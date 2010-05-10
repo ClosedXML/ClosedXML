@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML", "ClosedXML\ClosedXML.csproj", "{BD5E6BFE-E837-4A35-BCA9-39667D873A20}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs09.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ClosedXML\\ClosedXML.csproj
+		SccProjectName1 = ClosedXML
+		SccLocalPath1 = ClosedXML
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
