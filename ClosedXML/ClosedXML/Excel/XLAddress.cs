@@ -6,33 +6,58 @@ using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
 {
+    /// <summary>
+    /// Represents the address of a single cell in a worksheet.
+    /// </summary>
     public struct XLAddress : IEqualityComparer<XLAddress>, IEquatable<XLAddress>, IComparable, IComparable<XLAddress>
     {
         #region Constructors
+
+        /// <summary>
+        /// Initializes a new <see cref="XLAddress"/> struct using R1C1 notation.
+        /// </summary>
+        /// <param name="row">The row number of the cell address.</param>
+        /// <param name="column">The column number of the cell address.</param>
         public XLAddress(UInt32 row, UInt32 column)
         {
             this.row = row;
             this.column = column;
-            this.columnLetter = ColumnNumberToLetter(column);
+            this.columnLetter = GetColumnLetterFromNumber(column);
         }
 
+        /// <summary>
+        /// Initializes a new <see cref="XLAddress"/> struct using a mixed notation.
+        /// </summary>
+        /// <param name="row">The row number of the cell address.</param>
+        /// <param name="columnLetter">The column letter of the cell address.</param>
         public XLAddress(UInt32 row, String columnLetter)
         {
             this.row = row;
-            this.column = ColumnLetterToNumber(columnLetter);
+            this.column = GetColumnNumberFromLetter(columnLetter);
             this.columnLetter = columnLetter;
         }
 
+
+        /// <summary>
+        /// Initializes a new <see cref="XLAddress"/> struct using A1 notation.
+        /// </summary>
+        /// <param name="cellAddressString">The cell address.</param>
         public XLAddress(String cellAddressString)
         {
             Match m = Regex.Match(cellAddressString, @"^([a-zA-Z]+)(\d+)$");
             columnLetter = m.Groups[1].Value;
             this.row = UInt32.Parse(m.Groups[2].Value);
-            this.column = ColumnLetterToNumber(columnLetter);
+            this.column = GetColumnNumberFromLetter(columnLetter);
         }
+
         #endregion
 
+        #region Properties
+
         private UInt32 row;
+        /// <summary>
+        /// Gets the row number of this address.
+        /// </summary>
         public UInt32 Row
         {
             get { return row; }
@@ -40,6 +65,9 @@ namespace ClosedXML.Excel
         }
 
         private UInt32 column;
+        /// <summary>
+        /// Gets the column number of this address.
+        /// </summary>
         public UInt32 Column
         {
             get { return column; }
@@ -47,13 +75,24 @@ namespace ClosedXML.Excel
         }
 
         private String columnLetter;
+        /// <summary>
+        /// Gets the column letter(s) of this address.
+        /// </summary>
         public String ColumnLetter
         {
             get { return columnLetter; }
             private set { columnLetter = value; }
         }
 
-        public static UInt32 ColumnLetterToNumber(String column)
+        #endregion
+
+        #region Static
+
+        /// <summary>
+        /// Gets the column number of a given column letter.
+        /// </summary>
+        /// <param name="column">The column letter to translate into a column number.</param>
+        public static UInt32 GetColumnNumberFromLetter(String column)
         {
             Int32 intColumnLetterLength = column.Length;
             Int32 retVal = 0;
@@ -64,7 +103,11 @@ namespace ClosedXML.Excel
             return (UInt32)retVal;
         }
 
-        public static String ColumnNumberToLetter(UInt32 column)
+        /// <summary>
+        /// Gets the column letter of a given column number.
+        /// </summary>
+        /// <param name="column">The column number to translate into a column letter.</param>
+        public static String GetColumnLetterFromNumber(UInt32 column)
         {
             String s = String.Empty;
             for (
@@ -91,10 +134,16 @@ namespace ClosedXML.Excel
             return s;
         }
 
+        #endregion
+
+        #region Overridden
+
         public override String ToString()
         {
             return ColumnLetter + Row.ToString();
         }
+
+        #endregion
 
         #region Operator Overloads
 

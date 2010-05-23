@@ -104,6 +104,12 @@ namespace ClosedXML.Excel
             return Range(new XLAddress(firstCellAddress), new XLAddress(lastCellAddress));
         }
 
+        public XLRange Range(String rangeAddress)
+        {
+            String[] arrRange = rangeAddress.Split(':');
+            return Range(arrRange[0], arrRange[1]);
+        }
+
         public XLRange Cell(XLAddress address)
         {
             XLAddress absoluteCellAddress;

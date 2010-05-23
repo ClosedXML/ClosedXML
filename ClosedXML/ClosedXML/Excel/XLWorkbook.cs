@@ -112,8 +112,8 @@ namespace ClosedXML.Excel
         /// <param name="file">New Excel file to be created.</param>
         public XLWorkbook(String file)
         {
-            if (File.Exists(file))
-                throw new ArgumentException("File already exists.");
+            if (File.Exists(file)) File.Delete(file);
+                //throw new ArgumentException("File already exists.");
 
             FileInfo fi = new FileInfo(file);
             this.Name = fi.Name;
