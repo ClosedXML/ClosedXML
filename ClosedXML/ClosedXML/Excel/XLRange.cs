@@ -2,197 +2,288 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ClosedXML.Excel.Style;
 
 namespace ClosedXML.Excel
 {
-    public enum CellContent { All, WithValues }
+    public enum XLCellValues { SharedString, Number, Boolean, DateTime }
+
     public class XLRange
     {
-        private XLCell firstCell { get; set; }
-        public XLCell FirstCell()
-        {
-            return FirstCell(CellContent.All);
-        }
-        public XLCell FirstCell(CellContent cellContent)
-        {
-            if (cellContent == CellContent.WithValues)
-            {
-                var cellsWithValues = Cells(cellContent);
-                var minAddress = cellsWithValues.Min(c => c.CellAddress);
-                return new XLCell(this.workbook, minAddress);
-            }
-            else
-            {
-                return firstCell;
-            }
-        }
-
-        private XLCell lastCell { get; set; }
-        public XLCell LastCell()
-        {
-            return LastCell(CellContent.All);
-        }
-        public XLCell LastCell(CellContent cellContent)
-        {
-            if (cellContent == CellContent.WithValues)
-            {
-                var cellsWithValues = Cells(cellContent);
-                var maxAddress = cellsWithValues.Max(c => c.CellAddress);
-                return new XLCell(this.workbook, maxAddress);
-            }
-            else
-            {
-                return lastCell;
-            }
-        }
-
-        private XLCells cellData;
+        private Dictionary<XLAddress, XLRange> worksheetCells;
+        public Boolean IsWorksheet { get; private set; }
+        public Boolean IsCell { get; private set; }
+        private XLRange Worksheet { get; set; }
         public XLRange ParentRange { get; private set; }
-        protected XLWorkbook workbook;
-
-        internal XLRange(XLCell firstCell, XLCell lastCell, XLCells cellData, XLRange parentRange)
+        private String worksheetName;
+        public String Name { get { return ToString(); } }
+        private Boolean isInitializing;
+        private XLWorkbook workbook;
+        public XLRange(XLAddress firstCellAddress, XLAddress lastCellAddress, XLRange parentRange, XLRange worksheet, String name = "", XLWorkbook workbook=null)
         {
-            this.cellData = cellData;
-            this.firstCell = firstCell;
-            this.lastCell = lastCell;
-            this.ParentRange = parentRange;
-            this.workbook = parentRange == null ? null : parentRange.workbook;
-        }
+            isInitializing = true;
+            this.worksheetName = name;
+            this.workbook = workbook;
+            FirstCellAddress = firstCellAddress;
+            LastCellAddress = lastCellAddress;
+            IsCell = firstCellAddress == lastCellAddress;
 
-        public XLCell Cell(UInt32 row, String column)
-        {
-            return Cell(column + row.ToString());
-        }
-
-        public XLCell Cell(UInt32 row, UInt32 column)
-        {
-            XLCellAddress cellAddress = new XLCellAddress(row-1, column-1) + firstCell.CellAddress;
-            return cellData[cellAddress];
-        }
-
-        public XLCell Cell(String cellAddressString)
-        {
-            XLCellAddress cellAddress = new XLCellAddress(cellAddressString);
-            return cellData[cellAddress];
-        }
-
-        public XLRange Range(XLCell firstCell, XLCell lastCell)
-        {
-            return new XLRange(firstCell, lastCell, cellData, this);
-        }
-
-        public XLRange Range(String range)
-        {
-            String[] ranges = range.Split(':');
-            XLCell firstCell = new XLCell(workbook, ranges[0] );
-            XLCell lastCell = new XLCell(workbook, ranges[1] );
-            return Range(firstCell, lastCell);
-        }
-
-        public Boolean HasData { get { return cellData.Any(); } }
-
-
-        public UInt32 CellCount()
-        {
-            return CellCount(CellContent.All);
-        }
-        public UInt32 CellCount(CellContent cellContent)
-        {
-            return (UInt32)Cells(cellContent).Count;
-        }
-
-        public UInt32 Row { get { return firstCell.Row; } }
-        public List<XLRange> Rows()
-        {
-            return Rows(CellContent.All);
-        }
-        public List<XLRange> Rows(CellContent cellContent)
-        {
-            if (cellContent == CellContent.WithValues)
+            ParentRange = parentRange;
+            if (worksheet != null)
             {
-                var cellsWithValues = Cells(CellContent.WithValues);
-                var distinct = cellsWithValues.Select(c => c.Row).Distinct();
-                var rows = from d in distinct
-                           select new XLRange(
-                                  new XLCell(workbook, new XLCellAddress(d, 1))
-                                , new XLCell(workbook, new XLCellAddress(d, XLWorksheet.MaxNumberOfColumns))
-                                , cellData, this);
-                return rows.ToList();
+                IsWorksheet = false;
+                Worksheet = worksheet;
+                CellStyle = new XLStyle(parentRange.CellStyle, this);
             }
             else
             {
-                var distinct = Cells().Select(c => c.Row).Distinct();
-                var rows = from d in distinct
-                           select new XLRange(
-                                  new XLCell(workbook, new XLCellAddress(d, 1))
-                                , new XLCell(workbook, new XLCellAddress(d, XLWorksheet.MaxNumberOfColumns))
-                                , cellData, this);
-                return rows.ToList();
+                IsWorksheet = true;
+                worksheetCells = new Dictionary<XLAddress, XLRange>();
+                Worksheet = this;
+                var defaultStyle = new XLStyle(workbook.WorkbookStyle, this);
+
+                CellStyle = defaultStyle;
             }
+            isInitializing = false;
         }
-        public UInt32 RowCount()
+
+        public XLAddress Address { get { return FirstCellAddress; } }
+
+        private XLAddress FirstCellAddress { get; set; }
+        public XLRange FirstCell
         {
-            return RowCount(CellContent.All);
-        }
-        public UInt32 RowCount(CellContent cellContent)
-        {
-            if (cellContent == CellContent.WithValues)
+            get
             {
-                var cellsWithValues = Cells(CellContent.WithValues);
-                var distinct = cellsWithValues.Select(c => c.Row).Distinct();
-                return (UInt32)(distinct.Count());
-            }
-            else
-            {
-                return (lastCell.CellAddress - firstCell.CellAddress).Row + 1;
+                return Cell(FirstCellAddress);
             }
         }
 
-        public UInt32 Column { get { return firstCell.Column; } }
-        public UInt32 ColumnCount()
+        private XLAddress LastCellAddress { get; set; }
+        public XLRange LastCell
         {
-            return ColumnCount(CellContent.All);
-        }
-        public UInt32 ColumnCount(CellContent cellContent)
-        {
-            if (cellContent == CellContent.WithValues)
+            get
             {
-                var cellsWithValues = Cells(CellContent.WithValues);
-                var distinct = cellsWithValues.Select(c => c.Column).Distinct();
-                return (UInt32)(distinct.Count());
-            }
-            else
-            {
-                return (lastCell.CellAddress - firstCell.CellAddress).Column + 1;
+                return Cell(LastCellAddress);
             }
         }
 
-        public virtual List<XLCell> Cells()
+        public XLAddress AddressInWorksheet { get { return FirstCellAddressInWorksheet; } }
+
+        private XLAddress FirstCellAddressInWorksheet
         {
-            return Cells(CellContent.All);
+            get
+            {
+                if (IsWorksheet || ParentRange.IsWorksheet)
+                    return FirstCellAddress;
+                else
+                    return FirstCellAddress + ParentRange.FirstCellAddressInWorksheet - 1;
+            }
         }
 
-        public virtual List<XLCell> Cells(CellContent cellContent)
+        private XLAddress LastCellAddressAbsolute
         {
-            if (cellContent == CellContent.WithValues)
+            get
             {
-                return cellData
-                        .Where(c => c.HasValue && c.CellAddress >= this.firstCell.CellAddress && c.CellAddress <= lastCell.CellAddress)
-                        .OrderBy(x => x.CellAddress)
-                        .ToList();
+                if (IsWorksheet || ParentRange.IsWorksheet)
+                    return LastCellAddress;
+                else
+                    return ParentRange.FirstCellAddressInWorksheet + LastCellAddress - 1;
             }
+        }
+
+        public XLRange Range(XLAddress firstCellAddress, XLAddress lastCellAddress)
+        {
+            if (lastCellAddress > (LastCellAddress - FirstCellAddress + 1))
+                throw new IndexOutOfRangeException("Cell addresses must be within parent range.");
+
+            return new XLRange(firstCellAddress, lastCellAddress, this, Worksheet);
+        }
+
+        public XLRange Range(String firstCellAddress, String lastCellAddress)
+        {
+            return Range(new XLAddress(firstCellAddress), new XLAddress(lastCellAddress));
+        }
+
+        public XLRange Cell(XLAddress address)
+        {
+            XLAddress absoluteCellAddress;
+            if (IsWorksheet || ParentRange.IsWorksheet)
+                absoluteCellAddress = address;
             else
+                absoluteCellAddress = ParentRange.FirstCellAddressInWorksheet + address - 1;
+
+            var cell = Worksheet.GetCell(absoluteCellAddress);
+            return cell;
+        }
+
+        public XLRange Cell(String addressString)
+        {
+            var cellAddress = new XLAddress(addressString);
+            return Cell(cellAddress);
+        }
+
+        public XLRange Cell(UInt32 row, UInt32 column)
+        {
+            var cellAddress = new XLAddress(row, column);
+            return Cell(cellAddress);
+        }
+
+        protected XLRange GetCell(XLAddress cellAddress)
+        {
+            if (!worksheetCells.ContainsKey(cellAddress))
             {
-                List<XLCell> retVal = new List<XLCell>();
-                for (UInt32 row = firstCell.Row; row <= lastCell.Row; row++)
+                worksheetCells.Add(cellAddress, new XLRange(cellAddress, cellAddress, this, this));
+            }
+
+            return worksheetCells[cellAddress];
+        }
+
+        public Boolean HasValue { get; private set; }
+
+        public XLCellValues DataType { get; set; }
+
+        private String cellValue;
+        public String Value 
+        {
+            get
+            {
+                return Worksheet.GetCell(FirstCellAddressInWorksheet).cellValue;
+            }
+            set
+            {
+                String val = value;
+
+                Double dTest;
+                DateTime dtTest;
+                Boolean bTest;
+                if (Double.TryParse(val, out dTest))
                 {
-                    for (UInt32 column = firstCell.Column; column <= lastCell.Column; column++)
+                    DataType = XLCellValues.Number;
+                }
+                else if (DateTime.TryParse(val, out dtTest))
+                {
+                    DataType = XLCellValues.DateTime;
+                    String dateSerial = GetSerialFromDateTime(dtTest).ToString();
+                    Style.NumberFormat.NumberFormatId = 14;
+                    val = dateSerial;
+                }
+                else if (Boolean.TryParse(val, out bTest))
+                {
+                    DataType = XLCellValues.Boolean;
+                    val = bTest ? "1" : "0";
+                }
+                else
+                {
+                    DataType = XLCellValues.SharedString;
+                }
+
+                Worksheet.GetCell(FirstCellAddressInWorksheet).cellValue = val;
+                Worksheet.GetCell(FirstCellAddressInWorksheet).HasValue = !val.Equals(String.Empty);
+            }
+        }
+
+
+        internal XLStyle CellStyle;
+        public XLStyle Style
+        {
+            get
+            {
+                CellStyle = new XLStyle(Worksheet.GetCell(FirstCellAddressInWorksheet).CellStyle, this);
+                return CellStyle;
+            }
+            set
+            {
+                Cells().ForEach(c => c.CellStyle = new XLStyle(value, this));
+            }
+        }
+
+        public IEnumerable<XLRange> Cells()
+        {
+            if (IsWorksheet)
+            {
+                foreach (var cell in worksheetCells.Where(c=>c.Key != LastCellAddress).Select(c=>c.Value))
+                {
+                    yield return cell;
+                }
+            }
+            else
+            {
+                for (UInt32 row = FirstCellAddressInWorksheet.Row; row <= LastCellAddressAbsolute.Row; row++)
+                {
+                    for (UInt32 column = FirstCellAddressInWorksheet.Column; column <= LastCellAddressAbsolute.Column; column++)
                     {
-                        retVal.Add(Cell(row, column));
+                        yield return Worksheet.GetCell(new XLAddress(row, column));
                     }
                 }
-                return retVal;
             }
         }
+
+        private DateTime GetDateTimeFromSerial(Double serialDate)
+        {
+            String sDate = serialDate.ToString();
+            Int32 datePart = Int32.Parse(sDate.Split('.').First());
+            Double timePart = serialDate - (Double)datePart;
+            if (datePart > 59) datePart -= 1; //Excel/Lotus 2/29/1900 bug   
+
+            TimeSpan maxTime = new TimeSpan(0, 23, 59, 59, 999);
+            Double totalMilliseconds = maxTime.TotalMilliseconds * timePart;
+
+            return new DateTime(1899, 12, 31).AddDays(datePart).AddMilliseconds(totalMilliseconds);
+        }
+
+        private Double GetSerialFromDateTime(DateTime dateTime)
+        {
+            Int32 nDay = dateTime.Day;
+            Int32 nMonth = dateTime.Month;
+            Int32 nYear = dateTime.Year;
+
+            // Excel/Lotus 123 have a bug with 29-02-1900. 1900 is not a
+            // leap year, but Excel/Lotus 123 think it is...
+            if (nDay == 29 && nMonth == 02 && nYear == 1900)
+                return 60;
+
+            // DMY to Modified Julian calculatie with an extra substraction of 2415019.
+            long nSerialDate =
+                    (int)((1461 * (nYear + 4800 + (int)((nMonth - 14) / 12))) / 4) +
+                    (int)((367 * (nMonth - 2 - 12 * ((nMonth - 14) / 12))) / 12) -
+                    (int)((3 * ((int)((nYear + 4900 + (int)((nMonth - 14) / 12)) / 100))) / 4) +
+                    nDay - 2415019 - 32075;
+
+            if (nSerialDate < 60)
+            {
+                // Because of the 29-02-1900 bug, any serial date 
+                // under 60 is one off... Compensate.
+                nSerialDate--;
+            }
+
+            TimeSpan timePart = new TimeSpan(dateTime.Hour, dateTime.Minute, dateTime.Second);
+            TimeSpan maxTime = new TimeSpan(0, 23, 59, 59, 999);
+            Double timeRatio = timePart.TotalMilliseconds / maxTime.TotalMilliseconds;
+
+            return (Double)nSerialDate + timeRatio;
+        }
+
+
+
+        internal void ProcessCells(Action<XLRange> action)
+        {
+            if (!(IsWorksheet || isInitializing)) //(IsCell && ParentRange.IsWorksheet)))
+            {
+                Cells().ForEach(c => action(c));
+            }  
+        }
+
+        #region Overridden
+
+        public override string ToString()
+        {
+            if (IsWorksheet)
+                return worksheetName;
+            else
+                return FirstCellAddress.ToString();
+        }
+
+        #endregion
+
     }
 }

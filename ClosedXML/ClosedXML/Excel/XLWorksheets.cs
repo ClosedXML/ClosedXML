@@ -5,32 +5,40 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLWorksheets : IEnumerable<XLWorksheet>
+    /// <summary>
+    /// Allows you to add, access, and remove worksheets from the workbook.
+    /// </summary>
+    public class XLWorksheets: IEnumerable<XLRange>
     {
-        private Dictionary<String, XLWorksheet> worksheets = new Dictionary<String, XLWorksheet>();
+        #region Constants
 
-        private XLWorkbook workbook;
+        private const UInt32 MaxNumberOfRows = 1048576;
+        private const UInt32 MaxNumberOfColumns = 16384;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XLWorksheets"/> class.
+        /// </summary>
+        /// <param name="workbook">The workbook which will contain the worksheets.</param>
         public XLWorksheets(XLWorkbook workbook)
         {
             this.workbook = workbook;
         }
 
-        public XLWorksheet this[String sheetName]
-        {
-            get
-            {
-                return worksheets[sheetName];
-            }
-        }
+        #endregion
 
-        public XLWorksheet Add(String name)
-        {
-            XLWorksheet worksheet = new XLWorksheet(workbook,  name, new XLCells(workbook));
-            worksheets.Add(name, worksheet);
-            return worksheet;
-        }
+        #region Properties
 
+        private Dictionary<String, XLRange> worksheets = new Dictionary<String, XLRange>();
+
+        private XLWorkbook workbook;
+
+        /// <summary>
+        /// Gets the number of worksheets in the workbook.
+        /// </summary>
         public UInt32 Count
         {
             get
@@ -39,17 +47,52 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Int32 nextWorksheetId = 1;
-        private Int32 GetNextWorksheetId()
+        /// <summary>
+        /// Gets the worksheet (as an XLRange) with the specified sheet name.
+        /// </summary>
+        /// <value></value>
+        public XLRange this[String sheetName]
         {
-            return nextWorksheetId++;
+            get
+            {
+                return worksheets[sheetName];
+            }
         }
 
-        #region IEnumerable<XLWorksheet> Members
+        #endregion
 
-        public IEnumerator<XLWorksheet> GetEnumerator()
+        #region Methods
+
+        /// <summary>
+        /// Adds a new worksheet to the workbook.
+        /// </summary>
+        /// <param name="name">The name of the worksheet to be added.</param>
+        public XLRange Add(String name)
         {
-            return worksheets.Values.AsEnumerable().GetEnumerator();
+            var firstCellAddress = new XLAddress(1, 1);
+            var lastCellAddress = new XLAddress(MaxNumberOfRows, MaxNumberOfColumns);
+            XLRange worksheet = new XLRange(firstCellAddress, lastCellAddress, null, null, name, workbook);
+            worksheets.Add(name, worksheet);
+            return worksheet;
+        }
+
+        /// <summary>
+        /// Deletes the specified worksheet from the workbook.
+        /// </summary>
+        /// <param name="name">The name of the worksheet to be deleted.</param>
+        public void Delete(String name)
+        {
+            worksheets.Remove(name);
+        }
+
+        #endregion
+
+
+        #region IEnumerable<XLRange> Members
+
+        public IEnumerator<XLRange> GetEnumerator()
+        {
+            return worksheets.Values.GetEnumerator();
         }
 
         #endregion
@@ -58,7 +101,7 @@ namespace ClosedXML.Excel
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         #endregion
