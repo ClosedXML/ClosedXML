@@ -14,9 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Examples", "ClosedXML_Examples\ClosedXML_Examples.csproj", "{03A518D0-1CB7-488E-861C-C4E782B27A46}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs09.codeplex.com/
 		SccLocalPath0 = .
@@ -29,6 +31,9 @@ Global
 		SccProjectUniqueName3 = ClosedXML_Test\\ClosedXML_Test.csproj
 		SccProjectName3 = ClosedXML_Test
 		SccLocalPath3 = ClosedXML_Test
+		SccProjectUniqueName4 = ClosedXML_Examples\\ClosedXML_Examples.csproj
+		SccProjectName4 = ClosedXML_Examples
+		SccLocalPath4 = ClosedXML_Examples
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ClosedXML.vsmdi
@@ -72,6 +77,16 @@ Global
 		{D41B4F43-AB44-4236-B959-D508D259F4A7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D41B4F43-AB44-4236-B959-D508D259F4A7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D41B4F43-AB44-4236-B959-D508D259F4A7}.Release|x86.ActiveCfg = Release|Any CPU
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Debug|x86.ActiveCfg = Debug|x86
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Debug|x86.Build.0 = Debug|x86
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Release|Any CPU.ActiveCfg = Release|x86
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Release|Mixed Platforms.Build.0 = Release|x86
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Release|x86.ActiveCfg = Release|x86
+		{03A518D0-1CB7-488E-861C-C4E782B27A46}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

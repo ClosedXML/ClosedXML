@@ -194,7 +194,9 @@ namespace ClosedXML.Excel
         {
             get
             {
-                CellStyle = new XLStyle(Worksheet.GetCell(FirstCellAddressInWorksheet).CellStyle, this);
+                if(CellStyle == null)
+                    CellStyle = new XLStyle(Worksheet.GetCell(FirstCellAddressInWorksheet).CellStyle, this);
+
                 return CellStyle;
             }
             set

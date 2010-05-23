@@ -238,7 +238,7 @@ namespace ClosedXML.Excel
 
             titlesOfParts1.Append(vTVector2);
             Ap.Company company1 = new Ap.Company();
-            company1.Text = "NSI";
+            company1.Text = "";
             Ap.LinksUpToDate linksUpToDate1 = new Ap.LinksUpToDate();
             linksUpToDate1.Text = "false";
             Ap.SharedDocument sharedDocument1 = new Ap.SharedDocument();
@@ -1221,8 +1221,8 @@ namespace ClosedXML.Excel
         private void SetPackageProperties(OpenXmlPackage document)
         {
             document.PackageProperties.Creator = "";
-            document.PackageProperties.Created = System.Xml.XmlConvert.ToDateTime("2010-05-20T13:20:55Z", System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
-            document.PackageProperties.Modified = System.Xml.XmlConvert.ToDateTime("2010-05-20T13:21:22Z", System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
+            document.PackageProperties.Created = DateTime.Now;
+            document.PackageProperties.Modified = DateTime.Now;
             document.PackageProperties.LastModifiedBy = "";
         }
 
