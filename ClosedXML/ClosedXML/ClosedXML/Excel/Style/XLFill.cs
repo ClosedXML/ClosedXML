@@ -1,0 +1,109 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Drawing;
+
+namespace ClosedXML.Excel.Style
+{
+    public class XLFill: IXLFill
+    {
+        #region Properties
+
+        public Color BackgroundColor
+        {
+            get
+            {
+                return patternColor;
+            }
+            set
+            {                
+                if (container != null && !container.UpdatingStyle)
+                {
+                    container.Styles.ForEach(s => s.Fill.BackgroundColor = value);
+                }
+                else
+                {
+                    patternType = XLFillPatternValues.Solid;
+                    patternColor = value;
+                    patternBackgroundColor = value;
+                }
+            }
+        }
+
+        private Color patternColor;
+        public Color PatternColor
+        {
+            get
+            {
+                return patternColor;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Fill.PatternColor = value);
+                else
+                    patternColor = value;
+            }
+        }
+
+        private Color patternBackgroundColor;
+        public Color PatternBackgroundColor
+        {
+            get
+            {
+                return patternBackgroundColor;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Fill.PatternBackgroundColor = value);
+                else
+                    patternBackgroundColor = value;
+            }
+        }
+
+        private XLFillPatternValues patternType;
+        public XLFillPatternValues PatternType
+        {
+            get
+            {
+                return patternType;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Fill.PatternType = value);
+                else
+                    patternType = value;
+            }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        IXLStylized container;
+        public XLFill(IXLStylized container, IXLFill defaultFill = null)
+        {
+            this.container = container;
+            if (defaultFill != null)
+            {
+                PatternType = defaultFill.PatternType;
+                PatternColor = defaultFill.PatternColor;
+                PatternBackgroundColor = defaultFill.PatternBackgroundColor;
+            }
+        }
+
+        #endregion
+
+        #region Overridden
+
+        public override string ToString()
+        {
+            return BackgroundColor.ToString() + "-" + PatternType.ToString() + "-" + PatternColor.ToString();
+        }
+
+        #endregion
+    }
+}
