@@ -39,7 +39,7 @@ namespace ClosedXML.Excel.Style
 
         XLAlignmentVerticalValues Vertical { get; set; }
 
-        UInt32 Indent { get; set; }
+        Int32 Indent { get; set; }
 
         Boolean JustifyLastLine { get; set; }
 
@@ -49,7 +49,7 @@ namespace ClosedXML.Excel.Style
 
         Boolean ShrinkToFit { get; set; }
 
-        UInt32 TextRotation { get; set; }
+        Int32 TextRotation { get; set; }
 
         Boolean WrapText { get; set; }
 

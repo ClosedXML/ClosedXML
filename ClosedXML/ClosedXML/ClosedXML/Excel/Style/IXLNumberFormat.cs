@@ -7,7 +7,7 @@ namespace ClosedXML.Excel.Style
 {
     public interface IXLNumberFormat
     {
-        UInt32? NumberFormatId { get; set; }
+        Int32 NumberFormatId { get; set; }
         String Format { get; set; }
     }
 }

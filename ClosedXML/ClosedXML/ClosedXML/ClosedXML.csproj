@@ -38,7 +38,7 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="OX.Copyable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\My Documents\Code\OX.Copyable\havard-copyable-fd863c3\OX.Copyable\bin\Release\OX.Copyable.dll</HintPath>
+      <HintPath>..\..\..\OX.Copyable\OX.Copyable\bin\Release\OX.Copyable.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

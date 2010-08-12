@@ -17,7 +17,11 @@ namespace ClosedXML_Examples
 
             //new StyleFill().Create(@"c:\styleFill.xlsx");
 
-            new StyleBorder().Create(@"c:\styleBorder.xlsx");
+            //new StyleBorder().Create(@"c:\styleBorder.xlsx");
+
+            //new StyleAlignment().Create(@"c:\styleAlignment.xlsx");
+
+            new StyleNumberFormat().Create(@"c:\styleNumberFormat.xlsx");
 
             //var basicTable = new BasicTable();
             //basicTable.Create(@"c:\BasicTable.xlsx");

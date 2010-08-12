@@ -7,28 +7,235 @@ namespace ClosedXML.Excel.Style
 {
     public class XLBorder: IXLBorder
     {
-        public XLBorderStyleValues LeftBorder { get; set; }
+        IXLStylized container;
+        public XLBorder(IXLStylized container, IXLBorder defaultBorder = null)
+        {
+            this.container = container;
+            if (defaultBorder != null)
+            {
+                LeftBorder = defaultBorder.LeftBorder;
+                LeftBorderColor = defaultBorder.LeftBorderColor;
+                RightBorder = defaultBorder.RightBorder;
+                RightBorderColor = defaultBorder.RightBorderColor;
+                TopBorder = defaultBorder.TopBorder;
+                TopBorderColor = defaultBorder.TopBorderColor;
+                BottomBorder = defaultBorder.BottomBorder;
+                BottomBorderColor = defaultBorder.BottomBorderColor;
+                DiagonalBorder = defaultBorder.DiagonalBorder;
+                DiagonalBorderColor = defaultBorder.DiagonalBorderColor;
+                DiagonalUp = defaultBorder.DiagonalUp;
+                DiagonalDown = defaultBorder.DiagonalDown;
+            }
+        }
 
-        public Color LeftBorderColor { get; set; }
+        private XLBorderStyleValues leftBorder;
+        public XLBorderStyleValues LeftBorder
+        {
+            get
+            {
+                return leftBorder;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.LeftBorder = value);
+                else
+                    leftBorder = value;
+            }
+        }
 
-        public XLBorderStyleValues RightBorder { get; set; }
+        private Color leftBorderColor;
+        public Color LeftBorderColor
+        {
+            get
+            {
+                return leftBorderColor;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.LeftBorderColor = value);
+                else
+                    leftBorderColor = value;
+            }
+        }
 
-        public Color RightBorderColor { get; set; }
+        private XLBorderStyleValues rightBorder;
+        public XLBorderStyleValues RightBorder
+        {
+            get
+            {
+                return rightBorder;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.RightBorder = value);
+                else
+                    rightBorder = value;
+            }
+        }
 
-        public XLBorderStyleValues TopBorder { get; set; }
+        private Color rightBorderColor;
+        public Color RightBorderColor
+        {
+            get
+            {
+                return rightBorderColor;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.RightBorderColor = value);
+                else
+                    rightBorderColor = value;
+            }
+        }
 
-        public Color TopBorderColor { get; set; }
+        private XLBorderStyleValues topBorder;
+        public XLBorderStyleValues TopBorder
+        {
+            get
+            {
+                return topBorder;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.TopBorder = value);
+                else
+                    topBorder = value;
+            }
+        }
 
-        public XLBorderStyleValues BottomBorder { get; set; }
+        private Color topBorderColor;
+        public Color TopBorderColor
+        {
+            get
+            {
+                return topBorderColor;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.TopBorderColor = value);
+                else
+                    topBorderColor = value;
+            }
+        }
 
-        public Color BottomBorderColor { get; set; }
+        private XLBorderStyleValues bottomBorder;
+        public XLBorderStyleValues BottomBorder
+        {
+            get
+            {
+                return bottomBorder;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.BottomBorder = value);
+                else
+                    bottomBorder = value;
+            }
+        }
 
-        public bool DiagonalUp { get; set; }
+        private Color bottomBorderColor;
+        public Color BottomBorderColor
+        {
+            get
+            {
+                return bottomBorderColor;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.BottomBorderColor = value);
+                else
+                    bottomBorderColor = value;
+            }
+        }
 
-        public bool DiagonalDown { get; set; }
+        private XLBorderStyleValues diagonalBorder;
+        public XLBorderStyleValues DiagonalBorder
+        {
+            get
+            {
+                return diagonalBorder;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.DiagonalBorder = value);
+                else
+                    diagonalBorder = value;
+            }
+        }
 
-        public XLBorderStyleValues DiagonalBorder { get; set; }
+        private Color diagonalBorderColor;
+        public Color DiagonalBorderColor
+        {
+            get
+            {
+                return diagonalBorderColor;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.DiagonalBorderColor = value);
+                else
+                    diagonalBorderColor = value;
+            }
+        }
 
-        public Color DiagonalBorderColor { get; set; }
+        private Boolean diagonalUp;
+        public Boolean DiagonalUp
+        {
+            get
+            {
+                return diagonalUp;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.DiagonalUp = value);
+                else
+                    diagonalUp = value;
+            }
+        }
+
+        private Boolean diagonalDown;
+        public Boolean DiagonalDown
+        {
+            get
+            {
+                return diagonalDown;
+            }
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                    container.Styles.ForEach(s => s.Border.DiagonalDown = value);
+                else
+                    diagonalDown = value;
+            }
+        }
+
+        public override string ToString()
+        {
+            return
+                LeftBorder.ToString() + "-" +
+                LeftBorderColor.ToString() + "-" +
+                RightBorder.ToString() + "-" +
+                RightBorderColor.ToString() + "-" +
+                TopBorder.ToString() + "-" +
+                TopBorderColor.ToString() + "-" +
+                BottomBorder.ToString() + "-" +
+                BottomBorderColor.ToString() + "-" +
+                DiagonalBorder.ToString() + "-" +
+                DiagonalBorderColor.ToString() + "-" +
+                DiagonalUp.ToString() + "-" +
+                DiagonalDown.ToString();
+
+        }
     }
 }

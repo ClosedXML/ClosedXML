@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
         private struct FontInfo { public UInt32 FontId; public IXLFont Font; };
         private struct FillInfo { public UInt32 FillId; public IXLFill Fill; };
         private struct BorderInfo { public UInt32 BorderId; public IXLBorder Border; };
-        private struct NumberFormatInfo { public UInt32 NumberFormatId; public IXLNumberFormat NumberFormat; };
+        private struct NumberFormatInfo { public Int32 NumberFormatId; public IXLNumberFormat NumberFormat; };
 
 
         private struct StyleInfo
@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
             public UInt32 FontId;
             public UInt32 FillId;
             public UInt32 BorderId;
-            public UInt32 NumberFormatId;
+            public Int32 NumberFormatId;
             public IXLStyle Style;
         };
 
@@ -349,7 +349,7 @@ namespace ClosedXML.Excel
             UInt32 fontCount = 1;
             UInt32 fillCount = 3;
             UInt32 borderCount = 1;
-            UInt32 numberFormatCount = 1;
+            Int32 numberFormatCount = 1;
 
             foreach (var worksheet in Worksheets)
             {
@@ -370,7 +370,7 @@ namespace ClosedXML.Excel
                         sharedBorders.Add(cell.Style.Border.ToString(), new BorderInfo() { BorderId = borderCount++, Border = cell.Style.Border });
                     }
 
-                    if (!cell.Style.NumberFormat.NumberFormatId.HasValue && !sharedNumberFormats.ContainsKey(cell.Style.NumberFormat.ToString()))
+                    if (cell.Style.NumberFormat.NumberFormatId == -1 && !sharedNumberFormats.ContainsKey(cell.Style.NumberFormat.ToString()))
                     {
                         sharedNumberFormats.Add(cell.Style.NumberFormat.ToString(), new NumberFormatInfo() { NumberFormatId = numberFormatCount + 164, NumberFormat = cell.Style.NumberFormat });
                         //cell.Style.NumberFormat = new OPNumberFormat(numberFormatCount);
@@ -383,9 +383,9 @@ namespace ClosedXML.Excel
 
                     if (!sharedStyles.ContainsKey(cell.Style.ToString()))
                     {
-                        UInt32 numberFormatId;
-                        if (cell.Style.NumberFormat.NumberFormatId.HasValue)
-                            numberFormatId = cell.Style.NumberFormat.NumberFormatId.Value;
+                        Int32 numberFormatId;
+                        if (cell.Style.NumberFormat.NumberFormatId >= 0)
+                            numberFormatId = cell.Style.NumberFormat.NumberFormatId;
                         else
                             numberFormatId = sharedNumberFormats[cell.Style.NumberFormat.ToString()].NumberFormatId;
 
@@ -405,10 +405,10 @@ namespace ClosedXML.Excel
 
             Stylesheet stylesheet1 = new Stylesheet();
 
-            NumberingFormats numberingFormats = new NumberingFormats() { Count = (UInt32Value)numberFormatCount };
+            NumberingFormats numberingFormats = new NumberingFormats() { Count = (UInt32Value)(UInt32)numberFormatCount };
             foreach (var numberFormatInfo in sharedNumberFormats.Values)
             {
-                NumberingFormat numberingFormat = new NumberingFormat() { NumberFormatId = (UInt32Value)numberFormatInfo.NumberFormatId, FormatCode = numberFormatInfo.NumberFormat.Format };
+                NumberingFormat numberingFormat = new NumberingFormat() { NumberFormatId = (UInt32Value)(UInt32)numberFormatInfo.NumberFormatId, FormatCode = numberFormatInfo.NumberFormat.Format };
                 numberingFormats.Append(numberingFormat);
             }
 
@@ -526,18 +526,18 @@ namespace ClosedXML.Excel
                     || GetBorderStyleValue(opBorder.LeftBorder) != BorderStyleValues.None
                     || GetBorderStyleValue(opBorder.TopBorder) != BorderStyleValues.None);
 
-                CellFormat cellStyleFormat = new CellFormat() { NumberFormatId = (UInt32Value)numberFormatId, FontId = (UInt32Value)fontId, FillId = (UInt32Value)fillId, BorderId = (UInt32Value)borderId, ApplyNumberFormat = false, ApplyFill = applyFill, ApplyBorder = applyBorder, ApplyAlignment = false, ApplyProtection = false };
+                CellFormat cellStyleFormat = new CellFormat() { NumberFormatId = (UInt32Value)(UInt32)numberFormatId, FontId = (UInt32Value)fontId, FillId = (UInt32Value)fillId, BorderId = (UInt32Value)borderId, ApplyNumberFormat = false, ApplyFill = applyFill, ApplyBorder = applyBorder, ApplyAlignment = false, ApplyProtection = false };
                 cellStyleFormats.Append(cellStyleFormat);
 
-                CellFormat cellFormat = new CellFormat() { NumberFormatId = (UInt32Value)numberFormatId, FontId = (UInt32Value)fontId, FillId = (UInt32Value)fillId, BorderId = (UInt32Value)borderId, FormatId = (UInt32Value)formatId, ApplyNumberFormat = false, ApplyFill = applyFill, ApplyBorder = applyBorder, ApplyAlignment = false, ApplyProtection = false };
+                CellFormat cellFormat = new CellFormat() { NumberFormatId = (UInt32Value)(UInt32)numberFormatId, FontId = (UInt32Value)fontId, FillId = (UInt32Value)fillId, BorderId = (UInt32Value)borderId, FormatId = (UInt32Value)formatId, ApplyNumberFormat = false, ApplyFill = applyFill, ApplyBorder = applyBorder, ApplyAlignment = false, ApplyProtection = false };
                 Alignment alignment = new Alignment()
                 {
                     Horizontal = GetHorizontalAlignmentValue(styleInfo.Style.Alignment.Horizontal),
                     Vertical = GetVerticalAlignmentValue(styleInfo.Style.Alignment.Vertical),
-                    Indent = styleInfo.Style.Alignment.Indent,
+                    Indent = (UInt32)styleInfo.Style.Alignment.Indent,
                     ReadingOrder = (UInt32)styleInfo.Style.Alignment.ReadingOrder,
                     WrapText = styleInfo.Style.Alignment.WrapText,
-                    TextRotation = styleInfo.Style.Alignment.TextRotation,
+                    TextRotation = (UInt32)styleInfo.Style.Alignment.TextRotation,
                     ShrinkToFit = styleInfo.Style.Alignment.ShrinkToFit,
                     RelativeIndent = styleInfo.Style.Alignment.RelativeIndent,
                     JustifyLastLine = styleInfo.Style.Alignment.JustifyLastLine
