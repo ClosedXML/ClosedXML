@@ -36,10 +36,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="OX.Copyable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\OX.Copyable\OX.Copyable\bin\Release\OX.Copyable.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -51,6 +47,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Excel\IXLRow.cs" />
     <Compile Include="Excel\Style\IXLAlignment.cs" />
     <Compile Include="Excel\Style\IXLBorder.cs" />
     <Compile Include="Excel\Style\IXLFill.cs" />

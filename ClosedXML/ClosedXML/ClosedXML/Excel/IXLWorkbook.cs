@@ -12,7 +12,6 @@ namespace ClosedXML.Excel
         String Name { get; }
         String FullName { get; }
         void SaveAs(String file, Boolean overwrite = false);
-        //IXLStyle DefaultStyle { get; set; }
 
     }
 }

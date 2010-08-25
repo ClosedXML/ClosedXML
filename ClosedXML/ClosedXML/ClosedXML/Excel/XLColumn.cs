@@ -13,9 +13,11 @@ namespace ClosedXML.Excel
             FirstCellAddress = new XLAddress(1, column);
             LastCellAddress = new XLAddress(XLWorksheet.MaxNumberOfRows, column);
             CellsCollection = cellsCollection;
+            this.style = new XLStyle(this, defaultStyle);
+            this.Width = XLWorkbook.DefaultColumnWidth;
         }
 
-        public Int32 Width { get; set; }
+        public Double Width { get; set; }
 
         #region IXLRange Members
 

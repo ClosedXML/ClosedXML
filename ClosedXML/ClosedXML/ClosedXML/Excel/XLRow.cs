@@ -6,27 +6,18 @@ using ClosedXML.Excel.Style;
 
 namespace ClosedXML.Excel
 {
-    public class XLRow: IXLRange
+    public class XLRow: IXLRow
     {
         public XLRow(Int32 row, Dictionary<IXLAddress, IXLCell> cellsCollection, IXLStyle defaultStyle)
         {
             FirstCellAddress = new XLAddress(row, 1);
             LastCellAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns); 
             CellsCollection = cellsCollection;
-
-            var defaultAddress = new XLAddress(row, 0);
-            if (!cellsCollection.ContainsKey(defaultAddress))
-            {
-                DefaultCell = new XLCell(defaultAddress, defaultStyle);
-                cellsCollection.Add(defaultAddress, DefaultCell);
-            }
-            else
-            {
-                DefaultCell = cellsCollection[defaultAddress];
-            }
+            this.style = new XLStyle(this, defaultStyle);
+            this.Height = XLWorkbook.DefaultRowHeight;
         }
 
-        private IXLCell DefaultCell { get; set; }
+        public Double Height { get; set; }
 
         #region IXLRange Members
 
@@ -38,15 +29,16 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
+        private IXLStyle style;
         public IXLStyle Style
         {
             get
             {
-                return DefaultCell.Style;
+                return style;
             }
             set
             {
-                DefaultCell.Style = value;
+                style = new XLStyle(this, value);
             }
         }
 
@@ -55,6 +47,7 @@ namespace ClosedXML.Excel
             get
             {
                 UpdatingStyle = true;
+                yield return style;
                 foreach (var c in CellsCollection.Values.Where(c => c.Address.Row == FirstCellAddress.Row))
                 {
                     yield return c.Style;
@@ -66,7 +59,6 @@ namespace ClosedXML.Excel
         public Boolean UpdatingStyle { get; set; }
 
         #endregion
-
 
         #region IXLRange Members
 
@@ -83,8 +75,7 @@ namespace ClosedXML.Excel
 
         public IXLRange Column(string column)
         {
-            var address = new XLAddress(FirstCellAddress.Row, column);
-            return this.Range(address, address);
+            return Column(Int32.Parse(column));
         }
 
         #endregion

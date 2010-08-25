@@ -350,56 +350,59 @@ namespace ClosedXML.Excel
             UInt32 fillCount = 3;
             UInt32 borderCount = 1;
             Int32 numberFormatCount = 1;
+            var xlStyles = new List<IXLStyle>();
+
 
             foreach (var worksheet in Worksheets)
             {
-                foreach (var cell in worksheet.CellsCollection.Values)
+                xlStyles.AddRange(worksheet.Styles);
+                worksheet.ColumnsCollection.Values.ForEach(c => xlStyles.Add(c.Style));
+                worksheet.RowsCollection.Values.ForEach(c => xlStyles.Add(c.Style));
+            }
+
+
+
+            foreach (var xlStyle in xlStyles)
+            {
+                if (!sharedFonts.ContainsKey(xlStyle.Font.ToString()))
                 {
-                    if (!sharedFonts.ContainsKey(cell.Style.Font.ToString()))
-                    {
-                        sharedFonts.Add(cell.Style.Font.ToString(), new FontInfo() { FontId = fontCount++, Font = cell.Style.Font });
-                    }
+                    sharedFonts.Add(xlStyle.Font.ToString(), new FontInfo() { FontId = fontCount++, Font = xlStyle.Font });
+                }
 
-                    if (!sharedFills.ContainsKey(cell.Style.Fill.ToString()))
-                    {
-                        sharedFills.Add(cell.Style.Fill.ToString(), new FillInfo() { FillId = fillCount++, Fill = cell.Style.Fill });
-                    }
+                if (!sharedFills.ContainsKey(xlStyle.Fill.ToString()))
+                {
+                    sharedFills.Add(xlStyle.Fill.ToString(), new FillInfo() { FillId = fillCount++, Fill = xlStyle.Fill });
+                }
 
-                    if (!sharedBorders.ContainsKey(cell.Style.Border.ToString()))
-                    {
-                        sharedBorders.Add(cell.Style.Border.ToString(), new BorderInfo() { BorderId = borderCount++, Border = cell.Style.Border });
-                    }
+                if (!sharedBorders.ContainsKey(xlStyle.Border.ToString()))
+                {
+                    sharedBorders.Add(xlStyle.Border.ToString(), new BorderInfo() { BorderId = borderCount++, Border = xlStyle.Border });
+                }
 
-                    if (cell.Style.NumberFormat.NumberFormatId == -1 && !sharedNumberFormats.ContainsKey(cell.Style.NumberFormat.ToString()))
-                    {
-                        sharedNumberFormats.Add(cell.Style.NumberFormat.ToString(), new NumberFormatInfo() { NumberFormatId = numberFormatCount + 164, NumberFormat = cell.Style.NumberFormat });
-                        //cell.Style.NumberFormat = new OPNumberFormat(numberFormatCount);
-                        numberFormatCount++;
-                    }
-                    //else if (!cell.Style.NumberFormat.NumberFormatId.HasValue)
-                    //{
-                    //    cell.Style.NumberFormat = new OPNumberFormat(sharedNumberFormats[cell.Style.NumberFormat.ToString()].NumberFormatId);
-                    //}
+                if (xlStyle.NumberFormat.NumberFormatId == -1 && !sharedNumberFormats.ContainsKey(xlStyle.NumberFormat.ToString()))
+                {
+                    sharedNumberFormats.Add(xlStyle.NumberFormat.ToString(), new NumberFormatInfo() { NumberFormatId = numberFormatCount + 164, NumberFormat = xlStyle.NumberFormat });
+                    numberFormatCount++;
+                }
 
-                    if (!sharedStyles.ContainsKey(cell.Style.ToString()))
-                    {
-                        Int32 numberFormatId;
-                        if (cell.Style.NumberFormat.NumberFormatId >= 0)
-                            numberFormatId = cell.Style.NumberFormat.NumberFormatId;
-                        else
-                            numberFormatId = sharedNumberFormats[cell.Style.NumberFormat.ToString()].NumberFormatId;
+                if (!sharedStyles.ContainsKey(xlStyle.ToString()))
+                {
+                    Int32 numberFormatId;
+                    if (xlStyle.NumberFormat.NumberFormatId >= 0)
+                        numberFormatId = xlStyle.NumberFormat.NumberFormatId;
+                    else
+                        numberFormatId = sharedNumberFormats[xlStyle.NumberFormat.ToString()].NumberFormatId;
 
-                        sharedStyles.Add(cell.Style.ToString(),
-                            new StyleInfo()
-                            {
-                                StyleId = styleCount++,
-                                Style = cell.Style,
-                                FontId = sharedFonts[cell.Style.Font.ToString()].FontId,
-                                FillId = sharedFills[cell.Style.Fill.ToString()].FillId,
-                                BorderId = sharedBorders[cell.Style.Border.ToString()].BorderId,
-                                NumberFormatId = numberFormatId
-                            });
-                    }
+                    sharedStyles.Add(xlStyle.ToString(),
+                        new StyleInfo()
+                        {
+                            StyleId = styleCount++,
+                            Style = xlStyle,
+                            FontId = sharedFonts[xlStyle.Font.ToString()].FontId,
+                            FillId = sharedFills[xlStyle.Fill.ToString()].FillId,
+                            BorderId = sharedBorders[xlStyle.Border.ToString()].BorderId,
+                            NumberFormatId = numberFormatId
+                        });
                 }
             }
 
@@ -571,6 +574,8 @@ namespace ClosedXML.Excel
             workbookStylesPart.Stylesheet = stylesheet1;
         }
 
+
+
         private void GenerateWorksheetPartContent(WorksheetPart worksheetPart, IXLWorksheet xlWorksheet)
         {
             Worksheet worksheet = new Worksheet();
@@ -599,35 +604,44 @@ namespace ClosedXML.Excel
             SheetFormatProperties sheetFormatProperties3 = new SheetFormatProperties() { DefaultRowHeight = 15D };
 
             Columns columns = null;
-            //if (xlWorksheet.Columns.Count > 0)
-            //{
-            //    columns = new Columns();
-            //    foreach (var opColumn in xlWorksheet.Columns.Values)
-            //    {
-            //        Column column = new Column()
-            //        {
-            //            Min = (UInt32Value)opColumn.Column,
-            //            Max = (UInt32Value)opColumn.Column,
-            //            Width = opColumn.Width,
-            //            CustomWidth = true
-            //        };
-            //        columns.Append(column);
-            //    }
-            //}
+            if (xlWorksheet.ColumnsCollection.Count > 0)
+            {
+                columns = new Columns();
+                foreach (var xlColumn in xlWorksheet.ColumnsCollection.Values)
+                {
+                    Column column = new Column()
+                    {
+                        Min = (UInt32Value)(UInt32)xlColumn.FirstCellAddress.Column,
+                        Max = (UInt32Value)(UInt32)xlColumn.FirstCellAddress.Column,
+                        Style = sharedStyles[xlColumn.Style.ToString()].StyleId,
+                         Width = xlColumn.Width,
+                         CustomWidth = true
+                    };
+                    
+                    columns.Append(column);
+                }
+            }
 
             SheetData sheetData = new SheetData();
 
-            var distinctRows = xlWorksheet.CellsCollection.Where(c => c.Key.Column > 0 && c.Key.Row > 0).Select(c => c.Key.Row).Distinct();
+            var rowsFromCells = xlWorksheet.CellsCollection.Where(c => c.Key.Column > 0 && c.Key.Row > 0).Select(c => c.Key.Row).Distinct();
+            var rowsFromCollection = xlWorksheet.RowsCollection.Keys;
+            var allRows = rowsFromCells.ToList();
+            allRows.AddRange(rowsFromCollection);
+            var distinctRows = allRows.Distinct();
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
                 Row row = new Row() { RowIndex = (UInt32Value)(UInt32)distinctRow, Spans = new ListValue<StringValue>() { InnerText = "1:" + maxColumn.ToString() } };
-                //if (xlWorksheet.Rows.ContainsKey(distinctRow))
-                //{
-                //    row.Height = xlWorksheet.Rows[distinctRow].Height;
-                //    row.CustomHeight = true;
-                //}
+                if (xlWorksheet.RowsCollection.ContainsKey(distinctRow))
+                {
+                    var thisRow = xlWorksheet.RowsCollection[distinctRow];
+                    row.Height = thisRow.Height;
+                    row.CustomHeight = true;
+                    row.StyleIndex = sharedStyles[thisRow.Style.ToString()].StyleId;
+                    row.CustomFormat = true;
+                }
                 foreach (var opCell in xlWorksheet.CellsCollection
-                    .Where(c => c.Key.Row == distinctRow && c.Key.Column != 0)
+                    .Where(c => c.Key.Row == distinctRow)
                     .OrderBy(c => c.Key)
                     .Select(c => c))
                 {

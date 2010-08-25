@@ -12,6 +12,8 @@ namespace ClosedXML.Excel
     {
         public XLWorkbook()
         {
+            DefaultRowHeight = 15;
+            DefaultColumnWidth = 9.140625;
             Worksheets = new XLWorksheets();
         }
         #region IXLWorkbook Members
@@ -106,6 +108,9 @@ namespace ClosedXML.Excel
                 return defaultStyle;
             }
         }
+
+        public static Double DefaultRowHeight { get; set; }
+        public static Double DefaultColumnWidth { get; set; }
 
         #endregion
     }

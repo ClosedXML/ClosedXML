@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
         public Boolean Initialized { get; private set; }
         public IXLAddress Address { get; private set; }
 
-        private String cellValue;
+        private String cellValue = String.Empty;
         public String Value
         {
             get

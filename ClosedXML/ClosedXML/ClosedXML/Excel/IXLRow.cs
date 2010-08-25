@@ -5,8 +5,8 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLColumn: IXLRange
+    public interface IXLRow: IXLRange
     {
-        Double Width { get; set; }
+        Double Height { get; set; }
     }
 }

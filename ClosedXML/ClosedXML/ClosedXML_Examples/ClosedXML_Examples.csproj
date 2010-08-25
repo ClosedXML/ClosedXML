@@ -49,9 +49,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicTable.cs" />
+    <Compile Include="Columns\ColumnSettings.cs" />
     <Compile Include="HelloWorld.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rows\RowSettings.cs" />
     <Compile Include="StyleExamples.cs" />
     <Compile Include="Styles\StyleAlignment.cs" />
     <Compile Include="Styles\StyleBorder.cs" />
