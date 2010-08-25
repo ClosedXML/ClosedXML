@@ -14,16 +14,16 @@ namespace ClosedXML.Excel.Style
             this.container = container;
             if (defaultFont != null)
             {
-                Bold = defaultFont.Bold;
-                Italic = defaultFont.Italic;
-                Underline = defaultFont.Underline;
-                Strikethrough = defaultFont.Strikethrough;
-                VerticalAlignment = defaultFont.VerticalAlignment;
-                Shadow = defaultFont.Shadow;
-                FontSize = defaultFont.FontSize;
-                FontColor = defaultFont.FontColor;
-                FontName = defaultFont.FontName;
-                FontFamilyNumbering = defaultFont.FontFamilyNumbering;
+                bold = defaultFont.Bold;
+                italic = defaultFont.Italic;
+                underline = defaultFont.Underline;
+                strikethrough = defaultFont.Strikethrough;
+                verticalAlignment = defaultFont.VerticalAlignment;
+                shadow = defaultFont.Shadow;
+                fontSize = defaultFont.FontSize;
+                fontColor = defaultFont.FontColor;
+                fontName = defaultFont.FontName;
+                fontFamilyNumbering = defaultFont.FontFamilyNumbering;
             }
         }
 

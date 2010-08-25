@@ -13,18 +13,18 @@ namespace ClosedXML.Excel.Style
             this.container = container;
             if (defaultBorder != null)
             {
-                LeftBorder = defaultBorder.LeftBorder;
-                LeftBorderColor = defaultBorder.LeftBorderColor;
-                RightBorder = defaultBorder.RightBorder;
-                RightBorderColor = defaultBorder.RightBorderColor;
-                TopBorder = defaultBorder.TopBorder;
-                TopBorderColor = defaultBorder.TopBorderColor;
-                BottomBorder = defaultBorder.BottomBorder;
-                BottomBorderColor = defaultBorder.BottomBorderColor;
-                DiagonalBorder = defaultBorder.DiagonalBorder;
-                DiagonalBorderColor = defaultBorder.DiagonalBorderColor;
-                DiagonalUp = defaultBorder.DiagonalUp;
-                DiagonalDown = defaultBorder.DiagonalDown;
+                leftBorder = defaultBorder.LeftBorder;
+                leftBorderColor = defaultBorder.LeftBorderColor;
+                rightBorder = defaultBorder.RightBorder;
+                rightBorderColor = defaultBorder.RightBorderColor;
+                topBorder = defaultBorder.TopBorder;
+                topBorderColor = defaultBorder.TopBorderColor;
+                bottomBorder = defaultBorder.BottomBorder;
+                bottomBorderColor = defaultBorder.BottomBorderColor;
+                diagonalBorder = defaultBorder.DiagonalBorder;
+                diagonalBorderColor = defaultBorder.DiagonalBorderColor;
+                diagonalUp = defaultBorder.DiagonalUp;
+                diagonalDown = defaultBorder.DiagonalDown;
             }
         }
 

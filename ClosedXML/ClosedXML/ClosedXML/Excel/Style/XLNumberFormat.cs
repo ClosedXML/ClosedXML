@@ -57,9 +57,9 @@ namespace ClosedXML.Excel.Style
             if (defaultNumberFormat != null)
             {
                 if (defaultNumberFormat.NumberFormatId >= 0)
-                    NumberFormatId = defaultNumberFormat.NumberFormatId;
+                    numberFormatId = defaultNumberFormat.NumberFormatId;
                 else
-                    Format = defaultNumberFormat.Format;
+                    format = defaultNumberFormat.Format;
             }
         }
 

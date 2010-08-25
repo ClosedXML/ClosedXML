@@ -29,18 +29,18 @@ namespace ClosedXML.Excel
                 String val = value;
 
                 Double dTest;
-                //DateTime dtTest;
+                DateTime dtTest;
                 Boolean bTest;
                 if (Double.TryParse(val, out dTest))
                 {
                     DataType = XLCellValues.Number;
                 }
-                //else if (DateTime.TryParse(val, out dtTest))
-                //{
-                //    DataType = XLCellValues.DateTime;
-                //    Style.NumberFormat = new OPNumberFormat(14);
-                //    val = dtTest.ToOADate().ToString();
-                //}
+                else if (DateTime.TryParse(val, out dtTest))
+                {
+                    DataType = XLCellValues.DateTime;
+                    Style.NumberFormat.NumberFormatId = 14;
+                    val = dtTest.ToOADate().ToString();
+                }
                 else if (Boolean.TryParse(val, out bTest))
                 {
                     DataType = XLCellValues.Boolean;

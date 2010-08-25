@@ -13,16 +13,15 @@ namespace ClosedXML.Excel.Style
             this.container = container;
             if (d != null)
             {
-                Horizontal = d.Horizontal;
-                Vertical = d.Vertical;
-                Indent = d.Indent;
-                JustifyLastLine = d.JustifyLastLine;
-                ReadingOrder = d.ReadingOrder;
-                RelativeIndent = d.RelativeIndent;
-                ShrinkToFit = d.ShrinkToFit;
-                TextRotation = d.TextRotation;
-                WrapText = d.WrapText;
-                TopToBottom = d.TopToBottom;
+                horizontal = d.Horizontal;
+                vertical = d.Vertical;
+                indent = d.Indent;
+                justifyLastLine = d.JustifyLastLine;
+                readingOrder = d.ReadingOrder;
+                relativeIndent = d.RelativeIndent;
+                shrinkToFit = d.ShrinkToFit;
+                textRotation = d.TextRotation;
+                wrapText = d.WrapText;
             }
         }
 
@@ -198,7 +197,6 @@ namespace ClosedXML.Excel.Style
             }
         }
 
-        private Boolean topToBottom;
         public Boolean TopToBottom
         {
             get

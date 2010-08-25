@@ -52,6 +52,7 @@
     <Compile Include="HelloWorld.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StyleExamples.cs" />
     <Compile Include="Styles\StyleAlignment.cs" />
     <Compile Include="Styles\StyleBorder.cs" />
     <Compile Include="Styles\StyleFill.cs" />

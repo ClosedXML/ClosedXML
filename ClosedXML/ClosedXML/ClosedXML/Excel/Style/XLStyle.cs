@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OX.Copyable;
 
 namespace ClosedXML.Excel.Style
 {
@@ -12,16 +11,19 @@ namespace ClosedXML.Excel.Style
         {
             if (initialStyle != null)
             {
-                //Font = new XLFont(container, initialStyle.Font);
-                Font = (IXLFont)initialStyle.Font.Copy();
-                Alignment = (IXLAlignment)initialStyle.Alignment.Copy();
-                Border = (IXLBorder)initialStyle.Border.Copy();
-                Fill = (IXLFill)initialStyle.Fill.Copy();
-                NumberFormat = (IXLNumberFormat)initialStyle.NumberFormat.Copy();
+                Font = new XLFont(container, initialStyle.Font);
+                Alignment = new XLAlignment(container, initialStyle.Alignment);
+                Border = new XLBorder(container, initialStyle.Border);
+                Fill = new XLFill(container, initialStyle.Fill);
+                NumberFormat = new XLNumberFormat(container, initialStyle.NumberFormat);
             }
             else
             {
-                //Font = new XLFont(container);
+                Font = new XLFont(container);
+                Alignment = new XLAlignment(container);
+                Border = new XLBorder(container);
+                Fill = new XLFill(container);
+                NumberFormat = new XLNumberFormat(container);
             }
         }
 

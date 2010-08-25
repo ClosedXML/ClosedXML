@@ -10,21 +10,9 @@ namespace ClosedXML_Examples
     {
         static void Main(string[] args)
         {
-            //var helloWorld = new HelloWorld();
-            //helloWorld.Create(@"c:\HelloWorld.xlsx");
-
-            //new StyleFont().Create(@"c:\styleFont.xlsx");
-
-            //new StyleFill().Create(@"c:\styleFill.xlsx");
-
-            //new StyleBorder().Create(@"c:\styleBorder.xlsx");
-
-            //new StyleAlignment().Create(@"c:\styleAlignment.xlsx");
-
-            new StyleNumberFormat().Create(@"c:\styleNumberFormat.xlsx");
-
-            //var basicTable = new BasicTable();
-            //basicTable.Create(@"c:\BasicTable.xlsx");
+            new HelloWorld().Create(@"c:\HelloWorld.xlsx");
+            new BasicTable().Create(@"c:\BasicTable.xlsx");
+            new StyleExamples().Create();
         }
     }
 }

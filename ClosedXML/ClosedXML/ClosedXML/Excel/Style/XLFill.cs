@@ -89,9 +89,9 @@ namespace ClosedXML.Excel.Style
             this.container = container;
             if (defaultFill != null)
             {
-                PatternType = defaultFill.PatternType;
-                PatternColor = defaultFill.PatternColor;
-                PatternBackgroundColor = defaultFill.PatternBackgroundColor;
+                patternType = defaultFill.PatternType;
+                patternColor = defaultFill.PatternColor;
+                patternBackgroundColor = defaultFill.PatternBackgroundColor;
             }
         }
 
