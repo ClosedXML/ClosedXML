@@ -53,13 +53,13 @@ namespace ClosedXML_Examples
 
             //Formatting dates and numbers
             //Using a OpenXML's predefined formats
-            rngDates.Style.NumberFormat.NumberFormatId = 15; // .Format = "mm-dd-yyyy";
+            rngDates.Style.NumberFormat.NumberFormatId = 15;
             //Using a custom format
             rngNumbers.Style.NumberFormat.Format = "$ #,##0";
 
             // Adjust column width
             ws.Column("D").Width = 12;
-
+            
             //Formatting headers
             var rngHeaders = ws.Range("A1:E1");
             rngHeaders.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;

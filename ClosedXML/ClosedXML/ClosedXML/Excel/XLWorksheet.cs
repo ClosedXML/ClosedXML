@@ -24,12 +24,13 @@ namespace ClosedXML.Excel
             var defaultAddress = new XLAddress(0,0);
             DefaultCell = new XLCell(defaultAddress, XLWorkbook.DefaultStyle);
             cellsCollection.Add(defaultAddress, DefaultCell);
+            MergedCells = new List<String>();
             var tmp = this.Cell(1, 1).Value;
             this.Name = sheetName;
         }
 
         #region IXLRange Members
-
+        public List<String> MergedCells { get; private set; }
         public Dictionary<IXLAddress, IXLCell> CellsCollection
         {
             get { return cellsCollection; }

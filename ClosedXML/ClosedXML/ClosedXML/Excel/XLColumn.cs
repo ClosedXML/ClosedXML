@@ -22,6 +22,7 @@ namespace ClosedXML.Excel
         #region IXLRange Members
 
         public Dictionary<IXLAddress, IXLCell> CellsCollection { get; private set; }
+        public List<String> MergedCells { get; private set; }
         public IXLAddress FirstCellAddress { get; private set; }
         public IXLAddress LastCellAddress { get; private set; }
 

@@ -9,17 +9,30 @@ namespace ClosedXML.Excel
     public class XLRange: IXLRange
     {
         private IXLStyle defaultStyle;
-        public XLRange(IXLAddress firstCellAddress, IXLAddress lastCellAddress, Dictionary<IXLAddress, IXLCell> cellCollection)
+
+        public XLRange(XLRangeParameters xlRangeParameters)
         {
-            FirstCellAddress = firstCellAddress;
-            LastCellAddress = lastCellAddress;
-            CellsCollection = cellCollection;
+            FirstCellAddress = xlRangeParameters.FirstCellAddress;
+            LastCellAddress = xlRangeParameters.LastCellAddress;
+            CellsCollection = xlRangeParameters.CellsCollection;
+            MergedCells = xlRangeParameters.MergedCells;
             this.defaultStyle = new XLStyle(this, this.FirstCell().Style);
+        }
+
+        public void Merge()
+        { 
+            this.MergedCells.Add(this.FirstCellAddress.ToString() + ":" + this.LastCellAddress.ToString());
+        }
+
+        public void Unmerge()
+        {
+            this.MergedCells.Remove(this.FirstCellAddress.ToString() + ":" + this.LastCellAddress.ToString());
         }
 
         #region IXLRange Members
 
         public Dictionary<IXLAddress, IXLCell> CellsCollection { get; private set; }
+        public List<String> MergedCells { get; private set; }
 
         public IXLAddress FirstCellAddress { get; private set; }
 

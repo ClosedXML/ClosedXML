@@ -9,6 +9,7 @@ namespace ClosedXML.Excel
     public interface IXLRange: IXLStylized
     {
         Dictionary<IXLAddress, IXLCell> CellsCollection { get; }
+        List<String> MergedCells { get; }
 
         IXLAddress FirstCellAddress { get; }
         IXLAddress LastCellAddress { get; }
@@ -64,24 +65,28 @@ namespace ClosedXML.Excel
             return range.LastCellAddress.Column - range.FirstCellAddress.Column + 1;
         }
 
-        public static IXLRange Range(this IXLRange range, String rangeAddress)
+        public static XLRange Range(this IXLRange range, String rangeAddress)
         {
             String[] arrRange = rangeAddress.Split(':');
             return range.Range(arrRange[0], arrRange[1]);
         }
-        public static IXLRange Range(this IXLRange range, String firstCellAddress, String lastCellAddress)
+        public static XLRange Range(this IXLRange range, String firstCellAddress, String lastCellAddress)
         {
             return range.Range(new XLAddress(firstCellAddress), new XLAddress(lastCellAddress));
         }
-        public static IXLRange Range(this IXLRange range, IXLAddress firstCellAddress, IXLAddress lastCellAddress)
+        public static XLRange Range(this IXLRange range, IXLAddress firstCellAddress, IXLAddress lastCellAddress)
         {
             return new XLRange(
-                (XLAddress)firstCellAddress + (XLAddress)range.FirstCellAddress - 1, 
-                (XLAddress)lastCellAddress + (XLAddress)range.FirstCellAddress - 1, 
-                range.CellsCollection
+                new XLRangeParameters()
+                {
+                    FirstCellAddress = (XLAddress)firstCellAddress + (XLAddress)range.FirstCellAddress - 1,
+                    LastCellAddress = (XLAddress)lastCellAddress + (XLAddress)range.FirstCellAddress - 1,
+                    CellsCollection = range.CellsCollection,
+                    MergedCells = range.MergedCells
+                }
                 );
         }
-        public static IXLRange Range(this IXLRange range, IXLCell firstCell, IXLCell lastCell)
+        public static XLRange Range(this IXLRange range, IXLCell firstCell, IXLCell lastCell)
         {
             return range.Range(firstCell.Address, lastCell.Address);
         }

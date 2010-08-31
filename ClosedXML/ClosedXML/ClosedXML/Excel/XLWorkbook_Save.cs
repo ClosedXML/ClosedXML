@@ -691,15 +691,15 @@ namespace ClosedXML.Excel
             }
 
             MergeCells mergeCells = null;
-            //if (xlWorksheet.MergedCells.Count > 0)
-            //{
-            //    mergeCells = new MergeCells() { Count = (UInt32Value)(UInt32)xlWorksheet.MergedCells.Count };
-            //    foreach (var merged in xlWorksheet.MergedCells)
-            //    {
-            //        MergeCell mergeCell = new MergeCell() { Reference = merged };
-            //        mergeCells.Append(mergeCell);
-            //    }
-            //}
+            if (xlWorksheet.MergedCells.Count > 0)
+            {
+                mergeCells = new MergeCells() { Count = (UInt32Value)(UInt32)xlWorksheet.MergedCells.Count };
+                foreach (var merged in xlWorksheet.MergedCells)
+                {
+                    MergeCell mergeCell = new MergeCell() { Reference = merged };
+                    mergeCells.Append(mergeCell);
+                }
+            }
 
             PageMargins pageMargins = new PageMargins() { Left = 0.7D, Right = 0.7D, Top = 0.75D, Bottom = 0.75D, Header = 0.3D, Footer = 0.3D };
             Drawing drawing1 = new Drawing() { Id = "rId1" };

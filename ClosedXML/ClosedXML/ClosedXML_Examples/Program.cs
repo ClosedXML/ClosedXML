@@ -5,6 +5,7 @@ using System.Text;
 using ClosedXML_Examples.Styles;
 using ClosedXML_Examples.Columns;
 using ClosedXML_Examples.Rows;
+using ClosedXML_Examples.Misc;
 
 namespace ClosedXML_Examples
 {
@@ -17,6 +18,7 @@ namespace ClosedXML_Examples
             new StyleExamples().Create();
             new ColumnSettings().Create(@"c:\ColumnSettings.xlsx");
             new RowSettings().Create(@"c:\RowSettings.xlsx");
+            new MergeCells().Create(@"c:\MergedCells.xlsx");
         }
     }
 }
