@@ -69,7 +69,6 @@ namespace ClosedXML_Examples.Styles
             ws.Cell(ro, co).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
             ws.Cell(++ro, co).Value = "Indent = 2";
-            ws.Cell(ro, co).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             ws.Cell(ro, co).Style.Alignment.Indent = 2;
 
             ws.Cell(++ro, co).Value = "JustifyLastLine = true";
@@ -95,7 +94,6 @@ namespace ClosedXML_Examples.Styles
 
             ws.Cell(++ro, co).Value = "WrapText = true";
             ws.Cell(ro, co).Style.Alignment.WrapText = true;
-
 
             workbook.SaveAs(filePath);
         }

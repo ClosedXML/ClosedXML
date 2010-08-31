@@ -18,12 +18,12 @@ namespace ClosedXML_Examples.Styles
             var co = 2;
             var ro = 1;
 
-            ws.Cell(++ro, co).Value = "BackgroundColor = Red";
+            ws.Cell(++ro, co + 1).Value = "BackgroundColor = Red";
             ws.Cell(ro, co).Style.Fill.BackgroundColor = Color.Red;
 
-            ws.Cell(++ro, co).Value = "PatternType = DarkTrellis; PatternColor = Red; PatternBackgroundColor = Blue";
+            ws.Cell(++ro, co + 1).Value = "PatternType = DarkTrellis; PatternColor = Orange; PatternBackgroundColor = Blue";
             ws.Cell(ro, co).Style.Fill.PatternType = XLFillPatternValues.DarkTrellis;
-            ws.Cell(ro, co).Style.Fill.PatternColor = Color.Red;
+            ws.Cell(ro, co).Style.Fill.PatternColor = Color.Orange;
             ws.Cell(ro, co).Style.Fill.PatternBackgroundColor = Color.Blue;
 
             workbook.SaveAs(filePath);

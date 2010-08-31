@@ -82,6 +82,9 @@ namespace ClosedXML.Excel.Style
             }
             set
             {
+                if (Horizontal == XLAlignmentHorizontalValues.General)
+                    Horizontal = XLAlignmentHorizontalValues.Left;
+
                 if (value > 0 && !(
                     Horizontal == XLAlignmentHorizontalValues.Left
                     || Horizontal == XLAlignmentHorizontalValues.Right

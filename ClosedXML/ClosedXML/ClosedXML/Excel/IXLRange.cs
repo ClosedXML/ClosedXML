@@ -65,16 +65,16 @@ namespace ClosedXML.Excel
             return range.LastCellAddress.Column - range.FirstCellAddress.Column + 1;
         }
 
-        public static XLRange Range(this IXLRange range, String rangeAddress)
+        public static IXLRange Range(this IXLRange range, String rangeAddress)
         {
             String[] arrRange = rangeAddress.Split(':');
             return range.Range(arrRange[0], arrRange[1]);
         }
-        public static XLRange Range(this IXLRange range, String firstCellAddress, String lastCellAddress)
+        public static IXLRange Range(this IXLRange range, String firstCellAddress, String lastCellAddress)
         {
             return range.Range(new XLAddress(firstCellAddress), new XLAddress(lastCellAddress));
         }
-        public static XLRange Range(this IXLRange range, IXLAddress firstCellAddress, IXLAddress lastCellAddress)
+        public static IXLRange Range(this IXLRange range, IXLAddress firstCellAddress, IXLAddress lastCellAddress)
         {
             return new XLRange(
                 new XLRangeParameters()
@@ -86,11 +86,10 @@ namespace ClosedXML.Excel
                 }
                 );
         }
-        public static XLRange Range(this IXLRange range, IXLCell firstCell, IXLCell lastCell)
+        public static IXLRange Range(this IXLRange range, IXLCell firstCell, IXLCell lastCell)
         {
             return range.Range(firstCell.Address, lastCell.Address);
         }
-
 
         public static IEnumerable<IXLCell> Cells(this IXLRange range)
         {
@@ -103,7 +102,31 @@ namespace ClosedXML.Excel
             }
         }
 
-       
+        public static void Merge(this IXLRange range)
+        {
+            range.MergedCells.Add(range.FirstCellAddress.ToString() + ":" + range.LastCellAddress.ToString());
+        }
+        public static void Unmerge(this IXLRange range)
+        {
+            range.MergedCells.Add(range.FirstCellAddress.ToString() + ":" + range.LastCellAddress.ToString());
+        }
+
+        public static IXLRange FirstColumn(this IXLRange range)
+        {
+            return range.Column(1);
+        }
+        public static IXLRange LastColumn(this IXLRange range)
+        {
+            return range.Column(range.ColumnCount());
+        }
+        public static IXLRange FirstRow(this IXLRange range)
+        {
+            return range.Row(1);
+        }
+        public static IXLRange LastRow(this IXLRange range)
+        {
+            return range.Row(range.RowCount());
+        }
     }
 }
 

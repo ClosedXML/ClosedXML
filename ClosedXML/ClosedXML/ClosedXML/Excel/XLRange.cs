@@ -19,16 +19,6 @@ namespace ClosedXML.Excel
             this.defaultStyle = new XLStyle(this, this.FirstCell().Style);
         }
 
-        public void Merge()
-        { 
-            this.MergedCells.Add(this.FirstCellAddress.ToString() + ":" + this.LastCellAddress.ToString());
-        }
-
-        public void Unmerge()
-        {
-            this.MergedCells.Remove(this.FirstCellAddress.ToString() + ":" + this.LastCellAddress.ToString());
-        }
-
         #region IXLRange Members
 
         public Dictionary<IXLAddress, IXLCell> CellsCollection { get; private set; }
