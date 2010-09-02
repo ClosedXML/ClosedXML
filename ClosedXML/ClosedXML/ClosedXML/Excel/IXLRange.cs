@@ -215,7 +215,6 @@ namespace ClosedXML.Excel
             cellsToDelete.ForEach(c => range.CellsCollection.Remove(c));
             cellsToInsert.ForEach(c => range.CellsCollection.Add(c.Key, c.Value));
         }
-
         public static void InsertColumnsBefore(this IXLRange range, Int32 numberOfColumns)
         {
             var cellsToInsert = new Dictionary<IXLAddress, IXLCell>();
@@ -239,6 +238,16 @@ namespace ClosedXML.Excel
             }
             cellsToDelete.ForEach(c => range.CellsCollection.Remove(c));
             cellsToInsert.ForEach(c => range.CellsCollection.Add(c.Key, c.Value));
+        }
+
+        public static List<IXLRange> Columns(this IXLRange range)
+        {
+            var retVal = new List<IXLRange>();
+            foreach (var r in Enumerable.Range(1, range.RowCount()))
+            {
+                retVal.Add(range.Row(r));
+            }
+            return retVal;
         }
     }
 }

@@ -63,11 +63,13 @@ namespace ClosedXML_Examples.Columns
             var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Column Settings");
 
-            ws.Cell("B4").Style.Fill.BackgroundColor = Color.Brown;
-            ws.Column("B").Style.Fill.BackgroundColor = Color.Red;
-            ws.Cell("B2").Style.Fill.BackgroundColor = Color.Blue;
-            ws.Column("B").Width = 15;
-            ws.Column(4).Style.Fill.BackgroundColor = Color.DarkOrange;
+            var col1 = ws.Column("B");
+            col1.Style.Fill.BackgroundColor = Color.Red;
+            col1.Width = 20;
+
+            var col2 = ws.Column(4);
+            col2.Style.Fill.BackgroundColor = Color.DarkOrange;
+            col2.Width = 5;
 
             workbook.SaveAs(filePath);
         }

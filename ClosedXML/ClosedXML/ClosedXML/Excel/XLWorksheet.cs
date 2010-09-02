@@ -62,6 +62,19 @@ namespace ClosedXML.Excel
         public Int32 ColumnNumber { get; private set; }
         public String ColumnLetter { get; private set; }
 
+        public List<IXLColumn> Columns()
+        {
+            var retVal = new List<IXLColumn>();
+            var usedColumns = Enumerable.Range(CellsCollection.Keys.Min(k => k.Column), CellsCollection.Keys.Max(k => k.Column));
+            var columnList = usedColumns.ToList();
+            columnList.AddRange(ColumnsCollection.Keys.Where(k => !usedColumns.Contains(k)).ToList());
+            foreach (var c in columnList)
+            {
+                retVal.Add(Column(c));
+            }
+            return retVal;
+        }
+
         #endregion
 
         #region IXLStylized Members

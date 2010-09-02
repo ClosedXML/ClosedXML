@@ -63,11 +63,13 @@ namespace ClosedXML_Examples.Rows
             var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Row Settings");
 
-            ws.Cell("D2").Style.Fill.BackgroundColor = Color.Brown;
-            ws.Row(2).Style.Fill.BackgroundColor = Color.Red;
-            ws.Cell("B2").Style.Fill.BackgroundColor = Color.Blue;
-            ws.Row(2).Height = 30;
-            ws.Row(4).Style.Fill.BackgroundColor = Color.DarkOrange;
+            var row1 = ws.Row(2);
+            row1.Style.Fill.BackgroundColor = Color.Red;
+            row1.Height = 30;
+
+            var row2 = ws.Row(4);
+            row2.Style.Fill.BackgroundColor = Color.DarkOrange;
+            row2.Height = 3;
 
             workbook.SaveAs(filePath);
         }
