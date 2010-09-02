@@ -8,5 +8,11 @@ namespace ClosedXML.Excel
     public interface IXLRow: IXLRange
     {
         Double Height { get; set; }
+        
+    }
+
+    public static class IXLRowMethods
+    {
+
     }
 }

@@ -25,6 +25,9 @@ namespace ClosedXML.Excel
             DefaultCell = new XLCell(defaultAddress, XLWorkbook.DefaultStyle);
             cellsCollection.Add(defaultAddress, DefaultCell);
             MergedCells = new List<String>();
+            RowNumber = 1;
+            ColumnNumber = 1;
+            ColumnLetter = "A";
             var tmp = this.Cell(1, 1).Value;
             this.Name = sheetName;
         }
@@ -55,6 +58,9 @@ namespace ClosedXML.Excel
         }
 
         private IXLCell DefaultCell { get; set; }
+        public Int32 RowNumber { get; private set; }
+        public Int32 ColumnNumber { get; private set; }
+        public String ColumnLetter { get; private set; }
 
         #endregion
 

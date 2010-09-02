@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ClosedXML.Excel.Style;
 
 namespace ClosedXML.Excel
 {
@@ -23,6 +24,7 @@ namespace ClosedXML.Excel
         public IXLAddress LastCellAddress { get; set; }
         public Dictionary<IXLAddress, IXLCell> CellsCollection { get; set; }
         public List<String> MergedCells { get; set; }
+        public IXLStyle DefaultStyle { get; set; }
 
         // Private
 

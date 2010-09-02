@@ -16,7 +16,10 @@ namespace ClosedXML.Excel
             LastCellAddress = xlRangeParameters.LastCellAddress;
             CellsCollection = xlRangeParameters.CellsCollection;
             MergedCells = xlRangeParameters.MergedCells;
-            this.defaultStyle = new XLStyle(this, this.FirstCell().Style);
+            RowNumber = FirstCellAddress.Row;
+            ColumnNumber = FirstCellAddress.Column;
+            ColumnLetter = FirstCellAddress.ColumnLetter;
+            this.defaultStyle = new XLStyle(this, xlRangeParameters.DefaultStyle);
         }
 
         #region IXLRange Members
@@ -46,6 +49,10 @@ namespace ClosedXML.Excel
             IXLAddress lastCellAddress = new XLAddress(this.RowCount(), column);
             return this.Range(firstCellAddress, lastCellAddress);
         }
+
+        public Int32 RowNumber { get; private set; }
+        public Int32 ColumnNumber { get; private set; }
+        public String ColumnLetter { get; private set; }
 
 
         #endregion

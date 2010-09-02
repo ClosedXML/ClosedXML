@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
+using ClosedXML.Excel.Style;
+using System.Drawing;
 
-namespace ClosedXML_Examples.Styles
+namespace ClosedXML_Examples.Rows
 {
-    public class StyleNumberFormat
+    public class InsertRows
     {
         #region Variables
 
@@ -28,20 +30,6 @@ namespace ClosedXML_Examples.Styles
 
         #endregion
 
-        #region Constructors
-
-        // Public
-        public StyleNumberFormat()
-        {
-
-        }
-
-
-        // Private
-
-
-        #endregion
-
         #region Events
 
         // Public
@@ -59,19 +47,21 @@ namespace ClosedXML_Examples.Styles
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
-            var ws = workbook.Worksheets.Add("Style NumberFormat");
+            var ws = workbook.Worksheets.Add("Insert Rows");
 
-            var co = 2;
-            var ro = 1;
+            foreach (var r in Enumerable.Range(1, 5))
+            {
+                foreach (var c in Enumerable.Range(1, 5))
+                {
+                    ws.Cell(r, c).Value = "X";
+                    ws.Cell(r, c).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                }
+            }
 
-            ws.Cell(++ro, co).Value = "123456.789";
-            ws.Cell(ro, co).Style.NumberFormat.Format = "$ #,##0.00";
-
-            ws.Cell(++ro, co).Value = "12.345";
-            ws.Cell(ro, co).Style.NumberFormat.Format = "0000";
-
-            ws.Cell(++ro, co).Value = "12.345";
-            ws.Cell(ro, co).Style.NumberFormat.NumberFormatId = 3;
+            ws.Row(3).InsertRowsBelow(2);
+            ws.Row(1).InsertRowsAbove(2);
+            ws.Range("D3:E4").InsertRowsBelow(2);
+            ws.Range("B3:C5").InsertRowsAbove(2);
 
             workbook.SaveAs(filePath);
         }

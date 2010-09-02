@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         String ColumnLetter { get; }
     }
 
-    public static class XLAddressMethods
+    public static class IXLAddressMethods
     { 
 
     }

@@ -19,6 +19,8 @@ namespace ClosedXML_Examples
             new ColumnSettings().Create(@"c:\ColumnSettings.xlsx");
             new RowSettings().Create(@"c:\RowSettings.xlsx");
             new MergeCells().Create(@"c:\MergedCells.xlsx");
+            new InsertRows().Create(@"c:\InsertRows.xlsx");
+            new InsertColumns().Create(@"c:\InsertColumns.xlsx");
         }
     }
 }

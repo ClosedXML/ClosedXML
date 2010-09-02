@@ -11,13 +11,19 @@ namespace ClosedXML.Excel
         public XLRow(Int32 row, Dictionary<IXLAddress, IXLCell> cellsCollection, IXLStyle defaultStyle)
         {
             FirstCellAddress = new XLAddress(row, 1);
-            LastCellAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns); 
+            LastCellAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns);
+            RowNumber = row;
+            ColumnNumber = 1;
+            ColumnLetter = "A";
             CellsCollection = cellsCollection;
             this.style = new XLStyle(this, defaultStyle);
             this.Height = XLWorkbook.DefaultRowHeight;
         }
 
         public Double Height { get; set; }
+        public Int32 RowNumber { get; private set; }
+        public Int32 ColumnNumber { get; private set; }
+        public String ColumnLetter { get; private set; }
 
         #region IXLRange Members
 
@@ -70,7 +76,7 @@ namespace ClosedXML.Excel
 
         public IXLRange Column(int column)
         {
-            var address = new XLAddress(FirstCellAddress.Row, column);
+            var address = new XLAddress(1, column);
             return this.Range(address, address);
         }
 
