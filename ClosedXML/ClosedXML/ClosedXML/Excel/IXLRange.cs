@@ -122,7 +122,7 @@ namespace ClosedXML.Excel
         }
         public static void Unmerge(this IXLRange range)
         {
-            range.MergedCells.Add(range.FirstCellAddress.ToString() + ":" + range.LastCellAddress.ToString());
+            range.MergedCells.Remove(range.FirstCellAddress.ToString() + ":" + range.LastCellAddress.ToString());
         }
 
         public static IXLRange FirstColumn(this IXLRange range)
