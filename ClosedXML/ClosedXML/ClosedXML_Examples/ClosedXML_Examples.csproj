@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="BasicTable.cs" />
     <Compile Include="Columns\ColumnSettings.cs" />
+    <Compile Include="Columns\ColumnCollections.cs" />
     <Compile Include="Columns\InsertColumns.cs" />
     <Compile Include="HelloWorld.cs" />
     <Compile Include="Misc\MergeCells.cs" />

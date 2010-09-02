@@ -21,14 +21,12 @@ namespace ClosedXML.Excel
 
         public XLWorksheet(String sheetName)
         { 
-            var defaultAddress = new XLAddress(0,0);
-            DefaultCell = new XLCell(defaultAddress, XLWorkbook.DefaultStyle);
-            cellsCollection.Add(defaultAddress, DefaultCell);
+            Style = XLWorkbook.DefaultStyle;
             MergedCells = new List<String>();
             RowNumber = 1;
             ColumnNumber = 1;
             ColumnLetter = "A";
-            var tmp = this.Cell(1, 1).Value;
+            //var tmp = this.Cell(1, 1).Value;
             this.Name = sheetName;
         }
 
@@ -57,7 +55,6 @@ namespace ClosedXML.Excel
             get { return new XLAddress(MaxNumberOfRows, MaxNumberOfColumns); }
         }
 
-        private IXLCell DefaultCell { get; set; }
         public Int32 RowNumber { get; private set; }
         public Int32 ColumnNumber { get; private set; }
         public String ColumnLetter { get; private set; }
@@ -79,15 +76,16 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
+        private IXLStyle style;
         public IXLStyle Style
         {
             get
             {
-                return DefaultCell.Style;
+                return style;
             }
             set
             {
-                DefaultCell.Style = value;
+                style = new XLStyle(this, value);
             }
         }
 

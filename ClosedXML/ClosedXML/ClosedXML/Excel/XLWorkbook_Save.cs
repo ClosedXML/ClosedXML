@@ -593,6 +593,18 @@ namespace ClosedXML.Excel
                 sheetDimensionReference = "A1:" + new XLAddress((Int32)maxRow, (Int32)maxColumn).ToString();
             }
 
+            if (xlWorksheet.ColumnsCollection.Count > 0)
+            {
+                UInt32 maxColCollection = (UInt32)xlWorksheet.ColumnsCollection.Keys.Max();
+                if (maxColCollection > maxColumn) maxColumn = maxColCollection;
+            }
+
+            if (xlWorksheet.RowsCollection.Count > 0)
+            {
+                UInt32 maxRowCollection = (UInt32)xlWorksheet.RowsCollection.Keys.Max();
+                if (maxRowCollection > maxRow) maxRow = maxRowCollection;
+            }
+
             SheetDimension sheetDimension = new SheetDimension() { Reference = sheetDimensionReference };
 
             Boolean tabSelected = xlWorksheet.Name == Worksheets.GetWorksheet(0).Name;
@@ -631,7 +643,7 @@ namespace ClosedXML.Excel
             var distinctRows = allRows.Distinct();
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
-                Row row = new Row() { RowIndex = (UInt32Value)(UInt32)distinctRow, Spans = new ListValue<StringValue>() { InnerText = "1:" + maxColumn.ToString() } };
+                Row row = new Row() { RowIndex = (UInt32Value)(UInt32)distinctRow, Spans = new ListValue<StringValue>() { InnerText = "1:" + maxRow.ToString() } };
                 if (xlWorksheet.RowsCollection.ContainsKey(distinctRow))
                 {
                     var thisRow = xlWorksheet.RowsCollection[distinctRow];
