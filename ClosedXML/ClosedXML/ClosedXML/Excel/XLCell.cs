@@ -14,9 +14,10 @@ namespace ClosedXML.Excel
             Style = defaultStyle;
             if (Style == null) Style = XLWorkbook.DefaultStyle;
         }
-        public Boolean Initialized { get; private set; }
+        
         public IXLAddress Address { get; private set; }
 
+        private Boolean initialized = false;
         private String cellValue = String.Empty;
         public String Value
         {
@@ -28,27 +29,35 @@ namespace ClosedXML.Excel
             {
                 String val = value;
 
-                Double dTest;
-                DateTime dtTest;
-                Boolean bTest;
-                if (Double.TryParse(val, out dTest))
+                if (!initialized)
                 {
-                    DataType = XLCellValues.Number;
-                }
-                else if (DateTime.TryParse(val, out dtTest))
-                {
-                    DataType = XLCellValues.DateTime;
-                    Style.NumberFormat.NumberFormatId = 14;
-                    val = dtTest.ToOADate().ToString();
-                }
-                else if (Boolean.TryParse(val, out bTest))
-                {
-                    DataType = XLCellValues.Boolean;
-                    val = bTest ? "1" : "0";
-                }
-                else
-                {
-                    DataType = XLCellValues.SharedString;
+                    Double dTest;
+                    DateTime dtTest;
+                    Boolean bTest;
+                    if (val.Substring(0, 1) == "'")
+                    {
+                        val = val.Substring(1, val.Length - 1);
+                        dataType = XLCellValues.SharedString;
+                    }
+                    else if (Double.TryParse(val, out dTest))
+                    {
+                        dataType = XLCellValues.Number;
+                    }
+                    else if (DateTime.TryParse(val, out dtTest))
+                    {
+                        dataType = XLCellValues.DateTime;
+                        Style.NumberFormat.NumberFormatId = 14;
+                        val = dtTest.ToOADate().ToString();
+                    }
+                    else if (Boolean.TryParse(val, out bTest))
+                    {
+                        dataType = XLCellValues.Boolean;
+                        val = bTest ? "1" : "0";
+                    }
+                    else
+                    {
+                        dataType = XLCellValues.SharedString;
+                    }
                 }
                 cellValue = val;
             }
@@ -83,7 +92,64 @@ namespace ClosedXML.Excel
 
         #endregion
 
+        private XLCellValues dataType;
+        public XLCellValues DataType 
+        {
+            get
+            {
+                return dataType;
+            }
+            set
+            {
+                initialized = true;
+                if (value == XLCellValues.Boolean)
+                {
+                    cellValue = Boolean.Parse(cellValue) ? "1" : "0";
+                }
+                else if (value == XLCellValues.DateTime)
+                {
+                    DateTime dtTest;
+                    Double dblTest;
+                    if (DateTime.TryParse(cellValue, out dtTest))
+                    {
+                        cellValue = dtTest.ToOADate().ToString();
+                    }
+                    else if (Double.TryParse(cellValue, out dblTest))
+                    {
+                        cellValue = dblTest.ToString();
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Cannot set data type to DateTime because '" + cellValue + "' is not recognized as a date.");
+                    }
 
-        public XLCellValues DataType { get; set; }
+                    if (Style.NumberFormat.Format == String.Empty)
+                        Style.NumberFormat.NumberFormatId = 14;
+                }
+                else if (value == XLCellValues.Number)
+                {
+                    cellValue = Double.Parse(cellValue).ToString();
+                    if (Style.NumberFormat.Format == String.Empty)
+                        Style.NumberFormat.NumberFormatId = 0;
+                }
+                else
+                {
+                    if (dataType == XLCellValues.Boolean)
+                    {
+                        cellValue = (cellValue == "0" ? false : true).ToString();
+                    }
+                    else if (dataType == XLCellValues.Number)
+                    {
+                        cellValue = Double.Parse(cellValue).ToString(Style.NumberFormat.Format);
+                    }
+                    else if (dataType == XLCellValues.DateTime)
+                    {
+                        cellValue = DateTime.FromOADate(Double.Parse(cellValue)).ToString(Style.NumberFormat.Format);
+                    }
+                }
+                
+                dataType = value;
+            }
+        }
     }
 }

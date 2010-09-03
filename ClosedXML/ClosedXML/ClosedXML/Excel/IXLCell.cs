@@ -10,7 +10,6 @@ namespace ClosedXML.Excel
 
     public interface IXLCell: IXLStylized
     {
-        Boolean Initialized { get; }
         String Value { get; set; }
         IXLAddress Address { get; }
         XLCellValues DataType { get; set; }

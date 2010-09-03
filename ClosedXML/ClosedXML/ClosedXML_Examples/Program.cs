@@ -22,6 +22,7 @@ namespace ClosedXML_Examples
             new InsertRows().Create(@"c:\InsertRows.xlsx");
             new InsertColumns().Create(@"c:\InsertColumns.xlsx");
             new ColumnCollection().Create(@"c:\ColumnCollection.xlsx");
+            new DataTypes().Create(@"c:\DataTypes.xlsx");
         }
     }
 }
