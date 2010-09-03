@@ -26,7 +26,6 @@ namespace ClosedXML.Excel
             RowNumber = 1;
             ColumnNumber = 1;
             ColumnLetter = "A";
-            //var tmp = this.Cell(1, 1).Value;
             this.Name = sheetName;
         }
 
@@ -62,13 +61,19 @@ namespace ClosedXML.Excel
         public List<IXLColumn> Columns()
         {
             var retVal = new List<IXLColumn>();
-            var usedColumns = Enumerable.Range(CellsCollection.Keys.Min(k => k.Column), CellsCollection.Keys.Max(k => k.Column));
-            var columnList = usedColumns.ToList();
-            columnList.AddRange(ColumnsCollection.Keys.Where(k => !usedColumns.Contains(k)).ToList());
+            var columnList = new List<Int32>();
+
+            if (CellsCollection.Count > 0)
+            columnList.AddRange(CellsCollection.Keys.Select(k => k.Column).Distinct());
+
+            if (ColumnsCollection.Count > 0)
+            columnList.AddRange(ColumnsCollection.Keys.Where(c => !columnList.Contains(c)));
+
             foreach (var c in columnList)
             {
                 retVal.Add(Column(c));
             }
+
             return retVal;
         }
 

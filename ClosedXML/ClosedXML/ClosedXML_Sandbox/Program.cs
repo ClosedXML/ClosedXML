@@ -27,6 +27,9 @@ namespace ClosedXML_Sandbox
                 c.Width = 20;
             }
 
+            // Fix Worksheet.Cells() method   !!!
+
+
 
 
             //foreach (var r in ws.Rows())
