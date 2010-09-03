@@ -37,7 +37,7 @@ namespace ClosedXML.Excel
                     if (val.Substring(0, 1) == "'")
                     {
                         val = val.Substring(1, val.Length - 1);
-                        dataType = XLCellValues.SharedString;
+                        dataType = XLCellValues.Text;
                     }
                     else if (Double.TryParse(val, out dTest))
                     {
@@ -56,7 +56,7 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        dataType = XLCellValues.SharedString;
+                        dataType = XLCellValues.Text;
                     }
                 }
                 cellValue = val;

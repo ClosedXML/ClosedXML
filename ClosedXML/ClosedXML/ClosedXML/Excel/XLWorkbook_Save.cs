@@ -46,7 +46,7 @@ namespace ClosedXML.Excel
                 case XLCellValues.Boolean: return CellValues.Boolean;
                 case XLCellValues.DateTime: return CellValues.Date;
                 case XLCellValues.Number: return CellValues.Number;
-                case XLCellValues.SharedString: return CellValues.SharedString;
+                case XLCellValues.Text: return CellValues.SharedString;
                 default: throw new NotImplementedException();
             }
         }
@@ -295,7 +295,7 @@ namespace ClosedXML.Excel
         private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart)
         {
             List<String> combined = new List<String>();
-            Worksheets.ForEach(w => combined.AddRange(w.CellsCollection.Values.Where(c => c.DataType == XLCellValues.SharedString && c.Value != null).Select(c => c.Value).Distinct()));
+            Worksheets.ForEach(w => combined.AddRange(w.CellsCollection.Values.Where(c => c.DataType == XLCellValues.Text && c.Value != null).Select(c => c.Value).Distinct()));
             var distinctStrings = combined.Distinct();
             UInt32 stringCount = (UInt32)distinctStrings.Count();
             SharedStringTable sharedStringTable = new SharedStringTable() { Count = (UInt32Value)stringCount, UniqueCount = (UInt32Value)stringCount };
@@ -687,7 +687,7 @@ namespace ClosedXML.Excel
                         };
                     }
                     CellValue cellValue = new CellValue();
-                    if (dataType == XLCellValues.SharedString)
+                    if (dataType == XLCellValues.Text)
                     {
                         cellValue.Text = sharedStrings[opCell.Value.Value].ToString();
                     }

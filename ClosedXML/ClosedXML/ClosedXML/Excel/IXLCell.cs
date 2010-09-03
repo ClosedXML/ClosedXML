@@ -6,7 +6,7 @@ using ClosedXML.Excel.Style;
 
 namespace ClosedXML.Excel
 {
-    public enum XLCellValues { SharedString, Number, Boolean, DateTime }
+    public enum XLCellValues { Text, Number, Boolean, DateTime }
 
     public interface IXLCell: IXLStylized
     {

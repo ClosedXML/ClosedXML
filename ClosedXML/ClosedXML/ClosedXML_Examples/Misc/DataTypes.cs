@@ -86,15 +86,15 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(++ro, co).Value = "Date to Text:";
             ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2).ToString();
-            ws.Cell(ro, co + 1).DataType = XLCellValues.SharedString;
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ws.Cell(++ro, co).Value = "Boolean to Text:";
             ws.Cell(ro, co + 1).Value = true.ToString();
-            ws.Cell(ro, co + 1).DataType = XLCellValues.SharedString;
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ws.Cell(++ro, co).Value = "Number to Text:";
             ws.Cell(ro, co + 1).Value = "123.45";
-            ws.Cell(ro, co + 1).DataType = XLCellValues.SharedString;
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ws.Cell(++ro, co).Value = "Text to Date:";
             ws.Cell(ro, co + 1).Value = "'" + new DateTime(2010, 9, 2).ToString();
@@ -113,12 +113,12 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(++ro, co).Value = "Formatted Date to Text:";
             ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2).ToString();
             ws.Cell(ro, co + 1).Style.NumberFormat.Format = "yyyy-MM-dd";
-            ws.Cell(ro, co + 1).DataType = XLCellValues.SharedString;
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ws.Cell(++ro, co).Value = "Formatted Number to Text:";
             ws.Cell(ro, co + 1).Value = "12345.6789";
             ws.Cell(ro, co + 1).Style.NumberFormat.Format = "#,##0.00";
-            ws.Cell(ro, co + 1).DataType = XLCellValues.SharedString;
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             workbook.SaveAs(filePath);
         }
