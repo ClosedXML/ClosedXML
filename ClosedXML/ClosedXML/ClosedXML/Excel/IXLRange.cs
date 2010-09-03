@@ -118,7 +118,9 @@ namespace ClosedXML.Excel
 
         public static void Merge(this IXLRange range)
         {
-            range.MergedCells.Add(range.FirstCellAddress.ToString() + ":" + range.LastCellAddress.ToString());
+            var mergeRange = range.FirstCellAddress.ToString() + ":" + range.LastCellAddress.ToString();
+            if (!range.MergedCells.Contains(mergeRange))
+                range.MergedCells.Add(mergeRange);
         }
         public static void Unmerge(this IXLRange range)
         {
