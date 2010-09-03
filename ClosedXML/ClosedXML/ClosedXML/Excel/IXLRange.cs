@@ -68,6 +68,10 @@ namespace ClosedXML.Excel
             return range.LastCellAddress.Column - range.FirstCellAddress.Column + 1;
         }
 
+        public static IXLRange Range(this IXLRange range, Int32 firstCellRow, Int32 firstCellColumn, Int32 lastCellRow, Int32 lastCellColumn)
+        {
+            return range.Range(new XLAddress(firstCellRow, firstCellColumn), new XLAddress(lastCellRow, lastCellColumn));
+        }
         public static IXLRange Range(this IXLRange range, String rangeAddress)
         {
             String[] arrRange = rangeAddress.Split(':');
@@ -251,6 +255,8 @@ namespace ClosedXML.Excel
             }
             return retVal;
         }
+
+        
     }
 }
 

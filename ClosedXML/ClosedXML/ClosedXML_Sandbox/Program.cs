@@ -15,17 +15,19 @@ namespace ClosedXML_Sandbox
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("New Sheet");
 
-            foreach (var c in ws.Range("B2:C3").Columns())
-            {
-                c.Style.Fill.BackgroundColor = Color.Red;
-            }
 
-            ws.Cell("E1").Value = "Wide 2";
 
-            foreach (var c in ws.Columns())
-            {
-                c.Width = 20;
-            }
+            //foreach (var c in ws.Range("B2:C3").Columns())
+            //{
+            //    c.Style.Fill.BackgroundColor = Color.Red;
+            //}
+
+            //ws.Cell("E1").Value = "Wide 2";
+
+            //foreach (var c in ws.Columns())
+            //{
+            //    c.Width = 20;
+            //}
 
             // Fix Worksheet.Cells() method   !!!
 
