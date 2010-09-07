@@ -20,14 +20,17 @@ namespace ClosedXML.Excel
         Dictionary<Int32, IXLColumn> columnsCollection = new Dictionary<Int32, IXLColumn>();
 
         public XLWorksheet(String sheetName)
-        { 
+        {
             Style = XLWorkbook.DefaultStyle;
             MergedCells = new List<String>();
             RowNumber = 1;
             ColumnNumber = 1;
             ColumnLetter = "A";
+            PrintOptions = new XLPrintOptions();
             this.Name = sheetName;
         }
+
+        public IXLPrintOptions PrintOptions { get; private set; }
 
         #region IXLRange Members
         public List<String> MergedCells { get; private set; }
@@ -76,6 +79,8 @@ namespace ClosedXML.Excel
 
             return retVal;
         }
+        
+        public IXLRange PrintArea { get; set; }
 
         #endregion
 
@@ -120,7 +125,14 @@ namespace ClosedXML.Excel
             }
             else
             {
-                xlRow = new XLRow(row, cellsCollection, Style);
+                var xlRangeParameters = new XLRangeParameters()
+                {
+                    CellsCollection = cellsCollection,
+                    MergedCells = this.MergedCells,
+                    DefaultStyle = Style,
+                    PrintArea = this.PrintArea
+                };
+                xlRow = new XLRow(row, xlRangeParameters);
                 rowsCollection.Add(row, xlRow);
             }
 
@@ -135,7 +147,14 @@ namespace ClosedXML.Excel
             }
             else
             {
-                xlColumn = new XLColumn(column, cellsCollection, Style);
+                var xlRangeParameters = new XLRangeParameters()
+                {
+                    CellsCollection = cellsCollection,
+                    MergedCells = this.MergedCells,
+                    DefaultStyle = Style,
+                    PrintArea = this.PrintArea
+                };
+                xlColumn = new XLColumn(column, xlRangeParameters);
                 columnsCollection.Add(column, xlColumn);
             }
 

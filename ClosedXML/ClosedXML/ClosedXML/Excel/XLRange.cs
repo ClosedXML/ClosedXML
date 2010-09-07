@@ -10,15 +10,16 @@ namespace ClosedXML.Excel
     {
         private IXLStyle defaultStyle;
 
-        public XLRange(XLRangeParameters xlRangeParameters)
+        public XLRange(IXLAddress firstCellAddress, IXLAddress lastCellAddress, XLRangeParameters xlRangeParameters)
         {
-            FirstCellAddress = xlRangeParameters.FirstCellAddress;
-            LastCellAddress = xlRangeParameters.LastCellAddress;
+            FirstCellAddress = firstCellAddress;
+            LastCellAddress = lastCellAddress;
             CellsCollection = xlRangeParameters.CellsCollection;
             MergedCells = xlRangeParameters.MergedCells;
             RowNumber = FirstCellAddress.Row;
             ColumnNumber = FirstCellAddress.Column;
             ColumnLetter = FirstCellAddress.ColumnLetter;
+            PrintArea = xlRangeParameters.PrintArea;
             this.defaultStyle = new XLStyle(this, xlRangeParameters.DefaultStyle);
         }
 
@@ -53,7 +54,8 @@ namespace ClosedXML.Excel
         public Int32 RowNumber { get; private set; }
         public Int32 ColumnNumber { get; private set; }
         public String ColumnLetter { get; private set; }
-
+        
+        public IXLRange PrintArea { get; set; }
 
         #endregion
 

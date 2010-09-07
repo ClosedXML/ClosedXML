@@ -8,15 +8,16 @@ namespace ClosedXML.Excel
 {
     public class XLColumn: IXLColumn
     {
-        public XLColumn(Int32 column, Dictionary<IXLAddress, IXLCell> cellsCollection, IXLStyle defaultStyle)
+        public XLColumn(Int32 column, XLRangeParameters xlRangeParameters)
         {
             FirstCellAddress = new XLAddress(1, column);
             LastCellAddress = new XLAddress(XLWorksheet.MaxNumberOfRows, column);
             RowNumber = 1;
             ColumnNumber = column;
             ColumnLetter = XLAddress.GetColumnLetterFromNumber(column);
-            CellsCollection = cellsCollection;
-            this.style = new XLStyle(this, defaultStyle);
+            CellsCollection = xlRangeParameters.CellsCollection;
+            PrintArea = xlRangeParameters.PrintArea;
+            this.style = new XLStyle(this, xlRangeParameters.DefaultStyle);
             this.Width = XLWorkbook.DefaultColumnWidth;
         }
 
@@ -86,5 +87,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public IXLRange PrintArea { get; set; }
     }
 }

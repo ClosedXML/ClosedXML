@@ -13,8 +13,25 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("New Sheet");
-
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            ws1.PrintOptions.PrintArea = ws1.Range("A1:B2");
+            ws1.PrintOptions.PageOrientation = XLPageOrientation.Portrait;
+            var ws2 = wb.Worksheets.Add("Sheet2");
+            ws2.PrintOptions.PrintArea = ws2.Range("B2:E5");
+            ws2.PrintOptions.PageOrientation = XLPageOrientation.Landscape;
+            ws2.PrintOptions.PagesWide = 1;
+            ws2.PrintOptions.PagesTall = 2;
+            foreach (var wsNum in Enumerable.Range(1, 5))
+            {
+                var ws = wb.Worksheets.Add("New Sheet " + wsNum.ToString());
+                foreach (var ro in Enumerable.Range(1, 5))
+                {
+                    foreach (var co in Enumerable.Range(1, 5))
+                    {
+                        ws.Cell(ro, co).Value = "(" + ro + "," + co + ")";
+                    }
+                }
+            }
 
 
             //foreach (var c in ws.Range("B2:C3").Columns())

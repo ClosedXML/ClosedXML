@@ -6,7 +6,7 @@ using ClosedXML.Excel.Style;
 
 namespace ClosedXML.Excel
 {
-    public class XLCell: IXLCell
+    public class XLCell : IXLCell
     {
         public XLCell(IXLAddress address, IXLStyle defaultStyle)
         {
@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
             Style = defaultStyle;
             if (Style == null) Style = XLWorkbook.DefaultStyle;
         }
-        
+
         public IXLAddress Address { get; private set; }
 
         private Boolean initialized = false;
@@ -80,7 +80,7 @@ namespace ClosedXML.Excel
 
         public IEnumerable<IXLStyle> Styles
         {
-            get 
+            get
             {
                 UpdatingStyle = true;
                 yield return style;
@@ -93,7 +93,7 @@ namespace ClosedXML.Excel
         #endregion
 
         private XLCellValues dataType;
-        public XLCellValues DataType 
+        public XLCellValues DataType
         {
             get
             {
@@ -147,7 +147,7 @@ namespace ClosedXML.Excel
                         cellValue = DateTime.FromOADate(Double.Parse(cellValue)).ToString(Style.NumberFormat.Format);
                     }
                 }
-                
+
                 dataType = value;
             }
         }

@@ -20,11 +20,10 @@ namespace ClosedXML.Excel
         #region Properties
 
         // Public
-        public IXLAddress FirstCellAddress { get; set; }
-        public IXLAddress LastCellAddress { get; set; }
         public Dictionary<IXLAddress, IXLCell> CellsCollection { get; set; }
         public List<String> MergedCells { get; set; }
         public IXLStyle DefaultStyle { get; set; }
+        public IXLRange PrintArea { get; set; }
 
         // Private
 

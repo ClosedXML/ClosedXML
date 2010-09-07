@@ -8,15 +8,16 @@ namespace ClosedXML.Excel
 {
     public class XLRow: IXLRow
     {
-        public XLRow(Int32 row, Dictionary<IXLAddress, IXLCell> cellsCollection, IXLStyle defaultStyle)
+        public XLRow(Int32 row, XLRangeParameters xlRangeParameters)
         {
             FirstCellAddress = new XLAddress(row, 1);
             LastCellAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns);
             RowNumber = row;
             ColumnNumber = 1;
             ColumnLetter = "A";
-            CellsCollection = cellsCollection;
-            this.style = new XLStyle(this, defaultStyle);
+            CellsCollection = xlRangeParameters.CellsCollection;
+            PrintArea = xlRangeParameters.PrintArea;
+            this.style = new XLStyle(this, xlRangeParameters.DefaultStyle);
             this.Height = XLWorkbook.DefaultRowHeight;
         }
 
@@ -31,6 +32,7 @@ namespace ClosedXML.Excel
         public List<String> MergedCells { get; private set; }
         public IXLAddress FirstCellAddress { get; private set; }
         public IXLAddress LastCellAddress { get; private set; }
+        public IXLRange PrintArea { get; set; }
 
         #endregion
 

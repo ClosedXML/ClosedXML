@@ -19,6 +19,19 @@ namespace ClosedXML.Excel
 {
     public partial class XLWorkbook
     {
+        private enum RelType { General, Workbook, Worksheet }
+        private class RelId
+        {
+            private static Dictionary<RelType, Int32> relIds = new Dictionary<RelType, Int32>();
+            public static Int32 GetNext(RelType relType)
+            {
+                if (!relIds.ContainsKey(relType))
+                    relIds.Add(relType, -1);
+                var relId = relIds[relType];
+                relIds[relType] = ++relId;
+                return relId;
+            }
+        }
 
         private Dictionary<String, UInt32> sharedStrings = new Dictionary<string, UInt32>();
         private struct FontInfo { public UInt32 FontId; public IXLFont Font; };
@@ -60,6 +73,17 @@ namespace ClosedXML.Excel
                 case XLFontUnderlineValues.None: return UnderlineValues.None;
                 case XLFontUnderlineValues.Single: return UnderlineValues.Single;
                 case XLFontUnderlineValues.SingleAccounting: return UnderlineValues.SingleAccounting;
+                default: throw new NotImplementedException();
+            }
+        }
+
+        private OrientationValues GetOrientationValue(XLPageOrientation xlPageOrientation)
+        {
+            switch (xlPageOrientation)
+            {
+                case XLPageOrientation.Default: return OrientationValues.Default;
+                case XLPageOrientation.Landscape: return OrientationValues.Landscape;
+                case XLPageOrientation.Portrait: return OrientationValues.Portrait;
                 default: throw new NotImplementedException();
             }
         }
@@ -158,6 +182,7 @@ namespace ClosedXML.Excel
         {
             using (SpreadsheetDocument package = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook))
             {
+                RelId.GetNext(RelType.Worksheet);
                 CreateParts(package);
             }
         }
@@ -165,16 +190,17 @@ namespace ClosedXML.Excel
         // Adds child parts and generates content of the specified part.
         private void CreateParts(SpreadsheetDocument document)
         {
-            ExtendedFilePropertiesPart extendedFilePropertiesPart1 = document.AddNewPart<ExtendedFilePropertiesPart>("rId3");
+            Int32 startId = Worksheets.Count();
+            ExtendedFilePropertiesPart extendedFilePropertiesPart1 = document.AddNewPart<ExtendedFilePropertiesPart>("rId" + (startId));
             GenerateExtendedFilePropertiesPartContent(extendedFilePropertiesPart1);
 
             WorkbookPart workbookPart = document.AddWorkbookPart();
             GenerateWorkbookPartContent(workbookPart);
 
-            SharedStringTablePart sharedStringTablePart = workbookPart.AddNewPart<SharedStringTablePart>("rId6");
+            SharedStringTablePart sharedStringTablePart = workbookPart.AddNewPart<SharedStringTablePart>("rId" + (startId + 3));
             GenerateSharedStringTablePartContent(sharedStringTablePart);
 
-            WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>("rId5");
+            WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>("rId" + (startId + 2));
             GenerateWorkbookStylesPartContent(workbookStylesPart);
 
             UInt32 sheetId = 0;
@@ -185,7 +211,7 @@ namespace ClosedXML.Excel
                 GenerateWorksheetPartContent(worksheetPart, worksheet);
             }
 
-            ThemePart themePart1 = workbookPart.AddNewPart<ThemePart>("rId4");
+            ThemePart themePart1 = workbookPart.AddNewPart<ThemePart>("rId" + (startId + 1));
             GenerateThemePartContent(themePart1);
 
             //SetPackageProperties(document);
@@ -204,7 +230,7 @@ namespace ClosedXML.Excel
 
             Ap.HeadingPairs headingPairs1 = new Ap.HeadingPairs();
 
-            Vt.VTVector vTVector1 = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Variant, Size = (UInt32Value)2U };
+            Vt.VTVector vTVector1 = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Variant, Size = (UInt32Value)4U };
 
             Vt.Variant variant1 = new Vt.Variant();
             Vt.VTLPSTR vTLPSTR1 = new Vt.VTLPSTR();
@@ -214,24 +240,42 @@ namespace ClosedXML.Excel
 
             Vt.Variant variant2 = new Vt.Variant();
             Vt.VTInt32 vTInt321 = new Vt.VTInt32();
-            vTInt321.Text = "3";
+            vTInt321.Text = Worksheets.Count().ToString();
 
             variant2.Append(vTInt321);
 
+            Vt.Variant variant3 = new Vt.Variant();
+            Vt.VTLPSTR vTLPSTR2 = new Vt.VTLPSTR();
+            vTLPSTR2.Text = "Named Ranges";
+
+            variant3.Append(vTLPSTR2);
+
+            Vt.Variant variant4 = new Vt.Variant();
+            Vt.VTInt32 vTInt322 = new Vt.VTInt32();
+            vTInt322.Text = Worksheets.Count().ToString();
+
+            variant4.Append(vTInt322);
+
             vTVector1.Append(variant1);
             vTVector1.Append(variant2);
+            vTVector1.Append(variant3);
+            vTVector1.Append(variant4);
 
             headingPairs1.Append(vTVector1);
 
             Ap.TitlesOfParts titlesOfParts1 = new Ap.TitlesOfParts();
 
             UInt32 sheetCount = (UInt32)Worksheets.Count();
-            Vt.VTVector vTVector2 = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Lpstr, Size = (UInt32Value)sheetCount };
+            Vt.VTVector vTVector2 = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Lpstr, Size = (UInt32Value)sheetCount * 2 };
             foreach (var worksheet in Worksheets)
             {
-                Vt.VTLPSTR vTLPSTR2 = new Vt.VTLPSTR();
-                vTLPSTR2.Text = worksheet.Name;
-                vTVector2.Append(vTLPSTR2);
+                Vt.VTLPSTR vTLPSTR3 = new Vt.VTLPSTR();
+                vTLPSTR3.Text = worksheet.Name;
+                vTVector2.Append(vTLPSTR3);
+
+                Vt.VTLPSTR vTLPSTR4 = new Vt.VTLPSTR();
+                vTLPSTR4.Text = worksheet.Name + "!Print_Area";
+                vTVector2.Append(vTLPSTR4);
             }
 
             titlesOfParts1.Append(vTVector2);
@@ -274,11 +318,27 @@ namespace ClosedXML.Excel
 
             UInt32 sheetId = 0;
             Sheets sheets = new Sheets();
+            DefinedNames definedNames = new DefinedNames();
             foreach (var worksheet in Worksheets)
             {
                 sheetId++;
                 Sheet sheet = new Sheet() { Name = worksheet.Name, SheetId = (UInt32Value)sheetId, Id = "rId" + sheetId.ToString() };
                 sheets.Append(sheet);
+
+                if (worksheet.PrintOptions.PrintArea == null)
+                {
+                    var minCell = worksheet.CellsCollection.Min(c => c.Key);
+                    var maxCell = worksheet.CellsCollection.Max(c => c.Key);
+                    if (minCell != null && maxCell != null)
+                    {
+                        worksheet.PrintOptions.PrintArea = worksheet.Range(minCell, maxCell);
+                        DefinedName definedName = new DefinedName() { Name = "_xlnm.Print_Area", LocalSheetId = (UInt32Value)sheetId - 1 };
+                        definedName.Text = "'" + worksheet.Name + "'!"
+                            + worksheet.PrintOptions.PrintArea.FirstCellAddress.ToString()
+                            + ":" + worksheet.PrintOptions.PrintArea.LastCellAddress.ToString();
+                        definedNames.Append(definedName);
+                    }
+                }
             }
 
             CalculationProperties calculationProperties1 = new CalculationProperties() { CalculationId = (UInt32Value)125725U, CalculationMode = CalculateModeValues.Manual };
@@ -287,6 +347,7 @@ namespace ClosedXML.Excel
             workbook1.Append(workbookProperties1);
             workbook1.Append(bookViews1);
             workbook1.Append(sheets);
+            if (definedNames.Count() > 0) workbook1.Append(definedNames);
             workbook1.Append(calculationProperties1);
 
             workbookPart.Workbook = workbook1;
@@ -581,6 +642,11 @@ namespace ClosedXML.Excel
             Worksheet worksheet = new Worksheet();
             worksheet.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             SheetProperties sheetProperties = new SheetProperties() { CodeName = xlWorksheet.Name.RemoveSpecialCharacters() };
+            if (xlWorksheet.PrintOptions.PagesTall >= 0 || xlWorksheet.PrintOptions.PagesWide >= 0)
+            {
+                PageSetupProperties pageSetupProperties = new PageSetupProperties() { FitToPage = true };
+                sheetProperties.Append(pageSetupProperties);
+            }
 
             UInt32 maxColumn = 0;
             UInt32 maxRow = 0;
@@ -626,10 +692,10 @@ namespace ClosedXML.Excel
                         Min = (UInt32Value)(UInt32)xlColumn.FirstCellAddress.Column,
                         Max = (UInt32Value)(UInt32)xlColumn.FirstCellAddress.Column,
                         Style = sharedStyles[xlColumn.Style.ToString()].StyleId,
-                         Width = xlColumn.Width,
-                         CustomWidth = true
+                        Width = xlColumn.Width,
+                        CustomWidth = true
                     };
-                    
+
                     columns.Append(column);
                 }
             }
@@ -714,7 +780,14 @@ namespace ClosedXML.Excel
             }
 
             PageMargins pageMargins = new PageMargins() { Left = 0.7D, Right = 0.7D, Top = 0.75D, Bottom = 0.75D, Header = 0.3D, Footer = 0.3D };
-            Drawing drawing1 = new Drawing() { Id = "rId1" };
+            //Drawing drawing1 = new Drawing() { Id = "rId1" };
+
+            PageSetup pageSetup1 = new PageSetup() { Orientation = GetOrientationValue(xlWorksheet.PrintOptions.PageOrientation), HorizontalDpi = (UInt32Value)300U, VerticalDpi = (UInt32Value)300U, Id = "rId" + RelId.GetNext(RelType.Worksheet) };
+            if (xlWorksheet.PrintOptions.PagesWide >= 0)
+                pageSetup1.FitToWidth = (UInt32Value)(UInt32)xlWorksheet.PrintOptions.PagesWide;
+            if (xlWorksheet.PrintOptions.PagesTall >= 0)
+                pageSetup1.FitToHeight = (UInt32Value)(UInt32)xlWorksheet.PrintOptions.PagesTall;
+
             worksheet.Append(sheetProperties);
             worksheet.Append(sheetDimension);
             worksheet.Append(sheetViews);
@@ -723,6 +796,7 @@ namespace ClosedXML.Excel
             worksheet.Append(sheetData);
             if (mergeCells != null) worksheet.Append(mergeCells);
             worksheet.Append(pageMargins);
+            worksheet.Append(pageSetup1);
             //worksheet.Append(drawing1);
 
             worksheetPart.Worksheet = worksheet;

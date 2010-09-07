@@ -48,6 +48,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Excel\IXLPrintOptions.cs" />
     <Compile Include="Excel\IXLRow.cs" />
     <Compile Include="Excel\Style\IXLAlignment.cs" />
     <Compile Include="Excel\Style\IXLBorder.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Excel\Style\XLBorder.cs" />
     <Compile Include="Excel\Style\XLFill.cs" />
     <Compile Include="Excel\Style\XLNumberFormat.cs" />
+    <Compile Include="Excel\XLPrintOptions.cs" />
     <Compile Include="Excel\XLRangeParameters.cs" />
     <Compile Include="Excel\XLWorkbook_Save.cs" />
     <Compile Include="Excel\IXLAddress.cs" />

@@ -19,6 +19,7 @@ namespace ClosedXML.Excel
         Int32 RowNumber { get; }
         Int32 ColumnNumber { get; }
         String ColumnLetter { get; }
+        IXLRange PrintArea { get; set; }
     }
 
     public static class IXLRangeMethods
@@ -83,26 +84,26 @@ namespace ClosedXML.Excel
         }
         public static IXLRange Range(this IXLRange range, IXLAddress firstCellAddress, IXLAddress lastCellAddress)
         {
-
+            var newFirstCellAddress = (XLAddress)firstCellAddress + (XLAddress)range.FirstCellAddress - 1;
+            var newLastCellAddress = (XLAddress)lastCellAddress + (XLAddress)range.FirstCellAddress - 1;
             var xlRangeParameters = new XLRangeParameters()
             {
-                FirstCellAddress = (XLAddress)firstCellAddress + (XLAddress)range.FirstCellAddress - 1,
-                LastCellAddress = (XLAddress)lastCellAddress + (XLAddress)range.FirstCellAddress - 1,
                 CellsCollection = range.CellsCollection,
                 MergedCells = range.MergedCells,
-                DefaultStyle = range.Style
+                DefaultStyle = range.Style,
+                PrintArea = range.PrintArea
             };
             if (
-                xlRangeParameters.FirstCellAddress.Row < range.FirstCellAddress.Row
-                || xlRangeParameters.FirstCellAddress.Row > range.LastCellAddress.Row
-                || xlRangeParameters.LastCellAddress.Row > range.LastCellAddress.Row
-                || xlRangeParameters.FirstCellAddress.Column < range.FirstCellAddress.Column
-                || xlRangeParameters.FirstCellAddress.Column > range.LastCellAddress.Column
-                || xlRangeParameters.LastCellAddress.Column > range.LastCellAddress.Column
+                   newFirstCellAddress.Row < range.FirstCellAddress.Row
+                || newFirstCellAddress.Row > range.LastCellAddress.Row
+                || newLastCellAddress.Row > range.LastCellAddress.Row
+                || newFirstCellAddress.Column < range.FirstCellAddress.Column
+                || newFirstCellAddress.Column > range.LastCellAddress.Column
+                || newLastCellAddress.Column > range.LastCellAddress.Column
                 )
                 throw new ArgumentOutOfRangeException();
 
-            return new XLRange(xlRangeParameters);
+            return new XLRange(newFirstCellAddress, newLastCellAddress, xlRangeParameters);
         }
         public static IXLRange Range(this IXLRange range, IXLCell firstCell, IXLCell lastCell)
         {
@@ -256,7 +257,10 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        
+        public static void SetAsPrintArea(this IXLRange range)
+        {
+            range.PrintArea = range;
+        }
     }
 }
 
