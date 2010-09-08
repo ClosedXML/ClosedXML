@@ -6,9 +6,9 @@ using ClosedXML.Excel;
 
 using System.Drawing;
 
-namespace ClosedXML_Examples.Columns
+namespace ClosedXML_Examples.Misc
 {
-    public class ColumnCollection
+    public class MultipleSheets
     {
         #region Variables
 
@@ -30,7 +30,6 @@ namespace ClosedXML_Examples.Columns
 
         #endregion
 
-
         #region Events
 
         // Public
@@ -48,18 +47,9 @@ namespace ClosedXML_Examples.Columns
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
-            var ws = workbook.Worksheets.Add("Column Collection");
-
-            foreach (var c in ws.Range("B2:C3").Columns())
+            foreach (var wsNum in Enumerable.Range(1, 10))
             {
-                c.Style.Fill.BackgroundColor = Color.Red;
-            }
-
-            ws.Cell("E1").Value = "Wide 2";
-
-            foreach (var c in ws.Columns())
-            {
-                c.Width = 20;
+                var ws = workbook.Worksheets.Add("New Sheet " + wsNum.ToString());
             }
 
             workbook.SaveAs(filePath);

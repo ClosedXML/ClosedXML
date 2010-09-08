@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ClosedXML.Excel.Style;
+
 
 namespace ClosedXML.Excel
 {
     public class XLRow: IXLRow
     {
-        public XLRow(Int32 row, XLRangeParameters xlRangeParameters)
+        public XLRow(Int32 row, XLRowParameters xlRowParameters)
         {
-            FirstCellAddress = new XLAddress(row, 1);
-            LastCellAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns);
+            Internals = new XLRangeInternals(new XLAddress(row, 1), new XLAddress(row, XLWorksheet.MaxNumberOfColumns), xlRowParameters.Worksheet);
             RowNumber = row;
             ColumnNumber = 1;
             ColumnLetter = "A";
-            CellsCollection = xlRangeParameters.CellsCollection;
-            PrintArea = xlRangeParameters.PrintArea;
-            this.style = new XLStyle(this, xlRangeParameters.DefaultStyle);
+            this.style = new XLStyle(this, xlRowParameters.DefaultStyle);
             this.Height = XLWorkbook.DefaultRowHeight;
         }
 
@@ -28,11 +25,7 @@ namespace ClosedXML.Excel
 
         #region IXLRange Members
 
-        public Dictionary<IXLAddress, IXLCell> CellsCollection { get; private set; }
-        public List<String> MergedCells { get; private set; }
-        public IXLAddress FirstCellAddress { get; private set; }
-        public IXLAddress LastCellAddress { get; private set; }
-        public IXLRange PrintArea { get; set; }
+        public IXLRangeInternals Internals { get; private set; }
 
         #endregion
 
@@ -57,7 +50,7 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
                 yield return style;
-                foreach (var c in CellsCollection.Values.Where(c => c.Address.Row == FirstCellAddress.Row))
+                foreach (var c in Internals.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.Row == Internals.FirstCellAddress.Row))
                 {
                     yield return c.Style;
                 }

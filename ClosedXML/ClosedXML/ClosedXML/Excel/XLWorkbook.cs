@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ClosedXML.Excel.Style;
+
 using System.IO;
 using System.Drawing;
 
@@ -43,11 +43,11 @@ namespace ClosedXML.Excel
 
         #region Static
 
-        private static XLStyle defaultStyle;
+        private static IXLStyle defaultStyle;
         /// <summary>
         /// Gets the default style for new workbooks.
         /// </summary>
-        public static XLStyle DefaultStyle
+        public static IXLStyle DefaultStyle
         {
             get
             {
@@ -111,6 +111,33 @@ namespace ClosedXML.Excel
 
         public static Double DefaultRowHeight { get; set; }
         public static Double DefaultColumnWidth { get; set; }
+
+        public static XLPrintOptions defaultPrintOptions;
+        public static XLPrintOptions DefaultPrintOptions
+        {
+            get
+            {
+                if (defaultPrintOptions == null)
+                {
+                    defaultPrintOptions = new XLPrintOptions(null)
+                    {
+                        PageOrientation = XLPageOrientation.Default,
+                        Scale = 100,
+                        PaperSize = XLPaperSize.LetterPaper,
+                        Margins = new XLMargins()
+                        {
+                            Top = 0.75,
+                            Bottom = 0.75,
+                            Left = 0.75,
+                            Right = 0.75,
+                            Header = 0.75,
+                            Footer = 0.75
+                        }
+                    };
+                }
+                return defaultPrintOptions;
+            }
+        }
 
         #endregion
     }

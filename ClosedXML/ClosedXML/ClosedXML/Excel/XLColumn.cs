@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ClosedXML.Excel.Style;
+
 
 namespace ClosedXML.Excel
 {
     public class XLColumn: IXLColumn
     {
-        public XLColumn(Int32 column, XLRangeParameters xlRangeParameters)
+        public XLColumn(Int32 column, XLColumnParameters xlColumnParameters)
         {
-            FirstCellAddress = new XLAddress(1, column);
-            LastCellAddress = new XLAddress(XLWorksheet.MaxNumberOfRows, column);
+            Internals = new XLRangeInternals(new XLAddress(1, column), new XLAddress(XLWorksheet.MaxNumberOfRows, column), xlColumnParameters.Worksheet);
             RowNumber = 1;
             ColumnNumber = column;
             ColumnLetter = XLAddress.GetColumnLetterFromNumber(column);
-            CellsCollection = xlRangeParameters.CellsCollection;
-            PrintArea = xlRangeParameters.PrintArea;
-            this.style = new XLStyle(this, xlRangeParameters.DefaultStyle);
+            this.style = new XLStyle(this, xlColumnParameters.DefaultStyle);
             this.Width = XLWorkbook.DefaultColumnWidth;
         }
 
@@ -25,15 +22,6 @@ namespace ClosedXML.Excel
         public Int32 RowNumber { get; private set; }
         public Int32 ColumnNumber { get; private set; }
         public String ColumnLetter { get; private set; }
-
-        #region IXLRange Members
-
-        public Dictionary<IXLAddress, IXLCell> CellsCollection { get; private set; }
-        public List<String> MergedCells { get; private set; }
-        public IXLAddress FirstCellAddress { get; private set; }
-        public IXLAddress LastCellAddress { get; private set; }
-
-        #endregion
 
         #region IXLStylized Members
 
@@ -56,7 +44,7 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
                 yield return style;
-                foreach (var c in CellsCollection.Values.Where(c => c.Address.Column == FirstCellAddress.Column))
+                foreach (var c in Internals.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.Column == Internals.FirstCellAddress.Column))
                 {
                     yield return c.Style;
                 }
@@ -88,6 +76,6 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        public IXLRange PrintArea { get; set; }
+        public IXLRangeInternals Internals { get; private set; }
     }
 }

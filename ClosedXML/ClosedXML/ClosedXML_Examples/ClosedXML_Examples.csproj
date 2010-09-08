@@ -53,6 +53,7 @@
     <Compile Include="Columns\ColumnCollections.cs" />
     <Compile Include="Columns\InsertColumns.cs" />
     <Compile Include="HelloWorld.cs" />
+    <Compile Include="Misc\MultipleSheets.cs" />
     <Compile Include="Misc\DataTypes.cs" />
     <Compile Include="Misc\MergeCells.cs" />
     <Compile Include="Program.cs" />

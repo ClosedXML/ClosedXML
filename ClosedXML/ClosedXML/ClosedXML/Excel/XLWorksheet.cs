@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ClosedXML.Excel.Style;
+
 
 namespace ClosedXML.Excel
 {
@@ -15,47 +15,20 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        Dictionary<IXLAddress, IXLCell> cellsCollection = new Dictionary<IXLAddress, IXLCell>();
-        Dictionary<Int32, IXLRow> rowsCollection = new Dictionary<Int32, IXLRow>();
-        Dictionary<Int32, IXLColumn> columnsCollection = new Dictionary<Int32, IXLColumn>();
-
         public XLWorksheet(String sheetName)
         {
             Style = XLWorkbook.DefaultStyle;
-            MergedCells = new List<String>();
+            Internals = new XLWorksheetInternals(new Dictionary<IXLAddress, IXLCell>(), new Dictionary<Int32, IXLColumn>(), new Dictionary<Int32, IXLRow>(), new List<String>());
             RowNumber = 1;
             ColumnNumber = 1;
             ColumnLetter = "A";
-            PrintOptions = new XLPrintOptions();
+            PrintOptions = new XLPrintOptions(XLWorkbook.DefaultPrintOptions);
             this.Name = sheetName;
         }
 
-        public IXLPrintOptions PrintOptions { get; private set; }
+        public IXLWorksheetInternals Internals { get; private set; }
 
         #region IXLRange Members
-        public List<String> MergedCells { get; private set; }
-        public Dictionary<IXLAddress, IXLCell> CellsCollection
-        {
-            get { return cellsCollection; }
-        }
-        public Dictionary<Int32, IXLColumn> ColumnsCollection
-        {
-            get { return columnsCollection; }
-        }
-        public Dictionary<Int32, IXLRow> RowsCollection
-        {
-            get { return rowsCollection; }
-        }
-
-        public IXLAddress FirstCellAddress
-        {
-            get { return new XLAddress(1, 1); }
-        }
-
-        public IXLAddress LastCellAddress
-        {
-            get { return new XLAddress(MaxNumberOfRows, MaxNumberOfColumns); }
-        }
 
         public Int32 RowNumber { get; private set; }
         public Int32 ColumnNumber { get; private set; }
@@ -66,11 +39,11 @@ namespace ClosedXML.Excel
             var retVal = new List<IXLColumn>();
             var columnList = new List<Int32>();
 
-            if (CellsCollection.Count > 0)
-            columnList.AddRange(CellsCollection.Keys.Select(k => k.Column).Distinct());
+            if (Internals.CellsCollection.Count > 0)
+                columnList.AddRange(Internals.CellsCollection.Keys.Select(k => k.Column).Distinct());
 
-            if (ColumnsCollection.Count > 0)
-            columnList.AddRange(ColumnsCollection.Keys.Where(c => !columnList.Contains(c)));
+            if (Internals.ColumnsCollection.Count > 0)
+                columnList.AddRange(Internals.ColumnsCollection.Keys.Where(c => !columnList.Contains(c)));
 
             foreach (var c in columnList)
             {
@@ -104,7 +77,7 @@ namespace ClosedXML.Excel
             get 
             {
                 UpdatingStyle = true;
-                foreach (var c in cellsCollection.Values)
+                foreach (var c in Internals.CellsCollection.Values)
                 {
                     yield return c.Style;
                 }
@@ -119,21 +92,15 @@ namespace ClosedXML.Excel
         public IXLRow Row(Int32 row)
         {
             IXLRow xlRow;
-            if (rowsCollection.ContainsKey(row))
+            if (Internals.RowsCollection.ContainsKey(row))
             {
-                xlRow = rowsCollection[row];
+                xlRow = Internals.RowsCollection[row];
             }
             else
             {
-                var xlRangeParameters = new XLRangeParameters()
-                {
-                    CellsCollection = cellsCollection,
-                    MergedCells = this.MergedCells,
-                    DefaultStyle = Style,
-                    PrintArea = this.PrintArea
-                };
-                xlRow = new XLRow(row, xlRangeParameters);
-                rowsCollection.Add(row, xlRow);
+                var xlRowParameters = new XLRowParameters(this, Style);
+                xlRow = new XLRow(row, xlRowParameters);
+                Internals.RowsCollection.Add(row, xlRow);
             }
 
             return xlRow;
@@ -141,21 +108,15 @@ namespace ClosedXML.Excel
         public IXLColumn Column(Int32 column)
         {
             IXLColumn xlColumn;
-            if (columnsCollection.ContainsKey(column))
+            if (Internals.ColumnsCollection.ContainsKey(column))
             {
-                xlColumn = columnsCollection[column];
+                xlColumn = Internals.ColumnsCollection[column];
             }
             else
             {
-                var xlRangeParameters = new XLRangeParameters()
-                {
-                    CellsCollection = cellsCollection,
-                    MergedCells = this.MergedCells,
-                    DefaultStyle = Style,
-                    PrintArea = this.PrintArea
-                };
-                xlColumn = new XLColumn(column, xlRangeParameters);
-                columnsCollection.Add(column, xlColumn);
+                var xlColumnParameters = new XLColumnParameters(this, Style);
+                xlColumn = new XLColumn(column, xlColumnParameters);
+                Internals.ColumnsCollection.Add(column, xlColumn);
             }
 
             return xlColumn;
@@ -190,5 +151,17 @@ namespace ClosedXML.Excel
 
 
         public String Name { get; set; }
+
+
+        public IXLPrintOptions PrintOptions { get; private set; }
+
+
+        IXLRangeInternals IXLRange.Internals 
+        { 
+            get 
+            {
+                return new XLRangeInternals(Internals.FirstCellAddress, Internals.LastCellAddress, this);
+            } 
+        }
     }
 }

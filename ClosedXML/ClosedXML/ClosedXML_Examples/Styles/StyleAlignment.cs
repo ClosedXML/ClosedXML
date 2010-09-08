@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
-using ClosedXML.Excel.Style;
+
 
 namespace ClosedXML_Examples.Styles
 {

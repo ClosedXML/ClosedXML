@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ClosedXML.Excel.Style;
+
 
 namespace ClosedXML.Excel
 {
@@ -10,27 +10,16 @@ namespace ClosedXML.Excel
     {
         private IXLStyle defaultStyle;
 
-        public XLRange(IXLAddress firstCellAddress, IXLAddress lastCellAddress, XLRangeParameters xlRangeParameters)
+        public XLRange(XLRangeParameters xlRangeParameters)
         {
-            FirstCellAddress = firstCellAddress;
-            LastCellAddress = lastCellAddress;
-            CellsCollection = xlRangeParameters.CellsCollection;
-            MergedCells = xlRangeParameters.MergedCells;
-            RowNumber = FirstCellAddress.Row;
-            ColumnNumber = FirstCellAddress.Column;
-            ColumnLetter = FirstCellAddress.ColumnLetter;
-            PrintArea = xlRangeParameters.PrintArea;
+            Internals = new XLRangeInternals(xlRangeParameters.FirstCellAddress, xlRangeParameters.LastCellAddress, xlRangeParameters.Worksheet);
+            RowNumber = xlRangeParameters.FirstCellAddress.Row;
+            ColumnNumber = xlRangeParameters.FirstCellAddress.Column;
+            ColumnLetter = xlRangeParameters.FirstCellAddress.ColumnLetter;
             this.defaultStyle = new XLStyle(this, xlRangeParameters.DefaultStyle);
         }
 
         #region IXLRange Members
-
-        public Dictionary<IXLAddress, IXLCell> CellsCollection { get; private set; }
-        public List<String> MergedCells { get; private set; }
-
-        public IXLAddress FirstCellAddress { get; private set; }
-
-        public IXLAddress LastCellAddress { get; private set; }
 
         public IXLRange Row(Int32 row)
         {
@@ -54,9 +43,9 @@ namespace ClosedXML.Excel
         public Int32 RowNumber { get; private set; }
         public Int32 ColumnNumber { get; private set; }
         public String ColumnLetter { get; private set; }
-        
-        public IXLRange PrintArea { get; set; }
 
+        public IXLRangeInternals Internals { get; private set; }
+        
         #endregion
 
         #region IXLStylized Members

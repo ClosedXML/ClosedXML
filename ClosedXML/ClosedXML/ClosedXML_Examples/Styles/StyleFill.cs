@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
 using System.Drawing;
-using ClosedXML.Excel.Style;
+
 
 namespace ClosedXML_Examples.Styles
 {

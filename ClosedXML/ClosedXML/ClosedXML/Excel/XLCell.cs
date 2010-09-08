@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ClosedXML.Excel.Style;
+
 
 namespace ClosedXML.Excel
 {
@@ -34,7 +34,7 @@ namespace ClosedXML.Excel
                     Double dTest;
                     DateTime dtTest;
                     Boolean bTest;
-                    if (val.Substring(0, 1) == "'")
+                    if (val.Length > 0 && val.Substring(0, 1) == "'")
                     {
                         val = val.Substring(1, val.Length - 1);
                         dataType = XLCellValues.Text;

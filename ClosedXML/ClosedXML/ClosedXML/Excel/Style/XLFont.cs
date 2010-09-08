@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace ClosedXML.Excel.Style
+namespace ClosedXML.Excel
 {
     public class XLFont: IXLFont
     {
         IXLStylized container;
-        public XLFont(IXLStylized container, IXLFont defaultFont = null)
+        public XLFont(IXLStylized container = null, IXLFont defaultFont = null)
         {
             this.container = container;
             if (defaultFont != null)

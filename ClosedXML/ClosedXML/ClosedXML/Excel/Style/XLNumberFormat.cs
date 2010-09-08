@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ClosedXML.Excel.Style
+namespace ClosedXML.Excel
 {
     public class XLNumberFormat: IXLNumberFormat
     {

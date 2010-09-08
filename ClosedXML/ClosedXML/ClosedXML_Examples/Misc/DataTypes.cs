@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
-using ClosedXML.Excel.Style;
+
 using System.Drawing;
 
 namespace ClosedXML_Examples.Misc
@@ -119,6 +119,11 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(ro, co + 1).Value = "12345.6789";
             ws.Cell(ro, co + 1).Style.NumberFormat.Format = "#,##0.00";
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+
+            ro++;
+
+            ws.Cell(++ro, co).Value = "Blank Text:";
+            ws.Cell(ro, co + 1).Value = "";
 
             workbook.SaveAs(filePath);
         }

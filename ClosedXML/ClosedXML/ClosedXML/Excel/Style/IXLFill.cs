@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace ClosedXML.Excel.Style
+namespace ClosedXML.Excel
 {
     public enum XLFillPatternValues
     {

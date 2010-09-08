@@ -23,6 +23,7 @@ namespace ClosedXML_Examples
             new InsertColumns().Create(@"c:\InsertColumns.xlsx");
             new ColumnCollection().Create(@"c:\ColumnCollection.xlsx");
             new DataTypes().Create(@"c:\DataTypes.xlsx");
+            new MultipleSheets().Create(@"c:\MultipleSheets.xlsx");
         }
     }
 }

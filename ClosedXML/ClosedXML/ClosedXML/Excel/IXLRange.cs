@@ -2,24 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ClosedXML.Excel.Style;
+
 
 namespace ClosedXML.Excel
 {
     public interface IXLRange: IXLStylized
     {
-        Dictionary<IXLAddress, IXLCell> CellsCollection { get; }
-        List<String> MergedCells { get; }
-
-        IXLAddress FirstCellAddress { get; }
-        IXLAddress LastCellAddress { get; }
         IXLRange Row(Int32 row);
         IXLRange Column(Int32 column);
         IXLRange Column(String column);
         Int32 RowNumber { get; }
         Int32 ColumnNumber { get; }
         String ColumnLetter { get; }
-        IXLRange PrintArea { get; set; }
+        IXLRangeInternals Internals { get; }
     }
 
     public static class IXLRangeMethods
@@ -35,15 +30,15 @@ namespace ClosedXML.Excel
 
         public static IXLCell Cell(this IXLRange range, IXLAddress cellAddressInRange)
         {
-            IXLAddress absoluteAddress = (XLAddress)cellAddressInRange + (XLAddress)range.FirstCellAddress - 1;
-            if (range.CellsCollection.ContainsKey(absoluteAddress))
+            IXLAddress absoluteAddress = (XLAddress)cellAddressInRange + (XLAddress)range.Internals.FirstCellAddress - 1;
+            if (range.Internals.Worksheet.Internals.CellsCollection.ContainsKey(absoluteAddress))
             {
-                return range.CellsCollection[absoluteAddress];
+                return range.Internals.Worksheet.Internals.CellsCollection[absoluteAddress];
             }
             else
             {
                 var newCell = new XLCell(absoluteAddress, range.Style);
-                range.CellsCollection.Add(absoluteAddress, newCell);
+                range.Internals.Worksheet.Internals.CellsCollection.Add(absoluteAddress, newCell);
                 return newCell;
             }
         }
@@ -62,11 +57,11 @@ namespace ClosedXML.Excel
 
         public static Int32 RowCount(this IXLRange range)
         {
-            return range.LastCellAddress.Row - range.FirstCellAddress.Row + 1;
+            return range.Internals.LastCellAddress.Row - range.Internals.FirstCellAddress.Row + 1;
         }
         public static Int32 ColumnCount(this IXLRange range)
         {
-            return range.LastCellAddress.Column - range.FirstCellAddress.Column + 1;
+            return range.Internals.LastCellAddress.Column - range.Internals.FirstCellAddress.Column + 1;
         }
 
         public static IXLRange Range(this IXLRange range, Int32 firstCellRow, Int32 firstCellColumn, Int32 lastCellRow, Int32 lastCellColumn)
@@ -84,26 +79,20 @@ namespace ClosedXML.Excel
         }
         public static IXLRange Range(this IXLRange range, IXLAddress firstCellAddress, IXLAddress lastCellAddress)
         {
-            var newFirstCellAddress = (XLAddress)firstCellAddress + (XLAddress)range.FirstCellAddress - 1;
-            var newLastCellAddress = (XLAddress)lastCellAddress + (XLAddress)range.FirstCellAddress - 1;
-            var xlRangeParameters = new XLRangeParameters()
-            {
-                CellsCollection = range.CellsCollection,
-                MergedCells = range.MergedCells,
-                DefaultStyle = range.Style,
-                PrintArea = range.PrintArea
-            };
+            var newFirstCellAddress = (XLAddress)firstCellAddress + (XLAddress)range.Internals.FirstCellAddress - 1;
+            var newLastCellAddress = (XLAddress)lastCellAddress + (XLAddress)range.Internals.FirstCellAddress - 1;
+            var xlRangeParameters = new XLRangeParameters(newFirstCellAddress, newLastCellAddress, range.Internals.Worksheet, range.Style);
             if (
-                   newFirstCellAddress.Row < range.FirstCellAddress.Row
-                || newFirstCellAddress.Row > range.LastCellAddress.Row
-                || newLastCellAddress.Row > range.LastCellAddress.Row
-                || newFirstCellAddress.Column < range.FirstCellAddress.Column
-                || newFirstCellAddress.Column > range.LastCellAddress.Column
-                || newLastCellAddress.Column > range.LastCellAddress.Column
+                   newFirstCellAddress.Row < range.Internals.FirstCellAddress.Row
+                || newFirstCellAddress.Row > range.Internals.LastCellAddress.Row
+                || newLastCellAddress.Row > range.Internals.LastCellAddress.Row
+                || newFirstCellAddress.Column < range.Internals.FirstCellAddress.Column
+                || newFirstCellAddress.Column > range.Internals.LastCellAddress.Column
+                || newLastCellAddress.Column > range.Internals.LastCellAddress.Column
                 )
                 throw new ArgumentOutOfRangeException();
 
-            return new XLRange(newFirstCellAddress, newLastCellAddress, xlRangeParameters);
+            return new XLRange(xlRangeParameters);
         }
         public static IXLRange Range(this IXLRange range, IXLCell firstCell, IXLCell lastCell)
         {
@@ -123,13 +112,13 @@ namespace ClosedXML.Excel
 
         public static void Merge(this IXLRange range)
         {
-            var mergeRange = range.FirstCellAddress.ToString() + ":" + range.LastCellAddress.ToString();
-            if (!range.MergedCells.Contains(mergeRange))
-                range.MergedCells.Add(mergeRange);
+            var mergeRange = range.Internals.FirstCellAddress.ToString() + ":" + range.Internals.LastCellAddress.ToString();
+            if (!range.Internals.Worksheet.Internals.MergedCells.Contains(mergeRange))
+                range.Internals.Worksheet.Internals.MergedCells.Add(mergeRange);
         }
         public static void Unmerge(this IXLRange range)
         {
-            range.MergedCells.Remove(range.FirstCellAddress.ToString() + ":" + range.LastCellAddress.ToString());
+            range.Internals.Worksheet.Internals.MergedCells.Remove(range.Internals.FirstCellAddress.ToString() + ":" + range.Internals.LastCellAddress.ToString());
         }
 
         public static IXLRange FirstColumn(this IXLRange range)
@@ -156,7 +145,7 @@ namespace ClosedXML.Excel
             var lastRow = range.LastRow().RowNumber;
             var firstColumn = range.FirstColumn().ColumnNumber;
             var lastColumn = range.LastColumn().ColumnNumber;
-            foreach (var c in range.CellsCollection
+            foreach (var c in range.Internals.Worksheet.Internals.CellsCollection
                 .Where(c =>
                 c.Key.Row > lastRow
                 && c.Key.Column >= firstColumn
@@ -170,8 +159,8 @@ namespace ClosedXML.Excel
                 cellsToInsert.Add(newKey, newCell);
                 cellsToDelete.Add(c.Key);
             }
-            cellsToDelete.ForEach(c => range.CellsCollection.Remove(c));
-            cellsToInsert.ForEach(c => range.CellsCollection.Add(c.Key, c.Value));
+            cellsToDelete.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Remove(c));
+            cellsToInsert.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
         }
         public static void InsertRowsAbove(this IXLRange range, Int32 numberOfRows)
         {
@@ -180,7 +169,7 @@ namespace ClosedXML.Excel
             var firstRow = range.FirstRow().RowNumber;
             var firstColumn = range.FirstColumn().ColumnNumber;
             var lastColumn = range.LastColumn().ColumnNumber;
-            foreach (var c in range.CellsCollection
+            foreach (var c in range.Internals.Worksheet.Internals.CellsCollection
                 .Where(c =>
                 c.Key.Row >= firstRow
                 && c.Key.Column >= firstColumn
@@ -194,8 +183,8 @@ namespace ClosedXML.Excel
                 cellsToInsert.Add(newKey, newCell);
                 cellsToDelete.Add(c.Key);
             }
-            cellsToDelete.ForEach(c => range.CellsCollection.Remove(c));
-            cellsToInsert.ForEach(c => range.CellsCollection.Add(c.Key, c.Value));
+            cellsToDelete.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Remove(c));
+            cellsToInsert.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
         }
 
         public static void InsertColumnsAfter(this IXLRange range, Int32 numberOfColumns)
@@ -205,7 +194,7 @@ namespace ClosedXML.Excel
             var firstRow = range.FirstRow().RowNumber;
             var lastRow = range.LastRow().RowNumber;
             var lastColumn = range.LastColumn().ColumnNumber;
-            foreach (var c in range.CellsCollection
+            foreach (var c in range.Internals.Worksheet.Internals.CellsCollection
                 .Where(c =>
                 c.Key.Column > lastColumn
                 && c.Key.Row >= firstRow
@@ -219,8 +208,8 @@ namespace ClosedXML.Excel
                 cellsToInsert.Add(newKey, newCell);
                 cellsToDelete.Add(c.Key);
             }
-            cellsToDelete.ForEach(c => range.CellsCollection.Remove(c));
-            cellsToInsert.ForEach(c => range.CellsCollection.Add(c.Key, c.Value));
+            cellsToDelete.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Remove(c));
+            cellsToInsert.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
         }
         public static void InsertColumnsBefore(this IXLRange range, Int32 numberOfColumns)
         {
@@ -229,7 +218,7 @@ namespace ClosedXML.Excel
             var firstRow = range.FirstRow().RowNumber;
             var lastRow = range.LastRow().RowNumber;
             var firstColumn = range.FirstColumn().ColumnNumber;
-            foreach (var c in range.CellsCollection
+            foreach (var c in range.Internals.Worksheet.Internals.CellsCollection
                 .Where(c =>
                 c.Key.Column >= firstColumn
                 && c.Key.Row >= firstRow
@@ -243,23 +232,23 @@ namespace ClosedXML.Excel
                 cellsToInsert.Add(newKey, newCell);
                 cellsToDelete.Add(c.Key);
             }
-            cellsToDelete.ForEach(c => range.CellsCollection.Remove(c));
-            cellsToInsert.ForEach(c => range.CellsCollection.Add(c.Key, c.Value));
+            cellsToDelete.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Remove(c));
+            cellsToInsert.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
         }
 
         public static List<IXLRange> Columns(this IXLRange range)
         {
             var retVal = new List<IXLRange>();
-            foreach (var r in Enumerable.Range(1, range.RowCount()))
+            foreach (var c in Enumerable.Range(1, range.ColumnCount()))
             {
-                retVal.Add(range.Row(r));
+                retVal.Add(range.Column(c));
             }
             return retVal;
         }
 
         public static void SetAsPrintArea(this IXLRange range)
         {
-            range.PrintArea = range;
+            range.Internals.Worksheet.PrintOptions.PrintArea = range;
         }
     }
 }
