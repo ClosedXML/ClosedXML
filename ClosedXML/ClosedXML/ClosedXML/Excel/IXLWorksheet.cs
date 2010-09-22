@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
         new IXLColumn Column(Int32 column);
         new IXLColumn Column(String column);
         String Name { get; set; }
-        List<IXLColumn> Columns();
+        IXLColumns Columns();
         List<IXLColumn> Columns(String columns);
         List<IXLColumn> Columns(String firstColumn, String lastColumn);
         List<IXLColumn> Columns(Int32 firstColumn, Int32 lastColumn);

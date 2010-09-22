@@ -48,6 +48,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Excel\Columns\IXLColumns.cs" />
+    <Compile Include="Excel\Columns\XLColumns.cs" />
     <Compile Include="Excel\PrintOptions\IXLHeaderFooter.cs" />
     <Compile Include="Excel\PrintOptions\IXLHFItem.cs" />
     <Compile Include="Excel\PrintOptions\IXLPageOptions.cs" />
