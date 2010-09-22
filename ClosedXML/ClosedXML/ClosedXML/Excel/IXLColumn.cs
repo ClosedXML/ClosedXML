@@ -8,6 +8,6 @@ namespace ClosedXML.Excel
     public interface IXLColumn: IXLRange
     {
         Double Width { get; set; }
-
+        void Delete();
     }
 }

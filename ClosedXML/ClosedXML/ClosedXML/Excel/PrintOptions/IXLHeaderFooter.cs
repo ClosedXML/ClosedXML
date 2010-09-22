@@ -11,5 +11,6 @@ namespace ClosedXML.Excel
         IXLHFItem Left { get; }
         IXLHFItem Center { get; }
         IXLHFItem Right { get; }
+        String GetText(XLHFOccurrence occurrence);
     }
 }

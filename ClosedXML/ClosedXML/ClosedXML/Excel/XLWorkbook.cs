@@ -112,14 +112,14 @@ namespace ClosedXML.Excel
         public static Double DefaultRowHeight { get; set; }
         public static Double DefaultColumnWidth { get; set; }
 
-        public static XLPrintOptions defaultPrintOptions;
-        public static XLPrintOptions DefaultPrintOptions
+        public static XLPageOptions defaultPrintOptions;
+        public static XLPageOptions DefaultPrintOptions
         {
             get
             {
                 if (defaultPrintOptions == null)
                 {
-                    defaultPrintOptions = new XLPrintOptions(null)
+                    defaultPrintOptions = new XLPageOptions(null)
                     {
                         PageOrientation = XLPageOrientation.Default,
                         Scale = 100,
@@ -132,7 +132,11 @@ namespace ClosedXML.Excel
                             Right = 0.75,
                             Header = 0.75,
                             Footer = 0.75
-                        }
+                        },
+                         ScaleHFWithDocument = true,
+                         AlignHFWithMargins = true,
+                         PrintErrorValue = XLPrintErrorValues.Displayed,
+                         ShowComments = XLShowCommentsValues.None
                     };
                 }
                 return defaultPrintOptions;

@@ -20,8 +20,26 @@ namespace ClosedXML.Excel
         {
             if (text.Length > 0)
             {
-                var hfFont = GetHFFont(xlFont);
-                var newText = hfFont + text;
+                var newText = xlFont != null ? GetHFFont(text, xlFont) : text;
+                //var newText = hfFont + text;
+                if (occurrence == XLHFOccurrence.AllPages)
+                {
+                    AddTextToOccurrence(newText, XLHFOccurrence.EvenPages);
+                    AddTextToOccurrence(newText, XLHFOccurrence.FirstPage);
+                    AddTextToOccurrence(newText, XLHFOccurrence.OddPages);
+                }
+                else
+                {
+                    AddTextToOccurrence(newText, occurrence);
+                }
+            }
+        }
+
+        private void AddTextToOccurrence(String text, XLHFOccurrence occurrence)
+        {
+            if (text.Length > 0)
+            {
+                var newText = text;
                 if (texts.ContainsKey(occurrence))
                     texts[occurrence] = texts[occurrence] + newText;
                 else
@@ -41,6 +59,7 @@ namespace ClosedXML.Excel
                 case XLHFPredefinedText.Path : hfText = "&Z"; break;
                 case XLHFPredefinedText.File : hfText = "&F"; break;
                 case XLHFPredefinedText.SheetName : hfText = "&A"; break;
+                case XLHFPredefinedText.FullPath: hfText = "&Z&F"; break;
                 default: throw new NotImplementedException();
             }
             AddText(hfText, occurrence, xlFont);
@@ -48,11 +67,25 @@ namespace ClosedXML.Excel
 
         public void Clear(XLHFOccurrence occurrence = XLHFOccurrence.AllPages)
         {
+            if (occurrence == XLHFOccurrence.AllPages)
+            {
+                ClearOccurrence(XLHFOccurrence.EvenPages);
+                ClearOccurrence(XLHFOccurrence.FirstPage);
+                ClearOccurrence(XLHFOccurrence.OddPages);
+            }
+            else
+            {
+                ClearOccurrence(occurrence);
+            }
+        }
+
+        private void ClearOccurrence(XLHFOccurrence occurrence)
+        {
             if (texts.ContainsKey(occurrence))
                 texts.Remove(occurrence);
         }
 
-        private String GetHFFont(IXLFont xlFont)
+        private String GetHFFont(String text, IXLFont xlFont)
         {
             String retVal = String.Empty;
 
@@ -64,7 +97,16 @@ namespace ClosedXML.Excel
             retVal += xlFont.VerticalAlignment == XLFontVerticalTextAlignmentValues.Superscript ? "&X" : "";
             retVal += xlFont.Underline== XLFontUnderlineValues.Single ? "&U" : "";
             retVal += xlFont.Underline == XLFontUnderlineValues.Double ? "&E" : "";
-            retVal += "&K" + xlFont.FontColor.ToHex();
+            retVal += "&K" + xlFont.FontColor.ToHex().Substring(2);
+
+            retVal += text;
+
+            retVal += xlFont.Underline == XLFontUnderlineValues.Double ? "&E" : "";
+            retVal += xlFont.Underline == XLFontUnderlineValues.Single ? "&U" : "";
+            retVal += xlFont.VerticalAlignment == XLFontVerticalTextAlignmentValues.Superscript ? "&X" : "";
+            retVal += xlFont.VerticalAlignment == XLFontVerticalTextAlignmentValues.Subscript ? "&Y" : "";
+            retVal += xlFont.Strikethrough ? "&S" : "";
+            
             return retVal;
         }
 

@@ -13,87 +13,45 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             var wb = new XLWorkbook();
-            var ws1 = wb.Worksheets.Add("Sheet1");
-            ws1.PrintOptions.PrintArea = ws1.Range("A1:B2");
-            ws1.PrintOptions.PageOrientation = XLPageOrientation.Landscape;
-            ws1.PrintOptions.AdjustTo(85);
+            var ws = wb.Worksheets.Add("Print Areas");
+            ws.PageSetup.PrintAreas.Add(ws.Range("A1:B2"));
+            ws.PageSetup.PrintAreas.Add(ws.Range("D4:E5"));
+
+            ws.PageSetup.PageOrientation = XLPageOrientation.Landscape;
+            ws.PageSetup.AdjustTo(85);
             var ws2 = wb.Worksheets.Add("Sheet2");
-            ws2.PrintOptions.PrintArea = ws2.Range("B2:E5");
-            ws2.PrintOptions.PageOrientation = XLPageOrientation.Portrait;
-            ws2.PrintOptions.PagesWide = 1;
-            ws2.PrintOptions.PagesTall = 2;
-            ws2.PrintOptions.PaperSize = XLPaperSize.MonarchEnvelope;
-            ws2.PrintOptions.HorizontalDpi = 600;
-            ws2.PrintOptions.VerticalDpi = 600;
-            ws2.PrintOptions.FirstPageNumber = 6;
-            ws2.PrintOptions.CenterHorizontally = true;
-            ws2.PrintOptions.CenterVertically = true;
-            ws2.PrintOptions.Margins.Top = 1.5;
+            ws2.PageSetup.PrintAreas.Add(ws2.Range("B2:E5"));
+            ws2.PageSetup.PageOrientation = XLPageOrientation.Portrait;
+            ws2.PageSetup.PagesWide = 1;
+            ws2.PageSetup.PagesTall = 2;
+            ws2.PageSetup.PaperSize = XLPaperSize.MonarchEnvelope;
+            ws2.PageSetup.HorizontalDpi = 600;
+            ws2.PageSetup.VerticalDpi = 600;
+            ws2.PageSetup.FirstPageNumber = 6;
+            ws2.PageSetup.CenterHorizontally = true;
+            ws2.PageSetup.CenterVertically = true;
+            ws2.PageSetup.Margins.Top = 1.5;
 
             var headerFont = new XLFont() { Bold = true };
-            ws2.PrintOptions.Header.Left.AddText("Test", XLHFOccurrence.OddPages, headerFont);
-            ws2.PrintOptions.Header.Left.AddText("Test", XLHFOccurrence.EvenPages, headerFont);
-            ws2.PrintOptions.Header.Left.AddText("Test", XLHFOccurrence.FirstPage, headerFont);
-            ws2.PrintOptions.Header.Left.AddText("Test", XLHFOccurrence.AllPages, headerFont);
-            ws2.PrintOptions.Header.Left.Clear();
+            ws2.PageSetup.Header.Left.AddText("Test", XLHFOccurrence.OddPages, headerFont);
+            ws2.PageSetup.Header.Left.AddText("Test", XLHFOccurrence.EvenPages, headerFont);
+            ws2.PageSetup.Header.Left.AddText("Test", XLHFOccurrence.FirstPage, headerFont);
+            ws2.PageSetup.Header.Left.AddText("Test", XLHFOccurrence.AllPages, headerFont);
+            ws2.PageSetup.Header.Left.Clear();
             
-            ws2.PrintOptions.Footer.Center.AddText(XLHFPredefinedText.SheetName, XLHFOccurrence.AllPages, headerFont);
+            ws2.PageSetup.Footer.Center.AddText(XLHFPredefinedText.SheetName, XLHFOccurrence.AllPages, headerFont);
+            ws2.PageSetup.DraftQuality = true;
+            ws2.PageSetup.BlackAndWhite = true;
+            ws2.PageSetup.PageOrder = XLPageOrderValues.OverThenDown;
+            ws2.PageSetup.ShowComments = XLShowCommentsValues.AtEnd;
+            ws2.PageSetup.PrintAreas.Add(ws2.Range("H10:H20"));
+            ws2.PageSetup.RowTitles.Add(ws2.Row(1));
 
-            //foreach (var c in ws.Range("B2:C3").Columns())
-            //{
-            //    c.Style.Fill.BackgroundColor = Color.Red;
-            //}
+            
+            
+            // Add List<IXLRange> Ranges(...) to IXLRandge
 
-            //ws.Cell("E1").Value = "Wide 2";
-
-            //foreach (var c in ws.Columns())
-            //{
-            //    c.Width = 20;
-            //}
-
-            // Fix Worksheet.Cells() method   !!!
-
-
-
-
-            //foreach (var r in ws.Rows())
-            //{
-            //    r.Height = 15;
-            //}
-
-            //foreach (var r in ws.Range("B2:C3").Rows())
-            //{
-            //    r.Style.Fill.BackgroundColor = Color.Red;
-            //}
-
-            //ws.Columns("A:B").Width = 20;
-            //ws.Columns("3:4").Width = 20;
-            //ws.Rows("1:2").Height = 30;
-
-            //ws.Columns("A:B").Style.Fill.BackgroundColor = Color.Red;
-            //ws.Columns("3:4").Style.Fill.BackgroundColor = Color.Blue;
-            //ws.Rows("1:2").Style.Fill.BackgroundColor = Color.Orange;
-
-            //var rng1 = ws.Range("B2:E5");
-            //rng1.Columns("A:B").Style.Fill.BackgroundColor = Color.Red;
-            //rng1.Columns("3:4").Style.Fill.BackgroundColor = Color.Blue;
-            //rng1.Rows("1:2").Style.Fill.BackgroundColor = Color.Orange;
-
-            //ws.Row(2).Delete();
-            //ws.Column(2).Delete();
-            //ws.Column("B").Delete();
-
-            //ws.Columns("A:B").Delete();
-            //ws.Columns("3:4").Delete();
-            //ws.Rows("1:2").Delete();
-
-            //ws.Range("B2:C3").Delete(ShiftCellsUp);
-            //ws.Range("B2:C3").Delete(ShiftCellsLeft);
-
-            //ws.Range("B2:C3").Column(1).Delete(ShiftCellsUp);
-            //ws.Range("B2:C3").Column("A").Delete(ShiftCellsLeft);
-            //ws.Range("B2:C3").Row(1).Delete(ShiftCellsUp);
-            //ws.Range("B2:C3").Row((1).Delete(ShiftCellsLeft);
+            //Apply a style to the entire sheet (not just the used cells)
 
             wb.SaveAs(@"c:\Sandbox.xlsx");
             //Console.ReadKey();

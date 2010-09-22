@@ -22,6 +22,10 @@ namespace ClosedXML.Excel
         public Int32 RowNumber { get; private set; }
         public Int32 ColumnNumber { get; private set; }
         public String ColumnLetter { get; private set; }
+        public void Delete()
+        {
+            this.Column(ColumnNumber).Delete(XLShiftDeletedCells.ShiftCellsLeft);
+        }
 
         #region IXLStylized Members
 

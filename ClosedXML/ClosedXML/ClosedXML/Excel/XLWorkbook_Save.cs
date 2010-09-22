@@ -177,6 +177,40 @@ namespace ClosedXML.Excel
             }
         }
 
+        private PageOrderValues GetPageOrderValue(XLPageOrderValues pageOrderValue)
+        {
+            switch (pageOrderValue)
+            {
+                case XLPageOrderValues.DownThenOver: return PageOrderValues.DownThenOver;
+                case XLPageOrderValues.OverThenDown: return PageOrderValues.OverThenDown;
+                default: throw new NotImplementedException();
+            }
+        }
+
+        private CellCommentsValues GetCellCommentValue(XLShowCommentsValues showCommentsValue)
+        {
+            switch (showCommentsValue)
+            {
+                case XLShowCommentsValues.AsDisplayed: return CellCommentsValues.AsDisplayed;
+                case XLShowCommentsValues.AtEnd: return CellCommentsValues.AtEnd;
+                case XLShowCommentsValues.None: return CellCommentsValues.None;
+                default: throw new NotImplementedException();
+            }
+        }
+
+        private PrintErrorValues GetPrintErrorValue(XLPrintErrorValues printErrorValues)
+        {
+            switch (printErrorValues)
+            {
+                case XLPrintErrorValues.Blank: return PrintErrorValues.Blank;
+                case XLPrintErrorValues.Dash: return PrintErrorValues.Dash;
+                case XLPrintErrorValues.Displayed: return  PrintErrorValues.Displayed;
+                case XLPrintErrorValues.NA: return PrintErrorValues.NA;
+                default: throw new NotImplementedException();
+            }
+        }
+
+
         // Creates a SpreadsheetDocument.
         private void CreatePackage(String filePath)
         {
@@ -252,7 +286,7 @@ namespace ClosedXML.Excel
 
             Vt.Variant variant4 = new Vt.Variant();
             Vt.VTInt32 vTInt322 = new Vt.VTInt32();
-            vTInt322.Text = Worksheets.Count().ToString();
+            vTInt322.Text = (Worksheets.Count() * 2).ToString();
 
             variant4.Append(vTInt322);
 
@@ -266,7 +300,7 @@ namespace ClosedXML.Excel
             Ap.TitlesOfParts titlesOfParts1 = new Ap.TitlesOfParts();
 
             UInt32 sheetCount = (UInt32)Worksheets.Count();
-            Vt.VTVector vTVector2 = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Lpstr, Size = (UInt32Value)sheetCount * 2 };
+            Vt.VTVector vTVector2 = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Lpstr, Size = (UInt32Value)sheetCount * 3 };
             foreach (var worksheet in Worksheets)
             {
                 Vt.VTLPSTR vTLPSTR3 = new Vt.VTLPSTR();
@@ -276,6 +310,10 @@ namespace ClosedXML.Excel
                 Vt.VTLPSTR vTLPSTR4 = new Vt.VTLPSTR();
                 vTLPSTR4.Text = worksheet.Name + "!Print_Area";
                 vTVector2.Append(vTLPSTR4);
+
+                Vt.VTLPSTR vTLPSTR5 = new Vt.VTLPSTR();
+                vTLPSTR5.Text = worksheet.Name + "!Print_Titles";
+                vTVector2.Append(vTLPSTR5);
             }
 
             titlesOfParts1.Append(vTVector2);
@@ -325,19 +363,60 @@ namespace ClosedXML.Excel
                 Sheet sheet = new Sheet() { Name = worksheet.Name, SheetId = (UInt32Value)sheetId, Id = "rId" + sheetId.ToString() };
                 sheets.Append(sheet);
 
-                if (worksheet.PrintOptions.PrintArea == null)
+                if (worksheet.PageSetup.PrintAreas.Count == 0)
                 {
                     var minCell = worksheet.Internals.CellsCollection.Min(c => c.Key);
                     var maxCell = worksheet.Internals.CellsCollection.Max(c => c.Key);
                     if (minCell != null && maxCell != null)
-                        worksheet.PrintOptions.PrintArea = worksheet.Range(minCell, maxCell);
+                        worksheet.PageSetup.PrintAreas.Add(worksheet.Range(minCell, maxCell));
                 }
-                if (worksheet.PrintOptions.PrintArea != null)
+                if (worksheet.PageSetup.PrintAreas.Count > 0)
                 {
                     DefinedName definedName = new DefinedName() { Name = "_xlnm.Print_Area", LocalSheetId = (UInt32Value)sheetId - 1 };
-                    definedName.Text = "'" + worksheet.Name + "'!"
-                        + worksheet.PrintOptions.PrintArea.Internals.FirstCellAddress.ToString()
-                        + ":" + worksheet.PrintOptions.PrintArea.Internals.LastCellAddress.ToString();
+                    var definedNameText = String.Empty;
+                    foreach (var printArea in worksheet.PageSetup.PrintAreas)
+                    {
+                        definedNameText += "'" + worksheet.Name + "'!"
+                        + printArea.Internals.FirstCellAddress.ToString()
+                        + ":" + printArea.Internals.LastCellAddress.ToString() + ",";
+                    }
+
+                    definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
+                    definedNames.Append(definedName);
+                }
+
+                var titles = String.Empty;
+                var definedNameTextRow = String.Empty;
+                var definedNameTextColumn = String.Empty;
+                if (worksheet.PageSetup.RowTitles.Count > 0)
+                {
+                    definedNameTextRow = "'" + worksheet.Name + "'!$" + worksheet.PageSetup.RowTitles.Min(r => r.RowNumber).ToString()
+                        + ":$" + worksheet.PageSetup.RowTitles.Max(r => r.RowNumber).ToString();
+                }
+                if (worksheet.PageSetup.ColumnTitles.Count > 0)
+                {
+                    var minColumn = worksheet.PageSetup.ColumnTitles.Min(r => r.ColumnNumber);
+                    var maxColumn = worksheet.PageSetup.ColumnTitles.Max(r => r.ColumnNumber);
+                    definedNameTextColumn = "'" + worksheet.Name + "'!$" + XLAddress.GetColumnLetterFromNumber(minColumn)
+                        + ":$" + XLAddress.GetColumnLetterFromNumber(maxColumn);
+                }
+
+                if (definedNameTextColumn.Length > 0)
+                {
+                    titles = definedNameTextColumn;
+                    if (definedNameTextRow.Length > 0)
+                        titles += "," + definedNameTextRow;
+                }
+                else
+                {
+                    titles = definedNameTextRow;
+                }
+                
+
+                if (titles.Length > 0)
+                {
+                    DefinedName definedName = new DefinedName() { Name = "_xlnm.Print_Titles", LocalSheetId = (UInt32Value)sheetId - 1 };
+                    definedName.Text = titles;
                     definedNames.Append(definedName);
                 }
             }
@@ -643,12 +722,9 @@ namespace ClosedXML.Excel
             Worksheet worksheet = new Worksheet();
             worksheet.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             SheetProperties sheetProperties = new SheetProperties() { CodeName = xlWorksheet.Name.RemoveSpecialCharacters() };
-            if (xlWorksheet.PrintOptions.PagesTall >= 0 || xlWorksheet.PrintOptions.PagesWide >= 0)
+            if (xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0)
             {
-                PageSetupProperties pageSetupProperties = new PageSetupProperties();
-                if (xlWorksheet.PrintOptions.PagesWide > 0 || xlWorksheet.PrintOptions.PagesTall > 0)
-                    pageSetupProperties.FitToPage = true;
-
+                PageSetupProperties pageSetupProperties = new PageSetupProperties() { FitToPage = true };
                 sheetProperties.Append(pageSetupProperties);
             }
 
@@ -784,69 +860,111 @@ namespace ClosedXML.Excel
             }
 
             PageMargins pageMargins = new PageMargins() { 
-                Left = xlWorksheet.PrintOptions.Margins.Left,
-                Right = xlWorksheet.PrintOptions.Margins.Right,
-                Top = xlWorksheet.PrintOptions.Margins.Top,
-                Bottom = xlWorksheet.PrintOptions.Margins.Bottom,
-                Header = xlWorksheet.PrintOptions.Margins.Header,
-                Footer = xlWorksheet.PrintOptions.Margins.Footer
+                Left = xlWorksheet.PageSetup.Margins.Left,
+                Right = xlWorksheet.PageSetup.Margins.Right,
+                Top = xlWorksheet.PageSetup.Margins.Top,
+                Bottom = xlWorksheet.PageSetup.Margins.Bottom,
+                Header = xlWorksheet.PageSetup.Margins.Header,
+                Footer = xlWorksheet.PageSetup.Margins.Footer
             };
+
+            
+
             //Drawing drawing1 = new Drawing() { Id = "rId1" };
 
             PageSetup pageSetup1 = new PageSetup() { 
-                Orientation = GetOrientationValue(xlWorksheet.PrintOptions.PageOrientation),
+                Orientation = GetOrientationValue(xlWorksheet.PageSetup.PageOrientation),
                 Id = "rId" + RelId.GetNext(RelType.Worksheet),
-                PaperSize = (UInt32Value)(UInt32)xlWorksheet.PrintOptions.PaperSize
+                PaperSize = (UInt32Value)(UInt32)xlWorksheet.PageSetup.PaperSize,
+                BlackAndWhite = xlWorksheet.PageSetup.BlackAndWhite,
+                Draft = xlWorksheet.PageSetup.DraftQuality,
+                PageOrder = GetPageOrderValue(xlWorksheet.PageSetup.PageOrder),
+                CellComments = GetCellCommentValue(xlWorksheet.PageSetup.ShowComments),
+                Errors = GetPrintErrorValue(xlWorksheet.PageSetup.PrintErrorValue)
             };
 
-            if (xlWorksheet.PrintOptions.FirstPageNumber > 0)
+            if (xlWorksheet.PageSetup.FirstPageNumber > 0)
             {
-                pageSetup1.FirstPageNumber = (UInt32Value)(UInt32)xlWorksheet.PrintOptions.FirstPageNumber;
+                pageSetup1.FirstPageNumber = (UInt32Value)(UInt32)xlWorksheet.PageSetup.FirstPageNumber;
                 pageSetup1.UseFirstPageNumber = true;
             }
 
-            if (xlWorksheet.PrintOptions.HorizontalDpi > 0)
-                pageSetup1.HorizontalDpi = (UInt32Value)(UInt32)xlWorksheet.PrintOptions.HorizontalDpi;
+            if (xlWorksheet.PageSetup.HorizontalDpi > 0)
+                pageSetup1.HorizontalDpi = (UInt32Value)(UInt32)xlWorksheet.PageSetup.HorizontalDpi;
 
-            if (xlWorksheet.PrintOptions.VerticalDpi > 0)
-                pageSetup1.VerticalDpi = (UInt32Value)(UInt32)xlWorksheet.PrintOptions.VerticalDpi;
+            if (xlWorksheet.PageSetup.VerticalDpi > 0)
+                pageSetup1.VerticalDpi = (UInt32Value)(UInt32)xlWorksheet.PageSetup.VerticalDpi;
 
-            if (xlWorksheet.PrintOptions.Scale > 0)
+            if (xlWorksheet.PageSetup.Scale > 0)
             {
-                pageSetup1.Scale = (UInt32Value)(UInt32)xlWorksheet.PrintOptions.Scale;
+                pageSetup1.Scale = (UInt32Value)(UInt32)xlWorksheet.PageSetup.Scale;
             }
             else
             {
-                if (xlWorksheet.PrintOptions.PagesWide > 0)
-                    pageSetup1.FitToWidth = (UInt32Value)(UInt32)xlWorksheet.PrintOptions.PagesWide;
-                if (xlWorksheet.PrintOptions.PagesTall > 0)
-                    pageSetup1.FitToHeight = (UInt32Value)(UInt32)xlWorksheet.PrintOptions.PagesTall;
+                if (xlWorksheet.PageSetup.PagesWide > 0)
+                    pageSetup1.FitToWidth = (UInt32Value)(UInt32)xlWorksheet.PageSetup.PagesWide;
+                if (xlWorksheet.PageSetup.PagesTall > 0)
+                    pageSetup1.FitToHeight = (UInt32Value)(UInt32)xlWorksheet.PageSetup.PagesTall;
             }
 
-            PrintOptions printOptions = new PrintOptions() { 
-                HorizontalCentered = xlWorksheet.PrintOptions.CenterHorizontally, 
-                VerticalCentered = xlWorksheet.PrintOptions.CenterVertically };
+            PrintOptions printOptions = new PrintOptions()
+            {
+                HorizontalCentered = xlWorksheet.PageSetup.CenterHorizontally,
+                VerticalCentered = xlWorksheet.PageSetup.CenterVertically,
+                Headings = xlWorksheet.PageSetup.ShowRowAndColumnHeadings,
+                GridLines = xlWorksheet.PageSetup.ShowGridlines
+            };
 
             HeaderFooter headerFooter = new HeaderFooter();
-            headerFooter.ScaleWithDoc = xlWorksheet.PrintOptions.ScaleHFWithDocument;
-            headerFooter.AlignWithMargins = xlWorksheet.PrintOptions.AlignHFWithMargins;
+            headerFooter.ScaleWithDoc = xlWorksheet.PageSetup.ScaleHFWithDocument;
+            headerFooter.AlignWithMargins = xlWorksheet.PageSetup.AlignHFWithMargins;
+            headerFooter.DifferentFirst = true;
+            headerFooter.DifferentOddEven = true;
 
-            FirstHeader firstHeader = new FirstHeader("&L" + xlWorksheet.PrintOptions.Header.Left.GetText(XLHFOccurrence.FirstPage) + "&C" + xlWorksheet.PrintOptions.Header.Center.GetText(XLHFOccurrence.FirstPage) + "&R" + xlWorksheet.PrintOptions.Header.Right.GetText(XLHFOccurrence.FirstPage) + "");
-            headerFooter.Append(firstHeader);
-            OddHeader oddHeader = new OddHeader("&L" + xlWorksheet.PrintOptions.Header.Left.GetText(XLHFOccurrence.OddPages) + "&C" + xlWorksheet.PrintOptions.Header.Center.GetText(XLHFOccurrence.OddPages) + "&R" + xlWorksheet.PrintOptions.Header.Right.GetText(XLHFOccurrence.OddPages) + "");
-            headerFooter.Append(oddHeader);
-            EvenHeader evenHeader = new EvenHeader("&L" + xlWorksheet.PrintOptions.Header.Left.GetText(XLHFOccurrence.EvenPages) + "&C" + xlWorksheet.PrintOptions.Header.Center.GetText(XLHFOccurrence.EvenPages) + "&R" + xlWorksheet.PrintOptions.Header.Right.GetText(XLHFOccurrence.EvenPages) + "");
-            headerFooter.Append(evenHeader);
-
-            FirstFooter firstFooter = new FirstFooter("&L" + xlWorksheet.PrintOptions.Footer.Left.GetText(XLHFOccurrence.FirstPage) + "&C" + xlWorksheet.PrintOptions.Footer.Center.GetText(XLHFOccurrence.FirstPage) + "&R" + xlWorksheet.PrintOptions.Footer.Right.GetText(XLHFOccurrence.FirstPage) + "");
-            headerFooter.Append(firstFooter);
-            OddFooter oddFooter = new OddFooter("&L" + xlWorksheet.PrintOptions.Footer.Left.GetText(XLHFOccurrence.OddPages) + "&C" + xlWorksheet.PrintOptions.Footer.Center.GetText(XLHFOccurrence.OddPages) + "&R" + xlWorksheet.PrintOptions.Footer.Right.GetText(XLHFOccurrence.OddPages) + "");
-            headerFooter.Append(oddFooter);
-            EvenFooter evenFooter = new EvenFooter("&L" + xlWorksheet.PrintOptions.Footer.Left.GetText(XLHFOccurrence.EvenPages) + "&C" + xlWorksheet.PrintOptions.Footer.Center.GetText(XLHFOccurrence.EvenPages) + "&R" + xlWorksheet.PrintOptions.Footer.Right.GetText(XLHFOccurrence.EvenPages) + "");
-            headerFooter.Append(evenFooter);
             
+            OddHeader oddHeader = new OddHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.OddPages));
+            headerFooter.Append(oddHeader);
+            OddFooter oddFooter = new OddFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.OddPages));
+            headerFooter.Append(oddFooter);
 
+            EvenHeader evenHeader = new EvenHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.EvenPages));
+            headerFooter.Append(evenHeader);
+            EvenFooter evenFooter = new EvenFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.EvenPages));
+            headerFooter.Append(evenFooter);
 
+            //var firstHeaderText = "&L" + xlWorksheet.PageSetup.Header.Left.GetText(XLHFOccurrence.FirstPage) + "&C" + xlWorksheet.PageSetup.Header.Center.GetText(XLHFOccurrence.FirstPage) + "&R" + xlWorksheet.PageSetup.Header.Right.GetText(XLHFOccurrence.FirstPage) + "";
+
+            FirstHeader firstHeader = new FirstHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.FirstPage));
+            headerFooter.Append(firstHeader);
+            FirstFooter firstFooter = new FirstFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.FirstPage));
+            headerFooter.Append(firstFooter);
+
+            RowBreaks rowBreaks = null;
+            var rowBreakCount = xlWorksheet.PageSetup.RowBreaks.Count;
+            if (rowBreakCount > 0)
+            {
+                rowBreaks = new RowBreaks() { Count = (UInt32Value)(UInt32)rowBreakCount, ManualBreakCount = (UInt32)rowBreakCount };
+                foreach (var rb in xlWorksheet.PageSetup.RowBreaks)
+                {
+                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)rb.RowNumber, Max = (UInt32Value)(UInt32)rb.ColumnCount(), ManualPageBreak = true };
+                    rowBreaks.Append(break1);
+                }
+               
+            }
+
+            ColumnBreaks columnBreaks = null;
+            var columnBreakCount = xlWorksheet.PageSetup.ColumnBreaks.Count;
+            if (columnBreakCount > 0)
+            {
+                columnBreaks = new ColumnBreaks() { Count = (UInt32Value)(UInt32)columnBreakCount, ManualBreakCount = (UInt32Value)(UInt32)columnBreakCount };
+                foreach (var cb in xlWorksheet.PageSetup.ColumnBreaks)
+                {
+                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)cb.ColumnNumber, Max = (UInt32Value)(UInt32)cb.RowCount(), ManualPageBreak = true };
+                    columnBreaks.Append(break1);
+                }
+                
+            }
+            
             worksheet.Append(sheetProperties);
             worksheet.Append(sheetDimension);
             worksheet.Append(sheetViews);
@@ -858,6 +976,8 @@ namespace ClosedXML.Excel
             worksheet.Append(pageMargins);
             worksheet.Append(pageSetup1);
             worksheet.Append(headerFooter);
+            if (rowBreaks != null) worksheet.Append(rowBreaks);
+            if (columnBreaks != null) worksheet.Append(columnBreaks);
             //worksheet.Append(drawing1);
 
             worksheetPart.Worksheet = worksheet;

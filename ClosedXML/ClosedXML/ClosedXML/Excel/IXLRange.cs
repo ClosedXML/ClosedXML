@@ -15,7 +15,10 @@ namespace ClosedXML.Excel
         Int32 ColumnNumber { get; }
         String ColumnLetter { get; }
         IXLRangeInternals Internals { get; }
+        //void Delete(XLShiftDeletedCells shiftDeleteCells);
     }
+
+    public enum XLShiftDeletedCells { ShiftCellsUp, ShiftCellsLeft }
 
     public static class IXLRangeMethods
     {
@@ -70,8 +73,15 @@ namespace ClosedXML.Excel
         }
         public static IXLRange Range(this IXLRange range, String rangeAddress)
         {
-            String[] arrRange = rangeAddress.Split(':');
-            return range.Range(arrRange[0], arrRange[1]);
+            if (rangeAddress.Contains(':'))
+            {
+                String[] arrRange = rangeAddress.Split(':');
+                return range.Range(arrRange[0], arrRange[1]);
+            }
+            else
+            {
+                return range.Range(rangeAddress, rangeAddress);
+            }
         }
         public static IXLRange Range(this IXLRange range, String firstCellAddress, String lastCellAddress)
         {
@@ -245,10 +255,112 @@ namespace ClosedXML.Excel
             }
             return retVal;
         }
-
-        public static void SetAsPrintArea(this IXLRange range)
+        public static List<IXLRange> Columns(this IXLRange range, String columns)
         {
-            range.Internals.Worksheet.PrintOptions.PrintArea = range;
+            var retVal = new List<IXLRange>();
+            var columnPairs = columns.Split(',');
+            foreach (var pair in columnPairs)
+            {
+                var columnRange = pair.Split(':');
+                var firstColumn = columnRange[0];
+                var lastColumn = columnRange[1];
+                Int32 tmp;
+                if (Int32.TryParse(firstColumn, out tmp))
+                    retVal.AddRange(range.Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)));
+                else
+                    retVal.AddRange(range.Columns(firstColumn, lastColumn));
+            }
+            return retVal;
+        }
+        public static List<IXLRange> Columns(this IXLRange range, String firstColumn, String lastColumn)
+        {
+            return range.Columns(XLAddress.GetColumnNumberFromLetter(firstColumn), XLAddress.GetColumnNumberFromLetter(lastColumn));
+        }
+        public static List<IXLRange> Columns(this IXLRange range, Int32 firstColumn, Int32 lastColumn)
+        {
+            var retVal = new List<IXLRange>();
+
+            for (var co = firstColumn; co <= lastColumn; co++)
+            {
+                retVal.Add(range.Column(co));
+            }
+            return retVal;
+        }
+        public static List<IXLRange> Rows(this IXLRange range)
+        {
+            var retVal = new List<IXLRange>();
+            foreach (var r in Enumerable.Range(1, range.RowCount()))
+            {
+                retVal.Add(range.Row(r));
+            }
+            return retVal;
+        }
+        public static List<IXLRange> Rows(this IXLRange range, String rows)
+        {
+            var retVal = new List<IXLRange>();
+            var rowPairs = rows.Split(',');
+            foreach (var pair in rowPairs)
+            {
+                var rowRange = pair.Split(':');
+                var firstRow = rowRange[0];
+                var lastRow = rowRange[1];
+                retVal.AddRange(range.Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)));
+            }
+            return retVal;
+        }
+        public static List<IXLRange> Rows(this IXLRange range, Int32 firstRow, Int32 lastRow)
+        {
+            var retVal = new List<IXLRange>();
+            
+            for(var ro = firstRow; ro <= lastRow; ro++)
+            {
+                retVal.Add(range.Row(ro));
+            }
+            return retVal;
+        }
+
+        public static void Clear(this IXLRange range)
+        {
+            // Remove cells inside range
+            range.Internals.Worksheet.Internals.CellsCollection.RemoveAll(c =>
+                    c.Address.Column >= range.ColumnNumber
+                    && c.Address.Column <= range.LastColumn().ColumnNumber
+                    && c.Address.Row >= range.RowNumber
+                    && c.Address.Row <= range.LastRow().RowNumber
+                    );
+        }
+        public static void Delete(this IXLRange range, XLShiftDeletedCells shiftDeleteCells)
+        {
+            range.Clear();
+
+            // Range to shift...
+            var cellsToInsert = new Dictionary<IXLAddress, IXLCell>();
+            var cellsToDelete = new List<IXLAddress>();
+            var shiftLeft = range.Internals.Worksheet.Internals.CellsCollection
+                .Where(c => c.Key.Column > range.LastColumn().ColumnNumber
+                    && c.Key.Row >= range.RowNumber
+                    && c.Key.Row <= range.LastRow().RowNumber);
+
+            var shiftUp = range.Internals.Worksheet.Internals.CellsCollection
+    .Where(c =>
+        c.Key.Column >= range.ColumnNumber
+        && c.Key.Column <= range.LastColumn().ColumnNumber
+        && c.Key.Row > range.RowNumber);
+
+            foreach (var c in shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft ? shiftLeft : shiftUp)
+            {
+                var columnModifier = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft ? range.ColumnCount() : 0;
+                var rowModifier = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp ? range.RowCount() : 0;
+                var newKey = new XLAddress(c.Key.Row - rowModifier, c.Key.Column - columnModifier);
+                var newCell = new XLCell(newKey, c.Value.Style);
+                newCell.Value = c.Value.Value;
+                cellsToInsert.Add(newKey, newCell);
+                cellsToDelete.Add(c.Key);
+            }
+            cellsToDelete.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Remove(c));
+            cellsToInsert.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
+
+
         }
     }
 }

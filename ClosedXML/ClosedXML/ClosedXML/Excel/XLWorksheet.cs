@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
             RowNumber = 1;
             ColumnNumber = 1;
             ColumnLetter = "A";
-            PrintOptions = new XLPrintOptions(XLWorkbook.DefaultPrintOptions);
+            PageSetup = new XLPageOptions(XLWorkbook.DefaultPrintOptions);
             this.Name = sheetName;
         }
 
@@ -52,8 +52,85 @@ namespace ClosedXML.Excel
 
             return retVal;
         }
+        public List<IXLColumn> Columns(String columns)
+        {
+            var retVal = new List<IXLColumn>();
+            var columnPairs = columns.Split(',');
+            foreach (var pair in columnPairs)
+            {
+                var columnRange = pair.Split(':');
+                var firstColumn = columnRange[0];
+                var lastColumn = columnRange[1];
+                Int32 tmp;
+                if (Int32.TryParse(firstColumn, out tmp))
+                    retVal.AddRange(Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)));
+                else
+                    retVal.AddRange(Columns(firstColumn, lastColumn));
+            }
+            return retVal;
+        }
+        public List<IXLColumn> Columns(String firstColumn, String lastColumn)
+        {
+            return Columns(XLAddress.GetColumnNumberFromLetter(firstColumn), XLAddress.GetColumnNumberFromLetter(lastColumn));
+        }
+        public List<IXLColumn> Columns(Int32 firstColumn, Int32 lastColumn)
+        {
+            var retVal = new List<IXLColumn>();
+
+            for (var co = firstColumn; co <= lastColumn; co++)
+            {
+                retVal.Add(Column(co));
+            }
+            return retVal;
+        }
+
+        public List<IXLRow> Rows()
+        {
+            var retVal = new List<IXLRow>();
+            var rowList = new List<Int32>();
+
+            if (Internals.CellsCollection.Count > 0)
+                rowList.AddRange(Internals.CellsCollection.Keys.Select(k => k.Row).Distinct());
+
+            if (Internals.ColumnsCollection.Count > 0)
+                rowList.AddRange(Internals.ColumnsCollection.Keys.Where(r => !rowList.Contains(r)));
+
+            foreach (var r in rowList)
+            {
+                retVal.Add(Row(r));
+            }
+
+            return retVal;
+        }
+        public List<IXLRow> Rows(String rows)
+        {
+            var retVal = new List<IXLRow>();
+            var rowPairs = rows.Split(',');
+            foreach (var pair in rowPairs)
+            {
+                var rowRange = pair.Split(':');
+                var firstRow = rowRange[0];
+                var lastRow = rowRange[1];       
+                retVal.AddRange(Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)));
+            }
+            return retVal;
+        }
+        public List<IXLRow> Rows(Int32 firstRow, Int32 lastRow)
+        {
+            var retVal = new List<IXLRow>();
+
+            for (var ro = firstRow; ro <= lastRow; ro++)
+            {
+                retVal.Add(Row(ro));
+            }
+            return retVal;
+        }
         
-        public IXLRange PrintArea { get; set; }
+
+        public IEnumerable<IXLCell> Cells()
+        {
+            return Internals.CellsCollection.Values.AsEnumerable<IXLCell>();
+        }
 
         #endregion
 
@@ -81,6 +158,7 @@ namespace ClosedXML.Excel
                 {
                     yield return c.Style;
                 }
+                
                 UpdatingStyle = false;
             }
         }
@@ -153,7 +231,7 @@ namespace ClosedXML.Excel
         public String Name { get; set; }
 
 
-        public IXLPrintOptions PrintOptions { get; private set; }
+        public IXLPageSetup PageSetup { get; private set; }
 
 
         IXLRangeInternals IXLRange.Internals 

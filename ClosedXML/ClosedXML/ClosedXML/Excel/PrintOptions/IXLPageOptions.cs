@@ -75,9 +75,16 @@ namespace ClosedXML.Excel
         A3TransversePaper = 67,
         A3ExtraTransversePaper = 68
     }
-    public interface IXLPrintOptions
+    public enum XLPageOrderValues { DownThenOver, OverThenDown }
+    public enum XLShowCommentsValues { None, AtEnd, AsDisplayed }
+    public enum XLPrintErrorValues { Blank, Dash, Displayed, NA }
+    public interface IXLPageSetup
     {
-        IXLRange PrintArea { get; set; }
+        List<IXLRange> PrintAreas { get; set; }
+        List<IXLRow> RowTitles { get; set; }
+        void SetRowTitles(List<IXLRow> rowTitles);
+        List<IXLColumn> ColumnTitles { get; set; }
+        void SetColumnTitles(List<IXLColumn> columnTitles);
         XLPageOrientation PageOrientation { get; set; }
         Int32 PagesWide { get; set; }
         Int32 PagesTall { get; set; }
@@ -88,7 +95,7 @@ namespace ClosedXML.Excel
         Boolean CenterHorizontally { get; set; }
         Boolean CenterVertically { get; set; }
         void AdjustTo(Int32 pctOfNormalSize);
-        void FitTo(Int32 pagesWide, Int32 pagesTall);
+        void FitToPages(Int32 pagesWide, Int32 pagesTall);
         XLPaperSize PaperSize { get; set; }
         XLMargins Margins { get; }
 
@@ -96,5 +103,20 @@ namespace ClosedXML.Excel
         IXLHeaderFooter Footer { get; }
         Boolean ScaleHFWithDocument { get; set; }
         Boolean AlignHFWithMargins { get; set; }
+
+        Boolean ShowGridlines { get; set; }
+        Boolean ShowRowAndColumnHeadings { get; set; }
+        Boolean BlackAndWhite { get; set; }
+        Boolean DraftQuality { get; set; }
+        XLPageOrderValues PageOrder { get; set; }
+        XLShowCommentsValues ShowComments { get; set; }
+
+        List<IXLRow> RowBreaks { get; }
+        List<IXLColumn> ColumnBreaks { get; }
+        void AddPageBreak(IXLRow row);
+        void AddPageBreak(IXLColumn column);
+
+        XLPrintErrorValues PrintErrorValue { get; set; }
+
     }
 }

@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="Excel\PrintOptions\IXLHeaderFooter.cs" />
     <Compile Include="Excel\PrintOptions\IXLHFItem.cs" />
-    <Compile Include="Excel\PrintOptions\IXLPrintOptions.cs" />
+    <Compile Include="Excel\PrintOptions\IXLPageOptions.cs" />
     <Compile Include="Excel\IXLRangeInternals.cs" />
     <Compile Include="Excel\IXLRow.cs" />
     <Compile Include="Excel\IXLWorksheetInternals.cs" />
@@ -66,7 +66,7 @@
     <Compile Include="Excel\Style\XLFill.cs" />
     <Compile Include="Excel\Style\XLNumberFormat.cs" />
     <Compile Include="Excel\XLColumnParameters.cs" />
-    <Compile Include="Excel\PrintOptions\XLPrintOptions.cs" />
+    <Compile Include="Excel\PrintOptions\XLPageOptions.cs" />
     <Compile Include="Excel\XLRangeInternals.cs" />
     <Compile Include="Excel\XLRangeParameters.cs" />
     <Compile Include="Excel\XLRowParameters.cs" />

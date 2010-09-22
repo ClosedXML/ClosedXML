@@ -9,7 +9,25 @@ namespace ClosedXML.Excel
     public class XLFont: IXLFont
     {
         IXLStylized container;
-        public XLFont(IXLStylized container = null, IXLFont defaultFont = null)
+        public XLFont()
+        {
+            IXLFont defaultFont = XLWorkbook.DefaultStyle.Font;
+
+            if (defaultFont != null)
+            {
+                bold = defaultFont.Bold;
+                italic = defaultFont.Italic;
+                underline = defaultFont.Underline;
+                strikethrough = defaultFont.Strikethrough;
+                verticalAlignment = defaultFont.VerticalAlignment;
+                shadow = defaultFont.Shadow;
+                fontSize = defaultFont.FontSize;
+                fontColor = defaultFont.FontColor;
+                fontName = defaultFont.FontName;
+                fontFamilyNumbering = defaultFont.FontFamilyNumbering;
+            }
+        }
+        public XLFont(IXLStylized container, IXLFont defaultFont = null)
         {
             this.container = container;
             if (defaultFont != null)

@@ -123,6 +123,9 @@ namespace ClosedXML_Examples.Misc
             ro++;
 
             ws.Cell(++ro, co).Value = "Blank Text:";
+            ws.Cell(ro, co + 1).Value = "12345.6789";
+            ws.Cell(ro, co + 1).Style.NumberFormat.Format = "#,##0.00";
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
             ws.Cell(ro, co + 1).Value = "";
 
             workbook.SaveAs(filePath);

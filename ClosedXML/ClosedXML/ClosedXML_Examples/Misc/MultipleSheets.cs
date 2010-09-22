@@ -47,9 +47,9 @@ namespace ClosedXML_Examples.Misc
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
-            foreach (var wsNum in Enumerable.Range(1, 10))
+            foreach (var wsNum in Enumerable.Range(1, 5))
             {
-                var ws = workbook.Worksheets.Add("New Sheet " + wsNum.ToString());
+                var ws = workbook.Worksheets.Add("Sheet " + wsNum.ToString());
             }
 
             workbook.SaveAs(filePath);

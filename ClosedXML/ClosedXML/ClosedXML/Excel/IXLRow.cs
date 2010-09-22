@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
     public interface IXLRow: IXLRange
     {
         Double Height { get; set; }
+        void Delete();
         
     }
 
