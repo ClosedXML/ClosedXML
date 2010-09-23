@@ -7,7 +7,9 @@ namespace ClosedXML.Excel
 {
     public interface IXLColumns: IEnumerable<IXLColumn>, IXLStylized
     {
-        Double Width { get; set; }
+        Double Width { set; }
         void Delete();
+        void Add(IXLColumn column);
+
     }
 }

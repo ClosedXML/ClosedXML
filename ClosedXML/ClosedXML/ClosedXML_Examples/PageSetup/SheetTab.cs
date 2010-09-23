@@ -26,7 +26,7 @@ namespace ClosedXML_Examples.PageSetup
             ws.PageSetup.SetRowTitles(ws.Rows(1, 2));
 
             // Adding columns to repeat at left
-            ws.PageSetup.SetColumnTitles(ws.Columns(1, 2));
+            //ws.PageSetup.SetColumnTitles(ws.Columns(1, 2));
 
             // Show gridlines
             ws.PageSetup.ShowGridlines = true;

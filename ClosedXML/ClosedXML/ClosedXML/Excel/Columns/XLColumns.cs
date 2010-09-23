@@ -7,6 +7,11 @@ namespace ClosedXML.Excel
 {
     public class XLColumns: IXLColumns
     {
+        public XLColumns()
+        {
+            Style = XLWorkbook.DefaultStyle;
+        }
+
         List<IXLColumn> columns = new List<IXLColumn>();
         public IEnumerator<IXLColumn> GetEnumerator()
         {
@@ -30,6 +35,7 @@ namespace ClosedXML.Excel
             set
             {
                 style = new XLStyle(this, value);
+
             }
         }
 
@@ -41,6 +47,7 @@ namespace ClosedXML.Excel
                 yield return style;
                 foreach (var col in columns)
                 {
+                    yield return col.Style;
                     foreach (var c in col.Internals.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.Column == col.Internals.FirstCellAddress.Column))
                     {
                         yield return c.Style;
@@ -56,19 +63,21 @@ namespace ClosedXML.Excel
 
         public double Width
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
             set
             {
-                throw new NotImplementedException();
+                columns.ForEach(c => c.Width = value);
             }
         }
 
         public void Delete()
         {
-            this.Column(ColumnNumber).Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            columns.ForEach(c => c.Delete(XLShiftDeletedCells.ShiftCellsLeft));
+        }
+
+
+        public void Add(IXLColumn column)
+        {
+            columns.Add(column);
         }
     }
 }

@@ -26,6 +26,8 @@ namespace ClosedXML.Excel
             this.Name = sheetName;
         }
 
+        //private IXLColumns xlColumns = new XLColumns();
+
         public IXLWorksheetInternals Internals { get; private set; }
 
         #region IXLRange Members
@@ -34,9 +36,9 @@ namespace ClosedXML.Excel
         public Int32 ColumnNumber { get; private set; }
         public String ColumnLetter { get; private set; }
 
-        public List<IXLColumn> Columns()
+        public IXLColumns Columns()
         {
-            var retVal = new List<IXLColumn>();
+            var retVal = new XLColumns();
             var columnList = new List<Int32>();
 
             if (Internals.CellsCollection.Count > 0)
@@ -52,30 +54,47 @@ namespace ClosedXML.Excel
 
             return retVal;
         }
-        public List<IXLColumn> Columns(String columns)
+        public IXLColumns Columns(String columns)
         {
-            var retVal = new List<IXLColumn>();
+            var retVal = new XLColumns();
             var columnPairs = columns.Split(',');
             foreach (var pair in columnPairs)
             {
-                var columnRange = pair.Split(':');
-                var firstColumn = columnRange[0];
-                var lastColumn = columnRange[1];
+                String firstColumn;
+                String lastColumn;
+                if (pair.Contains(':'))
+                {
+                    var columnRange = pair.Split(':');
+                    firstColumn = columnRange[0];
+                    lastColumn = columnRange[1];
+                }
+                else
+                {
+                    firstColumn = pair;
+                    lastColumn = pair;
+                }
+                
                 Int32 tmp;
                 if (Int32.TryParse(firstColumn, out tmp))
-                    retVal.AddRange(Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)));
+                    foreach (var col in Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)))
+                    {
+                        retVal.Add(col);
+                    }
                 else
-                    retVal.AddRange(Columns(firstColumn, lastColumn));
+                    foreach (var col in Columns(firstColumn, lastColumn))
+                    {
+                        retVal.Add(col);
+                    }
             }
             return retVal;
         }
-        public List<IXLColumn> Columns(String firstColumn, String lastColumn)
+        public IXLColumns Columns(String firstColumn, String lastColumn)
         {
             return Columns(XLAddress.GetColumnNumberFromLetter(firstColumn), XLAddress.GetColumnNumberFromLetter(lastColumn));
         }
-        public List<IXLColumn> Columns(Int32 firstColumn, Int32 lastColumn)
+        public IXLColumns Columns(Int32 firstColumn, Int32 lastColumn)
         {
-            var retVal = new List<IXLColumn>();
+            var retVal = new XLColumns();
 
             for (var co = firstColumn; co <= lastColumn; co++)
             {
