@@ -48,27 +48,43 @@ namespace ClosedXML_Examples.Rows
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
-            var ws = workbook.Worksheets.Add("Row Collection");
+            var ws = workbook.Worksheets.Add("Rows of a Range");
 
             // All rows in a range
-            ws.Range("B2:C3").Rows().ForEach(r => r.Style.Fill.BackgroundColor = Color.Red);
+            ws.Range("A1:B2").Rows().Style.Fill.BackgroundColor = Color.DimGray;
 
-            // Let's add a separate cell to the worksheet
-            ws.Cell("B5").Value = "Tall 2";
-
-            // Only the used rows in a worksheet
-            ws.Rows().ForEach(r => r.Height = 30);
-
-            var ws2 = workbook.Worksheets.Add("Multiple Rows");
+            var bigRange = ws.Range("B4:C17");
 
             // Contiguous rows by number
-            ws2.Rows(1, 2).ForEach(r => r.Style.Fill.BackgroundColor = Color.Red);
+            bigRange.Rows(1, 2).Style.Fill.BackgroundColor = Color.Red;
 
             // Contiguous rows by number
-            ws2.Rows("4:5").ForEach(r => r.Style.Fill.BackgroundColor = Color.Blue);
+            bigRange.Rows("4:5").Style.Fill.BackgroundColor = Color.Blue;
 
             // Spread rows by number
-            ws2.Rows("7:8,10:11").ForEach(r => r.Style.Fill.BackgroundColor = Color.Orange);
+            bigRange.Rows("7:8,10:11").Style.Fill.BackgroundColor = Color.Orange;
+
+            // Using a single number
+            bigRange.Rows("13").Style.Fill.BackgroundColor = Color.Cyan;
+
+            // Only the used rows in a worksheet
+            ws.Rows().Height = 15;
+
+            var ws2 = workbook.Worksheets.Add("Rows of a Worksheet");
+
+            // Contiguous rows by number
+            ws2.Rows(1, 2).Style.Fill.BackgroundColor = Color.Red;
+
+            // Contiguous rows by number
+            ws2.Rows("4:5").Style.Fill.BackgroundColor = Color.Blue;
+
+            // Spread rows by number
+            ws2.Rows("7:8,10:11").Style.Fill.BackgroundColor = Color.Orange;
+
+            // Using a single number
+            ws2.Rows("13").Style.Fill.BackgroundColor = Color.Cyan;
+
+            ws2.Rows("1:13").Height = 15;
 
             workbook.SaveAs(filePath);
         }

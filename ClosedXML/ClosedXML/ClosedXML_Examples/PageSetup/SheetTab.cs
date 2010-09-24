@@ -19,14 +19,14 @@ namespace ClosedXML_Examples.PageSetup
             var ws = workbook.Worksheets.Add("Sheet Tab");
             
             // Adding print areas
-            ws.PageSetup.PrintAreas.Add(ws.Range("A1:B2"));
-            ws.PageSetup.PrintAreas.Add(ws.Range("D3:D5"));
+            ws.PageSetup.PrintAreas.Add("A1:B2");
+            ws.PageSetup.PrintAreas.Add("D3:D5");
 
             // Adding rows to repeat at top
-            ws.PageSetup.SetRowTitles(ws.Rows(1, 2));
+            ws.PageSetup.SetRowsToRepeatAtTop(1,2);
 
             // Adding columns to repeat at left
-            //ws.PageSetup.SetColumnTitles(ws.Columns(1, 2));
+            ws.PageSetup.SetColumnsToRepeatAtLeft(1, 2);
 
             // Show gridlines
             ws.PageSetup.ShowGridlines = true;

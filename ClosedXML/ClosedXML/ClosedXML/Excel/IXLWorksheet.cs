@@ -15,9 +15,9 @@ namespace ClosedXML.Excel
         IXLColumns Columns(String columns);
         IXLColumns Columns(String firstColumn, String lastColumn);
         IXLColumns Columns(Int32 firstColumn, Int32 lastColumn);
-        List<IXLRow> Rows();
-        List<IXLRow> Rows(String rows);
-        List<IXLRow> Rows(Int32 firstRow, Int32 lastRow); 
+        IXLRows Rows();
+        IXLRows Rows(String rows);
+        IXLRows Rows(Int32 firstRow, Int32 lastRow); 
 
         IXLPageSetup PageSetup { get; }
         new IXLWorksheetInternals Internals { get; }

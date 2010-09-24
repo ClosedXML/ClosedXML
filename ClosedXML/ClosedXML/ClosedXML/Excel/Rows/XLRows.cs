@@ -5,17 +5,17 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLColumns: IXLColumns
+    public class XLRows: IXLRows
     {
-        public XLColumns()
+        public XLRows()
         {
             Style = XLWorkbook.DefaultStyle;
         }
 
-        List<IXLColumn> columns = new List<IXLColumn>();
-        public IEnumerator<IXLColumn> GetEnumerator()
+        List<IXLRow> rows = new List<IXLRow>();
+        public IEnumerator<IXLRow> GetEnumerator()
         {
-            return columns.GetEnumerator();
+            return rows.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -45,10 +45,10 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
                 yield return style;
-                foreach (var col in columns)
+                foreach (var col in rows)
                 {
                     yield return col.Style;
-                    foreach (var c in col.Internals.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.Column == col.Internals.FirstCellAddress.Column))
+                    foreach (var c in col.Internals.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.Row == col.Internals.FirstCellAddress.Row))
                     {
                         yield return c.Style;
                     }
@@ -61,22 +61,23 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        public double Width
+        public double Height
         {
             set
             {
-                columns.ForEach(c => c.Width = value);
+                rows.ForEach(c => c.Height = value);
             }
         }
 
         public void Delete()
         {
-            columns.ForEach(c => c.Delete(XLShiftDeletedCells.ShiftCellsLeft));
+            rows.ForEach(c => c.Delete(XLShiftDeletedCells.ShiftCellsUp));
         }
 
-        public void Add(IXLColumn column)
+
+        public void Add(IXLRow row)
         {
-            columns.Add(column);
+            rows.Add(row);
         }
     }
 }

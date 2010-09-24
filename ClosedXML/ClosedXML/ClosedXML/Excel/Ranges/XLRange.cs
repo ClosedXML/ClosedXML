@@ -29,15 +29,11 @@ namespace ClosedXML.Excel
         }
         public IXLRange Column(Int32 column)
         {
-            IXLAddress firstCellAddress = new XLAddress(1, column);
-            IXLAddress lastCellAddress = new XLAddress(this.RowCount(), column);
-            return this.Range(firstCellAddress, lastCellAddress);
+            return this.Range(1, column, this.RowCount(), column);
         }
         public IXLRange Column(String column)
         {
-            IXLAddress firstCellAddress = new XLAddress(1, column);
-            IXLAddress lastCellAddress = new XLAddress(this.RowCount(), column);
-            return this.Range(firstCellAddress, lastCellAddress);
+            return Column(XLAddress.GetColumnNumberFromLetter(column));
         }
 
         public Int32 RowNumber { get; private set; }

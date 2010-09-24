@@ -5,17 +5,28 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLColumns: IXLColumns
+    public class XLRanges: IXLRanges
     {
-        public XLColumns()
+        public XLRanges()
         {
             Style = XLWorkbook.DefaultStyle;
         }
 
-        List<IXLColumn> columns = new List<IXLColumn>();
-        public IEnumerator<IXLColumn> GetEnumerator()
+        List<IXLRange> ranges = new List<IXLRange>();
+
+        public void Clear()
         {
-            return columns.GetEnumerator();
+            ranges.ForEach(r => r.Clear());
+        }
+
+        public void Add(IXLRange range)
+        {
+            ranges.Add(range);
+        }
+
+        public IEnumerator<IXLRange> GetEnumerator()
+        {
+            return ranges.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -45,12 +56,17 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
                 yield return style;
-                foreach (var col in columns)
+                foreach (var rng in ranges)
                 {
-                    yield return col.Style;
-                    foreach (var c in col.Internals.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.Column == col.Internals.FirstCellAddress.Column))
+                    yield return rng.Style;
+                    foreach (var r in rng.Internals.Worksheet.Internals.CellsCollection.Values.Where(c =>
+                        c.Address.Row >= rng.Internals.FirstCellAddress.Row
+                        && c.Address.Row <= rng.Internals.LastCellAddress.Row
+                        && c.Address.Column >= rng.Internals.FirstCellAddress.Column
+                        && c.Address.Column <= rng.Internals.LastCellAddress.Column
+                        ))
                     {
-                        yield return c.Style;
+                        yield return r.Style;
                     }
                 }
                 UpdatingStyle = false;
@@ -60,23 +76,5 @@ namespace ClosedXML.Excel
         public Boolean UpdatingStyle { get; set; }
 
         #endregion
-
-        public double Width
-        {
-            set
-            {
-                columns.ForEach(c => c.Width = value);
-            }
-        }
-
-        public void Delete()
-        {
-            columns.ForEach(c => c.Delete(XLShiftDeletedCells.ShiftCellsLeft));
-        }
-
-        public void Add(IXLColumn column)
-        {
-            columns.Add(column);
-        }
     }
 }

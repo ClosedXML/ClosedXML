@@ -15,7 +15,6 @@ namespace ClosedXML.Excel
         Int32 ColumnNumber { get; }
         String ColumnLetter { get; }
         IXLRangeInternals Internals { get; }
-        //void Delete(XLShiftDeletedCells shiftDeleteCells);
     }
 
     public enum XLShiftDeletedCells { ShiftCellsUp, ShiftCellsLeft }
@@ -246,39 +245,56 @@ namespace ClosedXML.Excel
             cellsToInsert.ForEach(c => range.Internals.Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
         }
 
-        public static List<IXLRange> Columns(this IXLRange range)
+        public static IXLRanges Columns(this IXLRange range)
         {
-            var retVal = new List<IXLRange>();
+            var retVal = new XLRanges();
             foreach (var c in Enumerable.Range(1, range.ColumnCount()))
             {
                 retVal.Add(range.Column(c));
             }
             return retVal;
         }
-        public static List<IXLRange> Columns(this IXLRange range, String columns)
+        public static IXLRanges Columns(this IXLRange range, String columns)
         {
-            var retVal = new List<IXLRange>();
+            var retVal = new XLRanges();
             var columnPairs = columns.Split(',');
             foreach (var pair in columnPairs)
             {
-                var columnRange = pair.Split(':');
-                var firstColumn = columnRange[0];
-                var lastColumn = columnRange[1];
+                String firstColumn;
+                String lastColumn;
+                if (pair.Contains(':'))
+                {
+                    var columnRange = pair.Split(':');
+                    firstColumn = columnRange[0];
+                    lastColumn = columnRange[1];
+                }
+                else
+                {
+                    firstColumn = pair;
+                    lastColumn = pair;
+                }
+
                 Int32 tmp;
                 if (Int32.TryParse(firstColumn, out tmp))
-                    retVal.AddRange(range.Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)));
+                    foreach (var col in range.Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)))
+                    {
+                        retVal.Add(col);
+                    }
                 else
-                    retVal.AddRange(range.Columns(firstColumn, lastColumn));
+                    foreach (var col in range.Columns(firstColumn, lastColumn))
+                    {
+                        retVal.Add(col);
+                    }
             }
             return retVal;
         }
-        public static List<IXLRange> Columns(this IXLRange range, String firstColumn, String lastColumn)
+        public static IXLRanges Columns(this IXLRange range, String firstColumn, String lastColumn)
         {
             return range.Columns(XLAddress.GetColumnNumberFromLetter(firstColumn), XLAddress.GetColumnNumberFromLetter(lastColumn));
         }
-        public static List<IXLRange> Columns(this IXLRange range, Int32 firstColumn, Int32 lastColumn)
+        public static IXLRanges Columns(this IXLRange range, Int32 firstColumn, Int32 lastColumn)
         {
-            var retVal = new List<IXLRange>();
+            var retVal = new XLRanges();
 
             for (var co = firstColumn; co <= lastColumn; co++)
             {
@@ -286,31 +302,44 @@ namespace ClosedXML.Excel
             }
             return retVal;
         }
-        public static List<IXLRange> Rows(this IXLRange range)
+        public static IXLRanges Rows(this IXLRange range)
         {
-            var retVal = new List<IXLRange>();
+            var retVal = new XLRanges();
             foreach (var r in Enumerable.Range(1, range.RowCount()))
             {
                 retVal.Add(range.Row(r));
             }
             return retVal;
         }
-        public static List<IXLRange> Rows(this IXLRange range, String rows)
+        public static IXLRanges Rows(this IXLRange range, String rows)
         {
-            var retVal = new List<IXLRange>();
+            var retVal = new XLRanges();
             var rowPairs = rows.Split(',');
             foreach (var pair in rowPairs)
             {
-                var rowRange = pair.Split(':');
-                var firstRow = rowRange[0];
-                var lastRow = rowRange[1];
-                retVal.AddRange(range.Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)));
+                String firstRow;
+                String lastRow;
+                if (pair.Contains(':'))
+                {
+                    var rowRange = pair.Split(':');
+                    firstRow = rowRange[0];
+                    lastRow = rowRange[1];
+                }
+                else
+                {
+                    firstRow = pair;
+                    lastRow = pair;
+                }
+                foreach (var row in range.Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
+                {
+                    retVal.Add(row);
+                }
             }
             return retVal;
         }
-        public static List<IXLRange> Rows(this IXLRange range, Int32 firstRow, Int32 lastRow)
+        public static IXLRanges Rows(this IXLRange range, Int32 firstRow, Int32 lastRow)
         {
-            var retVal = new List<IXLRange>();
+            var retVal = new XLRanges();
             
             for(var ro = firstRow; ro <= lastRow; ro++)
             {

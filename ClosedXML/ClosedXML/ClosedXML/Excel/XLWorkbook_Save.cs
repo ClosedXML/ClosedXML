@@ -363,14 +363,14 @@ namespace ClosedXML.Excel
                 Sheet sheet = new Sheet() { Name = worksheet.Name, SheetId = (UInt32Value)sheetId, Id = "rId" + sheetId.ToString() };
                 sheets.Append(sheet);
 
-                if (worksheet.PageSetup.PrintAreas.Count == 0)
+                if (worksheet.PageSetup.PrintAreas.Count() == 0)
                 {
                     var minCell = worksheet.Internals.CellsCollection.Min(c => c.Key);
                     var maxCell = worksheet.Internals.CellsCollection.Max(c => c.Key);
                     if (minCell != null && maxCell != null)
-                        worksheet.PageSetup.PrintAreas.Add(worksheet.Range(minCell, maxCell));
+                        worksheet.PageSetup.PrintAreas.Add(minCell, maxCell);
                 }
-                if (worksheet.PageSetup.PrintAreas.Count > 0)
+                if (worksheet.PageSetup.PrintAreas.Count() > 0)
                 {
                     DefinedName definedName = new DefinedName() { Name = "_xlnm.Print_Area", LocalSheetId = (UInt32Value)sheetId - 1 };
                     var definedNameText = String.Empty;
@@ -388,15 +388,15 @@ namespace ClosedXML.Excel
                 var titles = String.Empty;
                 var definedNameTextRow = String.Empty;
                 var definedNameTextColumn = String.Empty;
-                if (worksheet.PageSetup.RowTitles.Count > 0)
+                if (worksheet.PageSetup.FirstRowToRepeatAtTop > 0)
                 {
-                    definedNameTextRow = "'" + worksheet.Name + "'!$" + worksheet.PageSetup.RowTitles.Min(r => r.RowNumber).ToString()
-                        + ":$" + worksheet.PageSetup.RowTitles.Max(r => r.RowNumber).ToString();
+                    definedNameTextRow = "'" + worksheet.Name + "'!$" + worksheet.PageSetup.FirstRowToRepeatAtTop.ToString()
+                        + ":$" + worksheet.PageSetup.LastRowToRepeatAtTop.ToString();
                 }
-                if (worksheet.PageSetup.ColumnTitles.Count > 0)
+                if (worksheet.PageSetup.FirstColumnToRepeatAtLeft > 0)
                 {
-                    var minColumn = worksheet.PageSetup.ColumnTitles.Min(r => r.ColumnNumber);
-                    var maxColumn = worksheet.PageSetup.ColumnTitles.Max(r => r.ColumnNumber);
+                    var minColumn = worksheet.PageSetup.FirstColumnToRepeatAtLeft;
+                    var maxColumn = worksheet.PageSetup.LastColumnToRepeatAtLeft;
                     definedNameTextColumn = "'" + worksheet.Name + "'!$" + XLAddress.GetColumnLetterFromNumber(minColumn)
                         + ":$" + XLAddress.GetColumnLetterFromNumber(maxColumn);
                 }
@@ -946,7 +946,7 @@ namespace ClosedXML.Excel
                 rowBreaks = new RowBreaks() { Count = (UInt32Value)(UInt32)rowBreakCount, ManualBreakCount = (UInt32)rowBreakCount };
                 foreach (var rb in xlWorksheet.PageSetup.RowBreaks)
                 {
-                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)rb.RowNumber, Max = (UInt32Value)(UInt32)rb.ColumnCount(), ManualPageBreak = true };
+                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)rb, Max = (UInt32Value)(UInt32)xlWorksheet.LastRow().RowNumber, ManualPageBreak = true };
                     rowBreaks.Append(break1);
                 }
                
@@ -959,7 +959,7 @@ namespace ClosedXML.Excel
                 columnBreaks = new ColumnBreaks() { Count = (UInt32Value)(UInt32)columnBreakCount, ManualBreakCount = (UInt32Value)(UInt32)columnBreakCount };
                 foreach (var cb in xlWorksheet.PageSetup.ColumnBreaks)
                 {
-                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)cb.ColumnNumber, Max = (UInt32Value)(UInt32)cb.RowCount(), ManualPageBreak = true };
+                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)cb, Max = (UInt32Value)(UInt32)xlWorksheet.LastColumn().ColumnNumber, ManualPageBreak = true };
                     columnBreaks.Append(break1);
                 }
                 

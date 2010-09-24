@@ -48,18 +48,36 @@ namespace ClosedXML_Examples.Columns
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
-            var ws = workbook.Worksheets.Add("Column Collection");
+            var ws = workbook.Worksheets.Add("Columns of a Range");
 
             // All columns in a range
-            ws.Range("B2:C3").Columns().ForEach(c => c.Style.Fill.BackgroundColor = Color.Red);
+            ws.Range("A1:B2").Columns().Style.Fill.BackgroundColor = Color.DimGray;
 
-            // Let's add a separate cell to the worksheet
-            ws.Cell("E1").Value = "Wide 2";
+            var bigRange = ws.Range("A4:V6");
+
+            // Contiguous columns by number
+            bigRange.Columns(1, 2).Style.Fill.BackgroundColor = Color.Red;
+
+            // Contiguous columns by letter
+            bigRange.Columns("D", "E").Style.Fill.BackgroundColor = Color.Blue;
+
+            // Contiguous columns by letter
+            bigRange.Columns("G:H").Style.Fill.BackgroundColor = Color.DeepPink;
+
+            // Spread columns by number
+            bigRange.Columns("10:11,13:14").Style.Fill.BackgroundColor = Color.Orange;
+
+            // Spread columns by letter
+            bigRange.Columns("P:Q,S:T").Style.Fill.BackgroundColor = Color.Turquoise;
+
+            // Use a single number/letter
+            bigRange.Columns("V").Style.Fill.BackgroundColor = Color.Cyan;
 
             // Only the used columns in a worksheet
-            ws.Columns().Width = 20; 
+            ws.Columns("A:V").Width = 3; 
 
-            var ws2 = workbook.Worksheets.Add("Multiple Columns");
+
+            var ws2 = workbook.Worksheets.Add("Columns of a worksheet");
             
             // Contiguous columns by number
             ws2.Columns(1, 2).Style.Fill.BackgroundColor = Color.Red;

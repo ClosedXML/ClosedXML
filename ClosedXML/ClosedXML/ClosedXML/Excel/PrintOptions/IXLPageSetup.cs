@@ -78,13 +78,16 @@ namespace ClosedXML.Excel
     public enum XLPageOrderValues { DownThenOver, OverThenDown }
     public enum XLShowCommentsValues { None, AtEnd, AsDisplayed }
     public enum XLPrintErrorValues { Blank, Dash, Displayed, NA }
+    
     public interface IXLPageSetup
     {
-        List<IXLRange> PrintAreas { get; set; }
-        List<IXLRow> RowTitles { get; set; }
-        void SetRowTitles(List<IXLRow> rowTitles);
-        List<IXLColumn> ColumnTitles { get; set; }
-        void SetColumnTitles(List<IXLColumn> columnTitles);
+        IXLPrintAreas PrintAreas { get; }
+        Int32 FirstRowToRepeatAtTop { get; }
+        Int32 LastRowToRepeatAtTop { get; }
+        void SetRowsToRepeatAtTop(Int32 firstRowToRepeatAtTop, Int32 lastRowToRepeatAtTop);
+        Int32 FirstColumnToRepeatAtLeft { get; }
+        Int32 LastColumnToRepeatAtLeft { get; }
+        void SetColumnsToRepeatAtLeft(Int32 firstColumnToRepeatAtLeft, Int32 lastColumnToRepeatAtLeft);
         XLPageOrientation PageOrientation { get; set; }
         Int32 PagesWide { get; set; }
         Int32 PagesTall { get; set; }
@@ -111,10 +114,11 @@ namespace ClosedXML.Excel
         XLPageOrderValues PageOrder { get; set; }
         XLShowCommentsValues ShowComments { get; set; }
 
-        List<IXLRow> RowBreaks { get; }
-        List<IXLColumn> ColumnBreaks { get; }
-        void AddPageBreak(IXLRow row);
-        void AddPageBreak(IXLColumn column);
+
+        List<Int32> RowBreaks { get; }
+        List<Int32> ColumnBreaks { get; }
+        void AddHorizontalPageBreak(Int32 row);
+        void AddVerticalPageBreak(Int32 column);
 
         XLPrintErrorValues PrintErrorValue { get; set; }
 

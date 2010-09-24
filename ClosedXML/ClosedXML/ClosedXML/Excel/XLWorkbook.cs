@@ -112,14 +112,14 @@ namespace ClosedXML.Excel
         public static Double DefaultRowHeight { get; set; }
         public static Double DefaultColumnWidth { get; set; }
 
-        public static XLPageOptions defaultPrintOptions;
-        public static XLPageOptions DefaultPrintOptions
+        public static XLPageOptions defaultPageOptions;
+        public static XLPageOptions DefaultPageOptions
         {
             get
             {
-                if (defaultPrintOptions == null)
+                if (defaultPageOptions == null)
                 {
-                    defaultPrintOptions = new XLPageOptions(null)
+                    defaultPageOptions = new XLPageOptions(null, null)
                     {
                         PageOrientation = XLPageOrientation.Default,
                         Scale = 100,
@@ -139,7 +139,7 @@ namespace ClosedXML.Excel
                          ShowComments = XLShowCommentsValues.None
                     };
                 }
-                return defaultPrintOptions;
+                return defaultPageOptions;
             }
         }
 

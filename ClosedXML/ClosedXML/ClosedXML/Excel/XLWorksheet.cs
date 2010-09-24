@@ -22,11 +22,10 @@ namespace ClosedXML.Excel
             RowNumber = 1;
             ColumnNumber = 1;
             ColumnLetter = "A";
-            PageSetup = new XLPageOptions(XLWorkbook.DefaultPrintOptions);
+            PageSetup = new XLPageOptions(XLWorkbook.DefaultPageOptions, this);
             this.Name = sheetName;
         }
 
-        //private IXLColumns xlColumns = new XLColumns();
 
         public IXLWorksheetInternals Internals { get; private set; }
 
@@ -103,9 +102,9 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public List<IXLRow> Rows()
+        public IXLRows Rows()
         {
-            var retVal = new List<IXLRow>();
+            var retVal = new XLRows();
             var rowList = new List<Int32>();
 
             if (Internals.CellsCollection.Count > 0)
@@ -121,22 +120,35 @@ namespace ClosedXML.Excel
 
             return retVal;
         }
-        public List<IXLRow> Rows(String rows)
+        public IXLRows Rows(String rows)
         {
-            var retVal = new List<IXLRow>();
+            var retVal = new XLRows();
             var rowPairs = rows.Split(',');
             foreach (var pair in rowPairs)
             {
-                var rowRange = pair.Split(':');
-                var firstRow = rowRange[0];
-                var lastRow = rowRange[1];       
-                retVal.AddRange(Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)));
+                String firstRow;
+                String lastRow;
+                if (pair.Contains(':'))
+                {
+                    var rowRange = pair.Split(':');
+                    firstRow = rowRange[0];
+                    lastRow = rowRange[1];
+                }
+                else
+                {
+                    firstRow = pair;
+                    lastRow = pair;
+                }
+                foreach (var row in Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
+                {
+                    retVal.Add(row);
+                }
             }
             return retVal;
         }
-        public List<IXLRow> Rows(Int32 firstRow, Int32 lastRow)
+        public IXLRows Rows(Int32 firstRow, Int32 lastRow)
         {
-            var retVal = new List<IXLRow>();
+            var retVal = new XLRows();
 
             for (var ro = firstRow; ro <= lastRow; ro++)
             {
