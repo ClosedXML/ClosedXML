@@ -13,20 +13,15 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Print Areas");
-
-            // Column Collection examples
-            // Row Collection examples
-            // Sheets examples
-            // SheetTab examples
-            
-            // Add List<IXLRange> Ranges(...) to IXLRandge
-
-            //Apply a style to the entire sheet (not just the used cells)
-
-            wb.SaveAs(@"c:\Sandbox.xlsx");
+            wb.Load(@"c:\Initial.xlsx");
+            wb.SaveAs(@"c:\Initial_Saved.xlsx");
             //Console.ReadKey();
 
         }
+        // Modify IXLRange to have the "IXLRanges Ranges(...)" methods
+        // Modify DefiningRanges example to show how to select multiple ranges
+        // Apply a style to the entire sheet (not just the used cells)
+        // Implement formulas
+        // Implement grouping of rows and columns
     }
 }

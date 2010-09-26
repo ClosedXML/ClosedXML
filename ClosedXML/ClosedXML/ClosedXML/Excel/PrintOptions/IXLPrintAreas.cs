@@ -12,6 +12,5 @@ namespace ClosedXML.Excel
         void Add(String rangeAddress);
         void Add(String firstCellAddress, String lastCellAddress);
         void Add(IXLAddress firstCellAddress, IXLAddress lastCellAddress);
-        void Add(IXLCell firstCell, IXLCell lastCell);
     }
 }

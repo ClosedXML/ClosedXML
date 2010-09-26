@@ -15,7 +15,15 @@ namespace ClosedXML.Excel
             DefaultRowHeight = 15;
             DefaultColumnWidth = 9.140625;
             Worksheets = new XLWorksheets();
+
+            PopulateEnums();
         }
+
+        public XLWorkbook(String file)
+        {
+            Load(file);
+        }
+
         #region IXLWorkbook Members
 
         public IXLWorksheets Worksheets { get; private set; }

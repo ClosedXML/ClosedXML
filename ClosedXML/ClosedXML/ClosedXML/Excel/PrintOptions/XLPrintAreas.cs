@@ -39,11 +39,6 @@ namespace ClosedXML.Excel
             ranges.Add(worksheet.Range(firstCellAddress, lastCellAddress));
         }
 
-        public void Add(IXLCell firstCell, IXLCell lastCell)
-        {
-            ranges.Add(worksheet.Range(firstCell, lastCell));
-        }
-
         public IEnumerator<IXLRange> GetEnumerator()
         {
             return ranges.GetEnumerator();

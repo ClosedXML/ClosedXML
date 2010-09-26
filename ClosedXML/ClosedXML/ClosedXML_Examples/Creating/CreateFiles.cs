@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using ClosedXML_Examples.Styles;
+using ClosedXML_Examples.Columns;
+using ClosedXML_Examples.Rows;
+using ClosedXML_Examples.Misc;
+using ClosedXML_Examples.Ranges;
+using ClosedXML_Examples.PageSetup;
+
+namespace ClosedXML_Examples
+{
+    public class CreateFiles
+    {
+        public static void CreateAllFiles()
+        {
+            new HelloWorld().Create(@"C:\Excel Files\Created\HelloWorld.xlsx");
+            new BasicTable().Create(@"C:\Excel Files\Created\BasicTable.xlsx");
+            new StyleExamples().Create();
+            new ColumnSettings().Create(@"C:\Excel Files\Created\ColumnSettings.xlsx");
+            new RowSettings().Create(@"C:\Excel Files\Created\RowSettings.xlsx");
+            new MergeCells().Create(@"C:\Excel Files\Created\MergedCells.xlsx");
+            new InsertRows().Create(@"C:\Excel Files\Created\InsertRows.xlsx");
+            new InsertColumns().Create(@"C:\Excel Files\Created\InsertColumns.xlsx");
+            new ColumnCollection().Create(@"C:\Excel Files\Created\ColumnCollection.xlsx");
+            new DataTypes().Create(@"C:\Excel Files\Created\DataTypes.xlsx");
+            new MultipleSheets().Create(@"C:\Excel Files\Created\MultipleSheets.xlsx");
+            new RowCollection().Create(@"C:\Excel Files\Created\RowCollection.xlsx");
+            new DefiningRanges().Create(@"C:\Excel Files\Created\DefiningRanges.xlsx");
+            new ClearingRanges().Create(@"C:\Excel Files\Created\ClearingRanges.xlsx");
+            new DeletingRanges().Create(@"C:\Excel Files\Created\DeletingRanges.xlsx");
+            new Margins().Create(@"C:\Excel Files\Created\Margins.xlsx");
+            new Page().Create(@"C:\Excel Files\Created\Page.xlsx");
+            new HeaderFooters().Create(@"C:\Excel Files\Created\HeaderFooters.xlsx");
+            new Sheets().Create(@"C:\Excel Files\Created\Sheets.xlsx");
+            new SheetTab().Create(@"C:\Excel Files\Created\SheetTab.xlsx");
+        }
+    }
+}

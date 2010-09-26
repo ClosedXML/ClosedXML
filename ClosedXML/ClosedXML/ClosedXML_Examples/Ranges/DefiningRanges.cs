@@ -28,19 +28,14 @@ namespace ClosedXML_Examples.Ranges
             range2.Cell(1, 1).Value = "ws.Range(ws.Cell(2, 1).Address, ws.Cell(2, 2).Address).Merge()";
             range2.Merge();
 
-            // With two XLCells
-            var range3 = ws.Range(ws.Cell(3,1), ws.Cell(3,2));
-            range3.Cell(1, 1).Value = "ws.Range(ws.Cell(3,1), ws.Cell(3,2)).Merge()";
-            range3.Merge();
-
             // With two strings
-            var range4 = ws.Range("A4", "B4");
-            range4.Cell(1, 1).Value = "ws.Range(\"A4\", \"B4\").Merge()";
+            var range4 = ws.Range("A3", "B3");
+            range4.Cell(1, 1).Value = "ws.Range(\"A3\", \"B3\").Merge()";
             range4.Merge();
 
             // With 4 points
-            var range5 = ws.Range(5, 1, 5, 2);
-            range5.Cell(1, 1).Value = "ws.Range(5, 1, 5, 2).Merge()";
+            var range5 = ws.Range(4, 1, 4, 2);
+            range5.Cell(1, 1).Value = "ws.Range(4, 1, 4, 2).Merge()";
             range5.Merge();
 
             workbook.SaveAs(filePath);

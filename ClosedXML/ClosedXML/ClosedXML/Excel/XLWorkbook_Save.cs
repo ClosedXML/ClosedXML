@@ -19,6 +19,16 @@ namespace ClosedXML.Excel
 {
     public partial class XLWorkbook
     {
+        private List<KeyValuePair<XLFillPatternValues, PatternValues>> fillPatternValues = new List<KeyValuePair<XLFillPatternValues, PatternValues>>();
+        private List<KeyValuePair<XLAlignmentHorizontalValues, HorizontalAlignmentValues>> alignmentHorizontalValues = new List<KeyValuePair<XLAlignmentHorizontalValues, HorizontalAlignmentValues>>();
+        private List<KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>> alignmentVerticalValues = new List<KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>>();
+        private void PopulateEnums()
+        {
+            PopulateFillPatternValues();
+            PopulateAlignmentHorizontalValues();
+            PopulateAlignmentVerticalValues();
+        }
+
         private enum RelType { General, Workbook, Worksheet }
         private class RelId
         {
@@ -99,31 +109,27 @@ namespace ClosedXML.Excel
             }
         }
 
-        private PatternValues GetPatternValue(XLFillPatternValues xlFillPatternValue)
-        {
-            switch (xlFillPatternValue)
-            {
-                case XLFillPatternValues.DarkDown: return PatternValues.DarkDown;
-                case XLFillPatternValues.DarkGray: return PatternValues.DarkGray;
-                case XLFillPatternValues.DarkGrid: return PatternValues.DarkGrid;
-                case XLFillPatternValues.DarkHorizontal: return PatternValues.DarkHorizontal;
-                case XLFillPatternValues.DarkTrellis: return PatternValues.DarkTrellis;
-                case XLFillPatternValues.DarkUp: return PatternValues.DarkUp;
-                case XLFillPatternValues.DarkVertical: return PatternValues.DarkVertical;
-                case XLFillPatternValues.Gray0625: return PatternValues.Gray0625;
-                case XLFillPatternValues.Gray125: return PatternValues.Gray125;
-                case XLFillPatternValues.LightDown: return PatternValues.LightDown;
-                case XLFillPatternValues.LightGray: return PatternValues.LightGray;
-                case XLFillPatternValues.LightGrid: return PatternValues.LightGrid;
-                case XLFillPatternValues.LightHorizontal: return PatternValues.LightHorizontal;
-                case XLFillPatternValues.LightTrellis: return PatternValues.LightTrellis;
-                case XLFillPatternValues.LightUp: return PatternValues.LightUp;
-                case XLFillPatternValues.LightVertical: return PatternValues.LightVertical;
-                case XLFillPatternValues.MediumGray: return PatternValues.MediumGray;
-                case XLFillPatternValues.None: return PatternValues.None;
-                case XLFillPatternValues.Solid: return PatternValues.Solid;
-                default: throw new NotImplementedException();
-            }
+        private void PopulateFillPatternValues()
+        { 
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkDown, PatternValues.DarkDown));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkGray, PatternValues.DarkGray));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkGrid, PatternValues.DarkGrid));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkHorizontal, PatternValues.DarkHorizontal));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkTrellis, PatternValues.DarkTrellis));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkUp, PatternValues.DarkUp));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkVertical, PatternValues.DarkVertical));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.Gray0625, PatternValues.Gray0625));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.Gray125, PatternValues.Gray125));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightDown, PatternValues.LightDown));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightGray, PatternValues.LightGray));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightGrid, PatternValues.LightGrid));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightHorizontal, PatternValues.LightHorizontal));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightTrellis, PatternValues.LightTrellis));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightUp, PatternValues.LightUp));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightVertical, PatternValues.LightVertical));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.MediumGray, PatternValues.MediumGray));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.None, PatternValues.None));
+                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.Solid, PatternValues.Solid));
         }
 
         private BorderStyleValues GetBorderStyleValue(XLBorderStyleValues xlBorderStyleValue)
@@ -148,33 +154,26 @@ namespace ClosedXML.Excel
             }
         }
 
-        private HorizontalAlignmentValues GetHorizontalAlignmentValue(XLAlignmentHorizontalValues xlAlignmentHorizontalValue)
+        private void PopulateAlignmentHorizontalValues()
         {
-            switch (xlAlignmentHorizontalValue)
-            {
-                case XLAlignmentHorizontalValues.Center: return HorizontalAlignmentValues.Center;
-                case XLAlignmentHorizontalValues.CenterContinuous: return HorizontalAlignmentValues.CenterContinuous;
-                case XLAlignmentHorizontalValues.Distributed: return HorizontalAlignmentValues.Distributed;
-                case XLAlignmentHorizontalValues.Fill: return HorizontalAlignmentValues.Fill;
-                case XLAlignmentHorizontalValues.General: return HorizontalAlignmentValues.General;
-                case XLAlignmentHorizontalValues.Justify: return HorizontalAlignmentValues.Justify;
-                case XLAlignmentHorizontalValues.Left: return HorizontalAlignmentValues.Left;
-                case XLAlignmentHorizontalValues.Right: return HorizontalAlignmentValues.Right;
-                default: throw new NotImplementedException();
-            }
+                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Center, HorizontalAlignmentValues.Center));
+                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.CenterContinuous, HorizontalAlignmentValues.CenterContinuous));
+                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Distributed, HorizontalAlignmentValues.Distributed));
+                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Fill, HorizontalAlignmentValues.Fill));
+                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.General, HorizontalAlignmentValues.General));
+                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Justify, HorizontalAlignmentValues.Justify));
+                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Left, HorizontalAlignmentValues.Left));
+                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Right, HorizontalAlignmentValues.Right));
         }
 
-        private VerticalAlignmentValues GetVerticalAlignmentValue(XLAlignmentVerticalValues xlAlignmentVerticalValue)
+        private void PopulateAlignmentVerticalValues()
         {
-            switch (xlAlignmentVerticalValue)
-            {
-                case XLAlignmentVerticalValues.Bottom: return VerticalAlignmentValues.Bottom;
-                case XLAlignmentVerticalValues.Center: return VerticalAlignmentValues.Center;
-                case XLAlignmentVerticalValues.Distributed: return VerticalAlignmentValues.Distributed;
-                case XLAlignmentVerticalValues.Justify: return VerticalAlignmentValues.Justify;
-                case XLAlignmentVerticalValues.Top: return VerticalAlignmentValues.Top;
-                default: throw new NotImplementedException();
-            }
+
+            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Bottom, VerticalAlignmentValues.Bottom));
+            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Center, VerticalAlignmentValues.Center));
+            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Distributed, VerticalAlignmentValues.Distributed));
+            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Justify, VerticalAlignmentValues.Justify));
+            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Top, VerticalAlignmentValues.Top));
         }
 
         private PageOrderValues GetPageOrderValue(XLPageOrderValues pageOrderValue)
@@ -603,7 +602,8 @@ namespace ClosedXML.Excel
             foreach (var fillInfo in sharedFills.Values)
             {
                 Fill fill = new Fill();
-                PatternFill patternFill = new PatternFill() { PatternType = GetPatternValue(fillInfo.Fill.PatternType) };
+                
+                PatternFill patternFill = new PatternFill() { PatternType = fillPatternValues.Single(p=>p.Key == fillInfo.Fill.PatternType).Value };
                 ForegroundColor foregroundColor = new ForegroundColor() { Rgb = fillInfo.Fill.PatternColor.ToHex() };
                 BackgroundColor backgroundColor = new BackgroundColor() { Rgb = fillInfo.Fill.PatternBackgroundColor.ToHex() };
 
@@ -661,7 +661,7 @@ namespace ClosedXML.Excel
                 var fontId = styleInfo.FontId;
                 var fillId = styleInfo.FillId;
                 var borderId = styleInfo.BorderId;
-                Boolean applyFill = GetPatternValue(styleInfo.Style.Fill.PatternType) == PatternValues.None;
+                Boolean applyFill = fillPatternValues.Single(p => p.Key == styleInfo.Style.Fill.PatternType).Value == PatternValues.None;
                 IXLBorder opBorder = styleInfo.Style.Border;
                 Boolean applyBorder = (
                        GetBorderStyleValue(opBorder.BottomBorder) != BorderStyleValues.None
@@ -676,8 +676,8 @@ namespace ClosedXML.Excel
                 CellFormat cellFormat = new CellFormat() { NumberFormatId = (UInt32Value)(UInt32)numberFormatId, FontId = (UInt32Value)fontId, FillId = (UInt32Value)fillId, BorderId = (UInt32Value)borderId, FormatId = (UInt32Value)formatId, ApplyNumberFormat = false, ApplyFill = applyFill, ApplyBorder = applyBorder, ApplyAlignment = false, ApplyProtection = false };
                 Alignment alignment = new Alignment()
                 {
-                    Horizontal = GetHorizontalAlignmentValue(styleInfo.Style.Alignment.Horizontal),
-                    Vertical = GetVerticalAlignmentValue(styleInfo.Style.Alignment.Vertical),
+                    Horizontal = alignmentHorizontalValues.Single(a=>a.Key== styleInfo.Style.Alignment.Horizontal).Value,
+                    Vertical = alignmentVerticalValues.Single(a=>a.Key == styleInfo.Style.Alignment.Vertical).Value,
                     Indent = (UInt32)styleInfo.Style.Alignment.Indent,
                     ReadingOrder = (UInt32)styleInfo.Style.Alignment.ReadingOrder,
                     WrapText = styleInfo.Style.Alignment.WrapText,

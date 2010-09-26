@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Excel\Columns\IXLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumns.cs" />
+    <Compile Include="Excel\XLWorkbook_Load.cs" />
     <Compile Include="Excel\PrintOptions\IXLHeaderFooter.cs" />
     <Compile Include="Excel\PrintOptions\IXLHFItem.cs" />
     <Compile Include="Excel\PrintOptions\IXLPageSetup.cs" />

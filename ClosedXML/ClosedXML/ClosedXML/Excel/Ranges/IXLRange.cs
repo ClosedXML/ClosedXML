@@ -103,10 +103,6 @@ namespace ClosedXML.Excel
 
             return new XLRange(xlRangeParameters);
         }
-        public static IXLRange Range(this IXLRange range, IXLCell firstCell, IXLCell lastCell)
-        {
-            return range.Range(firstCell.Address, lastCell.Address);
-        }
 
         public static IEnumerable<IXLCell> Cells(this IXLRange range)
         {

@@ -51,6 +51,8 @@
     <Compile Include="BasicTable.cs" />
     <Compile Include="Columns\ColumnCollections.cs" />
     <Compile Include="Columns\ColumnSettings.cs" />
+    <Compile Include="Creating\CreateFiles.cs" />
+    <Compile Include="Loading\LoadFiles.cs" />
     <Compile Include="PageSetup\SheetTab.cs" />
     <Compile Include="PageSetup\Sheets.cs" />
     <Compile Include="PageSetup\HeaderFooters.cs" />

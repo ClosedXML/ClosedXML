@@ -12,6 +12,6 @@ namespace ClosedXML.Excel
         String Name { get; }
         String FullName { get; }
         void SaveAs(String file, Boolean overwrite = false);
-
+        void Load(String file);
     }
 }
