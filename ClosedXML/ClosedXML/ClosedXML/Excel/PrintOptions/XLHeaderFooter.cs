@@ -19,6 +19,8 @@ namespace ClosedXML.Excel
 
         public String GetText(XLHFOccurrence occurrence)
         {
+            if (innerTexts.ContainsKey(occurrence)) return innerTexts[occurrence];
+
             var retVal = String.Empty;
             var leftText = Left.GetText(occurrence);
             var centerText = Center.GetText(occurrence);
@@ -29,6 +31,17 @@ namespace ClosedXML.Excel
             if (retVal.Length > 255)
                 throw new ArgumentOutOfRangeException("Headers and Footers cannot be longer than 255 characters (including style markups)");
             return retVal;
+        }
+
+        private Dictionary<XLHFOccurrence, String> innerTexts = new Dictionary<XLHFOccurrence, String>();
+        internal String SetInnerText(XLHFOccurrence occurrence, String text)
+        { 
+            if (innerTexts.ContainsKey(occurrence))
+                innerTexts[occurrence] = text;
+            else
+                innerTexts.Add(occurrence, text);
+
+            return innerTexts[occurrence];
         }
     }
 }

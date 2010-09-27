@@ -52,6 +52,7 @@
     <Compile Include="Columns\ColumnCollections.cs" />
     <Compile Include="Columns\ColumnSettings.cs" />
     <Compile Include="Creating\CreateFiles.cs" />
+    <Compile Include="Loading\ChangingBasicTable.cs" />
     <Compile Include="Loading\LoadFiles.cs" />
     <Compile Include="PageSetup\SheetTab.cs" />
     <Compile Include="PageSetup\Sheets.cs" />

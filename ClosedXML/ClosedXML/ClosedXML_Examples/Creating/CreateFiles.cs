@@ -35,6 +35,7 @@ namespace ClosedXML_Examples
             new HeaderFooters().Create(@"C:\Excel Files\Created\HeaderFooters.xlsx");
             new Sheets().Create(@"C:\Excel Files\Created\Sheets.xlsx");
             new SheetTab().Create(@"C:\Excel Files\Created\SheetTab.xlsx");
+            new ChangingBasicTable().Create();
         }
     }
 }

@@ -56,13 +56,33 @@ namespace ClosedXML.Excel
         /// <param name="column">The column letter to translate into a column number.</param>
         public static Int32 GetColumnNumberFromLetter(String column)
         {
-            Int32 intColumnLetterLength = column.Length;
-            Int32 retVal = 0;
-            for (Int32 intCount = 0; intCount < intColumnLetterLength; intCount++)
+            Int32 iTest;
+            if (Int32.TryParse(column, out iTest)) return iTest;
+
+            column = column.ToUpper();
+
+            if (column.Length == 1)
             {
-                retVal = retVal * 26 + (column.Substring(intCount, 1).ToUpper().ToCharArray()[0] - 64);
+                return Convert.ToByte(Convert.ToChar(column)) - 64;
             }
-            return (Int32)retVal;
+            else if (column.Length == 2)
+            {
+                return
+                    ((Convert.ToByte(column[0]) - 64) * 26) +
+                    (Convert.ToByte(column[1]) - 64);
+
+            }
+            else if (column.Length == 3)
+            {
+                return
+                    ((Convert.ToByte(column[0]) - 64) * 26 * 26) +
+                    ((Convert.ToByte(column[1]) - 64) * 26) +
+                    (Convert.ToByte(column[2]) - 64);
+            }
+            else
+            {
+                throw new ApplicationException("Column Length must be between 1 and 3.");
+            }
         }
 
         /// <summary>

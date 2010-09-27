@@ -15,7 +15,7 @@ namespace ClosedXML_Examples
     {
         static void Main(string[] args)
         {
-            //CreateFiles.CreateAllFiles();
+            CreateFiles.CreateAllFiles();
             LoadFiles.LoadAllFiles();
         }
     }

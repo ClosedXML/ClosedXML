@@ -56,6 +56,11 @@ namespace ClosedXML.Excel
 
         public Int32 FirstRowToRepeatAtTop { get; private set; }
         public Int32 LastRowToRepeatAtTop { get; private set; }
+        public void SetRowsToRepeatAtTop(String range)
+        {
+            var arrRange = range.Replace("$", "").Split(':');
+            SetRowsToRepeatAtTop(Int32.Parse(arrRange[0]), Int32.Parse(arrRange[1]));
+        }
         public void SetRowsToRepeatAtTop(Int32 firstRowToRepeatAtTop, Int32 lastRowToRepeatAtTop)
         {
             if (firstRowToRepeatAtTop <= 0) throw new ArgumentOutOfRangeException("The first row has to be greater than zero.");
@@ -66,6 +71,19 @@ namespace ClosedXML.Excel
         }
         public Int32 FirstColumnToRepeatAtLeft { get; private set; }
         public Int32 LastColumnToRepeatAtLeft { get; private set; }
+        public void SetColumnsToRepeatAtLeft(String range)
+        {
+            var arrRange = range.Replace("$", "").Split(':');
+            Int32 iTest;
+            if (Int32.TryParse(arrRange[0], out iTest))
+                SetColumnsToRepeatAtLeft(Int32.Parse(arrRange[0]), Int32.Parse(arrRange[1]));
+            else
+                SetColumnsToRepeatAtLeft(arrRange[0], arrRange[1]);
+        }
+        public void SetColumnsToRepeatAtLeft(String firstColumnToRepeatAtLeft, String lastColumnToRepeatAtLeft)
+        {
+            SetColumnsToRepeatAtLeft(XLAddress.GetColumnNumberFromLetter(firstColumnToRepeatAtLeft), XLAddress.GetColumnNumberFromLetter(lastColumnToRepeatAtLeft));
+        }
         public void SetColumnsToRepeatAtLeft(Int32 firstColumnToRepeatAtLeft, Int32 lastColumnToRepeatAtLeft)
         {
             if (firstColumnToRepeatAtLeft <= 0) throw new ArgumentOutOfRangeException("The first column has to be greater than zero.");

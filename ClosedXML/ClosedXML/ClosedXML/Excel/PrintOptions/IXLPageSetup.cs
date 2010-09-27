@@ -84,10 +84,12 @@ namespace ClosedXML.Excel
         IXLPrintAreas PrintAreas { get; }
         Int32 FirstRowToRepeatAtTop { get; }
         Int32 LastRowToRepeatAtTop { get; }
+        void SetRowsToRepeatAtTop(String range);
         void SetRowsToRepeatAtTop(Int32 firstRowToRepeatAtTop, Int32 lastRowToRepeatAtTop);
         Int32 FirstColumnToRepeatAtLeft { get; }
         Int32 LastColumnToRepeatAtLeft { get; }
         void SetColumnsToRepeatAtLeft(Int32 firstColumnToRepeatAtLeft, Int32 lastColumnToRepeatAtLeft);
+        void SetColumnsToRepeatAtLeft(String range);
         XLPageOrientation PageOrientation { get; set; }
         Int32 PagesWide { get; set; }
         Int32 PagesTall { get; set; }
