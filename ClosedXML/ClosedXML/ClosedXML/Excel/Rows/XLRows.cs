@@ -5,17 +5,22 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLRows: IXLRows
+    internal class XLRows: IXLRows
     {
-        public XLRows()
+        private Boolean entireWorksheet;
+        private XLWorksheet worksheet;
+        public XLRows(XLWorksheet worksheet, Boolean entireWorksheet = false)
         {
-            Style = XLWorkbook.DefaultStyle;
+            this.worksheet = worksheet;
+            this.entireWorksheet = entireWorksheet;
+            Style = worksheet.Style;
         }
 
-        List<IXLRow> rows = new List<IXLRow>();
+        List<XLRow> rows = new List<XLRow>();
+
         public IEnumerator<IXLRow> GetEnumerator()
         {
-            return rows.GetEnumerator();
+            return rows.ToList<IXLRow>().GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -36,6 +41,31 @@ namespace ClosedXML.Excel
             {
                 style = new XLStyle(this, value);
 
+                if (entireWorksheet)
+                {
+                    worksheet.Style = value;
+                }
+                else
+                {
+                    var maxColumn = 0;
+                    if (worksheet.Internals.ColumnsCollection.Count > 0)
+                        maxColumn = worksheet.Internals.ColumnsCollection.Keys.Max();
+
+                    foreach (var row in rows)
+                    {
+                        row.Style = value;
+                        foreach (var c in row.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.RowNumber == row.FirstAddressInSheet.RowNumber))
+                        {
+                            c.Style = value;
+                        }
+
+                        for (var co = 1; co <= maxColumn; co++)
+                        {
+                            worksheet.Cell(row.RowNumber(), co).Style = value;
+                        }
+                    }
+                }
+
             }
         }
 
@@ -45,12 +75,28 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
                 yield return style;
-                foreach (var col in rows)
+                if (entireWorksheet)
                 {
-                    yield return col.Style;
-                    foreach (var c in col.Internals.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.Row == col.Internals.FirstCellAddress.Row))
+                    yield return worksheet.Style;
+                }
+                else
+                {
+                    var maxColumn = 0;
+                    if (worksheet.Internals.ColumnsCollection.Count > 0)
+                        maxColumn = worksheet.Internals.ColumnsCollection.Keys.Max();
+
+                    foreach (var row in rows)
                     {
-                        yield return c.Style;
+                        yield return row.Style;
+                        foreach (var c in row.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.RowNumber == row.FirstAddressInSheet.RowNumber))
+                        {
+                            yield return c.Style;
+                        }
+
+                        for (var co = 1; co <= maxColumn; co++)
+                        {
+                            yield return worksheet.Cell(row.RowNumber(), co).Style;
+                        }
                     }
                 }
                 UpdatingStyle = false;
@@ -66,16 +112,28 @@ namespace ClosedXML.Excel
             set
             {
                 rows.ForEach(c => c.Height = value);
+                if (entireWorksheet)
+                {
+                    worksheet.DefaultRowHeight = value;
+                    worksheet.Internals.RowsCollection.ForEach(r => r.Value.Height = value);
+                }
             }
         }
 
         public void Delete()
         {
-            rows.ForEach(c => c.Delete(XLShiftDeletedCells.ShiftCellsUp));
+            if (entireWorksheet)
+            {
+                worksheet.Internals.ColumnsCollection.Clear();
+                worksheet.Internals.CellsCollection.Clear();
+            }
+            else
+            {
+                rows.ForEach(r => r.Delete());
+            }
         }
 
-
-        public void Add(IXLRow row)
+        public void Add(XLRow row)
         {
             rows.Add(row);
         }

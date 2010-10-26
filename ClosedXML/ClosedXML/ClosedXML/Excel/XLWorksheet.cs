@@ -6,8 +6,14 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLWorksheet: IXLWorksheet
+    
+    internal delegate void RangeShiftedRowsDelegate(XLRange range, Int32 rowsShifted);
+    internal delegate void RangeShiftedColumnsDelegate(XLRange range, Int32 columnsShifted);
+    internal class XLWorksheet : XLRangeBase, IXLWorksheet
     {
+        public event RangeShiftedRowsDelegate RangeShiftedRows;
+        public event RangeShiftedColumnsDelegate RangeShiftedColumns;
+
         #region Constants
 
         public const Int32 MaxNumberOfRows = 1048576;
@@ -17,45 +23,190 @@ namespace ClosedXML.Excel
 
         public XLWorksheet(String sheetName)
         {
+            Worksheet = this;
             Style = XLWorkbook.DefaultStyle;
-            Internals = new XLWorksheetInternals(new Dictionary<IXLAddress, IXLCell>(), new Dictionary<Int32, IXLColumn>(), new Dictionary<Int32, IXLRow>(), new List<String>());
-            RowNumber = 1;
-            ColumnNumber = 1;
-            ColumnLetter = "A";
+            Internals = new XLWorksheetInternals(new Dictionary<IXLAddress, IXLCell>(), new XLColumnsCollection(), new XLRowsCollection(), new List<String>());
+            FirstAddressInSheet = new XLAddress(1, 1);
+            LastAddressInSheet = new XLAddress(MaxNumberOfRows, MaxNumberOfColumns);
             PageSetup = new XLPageOptions(XLWorkbook.DefaultPageOptions, this);
+            DefaultColumnWidth = XLWorkbook.DefaultColumnWidth;
+            DefaultRowHeight = XLWorkbook.DefaultRowHeight;
             this.Name = sheetName;
+            RangeShiftedRows += new RangeShiftedRowsDelegate(XLWorksheet_RangeShiftedRows);
+            RangeShiftedColumns += new RangeShiftedColumnsDelegate(XLWorksheet_RangeShiftedColumns);
         }
 
+        void XLWorksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
+        {
+            var newMerge = new List<String>();
+            foreach (var merge in Internals.MergedCells)
+            {
+                var rng = Range(merge);
+                if (range.FirstAddressInSheet.ColumnNumber <= rng.FirstAddressInSheet.ColumnNumber)
+                {
+                    var newRng = Range(
+                        rng.FirstAddressInSheet.RowNumber,
+                        rng.FirstAddressInSheet.ColumnNumber + columnsShifted,
+                        rng.LastAddressInSheet.RowNumber,
+                        rng.LastAddressInSheet.ColumnNumber + columnsShifted);
+                    newMerge.Add(newRng.ToString());
+                }
+                else
+                {
+                    newMerge.Add(rng.ToString());
+                }
+            }
+            Internals.MergedCells = newMerge;
+        }
 
-        public IXLWorksheetInternals Internals { get; private set; }
+        void XLWorksheet_RangeShiftedRows(XLRange range, int rowsShifted)
+        {
+            var newMerge = new List<String>();
+            foreach (var merge in Internals.MergedCells)
+            {
+                var rng = Range(merge);
+                if (range.FirstAddressInSheet.RowNumber <= rng.FirstAddressInSheet.RowNumber)
+                {
+                    var newRng = Range(
+                        rng.FirstAddressInSheet.RowNumber + rowsShifted,
+                        rng.FirstAddressInSheet.ColumnNumber,
+                        rng.LastAddressInSheet.RowNumber + rowsShifted,
+                        rng.LastAddressInSheet.ColumnNumber);
+                    newMerge.Add(newRng.ToString());
+                }
+                else
+                {
+                    newMerge.Add(rng.ToString());
+                }
+            }
+            Internals.MergedCells = newMerge;
+        }
 
-        #region IXLRange Members
+        public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
+        {
+            if (RangeShiftedRows != null)
+                RangeShiftedRows(range, rowsShifted);
+        }
 
-        public Int32 RowNumber { get; private set; }
-        public Int32 ColumnNumber { get; private set; }
-        public String ColumnLetter { get; private set; }
+        public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
+        {
+            if (RangeShiftedColumns != null)
+                RangeShiftedColumns(range, columnsShifted);
+        }
+        
+
+        public XLWorksheetInternals Internals { get; private set; }
+        
+        #region IXLStylized Members
+
+        private IXLStyle style;
+        public override IXLStyle Style
+        {
+            get
+            {
+                return style;
+            }
+            set
+            {
+                style = new XLStyle(this, value);
+            }
+        }
+
+        public override IEnumerable<IXLStyle> Styles
+        {
+            get 
+            {
+                UpdatingStyle = true;
+                yield return style;
+                foreach (var c in Internals.CellsCollection.Values)
+                {
+                    yield return c.Style;
+                }
+                UpdatingStyle = false;
+            }
+        }
+
+        public override Boolean UpdatingStyle { get; set; }
+
+        #endregion
+
+        public Double DefaultColumnWidth { get; set; }
+        public Double DefaultRowHeight { get; set; }
+
+        public String Name { get; set; }
+
+        public IXLPageOptions PageSetup { get; private set; }
+
+        public IXLRow FirstRowUsed()
+        {
+            var rngRow = this.AsRange().FirstRowUsed();
+            if (rngRow != null)
+            {
+                return this.Row(rngRow.FirstAddressInSheet.RowNumber);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public IXLRow LastRowUsed()
+        {
+            var rngRow = this.AsRange().LastRowUsed();
+            if (rngRow != null)
+            {
+                return this.Row(rngRow.LastAddressInSheet.RowNumber);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public IXLColumn FirstColumnUsed()
+        {
+            var rngColumn = this.AsRange().FirstColumnUsed();
+            if (rngColumn != null)
+            {
+                return this.Column(rngColumn.FirstAddressInSheet.ColumnNumber);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public IXLColumn LastColumnUsed()
+        {
+            var rngColumn = this.AsRange().LastColumnUsed();
+            if (rngColumn != null)
+            {
+                return this.Column(rngColumn.LastAddressInSheet.ColumnNumber);
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public IXLColumns Columns()
         {
-            var retVal = new XLColumns();
+            var retVal = new XLColumns(this, true);
             var columnList = new List<Int32>();
 
-            if (Internals.CellsCollection.Count > 0)
-                columnList.AddRange(Internals.CellsCollection.Keys.Select(k => k.Column).Distinct());
+            if (this.Internals.CellsCollection.Count > 0)
+                columnList.AddRange(this.Internals.CellsCollection.Keys.Select(k => k.ColumnNumber).Distinct());
 
-            if (Internals.ColumnsCollection.Count > 0)
-                columnList.AddRange(Internals.ColumnsCollection.Keys.Where(c => !columnList.Contains(c)));
+            if (this.Internals.ColumnsCollection.Count > 0)
+                columnList.AddRange(this.Internals.ColumnsCollection.Keys.Where(c => !columnList.Contains(c)));
 
             foreach (var c in columnList)
             {
-                retVal.Add(Column(c));
+                retVal.Add((XLColumn)this.Column(c));
             }
 
             return retVal;
         }
-        public IXLColumns Columns(String columns)
+        public IXLColumns Columns( String columns)
         {
-            var retVal = new XLColumns();
+            var retVal = new XLColumns(this);
             var columnPairs = columns.Split(',');
             foreach (var pair in columnPairs)
             {
@@ -72,57 +223,57 @@ namespace ClosedXML.Excel
                     firstColumn = pair;
                     lastColumn = pair;
                 }
-                
+
                 Int32 tmp;
                 if (Int32.TryParse(firstColumn, out tmp))
-                    foreach (var col in Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)))
+                    foreach (var col in this.Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)))
                     {
-                        retVal.Add(col);
+                        retVal.Add((XLColumn)col);
                     }
                 else
-                    foreach (var col in Columns(firstColumn, lastColumn))
+                    foreach (var col in this.Columns(firstColumn, lastColumn))
                     {
-                        retVal.Add(col);
+                        retVal.Add((XLColumn)col);
                     }
             }
             return retVal;
         }
-        public IXLColumns Columns(String firstColumn, String lastColumn)
+        public IXLColumns Columns( String firstColumn, String lastColumn)
         {
-            return Columns(XLAddress.GetColumnNumberFromLetter(firstColumn), XLAddress.GetColumnNumberFromLetter(lastColumn));
+            return this.Columns(XLAddress.GetColumnNumberFromLetter(firstColumn), XLAddress.GetColumnNumberFromLetter(lastColumn));
         }
-        public IXLColumns Columns(Int32 firstColumn, Int32 lastColumn)
+        public IXLColumns Columns( Int32 firstColumn, Int32 lastColumn)
         {
-            var retVal = new XLColumns();
+            var retVal = new XLColumns(this);
 
             for (var co = firstColumn; co <= lastColumn; co++)
             {
-                retVal.Add(Column(co));
+                retVal.Add((XLColumn)this.Column(co));
             }
             return retVal;
         }
 
         public IXLRows Rows()
         {
-            var retVal = new XLRows();
+            var retVal = new XLRows(this, true);
             var rowList = new List<Int32>();
 
-            if (Internals.CellsCollection.Count > 0)
-                rowList.AddRange(Internals.CellsCollection.Keys.Select(k => k.Row).Distinct());
+            if (this.Internals.CellsCollection.Count > 0)
+                rowList.AddRange(this.Internals.CellsCollection.Keys.Select(k => k.RowNumber).Distinct());
 
-            if (Internals.ColumnsCollection.Count > 0)
-                rowList.AddRange(Internals.ColumnsCollection.Keys.Where(r => !rowList.Contains(r)));
+            if (this.Internals.ColumnsCollection.Count > 0)
+                rowList.AddRange(this.Internals.ColumnsCollection.Keys.Where(r => !rowList.Contains(r)));
 
             foreach (var r in rowList)
             {
-                retVal.Add(Row(r));
+                retVal.Add((XLRow)this.Row(r));
             }
 
             return retVal;
         }
-        public IXLRows Rows(String rows)
+        public IXLRows Rows( String rows)
         {
-            var retVal = new XLRows();
+            var retVal = new XLRows(this);
             var rowPairs = rows.Split(',');
             foreach (var pair in rowPairs)
             {
@@ -139,138 +290,63 @@ namespace ClosedXML.Excel
                     firstRow = pair;
                     lastRow = pair;
                 }
-                foreach (var row in Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
+                foreach (var row in this.Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
                 {
-                    retVal.Add(row);
+                    retVal.Add((XLRow)row);
                 }
             }
             return retVal;
         }
-        public IXLRows Rows(Int32 firstRow, Int32 lastRow)
+        public IXLRows Rows( Int32 firstRow, Int32 lastRow)
         {
-            var retVal = new XLRows();
+            var retVal = new XLRows(this);
 
             for (var ro = firstRow; ro <= lastRow; ro++)
             {
-                retVal.Add(Row(ro));
+                retVal.Add((XLRow)this.Row(ro));
             }
             return retVal;
         }
-        
 
-        public IEnumerable<IXLCell> Cells()
+        public IXLRow Row( Int32 row)
         {
-            return Internals.CellsCollection.Values.AsEnumerable<IXLCell>();
-        }
-
-        #endregion
-
-        #region IXLStylized Members
-
-        private IXLStyle style;
-        public IXLStyle Style
-        {
-            get
+            IXLStyle styleToUse;
+            if (this.Internals.RowsCollection.ContainsKey(row))
             {
-                return style;
-            }
-            set
-            {
-                style = new XLStyle(this, value);
-            }
-        }
-
-        public IEnumerable<IXLStyle> Styles
-        {
-            get 
-            {
-                UpdatingStyle = true;
-                foreach (var c in Internals.CellsCollection.Values)
-                {
-                    yield return c.Style;
-                }
-                
-                UpdatingStyle = false;
-            }
-        }
-
-        public Boolean UpdatingStyle { get; set; }
-
-        #endregion
-
-        public IXLRow Row(Int32 row)
-        {
-            IXLRow xlRow;
-            if (Internals.RowsCollection.ContainsKey(row))
-            {
-                xlRow = Internals.RowsCollection[row];
+                styleToUse = this.Internals.RowsCollection[row].Style;
             }
             else
             {
-                var xlRowParameters = new XLRowParameters(this, Style);
-                xlRow = new XLRow(row, xlRowParameters);
-                Internals.RowsCollection.Add(row, xlRow);
+                styleToUse = this.Style;
+                this.Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, styleToUse, false)));
             }
 
-            return xlRow;
+            return new XLRow(row, new XLRowParameters(this, styleToUse, true));
         }
-        public IXLColumn Column(Int32 column)
+        public IXLColumn Column( Int32 column)
         {
-            IXLColumn xlColumn;
-            if (Internals.ColumnsCollection.ContainsKey(column))
+            IXLStyle styleToUse;
+            if (this.Internals.ColumnsCollection.ContainsKey(column))
             {
-                xlColumn = Internals.ColumnsCollection[column];
+                styleToUse = this.Internals.ColumnsCollection[column].Style;
             }
             else
             {
-                var xlColumnParameters = new XLColumnParameters(this, Style);
-                xlColumn = new XLColumn(column, xlColumnParameters);
-                Internals.ColumnsCollection.Add(column, xlColumn);
+                styleToUse = this.Style;
+                this.Internals.ColumnsCollection.Add(column, new XLColumn(column, new XLColumnParameters(this, this.Style, false)));
             }
 
-            return xlColumn;
+            return new XLColumn(column, new XLColumnParameters(this, this.Style, true));
         }
-        public IXLColumn Column(String column)
+        public IXLColumn Column( String column)
         {
-            return Column(XLAddress.GetColumnNumberFromLetter(column));
+            return this.Column(XLAddress.GetColumnNumberFromLetter(column));
         }
 
-        #region IXLRange Members
-
-        IXLRange IXLRange.Row(Int32 row)
+        public override IXLRange AsRange()
         {
-            var firstCellAddress = new XLAddress(row, 1);
-            var lastCellAddress = new XLAddress(row, MaxNumberOfColumns);
-            return this.Range(firstCellAddress, lastCellAddress);
-        }
-        IXLRange IXLRange.Column(int column)
-        {
-            IXLAddress firstCellAddress = new XLAddress(1, column);
-            IXLAddress lastCellAddress = new XLAddress(MaxNumberOfRows, column);
-            return this.Range(firstCellAddress, lastCellAddress);
-        }
-        IXLRange IXLRange.Column(string column)
-        {
-            IXLAddress firstCellAddress = new XLAddress(1, column);
-            IXLAddress lastCellAddress = new XLAddress(MaxNumberOfRows, column);
-            return this.Range(firstCellAddress, lastCellAddress);
+            return Range(1, 1, XLWorksheet.MaxNumberOfRows, XLWorksheet.MaxNumberOfColumns);
         }
 
-        #endregion
-
-
-        public String Name { get; set; }
-
-
-        public IXLPageSetup PageSetup { get; private set; }
-
-
-        IXLRangeInternals IXLRange.Internals 
-        { 
-            get 
-            {
-                return new XLRangeInternals(Internals.FirstCellAddress, Internals.LastCellAddress, this);
-            } 
-        }
     }
 }

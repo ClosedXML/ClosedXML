@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLCell : IXLCell
+    internal class XLCell : IXLCell
     {
         public XLCell(IXLAddress address, IXLStyle defaultStyle)
         {
@@ -52,7 +52,7 @@ namespace ClosedXML.Excel
                             throw new ArgumentException("'" + val + "' is not a DateTime type.");
                         }
 
-                        if (Style.NumberFormat.Format == String.Empty)
+                        if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
                             Style.NumberFormat.NumberFormatId = 14;
                     }
                     else if (dataType == XLCellValues.Number)
@@ -136,7 +136,11 @@ namespace ClosedXML.Excel
                 {
                     if (value == XLCellValues.Boolean)
                     {
-                        cellValue = Boolean.Parse(cellValue) ? "1" : "0";
+                        Boolean bTest;
+                        if (Boolean.TryParse(cellValue, out bTest))
+                            cellValue = Boolean.Parse(cellValue) ? "1" : "0";
+                        else
+                            cellValue = value != 0 ? "1" : "0";
                     }
                     else if (value == XLCellValues.DateTime)
                     {
@@ -155,14 +159,14 @@ namespace ClosedXML.Excel
                             throw new ArgumentException("Cannot set data type to DateTime because '" + cellValue + "' is not recognized as a date.");
                         }
 
-                        if (Style.NumberFormat.Format == String.Empty)
+                        if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
                             Style.NumberFormat.NumberFormatId = 14;
                     }
                     else if (value == XLCellValues.Number)
                     {
                         cellValue = Double.Parse(cellValue).ToString();
-                        if (Style.NumberFormat.Format == String.Empty)
-                            Style.NumberFormat.NumberFormatId = 0;
+                        //if (Style.NumberFormat.Format == String.Empty )
+                        //    Style.NumberFormat.NumberFormatId = 0;
                     }
                     else
                     {

@@ -48,19 +48,24 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Excel\Cells\XLCellCollection.cs" />
     <Compile Include="Excel\Columns\IXLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumns.cs" />
+    <Compile Include="Excel\Columns\XLColumnCollection.cs" />
+    <Compile Include="Excel\IXLWorksheetInternals.cs" />
+    <Compile Include="Excel\PrintOptions\IXLMargins.cs" />
+    <Compile Include="Excel\Ranges\IXLRangeBase.cs" />
+    <Compile Include="Excel\Ranges\XLRangeBase.cs" />
+    <Compile Include="Excel\Rows\XLRowCollection.cs" />
     <Compile Include="Excel\XLWorkbook_Load.cs" />
     <Compile Include="Excel\PrintOptions\IXLHeaderFooter.cs" />
     <Compile Include="Excel\PrintOptions\IXLHFItem.cs" />
-    <Compile Include="Excel\PrintOptions\IXLPageSetup.cs" />
+    <Compile Include="Excel\PrintOptions\IXLPageOptions.cs" />
     <Compile Include="Excel\PrintOptions\IXLPrintAreas.cs" />
     <Compile Include="Excel\PrintOptions\XLPrintAreas.cs" />
-    <Compile Include="Excel\Ranges\IXLRangeInternals.cs" />
     <Compile Include="Excel\Ranges\IXLRanges.cs" />
     <Compile Include="Excel\Ranges\XLRanges.cs" />
     <Compile Include="Excel\Rows\IXLRow.cs" />
-    <Compile Include="Excel\IXLWorksheetInternals.cs" />
     <Compile Include="Excel\PrintOptions\XLHeaderFooter.cs" />
     <Compile Include="Excel\PrintOptions\XLHFItem.cs" />
     <Compile Include="Excel\PrintOptions\XLMargins.cs" />
@@ -75,13 +80,12 @@
     <Compile Include="Excel\Style\XLFill.cs" />
     <Compile Include="Excel\Style\XLNumberFormat.cs" />
     <Compile Include="Excel\Columns\XLColumnParameters.cs" />
-    <Compile Include="Excel\PrintOptions\XLPageSetup.cs" />
-    <Compile Include="Excel\Ranges\XLRangeInternals.cs" />
+    <Compile Include="Excel\PrintOptions\XLPageOptions.cs" />
     <Compile Include="Excel\Ranges\XLRangeParameters.cs" />
     <Compile Include="Excel\Rows\XLRowParameters.cs" />
     <Compile Include="Excel\XLWorkbook_Save.cs" />
     <Compile Include="Excel\IXLAddress.cs" />
-    <Compile Include="Excel\IXLCell.cs" />
+    <Compile Include="Excel\Cells\IXLCell.cs" />
     <Compile Include="Excel\Columns\IXLColumn.cs" />
     <Compile Include="Excel\Ranges\IXLRange.cs" />
     <Compile Include="Excel\IXLWorkbook.cs" />
@@ -93,7 +97,7 @@
     <Compile Include="Excel\Style\XLFont.cs" />
     <Compile Include="Excel\Style\XLStyle.cs" />
     <Compile Include="Excel\XLAddress.cs" />
-    <Compile Include="Excel\XLCell.cs" />
+    <Compile Include="Excel\Cells\XLCell.cs" />
     <Compile Include="Excel\Columns\XLColumn.cs" />
     <Compile Include="Excel\Ranges\XLRange.cs" />
     <Compile Include="Excel\Rows\XLRow.cs" />

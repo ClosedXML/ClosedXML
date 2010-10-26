@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace ClosedXML.Excel
 {
-    public partial class XLWorkbook: IXLWorkbook
+    public partial class XLWorkbook
     {
         public XLWorkbook()
         {
@@ -120,8 +120,8 @@ namespace ClosedXML.Excel
         public static Double DefaultRowHeight { get; set; }
         public static Double DefaultColumnWidth { get; set; }
 
-        public static XLPageOptions defaultPageOptions;
-        public static XLPageOptions DefaultPageOptions
+        public static IXLPageOptions defaultPageOptions;
+        public static IXLPageOptions DefaultPageOptions
         {
             get
             {
@@ -149,6 +149,11 @@ namespace ClosedXML.Excel
                 }
                 return defaultPageOptions;
             }
+        }
+
+        public static IXLFont GetXLFont()
+        {
+            return new XLFont();
         }
 
         #endregion

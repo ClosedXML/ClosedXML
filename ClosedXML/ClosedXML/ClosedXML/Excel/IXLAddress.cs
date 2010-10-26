@@ -5,10 +5,10 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLAddress : IEqualityComparer<XLAddress>, IEquatable<XLAddress>, IComparable, IComparable<XLAddress>
+    public interface IXLAddress : IEqualityComparer<IXLAddress>, IEquatable<IXLAddress>, IComparable, IComparable<IXLAddress>
     {
-        Int32 Row { get; }
-        Int32 Column { get; }
+        Int32 RowNumber { get; }
+        Int32 ColumnNumber { get; }
         String ColumnLetter { get; }
     }
 

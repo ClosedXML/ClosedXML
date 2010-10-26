@@ -79,7 +79,7 @@ namespace ClosedXML.Excel
     public enum XLShowCommentsValues { None, AtEnd, AsDisplayed }
     public enum XLPrintErrorValues { Blank, Dash, Displayed, NA }
     
-    public interface IXLPageSetup
+    public interface IXLPageOptions
     {
         IXLPrintAreas PrintAreas { get; }
         Int32 FirstRowToRepeatAtTop { get; }
@@ -102,7 +102,7 @@ namespace ClosedXML.Excel
         void AdjustTo(Int32 pctOfNormalSize);
         void FitToPages(Int32 pagesWide, Int32 pagesTall);
         XLPaperSize PaperSize { get; set; }
-        XLMargins Margins { get; }
+        IXLMargins Margins { get; }
 
         IXLHeaderFooter Header { get; }
         IXLHeaderFooter Footer { get; }

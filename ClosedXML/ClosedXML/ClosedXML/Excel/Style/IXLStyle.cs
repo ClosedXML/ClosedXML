@@ -12,6 +12,6 @@ namespace ClosedXML.Excel
         IXLFill Fill { get; set; }
         IXLFont Font { get; set; }
         IXLNumberFormat NumberFormat { get; set; }
-
+        IXLNumberFormat DateFormat { get; }
     }
 }

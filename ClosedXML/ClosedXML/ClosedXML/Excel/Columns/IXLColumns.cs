@@ -9,7 +9,5 @@ namespace ClosedXML.Excel
     {
         Double Width { set; }
         void Delete();
-        void Add(IXLColumn column);
-
     }
 }

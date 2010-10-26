@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLPageOptions : IXLPageSetup
+    internal class XLPageOptions : IXLPageOptions
     {
-        public XLPageOptions(XLPageOptions defaultPageOptions, IXLWorksheet worksheet)
+        public XLPageOptions(IXLPageOptions defaultPageOptions, XLWorksheet worksheet)
         {
             this.PrintAreas = new XLPrintAreas(worksheet);
             if (defaultPageOptions != null)
@@ -20,9 +20,9 @@ namespace ClosedXML.Excel
                 this.VerticalDpi = defaultPageOptions.VerticalDpi;
 
                 this.PaperSize = defaultPageOptions.PaperSize;
-                this.pagesTall = defaultPageOptions.pagesTall;
-                this.pagesWide = defaultPageOptions.pagesWide;
-                this.scale = defaultPageOptions.scale;
+                this.pagesTall = defaultPageOptions.PagesTall;
+                this.pagesWide = defaultPageOptions.PagesWide;
+                this.scale = defaultPageOptions.Scale;
 
                 if (defaultPageOptions.Margins != null)
                 {
@@ -101,7 +101,7 @@ namespace ClosedXML.Excel
         public Boolean CenterHorizontally { get; set; }
         public Boolean CenterVertically { get; set; }
         public XLPrintErrorValues PrintErrorValue { get; set; }
-        public XLMargins Margins { get; set; }
+        public IXLMargins Margins { get; set; }
 
         private Int32 pagesWide;
         public Int32 PagesWide 

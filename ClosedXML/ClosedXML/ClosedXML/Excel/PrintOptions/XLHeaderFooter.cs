@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLHeaderFooter: IXLHeaderFooter
+    internal class XLHeaderFooter: IXLHeaderFooter
     {
         public XLHeaderFooter()
         {

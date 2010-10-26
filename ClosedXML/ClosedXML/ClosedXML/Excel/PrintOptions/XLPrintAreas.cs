@@ -5,11 +5,11 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLPrintAreas: IXLPrintAreas
+    internal class XLPrintAreas : IXLPrintAreas
     {
         List<IXLRange> ranges = new List<IXLRange>();
-        private IXLWorksheet worksheet;
-        public XLPrintAreas(IXLWorksheet worksheet)
+        private XLWorksheet worksheet;
+        public XLPrintAreas(XLWorksheet worksheet)
         {
             this.worksheet = worksheet;
         }

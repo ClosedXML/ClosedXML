@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLHFItem: IXLHFItem
+    internal class XLHFItem : IXLHFItem
     {
         private Dictionary<XLHFOccurrence, String> texts = new Dictionary<XLHFOccurrence, String>();
         public String GetText(XLHFOccurrence occurrence)

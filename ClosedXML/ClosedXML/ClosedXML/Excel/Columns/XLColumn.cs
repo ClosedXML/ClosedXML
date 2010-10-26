@@ -6,80 +6,187 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLColumn: IXLColumn
+    internal class XLColumn: XLRangeBase, IXLColumn
     {
         public XLColumn(Int32 column, XLColumnParameters xlColumnParameters)
         {
-            Internals = new XLRangeInternals(new XLAddress(1, column), new XLAddress(XLWorksheet.MaxNumberOfRows, column), xlColumnParameters.Worksheet);
-            RowNumber = 1;
-            ColumnNumber = column;
-            ColumnLetter = XLAddress.GetColumnLetterFromNumber(column);
-            this.style = new XLStyle(this, xlColumnParameters.DefaultStyle);
-            this.Width = XLWorkbook.DefaultColumnWidth;
+            SetColumnNumber(column);
+            Worksheet = xlColumnParameters.Worksheet;
+            
+
+            this.IsReference = xlColumnParameters.IsReference;
+            if (IsReference)
+            {
+                Worksheet.RangeShiftedColumns += new RangeShiftedColumnsDelegate(Worksheet_RangeShiftedColumns);
+            }
+            else
+            {
+                this.style = new XLStyle(this, xlColumnParameters.DefaultStyle);
+                this.width = xlColumnParameters.Worksheet.DefaultColumnWidth;
+            }
         }
 
-        public Double Width { get; set; }
-        public Int32 RowNumber { get; private set; }
-        public Int32 ColumnNumber { get; private set; }
-        public String ColumnLetter { get; private set; }
+
+
+        void Worksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
+        {
+            if (range.FirstAddressInSheet.ColumnNumber <= this.ColumnNumber())
+                SetColumnNumber(this.ColumnNumber() + columnsShifted);
+        }
+
+        private void SetColumnNumber(Int32 column)
+        {
+            FirstAddressInSheet = new XLAddress(1, column);
+            LastAddressInSheet = new XLAddress(XLWorksheet.MaxNumberOfRows, column);
+        }
+
+        public Boolean IsReference { get; private set; }
+
+        #region IXLColumn Members
+
+        private Double width;
+        public Double Width
+        {
+            get
+            {
+                if (IsReference)
+                {
+                    return Worksheet.Internals.ColumnsCollection[this.ColumnNumber()].Width;
+                }
+                else
+                {
+                    return width;
+                }
+            }
+            set
+            {
+                if (IsReference)
+                {
+                    Worksheet.Internals.ColumnsCollection[this.ColumnNumber()].Width = value;
+                }
+                else
+                {
+                    width = value;
+                }
+            }
+        }
+
         public void Delete()
         {
-            this.Column(ColumnNumber).Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            var columnNumber = this.ColumnNumber();
+            this.AsRange().Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            Worksheet.Internals.ColumnsCollection.Remove(columnNumber);
         }
+
+        public void Clear()
+        {
+            var range = this.AsRange();
+            range.Clear();
+            this.Style = Worksheet.Style;
+        }
+
+        #endregion
 
         #region IXLStylized Members
 
         private IXLStyle style;
-        public IXLStyle Style
+        public override IXLStyle Style
         {
             get
             {
-                return style;
+                if (IsReference)
+                    return Worksheet.Internals.ColumnsCollection[this.ColumnNumber()].Style;
+                else
+                    return style;
             }
             set
             {
-                style = new XLStyle(this, value);
+                if (IsReference)
+                {
+                    Worksheet.Internals.ColumnsCollection[this.ColumnNumber()].Style = value;
+                }
+                else
+                {
+                    style = new XLStyle(this, value);
+
+                    foreach (var c in Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == this.ColumnNumber()))
+                    {
+                        c.Style = value;
+                    }
+
+                    var maxRow = 0;
+                    if (Worksheet.Internals.RowsCollection.Count > 0)
+                        maxRow = Worksheet.Internals.RowsCollection.Keys.Max();
+
+                    for (var ro = 1; ro <= maxRow; ro++)
+                    {
+                        Worksheet.Cell(ro, this.ColumnNumber()).Style = value;
+                    }
+                }
             }
         }
 
-        public IEnumerable<IXLStyle> Styles
+        public override IEnumerable<IXLStyle> Styles
         {
             get
             {
                 UpdatingStyle = true;
-                yield return style;
-                foreach (var c in Internals.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.Column == Internals.FirstCellAddress.Column))
+
+                yield return Style;
+
+                var co = this.ColumnNumber();
+
+                foreach (var c in Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == co))
                 {
                     yield return c.Style;
                 }
+
+                var maxRow = 0;
+                if (Worksheet.Internals.RowsCollection.Count > 0)
+                    maxRow = Worksheet.Internals.RowsCollection.Keys.Max();
+
+                for (var ro = 1; ro <= maxRow; ro++)
+                {
+                    yield return Worksheet.Cell(ro, co).Style;
+                }
+
                 UpdatingStyle = false;
             }
         }
 
-        public Boolean UpdatingStyle { get; set; }
+        public override Boolean UpdatingStyle { get; set; }
 
         #endregion
 
-        #region IXLRange Members
-
-        public IXLRange Row(int row)
+        public Int32 ColumnNumber()
         {
-            var address = new XLAddress(row, 1);
-            return this.Range(address, address);
+            return this.FirstAddressInSheet.ColumnNumber;
+        }
+        public String ColumnLetter()
+        {
+            return this.FirstAddressInSheet.ColumnLetter;
         }
 
-        public IXLRange Column(int column)
+        public void InsertColumnsAfter( Int32 numberOfColumns)
         {
-            return this;
+            var columnNum = this.ColumnNumber();
+            this.Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum + 1, numberOfColumns);
+            XLRange range = (XLRange)this.Worksheet.Column(columnNum).AsRange();
+            range.InsertColumnsAfter(numberOfColumns, true);
+        }
+        public void InsertColumnsBefore( Int32 numberOfColumns)
+        {
+            var columnNum = this.ColumnNumber();
+            this.Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum, numberOfColumns);
+            // We can't use this.AsRange() because we've shifted the columns
+            // and we want to use the old columnNum.
+            XLRange range = (XLRange)this.Worksheet.Column(columnNum).AsRange(); 
+            range.InsertColumnsBefore(numberOfColumns, true);
         }
 
-        public IXLRange Column(string column)
+        public override IXLRange AsRange()
         {
-            return this;
+            return Range(1, 1, XLWorksheet.MaxNumberOfRows, 1);
         }
-
-        #endregion
-
-        public IXLRangeInternals Internals { get; private set; }
     }
 }

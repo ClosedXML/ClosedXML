@@ -9,7 +9,6 @@ namespace ClosedXML.Excel
     {
         Double Height { set; }
         void Delete();
-        void Add(IXLRow row);
-
+        //void Add(IXLRow row);
     }
 }

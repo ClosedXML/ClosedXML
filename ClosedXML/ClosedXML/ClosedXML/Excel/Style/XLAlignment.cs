@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLAlignment: IXLAlignment
+    internal class XLAlignment : IXLAlignment
     {
         IXLStylized container;
         public XLAlignment(IXLStylized container, IXLAlignment d = null)

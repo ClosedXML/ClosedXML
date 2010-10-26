@@ -5,14 +5,14 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLRanges: IXLRanges
+    internal class XLRanges : IXLRanges
     {
         public XLRanges()
         {
             Style = XLWorkbook.DefaultStyle;
         }
 
-        List<IXLRange> ranges = new List<IXLRange>();
+        List<XLRange> ranges = new List<XLRange>();
 
         public void Clear()
         {
@@ -21,12 +21,12 @@ namespace ClosedXML.Excel
 
         public void Add(IXLRange range)
         {
-            ranges.Add(range);
+            ranges.Add((XLRange)range);
         }
 
         public IEnumerator<IXLRange> GetEnumerator()
         {
-            return ranges.GetEnumerator();
+            return ranges.ToList<IXLRange>().GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -59,11 +59,11 @@ namespace ClosedXML.Excel
                 foreach (var rng in ranges)
                 {
                     yield return rng.Style;
-                    foreach (var r in rng.Internals.Worksheet.Internals.CellsCollection.Values.Where(c =>
-                        c.Address.Row >= rng.Internals.FirstCellAddress.Row
-                        && c.Address.Row <= rng.Internals.LastCellAddress.Row
-                        && c.Address.Column >= rng.Internals.FirstCellAddress.Column
-                        && c.Address.Column <= rng.Internals.LastCellAddress.Column
+                    foreach (var r in rng.Worksheet.Internals.CellsCollection.Values.Where(c =>
+                        c.Address.RowNumber >= rng.FirstAddressInSheet.RowNumber
+                        && c.Address.RowNumber <= rng.LastAddressInSheet.RowNumber
+                        && c.Address.ColumnNumber >= rng.FirstAddressInSheet.ColumnNumber
+                        && c.Address.ColumnNumber <= rng.LastAddressInSheet.ColumnNumber
                         ))
                     {
                         yield return r.Style;

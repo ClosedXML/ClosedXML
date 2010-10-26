@@ -6,14 +6,16 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLRowParameters
+    internal class XLRowParameters
     {
-        public XLRowParameters(IXLWorksheet worksheet, IXLStyle defaultStyle)
+        public XLRowParameters(XLWorksheet worksheet, IXLStyle defaultStyle, Boolean isReference = true)
         {
             Worksheet = worksheet;
             DefaultStyle = defaultStyle;
+            IsReference = isReference;
         }
         public IXLStyle DefaultStyle { get; set; }
-        public IXLWorksheet Worksheet { get; private set; }
+        public XLWorksheet Worksheet { get; private set; }
+        public Boolean IsReference { get; private set; }
     }
 }

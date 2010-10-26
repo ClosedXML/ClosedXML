@@ -6,9 +6,9 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLRangeParameters
+    internal class XLRangeParameters
     {
-        public XLRangeParameters(IXLAddress firstCellAddress, IXLAddress lastCellAddress, IXLWorksheet worksheet, IXLStyle defaultStyle)
+        public XLRangeParameters(IXLAddress firstCellAddress, IXLAddress lastCellAddress, XLWorksheet worksheet, IXLStyle defaultStyle)
         {
             FirstCellAddress = firstCellAddress;
             LastCellAddress = lastCellAddress;
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
         // Public
         public IXLAddress FirstCellAddress { get; private set; }
         public IXLAddress LastCellAddress { get; private set; }
-        public IXLWorksheet Worksheet { get; private set; }
+        public XLWorksheet Worksheet { get; private set; }
         public IXLStyle DefaultStyle { get; private set; }
 
         // Private

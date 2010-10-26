@@ -57,8 +57,11 @@ namespace ClosedXML.Excel
                     
                     var sheetName = dSheet.Name;
 
+                    var ws = (XLWorksheet)Worksheets.Add(sheetName);
 
-                    var ws = Worksheets.Add(sheetName);
+                    var sheetFormatProperties = (SheetFormatProperties)worksheetPart.Worksheet.Descendants<SheetFormatProperties>().First();
+                    ws.DefaultRowHeight = sheetFormatProperties.DefaultRowHeight;
+                    ws.DefaultColumnWidth = sheetFormatProperties.DefaultColumnWidth;
 
                     foreach (var mCell in worksheetPart.Worksheet.Descendants<MergeCell>())
                     {
@@ -66,45 +69,79 @@ namespace ClosedXML.Excel
                         ws.Range(mergeCell.Reference).Merge();
                     }
 
+
+                    var wsDefaultColumn = worksheetPart.Worksheet.Descendants<Column>().Where(
+                        c => c.Max == XLWorksheet.MaxNumberOfColumns).Single();
+
+                    if (wsDefaultColumn.Width != null) ws.DefaultColumnWidth = wsDefaultColumn.Width;
+
+                    Int32 styleIndexDefault = wsDefaultColumn.Style != null ? Int32.Parse(wsDefaultColumn.Style.InnerText) : -1;
+                    if (styleIndexDefault >= 0)
+                    {
+                        ApplyStyle(ws, styleIndexDefault, s, fills, borders, fonts, numberingFormats);
+                    }
+
                     foreach (var col in worksheetPart.Worksheet.Descendants<Column>())
                     {
-                        //var column = (Column)col;
-                        var xlColumns = ws.Columns(col.Min, col.Max);
-                        if (col.Width != null) xlColumns.Width = col.Width;
-                        Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
-                        if (styleIndex >= 0)
+                        IXLStylized toApply;
+                        if (col.Max != XLWorksheet.MaxNumberOfColumns)
                         {
-                            ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
+                            toApply = ws.Columns(col.Min, col.Max);
+                            if (col.Width != null) 
+                                ((XLColumns)toApply).Width = col.Width;
+                            else
+                                ((XLColumns)toApply).Width = ws.DefaultColumnWidth;
+
+                            Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
+                            if (styleIndex > 0)
+                            {
+                                ApplyStyle(toApply, styleIndex, s, fills, borders, fonts, numberingFormats);
+                            }
+                            else
+                            {
+                                toApply.Style = DefaultStyle;
+                            }
                         }
                     }
 
-                    foreach (var row in worksheetPart.Worksheet.Descendants<Row>())
+                    foreach (var row in worksheetPart.Worksheet.Descendants<Row>().Where(r=>r.CustomFormat != null && r.CustomFormat).Select(r=>r))
                     {
                         //var dRow = (Column)col;
                         var xlRow = ws.Row(Int32.Parse(row.RowIndex.ToString()));
-                        if (row.Height != null) xlRow.Height = row.Height;
+                        if (row.Height != null)
+                            xlRow.Height = row.Height;
+                        else
+                            xlRow.Height = ws.DefaultRowHeight;
+
                         Int32 styleIndex = row.StyleIndex != null ? Int32.Parse(row.StyleIndex.InnerText) : -1;
-                        if (styleIndex >= 0)
+                        if (styleIndex > 0)
                         {
                             ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
                         }
+                        else
+                        {
+                            xlRow.Style = DefaultStyle;
+                        }
                     }
+
 
                     foreach (var cell in worksheetPart.Worksheet.Descendants<Cell>())
                     {
                         var dCell = (Cell)cell;
                         Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : -1;
                         var xlCell = ws.Cell(dCell.CellReference);
-                        if (styleIndex >= 0)
+                        if (styleIndex > 0)
                         {
                             styleIndex = Int32.Parse(dCell.StyleIndex.InnerText);
                             ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
                         }
+                        else
+                        {
+                            xlCell.Style = DefaultStyle;
+                        }
 
                         if (dCell.DataType != null)
                         {
-   
-
                             if (dCell.DataType == CellValues.SharedString)
                             {
                                 xlCell.DataType = XLCellValues.Text;

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLWorkbook
+    public interface xIXLWorkbook
     {
         IXLWorksheets Worksheets { get; }
         String Name { get; }

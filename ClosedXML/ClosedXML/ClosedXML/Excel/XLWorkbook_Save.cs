@@ -230,7 +230,7 @@ namespace ClosedXML.Excel
             {
                 sheetId++;
                 WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("rId" + sheetId.ToString());
-                GenerateWorksheetPartContent(worksheetPart, worksheet);
+                GenerateWorksheetPartContent(worksheetPart, (XLWorksheet)worksheet);
             }
 
             ThemePart themePart1 = workbookPart.AddNewPart<ThemePart>("rId" + (startId + 1));
@@ -345,7 +345,7 @@ namespace ClosedXML.Excel
             UInt32 sheetId = 0;
             Sheets sheets = new Sheets();
             DefinedNames definedNames = new DefinedNames();
-            foreach (var worksheet in Worksheets)
+            foreach (var worksheet in Worksheets.Cast<XLWorksheet>())
             {
                 sheetId++;
                 Sheet sheet = new Sheet() { Name = worksheet.Name, SheetId = (UInt32Value)sheetId, Id = "rId" + sheetId.ToString() };
@@ -365,8 +365,8 @@ namespace ClosedXML.Excel
                     foreach (var printArea in worksheet.PageSetup.PrintAreas)
                     {
                         definedNameText += "'" + worksheet.Name + "'!"
-                        + printArea.Internals.FirstCellAddress.ToString()
-                        + ":" + printArea.Internals.LastCellAddress.ToString() + ",";
+                        + printArea.FirstAddressInSheet.ToString()
+                        + ":" + printArea.LastAddressInSheet.ToString() + ",";
                     }
 
                     definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
@@ -424,7 +424,7 @@ namespace ClosedXML.Excel
         private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart)
         {
             List<String> combined = new List<String>();
-            Worksheets.ForEach(w => combined.AddRange(w.Internals.CellsCollection.Values.Where(c => c.DataType == XLCellValues.Text && c.Value != null).Select(c => c.Value).Distinct()));
+            Worksheets.Cast<XLWorksheet>().ForEach(w => combined.AddRange(w.Internals.CellsCollection.Values.Where(c => c.DataType == XLCellValues.Text && c.Value != null).Select(c => c.Value).Distinct()));
             var distinctStrings = combined.Distinct();
             UInt32 stringCount = (UInt32)distinctStrings.Count();
             SharedStringTable sharedStringTable = new SharedStringTable() { Count = (UInt32Value)stringCount, UniqueCount = (UInt32Value)stringCount };
@@ -482,7 +482,7 @@ namespace ClosedXML.Excel
             var xlStyles = new List<IXLStyle>();
 
 
-            foreach (var worksheet in Worksheets)
+            foreach (var worksheet in Worksheets.Cast<XLWorksheet>())
             {
                 xlStyles.AddRange(worksheet.Styles);
                 worksheet.Internals.ColumnsCollection.Values.ForEach(c => xlStyles.Add(c.Style));
@@ -706,7 +706,7 @@ namespace ClosedXML.Excel
 
 
 
-        private void GenerateWorksheetPartContent(WorksheetPart worksheetPart, IXLWorksheet xlWorksheet)
+        private void GenerateWorksheetPartContent(WorksheetPart worksheetPart, XLWorksheet xlWorksheet)
         {
             Worksheet worksheet = new Worksheet();
             worksheet.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
@@ -723,8 +723,8 @@ namespace ClosedXML.Excel
             String sheetDimensionReference = "A1";
             if (xlWorksheet.Internals.CellsCollection.Count > 0)
             {
-                maxColumn = (UInt32)xlWorksheet.Internals.CellsCollection.Select(c => c.Key.Column).Max();
-                maxRow = (UInt32)xlWorksheet.Internals.CellsCollection.Select(c => c.Key.Row).Max();
+                maxColumn = (UInt32)xlWorksheet.Internals.CellsCollection.Select(c => c.Key.ColumnNumber).Max();
+                maxRow = (UInt32)xlWorksheet.Internals.CellsCollection.Select(c => c.Key.RowNumber).Max();
                 sheetDimensionReference = "A1:" + new XLAddress((Int32)maxRow, (Int32)maxColumn).ToString();
             }
 
@@ -748,47 +748,106 @@ namespace ClosedXML.Excel
             SheetView sheetView = new SheetView() { TabSelected = tabSelected, WorkbookViewId = (UInt32Value)0U };
 
             sheetViews.Append(sheetView);
-            SheetFormatProperties sheetFormatProperties3 = new SheetFormatProperties() { DefaultRowHeight = 15D };
+            SheetFormatProperties sheetFormatProperties3 = new SheetFormatProperties() { DefaultRowHeight = xlWorksheet.DefaultRowHeight, DefaultColumnWidth = xlWorksheet.DefaultColumnWidth , CustomHeight = true };
 
-            Columns columns = null;
+            Columns columns = new Columns();
+
+            
+            Int32 minInColumnsCollection;
+            Int32 maxInColumnsCollection;
             if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
             {
-                columns = new Columns();
-                foreach (var xlColumn in xlWorksheet.Internals.ColumnsCollection.Values)
+                minInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Min();
+                maxInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Max();
+            }
+            else
+            {
+                minInColumnsCollection = 1;
+                maxInColumnsCollection = 0;
+            }
+            
+            if (minInColumnsCollection > 1)
+            {
+                Column column = new Column()
                 {
-                    Column column = new Column()
-                    {
-                        Min = (UInt32Value)(UInt32)xlColumn.Internals.FirstCellAddress.Column,
-                        Max = (UInt32Value)(UInt32)xlColumn.Internals.FirstCellAddress.Column,
-                        Style = sharedStyles[xlColumn.Style.ToString()].StyleId,
-                        Width = xlColumn.Width,
-                        CustomWidth = true
-                    };
+                    Min = 1,
+                    Max = (UInt32Value)(UInt32)(minInColumnsCollection - 1),
+                    Style = sharedStyles[xlWorksheet.Style.ToString()].StyleId,
+                    Width = xlWorksheet.DefaultColumnWidth,
+                    CustomWidth = true
+                };
+                columns.Append(column);
+            }
 
-                    columns.Append(column);
+            for(var co = minInColumnsCollection; co <= maxInColumnsCollection; co++)
+            {
+                UInt32 styleId;
+                Double columnWidth;
+                if (xlWorksheet.Internals.ColumnsCollection.ContainsKey(co))
+                {
+                    styleId = sharedStyles[xlWorksheet.Internals.ColumnsCollection[co].Style.ToString()].StyleId;
+                    columnWidth = xlWorksheet.Internals.ColumnsCollection[co].Width;
                 }
+                else
+                {
+                    styleId = sharedStyles[xlWorksheet.Style.ToString()].StyleId;
+                    columnWidth = xlWorksheet.DefaultColumnWidth;
+                }
+
+                Column column = new Column()
+                {
+                    Min = (UInt32Value)(UInt32)co,
+                    Max = (UInt32Value)(UInt32)co,
+                    Style = styleId,
+                    Width = columnWidth,
+                    CustomWidth = true
+                };
+                columns.Append(column);
+            }
+
+            if (maxInColumnsCollection < XLWorksheet.MaxNumberOfColumns)
+            {
+                Column column = new Column()
+                {
+                    Min = (UInt32Value)(UInt32)(maxInColumnsCollection + 1),
+                    Max = (UInt32Value)(UInt32)(XLWorksheet.MaxNumberOfColumns),
+                    Style = sharedStyles[xlWorksheet.Style.ToString()].StyleId,
+                    Width = xlWorksheet.DefaultColumnWidth,
+                    CustomWidth = true
+                };
+                columns.Append(column);
             }
 
             SheetData sheetData = new SheetData();
 
-            var rowsFromCells = xlWorksheet.Internals.CellsCollection.Where(c => c.Key.Column > 0 && c.Key.Row > 0).Select(c => c.Key.Row).Distinct();
+            var rowsFromCells = xlWorksheet.Internals.CellsCollection.Where(c => c.Key.ColumnNumber > 0 && c.Key.RowNumber > 0).Select(c => c.Key.RowNumber).Distinct();
             var rowsFromCollection = xlWorksheet.Internals.RowsCollection.Keys;
             var allRows = rowsFromCells.ToList();
             allRows.AddRange(rowsFromCollection);
             var distinctRows = allRows.Distinct();
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
-                Row row = new Row() { RowIndex = (UInt32Value)(UInt32)distinctRow, Spans = new ListValue<StringValue>() { InnerText = "1:" + maxRow.ToString() } };
+                Row row = new Row() { RowIndex = (UInt32Value)(UInt32)distinctRow };
+                if (maxColumn > 0)
+                    row.Spans = new ListValue<StringValue>() { InnerText = "1:" + maxColumn.ToString() };
+
                 if (xlWorksheet.Internals.RowsCollection.ContainsKey(distinctRow))
                 {
                     var thisRow = xlWorksheet.Internals.RowsCollection[distinctRow];
+                    var thisRowStyleString = thisRow.Style.ToString();
                     row.Height = thisRow.Height;
                     row.CustomHeight = true;
-                    row.StyleIndex = sharedStyles[thisRow.Style.ToString()].StyleId;
+                    row.StyleIndex = sharedStyles[thisRowStyleString].StyleId;
                     row.CustomFormat = true;
                 }
+                else
+                {
+                    row.Height = xlWorksheet.DefaultRowHeight;
+                    row.CustomHeight = true;
+                }
+
                 foreach (var opCell in xlWorksheet.Internals.CellsCollection
-                    .Where(c => c.Key.Row == distinctRow)
+                    .Where(c => c.Key.RowNumber == distinctRow)
                     .OrderBy(c => c.Key)
                     .Select(c => c))
                 {
@@ -935,7 +994,7 @@ namespace ClosedXML.Excel
                 rowBreaks = new RowBreaks() { Count = (UInt32Value)(UInt32)rowBreakCount, ManualBreakCount = (UInt32)rowBreakCount };
                 foreach (var rb in xlWorksheet.PageSetup.RowBreaks)
                 {
-                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)rb, Max = (UInt32Value)(UInt32)xlWorksheet.LastRow().RowNumber, ManualPageBreak = true };
+                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)rb, Max = (UInt32Value)(UInt32)xlWorksheet.LastAddressInSheet.RowNumber, ManualPageBreak = true };
                     rowBreaks.Append(break1);
                 }
                
@@ -948,7 +1007,7 @@ namespace ClosedXML.Excel
                 columnBreaks = new ColumnBreaks() { Count = (UInt32Value)(UInt32)columnBreakCount, ManualBreakCount = (UInt32Value)(UInt32)columnBreakCount };
                 foreach (var cb in xlWorksheet.PageSetup.ColumnBreaks)
                 {
-                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)cb, Max = (UInt32Value)(UInt32)xlWorksheet.LastColumn().ColumnNumber, ManualPageBreak = true };
+                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)cb, Max = (UInt32Value)(UInt32)xlWorksheet.LastAddressInSheet.ColumnNumber, ManualPageBreak = true };
                     columnBreaks.Append(break1);
                 }
                 
@@ -971,6 +1030,55 @@ namespace ClosedXML.Excel
 
             worksheetPart.Worksheet = worksheet;
         }
+
+        //private void AppendColumns(Columns columns, Int32 startingColumn, IXLWorksheet xlWorksheet)
+        //{
+        //    var minUsable = xlWorksheet.Internals.ColumnsCollection.Keys.Where(i => i >= startingColumn).Select(i=>i).Min();
+        //    if (startingColumn < minUsable)
+        //    {
+        //        Column column = new Column()
+        //        {
+        //            Min = (UInt32Value)(UInt32)startingColumn,
+        //            Max = (UInt32Value)(UInt32)(minUsable - 1),
+        //            Style = sharedStyles[xlWorksheet.Style.ToString()].StyleId,
+        //            Width = xlWorksheet.DefaultColumnWidth,
+        //            CustomWidth = true
+        //        };
+        //        columns.Append(column);
+        //    }
+        //    else
+        //    {
+        //        var maxInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Max();
+        //        var maxUsable = maxInColumnsCollection;
+        //        for (var co = minUsable + 1; co <= maxInColumnsCollection; co++)
+        //        {
+        //            if (!xlWorksheet.Internals.ColumnsCollection.ContainsKey(co + 1))
+        //            {
+        //                maxUsable = co;
+        //                break;
+        //            }
+        //        }
+
+        //        Column column = new Column()
+        //        {
+        //            Min = (UInt32Value)(UInt32)minUsable,
+        //            Max = (UInt32Value)(UInt32)maxUsable,
+        //            Style = sharedStyles[xlWorksheet.Style.ToString()].StyleId,
+        //            Width = xlWorksheet.DefaultColumnWidth,
+        //            CustomWidth = true
+        //        };
+        //        columns.Append(column);
+        //    }
+        //    for(var co = startingColumn; co < minUsable; co++)
+        //    {
+                
+        //    }
+
+        //    var maxTotalColumns = XLWorksheet.MaxNumberOfColumns;
+            
+            
+        //    //var xlWorksheet.Internals.ColumnsCollection
+        //}
 
         private void GenerateThemePartContent(ThemePart themePart)
         {

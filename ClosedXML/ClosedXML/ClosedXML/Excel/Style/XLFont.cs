@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace ClosedXML.Excel
 {
-    public class XLFont: IXLFont
+    internal class XLFont : IXLFont
     {
         IXLStylized container;
         public XLFont()
@@ -233,5 +233,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
     }
 }

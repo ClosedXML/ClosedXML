@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLWorksheets: IXLWorksheets
+    internal class XLWorksheets : IXLWorksheets
     {
         Dictionary<String, IXLWorksheet> worksheets = new Dictionary<String, IXLWorksheet>();
 

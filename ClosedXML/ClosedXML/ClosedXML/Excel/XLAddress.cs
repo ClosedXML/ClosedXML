@@ -6,30 +6,30 @@ using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
 {
-    public struct XLAddress: IXLAddress
+    internal struct XLAddress: IXLAddress
     {
         #region Constructors
         /// <summary>
         /// Initializes a new <see cref="XLAddress"/> struct using R1C1 notation.
         /// </summary>
-        /// <param name="row">The row number of the cell address.</param>
-        /// <param name="column">The column number of the cell address.</param>
-        public XLAddress(Int32 row, Int32 column)
+        /// <param name="rowNumber">The row number of the cell address.</param>
+        /// <param name="columnNumber">The column number of the cell address.</param>
+        public XLAddress(Int32 rowNumber, Int32 columnNumber)
         {
-            this.row = row;
-            this.column = column;
-            this.columnLetter = GetColumnLetterFromNumber(column);
+            this.rowNumber = rowNumber;
+            this.columnNumber = columnNumber;
+            this.columnLetter = GetColumnLetterFromNumber(columnNumber);
         }
 
         /// <summary>
         /// Initializes a new <see cref="XLAddress"/> struct using a mixed notation.
         /// </summary>
-        /// <param name="row">The row number of the cell address.</param>
+        /// <param name="rowNumber">The row number of the cell address.</param>
         /// <param name="columnLetter">The column letter of the cell address.</param>
-        public XLAddress(Int32 row, String columnLetter)
+        public XLAddress(Int32 rowNumber, String columnLetter)
         {
-            this.row = row;
-            this.column = GetColumnNumberFromLetter(columnLetter);
+            this.rowNumber = rowNumber;
+            this.columnNumber = GetColumnNumberFromLetter(columnLetter);
             this.columnLetter = columnLetter;
         }
 
@@ -42,8 +42,8 @@ namespace ClosedXML.Excel
         {
             Match m = Regex.Match(cellAddressString, @"^([a-zA-Z]+)(\d+)$");
             columnLetter = m.Groups[1].Value;
-            this.row = Int32.Parse(m.Groups[2].Value);
-            this.column = GetColumnNumberFromLetter(columnLetter);
+            this.rowNumber = Int32.Parse(m.Groups[2].Value);
+            this.columnNumber = GetColumnNumberFromLetter(columnLetter);
         }
 
         #endregion
@@ -53,31 +53,31 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the column number of a given column letter.
         /// </summary>
-        /// <param name="column">The column letter to translate into a column number.</param>
-        public static Int32 GetColumnNumberFromLetter(String column)
+        /// <param name="columnLetter">The column letter to translate into a column number.</param>
+        public static Int32 GetColumnNumberFromLetter(String columnLetter)
         {
             Int32 iTest;
-            if (Int32.TryParse(column, out iTest)) return iTest;
+            if (Int32.TryParse(columnLetter, out iTest)) return iTest;
 
-            column = column.ToUpper();
+            columnLetter = columnLetter.ToUpper();
 
-            if (column.Length == 1)
+            if (columnLetter.Length == 1)
             {
-                return Convert.ToByte(Convert.ToChar(column)) - 64;
+                return Convert.ToByte(Convert.ToChar(columnLetter)) - 64;
             }
-            else if (column.Length == 2)
+            else if (columnLetter.Length == 2)
             {
                 return
-                    ((Convert.ToByte(column[0]) - 64) * 26) +
-                    (Convert.ToByte(column[1]) - 64);
+                    ((Convert.ToByte(columnLetter[0]) - 64) * 26) +
+                    (Convert.ToByte(columnLetter[1]) - 64);
 
             }
-            else if (column.Length == 3)
+            else if (columnLetter.Length == 3)
             {
                 return
-                    ((Convert.ToByte(column[0]) - 64) * 26 * 26) +
-                    ((Convert.ToByte(column[1]) - 64) * 26) +
-                    (Convert.ToByte(column[2]) - 64);
+                    ((Convert.ToByte(columnLetter[0]) - 64) * 26 * 26) +
+                    ((Convert.ToByte(columnLetter[1]) - 64) * 26) +
+                    (Convert.ToByte(columnLetter[2]) - 64);
             }
             else
             {
@@ -88,8 +88,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the column letter of a given column number.
         /// </summary>
-        /// <param name="column">The column number to translate into a column letter.</param>
-        public static String GetColumnLetterFromNumber(Int32 column)
+        /// <param name="columnNumber">The column number to translate into a column letter.</param>
+        public static String GetColumnLetterFromNumber(Int32 columnNumber)
         {
             String s = String.Empty;
             for (
@@ -97,7 +97,7 @@ namespace ClosedXML.Excel
                     Math.Log(
                         Convert.ToDouble(
                             25 * (
-                                Convert.ToDouble(column)
+                                Convert.ToDouble(columnNumber)
                                 + 1
                             )
                          )
@@ -108,9 +108,9 @@ namespace ClosedXML.Excel
                 )
             {
                 Int32 x = Convert.ToInt32(Math.Pow(26, i + 1) - 1) / 25 - 1;
-                if (column > x)
+                if (columnNumber > x)
                 {
-                    s += (Char)(((column - x - 1) / Convert.ToInt32(Math.Pow(26, i))) % 26 + 65);
+                    s += (Char)(((columnNumber - x - 1) / Convert.ToInt32(Math.Pow(26, i))) % 26 + 65);
                 }
             }
             return s;
@@ -120,24 +120,24 @@ namespace ClosedXML.Excel
 
         #region Properties
 
-        private Int32 row;
+        private Int32 rowNumber;
         /// <summary>
         /// Gets the row number of this address.
         /// </summary>
-        public Int32 Row
+        public Int32 RowNumber
         {
-            get { return row; }
-            private set { row = value; }
+            get { return rowNumber; }
+            private set { rowNumber = value; }
         }
 
-        private Int32 column;
+        private Int32 columnNumber;
         /// <summary>
         /// Gets the column number of this address.
         /// </summary>
-        public Int32 Column
+        public Int32 ColumnNumber
         {
-            get { return column; }
-            private set { column = value; }
+            get { return columnNumber; }
+            private set { columnNumber = value; }
         }
 
         private String columnLetter;
@@ -155,7 +155,7 @@ namespace ClosedXML.Excel
         #region Overrides
         public override string ToString()
         {
-            return this.columnLetter + this.row.ToString();
+            return this.columnLetter + this.rowNumber.ToString();
         }
         #endregion
 
@@ -163,29 +163,29 @@ namespace ClosedXML.Excel
 
         public static XLAddress operator +(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            return new XLAddress(xlCellAddressLeft.Row + xlCellAddressRight.Row, xlCellAddressLeft.Column + xlCellAddressRight.Column);
+            return new XLAddress(xlCellAddressLeft.RowNumber + xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber + xlCellAddressRight.ColumnNumber);
         }
 
         public static XLAddress operator -(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            return new XLAddress(xlCellAddressLeft.Row - xlCellAddressRight.Row, xlCellAddressLeft.Column - xlCellAddressRight.Column);
+            return new XLAddress(xlCellAddressLeft.RowNumber - xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber - xlCellAddressRight.ColumnNumber);
         }
 
         public static XLAddress operator +(XLAddress xlCellAddressLeft, Int32 right)
         {
-            return new XLAddress(xlCellAddressLeft.Row + right, xlCellAddressLeft.Column + right);
+            return new XLAddress(xlCellAddressLeft.RowNumber + right, xlCellAddressLeft.ColumnNumber + right);
         }
 
         public static XLAddress operator -(XLAddress xlCellAddressLeft, Int32 right)
         {
-            return new XLAddress(xlCellAddressLeft.Row - right, xlCellAddressLeft.Column - right);
+            return new XLAddress(xlCellAddressLeft.RowNumber - right, xlCellAddressLeft.ColumnNumber - right);
         }
 
         public static Boolean operator ==(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
             return
-                xlCellAddressLeft.Row == xlCellAddressRight.Row
-                && xlCellAddressLeft.Column == xlCellAddressRight.Column;
+                xlCellAddressLeft.RowNumber == xlCellAddressRight.RowNumber
+                && xlCellAddressLeft.ColumnNumber == xlCellAddressRight.ColumnNumber;
         }
 
         public static Boolean operator !=(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
@@ -196,13 +196,13 @@ namespace ClosedXML.Excel
         public static Boolean operator >(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
             return !(xlCellAddressLeft == xlCellAddressRight)
-                && (xlCellAddressLeft.Row > xlCellAddressRight.Row || xlCellAddressLeft.Column > xlCellAddressRight.Column);
+                && (xlCellAddressLeft.RowNumber > xlCellAddressRight.RowNumber || xlCellAddressLeft.ColumnNumber > xlCellAddressRight.ColumnNumber);
         }
 
         public static Boolean operator <(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
             return !(xlCellAddressLeft == xlCellAddressRight)
-                && (xlCellAddressLeft.Row < xlCellAddressRight.Row || xlCellAddressLeft.Column < xlCellAddressRight.Column);
+                && (xlCellAddressLeft.RowNumber < xlCellAddressRight.RowNumber || xlCellAddressLeft.ColumnNumber < xlCellAddressRight.ColumnNumber);
         }
 
         public static Boolean operator >=(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
@@ -221,12 +221,12 @@ namespace ClosedXML.Excel
 
         #region IEqualityComparer<XLCellAddress> Members
 
-        public Boolean Equals(XLAddress x, XLAddress y)
+        public Boolean Equals(IXLAddress x, IXLAddress y)
         {
             return x == y;
         }
 
-        public Int32 GetHashCode(XLAddress obj)
+        public Int32 GetHashCode(IXLAddress obj)
         {
             return obj.GetHashCode();
         }
@@ -250,9 +250,9 @@ namespace ClosedXML.Excel
 
         #region IEquatable<XLCellAddress> Members
 
-        public Boolean Equals(XLAddress other)
+        public Boolean Equals(IXLAddress other)
         {
-            return this == other;
+            return this == (XLAddress)other;
         }
 
         public override Boolean Equals(Object other)
@@ -279,9 +279,9 @@ namespace ClosedXML.Excel
 
         #region IComparable<XLCellAddress> Members
 
-        public int CompareTo(XLAddress other)
+        public Int32 CompareTo(IXLAddress other)
         {
-            throw new NotImplementedException();
+            return CompareTo((Object)other);
         }
 
         #endregion

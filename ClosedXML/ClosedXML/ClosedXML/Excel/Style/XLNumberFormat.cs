@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLNumberFormat: IXLNumberFormat
+    internal class XLNumberFormat : IXLNumberFormat
     {
         #region Properties
 
@@ -56,10 +56,8 @@ namespace ClosedXML.Excel
             this.container = container;
             if (defaultNumberFormat != null)
             {
-                if (defaultNumberFormat.NumberFormatId >= 0)
-                    numberFormatId = defaultNumberFormat.NumberFormatId;
-                else
-                    format = defaultNumberFormat.Format;
+                numberFormatId = defaultNumberFormat.NumberFormatId;
+                format = defaultNumberFormat.Format;
             }
         }
 

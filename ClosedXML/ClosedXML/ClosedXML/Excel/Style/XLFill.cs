@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace ClosedXML.Excel
 {
-    public class XLFill: IXLFill
+    internal class XLFill : IXLFill
     {
         #region Properties
 

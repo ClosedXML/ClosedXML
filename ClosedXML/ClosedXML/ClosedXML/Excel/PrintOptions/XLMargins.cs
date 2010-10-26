@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLMargins
+    internal class XLMargins: IXLMargins
     {
         public Double Left { get; set; }
         public Double Right { get; set; }

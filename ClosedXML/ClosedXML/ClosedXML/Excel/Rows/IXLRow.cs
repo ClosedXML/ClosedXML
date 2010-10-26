@@ -5,15 +5,13 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRow: IXLRange
+    public interface IXLRow : IXLRangeBase
     {
         Double Height { get; set; }
         void Delete();
-        
-    }
-
-    public static class IXLRowMethods
-    {
-
+        Int32 RowNumber();
+        void InsertRowsBelow(Int32 numberOfRows);
+        void InsertRowsAbove(Int32 numberOfRows);
+        void Clear();
     }
 }

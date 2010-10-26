@@ -5,7 +5,7 @@ using System.Text;
 using System.Drawing;
 namespace ClosedXML.Excel
 {
-    public class XLBorder: IXLBorder
+    internal class XLBorder : IXLBorder
     {
         IXLStylized container;
         public XLBorder(IXLStylized container, IXLBorder defaultBorder = null)

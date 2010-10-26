@@ -5,13 +5,11 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLWorksheetInternals
+    internal interface IXLWorksheetInternals
     {
-        IXLAddress FirstCellAddress { get; }
-        IXLAddress LastCellAddress { get; }
         Dictionary<IXLAddress, IXLCell> CellsCollection { get; }
-        Dictionary<Int32, IXLColumn> ColumnsCollection { get; }
-        Dictionary<Int32, IXLRow> RowsCollection { get; }
+        XLColumnsCollection ColumnsCollection { get; }
+        XLRowsCollection RowsCollection { get; }
         List<String> MergedCells { get; }
     }
 }

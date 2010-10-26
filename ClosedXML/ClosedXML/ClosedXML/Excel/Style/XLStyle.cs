@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLStyle: IXLStyle
+    internal class XLStyle : IXLStyle
     {
         public XLStyle(IXLStylized container, IXLStyle initialStyle = null)
         {
@@ -25,6 +25,8 @@ namespace ClosedXML.Excel
                 Fill = new XLFill(container);
                 NumberFormat = new XLNumberFormat(container);
             }
+
+            DateFormat = NumberFormat;
         }
 
         public IXLFont Font { get; set; }
@@ -35,7 +37,21 @@ namespace ClosedXML.Excel
 
         public IXLFill Fill { get; set; }
 
-        public IXLNumberFormat NumberFormat { get; set; }
+        private IXLNumberFormat numberFormat;
+        public IXLNumberFormat NumberFormat 
+        {
+            get
+            {
+                return numberFormat;
+            }
+            set
+            {
+                numberFormat = value;
+                DateFormat = numberFormat;
+            }
+        }
+
+        public IXLNumberFormat DateFormat { get; private set; }
 
         public override string ToString()
         {
@@ -46,5 +62,6 @@ namespace ClosedXML.Excel
                 + " NumberFormat: " + NumberFormat.ToString()
                 + " Alignment: " + Alignment.ToString();
         }
+
     }
 }
