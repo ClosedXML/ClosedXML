@@ -8,6 +8,8 @@ using System.Drawing;
 
 namespace ClosedXML_Examples.Styles
 {
+
+
     public class StyleFill
     {
         public void Create(String filePath)

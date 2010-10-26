@@ -13,7 +13,7 @@ namespace ClosedXML_Examples
         public void Create()
         {
             var workbook = new XLWorkbook();
-            workbook.Load(@"C:\BasicTable.xlsx");
+            workbook.Load(@"C:\Excel Files\Created\BasicTable.xlsx");
             var ws = workbook.Worksheets.GetWorksheet(0);
 
             // Change the background color of the headers
@@ -22,7 +22,7 @@ namespace ClosedXML_Examples
 
             // Change the date formats
             var rngDates = ws.Range("E4:E6");
-            rngDates.Style.NumberFormat.Format = "MM/dd/yyyy";
+            rngDates.Style.DateFormat.Format = "MM/dd/yyyy";
 
             // Change the income values to text
             var rngNumbers = ws.Range("F4:F6");
@@ -32,7 +32,7 @@ namespace ClosedXML_Examples
                 cell.Value += " Dollars";
             }
 
-            workbook.SaveAs(@"C:\BasicTable_Modified.xlsx");
+            workbook.SaveAs(@"C:\Excel Files\Modified\BasicTable_Modified.xlsx");
         }
     }
 }

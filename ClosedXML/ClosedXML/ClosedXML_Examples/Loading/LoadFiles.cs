@@ -11,7 +11,7 @@ namespace ClosedXML_Examples
     {
         public static void LoadAllFiles()
         {
-            var forLoadingFolder = @"C:\Excel Files\ForLoading";
+            var forLoadingFolder = @"C:\Excel Files\Created";
             var forSavingFolder = @"C:\Excel Files\Modified";
 
             foreach (var file in Directory.GetFiles(forLoadingFolder))
@@ -21,7 +21,7 @@ namespace ClosedXML_Examples
                 LoadAndSaveFile(forLoadingFolder + @"\" + fileName, forSavingFolder + @"\" + fileName);
             }
 
-            //LoadAndSaveFile(forLoadingFolder + @"\HeaderFooters.xlsx", forSavingFolder + @"\HeaderFooters.xlsx");
+            //LoadAndSaveFile(forLoadingFolder + @"\StyleWorksheet.xlsx", forSavingFolder + @"\StyleWorksheet.xlsx");
             //LoadAndSaveFile(forLoadingFolder + "DataTypes.xlsx", forSavingFolder + "DataTypes.xlsx");
             //LoadAndSaveFile(forLoadingFolder + "MultipleSheets.xlsx", forSavingFolder + "MultipleSheets.xlsx");
             //LoadAndSaveFile(forLoadingFolder + "styleNumberFormat.xlsx", forSavingFolder + "styleNumberFormat.xlsx");

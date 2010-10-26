@@ -18,6 +18,8 @@ namespace ClosedXML_Examples
             new HelloWorld().Create(@"C:\Excel Files\Created\HelloWorld.xlsx");
             new BasicTable().Create(@"C:\Excel Files\Created\BasicTable.xlsx");
             new StyleExamples().Create();
+            new ChangingBasicTable().Create();
+            new MovingRanges().Create();
             new ColumnSettings().Create(@"C:\Excel Files\Created\ColumnSettings.xlsx");
             new RowSettings().Create(@"C:\Excel Files\Created\RowSettings.xlsx");
             new MergeCells().Create(@"C:\Excel Files\Created\MergedCells.xlsx");
@@ -35,7 +37,12 @@ namespace ClosedXML_Examples
             new HeaderFooters().Create(@"C:\Excel Files\Created\HeaderFooters.xlsx");
             new Sheets().Create(@"C:\Excel Files\Created\Sheets.xlsx");
             new SheetTab().Create(@"C:\Excel Files\Created\SheetTab.xlsx");
-            new ChangingBasicTable().Create();
+            new MultipleRanges().Create(@"C:\Excel Files\Created\MultipleRanges.xlsx");
+            new StyleWorksheet().Create(@"C:\Excel Files\Created\StyleWorksheet.xlsx");
+            new StyleRowsColumns().Create(@"C:\Excel Files\Created\StyleRowsColumns.xlsx");
+            new InsertingDeletingRows().Create(@"C:\Excel Files\Created\InsertingDeletingRows.xlsx");
+            new InsertingDeletingColumns().Create(@"C:\Excel Files\Created\InsertingDeletingColumns.xlsx");
+            //new DeletingColumns().Create(@"C:\Excel Files\Created\DeletingColumns.xlsx");
         }
     }
 }

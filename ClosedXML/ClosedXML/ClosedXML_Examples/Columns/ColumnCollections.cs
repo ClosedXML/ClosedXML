@@ -73,9 +73,8 @@ namespace ClosedXML_Examples.Columns
             // Use a single number/letter
             bigRange.Columns("V").Style.Fill.BackgroundColor = Color.Cyan;
 
-            // Only the used columns in a worksheet
+            // Adjust the width
             ws.Columns("A:V").Width = 3; 
-
 
             var ws2 = workbook.Worksheets.Add("Columns of a worksheet");
             
@@ -97,6 +96,7 @@ namespace ClosedXML_Examples.Columns
             // Use a single number/letter
             ws2.Columns("V").Style.Fill.BackgroundColor = Color.Cyan;
 
+            // Adjust the width
             ws2.Columns("A:V").Width = 3;
             
             workbook.SaveAs(filePath);

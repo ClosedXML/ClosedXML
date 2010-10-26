@@ -112,7 +112,7 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(++ro, co).Value = "Formatted Date to Text:";
             ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2).ToString();
-            ws.Cell(ro, co + 1).Style.NumberFormat.Format = "yyyy-MM-dd";
+            ws.Cell(ro, co + 1).Style.DateFormat.Format = "yyyy-MM-dd";
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ws.Cell(++ro, co).Value = "Formatted Number to Text:";

@@ -22,10 +22,21 @@ namespace ClosedXML_Examples.PageSetup
             ws.PageSetup.Header.Left.AddText("Created with ClosedXML");
 
             // Using various fonts for the right header on the first page only
-            ws.PageSetup.Header.Right.AddText("The ", XLHFOccurrence.FirstPage, new XLFont() { Bold = true });
-            ws.PageSetup.Header.Right.AddText("First ", XLHFOccurrence.FirstPage, new XLFont() {  FontColor = Color.Red });
-            ws.PageSetup.Header.Right.AddText("Colorful ", XLHFOccurrence.FirstPage, new XLFont() { Underline = XLFontUnderlineValues.Double});
-            ws.PageSetup.Header.Right.AddText("Page", XLHFOccurrence.FirstPage, new XLFont() {  FontName = "Broadway" });
+            var font1 = XLWorkbook.GetXLFont();
+            font1.Bold = true;
+            ws.PageSetup.Header.Right.AddText("The ", XLHFOccurrence.FirstPage, font1);
+
+            var font2 = XLWorkbook.GetXLFont();
+            font2.FontColor = Color.Red;
+            ws.PageSetup.Header.Right.AddText("First ", XLHFOccurrence.FirstPage, font2);
+
+            var font3 = XLWorkbook.GetXLFont();
+            font3.Underline = XLFontUnderlineValues.Double;
+            ws.PageSetup.Header.Right.AddText("Colorful ", XLHFOccurrence.FirstPage, font3);
+
+            var font4 = XLWorkbook.GetXLFont();
+            font4.FontName = "Broadway";
+            ws.PageSetup.Header.Right.AddText("Page", XLHFOccurrence.FirstPage, font4);
 
             // Using predefined header/footer text:
 

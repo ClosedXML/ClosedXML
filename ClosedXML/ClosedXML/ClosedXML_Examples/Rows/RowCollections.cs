@@ -67,7 +67,7 @@ namespace ClosedXML_Examples.Rows
             // Using a single number
             bigRange.Rows("13").Style.Fill.BackgroundColor = Color.Cyan;
 
-            // Only the used rows in a worksheet
+            // Adjust the height
             ws.Rows().Height = 15;
 
             var ws2 = workbook.Worksheets.Add("Rows of a Worksheet");
@@ -84,6 +84,7 @@ namespace ClosedXML_Examples.Rows
             // Using a single number
             ws2.Rows("13").Style.Fill.BackgroundColor = Color.Cyan;
 
+            // Adjust the height
             ws2.Rows("1:13").Height = 15;
 
             workbook.SaveAs(filePath);

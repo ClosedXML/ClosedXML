@@ -51,6 +51,7 @@
     <Compile Include="BasicTable.cs" />
     <Compile Include="Columns\ColumnCollections.cs" />
     <Compile Include="Columns\ColumnSettings.cs" />
+    <Compile Include="Columns\DeletingColumns.cs" />
     <Compile Include="Creating\CreateFiles.cs" />
     <Compile Include="Loading\ChangingBasicTable.cs" />
     <Compile Include="Loading\LoadFiles.cs" />
@@ -60,8 +61,12 @@
     <Compile Include="PageSetup\Margins.cs" />
     <Compile Include="PageSetup\Page.cs" />
     <Compile Include="Ranges\ClearingRanges.cs" />
+    <Compile Include="Ranges\InsertingDeletingColumns.cs" />
+    <Compile Include="Ranges\InsertingDeletingRows.cs" />
     <Compile Include="Ranges\DeletingRanges.cs" />
     <Compile Include="Ranges\DefiningRanges.cs" />
+    <Compile Include="Ranges\MovingRanges.cs" />
+    <Compile Include="Ranges\MultipleRanges.cs" />
     <Compile Include="Rows\RowCollections.cs" />
     <Compile Include="Columns\InsertColumns.cs" />
     <Compile Include="HelloWorld.cs" />
@@ -73,6 +78,8 @@
     <Compile Include="Rows\InsertRows.cs" />
     <Compile Include="Rows\RowSettings.cs" />
     <Compile Include="StyleExamples.cs" />
+    <Compile Include="Styles\StyleRowsColumns.cs" />
+    <Compile Include="Styles\StyleWorksheet.cs" />
     <Compile Include="Styles\StyleAlignment.cs" />
     <Compile Include="Styles\StyleBorder.cs" />
     <Compile Include="Styles\StyleFill.cs" />

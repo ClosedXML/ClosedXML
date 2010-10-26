@@ -16,7 +16,7 @@ namespace ClosedXML_Examples.Ranges
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
-            var ws = workbook.Worksheets.Add("Deleting a Range");
+            var ws = workbook.Worksheets.Add("Clearing Ranges");
             foreach (var ro in Enumerable.Range(1, 10))
             {
                 foreach (var co in Enumerable.Range(1, 10))
