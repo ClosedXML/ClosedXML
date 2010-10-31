@@ -13,5 +13,8 @@ namespace ClosedXML.Excel
         void InsertRowsBelow(Int32 numberOfRows);
         void InsertRowsAbove(Int32 numberOfRows);
         void Clear();
+
+        IXLCell Cell(Int32 column);
+        IXLCell Cell(String column);
     }
 }

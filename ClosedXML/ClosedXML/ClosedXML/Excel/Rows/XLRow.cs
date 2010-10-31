@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
             else
             {
                 this.style = new XLStyle(this, xlRowParameters.DefaultStyle);
-                this.height = xlRowParameters.Worksheet.DefaultRowHeight;
+                this.height = xlRowParameters.Worksheet.RowHeight;
             }
         }
 
@@ -42,7 +42,6 @@ namespace ClosedXML.Excel
             FirstAddressInSheet = new XLAddress(row, 1);
             LastAddressInSheet = new XLAddress(row, XLWorksheet.MaxNumberOfColumns);
         }
-
 
         public Boolean IsReference { get; private set; }
 
@@ -87,7 +86,7 @@ namespace ClosedXML.Excel
             return this.FirstAddressInSheet.RowNumber;
         }
 
-        public void InsertRowsBelow(Int32 numberOfRows)
+        public new void InsertRowsBelow(Int32 numberOfRows)
         {
             var rowNum = this.RowNumber();
             this.Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum + 1, numberOfRows);
@@ -95,7 +94,7 @@ namespace ClosedXML.Excel
             range.InsertRowsBelow(numberOfRows, true);
         }
 
-        public void InsertRowsAbove(Int32 numberOfRows)
+        public new void InsertRowsAbove(Int32 numberOfRows)
         {
             var rowNum = this.RowNumber();
             this.Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum, numberOfRows);
@@ -105,15 +104,23 @@ namespace ClosedXML.Excel
             range.InsertRowsAbove(numberOfRows, true);
         }
 
-        public void Clear()
+        public new void Clear()
         {
             var range = this.AsRange();
             range.Clear();
             this.Style = Worksheet.Style;
         }
 
-        #endregion
+        public IXLCell Cell(Int32 column)
+        {
+            return base.Cell(1, column);
+        }
+        public new IXLCell Cell(String column)
+        {
+            return base.Cell(1, column);
+        }
 
+        #endregion
 
         #region IXLStylized Members
 

@@ -42,7 +42,10 @@ namespace ClosedXML_Examples
             new StyleRowsColumns().Create(@"C:\Excel Files\Created\StyleRowsColumns.xlsx");
             new InsertingDeletingRows().Create(@"C:\Excel Files\Created\InsertingDeletingRows.xlsx");
             new InsertingDeletingColumns().Create(@"C:\Excel Files\Created\InsertingDeletingColumns.xlsx");
-            //new DeletingColumns().Create(@"C:\Excel Files\Created\DeletingColumns.xlsx");
+            new DeletingColumns().Create(@"C:\Excel Files\Created\DeletingColumns.xlsx");
+            new CellValues().Create(@"C:\Excel Files\Created\CellValues.xlsx");
+            new LambdaExpressions().Create();
+            new DefaultStyles().Create(@"C:\Excel Files\Created\DefaultStyles.xlsx");
         }
     }
 }

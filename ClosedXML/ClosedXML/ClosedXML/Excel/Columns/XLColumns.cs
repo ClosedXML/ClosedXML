@@ -112,7 +112,7 @@ namespace ClosedXML.Excel
 
                 if (entireWorksheet)
                 {
-                    worksheet.DefaultColumnWidth = value;
+                    worksheet.ColumnWidth = value;
                     worksheet.Internals.ColumnsCollection.ForEach(c => c.Value.Width = value);
                 }
             }

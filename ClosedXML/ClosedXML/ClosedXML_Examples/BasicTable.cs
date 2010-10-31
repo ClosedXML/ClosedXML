@@ -35,19 +35,19 @@ namespace ClosedXML_Examples
             //Adding more data types
             //Is an outcast?
             ws.Cell("D3").Value = "Outcast";
-            ws.Cell("D4").Value = true.ToString();
-            ws.Cell("D5").Value = false.ToString();
-            ws.Cell("D6").Value = false.ToString();
+            ws.Cell("D4").Value = true;
+            ws.Cell("D5").Value = false;
+            ws.Cell("D6").Value = false;
             //Date of Birth
             ws.Cell("E3").Value = "DOB";
-            ws.Cell("E4").Value = new DateTime(1919, 1, 21).ToString();
-            ws.Cell("E5").Value = new DateTime(1907, 3, 4).ToString();
-            ws.Cell("E6").Value = new DateTime(1921, 12, 15).ToString();
+            ws.Cell("E4").Value = new DateTime(1919, 1, 21);
+            ws.Cell("E5").Value = new DateTime(1907, 3, 4);
+            ws.Cell("E6").Value = new DateTime(1921, 12, 15);
             //Income
             ws.Cell("F3").Value = "Income";
-            ws.Cell("F4").Value = "2000";
-            ws.Cell("F5").Value = "40000";
-            ws.Cell("F6").Value = "10000";
+            ws.Cell("F4").Value = 2000;
+            ws.Cell("F5").Value = 40000;
+            ws.Cell("F6").Value = 10000;
 
             //Defining ranges
             //From worksheet

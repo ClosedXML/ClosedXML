@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     internal class XLWorksheetInternals: IXLWorksheetInternals
     {
         public XLWorksheetInternals(
-            Dictionary<IXLAddress, IXLCell> cellsCollection , 
+            Dictionary<IXLAddress, XLCell> cellsCollection , 
             XLColumnsCollection columnsCollection,
             XLRowsCollection rowsCollection,
             List<String> mergedCells)
@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
             MergedCells = mergedCells;
         }
 
-        public Dictionary<IXLAddress, IXLCell> CellsCollection { get; private set; }
+        public Dictionary<IXLAddress, XLCell> CellsCollection { get; private set; }
         public XLColumnsCollection ColumnsCollection { get; private set; }
         public XLRowsCollection RowsCollection { get; private set; }
         public List<String> MergedCells { get; internal set; }

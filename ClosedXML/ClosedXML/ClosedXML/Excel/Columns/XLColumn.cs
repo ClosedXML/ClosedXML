@@ -22,11 +22,9 @@ namespace ClosedXML.Excel
             else
             {
                 this.style = new XLStyle(this, xlColumnParameters.DefaultStyle);
-                this.width = xlColumnParameters.Worksheet.DefaultColumnWidth;
+                this.width = xlColumnParameters.Worksheet.ColumnWidth;
             }
         }
-
-
 
         void Worksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
         {
@@ -78,11 +76,16 @@ namespace ClosedXML.Excel
             Worksheet.Internals.ColumnsCollection.Remove(columnNumber);
         }
 
-        public void Clear()
+        public new void Clear()
         {
             var range = this.AsRange();
             range.Clear();
             this.Style = Worksheet.Style;
+        }
+
+        public IXLCell Cell(int row)
+        {
+            return base.Cell(row, 1);
         }
 
         #endregion
@@ -167,14 +170,14 @@ namespace ClosedXML.Excel
             return this.FirstAddressInSheet.ColumnLetter;
         }
 
-        public void InsertColumnsAfter( Int32 numberOfColumns)
+        public new void InsertColumnsAfter( Int32 numberOfColumns)
         {
             var columnNum = this.ColumnNumber();
             this.Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum + 1, numberOfColumns);
             XLRange range = (XLRange)this.Worksheet.Column(columnNum).AsRange();
             range.InsertColumnsAfter(numberOfColumns, true);
         }
-        public void InsertColumnsBefore( Int32 numberOfColumns)
+        public new void InsertColumnsBefore( Int32 numberOfColumns)
         {
             var columnNum = this.ColumnNumber();
             this.Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum, numberOfColumns);

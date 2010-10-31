@@ -7,11 +7,11 @@ namespace ClosedXML.Excel
 {
     public interface IXLWorksheet: IXLRangeBase
     {
-        Double DefaultColumnWidth { get; set; }
-        Double DefaultRowHeight { get; set; }
+        Double ColumnWidth { get; set; }
+        Double RowHeight { get; set; }
 
         String Name { get; set; }
-        IXLPageOptions PageSetup { get; }
+        IXLPageSetup PageSetup { get; }
 
         IXLRow FirstRowUsed();
         IXLRow LastRowUsed();
@@ -27,5 +27,14 @@ namespace ClosedXML.Excel
         IXLRow Row(Int32 row);
         IXLColumn Column(Int32 column);
         IXLColumn Column(String column);
+        IXLRange Range(int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn);
+
+        IXLCell Cell(int row, int column);
+        IXLCell Cell(string cellAddressInRange);
+        IXLCell Cell(int row, string column);
+        IXLCell Cell(IXLAddress cellAddressInRange);
+
+        int RowCount();
+        int ColumnCount();
     }
 }

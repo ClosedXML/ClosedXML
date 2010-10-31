@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
 {
     public partial class XLWorkbook
     {
-        public void Load(String file)
+        private void Load(String file)
         {
 
             LoadSheets(file);
@@ -60,8 +60,8 @@ namespace ClosedXML.Excel
                     var ws = (XLWorksheet)Worksheets.Add(sheetName);
 
                     var sheetFormatProperties = (SheetFormatProperties)worksheetPart.Worksheet.Descendants<SheetFormatProperties>().First();
-                    ws.DefaultRowHeight = sheetFormatProperties.DefaultRowHeight;
-                    ws.DefaultColumnWidth = sheetFormatProperties.DefaultColumnWidth;
+                    ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
+                    ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth;
 
                     foreach (var mCell in worksheetPart.Worksheet.Descendants<MergeCell>())
                     {
@@ -73,7 +73,7 @@ namespace ClosedXML.Excel
                     var wsDefaultColumn = worksheetPart.Worksheet.Descendants<Column>().Where(
                         c => c.Max == XLWorksheet.MaxNumberOfColumns).Single();
 
-                    if (wsDefaultColumn.Width != null) ws.DefaultColumnWidth = wsDefaultColumn.Width;
+                    if (wsDefaultColumn.Width != null) ws.ColumnWidth = wsDefaultColumn.Width;
 
                     Int32 styleIndexDefault = wsDefaultColumn.Style != null ? Int32.Parse(wsDefaultColumn.Style.InnerText) : -1;
                     if (styleIndexDefault >= 0)
@@ -90,7 +90,7 @@ namespace ClosedXML.Excel
                             if (col.Width != null) 
                                 ((XLColumns)toApply).Width = col.Width;
                             else
-                                ((XLColumns)toApply).Width = ws.DefaultColumnWidth;
+                                ((XLColumns)toApply).Width = ws.ColumnWidth;
 
                             Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
                             if (styleIndex > 0)
@@ -111,7 +111,7 @@ namespace ClosedXML.Excel
                         if (row.Height != null)
                             xlRow.Height = row.Height;
                         else
-                            xlRow.Height = ws.DefaultRowHeight;
+                            xlRow.Height = ws.RowHeight;
 
                         Int32 styleIndex = row.StyleIndex != null ? Int32.Parse(row.StyleIndex.InnerText) : -1;
                         if (styleIndex > 0)
@@ -150,12 +150,12 @@ namespace ClosedXML.Excel
                             else if (dCell.DataType == CellValues.Date)
                             {
                                 xlCell.DataType = XLCellValues.DateTime;
-                                xlCell.Value = DateTime.FromOADate(Double.Parse(dCell.CellValue.Text)).ToString();
+                                xlCell.Value = DateTime.FromOADate(Double.Parse(dCell.CellValue.Text));
                             }
                             else if (dCell.DataType == CellValues.Boolean)
                             {
                                 xlCell.DataType = XLCellValues.Boolean;
-                                xlCell.Value = (dCell.CellValue.Text == "1").ToString();
+                                xlCell.Value = (dCell.CellValue.Text == "1");
                             }
                             else if (dCell.DataType == CellValues.Number)
                             {

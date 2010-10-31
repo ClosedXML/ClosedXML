@@ -5,28 +5,28 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLRanges : IXLRanges
+    internal class XLRangeRows : IXLRangeRows
     {
-        public XLRanges(XLWorksheet worksheet)
+        public XLRangeRows(XLWorksheet worksheet)
         {
             Style = worksheet.Style;
         }
 
-        List<XLRange> ranges = new List<XLRange>();
+        List<XLRangeRow> ranges = new List<XLRangeRow>();
 
         public void Clear()
         {
             ranges.ForEach(r => r.Clear());
         }
 
-        public void Add(IXLRange range)
+        public void Add(IXLRangeRow range)
         {
-            ranges.Add((XLRange)range);
+            ranges.Add((XLRangeRow)range);
         }
 
-        public IEnumerator<IXLRange> GetEnumerator()
+        public IEnumerator<IXLRangeRow> GetEnumerator()
         {
-            return ranges.ToList<IXLRange>().GetEnumerator();
+            return ranges.ToList<IXLRangeRow>().GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

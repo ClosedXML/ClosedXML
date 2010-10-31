@@ -8,26 +8,87 @@ namespace ClosedXML.Excel
 {
     internal class XLCell : IXLCell
     {
-        public XLCell(IXLAddress address, IXLStyle defaultStyle)
+        XLWorksheet worksheet;
+        public XLCell(IXLAddress address, IXLStyle defaultStyle, XLWorksheet worksheet)
         {
             this.Address = address;
             Style = defaultStyle;
-            if (Style == null) Style = XLWorkbook.DefaultStyle;
+            if (Style == null) Style = worksheet.Style;
+            this.worksheet = worksheet;
         }
 
         public IXLAddress Address { get; private set; }
-
-        private Boolean initialized = false;
-        private String cellValue = String.Empty;
-        public String Value
+        public String InnerText
         {
-            get
+            get { return cellValue; }
+        }
+
+        public T GetValue<T>() 
+        {
+            return (T)Convert.ChangeType(Value, typeof(T));
+        }
+        public String GetString()
+        {
+            return GetValue<String>();
+        }
+        public Double GetDouble()
+        {
+            return GetValue<Double>();
+        }
+        public Boolean GetBoolean()
+        {
+            return GetValue<Boolean>();
+        }
+        public DateTime GetDateTime()
+        {
+            return GetValue<DateTime>();
+        }
+        public String GetFormattedValue()
+        {
+            if (dataType == XLCellValues.Boolean)
+            {
+                return (cellValue != "0").ToString();
+            }
+            else if (dataType == XLCellValues.Number)
+            {
+                return Double.Parse(cellValue).ToString(Style.NumberFormat.Format);
+            }
+            else if (dataType == XLCellValues.DateTime)
+            {
+                return DateTime.FromOADate(Double.Parse(cellValue)).ToString(Style.NumberFormat.Format);
+            }
+            else
             {
                 return cellValue;
             }
+        }
+
+        private Boolean initialized = false;
+        private String cellValue = String.Empty;
+        public Object Value
+        {
+            get
+            {
+                if (dataType == XLCellValues.Boolean)
+                {
+                    return cellValue != "0";
+                }
+                else if (dataType == XLCellValues.DateTime)
+                {
+                    return DateTime.FromOADate(Double.Parse(cellValue));
+                }
+                else if (dataType == XLCellValues.Number)
+                {
+                    return Double.Parse(cellValue);
+                }
+                else
+                {
+                    return cellValue;
+                }
+            }
             set
             {
-                String val = value;
+                String val = value.ToString();
                 Double dTest;
                 DateTime dtTest;
                 Boolean bTest;
@@ -138,9 +199,9 @@ namespace ClosedXML.Excel
                     {
                         Boolean bTest;
                         if (Boolean.TryParse(cellValue, out bTest))
-                            cellValue = Boolean.Parse(cellValue) ? "1" : "0";
+                            cellValue = bTest ? "1" : "0";
                         else
-                            cellValue = value != 0 ? "1" : "0";
+                            cellValue = cellValue == "0" || String.IsNullOrEmpty(cellValue) ? "0" : "1";
                     }
                     else if (value == XLCellValues.DateTime)
                     {
@@ -172,7 +233,7 @@ namespace ClosedXML.Excel
                     {
                         if (dataType == XLCellValues.Boolean)
                         {
-                            cellValue = (cellValue == "0" ? false : true).ToString();
+                            cellValue = (cellValue != "0").ToString();
                         }
                         else if (dataType == XLCellValues.Number)
                         {

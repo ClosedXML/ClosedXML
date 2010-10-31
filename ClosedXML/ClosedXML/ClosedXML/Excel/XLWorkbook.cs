@@ -14,12 +14,15 @@ namespace ClosedXML.Excel
         {
             DefaultRowHeight = 15;
             DefaultColumnWidth = 9.140625;
-            Worksheets = new XLWorksheets();
-
+            Worksheets = new XLWorksheets(this);
             PopulateEnums();
+            Style = DefaultStyle;
+            RowHeight = DefaultRowHeight;
+            ColumnWidth = DefaultColumnWidth;
+            PageOptions = DefaultPageOptions;
         }
 
-        public XLWorkbook(String file)
+        public XLWorkbook(String file): this()
         {
             Load(file);
         }
@@ -47,106 +50,100 @@ namespace ClosedXML.Excel
             CreatePackage(file);
         }
 
+        public IXLStyle Style { get; set; }
+        public Double RowHeight { get; set; }
+        public Double ColumnWidth { get; set; }
+        public IXLPageSetup PageOptions { get; set; }
+
         #endregion
 
         #region Static
 
-        private static IXLStyle defaultStyle;
-        /// <summary>
-        /// Gets the default style for new workbooks.
-        /// </summary>
         public static IXLStyle DefaultStyle
         {
             get
             {
-                if (defaultStyle == null)
+                var defaultStyle = new XLStyle(null, null)
                 {
-                    defaultStyle = new XLStyle(null, null)
+                    Font = new XLFont(null, null)
                     {
-                        Font = new XLFont(null, null)
+                        Bold = false,
+                        Italic = false,
+                        Underline = XLFontUnderlineValues.None,
+                        Strikethrough = false,
+                        VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
+                        FontSize = 11,
+                        FontColor = Color.FromArgb(0, 0, 0),
+                        FontName = "Calibri",
+                        FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
+                    },
+
+                    Fill = new XLFill(null)
+                   {
+                       BackgroundColor = Color.FromArgb(255, 255, 255),
+                       PatternType = XLFillPatternValues.None,
+                       PatternColor = Color.FromArgb(255, 255, 255)
+                   },
+
+                    Border = new XLBorder(null)
                         {
-                            Bold = false,
-                            Italic = false,
-                            Underline = XLFontUnderlineValues.None,
-                            Strikethrough = false,
-                            VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
-                            FontSize = 11,
-                            FontColor = Color.FromArgb(0, 0, 0),
-                            FontName = "Calibri",
-                            FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
+                            BottomBorder = XLBorderStyleValues.None,
+                            DiagonalBorder = XLBorderStyleValues.None,
+                            DiagonalDown = false,
+                            DiagonalUp = false,
+                            LeftBorder = XLBorderStyleValues.None,
+                            RightBorder = XLBorderStyleValues.None,
+                            TopBorder = XLBorderStyleValues.None,
+                            BottomBorderColor = Color.Black,
+                            DiagonalBorderColor = Color.Black,
+                            LeftBorderColor = Color.Black,
+                            RightBorderColor = Color.Black,
+                            TopBorderColor = Color.Black
                         },
-
-                        Fill = new XLFill(null)
-                       {
-                           BackgroundColor = Color.FromArgb(255, 255, 255),
-                           PatternType = XLFillPatternValues.None,
-                           PatternColor = Color.FromArgb(255, 255, 255)
-                       },
-
-                        Border = new XLBorder(null)
-                            {
-                                BottomBorder = XLBorderStyleValues.None,
-                                DiagonalBorder = XLBorderStyleValues.None,
-                                DiagonalDown = false,
-                                DiagonalUp = false,
-                                LeftBorder = XLBorderStyleValues.None,
-                                RightBorder = XLBorderStyleValues.None,
-                                TopBorder = XLBorderStyleValues.None,
-                                BottomBorderColor = Color.Black,
-                                DiagonalBorderColor = Color.Black,
-                                LeftBorderColor = Color.Black,
-                                RightBorderColor = Color.Black,
-                                TopBorderColor = Color.Black
-                            },
-                        NumberFormat = new XLNumberFormat(null) { NumberFormatId = 0 },
-                        Alignment = new XLAlignment(null)
-                            {
-                                Horizontal = XLAlignmentHorizontalValues.General,
-                                Indent = 0,
-                                JustifyLastLine = false,
-                                ReadingOrder = XLAlignmentReadingOrderValues.ContextDependent,
-                                RelativeIndent = 0,
-                                ShrinkToFit = false,
-                                TextRotation = 0,
-                                Vertical = XLAlignmentVerticalValues.Bottom,
-                                WrapText = false
-                            }
-                    };
-                }
+                    NumberFormat = new XLNumberFormat(null) { NumberFormatId = 0 },
+                    Alignment = new XLAlignment(null)
+                        {
+                            Horizontal = XLAlignmentHorizontalValues.General,
+                            Indent = 0,
+                            JustifyLastLine = false,
+                            ReadingOrder = XLAlignmentReadingOrderValues.ContextDependent,
+                            RelativeIndent = 0,
+                            ShrinkToFit = false,
+                            TextRotation = 0,
+                            Vertical = XLAlignmentVerticalValues.Bottom,
+                            WrapText = false
+                        }
+                };
                 return defaultStyle;
             }
         }
 
-        public static Double DefaultRowHeight { get; set; }
-        public static Double DefaultColumnWidth { get; set; }
+        public static Double DefaultRowHeight { get; private set; }
+        public static Double DefaultColumnWidth { get; private set; }
 
-        public static IXLPageOptions defaultPageOptions;
-        public static IXLPageOptions DefaultPageOptions
+        public static IXLPageSetup DefaultPageOptions
         {
             get
             {
-                if (defaultPageOptions == null)
+                var defaultPageOptions = new XLPageSetup(null, null)
                 {
-                    defaultPageOptions = new XLPageOptions(null, null)
+                    PageOrientation = XLPageOrientation.Default,
+                    Scale = 100,
+                    PaperSize = XLPaperSize.LetterPaper,
+                    Margins = new XLMargins()
                     {
-                        PageOrientation = XLPageOrientation.Default,
-                        Scale = 100,
-                        PaperSize = XLPaperSize.LetterPaper,
-                        Margins = new XLMargins()
-                        {
-                            Top = 0.75,
-                            Bottom = 0.75,
-                            Left = 0.75,
-                            Right = 0.75,
-                            Header = 0.75,
-                            Footer = 0.75
-                        },
-                         ScaleHFWithDocument = true,
-                         AlignHFWithMargins = true,
-                         PrintErrorValue = XLPrintErrorValues.Displayed,
-                         ShowComments = XLShowCommentsValues.None
-                    };
-                }
+                        Top = 0.75,
+                        Bottom = 0.75,
+                        Left = 0.75,
+                        Right = 0.75,
+                        Header = 0.75,
+                        Footer = 0.75
+                    },
+                    ScaleHFWithDocument = true,
+                    AlignHFWithMargins = true,
+                    PrintErrorValue = XLPrintErrorValues.Displayed,
+                    ShowComments = XLShowCommentsValues.None
+                };
                 return defaultPageOptions;
             }
         }

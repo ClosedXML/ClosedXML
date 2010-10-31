@@ -68,7 +68,6 @@ namespace ClosedXML_Examples.Misc
             ws.Cell("F2").Style.Alignment.WrapText = true;
             ws.Range("F2:G8").Column(1).Merge();
 
-
             // Merge a range
             ws.Cell("B4").Value = "Merged Range (B4:D6)";
             ws.Cell("B4").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;

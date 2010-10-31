@@ -21,16 +21,16 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        public XLWorksheet(String sheetName)
+        public XLWorksheet(String sheetName, XLWorkbook workbook)
         {
             Worksheet = this;
-            Style = XLWorkbook.DefaultStyle;
-            Internals = new XLWorksheetInternals(new Dictionary<IXLAddress, IXLCell>(), new XLColumnsCollection(), new XLRowsCollection(), new List<String>());
+            Style = workbook.Style;
+            Internals = new XLWorksheetInternals(new Dictionary<IXLAddress, XLCell>(), new XLColumnsCollection(), new XLRowsCollection(), new List<String>());
             FirstAddressInSheet = new XLAddress(1, 1);
             LastAddressInSheet = new XLAddress(MaxNumberOfRows, MaxNumberOfColumns);
-            PageSetup = new XLPageOptions(XLWorkbook.DefaultPageOptions, this);
-            DefaultColumnWidth = XLWorkbook.DefaultColumnWidth;
-            DefaultRowHeight = XLWorkbook.DefaultRowHeight;
+            PageSetup = new XLPageSetup(workbook.PageOptions, this);
+            ColumnWidth = workbook.ColumnWidth;
+            RowHeight = workbook.RowHeight;
             this.Name = sheetName;
             RangeShiftedRows += new RangeShiftedRowsDelegate(XLWorksheet_RangeShiftedRows);
             RangeShiftedColumns += new RangeShiftedColumnsDelegate(XLWorksheet_RangeShiftedColumns);
@@ -93,7 +93,6 @@ namespace ClosedXML.Excel
             if (RangeShiftedColumns != null)
                 RangeShiftedColumns(range, columnsShifted);
         }
-        
 
         public XLWorksheetInternals Internals { get; private set; }
         
@@ -130,12 +129,12 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        public Double DefaultColumnWidth { get; set; }
-        public Double DefaultRowHeight { get; set; }
+        public Double ColumnWidth { get; set; }
+        public Double RowHeight { get; set; }
 
         public String Name { get; set; }
 
-        public IXLPageOptions PageSetup { get; private set; }
+        public IXLPageSetup PageSetup { get; private set; }
 
         public IXLRow FirstRowUsed()
         {

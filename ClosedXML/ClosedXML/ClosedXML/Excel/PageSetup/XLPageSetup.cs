@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLPageOptions : IXLPageOptions
+    internal class XLPageSetup : IXLPageSetup
     {
-        public XLPageOptions(IXLPageOptions defaultPageOptions, XLWorksheet worksheet)
+        public XLPageSetup(IXLPageSetup defaultPageOptions, XLWorksheet worksheet)
         {
             this.PrintAreas = new XLPrintAreas(worksheet);
             if (defaultPageOptions != null)

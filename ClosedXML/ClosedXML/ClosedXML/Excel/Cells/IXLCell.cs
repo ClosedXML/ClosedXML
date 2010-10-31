@@ -10,8 +10,14 @@ namespace ClosedXML.Excel
 
     public interface IXLCell: IXLStylized
     {
-        String Value { get; set; }
+        Object Value { get; set; }
         IXLAddress Address { get; }
         XLCellValues DataType { get; set; }
+        T GetValue<T>();
+        String GetString();
+        String GetFormattedValue();
+        Double GetDouble();
+        Boolean GetBoolean();
+        DateTime GetDateTime();
     }
 }

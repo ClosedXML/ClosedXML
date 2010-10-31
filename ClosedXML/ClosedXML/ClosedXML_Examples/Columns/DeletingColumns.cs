@@ -51,8 +51,6 @@ namespace ClosedXML_Examples
 
             var rngTitles = ws.Range("B2:D2");
             ws.Row(1).InsertRowsBelow(2);
-            Console.Write(rngTitles.ToString()); // Prints "B4:D4
-            Console.ReadKey();
 
             var rng1 = ws.Range("B2:D2"); 
             var rng2 = ws.Range("F2:G2");

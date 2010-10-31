@@ -9,24 +9,36 @@ namespace ClosedXML.Excel
     public enum XLShiftDeletedCells { ShiftCellsUp, ShiftCellsLeft }
     public interface IXLRange: IXLRangeBase
     {
-        IXLRange Column(int column);
-        IXLRange Column(string column);
-        IXLRanges Columns();
-        IXLRanges Columns(int firstColumn, int lastColumn);
-        IXLRanges Columns(string columns);
-        IXLRanges Columns(string firstColumn, string lastColumn);
-        IXLRange FirstColumn();
-        IXLRange FirstColumnUsed();
-        IXLRange FirstRow();
-        IXLRange FirstRowUsed();
-        IXLRange LastColumn();
-        IXLRange LastColumnUsed();
-        IXLRange LastRow();
-        IXLRange LastRowUsed();
-        IXLRange Row(int row);
-        IXLRanges Rows();
-        IXLRanges Rows(int firstRow, int lastRow);
-        IXLRanges Rows(string rows);
+        IXLCell Cell(int row, int column);
+        IXLCell Cell(string cellAddressInRange);
+        IXLCell Cell(int row, string column);
+        IXLCell Cell(IXLAddress cellAddressInRange);
+
+        IXLRangeColumn Column(int column);
+        IXLRangeColumn Column(string column);
+        IXLRangeColumn FirstColumn();
+        IXLRangeColumn FirstColumnUsed();
+        IXLRangeColumn LastColumn();
+        IXLRangeColumn LastColumnUsed();
+        IXLRangeColumns Columns();
+        IXLRangeColumns Columns(int firstColumn, int lastColumn);
+        IXLRangeColumns Columns(string firstColumn, string lastColumn);
+        IXLRangeColumns Columns(string columns);
+
+        IXLRangeRow FirstRow();
+        IXLRangeRow FirstRowUsed();
+        IXLRangeRow LastRow();
+        IXLRangeRow LastRowUsed();
+        IXLRangeRow Row(int row);
+        IXLRangeRows Rows();
+        IXLRangeRows Rows(int firstRow, int lastRow);
+        IXLRangeRows Rows(string rows);
+
+        IXLRange Range(int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn);
+
+        int RowCount();
+        int ColumnCount();
+
         void InsertColumnsAfter(int numberOfColumns);
         void InsertColumnsBefore(int numberOfColumns);
         void InsertRowsAbove(int numberOfRows);

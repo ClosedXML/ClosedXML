@@ -12,8 +12,7 @@ namespace ClosedXML_Examples
     {
         public void Create()
         {
-            var workbook = new XLWorkbook();
-            workbook.Load(@"C:\Excel Files\Created\BasicTable.xlsx");
+            var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
             var ws = workbook.Worksheets.GetWorksheet(0);
 
             // Change the background color of the headers
@@ -32,7 +31,7 @@ namespace ClosedXML_Examples
                 cell.Value += " Dollars";
             }
 
-            workbook.SaveAs(@"C:\Excel Files\Modified\BasicTable_Modified.xlsx");
+            workbook.SaveAs(@"C:\Excel Files\Created\BasicTable_Modified.xlsx");
         }
     }
 }

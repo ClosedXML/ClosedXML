@@ -79,7 +79,7 @@ namespace ClosedXML.Excel
     public enum XLShowCommentsValues { None, AtEnd, AsDisplayed }
     public enum XLPrintErrorValues { Blank, Dash, Displayed, NA }
     
-    public interface IXLPageOptions
+    public interface IXLPageSetup
     {
         IXLPrintAreas PrintAreas { get; }
         Int32 FirstRowToRepeatAtTop { get; }

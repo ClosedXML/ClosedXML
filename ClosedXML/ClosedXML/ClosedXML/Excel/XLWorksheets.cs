@@ -9,6 +9,12 @@ namespace ClosedXML.Excel
     {
         Dictionary<String, IXLWorksheet> worksheets = new Dictionary<String, IXLWorksheet>();
 
+        XLWorkbook workbook;
+        public XLWorksheets(XLWorkbook workbook)
+        {
+            this.workbook = workbook;
+        }
+
         #region IXLWorksheets Members
 
         public IXLWorksheet GetWorksheet(string sheetName)
@@ -23,7 +29,7 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Add(String sheetName)
         {
-            var sheet = new XLWorksheet(sheetName);
+            var sheet = new XLWorksheet(sheetName, workbook);
             worksheets.Add(sheetName, sheet);
             return sheet;
         }

@@ -56,13 +56,13 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(ro, co + 1).Value = "Hello World.";
 
             ws.Cell(++ro, co).Value = "Plain Date:";
-            ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2).ToString();
+            ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2);
 
             ws.Cell(++ro, co).Value = "Plain Boolean:";
-            ws.Cell(ro, co + 1).Value = true.ToString();
+            ws.Cell(ro, co + 1).Value = true;
 
             ws.Cell(++ro, co).Value = "Plain Number:";
-            ws.Cell(ro, co + 1).Value = "123.45";
+            ws.Cell(ro, co + 1).Value = 123.45;
 
             ro++;
 
@@ -85,15 +85,15 @@ namespace ClosedXML_Examples.Misc
             ro++;
 
             ws.Cell(++ro, co).Value = "Date to Text:";
-            ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2).ToString();
+            ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2);
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ws.Cell(++ro, co).Value = "Boolean to Text:";
-            ws.Cell(ro, co + 1).Value = true.ToString();
+            ws.Cell(ro, co + 1).Value = true;
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ws.Cell(++ro, co).Value = "Number to Text:";
-            ws.Cell(ro, co + 1).Value = "123.45";
+            ws.Cell(ro, co + 1).Value = 123.45;
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ws.Cell(++ro, co).Value = "Text to Date:";
@@ -111,19 +111,19 @@ namespace ClosedXML_Examples.Misc
             ro++;
 
             ws.Cell(++ro, co).Value = "Formatted Date to Text:";
-            ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2).ToString();
+            ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2);
             ws.Cell(ro, co + 1).Style.DateFormat.Format = "yyyy-MM-dd";
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ws.Cell(++ro, co).Value = "Formatted Number to Text:";
-            ws.Cell(ro, co + 1).Value = "12345.6789";
+            ws.Cell(ro, co + 1).Value = 12345.6789;
             ws.Cell(ro, co + 1).Style.NumberFormat.Format = "#,##0.00";
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
             ro++;
 
             ws.Cell(++ro, co).Value = "Blank Text:";
-            ws.Cell(ro, co + 1).Value = "12345.6789";
+            ws.Cell(ro, co + 1).Value = 12345.6789;
             ws.Cell(ro, co + 1).Style.NumberFormat.Format = "#,##0.00";
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
             ws.Cell(ro, co + 1).Value = "";

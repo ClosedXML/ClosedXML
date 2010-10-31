@@ -14,5 +14,7 @@ namespace ClosedXML.Excel
         void InsertColumnsAfter(Int32 numberOfColumns);
         void InsertColumnsBefore(Int32 numberOfColumns);
         void Clear();
+
+        IXLCell Cell(int row);
     }
 }

@@ -114,7 +114,7 @@ namespace ClosedXML.Excel
                 rows.ForEach(c => c.Height = value);
                 if (entireWorksheet)
                 {
-                    worksheet.DefaultRowHeight = value;
+                    worksheet.RowHeight = value;
                     worksheet.Internals.RowsCollection.ForEach(r => r.Value.Height = value);
                 }
             }

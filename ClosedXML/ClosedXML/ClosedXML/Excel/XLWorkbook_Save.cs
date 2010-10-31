@@ -424,7 +424,7 @@ namespace ClosedXML.Excel
         private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart)
         {
             List<String> combined = new List<String>();
-            Worksheets.Cast<XLWorksheet>().ForEach(w => combined.AddRange(w.Internals.CellsCollection.Values.Where(c => c.DataType == XLCellValues.Text && c.Value != null).Select(c => c.Value).Distinct()));
+            Worksheets.Cast<XLWorksheet>().ForEach(w => combined.AddRange(w.Internals.CellsCollection.Values.Where(c => c.DataType == XLCellValues.Text && c.InnerText != null).Select(c => c.GetString()).Distinct()));
             var distinctStrings = combined.Distinct();
             UInt32 stringCount = (UInt32)distinctStrings.Count();
             SharedStringTable sharedStringTable = new SharedStringTable() { Count = (UInt32Value)stringCount, UniqueCount = (UInt32Value)stringCount };
@@ -446,7 +446,7 @@ namespace ClosedXML.Excel
 
         private void GenerateWorkbookStylesPartContent(WorkbookStylesPart workbookStylesPart)
         {
-            var defaultStyle = XLWorkbook.DefaultStyle;
+            var defaultStyle = DefaultStyle;
             Dictionary<String, FontInfo> sharedFonts = new Dictionary<String, FontInfo>();
             sharedFonts.Add(defaultStyle.Font.ToString(), new FontInfo() { FontId = 0, Font = defaultStyle.Font });
 
@@ -684,7 +684,7 @@ namespace ClosedXML.Excel
 
             // Cell styles = Named styles
             CellStyles cellStyles1 = new CellStyles() { Count = (UInt32Value)1U };
-            var defaultFormatId = sharedStyles.Values.Where(s => s.Style.ToString() == XLWorkbook.DefaultStyle.ToString()).Single().StyleId;
+            var defaultFormatId = sharedStyles.Values.Where(s => s.Style.ToString() == DefaultStyle.ToString()).Single().StyleId;
             CellStyle cellStyle1 = new CellStyle() { Name = "Normal", FormatId = (UInt32Value)defaultFormatId, BuiltinId = (UInt32Value)0U };
             cellStyles1.Append(cellStyle1);
 
@@ -748,7 +748,7 @@ namespace ClosedXML.Excel
             SheetView sheetView = new SheetView() { TabSelected = tabSelected, WorkbookViewId = (UInt32Value)0U };
 
             sheetViews.Append(sheetView);
-            SheetFormatProperties sheetFormatProperties3 = new SheetFormatProperties() { DefaultRowHeight = xlWorksheet.DefaultRowHeight, DefaultColumnWidth = xlWorksheet.DefaultColumnWidth , CustomHeight = true };
+            SheetFormatProperties sheetFormatProperties3 = new SheetFormatProperties() { DefaultRowHeight = xlWorksheet.RowHeight, DefaultColumnWidth = xlWorksheet.ColumnWidth , CustomHeight = true };
 
             Columns columns = new Columns();
 
@@ -773,7 +773,7 @@ namespace ClosedXML.Excel
                     Min = 1,
                     Max = (UInt32Value)(UInt32)(minInColumnsCollection - 1),
                     Style = sharedStyles[xlWorksheet.Style.ToString()].StyleId,
-                    Width = xlWorksheet.DefaultColumnWidth,
+                    Width = xlWorksheet.ColumnWidth,
                     CustomWidth = true
                 };
                 columns.Append(column);
@@ -791,7 +791,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     styleId = sharedStyles[xlWorksheet.Style.ToString()].StyleId;
-                    columnWidth = xlWorksheet.DefaultColumnWidth;
+                    columnWidth = xlWorksheet.ColumnWidth;
                 }
 
                 Column column = new Column()
@@ -812,7 +812,7 @@ namespace ClosedXML.Excel
                     Min = (UInt32Value)(UInt32)(maxInColumnsCollection + 1),
                     Max = (UInt32Value)(UInt32)(XLWorksheet.MaxNumberOfColumns),
                     Style = sharedStyles[xlWorksheet.Style.ToString()].StyleId,
-                    Width = xlWorksheet.DefaultColumnWidth,
+                    Width = xlWorksheet.ColumnWidth,
                     CustomWidth = true
                 };
                 columns.Append(column);
@@ -842,7 +842,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    row.Height = xlWorksheet.DefaultRowHeight;
+                    row.Height = xlWorksheet.RowHeight;
                     row.CustomHeight = true;
                 }
 
@@ -883,11 +883,11 @@ namespace ClosedXML.Excel
                     CellValue cellValue = new CellValue();
                     if (dataType == XLCellValues.Text)
                     {
-                        cellValue.Text = sharedStrings[opCell.Value.Value].ToString();
+                        cellValue.Text = sharedStrings[opCell.Value.InnerText].ToString();
                     }
                     else
                     {
-                        cellValue.Text = opCell.Value.Value;
+                        cellValue.Text = opCell.Value.InnerText;
                     }
 
                     cell.Append(cellValue);

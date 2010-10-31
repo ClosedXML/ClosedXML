@@ -36,8 +36,7 @@ namespace ClosedXML_Examples
 
         private static void LoadAndSaveFile(String input, String output)
         {
-            var wb = new XLWorkbook();
-            wb.Load(input);
+            var wb = new XLWorkbook(input);
             wb.SaveAs(output);
         }
     }
