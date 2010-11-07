@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace ClosedXML_Examples
 {
-    public class MovingRanges
+    public class ShiftingRanges
     {
         public void Create()
         {
@@ -24,7 +24,7 @@ namespace ClosedXML_Examples
             // Change the background color of the headers
             rngHeaders.Style.Fill.BackgroundColor = Color.LightSalmon;
 
-            workbook.SaveAs(@"C:\Excel Files\Created\MovingRanges.xlsx");
+            workbook.SaveAs(@"C:\Excel Files\Created\ShiftingRanges.xlsx");
         }
     }
 }

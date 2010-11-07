@@ -127,7 +127,7 @@ namespace ClosedXML.Excel
                 || newFirstCellAddress.ColumnNumber > this.LastAddressInSheet.ColumnNumber
                 || newLastCellAddress.ColumnNumber > this.LastAddressInSheet.ColumnNumber
                 )
-                throw new ArgumentOutOfRangeException(String.Format("The cells {0} and {1} are outside the range '{2}'.", firstCellAddress.ToString(), lastCellAddress.ToString(), this.ToString()));
+                throw new ArgumentOutOfRangeException(String.Format("The cells {0} and {1} are outside the range '{2}'.", newFirstCellAddress.ToString(), newLastCellAddress.ToString(), this.ToString()));
 
             return new XLRange(xlRangeParameters);
         }

@@ -196,13 +196,15 @@ namespace ClosedXML.Excel
         public static Boolean operator >(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
             return !(xlCellAddressLeft == xlCellAddressRight)
-                && (xlCellAddressLeft.RowNumber > xlCellAddressRight.RowNumber || xlCellAddressLeft.ColumnNumber > xlCellAddressRight.ColumnNumber);
+                && (xlCellAddressLeft.RowNumber >= xlCellAddressRight.RowNumber 
+                && xlCellAddressLeft.ColumnNumber >= xlCellAddressRight.ColumnNumber);
         }
 
         public static Boolean operator <(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
             return !(xlCellAddressLeft == xlCellAddressRight)
-                && (xlCellAddressLeft.RowNumber < xlCellAddressRight.RowNumber || xlCellAddressLeft.ColumnNumber < xlCellAddressRight.ColumnNumber);
+                && (xlCellAddressLeft.RowNumber <= xlCellAddressRight.RowNumber 
+                && xlCellAddressLeft.ColumnNumber <= xlCellAddressRight.ColumnNumber);
         }
 
         public static Boolean operator >=(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)

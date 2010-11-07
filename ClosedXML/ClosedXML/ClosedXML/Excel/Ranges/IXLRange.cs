@@ -7,6 +7,7 @@ using System.Text;
 namespace ClosedXML.Excel
 {
     public enum XLShiftDeletedCells { ShiftCellsUp, ShiftCellsLeft }
+    public enum XLTransposeOptions { MoveCells, ReplaceCells }
     public interface IXLRange: IXLRangeBase
     {
         IXLCell Cell(int row, int column);
@@ -45,6 +46,8 @@ namespace ClosedXML.Excel
         void InsertRowsBelow(int numberOfRows);
         void Delete(XLShiftDeletedCells shiftDeleteCells);
         void Clear();
+
+        void Transpose(XLTransposeOptions transposeOption);
     }
 }
 

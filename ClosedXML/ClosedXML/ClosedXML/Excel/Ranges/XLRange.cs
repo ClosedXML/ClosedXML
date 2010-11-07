@@ -286,6 +286,184 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
+        public void Transpose(XLTransposeOptions transposeOption)
+        {
+            var rowCount = this.RowCount();
+            var columnCount = this.ColumnCount();
+            var squareSide = rowCount > columnCount ? rowCount : columnCount;
+
+            var firstCell = FirstCell();
+            var lastCell = LastCell();
+            var topBorder = firstCell.Style.Border.LeftBorder;
+            var topBorderColor = firstCell.Style.Border.LeftBorderColor;
+            var leftBorder = firstCell.Style.Border.TopBorder;
+            var leftBorderColor = firstCell.Style.Border.TopBorderColor;
+            var rightBorder = lastCell.Style.Border.BottomBorder;
+            var rightBorderColor = lastCell.Style.Border.BottomBorderColor;
+            var bottomBorder = lastCell.Style.Border.RightBorder;
+            var bottomBorderColor = lastCell.Style.Border.RightBorderColor;
+
+            var insideTopBorder = lastCell.Style.Border.LeftBorder;
+            var insideTopBorderColor = lastCell.Style.Border.LeftBorderColor;
+            var insideLeftBorder = lastCell.Style.Border.TopBorder;
+            var insideLeftBorderColor = lastCell.Style.Border.TopBorderColor;
+            var insideRightBorder = firstCell.Style.Border.BottomBorder;
+            var insideRightBorderColor = firstCell.Style.Border.BottomBorderColor;
+            var insideBottomBorder = firstCell.Style.Border.RightBorder;
+            var insideBottomBorderColor = firstCell.Style.Border.RightBorderColor;
+
+            MoveOrClearForTranspose(transposeOption, rowCount, columnCount);
+            TransposeMerged();
+            TransposeRange(squareSide);
+            this.LastAddressInSheet = new XLAddress(
+                firstCell.Address.RowNumber + columnCount - 1,
+                firstCell.Address.ColumnNumber + rowCount - 1);
+            if (rowCount > columnCount)
+            {
+                var rng = Worksheet.Range(
+                    this.LastAddressInSheet.RowNumber + 1,
+                    this.FirstAddressInSheet.ColumnNumber,
+                    this.LastAddressInSheet.RowNumber + (rowCount - columnCount),
+                    this.LastAddressInSheet.ColumnNumber);
+                rng.Delete(XLShiftDeletedCells.ShiftCellsUp);
+            }
+            else if (columnCount > rowCount)
+            {
+                var rng = Worksheet.Range(
+                    this.FirstAddressInSheet.RowNumber,
+                    this.LastAddressInSheet.ColumnNumber + 1,
+                    this.LastAddressInSheet.RowNumber,
+                    this.LastAddressInSheet.ColumnNumber + (columnCount - rowCount));
+                rng.Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            }
+
+
+            foreach (var c in this.Range(1,1,columnCount, rowCount).Cells())
+            {
+                c.Style.Border.TopBorder = insideTopBorder;
+                c.Style.Border.TopBorderColor = insideTopBorderColor;
+                c.Style.Border.LeftBorder = insideLeftBorder;
+                c.Style.Border.LeftBorderColor = insideLeftBorderColor;
+                c.Style.Border.RightBorder = insideRightBorder;
+                c.Style.Border.RightBorderColor = insideRightBorderColor;
+                c.Style.Border.BottomBorder = insideBottomBorder;
+                c.Style.Border.BottomBorderColor = insideBottomBorderColor;
+            }
+
+            var firstColumn = this.FirstColumn();
+            firstColumn.Style.Border.LeftBorder = leftBorder;
+            firstColumn.Style.Border.LeftBorderColor = leftBorderColor;
+            var LastColumn = this.LastColumn();
+            LastColumn.Style.Border.RightBorder = rightBorder;
+            LastColumn.Style.Border.RightBorderColor = rightBorderColor;
+            var firstRow = this.FirstRow();
+            firstRow.Style.Border.TopBorder = topBorder;
+            firstRow.Style.Border.TopBorderColor = topBorderColor;
+            var lastRow = this.LastRow();
+            lastRow.Style.Border.BottomBorder = bottomBorder;
+            lastRow.Style.Border.BottomBorderColor = bottomBorderColor;
+        }
+
+        private void TransposeRange(int squareSide)
+        {
+            var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
+            var cellsToDelete = new List<IXLAddress>();
+            XLRange rngToTranspose = (XLRange)Worksheet.Range(
+                this.FirstAddressInSheet.RowNumber,
+                this.FirstAddressInSheet.ColumnNumber,
+                this.FirstAddressInSheet.RowNumber + squareSide,
+                this.FirstAddressInSheet.ColumnNumber + squareSide);
+
+            foreach (var c in rngToTranspose.Cells())
+            {
+                var newKey = new XLAddress(c.Address.ColumnNumber, c.Address.RowNumber);
+                var newCell = new XLCell(newKey, c.Style, Worksheet);
+                newCell.Value = c.Value;
+                newCell.DataType = c.DataType;
+                cellsToInsert.Add(newKey, newCell);
+                cellsToDelete.Add(c.Address);
+            }
+            cellsToDelete.ForEach(c => this.Worksheet.Internals.CellsCollection.Remove(c));
+            cellsToInsert.ForEach(c => this.Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
+        }
+
+        private void TransposeMerged()
+        {
+            List<String> mergeToDelete = new List<String>();
+            List<String> mergeToInsert = new List<String>();
+            foreach (var merge in Worksheet.Internals.MergedCells)
+            {
+                if (this.ContainsRange(merge))
+                {
+                    mergeToDelete.Add(merge);
+                    String[] arrRange = merge.Split(':');
+                    var firstAddress = new XLAddress(arrRange[0]);
+                    var lastAddress = new XLAddress(arrRange[1]);
+                    var newLastAddress = new XLAddress(lastAddress.ColumnNumber, lastAddress.RowNumber);
+                    mergeToInsert.Add(firstAddress.ToString() + ":" + newLastAddress.ToString());
+                }
+            }
+            mergeToDelete.ForEach(m => this.Worksheet.Internals.MergedCells.Remove(m));
+            mergeToInsert.ForEach(m => this.Worksheet.Internals.MergedCells.Add(m));
+        }
+
+        private void MoveOrClearForTranspose(XLTransposeOptions transposeOption, int rowCount, int columnCount)
+        {
+            if (transposeOption == XLTransposeOptions.MoveCells)
+            {
+                if (rowCount > columnCount)
+                {
+                    this.InsertColumnsAfter(rowCount - columnCount);
+                }
+                else if (columnCount > rowCount)
+                {
+                    this.InsertRowsBelow(columnCount - rowCount);
+                }
+            }
+            else
+            {
+                if (rowCount > columnCount)
+                {
+                    var toMove = columnCount - rowCount;
+                    var rngToClear = Worksheet.Range(
+                        this.FirstAddressInSheet.RowNumber,
+                        columnCount + 1,
+                        this.LastAddressInSheet.RowNumber,
+                        columnCount + toMove);
+                    rngToClear.Clear();
+                }
+                else if (columnCount > rowCount)
+                {
+                    var toMove = rowCount - columnCount;
+                    var rngToClear = Worksheet.Range(
+                        rowCount + 1,
+                        this.FirstAddressInSheet.ColumnNumber,
+                        rowCount + toMove,
+                        this.LastAddressInSheet.ColumnNumber);
+                    rngToClear.Clear();
+                }
+            }
+        }
+
+        public Boolean ContainsRange(String rangeAddress)
+        {
+            XLAddress firstAddress;
+            XLAddress lastAddress;
+            if (rangeAddress.Contains(':'))
+            {
+                String[] arrRange = rangeAddress.Split(':');
+                firstAddress = new XLAddress(arrRange[0]);
+                lastAddress = new XLAddress(arrRange[1]);
+            }
+            else
+            {
+                firstAddress = new XLAddress(rangeAddress);
+                lastAddress = new XLAddress(rangeAddress);
+            }
+            return
+                firstAddress >= (XLAddress)this.FirstAddressInSheet
+                && lastAddress <= (XLAddress)this.LastAddressInSheet;
+        }
         #endregion
 
     }

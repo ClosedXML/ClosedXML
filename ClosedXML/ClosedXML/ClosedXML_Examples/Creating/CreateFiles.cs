@@ -19,7 +19,7 @@ namespace ClosedXML_Examples
             new BasicTable().Create(@"C:\Excel Files\Created\BasicTable.xlsx");
             new StyleExamples().Create();
             new ChangingBasicTable().Create();
-            new MovingRanges().Create();
+            new ShiftingRanges().Create();
             new ColumnSettings().Create(@"C:\Excel Files\Created\ColumnSettings.xlsx");
             new RowSettings().Create(@"C:\Excel Files\Created\RowSettings.xlsx");
             new MergeCells().Create(@"C:\Excel Files\Created\MergedCells.xlsx");
@@ -46,6 +46,8 @@ namespace ClosedXML_Examples
             new CellValues().Create(@"C:\Excel Files\Created\CellValues.xlsx");
             new LambdaExpressions().Create();
             new DefaultStyles().Create(@"C:\Excel Files\Created\DefaultStyles.xlsx");
+            new TransposeRanges().Create();
+            new TransposeRangesPlus().Create();
         }
     }
 }

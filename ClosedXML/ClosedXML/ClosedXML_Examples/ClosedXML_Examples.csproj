@@ -54,6 +54,8 @@
     <Compile Include="Columns\DeletingColumns.cs" />
     <Compile Include="Creating\CreateFiles.cs" />
     <Compile Include="Loading\ChangingBasicTable.cs" />
+    <Compile Include="Ranges\TransposeRangesPlus.cs" />
+    <Compile Include="Ranges\TransposeRanges.cs" />
     <Compile Include="Misc\LambdaExpressions.cs" />
     <Compile Include="Loading\LoadFiles.cs" />
     <Compile Include="Misc\CellValues.cs" />
@@ -67,7 +69,7 @@
     <Compile Include="Ranges\InsertingDeletingRows.cs" />
     <Compile Include="Ranges\DeletingRanges.cs" />
     <Compile Include="Ranges\DefiningRanges.cs" />
-    <Compile Include="Ranges\MovingRanges.cs" />
+    <Compile Include="Ranges\ShiftingRanges.cs" />
     <Compile Include="Ranges\MultipleRanges.cs" />
     <Compile Include="Rows\RowCollections.cs" />
     <Compile Include="Columns\InsertColumns.cs" />
