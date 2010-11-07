@@ -294,23 +294,6 @@ namespace ClosedXML.Excel
 
             var firstCell = FirstCell();
             var lastCell = LastCell();
-            var topBorder = firstCell.Style.Border.LeftBorder;
-            var topBorderColor = firstCell.Style.Border.LeftBorderColor;
-            var leftBorder = firstCell.Style.Border.TopBorder;
-            var leftBorderColor = firstCell.Style.Border.TopBorderColor;
-            var rightBorder = lastCell.Style.Border.BottomBorder;
-            var rightBorderColor = lastCell.Style.Border.BottomBorderColor;
-            var bottomBorder = lastCell.Style.Border.RightBorder;
-            var bottomBorderColor = lastCell.Style.Border.RightBorderColor;
-
-            var insideTopBorder = lastCell.Style.Border.LeftBorder;
-            var insideTopBorderColor = lastCell.Style.Border.LeftBorderColor;
-            var insideLeftBorder = lastCell.Style.Border.TopBorder;
-            var insideLeftBorderColor = lastCell.Style.Border.TopBorderColor;
-            var insideRightBorder = firstCell.Style.Border.BottomBorder;
-            var insideRightBorderColor = firstCell.Style.Border.BottomBorderColor;
-            var insideBottomBorder = firstCell.Style.Border.RightBorder;
-            var insideBottomBorderColor = firstCell.Style.Border.RightBorderColor;
 
             MoveOrClearForTranspose(transposeOption, rowCount, columnCount);
             TransposeMerged();
@@ -337,31 +320,18 @@ namespace ClosedXML.Excel
                 rng.Delete(XLShiftDeletedCells.ShiftCellsLeft);
             }
 
-
             foreach (var c in this.Range(1,1,columnCount, rowCount).Cells())
             {
-                c.Style.Border.TopBorder = insideTopBorder;
-                c.Style.Border.TopBorderColor = insideTopBorderColor;
-                c.Style.Border.LeftBorder = insideLeftBorder;
-                c.Style.Border.LeftBorderColor = insideLeftBorderColor;
-                c.Style.Border.RightBorder = insideRightBorder;
-                c.Style.Border.RightBorderColor = insideRightBorderColor;
-                c.Style.Border.BottomBorder = insideBottomBorder;
-                c.Style.Border.BottomBorderColor = insideBottomBorderColor;
+                var border = new XLBorder(this, c.Style.Border);
+                c.Style.Border.TopBorder = border.LeftBorder;
+                c.Style.Border.TopBorderColor = border.LeftBorderColor;
+                c.Style.Border.LeftBorder = border.TopBorder;
+                c.Style.Border.LeftBorderColor = border.TopBorderColor;
+                c.Style.Border.RightBorder = border.BottomBorder;
+                c.Style.Border.RightBorderColor = border.BottomBorderColor;
+                c.Style.Border.BottomBorder = border.RightBorder;
+                c.Style.Border.BottomBorderColor = border.RightBorderColor;
             }
-
-            var firstColumn = this.FirstColumn();
-            firstColumn.Style.Border.LeftBorder = leftBorder;
-            firstColumn.Style.Border.LeftBorderColor = leftBorderColor;
-            var LastColumn = this.LastColumn();
-            LastColumn.Style.Border.RightBorder = rightBorder;
-            LastColumn.Style.Border.RightBorderColor = rightBorderColor;
-            var firstRow = this.FirstRow();
-            firstRow.Style.Border.TopBorder = topBorder;
-            firstRow.Style.Border.TopBorderColor = topBorderColor;
-            var lastRow = this.LastRow();
-            lastRow.Style.Border.BottomBorder = bottomBorder;
-            lastRow.Style.Border.BottomBorderColor = bottomBorderColor;
         }
 
         private void TransposeRange(int squareSide)
