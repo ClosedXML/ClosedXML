@@ -24,6 +24,8 @@ namespace ClosedXML_Examples
             // Change the background color of the headers
             rngHeaders.Style.Fill.BackgroundColor = Color.LightSalmon;
 
+            ws.Columns().AdjustToContents();
+
             workbook.SaveAs(@"C:\Excel Files\Created\ShiftingRanges.xlsx");
         }
     }

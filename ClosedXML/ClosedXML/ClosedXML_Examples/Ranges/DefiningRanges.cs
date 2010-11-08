@@ -38,6 +38,8 @@ namespace ClosedXML_Examples.Ranges
             range5.Cell(1, 1).Value = "ws.Range(4, 1, 4, 2).Merge()";
             range5.Merge();
 
+            ws.Column("A").AdjustToContents();
+
             workbook.SaveAs(filePath);
         }
 

@@ -53,7 +53,7 @@ namespace ClosedXML.Excel
                     foreach (var col in columns)
                     {
                         col.Style = value;
-                        foreach (var c in col.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == col.FirstAddressInSheet.ColumnNumber))
+                        foreach (var c in col.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == col.RangeAddress.FirstAddress.ColumnNumber))
                         {
                             c.Style = value;
                         }
@@ -85,7 +85,7 @@ namespace ClosedXML.Excel
                     foreach (var col in columns)
                     {
                         yield return col.Style;
-                        foreach (var c in col.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == col.FirstAddressInSheet.ColumnNumber))
+                        foreach (var c in col.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == col.RangeAddress.FirstAddress.ColumnNumber))
                         {
                             yield return c.Style;
                         }
@@ -139,6 +139,11 @@ namespace ClosedXML.Excel
         public void Add(XLColumn column)
         {
             columns.Add(column);
+        }
+
+        public void AdjustToContents()
+        {
+            columns.ForEach(c => c.AdjustToContents());
         }
     }
 }

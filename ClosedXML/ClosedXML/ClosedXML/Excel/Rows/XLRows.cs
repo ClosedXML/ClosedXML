@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
                     foreach (var row in rows)
                     {
                         row.Style = value;
-                        foreach (var c in row.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.RowNumber == row.FirstAddressInSheet.RowNumber))
+                        foreach (var c in row.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.RowNumber == row.RangeAddress.FirstAddress.RowNumber))
                         {
                             c.Style = value;
                         }
@@ -88,7 +88,7 @@ namespace ClosedXML.Excel
                     foreach (var row in rows)
                     {
                         yield return row.Style;
-                        foreach (var c in row.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.RowNumber == row.FirstAddressInSheet.RowNumber))
+                        foreach (var c in row.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.RowNumber == row.RangeAddress.FirstAddress.RowNumber))
                         {
                             yield return c.Style;
                         }
@@ -136,6 +136,11 @@ namespace ClosedXML.Excel
         public void Add(XLRow row)
         {
             rows.Add(row);
+        }
+
+        public void AdjustToContents()
+        {
+            rows.ForEach(r => r.AdjustToContents());
         }
     }
 }

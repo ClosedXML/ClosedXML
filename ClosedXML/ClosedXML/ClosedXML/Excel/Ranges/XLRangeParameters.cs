@@ -8,18 +8,16 @@ namespace ClosedXML.Excel
 {
     internal class XLRangeParameters
     {
-        public XLRangeParameters(IXLAddress firstCellAddress, IXLAddress lastCellAddress, XLWorksheet worksheet, IXLStyle defaultStyle)
+        public XLRangeParameters(IXLRangeAddress rangeAddress, XLWorksheet worksheet, IXLStyle defaultStyle)
         {
-            FirstCellAddress = firstCellAddress;
-            LastCellAddress = lastCellAddress;
+            RangeAddress = rangeAddress;
             Worksheet = worksheet;
             DefaultStyle = defaultStyle;
         }
         #region Properties
 
         // Public
-        public IXLAddress FirstCellAddress { get; private set; }
-        public IXLAddress LastCellAddress { get; private set; }
+        public IXLRangeAddress RangeAddress { get; private set; }
         public XLWorksheet Worksheet { get; private set; }
         public IXLStyle DefaultStyle { get; private set; }
 

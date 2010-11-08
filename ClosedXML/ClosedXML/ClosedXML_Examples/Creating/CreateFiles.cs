@@ -48,6 +48,9 @@ namespace ClosedXML_Examples
             new DefaultStyles().Create(@"C:\Excel Files\Created\DefaultStyles.xlsx");
             new TransposeRanges().Create();
             new TransposeRangesPlus().Create();
+            new MergeMoves().Create();
+            new WorkbookProperties().Create(@"C:\Excel Files\Created\WorkbookProperties.xlsx");
+            new AdjustToContents().Create(@"C:\Excel Files\Created\AdjustToContents.xlsx");
         }
     }
 }

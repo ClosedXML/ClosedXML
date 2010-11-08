@@ -30,12 +30,19 @@ namespace ClosedXML.Excel
             // Open file as read-only.
             using (SpreadsheetDocument dSpreadsheet = SpreadsheetDocument.Open(fileName, false))
             {
+                SetProperties(dSpreadsheet);
                 SharedStringItem[] sharedStrings = null;
                 if (dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
                 {
                     SharedStringTablePart shareStringPart = dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
                     sharedStrings = shareStringPart.SharedStringTable.Elements<SharedStringItem>().ToArray();
                 }
+
+                if (dSpreadsheet.ExtendedFilePropertiesPart.Properties.Elements<Ap.Company>().Count() > 0)
+                    Properties.Company = dSpreadsheet.ExtendedFilePropertiesPart.Properties.GetFirstChild<Ap.Company>().Text;
+                
+                if (dSpreadsheet.ExtendedFilePropertiesPart.Properties.Elements<Ap.Manager>().Count() > 0)
+                    Properties.Manager = dSpreadsheet.ExtendedFilePropertiesPart.Properties.GetFirstChild<Ap.Manager>().Text;
 
                 var workbookStylesPart = (WorkbookStylesPart)dSpreadsheet.WorkbookPart.WorkbookStylesPart;
                 var s = (Stylesheet)workbookStylesPart.Stylesheet;
@@ -276,6 +283,22 @@ namespace ClosedXML.Excel
                     //ws.PageSetup.PrintAreas.
                 }
             }
+        }
+
+        private void SetProperties(SpreadsheetDocument dSpreadsheet)
+        {
+            var p = dSpreadsheet.PackageProperties;
+            Properties.Author = p.Creator;
+            Properties.Category = p.Category;
+            Properties.Comments = p.Description;
+            if (p.Created.HasValue)
+                Properties.Created = p.Created.Value;
+            Properties.Keywords = p.Keywords;
+            Properties.LastModifiedBy = p.LastModifiedBy;
+            Properties.Status = p.ContentStatus;
+            Properties.Subject = p.Subject;
+            Properties.Title = p.Title;
+            
         }
 
         private void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats )

@@ -20,15 +20,17 @@ namespace ClosedXML_Examples
             rngTable.Row(rngTable.RowCount() - 1).Delete(XLShiftDeletedCells.ShiftCellsUp);
 
             // Place some markers
-            var cellNextRow = ws.Cell(rngTable.LastAddressInSheet.RowNumber + 1, rngTable.LastAddressInSheet.ColumnNumber);
+            var cellNextRow = ws.Cell(rngTable.RangeAddress.LastAddress.RowNumber + 1, rngTable.RangeAddress.LastAddress.ColumnNumber);
             cellNextRow.Value = "Next Row";
-            var cellNextColumn = ws.Cell(rngTable.LastAddressInSheet.RowNumber, rngTable.LastAddressInSheet.ColumnNumber + 1);
+            var cellNextColumn = ws.Cell(rngTable.RangeAddress.LastAddress.RowNumber, rngTable.RangeAddress.LastAddress.ColumnNumber + 1);
             cellNextColumn.Value = "Next Column";
 
             rngTable.Transpose(XLTransposeOptions.MoveCells);
             rngTable.Transpose(XLTransposeOptions.MoveCells);
             rngTable.Transpose(XLTransposeOptions.ReplaceCells);
             rngTable.Transpose(XLTransposeOptions.ReplaceCells);
+
+            ws.Columns().AdjustToContents();
 
             workbook.SaveAs(@"C:\Excel Files\Created\TransposeRangesPlus.xlsx");
         }

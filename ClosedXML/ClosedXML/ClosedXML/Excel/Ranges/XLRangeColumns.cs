@@ -60,10 +60,10 @@ namespace ClosedXML.Excel
                 {
                     yield return rng.Style;
                     foreach (var r in rng.Worksheet.Internals.CellsCollection.Values.Where(c =>
-                        c.Address.RowNumber >= rng.FirstAddressInSheet.RowNumber
-                        && c.Address.RowNumber <= rng.LastAddressInSheet.RowNumber
-                        && c.Address.ColumnNumber >= rng.FirstAddressInSheet.ColumnNumber
-                        && c.Address.ColumnNumber <= rng.LastAddressInSheet.ColumnNumber
+                        c.Address.RowNumber >= rng.RangeAddress.FirstAddress.RowNumber
+                        && c.Address.RowNumber <= rng.RangeAddress.LastAddress.RowNumber
+                        && c.Address.ColumnNumber >= rng.RangeAddress.FirstAddress.ColumnNumber
+                        && c.Address.ColumnNumber <= rng.RangeAddress.LastAddress.ColumnNumber
                         ))
                     {
                         yield return r.Style;

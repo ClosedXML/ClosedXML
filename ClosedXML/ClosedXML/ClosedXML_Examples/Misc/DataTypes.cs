@@ -128,6 +128,8 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
             ws.Cell(ro, co + 1).Value = "";
 
+            ws.Columns(2, 3).AdjustToContents();
+
             workbook.SaveAs(filePath);
         }
 

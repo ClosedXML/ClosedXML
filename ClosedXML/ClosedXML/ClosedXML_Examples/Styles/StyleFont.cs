@@ -47,6 +47,8 @@ namespace ClosedXML_Examples.Styles
 
             ws.Cell(++ro, co).Value = "VerticalAlignment - Superscript";
             ws.Cell(ro, co).Style.Font.VerticalAlignment = XLFontVerticalTextAlignmentValues.Superscript;
+
+            ws.Column(co).AdjustToContents();
             
             workbook.SaveAs(filePath);
         }

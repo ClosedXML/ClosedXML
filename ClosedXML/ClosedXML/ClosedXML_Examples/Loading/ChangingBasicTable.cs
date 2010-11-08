@@ -31,6 +31,8 @@ namespace ClosedXML_Examples
                 cell.Value += " Dollars";
             }
 
+            ws.Columns().AdjustToContents();
+
             workbook.SaveAs(@"C:\Excel Files\Created\BasicTable_Modified.xlsx");
         }
     }

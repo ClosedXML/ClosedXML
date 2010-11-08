@@ -9,6 +9,7 @@ namespace ClosedXML.Excel
     internal class XLRow: XLRangeBase, IXLRow
     {
         public XLRow(Int32 row, XLRowParameters xlRowParameters)
+            : base(new XLRangeAddress(row, 1, row, XLWorksheet.MaxNumberOfColumns))
         {
             SetRowNumber(row);
             Worksheet = xlRowParameters.Worksheet;
@@ -27,7 +28,7 @@ namespace ClosedXML.Excel
 
         void Worksheet_RangeShiftedRows(XLRange range, int rowsShifted)
         {
-            if (range.FirstAddressInSheet.RowNumber <= this.RowNumber())
+            if (range.RangeAddress.FirstAddress.RowNumber <= this.RowNumber())
                 SetRowNumber(this.RowNumber() + rowsShifted);
         }
 
@@ -39,8 +40,8 @@ namespace ClosedXML.Excel
 
         private void SetRowNumber(Int32 row)
         {
-            FirstAddressInSheet = new XLAddress(row, 1);
-            LastAddressInSheet = new XLAddress(row, XLWorksheet.MaxNumberOfColumns);
+            RangeAddress.FirstAddress = new XLAddress(row, 1);
+            RangeAddress.LastAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns);
         }
 
         public Boolean IsReference { get; private set; }
@@ -83,7 +84,7 @@ namespace ClosedXML.Excel
 
         public Int32 RowNumber()
         {
-            return this.FirstAddressInSheet.RowNumber;
+            return this.RangeAddress.FirstAddress.RowNumber;
         }
 
         public new void InsertRowsBelow(Int32 numberOfRows)
@@ -118,6 +119,20 @@ namespace ClosedXML.Excel
         public new IXLCell Cell(String column)
         {
             return base.Cell(1, column);
+        }
+
+        public void AdjustToContents()
+        {
+            Double maxHeight = 0;
+            var cellsUsed = CellsUsed();
+            foreach (var c in cellsUsed)
+            {
+                var thisHeight = ((XLFont)c.Style.Font).GetHeight();
+                if (thisHeight > maxHeight)
+                    maxHeight = thisHeight;
+            }
+            if (maxHeight > 0)
+                Height = maxHeight;
         }
 
         #endregion

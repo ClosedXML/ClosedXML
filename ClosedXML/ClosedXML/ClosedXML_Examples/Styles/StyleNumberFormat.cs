@@ -73,6 +73,8 @@ namespace ClosedXML_Examples.Styles
             ws.Cell(++ro, co).Value = "12.345";
             ws.Cell(ro, co).Style.NumberFormat.NumberFormatId = 3;
 
+            ws.Column(2).AdjustToContents();
+
             workbook.SaveAs(filePath);
         }
 

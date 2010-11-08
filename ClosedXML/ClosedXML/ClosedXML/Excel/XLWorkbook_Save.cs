@@ -236,7 +236,7 @@ namespace ClosedXML.Excel
             ThemePart themePart1 = workbookPart.AddNewPart<ThemePart>("rId" + (startId + 1));
             GenerateThemePartContent(themePart1);
 
-            //SetPackageProperties(document);
+            SetPackageProperties(document);
         }
 
         private void GenerateExtendedFilePropertiesPartContent(ExtendedFilePropertiesPart extendedFilePropertiesPart)
@@ -305,8 +305,11 @@ namespace ClosedXML.Excel
             }
 
             titlesOfParts1.Append(vTVector2);
+            Ap.Manager manager1 = new Ap.Manager();
+            manager1.Text = Properties.Manager;
             Ap.Company company1 = new Ap.Company();
-            company1.Text = "NSI";
+            company1.Text = Properties.Company;
+
             Ap.LinksUpToDate linksUpToDate1 = new Ap.LinksUpToDate();
             linksUpToDate1.Text = "false";
             Ap.SharedDocument sharedDocument1 = new Ap.SharedDocument();
@@ -321,6 +324,7 @@ namespace ClosedXML.Excel
             properties1.Append(scaleCrop1);
             properties1.Append(headingPairs1);
             properties1.Append(titlesOfParts1);
+            properties1.Append(manager1);
             properties1.Append(company1);
             properties1.Append(linksUpToDate1);
             properties1.Append(sharedDocument1);
@@ -365,8 +369,8 @@ namespace ClosedXML.Excel
                     foreach (var printArea in worksheet.PageSetup.PrintAreas)
                     {
                         definedNameText += "'" + worksheet.Name + "'!"
-                        + printArea.FirstAddressInSheet.ToString()
-                        + ":" + printArea.LastAddressInSheet.ToString() + ",";
+                        + printArea.RangeAddress.FirstAddress.ToString()
+                        + ":" + printArea.RangeAddress.LastAddress.ToString() + ",";
                     }
 
                     definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
@@ -994,7 +998,7 @@ namespace ClosedXML.Excel
                 rowBreaks = new RowBreaks() { Count = (UInt32Value)(UInt32)rowBreakCount, ManualBreakCount = (UInt32)rowBreakCount };
                 foreach (var rb in xlWorksheet.PageSetup.RowBreaks)
                 {
-                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)rb, Max = (UInt32Value)(UInt32)xlWorksheet.LastAddressInSheet.RowNumber, ManualPageBreak = true };
+                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)rb, Max = (UInt32Value)(UInt32)xlWorksheet.RangeAddress.LastAddress.RowNumber, ManualPageBreak = true };
                     rowBreaks.Append(break1);
                 }
                
@@ -1007,7 +1011,7 @@ namespace ClosedXML.Excel
                 columnBreaks = new ColumnBreaks() { Count = (UInt32Value)(UInt32)columnBreakCount, ManualBreakCount = (UInt32Value)(UInt32)columnBreakCount };
                 foreach (var cb in xlWorksheet.PageSetup.ColumnBreaks)
                 {
-                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)cb, Max = (UInt32Value)(UInt32)xlWorksheet.LastAddressInSheet.ColumnNumber, ManualPageBreak = true };
+                    Break break1 = new Break() { Id = (UInt32Value)(UInt32)cb, Max = (UInt32Value)(UInt32)xlWorksheet.RangeAddress.LastAddress.ColumnNumber, ManualPageBreak = true };
                     columnBreaks.Append(break1);
                 }
                 
@@ -1030,55 +1034,6 @@ namespace ClosedXML.Excel
 
             worksheetPart.Worksheet = worksheet;
         }
-
-        //private void AppendColumns(Columns columns, Int32 startingColumn, IXLWorksheet xlWorksheet)
-        //{
-        //    var minUsable = xlWorksheet.Internals.ColumnsCollection.Keys.Where(i => i >= startingColumn).Select(i=>i).Min();
-        //    if (startingColumn < minUsable)
-        //    {
-        //        Column column = new Column()
-        //        {
-        //            Min = (UInt32Value)(UInt32)startingColumn,
-        //            Max = (UInt32Value)(UInt32)(minUsable - 1),
-        //            Style = sharedStyles[xlWorksheet.Style.ToString()].StyleId,
-        //            Width = xlWorksheet.DefaultColumnWidth,
-        //            CustomWidth = true
-        //        };
-        //        columns.Append(column);
-        //    }
-        //    else
-        //    {
-        //        var maxInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Max();
-        //        var maxUsable = maxInColumnsCollection;
-        //        for (var co = minUsable + 1; co <= maxInColumnsCollection; co++)
-        //        {
-        //            if (!xlWorksheet.Internals.ColumnsCollection.ContainsKey(co + 1))
-        //            {
-        //                maxUsable = co;
-        //                break;
-        //            }
-        //        }
-
-        //        Column column = new Column()
-        //        {
-        //            Min = (UInt32Value)(UInt32)minUsable,
-        //            Max = (UInt32Value)(UInt32)maxUsable,
-        //            Style = sharedStyles[xlWorksheet.Style.ToString()].StyleId,
-        //            Width = xlWorksheet.DefaultColumnWidth,
-        //            CustomWidth = true
-        //        };
-        //        columns.Append(column);
-        //    }
-        //    for(var co = startingColumn; co < minUsable; co++)
-        //    {
-                
-        //    }
-
-        //    var maxTotalColumns = XLWorksheet.MaxNumberOfColumns;
-            
-            
-        //    //var xlWorksheet.Internals.ColumnsCollection
-        //}
 
         private void GenerateThemePartContent(ThemePart themePart)
         {
@@ -1647,10 +1602,19 @@ namespace ClosedXML.Excel
 
         private void SetPackageProperties(OpenXmlPackage document)
         {
-            document.PackageProperties.Creator = Environment.UserName;
-            document.PackageProperties.Created = DateTime.Now;
-            document.PackageProperties.Modified = DateTime.Now;
-            document.PackageProperties.LastModifiedBy = Environment.UserName;
+            var created = Properties.Created == DateTime.MinValue ? DateTime.Now : Properties.Created;
+            var modified = Properties.Modified == DateTime.MinValue ? DateTime.Now : Properties.Modified;
+            document.PackageProperties.Created = created;
+            document.PackageProperties.Modified = modified;
+            document.PackageProperties.LastModifiedBy = Properties.LastModifiedBy;
+
+            document.PackageProperties.Creator = Properties.Author;
+            document.PackageProperties.Title = Properties.Title;
+            document.PackageProperties.Subject = Properties.Subject;
+            document.PackageProperties.Category = Properties.Category;
+            document.PackageProperties.Keywords = Properties.Keywords;
+            document.PackageProperties.Description = Properties.Comments;
+            document.PackageProperties.ContentStatus = Properties.Status;
         }
     }
 }

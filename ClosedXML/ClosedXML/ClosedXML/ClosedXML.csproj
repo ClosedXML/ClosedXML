@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +55,8 @@
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
     <Compile Include="Excel\IXLWorksheetInternals.cs" />
     <Compile Include="Excel\PageSetup\IXLMargins.cs" />
+    <Compile Include="Excel\Ranges\IXLRangeAddress.cs" />
+    <Compile Include="Excel\Ranges\XLRangeAddress.cs" />
     <Compile Include="Excel\Ranges\XLRangeColumn.cs" />
     <Compile Include="Excel\Ranges\XLRangeRow.cs" />
     <Compile Include="Excel\Ranges\XLRangeRows.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="Excel\XLWorkbook.cs" />
     <Compile Include="Excel\XLWorksheet.cs" />
     <Compile Include="Excel\XLWorksheetInternals.cs" />
+    <Compile Include="Excel\XLWorkbookProperties.cs" />
     <Compile Include="Excel\XLWorksheets.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

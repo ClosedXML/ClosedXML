@@ -14,9 +14,9 @@ namespace ClosedXML_Sandbox
         {
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Test");
-            ws.Row(1).Style.Fill.BackgroundColor = Color.Red;
-            ws.Cell(1, 1).Value = "Hello";
-
+            var rng = ws.Range("B2:B2");
+            ws.Column(2).Delete();
+            rng.Style.Fill.BackgroundColor = Color.Blue;
 
             //wb.Load(@"c:\Initial.xlsx");
             wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");

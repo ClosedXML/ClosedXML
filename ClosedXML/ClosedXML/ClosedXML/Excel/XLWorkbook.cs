@@ -20,6 +20,7 @@ namespace ClosedXML.Excel
             RowHeight = DefaultRowHeight;
             ColumnWidth = DefaultColumnWidth;
             PageOptions = DefaultPageOptions;
+            Properties = new XLWorkbookProperties();
         }
 
         public XLWorkbook(String file): this()
@@ -54,6 +55,7 @@ namespace ClosedXML.Excel
         public Double RowHeight { get; set; }
         public Double ColumnWidth { get; set; }
         public IXLPageSetup PageOptions { get; set; }
+        public XLWorkbookProperties Properties { get; set; }
 
         #endregion
 

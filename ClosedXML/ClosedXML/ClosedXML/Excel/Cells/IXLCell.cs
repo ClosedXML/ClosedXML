@@ -15,9 +15,11 @@ namespace ClosedXML.Excel
         XLCellValues DataType { get; set; }
         T GetValue<T>();
         String GetString();
-        String GetFormattedValue();
+        String GetFormattedString();
         Double GetDouble();
         Boolean GetBoolean();
         DateTime GetDateTime();
+        void Clear();
+        void Delete(XLShiftDeletedCells shiftDeleteCells);
     }
 }

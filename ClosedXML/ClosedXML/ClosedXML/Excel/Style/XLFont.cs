@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace ClosedXML.Excel
 {
@@ -233,6 +234,41 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public Double GetWidth(String text)
+        {
+            if (String.IsNullOrWhiteSpace(text))
+                return 0;
+
+            System.Drawing.Font stringFont = new System.Drawing.Font(fontName, (float)fontSize);
+            return GetWidth(stringFont, text);
+        }
+
+        private Double GetWidth(System.Drawing.Font stringFont, string text)
+        {
+            // This formula is based on this article plus a nudge ( + 0.2M )
+            // http://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.column.width.aspx
+            // Truncate(((256 * Solve_For_This + Truncate(128 / 7)) / 256) * 7) = DeterminePixelsOfString
+
+            Size textSize = TextRenderer.MeasureText(text, stringFont);
+            double width = (double)(((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
+            width = (double)decimal.Round((decimal)width + 0.2M, 2);
+
+            return width;
+        }
+
+        public Double GetHeight()
+        {
+            System.Drawing.Font stringFont = new System.Drawing.Font(fontName, (float)fontSize);
+            return GetHeight(stringFont);
+        }
+
+        private Double GetHeight(System.Drawing.Font stringFont)
+        {
+            Size textSize = TextRenderer.MeasureText("X", stringFont);
+            var val = (double)textSize.Height * 0.85;
+            return val;
+        }
 
     }
 }

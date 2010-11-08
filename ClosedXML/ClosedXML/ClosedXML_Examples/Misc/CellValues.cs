@@ -55,7 +55,7 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(2, 4).Value = "Using Get...()";
             ws.Cell(2, 5).Value = "Using GetValue<T>()";
             ws.Cell(2, 6).Value = "GetString()";
-            ws.Cell(2, 7).Value = "GetFormattedValue()";
+            ws.Cell(2, 7).Value = "GetFormattedString()";
 
             //////////////////////////////////////////////////////////////////
             // DateTime
@@ -70,7 +70,7 @@ namespace ClosedXML_Examples.Misc
             DateTime dateTime2 = cellDateTime.GetDateTime();
             DateTime dateTime3 = cellDateTime.GetValue<DateTime>();
             String dateTimeString = cellDateTime.GetString();
-            String dateTimeFormattedString = cellDateTime.GetFormattedValue();
+            String dateTimeFormattedString = cellDateTime.GetFormattedString();
 
             // Set the values back to cells
             // The apostrophe is to force ClosedXML to treat the date as a string
@@ -92,7 +92,7 @@ namespace ClosedXML_Examples.Misc
             Boolean boolean2 = cellBoolean.GetBoolean();
             Boolean boolean3 = cellBoolean.GetValue<Boolean>();
             String booleanString = cellBoolean.GetString();
-            String booleanFormattedString = cellBoolean.GetFormattedValue();
+            String booleanFormattedString = cellBoolean.GetFormattedString();
 
             // Set the values back to cells
             // The apostrophe is to force ClosedXML to treat the boolean as a string
@@ -115,7 +115,7 @@ namespace ClosedXML_Examples.Misc
             Double double2 = cellDouble.GetDouble();
             Double double3 = cellDouble.GetValue<Double>();
             String doubleString = cellDouble.GetString();
-            String doubleFormattedString = cellDouble.GetFormattedValue();
+            String doubleFormattedString = cellDouble.GetFormattedString();
 
             // Set the values back to cells
             // The apostrophe is to force ClosedXML to treat the double as a string
@@ -137,7 +137,7 @@ namespace ClosedXML_Examples.Misc
             String string2 = cellString.GetString();
             String string3 = cellString.GetValue<String>();
             String stringString = cellString.GetString();
-            String stringFormattedString = cellString.GetFormattedValue();
+            String stringFormattedString = cellString.GetFormattedString();
 
             // Set the values back to cells
             ws.Cell(6, 3).Value = string1;
@@ -152,6 +152,8 @@ namespace ClosedXML_Examples.Misc
             var rngTitle = ws.Range("B2:G2");
             rngTitle.Style.Font.Bold = true;
             rngTitle.Style.Fill.BackgroundColor = Color.Cyan;
+
+            ws.Columns().AdjustToContents();
 
             workbook.SaveAs(filePath);
         }

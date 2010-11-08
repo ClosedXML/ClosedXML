@@ -11,9 +11,4 @@ namespace ClosedXML.Excel
         Int32 ColumnNumber { get; }
         String ColumnLetter { get; }
     }
-
-    public static class IXLAddressMethods
-    { 
-
-    }
 }

@@ -43,24 +43,51 @@ namespace ClosedXML.Excel
         {
             return GetValue<DateTime>();
         }
-        public String GetFormattedValue()
+        public String GetFormattedString()
         {
             if (dataType == XLCellValues.Boolean)
             {
                 return (cellValue != "0").ToString();
             }
+            else if (dataType == XLCellValues.DateTime || IsDateFormat())
+            {
+                String format = GetFormat();
+                return DateTime.FromOADate(Double.Parse(cellValue)).ToString(format);
+            }
             else if (dataType == XLCellValues.Number)
             {
-                return Double.Parse(cellValue).ToString(Style.NumberFormat.Format);
-            }
-            else if (dataType == XLCellValues.DateTime)
-            {
-                return DateTime.FromOADate(Double.Parse(cellValue)).ToString(Style.NumberFormat.Format);
+                String format = GetFormat();
+                return Double.Parse(cellValue).ToString(format);
             }
             else
             {
                 return cellValue;
             }
+        }
+
+        private bool IsDateFormat()
+        {
+            return (dataType == XLCellValues.Number 
+                && String.IsNullOrWhiteSpace(Style.NumberFormat.Format)
+                && ((Style.NumberFormat.NumberFormatId >= 14
+                    && Style.NumberFormat.NumberFormatId <= 22)
+                || (Style.NumberFormat.NumberFormatId >= 45
+                    && Style.NumberFormat.NumberFormatId <= 47)));
+        }
+
+        private String GetFormat()
+        {
+            String format;
+            if (String.IsNullOrWhiteSpace(Style.NumberFormat.Format))
+            {
+                var formatCodes = GetFormatCodes();
+                format = formatCodes[Style.NumberFormat.NumberFormatId];
+            }
+            else
+            {
+                format = Style.NumberFormat.Format;
+            }
+            return format;
         }
 
         private Boolean initialized = false;
@@ -247,6 +274,54 @@ namespace ClosedXML.Excel
                 }
                 dataType = value;
             }
+        }
+
+        public void Clear()
+        {
+            worksheet.Range(Address, Address).Clear();
+        }
+        public void Delete(XLShiftDeletedCells shiftDeleteCells)
+        {
+            worksheet.Range(Address, Address).Delete(shiftDeleteCells);
+        }
+
+        private static Dictionary<Int32, String> formatCodes;
+        private static Dictionary<Int32, String> GetFormatCodes()
+        {
+            if (formatCodes == null)
+            {
+                var fCodes = new Dictionary<Int32, String>();
+                fCodes.Add(0, "");
+                fCodes.Add(1, "0");
+                fCodes.Add(2, "0.00");
+                fCodes.Add(3, "#,##0");
+                fCodes.Add(4, "#,##0.00");
+                fCodes.Add(9, "0%");
+                fCodes.Add(10, "0.00%");
+                fCodes.Add(11, "0.00E+00");
+                fCodes.Add(12, "# ?/?");
+                fCodes.Add(13, "# ??/??");
+                fCodes.Add(14, "MM-dd-yy");
+                fCodes.Add(15, "d-MMM-yy");
+                fCodes.Add(16, "d-MMM");
+                fCodes.Add(17, "MMM-yy");
+                fCodes.Add(18, "h:mm AM/PM");
+                fCodes.Add(19, "h:mm:ss AM/PM");
+                fCodes.Add(20, "h:mm");
+                fCodes.Add(21, "h:mm:ss");
+                fCodes.Add(22, "M/d/yy h:mm");
+                fCodes.Add(37, "#,##0 ;(#,##0)");
+                fCodes.Add(38, "#,##0 ;[Red](#,##0)");
+                fCodes.Add(39, "#,##0.00;(#,##0.00)");
+                fCodes.Add(40, "#,##0.00;[Red](#,##0.00)");
+                fCodes.Add(45, "mm:ss");
+                fCodes.Add(46, "[h]:mm:ss");
+                fCodes.Add(47, "mmss.0");
+                fCodes.Add(48, "##0.0E+0");
+                fCodes.Add(49, "@");
+                formatCodes = fCodes;
+            }
+            return formatCodes;
         }
     }
 }

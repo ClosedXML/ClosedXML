@@ -16,5 +16,6 @@ namespace ClosedXML.Excel
         void Clear();
 
         IXLCell Cell(int row);
+        void AdjustToContents();
     }
 }

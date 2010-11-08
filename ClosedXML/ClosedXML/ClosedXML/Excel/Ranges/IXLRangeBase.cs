@@ -9,12 +9,12 @@ namespace ClosedXML.Excel
     {
         IEnumerable<IXLCell> Cells();
         IEnumerable<IXLCell> CellsUsed();
-        IXLAddress FirstAddressInSheet { get; }
-        IXLAddress LastAddressInSheet { get; }
+        IXLRangeAddress RangeAddress { get; }
         IXLCell FirstCell();
         IXLCell FirstCellUsed(Boolean ignoreStyle = true);
         IXLCell LastCell();
         IXLCell LastCellUsed(Boolean ignoreStyle = true);
+        IXLRange Range(IXLRangeAddress rangeAddress);
         IXLRange Range(string rangeAddress);
         IXLRange Range(string firstCellAddress, string lastCellAddress);
         IXLRange Range(IXLAddress firstCellAddress, IXLAddress lastCellAddress);
@@ -23,5 +23,6 @@ namespace ClosedXML.Excel
         void Unmerge();
         void Merge();
         IXLRange AsRange();
+        Boolean ContainsRange(String rangeAddress);
     }
 }

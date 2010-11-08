@@ -8,10 +8,8 @@ namespace ClosedXML.Excel
 {
     internal class XLRangeRow: XLRangeBase, IXLRangeRow
     {
-        public XLRangeRow(XLRangeParameters xlRangeParameters)
+        public XLRangeRow(XLRangeParameters xlRangeParameters): base(xlRangeParameters.RangeAddress)
         {
-            FirstAddressInSheet = xlRangeParameters.FirstCellAddress;
-            LastAddressInSheet = xlRangeParameters.LastCellAddress;
             Worksheet = xlRangeParameters.Worksheet;
             Worksheet.RangeShiftedRows += new RangeShiftedRowsDelegate(Worksheet_RangeShiftedRows);
             Worksheet.RangeShiftedColumns += new RangeShiftedColumnsDelegate(Worksheet_RangeShiftedColumns);
@@ -20,26 +18,26 @@ namespace ClosedXML.Excel
 
         void Worksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            if (range.FirstAddressInSheet.RowNumber <= FirstAddressInSheet.RowNumber
-                && range.LastAddressInSheet.RowNumber >= LastAddressInSheet.RowNumber)
+            if (range.RangeAddress.FirstAddress.RowNumber <= RangeAddress.FirstAddress.RowNumber
+                && range.RangeAddress.LastAddress.RowNumber >= RangeAddress.LastAddress.RowNumber)
             {
-                if (range.FirstAddressInSheet.ColumnNumber <= FirstAddressInSheet.ColumnNumber)
-                    FirstAddressInSheet = new XLAddress(FirstAddressInSheet.RowNumber, FirstAddressInSheet.ColumnNumber + columnsShifted);
+                if (range.RangeAddress.FirstAddress.ColumnNumber <= RangeAddress.FirstAddress.ColumnNumber)
+                    RangeAddress.FirstAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + columnsShifted);
 
-                if (range.FirstAddressInSheet.ColumnNumber <= LastAddressInSheet.ColumnNumber)
-                    LastAddressInSheet = new XLAddress(LastAddressInSheet.RowNumber, LastAddressInSheet.ColumnNumber + columnsShifted);
+                if (range.RangeAddress.FirstAddress.ColumnNumber <= RangeAddress.LastAddress.ColumnNumber)
+                    RangeAddress.LastAddress = new XLAddress(RangeAddress.LastAddress.RowNumber, RangeAddress.LastAddress.ColumnNumber + columnsShifted);
             }
         }
         void Worksheet_RangeShiftedRows(XLRange range, int rowsShifted)
         {
-            if (range.FirstAddressInSheet.ColumnNumber <= FirstAddressInSheet.ColumnNumber
-                && range.LastAddressInSheet.ColumnNumber >= LastAddressInSheet.ColumnNumber)
+            if (range.RangeAddress.FirstAddress.ColumnNumber <= RangeAddress.FirstAddress.ColumnNumber
+                && range.RangeAddress.LastAddress.ColumnNumber >= RangeAddress.LastAddress.ColumnNumber)
             {
-                if (range.FirstAddressInSheet.RowNumber <= FirstAddressInSheet.RowNumber)
-                    FirstAddressInSheet = new XLAddress(FirstAddressInSheet.RowNumber + rowsShifted, FirstAddressInSheet.ColumnNumber);
+                if (range.RangeAddress.FirstAddress.RowNumber <= RangeAddress.FirstAddress.RowNumber)
+                    RangeAddress.FirstAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber + rowsShifted, RangeAddress.FirstAddress.ColumnNumber);
 
-                if (range.FirstAddressInSheet.RowNumber <= LastAddressInSheet.RowNumber)
-                    LastAddressInSheet = new XLAddress(LastAddressInSheet.RowNumber + rowsShifted, LastAddressInSheet.ColumnNumber);
+                if (range.RangeAddress.FirstAddress.RowNumber <= RangeAddress.LastAddress.RowNumber)
+                    RangeAddress.LastAddress = new XLAddress(RangeAddress.LastAddress.RowNumber + rowsShifted, RangeAddress.LastAddress.ColumnNumber);
             }
         }
 

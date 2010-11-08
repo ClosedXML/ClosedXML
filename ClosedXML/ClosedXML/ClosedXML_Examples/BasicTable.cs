@@ -62,9 +62,6 @@ namespace ClosedXML_Examples
             //Using a custom format
             rngNumbers.Style.NumberFormat.Format = "$ #,##0";
 
-            // Adjust column width
-            ws.Column("E").Width = 12;
-            
             //Formatting headers
             var rngHeaders = rngTable.Range("A2:E2"); // The address is relative to rngTable (NOT the worksheet)
             rngHeaders.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -91,6 +88,9 @@ namespace ClosedXML_Examples
             rngTable.FirstRow().Style.Border.TopBorder = XLBorderStyleValues.Thick;
             //Bottom border
             rngTable.LastRow().Style.Border.BottomBorder = XLBorderStyleValues.Thick;
+
+            // Adjust column widths to their content
+            ws.Columns(2, 6).AdjustToContents();
 
             //Saving the workbook
             wb.SaveAs(filePath);

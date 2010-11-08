@@ -9,10 +9,11 @@ namespace ClosedXML.Excel
     internal class XLColumn: XLRangeBase, IXLColumn
     {
         public XLColumn(Int32 column, XLColumnParameters xlColumnParameters)
+            : base(new XLRangeAddress(1, column, XLWorksheet.MaxNumberOfRows, column))
         {
             SetColumnNumber(column);
             Worksheet = xlColumnParameters.Worksheet;
-            
+
 
             this.IsReference = xlColumnParameters.IsReference;
             if (IsReference)
@@ -28,14 +29,14 @@ namespace ClosedXML.Excel
 
         void Worksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            if (range.FirstAddressInSheet.ColumnNumber <= this.ColumnNumber())
+            if (range.RangeAddress.FirstAddress.ColumnNumber <= this.ColumnNumber())
                 SetColumnNumber(this.ColumnNumber() + columnsShifted);
         }
 
         private void SetColumnNumber(Int32 column)
         {
-            FirstAddressInSheet = new XLAddress(1, column);
-            LastAddressInSheet = new XLAddress(XLWorksheet.MaxNumberOfRows, column);
+            RangeAddress.FirstAddress = new XLAddress(1, column);
+            RangeAddress.LastAddress = new XLAddress(XLWorksheet.MaxNumberOfRows, column);
         }
 
         public Boolean IsReference { get; private set; }
@@ -163,11 +164,11 @@ namespace ClosedXML.Excel
 
         public Int32 ColumnNumber()
         {
-            return this.FirstAddressInSheet.ColumnNumber;
+            return this.RangeAddress.FirstAddress.ColumnNumber;
         }
         public String ColumnLetter()
         {
-            return this.FirstAddressInSheet.ColumnLetter;
+            return this.RangeAddress.FirstAddress.ColumnLetter;
         }
 
         public new void InsertColumnsAfter( Int32 numberOfColumns)
@@ -190,6 +191,22 @@ namespace ClosedXML.Excel
         public override IXLRange AsRange()
         {
             return Range(1, 1, XLWorksheet.MaxNumberOfRows, 1);
+        }
+
+        public void AdjustToContents()
+        {
+            Double maxWidth = 0;
+            foreach (var c in CellsUsed())
+            { 
+                var thisWidth = ((XLFont)c.Style.Font).GetWidth(c.GetFormattedString());
+                if (thisWidth > maxWidth)
+                    maxWidth = thisWidth;
+            }
+
+            if (maxWidth == 0)
+                maxWidth = Worksheet.ColumnWidth;
+
+            Width = maxWidth;
         }
     }
 }

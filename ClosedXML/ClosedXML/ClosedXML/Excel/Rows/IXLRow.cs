@@ -16,5 +16,7 @@ namespace ClosedXML.Excel
 
         IXLCell Cell(Int32 column);
         IXLCell Cell(String column);
+
+        void AdjustToContents();
     }
 }
