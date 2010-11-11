@@ -25,9 +25,9 @@ namespace ClosedXML_Examples.PageSetup
 
             var ws2 = workbook.Worksheets.Add("Page Setup - Page2");
             ws2.PageSetup.PageOrientation = XLPageOrientation.Portrait;
-            ws2.PageSetup.FitToPages(2, 2); // Alternatively you can use 
-                                            // ws2.PageSetup.PagesTall = #
-                                            // and/or ws2.PageSetup.PagesWide = #
+            ws2.PageSetup.FitToPages(2, 2);     // Alternatively you can use 
+                                                // ws2.PageSetup.PagesTall = #
+                                                // and/or ws2.PageSetup.PagesWide = #
 
             ws2.PageSetup.PaperSize = XLPaperSize.LetterPaper;
             ws2.PageSetup.VerticalDpi = 600;

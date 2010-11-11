@@ -12,6 +12,7 @@ namespace ClosedXML.Excel
 
         String Name { get; set; }
         IXLPageSetup PageSetup { get; }
+        IXLOutline Outline { get; }
 
         IXLRow FirstRowUsed();
         IXLRow LastRowUsed();
@@ -36,5 +37,15 @@ namespace ClosedXML.Excel
 
         int RowCount();
         int ColumnCount();
+
+        void CollapseRows();
+        void CollapseColumns();
+        void ExpandRows();
+        void ExpandColumns();
+
+        void CollapseRows(Int32 outlineLevel);
+        void CollapseColumns(Int32 outlineLevel);
+        void ExpandRows(Int32 outlineLevel);
+        void ExpandColumns(Int32 outlineLevel);
     }
 }

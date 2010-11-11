@@ -520,5 +520,20 @@ namespace ClosedXML.Excel
             return RangeAddress.FirstAddress.ToString() + ":" + RangeAddress.LastAddress.ToString();
         }
 
+        public String FormulaA1
+        {
+            set
+            {
+                Cells().ForEach(c => c.FormulaA1 = value);
+            }
+        }
+        public String FormulaR1C1
+        {
+            set
+            {
+                Cells().ForEach(c => c.FormulaR1C1 = value);
+            }
+        }
+
     }
 }

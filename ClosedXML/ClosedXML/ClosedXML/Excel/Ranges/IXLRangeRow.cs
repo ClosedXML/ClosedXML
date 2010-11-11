@@ -24,6 +24,8 @@ namespace ClosedXML.Excel
 
         void Delete(XLShiftDeletedCells shiftDeleteCells = XLShiftDeletedCells.ShiftCellsUp);
         void Clear();
+        String FormulaA1 { set; }
+        String FormulaR1C1 { set; }
     }
 }
 

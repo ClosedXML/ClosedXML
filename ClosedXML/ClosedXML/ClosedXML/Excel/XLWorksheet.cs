@@ -28,6 +28,7 @@ namespace ClosedXML.Excel
             Style = workbook.Style;
             Internals = new XLWorksheetInternals(new Dictionary<IXLAddress, XLCell>(), new XLColumnsCollection(), new XLRowsCollection(), new List<String>());
             PageSetup = new XLPageSetup(workbook.PageOptions, this);
+            Outline = new XLOutline(workbook.Outline);
             ColumnWidth = workbook.ColumnWidth;
             RowHeight = workbook.RowHeight;
             this.Name = sheetName;
@@ -141,6 +142,7 @@ namespace ClosedXML.Excel
         public String Name { get; set; }
 
         public IXLPageSetup PageSetup { get; private set; }
+        public IXLOutline Outline { get; private set; }
 
         public IXLRow FirstRowUsed()
         {
@@ -322,6 +324,9 @@ namespace ClosedXML.Excel
             }
             else
             {
+                // This is a new row so we're going to reference all 
+                // cells in this row to preserve their formatting
+                this.Internals.ColumnsCollection.Keys.ForEach(c => Cell(row, c));
                 styleToUse = this.Style;
                 this.Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, styleToUse, false)));
             }
@@ -337,6 +342,9 @@ namespace ClosedXML.Excel
             }
             else
             {
+                // This is a new row so we're going to reference all 
+                // cells in this row to preserve their formatting
+                this.Internals.RowsCollection.Keys.ForEach(r => Cell(r, column));
                 styleToUse = this.Style;
                 this.Internals.ColumnsCollection.Add(column, new XLColumn(column, new XLColumnParameters(this, this.Style, false)));
             }
@@ -353,5 +361,50 @@ namespace ClosedXML.Excel
             return Range(1, 1, XLWorksheet.MaxNumberOfRows, XLWorksheet.MaxNumberOfColumns);
         }
 
+        public void CollapseRows()
+        {
+            Enumerable.Range(1, 8).ForEach(i => CollapseRows(i));
+        }
+        public void CollapseColumns()
+        {
+            Enumerable.Range(1, 8).ForEach(i => CollapseColumns(i));
+        }
+        public void ExpandRows()
+        {
+            Enumerable.Range(1, 8).ForEach(i => ExpandRows(i));
+        }
+        public void ExpandColumns()
+        {
+            Enumerable.Range(1, 8).ForEach(i => ExpandRows(i));
+        }
+
+        public void CollapseRows(Int32 outlineLevel)
+        {
+            if (outlineLevel < 1 || outlineLevel > 8)
+                throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
+
+            Internals.RowsCollection.Values.Where(r => r.OutlineLevel == outlineLevel).ForEach(r => r.Collapse());
+        }
+        public void CollapseColumns(Int32 outlineLevel)
+        {
+            if (outlineLevel < 1 || outlineLevel > 8)
+                throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
+
+            Internals.ColumnsCollection.Values.Where(c => c.OutlineLevel == outlineLevel).ForEach(c => c.Collapse());
+        }
+        public void ExpandRows(Int32 outlineLevel)
+        {
+            if (outlineLevel < 1 || outlineLevel > 8)
+                throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
+
+            Internals.RowsCollection.Values.Where(r => r.OutlineLevel == outlineLevel).ForEach(r => r.Expand());
+        }
+        public void ExpandColumns(Int32 outlineLevel)
+        {
+            if (outlineLevel < 1 || outlineLevel > 8)
+                throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
+
+            Internals.ColumnsCollection.Values.Where(c => c.OutlineLevel == outlineLevel).ForEach(c => c.Expand());
+        }
     }
 }

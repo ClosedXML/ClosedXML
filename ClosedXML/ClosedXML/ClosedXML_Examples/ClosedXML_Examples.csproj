@@ -55,10 +55,13 @@
     <Compile Include="Creating\CreateFiles.cs" />
     <Compile Include="Loading\ChangingBasicTable.cs" />
     <Compile Include="Misc\AdjustToContents.cs" />
+    <Compile Include="Misc\Formulas.cs" />
+    <Compile Include="Misc\Outline.cs" />
+    <Compile Include="Misc\HideUnhide.cs" />
     <Compile Include="Misc\WorkbookProperties.cs" />
     <Compile Include="Misc\MergeMoves.cs" />
-    <Compile Include="Ranges\TransposeRangesPlus.cs" />
     <Compile Include="Ranges\TransposeRanges.cs" />
+    <Compile Include="Ranges\TransposeRangesPlus.cs" />
     <Compile Include="Misc\LambdaExpressions.cs" />
     <Compile Include="Loading\LoadFiles.cs" />
     <Compile Include="Misc\CellValues.cs" />

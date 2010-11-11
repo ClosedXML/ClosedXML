@@ -21,5 +21,7 @@ namespace ClosedXML.Excel
         DateTime GetDateTime();
         void Clear();
         void Delete(XLShiftDeletedCells shiftDeleteCells);
+        String FormulaA1 { get; set; }
+        String FormulaR1C1 { get; set; }
     }
 }

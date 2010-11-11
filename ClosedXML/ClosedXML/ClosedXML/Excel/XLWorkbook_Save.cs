@@ -29,6 +29,8 @@ namespace ClosedXML.Excel
         private List<KeyValuePair<XLPageOrientation, OrientationValues>> pageOrientationValues = new List<KeyValuePair<XLPageOrientation, OrientationValues>>();
         private List<KeyValuePair<XLShowCommentsValues, CellCommentsValues>> showCommentsValues = new List<KeyValuePair<XLShowCommentsValues, CellCommentsValues>>();
         private List<KeyValuePair<XLPrintErrorValues, PrintErrorValues>> printErrorValues = new List<KeyValuePair<XLPrintErrorValues, PrintErrorValues>>();
+        private List<KeyValuePair<XLCalculateMode, CalculateModeValues>> calculateModeValues = new List<KeyValuePair<XLCalculateMode, CalculateModeValues>>();
+        private List<KeyValuePair<XLReferenceStyle, ReferenceModeValues>> referenceModeValues = new List<KeyValuePair<XLReferenceStyle, ReferenceModeValues>>();
         private void PopulateEnums()
         {
             PopulateFillPatternValues();
@@ -41,6 +43,8 @@ namespace ClosedXML.Excel
             PopulatePageOrientationValues();
             PopulateShowCommentsValues();
             PopulatePrintErrorValues();
+            PopulateCalculateModeValues();
+            PoulateReferenceModeValues();
         }
 
         private enum RelType { General, Workbook, Worksheet }
@@ -198,6 +202,18 @@ namespace ClosedXML.Excel
             printErrorValues.Add(new KeyValuePair<XLPrintErrorValues, PrintErrorValues>(XLPrintErrorValues.NA, PrintErrorValues.NA));
         }
 
+        private void PopulateCalculateModeValues()
+        {
+            calculateModeValues.Add(new KeyValuePair<XLCalculateMode, CalculateModeValues>(XLCalculateMode.Auto, CalculateModeValues.Auto)) ;
+            calculateModeValues.Add(new KeyValuePair<XLCalculateMode, CalculateModeValues>(XLCalculateMode.AutoNoTable, CalculateModeValues.AutoNoTable));
+            calculateModeValues.Add(new KeyValuePair<XLCalculateMode, CalculateModeValues>(XLCalculateMode.Manual, CalculateModeValues.Manual));
+        }
+
+        private void PoulateReferenceModeValues()
+        {
+            referenceModeValues.Add(new KeyValuePair<XLReferenceStyle, ReferenceModeValues>(XLReferenceStyle.R1C1, ReferenceModeValues.R1C1));
+            referenceModeValues.Add(new KeyValuePair<XLReferenceStyle, ReferenceModeValues>(XLReferenceStyle.A1, ReferenceModeValues.A1));
+        }
 
         // Creates a SpreadsheetDocument.
         private void CreatePackage(String filePath)
@@ -232,6 +248,8 @@ namespace ClosedXML.Excel
                 WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("rId" + sheetId.ToString());
                 GenerateWorksheetPartContent(worksheetPart, (XLWorksheet)worksheet);
             }
+
+            GenerateCalculationChainPartContent(workbookPart, "rId" + (startId + 4));
 
             ThemePart themePart1 = workbookPart.AddNewPart<ThemePart>("rId" + (startId + 1));
             GenerateThemePartContent(themePart1);
@@ -404,7 +422,6 @@ namespace ClosedXML.Excel
                     titles = definedNameTextRow;
                 }
                 
-
                 if (titles.Length > 0)
                 {
                     DefinedName definedName = new DefinedName() { Name = "_xlnm.Print_Titles", LocalSheetId = (UInt32Value)sheetId - 1 };
@@ -413,14 +430,20 @@ namespace ClosedXML.Excel
                 }
             }
 
-            CalculationProperties calculationProperties1 = new CalculationProperties() { CalculationId = (UInt32Value)125725U, CalculationMode = CalculateModeValues.Manual };
+            CalculationProperties calculationProperties = new CalculationProperties() { CalculationId = (UInt32Value)125725U };
+            if (CalculateMode != XLCalculateMode.Default)
+                calculationProperties.CalculationMode = calculateModeValues.Single(p => p.Key == CalculateMode).Value;
+
+            if (ReferenceStyle != XLReferenceStyle.Default)
+                calculationProperties.ReferenceMode = referenceModeValues.Single(p=>p.Key==ReferenceStyle).Value;
+           
 
             workbook1.Append(fileVersion1);
             workbook1.Append(workbookProperties1);
             workbook1.Append(bookViews1);
             workbook1.Append(sheets);
             if (definedNames.Count() > 0) workbook1.Append(definedNames);
-            workbook1.Append(calculationProperties1);
+            workbook1.Append(calculationProperties);
 
             workbookPart.Workbook = workbook1;
         }
@@ -708,18 +731,23 @@ namespace ClosedXML.Excel
             workbookStylesPart.Stylesheet = stylesheet1;
         }
 
-
-
         private void GenerateWorksheetPartContent(WorksheetPart worksheetPart, XLWorksheet xlWorksheet)
         {
             Worksheet worksheet = new Worksheet();
             worksheet.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             SheetProperties sheetProperties = new SheetProperties() { CodeName = xlWorksheet.Name.RemoveSpecialCharacters() };
+            OutlineProperties outlineProperties = new OutlineProperties() { 
+                SummaryBelow = (xlWorksheet.Outline.SummaryVLocation == XLOutlineSummaryVLocation.Bottom),
+                SummaryRight = (xlWorksheet.Outline.SummaryHLocation == XLOutlineSummaryHLocation.Right)
+            };
+            sheetProperties.Append(outlineProperties);
+
             if (xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0)
             {
                 PageSetupProperties pageSetupProperties = new PageSetupProperties() { FitToPage = true };
                 sheetProperties.Append(pageSetupProperties);
             }
+            
 
             UInt32 maxColumn = 0;
             UInt32 maxRow = 0;
@@ -752,7 +780,20 @@ namespace ClosedXML.Excel
             SheetView sheetView = new SheetView() { TabSelected = tabSelected, WorkbookViewId = (UInt32Value)0U };
 
             sheetViews.Append(sheetView);
+
+            var maxOutlineColumn = 0;
+            if (xlWorksheet.Columns().Count() > 0)
+                maxOutlineColumn = xlWorksheet.Columns().Cast<XLColumn>().Max(c => c.OutlineLevel);
+
+            var maxOutlineRow = 0;
+            if (xlWorksheet.Rows().Count() > 0)
+                maxOutlineRow = xlWorksheet.Rows().Cast<XLRow>().Max(c => c.OutlineLevel);
+
             SheetFormatProperties sheetFormatProperties3 = new SheetFormatProperties() { DefaultRowHeight = xlWorksheet.RowHeight, DefaultColumnWidth = xlWorksheet.ColumnWidth , CustomHeight = true };
+            if (maxOutlineColumn > 0)
+                sheetFormatProperties3.OutlineLevelColumn = (byte)maxOutlineColumn;
+            if (maxOutlineRow > 0)
+                sheetFormatProperties3.OutlineLevelRow = (byte)maxOutlineRow;
 
             Columns columns = new Columns();
 
@@ -787,10 +828,16 @@ namespace ClosedXML.Excel
             {
                 UInt32 styleId;
                 Double columnWidth;
+                Boolean isHidden = false;
+                Boolean collapsed = false;
+                Int32 outlineLevel = 0;
                 if (xlWorksheet.Internals.ColumnsCollection.ContainsKey(co))
                 {
                     styleId = sharedStyles[xlWorksheet.Internals.ColumnsCollection[co].Style.ToString()].StyleId;
                     columnWidth = xlWorksheet.Internals.ColumnsCollection[co].Width;
+                    isHidden = xlWorksheet.Internals.ColumnsCollection[co].IsHidden;
+                    collapsed = xlWorksheet.Internals.ColumnsCollection[co].Collapsed;
+                    outlineLevel = xlWorksheet.Internals.ColumnsCollection[co].OutlineLevel;
                 }
                 else
                 {
@@ -806,6 +853,9 @@ namespace ClosedXML.Excel
                     Width = columnWidth,
                     CustomWidth = true
                 };
+                if (isHidden) column.Hidden = true;
+                if (collapsed) column.Collapsed = true;
+                if (outlineLevel > 0) column.OutlineLevel = (byte)outlineLevel;
                 columns.Append(column);
             }
 
@@ -843,11 +893,15 @@ namespace ClosedXML.Excel
                     row.CustomHeight = true;
                     row.StyleIndex = sharedStyles[thisRowStyleString].StyleId;
                     row.CustomFormat = true;
+                    if (thisRow.IsHidden) row.Hidden = true;
+                    if (thisRow.Collapsed) row.Collapsed = true;
+                    if (thisRow.OutlineLevel > 0) row.OutlineLevel = (byte)thisRow.OutlineLevel;
                 }
                 else
                 {
                     row.Height = xlWorksheet.RowHeight;
                     row.CustomHeight = true;
+                    row.Hidden = false;
                 }
 
                 foreach (var opCell in xlWorksheet.Internals.CellsCollection
@@ -859,42 +913,50 @@ namespace ClosedXML.Excel
                     Cell cell;
                     var dataType = opCell.Value.DataType;
                     var cellReference = opCell.Key.ToString();
-                    if (opCell.Value.DataType == XLCellValues.DateTime)
+                    if (!String.IsNullOrWhiteSpace(opCell.Value.FormulaA1))
                     {
-                        cell = new Cell()
-                        {
-                            CellReference = cellReference,
-                            StyleIndex = styleId
-                        };
-                    }
-                    else if (styleId == 0)
-                    {
-                        cell = new Cell()
-                        {
-                            CellReference = cellReference,
-                            DataType = GetCellValue(dataType)
-                        };
+                        cell = new Cell() { CellReference = cellReference, StyleIndex = styleId };
+                        cell.Append(new CellFormula(opCell.Value.FormulaA1));
                     }
                     else
                     {
-                        cell = new Cell()
+                        if (opCell.Value.DataType == XLCellValues.DateTime)
                         {
-                            CellReference = cellReference,
-                            DataType = GetCellValue(dataType),
-                            StyleIndex = styleId
-                        };
+                            cell = new Cell()
+                            {
+                                CellReference = cellReference,
+                                StyleIndex = styleId
+                            };
+                        }
+                        else if (styleId == 0)
+                        {
+                            cell = new Cell()
+                            {
+                                CellReference = cellReference,
+                                DataType = GetCellValue(dataType)
+                            };
+                        }
+                        else
+                        {
+                            cell = new Cell()
+                            {
+                                CellReference = cellReference,
+                                DataType = GetCellValue(dataType),
+                                StyleIndex = styleId
+                            };
+                        }
+                        CellValue cellValue = new CellValue();
+                        if (dataType == XLCellValues.Text && !String.IsNullOrWhiteSpace(opCell.Value.InnerText))
+                        {
+                            cellValue.Text = sharedStrings[opCell.Value.InnerText].ToString();
+                        }
+                        else
+                        {
+                            cellValue.Text = opCell.Value.InnerText;
+                        }
+                        cell.Append(cellValue);
                     }
-                    CellValue cellValue = new CellValue();
-                    if (dataType == XLCellValues.Text)
-                    {
-                        cellValue.Text = sharedStrings[opCell.Value.InnerText].ToString();
-                    }
-                    else
-                    {
-                        cellValue.Text = opCell.Value.InnerText;
-                    }
-
-                    cell.Append(cellValue);
+                    
                     row.Append(cell);
                 }
                 sheetData.Append(row);
@@ -1014,7 +1076,6 @@ namespace ClosedXML.Excel
                     Break break1 = new Break() { Id = (UInt32Value)(UInt32)cb, Max = (UInt32Value)(UInt32)xlWorksheet.RangeAddress.LastAddress.ColumnNumber, ManualPageBreak = true };
                     columnBreaks.Append(break1);
                 }
-                
             }
             
             worksheet.Append(sheetProperties);
@@ -1027,12 +1088,35 @@ namespace ClosedXML.Excel
             worksheet.Append(printOptions);
             worksheet.Append(pageMargins);
             worksheet.Append(pageSetup1);
-            worksheet.Append(headerFooter);
+            if (headerFooter.Any(hf=>hf.InnerText.Length > 0))
+                worksheet.Append(headerFooter);
             if (rowBreaks != null) worksheet.Append(rowBreaks);
             if (columnBreaks != null) worksheet.Append(columnBreaks);
             //worksheet.Append(drawing1);
 
             worksheetPart.Worksheet = worksheet;
+        }
+
+        private void GenerateCalculationChainPartContent(WorkbookPart workbookPart, String rId)
+        {
+            Boolean foundOne = false;
+            CalculationChain calculationChain = new CalculationChain();
+            Int32 sheetId = 0;
+            foreach (var worksheet in Worksheets.Cast<XLWorksheet>())
+            {
+                sheetId++;
+                foreach (var c in worksheet.Internals.CellsCollection.Values.Where(c => !String.IsNullOrWhiteSpace(c.FormulaA1)))
+                {
+                    CalculationCell calculationCell = new CalculationCell() { CellReference = c.Address.ToString(), SheetId = sheetId };
+                    calculationChain.Append(calculationCell);
+                    if (!foundOne) foundOne = true;
+                }
+            }
+            if (foundOne)
+            {
+                CalculationChainPart calculationChainPart = workbookPart.AddNewPart<CalculationChainPart>(rId);
+                calculationChainPart.CalculationChain = calculationChain;
+            }
         }
 
         private void GenerateThemePartContent(ThemePart themePart)

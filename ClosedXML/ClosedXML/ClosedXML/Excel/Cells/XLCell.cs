@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 
 namespace ClosedXML.Excel
@@ -96,6 +97,10 @@ namespace ClosedXML.Excel
         {
             get
             {
+                var fA1 = FormulaA1;
+                if (!String.IsNullOrWhiteSpace(fA1))
+                    return fA1;
+
                 if (dataType == XLCellValues.Boolean)
                 {
                     return cellValue != "0";
@@ -115,6 +120,7 @@ namespace ClosedXML.Excel
             }
             set
             {
+                FormulaA1 = String.Empty;
                 String val = value.ToString();
                 Double dTest;
                 DateTime dtTest;
@@ -322,6 +328,147 @@ namespace ClosedXML.Excel
                 formatCodes = fCodes;
             }
             return formatCodes;
+        }
+
+        private String formulaA1;
+        public String FormulaA1
+        {
+            get { return formulaA1; }
+            set 
+            { 
+                formulaA1 = value;
+                formulaR1C1 = String.Empty;
+            }
+        }
+
+        private String formulaR1C1;
+        public String FormulaR1C1
+        {
+            get 
+            {
+                if (String.IsNullOrWhiteSpace(formulaR1C1))
+                    formulaR1C1 = GetFormulaR1C1(FormulaA1);
+
+                return formulaR1C1; 
+            }
+            set 
+            { 
+                formulaR1C1 = value;
+                FormulaA1 = GetFormulaA1(value);
+            }
+        }
+
+        private String GetFormulaR1C1(String value)
+        {
+            return GetFormula(value, FormulaConversionType.A1toR1C1);
+        }
+
+        private String GetFormulaA1(String value)
+        {
+            return GetFormula(value, FormulaConversionType.R1C1toA1);
+        }
+
+        private enum FormulaConversionType { A1toR1C1, R1C1toA1 };
+        private static Regex a1Regex = new Regex(@"\$?[a-zA-Z]{1,3}\$?\d+");
+        private static Regex r1c1Regex = new Regex(@"[Rr]\[?-?\d*\]?[Cc]\[?-?\d*\]?");
+        private String GetFormula(String value, FormulaConversionType conversionType)
+        {
+            if (String.IsNullOrWhiteSpace(value))
+                return String.Empty;
+
+            Regex regex = conversionType == FormulaConversionType.A1toR1C1 ? a1Regex : r1c1Regex;
+
+            var sb = new StringBuilder();
+            var lastIndex = 0;
+            var matches = regex.Matches(value);
+            foreach (var i in Enumerable.Range(0, matches.Count))
+            {
+                var m = matches[i];
+                sb.Append(value.Substring(lastIndex, m.Index - lastIndex));
+                
+                if (conversionType == FormulaConversionType.A1toR1C1)
+                    sb.Append(GetR1C1Address(m.Value));
+                else
+                    sb.Append(GetA1Address(m.Value));
+
+                lastIndex = m.Index + m.Value.Length;
+            }
+            if (lastIndex < value.Length)
+                sb.Append(value.Substring(lastIndex));
+
+            var retVal = sb.ToString();
+            return retVal;
+        }
+
+        private String GetA1Address(String r1c1Address)
+        {
+            var addressToUse = r1c1Address.ToUpper();
+
+            var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
+            String rowToReturn;
+            if (rowPart == "R")
+            {
+                rowToReturn = Address.RowNumber.ToString();
+            }
+            else
+            {
+                var bIndex = rowPart.IndexOf("[");
+                if (bIndex >= 0)
+                    rowToReturn = (Address.RowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 1))).ToString();
+                else
+                    rowToReturn = "$" + rowPart.Substring(1);
+            }
+
+            var cIndex = addressToUse.IndexOf("C");
+            String columnToReturn;
+            if (cIndex == addressToUse.Length - 1)
+            {
+                columnToReturn = Address.ColumnLetter;
+            }
+            else
+            {
+                var columnPart = addressToUse.Substring(cIndex);
+                var bIndex = columnPart.IndexOf("[");
+                if (bIndex >= 0)
+                    columnToReturn = XLAddress.GetColumnLetterFromNumber(
+                        Address.ColumnNumber + Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)));
+                else
+                    columnToReturn = "$" + XLAddress.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)));
+            }
+
+            var retAddress = columnToReturn + rowToReturn;
+            return retAddress;
+        }
+
+        private String GetR1C1Address(String a1Address)
+        {
+            var address = new XLAddress(a1Address);
+
+            String rowPart;
+            var rowDiff = address.RowNumber - Address.RowNumber;
+            if (rowDiff != 0 || address.FixedRow)
+            {
+                if (address.FixedRow)
+                    rowPart = String.Format("R{0}", address.RowNumber);
+                else
+                    rowPart = String.Format("R[{0}]", rowDiff);
+            }
+            else
+                rowPart = "R";
+
+            String columnPart;
+            var columnDiff = address.ColumnNumber - Address.ColumnNumber;
+            if (columnDiff != 0 || address.FixedColumn)
+            {
+                if(address.FixedColumn)
+                    columnPart = String.Format("C{0}", address.ColumnNumber);
+                else
+                    columnPart = String.Format("C[{0}]", columnDiff);
+            }
+            else
+                columnPart = "C";
+
+            return rowPart + columnPart;
         }
     }
 }

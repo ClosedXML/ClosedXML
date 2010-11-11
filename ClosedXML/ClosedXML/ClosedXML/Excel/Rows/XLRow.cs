@@ -135,6 +135,41 @@ namespace ClosedXML.Excel
                 Height = maxHeight;
         }
 
+        public void Hide()
+        {
+            IsHidden = true;
+        }
+        public void Unhide()
+        {
+            IsHidden = false;
+        }
+        private Boolean isHidden;
+        public Boolean IsHidden
+        {
+            get
+            {
+                if (IsReference)
+                {
+                    return Worksheet.Internals.RowsCollection[this.RowNumber()].IsHidden;
+                }
+                else
+                {
+                    return isHidden;
+                }
+            }
+            set
+            {
+                if (IsReference)
+                {
+                    Worksheet.Internals.RowsCollection[this.RowNumber()].IsHidden = value;
+                }
+                else
+                {
+                    isHidden = value;
+                }
+            }
+        }
+
         #endregion
 
         #region IXLStylized Members
@@ -214,5 +249,96 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        private Boolean collapsed;
+        public Boolean Collapsed
+        {
+            get
+            {
+                if (IsReference)
+                {
+                    return Worksheet.Internals.RowsCollection[this.RowNumber()].Collapsed;
+                }
+                else
+                {
+                    return collapsed;
+                }
+            }
+            set
+            {
+                if (IsReference)
+                {
+                    Worksheet.Internals.RowsCollection[this.RowNumber()].Collapsed = value;
+                }
+                else
+                {
+                    collapsed = value;
+                }
+            }
+        }
+        private Int32 outlineLevel;
+        public Int32 OutlineLevel
+        {
+            get
+            {
+                if (IsReference)
+                {
+                    return Worksheet.Internals.RowsCollection[this.RowNumber()].OutlineLevel;
+                }
+                else
+                {
+                    return outlineLevel;
+                }
+            }
+            set
+            {
+                if (value < 1 || value > 8)
+                    throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
+
+                if (IsReference)
+                {
+                    Worksheet.Internals.RowsCollection[this.RowNumber()].OutlineLevel = value;
+                }
+                else
+                {
+                    outlineLevel = value;
+                }
+            }
+        }
+
+        public void Group(Boolean collapse = false)
+        {
+            if (OutlineLevel < 8)
+                OutlineLevel += 1;
+
+            Collapsed = collapse;
+        }
+        public void Group(Int32 outlineLevel, Boolean collapse = false)
+        {
+            OutlineLevel = outlineLevel;
+            Collapsed = collapse;
+        }
+        public void Ungroup(Boolean ungroupFromAll = false)
+        {
+            if (ungroupFromAll)
+            {
+                OutlineLevel = 0;
+            }
+            else
+            {
+                if (OutlineLevel > 0)
+                    OutlineLevel -= 1;
+            }
+        }
+        public void Collapse()
+        {
+            Collapsed = true;
+            Hide();
+        }
+        public void Expand()
+        {
+            Collapsed = false;
+            Unhide();
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
 {
     internal struct XLAddress: IXLAddress
     {
+        private static Regex a1Regex = new Regex(@"^(\$?[a-zA-Z]{1,3})(\$?\d+)$");
         #region Constructors
         /// <summary>
         /// Initializes a new <see cref="XLAddress"/> struct using R1C1 notation.
@@ -19,6 +20,8 @@ namespace ClosedXML.Excel
             this.rowNumber = rowNumber;
             this.columnNumber = columnNumber;
             this.columnLetter = GetColumnLetterFromNumber(columnNumber);
+            fixedColumn = false;
+            fixedRow = false;
         }
 
         /// <summary>
@@ -31,6 +34,8 @@ namespace ClosedXML.Excel
             this.rowNumber = rowNumber;
             this.columnNumber = GetColumnNumberFromLetter(columnLetter);
             this.columnLetter = columnLetter;
+            fixedColumn = false;
+            fixedRow = false;
         }
 
 
@@ -40,10 +45,12 @@ namespace ClosedXML.Excel
         /// <param name="cellAddressString">The cell address.</param>
         public XLAddress(String cellAddressString)
         {
-            Match m = Regex.Match(cellAddressString, @"^([a-zA-Z]+)(\d+)$");
-            columnLetter = m.Groups[1].Value;
-            this.rowNumber = Int32.Parse(m.Groups[2].Value);
-            this.columnNumber = GetColumnNumberFromLetter(columnLetter);
+            Match m = a1Regex.Match(cellAddressString);
+            fixedColumn = m.Groups[1].Value.StartsWith("$");
+            columnLetter = m.Groups[1].Value.Replace("$", "");
+            fixedRow = m.Groups[1].Value.StartsWith("$");
+            rowNumber = Int32.Parse(m.Groups[2].Value.Replace("$", ""));
+            columnNumber = GetColumnNumberFromLetter(columnLetter);
         }
 
         #endregion
@@ -119,6 +126,20 @@ namespace ClosedXML.Excel
         #endregion
 
         #region Properties
+
+        private Boolean fixedRow;
+        public Boolean FixedRow
+        {
+            get { return fixedRow; }
+            set { fixedRow = value; }
+        }
+
+        private Boolean fixedColumn;
+        public Boolean FixedColumn
+        {
+            get { return fixedColumn; }
+            set { fixedColumn = value; }
+        }
 
         private Int32 rowNumber;
         /// <summary>

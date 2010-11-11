@@ -48,6 +48,8 @@ namespace ClosedXML.Excel
         void Clear();
 
         void Transpose(XLTransposeOptions transposeOption);
+        String FormulaA1 { set; }
+        String FormulaR1C1 { set; }
     }
 }
 

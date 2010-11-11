@@ -145,5 +145,35 @@ namespace ClosedXML.Excel
         {
             columns.ForEach(c => c.AdjustToContents());
         }
+
+        public void Hide()
+        {
+            columns.ForEach(c => c.Hide());
+        }
+        public void Unhide()
+        {
+            columns.ForEach(c => c.Unhide());
+        }
+
+        public void Group(Boolean collapse = false)
+        {
+            columns.ForEach(c => c.Group(collapse));
+        }
+        public void Group(Int32 outlineLevel, Boolean collapse = false)
+        {
+            columns.ForEach(c => c.Group(outlineLevel, collapse));
+        }
+        public void Ungroup(Boolean ungroupFromAll = false)
+        {
+            columns.ForEach(c => c.Ungroup(ungroupFromAll));
+        }
+        public void Collapse()
+        {
+            columns.ForEach(c => c.Collapse());
+        }
+        public void Expand()
+        {
+            columns.ForEach(c => c.Expand());
+        }
     }
 }

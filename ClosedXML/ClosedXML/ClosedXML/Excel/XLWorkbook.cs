@@ -8,6 +8,8 @@ using System.Drawing;
 
 namespace ClosedXML.Excel
 {
+    public enum XLCalculateMode { Auto, AutoNoTable, Manual, Default };
+    public enum XLReferenceStyle { R1C1, A1, Default };
     public partial class XLWorkbook
     {
         public XLWorkbook()
@@ -20,7 +22,10 @@ namespace ClosedXML.Excel
             RowHeight = DefaultRowHeight;
             ColumnWidth = DefaultColumnWidth;
             PageOptions = DefaultPageOptions;
+            Outline = DefaultOutline;
             Properties = new XLWorkbookProperties();
+            CalculateMode = XLCalculateMode.Default;
+            ReferenceStyle = XLReferenceStyle.Default;
         }
 
         public XLWorkbook(String file): this()
@@ -55,7 +60,10 @@ namespace ClosedXML.Excel
         public Double RowHeight { get; set; }
         public Double ColumnWidth { get; set; }
         public IXLPageSetup PageOptions { get; set; }
+        public IXLOutline Outline { get; set; }
         public XLWorkbookProperties Properties { get; set; }
+        public XLCalculateMode CalculateMode { get; set; }
+        public XLReferenceStyle ReferenceStyle { get; set; }
 
         #endregion
 
@@ -147,6 +155,16 @@ namespace ClosedXML.Excel
                     ShowComments = XLShowCommentsValues.None
                 };
                 return defaultPageOptions;
+            }
+        }
+
+        public static IXLOutline DefaultOutline
+        {
+            get
+            {
+                return new XLOutline(null) { 
+                    SummaryHLocation = XLOutlineSummaryHLocation.Right, 
+                    SummaryVLocation= XLOutlineSummaryVLocation.Bottom };
             }
         }
 

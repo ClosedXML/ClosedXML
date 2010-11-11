@@ -1,0 +1,102 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using ClosedXML.Excel;
+
+using System.Drawing;
+
+namespace ClosedXML_Examples.Misc
+{
+    public class Formulas
+    {
+        #region Variables
+
+        // Public
+
+        // Private
+
+
+        #endregion
+
+        #region Properties
+
+        // Public
+
+        // Private
+
+        // Override
+
+
+        #endregion
+
+        #region Events
+
+        // Public
+
+        // Private
+
+        // Override
+
+
+        #endregion
+
+        #region Methods
+
+        // Public
+        public void Create(String filePath)
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Formulas");
+
+            ws.Cell(1, 1).Value = "Num1";
+            ws.Cell(1, 2).Value = "Num2";
+            ws.Cell(1, 3).Value = "Total";
+            ws.Cell(1, 4).Value = "cell.FormulaA1";
+            ws.Cell(1, 5).Value = "cell.FormulaR1C1";
+            ws.Cell(1, 6).Value = "cell.Value";
+            ws.Cell(1, 7).Value = "Are Equal?";
+
+            ws.Cell(2, 1).Value = 1;
+            ws.Cell(2, 2).Value = 2;
+            var cellWithFormulaA1 = ws.Cell(2, 3);
+            // Use A1 notation
+            cellWithFormulaA1.FormulaA1 = "=A2+$B$2"; // The equal sign (=) in a formula is optional
+            ws.Cell(2, 4).Value = cellWithFormulaA1.FormulaA1;
+            ws.Cell(2, 5).Value = cellWithFormulaA1.FormulaR1C1;
+            ws.Cell(2, 6).Value = cellWithFormulaA1.Value;
+
+            ws.Cell(3, 1).Value = 1;
+            ws.Cell(3, 2).Value = 2;
+            var cellWithFormulaR1C1 = ws.Cell(3, 3);
+            // Use R1C1 notation
+            cellWithFormulaR1C1.FormulaR1C1 = "RC[-2]+R3C2"; // The equal sign (=) in a formula is optional
+            ws.Cell(3, 4).Value = cellWithFormulaR1C1.FormulaA1;
+            ws.Cell(3, 5).Value = cellWithFormulaR1C1.FormulaR1C1;
+            ws.Cell(3, 6).Value = cellWithFormulaR1C1.Value;
+
+            // Setting the formula of a range
+            var rngData = ws.Range(2, 1, 3, 7);
+            rngData.LastColumn().FormulaR1C1 = "=IF(RC[-3]=RC[-1],\"Yes\", \"No\")";
+
+            ws.Range(1, 1, 1, 7).Style.Fill.BackgroundColor = Color.Cyan;
+            ws.Range(1, 1, 1, 7).Style.Font.Bold = true;
+            ws.Columns().AdjustToContents();
+
+            // You can also change the reference notation:
+            // wb.ReferenceStyle = XLReferenceStyle.R1C1;
+
+            // And the workbook calculation mode:
+            // wb.CalculateMode = XLCalculateMode.Auto;
+
+            wb.SaveAs(filePath);
+        }
+
+        // Private
+
+        // Override
+
+
+        #endregion
+    }
+}

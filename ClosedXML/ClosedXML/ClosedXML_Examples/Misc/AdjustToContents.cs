@@ -57,15 +57,17 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(5, 2).Value = "really long text";
             ws.Cell(5, 2).Style.Font.FontSize = 20;
 
+            // Adjust all rows/columns in one shot
+            ws.Rows().AdjustToContents();
+            ws.Columns().AdjustToContents();
+
+            // You can also adjust specific rows/columns
+
             // Adjust the width of column 2 to its contents
-            ws.Column(2).AdjustToContents();
+            //ws.Column(2).AdjustToContents();
 
-            // Adjust the height of row 5 to its contents
-            ws.Row(5).AdjustToContents();
-
-            // You can also adjust all rows/columns in one shot
-            //ws.Rows().AdjustToContents();
-            //ws.Columns().AdjustToContents();
+            // Adjust the height of rows 2,3,4,5 to their contents
+            //ws.Rows(2, 5).AdjustToContents();
 
             wb.SaveAs(filePath);
         }

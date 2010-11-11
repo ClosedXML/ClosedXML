@@ -76,5 +76,20 @@ namespace ClosedXML.Excel
         public Boolean UpdatingStyle { get; set; }
 
         #endregion
+
+        public String FormulaA1
+        {
+            set
+            {
+                ranges.ForEach(r => r.FormulaA1 = value);
+            }
+        }
+        public String FormulaR1C1
+        {
+            set
+            {
+                ranges.ForEach(r => r.FormulaR1C1 = value);
+            }
+        }
     }
 }

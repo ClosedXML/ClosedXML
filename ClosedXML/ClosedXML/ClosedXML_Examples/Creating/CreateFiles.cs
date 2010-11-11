@@ -51,6 +51,9 @@ namespace ClosedXML_Examples
             new MergeMoves().Create();
             new WorkbookProperties().Create(@"C:\Excel Files\Created\WorkbookProperties.xlsx");
             new AdjustToContents().Create(@"C:\Excel Files\Created\AdjustToContents.xlsx");
+            new HideUnhide().Create(@"C:\Excel Files\Created\HideUnhide.xlsx");
+            new Outline().Create(@"C:\Excel Files\Created\Outline.xlsx");
+            new Formulas().Create(@"C:\Excel Files\Created\Formulas.xlsx");
         }
     }
 }

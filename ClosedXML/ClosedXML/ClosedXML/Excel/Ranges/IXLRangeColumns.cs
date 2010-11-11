@@ -9,5 +9,7 @@ namespace ClosedXML.Excel
     {
         void Clear();
         void Add(IXLRangeColumn range);
+        String FormulaA1 { set; }
+        String FormulaR1C1 { set; }
     }
 }
