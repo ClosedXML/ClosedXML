@@ -12,7 +12,7 @@ namespace ClosedXML_Examples
         public void Create()
         {
             var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            var ws = workbook.Worksheets.GetWorksheet(0);
+            var ws = workbook.Worksheets.Worksheet(0);
 
             // Get a range object
             var rngHeaders = ws.Range("B3:F3");

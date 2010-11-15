@@ -57,7 +57,7 @@ namespace ClosedXML_Examples.Misc
         public void Create()
         {
             var workbook = new XLWorkbook(@"C:\Excel Files\Created\MergedCells.xlsx");
-            var ws = workbook.Worksheets.GetWorksheet(0);
+            var ws = workbook.Worksheets.Worksheet(0);
 
             ws.Range("B1:F1").InsertRowsBelow(1);
             ws.Range("A3:A9").InsertColumnsAfter(1);

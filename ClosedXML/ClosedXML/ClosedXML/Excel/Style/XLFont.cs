@@ -249,8 +249,8 @@ namespace ClosedXML.Excel
             // This formula is based on this article plus a nudge ( + 0.2M )
             // http://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.column.width.aspx
             // Truncate(((256 * Solve_For_This + Truncate(128 / 7)) / 256) * 7) = DeterminePixelsOfString
-
-            Size textSize = TextRenderer.MeasureText(text, stringFont);
+            String textToUse = new String('X', text.Length);
+            Size textSize = TextRenderer.MeasureText(textToUse, stringFont);
             double width = (double)(((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
             width = (double)decimal.Round((decimal)width + 0.2M, 2);
 

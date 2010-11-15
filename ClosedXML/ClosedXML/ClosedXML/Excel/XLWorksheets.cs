@@ -17,12 +17,12 @@ namespace ClosedXML.Excel
 
         #region IXLWorksheets Members
 
-        public IXLWorksheet GetWorksheet(string sheetName)
+        public IXLWorksheet Worksheet(string sheetName)
         {
             return worksheets[sheetName];
         }
 
-        public IXLWorksheet GetWorksheet(int sheetIndex)
+        public IXLWorksheet Worksheet(int sheetIndex)
         {
             return worksheets.ElementAt(sheetIndex).Value;
         }
@@ -39,6 +39,11 @@ namespace ClosedXML.Excel
             worksheets.Remove(sheetName);
         }
 
+        public void Delete(Int32 sheetIndex)
+        {
+            worksheets.Remove(worksheets.ElementAt(sheetIndex).Key);
+        }
+        
         #endregion
 
         #region IEnumerable<IXLWorksheet> Members

@@ -7,9 +7,9 @@ namespace ClosedXML.Excel
 {
     internal class XLRanges : IXLRanges
     {
-        public XLRanges(XLWorksheet worksheet)
+        public XLRanges(IXLStyle defaultStyle)
         {
-            Style = worksheet.Style;
+            Style = defaultStyle;
         }
 
         List<XLRange> ranges = new List<XLRange>();
@@ -22,6 +22,11 @@ namespace ClosedXML.Excel
         public void Add(IXLRange range)
         {
             ranges.Add((XLRange)range);
+        }
+
+        public void Remove(IXLRange range)
+        {
+            ranges.RemoveAll(r => r.ToString() == range.ToString());
         }
 
         public IEnumerator<IXLRange> GetEnumerator()
@@ -76,5 +81,12 @@ namespace ClosedXML.Excel
         public Boolean UpdatingStyle { get; set; }
 
         #endregion
+
+        public override string ToString()
+        {
+            String retVal = ranges.Aggregate(String.Empty, (agg, r)=> agg += r.ToString() + ",");
+            if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
+            return retVal;
+        }
     }
 }

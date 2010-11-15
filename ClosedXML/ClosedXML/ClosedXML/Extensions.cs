@@ -61,6 +61,10 @@ namespace ClosedXML
             return sb.ToString();
         }
 
+        public static Int32 CharCount(this String instance, Char c)
+        {
+            return instance.Length - instance.Replace(c.ToString(), "").Length;
+        }
     }
 
     public static class DictionaryExtensions

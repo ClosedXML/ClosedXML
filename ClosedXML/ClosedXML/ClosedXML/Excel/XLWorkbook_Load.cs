@@ -64,12 +64,8 @@ namespace ClosedXML.Excel
                 Borders borders = (Borders)s.Borders;
                 Fonts fonts = (Fonts)s.Fonts;
                
-
-                //return items[int.Parse(headCell.CellValue.Text)].InnerText;
-
                 var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
-                
-                // For each sheet, display the sheet information.
+
                 foreach (var sheet in sheets)
                 {
                     var dSheet = ((Sheet)sheet);
@@ -319,31 +315,45 @@ namespace ClosedXML.Excel
                 var workbook = (Workbook)dSpreadsheet.WorkbookPart.Workbook;
                 foreach (var definedName in workbook.Descendants<DefinedName>())
                 {
-                    if (definedName.Name == "_xlnm.Print_Area")
+                    var name = definedName.Name;
+                    if (name == "_xlnm.Print_Area")
                     {
                         foreach (var area in definedName.Text.Split(','))
                         {
                             var sections = area.Split('!');
                             var sheetName = sections[0].Replace("\'", "");
                             var sheetArea = sections[1];
-                            Worksheets.GetWorksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
+                            Worksheets.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                         }
                     }
-                    else if (definedName.Name == "_xlnm.Print_Titles")
+                    else if (name == "_xlnm.Print_Titles")
                     {
                         var areas = definedName.Text.Split(',');
 
                         var colSections = areas[0].Split('!');
                         var sheetNameCol = colSections[0].Replace("\'", "");
                         var sheetAreaCol = colSections[1];
-                        Worksheets.GetWorksheet(sheetNameCol).PageSetup.SetColumnsToRepeatAtLeft(sheetAreaCol);
+                        Worksheets.Worksheet(sheetNameCol).PageSetup.SetColumnsToRepeatAtLeft(sheetAreaCol);
 
                         var rowSections = areas[1].Split('!');
                         var sheetNameRow = rowSections[0].Replace("\'", "");
                         var sheetAreaRow = rowSections[1];
-                        Worksheets.GetWorksheet(sheetNameRow).PageSetup.SetRowsToRepeatAtTop(sheetAreaRow);
+                        Worksheets.Worksheet(sheetNameRow).PageSetup.SetRowsToRepeatAtTop(sheetAreaRow);
                     }
-                    //ws.PageSetup.PrintAreas.
+                    else
+                    {
+                        var localSheetId = definedName.LocalSheetId;
+                        var comment = definedName.Comment;
+                        var text = definedName.Text;
+                        if (localSheetId == null)
+                        {
+                            NamedRanges.Add(name, text, comment);
+                        }
+                        else
+                        {
+                            Worksheets.Worksheet(Int32.Parse(localSheetId)).NamedRanges.Add(name, text, comment);
+                        }
+                    }
                 }
             }
         }

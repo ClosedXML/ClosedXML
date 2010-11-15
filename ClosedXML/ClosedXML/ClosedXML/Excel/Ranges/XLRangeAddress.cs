@@ -7,6 +7,8 @@ namespace ClosedXML.Excel
 {
     internal class XLRangeAddress: IXLRangeAddress
     {
+        //public IXLWorksheet Worksheet { get; set; }
+
         private IXLAddress firstAddress;
         public IXLAddress FirstAddress
         {
@@ -55,11 +57,17 @@ namespace ClosedXML.Excel
 
         public XLRangeAddress(String rangeAddress)
         {
+            String addressToUse;
+            if (rangeAddress.Contains("!"))
+                addressToUse = rangeAddress.Substring(rangeAddress.IndexOf("!") + 1);
+            else
+                addressToUse = rangeAddress;
+
             XLAddress firstAddress;
             XLAddress lastAddress;
-            if (rangeAddress.Contains(':'))
+            if (addressToUse.Contains(':'))
             {
-                String[] arrRange = rangeAddress.Split(':');
+                String[] arrRange = addressToUse.Split(':');
                 var firstPart = arrRange[0];
                 var secondPart = arrRange[1];
                 firstAddress = new XLAddress(firstPart);
@@ -67,8 +75,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                firstAddress = new XLAddress(rangeAddress);
-                lastAddress = new XLAddress(rangeAddress);
+                firstAddress = new XLAddress(addressToUse);
+                lastAddress = new XLAddress(addressToUse);
             }
             FirstAddress = firstAddress;
             LastAddress = lastAddress;

@@ -54,6 +54,9 @@ namespace ClosedXML_Examples
             new HideUnhide().Create(@"C:\Excel Files\Created\HideUnhide.xlsx");
             new Outline().Create(@"C:\Excel Files\Created\Outline.xlsx");
             new Formulas().Create(@"C:\Excel Files\Created\Formulas.xlsx");
+            new Collections().Create(@"C:\Excel Files\Created\Collections.xlsx");
+            new NamedRanges().Create(@"C:\Excel Files\Created\NamedRanges.xlsx");
+            new CopyingRanges().Create();
         }
     }
 }

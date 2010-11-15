@@ -5,6 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
+    public enum XLScope { Workbook, Worksheet };
     public interface IXLRangeBase: IXLStylized
     {
         IEnumerable<IXLCell> Cells();
@@ -24,5 +25,6 @@ namespace ClosedXML.Excel
         void Merge();
         IXLRange AsRange();
         Boolean ContainsRange(String rangeAddress);
+        void CreateNamedRange(String rangeName, XLScope scope = XLScope.Workbook, String comment = null);
     }
 }

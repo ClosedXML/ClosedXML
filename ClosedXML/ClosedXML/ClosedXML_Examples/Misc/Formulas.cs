@@ -75,8 +75,17 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(3, 5).Value = cellWithFormulaR1C1.FormulaR1C1;
             ws.Cell(3, 6).Value = cellWithFormulaR1C1.Value;
 
+            ws.Cell(4, 1).Value = "A";
+            ws.Cell(4, 2).Value = "B";
+            var cellWithStringFormula = ws.Cell(4, 3);
+            // Use R1C1 notation
+            cellWithStringFormula.FormulaR1C1 = "=\"Test\" & RC[-2] & \"R3C2\"";
+            ws.Cell(4, 4).Value = cellWithStringFormula.FormulaA1;
+            ws.Cell(4, 5).Value = cellWithStringFormula.FormulaR1C1;
+            ws.Cell(4, 6).Value = cellWithStringFormula.Value;
+
             // Setting the formula of a range
-            var rngData = ws.Range(2, 1, 3, 7);
+            var rngData = ws.Range(2, 1, 4, 7);
             rngData.LastColumn().FormulaR1C1 = "=IF(RC[-3]=RC[-1],\"Yes\", \"No\")";
 
             ws.Range(1, 1, 1, 7).Style.Fill.BackgroundColor = Color.Cyan;
@@ -84,10 +93,17 @@ namespace ClosedXML_Examples.Misc
             ws.Columns().AdjustToContents();
 
             // You can also change the reference notation:
-            // wb.ReferenceStyle = XLReferenceStyle.R1C1;
+            wb.ReferenceStyle = XLReferenceStyle.R1C1;
 
             // And the workbook calculation mode:
-            // wb.CalculateMode = XLCalculateMode.Auto;
+            wb.CalculateMode = XLCalculateMode.Auto;
+
+            ws.Range("A10").CreateNamedRange("A10_R1C1_A10_R1C1");
+            ws.Cell("A10").Value = 0;
+            ws.Cell("A11").FormulaA1 = "A2 + A10_R1C1_A10_R1C1";
+            ws.Cell("A12").FormulaR1C1 = "R2C1 + A10_R1C1_A10_R1C1";
+            ws.Cell("A13").FormulaR1C1 = "=SUM(R[-5]:R[-4])";
+            ws.Cell("A14").FormulaA1 = "=SUM(8:9)";
 
             wb.SaveAs(filePath);
         }

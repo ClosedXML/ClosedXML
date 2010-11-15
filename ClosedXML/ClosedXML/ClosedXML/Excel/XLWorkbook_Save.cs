@@ -290,9 +290,13 @@ namespace ClosedXML.Excel
 
             variant3.Append(vTLPSTR2);
 
+            var namedCount = NamedRanges.Count() + Worksheets.Aggregate(0, (counter, ws) => counter += ws.NamedRanges.Count());
             Vt.Variant variant4 = new Vt.Variant();
             Vt.VTInt32 vTInt322 = new Vt.VTInt32();
-            vTInt322.Text = (Worksheets.Count() * 2).ToString();
+            vTInt322.Text = (
+                Worksheets.Count() * 2 // for the worksheets print area and titles
+                + namedCount
+                ).ToString();
 
             variant4.Append(vTInt322);
 
@@ -306,7 +310,7 @@ namespace ClosedXML.Excel
             Ap.TitlesOfParts titlesOfParts1 = new Ap.TitlesOfParts();
 
             UInt32 sheetCount = (UInt32)Worksheets.Count();
-            Vt.VTVector vTVector2 = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Lpstr, Size = (UInt32Value)sheetCount * 3 };
+            Vt.VTVector vTVector2 = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Lpstr, Size = (UInt32Value)(sheetCount * 3 + namedCount) };
             foreach (var worksheet in Worksheets)
             {
                 Vt.VTLPSTR vTLPSTR3 = new Vt.VTLPSTR();
@@ -320,6 +324,20 @@ namespace ClosedXML.Excel
                 Vt.VTLPSTR vTLPSTR5 = new Vt.VTLPSTR();
                 vTLPSTR5.Text = worksheet.Name + "!Print_Titles";
                 vTVector2.Append(vTLPSTR5);
+
+                foreach (var nr in worksheet.NamedRanges)
+                {
+                    Vt.VTLPSTR vTLPSTR6 = new Vt.VTLPSTR();
+                    vTLPSTR6.Text = worksheet.Name + "!" + nr.Name;
+                    vTVector2.Append(vTLPSTR6);
+                }
+            }
+
+            foreach (var nr in NamedRanges)
+            {
+                Vt.VTLPSTR vTLPSTR7 = new Vt.VTLPSTR();
+                vTLPSTR7.Text = nr.Name;
+                vTVector2.Append(vTLPSTR7);
             }
 
             titlesOfParts1.Append(vTVector2);
@@ -390,8 +408,18 @@ namespace ClosedXML.Excel
                         + printArea.RangeAddress.FirstAddress.ToString()
                         + ":" + printArea.RangeAddress.LastAddress.ToString() + ",";
                     }
-
                     definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
+                    definedNames.Append(definedName);
+                }
+
+                foreach (var nr in worksheet.NamedRanges)
+                {
+                    DefinedName definedName = new DefinedName() { 
+                        Name = nr.Name, 
+                        LocalSheetId = (UInt32Value)sheetId - 1,
+                        Text = nr.ToString()
+                    };
+                    if (!String.IsNullOrWhiteSpace(nr.Comment)) definedName.Comment = nr.Comment;
                     definedNames.Append(definedName);
                 }
 
@@ -428,6 +456,17 @@ namespace ClosedXML.Excel
                     definedName.Text = titles;
                     definedNames.Append(definedName);
                 }
+            }
+
+            foreach (var nr in NamedRanges)
+            {
+                DefinedName definedName = new DefinedName()
+                {
+                    Name = nr.Name,
+                    Text = nr.ToString()
+                };
+                if (!String.IsNullOrWhiteSpace(nr.Comment)) definedName.Comment = nr.Comment;
+                definedNames.Append(definedName);
             }
 
             CalculationProperties calculationProperties = new CalculationProperties() { CalculationId = (UInt32Value)125725U };
@@ -774,7 +813,7 @@ namespace ClosedXML.Excel
 
             SheetDimension sheetDimension = new SheetDimension() { Reference = sheetDimensionReference };
 
-            Boolean tabSelected = xlWorksheet.Name == Worksheets.GetWorksheet(0).Name;
+            Boolean tabSelected = xlWorksheet.Name == Worksheets.Worksheet(0).Name;
 
             SheetViews sheetViews = new SheetViews();
             SheetView sheetView = new SheetView() { TabSelected = tabSelected, WorkbookViewId = (UInt32Value)0U };

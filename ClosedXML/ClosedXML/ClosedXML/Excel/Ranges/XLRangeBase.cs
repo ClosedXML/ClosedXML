@@ -139,7 +139,7 @@ namespace ClosedXML.Excel
 
         public IXLRanges Ranges( String ranges)
         {
-            var retVal = new XLRanges(Worksheet);
+            var retVal = new XLRanges(Worksheet.Style);
             var rangePairs = ranges.Split(',');
             foreach (var pair in rangePairs)
             {
@@ -149,7 +149,7 @@ namespace ClosedXML.Excel
         }
         public IXLRanges Ranges( params String[] ranges)
         {
-            var retVal = new XLRanges(Worksheet);
+            var retVal = new XLRanges(Worksheet.Style);
             foreach (var pair in ranges)
             {
                 retVal.Add(this.Range(pair));
@@ -411,18 +411,24 @@ namespace ClosedXML.Excel
 
         public Boolean ContainsRange(String rangeAddress)
         {
+            String addressToUse;
+            if (rangeAddress.Contains("!"))
+                addressToUse = rangeAddress.Substring(rangeAddress.IndexOf("!") + 1);
+            else
+                addressToUse = rangeAddress;
+
             XLAddress firstAddress;
             XLAddress lastAddress;
-            if (rangeAddress.Contains(':'))
+            if (addressToUse.Contains(':'))
             {
-                String[] arrRange = rangeAddress.Split(':');
+                String[] arrRange = addressToUse.Split(':');
                 firstAddress = new XLAddress(arrRange[0]);
                 lastAddress = new XLAddress(arrRange[1]);
             }
             else
             {
-                firstAddress = new XLAddress(rangeAddress);
-                lastAddress = new XLAddress(rangeAddress);
+                firstAddress = new XLAddress(addressToUse);
+                lastAddress = new XLAddress(addressToUse);
             }
             return
                 firstAddress >= (XLAddress)this.RangeAddress.FirstAddress
@@ -517,7 +523,20 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return RangeAddress.FirstAddress.ToString() + ":" + RangeAddress.LastAddress.ToString();
+            var sb = new StringBuilder();
+            sb.Append("'");
+            sb.Append(Worksheet.Name);
+            sb.Append("'!");
+            var firstAddress = new XLAddress(RangeAddress.FirstAddress.ToString());
+            firstAddress.FixedColumn = true;
+            firstAddress.FixedRow = true;
+            sb.Append(firstAddress.ToString());
+            sb.Append(":");
+            var lastAddress = new XLAddress(RangeAddress.LastAddress.ToString());
+            lastAddress.FixedColumn = true;
+            lastAddress.FixedRow = true;
+            sb.Append(lastAddress.ToString());
+            return sb.ToString();
         }
 
         public String FormulaA1
@@ -535,5 +554,16 @@ namespace ClosedXML.Excel
             }
         }
 
+        public void CreateNamedRange(String rangeName, XLScope scope = XLScope.Workbook, String comment = null)
+        {
+            if (scope == XLScope.Workbook)
+            {
+                Worksheet.Internals.Workbook.NamedRanges.Add(rangeName, this.AsRange(), comment);
+            }
+            else
+            {
+                Worksheet.NamedRanges.Add(rangeName, this.AsRange(), comment);
+            }
+        }
     }
 }

@@ -391,8 +391,14 @@ namespace ClosedXML.Excel
             {
                 if (this.ContainsRange(merge))
                 {
+                    String addressToUse;
+                    if (merge.Contains("!"))
+                        addressToUse = merge.Substring(merge.IndexOf("!") + 1);
+                    else
+                        addressToUse = merge;
+
                     mergeToDelete.Add(merge);
-                    String[] arrRange = merge.Split(':');
+                    String[] arrRange = addressToUse.Split(':');
                     var firstAddress = new XLAddress(arrRange[0]);
                     var lastAddress = new XLAddress(arrRange[1]);
                     var newLastAddress = new XLAddress(lastAddress.ColumnNumber, lastAddress.RowNumber);
@@ -442,6 +448,5 @@ namespace ClosedXML.Excel
         }
 
         #endregion
-
     }
 }

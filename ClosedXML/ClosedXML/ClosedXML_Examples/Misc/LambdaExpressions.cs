@@ -13,7 +13,7 @@ namespace ClosedXML_Examples
         public void Create()
         {
             var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            var ws = workbook.Worksheets.GetWorksheet(0);
+            var ws = workbook.Worksheets.Worksheet(0);
 
             // Define a range with the data
             var firstDataCell = ws.Cell("B4");
@@ -24,7 +24,7 @@ namespace ClosedXML_Examples
             rngData.Rows() // From all rows
                 .Where(r => !r.Cell(3).GetBoolean()) // where the 3rd cell of each row is false
                 .ForEach(r => r.Delete()); // delete the row and shift the cells up (the default for rows in a range)
-            
+
             // Put a light gray background to all text cells
             rngData.Cells() // From all cells
                 .Where(c => c.DataType == XLCellValues.Text) // where the data type is Text

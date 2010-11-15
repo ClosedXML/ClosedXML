@@ -11,5 +11,6 @@ namespace ClosedXML.Excel
         XLColumnsCollection ColumnsCollection { get; }
         XLRowsCollection RowsCollection { get; }
         List<String> MergedCells { get; }
+        XLWorkbook Workbook { get; }
     }
 }

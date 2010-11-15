@@ -53,6 +53,10 @@
     <Compile Include="Excel\Columns\IXLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
+    <Compile Include="Excel\NamedRanges\XLNamedRanges.cs" />
+    <Compile Include="Excel\NamedRanges\IXLNamedRanges.cs" />
+    <Compile Include="Excel\NamedRanges\XLNamedRange.cs" />
+    <Compile Include="Excel\NamedRanges\IXLNamedRange.cs" />
     <Compile Include="Excel\XLOutline.cs" />
     <Compile Include="Excel\IXLOutline.cs" />
     <Compile Include="Excel\IXLWorksheetInternals.cs" />

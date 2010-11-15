@@ -47,5 +47,9 @@ namespace ClosedXML.Excel
         void CollapseColumns(Int32 outlineLevel);
         void ExpandRows(Int32 outlineLevel);
         void ExpandColumns(Int32 outlineLevel);
+
+        void Delete();
+
+        IXLNamedRanges NamedRanges { get; }
     }
 }

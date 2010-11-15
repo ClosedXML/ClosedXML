@@ -176,7 +176,12 @@ namespace ClosedXML.Excel
         #region Overrides
         public override string ToString()
         {
-            return this.columnLetter + this.rowNumber.ToString();
+            var sb = new StringBuilder();
+            if (fixedColumn) sb.Append("$");
+            sb.Append(this.columnLetter);
+            if (fixedRow) sb.Append("$");
+            sb.Append(this.rowNumber.ToString());
+            return sb.ToString();
         }
         #endregion
 

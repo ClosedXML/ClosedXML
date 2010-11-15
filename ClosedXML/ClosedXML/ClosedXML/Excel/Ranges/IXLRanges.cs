@@ -9,5 +9,6 @@ namespace ClosedXML.Excel
     {
         void Clear();
         void Add(IXLRange range);
+        void Remove(IXLRange range);
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections;
+using System.Data;
 
 
 namespace ClosedXML.Excel
@@ -120,71 +122,210 @@ namespace ClosedXML.Excel
             }
             set
             {
-                FormulaA1 = String.Empty;
-                String val = value.ToString();
-                Double dTest;
-                DateTime dtTest;
-                Boolean bTest;
-                if (initialized)
+                if (!SetEnumerable(value))
+                    if (!SetRange(value))
+                        SetValue(value);
+            }
+        }
+
+        private Boolean SetRange(Object rangeObject)
+        {
+            var asRange = rangeObject as XLRangeBase;
+            if (asRange != null)
+            {
+                worksheet.Range(Address.RowNumber, Address.ColumnNumber, asRange.RowCount(), asRange.ColumnCount()).Clear();
+                for (var ro = 1; ro <= asRange.RowCount(); ro++)
                 {
-                    if (dataType == XLCellValues.Boolean)
+                    for (var co = 1; co <= asRange.RowCount(); co++)
                     {
-                        if (Boolean.TryParse(val, out bTest))
-                            val = bTest ? "1" : "0";
-                        else if (!(val == "1" || val == "0"))
-                            throw new ArgumentException("'" + val + "' is not a Boolean type.");
-                    }
-                    else if (dataType == XLCellValues.DateTime)
-                    {
-                        if (DateTime.TryParse(val, out dtTest))
-                        {
-
-                            val = dtTest.ToOADate().ToString();
-                        }
-                        else if (!Double.TryParse(val, out dTest))
-                        {
-                            throw new ArgumentException("'" + val + "' is not a DateTime type.");
-                        }
-
-                        if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
-                            Style.NumberFormat.NumberFormatId = 14;
-                    }
-                    else if (dataType == XLCellValues.Number)
-                    {
-                        if (!Double.TryParse(val, out dTest))
-                            throw new ArgumentException("'" + val + "' is not a Numeric type.");
-                        
+                        var sourceCell = asRange.Cell(ro, co);
+                        var targetCell = worksheet.Cell(Address.RowNumber + ro - 1, Address.ColumnNumber + co - 1);
+                        targetCell.Style = sourceCell.Style;
+                        targetCell.DataType = sourceCell.DataType;
+                        targetCell.Value = sourceCell.Value;
+                        targetCell.FormulaA1 = sourceCell.FormulaA1;
                     }
                 }
-                else
+                var rangesToMerge = new List<IXLRange>();
+                foreach (var merge in asRange.Worksheet.Internals.MergedCells)
                 {
-                    if (val.Length > 0 && val.Substring(0, 1) == "'")
+                    if (asRange.ContainsRange(merge))
                     {
-                        val = val.Substring(1, val.Length - 1);
-                        dataType = XLCellValues.Text;
+                        var mergedRange = worksheet.Range(merge);
+                        var initialRo = Address.RowNumber + (mergedRange.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
+                        var initialCo = Address.ColumnNumber + (mergedRange.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
+                        rangesToMerge.Add(worksheet.Range(initialRo, initialCo, initialRo + mergedRange.RowCount() - 1, initialCo + mergedRange.ColumnCount() - 1));
                     }
-                    else if (Double.TryParse(val, out dTest))
+                }
+                rangesToMerge.ForEach(r => r.Merge());
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        private Boolean SetEnumerable(Object collectionObject)
+        {
+            var asEnumerable = collectionObject as IEnumerable;
+            if (asEnumerable != null && collectionObject.GetType() != typeof(String))
+            {
+                Int32 ro = Address.RowNumber;
+                Int32 maxCo = 0;
+                foreach (var m in asEnumerable)
+                {
+                    Int32 co = Address.ColumnNumber;
+
+                    if (m.GetType().IsPrimitive || m.GetType() == typeof(String) || m.GetType() == typeof(DateTime))
                     {
-                        dataType = XLCellValues.Number;
+                        SetValue(m, ro, co);
                     }
-                    else if (DateTime.TryParse(val, out dtTest))
+                    else if (m.GetType().IsArray)
                     {
-                        dataType = XLCellValues.DateTime;
-                        Style.NumberFormat.NumberFormatId = 14;
-                        val = dtTest.ToOADate().ToString();
+                        dynamic arr = m;
+                        foreach (var item in arr)
+                        {
+                            SetValue(item, ro, co);
+                            co++;
+                        }
                     }
-                    else if (Boolean.TryParse(val, out bTest))
+                    else if ((m as DataRow) != null)
                     {
-                        dataType = XLCellValues.Boolean;
-                        val = bTest ? "1" : "0";
+                        foreach (var item in (m as DataRow).ItemArray)
+                        {
+                            SetValue(item, ro, co);
+                            co++;
+                        }
                     }
                     else
                     {
-                        dataType = XLCellValues.Text;
+                        var fieldInfo = m.GetType().GetFields();
+                        foreach (var info in fieldInfo)
+                        {
+                            SetValue(info.GetValue(m), ro, co);
+                            co++;
+                        }
+                        var propertyInfo = m.GetType().GetProperties();
+                        foreach (var info in propertyInfo)
+                        {
+                            if ((info as IEnumerable) == null)
+                                SetValue(info.GetValue(m, null), ro, co);
+                            co++;
+                        }
                     }
+
+                    if (co > maxCo)
+                        maxCo = co;
+
+                    ro++;
                 }
-                cellValue = val;
+                ClearMerged(ro - 1, maxCo - 1);
+                return true;
+            } 
+            else
+            {
+                return false;
             }
+        }
+
+        private void ClearMerged(Int32 rowCount, Int32 columnCount)
+        {
+            List<String> mergeToDelete = new List<String>();
+            foreach (var merge in worksheet.Internals.MergedCells)
+            {
+                var ma = new XLRangeAddress(merge);
+
+                if (!( // See if the two ranges intersect...
+                       ma.FirstAddress.ColumnNumber > Address.ColumnNumber + columnCount
+                    || ma.LastAddress.ColumnNumber < Address.ColumnNumber
+                    || ma.FirstAddress.RowNumber > Address.RowNumber + rowCount
+                    || ma.LastAddress.RowNumber < Address.RowNumber
+                    ))
+                {
+                    mergeToDelete.Add(merge);
+                }
+            }
+            mergeToDelete.ForEach(m => worksheet.Internals.MergedCells.Remove(m));
+        }
+
+        private void SetValue(object objWithValue, int ro, int co)
+        {
+            String str = String.Empty;
+            if (objWithValue != null)
+                str = objWithValue.ToString();
+
+            worksheet.Cell(ro, co).Value = str;
+        }
+
+        private void SetValue(Object value)
+        {
+            FormulaA1 = String.Empty;
+            String val = value.ToString();
+            Double dTest;
+            DateTime dtTest;
+            Boolean bTest;
+            if (initialized)
+            {
+                if (dataType == XLCellValues.Boolean)
+                {
+                    if (Boolean.TryParse(val, out bTest))
+                        val = bTest ? "1" : "0";
+                    else if (!(val == "1" || val == "0"))
+                        throw new ArgumentException("'" + val + "' is not a Boolean type.");
+                }
+                else if (dataType == XLCellValues.DateTime)
+                {
+                    if (DateTime.TryParse(val, out dtTest))
+                    {
+
+                        val = dtTest.ToOADate().ToString();
+                    }
+                    else if (!Double.TryParse(val, out dTest))
+                    {
+                        throw new ArgumentException("'" + val + "' is not a DateTime type.");
+                    }
+
+                    if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                        Style.NumberFormat.NumberFormatId = 14;
+                }
+                else if (dataType == XLCellValues.Number)
+                {
+                    if (!Double.TryParse(val, out dTest))
+                        throw new ArgumentException("'" + val + "' is not a Numeric type.");
+
+                }
+            }
+            else
+            {
+                if (val.Length > 0 && val.Substring(0, 1) == "'")
+                {
+                    val = val.Substring(1, val.Length - 1);
+                    dataType = XLCellValues.Text;
+                }
+                else if (Double.TryParse(val, out dTest))
+                {
+                    dataType = XLCellValues.Number;
+                }
+                else if (DateTime.TryParse(val, out dtTest))
+                {
+                    dataType = XLCellValues.DateTime;
+                    Style.NumberFormat.NumberFormatId = 14;
+                    val = dtTest.ToOADate().ToString();
+                }
+                else if (Boolean.TryParse(val, out bTest))
+                {
+                    dataType = XLCellValues.Boolean;
+                    val = bTest ? "1" : "0";
+                }
+                else
+                {
+                    dataType = XLCellValues.Text;
+                }
+            }
+            cellValue = val;
         }
 
         #region IXLStylized Members
@@ -369,42 +510,141 @@ namespace ClosedXML.Excel
         }
 
         private enum FormulaConversionType { A1toR1C1, R1C1toA1 };
-        private static Regex a1Regex = new Regex(@"\$?[a-zA-Z]{1,3}\$?\d+");
-        private static Regex r1c1Regex = new Regex(@"[Rr]\[?-?\d*\]?[Cc]\[?-?\d*\]?");
-        private String GetFormula(String value, FormulaConversionType conversionType)
+        private static Regex a1Regex = new Regex(@"\W(\$?[a-zA-Z]{1,3}\$?\d{1,7})\W|\W(\d{1,7}:\d{1,7})\W|\W([a-zA-Z]{1,3}:[a-zA-Z]{1,3})\W");
+        private static Regex r1c1Regex = new Regex(
+              @"\W([Rr]\[?-?\d{0,7}\]?[Cc]\[?-?\d{0,7}\]?)\W" // R1C1
+            + @"|\W([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)\W" // R:R
+            + @"|\W([Cc]\[?-?\d{0,3}\]?:[Cc]\[?-?\d{0,3}\]?)\W"); // C:C
+        private String GetFormula(String strValue, FormulaConversionType conversionType)
         {
-            if (String.IsNullOrWhiteSpace(value))
+            if (String.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
+
+            var value = ">" + strValue + "<";
 
             Regex regex = conversionType == FormulaConversionType.A1toR1C1 ? a1Regex : r1c1Regex;
 
             var sb = new StringBuilder();
             var lastIndex = 0;
-            var matches = regex.Matches(value);
-            foreach (var i in Enumerable.Range(0, matches.Count))
+            var matchList = new List<KeyValuePair<String, Int32>>();
+            PopulateMatchList(value, 0, matchList, regex);
+            foreach (var kp in matchList)
             {
-                var m = matches[i];
-                sb.Append(value.Substring(lastIndex, m.Index - lastIndex));
-                
-                if (conversionType == FormulaConversionType.A1toR1C1)
-                    sb.Append(GetR1C1Address(m.Value));
-                else
-                    sb.Append(GetA1Address(m.Value));
 
-                lastIndex = m.Index + m.Value.Length;
+                var matchString = kp.Key;
+                var matchIndex = kp.Value;
+                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0) // Check if the match is in between quotes
+                {
+                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
+                    if (conversionType == FormulaConversionType.A1toR1C1)
+                        sb.Append(GetR1C1Address(matchString));
+                    else
+                        sb.Append(GetA1Address(matchString));
+                }
+                else
+                {
+                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
+                }
+                lastIndex = matchIndex + matchString.Length;
             }
             if (lastIndex < value.Length)
                 sb.Append(value.Substring(lastIndex));
 
             var retVal = sb.ToString();
-            return retVal;
+            return retVal.Substring(1, retVal.Length - 2);
+        }
+
+        private void PopulateMatchList(string value, Int32 startIndex, List<KeyValuePair<String, Int32>> matchList, Regex regex)
+        {
+            var match = regex.Match(value, startIndex);
+            if (match.Success)
+            {
+                //var groups = from g in match.Groups.Cast<Group>() where g.Success select g;
+                var matchGroup = (from g in match.Groups.Cast<Group>() where g.Success select g).ElementAt(1);
+                matchList.Add(new KeyValuePair<string, int>(matchGroup.Value, matchGroup.Index));
+                if (matchGroup.Index + matchGroup.Value.Length < value.Length)
+                {
+                    //var newValue = value.Substring(matchGroup.Index + matchGroup.Value.Length);
+                    PopulateMatchList(value, matchGroup.Index + matchGroup.Value.Length, matchList, regex);
+                }
+            }
         }
 
         private String GetA1Address(String r1c1Address)
         {
             var addressToUse = r1c1Address.ToUpper();
 
-            var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
+            if (addressToUse.Contains(':'))
+            {
+                var parts = addressToUse.Split(':');
+                var p1 = parts[0];
+                var p2 = parts[1];
+                String leftPart;
+                String rightPart;
+                if (p1.StartsWith("R"))
+                {
+                    leftPart = GetA1Row(p1);
+                    rightPart = GetA1Row(p2);
+                }
+                else
+                {
+                    leftPart = GetA1Column(p1);
+                    rightPart = GetA1Column(p2);
+                }
+                return leftPart + ":" + rightPart;
+            }
+            else
+            {
+
+                var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
+                String rowToReturn = GetA1Row(rowPart);
+
+                var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
+                String columnToReturn = GetA1Column(columnPart);
+                //var cIndex = addressToUse.IndexOf("C");
+                //String columnToReturn;
+                //if (cIndex == addressToUse.Length - 1)
+                //{
+                //    columnToReturn = Address.ColumnLetter;
+                //}
+                //else
+                //{
+                //    var columnPart = addressToUse.Substring(cIndex);
+                //    var bIndex = columnPart.IndexOf("[");
+                //    if (bIndex >= 0)
+                //        columnToReturn = XLAddress.GetColumnLetterFromNumber(
+                //            Address.ColumnNumber + Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)));
+                //    else
+                //        columnToReturn = "$" + XLAddress.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)));
+                //}
+
+                var retAddress = columnToReturn + rowToReturn;
+                return retAddress;
+            }
+        }
+
+        private String GetA1Column(String columnPart)
+        {
+            String columnToReturn;
+            if (columnPart == "C")
+            {
+                columnToReturn = Address.ColumnLetter;
+            }
+            else
+            {
+                var bIndex = columnPart.IndexOf("[");
+                if (bIndex >= 0)
+                    columnToReturn = XLAddress.GetColumnLetterFromNumber(
+                        Address.ColumnNumber + Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2))
+                        );
+                else
+                    columnToReturn = "$" + XLAddress.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)));
+            }
+            return columnToReturn;
+        }
+
+        private String GetA1Row(String rowPart)
+        {
             String rowToReturn;
             if (rowPart == "R")
             {
@@ -414,61 +654,81 @@ namespace ClosedXML.Excel
             {
                 var bIndex = rowPart.IndexOf("[");
                 if (bIndex >= 0)
-                    rowToReturn = (Address.RowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 1))).ToString();
+                    rowToReturn = (Address.RowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2))).ToString();
                 else
                     rowToReturn = "$" + rowPart.Substring(1);
             }
-
-            var cIndex = addressToUse.IndexOf("C");
-            String columnToReturn;
-            if (cIndex == addressToUse.Length - 1)
-            {
-                columnToReturn = Address.ColumnLetter;
-            }
-            else
-            {
-                var columnPart = addressToUse.Substring(cIndex);
-                var bIndex = columnPart.IndexOf("[");
-                if (bIndex >= 0)
-                    columnToReturn = XLAddress.GetColumnLetterFromNumber(
-                        Address.ColumnNumber + Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)));
-                else
-                    columnToReturn = "$" + XLAddress.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)));
-            }
-
-            var retAddress = columnToReturn + rowToReturn;
-            return retAddress;
+            return rowToReturn;
         }
 
         private String GetR1C1Address(String a1Address)
         {
-            var address = new XLAddress(a1Address);
-
-            String rowPart;
-            var rowDiff = address.RowNumber - Address.RowNumber;
-            if (rowDiff != 0 || address.FixedRow)
+            if (a1Address.Contains(':'))
             {
-                if (address.FixedRow)
-                    rowPart = String.Format("R{0}", address.RowNumber);
+                var parts = a1Address.Split(':');
+                var p1 = parts[0];
+                var p2 = parts[1];
+                Int32 row1;
+                if (Int32.TryParse(p1.Replace("$", ""), out row1))
+                {
+                    var row2 = Int32.Parse(p2.Replace("$", ""));
+                    var leftPart = GetR1C1Row(row1, p1.Contains('$'));
+                    var rightPart = GetR1C1Row(row2, p2.Contains('$'));
+                    return leftPart + ":" + rightPart;
+                }
+                else
+                {
+                    var column1 = XLAddress.GetColumnNumberFromLetter(p1.Replace("$", ""));
+                    var column2 = XLAddress.GetColumnNumberFromLetter(p2.Replace("$", ""));
+                    var leftPart = GetR1C1Column(column1, p1.Contains('$'));
+                    var rightPart = GetR1C1Column(column2, p2.Contains('$'));
+                    return leftPart + ":" + rightPart;
+                }
+            }
+            else
+            {
+                var address = new XLAddress(a1Address);
+
+                String rowPart = GetR1C1Row(address.RowNumber, address.FixedRow);
+                String columnPart = GetR1C1Column(address.ColumnNumber, address.FixedRow);
+
+                return rowPart + columnPart;
+            }
+        }
+
+        private String GetR1C1Row(Int32 rowNumber, Boolean fixedRow)
+        {
+            String rowPart;
+            var rowDiff = rowNumber - Address.RowNumber;
+            if (rowDiff != 0 || fixedRow)
+            {
+                if (fixedRow)
+                    rowPart = String.Format("R{0}", rowNumber);
                 else
                     rowPart = String.Format("R[{0}]", rowDiff);
             }
             else
                 rowPart = "R";
 
+            return rowPart;
+        }
+
+        private String GetR1C1Column(Int32 columnNumber, Boolean fixedColumn)
+        {
             String columnPart;
-            var columnDiff = address.ColumnNumber - Address.ColumnNumber;
-            if (columnDiff != 0 || address.FixedColumn)
+            var columnDiff = columnNumber - Address.ColumnNumber;
+            if (columnDiff != 0 || fixedColumn)
             {
-                if(address.FixedColumn)
-                    columnPart = String.Format("C{0}", address.ColumnNumber);
+                if (fixedColumn)
+                    columnPart = String.Format("C{0}", columnNumber);
                 else
                     columnPart = String.Format("C[{0}]", columnDiff);
             }
             else
                 columnPart = "C";
 
-            return rowPart + columnPart;
+            return columnPart;
         }
+
     }
 }

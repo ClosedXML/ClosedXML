@@ -17,6 +17,7 @@ namespace ClosedXML.Excel
             DefaultRowHeight = 15;
             DefaultColumnWidth = 9.140625;
             Worksheets = new XLWorksheets(this);
+            NamedRanges = new XLNamedRanges(this);
             PopulateEnums();
             Style = DefaultStyle;
             RowHeight = DefaultRowHeight;
@@ -36,6 +37,7 @@ namespace ClosedXML.Excel
         #region IXLWorkbook Members
 
         public IXLWorksheets Worksheets { get; private set; }
+        public IXLNamedRanges NamedRanges { get; private set; }
 
         /// <summary>
         /// Gets the file name of the workbook.
