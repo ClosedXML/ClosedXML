@@ -76,8 +76,11 @@ namespace ClosedXML.Excel
                     var ws = (XLWorksheet)Worksheets.Add(sheetName);
 
                     var sheetFormatProperties = (SheetFormatProperties)worksheetPart.Worksheet.Descendants<SheetFormatProperties>().First();
-                    ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
-                    ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth;
+                    if (sheetFormatProperties.DefaultRowHeight != null)
+                        ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
+
+                    if (sheetFormatProperties.DefaultColumnWidth != null)
+                        ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth;
 
                     foreach (var mCell in worksheetPart.Worksheet.Descendants<MergeCell>())
                     {
@@ -85,13 +88,14 @@ namespace ClosedXML.Excel
                         ws.Range(mergeCell.Reference).Merge();
                     }
 
+                    Column wsDefaultColumn = null;
+                    var defaultColumns = worksheetPart.Worksheet.Descendants<Column>().Where(c => c.Max == XLWorksheet.MaxNumberOfColumns);
+                    if (defaultColumns.Count() > 0)
+                        wsDefaultColumn = defaultColumns.Single();
 
-                    var wsDefaultColumn = worksheetPart.Worksheet.Descendants<Column>().Where(
-                        c => c.Max == XLWorksheet.MaxNumberOfColumns).Single();
+                    if (wsDefaultColumn != null && wsDefaultColumn.Width != null) ws.ColumnWidth = wsDefaultColumn.Width;
 
-                    if (wsDefaultColumn.Width != null) ws.ColumnWidth = wsDefaultColumn.Width;
-
-                    Int32 styleIndexDefault = wsDefaultColumn.Style != null ? Int32.Parse(wsDefaultColumn.Style.InnerText) : -1;
+                    Int32 styleIndexDefault = wsDefaultColumn != null && wsDefaultColumn.Style != null ? Int32.Parse(wsDefaultColumn.Style.InnerText) : -1;
                     if (styleIndexDefault >= 0)
                     {
                         ApplyStyle(ws, styleIndexDefault, s, fills, borders, fonts, numberingFormats);
@@ -214,39 +218,51 @@ namespace ClosedXML.Excel
                         }
                     }
 
-                    var printOptions = (PrintOptions)worksheetPart.Worksheet.Descendants<PrintOptions>().First();
-                    ws.PageSetup.ShowGridlines = printOptions.GridLines;
-                    ws.PageSetup.CenterHorizontally = printOptions.HorizontalCentered;
-                    ws.PageSetup.CenterVertically = printOptions.VerticalCentered;
-                    ws.PageSetup.ShowRowAndColumnHeadings = printOptions.Headings;
-
-                    var pageMargins = (PageMargins)worksheetPart.Worksheet.Descendants<PageMargins>().First();
-                    ws.PageSetup.Margins.Bottom = pageMargins.Bottom;
-                    ws.PageSetup.Margins.Footer = pageMargins.Footer;
-                    ws.PageSetup.Margins.Header = pageMargins.Header;
-                    ws.PageSetup.Margins.Left = pageMargins.Left;
-                    ws.PageSetup.Margins.Right = pageMargins.Right;
-                    ws.PageSetup.Margins.Top = pageMargins.Top;
-
-                    var pageSetup = (PageSetup)worksheetPart.Worksheet.Descendants<PageSetup>().First();
-                    ws.PageSetup.PaperSize = (XLPaperSize)Int32.Parse(pageSetup.PaperSize.InnerText);
-                    if (pageSetup.Scale != null)
+                    var printOptionsQuery = worksheetPart.Worksheet.Descendants<PrintOptions>();
+                    if (printOptionsQuery.Count() > 1)
                     {
-                        ws.PageSetup.Scale = Int32.Parse(pageSetup.Scale.InnerText);
+                        var printOptions = (PrintOptions)printOptionsQuery.First();
+                        ws.PageSetup.ShowGridlines = printOptions.GridLines;
+                        ws.PageSetup.CenterHorizontally = printOptions.HorizontalCentered;
+                        ws.PageSetup.CenterVertically = printOptions.VerticalCentered;
+                        ws.PageSetup.ShowRowAndColumnHeadings = printOptions.Headings;
                     }
-                    else
+
+                    var pageMarginsQuery = worksheetPart.Worksheet.Descendants<PageMargins>();
+                    if (pageMarginsQuery.Count() > 0)
                     {
-                        ws.PageSetup.FitToPages(Int32.Parse(pageSetup.FitToWidth.InnerText), Int32.Parse(pageSetup.FitToHeight.InnerText));
+                        var pageMargins = (PageMargins)pageMarginsQuery.First();
+                        ws.PageSetup.Margins.Bottom = pageMargins.Bottom;
+                        ws.PageSetup.Margins.Footer = pageMargins.Footer;
+                        ws.PageSetup.Margins.Header = pageMargins.Header;
+                        ws.PageSetup.Margins.Left = pageMargins.Left;
+                        ws.PageSetup.Margins.Right = pageMargins.Right;
+                        ws.PageSetup.Margins.Top = pageMargins.Top;
                     }
-                    ws.PageSetup.PageOrder = pageOrderValues.Single(p => p.Value == pageSetup.PageOrder).Key;
-                    ws.PageSetup.PageOrientation = pageOrientationValues.Single(p => p.Value == pageSetup.Orientation).Key;
-                    ws.PageSetup.BlackAndWhite = pageSetup.BlackAndWhite;
-                    ws.PageSetup.DraftQuality = pageSetup.Draft;
-                    ws.PageSetup.ShowComments = showCommentsValues.Single(sc => sc.Value == pageSetup.CellComments).Key;
-                    ws.PageSetup.PrintErrorValue = printErrorValues.Single(p => p.Value == pageSetup.Errors).Key;
-                    if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = Int32.Parse(pageSetup.HorizontalDpi.InnerText);
-                    if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = Int32.Parse(pageSetup.VerticalDpi.InnerText);
-                    if (pageSetup.FirstPageNumber != null) ws.PageSetup.FirstPageNumber = Int32.Parse(pageSetup.FirstPageNumber.InnerText);
+
+                    var pageSetupQuery = worksheetPart.Worksheet.Descendants<PageSetup>();
+                    if (pageSetupQuery.Count() > 0)
+                    {
+                        var pageSetup = (PageSetup)pageSetupQuery.First();
+                        ws.PageSetup.PaperSize = (XLPaperSize)Int32.Parse(pageSetup.PaperSize.InnerText);
+                        if (pageSetup.Scale != null)
+                        {
+                            ws.PageSetup.Scale = Int32.Parse(pageSetup.Scale.InnerText);
+                        }
+                        else
+                        {
+                            ws.PageSetup.FitToPages(Int32.Parse(pageSetup.FitToWidth.InnerText), Int32.Parse(pageSetup.FitToHeight.InnerText));
+                        }
+                        ws.PageSetup.PageOrder = pageOrderValues.Single(p => p.Value == pageSetup.PageOrder).Key;
+                        ws.PageSetup.PageOrientation = pageOrientationValues.Single(p => p.Value == pageSetup.Orientation).Key;
+                        ws.PageSetup.BlackAndWhite = pageSetup.BlackAndWhite;
+                        ws.PageSetup.DraftQuality = pageSetup.Draft;
+                        ws.PageSetup.ShowComments = showCommentsValues.Single(sc => sc.Value == pageSetup.CellComments).Key;
+                        ws.PageSetup.PrintErrorValue = printErrorValues.Single(p => p.Value == pageSetup.Errors).Key;
+                        if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = Int32.Parse(pageSetup.HorizontalDpi.InnerText);
+                        if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = Int32.Parse(pageSetup.VerticalDpi.InnerText);
+                        if (pageSetup.FirstPageNumber != null) ws.PageSetup.FirstPageNumber = Int32.Parse(pageSetup.FirstPageNumber.InnerText);
+                    }
 
                     var headerFooters = worksheetPart.Worksheet.Descendants<HeaderFooter>();
                     if (headerFooters.Count() > 0)
@@ -271,6 +287,7 @@ namespace ClosedXML.Excel
                         var firstHeader = (FirstHeader)headerFooter.FirstHeader;
                         xlHeader.SetInnerText(XLHFOccurrence.FirstPage, firstHeader.Text);
                     }
+
                     var sheetProperties = worksheetPart.Worksheet.Descendants<SheetProperties>();
                     if (sheetProperties.Count() > 0)
                     {

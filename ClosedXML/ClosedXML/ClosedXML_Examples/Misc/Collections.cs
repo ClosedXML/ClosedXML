@@ -89,7 +89,8 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(6, 6).Value = "Query";
             ws.Cell(6, 6).Style.Fill.BackgroundColor = Color.Cyan;
             ws.Range(6, 6, 6, 8).Merge();
-            ws.Cell(7, 6).Value = people.AsEnumerable();
+            ws.Cell(7, 6).Value = people.AsEnumerable();    // Very Important to call the AsEnumerable method
+                                                            // otherwise it won't be copied.
 
 
             ws.Columns().AdjustToContents();

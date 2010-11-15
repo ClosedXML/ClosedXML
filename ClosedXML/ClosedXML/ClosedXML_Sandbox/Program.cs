@@ -12,16 +12,11 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Test");
+            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Blank.xlsx");
+            var ws = wb.Worksheets.Worksheet("Sheet1");
 
-            var lst = new List<Person>();
-            lst.Add(new Person(){ Name = "Manuel", Age = 33});
-            lst.Add(new Person() { Name = "Carlos", Age = 32 });
-
-            ws.Cell(1, 1).Value = lst;
-                        
-            //wb.Load(@"c:\Initial.xlsx");
+            ws.Cell(1, 1).Value = "something";
+            
             wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
             //Console.ReadKey();
         }
@@ -33,7 +28,5 @@ namespace ClosedXML_Sandbox
         }
 
         // Save defaults to a .config file
-
-        // Add/Copy/Paste (maybe another name?) rows, columns, ranges into an area.
     }
 }
