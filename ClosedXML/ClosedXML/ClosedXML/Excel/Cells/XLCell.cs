@@ -510,11 +510,15 @@ namespace ClosedXML.Excel
         }
 
         private enum FormulaConversionType { A1toR1C1, R1C1toA1 };
-        private static Regex a1Regex = new Regex(@"\W(\$?[a-zA-Z]{1,3}\$?\d{1,7})\W|\W(\d{1,7}:\d{1,7})\W|\W([a-zA-Z]{1,3}:[a-zA-Z]{1,3})\W");
+        private static Regex a1Regex = new Regex(
+            @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
+            + @"|(?<=\W)(\d{1,7}:\d{1,7})(?=\W)" // 1:1
+            + @"|(?<=\W)([a-zA-Z]{1,3}:[a-zA-Z]{1,3})(?=\W)"); // A:A
+
         private static Regex r1c1Regex = new Regex(
-              @"\W([Rr]\[?-?\d{0,7}\]?[Cc]\[?-?\d{0,7}\]?)\W" // R1C1
-            + @"|\W([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)\W" // R:R
-            + @"|\W([Cc]\[?-?\d{0,3}\]?:[Cc]\[?-?\d{0,3}\]?)\W"); // C:C
+               @"(?<=\W)([Rr]\[?-?\d{0,7}\]?[Cc]\[?-?\d{0,7}\]?)(?=\W)" // R1C1
+            + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
+            + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)"); // C:C
         private String GetFormula(String strValue, FormulaConversionType conversionType)
         {
             if (String.IsNullOrWhiteSpace(strValue))
@@ -526,13 +530,11 @@ namespace ClosedXML.Excel
 
             var sb = new StringBuilder();
             var lastIndex = 0;
-            var matchList = new List<KeyValuePair<String, Int32>>();
-            PopulateMatchList(value, 0, matchList, regex);
-            foreach (var kp in matchList)
-            {
 
-                var matchString = kp.Key;
-                var matchIndex = kp.Value;
+            foreach (var match in regex.Matches(value).Cast<Match>())
+            {
+                var matchString = match.Value;
+                var matchIndex = match.Index;
                 if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0) // Check if the match is in between quotes
                 {
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
@@ -552,22 +554,6 @@ namespace ClosedXML.Excel
 
             var retVal = sb.ToString();
             return retVal.Substring(1, retVal.Length - 2);
-        }
-
-        private void PopulateMatchList(string value, Int32 startIndex, List<KeyValuePair<String, Int32>> matchList, Regex regex)
-        {
-            var match = regex.Match(value, startIndex);
-            if (match.Success)
-            {
-                //var groups = from g in match.Groups.Cast<Group>() where g.Success select g;
-                var matchGroup = (from g in match.Groups.Cast<Group>() where g.Success select g).ElementAt(1);
-                matchList.Add(new KeyValuePair<string, int>(matchGroup.Value, matchGroup.Index));
-                if (matchGroup.Index + matchGroup.Value.Length < value.Length)
-                {
-                    //var newValue = value.Substring(matchGroup.Index + matchGroup.Value.Length);
-                    PopulateMatchList(value, matchGroup.Index + matchGroup.Value.Length, matchList, regex);
-                }
-            }
         }
 
         private String GetA1Address(String r1c1Address)

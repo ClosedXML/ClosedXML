@@ -12,10 +12,10 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Blank.xlsx");
-            var ws = wb.Worksheets.Worksheet("Sheet1");
+            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Excel2003.xlsx");
+            //var ws = wb.Worksheets.Worksheet("Sheet1");
 
-            ws.Cell(1, 1).Value = "something";
+            //ws.Cell(1, 1).Value = "something";
             
             wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
             //Console.ReadKey();
