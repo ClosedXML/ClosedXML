@@ -918,6 +918,7 @@ namespace ClosedXML.Excel
             var allRows = rowsFromCells.ToList();
             allRows.AddRange(rowsFromCollection);
             var distinctRows = allRows.Distinct();
+
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
                 Row row = new Row() { RowIndex = (UInt32Value)(UInt32)distinctRow };

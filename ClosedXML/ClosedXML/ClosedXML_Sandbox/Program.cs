@@ -12,7 +12,7 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Excel2003.xlsx");
+            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\2007.xlsx");
             //var ws = wb.Worksheets.Worksheet("Sheet1");
 
             //ws.Cell(1, 1).Value = "something";

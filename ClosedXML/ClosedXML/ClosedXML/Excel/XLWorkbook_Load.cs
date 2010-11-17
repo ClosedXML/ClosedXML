@@ -222,9 +222,13 @@ namespace ClosedXML.Excel
                     if (printOptionsQuery.Count() > 1)
                     {
                         var printOptions = (PrintOptions)printOptionsQuery.First();
+                        if (printOptions.GridLines != null)
                         ws.PageSetup.ShowGridlines = printOptions.GridLines;
+                        if (printOptions.HorizontalCentered != null)
                         ws.PageSetup.CenterHorizontally = printOptions.HorizontalCentered;
+                        if (printOptions.VerticalCentered != null)
                         ws.PageSetup.CenterVertically = printOptions.VerticalCentered;
+                        if (printOptions.Headings != null)
                         ws.PageSetup.ShowRowAndColumnHeadings = printOptions.Headings;
                     }
 
@@ -232,11 +236,17 @@ namespace ClosedXML.Excel
                     if (pageMarginsQuery.Count() > 0)
                     {
                         var pageMargins = (PageMargins)pageMarginsQuery.First();
+                        if (pageMargins.Bottom != null)
                         ws.PageSetup.Margins.Bottom = pageMargins.Bottom;
+                        if (pageMargins.Footer != null)
                         ws.PageSetup.Margins.Footer = pageMargins.Footer;
+                        if (pageMargins.Header != null)
                         ws.PageSetup.Margins.Header = pageMargins.Header;
+                        if (pageMargins.Left != null)
                         ws.PageSetup.Margins.Left = pageMargins.Left;
+                        if (pageMargins.Right != null)
                         ws.PageSetup.Margins.Right = pageMargins.Right;
+                        if (pageMargins.Top != null)
                         ws.PageSetup.Margins.Top = pageMargins.Top;
                     }
 
@@ -244,20 +254,30 @@ namespace ClosedXML.Excel
                     if (pageSetupQuery.Count() > 0)
                     {
                         var pageSetup = (PageSetup)pageSetupQuery.First();
-                        ws.PageSetup.PaperSize = (XLPaperSize)Int32.Parse(pageSetup.PaperSize.InnerText);
+                        if (pageSetup.PaperSize !=null)
+                            ws.PageSetup.PaperSize = (XLPaperSize)Int32.Parse(pageSetup.PaperSize.InnerText);
                         if (pageSetup.Scale != null)
                         {
                             ws.PageSetup.Scale = Int32.Parse(pageSetup.Scale.InnerText);
                         }
                         else
                         {
-                            ws.PageSetup.FitToPages(Int32.Parse(pageSetup.FitToWidth.InnerText), Int32.Parse(pageSetup.FitToHeight.InnerText));
+                            if (pageSetup.FitToWidth != null)
+                                ws.PageSetup.PagesWide = Int32.Parse(pageSetup.FitToWidth.InnerText);
+                            if (pageSetup.FitToHeight != null)
+                                ws.PageSetup.PagesTall = Int32.Parse(pageSetup.FitToHeight.InnerText);
                         }
+                        if (pageSetup.PageOrder != null)
                         ws.PageSetup.PageOrder = pageOrderValues.Single(p => p.Value == pageSetup.PageOrder).Key;
+                        if (pageSetup.Orientation != null)
                         ws.PageSetup.PageOrientation = pageOrientationValues.Single(p => p.Value == pageSetup.Orientation).Key;
+                        if (pageSetup.BlackAndWhite != null)
                         ws.PageSetup.BlackAndWhite = pageSetup.BlackAndWhite;
+                        if (pageSetup.Draft != null)
                         ws.PageSetup.DraftQuality = pageSetup.Draft;
+                        if (pageSetup.CellComments != null)
                         ws.PageSetup.ShowComments = showCommentsValues.Single(sc => sc.Value == pageSetup.CellComments).Key;
+                        if (pageSetup.Errors != null)
                         ws.PageSetup.PrintErrorValue = printErrorValues.Single(p => p.Value == pageSetup.Errors).Key;
                         if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = Int32.Parse(pageSetup.HorizontalDpi.InnerText);
                         if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = Int32.Parse(pageSetup.VerticalDpi.InnerText);
@@ -268,7 +288,8 @@ namespace ClosedXML.Excel
                     if (headerFooters.Count() > 0)
                     {
                         var headerFooter = (HeaderFooter)headerFooters.First();
-                        ws.PageSetup.AlignHFWithMargins = headerFooter.AlignWithMargins;
+                        if (headerFooter.AlignWithMargins != null)
+                            ws.PageSetup.AlignHFWithMargins = headerFooter.AlignWithMargins;
 
                         // Footers
                         var xlFooter = (XLHeaderFooter)ws.PageSetup.Footer;
@@ -330,7 +351,8 @@ namespace ClosedXML.Excel
                         var columnBreaks = (ColumnBreaks)columnBreaksList.First();
                         foreach (var columnBreak in columnBreaks.Descendants<Break>())
                         {
-                            ws.PageSetup.ColumnBreaks.Add(Int32.Parse(columnBreak.Id.InnerText));
+                            if (columnBreak.Id != null)
+                                ws.PageSetup.ColumnBreaks.Add(Int32.Parse(columnBreak.Id.InnerText));
                         }
                     }
                 }
@@ -432,22 +454,24 @@ namespace ClosedXML.Excel
             var alignment = (Alignment)((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).Alignment;
             if (alignment != null)
             {
-                xlStylized.Style.Alignment.Horizontal = alignmentHorizontalValues.Single(a => a.Value == alignment.Horizontal).Key;
+                if (alignment.Horizontal != null)
+                    xlStylized.Style.Alignment.Horizontal = alignmentHorizontalValues.Single(a => a.Value == alignment.Horizontal).Key;
                 if (alignment.Indent != null)
                     xlStylized.Style.Alignment.Indent = Int32.Parse(alignment.Indent.ToString());
-                xlStylized.Style.Alignment.JustifyLastLine = alignment.JustifyLastLine;
+                if (alignment.JustifyLastLine != null)
+                    xlStylized.Style.Alignment.JustifyLastLine = alignment.JustifyLastLine;
                 if (alignment.ReadingOrder != null)
                     xlStylized.Style.Alignment.ReadingOrder = (XLAlignmentReadingOrderValues)Int32.Parse(alignment.ReadingOrder.ToString());
                 if (alignment.RelativeIndent != null)
                     xlStylized.Style.Alignment.RelativeIndent = alignment.RelativeIndent;
-
-                xlStylized.Style.Alignment.ShrinkToFit = alignment.ShrinkToFit;
+                if (alignment.ShrinkToFit != null)
+                    xlStylized.Style.Alignment.ShrinkToFit = alignment.ShrinkToFit;
                 if (alignment.TextRotation != null)
                     xlStylized.Style.Alignment.TextRotation = Int32.Parse(alignment.TextRotation.ToString());
                 if (alignment.Vertical != null)
                     xlStylized.Style.Alignment.Vertical = alignmentVerticalValues.Single(a => a.Value == alignment.Vertical).Key;
-
-                xlStylized.Style.Alignment.WrapText = alignment.WrapText;
+                if (alignment.WrapText !=null)
+                    xlStylized.Style.Alignment.WrapText = alignment.WrapText;
             }
 
             var borderId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).BorderId.Value;
@@ -530,12 +554,13 @@ namespace ClosedXML.Excel
                         xlStylized.Style.Font.FontSize = ((FontSize)font.FontSize).Val;
                 }
                 if (font.Italic != null && font.Italic.Val != null)
-                xlStylized.Style.Font.Italic = font.Italic.Val;
+                    xlStylized.Style.Font.Italic = font.Italic.Val;
                 if (font.Shadow != null && font.Shadow.Val != null)
-                xlStylized.Style.Font.Shadow = font.Shadow.Val;
+                    xlStylized.Style.Font.Shadow = font.Shadow.Val;
                 if (font.Strike != null && font.Strike.Val != null)
-                xlStylized.Style.Font.Strikethrough = font.Strike.Val;
-                xlStylized.Style.Font.Underline = font.Underline == null || ((Underline)font.Underline).Val == null ? XLWorkbook.DefaultStyle.Font.Underline : underlineValuesList.Single(u => u.Value == ((Underline)font.Underline).Val).Key;
+                    xlStylized.Style.Font.Strikethrough = font.Strike.Val;
+                if (font.Underline != null && ((Underline)font.Underline).Val == null)
+                    xlStylized.Style.Font.Underline = underlineValuesList.Single(u => u.Value == ((Underline)font.Underline).Val).Key;
                 if (font.VerticalTextAlignment != null && ((VerticalTextAlignment)font.VerticalTextAlignment).Val != null)
                     xlStylized.Style.Font.VerticalAlignment = fontVerticalTextAlignmentValues.Single(f => f.Value == ((VerticalTextAlignment)font.VerticalTextAlignment).Val).Key;
             }

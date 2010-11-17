@@ -222,20 +222,31 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return
-                LeftBorder.ToString() + "-" +
-                LeftBorderColor.ToString() + "-" +
-                RightBorder.ToString() + "-" +
-                RightBorderColor.ToString() + "-" +
-                TopBorder.ToString() + "-" +
-                TopBorderColor.ToString() + "-" +
-                BottomBorder.ToString() + "-" +
-                BottomBorderColor.ToString() + "-" +
-                DiagonalBorder.ToString() + "-" +
-                DiagonalBorderColor.ToString() + "-" +
-                DiagonalUp.ToString() + "-" +
-                DiagonalDown.ToString();
-
+            var sb = new StringBuilder();
+            sb.Append(LeftBorder.ToString());
+            sb.Append("-");
+            sb.Append(LeftBorderColor.ToString());
+            sb.Append("-");
+            sb.Append(RightBorder.ToString());
+            sb.Append("-");
+            sb.Append(RightBorderColor.ToString());
+            sb.Append("-");
+            sb.Append(TopBorder.ToString());
+            sb.Append("-");
+            sb.Append(TopBorderColor.ToString());
+            sb.Append("-");
+            sb.Append(BottomBorder.ToString());
+            sb.Append("-");
+            sb.Append(BottomBorderColor.ToString());
+            sb.Append("-");
+            sb.Append(DiagonalBorder.ToString());
+            sb.Append("-");
+            sb.Append(DiagonalBorderColor.ToString());
+            sb.Append("-");
+            sb.Append(DiagonalUp.ToString());
+            sb.Append("-");
+            sb.Append(DiagonalDown.ToString());
+            return sb.ToString();
         }
     }
 }

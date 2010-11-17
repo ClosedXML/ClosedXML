@@ -101,7 +101,13 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return BackgroundColor.ToString() + "-" + PatternType.ToString() + "-" + PatternColor.ToString();
+            var sb = new StringBuilder();
+            sb.Append(BackgroundColor.ToString());
+            sb.Append("-");
+            sb.Append(PatternType.ToString());
+            sb.Append("-");
+            sb.Append(PatternColor.ToString());
+            return sb.ToString();
         }
 
         #endregion

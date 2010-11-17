@@ -133,10 +133,26 @@ namespace ClosedXML.Excel
             var asRange = rangeObject as XLRangeBase;
             if (asRange != null)
             {
-                worksheet.Range(Address.RowNumber, Address.ColumnNumber, asRange.RowCount(), asRange.ColumnCount()).Clear();
-                for (var ro = 1; ro <= asRange.RowCount(); ro++)
+                Int32 maxRows;
+                Int32 maxColumns;
+                if (asRange is XLRow || asRange is XLColumn)
                 {
-                    for (var co = 1; co <= asRange.RowCount(); co++)
+                    var lastCellUsed = asRange.LastCellUsed();
+                    maxRows = lastCellUsed.Address.RowNumber;
+                    maxColumns = lastCellUsed.Address.ColumnNumber;
+                    //if (asRange is XLRow)
+                    //    worksheet.Range(Address.RowNumber, Address.ColumnNumber,  , maxColumns).Clear();
+                }
+                else
+                {
+                    maxRows = asRange.RowCount();
+                    maxColumns = asRange.ColumnCount();
+                    worksheet.Range(Address.RowNumber, Address.ColumnNumber, maxRows, maxColumns).Clear();
+                }
+                
+                for (var ro = 1; ro <= maxRows; ro++)
+                {
+                    for (var co = 1; co <= maxColumns; co++)
                     {
                         var sourceCell = asRange.Cell(ro, co);
                         var targetCell = worksheet.Cell(Address.RowNumber + ro - 1, Address.ColumnNumber + co - 1);

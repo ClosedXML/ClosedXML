@@ -55,12 +55,18 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return
-                "Font:" + Font.ToString()
-                + " Fill:" + Fill.ToString()
-                + " Border:" + Border.ToString()
-                + " NumberFormat: " + NumberFormat.ToString()
-                + " Alignment: " + Alignment.ToString();
+            var sb = new StringBuilder();
+            sb.Append("Font:");
+            sb.Append(Font.ToString());
+            sb.Append(" Fill:");
+            sb.Append(Fill.ToString());
+            sb.Append(" Border:");
+            sb.Append(Border.ToString());
+            sb.Append(" NumberFormat: ");
+            sb.Append(NumberFormat.ToString());
+            sb.Append(" Alignment: ");
+            sb.Append(Alignment.ToString());
+            return sb.ToString();
         }
 
     }

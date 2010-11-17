@@ -67,7 +67,7 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return numberFormatId.ToString() + "-" + format.ToString();
+            return numberFormatId.ToString() + "-" + format;
         }
 
         #endregion
