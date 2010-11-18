@@ -12,12 +12,22 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\2007.xlsx");
+            //while (true)
+            //{
+            //    var startTime = DateTime.Now;
+            //    var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\2007.xlsx");
+            //    var endTime = DateTime.Now;
+
+            //    Console.WriteLine("{0} secs.", (endTime - startTime).TotalSeconds);
+            //}
+            //Console.ReadKey();
+
+
             //var ws = wb.Worksheets.Worksheet("Sheet1");
 
             //ws.Cell(1, 1).Value = "something";
             
-            wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
+            //wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
             //Console.ReadKey();
         }
 

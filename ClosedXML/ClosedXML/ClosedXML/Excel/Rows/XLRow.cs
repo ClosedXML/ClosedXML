@@ -40,8 +40,15 @@ namespace ClosedXML.Excel
 
         private void SetRowNumber(Int32 row)
         {
-            RangeAddress.FirstAddress = new XLAddress(row, 1);
-            RangeAddress.LastAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns);
+            if (row <= 0)
+            {
+                RangeAddress.IsInvalid = false;
+            }
+            else
+            {
+                RangeAddress.FirstAddress = new XLAddress(row, 1);
+                RangeAddress.LastAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns);
+            }
         }
 
         public Boolean IsReference { get; private set; }

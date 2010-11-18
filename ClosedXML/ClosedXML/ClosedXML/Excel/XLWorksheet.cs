@@ -336,8 +336,15 @@ namespace ClosedXML.Excel
             else
             {
                 // This is a new row so we're going to reference all 
-                // cells in this row to preserve their formatting
-                this.Internals.ColumnsCollection.Keys.ForEach(c => Cell(row, c));
+                // cells in columns of this row to preserve their formatting
+                var distinctColumns = this.Internals.CellsCollection.Keys.Select(k=>k.ColumnNumber).Distinct().ToDictionary(r=>r, r=>0);
+
+                var usedColumns = from c in this.Internals.ColumnsCollection
+                                  join dc in distinctColumns
+                                    on c.Key equals dc.Key
+                                  select c.Key;
+                
+                usedColumns.ForEach(c => Cell(row, c));
                 styleToUse = this.Style;
                 this.Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, styleToUse, false)));
             }

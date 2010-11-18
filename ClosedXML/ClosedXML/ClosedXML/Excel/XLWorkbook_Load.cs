@@ -61,9 +61,47 @@ namespace ClosedXML.Excel
                 var s = (Stylesheet)workbookStylesPart.Stylesheet;
                 var numberingFormats = (NumberingFormats)s.NumberingFormats;
                 Fills fills = (Fills)s.Fills;
+                //var fillDictionary = new Dictionary<Int32, Fill>();
+                //for (var i = 0; i < fills.Count; i++)
+                //{
+                //    fillDictionary.Add(i, (Fill)fills.ElementAt(i));
+                //}
+                //var cellFormatToFill = new Dictionary<Int32, Fill>();
+                //for (var i = 0; i < s.CellFormats.Count; i++)
+                //{
+                //    var cellFormat = (CellFormat)s.CellFormats.ElementAt(i);
+                //    if (cellFormat.FillId.HasValue)
+                //        cellFormatToFill.Add(i, fillDictionary[(Int32)cellFormat.FillId.Value]);
+                //}
+
                 Borders borders = (Borders)s.Borders;
+                //var borderDictionary = new Dictionary<Int32, Border>();
+                //for (var i = 0; i < borders.Count; i++)
+                //{
+                //    borderDictionary.Add(i, (Border)borders.ElementAt(i));
+                //}
+                //var cellFormatToBorder = new Dictionary<Int32, Border>();
+                //for (var i = 0; i < s.CellFormats.Count; i++)
+                //{
+                //    var cellFormat = (CellFormat)s.CellFormats.ElementAt(i);
+                //    if (cellFormat.BorderId.HasValue)
+                //        cellFormatToBorder.Add(i, borderDictionary[(Int32)cellFormat.BorderId.Value]);
+                //}
+
                 Fonts fonts = (Fonts)s.Fonts;
-               
+                //var fontDictionary = new Dictionary<Int32, Font>();
+                //for (var i = 0; i < fonts.Count; i++)
+                //{
+                //    fontDictionary.Add(i, (Font)fonts.ElementAt(i));
+                //}
+                //var cellFormatToFont = new Dictionary<Int32, Font>();
+                //for (var i = 0; i < s.CellFormats.Count; i++)
+                //{
+                //    var cellFormat = (CellFormat)s.CellFormats.ElementAt(i);
+                //    if (cellFormat.FontId.HasValue)
+                //        cellFormatToFont.Add(i, fontDictionary[(Int32)cellFormat.FontId.Value]);
+                //}
+
                 var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
 
                 foreach (var sheet in sheets)
@@ -137,7 +175,7 @@ namespace ClosedXML.Excel
                     foreach (var row in worksheetPart.Worksheet.Descendants<Row>().Where(r=>r.CustomFormat != null && r.CustomFormat).Select(r=>r))
                     {
                         //var dRow = (Column)col;
-                        var xlRow = ws.Row(Int32.Parse(row.RowIndex.ToString()));
+                        var xlRow = ws.Row((Int32)row.RowIndex.Value);
                         if (row.Height != null)
                             xlRow.Height = row.Height;
                         else
@@ -168,7 +206,7 @@ namespace ClosedXML.Excel
                     {
                         var dCell = (Cell)cell;
                         Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : -1;
-                        var xlCell = ws.Cell(dCell.CellReference);
+                        var xlCell = ws.CellFast(dCell.CellReference);
                         if (styleIndex > 0)
                         {
                             styleIndex = Int32.Parse(dCell.StyleIndex.InnerText);
@@ -432,12 +470,31 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        private void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats )
+        //private Dictionary<Int32, Alignment> alignmentDictionary;
+        //private Dictionary<Int32, Alignment> GetAlignmentDictionary(Stylesheet s)
+        //{
+        //    if (alignmentDictionary == null)
+        //    {
+        //        alignmentDictionary = new Dictionary<int, Alignment>();
+        //        for (Int32 i = 0; i < s.CellFormats.Count; i++)
+        //        {
+        //            var alignment = ((CellFormat)s.CellFormats.ElementAt(i)).Alignment;
+        //            if (alignment != null)
+        //                alignmentDictionary.Add(i, alignment);
+        //        }
+        //    }
+        //    return alignmentDictionary;
+        //}
+
+        private void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats)
         {
+            //if (fills.ContainsKey(styleIndex))
+            //{
+            //    var fill = fills[styleIndex];
             var fillId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).FillId.Value;
             if (fillId > 0)
             {
-                var fill = (Fill)fills.ElementAt(Int32.Parse(fillId.ToString()));
+                var fill = (Fill)fills.ElementAt((Int32)fillId);
                 if (fill.PatternFill != null)
                 {
                     if (fill.PatternFill.PatternType != null)
@@ -451,6 +508,11 @@ namespace ClosedXML.Excel
                 }
             }
 
+            //var alignmentDictionary = GetAlignmentDictionary(s);
+
+            //if (alignmentDictionary.ContainsKey(styleIndex))
+            //{
+            //    var alignment = alignmentDictionary[styleIndex];
             var alignment = (Alignment)((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).Alignment;
             if (alignment != null)
             {
@@ -467,15 +529,19 @@ namespace ClosedXML.Excel
                 if (alignment.ShrinkToFit != null)
                     xlStylized.Style.Alignment.ShrinkToFit = alignment.ShrinkToFit;
                 if (alignment.TextRotation != null)
-                    xlStylized.Style.Alignment.TextRotation = Int32.Parse(alignment.TextRotation.ToString());
+                    xlStylized.Style.Alignment.TextRotation = (Int32)alignment.TextRotation.Value;
                 if (alignment.Vertical != null)
                     xlStylized.Style.Alignment.Vertical = alignmentVerticalValues.Single(a => a.Value == alignment.Vertical).Key;
                 if (alignment.WrapText !=null)
                     xlStylized.Style.Alignment.WrapText = alignment.WrapText;
             }
 
+
+            //if (borders.ContainsKey(styleIndex))
+            //{
+            //    var border = borders[styleIndex];
             var borderId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).BorderId.Value;
-            var border = (Border)borders.ElementAt(Int32.Parse(borderId.ToString()));
+            var border = (Border)borders.ElementAt((Int32)borderId);
             if (border != null)
             {
                 var bottomBorder = (BottomBorder)border.BottomBorder;
@@ -530,12 +596,14 @@ namespace ClosedXML.Excel
                 }
             }
 
+            //if (fonts.ContainsKey(styleIndex))
+            //{
+            //    var font = fonts[styleIndex];
             var fontId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).FontId;
-            var font = (Font)fonts.ElementAt(Int32.Parse(fontId.ToString()));
+            var font = (Font)fonts.ElementAt((Int32)fontId.Value);
             if (font != null)
             {
-                if (font.Bold != null && font.Bold.Val != null)
-                    xlStylized.Style.Font.Bold = font.Bold.Val;
+                xlStylized.Style.Font.Bold = GetBoolean(font.Bold);
 
                 var fontColor = GetColor(font.Color);
                 if (fontColor != null)
@@ -553,13 +621,11 @@ namespace ClosedXML.Excel
                     if (((FontSize)font.FontSize).Val != null)
                         xlStylized.Style.Font.FontSize = ((FontSize)font.FontSize).Val;
                 }
-                if (font.Italic != null && font.Italic.Val != null)
-                    xlStylized.Style.Font.Italic = font.Italic.Val;
-                if (font.Shadow != null && font.Shadow.Val != null)
-                    xlStylized.Style.Font.Shadow = font.Shadow.Val;
-                if (font.Strike != null && font.Strike.Val != null)
-                    xlStylized.Style.Font.Strikethrough = font.Strike.Val;
-                if (font.Underline != null && ((Underline)font.Underline).Val == null)
+
+                xlStylized.Style.Font.Italic = GetBoolean(font.Italic);
+                xlStylized.Style.Font.Shadow = GetBoolean(font.Shadow);
+                xlStylized.Style.Font.Strikethrough = GetBoolean(font.Strike);
+                if (font.Underline != null && ((Underline)font.Underline).Val != null)
                     xlStylized.Style.Font.Underline = underlineValuesList.Single(u => u.Value == ((Underline)font.Underline).Val).Key;
                 if (font.VerticalTextAlignment != null && ((VerticalTextAlignment)font.VerticalTextAlignment).Val != null)
                     xlStylized.Style.Font.VerticalAlignment = fontVerticalTextAlignmentValues.Single(f => f.Value == ((VerticalTextAlignment)font.VerticalTextAlignment).Val).Key;
@@ -584,10 +650,26 @@ namespace ClosedXML.Excel
                     if (formatCode.Length > 0)
                         xlStylized.Style.NumberFormat.Format = formatCode;
                     else
-                        xlStylized.Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
+                        xlStylized.Style.NumberFormat.NumberFormatId = (Int32)numberFormatId.Value;
                 }
             }
         }
+
+        private Boolean GetBoolean(BooleanPropertyType property)
+        {
+            if (property != null)
+            {
+                if (property.Val != null)
+                    return property.Val;
+                else
+                    return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         private static Dictionary<Int32, String> indexedColorList;
         private static Dictionary<Int32, String> GetIndexedColors()

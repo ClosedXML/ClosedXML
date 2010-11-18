@@ -35,8 +35,15 @@ namespace ClosedXML.Excel
 
         private void SetColumnNumber(Int32 column)
         {
-            RangeAddress.FirstAddress = new XLAddress(1, column);
-            RangeAddress.LastAddress = new XLAddress(XLWorksheet.MaxNumberOfRows, column);
+            if (column <= 0)
+            {
+                RangeAddress.IsInvalid = false;
+            }
+            else
+            {
+                RangeAddress.FirstAddress = new XLAddress(1, column);
+                RangeAddress.LastAddress = new XLAddress(XLWorksheet.MaxNumberOfRows, column);
+            }
         }
 
         public Boolean IsReference { get; private set; }

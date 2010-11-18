@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
         {
             this.rowNumber = rowNumber;
             this.columnNumber = columnNumber;
-            this.columnLetter = GetColumnLetterFromNumber(columnNumber);
+            this.columnLetter = null;
             fixedColumn = false;
             fixedRow = false;
         }
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
         public XLAddress(Int32 rowNumber, String columnLetter)
         {
             this.rowNumber = rowNumber;
-            this.columnNumber = GetColumnNumberFromLetter(columnLetter);
+            this.columnNumber = 0;
             this.columnLetter = columnLetter;
             fixedColumn = false;
             fixedRow = false;
@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
             columnLetter = m.Groups[1].Value.Replace("$", "");
             fixedRow = m.Groups[1].Value.StartsWith("$");
             rowNumber = Int32.Parse(m.Groups[2].Value.Replace("$", ""));
-            columnNumber = GetColumnNumberFromLetter(columnLetter);
+            columnNumber = 0;
         }
 
         #endregion
@@ -157,7 +157,13 @@ namespace ClosedXML.Excel
         /// </summary>
         public Int32 ColumnNumber
         {
-            get { return columnNumber; }
+            get 
+            {
+                if (columnNumber == 0)
+                    columnNumber = GetColumnNumberFromLetter(columnLetter);
+
+                return columnNumber; 
+            }
             private set { columnNumber = value; }
         }
 
@@ -167,7 +173,13 @@ namespace ClosedXML.Excel
         /// </summary>
         public String ColumnLetter
         {
-            get { return columnLetter; }
+            get 
+            { 
+                if (columnLetter == null)
+                    columnLetter = GetColumnLetterFromNumber(columnNumber);
+
+                return columnLetter; 
+            }
             private set { columnLetter = value; }
         }
 
@@ -177,10 +189,10 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             var sb = new StringBuilder();
-            if (fixedColumn) sb.Append("$");
-            sb.Append(this.columnLetter);
-            if (fixedRow) sb.Append("$");
-            sb.Append(this.rowNumber.ToString());
+            if (FixedColumn) sb.Append("$");
+            sb.Append(ColumnLetter);
+            if (FixedRow) sb.Append("$");
+            sb.Append(RowNumber.ToString());
             return sb.ToString();
         }
         #endregion
