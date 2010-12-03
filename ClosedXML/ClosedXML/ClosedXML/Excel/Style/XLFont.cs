@@ -11,24 +11,11 @@ namespace ClosedXML.Excel
     {
         IXLStylized container;
         public XLFont()
+            : this(null, XLWorkbook.DefaultStyle.Font)
         {
-            IXLFont defaultFont = XLWorkbook.DefaultStyle.Font;
 
-            if (defaultFont != null)
-            {
-                bold = defaultFont.Bold;
-                italic = defaultFont.Italic;
-                underline = defaultFont.Underline;
-                strikethrough = defaultFont.Strikethrough;
-                verticalAlignment = defaultFont.VerticalAlignment;
-                shadow = defaultFont.Shadow;
-                fontSize = defaultFont.FontSize;
-                fontColor = defaultFont.FontColor;
-                fontName = defaultFont.FontName;
-                fontFamilyNumbering = defaultFont.FontFamilyNumbering;
-            }
         }
-        public XLFont(IXLStylized container, IXLFont defaultFont = null)
+        public XLFont(IXLStylized container, IXLFont defaultFont)
         {
             this.container = container;
             if (defaultFont != null)

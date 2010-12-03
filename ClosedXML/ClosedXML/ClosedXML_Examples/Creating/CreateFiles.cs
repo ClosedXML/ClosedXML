@@ -57,6 +57,7 @@ namespace ClosedXML_Examples
             new Collections().Create(@"C:\Excel Files\Created\Collections.xlsx");
             new NamedRanges().Create(@"C:\Excel Files\Created\NamedRanges.xlsx");
             new CopyingRanges().Create();
+            new BlankCells().Create(@"C:\Excel Files\Created\BlankCells.xlsx");
         }
     }
 }

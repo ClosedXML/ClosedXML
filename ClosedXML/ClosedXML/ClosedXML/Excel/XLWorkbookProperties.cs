@@ -7,6 +7,11 @@ namespace ClosedXML.Excel
 {
     public class XLWorkbookProperties
     {
+        public XLWorkbookProperties()
+        { 
+            Company = null;
+            Manager = null;
+        }
         public String Author { get; set; }
         public String Title { get; set; }
         public String Subject { get; set; }

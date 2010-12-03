@@ -19,11 +19,11 @@ namespace ClosedXML.Excel
             }
             else
             {
-                Font = new XLFont(container);
+                Font = new XLFont(container, null);
                 Alignment = new XLAlignment(container);
-                Border = new XLBorder(container);
+                Border = new XLBorder(container, null);
                 Fill = new XLFill(container);
-                NumberFormat = new XLNumberFormat(container);
+                NumberFormat = new XLNumberFormat(container, null);
             }
 
             DateFormat = NumberFormat;

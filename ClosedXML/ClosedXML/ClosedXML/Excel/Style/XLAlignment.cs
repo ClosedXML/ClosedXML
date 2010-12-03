@@ -8,6 +8,9 @@ namespace ClosedXML.Excel
     internal class XLAlignment : IXLAlignment
     {
         IXLStylized container;
+
+        public XLAlignment() : this(null, XLWorkbook.DefaultStyle.Alignment) { }
+
         public XLAlignment(IXLStylized container, IXLAlignment d = null)
         {
             this.container = container;

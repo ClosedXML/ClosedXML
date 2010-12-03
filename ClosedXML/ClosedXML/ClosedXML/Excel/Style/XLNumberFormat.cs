@@ -51,7 +51,13 @@ namespace ClosedXML.Excel
 
         #region Constructors
 
-        public XLNumberFormat(IXLStylized container, IXLNumberFormat defaultNumberFormat = null)
+        public XLNumberFormat()
+            : this(null, XLWorkbook.DefaultStyle.NumberFormat)
+        {
+        }
+
+
+        public XLNumberFormat(IXLStylized container, IXLNumberFormat defaultNumberFormat)
         {
             this.container = container;
             if (defaultNumberFormat != null)

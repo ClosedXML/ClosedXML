@@ -29,7 +29,7 @@ namespace ClosedXML.Excel
             NamedRanges = new XLNamedRanges(workbook);
             this.workbook = workbook;
             Style = workbook.Style;
-            Internals = new XLWorksheetInternals(new Dictionary<IXLAddress, XLCell>(), new XLColumnsCollection(), new XLRowsCollection(), new List<String>(), workbook);
+            Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new List<String>(), workbook);
             PageSetup = new XLPageSetup(workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
             ColumnWidth = workbook.ColumnWidth;
@@ -151,6 +151,7 @@ namespace ClosedXML.Excel
         public Double RowHeight { get; set; }
 
         public String Name { get; set; }
+        public Int32 SheetId { get; set; }
 
         public IXLPageSetup PageSetup { get; private set; }
         public IXLOutline Outline { get; private set; }

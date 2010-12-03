@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     internal interface IXLWorksheetInternals
     {
-        Dictionary<IXLAddress, XLCell> CellsCollection { get; }
+        XLCellCollection CellsCollection { get; }
         XLColumnsCollection ColumnsCollection { get; }
         XLRowsCollection RowsCollection { get; }
         List<String> MergedCells { get; }

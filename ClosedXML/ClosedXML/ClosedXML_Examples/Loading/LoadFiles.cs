@@ -21,17 +21,7 @@ namespace ClosedXML_Examples
                 LoadAndSaveFile(forLoadingFolder + @"\" + fileName, forSavingFolder + @"\" + fileName);
             }
 
-            //LoadAndSaveFile(forLoadingFolder + @"\StyleWorksheet.xlsx", forSavingFolder + @"\StyleWorksheet.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "DataTypes.xlsx", forSavingFolder + "DataTypes.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "MultipleSheets.xlsx", forSavingFolder + "MultipleSheets.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "styleNumberFormat.xlsx", forSavingFolder + "styleNumberFormat.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "styleFill.xlsx", forSavingFolder + "styleFill.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "styleAlignment.xlsx", forSavingFolder + "styleAlignment.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "styleBorder.xlsx", forSavingFolder + "styleBorder.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "styleFont.xlsx", forSavingFolder + "styleFont.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "MergedCells.xlsx", forSavingFolder + "MergedCells.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "ColumnSettings.xlsx", forSavingFolder + "ColumnSettings.xlsx");
-            //LoadAndSaveFile(forLoadingFolder + "RowSettings.xlsx", forSavingFolder + "RowSettings.xlsx");
+            //LoadAndSaveFile(forLoadingFolder + @"\BasicTable.xlsx", forSavingFolder + @"\BasicTable.xlsx");
         }
 
         private static void LoadAndSaveFile(String input, String output)

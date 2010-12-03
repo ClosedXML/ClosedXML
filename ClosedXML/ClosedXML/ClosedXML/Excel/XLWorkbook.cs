@@ -29,8 +29,10 @@ namespace ClosedXML.Excel
             ReferenceStyle = XLReferenceStyle.Default;
         }
 
+        private String originalFile;
         public XLWorkbook(String file): this()
         {
+            originalFile = file;
             Load(file);
         }
 
@@ -49,12 +51,32 @@ namespace ClosedXML.Excel
         /// </summary>
         public String FullName { get; private set; }
 
-        public void SaveAs(String file, Boolean overwrite = false)
+        public void Save()
         {
-            if (overwrite && File.Exists(file)) File.Delete(file);
+            if (originalFile == null)
+                throw new Exception("This is a new file, please use one of the following methods: SaveAs, MergeInto, or SaveChangesTo");
 
-            // For maintainability reasons the XLWorkbook class was divided into two files.
-            // The method CreatePackage can be located in the file XLWorkbook_Save.cs   
+            MergeInto(originalFile);
+        }
+
+        public void SaveAs(String file)
+        {
+            if (originalFile == null)
+                File.Delete(file);
+            else if (originalFile.Trim().ToLower() != file.Trim().ToLower())
+                File.Copy(originalFile, file, true);
+
+            CreatePackage(file);
+        }
+
+        public void MergeInto(String file)
+        {
+            CreatePackage(file);
+        }
+
+        public void SaveChangesTo(String file)
+        {
+            if (File.Exists(file)) File.Delete(file);
             CreatePackage(file);
         }
 
@@ -97,7 +119,7 @@ namespace ClosedXML.Excel
                        PatternColor = Color.FromArgb(255, 255, 255)
                    },
 
-                    Border = new XLBorder(null)
+                    Border = new XLBorder(null, null)
                         {
                             BottomBorder = XLBorderStyleValues.None,
                             DiagonalBorder = XLBorderStyleValues.None,
@@ -112,7 +134,7 @@ namespace ClosedXML.Excel
                             RightBorderColor = Color.Black,
                             TopBorderColor = Color.Black
                         },
-                    NumberFormat = new XLNumberFormat(null) { NumberFormatId = 0 },
+                    NumberFormat = new XLNumberFormat(null, null) { NumberFormatId = 0 },
                     Alignment = new XLAlignment(null)
                         {
                             Horizontal = XLAlignmentHorizontalValues.General,

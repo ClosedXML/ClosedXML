@@ -122,6 +122,7 @@ namespace ClosedXML.Excel
             }
             set
             {
+                FormulaA1 = String.Empty;
                 if (!SetEnumerable(value))
                     if (!SetRange(value))
                         SetValue(value);

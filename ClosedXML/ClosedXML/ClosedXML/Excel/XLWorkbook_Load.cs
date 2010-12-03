@@ -61,52 +61,16 @@ namespace ClosedXML.Excel
                 var s = (Stylesheet)workbookStylesPart.Stylesheet;
                 var numberingFormats = (NumberingFormats)s.NumberingFormats;
                 Fills fills = (Fills)s.Fills;
-                //var fillDictionary = new Dictionary<Int32, Fill>();
-                //for (var i = 0; i < fills.Count; i++)
-                //{
-                //    fillDictionary.Add(i, (Fill)fills.ElementAt(i));
-                //}
-                //var cellFormatToFill = new Dictionary<Int32, Fill>();
-                //for (var i = 0; i < s.CellFormats.Count; i++)
-                //{
-                //    var cellFormat = (CellFormat)s.CellFormats.ElementAt(i);
-                //    if (cellFormat.FillId.HasValue)
-                //        cellFormatToFill.Add(i, fillDictionary[(Int32)cellFormat.FillId.Value]);
-                //}
-
                 Borders borders = (Borders)s.Borders;
-                //var borderDictionary = new Dictionary<Int32, Border>();
-                //for (var i = 0; i < borders.Count; i++)
-                //{
-                //    borderDictionary.Add(i, (Border)borders.ElementAt(i));
-                //}
-                //var cellFormatToBorder = new Dictionary<Int32, Border>();
-                //for (var i = 0; i < s.CellFormats.Count; i++)
-                //{
-                //    var cellFormat = (CellFormat)s.CellFormats.ElementAt(i);
-                //    if (cellFormat.BorderId.HasValue)
-                //        cellFormatToBorder.Add(i, borderDictionary[(Int32)cellFormat.BorderId.Value]);
-                //}
-
                 Fonts fonts = (Fonts)s.Fonts;
-                //var fontDictionary = new Dictionary<Int32, Font>();
-                //for (var i = 0; i < fonts.Count; i++)
-                //{
-                //    fontDictionary.Add(i, (Font)fonts.ElementAt(i));
-                //}
-                //var cellFormatToFont = new Dictionary<Int32, Font>();
-                //for (var i = 0; i < s.CellFormats.Count; i++)
-                //{
-                //    var cellFormat = (CellFormat)s.CellFormats.ElementAt(i);
-                //    if (cellFormat.FontId.HasValue)
-                //        cellFormatToFont.Add(i, fontDictionary[(Int32)cellFormat.FontId.Value]);
-                //}
 
                 var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
 
                 foreach (var sheet in sheets)
                 {
-                    var dSheet = ((Sheet)sheet);
+                    var sharedFormulas = new Dictionary<UInt32, CellFormula>();
+
+                    Sheet dSheet = ((Sheet)sheet);
                     WorksheetPart worksheetPart = (WorksheetPart)dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id);
                     
                     var sheetName = dSheet.Name;
@@ -201,15 +165,20 @@ namespace ClosedXML.Excel
                         }
                     }
 
-
+                    foreach (var cell in worksheetPart.Worksheet.Descendants<Cell>()
+                        .Where(c=>c.CellFormula != null && c.CellFormula.SharedIndex != null && c.CellFormula.Reference != null)
+                        .Select(c=>c))
+                    {
+                        sharedFormulas.Add(cell.CellFormula.SharedIndex.Value, cell.CellFormula);
+                    }
                     foreach (var cell in worksheetPart.Worksheet.Descendants<Cell>())
                     {
                         var dCell = (Cell)cell;
-                        Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : -1;
+                        Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : 0;
                         var xlCell = ws.CellFast(dCell.CellReference);
                         if (styleIndex > 0)
                         {
-                            styleIndex = Int32.Parse(dCell.StyleIndex.InnerText);
+                            //styleIndex = Int32.Parse(dCell.StyleIndex.InnerText);
                             ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
                         }
                         else
@@ -219,17 +188,27 @@ namespace ClosedXML.Excel
 
                         if(dCell.CellFormula != null)
                         {
-                            xlCell.FormulaA1 = dCell.CellFormula.Text;
+                            if (dCell.CellFormula.SharedIndex != null)
+                                xlCell.FormulaA1 = sharedFormulas[dCell.CellFormula.SharedIndex.Value].Text;
+                            else
+                                xlCell.FormulaA1 = dCell.CellFormula.Text;
                         }
                         else if (dCell.DataType != null)
                         {
                             if (dCell.DataType == CellValues.SharedString)
                             {
                                 xlCell.DataType = XLCellValues.Text;
-                                if (!String.IsNullOrWhiteSpace(dCell.CellValue.Text))
-                                    xlCell.Value = sharedStrings[Int32.Parse(dCell.CellValue.Text)].InnerText;
+                                if (dCell.CellValue != null)
+                                {
+                                    if (!String.IsNullOrWhiteSpace(dCell.CellValue.Text))
+                                        xlCell.Value = sharedStrings[Int32.Parse(dCell.CellValue.Text)].InnerText;
+                                    else
+                                        xlCell.Value = dCell.CellValue.Text;
+                                }
                                 else
-                                    xlCell.Value = dCell.CellValue.Text;
+                                {
+                                    xlCell.Value = String.Empty;
+                                }
                             }
                             else if (dCell.DataType == CellValues.Date)
                             {
@@ -447,7 +426,7 @@ namespace ClosedXML.Excel
             Properties.Author = p.Creator;
             Properties.Category = p.Category;
             Properties.Comments = p.Description;
-            if (p.Created.HasValue)
+            if (p.Created != null)
                 Properties.Created = p.Created.Value;
             Properties.Keywords = p.Keywords;
             Properties.LastModifiedBy = p.LastModifiedBy;

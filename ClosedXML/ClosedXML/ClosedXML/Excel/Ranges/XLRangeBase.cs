@@ -31,12 +31,16 @@ namespace ClosedXML.Excel
             if (ignoreStyle)
                 cellsUsed = cellsUsed.Where(c => c.GetString().Length != 0);
 
-            var cellsUsedFiltered = cellsUsed.Where(cell => cell.Address == cellsUsed.Min(c => c.Address));
-            
-            if (cellsUsedFiltered.Count() > 0)
-                return cellsUsedFiltered.Single();
-            else
+            if (cellsUsed.Count() == 0)
+            {
                 return null;
+            }
+            else
+            {
+                var firstRow = cellsUsed.Min(c => c.Address.RowNumber);
+                var firstColumn = cellsUsed.Min(c => c.Address.ColumnNumber);
+                return Worksheet.Cell(firstRow, firstColumn);
+            }
         }
 
         public IXLCell LastCellUsed(Boolean ignoreStyle = true) 
@@ -45,11 +49,16 @@ namespace ClosedXML.Excel
             if (ignoreStyle)
                 cellsUsed = cellsUsed.Where(c => c.GetString().Length != 0);
 
-            var cellsUsedFiltered = cellsUsed.Where(cell => cell.Address == cellsUsed.Max(c => c.Address));
-            if (cellsUsedFiltered.Count() > 0)
-                return cellsUsedFiltered.Single();
-            else
+            if (cellsUsed.Count() == 0)
+            {
                 return null;
+            }
+            else
+            {
+                var lastRow = cellsUsed.Max(c => c.Address.RowNumber);
+                var lastColumn = cellsUsed.Max(c => c.Address.ColumnNumber);
+                return Worksheet.Cell(lastRow, lastColumn);
+            }
         }
         
         public IXLCell Cell(Int32 row, Int32 column)

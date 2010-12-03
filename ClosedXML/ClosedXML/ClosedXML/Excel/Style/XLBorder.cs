@@ -8,7 +8,10 @@ namespace ClosedXML.Excel
     internal class XLBorder : IXLBorder
     {
         IXLStylized container;
-        public XLBorder(IXLStylized container, IXLBorder defaultBorder = null)
+
+        public XLBorder() : this(null, XLWorkbook.DefaultStyle.Border) { }
+
+        public XLBorder(IXLStylized container, IXLBorder defaultBorder)
         {
             this.container = container;
             if (defaultBorder != null)

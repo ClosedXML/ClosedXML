@@ -83,6 +83,10 @@ namespace ClosedXML.Excel
 
         #region Constructors
 
+        public XLFill(): this(null, XLWorkbook.DefaultStyle.Fill)
+        {          
+        }
+
         IXLStylized container;
         public XLFill(IXLStylized container, IXLFill defaultFill = null)
         {
