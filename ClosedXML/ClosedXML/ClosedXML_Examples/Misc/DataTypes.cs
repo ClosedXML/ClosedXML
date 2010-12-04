@@ -58,11 +58,17 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(++ro, co).Value = "Plain Date:";
             ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2);
 
+            ws.Cell(++ro, co).Value = "Plain DateTime:";
+            ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2, 13, 45, 22);
+
             ws.Cell(++ro, co).Value = "Plain Boolean:";
             ws.Cell(ro, co + 1).Value = true;
 
             ws.Cell(++ro, co).Value = "Plain Number:";
             ws.Cell(ro, co + 1).Value = 123.45;
+
+            ws.Cell(++ro, co).Value = "TimeSpan:";
+            ws.Cell(ro, co + 1).Value = new TimeSpan(33, 45, 22);
 
             ro++;
 
@@ -72,11 +78,17 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(++ro, co).Value = "Date as Text:";
             ws.Cell(ro, co + 1).Value = "'" + new DateTime(2010, 9, 2).ToString();
 
+            ws.Cell(++ro, co).Value = "DateTime as Text:";
+            ws.Cell(ro, co + 1).Value = "'" + new DateTime(2010, 9, 2, 13, 45, 22).ToString();
+
             ws.Cell(++ro, co).Value = "Boolean as Text:";
             ws.Cell(ro, co + 1).Value = "'" + true.ToString();
 
             ws.Cell(++ro, co).Value = "Number as Text:";
             ws.Cell(ro, co + 1).Value = "'123.45";
+
+            ws.Cell(++ro, co).Value = "TimeSpan as Text:";
+            ws.Cell(ro, co + 1).Value = "'" + new TimeSpan(33, 45, 22).ToString();
 
             ro++;
 
@@ -88,6 +100,10 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2);
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
+            ws.Cell(++ro, co).Value = "DateTime to Text:";
+            ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2, 13, 45, 22);
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+
             ws.Cell(++ro, co).Value = "Boolean to Text:";
             ws.Cell(ro, co + 1).Value = true;
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
@@ -96,8 +112,16 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(ro, co + 1).Value = 123.45;
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
 
+            ws.Cell(++ro, co).Value = "TimeSpan to Text:";
+            ws.Cell(ro, co + 1).Value = new TimeSpan(33, 45, 22);
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+
             ws.Cell(++ro, co).Value = "Text to Date:";
             ws.Cell(ro, co + 1).Value = "'" + new DateTime(2010, 9, 2).ToString();
+            ws.Cell(ro, co + 1).DataType = XLCellValues.DateTime;
+
+            ws.Cell(++ro, co).Value = "Text to DateTime:";
+            ws.Cell(ro, co + 1).Value = "'" + new DateTime(2010, 9, 2, 13, 45, 22).ToString();
             ws.Cell(ro, co + 1).DataType = XLCellValues.DateTime;
 
             ws.Cell(++ro, co).Value = "Text to Boolean:";
@@ -106,6 +130,10 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(++ro, co).Value = "Text to Number:";
             ws.Cell(ro, co + 1).Value = "'123.45";
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Number;
+
+            ws.Cell(++ro, co).Value = "Text to TimeSpan:";
+            ws.Cell(ro, co + 1).Value = "'" + new TimeSpan(33, 45, 22).ToString();
             ws.Cell(ro, co + 1).DataType = XLCellValues.Number;
 
             ro++;

@@ -12,6 +12,8 @@ namespace ClosedXML.Excel
     public enum XLReferenceStyle { R1C1, A1, Default };
     public partial class XLWorkbook
     {
+        private enum XLLoadSource { New, File, Stream };
+        private XLLoadSource loadSource = XLLoadSource.New;
         public XLWorkbook()
         {
             DefaultRowHeight = 15;
@@ -32,8 +34,16 @@ namespace ClosedXML.Excel
         private String originalFile;
         public XLWorkbook(String file): this()
         {
+            loadSource = XLLoadSource.File;
             originalFile = file;
             Load(file);
+        }
+
+        public XLWorkbook(Stream stream)
+            : this()
+        {
+            loadSource = XLLoadSource.Stream;
+            Load(stream);
         }
 
         #region IXLWorkbook Members
@@ -53,10 +63,12 @@ namespace ClosedXML.Excel
 
         public void Save()
         {
-            if (originalFile == null)
-                throw new Exception("This is a new file, please use one of the following methods: SaveAs, MergeInto, or SaveChangesTo");
-
-            MergeInto(originalFile);
+            if (loadSource == XLLoadSource.New)
+                throw new Exception("This is a new file, please use one of the SaveAs method.");
+            else if (loadSource == XLLoadSource.Stream)
+                throw new Exception("The file was loaded from a stream, please use one of the SaveAs method.");
+            else
+                CreatePackage(originalFile);
         }
 
         public void SaveAs(String file)
@@ -69,15 +81,9 @@ namespace ClosedXML.Excel
             CreatePackage(file);
         }
 
-        public void MergeInto(String file)
+        public void SaveAs(Stream stream)
         {
-            CreatePackage(file);
-        }
-
-        public void SaveChangesTo(String file)
-        {
-            if (File.Exists(file)) File.Delete(file);
-            CreatePackage(file);
+            CreatePackage(stream);
         }
 
         public IXLStyle Style { get; set; }

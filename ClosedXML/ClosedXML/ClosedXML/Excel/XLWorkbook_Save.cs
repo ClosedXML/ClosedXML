@@ -240,7 +240,7 @@ namespace ClosedXML.Excel
             alignmentReadingOrderValues.Add(new KeyValuePair<XLAlignmentReadingOrderValues, uint>(XLAlignmentReadingOrderValues.LeftToRight, 1));
             alignmentReadingOrderValues.Add(new KeyValuePair<XLAlignmentReadingOrderValues, uint>(XLAlignmentReadingOrderValues.RightToLeft, 2));
         }
-        // Creates a SpreadsheetDocument.
+        
         private void CreatePackage(String filePath)
         {
             SpreadsheetDocument package;
@@ -249,6 +249,15 @@ namespace ClosedXML.Excel
             else
                 package = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook);
 
+            using (package)
+            {
+                CreateParts(package);
+            }
+        }
+
+        private void CreatePackage(Stream stream)
+        {
+            SpreadsheetDocument package = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook);
             using (package)
             {
                 CreateParts(package);
@@ -1640,7 +1649,15 @@ namespace ClosedXML.Excel
                         }
                         else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
                         {
-                            cellValue.Text = Double.Parse(opCell.Value.InnerText).ToString(CultureInfo.InvariantCulture);
+                            TimeSpan timeSpan;
+                            if (TimeSpan.TryParse(opCell.Value.InnerText, out timeSpan))
+                            {
+                                cellValue.Text = XLCell.baseDate.Add(timeSpan).ToOADate().ToString(CultureInfo.InvariantCulture);
+                            }
+                            else
+                            {
+                                cellValue.Text = Double.Parse(opCell.Value.InnerText).ToString(CultureInfo.InvariantCulture);
+                            }
                             cell.CellValue = cellValue;
                         }
                         else
