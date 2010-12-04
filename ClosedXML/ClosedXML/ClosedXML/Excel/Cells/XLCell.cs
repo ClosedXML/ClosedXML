@@ -47,6 +47,10 @@ namespace ClosedXML.Excel
         {
             return GetValue<DateTime>();
         }
+        public TimeSpan GetTimeSpan()
+        {
+            return GetValue<TimeSpan>();
+        }
         public String GetFormattedString()
         {
             if (dataType == XLCellValues.Boolean)
