@@ -1708,15 +1708,11 @@ namespace ClosedXML.Excel
             }
             #endregion
 
+            var hyperlinks = worksheetPart.Worksheet.Elements<Hyperlinks>().FirstOrDefault();
+
             #region PrintOptions
             PrintOptions printOptions = null;
-            if (xlWorksheet.Internals.CellsCollection.Count == 0 
-                //|| !(
-                //   xlWorksheet.PageSetup.CenterHorizontally
-                //|| xlWorksheet.PageSetup.CenterVertically
-                //|| xlWorksheet.PageSetup.ShowRowAndColumnHeadings
-                //|| xlWorksheet.PageSetup.ShowGridlines)
-                )
+            if (xlWorksheet.Internals.CellsCollection.Count == 0)
             {
                 worksheetPart.Worksheet.RemoveAllChildren<PrintOptions>();
             }
@@ -1725,7 +1721,9 @@ namespace ClosedXML.Excel
                 if (worksheetPart.Worksheet.Elements<PrintOptions>().Count() == 0)
                 {
                     OpenXmlElement previousElement;
-                    if (mergeCells != null)
+                    if (hyperlinks != null)
+                        previousElement = hyperlinks;
+                    else if (mergeCells != null)
                         previousElement = mergeCells;
                     else if (phoneticProperties != null)
                         previousElement = phoneticProperties;
@@ -1754,6 +1752,8 @@ namespace ClosedXML.Excel
                 OpenXmlElement previousElement;
                 if (printOptions != null)
                     previousElement = printOptions;
+                else if (hyperlinks != null)
+                    previousElement = hyperlinks;
                 else if (mergeCells != null)
                     previousElement = mergeCells;
                 else if (phoneticProperties != null)
