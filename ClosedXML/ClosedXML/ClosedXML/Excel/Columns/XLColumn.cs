@@ -307,20 +307,31 @@ namespace ClosedXML.Excel
                 }
             }
         }
-
-        public void Group(Boolean collapse = false)
+        public void Group()
+        {
+            Group(false);
+        }
+        public void Group(Boolean collapse)
         {
             if (OutlineLevel < 8)
                 OutlineLevel += 1;
 
             Collapsed = collapse;
         }
-        public void Group(Int32 outlineLevel, Boolean collapse = false)
+        public void Group(Int32 outlineLevel)
+        {
+            Group(outlineLevel, false);
+        }
+        public void Group(Int32 outlineLevel, Boolean collapse)
         {
             OutlineLevel = outlineLevel;
             Collapsed = collapse;
         }
-        public void Ungroup(Boolean ungroupFromAll = false)
+        public void Ungroup()
+        {
+            Ungroup(false);
+        }
+        public void Ungroup(Boolean ungroupFromAll)
         {
             if (ungroupFromAll)
             {

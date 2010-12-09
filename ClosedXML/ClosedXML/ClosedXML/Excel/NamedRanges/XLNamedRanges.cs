@@ -27,21 +27,31 @@ namespace ClosedXML.Excel
             return namedRanges.ElementAt(rangeIndex).Value;
         }
 
-        public IXLNamedRange Add(String rangeName, String rangeAddress, String comment = null)
+        public IXLNamedRange Add(String rangeName, String rangeAddress)
+        {
+            return Add(rangeName, rangeAddress, null);
+        }
+        public IXLNamedRange Add(String rangeName, IXLRange range)
+        {
+            return Add(rangeName, range, null);
+        }
+        public IXLNamedRange Add(String rangeName, IXLRanges ranges)
+        {
+            return Add(rangeName, ranges, null);
+        }
+        public IXLNamedRange Add(String rangeName, String rangeAddress, String comment )
         {
             var namedRange = new XLNamedRange(this, rangeName, rangeAddress, comment);
             namedRanges.Add(rangeName, namedRange);
             return namedRange;
         }
-
-        public IXLNamedRange Add(String rangeName, IXLRange range, String comment = null)
+        public IXLNamedRange Add(String rangeName, IXLRange range, String comment)
         {
             var ranges = new XLRanges(((XLRange)range).Worksheet.Internals.Workbook, range.Style);
             ranges.Add(range);
             return Add(rangeName, ranges, comment);
         }
-
-        public IXLNamedRange Add(String rangeName, IXLRanges ranges, String comment = null)
+        public IXLNamedRange Add(String rangeName, IXLRanges ranges, String comment)
         {
             var namedRange = new XLNamedRange(this, rangeName, ranges, comment);
             namedRanges.Add(rangeName, namedRange);

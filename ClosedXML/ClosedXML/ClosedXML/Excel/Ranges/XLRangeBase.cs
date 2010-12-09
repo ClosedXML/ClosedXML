@@ -24,8 +24,12 @@ namespace ClosedXML.Excel
         {
             return this.Cell(this.RowCount(), this.ColumnCount());
         }
-
-        public IXLCell FirstCellUsed(Boolean ignoreStyle = true)
+        
+        public IXLCell FirstCellUsed()
+        {
+            return FirstCellUsed(true);
+        }
+        public IXLCell FirstCellUsed(Boolean ignoreStyle)
         {
             var cellsUsed = CellsUsed();
             if (ignoreStyle)
@@ -43,7 +47,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLCell LastCellUsed(Boolean ignoreStyle = true) 
+        public IXLCell LastCellUsed()
+        {
+            return LastCellUsed(true);
+        }
+        public IXLCell LastCellUsed(Boolean ignoreStyle) 
         {
             var cellsUsed = CellsUsed();
             if (ignoreStyle)
@@ -588,7 +596,15 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLRange AddToNamed(String rangeName, XLScope scope = XLScope.Workbook, String comment = null)
+        public IXLRange AddToNamed(String rangeName)
+        {
+            return AddToNamed(rangeName, XLScope.Workbook);
+        }
+        public IXLRange AddToNamed(String rangeName, XLScope scope)
+        {
+            return AddToNamed(rangeName, XLScope.Workbook, null);
+        }
+        public IXLRange AddToNamed(String rangeName, XLScope scope, String comment)
         {
             IXLNamedRanges namedRanges;
             if (scope == XLScope.Workbook)

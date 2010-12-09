@@ -17,8 +17,12 @@ namespace ClosedXML.Excel
     public interface IXLHFItem
     {
         String GetText(XLHFOccurrence occurrence);
-        void AddText(String text, XLHFOccurrence occurrence = XLHFOccurrence.AllPages, IXLFont xlFont = null);
-        void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence = XLHFOccurrence.AllPages, IXLFont xlFont = null);
+        void AddText(String text);
+        void AddText(XLHFPredefinedText predefinedText);
+        void AddText(String text, XLHFOccurrence occurrence);
+        void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence);
+        void AddText(String text, XLHFOccurrence occurrence, IXLFont xlFont);
+        void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence, IXLFont xlFont);
         void Clear(XLHFOccurrence occurrence = XLHFOccurrence.AllPages);
     }
 }

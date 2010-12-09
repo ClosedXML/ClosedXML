@@ -51,6 +51,11 @@ namespace ClosedXML.Excel
         {
             return Range(1, firstColumn, 1, lastColumn);
         }
+
+        public void Delete()
+        {
+            Delete(XLShiftDeletedCells.ShiftCellsUp);
+        }
     }
 }
 

@@ -21,9 +21,12 @@ namespace ClosedXML.Excel
         void Unhide();
         Boolean IsHidden { get; }
         Int32 OutlineLevel { get; set; }
-        void Group(Boolean collapse = false);
-        void Group(Int32 outlineLevel, Boolean collapse = false);
-        void Ungroup(Boolean fromAll = false);
+        void Group();
+        void Group(Boolean collapse);
+        void Group(Int32 outlineLevel);
+        void Group(Int32 outlineLevel, Boolean collapse);
+        void Ungroup();
+        void Ungroup(Boolean fromAll);
         void Collapse();
         void Expand();
 

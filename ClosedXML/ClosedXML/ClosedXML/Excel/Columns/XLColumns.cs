@@ -156,16 +156,27 @@ namespace ClosedXML.Excel
         {
             columns.ForEach(c => c.Unhide());
         }
-
-        public void Group(Boolean collapse = false)
+        public void Group()
+        {
+            Group(false);
+        }
+        public void Group(Int32 outlineLevel)
+        {
+            Group(outlineLevel, false);
+        }
+        public void Ungroup()
+        {
+            Ungroup(false);
+        }
+        public void Group(Boolean collapse)
         {
             columns.ForEach(c => c.Group(collapse));
         }
-        public void Group(Int32 outlineLevel, Boolean collapse = false)
+        public void Group(Int32 outlineLevel, Boolean collapse)
         {
             columns.ForEach(c => c.Group(outlineLevel, collapse));
         }
-        public void Ungroup(Boolean ungroupFromAll = false)
+        public void Ungroup(Boolean ungroupFromAll)
         {
             columns.ForEach(c => c.Ungroup(ungroupFromAll));
         }

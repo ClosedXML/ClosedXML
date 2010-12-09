@@ -12,9 +12,11 @@ namespace ClosedXML.Excel
         IEnumerable<IXLCell> CellsUsed();
         IXLRangeAddress RangeAddress { get; }
         IXLCell FirstCell();
-        IXLCell FirstCellUsed(Boolean ignoreStyle = true);
+        IXLCell FirstCellUsed();
+        IXLCell FirstCellUsed(Boolean ignoreStyle);
         IXLCell LastCell();
-        IXLCell LastCellUsed(Boolean ignoreStyle = true);
+        IXLCell LastCellUsed();
+        IXLCell LastCellUsed(Boolean ignoreStyle);
         IXLRange Range(IXLRangeAddress rangeAddress);
         IXLRange Range(string rangeAddress);
         IXLRange Range(string firstCellAddress, string lastCellAddress);
@@ -25,6 +27,8 @@ namespace ClosedXML.Excel
         IXLRange Merge();
         IXLRange AsRange();
         Boolean ContainsRange(String rangeAddress);
-        IXLRange AddToNamed(String rangeName, XLScope scope = XLScope.Workbook, String comment = null);
+        IXLRange AddToNamed(String rangeName);
+        IXLRange AddToNamed(String rangeName, XLScope scope);
+        IXLRange AddToNamed(String rangeName, XLScope scope, String comment);
     }
 }

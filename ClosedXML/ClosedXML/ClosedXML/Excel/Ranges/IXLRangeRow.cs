@@ -22,7 +22,8 @@ namespace ClosedXML.Excel
         void InsertRowsAbove(int numberOfRows);
         void InsertRowsBelow(int numberOfRows);
 
-        void Delete(XLShiftDeletedCells shiftDeleteCells = XLShiftDeletedCells.ShiftCellsUp);
+        void Delete();
+        void Delete(XLShiftDeletedCells shiftDeleteCells);
         void Clear();
         String FormulaA1 { set; }
         String FormulaR1C1 { set; }

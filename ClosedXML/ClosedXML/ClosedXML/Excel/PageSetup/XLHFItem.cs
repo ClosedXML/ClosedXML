@@ -16,7 +16,24 @@ namespace ClosedXML.Excel
                 return String.Empty;
         }
 
-        public void AddText(String text, XLHFOccurrence occurrence = XLHFOccurrence.AllPages, IXLFont xlFont = null)
+        public void AddText(String text)
+        {
+            AddText(text, XLHFOccurrence.AllPages);
+        }
+        public void AddText(XLHFPredefinedText predefinedText)
+        {
+            AddText(predefinedText, XLHFOccurrence.AllPages);
+        }
+        public void AddText(String text, XLHFOccurrence occurrence)
+        {
+            AddText(text, occurrence, null);
+        }
+        public void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)
+        {
+            AddText(predefinedText, occurrence, null);
+        }
+
+        public void AddText(String text, XLHFOccurrence occurrence, IXLFont xlFont)
         {
             if (text.Length > 0)
             {
@@ -47,7 +64,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence = XLHFOccurrence.AllPages, IXLFont xlFont = null)
+        public void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence, IXLFont xlFont)
         {
             String hfText;
             switch (predefinedText)

@@ -38,10 +38,14 @@ namespace ClosedXML.Excel
                     && c.Address.RowNumber <= lastRow);
         }
 
-
         public IXLRange Range(int firstRow, int lastRow)
         {
             return Range(firstRow, 1, lastRow, 1);
+        }
+
+        public void Delete()
+        {
+            Delete(XLShiftDeletedCells.ShiftCellsLeft);
         }
     }
 }

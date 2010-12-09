@@ -12,8 +12,11 @@ namespace ClosedXML.Excel
         void AdjustToContents();
         void Hide();
         void Unhide();
-        void Group(Boolean collapse = false);
+        void Group();
+        void Group(Boolean collapse);
+        void Group(Int32 outlineLevel);
         void Group(Int32 outlineLevel, Boolean collapse = false);
+        void Ungroup();
         void Ungroup(Boolean fromAll = false);
         void Collapse();
         void Expand();
