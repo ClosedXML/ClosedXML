@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal abstract class XLRangeBase: IXLRangeBase
+    internal abstract class XLRangeBase : IXLRangeBase
     {
         public XLRangeBase(IXLRangeAddress rangeAddress)
         {
@@ -166,7 +166,7 @@ namespace ClosedXML.Excel
 
         public IXLRanges Ranges( String ranges)
         {
-            var retVal = new XLRanges(Worksheet.Style);
+            var retVal = new XLRanges(Worksheet.Internals.Workbook, Worksheet.Style);
             var rangePairs = ranges.Split(',');
             foreach (var pair in rangePairs)
             {
@@ -176,7 +176,7 @@ namespace ClosedXML.Excel
         }
         public IXLRanges Ranges( params String[] ranges)
         {
-            var retVal = new XLRanges(Worksheet.Style);
+            var retVal = new XLRanges(Worksheet.Internals.Workbook, Worksheet.Style);
             foreach (var pair in ranges)
             {
                 retVal.Add(this.Range(pair));
@@ -196,18 +196,25 @@ namespace ClosedXML.Excel
         }
         public IEnumerable<IXLCell> CellsUsed()
         {
-            return this.Worksheet.Internals.CellsCollection.Where(c => this.ContainsRange(c.Key.ToString())).Select(c => c.Value).AsEnumerable<IXLCell>();
+            var list = this.Worksheet.Internals.CellsCollection.Where(c => this.ContainsRange(c.Key.ToString())).Select(c => c.Value);
+            var retList = new List<IXLCell>();
+            list.ForEach(c => retList.Add(c));
+            return retList.AsEnumerable();
         }
 
-        public void Merge()
+        public IXLRange Merge()
         {
             var mergeRange = this.RangeAddress.FirstAddress.ToString() + ":" + this.RangeAddress.LastAddress.ToString();
             if (!this.Worksheet.Internals.MergedCells.Contains(mergeRange))
                 this.Worksheet.Internals.MergedCells.Add(mergeRange);
+            return AsRange();
         }
-        public void Unmerge()
+        public IXLRange Unmerge()
         {
-            this.Worksheet.Internals.MergedCells.Remove(this.RangeAddress.FirstAddress.ToString() + ":" + this.RangeAddress.LastAddress.ToString());
+            var mergeRange = this.RangeAddress.FirstAddress.ToString() + ":" + this.RangeAddress.LastAddress.ToString();
+            if (this.Worksheet.Internals.MergedCells.Contains(mergeRange))
+            this.Worksheet.Internals.MergedCells.Remove(mergeRange);
+            return AsRange();
         }
 
 
@@ -581,16 +588,28 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void CreateNamedRange(String rangeName, XLScope scope = XLScope.Workbook, String comment = null)
+        public IXLRange AddToNamed(String rangeName, XLScope scope = XLScope.Workbook, String comment = null)
         {
+            IXLNamedRanges namedRanges;
             if (scope == XLScope.Workbook)
             {
-                Worksheet.Internals.Workbook.NamedRanges.Add(rangeName, this.AsRange(), comment);
+                namedRanges = Worksheet.Internals.Workbook.NamedRanges;
             }
             else
             {
-                Worksheet.NamedRanges.Add(rangeName, this.AsRange(), comment);
+                namedRanges = Worksheet.NamedRanges;
             }
+
+            if (namedRanges.Where(nr => nr.Name.ToLower() == rangeName.ToLower()).Any())
+            {
+                var namedRange = namedRanges.Where(nr => nr.Name.ToLower() == rangeName.ToLower()).Single();
+                namedRange.Add(this.AsRange());
+            }
+            else
+            {
+                namedRanges.Add(rangeName, this.AsRange(), comment);
+            }
+            return AsRange();
         }
 
         protected void ShiftColumns(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int columnsShifted)

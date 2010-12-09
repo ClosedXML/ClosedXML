@@ -14,5 +14,6 @@ namespace ClosedXML.Excel
         IXLNamedRange Add(String rangeName, IXLRanges ranges, String comment = null);
         void Delete(String rangeName);
         void Delete(Int32 rangeIndex);
+        void DeleteAll();
     }
 }

@@ -55,7 +55,7 @@ namespace ClosedXML_Examples.Misc
             listOfStrings.Add("House");
             listOfStrings.Add("Car");
             ws.Cell(1, 1).Value = "Strings";
-            ws.Cell(1, 1).Style.Fill.BackgroundColor = Color.Cyan;
+            ws.Cell(1, 1).AsRange().AddToNamed("Titles");
             ws.Cell(2, 1).Value = listOfStrings;
 
             // From a list of arrays
@@ -64,22 +64,20 @@ namespace ClosedXML_Examples.Misc
             listOfArr.Add(new Int32[] { 1 });
             listOfArr.Add(new Int32[] { 1, 2, 3, 4, 5, 6 });
             ws.Cell(1, 3).Value = "Arrays";
-            ws.Cell(1, 3).Style.Fill.BackgroundColor = Color.Cyan;
-            ws.Range(1, 3, 1, 8).Merge();
+            ws.Range(1, 3, 1, 8).Merge().AddToNamed("Titles");
             ws.Cell(2, 3).Value = listOfArr;
 
             // From a DataTable
             var dataTable = GetTable();
             ws.Cell(6, 1).Value = "DataTable";
-            ws.Cell(6, 1).Style.Fill.BackgroundColor = Color.Cyan;
-            ws.Range(6, 1, 6, 4).Merge();
+            ws.Range(6, 1, 6, 4).Merge().AddToNamed("Titles");
             ws.Cell(7, 1).Value = dataTable.AsEnumerable();
 
             // From a query
             var list = new List<Person>();
-            list.Add(new Person() { Name = "John", Age = 30, House = "On Elm St." });
-            list.Add(new Person() { Name = "Mary", Age = 15, House = "On Main St." });
-            list.Add(new Person() { Name = "Luis", Age = 21, House = "On 23rd St." });
+            list.Add(new Person() { Name = "John", Age = 30, House = "On Elm St."   });
+            list.Add(new Person() { Name = "Mary", Age = 15, House = "On Main St."  });
+            list.Add(new Person() { Name = "Luis", Age = 21, House = "On 23rd St."  });
             list.Add(new Person() { Name = "Henry", Age = 45, House = "On 5th Ave." });
 
             var people = from p in list
@@ -87,11 +85,19 @@ namespace ClosedXML_Examples.Misc
                          select new { p.Name, p.House, p.Age };
 
             ws.Cell(6, 6).Value = "Query";
-            ws.Cell(6, 6).Style.Fill.BackgroundColor = Color.Cyan;
-            ws.Range(6, 6, 6, 8).Merge();
+            ws.Range(6, 6, 6, 8).Merge().AddToNamed("Titles");
             ws.Cell(7, 6).Value = people.AsEnumerable();    // Very Important to call the AsEnumerable method
                                                             // otherwise it won't be copied.
 
+
+            // Prepare the style for the titles
+            var titlesStyle = wb.Style;
+            titlesStyle.Font.Bold = true;
+            titlesStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            titlesStyle.Fill.BackgroundColor = Color.Cyan;
+            
+            // Format all titles in one shot
+            wb.NamedRanges.NamedRange("Titles").Ranges.Style = titlesStyle;
 
             ws.Columns().AdjustToContents();
 

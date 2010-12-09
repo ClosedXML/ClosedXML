@@ -11,5 +11,13 @@ namespace ClosedXML.Excel
         IXLRanges Ranges { get; }
         IXLRange Range { get; }
         String Comment { get; set; }
+        IXLRanges Add(String rangeAddress);
+        IXLRanges Add(IXLRange range);
+        IXLRanges Add(IXLRanges ranges);
+        void Delete();
+        void Clear();
+        void Remove(String rangeAddress);
+        void Remove(IXLRange range);
+        void Remove(IXLRanges ranges);
     }
 }

@@ -19,7 +19,9 @@ namespace ClosedXML.Excel
         List<XLColumn> columns = new List<XLColumn>();
         public IEnumerator<IXLColumn> GetEnumerator()
         {
-            return columns.ToList<IXLColumn>().GetEnumerator();
+            var retList = new List<IXLColumn>();
+            columns.ForEach(c => retList.Add(c));
+            return retList.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

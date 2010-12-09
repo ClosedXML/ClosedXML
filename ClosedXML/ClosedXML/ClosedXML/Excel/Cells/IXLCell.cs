@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public enum XLCellValues { Text, Number, Boolean, DateTime }
+    public enum XLCellValues { Text, Number, Boolean, DateTime, TimeSpan }
 
     public interface IXLCell: IXLStylized
     {
@@ -19,9 +19,11 @@ namespace ClosedXML.Excel
         Double GetDouble();
         Boolean GetBoolean();
         DateTime GetDateTime();
+        TimeSpan GetTimeSpan();
         void Clear();
         void Delete(XLShiftDeletedCells shiftDeleteCells);
         String FormulaA1 { get; set; }
         String FormulaR1C1 { get; set; }
+        IXLRange AsRange();
     }
 }

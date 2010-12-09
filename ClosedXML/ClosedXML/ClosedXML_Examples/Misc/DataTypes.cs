@@ -134,7 +134,7 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(++ro, co).Value = "Text to TimeSpan:";
             ws.Cell(ro, co + 1).Value = "'" + new TimeSpan(33, 45, 22).ToString();
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Number;
+            ws.Cell(ro, co + 1).DataType = XLCellValues.TimeSpan;
 
             ro++;
 

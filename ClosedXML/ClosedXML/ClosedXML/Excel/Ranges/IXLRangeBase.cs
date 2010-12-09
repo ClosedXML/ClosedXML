@@ -21,10 +21,10 @@ namespace ClosedXML.Excel
         IXLRange Range(IXLAddress firstCellAddress, IXLAddress lastCellAddress);
         IXLRanges Ranges(params string[] ranges);
         IXLRanges Ranges(string ranges);
-        void Unmerge();
-        void Merge();
+        IXLRange Unmerge();
+        IXLRange Merge();
         IXLRange AsRange();
         Boolean ContainsRange(String rangeAddress);
-        void CreateNamedRange(String rangeName, XLScope scope = XLScope.Workbook, String comment = null);
+        IXLRange AddToNamed(String rangeName, XLScope scope = XLScope.Workbook, String comment = null);
     }
 }

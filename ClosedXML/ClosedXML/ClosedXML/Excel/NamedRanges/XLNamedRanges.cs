@@ -8,10 +8,11 @@ namespace ClosedXML.Excel
     internal class XLNamedRanges: IXLNamedRanges
     {
         Dictionary<String, IXLNamedRange> namedRanges = new Dictionary<String, IXLNamedRange>();
-        private XLWorkbook workbook;
+        internal XLWorkbook Workbook { get; set; }
+       
         public XLNamedRanges(XLWorkbook workbook)
         {
-            this.workbook = workbook;
+            this.Workbook = workbook;
         }
 
         #region IXLNamedRanges Members
@@ -28,21 +29,21 @@ namespace ClosedXML.Excel
 
         public IXLNamedRange Add(String rangeName, String rangeAddress, String comment = null)
         {
-            var namedRange = new XLNamedRange(workbook, rangeName, rangeAddress, comment);
+            var namedRange = new XLNamedRange(this, rangeName, rangeAddress, comment);
             namedRanges.Add(rangeName, namedRange);
             return namedRange;
         }
 
         public IXLNamedRange Add(String rangeName, IXLRange range, String comment = null)
         {
-            var ranges = new XLRanges(range.Style);
+            var ranges = new XLRanges(((XLRange)range).Worksheet.Internals.Workbook, range.Style);
             ranges.Add(range);
             return Add(rangeName, ranges, comment);
         }
 
         public IXLNamedRange Add(String rangeName, IXLRanges ranges, String comment = null)
         {
-            var namedRange = new XLNamedRange(workbook, rangeName, ranges, comment);
+            var namedRange = new XLNamedRange(this, rangeName, ranges, comment);
             namedRanges.Add(rangeName, namedRange);
             return namedRange;
         }
@@ -51,10 +52,13 @@ namespace ClosedXML.Excel
         {
             namedRanges.Remove(rangeName);
         }
-
         public void Delete(Int32 rangeIndex)
         {
             namedRanges.Remove(namedRanges.ElementAt(rangeIndex).Key);
+        }
+        public void DeleteAll()
+        {
+            namedRanges.Clear();
         }
         
         #endregion

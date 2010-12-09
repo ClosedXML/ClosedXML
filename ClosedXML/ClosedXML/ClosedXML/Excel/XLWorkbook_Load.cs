@@ -210,10 +210,9 @@ namespace ClosedXML.Excel
                     {
                         if (dCell.DataType == CellValues.SharedString)
                         {
-                            xlCell.DataType = XLCellValues.Text;
                             if (dCell.CellValue != null)
                             {
-                                if (!String.IsNullOrWhiteSpace(dCell.CellValue.Text))
+                                if (!StringExtensions.IsNullOrWhiteSpace(dCell.CellValue.Text))
                                     xlCell.Value = sharedStrings[Int32.Parse(dCell.CellValue.Text)].InnerText;
                                 else
                                     xlCell.Value = dCell.CellValue.Text;
@@ -222,21 +221,24 @@ namespace ClosedXML.Excel
                             {
                                 xlCell.Value = String.Empty;
                             }
+                            xlCell.DataType = XLCellValues.Text;
                         }
                         else if (dCell.DataType == CellValues.Date)
                         {
-                            xlCell.DataType = XLCellValues.DateTime;
                             xlCell.Value = DateTime.FromOADate(Double.Parse(dCell.CellValue.Text));
                         }
                         else if (dCell.DataType == CellValues.Boolean)
                         {
-                            xlCell.DataType = XLCellValues.Boolean;
                             xlCell.Value = (dCell.CellValue.Text == "1");
                         }
                         else if (dCell.DataType == CellValues.Number)
                         {
-                            xlCell.DataType = XLCellValues.Number;
                             xlCell.Value = dCell.CellValue.Text;
+                            var numberFormatId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
+                            if (numberFormatId == 46U)
+                                xlCell.DataType = XLCellValues.TimeSpan;
+                            else
+                                xlCell.DataType = XLCellValues.Number;
                         }
                     }
                     else if (dCell.CellValue != null)

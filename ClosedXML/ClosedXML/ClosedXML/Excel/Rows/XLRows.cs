@@ -20,7 +20,9 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLRow> GetEnumerator()
         {
-            return rows.ToList<IXLRow>().GetEnumerator();
+            var retList = new List<IXLRow>();
+            rows.ForEach(c => retList.Add(c));
+            return retList.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

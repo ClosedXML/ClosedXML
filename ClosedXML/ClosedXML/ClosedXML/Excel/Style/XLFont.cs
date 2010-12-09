@@ -224,7 +224,7 @@ namespace ClosedXML.Excel
 
         public Double GetWidth(String text)
         {
-            if (String.IsNullOrWhiteSpace(text))
+            if (StringExtensions.IsNullOrWhiteSpace(text))
                 return 0;
 
             System.Drawing.Font stringFont = new System.Drawing.Font(fontName, (float)fontSize);

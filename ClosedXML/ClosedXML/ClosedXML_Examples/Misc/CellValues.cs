@@ -147,6 +147,27 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(6, 7).Value = stringFormattedString;
 
             //////////////////////////////////////////////////////////////////
+            // TimeSpan
+
+            // Fill a cell with a timeSpan
+            var cellTimeSpan = ws.Cell(7, 2);
+            cellTimeSpan.Value = new TimeSpan(1, 2, 31, 45);
+
+            // Extract the timeSpan in different ways
+            TimeSpan timeSpan1 = (TimeSpan)cellTimeSpan.Value;
+            TimeSpan timeSpan2 = cellTimeSpan.GetTimeSpan();
+            TimeSpan timeSpan3 = cellTimeSpan.GetValue<TimeSpan>();
+            String timeSpanString = cellTimeSpan.GetString();
+            String timeSpanFormattedString = cellTimeSpan.GetFormattedString();
+
+            // Set the values back to cells
+            ws.Cell(7, 3).Value = timeSpan1;
+            ws.Cell(7, 4).Value = timeSpan2;
+            ws.Cell(7, 5).Value = timeSpan3;
+            ws.Cell(7, 6).Value = timeSpanString;
+            ws.Cell(7, 7).Value = timeSpanFormattedString;
+
+            //////////////////////////////////////////////////////////////////
             // Do some formatting
             ws.Columns("B:G").Width = 20;
             var rngTitle = ws.Range("B2:G2");

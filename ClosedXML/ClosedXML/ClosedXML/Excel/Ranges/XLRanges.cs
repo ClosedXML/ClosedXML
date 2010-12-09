@@ -7,8 +7,10 @@ namespace ClosedXML.Excel
 {
     internal class XLRanges : IXLRanges
     {
-        public XLRanges(IXLStyle defaultStyle)
+        private XLWorkbook workbook;
+        public XLRanges(XLWorkbook workbook, IXLStyle defaultStyle)
         {
+            this.workbook = workbook;
             Style = defaultStyle;
         }
 
@@ -23,7 +25,14 @@ namespace ClosedXML.Excel
         {
             ranges.Add((XLRange)range);
         }
-
+        public void Add(String rangeAddress)
+        {
+            var byExclamation = rangeAddress.Split('!');
+            var wsName = byExclamation[0].Replace("'", "");
+            var rng = byExclamation[1];
+            var rangeToAdd = workbook.Worksheets.Worksheet(wsName).Range(rng);
+            ranges.Add((XLRange)rangeToAdd);
+        }
         public void Remove(IXLRange range)
         {
             ranges.RemoveAll(r => r.ToString() == range.ToString());
@@ -31,7 +40,9 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLRange> GetEnumerator()
         {
-            return ranges.ToList<IXLRange>().GetEnumerator();
+            var retList = new List<IXLRange>();
+            ranges.ForEach(c => retList.Add(c));
+            return retList.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -51,7 +62,10 @@ namespace ClosedXML.Excel
             set
             {
                 style = new XLStyle(this, value);
-
+                foreach (var rng in ranges)
+                {
+                    rng.Style = value;
+                }
             }
         }
 

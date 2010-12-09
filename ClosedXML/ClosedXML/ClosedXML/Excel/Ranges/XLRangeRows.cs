@@ -26,7 +26,9 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLRangeRow> GetEnumerator()
         {
-            return ranges.ToList<IXLRangeRow>().GetEnumerator();
+            var retList = new List<IXLRangeRow>();
+            ranges.ForEach(c => retList.Add(c));
+            return retList.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

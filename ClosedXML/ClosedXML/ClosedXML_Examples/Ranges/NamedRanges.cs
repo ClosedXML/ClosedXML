@@ -30,14 +30,14 @@ namespace ClosedXML_Examples.Misc
             wsData.Cell(4, 2).Value = 29;
 
             // Create a named range with the data:
-            wsData.Range("A2:B4").CreateNamedRange("PeopleData"); // Default named range scope is Workbook
+            wsData.Range("A2:B4").AddToNamed("PeopleData"); // Default named range scope is Workbook
 
             // Let's use the named range in a formula:
             wsPresentation.Cell(1, 1).Value = "People Count:";
             wsPresentation.Cell(1, 2).FormulaA1 = "COUNT(PeopleData)";
 
             // Create a named range with worksheet scope:
-            wsPresentation.Range("B1").CreateNamedRange("PeopleCount", XLScope.Worksheet);
+            wsPresentation.Range("B1").AddToNamed("PeopleCount", XLScope.Worksheet);
 
             // Let's use the named range:
             wsPresentation.Cell(2, 1).Value = "Total:";

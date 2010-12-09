@@ -98,7 +98,7 @@ namespace ClosedXML_Examples.Misc
             // And the workbook calculation mode:
             wb.CalculateMode = XLCalculateMode.Auto;
 
-            ws.Range("A10").CreateNamedRange("A10_R1C1_A10_R1C1");
+            ws.Range("A10").AddToNamed("A10_R1C1_A10_R1C1");
             ws.Cell("A10").Value = 0;
             ws.Cell("A11").FormulaA1 = "A2 + A10_R1C1_A10_R1C1";
             ws.Cell("A12").FormulaR1C1 = "R2C1 + A10_R1C1_A10_R1C1";

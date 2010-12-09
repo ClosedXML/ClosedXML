@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Globalization;
-using System.IO.Packaging;
+//using System.IO.Packaging;
 
 
 
@@ -107,6 +107,7 @@ namespace ClosedXML.Excel
                 case XLCellValues.DateTime: return CellValues.Date;
                 case XLCellValues.Number: return CellValues.Number;
                 case XLCellValues.Text: return CellValues.SharedString;
+                case XLCellValues.TimeSpan: return CellValues.Number;
                 default: throw new NotImplementedException();
             }
         }
@@ -412,7 +413,7 @@ namespace ClosedXML.Excel
 
             if (Properties.Manager != null)
             {
-                if (!String.IsNullOrWhiteSpace(Properties.Manager))
+                if (!StringExtensions.IsNullOrWhiteSpace(Properties.Manager))
                 {
                     if (properties.Manager == null)
                         properties.Manager = new Ap.Manager();
@@ -427,7 +428,7 @@ namespace ClosedXML.Excel
 
             if (Properties.Company != null)
             {
-                if (!String.IsNullOrWhiteSpace(Properties.Company))
+                if (!StringExtensions.IsNullOrWhiteSpace(Properties.Company))
                 {
                     if (properties.Company == null)
                         properties.Company = new Ap.Company();
@@ -583,7 +584,7 @@ namespace ClosedXML.Excel
                         LocalSheetId = sheetId,
                         Text = nr.ToString()
                     };
-                    if (!String.IsNullOrWhiteSpace(nr.Comment)) definedName.Comment = nr.Comment;
+                    if (!StringExtensions.IsNullOrWhiteSpace(nr.Comment)) definedName.Comment = nr.Comment;
                     definedNames.Append(definedName);
                 }
 
@@ -629,7 +630,7 @@ namespace ClosedXML.Excel
                     Name = nr.Name,
                     Text = nr.ToString()
                 };
-                if (!String.IsNullOrWhiteSpace(nr.Comment)) definedName.Comment = nr.Comment;
+                if (!StringExtensions.IsNullOrWhiteSpace(nr.Comment)) definedName.Comment = nr.Comment;
                 definedNames.Append(definedName);
             }
 
@@ -673,7 +674,7 @@ namespace ClosedXML.Excel
         private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart)
         {
             List<String> modifiedStrings = new List<String>();
-            Worksheets.Cast<XLWorksheet>().ForEach(w => modifiedStrings.AddRange(w.Internals.CellsCollection.Values.Where(c => c.DataType == XLCellValues.Text && !String.IsNullOrWhiteSpace(c.InnerText)).Select(c => c.GetString()).Distinct()));
+            Worksheets.Cast<XLWorksheet>().ForEach(w => modifiedStrings.AddRange(w.Internals.CellsCollection.Values.Where(c => c.DataType == XLCellValues.Text && !StringExtensions.IsNullOrWhiteSpace(c.InnerText)).Select(c => c.GetString()).Distinct()));
 
             List<String> existingStrings;
             if (sharedStringTablePart.SharedStringTable != null)
@@ -1304,7 +1305,7 @@ namespace ClosedXML.Excel
         {
             var newXLNumberFormat = new XLNumberFormat();
             
-            if (nf.FormatCode != null && !String.IsNullOrWhiteSpace(nf.FormatCode.Value))
+            if (nf.FormatCode != null && !StringExtensions.IsNullOrWhiteSpace(nf.FormatCode.Value))
                 newXLNumberFormat.Format = nf.FormatCode.Value;
             else if (nf.NumberFormatId != null)
                 newXLNumberFormat.NumberFormatId = (Int32)nf.NumberFormatId.Value;
@@ -1406,7 +1407,7 @@ namespace ClosedXML.Excel
 
             #region Columns
             Columns columns = null;
-            if (xlWorksheet.Internals.CellsCollection.Count == 0)
+            if (xlWorksheet.Internals.CellsCollection.Count == 0 && xlWorksheet.Internals.ColumnsCollection.Count == 0)
             {
                 worksheetPart.Worksheet.RemoveAllChildren<Columns>();
             }
@@ -1619,7 +1620,7 @@ namespace ClosedXML.Excel
                     }
 
                     cell.StyleIndex = styleId;
-                    if (!String.IsNullOrWhiteSpace(opCell.Value.FormulaA1))
+                    if (!StringExtensions.IsNullOrWhiteSpace(opCell.Value.FormulaA1))
                     {
                         cell.CellFormula = new CellFormula(opCell.Value.FormulaA1);
                         cell.CellValue = null;
@@ -1634,7 +1635,7 @@ namespace ClosedXML.Excel
                         CellValue cellValue = new CellValue();
                         if (dataType == XLCellValues.Text)
                         {
-                            if (String.IsNullOrWhiteSpace(opCell.Value.InnerText))
+                            if (StringExtensions.IsNullOrWhiteSpace(opCell.Value.InnerText))
                             {
                                 if (isNewCell)
                                     cellValue = null;
@@ -1647,17 +1648,15 @@ namespace ClosedXML.Excel
                             }
                             cell.CellValue = cellValue;
                         }
+                        else if (dataType == XLCellValues.TimeSpan)
+                        {
+                            TimeSpan timeSpan = opCell.Value.GetTimeSpan();
+                            cellValue.Text = XLCell.baseDate.Add(timeSpan).ToOADate().ToString(CultureInfo.InvariantCulture);
+                            cell.CellValue = cellValue;
+                        }
                         else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
                         {
-                            TimeSpan timeSpan;
-                            if (TimeSpan.TryParse(opCell.Value.InnerText, out timeSpan))
-                            {
-                                cellValue.Text = XLCell.baseDate.Add(timeSpan).ToOADate().ToString(CultureInfo.InvariantCulture);
-                            }
-                            else
-                            {
-                                cellValue.Text = Double.Parse(opCell.Value.InnerText).ToString(CultureInfo.InvariantCulture);
-                            }
+                            cellValue.Text = Double.Parse(opCell.Value.InnerText).ToString(CultureInfo.InvariantCulture);
                             cell.CellValue = cellValue;
                         }
                         else
@@ -1999,7 +1998,7 @@ namespace ClosedXML.Excel
             CalculationChain calculationChain =  workbookPart.CalculationChainPart.CalculationChain;
             foreach (var worksheet in Worksheets.Cast<XLWorksheet>())
             {
-                foreach (var c in worksheet.Internals.CellsCollection.Values.Where(c => !String.IsNullOrWhiteSpace(c.FormulaA1)))
+                foreach (var c in worksheet.Internals.CellsCollection.Values.Where(c => !StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)))
                 {
                     var calculationCells = calculationChain.Elements<CalculationCell>().Where(
                         cc => cc.CellReference != null && cc.CellReference == c.Address.ToString()).Select(cc=>cc);
@@ -2029,7 +2028,7 @@ namespace ClosedXML.Excel
                         .Where(c1 => c1.SheetId != null)
                         .Select(c1 => c1.CellReference.Value)
                         .Contains(cc.CellReference.Value)
-                        || worksheet.Internals.CellsCollection.Where(kp=>kp.Key.ToString() == cc.CellReference.Value && String.IsNullOrWhiteSpace(kp.Value.FormulaA1)).Any()
+                        || worksheet.Internals.CellsCollection.Where(kp=>kp.Key.ToString() == cc.CellReference.Value && StringExtensions.IsNullOrWhiteSpace(kp.Value.FormulaA1)).Any()
                     select cc;
             m.ForEach(cc => cCellsToRemove.Add(cc));
             cCellsToRemove.ForEach(cc=>calculationChain.RemoveChild(cc));

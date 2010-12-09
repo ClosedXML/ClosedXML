@@ -8,21 +8,21 @@ namespace ClosedXML.Excel
     internal class XLNamedRange: IXLNamedRange
     {
         private List<String> rangeList = new List<String>();
-        private XLWorkbook workbook;
-        public XLNamedRange(XLWorkbook workbook, String rangeName, String range, String comment = null)
+        private XLNamedRanges namedRanges;
+        public XLNamedRange(XLNamedRanges namedRanges , String rangeName, String range,  String comment = null)
         {
             Name = rangeName;
             rangeList.Add(range);
             Comment = comment;
-            this.workbook = workbook;
+            this.namedRanges = namedRanges;
         }
 
-        public XLNamedRange(XLWorkbook workbook, String rangeName, IXLRanges ranges, String comment = null)
+        public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
         {
             Name = rangeName;
             ranges.ForEach(r => rangeList.Add(r.ToString()));
             Comment = comment;
-            this.workbook = workbook;
+            this.namedRanges = namedRanges;
         }
 
         public String Name { get; set; }
@@ -30,13 +30,13 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var ranges = new XLRanges(workbook.Style);
+                var ranges = new XLRanges(namedRanges.Workbook, namedRanges.Workbook.Style);
                 foreach (var rangeAddress in rangeList)
                 {
                     var byExclamation = rangeAddress.Split('!');
                     var wsName = byExclamation[0].Replace("'", "");
                     var rng = byExclamation[1];
-                    var rangeToAdd = workbook.Worksheets.Worksheet(wsName).Range(rng);
+                    var rangeToAdd = namedRanges.Workbook.Worksheets.Worksheet(wsName).Range(rng);
                     ranges.Add(rangeToAdd);
                 }
                 return ranges;
@@ -50,6 +50,46 @@ namespace ClosedXML.Excel
             }
         }
         public String Comment { get; set; }
+
+        public IXLRanges Add(String rangeAddress)
+        {
+            var ranges = new XLRanges(namedRanges.Workbook, namedRanges.Workbook.Style);
+            ranges.Add(rangeAddress);
+            return Add(ranges);
+        }
+        public IXLRanges Add(IXLRange range)
+        {
+            var ranges = new XLRanges(((XLRange)range).Worksheet.Internals.Workbook, range.Style);
+            ranges.Add(range);
+            return Add(ranges);
+        }
+        public IXLRanges Add(IXLRanges ranges)
+        {
+            ranges.ForEach(r => rangeList.Add(r.ToString()));
+            return ranges;
+        }
+
+        public void Delete()
+        {
+            namedRanges.Delete(Name);
+        }
+        public void Clear()
+        {
+            rangeList.Clear();
+        }
+        public void Remove(String rangeAddress)
+        {
+            rangeList.Remove(rangeAddress);
+        }
+        public void Remove(IXLRange range)
+        {
+            rangeList.Remove(range.ToString());
+        }
+        public void Remove(IXLRanges ranges)
+        {
+            ranges.ForEach(r => rangeList.Remove(r.ToString()));
+        }
+
 
         public override string ToString()
         {

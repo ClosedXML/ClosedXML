@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5F43B12B-A900-40C6-9924-A0C0B032F791}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClosedXML</RootNamespace>
+    <AssemblyName>ClosedXML</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ClosedXML\Excel\Cells\IXLCell.cs">
+      <Link>Excel\Cells\IXLCell.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Cells\XLCell.cs">
+      <Link>Excel\Cells\XLCell.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Cells\XLCellCollection.cs">
+      <Link>Excel\Cells\XLCellCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Columns\IXLColumn.cs">
+      <Link>Excel\Columns\IXLColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Columns\IXLColumns.cs">
+      <Link>Excel\Columns\IXLColumns.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Columns\XLColumn.cs">
+      <Link>Excel\Columns\XLColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Columns\XLColumnCollection.cs">
+      <Link>Excel\Columns\XLColumnCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Columns\XLColumnParameters.cs">
+      <Link>Excel\Columns\XLColumnParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Columns\XLColumns.cs">
+      <Link>Excel\Columns\XLColumns.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\IXLAddress.cs">
+      <Link>Excel\IXLAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\IXLOutline.cs">
+      <Link>Excel\IXLOutline.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\IXLWorksheet.cs">
+      <Link>Excel\IXLWorksheet.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\IXLWorksheetInternals.cs">
+      <Link>Excel\IXLWorksheetInternals.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\IXLWorksheets.cs">
+      <Link>Excel\IXLWorksheets.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\NamedRanges\IXLNamedRange.cs">
+      <Link>Excel\NamedRanges\IXLNamedRange.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\NamedRanges\IXLNamedRanges.cs">
+      <Link>Excel\NamedRanges\IXLNamedRanges.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\NamedRanges\XLNamedRange.cs">
+      <Link>Excel\NamedRanges\XLNamedRange.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\NamedRanges\XLNamedRanges.cs">
+      <Link>Excel\NamedRanges\XLNamedRanges.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\IXLHeaderFooter.cs">
+      <Link>Excel\PageSetup\IXLHeaderFooter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\IXLHFItem.cs">
+      <Link>Excel\PageSetup\IXLHFItem.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\IXLMargins.cs">
+      <Link>Excel\PageSetup\IXLMargins.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\IXLPageSetup.cs">
+      <Link>Excel\PageSetup\IXLPageSetup.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\IXLPrintAreas.cs">
+      <Link>Excel\PageSetup\IXLPrintAreas.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\XLHeaderFooter.cs">
+      <Link>Excel\PageSetup\XLHeaderFooter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\XLHFItem.cs">
+      <Link>Excel\PageSetup\XLHFItem.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\XLMargins.cs">
+      <Link>Excel\PageSetup\XLMargins.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\XLPageSetup.cs">
+      <Link>Excel\PageSetup\XLPageSetup.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\XLPrintAreas.cs">
+      <Link>Excel\PageSetup\XLPrintAreas.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\IXLRange.cs">
+      <Link>Excel\Ranges\IXLRange.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\IXLRangeAddress.cs">
+      <Link>Excel\Ranges\IXLRangeAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\IXLRangeBase.cs">
+      <Link>Excel\Ranges\IXLRangeBase.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\IXLRangeColumn.cs">
+      <Link>Excel\Ranges\IXLRangeColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\IXLRangeColumns.cs">
+      <Link>Excel\Ranges\IXLRangeColumns.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\IXLRangeRow.cs">
+      <Link>Excel\Ranges\IXLRangeRow.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\IXLRangeRows.cs">
+      <Link>Excel\Ranges\IXLRangeRows.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\IXLRanges.cs">
+      <Link>Excel\Ranges\IXLRanges.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\XLRange.cs">
+      <Link>Excel\Ranges\XLRange.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\XLRangeAddress.cs">
+      <Link>Excel\Ranges\XLRangeAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\XLRangeBase.cs">
+      <Link>Excel\Ranges\XLRangeBase.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\XLRangeColumn.cs">
+      <Link>Excel\Ranges\XLRangeColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\XLRangeColumns.cs">
+      <Link>Excel\Ranges\XLRangeColumns.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\XLRangeParameters.cs">
+      <Link>Excel\Ranges\XLRangeParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\XLRangeRow.cs">
+      <Link>Excel\Ranges\XLRangeRow.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\XLRangeRows.cs">
+      <Link>Excel\Ranges\XLRangeRows.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\XLRanges.cs">
+      <Link>Excel\Ranges\XLRanges.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Rows\IXLRow.cs">
+      <Link>Excel\Rows\IXLRow.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Rows\IXLRows.cs">
+      <Link>Excel\Rows\IXLRows.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Rows\XLRow.cs">
+      <Link>Excel\Rows\XLRow.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Rows\XLRowCollection.cs">
+      <Link>Excel\Rows\XLRowCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Rows\XLRowParameters.cs">
+      <Link>Excel\Rows\XLRowParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Rows\XLRows.cs">
+      <Link>Excel\Rows\XLRows.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLAlignment.cs">
+      <Link>Excel\Style\IXLAlignment.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLBorder.cs">
+      <Link>Excel\Style\IXLBorder.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLFill.cs">
+      <Link>Excel\Style\IXLFill.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLFont.cs">
+      <Link>Excel\Style\IXLFont.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLNumberFormat.cs">
+      <Link>Excel\Style\IXLNumberFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLStyle.cs">
+      <Link>Excel\Style\IXLStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLStylized.cs">
+      <Link>Excel\Style\IXLStylized.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\XLAlignment.cs">
+      <Link>Excel\Style\XLAlignment.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\XLBorder.cs">
+      <Link>Excel\Style\XLBorder.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\XLFill.cs">
+      <Link>Excel\Style\XLFill.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\XLFont.cs">
+      <Link>Excel\Style\XLFont.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\XLNumberFormat.cs">
+      <Link>Excel\Style\XLNumberFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\XLStyle.cs">
+      <Link>Excel\Style\XLStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLAddress.cs">
+      <Link>Excel\XLAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLOutline.cs">
+      <Link>Excel\XLOutline.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLWorkbook.cs">
+      <Link>Excel\XLWorkbook.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLWorkbookProperties.cs">
+      <Link>Excel\XLWorkbookProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLWorkbook_Load.cs">
+      <Link>Excel\XLWorkbook_Load.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLWorkbook_Save.cs">
+      <Link>Excel\XLWorkbook_Save.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLWorksheet.cs">
+      <Link>Excel\XLWorksheet.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLWorksheetInternals.cs">
+      <Link>Excel\XLWorksheetInternals.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLWorksheets.cs">
+      <Link>Excel\XLWorksheets.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
