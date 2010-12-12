@@ -420,7 +420,7 @@ namespace ClosedXML.Excel
                             }
 
                             if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
-                                if (((Int32)Double.Parse(cellValue)).ToString() == cellValue)
+                                if (cellValue.Contains('.'))
                                     Style.NumberFormat.NumberFormatId = 14;
                                 else
                                     Style.NumberFormat.NumberFormatId = 22;

@@ -77,5 +77,29 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public bool Equals(IXLNumberFormat other)
+        {
+            return
+            this.NumberFormatId.Equals(other.NumberFormatId)
+            && this.Format.Equals(other.Format)
+            ;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.GetHashCode().Equals(obj.GetHashCode());
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + NumberFormatId.GetHashCode();
+                hash = hash * 23 + Format.GetHashCode();
+                return hash;
+            }
+        }
     }
 }

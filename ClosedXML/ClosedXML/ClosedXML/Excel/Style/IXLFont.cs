@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
         Decorative = 5
     }
 
-    public interface IXLFont
+    public interface IXLFont: IEquatable<IXLFont>
     {
         Boolean Bold { get; set; }
         Boolean Italic { get; set; }

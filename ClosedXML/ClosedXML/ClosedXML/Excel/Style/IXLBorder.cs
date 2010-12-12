@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
         Thick,
         Thin
     }
-    public interface IXLBorder
+    public interface IXLBorder: IEquatable<IXLBorder>
     {
         XLBorderStyleValues LeftBorder { get; set; }
 

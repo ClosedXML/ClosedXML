@@ -109,13 +109,13 @@ namespace ClosedXML.Excel
             else
             {
                 IXLStyle style = this.Style;
-                if (this.Style.ToString() == this.Worksheet.Style.ToString())
+                if (this.Style.Equals(this.Worksheet.Style))
                 {
                     if (this.Worksheet.Internals.RowsCollection.ContainsKey(absoluteAddress.RowNumber)
-                        && this.Worksheet.Internals.RowsCollection[absoluteAddress.RowNumber].Style.ToString() != this.Worksheet.Style.ToString())
+                        && !this.Worksheet.Internals.RowsCollection[absoluteAddress.RowNumber].Style.Equals(this.Worksheet.Style))
                         style = this.Worksheet.Internals.RowsCollection[absoluteAddress.RowNumber].Style;
                     else if (this.Worksheet.Internals.ColumnsCollection.ContainsKey(absoluteAddress.ColumnNumber)
-                        && this.Worksheet.Internals.ColumnsCollection[absoluteAddress.ColumnNumber].Style.ToString() != this.Worksheet.Style.ToString())
+                        && !this.Worksheet.Internals.ColumnsCollection[absoluteAddress.ColumnNumber].Style.Equals(this.Worksheet.Style))
                         style = this.Worksheet.Internals.ColumnsCollection[absoluteAddress.ColumnNumber].Style;
                 }
                 var newCell = new XLCell(absoluteAddress, style, Worksheet);

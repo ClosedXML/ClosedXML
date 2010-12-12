@@ -69,5 +69,34 @@ namespace ClosedXML.Excel
             return sb.ToString();
         }
 
+        public bool Equals(IXLStyle other)
+        {
+            return
+            this.Font.Equals(other.Font)
+            && this.Fill.Equals(other.Fill)
+            && this.Border.Equals(other.Border)
+            && this.NumberFormat.Equals(other.NumberFormat)
+            && this.Alignment.Equals(other.Alignment)
+            ;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.GetHashCode().Equals(obj.GetHashCode());
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + Font.GetHashCode();
+                hash = hash * 23 + Fill.GetHashCode();
+                hash = hash * 23 + Border.GetHashCode();
+                hash = hash * 23 + NumberFormat.GetHashCode();
+                hash = hash * 23 + Alignment.GetHashCode();
+                return hash;
+            }
+        }
     }
 }

@@ -242,5 +242,44 @@ namespace ClosedXML.Excel
             sb.Append("-");
             return sb.ToString();
         }
+
+        public override bool Equals(object obj)
+        {
+            return this.GetHashCode().Equals(obj.GetHashCode());
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + Horizontal.GetHashCode();
+                hash = hash * 23 + Vertical.GetHashCode();
+                hash = hash * 23 + Indent.GetHashCode();
+                hash = hash * 23 + JustifyLastLine.GetHashCode();
+                hash = hash * 23 + ReadingOrder.GetHashCode();
+                hash = hash * 23 + RelativeIndent.GetHashCode();
+                hash = hash * 23 + ShrinkToFit.GetHashCode();
+                hash = hash * 23 + TextRotation.GetHashCode();
+                hash = hash * 23 + WrapText.GetHashCode();
+                return hash;
+            }
+        }
+
+        public bool Equals(IXLAlignment other)
+        {
+            return 
+               this.Horizontal.Equals(other.Horizontal)
+            && this.Vertical.Equals(other.Vertical)
+            && this.Indent.Equals(other.Indent)
+            && this.JustifyLastLine.Equals(other.JustifyLastLine)
+            && this.ReadingOrder.Equals(other.ReadingOrder)
+            && this.RelativeIndent.Equals(other.RelativeIndent)
+            && this.ShrinkToFit.Equals(other.ShrinkToFit)
+            && this.TextRotation.Equals(other.TextRotation)
+            && this.WrapText.Equals(other.WrapText)
+            ;
+        }
+
     }
 }

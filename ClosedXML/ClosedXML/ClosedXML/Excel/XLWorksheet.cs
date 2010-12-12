@@ -327,7 +327,11 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRow Row( Int32 row)
+        public IXLRow Row(Int32 row)
+        {
+            return Row(row, true);
+        }
+        public IXLRow Row(Int32 row, Boolean pingCells)
         {
             IXLStyle styleToUse;
             if (this.Internals.RowsCollection.ContainsKey(row))
@@ -336,16 +340,25 @@ namespace ClosedXML.Excel
             }
             else
             {
-                // This is a new row so we're going to reference all 
-                // cells in columns of this row to preserve their formatting
-                var distinctColumns = this.Internals.CellsCollection.Keys.Select(k=>k.ColumnNumber).Distinct().ToDictionary(r=>r, r=>0);
+                if (pingCells)
+                {
+                    // This is a new row so we're going to reference all 
+                    // cells in columns of this row to preserve their formatting
+                    var distinctColumns = new Dictionary<Int32, Object>();
+                    foreach (var k in this.Internals.CellsCollection.Keys)
+                    {
+                        if (!distinctColumns.ContainsKey(k.ColumnNumber))
+                            distinctColumns.Add(k.ColumnNumber, null);
+                    }
 
-                var usedColumns = from c in this.Internals.ColumnsCollection
-                                  join dc in distinctColumns
-                                    on c.Key equals dc.Key
-                                  select c.Key;
-                
-                usedColumns.ForEach(c => Cell(row, c));
+                    var usedColumns = from c in this.Internals.ColumnsCollection
+                                      join dc in distinctColumns
+                                        on c.Key equals dc.Key
+                                      where !this.Internals.CellsCollection.ContainsKey(new XLAddress(row, c.Key))
+                                      select c.Key;
+
+                    usedColumns.ForEach(c => Cell(row, c));
+                }
                 styleToUse = this.Style;
                 this.Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, styleToUse, false)));
             }

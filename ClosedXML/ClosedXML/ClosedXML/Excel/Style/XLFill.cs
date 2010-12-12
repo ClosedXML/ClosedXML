@@ -115,5 +115,31 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public bool Equals(IXLFill other)
+        {
+            return
+            this.BackgroundColor.Equals(other.BackgroundColor)
+            && this.PatternType.Equals(other.PatternType)
+            && this.PatternColor.Equals(other.PatternColor)
+            ;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.GetHashCode().Equals(obj.GetHashCode());
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + BackgroundColor.GetHashCode();
+                hash = hash * 23 + PatternType.GetHashCode();
+                hash = hash * 23 + PatternColor.GetHashCode();
+                return hash;
+            }
+        }
     }
 }

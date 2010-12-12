@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
         Top
     }
 
-    public interface IXLAlignment
+    public interface IXLAlignment: IEquatable<IXLAlignment>
     {
         XLAlignmentHorizontalValues Horizontal { get; set; }
 

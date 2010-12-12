@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLStyle
+    public interface IXLStyle: IEquatable<IXLStyle>
     {
         IXLAlignment Alignment { get; set; }
         IXLBorder Border { get; set; }

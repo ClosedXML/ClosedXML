@@ -45,44 +45,63 @@ namespace ClosedXML.Excel
         /// <param name="cellAddressString">The cell address.</param>
         public XLAddress(String cellAddressString)
         {
-            Match m = a1Regex.Match(cellAddressString);
-            fixedColumn = m.Groups[1].Value.StartsWith("$");
-            columnLetter = m.Groups[1].Value.Replace("$", "");
-            fixedRow = m.Groups[1].Value.StartsWith("$");
-            rowNumber = Int32.Parse(m.Groups[2].Value.Replace("$", ""));
+            fixedColumn = cellAddressString[0] == '$';
+            Int32 startPos;
+            if (fixedColumn)
+                startPos = 1;
+            else
+                startPos = 0;
+
+            Int32 rowPos = startPos;
+            while (cellAddressString[rowPos] > '9')
+                rowPos++;
+
+            fixedRow = cellAddressString[rowPos] == '$';
+
+            if (fixedRow)
+            {
+                columnLetter = cellAddressString.Substring(startPos, rowPos - 1);
+                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos + 1));
+            }
+            else
+            {
+                columnLetter = cellAddressString.Substring(startPos, rowPos);
+                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos));
+            }
+
             columnNumber = 0;
         }
 
         #endregion
 
         #region Static
-
+        private static readonly Int32 twoT26 = 26 * 26;
         /// <summary>
         /// Gets the column number of a given column letter.
         /// </summary>
         /// <param name="columnLetter">The column letter to translate into a column number.</param>
         public static Int32 GetColumnNumberFromLetter(String columnLetter)
         {
-            Int32 iTest;
-            if (Int32.TryParse(columnLetter, out iTest)) return iTest;
+            if (columnLetter[0] <= '9')
+                return Int32.Parse(columnLetter);
 
             columnLetter = columnLetter.ToUpper();
-
-            if (columnLetter.Length == 1)
+            var length = columnLetter.Length;
+            if (length == 1)
             {
-                return Convert.ToByte(Convert.ToChar(columnLetter)) - 64;
+                return Convert.ToByte(columnLetter[0]) - 64;
             }
-            else if (columnLetter.Length == 2)
+            else if (length == 2)
             {
                 return
                     ((Convert.ToByte(columnLetter[0]) - 64) * 26) +
                     (Convert.ToByte(columnLetter[1]) - 64);
 
             }
-            else if (columnLetter.Length == 3)
+            else if (length == 3)
             {
                 return
-                    ((Convert.ToByte(columnLetter[0]) - 64) * 26 * 26) +
+                    ((Convert.ToByte(columnLetter[0]) - 64) * twoT26) +
                     ((Convert.ToByte(columnLetter[1]) - 64) * 26) +
                     (Convert.ToByte(columnLetter[2]) - 64);
             }
@@ -123,6 +142,61 @@ namespace ClosedXML.Excel
             return s;
         }
 
+        public static Int32 GetRowFromAddress1(String cellAddressString)
+        {
+            Int32 rowPos = 1;
+            while (cellAddressString[rowPos] > '9')
+                rowPos++;
+
+                return Int32.Parse(cellAddressString.Substring(rowPos));
+        }
+
+        public static Int32 GetColumnNumberFromAddress1(String cellAddressString)
+        {
+            Int32 rowPos = 0;
+            while (cellAddressString[rowPos] > '9')
+                rowPos++;
+
+            return GetColumnNumberFromLetter(cellAddressString.Substring(0, rowPos));
+        }
+
+        public static Int32 GetRowFromAddress2(String cellAddressString)
+        {
+            Int32 rowPos = 1;
+            while (cellAddressString[rowPos] > '9')
+                rowPos++;
+
+            if (cellAddressString[rowPos] == '$')
+            {
+                return Int32.Parse(cellAddressString.Substring(rowPos + 1));
+            }
+            else
+            {
+                return Int32.Parse(cellAddressString.Substring(rowPos));
+            }
+        }
+
+        public static Int32 GetColumnNumberFromAddress2(String cellAddressString)
+        {
+            Int32 startPos;
+            if (cellAddressString[0] == '$')
+                startPos = 1;
+            else
+                startPos = 0;
+
+            Int32 rowPos = startPos;
+            while (cellAddressString[rowPos] > '9')
+                rowPos++;
+            
+            if (cellAddressString[rowPos] == '$')
+            {
+                return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos - 1));
+            }
+            else
+            {
+                return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos));
+            }
+        }
         #endregion
 
         #region Properties
@@ -194,6 +268,13 @@ namespace ClosedXML.Excel
             if (FixedRow) sb.Append("$");
             sb.Append(RowNumber.ToString());
             return sb.ToString();
+        }
+        #endregion
+
+        #region Methods
+        public string GetTrimmedAddress()
+        {
+            return ColumnLetter + rowNumber.ToString();
         }
         #endregion
 

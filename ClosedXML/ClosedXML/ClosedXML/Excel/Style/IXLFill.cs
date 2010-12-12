@@ -29,7 +29,7 @@ namespace ClosedXML.Excel
         Solid
     }
 
-    public interface IXLFill
+    public interface IXLFill:IEquatable<IXLFill>
     {
         Color BackgroundColor { get; set; }
 

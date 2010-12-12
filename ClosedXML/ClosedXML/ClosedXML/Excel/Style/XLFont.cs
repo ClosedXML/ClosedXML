@@ -257,5 +257,45 @@ namespace ClosedXML.Excel
             return val;
         }
 
+
+        public Boolean Equals(IXLFont other)
+        {
+            return
+                   this.Bold.Equals(other.Bold)
+                && this.Italic.Equals(other.Italic)
+                && this.Underline.Equals(other.Underline)
+                && this.Strikethrough.Equals(other.Strikethrough)
+                && this.VerticalAlignment.Equals(other.VerticalAlignment)
+                && this.Shadow.Equals(other.Shadow)
+                && this.FontSize.Equals(other.FontSize)
+                && this.FontColor.Equals(other.FontColor)
+                && this.FontName.Equals(other.FontName)
+                && this.FontFamilyNumbering.Equals(other.FontFamilyNumbering)
+                ;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.GetHashCode().Equals(obj.GetHashCode());
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + Bold.GetHashCode();
+                hash = hash * 23 + Italic.GetHashCode();
+                hash = hash * 23 + Underline.GetHashCode();
+                hash = hash * 23 + Strikethrough.GetHashCode();
+                hash = hash * 23 + VerticalAlignment.GetHashCode();
+                hash = hash * 23 + Shadow.GetHashCode();
+                hash = hash * 23 + FontSize.GetHashCode();
+                hash = hash * 23 + FontColor.GetHashCode();
+                hash = hash * 23 + FontName.GetHashCode();
+                hash = hash * 23 + FontFamilyNumbering.GetHashCode();
+                return hash;
+            }
+        }
     }
 }

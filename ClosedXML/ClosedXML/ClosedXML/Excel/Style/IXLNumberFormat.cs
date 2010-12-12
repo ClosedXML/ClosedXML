@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLNumberFormat
+    public interface IXLNumberFormat: IEquatable<IXLNumberFormat>
     {
         Int32 NumberFormatId { get; set; }
         String Format { get; set; }

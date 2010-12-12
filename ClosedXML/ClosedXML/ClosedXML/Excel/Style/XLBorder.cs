@@ -251,5 +251,49 @@ namespace ClosedXML.Excel
             sb.Append(DiagonalDown.ToString());
             return sb.ToString();
         }
+
+        public bool Equals(IXLBorder other)
+        {
+            return
+                   this.LeftBorder.Equals(other.LeftBorder)
+                && this.LeftBorderColor.Equals(other.LeftBorderColor)
+                && this.RightBorder.Equals(other.RightBorder)
+                && this.RightBorderColor.Equals(other.RightBorderColor)
+                && this.TopBorder.Equals(other.TopBorder)
+                && this.TopBorderColor.Equals(other.TopBorderColor)
+                && this.BottomBorder.Equals(other.BottomBorder)
+                && this.BottomBorderColor.Equals(other.BottomBorderColor)
+                && this.DiagonalBorder.Equals(other.DiagonalBorder)
+                && this.DiagonalBorderColor.Equals(other.DiagonalBorderColor)
+                && this.DiagonalUp.Equals(other.DiagonalUp)
+                && this.DiagonalDown.Equals(other.DiagonalDown)
+                ;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.GetHashCode().Equals(obj.GetHashCode());
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + LeftBorder.GetHashCode();
+                hash = hash * 23 + LeftBorderColor.GetHashCode();
+                hash = hash * 23 + RightBorder.GetHashCode();
+                hash = hash * 23 + RightBorderColor.GetHashCode();
+                hash = hash * 23 + TopBorder.GetHashCode();
+                hash = hash * 23 + TopBorderColor.GetHashCode();
+                hash = hash * 23 + BottomBorder.GetHashCode();
+                hash = hash * 23 + BottomBorderColor.GetHashCode();
+                hash = hash * 23 + DiagonalBorder.GetHashCode();
+                hash = hash * 23 + DiagonalBorderColor.GetHashCode();
+                hash = hash * 23 + DiagonalUp.GetHashCode();
+                hash = hash * 23 + DiagonalDown.GetHashCode();
+                return hash;
+            }
+        }
     }
 }
