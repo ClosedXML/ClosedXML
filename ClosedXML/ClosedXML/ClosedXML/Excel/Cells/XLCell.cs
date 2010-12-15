@@ -143,7 +143,7 @@ namespace ClosedXML.Excel
                 }
             }
             set
-            {
+            {   
                 FormulaA1 = String.Empty;
                 if (!SetEnumerable(value))
                     if (!SetRange(value))
@@ -177,12 +177,19 @@ namespace ClosedXML.Excel
                 {
                     for (var co = 1; co <= maxColumns; co++)
                     {
-                        var sourceCell = asRange.Cell(ro, co);
-                        var targetCell = worksheet.Cell(Address.RowNumber + ro - 1, Address.ColumnNumber + co - 1);
-                        targetCell.Style = sourceCell.Style;
-                        targetCell.DataType = sourceCell.DataType;
-                        targetCell.Value = sourceCell.Value;
-                        targetCell.FormulaA1 = sourceCell.FormulaA1;
+                        var sourceCell = (XLCell)asRange.Cell(ro, co);
+                        var targetCell = (XLCell)worksheet.Cell(Address.RowNumber + ro - 1, Address.ColumnNumber + co - 1);
+                        if (!targetCell.Style.Equals(sourceCell.Style))
+                            targetCell.Style = sourceCell.Style;
+
+                        if (targetCell.InnerText != sourceCell.InnerText)
+                            targetCell.Value = sourceCell.Value;
+
+                        if (targetCell.DataType != sourceCell.DataType)
+                            targetCell.DataType = sourceCell.DataType;
+
+                        if (targetCell.FormulaA1 != sourceCell.FormulaA1)
+                            targetCell.FormulaA1 = sourceCell.FormulaA1;
                     }
                 }
                 var rangesToMerge = new List<IXLRange>();

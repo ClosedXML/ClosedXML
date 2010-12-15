@@ -89,7 +89,7 @@ namespace ClosedXML.Excel
                 var sheetName = dSheet.Name;
 
                 var ws = (XLWorksheet)Worksheets.Add(sheetName);
-
+                ws.RelId = dSheet.Id;
                 var sheetFormatProperties = (SheetFormatProperties)worksheetPart.Worksheet.Descendants<SheetFormatProperties>().First();
                 if (sheetFormatProperties.DefaultRowHeight != null)
                     ws.RowHeight = sheetFormatProperties.DefaultRowHeight;

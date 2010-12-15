@@ -11,6 +11,7 @@ namespace ClosedXML.Excel
         Double RowHeight { get; set; }
 
         String Name { get; set; }
+        Int32 SheetIndex { get; set; }
         IXLPageSetup PageSetup { get; }
         IXLOutline Outline { get; }
 

@@ -65,6 +65,19 @@ namespace ClosedXML
         {
             return instance.Length - instance.Replace(c.ToString(), "").Length;
         }
+
+        public static Boolean HasDuplicates<T>(this IEnumerable<T> source)
+        {
+            HashSet<T> distinctItems = new HashSet<T>();
+            foreach (var item in source)
+            {
+                if (distinctItems.Contains(item))
+                    return true;
+                else
+                    distinctItems.Add(item);
+            }
+            return false;
+        }
     }
 
     public static class DictionaryExtensions

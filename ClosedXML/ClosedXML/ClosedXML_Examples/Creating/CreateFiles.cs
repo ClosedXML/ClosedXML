@@ -27,7 +27,7 @@ namespace ClosedXML_Examples
             new InsertColumns().Create(@"C:\Excel Files\Created\InsertColumns.xlsx");
             new ColumnCollection().Create(@"C:\Excel Files\Created\ColumnCollection.xlsx");
             new DataTypes().Create(@"C:\Excel Files\Created\DataTypes.xlsx");
-            new MultipleSheets().Create(@"C:\Excel Files\Created\MultipleSheets.xlsx");
+            new MultipleSheets().Create();
             new RowCollection().Create(@"C:\Excel Files\Created\RowCollection.xlsx");
             new DefiningRanges().Create(@"C:\Excel Files\Created\DefiningRanges.xlsx");
             new ClearingRanges().Create(@"C:\Excel Files\Created\ClearingRanges.xlsx");

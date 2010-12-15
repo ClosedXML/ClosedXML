@@ -152,6 +152,30 @@ namespace ClosedXML.Excel
 
         public String Name { get; set; }
         public Int32 SheetId { get; set; }
+        public String RelId { get; set; }
+
+
+        internal Int32 sheetIndex;
+        public Int32 SheetIndex 
+        {
+            get
+            {
+                return sheetIndex;
+            }
+            set
+            {
+                if (value > workbook.Worksheets.Count())
+                    throw new IndexOutOfRangeException("Index must be equal or less than the number of worksheets.");
+
+                if (value < sheetIndex)
+                    workbook.Worksheets.Where(w => w.SheetIndex >= value && w.SheetIndex < sheetIndex).ForEach(w => ((XLWorksheet)w).sheetIndex += 1);
+
+                if (value > sheetIndex)
+                    workbook.Worksheets.Where(w => w.SheetIndex <= value && w.SheetIndex > sheetIndex).ForEach(w => ((XLWorksheet)w).sheetIndex -= 1);
+
+                sheetIndex = value;
+            }
+        }
 
         public IXLPageSetup PageSetup { get; private set; }
         public IXLOutline Outline { get; private set; }
@@ -344,16 +368,16 @@ namespace ClosedXML.Excel
                 {
                     // This is a new row so we're going to reference all 
                     // cells in columns of this row to preserve their formatting
-                    var distinctColumns = new Dictionary<Int32, Object>();
+                    var distinctColumns = new HashSet<Int32>();
                     foreach (var k in this.Internals.CellsCollection.Keys)
                     {
-                        if (!distinctColumns.ContainsKey(k.ColumnNumber))
-                            distinctColumns.Add(k.ColumnNumber, null);
+                        if (!distinctColumns.Contains(k.ColumnNumber))
+                            distinctColumns.Add(k.ColumnNumber);
                     }
 
                     var usedColumns = from c in this.Internals.ColumnsCollection
                                       join dc in distinctColumns
-                                        on c.Key equals dc.Key
+                                        on c.Key equals dc
                                       where !this.Internals.CellsCollection.ContainsKey(new XLAddress(row, c.Key))
                                       select c.Key;
 

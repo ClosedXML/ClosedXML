@@ -1,4 +1,5 @@
-﻿using System;using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
@@ -12,37 +13,66 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-
-
-            FillStyles();
             var wb = new XLWorkbook();
-            foreach (var i in Enumerable.Range(1, 1))
+            foreach (var wsNum in Enumerable.Range(0, 5))
             {
-                var ws = wb.Worksheets.Add("Sheet" + i);
-                foreach (var ro in Enumerable.Range(1, 100))
-                {
-                    foreach (var co in Enumerable.Range(1, 100))
-                    {
-                        ws.Cell(ro, co).Style = GetRandomStyle();
-                        ws.Cell(ro, co).Value = GetRandomValue();
-                    }
-                    System.Threading.Thread.Sleep(10);
-                }
+                wb.Worksheets.Add("Original Pos. is " + wsNum.ToString());
             }
-            var start = DateTime.Now;
-            wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
-            var end = DateTime.Now;
-            Console.WriteLine("Saved in {0} secs.", (end - start).TotalSeconds);
 
-            var start1 = DateTime.Now;
-            var wb1 = new XLWorkbook(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
+            // Move first worksheet to the last position
+            wb.Worksheets.Worksheet(0).SheetIndex = wb.Worksheets.Count();
 
-            var end1 = DateTime.Now;
-            Console.WriteLine("Loaded in {0} secs.", (end1 - start1).TotalSeconds);
+            // Delete worksheet on position 2 (in this case it's where original position = 3)
+            wb.Worksheets.Worksheet(2).Delete();
 
-            //var ws = wb.Worksheets.Worksheet(0);
-            //wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark_Saved.xlsx");
+            // Swap sheets in positions 0 and 1
+            wb.Worksheets.Worksheet(1).SheetIndex = 0;
 
+            wb.SaveAs(@"C:\Excel Files\ForTesting\OrganizingSheets.xlsx");
+        }
+        static void xMain(string[] args)
+        {
+            List<Double> running = new List<Double>();
+            foreach (Int32 r in Enumerable.Range(1, 1))
+            {
+                var startTotal = DateTime.Now;
+
+                FillStyles();
+                var wb = new XLWorkbook();
+                foreach (var i in Enumerable.Range(1, 3))
+                {
+                    var ws = wb.Worksheets.Add("Sheet" + i);
+                    foreach (var ro in Enumerable.Range(1, 100))
+                    {
+                        foreach (var co in Enumerable.Range(1, 100))
+                        {
+                            ws.Cell(ro, co).Style = GetRandomStyle();
+                            ws.Cell(ro, co).Value = GetRandomValue();
+                        }
+                        //System.Threading.Thread.Sleep(10);
+                    }
+                }
+                var start = DateTime.Now;
+                wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
+                var end = DateTime.Now;
+                Console.WriteLine("Saved in {0} secs.", (end - start).TotalSeconds);
+
+                var start1 = DateTime.Now;
+                var wb1 = new XLWorkbook(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
+
+                var end1 = DateTime.Now;
+                Console.WriteLine("Loaded in {0} secs.", (end1 - start1).TotalSeconds);
+                var start2 = DateTime.Now;
+                wb1.SaveAs(@"C:\Excel Files\ForTesting\Benchmark_Saved.xlsx");
+                var end2 = DateTime.Now;
+                Console.WriteLine("Saved back in {0} secs.", (end2 - start2).TotalSeconds);
+
+                var endTotal = DateTime.Now;
+                Console.WriteLine("It all took {0} secs.", (endTotal - startTotal).TotalSeconds);
+                running.Add((endTotal - startTotal).TotalSeconds);
+            }
+            Console.WriteLine("-------");
+            Console.WriteLine("Avg total time: {0}", running.Average());
             //Console.ReadKey();
         }
 
@@ -73,7 +103,7 @@ namespace ClosedXML_Sandbox
         private static IXLStyle GetRandomStyle()
         {
             
-            var val = rnd.Next(1, 3);
+            var val = rnd.Next(1, 4);
             if (val == 1)
             {
                 return style1;
@@ -90,7 +120,7 @@ namespace ClosedXML_Sandbox
         private static Random rnd = new Random();
         private static object GetRandomValue()
         {
-            var val = rnd.Next(1, 6);
+            var val = rnd.Next(1, 7);
             if (val == 1)
                 return Guid.NewGuid().ToString().Substring(1, 5);
             else if (val == 2)

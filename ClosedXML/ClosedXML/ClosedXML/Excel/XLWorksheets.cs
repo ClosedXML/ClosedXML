@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     internal class XLWorksheets : IXLWorksheets
     {
         Dictionary<String, IXLWorksheet> worksheets = new Dictionary<String, IXLWorksheet>();
-
+        public HashSet<String> Deleted = new HashSet<String>();
         XLWorkbook workbook;
         public XLWorksheets(XLWorkbook workbook)
         {
@@ -17,31 +17,51 @@ namespace ClosedXML.Excel
 
         #region IXLWorksheets Members
 
-        public IXLWorksheet Worksheet(string sheetName)
+        public IXLWorksheet Worksheet(String sheetName)
         {
             return worksheets[sheetName];
         }
 
-        public IXLWorksheet Worksheet(int sheetIndex)
+        public IXLWorksheet Worksheet(Int32 sheetIndex)
         {
-            return worksheets.ElementAt(sheetIndex).Value;
+            var wsCount = worksheets.Values.Where(w => w.SheetIndex == sheetIndex).Count();
+            if (wsCount == 0)
+                throw new Exception("There isn't a worksheet associated with that index.");
+
+            if (wsCount > 1)
+                throw new Exception("Can't retrieve a worksheet because there are multiple worksheets associated with that index.");
+
+            return worksheets.Values.Where(w => w.SheetIndex == sheetIndex).Single();
         }
 
         public IXLWorksheet Add(String sheetName)
         {
             var sheet = new XLWorksheet(sheetName, workbook);
             worksheets.Add(sheetName, sheet);
+            sheet.sheetIndex = worksheets.Count - 1;
             return sheet;
         }
 
-        public void Delete(string sheetName)
+        public void Delete(String sheetName)
         {
-            worksheets.Remove(sheetName);
+            Delete(worksheets[sheetName].SheetIndex);
         }
 
         public void Delete(Int32 sheetIndex)
         {
-            worksheets.Remove(worksheets.ElementAt(sheetIndex).Key);
+            var wsCount = worksheets.Values.Where(w => w.SheetIndex == sheetIndex).Count();
+            if (wsCount == 0)
+                throw new Exception("There isn't a worksheet associated with that index.");
+
+            if (wsCount > 1)
+                throw new Exception("Can't delete the worksheet because there are multiple worksheets associated with that index.");
+
+            var ws = (XLWorksheet)worksheets.Values.Where(w => w.SheetIndex == sheetIndex).Single();
+            if (!StringExtensions.IsNullOrWhiteSpace(ws.RelId) && !Deleted.Contains(ws.RelId))
+                Deleted.Add(ws.RelId);
+
+            worksheets.RemoveAll(w => w.SheetIndex == sheetIndex);
+            worksheets.Values.Where(w => w.SheetIndex > sheetIndex).ForEach(w => ((XLWorksheet)w).sheetIndex -= 1);
         }
         
         #endregion

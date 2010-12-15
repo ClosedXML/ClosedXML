@@ -277,6 +277,9 @@ namespace ClosedXML.Excel
             else
                 workbookPart = document.WorkbookPart;
             
+            var worksheets = (XLWorksheets)Worksheets;
+            var partsToRemove = workbookPart.Parts.Where(s => worksheets.Deleted.Contains(s.RelationshipId)).ToList();
+            partsToRemove.ForEach(s => workbookPart.DeletePart(s.OpenXmlPart));
             relId.AddValues(workbookPart.Parts.Select(p=>p.RelationshipId).ToList(), RelType.Workbook);
 
             var modifiedSheetNames = Worksheets.Select(w => w.Name.ToLower()).ToList();
@@ -315,18 +318,14 @@ namespace ClosedXML.Excel
 
             GenerateWorkbookStylesPartContent(workbookStylesPart);
 
-            foreach (var worksheet in Worksheets.Cast<XLWorksheet>().OrderBy(w=>w.SheetId))
+            foreach (var worksheet in Worksheets.Cast<XLWorksheet>().OrderBy(w=>w.SheetIndex))
             {
-            //Int32 sheetCount = Worksheets.Count();
-            //for (Int32 i = 0; i < sheetCount; i++)
-            //{
-            //    var worksheet = (XLWorksheet)Worksheets.Worksheet(i);
                 WorksheetPart worksheetPart;
                 var sheets = workbookPart.Workbook.Sheets.Elements<Sheet>();
-                if (workbookPart.Parts.Where(p => p.RelationshipId == "rId" + worksheet.SheetId.ToString()).Any())
-                    worksheetPart = (WorksheetPart)workbookPart.GetPartById("rId" + worksheet.SheetId.ToString());
+                if (workbookPart.Parts.Where(p => p.RelationshipId == worksheet.RelId).Any())
+                    worksheetPart = (WorksheetPart)workbookPart.GetPartById(worksheet.RelId);
                 else
-                    worksheetPart = workbookPart.AddNewPart<WorksheetPart>("rId" + worksheet.SheetId.ToString());
+                    worksheetPart = workbookPart.AddNewPart<WorksheetPart>(worksheet.RelId);
 
                 GenerateWorksheetPartContent(worksheetPart, worksheet);
             }
@@ -368,11 +367,9 @@ namespace ClosedXML.Excel
             if (properties.TitlesOfParts == null)
                 properties.TitlesOfParts = new Ap.TitlesOfParts();
 
-            if (properties.HeadingPairs.VTVector == null)
-                properties.HeadingPairs.VTVector = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Variant};
+            properties.HeadingPairs.VTVector = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Variant};
 
-            if (properties.TitlesOfParts.VTVector == null)
-                properties.TitlesOfParts.VTVector = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Lpstr };
+            properties.TitlesOfParts.VTVector = new Vt.VTVector() { BaseType = Vt.VectorBaseValues.Lpstr };
 
             Vt.VTVector vTVector_One;
             vTVector_One = properties.HeadingPairs.VTVector;
@@ -380,36 +377,22 @@ namespace ClosedXML.Excel
             Vt.VTVector vTVector_Two;
             vTVector_Two = properties.TitlesOfParts.VTVector;
 
-            
-            var modifiedWorksheets = Worksheets.Select(w => w.Name).ToList();
-            var modifiedNamedRanges = GetModifiedNamedRanges().Union(modifiedWorksheets);
 
-            var existingNamedRanges = GetExistingNamedRanges(vTVector_Two);
-            var existingWorksheets = GetExistingWorksheets(workbookPart);
+            var modifiedWorksheets = Worksheets.Select(w => new { w.Name, Order = w.SheetIndex });
+            var modifiedNamedRanges = GetModifiedNamedRanges();
 
-            var allWorksheets = existingWorksheets.Union(modifiedWorksheets);
-            var allNamedRanges = existingNamedRanges.Union(modifiedNamedRanges);
+            InsertOnVTVector(vTVector_One, "Worksheets", 0, modifiedWorksheets.Count().ToString());
+            InsertOnVTVector(vTVector_One, "Named Ranges", 2, (modifiedNamedRanges.Count()).ToString());
 
-            InsertOnVTVector(vTVector_One, "Worksheets", 0, allWorksheets.Count().ToString());
-            InsertOnVTVector(vTVector_One, "Named Ranges", 2, (allNamedRanges.Count() - allWorksheets.Count()).ToString());
+            vTVector_Two.Size = (UInt32)(modifiedNamedRanges.Count() + modifiedWorksheets.Count());
 
-            vTVector_Two.Size = (UInt32)(allNamedRanges.Count());
-
-            var worksheetsToInsert = from w in modifiedWorksheets
-                                where !vTVector_Two.Elements<Vt.VTLPSTR>().Any(m => w.ToLower() == m.Text.ToLower())
-                                select w;
-
-            var namedRangesToInsert = from r in modifiedNamedRanges
-                                 where !vTVector_Two.Elements<Vt.VTLPSTR>().Any(m => r.ToLower() == m.Text.ToLower())
-                                 select r;
-
-            foreach (var w in worksheetsToInsert)
+            foreach (var w in modifiedWorksheets.OrderBy(w=>w.Order))
             {
-                Vt.VTLPSTR vTLPSTR3 = new Vt.VTLPSTR() { Text = w };
+                Vt.VTLPSTR vTLPSTR3 = new Vt.VTLPSTR() { Text = w.Name };
                 vTVector_Two.Append(vTLPSTR3);
             }
 
-            foreach (var nr in namedRangesToInsert)
+            foreach (var nr in modifiedNamedRanges)
             {
                 Vt.VTLPSTR vTLPSTR7 = new Vt.VTLPSTR() { Text = nr };
                 vTVector_Two.Append(vTLPSTR7);
@@ -535,18 +518,37 @@ namespace ClosedXML.Excel
             if (workbook.Sheets == null)
                 workbook.Sheets = new Sheets();
 
+            var worksheets = (XLWorksheets)Worksheets;
+            workbook.Sheets.Elements<Sheet>().Where(s => worksheets.Deleted.Contains(s.Id)).ForEach(s => s.Remove());
+
             foreach (var sheet in workbook.Sheets.Elements<Sheet>())
             {
                 var sName = sheet.Name.Value;
                 if (Worksheets.Where(w => w.Name.ToLower() == sName.ToLower()).Any())
-                    ((XLWorksheet)Worksheets.Where(w => w.Name.ToLower() == sName.ToLower()).Single()).SheetId = (Int32)sheet.SheetId.Value;
+                {
+                    var wks = (XLWorksheet)Worksheets.Where(w => w.Name.ToLower() == sName.ToLower()).Single();
+                    wks.SheetId = (Int32)sheet.SheetId.Value;
+                    wks.RelId = sheet.Id;
+                }
             }
 
-            foreach (var xlSheet in Worksheets.Cast<XLWorksheet>().Where(w=>w.SheetId == 0))
+            foreach (var xlSheet in Worksheets.Cast<XLWorksheet>().Where(w => w.SheetId == 0).OrderBy(w => w.SheetIndex))
             {
                 var rId = relId.GetNext(RelType.Workbook);
                 xlSheet.SheetId = Int32.Parse(rId.Substring(3));
+                xlSheet.RelId = rId;
                 workbook.Sheets.Append(new Sheet() { Name = xlSheet.Name, Id = rId, SheetId = (UInt32)xlSheet.SheetId });
+            }
+
+            var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
+                                join worksheet in Worksheets.Cast<XLWorksheet>() on sheet.Id.Value equals worksheet.RelId
+                                orderby worksheet.SheetIndex
+                                select sheet;
+
+            foreach (var sheet in sheetElements)
+            {
+                workbook.Sheets.RemoveChild(sheet);
+                workbook.Sheets.Append(sheet);
             }
 
             DefinedNames definedNames = new DefinedNames();
@@ -677,7 +679,7 @@ namespace ClosedXML.Excel
 
         private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart)
         {
-            Dictionary<String, Object> modifiedStrings = new Dictionary<string, object>();
+            HashSet<String> modifiedStrings = new HashSet<String>();
             foreach (var w in Worksheets.Cast<XLWorksheet>())
             {
                 foreach (var c in w.Internals.CellsCollection.Values)
@@ -685,10 +687,10 @@ namespace ClosedXML.Excel
                     if (
                         c.DataType == XLCellValues.Text 
                         && !StringExtensions.IsNullOrWhiteSpace(c.InnerText)
-                        && !modifiedStrings.ContainsKey(c.Value.ToString())
+                        && !modifiedStrings.Contains(c.Value.ToString())
                         )
                     {
-                        modifiedStrings.Add(c.Value.ToString(), null);
+                        modifiedStrings.Add(c.Value.ToString());
                     }
                 }
             }
@@ -698,7 +700,7 @@ namespace ClosedXML.Excel
             UInt32 stringCount = (UInt32)modifiedStrings.Count();
 
             Int32 stringId = 0;
-            foreach (var s in modifiedStrings.Keys)
+            foreach (var s in modifiedStrings)
             {
                     SharedStringItem sharedStringItem = new SharedStringItem();
                     Text text = new Text();
@@ -1637,8 +1639,10 @@ namespace ClosedXML.Excel
                     {
                         cell.CellFormula = null;
 
-                        if (opCell.Value.DataType != XLCellValues.DateTime)
-                                cell.DataType = GetCellValue(dataType);
+                        if (opCell.Value.DataType == XLCellValues.DateTime)
+                            cell.DataType = null;
+                        else
+                            cell.DataType = GetCellValue(dataType);
 
                         CellValue cellValue = new CellValue();
                         if (dataType == XLCellValues.Text)

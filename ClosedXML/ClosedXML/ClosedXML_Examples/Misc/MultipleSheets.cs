@@ -44,15 +44,14 @@ namespace ClosedXML_Examples.Misc
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create()
         {
-            var workbook = new XLWorkbook();
-            foreach (var wsNum in Enumerable.Range(1, 5))
-            {
-                var ws = workbook.Worksheets.Add("Sheet " + wsNum.ToString());
-            }
-
-            workbook.SaveAs(filePath);
+            var wb = new XLWorkbook(@"C:\Excel Files\Created\MultipleSheets.xlsx");
+            var ws = wb.Worksheets.Add("NewOne");
+            wb.Worksheets.Worksheet(0).Delete();
+            ws.SheetIndex = 0;
+            wb.Worksheets.Worksheet("Inserted").SheetIndex = wb.Worksheets.Count();
+            wb.SaveAs(@"C:\Excel Files\Created\MultipleSheets_Saved.xlsx");
         }
 
         // Private
