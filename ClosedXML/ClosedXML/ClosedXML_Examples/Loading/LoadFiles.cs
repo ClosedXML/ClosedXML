@@ -21,7 +21,7 @@ namespace ClosedXML_Examples
                 LoadAndSaveFile(forLoadingFolder + @"\" + fileName, forSavingFolder + @"\" + fileName);
             }
 
-            //LoadAndSaveFile(forLoadingFolder + @"\DataTypes.xlsx", forSavingFolder + @"\DataTypes.xlsx");
+            //LoadAndSaveFile(forLoadingFolder + @"\HeaderFooters.xlsx", forSavingFolder + @"\HeaderFooters.xlsx");
         }
 
         private static void LoadAndSaveFile(String input, String output)

@@ -149,7 +149,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                foreach (var row in worksheetPart.Worksheet.Descendants<Row>().Where(r => r.CustomFormat != null && r.CustomFormat).Select(r => r))
+                foreach (var row in worksheetPart.Worksheet.Descendants<Row>()) //.Where(r => r.CustomFormat != null && r.CustomFormat).Select(r => r))
                 {
                     var xlRow = ws.Row((Int32)row.RowIndex.Value, false);
                     if (row.Height != null)
@@ -248,7 +248,7 @@ namespace ClosedXML.Excel
                 }
 
                 var printOptionsQuery = worksheetPart.Worksheet.Descendants<PrintOptions>();
-                if (printOptionsQuery.Count() > 1)
+                if (printOptionsQuery.Count() > 0)
                 {
                     var printOptions = (PrintOptions)printOptionsQuery.First();
                     if (printOptions.GridLines != null)
@@ -319,6 +319,8 @@ namespace ClosedXML.Excel
                     var headerFooter = (HeaderFooter)headerFooters.First();
                     if (headerFooter.AlignWithMargins != null)
                         ws.PageSetup.AlignHFWithMargins = headerFooter.AlignWithMargins;
+                    if (headerFooter.ScaleWithDoc != null)
+                        ws.PageSetup.ScaleHFWithDocument = headerFooter.ScaleWithDoc;
 
                     // Footers
                     var xlFooter = (XLHeaderFooter)ws.PageSetup.Footer;

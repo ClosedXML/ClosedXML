@@ -230,18 +230,12 @@ namespace ClosedXML.Excel
             System.Drawing.Font stringFont = new System.Drawing.Font(fontName, (float)fontSize);
             return GetWidth(stringFont, text);
         }
-
+        private static readonly Graphics g = Graphics.FromImage(new Bitmap(200, 200));
         private Double GetWidth(System.Drawing.Font stringFont, string text)
         {
-            // This formula is based on this article plus a nudge ( + 0.2M )
-            // http://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.column.width.aspx
-            // Truncate(((256 * Solve_For_This + Truncate(128 / 7)) / 256) * 7) = DeterminePixelsOfString
-            String textToUse = new String('X', text.Length);
-            Size textSize = TextRenderer.MeasureText(textToUse, stringFont);
-            double width = (double)(((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
-            width = (double)decimal.Round((decimal)width + 0.2M, 2);
-
-            return width;
+            System.Drawing.Font drawfont = new System.Drawing.Font(fontName, (float)fontSize);
+            Int32 charWidth = (Int32)g.MeasureString("X", drawfont).Width;
+            return 2 + Math.Truncate((text.Length * charWidth) / charWidth * 256.0) / 256.0 - 0.71;
         }
 
         public Double GetHeight()

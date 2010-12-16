@@ -14,22 +14,20 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             var wb = new XLWorkbook();
-            foreach (var wsNum in Enumerable.Range(0, 5))
+
+            var ws = wb.Worksheets.Add("Sheet1");
+            foreach (var ro in Enumerable.Range(1, 100))
             {
-                wb.Worksheets.Add("Original Pos. is " + wsNum.ToString());
+                foreach (var co in Enumerable.Range(1, 10))
+                {
+                    ws.Cell(ro, co).Value = ws.Cell(ro, co).Address.ToString();
+                }
             }
+            ws.PageSetup.PagesWide = 1;
 
-            // Move first worksheet to the last position
-            wb.Worksheets.Worksheet(0).SheetIndex = wb.Worksheets.Count();
-
-            // Delete worksheet on position 2 (in this case it's where original position = 3)
-            wb.Worksheets.Worksheet(2).Delete();
-
-            // Swap sheets in positions 0 and 1
-            wb.Worksheets.Worksheet(1).SheetIndex = 0;
-
-            wb.SaveAs(@"C:\Excel Files\ForTesting\OrganizingSheets.xlsx");
+            wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
         }
+
         static void xMain(string[] args)
         {
             List<Double> running = new List<Double>();

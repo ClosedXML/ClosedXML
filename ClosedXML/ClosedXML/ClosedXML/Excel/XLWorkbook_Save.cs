@@ -13,7 +13,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Globalization;
-//using System.IO.Packaging;
+using DRW = System.Drawing;
+
 
 
 
@@ -564,10 +565,10 @@ namespace ClosedXML.Excel
 
                 if (worksheet.PageSetup.PrintAreas.Count() == 0)
                 {
-                    var minCell = worksheet.Internals.CellsCollection.Min(c => c.Key);
-                    var maxCell = worksheet.Internals.CellsCollection.Max(c => c.Key);
+                    var minCell = worksheet.FirstCellUsed();
+                    var maxCell = worksheet.LastCellUsed();
                     if (minCell != null && maxCell != null)
-                        worksheet.PageSetup.PrintAreas.Add(minCell, maxCell);
+                        worksheet.PageSetup.PrintAreas.Add(minCell.Address.ToString(), maxCell.Address.ToString());
                 }
                 if (worksheet.PageSetup.PrintAreas.Count() > 0)
                 {
@@ -623,7 +624,7 @@ namespace ClosedXML.Excel
                 
                 if (titles.Length > 0)
                 {
-                    DefinedName definedName = new DefinedName() { Name = "_xlnm.Print_Titles", LocalSheetId = sheetId};
+                    DefinedName definedName = new DefinedName() { Name = "_xlnm.Print_Titles", LocalSheetId = sheetId };
                     definedName.Text = titles;
                     definedNames.Append(definedName);
                 }
@@ -645,12 +646,19 @@ namespace ClosedXML.Excel
 
             foreach (DefinedName dn in definedNames)
             {
-                if (workbook.DefinedNames.Elements<DefinedName>().Any(d => d.Name.Value.ToLower() == dn.Name.Value.ToLower() 
-                    && ((d.LocalSheetId != null && dn.LocalSheetId !=null && d.LocalSheetId.InnerText == dn.LocalSheetId.InnerText)
+                if (workbook.DefinedNames.Elements<DefinedName>().Any(d =>
+                d.Name.Value.ToLower() == dn.Name.Value.ToLower()
+                    && (
+                        (d.LocalSheetId != null && dn.LocalSheetId != null && d.LocalSheetId.InnerText == dn.LocalSheetId.InnerText)
                         || d.LocalSheetId == null || dn.LocalSheetId == null)
                     ))
                 {
-                    DefinedName existingDefinedName = (DefinedName)workbook.DefinedNames.Where(d => ((DefinedName)d).Name.Value.ToLower() == dn.Name.Value.ToLower()).First();
+                    DefinedName existingDefinedName = (DefinedName)workbook.DefinedNames.Where(d => 
+                        ((DefinedName)d).Name.Value.ToLower() == dn.Name.Value.ToLower()
+                    && (
+                        (((DefinedName)d).LocalSheetId != null && dn.LocalSheetId != null && ((DefinedName)d).LocalSheetId.InnerText == dn.LocalSheetId.InnerText)
+                        || ((DefinedName)d).LocalSheetId == null || dn.LocalSheetId == null)
+                        ).First();
                     existingDefinedName.Text = dn.Text;
                     existingDefinedName.LocalSheetId = dn.LocalSheetId;
                     existingDefinedName.Comment = dn.Comment;
@@ -1415,6 +1423,8 @@ namespace ClosedXML.Excel
             }
             else
             {
+                var worksheetColumnWidth = GetColumnWidth(xlWorksheet.ColumnWidth);
+
                 if (worksheetPart.Worksheet.Elements<Columns>().Count() == 0)
                     worksheetPart.Worksheet.InsertAfter(new Columns(), worksheetPart.Worksheet.SheetFormatProperties);
 
@@ -1446,7 +1456,7 @@ namespace ClosedXML.Excel
                             Min = co,
                             Max = co,
                             Style = styleId,
-                            Width = xlWorksheet.ColumnWidth,
+                            Width = worksheetColumnWidth,
                             CustomWidth = true
                         };
 
@@ -1464,7 +1474,7 @@ namespace ClosedXML.Excel
                     if (xlWorksheet.Internals.ColumnsCollection.ContainsKey(co))
                     {
                         styleId = sharedStyles[xlWorksheet.Internals.ColumnsCollection[co].Style].StyleId;
-                        columnWidth = xlWorksheet.Internals.ColumnsCollection[co].Width;
+                        columnWidth = GetColumnWidth(xlWorksheet.Internals.ColumnsCollection[co].Width);
                         isHidden = xlWorksheet.Internals.ColumnsCollection[co].IsHidden;
                         collapsed = xlWorksheet.Internals.ColumnsCollection[co].Collapsed;
                         outlineLevel = xlWorksheet.Internals.ColumnsCollection[co].OutlineLevel;
@@ -1472,7 +1482,7 @@ namespace ClosedXML.Excel
                     else
                     {
                         styleId = sharedStyles[xlWorksheet.Style].StyleId;
-                        columnWidth = xlWorksheet.ColumnWidth;
+                        columnWidth = worksheetColumnWidth;
                     }
 
                     Column column = new Column()
@@ -1493,12 +1503,12 @@ namespace ClosedXML.Excel
                 foreach (var col in columns.Elements<Column>().Where(c => c.Min > (UInt32)(maxInColumnsCollection)).OrderBy(c => c.Min.Value))
                 {
                     col.Style = sharedStyles[xlWorksheet.Style].StyleId;
-                    col.Width = xlWorksheet.ColumnWidth;
+                    col.Width = worksheetColumnWidth;
                     col.CustomWidth = true;
                     if ((Int32)col.Max.Value > maxInColumnsCollection)
                         maxInColumnsCollection = (Int32)col.Max.Value;
                 }
-
+                
                 if (maxInColumnsCollection < XLWorksheet.MaxNumberOfColumns)
                 {
                     Column column = new Column()
@@ -1506,7 +1516,7 @@ namespace ClosedXML.Excel
                         Min = (UInt32)(maxInColumnsCollection + 1),
                         Max = (UInt32)(XLWorksheet.MaxNumberOfColumns),
                         Style = sharedStyles[xlWorksheet.Style].StyleId,
-                        Width = xlWorksheet.ColumnWidth,
+                        Width = worksheetColumnWidth,
                         CustomWidth = true
                     };
                     columns.Append(column);
@@ -1723,12 +1733,6 @@ namespace ClosedXML.Excel
 
             #region PrintOptions
             PrintOptions printOptions = null;
-            if (xlWorksheet.Internals.CellsCollection.Count == 0)
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<PrintOptions>();
-            }
-            else
-            {
                 if (worksheetPart.Worksheet.Elements<PrintOptions>().Count() == 0)
                 {
                     OpenXmlElement previousElement;
@@ -1754,7 +1758,6 @@ namespace ClosedXML.Excel
                 printOptions.VerticalCentered = xlWorksheet.PageSetup.CenterVertically;
                 printOptions.Headings = xlWorksheet.PageSetup.ShowRowAndColumnHeadings;
                 printOptions.GridLines = xlWorksheet.PageSetup.ShowGridlines;
-            }
             #endregion
 
             #region PageMargins
@@ -1835,15 +1838,17 @@ namespace ClosedXML.Excel
             }
             else
             {
+                pageSetup.Scale = null;
+
                 if (xlWorksheet.PageSetup.PagesWide > 0)
                     pageSetup.FitToWidth = (UInt32)xlWorksheet.PageSetup.PagesWide;
                 else
-                    pageSetup.FitToWidth = null;
+                    pageSetup.FitToWidth = 0;
 
                 if (xlWorksheet.PageSetup.PagesTall > 0)
                     pageSetup.FitToHeight = (UInt32)xlWorksheet.PageSetup.PagesTall;
                 else
-                    pageSetup.FitToHeight = null;
+                    pageSetup.FitToHeight = 0;
             }
             #endregion
 
@@ -1874,8 +1879,8 @@ namespace ClosedXML.Excel
             FirstFooter firstFooter = new FirstFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.FirstPage));
             headerFooter.Append(firstFooter);
 
-            if (!headerFooter.Any(hf => hf.InnerText.Length > 0))
-                worksheetPart.Worksheet.RemoveAllChildren<HeaderFooter>();
+            //if (!headerFooter.Any(hf => hf.InnerText.Length > 0))
+            //    worksheetPart.Worksheet.RemoveAllChildren<HeaderFooter>();
             #endregion
 
             #region RowBreaks
@@ -1945,6 +1950,11 @@ namespace ClosedXML.Excel
             #endregion
         }
 
+        private Double GetColumnWidth(Double columnWidth)
+        {
+            return columnWidth + 0.71;
+        }
+
         private void UpdateColumn(Column column, Columns columns)
         {
             Column newColumn;
@@ -1978,7 +1988,7 @@ namespace ClosedXML.Excel
                 if (column.OutlineLevel != null && column.OutlineLevel > 0)
                     newColumn.OutlineLevel = (byte)column.OutlineLevel;
                 else
-                    newColumn.Hidden = null;
+                    newColumn.OutlineLevel = null;
 
                 if (existingColumn.Min + 1 > existingColumn.Max)
                 {

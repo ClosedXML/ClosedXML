@@ -428,9 +428,9 @@ namespace ClosedXML.Excel
 
                             if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
                                 if (cellValue.Contains('.'))
-                                    Style.NumberFormat.NumberFormatId = 14;
-                                else
                                     Style.NumberFormat.NumberFormatId = 22;
+                                else
+                                    Style.NumberFormat.NumberFormatId = 14;
                         }
                         else if (value == XLCellValues.TimeSpan)
                         {
@@ -579,12 +579,12 @@ namespace ClosedXML.Excel
 
         private String GetFormulaR1C1(String value)
         {
-            return GetFormula(value, FormulaConversionType.A1toR1C1);
+            return GetFormula(value, FormulaConversionType.A1toR1C1, 0, 0);
         }
 
         private String GetFormulaA1(String value)
         {
-            return GetFormula(value, FormulaConversionType.R1C1toA1);
+            return GetFormula(value, FormulaConversionType.R1C1toA1, 0, 0);
         }
 
         private enum FormulaConversionType { A1toR1C1, R1C1toA1 };
@@ -597,7 +597,7 @@ namespace ClosedXML.Excel
                @"(?<=\W)([Rr]\[?-?\d{0,7}\]?[Cc]\[?-?\d{0,7}\]?)(?=\W)" // R1C1
             + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
             + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)"); // C:C
-        private String GetFormula(String strValue, FormulaConversionType conversionType)
+        private String GetFormula(String strValue, FormulaConversionType conversionType, Int32 rowsToShift, Int32 columnsToShift)
         {
             if (StringExtensions.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
@@ -617,9 +617,9 @@ namespace ClosedXML.Excel
                 {
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     if (conversionType == FormulaConversionType.A1toR1C1)
-                        sb.Append(GetR1C1Address(matchString));
+                        sb.Append(GetR1C1Address(matchString, rowsToShift, columnsToShift));
                     else
-                        sb.Append(GetA1Address(matchString));
+                        sb.Append(GetA1Address(matchString, rowsToShift, columnsToShift));
                 }
                 else
                 {
@@ -634,7 +634,7 @@ namespace ClosedXML.Excel
             return retVal.Substring(1, retVal.Length - 2);
         }
 
-        private String GetA1Address(String r1c1Address)
+        private String GetA1Address(String r1c1Address, Int32 rowsToShift, Int32 columnsToShift)
         {
             var addressToUse = r1c1Address.ToUpper();
 
@@ -647,13 +647,13 @@ namespace ClosedXML.Excel
                 String rightPart;
                 if (p1.StartsWith("R"))
                 {
-                    leftPart = GetA1Row(p1);
-                    rightPart = GetA1Row(p2);
+                    leftPart = GetA1Row(p1, rowsToShift);
+                    rightPart = GetA1Row(p2, rowsToShift);
                 }
                 else
                 {
-                    leftPart = GetA1Column(p1);
-                    rightPart = GetA1Column(p2);
+                    leftPart = GetA1Column(p1, columnsToShift);
+                    rightPart = GetA1Column(p2, columnsToShift);
                 }
                 return leftPart + ":" + rightPart;
             }
@@ -661,55 +661,55 @@ namespace ClosedXML.Excel
             {
 
                 var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
-                String rowToReturn = GetA1Row(rowPart);
+                String rowToReturn = GetA1Row(rowPart, rowsToShift);
 
                 var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
-                String columnToReturn = GetA1Column(columnPart);
+                String columnToReturn = GetA1Column(columnPart, columnsToShift);
 
                 var retAddress = columnToReturn + rowToReturn;
                 return retAddress;
             }
         }
 
-        private String GetA1Column(String columnPart)
+        private String GetA1Column(String columnPart, Int32 columnsToShift)
         {
             String columnToReturn;
             if (columnPart == "C")
             {
-                columnToReturn = Address.ColumnLetter;
+                columnToReturn = XLAddress.GetColumnLetterFromNumber(Address.ColumnNumber + columnsToShift);
             }
             else
             {
                 var bIndex = columnPart.IndexOf("[");
                 if (bIndex >= 0)
                     columnToReturn = XLAddress.GetColumnLetterFromNumber(
-                        Address.ColumnNumber + Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2))
+                        Address.ColumnNumber + Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
                         );
                 else
-                    columnToReturn = "$" + XLAddress.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)));
+                    columnToReturn = "$" + XLAddress.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)) + columnsToShift);
             }
             return columnToReturn;
         }
 
-        private String GetA1Row(String rowPart)
+        private String GetA1Row(String rowPart, Int32 rowsToShift)
         {
             String rowToReturn;
             if (rowPart == "R")
             {
-                rowToReturn = Address.RowNumber.ToString();
+                rowToReturn = (Address.RowNumber + rowsToShift).ToString();
             }
             else
             {
                 var bIndex = rowPart.IndexOf("[");
                 if (bIndex >= 0)
-                    rowToReturn = (Address.RowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2))).ToString();
+                    rowToReturn = (Address.RowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) + rowsToShift).ToString();
                 else
-                    rowToReturn = "$" + rowPart.Substring(1);
+                    rowToReturn = "$" + (Int32.Parse(rowPart.Substring(1)) + rowsToShift).ToString();
             }
             return rowToReturn;
         }
 
-        private String GetR1C1Address(String a1Address)
+        private String GetR1C1Address(String a1Address, Int32 rowsToShift, Int32 columnsToShift)
         {
             if (a1Address.Contains(':'))
             {
@@ -720,16 +720,16 @@ namespace ClosedXML.Excel
                 if (Int32.TryParse(p1.Replace("$", ""), out row1))
                 {
                     var row2 = Int32.Parse(p2.Replace("$", ""));
-                    var leftPart = GetR1C1Row(row1, p1.Contains('$'));
-                    var rightPart = GetR1C1Row(row2, p2.Contains('$'));
+                    var leftPart = GetR1C1Row(row1, p1.Contains('$'), rowsToShift);
+                    var rightPart = GetR1C1Row(row2, p2.Contains('$'), rowsToShift);
                     return leftPart + ":" + rightPart;
                 }
                 else
                 {
                     var column1 = XLAddress.GetColumnNumberFromLetter(p1.Replace("$", ""));
                     var column2 = XLAddress.GetColumnNumberFromLetter(p2.Replace("$", ""));
-                    var leftPart = GetR1C1Column(column1, p1.Contains('$'));
-                    var rightPart = GetR1C1Column(column2, p2.Contains('$'));
+                    var leftPart = GetR1C1Column(column1, p1.Contains('$'), columnsToShift);
+                    var rightPart = GetR1C1Column(column2, p2.Contains('$'), columnsToShift);
                     return leftPart + ":" + rightPart;
                 }
             }
@@ -737,16 +737,17 @@ namespace ClosedXML.Excel
             {
                 var address = new XLAddress(a1Address);
 
-                String rowPart = GetR1C1Row(address.RowNumber, address.FixedRow);
-                String columnPart = GetR1C1Column(address.ColumnNumber, address.FixedRow);
+                String rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, rowsToShift);
+                String columnPart = GetR1C1Column(address.ColumnNumber, address.FixedRow, columnsToShift);
 
                 return rowPart + columnPart;
             }
         }
 
-        private String GetR1C1Row(Int32 rowNumber, Boolean fixedRow)
+        private String GetR1C1Row(Int32 rowNumber, Boolean fixedRow, Int32 rowsToShift)
         {
             String rowPart;
+            rowNumber += rowsToShift;
             var rowDiff = rowNumber - Address.RowNumber;
             if (rowDiff != 0 || fixedRow)
             {
@@ -761,9 +762,10 @@ namespace ClosedXML.Excel
             return rowPart;
         }
 
-        private String GetR1C1Column(Int32 columnNumber, Boolean fixedColumn)
+        private String GetR1C1Column(Int32 columnNumber, Boolean fixedColumn, Int32 columnsToShift)
         {
             String columnPart;
+            columnNumber += columnsToShift;
             var columnDiff = columnNumber - Address.ColumnNumber;
             if (columnDiff != 0 || fixedColumn)
             {
@@ -778,5 +780,20 @@ namespace ClosedXML.Excel
             return columnPart;
         }
 
+        internal void CopyValues(XLCell source)
+        {
+            this.cellValue = source.cellValue;
+            this.dataType = source.dataType;
+            this.formulaA1 = source.formulaA1;
+            this.formulaR1C1 = source.formulaR1C1;
+        }
+
+        internal void ShiftFormula(Int32 rowsToShift, Int32 columnsToShift)
+        {
+            if (!StringExtensions.IsNullOrWhiteSpace(formulaA1))
+                FormulaR1C1 = GetFormula(formulaA1, FormulaConversionType.A1toR1C1, rowsToShift, columnsToShift);
+            else if (!StringExtensions.IsNullOrWhiteSpace(formulaA1))
+                FormulaA1 = GetFormula(formulaA1, FormulaConversionType.R1C1toA1, rowsToShift, columnsToShift);
+        }
     }
 }

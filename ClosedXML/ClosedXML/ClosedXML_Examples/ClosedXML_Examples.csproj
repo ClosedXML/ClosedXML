@@ -57,6 +57,7 @@
     <Compile Include="Misc\AdjustToContents.cs" />
     <Compile Include="Misc\Collections.cs" />
     <Compile Include="Misc\BlankCells.cs" />
+    <Compile Include="PageSetup\TwoPages.cs" />
     <Compile Include="Ranges\CopyingRanges.cs" />
     <Compile Include="Ranges\NamedRanges.cs" />
     <Compile Include="Misc\Formulas.cs" />
