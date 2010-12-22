@@ -59,6 +59,7 @@ namespace ClosedXML_Examples
             new CopyingRanges().Create();
             new BlankCells().Create(@"C:\Excel Files\Created\BlankCells.xlsx");
             new TwoPages().Create(@"C:\Excel Files\Created\TwoPages.xlsx");
+            new UsingColors().Create(@"C:\Excel Files\Created\UsingColors.xlsx");
         }
     }
 }

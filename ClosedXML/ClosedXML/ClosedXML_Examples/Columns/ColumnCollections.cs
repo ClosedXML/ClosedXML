@@ -51,27 +51,27 @@ namespace ClosedXML_Examples.Columns
             var ws = workbook.Worksheets.Add("Columns of a Range");
 
             // All columns in a range
-            ws.Range("A1:B2").Columns().Style.Fill.BackgroundColor = Color.DimGray;
+            ws.Range("A1:B2").Columns().Style.Fill.BackgroundColor = XLColor.DimGray;
 
             var bigRange = ws.Range("A4:V6");
 
             // Contiguous columns by number
-            bigRange.Columns(1, 2).Style.Fill.BackgroundColor = Color.Red;
+            bigRange.Columns(1, 2).Style.Fill.BackgroundColor = XLColor.Red;
 
             // Contiguous columns by letter
-            bigRange.Columns("D", "E").Style.Fill.BackgroundColor = Color.Blue;
+            bigRange.Columns("D", "E").Style.Fill.BackgroundColor = XLColor.Blue;
 
             // Contiguous columns by letter
-            bigRange.Columns("G:H").Style.Fill.BackgroundColor = Color.DeepPink;
+            bigRange.Columns("G:H").Style.Fill.BackgroundColor = XLColor.DeepPink;
 
             // Spread columns by number
-            bigRange.Columns("10:11,13:14").Style.Fill.BackgroundColor = Color.Orange;
+            bigRange.Columns("10:11,13:14").Style.Fill.BackgroundColor = XLColor.Orange;
 
             // Spread columns by letter
-            bigRange.Columns("P:Q,S:T").Style.Fill.BackgroundColor = Color.Turquoise;
+            bigRange.Columns("P:Q,S:T").Style.Fill.BackgroundColor = XLColor.Turquoise;
 
             // Use a single number/letter
-            bigRange.Columns("V").Style.Fill.BackgroundColor = Color.Cyan;
+            bigRange.Columns("V").Style.Fill.BackgroundColor = XLColor.Cyan;
 
             // Adjust the width
             ws.Columns("A:V").Width = 3; 
@@ -79,22 +79,22 @@ namespace ClosedXML_Examples.Columns
             var ws2 = workbook.Worksheets.Add("Columns of a worksheet");
             
             // Contiguous columns by number
-            ws2.Columns(1, 2).Style.Fill.BackgroundColor = Color.Red;
+            ws2.Columns(1, 2).Style.Fill.BackgroundColor = XLColor.Red;
 
             // Contiguous columns by letter
-            ws2.Columns("D", "E").Style.Fill.BackgroundColor = Color.Blue;
+            ws2.Columns("D", "E").Style.Fill.BackgroundColor = XLColor.Blue;
 
             // Contiguous columns by letter
-            ws2.Columns("G:H").Style.Fill.BackgroundColor = Color.DeepPink;
+            ws2.Columns("G:H").Style.Fill.BackgroundColor = XLColor.DeepPink;
 
             // Spread columns by number
-            ws2.Columns("10:11,13:14").Style.Fill.BackgroundColor = Color.Orange;
+            ws2.Columns("10:11,13:14").Style.Fill.BackgroundColor = XLColor.Orange;
 
             // Spread columns by letter
-            ws2.Columns("P:Q,S:T").Style.Fill.BackgroundColor = Color.Turquoise;
+            ws2.Columns("P:Q,S:T").Style.Fill.BackgroundColor = XLColor.Turquoise;
 
             // Use a single number/letter
-            ws2.Columns("V").Style.Fill.BackgroundColor = Color.Cyan;
+            ws2.Columns("V").Style.Fill.BackgroundColor = XLColor.Cyan;
 
             // Adjust the width
             ws2.Columns("A:V").Width = 3;

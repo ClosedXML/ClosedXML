@@ -17,7 +17,7 @@ namespace ClosedXML_Examples
 
             // Change the background color of the headers
             var rngHeaders = ws.Range("B3:F3");
-            rngHeaders.Style.Fill.BackgroundColor = Color.LightSalmon;
+            rngHeaders.Style.Fill.BackgroundColor = XLColor.LightSalmon;
 
             // Change the date formats
             var rngDates = ws.Range("E4:E6");

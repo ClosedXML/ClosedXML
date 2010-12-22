@@ -24,7 +24,7 @@ namespace ClosedXML_Examples.Ranges
                     var cell = ws.Cell(ro, co);
                     cell.Value = cell.Address.ToString();
                     cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    cell.Style.Fill.BackgroundColor = Color.Turquoise;
+                    cell.Style.Fill.BackgroundColor = XLColor.Turquoise;
                     cell.Style.Font.Bold = true;
                 }
             }

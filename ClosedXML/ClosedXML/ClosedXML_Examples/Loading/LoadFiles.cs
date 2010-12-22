@@ -28,6 +28,7 @@ namespace ClosedXML_Examples
         {
             var wb = new XLWorkbook(input);
             wb.SaveAs(output);
+            wb.SaveAs(output);
         }
     }
 }

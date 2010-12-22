@@ -18,7 +18,7 @@ namespace ClosedXML_Examples.Styles
             style.Border.DiagonalUp = true;
             style.Border.DiagonalDown = true;
             style.Border.DiagonalBorder = XLBorderStyleValues.Thick;
-            style.Border.DiagonalBorderColor = Color.Red;
+            style.Border.DiagonalBorderColor = XLColor.Red;
 
             // Create our workbook
             var workbook = new XLWorkbook();

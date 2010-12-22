@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
         XLFontVerticalTextAlignmentValues VerticalAlignment { get; set; }
         Boolean Shadow { get; set; }
         Double FontSize { get; set; }
-        Color FontColor { get; set; }
+        XLColor FontColor { get; set; }
         String FontName { get; set; }
         XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
     }

@@ -29,6 +29,41 @@ namespace ClosedXML.Excel
             Properties = new XLWorkbookProperties();
             CalculateMode = XLCalculateMode.Default;
             ReferenceStyle = XLReferenceStyle.Default;
+            InitializeTheme();
+        }
+
+        private void InitializeTheme()
+        {
+            Theme = new XLTheme() {
+                Text1 = XLColor.FromHtml("#FF000000"),
+                Background1 = XLColor.FromHtml("#FFFFFFFF"),
+                Text2 = XLColor.FromHtml("#FF1F497D"),
+                Background2 = XLColor.FromHtml("#FFEEECE1"),
+                Accent1 = XLColor.FromHtml("#FF4F81BD"),
+                Accent2 = XLColor.FromHtml("#FFC0504D"),
+                Accent3 = XLColor.FromHtml("#FF9BBB59"),
+                Accent4 = XLColor.FromHtml("#FF8064A2"),
+                Accent5 = XLColor.FromHtml("#FF4BACC6"),
+                Accent6 = XLColor.FromHtml("#FFF79646"),
+            };
+        }
+
+        internal IXLColor GetXLColor(XLThemeColor themeColor)
+        {
+            switch (themeColor)
+            {
+                case XLThemeColor.Text1: return Theme.Text1;
+                case XLThemeColor.Background1: return Theme.Background1;
+                case XLThemeColor.Text2: return Theme.Text2;
+                case XLThemeColor.Background2: return Theme.Background2;
+                case XLThemeColor.Accent1: return Theme.Accent1;
+                case XLThemeColor.Accent2: return Theme.Accent2;
+                case XLThemeColor.Accent3: return Theme.Accent3;
+                case XLThemeColor.Accent4: return Theme.Accent4;
+                case XLThemeColor.Accent5: return Theme.Accent5;
+                case XLThemeColor.Accent6: return Theme.Accent6;
+                default: throw new ArgumentException("Invalid theme color");
+            }
         }
 
         private String originalFile;
@@ -60,6 +95,8 @@ namespace ClosedXML.Excel
         /// Gets the file name of the workbook including its full directory.
         /// </summary>
         public String FullName { get; private set; }
+
+        public IXLTheme Theme { get; private set; }
 
         public void Save()
         {
@@ -113,16 +150,16 @@ namespace ClosedXML.Excel
                         Strikethrough = false,
                         VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
                         FontSize = 11,
-                        FontColor = Color.FromArgb(0, 0, 0),
+                        FontColor = XLColor.FromArgb(0, 0, 0),
                         FontName = "Calibri",
                         FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
                     },
 
                     Fill = new XLFill(null)
                    {
-                       BackgroundColor = Color.FromArgb(255, 255, 255),
+                       BackgroundColor = XLColor.FromIndex(64),
                        PatternType = XLFillPatternValues.None,
-                       PatternColor = Color.FromArgb(255, 255, 255)
+                       PatternColor = XLColor.FromIndex(64)
                    },
 
                     Border = new XLBorder(null, null)
@@ -134,11 +171,11 @@ namespace ClosedXML.Excel
                             LeftBorder = XLBorderStyleValues.None,
                             RightBorder = XLBorderStyleValues.None,
                             TopBorder = XLBorderStyleValues.None,
-                            BottomBorderColor = Color.Black,
-                            DiagonalBorderColor = Color.Black,
-                            LeftBorderColor = Color.Black,
-                            RightBorderColor = Color.Black,
-                            TopBorderColor = Color.Black
+                            BottomBorderColor = XLColor.Black,
+                            DiagonalBorderColor = XLColor.Black,
+                            LeftBorderColor = XLColor.Black,
+                            RightBorderColor = XLColor.Black,
+                            TopBorderColor = XLColor.Black
                         },
                     NumberFormat = new XLNumberFormat(null, null) { NumberFormatId = 0 },
                     Alignment = new XLAlignment(null)

@@ -114,7 +114,7 @@ namespace ClosedXML.Excel
             retVal += xlFont.VerticalAlignment == XLFontVerticalTextAlignmentValues.Superscript ? "&X" : "";
             retVal += xlFont.Underline== XLFontUnderlineValues.Single ? "&U" : "";
             retVal += xlFont.Underline == XLFontUnderlineValues.Double ? "&E" : "";
-            retVal += "&K" + xlFont.FontColor.ToHex().Substring(2);
+            retVal += "&K" + xlFont.FontColor.Color.ToHex().Substring(2);
 
             retVal += text;
 

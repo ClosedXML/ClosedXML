@@ -22,7 +22,7 @@ namespace ClosedXML_Examples.Styles
             ws.Cell(ro, co).Style.Font.Bold = true;
 
             ws.Cell(++ro, co).Value = "FontColor - Red";
-            ws.Cell(ro, co).Style.Font.FontColor = Color.Red;
+            ws.Cell(ro, co).Style.Font.FontColor = XLColor.Red;
 
             ws.Cell(++ro, co).Value = "FontFamilyNumbering - Script";
             ws.Cell(ro, co).Style.Font.FontFamilyNumbering = XLFontFamilyNumberingValues.Script;

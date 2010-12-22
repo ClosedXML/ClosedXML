@@ -51,7 +51,7 @@ namespace ClosedXML_Examples
             ws.Range("A1:A2").Delete(XLShiftDeletedCells.ShiftCellsLeft);
             ws.Range("D3:D4").Delete(XLShiftDeletedCells.ShiftCellsLeft);
 
-            rng.Style.Fill.BackgroundColor = Color.Orange;
+            rng.Style.Fill.BackgroundColor = XLColor.Orange;
 
             workbook.SaveAs(filePath);
         }

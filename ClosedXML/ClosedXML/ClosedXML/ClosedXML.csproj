@@ -53,10 +53,15 @@
     <Compile Include="Excel\Columns\IXLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
+    <Compile Include="Excel\IXLTheme.cs" />
     <Compile Include="Excel\NamedRanges\XLNamedRanges.cs" />
     <Compile Include="Excel\NamedRanges\IXLNamedRanges.cs" />
     <Compile Include="Excel\NamedRanges\XLNamedRange.cs" />
     <Compile Include="Excel\NamedRanges\IXLNamedRange.cs" />
+    <Compile Include="Excel\Style\Colors\XLColor_Static.cs" />
+    <Compile Include="Excel\Style\Colors\XLColor_Public.cs" />
+    <Compile Include="Excel\Style\Colors\IXLColor.cs" />
+    <Compile Include="Excel\Style\Colors\XLColor_Internal.cs" />
     <Compile Include="Excel\XLOutline.cs" />
     <Compile Include="Excel\IXLOutline.cs" />
     <Compile Include="Excel\IXLWorksheetInternals.cs" />
@@ -74,6 +79,7 @@
     <Compile Include="Excel\Ranges\IXLRangeBase.cs" />
     <Compile Include="Excel\Ranges\XLRangeBase.cs" />
     <Compile Include="Excel\Rows\XLRowCollection.cs" />
+    <Compile Include="Excel\XLTheme.cs" />
     <Compile Include="Excel\XLWorkbook_Load.cs" />
     <Compile Include="Excel\PageSetup\IXLHeaderFooter.cs" />
     <Compile Include="Excel\PageSetup\IXLHFItem.cs" />

@@ -88,7 +88,7 @@ namespace ClosedXML_Examples.Misc
             var rngData = ws.Range(2, 1, 4, 7);
             rngData.LastColumn().FormulaR1C1 = "=IF(RC[-3]=RC[-1],\"Yes\", \"No\")";
 
-            ws.Range(1, 1, 1, 7).Style.Fill.BackgroundColor = Color.Cyan;
+            ws.Range(1, 1, 1, 7).Style.Fill.BackgroundColor = XLColor.Cyan;
             ws.Range(1, 1, 1, 7).Style.Font.Bold = true;
             ws.Columns().AdjustToContents();
 

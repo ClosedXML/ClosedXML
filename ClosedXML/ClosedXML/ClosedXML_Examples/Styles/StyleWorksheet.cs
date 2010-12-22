@@ -16,8 +16,8 @@ namespace ClosedXML_Examples.Styles
             var ws = workbook.Worksheets.Add("Style Worksheet");
 
             ws.Style.Font.Bold = true;
-            ws.Style.Font.FontColor = Color.Red;
-            ws.Style.Fill.BackgroundColor = Color.Cyan;
+            ws.Style.Font.FontColor = XLColor.Red;
+            ws.Style.Fill.BackgroundColor = XLColor.Cyan;
 
             // The following cells will be bold and red
             // because we've specified those attributes to the entire worksheet

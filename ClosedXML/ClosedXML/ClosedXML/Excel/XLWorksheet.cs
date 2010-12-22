@@ -467,7 +467,13 @@ namespace ClosedXML.Excel
         {
             workbook.Worksheets.Delete(Name);
         }
-
+        public new void Clear()
+        {
+            Internals.CellsCollection.Clear();
+            Internals.ColumnsCollection.Clear();
+            Internals.MergedCells.Clear();
+            Internals.RowsCollection.Clear();
+        }
         public IXLNamedRanges NamedRanges { get; private set; }
     }
 }

@@ -245,7 +245,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            return this.GetHashCode().Equals(obj.GetHashCode());
+            return this.Equals((XLAlignment)obj);
         }
 
         public override int GetHashCode()

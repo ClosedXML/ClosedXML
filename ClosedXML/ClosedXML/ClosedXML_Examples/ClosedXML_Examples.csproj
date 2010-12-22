@@ -93,6 +93,7 @@
     <Compile Include="Rows\InsertRows.cs" />
     <Compile Include="Rows\RowSettings.cs" />
     <Compile Include="StyleExamples.cs" />
+    <Compile Include="Styles\UsingColors.cs" />
     <Compile Include="Styles\DefaultStyles.cs" />
     <Compile Include="Styles\StyleRowsColumns.cs" />
     <Compile Include="Styles\StyleWorksheet.cs" />

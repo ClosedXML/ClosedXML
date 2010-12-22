@@ -57,10 +57,10 @@ namespace ClosedXML_Examples
             var rng3 = ws.Range("A1:A3");
             var col1 = ws.Column(1);
 
-            rng1.Style.Fill.BackgroundColor = Color.Orange;
-            rng2.Style.Fill.BackgroundColor = Color.Blue;
-            rng3.Style.Fill.BackgroundColor = Color.Red;
-            col1.Style.Fill.BackgroundColor = Color.Black;
+            rng1.Style.Fill.BackgroundColor = XLColor.Orange;
+            rng2.Style.Fill.BackgroundColor = XLColor.Blue;
+            rng3.Style.Fill.BackgroundColor = XLColor.Red;
+            col1.Style.Fill.BackgroundColor = XLColor.Black;
 
             ws.Columns("A,C,E:H").Delete();
             ws.Cell("A2").Value = "OK";

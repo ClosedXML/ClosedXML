@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
-
+using ClosedXML;
 using System.Drawing;
 using System.IO;
 
@@ -14,18 +14,34 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             var wb = new XLWorkbook();
-
             var ws = wb.Worksheets.Add("Sheet1");
-            foreach (var ro in Enumerable.Range(1, 100))
-            {
-                foreach (var co in Enumerable.Range(1, 10))
-                {
-                    ws.Cell(ro, co).Value = ws.Cell(ro, co).Address.ToString();
-                }
-            }
-            ws.PageSetup.PagesWide = 1;
-
+            ws.Cell(1, 1).Value = "Font Color = Theme Accent 6";
+            ws.Cell(1, 1).Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Accent6);
             wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
+        }
+        static void Main_5961(string[] args)
+        {
+            var fi = new FileInfo(@"C:\Excel Files\ForTesting\Issue_5961.xlsx");
+            XLWorkbook wb = new XLWorkbook(fi.FullName);
+            {
+                IXLWorksheet s = wb.Worksheets.Add("test1");
+                s.Cell(1, 1).Value = DateTime.Now.ToString();
+            }
+            {
+                IXLWorksheet s = wb.Worksheets.Add("test2");
+                s.Cell(1, 1).Value = DateTime.Now.ToString();
+            }
+            wb.Save();
+            wb = new XLWorkbook(fi.FullName);
+            wb.Worksheets.Delete("test1");
+            {
+                IXLWorksheet s = wb.Worksheets.Add("test3");
+                s.Cell(1, 1).Value = DateTime.Now.ToString();
+            }
+            wb.Save();
+            wb = new XLWorkbook(fi.FullName);
+
+            wb.Save();
         }
 
         static void xMain(string[] args)
@@ -82,19 +98,19 @@ namespace ClosedXML_Sandbox
 
                     style1 = XLWorkbook.DefaultStyle;
                     style1.Font.Bold = true;
-                    style1.Fill.BackgroundColor = Color.Azure;
+                    style1.Fill.BackgroundColor = XLColor.Azure;
                     style1.Border.BottomBorder = XLBorderStyleValues.Medium;
                     style1.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
                     style2 = XLWorkbook.DefaultStyle;
                     style2.Font.Italic = true;
-                    style2.Fill.BackgroundColor = Color.Orange;
+                    style2.Fill.BackgroundColor = XLColor.Orange;
                     style2.Border.LeftBorder = XLBorderStyleValues.Medium;
                     style2.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
                     style3 = XLWorkbook.DefaultStyle;
-                    style3.Font.FontColor = Color.Red;
-                    style3.Fill.PatternColor = Color.Blue;
+                    style3.Font.FontColor = XLColor.FromColor(Color.Red);
+                    style3.Fill.PatternColor = XLColor.Blue;
                     style3.Fill.PatternType = XLFillPatternValues.DarkTrellis;
                     style3.Border.DiagonalBorder = XLBorderStyleValues.Dotted;
         }

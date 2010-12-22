@@ -50,6 +50,7 @@ namespace ClosedXML.Excel
         void ExpandColumns(Int32 outlineLevel);
 
         void Delete();
+        void Clear();
 
         IXLNamedRanges NamedRanges { get; }
     }

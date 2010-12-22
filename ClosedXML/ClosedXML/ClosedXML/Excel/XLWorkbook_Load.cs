@@ -449,16 +449,10 @@ namespace ClosedXML.Excel
             Properties.Title = p.Title;
         }
 
-        private struct XLColor
-        {
-            public System.Drawing.Color Color { get; set; }
-            public Boolean HasValue { get; set; }
-        }
-
         private Dictionary<String, System.Drawing.Color> colorList = new Dictionary<string, System.Drawing.Color>();
         private XLColor GetColor(ColorType color)
         {
-            var retVal = new XLColor();
+            XLColor retVal = null;
             if (color != null)
             {
                 if (color.Rgb != null)
@@ -474,13 +468,12 @@ namespace ClosedXML.Excel
                     {
                         thisColor = colorList[htmlColor];
                     }
-                    retVal.HasValue = true;
-                    retVal.Color = thisColor;
+                    retVal = new XLColor(thisColor);
                 }
                 else if (color.Indexed != null && color.Indexed < 64)
                 {
-                    var indexedColors = GetIndexedColors();
-                    String htmlColor = "#" + indexedColors[(Int32)color.Indexed.Value];
+                    var indexedColors = XLColor.IndexedColors;
+                    String htmlColor = "#" + indexedColors[(Int32)color.Indexed.Value].Color.ToHex();
                     System.Drawing.Color thisColor;
                     if (!colorList.ContainsKey(htmlColor))
                     {
@@ -491,11 +484,20 @@ namespace ClosedXML.Excel
                     {
                         thisColor = colorList[htmlColor];
                     }
-                    retVal.HasValue = true;
-                    retVal.Color = thisColor;
+                    retVal = new XLColor(thisColor);
+                }
+                else if (color.Theme != null)
+                {
+                    if (color.Tint != null)
+                        retVal = XLColor.FromTheme((XLThemeColor)color.Theme.Value, color.Tint.Value);
+                    else
+                        retVal = XLColor.FromTheme((XLThemeColor)color.Theme.Value);
                 }
             }
-            return retVal;
+            if (retVal == null)
+                return new XLColor();
+            else
+                return retVal;
         }
 
         private void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats)
@@ -513,10 +515,10 @@ namespace ClosedXML.Excel
                         xlStylized.Style.Fill.PatternType = fillPatternValues.Single(p => p.Value == fill.PatternFill.PatternType).Key;
 
                     var fgColor = GetColor(fill.PatternFill.ForegroundColor);
-                    if (fgColor.HasValue) xlStylized.Style.Fill.PatternColor = fgColor.Color;
+                    if (fgColor.HasValue) xlStylized.Style.Fill.PatternColor = fgColor;
 
                     var bgColor = GetColor(fill.PatternFill.BackgroundColor);
-                    if (bgColor.HasValue) xlStylized.Style.Fill.PatternBackgroundColor = bgColor.Color;
+                    if (bgColor.HasValue) xlStylized.Style.Fill.PatternBackgroundColor = bgColor;
                 }
             }
 
@@ -564,7 +566,7 @@ namespace ClosedXML.Excel
 
                     var bottomBorderColor = GetColor(bottomBorder.Color);
                     if (bottomBorderColor.HasValue)
-                        xlStylized.Style.Border.BottomBorderColor = bottomBorderColor.Color;
+                        xlStylized.Style.Border.BottomBorderColor = bottomBorderColor;
                 }
                 var topBorder = (TopBorder)border.TopBorder;
                 if (topBorder != null)
@@ -573,7 +575,7 @@ namespace ClosedXML.Excel
                         xlStylized.Style.Border.TopBorder = borderStyleValues.Single(b => b.Value == topBorder.Style.Value).Key;
                     var topBorderColor = GetColor(topBorder.Color);
                     if (topBorderColor.HasValue)
-                        xlStylized.Style.Border.TopBorderColor = topBorderColor.Color;
+                        xlStylized.Style.Border.TopBorderColor = topBorderColor;
                 }
                 var leftBorder = (LeftBorder)border.LeftBorder;
                 if (leftBorder != null)
@@ -582,7 +584,7 @@ namespace ClosedXML.Excel
                         xlStylized.Style.Border.LeftBorder = borderStyleValues.Single(b => b.Value == leftBorder.Style.Value).Key;
                     var leftBorderColor = GetColor(leftBorder.Color);
                     if (leftBorderColor.HasValue)
-                        xlStylized.Style.Border.LeftBorderColor = leftBorderColor.Color;
+                        xlStylized.Style.Border.LeftBorderColor = leftBorderColor;
                 }
                 var rightBorder = (RightBorder)border.RightBorder;
                 if (rightBorder != null)
@@ -591,7 +593,7 @@ namespace ClosedXML.Excel
                         xlStylized.Style.Border.RightBorder = borderStyleValues.Single(b => b.Value == rightBorder.Style.Value).Key;
                     var rightBorderColor = GetColor(rightBorder.Color);
                     if (rightBorderColor.HasValue)
-                        xlStylized.Style.Border.RightBorderColor = rightBorderColor.Color;
+                        xlStylized.Style.Border.RightBorderColor = rightBorderColor;
                 }
                 var diagonalBorder = (DiagonalBorder)border.DiagonalBorder;
                 if (diagonalBorder != null)
@@ -600,7 +602,7 @@ namespace ClosedXML.Excel
                         xlStylized.Style.Border.DiagonalBorder = borderStyleValues.Single(b => b.Value == diagonalBorder.Style.Value).Key;
                     var diagonalBorderColor = GetColor(diagonalBorder.Color);
                     if (diagonalBorderColor.HasValue)
-                        xlStylized.Style.Border.DiagonalBorderColor = diagonalBorderColor.Color;
+                        xlStylized.Style.Border.DiagonalBorderColor = diagonalBorderColor;
                     if (border.DiagonalDown != null)
                         xlStylized.Style.Border.DiagonalDown = border.DiagonalDown;
                     if (border.DiagonalUp != null)
@@ -619,7 +621,7 @@ namespace ClosedXML.Excel
 
                 var fontColor = GetColor(font.Color);
                 if (fontColor.HasValue)
-                    xlStylized.Style.Font.FontColor = fontColor.Color;
+                    xlStylized.Style.Font.FontColor = fontColor;
 
                 if (font.FontFamilyNumbering != null && ((FontFamilyNumbering)font.FontFamilyNumbering).Val != null)
                     xlStylized.Style.Font.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(((FontFamilyNumbering)font.FontFamilyNumbering).Val.ToString());
@@ -692,80 +694,7 @@ namespace ClosedXML.Excel
         }
 
 
-        private static Dictionary<Int32, String> indexedColorList;
-        private static Dictionary<Int32, String> GetIndexedColors()
-        {
-            if (indexedColorList == null)
-            {
-                Dictionary<Int32, String> retVal = new Dictionary<Int32, String>();
-                retVal.Add(0, "000000");
-                retVal.Add(1, "FFFFFF");
-                retVal.Add(2, "FF0000");
-                retVal.Add(3, "00FF00");
-                retVal.Add(4, "0000FF");
-                retVal.Add(5, "FFFF00");
-                retVal.Add(6, "FF00FF");
-                retVal.Add(7, "00FFFF");
-                retVal.Add(8, "000000");
-                retVal.Add(9, "FFFFFF");
-                retVal.Add(10, "FF0000");
-                retVal.Add(11, "00FF00");
-                retVal.Add(12, "0000FF");
-                retVal.Add(13, "FFFF00");
-                retVal.Add(14, "FF00FF");
-                retVal.Add(15, "00FFFF");
-                retVal.Add(16, "800000");
-                retVal.Add(17, "008000");
-                retVal.Add(18, "000080");
-                retVal.Add(19, "808000");
-                retVal.Add(20, "800080");
-                retVal.Add(21, "008080");
-                retVal.Add(22, "C0C0C0");
-                retVal.Add(23, "808080");
-                retVal.Add(24, "9999FF");
-                retVal.Add(25, "993366");
-                retVal.Add(26, "FFFFCC");
-                retVal.Add(27, "CCFFFF");
-                retVal.Add(28, "660066");
-                retVal.Add(29, "FF8080");
-                retVal.Add(30, "0066CC");
-                retVal.Add(31, "CCCCFF");
-                retVal.Add(32, "000080");
-                retVal.Add(33, "FF00FF");
-                retVal.Add(34, "FFFF00");
-                retVal.Add(35, "00FFFF");
-                retVal.Add(36, "800080");
-                retVal.Add(37, "800000");
-                retVal.Add(38, "008080");
-                retVal.Add(39, "0000FF");
-                retVal.Add(40, "00CCFF");
-                retVal.Add(41, "CCFFFF");
-                retVal.Add(42, "CCFFCC");
-                retVal.Add(43, "FFFF99");
-                retVal.Add(44, "99CCFF");
-                retVal.Add(45, "FF99CC");
-                retVal.Add(46, "CC99FF");
-                retVal.Add(47, "FFCC99");
-                retVal.Add(48, "3366FF");
-                retVal.Add(49, "33CCCC");
-                retVal.Add(50, "003300");
-                retVal.Add(51, "99CC00");
-                retVal.Add(52, "FFCC00");
-                retVal.Add(53, "FF9900");
-                retVal.Add(54, "FF6600");
-                retVal.Add(55, "666699");
-                retVal.Add(56, "969696");
-                retVal.Add(57, "003366");
-                retVal.Add(58, "339966");
-                retVal.Add(59, "333300");
-                retVal.Add(60, "993300");
-                retVal.Add(61, "993366");
-                retVal.Add(62, "333399");
-                retVal.Add(63, "333333");
-                indexedColorList = retVal;
-            }
-            return indexedColorList;
-        }
+
 
     }
 }

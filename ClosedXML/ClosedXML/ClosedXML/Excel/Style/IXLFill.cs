@@ -31,11 +31,11 @@ namespace ClosedXML.Excel
 
     public interface IXLFill:IEquatable<IXLFill>
     {
-        Color BackgroundColor { get; set; }
+        XLColor BackgroundColor { get; set; }
 
-        Color PatternColor { get; set; }
+        XLColor PatternColor { get; set; }
 
-        Color PatternBackgroundColor { get; set; }
+        XLColor PatternBackgroundColor { get; set; }
 
         XLFillPatternValues PatternType { get; set; }
     }

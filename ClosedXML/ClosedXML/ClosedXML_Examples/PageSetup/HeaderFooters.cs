@@ -27,7 +27,7 @@ namespace ClosedXML_Examples.PageSetup
             ws.PageSetup.Header.Right.AddText("The ", XLHFOccurrence.FirstPage, font1);
 
             var font2 = XLWorkbook.GetXLFont();
-            font2.FontColor = Color.Red;
+            font2.FontColor = XLColor.Red;
             ws.PageSetup.Header.Right.AddText("First ", XLHFOccurrence.FirstPage, font2);
 
             var font3 = XLWorkbook.GetXLFont();

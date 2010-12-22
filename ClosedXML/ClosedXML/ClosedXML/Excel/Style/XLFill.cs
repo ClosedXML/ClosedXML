@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
     {
         #region Properties
 
-        public Color BackgroundColor
+        public XLColor BackgroundColor
         {
             get
             {
@@ -25,14 +25,14 @@ namespace ClosedXML.Excel
                 else
                 {
                     patternType = XLFillPatternValues.Solid;
-                    patternColor = value;
-                    patternBackgroundColor = value;
+                    patternColor = new XLColor(value);
+                    patternBackgroundColor = new XLColor(value);
                 }
             }
         }
 
-        private Color patternColor;
-        public Color PatternColor
+        private XLColor patternColor;
+        public XLColor PatternColor
         {
             get
             {
@@ -47,8 +47,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Color patternBackgroundColor;
-        public Color PatternBackgroundColor
+        private XLColor patternBackgroundColor;
+        public XLColor PatternBackgroundColor
         {
             get
             {
@@ -127,7 +127,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            return this.GetHashCode().Equals(obj.GetHashCode());
+            return this.Equals((XLFill)obj);
         }
 
         public override int GetHashCode()

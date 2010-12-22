@@ -47,8 +47,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Color leftBorderColor;
-        public Color LeftBorderColor
+        private XLColor leftBorderColor;
+        public XLColor LeftBorderColor
         {
             get
             {
@@ -79,8 +79,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Color rightBorderColor;
-        public Color RightBorderColor
+        private XLColor rightBorderColor;
+        public XLColor RightBorderColor
         {
             get
             {
@@ -111,8 +111,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Color topBorderColor;
-        public Color TopBorderColor
+        private XLColor topBorderColor;
+        public XLColor TopBorderColor
         {
             get
             {
@@ -143,8 +143,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Color bottomBorderColor;
-        public Color BottomBorderColor
+        private XLColor bottomBorderColor;
+        public XLColor BottomBorderColor
         {
             get
             {
@@ -175,8 +175,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Color diagonalBorderColor;
-        public Color DiagonalBorderColor
+        private XLColor diagonalBorderColor;
+        public XLColor DiagonalBorderColor
         {
             get
             {
@@ -272,7 +272,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            return this.GetHashCode().Equals(obj.GetHashCode());
+            return this.Equals((XLBorder)obj);
         }
 
         public override int GetHashCode()

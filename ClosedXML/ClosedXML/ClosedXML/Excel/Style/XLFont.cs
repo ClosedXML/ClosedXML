@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
             sb.Append("-");
             sb.Append(FontSize.ToString());
             sb.Append("-");
-            sb.Append(FontColor.ToHex());
+            sb.Append(FontColor.Color.ToHex());
             sb.Append("-");
             sb.Append(FontName);
             sb.Append("-");
@@ -172,8 +172,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Color fontColor;
-        public Color FontColor
+        private XLColor fontColor;
+        public XLColor FontColor
         {
             get
             {
@@ -270,7 +270,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            return this.GetHashCode().Equals(obj.GetHashCode());
+            return this.Equals((XLFont)obj);
         }
 
         public override int GetHashCode()

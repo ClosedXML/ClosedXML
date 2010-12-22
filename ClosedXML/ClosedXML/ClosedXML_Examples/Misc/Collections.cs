@@ -94,7 +94,7 @@ namespace ClosedXML_Examples.Misc
             var titlesStyle = wb.Style;
             titlesStyle.Font.Bold = true;
             titlesStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            titlesStyle.Fill.BackgroundColor = Color.Cyan;
+            titlesStyle.Fill.BackgroundColor = XLColor.Cyan;
             
             // Format all titles in one shot
             wb.NamedRanges.NamedRange("Titles").Ranges.Style = titlesStyle;

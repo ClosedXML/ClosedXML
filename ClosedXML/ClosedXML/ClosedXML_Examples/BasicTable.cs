@@ -66,14 +66,14 @@ namespace ClosedXML_Examples
             var rngHeaders = rngTable.Range("A2:E2"); // The address is relative to rngTable (NOT the worksheet)
             rngHeaders.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             rngHeaders.Style.Font.Bold = true;
-            rngHeaders.Style.Fill.BackgroundColor = Color.Aqua;
+            rngHeaders.Style.Fill.BackgroundColor = XLColor.Aqua;
 
             //Adding grid lines
             rngTable.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
 
             //Format title cell
             rngTable.Cell(1, 1).Style.Font.Bold = true;
-            rngTable.Cell(1, 1).Style.Fill.BackgroundColor = Color.CornflowerBlue;
+            rngTable.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.CornflowerBlue;
             rngTable.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
             //Merge title cells

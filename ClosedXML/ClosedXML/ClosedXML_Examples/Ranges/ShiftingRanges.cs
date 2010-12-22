@@ -22,7 +22,7 @@ namespace ClosedXML_Examples
             ws.Column(1).InsertColumnsBefore(2);
 
             // Change the background color of the headers
-            rngHeaders.Style.Fill.BackgroundColor = Color.LightSalmon;
+            rngHeaders.Style.Fill.BackgroundColor = XLColor.LightSalmon;
 
             ws.Columns().AdjustToContents();
 

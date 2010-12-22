@@ -28,7 +28,7 @@ namespace ClosedXML_Examples
             // Put a light gray background to all text cells
             rngData.Cells() // From all cells
                 .Where(c => c.DataType == XLCellValues.Text) // where the data type is Text
-                .ForEach(c => c.Style.Fill.BackgroundColor = Color.LightGray); // Fill with a light gray
+                .ForEach(c => c.Style.Fill.BackgroundColor = XLColor.LightGray); // Fill with a light gray
 
             // Put a thick border to the bottom of the table (we may have deleted the bottom cells with the border)
             rngData.LastRow().Style.Border.BottomBorder = XLBorderStyleValues.Thick;

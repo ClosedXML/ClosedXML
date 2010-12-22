@@ -80,6 +80,9 @@
     <Compile Include="..\ClosedXML\Excel\IXLOutline.cs">
       <Link>Excel\IXLOutline.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\IXLTheme.cs">
+      <Link>Excel\IXLTheme.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLWorksheet.cs">
       <Link>Excel\IXLWorksheet.cs</Link>
     </Compile>
@@ -200,6 +203,18 @@
     <Compile Include="..\ClosedXML\Excel\Rows\XLRows.cs">
       <Link>Excel\Rows\XLRows.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\Colors\IXLColor.cs">
+      <Link>Excel\Style\Colors\IXLColor.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\Colors\XLColor_Internal.cs">
+      <Link>Excel\Style\Colors\XLColor_Internal.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\Colors\XLColor_Public.cs">
+      <Link>Excel\Style\Colors\XLColor_Public.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\Colors\XLColor_Static.cs">
+      <Link>Excel\Style\Colors\XLColor_Static.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Style\IXLAlignment.cs">
       <Link>Excel\Style\IXLAlignment.cs</Link>
     </Compile>
@@ -244,6 +259,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\XLOutline.cs">
       <Link>Excel\XLOutline.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLTheme.cs">
+      <Link>Excel\XLTheme.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\XLWorkbook.cs">
       <Link>Excel\XLWorkbook.cs</Link>

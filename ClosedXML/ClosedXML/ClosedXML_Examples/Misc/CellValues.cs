@@ -172,7 +172,7 @@ namespace ClosedXML_Examples.Misc
             ws.Columns("B:G").Width = 20;
             var rngTitle = ws.Range("B2:G2");
             rngTitle.Style.Font.Bold = true;
-            rngTitle.Style.Fill.BackgroundColor = Color.Cyan;
+            rngTitle.Style.Fill.BackgroundColor = XLColor.Cyan;
 
             ws.Columns().AdjustToContents();
 

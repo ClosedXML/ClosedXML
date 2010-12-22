@@ -35,21 +35,27 @@ namespace ClosedXML.Excel
         private List<KeyValuePair<XLCalculateMode, CalculateModeValues>> calculateModeValues = new List<KeyValuePair<XLCalculateMode, CalculateModeValues>>();
         private List<KeyValuePair<XLReferenceStyle, ReferenceModeValues>> referenceModeValues = new List<KeyValuePair<XLReferenceStyle, ReferenceModeValues>>();
         private List<KeyValuePair<XLAlignmentReadingOrderValues, UInt32>> alignmentReadingOrderValues = new List<KeyValuePair<XLAlignmentReadingOrderValues, UInt32>>();
+
+        private Boolean populated = false;
         private void PopulateEnums()
         {
-            PopulateFillPatternValues();
-            PopulateAlignmentHorizontalValues();
-            PopulateAlignmentVerticalValues();
-            PupulateBorderStyleValues();
-            PopulateUnderlineValues();
-            PopulateFontVerticalTextAlignmentValues();
-            PopulatePageOrderValues();
-            PopulatePageOrientationValues();
-            PopulateShowCommentsValues();
-            PopulatePrintErrorValues();
-            PopulateCalculateModeValues();
-            PopulateReferenceModeValues();
-            PopulateAlignmentReadingOrderValues();
+            if (!populated)
+            {
+                PopulateFillPatternValues();
+                PopulateAlignmentHorizontalValues();
+                PopulateAlignmentVerticalValues();
+                PupulateBorderStyleValues();
+                PopulateUnderlineValues();
+                PopulateFontVerticalTextAlignmentValues();
+                PopulatePageOrderValues();
+                PopulatePageOrientationValues();
+                PopulateShowCommentsValues();
+                PopulatePrintErrorValues();
+                PopulateCalculateModeValues();
+                PopulateReferenceModeValues();
+                PopulateAlignmentReadingOrderValues();
+                populated = true;
+            }
         }
 
         private enum RelType { General, Workbook, Worksheet }
@@ -81,7 +87,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Dictionary<String, UInt32> sharedStrings = new Dictionary<string, UInt32>();
+        private Dictionary<String, UInt32> sharedStrings;
+        private Dictionary<IXLStyle, StyleInfo> sharedStyles;
         private struct FontInfo { public UInt32 FontId; public IXLFont Font; };
         private struct FillInfo { public UInt32 FillId; public IXLFill Fill; };
         private struct BorderInfo { public UInt32 BorderId; public IXLBorder Border; };
@@ -97,8 +104,6 @@ namespace ClosedXML.Excel
             public Int32 NumberFormatId;
             public IXLStyle Style;
         };
-
-        private Dictionary<IXLStyle, StyleInfo> sharedStyles = new Dictionary<IXLStyle, StyleInfo>();
 
         private CellValues GetCellValue(XLCellValues xlCellValue)
         {
@@ -271,6 +276,8 @@ namespace ClosedXML.Excel
         private void CreateParts(SpreadsheetDocument document)
         {
             relId = new RelIdGenerator();
+            sharedStrings = new Dictionary<String, UInt32>();
+            sharedStyles = new Dictionary<IXLStyle, StyleInfo>();
 
             WorkbookPart workbookPart;
             if (document.WorkbookPart == null)
@@ -1033,27 +1040,27 @@ namespace ClosedXML.Excel
             Border border = new Border() { DiagonalUp = borderInfo.Border.DiagonalUp, DiagonalDown = borderInfo.Border.DiagonalDown };
 
             LeftBorder leftBorder = new LeftBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.LeftBorder).Value };
-            Color leftBorderColor = new Color() { Rgb = borderInfo.Border.LeftBorderColor.ToHex() };
+            Color leftBorderColor = GetNewColor(borderInfo.Border.LeftBorderColor);
             leftBorder.Append(leftBorderColor);
             border.Append(leftBorder);
 
             RightBorder rightBorder = new RightBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.RightBorder).Value };
-            Color rightBorderColor = new Color() { Rgb = borderInfo.Border.RightBorderColor.ToHex() };
+            Color rightBorderColor = GetNewColor(borderInfo.Border.RightBorderColor);
             rightBorder.Append(rightBorderColor);
             border.Append(rightBorder);
 
             TopBorder topBorder = new TopBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.TopBorder).Value };
-            Color topBorderColor = new Color() { Rgb = borderInfo.Border.TopBorderColor.ToHex() };
+            Color topBorderColor = GetNewColor(borderInfo.Border.TopBorderColor);
             topBorder.Append(topBorderColor);
             border.Append(topBorder);
 
             BottomBorder bottomBorder = new BottomBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.BottomBorder).Value };
-            Color bottomBorderColor = new Color() { Rgb = borderInfo.Border.BottomBorderColor.ToHex() };
+            Color bottomBorderColor = GetNewColor(borderInfo.Border.BottomBorderColor);
             bottomBorder.Append(bottomBorderColor);
             border.Append(bottomBorder);
 
             DiagonalBorder diagonalBorder = new DiagonalBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.DiagonalBorder).Value };
-            Color diagonalBorderColor = new Color() { Rgb = borderInfo.Border.DiagonalBorderColor.ToHex() };
+            Color diagonalBorderColor = GetNewColor(borderInfo.Border.DiagonalBorderColor);
             diagonalBorder.Append(diagonalBorderColor);
             border.Append(diagonalBorder);
 
@@ -1075,7 +1082,7 @@ namespace ClosedXML.Excel
                     nb.LeftBorder = borderStyleValues.Single(p => p.Value == b.LeftBorder.Style).Key;
                 var bColor = GetColor(b.LeftBorder.Color);
                 if (bColor.HasValue)
-                    nb.LeftBorderColor = bColor.Color;
+                    nb.LeftBorderColor = bColor;
             }
 
             if (b.RightBorder != null)
@@ -1084,7 +1091,7 @@ namespace ClosedXML.Excel
                     nb.RightBorder = borderStyleValues.Single(p => p.Value == b.RightBorder.Style).Key;
                 var bColor = GetColor(b.RightBorder.Color);
                 if (bColor.HasValue)
-                    nb.RightBorderColor = bColor.Color;
+                    nb.RightBorderColor = bColor;
             }
 
             if (b.TopBorder != null)
@@ -1093,7 +1100,7 @@ namespace ClosedXML.Excel
                     nb.TopBorder = borderStyleValues.Single(p => p.Value == b.TopBorder.Style).Key;
                 var bColor = GetColor(b.TopBorder.Color);
                 if (bColor.HasValue)
-                    nb.TopBorderColor = bColor.Color;
+                    nb.TopBorderColor = bColor;
             }
 
             if (b.BottomBorder != null)
@@ -1102,7 +1109,7 @@ namespace ClosedXML.Excel
                     nb.BottomBorder = borderStyleValues.Single(p => p.Value == b.BottomBorder.Style).Key;
                 var bColor = GetColor(b.BottomBorder.Color);
                 if (bColor.HasValue)
-                    nb.BottomBorderColor = bColor.Color;
+                    nb.BottomBorderColor = bColor;
             }
 
             return nb.Equals(xlBorder);
@@ -1163,8 +1170,28 @@ namespace ClosedXML.Excel
             Fill fill = new Fill();
 
             PatternFill patternFill = new PatternFill() { PatternType = fillPatternValues.Single(p => p.Key == fillInfo.Fill.PatternType).Value };
-            ForegroundColor foregroundColor = new ForegroundColor() { Rgb = fillInfo.Fill.PatternColor.ToHex() };
-            BackgroundColor backgroundColor = new BackgroundColor() { Rgb = fillInfo.Fill.PatternBackgroundColor.ToHex() };
+            ForegroundColor foregroundColor = new ForegroundColor();
+            if (fillInfo.Fill.PatternColor.ColorType == XLColorType.Color)
+                foregroundColor.Rgb = fillInfo.Fill.PatternColor.Color.ToHex();
+            else if (fillInfo.Fill.PatternColor.ColorType == XLColorType.Indexed)
+                foregroundColor.Indexed = (UInt32)fillInfo.Fill.PatternColor.Indexed;
+            else
+            {
+                foregroundColor.Theme = (UInt32)fillInfo.Fill.PatternColor.ThemeColor;
+                if (fillInfo.Fill.PatternColor.ThemeTint != 1)
+                    foregroundColor.Tint = fillInfo.Fill.PatternColor.ThemeTint;
+            }
+            BackgroundColor backgroundColor = new BackgroundColor();
+            if (fillInfo.Fill.PatternBackgroundColor.ColorType == XLColorType.Color)
+                backgroundColor.Rgb = fillInfo.Fill.PatternBackgroundColor.Color.ToHex();
+            else if (fillInfo.Fill.PatternBackgroundColor.ColorType == XLColorType.Indexed)
+                backgroundColor.Indexed = (UInt32)fillInfo.Fill.PatternBackgroundColor.Indexed;
+            else
+            {
+                backgroundColor.Theme = (UInt32)fillInfo.Fill.PatternBackgroundColor.ThemeColor;
+                if (fillInfo.Fill.PatternBackgroundColor.ThemeTint != 1)
+                    backgroundColor.Tint = fillInfo.Fill.PatternBackgroundColor.ThemeTint;
+            }
 
             patternFill.Append(foregroundColor);
             patternFill.Append(backgroundColor);
@@ -1184,11 +1211,11 @@ namespace ClosedXML.Excel
 
                 var fColor = GetColor(f.PatternFill.ForegroundColor);
                 if (fColor.HasValue)
-                    nF.PatternColor = fColor.Color;
+                    nF.PatternColor = fColor;
 
                 var bColor = GetColor(f.PatternFill.BackgroundColor);
                 if (bColor.HasValue)
-                    nF.PatternBackgroundColor = bColor.Color;
+                    nF.PatternBackgroundColor = bColor;
             }
             return nF.Equals(xlFill);
         }
@@ -1233,7 +1260,8 @@ namespace ClosedXML.Excel
             VerticalTextAlignment verticalAlignment = new VerticalTextAlignment() { Val = fontVerticalTextAlignmentValues.Single(f => f.Key == fontInfo.Font.VerticalAlignment).Value };
             Shadow shadow = fontInfo.Font.Shadow ? new Shadow() : null;
             FontSize fontSize = new FontSize() { Val = fontInfo.Font.FontSize };
-            Color color = new Color() { Rgb = fontInfo.Font.FontColor.ToHex() };
+            Color color = GetNewColor(fontInfo.Font.FontColor);
+            
             FontName fontName = new FontName() { Val = fontInfo.Font.FontName };
             FontFamilyNumbering fontFamilyNumbering = new FontFamilyNumbering() { Val = (Int32)fontInfo.Font.FontFamilyNumbering };
 
@@ -1249,6 +1277,22 @@ namespace ClosedXML.Excel
             font.Append(fontFamilyNumbering);
 
             return font;
+        }
+
+        private Color GetNewColor(IXLColor xlColor)
+        {
+            Color color = new Color();
+            if (xlColor.ColorType == XLColorType.Color)
+                color.Rgb = xlColor.Color.ToHex();
+            else if (xlColor.ColorType == XLColorType.Indexed)
+                color.Indexed = (UInt32)xlColor.Indexed;
+            else
+            {
+                color.Theme = (UInt32)xlColor.ThemeColor;
+                if (xlColor.ThemeTint != 1)
+                    color.Tint = xlColor.ThemeTint;
+            }
+            return color;
         }
 
         private bool FontsAreEqual(Font f, IXLFont xlFont)
@@ -1272,7 +1316,7 @@ namespace ClosedXML.Excel
                 nf.FontSize = f.FontSize.Val;
             var fColor = GetColor(f.Color);
             if (fColor.HasValue)
-                nf.FontColor = fColor.Color;
+                nf.FontColor = fColor;
             if (f.FontName != null)
                 nf.FontName = f.FontName.Val;
             if (f.FontFamilyNumbering != null)
@@ -2072,52 +2116,52 @@ namespace ClosedXML.Excel
             A.ColorScheme colorScheme1 = new A.ColorScheme() { Name = "Office" };
 
             A.Dark1Color dark1Color1 = new A.Dark1Color();
-            A.SystemColor systemColor1 = new A.SystemColor() { Val = A.SystemColorValues.WindowText, LastColor = "000000" };
+            A.SystemColor systemColor1 = new A.SystemColor() { Val = A.SystemColorValues.WindowText, LastColor = Theme.Text1.Color.ToHex().Substring(3)};
 
             dark1Color1.Append(systemColor1);
 
             A.Light1Color light1Color1 = new A.Light1Color();
-            A.SystemColor systemColor2 = new A.SystemColor() { Val = A.SystemColorValues.Window, LastColor = "FFFFFF" };
+            A.SystemColor systemColor2 = new A.SystemColor() { Val = A.SystemColorValues.Window, LastColor = Theme.Background1.Color.ToHex().Substring(3) };
 
             light1Color1.Append(systemColor2);
 
             A.Dark2Color dark2Color1 = new A.Dark2Color();
-            A.RgbColorModelHex rgbColorModelHex1 = new A.RgbColorModelHex() { Val = "1F497D" };
+            A.RgbColorModelHex rgbColorModelHex1 = new A.RgbColorModelHex() { Val = Theme.Text2.Color.ToHex().Substring(3) };
 
             dark2Color1.Append(rgbColorModelHex1);
 
             A.Light2Color light2Color1 = new A.Light2Color();
-            A.RgbColorModelHex rgbColorModelHex2 = new A.RgbColorModelHex() { Val = "EEECE1" };
+            A.RgbColorModelHex rgbColorModelHex2 = new A.RgbColorModelHex() { Val = Theme.Background2.Color.ToHex().Substring(3) };
 
             light2Color1.Append(rgbColorModelHex2);
 
             A.Accent1Color accent1Color1 = new A.Accent1Color();
-            A.RgbColorModelHex rgbColorModelHex3 = new A.RgbColorModelHex() { Val = "4F81BD" };
+            A.RgbColorModelHex rgbColorModelHex3 = new A.RgbColorModelHex() { Val = Theme.Accent1.Color.ToHex().Substring(3) };
 
             accent1Color1.Append(rgbColorModelHex3);
 
             A.Accent2Color accent2Color1 = new A.Accent2Color();
-            A.RgbColorModelHex rgbColorModelHex4 = new A.RgbColorModelHex() { Val = "C0504D" };
+            A.RgbColorModelHex rgbColorModelHex4 = new A.RgbColorModelHex() { Val = Theme.Accent2.Color.ToHex().Substring(3) };
 
             accent2Color1.Append(rgbColorModelHex4);
 
             A.Accent3Color accent3Color1 = new A.Accent3Color();
-            A.RgbColorModelHex rgbColorModelHex5 = new A.RgbColorModelHex() { Val = "9BBB59" };
+            A.RgbColorModelHex rgbColorModelHex5 = new A.RgbColorModelHex() { Val = Theme.Accent3.Color.ToHex().Substring(3) };
 
             accent3Color1.Append(rgbColorModelHex5);
 
             A.Accent4Color accent4Color1 = new A.Accent4Color();
-            A.RgbColorModelHex rgbColorModelHex6 = new A.RgbColorModelHex() { Val = "8064A2" };
+            A.RgbColorModelHex rgbColorModelHex6 = new A.RgbColorModelHex() { Val = Theme.Accent4.Color.ToHex().Substring(3) };
 
             accent4Color1.Append(rgbColorModelHex6);
 
             A.Accent5Color accent5Color1 = new A.Accent5Color();
-            A.RgbColorModelHex rgbColorModelHex7 = new A.RgbColorModelHex() { Val = "4BACC6" };
+            A.RgbColorModelHex rgbColorModelHex7 = new A.RgbColorModelHex() { Val = Theme.Accent5.Color.ToHex().Substring(3) };
 
             accent5Color1.Append(rgbColorModelHex7);
 
             A.Accent6Color accent6Color1 = new A.Accent6Color();
-            A.RgbColorModelHex rgbColorModelHex8 = new A.RgbColorModelHex() { Val = "F79646" };
+            A.RgbColorModelHex rgbColorModelHex8 = new A.RgbColorModelHex() { Val = Theme.Accent6.Color.ToHex().Substring(3) };
 
             accent6Color1.Append(rgbColorModelHex8);
 
