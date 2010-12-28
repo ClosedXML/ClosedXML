@@ -14,6 +14,9 @@ namespace ClosedXML.Excel
     {
         private enum XLLoadSource { New, File, Stream };
         private XLLoadSource loadSource = XLLoadSource.New;
+        /// <summary>
+        /// Creates a new Excel workbook.
+        /// </summary>
         public XLWorkbook()
         {
             DefaultRowHeight = 15;
@@ -67,6 +70,10 @@ namespace ClosedXML.Excel
         }
 
         private String originalFile;
+        /// <summary>
+        /// Opens an existing workbook from a file.
+        /// </summary>
+        /// <param name="file">The file to open.</param>
         public XLWorkbook(String file): this()
         {
             loadSource = XLLoadSource.File;
@@ -74,6 +81,10 @@ namespace ClosedXML.Excel
             Load(file);
         }
 
+        /// <summary>
+        /// Opens an existing workbook from a stream.
+        /// </summary>
+        /// <param name="stream">The stream to open.</param>
         public XLWorkbook(Stream stream)
             : this()
         {
@@ -83,7 +94,13 @@ namespace ClosedXML.Excel
 
         #region IXLWorkbook Members
 
+        /// <summary>
+        /// Gets an object to manipulate the worksheets.
+        /// </summary>
         public IXLWorksheets Worksheets { get; private set; }
+        /// <summary>
+        /// Gets an object to manipulate this workbook's named ranges.
+        /// </summary>
         public IXLNamedRanges NamedRanges { get; private set; }
 
         /// <summary>
@@ -95,9 +112,14 @@ namespace ClosedXML.Excel
         /// Gets the file name of the workbook including its full directory.
         /// </summary>
         public String FullName { get; private set; }
-
+        /// <summary>
+        /// Gets an object to manipulate this workbook's theme.
+        /// </summary>
         public IXLTheme Theme { get; private set; }
 
+        /// <summary>
+        /// Saves the current workbook.
+        /// </summary>
         public void Save()
         {
             if (loadSource == XLLoadSource.New)
@@ -107,7 +129,9 @@ namespace ClosedXML.Excel
             else
                 CreatePackage(originalFile);
         }
-
+        /// <summary>
+        /// Saves the current workbook to a file.
+        /// </summary>
         public void SaveAs(String file)
         {
             if (originalFile == null)
@@ -117,19 +141,50 @@ namespace ClosedXML.Excel
 
             CreatePackage(file);
         }
-
+        /// <summary>
+        /// Saves the current workbook to a stream.
+        /// </summary>
         public void SaveAs(Stream stream)
         {
             CreatePackage(stream);
         }
 
+        /// <summary>
+        /// Gets or sets the default style for the workbook.
+        /// <para>All new worksheets will use this style.</para>
+        /// </summary>
         public IXLStyle Style { get; set; }
+        /// <summary>
+        /// Gets or sets the default row height for the workbook.
+        /// <para>All new worksheets will use this row height.</para>
+        /// </summary>
         public Double RowHeight { get; set; }
+        /// <summary>
+        /// Gets or sets the default column width for the workbook.
+        /// <para>All new worksheets will use this column width.</para>
+        /// </summary>
         public Double ColumnWidth { get; set; }
+        /// <summary>
+        /// Gets or sets the default page options for the workbook.
+        /// <para>All new worksheets will use these page options.</para>
+        /// </summary>
         public IXLPageSetup PageOptions { get; set; }
+        /// <summary>
+        /// Gets or sets the default outline options for the workbook.
+        /// <para>All new worksheets will use these outline options.</para>
+        /// </summary>
         public IXLOutline Outline { get; set; }
+        /// <summary>
+        /// Gets or sets the workbook's properties.
+        /// </summary>
         public XLWorkbookProperties Properties { get; set; }
+        /// <summary>
+        /// Gets or sets the workbook's calculation mode.
+        /// </summary>
         public XLCalculateMode CalculateMode { get; set; }
+        /// <summary>
+        /// Gets or sets the workbook's reference style.
+        /// </summary>
         public XLReferenceStyle ReferenceStyle { get; set; }
 
         #endregion

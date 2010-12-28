@@ -450,9 +450,9 @@ namespace ClosedXML.Excel
         }
 
         private Dictionary<String, System.Drawing.Color> colorList = new Dictionary<string, System.Drawing.Color>();
-        private XLColor GetColor(ColorType color)
+        private IXLColor GetColor(ColorType color)
         {
-            XLColor retVal = null;
+            IXLColor retVal = null;
             if (color != null)
             {
                 if (color.Rgb != null)
@@ -472,19 +472,7 @@ namespace ClosedXML.Excel
                 }
                 else if (color.Indexed != null && color.Indexed < 64)
                 {
-                    var indexedColors = XLColor.IndexedColors;
-                    String htmlColor = "#" + indexedColors[(Int32)color.Indexed.Value].Color.ToHex();
-                    System.Drawing.Color thisColor;
-                    if (!colorList.ContainsKey(htmlColor))
-                    {
-                        thisColor = System.Drawing.ColorTranslator.FromHtml(htmlColor);
-                        colorList.Add(htmlColor, thisColor);
-                    }
-                    else
-                    {
-                        thisColor = colorList[htmlColor];
-                    }
-                    retVal = new XLColor(thisColor);
+                    retVal = new XLColor((Int32)color.Indexed.Value);
                 }
                 else if (color.Theme != null)
                 {

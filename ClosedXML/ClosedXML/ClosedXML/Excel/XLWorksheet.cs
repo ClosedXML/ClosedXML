@@ -204,6 +204,23 @@ namespace ClosedXML.Excel
                 return null;
             }
         }
+
+        public IXLColumn LastColumn()
+        {
+            return Column(MaxNumberOfColumns);
+        }
+        public IXLColumn FirstColumn()
+        {
+            return Column(1);
+        }
+        public IXLRow FirstRow()
+        {
+            return Row(1);
+        }
+        public IXLRow LastRow()
+        {
+            return Row(MaxNumberOfRows);
+        }
         public IXLColumn FirstColumnUsed()
         {
             var rngColumn = this.AsRange().FirstColumnUsed();

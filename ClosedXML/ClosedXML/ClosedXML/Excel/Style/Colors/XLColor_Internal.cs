@@ -8,8 +8,8 @@ namespace ClosedXML.Excel
 {
     public partial class XLColor
     {
-        internal Boolean HasValue { get; private set; }
-        internal XLColor(XLColor defaultColor)
+        
+        internal XLColor(IXLColor defaultColor)
         {
             if (defaultColor.ColorType == XLColorType.Theme)
             {
@@ -24,6 +24,32 @@ namespace ClosedXML.Excel
             {
                 this.Color = defaultColor.Color;
             }
+        }
+        internal XLColor()
+        {
+            HasValue = false;
+        }
+        internal XLColor(Color color)
+        {
+            Color = color;
+            HasValue = true;
+        }
+        internal XLColor(Int32 index)
+        {
+            Indexed = index;
+            HasValue = true;
+        }
+        internal XLColor(XLThemeColor themeColor)
+        {
+            ThemeColor = themeColor;
+            ThemeTint = 1;
+            HasValue = true;
+        }
+        internal XLColor(XLThemeColor themeColor, Double themeTint)
+        {
+            ThemeColor = themeColor;
+            ThemeTint = themeTint;
+            HasValue = true;
         }
     }
 }

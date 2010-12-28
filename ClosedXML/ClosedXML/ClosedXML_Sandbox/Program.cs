@@ -15,8 +15,20 @@ namespace ClosedXML_Sandbox
         {
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
-            ws.Cell(1, 1).Value = "Font Color = Theme Accent 6";
-            ws.Cell(1, 1).Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Accent6);
+            var col = ws.Row(1);
+            col.Cells("1:2, 4:5").Style.Fill.BackgroundColor = XLColor.Red;
+            col.Cells("3").Style.Fill.BackgroundColor = XLColor.Blue;
+            col.Cell(6).Style.Fill.BackgroundColor = XLColor.Orange;
+            col.Cells(7, 8).Style.Fill.BackgroundColor = XLColor.Blue;
+
+            var colRng = ws.Range("A2:H2").FirstRow();
+
+            colRng.Cells("1:2, 4:5").Style.Fill.BackgroundColor = XLColor.Red;
+            colRng.Cells("3").Style.Fill.BackgroundColor = XLColor.Blue;
+            colRng.Cell(6).Style.Fill.BackgroundColor = XLColor.Orange;
+            colRng.Cells(7, 8).Style.Fill.BackgroundColor = XLColor.Blue;
+            
+
             wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
         }
         static void Main_5961(string[] args)

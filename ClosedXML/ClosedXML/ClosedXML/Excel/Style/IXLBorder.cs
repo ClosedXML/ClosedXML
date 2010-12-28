@@ -27,19 +27,19 @@ namespace ClosedXML.Excel
     {
         XLBorderStyleValues LeftBorder { get; set; }
 
-        XLColor LeftBorderColor { get; set; }
+        IXLColor LeftBorderColor { get; set; }
 
         XLBorderStyleValues RightBorder { get; set; }
 
-        XLColor RightBorderColor { get; set; }
+        IXLColor RightBorderColor { get; set; }
 
         XLBorderStyleValues TopBorder { get; set; }
 
-        XLColor TopBorderColor { get; set; }
+        IXLColor TopBorderColor { get; set; }
 
         XLBorderStyleValues BottomBorder { get; set; }
 
-        XLColor BottomBorderColor { get; set; }
+        IXLColor BottomBorderColor { get; set; }
 
         Boolean DiagonalUp { get; set; }
 
@@ -47,6 +47,6 @@ namespace ClosedXML.Excel
 
         XLBorderStyleValues DiagonalBorder { get; set; }
 
-        XLColor DiagonalBorderColor { get; set; }
+        IXLColor DiagonalBorderColor { get; set; }
     }
 }

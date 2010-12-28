@@ -29,13 +29,11 @@ namespace ClosedXML.Excel
         {
             return FirstCellUsed(true);
         }
-        public IXLCell FirstCellUsed(Boolean ignoreStyle)
+        public IXLCell FirstCellUsed(Boolean includeStyles)
         {
-            var cellsUsed = CellsUsed();
-            if (ignoreStyle)
-                cellsUsed = cellsUsed.Where(c => c.GetString().Length != 0);
+            var cellsUsed = CellsUsed(includeStyles);
 
-            if (cellsUsed.Count() == 0)
+             if (cellsUsed.Count() == 0)
             {
                 return null;
             }
@@ -51,11 +49,9 @@ namespace ClosedXML.Excel
         {
             return LastCellUsed(true);
         }
-        public IXLCell LastCellUsed(Boolean ignoreStyle) 
+        public IXLCell LastCellUsed(Boolean includeStyles) 
         {
-            var cellsUsed = CellsUsed();
-            if (ignoreStyle)
-                cellsUsed = cellsUsed.Where(c => c.GetString().Length != 0);
+            var cellsUsed = CellsUsed(includeStyles);
 
             if (cellsUsed.Count() == 0)
             {
@@ -133,7 +129,7 @@ namespace ClosedXML.Excel
             return this.RangeAddress.LastAddress.ColumnNumber - this.RangeAddress.FirstAddress.ColumnNumber + 1;
         }
 
-        public IXLRange Range(String rangeAddressStr)
+        public virtual IXLRange Range(String rangeAddressStr)
         {
             var rangeAddress = new XLRangeAddress(rangeAddressStr);
             return Range(rangeAddress);
@@ -178,11 +174,11 @@ namespace ClosedXML.Excel
             var rangePairs = ranges.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.Add(this.Range(pair));
+                retVal.Add(Range(pair));
             }
             return retVal;
         }
-        public IXLRanges Ranges( params String[] ranges)
+        public IXLRanges Ranges(params String[] ranges)
         {
             var retVal = new XLRanges(Worksheet.Internals.Workbook, Worksheet.Style);
             foreach (var pair in ranges)
@@ -191,23 +187,59 @@ namespace ClosedXML.Excel
             }
             return retVal;
         }
-
-        public IEnumerable<IXLCell> Cells()
+        protected String FixColumnAddress(String address)
         {
+            Int32 test;
+            if (Int32.TryParse(address, out test))
+                return "A" + address;
+            else
+                return address;
+        }
+        protected String FixRowAddress(String address)
+        {
+            Int32 test;
+            if (Int32.TryParse(address, out test))
+                return XLAddress.GetColumnLetterFromNumber(test) + "1";
+            else
+                return address;
+        }
+        public IXLCells Cells()
+        {
+            var cellHash = new HashSet<IXLCell>();
             foreach (var row in Enumerable.Range(1, this.RowCount()))
             {
                 foreach (var column in Enumerable.Range(1, this.ColumnCount()))
                 {
-                    yield return this.Cell(row, column);
+                    cellHash.Add(this.Cell(row, column));
                 }
             }
+            var cells = new XLCells(Worksheet);
+            cells.AddRange(cellHash);
+            return (IXLCells)cells;
         }
-        public IEnumerable<IXLCell> CellsUsed()
+        public IXLCells CellsUsed()
         {
-            var list = this.Worksheet.Internals.CellsCollection.Where(c => this.ContainsRange(c.Key.ToString())).Select(c => c.Value);
-            var retList = new List<IXLCell>();
-            list.ForEach(c => retList.Add(c));
-            return retList.AsEnumerable();
+            var list = this.Worksheet.Internals.CellsCollection.Where(c => !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) && this.ContainsRange(c.Key.ToString())).Select(c => (IXLCell)c.Value);
+            var cells = new XLCells(Worksheet);
+            cells.AddRange(list.AsEnumerable());
+            return (IXLCells)cells;
+        }
+        public IXLCells CellsUsed(Boolean includeStyles)
+        {
+            IEnumerable<IXLCell> list;
+            if (includeStyles)
+                list = this.Worksheet.Internals.CellsCollection.Where(c => 
+                    (!StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) || !c.Value.Style.Equals(Worksheet.Style)) 
+                    && this.ContainsRange(c.Key.ToString())
+                    ).Select(c => (IXLCell)c.Value);
+            else
+                list = this.Worksheet.Internals.CellsCollection.Where(c => 
+                    !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) 
+                    && this.ContainsRange(c.Key.ToString())
+                    ).Select(c => (IXLCell)c.Value);
+            var cells = new XLCells(Worksheet);
+            cells.AddRange(list);
+            return (IXLCells)cells;
         }
 
         public IXLRange Merge()

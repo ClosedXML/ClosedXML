@@ -24,7 +24,13 @@ namespace ClosedXML.Excel
         public IXLAddress Address { get; private set; }
         public String InnerText
         {
-            get { return cellValue; }
+            get 
+            {
+                if (StringExtensions.IsNullOrWhiteSpace(cellValue))
+                    return FormulaA1;
+                else
+                    return cellValue;
+            }
         }
         public IXLRange AsRange()
         {

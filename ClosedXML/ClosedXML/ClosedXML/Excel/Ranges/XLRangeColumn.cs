@@ -31,21 +31,58 @@ namespace ClosedXML.Excel
             return Cell(row, 1);
         }
 
-        public IEnumerable<IXLCell> Cells(int firstRow, int lastRow)
+        public IXLCells Cells(String cellsInColumn)
         {
-            return Cells()
-                .Where(c => c.Address.RowNumber >= firstRow
-                    && c.Address.RowNumber <= lastRow);
+            var retVal = new XLCells(Worksheet);
+            var rangePairs = cellsInColumn.Split(',');
+            foreach (var pair in rangePairs)
+            {
+                retVal.AddRange(Range(pair).Cells());
+            }
+            return retVal;
         }
 
+        public IXLCells Cells(Int32 firstRow, Int32 lastRow)
+        {
+            return Cells(firstRow + ":" + lastRow);
+        }
+        
         public IXLRange Range(int firstRow, int lastRow)
         {
             return Range(firstRow, 1, lastRow, 1);
+        }
+        public override IXLRange Range(String rangeAddressStr)
+        {
+            String rangeAddressToUse;
+            if (rangeAddressStr.Contains(":"))
+            {
+                String[] arrRange = rangeAddressStr.Split(':');
+                var firstPart = arrRange[0];
+                var secondPart = arrRange[1];
+                rangeAddressToUse = FixColumnAddress(firstPart) + ":" + FixColumnAddress(secondPart);
+            }
+            else
+            {
+                rangeAddressToUse = FixColumnAddress(rangeAddressStr);
+            }
+
+            var rangeAddress = new XLRangeAddress(rangeAddressToUse);
+            return Range(rangeAddress);
         }
 
         public void Delete()
         {
             Delete(XLShiftDeletedCells.ShiftCellsLeft);
+        }
+
+        public void InsertCellsAbove(int numberOfRows)
+        {
+            InsertRowsAbove(numberOfRows);
+        }
+
+        public void InsertCellsBelow(int numberOfRows)
+        {
+            InsertRowsBelow(numberOfRows);
         }
     }
 }

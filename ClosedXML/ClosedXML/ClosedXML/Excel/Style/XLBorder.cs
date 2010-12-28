@@ -47,8 +47,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private XLColor leftBorderColor;
-        public XLColor LeftBorderColor
+        private IXLColor leftBorderColor;
+        public IXLColor LeftBorderColor
         {
             get
             {
@@ -79,8 +79,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private XLColor rightBorderColor;
-        public XLColor RightBorderColor
+        private IXLColor rightBorderColor;
+        public IXLColor RightBorderColor
         {
             get
             {
@@ -111,8 +111,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private XLColor topBorderColor;
-        public XLColor TopBorderColor
+        private IXLColor topBorderColor;
+        public IXLColor TopBorderColor
         {
             get
             {
@@ -143,8 +143,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private XLColor bottomBorderColor;
-        public XLColor BottomBorderColor
+        private IXLColor bottomBorderColor;
+        public IXLColor BottomBorderColor
         {
             get
             {
@@ -175,8 +175,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private XLColor diagonalBorderColor;
-        public XLColor DiagonalBorderColor
+        private IXLColor diagonalBorderColor;
+        public IXLColor DiagonalBorderColor
         {
             get
             {

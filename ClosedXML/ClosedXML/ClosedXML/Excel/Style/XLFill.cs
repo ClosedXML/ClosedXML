@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
     {
         #region Properties
 
-        public XLColor BackgroundColor
+        public IXLColor BackgroundColor
         {
             get
             {
@@ -31,8 +31,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private XLColor patternColor;
-        public XLColor PatternColor
+        private IXLColor patternColor;
+        public IXLColor PatternColor
         {
             get
             {
@@ -47,8 +47,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private XLColor patternBackgroundColor;
-        public XLColor PatternBackgroundColor
+        private IXLColor patternBackgroundColor;
+        public IXLColor PatternBackgroundColor
         {
             get
             {

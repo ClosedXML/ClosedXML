@@ -10,20 +10,106 @@ namespace ClosedXML.Excel
 
     public interface IXLCell: IXLStylized
     {
+        /// <summary>
+        /// Gets or sets the cell's value. To get a strongly typed object use the method GetValue&lt;T&gt;.
+        /// <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from this cell.</para>
+        /// <para>If the object is a range ClosedXML will copy the range starting from this cell.</para>
+        /// <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
+        /// <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
+        /// </summary>
+        /// <value>
+        /// The object containing the value(s) to set.
+        /// </value>
         Object Value { get; set; }
+
+        /// <summary>Gets this cell's address, relative to the worksheet.</summary>
+        /// <value>The cell's address.</value>
         IXLAddress Address { get; }
+
+        /// <summary>
+        /// Gets or sets the type of this cell's data.
+        /// <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
+        /// <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
+        /// </summary>
+        /// <value>
+        /// The type of the cell's data.
+        /// </value>
+        /// <exception cref="ArgumentException"></exception>
         XLCellValues DataType { get; set; }
+
+        /// <summary>
+        /// Gets the cell's value converted to the T type.
+        /// <para>ClosedXML will try to covert the current value to the T type.</para>
+        /// <para>An exception will be thrown if the current value cannot be converted to the T type.</para>
+        /// </summary>
+        /// <typeparam name="T">The return type.</typeparam>
+        /// <exception cref="ArgumentException"></exception>
         T GetValue<T>();
+
+        /// <summary>
+        /// Gets the cell's value converted to a String.
+        /// </summary>
         String GetString();
+
+        /// <summary>
+        /// Gets the cell's value formatted depending on the cell's data type and style.
+        /// </summary>
         String GetFormattedString();
+
+        /// <summary>
+        /// Gets the cell's value converted to Double.
+        /// <para>ClosedXML will try to covert the current value to Double.</para>
+        /// <para>An exception will be thrown if the current value cannot be converted to Double.</para>
+        /// </summary>
         Double GetDouble();
+
+        /// <summary>
+        /// Gets the cell's value converted to Boolean.
+        /// <para>ClosedXML will try to covert the current value to Boolean.</para>
+        /// <para>An exception will be thrown if the current value cannot be converted to Boolean.</para>
+        /// </summary>
         Boolean GetBoolean();
+
+        /// <summary>
+        /// Gets the cell's value converted to DateTime.
+        /// <para>ClosedXML will try to covert the current value to DateTime.</para>
+        /// <para>An exception will be thrown if the current value cannot be converted to DateTime.</para>
+        /// </summary>
         DateTime GetDateTime();
+
+        /// <summary>
+        /// Gets the cell's value converted to TimeSpan.
+        /// <para>ClosedXML will try to covert the current value to TimeSpan.</para>
+        /// <para>An exception will be thrown if the current value cannot be converted to TimeSpan.</para>
+        /// </summary>
         TimeSpan GetTimeSpan();
+
+        /// <summary>
+        /// Clears the contents of this cell (including styles).
+        /// </summary>
         void Clear();
+
+        /// <summary>
+        /// Deletes the current cell and shifts the surrounding cells according to the shiftDeleteCells parameter.
+        /// </summary>
+        /// <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
         void Delete(XLShiftDeletedCells shiftDeleteCells);
+
+        /// <summary>
+        /// Gets or sets the cell's formula with A1 references.
+        /// </summary>
+        /// <value>The formula with A1 references.</value>
         String FormulaA1 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cell's formula with R1C1 references.
+        /// </summary>
+        /// <value>The formula with R1C1 references.</value>
         String FormulaR1C1 { get; set; }
+
+        /// <summary>
+        /// Returns this cell as an IXLRange.
+        /// </summary>
         IXLRange AsRange();
     }
 }

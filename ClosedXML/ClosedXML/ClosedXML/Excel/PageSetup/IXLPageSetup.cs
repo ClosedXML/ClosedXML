@@ -81,47 +81,207 @@ namespace ClosedXML.Excel
     
     public interface IXLPageSetup
     {
+        /// <summary>
+        /// Gets an object to manage the print areas of the worksheet.
+        /// </summary>
         IXLPrintAreas PrintAreas { get; }
+        /// <summary>
+        /// Gets the first row that will repeat on the top of the printed pages.
+        /// <para>Use SetRowsToRepeatAtTop() to set the rows that will be repeated on the top of the printed pages.</para>
+        /// </summary>
         Int32 FirstRowToRepeatAtTop { get; }
+        /// <summary>
+        /// Gets the last row that will repeat on the top of the printed pages.
+        /// <para>Use SetRowsToRepeatAtTop() to set the rows that will be repeated on the top of the printed pages.</para>
+        /// </summary>
         Int32 LastRowToRepeatAtTop { get; }
+        /// <summary>
+        /// Sets the rows to repeat on the top of the printed pages.
+        /// </summary>
+        /// <param name="range">The range of rows to repeat on the top of the printed pages.</param>
         void SetRowsToRepeatAtTop(String range);
+        /// <summary>
+        /// Sets the rows to repeat on the top of the printed pages.
+        /// </summary>
+        /// <param name="firstRowToRepeatAtTop">The first row to repeat at top.</param>
+        /// <param name="lastRowToRepeatAtTop">The last row to repeat at top.</param>
         void SetRowsToRepeatAtTop(Int32 firstRowToRepeatAtTop, Int32 lastRowToRepeatAtTop);
+
+        /// <summary>Gets the first column to repeat on the left of the printed pages.</summary>
+        /// <value>The first column to repeat on the left of the printed pages.</value>
         Int32 FirstColumnToRepeatAtLeft { get; }
+        /// <summary>Gets the last column to repeat on the left of the printed pages.</summary>
+        /// <value>The last column to repeat on the left of the printed pages.</value>
         Int32 LastColumnToRepeatAtLeft { get; }
+        /// <summary>
+        /// Sets the rows to repeat on the left of the printed pages.
+        /// </summary>
+        /// <param name="firstColumnToRepeatAtLeft">The first column to repeat at left.</param>
+        /// <param name="lastColumnToRepeatAtLeft">The last column to repeat at left.</param>
         void SetColumnsToRepeatAtLeft(Int32 firstColumnToRepeatAtLeft, Int32 lastColumnToRepeatAtLeft);
+        /// <summary>
+        /// Sets the rows to repeat on the left of the printed pages.
+        /// </summary>
+        /// <param name="range">The range of rows to repeat on the left of the printed pages.</param>
         void SetColumnsToRepeatAtLeft(String range);
+
+        /// <summary>Gets or sets the page orientation for printing.</summary>
+        /// <value>The page orientation.</value>
         XLPageOrientation PageOrientation { get; set; }
+        /// <summary>
+        /// Gets or sets the number of pages wide (horizontal) the worksheet will be printed on.
+        /// <para>If you don't specify the PagesTall, Excel will adjust that value</para>
+        /// <para>based on the contents of the worksheet and the PagesWide number.</para>
+        /// <para>Setting this value will override the Scale value.</para>
+        /// </summary>
         Int32 PagesWide { get; set; }
+        /// <summary>
+        /// Gets or sets the number of pages tall (vertical) the worksheet will be printed on.
+        /// <para>If you don't specify the PagesWide, Excel will adjust that value</para>
+        /// <para>based on the contents of the worksheet and the PagesTall number.</para>
+        /// <para>Setting this value will override the Scale value.</para>
+        /// </summary>
         Int32 PagesTall { get; set; }
+        /// <summary>
+        /// Gets or sets the scale at which the worksheet will be printed.
+        /// <para>The worksheet will be printed on as many pages as necessary to print at the given scale.</para>
+        /// <para>Setting this value will override the PagesWide and PagesTall values.</para>
+        /// </summary>
         Int32 Scale { get; set; }
+        /// <summary>
+        /// Gets or sets the horizontal dpi for printing the worksheet.
+        /// </summary>
         Int32 HorizontalDpi { get; set; }
+        /// <summary>
+        /// Gets or sets the vertical dpi for printing the worksheet.
+        /// </summary>
         Int32 VerticalDpi { get; set; }
+        /// <summary>
+        /// Gets or sets the page number that will begin the printout.
+        /// <para>For example, the first page of your printout could be numbered page 5.</para>
+        /// </summary>
         Int32 FirstPageNumber { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the worksheet will be centered on the page horizontally.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the worksheet will be centered on the page horizontally; otherwise, <c>false</c>.
+        /// </value>
         Boolean CenterHorizontally { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the worksheet will be centered on the page vertically.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the worksheet will be centered on the page vartically; otherwise, <c>false</c>.
+        /// </value>
         Boolean CenterVertically { get; set; }
+        /// <summary>
+        /// Sets the scale at which the worksheet will be printed. This is equivalent to setting the Scale property.
+        /// <para>The worksheet will be printed on as many pages as necessary to print at the given scale.</para>
+        /// <para>Setting this value will override the PagesWide and PagesTall values.</para>
+        /// </summary>
+        /// <param name="pctOfNormalSize">The scale at which the worksheet will be printed.</param>
         void AdjustTo(Int32 pctOfNormalSize);
+        /// <summary>
+        /// Gets or sets the number of pages the worksheet will be printed on.
+        /// <para>This is equivalent to setting both PagesWide and PagesTall properties.</para>
+        /// <para>Setting this value will override the Scale value.</para>
+        /// </summary>
+        /// <param name="pagesWide">The pages wide.</param>
+        /// <param name="pagesTall">The pages tall.</param>
         void FitToPages(Int32 pagesWide, Int32 pagesTall);
+        /// <summary>
+        /// Gets or sets the size of the paper to print the worksheet.
+        /// </summary>
         XLPaperSize PaperSize { get; set; }
+        /// <summary>
+        /// Gets an object to work with the page margins.
+        /// </summary>
         IXLMargins Margins { get; }
 
+        /// <summary>
+        /// Gets an object to work with the page headers.
+        /// </summary>
         IXLHeaderFooter Header { get; }
+        /// <summary>
+        /// Gets an object to work with the page footers.
+        /// </summary>
         IXLHeaderFooter Footer { get; }
+        /// <summary>
+        /// Gets or sets a value indicating whether Excel will automatically adjust the font size to the scale of the worksheet.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if Excel will automatically adjust the font size to the scale of the worksheet; otherwise, <c>false</c>.
+        /// </value>
         Boolean ScaleHFWithDocument { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the header and footer margins are aligned with the left and right margins of the worksheet.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the header and footer margins are aligned with the left and right margins of the worksheet; otherwise, <c>false</c>.
+        /// </value>
         Boolean AlignHFWithMargins { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the gridlines will be printed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the gridlines will be printed; otherwise, <c>false</c>.
+        /// </value>
         Boolean ShowGridlines { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether to show row numbers and column letters/numbers.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> to show row numbers and column letters/numbers; otherwise, <c>false</c>.
+        /// </value>
         Boolean ShowRowAndColumnHeadings { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the worksheet will be printed in black and white.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the worksheet will be printed in black and white; otherwise, <c>false</c>.
+        /// </value>
         Boolean BlackAndWhite { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the worksheet will be printed in draft quality.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the worksheet will be printed in draft quality; otherwise, <c>false</c>.
+        /// </value>
         Boolean DraftQuality { get; set; }
+        /// <summary>
+        /// Gets or sets the page order for printing.
+        /// </summary>
         XLPageOrderValues PageOrder { get; set; }
+        /// <summary>
+        /// Gets or sets how the comments will be printed.
+        /// </summary>
         XLShowCommentsValues ShowComments { get; set; }
 
-
+        /// <summary>
+        /// Gets a list with the row breaks (for printing).
+        /// </summary>
         List<Int32> RowBreaks { get; }
+        /// <summary>
+        /// Gets a list with the column breaks (for printing).
+        /// </summary>
         List<Int32> ColumnBreaks { get; }
+        /// <summary>
+        /// Adds a horizontal page break after the given row.
+        /// </summary>
+        /// <param name="row">The row to insert the break.</param>
         void AddHorizontalPageBreak(Int32 row);
+
+        /// <summary>
+        /// Adds a vertical page break after the given column.
+        /// </summary>
+        /// <param name="column">The column to insert the break.</param>
         void AddVerticalPageBreak(Int32 column);
 
+        /// <summary>
+        /// Gets or sets how error values will be printed.
+        /// </summary>
         XLPrintErrorValues PrintErrorValue { get; set; }
 
     }

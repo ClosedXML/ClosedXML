@@ -33,6 +33,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -50,11 +52,17 @@
     <Compile Include="..\ClosedXML\Excel\Cells\IXLCell.cs">
       <Link>Excel\Cells\IXLCell.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Cells\IXLCells.cs">
+      <Link>Excel\Cells\IXLCells.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Cells\XLCell.cs">
       <Link>Excel\Cells\XLCell.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Cells\XLCellCollection.cs">
       <Link>Excel\Cells\XLCellCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Cells\XLCells.cs">
+      <Link>Excel\Cells\XLCells.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Columns\IXLColumn.cs">
       <Link>Excel\Columns\IXLColumn.cs</Link>

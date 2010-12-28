@@ -172,8 +172,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private XLColor fontColor;
-        public XLColor FontColor
+        private IXLColor fontColor;
+        public IXLColor FontColor
         {
             get
             {

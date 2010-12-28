@@ -91,9 +91,25 @@ namespace ClosedXML.Excel
             this.Style = Worksheet.Style;
         }
 
-        public IXLCell Cell(int row)
+        public IXLCell Cell(Int32 rowNumber)
         {
-            return base.Cell(row, 1);
+            return base.Cell(rowNumber, 1);
+        }
+
+        public IXLCells Cells(String cellsInColumn)
+        {
+            var retVal = new XLCells(Worksheet);
+            var rangePairs = cellsInColumn.Split(',');
+            foreach (var pair in rangePairs)
+            {
+                retVal.AddRange(Range(pair).Cells());
+            }
+            return retVal;
+        }
+
+        public IXLCells Cells(Int32 firstRow, Int32 lastRow)
+        {
+            return Cells(firstRow + ":" + lastRow);
         }
 
         #endregion
@@ -119,19 +135,23 @@ namespace ClosedXML.Excel
                 else
                 {
                     style = new XLStyle(this, value);
-
-                    foreach (var c in Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == this.ColumnNumber()))
+                    Int32 thisCo = this.ColumnNumber();
+                    foreach (var c in Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == thisCo))
                     {
                         c.Style = value;
                     }
 
-                    var maxRow = 0;
+                    Int32 maxRow = 0;
+                    Int32 minRow = 1;
                     if (Worksheet.Internals.RowsCollection.Count > 0)
-                        maxRow = Worksheet.Internals.RowsCollection.Keys.Max();
-
-                    for (var ro = 1; ro <= maxRow; ro++)
                     {
-                        Worksheet.Cell(ro, this.ColumnNumber()).Style = value;
+                        maxRow = Worksheet.Internals.RowsCollection.Keys.Max();
+                        minRow = Worksheet.Internals.RowsCollection.Keys.Min();
+                    }
+
+                    for (Int32 ro = minRow; ro <= maxRow; ro++)
+                    {
+                        Worksheet.Cell(ro, thisCo).Style = value;
                     }
                 }
             }
@@ -198,6 +218,28 @@ namespace ClosedXML.Excel
         public override IXLRange AsRange()
         {
             return Range(1, 1, XLWorksheet.MaxNumberOfRows, 1);
+        }
+        public override IXLRange Range(String rangeAddressStr)
+        {
+            String rangeAddressToUse;
+            if (rangeAddressStr.Contains(":"))
+            {
+                String[] arrRange = rangeAddressStr.Split(':');
+                var firstPart = arrRange[0];
+                var secondPart = arrRange[1];
+                rangeAddressToUse = FixColumnAddress(firstPart) + ":" + FixColumnAddress(secondPart);
+            }
+            else
+            {
+                rangeAddressToUse = FixColumnAddress(rangeAddressStr);
+            }
+
+            var rangeAddress = new XLRangeAddress(rangeAddressToUse);
+            return Range(rangeAddress);
+        }
+        public IXLRangeColumn Range(int firstRow, int lastRow)
+        {
+            return Range(firstRow, 1, lastRow, 1).Column(1);
         }
 
         public void AdjustToContents()

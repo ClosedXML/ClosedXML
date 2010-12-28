@@ -119,13 +119,54 @@ namespace ClosedXML.Excel
             this.Style = Worksheet.Style;
         }
 
-        public IXLCell Cell(Int32 column)
+        public IXLCell Cell(Int32 columnNumber)
         {
-            return base.Cell(1, column);
+            return base.Cell(1, columnNumber);
         }
-        public new IXLCell Cell(String column)
+        public new IXLCell Cell(String columnLetter)
         {
-            return base.Cell(1, column);
+            return base.Cell(1, columnLetter);
+        }
+
+        public IXLCells Cells(String cellsInRow)
+        {
+            var retVal = new XLCells(Worksheet);
+            var rangePairs = cellsInRow.Split(',');
+            foreach (var pair in rangePairs)
+            {
+                retVal.AddRange(Range(pair).Cells());
+            }
+            return retVal;
+        }
+
+        public override IXLRange Range(String rangeAddressStr)
+        {
+            String rangeAddressToUse;
+            if (rangeAddressStr.Contains(":"))
+            {
+                String[] arrRange = rangeAddressStr.Split(':');
+                var firstPart = arrRange[0];
+                var secondPart = arrRange[1];
+                rangeAddressToUse = FixRowAddress(firstPart) + ":" + FixRowAddress(secondPart);
+            }
+            else
+            {
+                rangeAddressToUse = FixRowAddress(rangeAddressStr);
+            }
+
+            var rangeAddress = new XLRangeAddress(rangeAddressToUse);
+            return Range(rangeAddress);
+        }
+
+        public IXLCells Cells(Int32 firstColumn, Int32 lastColumn)
+        {
+            return Cells(firstColumn + ":" + lastColumn);
+        }
+
+        public IXLCells Cells(String firstColumn, String lastColumn)
+        {
+            return Cells(XLAddress.GetColumnNumberFromLetter(firstColumn) + ":" 
+                + XLAddress.GetColumnNumberFromLetter(lastColumn));
         }
 
         public void AdjustToContents()
@@ -207,12 +248,16 @@ namespace ClosedXML.Excel
                         c.Style = value;
                     }
 
-                    var maxColumn = 0;
+                    Int32 maxColumn = 0;
+                    Int32 minColumn = 1;
                     if (Worksheet.Internals.ColumnsCollection.Count > 0)
+                    {
                         maxColumn = Worksheet.Internals.ColumnsCollection.Keys.Max();
+                        minColumn = Worksheet.Internals.ColumnsCollection.Keys.Min();
+                    }
 
 
-                    for (var co = 1; co <= maxColumn; co++)
+                    for (Int32 co = minColumn; co <= maxColumn; co++)
                     {
                         Worksheet.Cell(row, co).Style = value;
                     }

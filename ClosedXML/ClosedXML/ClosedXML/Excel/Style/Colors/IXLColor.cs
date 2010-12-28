@@ -27,5 +27,6 @@ namespace ClosedXML.Excel
         Int32 Indexed { get;  }
         XLThemeColor ThemeColor { get;  }
         Double ThemeTint { get;  }
+        Boolean HasValue { get; }
     }
 }

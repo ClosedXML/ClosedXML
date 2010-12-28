@@ -102,5 +102,7 @@ namespace ClosedXML.Excel
             if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
             return retVal;
         }
+
+
     }
 }

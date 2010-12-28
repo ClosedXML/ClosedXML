@@ -7,9 +7,11 @@ namespace ClosedXML.Excel
 {
     internal class XLRangeColumns : IXLRangeColumns
     {
+        XLWorksheet worksheet;
         public XLRangeColumns(XLWorksheet worksheet)
         {
             Style = worksheet.Style;
+            this.worksheet = worksheet;
         }
 
         List<XLRangeColumn> ranges = new List<XLRangeColumn>();
@@ -92,6 +94,60 @@ namespace ClosedXML.Excel
             {
                 ranges.ForEach(r => r.FormulaR1C1 = value);
             }
+        }
+
+        public IXLCells Cells()
+        {
+            var cellHash = new HashSet<IXLCell>();
+            foreach (var container in ranges)
+            {
+                foreach (var cell in container.Cells())
+                {
+                    if (!cellHash.Contains(cell))
+                    {
+                        cellHash.Add(cell);
+                    }
+                }
+            }
+            var cells = new XLCells(worksheet);
+            cells.AddRange(cellHash);
+            return (IXLCells)cells;
+        }
+
+        public IXLCells CellsUsed()
+        {
+            var cellHash = new HashSet<IXLCell>();
+            foreach (var container in ranges)
+            {
+                foreach (var cell in container.CellsUsed())
+                {
+                    if (!cellHash.Contains(cell))
+                    {
+                        cellHash.Add(cell);
+                    }
+                }
+            }
+            var cells = new XLCells(worksheet);
+            cells.AddRange(cellHash);
+            return (IXLCells)cells;
+        }
+
+        public IXLCells CellsUsed(Boolean includeStyles)
+        {
+            var cellHash = new HashSet<IXLCell>();
+            foreach (var container in ranges)
+            {
+                foreach (var cell in container.CellsUsed(includeStyles))
+                {
+                    if (!cellHash.Contains(cell))
+                    {
+                        cellHash.Add(cell);
+                    }
+                }
+            }
+            var cells = new XLCells(worksheet);
+            cells.AddRange(cellHash);
+            return (IXLCells)cells;
         }
     }
 }

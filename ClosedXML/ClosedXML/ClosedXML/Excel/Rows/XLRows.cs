@@ -186,5 +186,59 @@ namespace ClosedXML.Excel
         {
             rows.ForEach(r => r.Expand());
         }
+
+        public IXLCells Cells()
+        {
+            var cellHash = new HashSet<IXLCell>();
+            foreach (var container in rows)
+            {
+                foreach (var cell in container.Cells())
+                {
+                    if (!cellHash.Contains(cell))
+                    {
+                        cellHash.Add(cell);
+                    }
+                }
+            }
+            var cells = new XLCells(worksheet, entireWorksheet);
+            cells.AddRange(cellHash);
+            return (IXLCells)cells;
+        }
+
+        public IXLCells CellsUsed()
+        {
+            var cellHash = new HashSet<IXLCell>();
+            foreach (var container in rows)
+            {
+                foreach (var cell in container.CellsUsed())
+                {
+                    if (!cellHash.Contains(cell))
+                    {
+                        cellHash.Add(cell);
+                    }
+                }
+            }
+            var cells = new XLCells(worksheet, entireWorksheet);
+            cells.AddRange(cellHash);
+            return (IXLCells)cells;
+        }
+
+        public IXLCells CellsUsed(Boolean includeStyles)
+        {
+            var cellHash = new HashSet<IXLCell>();
+            foreach (var container in rows)
+            {
+                foreach (var cell in container.CellsUsed(includeStyles))
+                {
+                    if (!cellHash.Contains(cell))
+                    {
+                        cellHash.Add(cell);
+                    }
+                }
+            }
+            var cells = new XLCells(worksheet, entireWorksheet);
+            cells.AddRange(cellHash);
+            return (IXLCells)cells;
+        }
     }
 }

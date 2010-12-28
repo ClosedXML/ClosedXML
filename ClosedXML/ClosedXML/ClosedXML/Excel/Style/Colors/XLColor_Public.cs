@@ -8,33 +8,8 @@ namespace ClosedXML.Excel
 {
     public partial class XLColor: IXLColor
     {
-        public XLColor()
-        {
-            HasValue = false;
-        }
+        public Boolean HasValue { get; private set; }
 
-        public XLColor(Color color)
-        {
-            Color = color;
-            HasValue = true;
-        }
-        public XLColor(Int32 index)
-        {
-            Indexed = index;
-            HasValue = true;
-        }
-        public XLColor(XLThemeColor themeColor)
-        {
-            ThemeColor = themeColor;
-            ThemeTint = 1;
-            HasValue = true;
-        }
-        public XLColor(XLThemeColor themeColor, Double themeTint)
-        {
-            ThemeColor = themeColor;
-            ThemeTint = themeTint;
-            HasValue = true;
-        }
         public XLColorType ColorType { get; private set; }
         private Color color;
         public Color Color 
