@@ -59,13 +59,45 @@ namespace ClosedXML.Excel
         IXLCell LastCellUsed(Boolean includeStyles);
 
         /// <summary>
-        /// Determines whether this range contains the specified range address.
+        /// Determines whether this range contains the specified range (completely).
+        /// <para>For partial matches use the range.Intersects method.</para>
         /// </summary>
         /// <param name="rangeAddress">The range address.</param>
         /// <returns>
-        ///   <c>true</c> if this range contains the specified range address; otherwise, <c>false</c>.
+        ///   <c>true</c> if this range contains the specified range; otherwise, <c>false</c>.
         /// </returns>
-        Boolean ContainsRange(String rangeAddress);
+        Boolean Contains(String rangeAddress);
+
+        /// <summary>
+        /// Determines whether this range contains the specified range (completely).
+        /// <para>For partial matches use the range.Intersects method.</para>
+        /// </summary>
+        /// <param name="range">The range to match.</param>
+        /// <returns>
+        ///   <c>true</c> if this range contains the specified range; otherwise, <c>false</c>.
+        /// </returns>
+        Boolean Contains(IXLRangeBase range);
+
+        /// <summary>
+        /// Determines whether this range intersects the specified range.
+        /// <para>For whole matches use the range.Contains method.</para>
+        /// </summary>
+        /// <param name="rangeAddress">The range address.</param>
+        /// <returns>
+        ///   <c>true</c> if this range intersects the specified range; otherwise, <c>false</c>.
+        /// </returns>
+        Boolean Intersects(String rangeAddress);
+
+        /// <summary>
+        /// Determines whether this range contains the specified range.
+        /// <para>For whole matches use the range.Contains method.</para>
+        /// </summary>
+        /// <param name="range">The range to match.</param>
+        /// <returns>
+        ///   <c>true</c> if this range intersects the specified range; otherwise, <c>false</c>.
+        /// </returns>
+        Boolean Intersects(IXLRangeBase range);
+
         /// <summary>
         /// Unmerges this range.
         /// </summary>

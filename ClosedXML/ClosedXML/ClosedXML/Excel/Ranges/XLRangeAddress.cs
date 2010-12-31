@@ -81,5 +81,10 @@ namespace ClosedXML.Excel
             FirstAddress = firstAddress;
             LastAddress = lastAddress;
         }
+
+        public override string ToString()
+        {
+            return firstAddress.ToString() + ":" + lastAddress.ToString();
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
         XLCellCollection CellsCollection { get; }
         XLColumnsCollection ColumnsCollection { get; }
         XLRowsCollection RowsCollection { get; }
-        List<String> MergedCells { get; }
+        XLRanges MergedRanges { get; }
         XLWorkbook Workbook { get; }
     }
 }

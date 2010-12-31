@@ -134,7 +134,7 @@ namespace ClosedXML.Excel
             var rangePairs = cellsInRow.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.AddRange(Range(pair).Cells());
+                retVal.AddRange(Range(pair.Trim()).Cells());
             }
             return retVal;
         }
@@ -168,19 +168,41 @@ namespace ClosedXML.Excel
             return Cells(XLAddress.GetColumnNumberFromLetter(firstColumn) + ":" 
                 + XLAddress.GetColumnNumberFromLetter(lastColumn));
         }
-
         public void AdjustToContents()
         {
+            AdjustToContents(1);
+        }
+        public void AdjustToContents(Int32 startColumn)
+        {
+            AdjustToContents(startColumn, XLWorksheet.MaxNumberOfColumns);
+        }
+        public void AdjustToContents(Int32 startColumn, Int32 endColumn)
+        {
             Double maxHeight = 0;
-            var cellsUsed = CellsUsed();
-            foreach (var c in cellsUsed)
+            foreach (var c in CellsUsed().Where(cell => cell.Address.ColumnNumber >= startColumn && cell.Address.ColumnNumber <= endColumn))
             {
-                var thisHeight = ((XLFont)c.Style.Font).GetHeight();
-                if (thisHeight > maxHeight)
-                    maxHeight = thisHeight;
+                Boolean isMerged = false;
+                var cellAsRange = c.AsRange();
+                foreach (var m in Worksheet.Internals.MergedRanges)
+                {
+                    if (cellAsRange.Intersects(m))
+                    {
+                        isMerged = true;
+                        break;
+                    }
+                }
+                if (!isMerged)
+                {
+                    var thisHeight = ((XLFont)c.Style.Font).GetHeight();
+                    if (thisHeight > maxHeight)
+                        maxHeight = thisHeight;
+                }
             }
-            if (maxHeight > 0)
-                Height = maxHeight;
+
+            if (maxHeight == 0)
+                maxHeight = Worksheet.RowHeight;
+
+            Height = maxHeight;
         }
 
         public void Hide()

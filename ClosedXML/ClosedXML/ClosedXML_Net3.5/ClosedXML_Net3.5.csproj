@@ -16,6 +16,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,8 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Release\ClosedXML.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -87,6 +87,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLOutline.cs">
       <Link>Excel\IXLOutline.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\IXLSheetView.cs">
+      <Link>Excel\IXLSheetView.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLTheme.cs">
       <Link>Excel\IXLTheme.cs</Link>
@@ -267,6 +270,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\XLOutline.cs">
       <Link>Excel\XLOutline.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLSheetView.cs">
+      <Link>Excel\XLSheetView.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\XLTheme.cs">
       <Link>Excel\XLTheme.cs</Link>

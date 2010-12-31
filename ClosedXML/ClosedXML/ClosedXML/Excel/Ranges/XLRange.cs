@@ -190,16 +190,16 @@ namespace ClosedXML.Excel
             {
                 String firstColumn;
                 String lastColumn;
-                if (pair.Contains(':'))
+                if (pair.Trim().Contains(':'))
                 {
-                    var columnRange = pair.Split(':');
+                    var columnRange = pair.Trim().Split(':');
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
                 }
                 else
                 {
-                    firstColumn = pair;
-                    lastColumn = pair;
+                    firstColumn = pair.Trim();
+                    lastColumn = pair.Trim();
                 }
 
                 Int32 tmp;
@@ -244,16 +244,16 @@ namespace ClosedXML.Excel
             {
                 String firstRow;
                 String lastRow;
-                if (pair.Contains(':'))
+                if (pair.Trim().Contains(':'))
                 {
-                    var rowRange = pair.Split(':');
+                    var rowRange = pair.Trim().Split(':');
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
                 }
                 else
                 {
-                    firstRow = pair;
-                    lastRow = pair;
+                    firstRow = pair.Trim();
+                    lastRow = pair.Trim();
                 }
                 foreach (var row in this.Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
                 {
@@ -336,28 +336,19 @@ namespace ClosedXML.Excel
 
         private void TransposeMerged()
         {
-            List<String> mergeToDelete = new List<String>();
-            List<String> mergeToInsert = new List<String>();
-            foreach (var merge in Worksheet.Internals.MergedCells)
+            List<IXLRange> mergeToDelete = new List<IXLRange>();
+            List<IXLRange> mergeToInsert = new List<IXLRange>();
+            foreach (var merge in Worksheet.Internals.MergedRanges)
             {
-                if (this.ContainsRange(merge))
+                if (this.Contains(merge))
                 {
-                    String addressToUse;
-                    if (merge.Contains("!"))
-                        addressToUse = merge.Substring(merge.IndexOf("!") + 1);
-                    else
-                        addressToUse = merge;
-
-                    mergeToDelete.Add(merge);
-                    String[] arrRange = addressToUse.Split(':');
-                    var firstAddress = new XLAddress(arrRange[0]);
-                    var lastAddress = new XLAddress(arrRange[1]);
+                    var lastAddress = merge.RangeAddress.LastAddress;
                     var newLastAddress = new XLAddress(lastAddress.ColumnNumber, lastAddress.RowNumber);
-                    mergeToInsert.Add(firstAddress.ToString() + ":" + newLastAddress.ToString());
+                    merge.RangeAddress.LastAddress = newLastAddress;
                 }
             }
-            mergeToDelete.ForEach(m => this.Worksheet.Internals.MergedCells.Remove(m));
-            mergeToInsert.ForEach(m => this.Worksheet.Internals.MergedCells.Add(m));
+            mergeToDelete.ForEach(m => this.Worksheet.Internals.MergedRanges.Remove(m));
+            mergeToInsert.ForEach(m => this.Worksheet.Internals.MergedRanges.Add(m));
         }
 
         private void MoveOrClearForTranspose(XLTransposeOptions transposeOption, int rowCount, int columnCount)

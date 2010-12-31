@@ -174,7 +174,7 @@ namespace ClosedXML.Excel
             var rangePairs = ranges.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.Add(Range(pair));
+                retVal.Add(Range(pair.Trim()));
             }
             return retVal;
         }
@@ -219,7 +219,7 @@ namespace ClosedXML.Excel
         }
         public IXLCells CellsUsed()
         {
-            var list = this.Worksheet.Internals.CellsCollection.Where(c => !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) && this.ContainsRange(c.Key.ToString())).Select(c => (IXLCell)c.Value);
+            var list = this.Worksheet.Internals.CellsCollection.Where(c => !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) && this.Contains(c.Key.ToString())).Select(c => (IXLCell)c.Value);
             var cells = new XLCells(Worksheet);
             cells.AddRange(list.AsEnumerable());
             return (IXLCells)cells;
@@ -229,13 +229,13 @@ namespace ClosedXML.Excel
             IEnumerable<IXLCell> list;
             if (includeStyles)
                 list = this.Worksheet.Internals.CellsCollection.Where(c => 
-                    (!StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) || !c.Value.Style.Equals(Worksheet.Style)) 
-                    && this.ContainsRange(c.Key.ToString())
+                    (!StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) || !c.Value.Style.Equals(Worksheet.Style))
+                    && this.Contains(c.Key.ToString())
                     ).Select(c => (IXLCell)c.Value);
             else
                 list = this.Worksheet.Internals.CellsCollection.Where(c => 
-                    !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) 
-                    && this.ContainsRange(c.Key.ToString())
+                    !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText)
+                    && this.Contains(c.Key.ToString())
                     ).Select(c => (IXLCell)c.Value);
             var cells = new XLCells(Worksheet);
             cells.AddRange(list);
@@ -244,16 +244,35 @@ namespace ClosedXML.Excel
 
         public IXLRange Merge()
         {
-            var mergeRange = this.RangeAddress.FirstAddress.ToString() + ":" + this.RangeAddress.LastAddress.ToString();
-            if (!this.Worksheet.Internals.MergedCells.Contains(mergeRange))
-                this.Worksheet.Internals.MergedCells.Add(mergeRange);
+            var tAddress = this.RangeAddress.ToString();
+            Boolean foundOne = false;
+            foreach (var m in this.Worksheet.Internals.MergedRanges)
+            {
+                var mAddress = m.RangeAddress.ToString();
+                if (mAddress == tAddress)
+                {
+                    foundOne = true;
+                    break;
+                }
+            }
+
+            if (!foundOne)
+                this.Worksheet.Internals.MergedRanges.Add(this.AsRange());
             return AsRange();
         }
         public IXLRange Unmerge()
         {
-            var mergeRange = this.RangeAddress.FirstAddress.ToString() + ":" + this.RangeAddress.LastAddress.ToString();
-            if (this.Worksheet.Internals.MergedCells.Contains(mergeRange))
-            this.Worksheet.Internals.MergedCells.Remove(mergeRange);
+            var tAddress = this.RangeAddress.ToString();
+            foreach (var m in this.Worksheet.Internals.MergedRanges)
+            {
+                var mAddress = m.RangeAddress.ToString();
+                if (mAddress == tAddress)
+                {
+                    this.Worksheet.Internals.MergedRanges.Remove(this.AsRange());
+                    break;
+                }
+            }
+                
             return AsRange();
         }
 
@@ -460,26 +479,18 @@ namespace ClosedXML.Excel
 
         private void ClearMerged()
         {
-            List<String> mergeToDelete = new List<String>();
-            foreach (var merge in Worksheet.Internals.MergedCells)
+            List<IXLRange> mergeToDelete = new List<IXLRange>();
+            foreach (var merge in Worksheet.Internals.MergedRanges)
             {
-                var ma = new XLRangeAddress(merge);
-                var ra = RangeAddress;
-
-                if (!( // See if the two ranges intersect...
-                       ma.FirstAddress.ColumnNumber > ra.LastAddress.ColumnNumber
-                    || ma.LastAddress.ColumnNumber < ra.FirstAddress.ColumnNumber
-                    || ma.FirstAddress.RowNumber > ra.LastAddress.RowNumber
-                    || ma.LastAddress.RowNumber < ra.FirstAddress.RowNumber
-                    ))
+                if (this.Intersects(merge))
                 {
                     mergeToDelete.Add(merge);
                 }
             }
-            mergeToDelete.ForEach(m => this.Worksheet.Internals.MergedCells.Remove(m));
+            mergeToDelete.ForEach(m => this.Worksheet.Internals.MergedRanges.Remove(m));
         }
 
-        public Boolean ContainsRange(String rangeAddress)
+        public Boolean Contains(String rangeAddress)
         {
             String addressToUse;
             if (rangeAddress.Contains("!"))
@@ -503,6 +514,31 @@ namespace ClosedXML.Excel
             return
                 firstAddress >= (XLAddress)this.RangeAddress.FirstAddress
                 && lastAddress <= (XLAddress)this.RangeAddress.LastAddress;
+        }
+
+        public Boolean Contains(IXLRangeBase range)
+        {
+            return
+                (XLAddress)range.RangeAddress.FirstAddress >= (XLAddress)this.RangeAddress.FirstAddress
+                && (XLAddress)range.RangeAddress.LastAddress <= (XLAddress)this.RangeAddress.LastAddress;
+        }
+
+        public Boolean Intersects(String rangeAddress)
+        {
+            return this.Intersects(Range(rangeAddress));
+        }
+
+        public Boolean Intersects(IXLRangeBase range)
+        {
+            var ma = range.RangeAddress;
+            var ra = RangeAddress;
+
+            return !( // See if the two ranges intersect...
+                   ma.FirstAddress.ColumnNumber > ra.LastAddress.ColumnNumber
+                || ma.LastAddress.ColumnNumber < ra.FirstAddress.ColumnNumber
+                || ma.FirstAddress.RowNumber > ra.LastAddress.RowNumber
+                || ma.LastAddress.RowNumber < ra.FirstAddress.RowNumber
+                );
         }
 
         public void Delete(XLShiftDeletedCells shiftDeleteCells)

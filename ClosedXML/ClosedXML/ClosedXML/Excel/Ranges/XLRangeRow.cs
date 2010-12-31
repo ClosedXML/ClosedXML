@@ -60,7 +60,7 @@ namespace ClosedXML.Excel
             var rangePairs = cellsInRow.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.AddRange(Range(pair).Cells());
+                retVal.AddRange(Range(pair.Trim()).Cells());
             }
             return retVal;
         }

@@ -199,11 +199,10 @@ namespace ClosedXML.Excel
                     }
                 }
                 var rangesToMerge = new List<IXLRange>();
-                foreach (var merge in asRange.Worksheet.Internals.MergedCells)
+                foreach (var mergedRange in asRange.Worksheet.Internals.MergedRanges)
                 {
-                    if (asRange.ContainsRange(merge))
+                    if (asRange.Contains(mergedRange))
                     {
-                        var mergedRange = worksheet.Range(merge);
                         var initialRo = Address.RowNumber + (mergedRange.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
                         var initialCo = Address.ColumnNumber + (mergedRange.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
                         rangesToMerge.Add(worksheet.Range(initialRo, initialCo, initialRo + mergedRange.RowCount() - 1, initialCo + mergedRange.ColumnCount() - 1));
@@ -285,22 +284,15 @@ namespace ClosedXML.Excel
 
         private void ClearMerged(Int32 rowCount, Int32 columnCount)
         {
-            List<String> mergeToDelete = new List<String>();
-            foreach (var merge in worksheet.Internals.MergedCells)
+            List<IXLRange> mergeToDelete = new List<IXLRange>();
+            foreach (var merge in worksheet.Internals.MergedRanges)
             {
-                var ma = new XLRangeAddress(merge);
-
-                if (!( // See if the two ranges intersect...
-                       ma.FirstAddress.ColumnNumber > Address.ColumnNumber + columnCount
-                    || ma.LastAddress.ColumnNumber < Address.ColumnNumber
-                    || ma.FirstAddress.RowNumber > Address.RowNumber + rowCount
-                    || ma.LastAddress.RowNumber < Address.RowNumber
-                    ))
+                if (merge.Intersects(AsRange()))
                 {
                     mergeToDelete.Add(merge);
                 }
             }
-            mergeToDelete.ForEach(m => worksheet.Internals.MergedCells.Remove(m));
+            mergeToDelete.ForEach(m => worksheet.Internals.MergedRanges.Remove(m));
         }
 
         private void SetValue(object objWithValue, int ro, int co)

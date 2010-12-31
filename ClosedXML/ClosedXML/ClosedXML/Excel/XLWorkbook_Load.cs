@@ -97,6 +97,22 @@ namespace ClosedXML.Excel
                 if (sheetFormatProperties.DefaultColumnWidth != null)
                     ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth;
 
+                var sheetView = (SheetView)worksheetPart.Worksheet.Descendants<SheetView>().FirstOrDefault();
+                if (sheetView != null)
+                {
+                    var pane = (Pane)sheetView.Descendants<Pane>().FirstOrDefault();
+                    if (pane != null)
+                    {
+                        if (pane.State != null && pane.State == PaneStateValues.FrozenSplit)
+                        {
+                            if (pane.HorizontalSplit != null)
+                                ws.SheetView.SplitColumn = (Int32)pane.HorizontalSplit.Value;
+                            if (pane.VerticalSplit != null)
+                                ws.SheetView.SplitRow = (Int32)pane.VerticalSplit.Value;
+                        }
+                    }
+                }
+
                 foreach (var mCell in worksheetPart.Worksheet.Descendants<MergeCell>())
                 {
                     var mergeCell = (MergeCell)mCell;
@@ -396,7 +412,7 @@ namespace ClosedXML.Excel
                 {
                     foreach (var area in definedName.Text.Split(','))
                     {
-                        var sections = area.Split('!');
+                        var sections = area.Trim().Split('!');
                         var sheetName = sections[0].Replace("\'", "");
                         var sheetArea = sections[1];
                         Worksheets.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
@@ -406,7 +422,7 @@ namespace ClosedXML.Excel
                 {
                     var areas = definedName.Text.Split(',');
 
-                    var colSections = areas[0].Split('!');
+                    var colSections = areas[0].Trim().Split('!');
                     var sheetNameCol = colSections[0].Replace("\'", "");
                     var sheetAreaCol = colSections[1];
                     Worksheets.Worksheet(sheetNameCol).PageSetup.SetColumnsToRepeatAtLeft(sheetAreaCol);

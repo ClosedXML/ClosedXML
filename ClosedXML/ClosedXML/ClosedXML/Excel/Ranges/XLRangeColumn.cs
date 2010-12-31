@@ -37,7 +37,7 @@ namespace ClosedXML.Excel
             var rangePairs = cellsInColumn.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.AddRange(Range(pair).Cells());
+                retVal.AddRange(Range(pair.Trim()).Cells());
             }
             return retVal;
         }

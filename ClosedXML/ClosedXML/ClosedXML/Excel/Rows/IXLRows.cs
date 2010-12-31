@@ -24,6 +24,17 @@ namespace ClosedXML.Excel
         /// Adjusts the height of all rows based on its contents.
         /// </summary>
         void AdjustToContents();
+        /// <summary>
+        /// Adjusts the height of all rows based on its contents, starting from the startColumn.
+        /// </summary>
+        /// <param name="startColumn">The column to start calculating the row height.</param>
+        void AdjustToContents(Int32 startColumn);
+        /// <summary>
+        /// Adjusts the height of all rows based on its contents, starting from the startColumn and ending at endColumn.
+        /// </summary>
+        /// <param name="startColumn">The column to start calculating the row height.</param>
+        /// <param name="endColumn">The column to end calculating the row height.</param>
+        void AdjustToContents(Int32 startColumn, Int32 endColumn);
 
         /// <summary>
         /// Hides all rows.

@@ -1423,12 +1423,53 @@ namespace ClosedXML.Excel
             if (worksheetPart.Worksheet.SheetDimension == null)
                 worksheetPart.Worksheet.SheetDimension = new SheetDimension() { Reference = sheetDimensionReference };
 
-
             if (worksheetPart.Worksheet.SheetViews == null)
                 worksheetPart.Worksheet.SheetViews = new SheetViews();
 
+            var sheetView = worksheetPart.Worksheet.SheetViews.FirstOrDefault();
             if (worksheetPart.Worksheet.SheetViews.Count() == 0)
-                worksheetPart.Worksheet.SheetViews.Append(new SheetView() { WorkbookViewId = (UInt32Value)0U });
+            {
+                sheetView = new SheetView() { WorkbookViewId = (UInt32Value)0U };
+                worksheetPart.Worksheet.SheetViews.Append(sheetView);
+            }
+
+
+            var pane = sheetView.Elements<Pane>().FirstOrDefault();
+            if (pane == null)
+            {
+                pane = new Pane();
+                sheetView.Append(pane);
+            }
+
+            Double hSplit = 0;
+            Double ySplit = 0;
+            //if (xlWorksheet.SheetView.FreezePanes)
+            //{
+                pane.State = PaneStateValues.FrozenSplit;
+                hSplit = xlWorksheet.SheetView.SplitColumn;
+                ySplit = xlWorksheet.SheetView.SplitRow;
+            //}
+            //else
+            //{
+            //    pane.State = null;
+            //    foreach (var column in xlWorksheet.Columns(1, xlWorksheet.SheetView.SplitColumn))
+            //    {
+            //        hSplit += (column.Width * 141.33);
+            //    }
+            //    foreach (var row in xlWorksheet.Rows(1, xlWorksheet.SheetView.SplitRow))
+            //    {
+            //        ySplit += (row.Height * 37.0);
+            //    }
+            //}
+
+            pane.HorizontalSplit = hSplit;
+            pane.VerticalSplit = ySplit;
+
+            pane.TopLeftCell = XLAddress.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
+                                    + (xlWorksheet.SheetView.SplitRow + 1).ToString();
+
+            if (hSplit == 0 && ySplit == 0)
+                sheetView.RemoveAllChildren<Pane>();
 
             #endregion
 
@@ -1739,7 +1780,7 @@ namespace ClosedXML.Excel
 
             #region MergeCells
             MergeCells mergeCells = null;
-            if (xlWorksheet.Internals.MergedCells.Count > 0)
+            if (xlWorksheet.Internals.MergedRanges.Count() > 0)
             {
                 if (worksheetPart.Worksheet.Elements<MergeCells>().Count() == 0)
                 {
@@ -1759,7 +1800,7 @@ namespace ClosedXML.Excel
                 mergeCells = worksheetPart.Worksheet.Elements<MergeCells>().First();
                 mergeCells.RemoveAllChildren<MergeCell>();
 
-                foreach (var merged in xlWorksheet.Internals.MergedCells)
+                foreach (var merged in xlWorksheet.Internals.MergedRanges.Select(m=>m.RangeAddress.FirstAddress.ToString() + ":" + m.RangeAddress.LastAddress.ToString()))
                 {
                     MergeCell mergeCell = new MergeCell() { Reference = merged };
                     mergeCells.Append(mergeCell);

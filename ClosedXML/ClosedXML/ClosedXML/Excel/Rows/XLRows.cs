@@ -144,7 +144,14 @@ namespace ClosedXML.Excel
         {
             rows.ForEach(r => r.AdjustToContents());
         }
-
+        public void AdjustToContents(Int32 startColumn)
+        {
+            rows.ForEach(r => r.AdjustToContents(startColumn));
+        }
+        public void AdjustToContents(Int32 startColumn, Int32 endColumn)
+        {
+            rows.ForEach(r => r.AdjustToContents(startColumn, endColumn));
+        }
         public void Hide()
         {
             rows.ForEach(r => r.Hide());

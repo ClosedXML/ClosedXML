@@ -20,7 +20,7 @@ namespace ClosedXML_Sandbox
             col.Cells("3").Style.Fill.BackgroundColor = XLColor.Blue;
             col.Cell(6).Style.Fill.BackgroundColor = XLColor.Orange;
             col.Cells(7, 8).Style.Fill.BackgroundColor = XLColor.Blue;
-
+            
             var colRng = ws.Range("A2:H2").FirstRow();
 
             colRng.Cells("1:2, 4:5").Style.Fill.BackgroundColor = XLColor.Red;

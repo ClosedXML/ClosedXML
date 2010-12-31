@@ -11,21 +11,21 @@ namespace ClosedXML.Excel
             XLCellCollection cellsCollection, 
             XLColumnsCollection columnsCollection,
             XLRowsCollection rowsCollection,
-            List<String> mergedCells,
+            XLRanges mergedRanges,
             XLWorkbook workbook
             )
         {
             CellsCollection = cellsCollection;
             ColumnsCollection = columnsCollection;
             RowsCollection = rowsCollection;
-            MergedCells = mergedCells;
+            MergedRanges = mergedRanges;
             Workbook = workbook;
         }
 
         public XLCellCollection CellsCollection { get; private set; }
         public XLColumnsCollection ColumnsCollection { get; private set; }
         public XLRowsCollection RowsCollection { get; private set; }
-        public List<String> MergedCells { get; internal set; }
+        public XLRanges MergedRanges { get; internal set; }
         public XLWorkbook Workbook { get; internal set; }
     }
 }

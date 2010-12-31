@@ -60,6 +60,9 @@ namespace ClosedXML_Examples
             new BlankCells().Create(@"C:\Excel Files\Created\BlankCells.xlsx");
             new TwoPages().Create(@"C:\Excel Files\Created\TwoPages.xlsx");
             new UsingColors().Create(@"C:\Excel Files\Created\UsingColors.xlsx");
+            new ColumnCells().Create(@"C:\Excel Files\Created\ColumnCells.xlsx");
+            new RowCells().Create(@"C:\Excel Files\Created\RowCells.xlsx");
+            new FreezePanes().Create(@"C:\Excel Files\Created\FreezePanes.xlsx");
         }
     }
 }

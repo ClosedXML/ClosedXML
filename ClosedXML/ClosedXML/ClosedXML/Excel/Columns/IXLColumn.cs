@@ -79,6 +79,17 @@ namespace ClosedXML.Excel
         /// Adjusts the width of the column based on its contents.
         /// </summary>
         void AdjustToContents();
+        /// <summary>
+        /// Adjusts the width of the column based on its contents, starting from the startRow.
+        /// </summary>
+        /// <param name="startRow">The row to start calculating the column width.</param>
+        void AdjustToContents(Int32 startRow);
+        /// <summary>
+        /// Adjusts the width of the column based on its contents, starting from the startRow and ending at endRow.
+        /// </summary>
+        /// <param name="startRow">The row to start calculating the column width.</param>
+        /// <param name="endRow">The row to end calculating the column width.</param>
+        void AdjustToContents(Int32 startRow, Int32 endRow);
 
 
         /// <summary>

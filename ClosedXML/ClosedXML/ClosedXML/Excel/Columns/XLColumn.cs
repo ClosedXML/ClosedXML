@@ -102,7 +102,7 @@ namespace ClosedXML.Excel
             var rangePairs = cellsInColumn.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.AddRange(Range(pair).Cells());
+                retVal.AddRange(Range(pair.Trim()).Cells());
             }
             return retVal;
         }
@@ -244,12 +244,33 @@ namespace ClosedXML.Excel
 
         public void AdjustToContents()
         {
+            AdjustToContents(1);
+        }
+        public void AdjustToContents(Int32 startRow)
+        {
+            AdjustToContents(startRow, XLWorksheet.MaxNumberOfRows);
+        }
+        public void AdjustToContents(Int32 startRow, Int32 endRow)
+        {
             Double maxWidth = 0;
-            foreach (var c in CellsUsed())
-            { 
-                var thisWidth = ((XLFont)c.Style.Font).GetWidth(c.GetFormattedString());
-                if (thisWidth > maxWidth)
-                    maxWidth = thisWidth;
+            foreach (var c in CellsUsed().Where(cell=>cell.Address.RowNumber >= startRow && cell.Address.RowNumber <= endRow))
+            {
+                Boolean isMerged = false;
+                var cellAsRange = c.AsRange();
+                foreach (var m in Worksheet.Internals.MergedRanges)
+                {
+                    if (cellAsRange.Intersects(m))
+                    {
+                        isMerged = true;
+                        break;
+                    }
+                }
+                if (!isMerged)
+                {
+                    var thisWidth = ((XLFont)c.Style.Font).GetWidth(c.GetFormattedString());
+                    if (thisWidth > maxWidth)
+                        maxWidth = thisWidth;
+                }
             }
 
             if (maxWidth == 0)

@@ -27,9 +27,10 @@ namespace ClosedXML.Excel
         {
             Worksheet = this;
             NamedRanges = new XLNamedRanges(workbook);
+            SheetView = new XLSheetView();
             this.workbook = workbook;
             Style = workbook.Style;
-            Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new List<String>(), workbook);
+            Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new XLRanges(workbook, workbook.Style) , workbook);
             PageSetup = new XLPageSetup(workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
             ColumnWidth = workbook.ColumnWidth;
@@ -41,10 +42,9 @@ namespace ClosedXML.Excel
 
         void XLWorksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            var newMerge = new List<String>();
-            foreach (var merge in Internals.MergedCells)
+            var newMerge = new XLRanges(workbook, workbook.Style);
+            foreach (var rngMerged in Internals.MergedRanges)
             {
-                var rngMerged = Range(merge);
                 if (range.RangeAddress.FirstAddress.ColumnNumber <= rngMerged.RangeAddress.FirstAddress.ColumnNumber
                     && rngMerged.RangeAddress.FirstAddress.RowNumber >= range.RangeAddress.FirstAddress.RowNumber
                     && rngMerged.RangeAddress.LastAddress.RowNumber <= range.RangeAddress.LastAddress.RowNumber)
@@ -54,24 +54,23 @@ namespace ClosedXML.Excel
                         rngMerged.RangeAddress.FirstAddress.ColumnNumber + columnsShifted,
                         rngMerged.RangeAddress.LastAddress.RowNumber,
                         rngMerged.RangeAddress.LastAddress.ColumnNumber + columnsShifted);
-                    newMerge.Add(GetRangeLocation(newRng.ToString()));
+                    newMerge.Add(newRng);
                 }
                 else if (
                        !(range.RangeAddress.FirstAddress.ColumnNumber <= rngMerged.RangeAddress.FirstAddress.ColumnNumber
                         && range.RangeAddress.FirstAddress.RowNumber <= rngMerged.RangeAddress.LastAddress.RowNumber))
                 {
-                    newMerge.Add(GetRangeLocation(rngMerged.ToString()));
+                    newMerge.Add(rngMerged);
                 }
             }
-            Internals.MergedCells = newMerge;
+            Internals.MergedRanges = newMerge;
         }
 
         void XLWorksheet_RangeShiftedRows(XLRange range, int rowsShifted)
         {
-            var newMerge = new List<String>();
-            foreach (var merge in Internals.MergedCells)
+            var newMerge = new XLRanges(workbook, workbook.Style);
+            foreach (var rngMerged in Internals.MergedRanges)
             {
-                var rngMerged = Range(merge);
                 if (range.RangeAddress.FirstAddress.RowNumber <= rngMerged.RangeAddress.FirstAddress.RowNumber
                     && rngMerged.RangeAddress.FirstAddress.ColumnNumber >= range.RangeAddress.FirstAddress.ColumnNumber
                     && rngMerged.RangeAddress.LastAddress.ColumnNumber <= range.RangeAddress.LastAddress.ColumnNumber)
@@ -81,23 +80,15 @@ namespace ClosedXML.Excel
                         rngMerged.RangeAddress.FirstAddress.ColumnNumber,
                         rngMerged.RangeAddress.LastAddress.RowNumber + rowsShifted,
                         rngMerged.RangeAddress.LastAddress.ColumnNumber);
-                    newMerge.Add(GetRangeLocation(newRng.ToString()));
+                    newMerge.Add(newRng);
                 }
                 else if (!(range.RangeAddress.FirstAddress.RowNumber <= rngMerged.RangeAddress.FirstAddress.RowNumber
                     && range.RangeAddress.FirstAddress.ColumnNumber <= rngMerged.RangeAddress.LastAddress.ColumnNumber))
                 {
-                    newMerge.Add(GetRangeLocation(rngMerged.ToString()));
+                    newMerge.Add(rngMerged);
                 }
             }
-            Internals.MergedCells = newMerge;
-        }
-
-        private String GetRangeLocation(String rangeAddress)
-        {
-            if (rangeAddress.Contains("!"))
-                return rangeAddress.Substring(rangeAddress.IndexOf("!") + 1);
-            else
-                return rangeAddress;
+            Internals.MergedRanges = newMerge;
         }
 
         public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
@@ -272,16 +263,16 @@ namespace ClosedXML.Excel
             {
                 String firstColumn;
                 String lastColumn;
-                if (pair.Contains(':'))
+                if (pair.Trim().Contains(':'))
                 {
-                    var columnRange = pair.Split(':');
+                    var columnRange = pair.Trim().Split(':');
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
                 }
                 else
                 {
-                    firstColumn = pair;
-                    lastColumn = pair;
+                    firstColumn = pair.Trim();
+                    lastColumn = pair.Trim();
                 }
 
                 Int32 tmp;
@@ -339,16 +330,16 @@ namespace ClosedXML.Excel
             {
                 String firstRow;
                 String lastRow;
-                if (pair.Contains(':'))
+                if (pair.Trim().Contains(':'))
                 {
-                    var rowRange = pair.Split(':');
+                    var rowRange = pair.Trim().Split(':');
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
                 }
                 else
                 {
-                    firstRow = pair;
-                    lastRow = pair;
+                    firstRow = pair.Trim();
+                    lastRow = pair.Trim();
                 }
                 foreach (var row in this.Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
                 {
@@ -488,9 +479,10 @@ namespace ClosedXML.Excel
         {
             Internals.CellsCollection.Clear();
             Internals.ColumnsCollection.Clear();
-            Internals.MergedCells.Clear();
+            Internals.MergedRanges.Clear();
             Internals.RowsCollection.Clear();
         }
         public IXLNamedRanges NamedRanges { get; private set; }
+        public IXLSheetView SheetView { get; private set; }
     }
 }
