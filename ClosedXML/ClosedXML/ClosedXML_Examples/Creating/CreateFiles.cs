@@ -63,6 +63,8 @@ namespace ClosedXML_Examples
             new ColumnCells().Create(@"C:\Excel Files\Created\ColumnCells.xlsx");
             new RowCells().Create(@"C:\Excel Files\Created\RowCells.xlsx");
             new FreezePanes().Create(@"C:\Excel Files\Created\FreezePanes.xlsx");
+            new UsingTables().Create(@"C:\Excel Files\Created\UsingTables.xlsx");
+            new ShowCase().Create(@"C:\Excel Files\Created\ShowCase.xlsx");
         }
     }
 }

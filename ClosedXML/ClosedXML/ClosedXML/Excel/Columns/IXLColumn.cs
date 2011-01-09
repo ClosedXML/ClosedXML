@@ -45,11 +45,6 @@ namespace ClosedXML.Excel
         void InsertColumnsBefore(Int32 numberOfColumns);
 
         /// <summary>
-        /// Clears the contents of this column (including styles).
-        /// </summary>
-        void Clear();
-
-        /// <summary>
         /// Gets the cell in the specified row.
         /// </summary>
         /// <param name="rowNumber">The cell's row.</param>
@@ -68,12 +63,6 @@ namespace ClosedXML.Excel
         /// <param name="firstRow">The first row in the group of cells to return.</param>
         /// <param name="lastRow">The last row in the group of cells to return.</param>
         IXLCells Cells(Int32 firstRow, Int32 lastRow);
-
-        /// <summary>
-        /// Converts this column to a range object.
-        /// </summary>
-        IXLRange AsRange();
-
 
         /// <summary>
         /// Adjusts the width of the column based on its contents.
@@ -159,5 +148,6 @@ namespace ClosedXML.Excel
         /// <summary>Expands this column (if it's collapsed).</summary>
         void Expand();
 
+        Int32 CellCount();
     }
 }

@@ -21,6 +21,12 @@ namespace ClosedXML.Excel
             ranges.ForEach(r => r.Clear());
         }
 
+        public void Delete()
+        {
+            ranges.OrderByDescending(r => r.RowNumber()).ForEach(r => r.Delete());
+            ranges.Clear();
+        }
+
         public void Add(IXLRangeRow range)
         {
             ranges.Add((XLRangeRow)range);
@@ -50,7 +56,7 @@ namespace ClosedXML.Excel
             set
             {
                 style = new XLStyle(this, value);
-
+                ranges.ForEach(r => r.Style = value);
             }
         }
 
@@ -80,21 +86,6 @@ namespace ClosedXML.Excel
         public Boolean UpdatingStyle { get; set; }
 
         #endregion
-
-        public String FormulaA1
-        {
-            set
-            {
-                ranges.ForEach(r => r.FormulaA1 = value);
-            }
-        }
-        public String FormulaR1C1
-        {
-            set
-            {
-                ranges.ForEach(r => r.FormulaR1C1 = value);
-            }
-        }
 
         public IXLCells Cells()
         {

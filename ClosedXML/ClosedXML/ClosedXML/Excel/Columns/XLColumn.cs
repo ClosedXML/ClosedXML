@@ -82,6 +82,13 @@ namespace ClosedXML.Excel
             var columnNumber = this.ColumnNumber();
             this.AsRange().Delete(XLShiftDeletedCells.ShiftCellsLeft);
             Worksheet.Internals.ColumnsCollection.Remove(columnNumber);
+            List<Int32> columnsToMove = new List<Int32>();
+            columnsToMove.AddRange(Worksheet.Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key));
+            foreach (var column in columnsToMove.OrderBy(c=>c))
+            {
+                Worksheet.Internals.ColumnsCollection.Add(column - 1, Worksheet.Internals.ColumnsCollection[column]);
+                Worksheet.Internals.ColumnsCollection.Remove(column);
+            }
         }
 
         public new void Clear()
@@ -189,30 +196,21 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        public Int32 ColumnNumber()
-        {
-            return this.RangeAddress.FirstAddress.ColumnNumber;
-        }
-        public String ColumnLetter()
-        {
-            return this.RangeAddress.FirstAddress.ColumnLetter;
-        }
-
-        public new void InsertColumnsAfter( Int32 numberOfColumns)
+        public new void InsertColumnsAfter(Int32 numberOfColumns)
         {
             var columnNum = this.ColumnNumber();
             this.Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum + 1, numberOfColumns);
             XLRange range = (XLRange)this.Worksheet.Column(columnNum).AsRange();
-            range.InsertColumnsAfter(numberOfColumns, true);
+            range.InsertColumnsAfter(true, numberOfColumns);
         }
-        public new void InsertColumnsBefore( Int32 numberOfColumns)
+        public new void InsertColumnsBefore(Int32 numberOfColumns)
         {
             var columnNum = this.ColumnNumber();
             this.Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum, numberOfColumns);
             // We can't use this.AsRange() because we've shifted the columns
             // and we want to use the old columnNum.
             XLRange range = (XLRange)this.Worksheet.Column(columnNum).AsRange(); 
-            range.InsertColumnsBefore(numberOfColumns, true);
+            range.InsertColumnsBefore(true, numberOfColumns);
         }
 
         public override IXLRange AsRange()
@@ -222,8 +220,11 @@ namespace ClosedXML.Excel
         public override IXLRange Range(String rangeAddressStr)
         {
             String rangeAddressToUse;
-            if (rangeAddressStr.Contains(":"))
+            if (rangeAddressStr.Contains(':') || rangeAddressStr.Contains('-'))
             {
+                if (rangeAddressStr.Contains('-'))
+                    rangeAddressStr = rangeAddressStr.Replace('-', ':');
+
                 String[] arrRange = rangeAddressStr.Split(':');
                 var firstPart = arrRange[0];
                 var secondPart = arrRange[1];
@@ -366,6 +367,8 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
+                    Worksheet.IncrementColumnOutline(value);
+                    Worksheet.DecrementColumnOutline(outlineLevel);
                     outlineLevel = value;
                 }
             }
@@ -415,6 +418,11 @@ namespace ClosedXML.Excel
         {
             Collapsed = false;
             Unhide();
+        }
+
+        public Int32 CellCount()
+        {
+            return this.RangeAddress.LastAddress.ColumnNumber - this.RangeAddress.FirstAddress.ColumnNumber + 1;
         }
     }
 }

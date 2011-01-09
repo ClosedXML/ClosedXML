@@ -78,13 +78,29 @@ namespace ClosedXML.Excel
             }
             else if (dataType == XLCellValues.DateTime || IsDateFormat())
             {
-                String format = GetFormat();
-                return DateTime.FromOADate(Double.Parse(cellValue)).ToString(format);
+                Double dTest;
+                if (Double.TryParse(cellValue, out dTest))
+                {
+                    String format = GetFormat();
+                    return DateTime.FromOADate(dTest).ToString(format);
+                }
+                else
+                {
+                    return cellValue;
+                }
             }
             else if (dataType == XLCellValues.Number)
             {
-                String format = GetFormat();
-                return Double.Parse(cellValue).ToString(format);
+                Double dTest;
+                if (Double.TryParse(cellValue, out dTest))
+                {
+                    String format = GetFormat();
+                    return dTest.ToString(format);
+                }
+                else
+                {
+                    return cellValue;
+                }
             }
             else
             {
@@ -503,6 +519,12 @@ namespace ClosedXML.Excel
         {
             worksheet.Range(Address, Address).Clear();
         }
+        public void ClearStyles()
+        {
+            var newStyle = new XLStyle(this, worksheet.Style);
+            newStyle.NumberFormat = this.Style.NumberFormat;
+            this.Style = newStyle;
+        }
         public void Delete(XLShiftDeletedCells shiftDeleteCells)
         {
             worksheet.Range(Address, Address).Delete(shiftDeleteCells);
@@ -550,7 +572,15 @@ namespace ClosedXML.Excel
         private String formulaA1;
         public String FormulaA1
         {
-            get { return formulaA1; }
+            get 
+            {
+                if (StringExtensions.IsNullOrWhiteSpace(formulaA1))
+                    return String.Empty;
+                else if (formulaA1.Trim()[0] == '=')
+                    return formulaA1.Substring(1);
+                else
+                    return formulaA1;
+            }
             set 
             { 
                 formulaA1 = value;

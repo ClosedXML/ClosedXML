@@ -28,6 +28,7 @@ namespace ClosedXML.Excel
             Worksheet = this;
             NamedRanges = new XLNamedRanges(workbook);
             SheetView = new XLSheetView();
+            Tables = new XLTables();
             this.workbook = workbook;
             Style = workbook.Style;
             Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new XLRanges(workbook, workbook.Style) , workbook);
@@ -144,8 +145,7 @@ namespace ClosedXML.Excel
         public String Name { get; set; }
         public Int32 SheetId { get; set; }
         public String RelId { get; set; }
-
-
+        
         internal Int32 sheetIndex;
         public Int32 SheetIndex 
         {
@@ -255,24 +255,28 @@ namespace ClosedXML.Excel
 
             return retVal;
         }
-        public IXLColumns Columns( String columns)
+        public IXLColumns Columns(String columns)
         {
             var retVal = new XLColumns(this);
             var columnPairs = columns.Split(',');
             foreach (var pair in columnPairs)
             {
+                var tPair = pair.Trim();
                 String firstColumn;
                 String lastColumn;
-                if (pair.Trim().Contains(':'))
+                if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    var columnRange = pair.Trim().Split(':');
+                    if (tPair.Contains('-'))
+                        tPair = tPair.Replace('-', ':');
+
+                    var columnRange = tPair.Split(':');
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
                 }
                 else
                 {
-                    firstColumn = pair.Trim();
-                    lastColumn = pair.Trim();
+                    firstColumn = tPair;
+                    lastColumn = tPair;
                 }
 
                 Int32 tmp;
@@ -328,18 +332,22 @@ namespace ClosedXML.Excel
             var rowPairs = rows.Split(',');
             foreach (var pair in rowPairs)
             {
+                var tPair = pair.Trim();
                 String firstRow;
                 String lastRow;
-                if (pair.Trim().Contains(':'))
+                if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    var rowRange = pair.Trim().Split(':');
+                    if (tPair.Contains('-'))
+                        tPair = tPair.Replace('-', ':');
+
+                    var rowRange = tPair.Split(':');
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
                 }
                 else
                 {
-                    firstRow = pair.Trim();
-                    lastRow = pair.Trim();
+                    firstRow = tPair;
+                    lastRow = tPair;
                 }
                 foreach (var row in this.Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
                 {
@@ -484,5 +492,68 @@ namespace ClosedXML.Excel
         }
         public IXLNamedRanges NamedRanges { get; private set; }
         public IXLSheetView SheetView { get; private set; }
+        public IXLTables Tables { get; private set; }
+
+        #region Outlines
+        private Dictionary<Int32, Int32> columnOutlineCount = new Dictionary<Int32, Int32>();
+        public void IncrementColumnOutline(Int32 level)
+        {
+            if (level > 0)
+            {
+                if (!columnOutlineCount.ContainsKey(level))
+                    columnOutlineCount.Add(level, 0);
+
+                columnOutlineCount[level]++;
+            }
+        }
+        public void DecrementColumnOutline(Int32 level)
+        {
+            if (level > 0)
+            {
+                if (!columnOutlineCount.ContainsKey(level))
+                    columnOutlineCount.Add(level, 0);
+
+                if (columnOutlineCount[level] > 0)
+                    columnOutlineCount[level]--;
+            }
+        }
+        public Int32 GetMaxColumnOutline()
+        {
+            if (columnOutlineCount.Count == 0)
+                return 0;
+            else
+                return columnOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
+        }
+
+        private Dictionary<Int32, Int32> rowOutlineCount = new Dictionary<Int32, Int32>();
+        public void IncrementRowOutline(Int32 level)
+        {
+            if (level > 0)
+            {
+                if (!rowOutlineCount.ContainsKey(level))
+                    rowOutlineCount.Add(level, 0);
+
+                rowOutlineCount[level]++;
+            }
+        }
+        public void DecrementRowOutline(Int32 level)
+        {
+            if (level > 0)
+            {
+                if (!rowOutlineCount.ContainsKey(level))
+                    rowOutlineCount.Add(level, 0);
+
+                if (rowOutlineCount[level] > 0)
+                    rowOutlineCount[level]--;
+            }
+        }
+        public Int32 GetMaxRowOutline()
+        {
+            if (rowOutlineCount.Count == 0)
+                return 0;
+            else
+                return rowOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
+        }
+        #endregion
     }
 }

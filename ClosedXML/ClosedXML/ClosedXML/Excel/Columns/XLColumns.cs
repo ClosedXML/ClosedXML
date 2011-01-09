@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        private IXLStyle style;
+        internal IXLStyle style;
         public IXLStyle Style
         {
             get

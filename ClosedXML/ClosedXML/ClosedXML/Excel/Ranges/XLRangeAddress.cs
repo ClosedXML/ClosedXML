@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
             get 
             {
                 if (IsInvalid)
-                    throw new Exception("Range is invalid.");
+                    throw new Exception("Range is an invalid state.");
 
                 return lastAddress; 
             }

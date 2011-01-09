@@ -90,6 +90,11 @@ namespace ClosedXML.Excel
         void Clear();
 
         /// <summary>
+        /// Clears the styles of this cell (preserving number formats).
+        /// </summary>
+        void ClearStyles();
+
+        /// <summary>
         /// Deletes the current cell and shifts the surrounding cells according to the shiftDeleteCells parameter.
         /// </summary>
         /// <param name="shiftDeleteCells">How to shift the surrounding cells.</param>

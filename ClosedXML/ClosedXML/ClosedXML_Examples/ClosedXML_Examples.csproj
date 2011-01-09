@@ -60,6 +60,8 @@
     <Compile Include="Misc\BlankCells.cs" />
     <Compile Include="Misc\FreezePanes.cs" />
     <Compile Include="PageSetup\TwoPages.cs" />
+    <Compile Include="Misc\ShowCase.cs" />
+    <Compile Include="Ranges\UsingTables.cs" />
     <Compile Include="Ranges\CopyingRanges.cs" />
     <Compile Include="Ranges\NamedRanges.cs" />
     <Compile Include="Misc\Formulas.cs" />

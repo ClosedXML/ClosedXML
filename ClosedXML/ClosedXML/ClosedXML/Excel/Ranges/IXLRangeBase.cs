@@ -129,5 +129,20 @@ namespace ClosedXML.Excel
         /// <param name="scope">The scope for the named range.</param>
         /// <param name="comment">The comments for the named range.</param>
         IXLRange AddToNamed(String rangeName, XLScope scope, String comment);
+
+        /// <summary>
+        /// Clears the contents of this range (including styles).
+        /// </summary>
+        void Clear();
+
+        /// <summary>
+        /// Clears the styles of this range (preserving number formats).
+        /// </summary>
+        void ClearStyles();
+
+        /// <summary>
+        /// Converts this object to a range.
+        /// </summary>
+        IXLRange AsRange();
     }
 }

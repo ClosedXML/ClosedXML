@@ -5,36 +5,30 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLRangeColumns : IXLRangeColumns
+    internal class XLTableRows: IXLTableRows
     {
         XLWorksheet worksheet;
-        public XLRangeColumns(XLWorksheet worksheet)
+        public XLTableRows(XLWorksheet worksheet)
         {
             Style = worksheet.Style;
             this.worksheet = worksheet;
         }
 
-        List<XLRangeColumn> ranges = new List<XLRangeColumn>();
+        List<XLTableRow> ranges = new List<XLTableRow>();
 
         public void Clear()
         {
             ranges.ForEach(r => r.Clear());
         }
 
-        public void Delete()
+        public void Add(IXLTableRow range)
         {
-            ranges.OrderByDescending(c => c.ColumnNumber()).ForEach(r => r.Delete());
-            ranges.Clear();
+            ranges.Add((XLTableRow)range);
         }
 
-        public void Add(IXLRangeColumn range)
+        public IEnumerator<IXLTableRow> GetEnumerator()
         {
-            ranges.Add((XLRangeColumn)range);
-        }
-
-        public IEnumerator<IXLRangeColumn> GetEnumerator()
-        {
-            var retList = new List<IXLRangeColumn>();
+            var retList = new List<IXLTableRow>();
             ranges.ForEach(c => retList.Add(c));
             return retList.GetEnumerator();
         }
@@ -86,7 +80,6 @@ namespace ClosedXML.Excel
         public Boolean UpdatingStyle { get; set; }
 
         #endregion
-
 
         public IXLCells Cells()
         {

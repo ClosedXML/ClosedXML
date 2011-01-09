@@ -265,6 +265,36 @@
     <Compile Include="..\ClosedXML\Excel\Style\XLStyle.cs">
       <Link>Excel\Style\XLStyle.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\IXLTable.cs">
+      <Link>Excel\Tables\IXLTable.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\IXLTableField.cs">
+      <Link>Excel\Tables\IXLTableField.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\IXLTableRow.cs">
+      <Link>Excel\Tables\IXLTableRow.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\IXLTableRows.cs">
+      <Link>Excel\Tables\IXLTableRows.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\IXLTables.cs">
+      <Link>Excel\Tables\IXLTables.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\XLTable.cs">
+      <Link>Excel\Tables\XLTable.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\XLTableField.cs">
+      <Link>Excel\Tables\XLTableField.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\XLTableRow.cs">
+      <Link>Excel\Tables\XLTableRow.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\XLTableRows.cs">
+      <Link>Excel\Tables\XLTableRows.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\XLTables.cs">
+      <Link>Excel\Tables\XLTables.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\XLAddress.cs">
       <Link>Excel\XLAddress.cs</Link>
     </Compile>

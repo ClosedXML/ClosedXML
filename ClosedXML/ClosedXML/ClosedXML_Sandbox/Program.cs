@@ -11,22 +11,31 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
-        static void Main(string[] args)
+        static void xMain(string[] args)
         {
-            var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
-            var col = ws.Row(1);
-            col.Cells("1:2, 4:5").Style.Fill.BackgroundColor = XLColor.Red;
-            col.Cells("3").Style.Fill.BackgroundColor = XLColor.Blue;
-            col.Cell(6).Style.Fill.BackgroundColor = XLColor.Orange;
-            col.Cells(7, 8).Style.Fill.BackgroundColor = XLColor.Blue;
-            
-            var colRng = ws.Range("A2:H2").FirstRow();
+            var wb = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
+            var ws = wb.Worksheets.Worksheet(0);
+            var firstCell = ws.FirstCellUsed();
+            var lastCell = ws.LastCellUsed();
+            var range = ws.Range(firstCell.Address, lastCell.Address);
+            range.Row(1).Delete();
+            range.ClearStyles();
 
-            colRng.Cells("1:2, 4:5").Style.Fill.BackgroundColor = XLColor.Red;
-            colRng.Cells("3").Style.Fill.BackgroundColor = XLColor.Blue;
-            colRng.Cell(6).Style.Fill.BackgroundColor = XLColor.Orange;
-            colRng.Cells(7, 8).Style.Fill.BackgroundColor = XLColor.Blue;
+            var table = range.CreateTable();
+
+            //Int32 currentRow = 8;
+            //foreach (var cell in table.HeadersRow().Cells())
+            //{
+            //    ws.Cell(currentRow, cell.Address.ColumnNumber).Value = cell.Value;
+            //}
+            //foreach (var row in table.Rows())
+            //{
+            //    currentRow++;
+            //    foreach (var cell in row.Cells())
+            //    {
+            //        ws.Cell(currentRow, cell.Address.ColumnNumber).Value = cell.Value;
+            //    }
+            //}
             
 
             wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
@@ -56,7 +65,7 @@ namespace ClosedXML_Sandbox
             wb.Save();
         }
 
-        static void xMain(string[] args)
+        static void Main(string[] args)
         {
             List<Double> running = new List<Double>();
             foreach (Int32 r in Enumerable.Range(1, 1))
@@ -65,10 +74,10 @@ namespace ClosedXML_Sandbox
 
                 FillStyles();
                 var wb = new XLWorkbook();
-                foreach (var i in Enumerable.Range(1, 3))
+                foreach (var i in Enumerable.Range(1, 1))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
-                    foreach (var ro in Enumerable.Range(1, 100))
+                    foreach (var ro in Enumerable.Range(1, 2000))
                     {
                         foreach (var co in Enumerable.Range(1, 100))
                         {
@@ -99,7 +108,7 @@ namespace ClosedXML_Sandbox
             }
             Console.WriteLine("-------");
             Console.WriteLine("Avg total time: {0}", running.Average());
-            //Console.ReadKey();
+            Console.ReadKey();
         }
 
         private static IXLStyle style1;

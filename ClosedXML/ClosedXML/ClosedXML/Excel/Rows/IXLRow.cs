@@ -40,15 +40,6 @@ namespace ClosedXML.Excel
         void InsertRowsAbove(Int32 numberOfRows);
 
         /// <summary>
-        /// Clears the contents of this row (including styles).
-        /// </summary>
-        void Clear();
-
-        /// <summary>
-        /// Adjusts the height of the row based on its contents.
-        /// </summary>
-        void AdjustToContents();
-        /// <summary>
         /// Adjusts the height of the row based on its contents, starting from the startColumn.
         /// </summary>
         /// <param name="startColumn">The column to start calculating the row height.</param>
@@ -154,13 +145,9 @@ namespace ClosedXML.Excel
         /// <param name="lastColumn">The last column in the group of cells to return.</param>
         IXLCells Cells(String firstColumn, String lastColumn);
 
-        /// <summary>
-        /// Converts this row to a range object.
-        /// </summary>
-        IXLRange AsRange();
-
         /// <summary>Expands this row (if it's collapsed).</summary>
         void Expand();
 
+        Int32 CellCount();
     }
 }

@@ -134,10 +134,10 @@ namespace ClosedXML.Excel
 
                 foreach (var col in worksheetPart.Worksheet.Descendants<Column>())
                 {
-                    IXLStylized toApply;
+                    //IXLStylized toApply;
                     if (col.Max != XLWorksheet.MaxNumberOfColumns)
                     {
-                        toApply = ws.Columns(col.Min, col.Max);
+                        var toApply = ws.Columns(col.Min, col.Max);
                         var xlColumns = (XLColumns)toApply;
                         if (col.Width != null)
                             xlColumns.Width = col.Width;
@@ -160,7 +160,7 @@ namespace ClosedXML.Excel
                         }
                         else
                         {
-                            toApply.Style = DefaultStyle;
+                            xlColumns.Style = DefaultStyle;
                         }
                     }
                 }
@@ -182,14 +182,20 @@ namespace ClosedXML.Excel
                     if (row.OutlineLevel != null)
                         xlRow.OutlineLevel = row.OutlineLevel;
 
-                    Int32 styleIndex = row.StyleIndex != null ? Int32.Parse(row.StyleIndex.InnerText) : -1;
-                    if (styleIndex > 0)
+                    if (row.CustomFormat != null)
                     {
-                        ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
-                    }
-                    else
-                    {
-                        xlRow.Style = DefaultStyle;
+                        Int32 styleIndex = row.StyleIndex != null ? Int32.Parse(row.StyleIndex.InnerText) : -1;
+                        if (styleIndex > 0)
+                        {
+                            ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
+                        }
+                        else
+                        {
+                            //((XLRow)xlRow).style = ws.Style;
+                            //((XLRow)xlRow).SetStyleNoColumns(ws.Style);
+                            xlRow.Style = DefaultStyle;
+                            //xlRow.Style = ws.Style;
+                        }
                     }
                 }
 
@@ -261,8 +267,46 @@ namespace ClosedXML.Excel
                         ws.Cell(dCell.CellReference).Value = dCell.CellValue.Text;
                         ws.Cell(dCell.CellReference).Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
                     }
-                }
 
+                    
+                }
+                foreach (var tablePart in worksheetPart.TableDefinitionParts)
+                {
+                    var dTable = (Table)tablePart.Table;
+                    var reference = dTable.Reference.Value;
+                    var xlTable = ws.Range(reference).CreateTable(dTable.Name);
+                    if (dTable.TotalsRowCount != null && dTable.TotalsRowCount.Value > 0)
+                        ((XLTable)xlTable).showTotalsRow = true;
+
+                    if (dTable.TableStyleInfo != null)
+                    {
+                        if (dTable.TableStyleInfo.ShowFirstColumn != null)
+                            xlTable.EmphasizeFirstColumn = dTable.TableStyleInfo.ShowFirstColumn.Value;
+                        if (dTable.TableStyleInfo.ShowLastColumn != null)
+                            xlTable.EmphasizeLastColumn = dTable.TableStyleInfo.ShowLastColumn.Value;
+                        if (dTable.TableStyleInfo.ShowRowStripes != null)
+                            xlTable.ShowRowStripes = dTable.TableStyleInfo.ShowRowStripes.Value;
+                        if (dTable.TableStyleInfo.ShowColumnStripes != null)
+                            xlTable.ShowColumnStripes = dTable.TableStyleInfo.ShowColumnStripes.Value;
+                        if (dTable.TableStyleInfo.Name != null)
+                            xlTable.Theme = (XLTableTheme)Enum.Parse(typeof(XLTableTheme), dTable.TableStyleInfo.Name.Value);
+                    }
+
+                    xlTable.ShowAutoFilter = dTable.AutoFilter != null;
+
+                    foreach (var column in dTable.TableColumns)
+                    {
+                        var tableColumn = (TableColumn)column;
+                        if (tableColumn.TotalsRowFunction != null)
+                            xlTable.Field(tableColumn.Name.Value).TotalsRowFunction = totalsRowFunctionValues.Single(p => p.Value == tableColumn.TotalsRowFunction.Value).Key;
+
+                        if (tableColumn.TotalsRowFormula != null)
+                            xlTable.Field(tableColumn.Name.Value).TotalsRowFormulaA1 = tableColumn.TotalsRowFormula.Text;
+
+                        if (tableColumn.TotalsRowLabel != null)
+                            xlTable.Field(tableColumn.Name.Value).TotalsRowLabel = tableColumn.TotalsRowLabel.Value;
+                    }
+                }
                 var printOptionsQuery = worksheetPart.Worksheet.Descendants<PrintOptions>();
                 if (printOptionsQuery.Count() > 0)
                 {
@@ -447,6 +491,7 @@ namespace ClosedXML.Excel
                     }
                 }
             }
+
 
         }
 

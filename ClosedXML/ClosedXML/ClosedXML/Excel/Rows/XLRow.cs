@@ -87,19 +87,22 @@ namespace ClosedXML.Excel
             var rowNumber = this.RowNumber();
             this.AsRange().Delete(XLShiftDeletedCells.ShiftCellsUp);
             Worksheet.Internals.RowsCollection.Remove(rowNumber);
+            List<Int32> rowsToMove = new List<Int32>();
+            rowsToMove.AddRange(Worksheet.Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key));
+            foreach (var row in rowsToMove.OrderBy(r=>r))
+            {
+                Worksheet.Internals.RowsCollection.Add(row - 1, Worksheet.Internals.RowsCollection[row]);
+                Worksheet.Internals.RowsCollection.Remove(row);
+            }
         }
 
-        public Int32 RowNumber()
-        {
-            return this.RangeAddress.FirstAddress.RowNumber;
-        }
 
         public new void InsertRowsBelow(Int32 numberOfRows)
         {
             var rowNum = this.RowNumber();
             this.Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum + 1, numberOfRows);
             XLRange range = (XLRange)this.Worksheet.Row(rowNum).AsRange();
-            range.InsertRowsBelow(numberOfRows, true);
+            range.InsertRowsBelow(true, numberOfRows);
         }
 
         public new void InsertRowsAbove(Int32 numberOfRows)
@@ -109,7 +112,7 @@ namespace ClosedXML.Excel
             // We can't use this.AsRange() because we've shifted the rows
             // and we want to use the old rowNum.
             XLRange range = (XLRange)this.Worksheet.Row(rowNum).AsRange(); 
-            range.InsertRowsAbove(numberOfRows, true);
+            range.InsertRowsAbove(true, numberOfRows);
         }
 
         public new void Clear()
@@ -142,8 +145,11 @@ namespace ClosedXML.Excel
         public override IXLRange Range(String rangeAddressStr)
         {
             String rangeAddressToUse;
-            if (rangeAddressStr.Contains(":"))
+            if (rangeAddressStr.Contains(':') || rangeAddressStr.Contains('-'))
             {
+                if (rangeAddressStr.Contains('-'))
+                    rangeAddressStr = rangeAddressStr.Replace('-', ':');
+
                 String[] arrRange = rangeAddressStr.Split(':');
                 var firstPart = arrRange[0];
                 var secondPart = arrRange[1];
@@ -244,7 +250,25 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        private IXLStyle style;
+        internal void SetStyleNoColumns(IXLStyle value)
+        {
+            if (IsReference)
+            {
+                Worksheet.Internals.RowsCollection[this.RowNumber()].SetStyleNoColumns(value);
+            }
+            else
+            {
+                style = new XLStyle(this, value);
+
+                var row = this.RowNumber();
+                foreach (var c in Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.RowNumber == row))
+                {
+                    c.Style = value;
+                }
+            }
+        }
+
+        internal IXLStyle style;
         public override IXLStyle Style
         {
             get
@@ -375,6 +399,8 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
+                    Worksheet.IncrementColumnOutline(value);
+                    Worksheet.DecrementColumnOutline(outlineLevel);
                     outlineLevel = value;
                 }
             }
@@ -425,6 +451,11 @@ namespace ClosedXML.Excel
         {
             Collapsed = false;
             Unhide();
+        }
+
+        public Int32 CellCount()
+        {
+            return this.RangeAddress.LastAddress.ColumnNumber - this.RangeAddress.FirstAddress.ColumnNumber + 1;
         }
     }
 }

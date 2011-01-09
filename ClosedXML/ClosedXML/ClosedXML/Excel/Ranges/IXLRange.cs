@@ -135,6 +135,11 @@ namespace ClosedXML.Excel
         IXLRange Range(string rangeAddress);
 
         /// <summary>Returns the specified range.</summary>
+        /// <param name="firstCell">The first cell in the range.</param>
+        /// <param name="lastCell"> The last cell in the range.</param>
+        IXLRange Range(IXLCell firstCell, IXLCell lastCell);
+
+        /// <summary>Returns the specified range.</summary>
         /// <param name="firstCellAddress">The first cell address in the range.</param>
         /// <param name="lastCellAddress"> The last cell address in the range.</param>
         IXLRange Range(string firstCellAddress, string lastCellAddress);
@@ -169,54 +174,45 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="numberOfColumns">Number of columns to insert.</param>
         void InsertColumnsAfter(int numberOfColumns);
+        void InsertColumnsAfter(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of columns to the left of this range.
         /// <para>This range and all cells to the right of this range will be shifted X number of columns.</para>
         /// </summary>
         /// <param name="numberOfColumns">Number of columns to insert.</param>
         void InsertColumnsBefore(int numberOfColumns);
+        void InsertColumnsBefore(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of rows on top of this range.
         /// <para>This range and all cells below this range will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of rows to insert.</param>
         void InsertRowsAbove(int numberOfRows);
+        void InsertRowsAbove(int numberOfRows, Boolean expandRange);
         /// <summary>
         /// Inserts X number of rows below this range.
         /// <para>All cells below this range will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of rows to insert.</param>
         void InsertRowsBelow(int numberOfRows);
+        void InsertRowsBelow(int numberOfRows, Boolean expandRange);
 
         /// <summary>
         /// Deletes this range and shifts the surrounding cells accordingly.
         /// </summary>
         /// <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
         void Delete(XLShiftDeletedCells shiftDeleteCells);
-        /// <summary>
-        /// Clears the contents of this range (including styles).
-        /// </summary>
-        void Clear();
 
         /// <summary>
         /// Transposes the contents and styles of all cells in this range.
         /// </summary>
         /// <param name="transposeOption">How to handle the surrounding cells when transposing the range.</param>
         void Transpose(XLTransposeOptions transposeOption);
-        /// <summary>
-        /// Sets the formula for all cells in the range in A1 notation.
-        /// </summary>
-        /// <value>
-        /// The formula A1.
-        /// </value>
-        String FormulaA1 { set; }
-        /// <summary>
-        /// Sets the formula for all cells in the range in R1C1 notation.
-        /// </summary>
-        /// <value>
-        /// The formula R1C1.
-        /// </value>
-        String FormulaR1C1 { set; }
+
+        IXLTable AsTable();
+        IXLTable AsTable(String name);
+        IXLTable CreateTable();
+        IXLTable CreateTable(String name);
     }
 }
 

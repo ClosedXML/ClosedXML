@@ -94,5 +94,47 @@ namespace ClosedXML.Excel
         public Boolean UpdatingStyle { get; set; }
 
         #endregion
+
+        public Object Value 
+        {
+            set
+            {
+                cells.ForEach(c => c.Value = value);
+            }
+        }
+
+        public XLCellValues DataType
+        {
+            set
+            {
+                cells.ForEach(c => c.DataType = value);
+            }
+        }
+
+        public void Clear()
+        {
+            cells.ForEach(c => c.Clear());
+        }
+
+        public void ClearStyles()
+        {
+            cells.ForEach(c => c.ClearStyles());
+        }
+
+        public String FormulaA1
+        {
+            set
+            {
+                cells.ForEach(c => c.FormulaA1 = value);
+            }
+        }
+
+        public String FormulaR1C1
+        {
+            set
+            {
+                cells.ForEach(c => c.FormulaR1C1 = value);
+            }
+        }
     }
 }

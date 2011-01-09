@@ -5,13 +5,14 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRangeRows: IEnumerable<IXLRangeRow>, IXLStylized
+    public interface IXLTableRows: IEnumerable<IXLTableRow>,  IXLStylized
     {
         /// <summary>
-        /// Adds a row range to this group.
+        /// Adds a table row to this group.
         /// </summary>
-        /// <param name="rowRange">The row range to add.</param>
-        void Add(IXLRangeRow rowRange);
+        /// <param name="tableRow">The row table to add.</param>
+        void Add(IXLTableRow tableRow);
+
         /// <summary>
         /// Clears the contents of the rows (including styles).
         /// </summary>
@@ -32,10 +33,5 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="includeStyles">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         IXLCells CellsUsed(Boolean includeStyles);
-
-        /// <summary>
-        /// Deletes all rows and shifts the rows below them accordingly.
-        /// </summary>
-        void Delete();
     }
 }

@@ -17,20 +17,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="columRange">The column range to add.</param>
         void Add(IXLRangeColumn columRange);
-        /// <summary>
-        /// Sets the formula for all cells in the columns in A1 notation.
-        /// </summary>
-        /// <value>
-        /// The formula A1.
-        /// </value>
-        String FormulaA1 { set; }
-        /// <summary>
-        /// Sets the formula for all cells in the columns in R1C1 notation.
-        /// </summary>
-        /// <value>
-        /// The formula R1C1.
-        /// </value>
-        String FormulaR1C1 { set; }
 
         /// <summary>
         /// Returns the collection of cells in this column.
@@ -47,5 +33,10 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="includeStyles">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         IXLCells CellsUsed(Boolean includeStyles);
+
+        /// <summary>
+        /// Deletes all columns and shifts the columns at the right of them accordingly.
+        /// </summary>
+        void Delete();
     }
 }

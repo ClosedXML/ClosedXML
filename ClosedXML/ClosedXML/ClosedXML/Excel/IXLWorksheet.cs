@@ -151,6 +151,11 @@ namespace ClosedXML.Excel
         IXLRange Range(string rangeAddress);
 
         /// <summary>Returns the specified range.</summary>
+        /// <param name="firstCell">The first cell in the range.</param>
+        /// <param name="lastCell"> The last cell in the range.</param>
+        IXLRange Range(IXLCell firstCell, IXLCell lastCell);
+
+        /// <summary>Returns the specified range.</summary>
         /// <param name="firstCellAddress">The first cell address in the worksheet.</param>
         /// <param name="lastCellAddress"> The last cell address in the worksheet.</param>
         IXLRange Range(string firstCellAddress, string lastCellAddress);
@@ -221,10 +226,7 @@ namespace ClosedXML.Excel
         /// Deletes this worksheet.
         /// </summary>
         void Delete();
-        /// <summary>
-        /// Clears the contents of this worksheet (including styles).
-        /// </summary>
-        void Clear();
+
 
         /// <summary>
         /// Gets an object to manage this worksheet's named ranges.
@@ -235,5 +237,7 @@ namespace ClosedXML.Excel
         /// Gets an object to manage how the worksheet is going to displayed by Excel.
         /// </summary>
         IXLSheetView SheetView { get; }
+
+        IXLTables Tables { get; }
     }
 }

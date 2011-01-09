@@ -16,29 +16,49 @@ namespace ClosedXML_Examples.Ranges
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
-
             var ws = workbook.Worksheets.Add("Deleting Ranges");
-            foreach (var ro in Enumerable.Range(1, 10))
-                foreach (var co in Enumerable.Range(1, 10))
-                    ws.Cell(ro, co).Value = ws.Cell(ro, co).Address.ToString();
-            
-            // Delete range and shift cells up
-            ws.Range("B4:C5").Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-            // Delete range and shift cells left
-            ws.Range("D1:E3").Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            // Deleting Columns
+            // Setup test values
+            ws.Columns("1-3, 5, 7").Style.Fill.BackgroundColor = XLColor.Gray;
+            ws.Columns("4, 6").Style.Fill.BackgroundColor = XLColor.GreenPigment;
+            ws.Row(1).Cells("1-3, 5, 7").Value = "FAIL";
 
-            // Delete an entire row
-            ws.Row(5).Delete();
+            ws.Column(7).Delete();
+            ws.Column(1).Delete();
+            ws.Columns(1,2).Delete();
+            ws.Column(2).Delete();
 
-            // Delete a row in a range, shift cells up
-            ws.Range("A1:C4").Row(2).Delete(XLShiftDeletedCells.ShiftCellsUp);
+            // Deleting Rows
+            ws.Rows("1,5,7").Style.Fill.BackgroundColor = XLColor.GreenPigment;
+            ws.Rows("2-4,6, 8").Style.Fill.BackgroundColor = XLColor.Gray;
+            ws.Column(1).Cells("2-4,6, 8").Value = "FAIL";
 
-            // Delete an entire column
-            ws.Column(5).Delete();
+            ws.Row(8).Delete();
+            ws.Row(2).Delete();
+            ws.Rows(2, 3).Delete();
+            ws.Rows(3, 4).Delete();
 
-            // Delete a column in a range, shift cells up
-            ws.Range("A1:C4").Column(2).Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            // Deleting Ranges (Shifting Left)
+            var rng1 = ws.Range(2, 2, 8, 8);
+            rng1.Columns("1-3, 5, 7").Style.Fill.BackgroundColor = XLColor.Gray;
+            rng1.Columns("4, 6").Style.Fill.BackgroundColor = XLColor.Orange;
+            rng1.Row(1).Cells("1-3, 5, 7").Value = "FAIL";
+
+            rng1.Column(7).Delete();
+            rng1.Column(1).Delete();
+            rng1.Range(1, 1, rng1.RowCount(), 2).Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            rng1.Column(2).Delete();
+
+            // Deleting Ranges (Shifting Up)
+            rng1.Rows("4, 6").Style.Fill.BackgroundColor = XLColor.Orange;
+            rng1.Rows("1-3, 5, 7").Style.Fill.BackgroundColor = XLColor.Gray;
+            rng1.Column(1).Cells("1-3, 5, 7").Value = "FAIL";
+
+            rng1.Row(7).Delete();
+            rng1.Row(1).Delete();
+            rng1.Range(1, 1, 2, rng1.ColumnCount()).Delete(XLShiftDeletedCells.ShiftCellsUp);
+            rng1.Row(2).Delete();
 
             workbook.SaveAs(filePath);
         }

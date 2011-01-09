@@ -54,8 +54,11 @@ namespace ClosedXML.Excel
         public override IXLRange Range(String rangeAddressStr)
         {
             String rangeAddressToUse;
-            if (rangeAddressStr.Contains(":"))
+            if (rangeAddressStr.Contains(':') || rangeAddressStr.Contains('-'))
             {
+                if (rangeAddressStr.Contains('-'))
+                    rangeAddressStr = rangeAddressStr.Replace('-', ':');
+
                 String[] arrRange = rangeAddressStr.Split(':');
                 var firstPart = arrRange[0];
                 var secondPart = arrRange[1];
@@ -74,15 +77,27 @@ namespace ClosedXML.Excel
         {
             Delete(XLShiftDeletedCells.ShiftCellsLeft);
         }
-
         public void InsertCellsAbove(int numberOfRows)
         {
-            InsertRowsAbove(numberOfRows);
+            InsertCellsAbove(numberOfRows, false);
+        }
+        public void InsertCellsAbove(int numberOfRows, Boolean expandRange)
+        {
+            InsertRowsAbove(numberOfRows, expandRange);
         }
 
         public void InsertCellsBelow(int numberOfRows)
         {
-            InsertRowsBelow(numberOfRows);
+            InsertCellsBelow(numberOfRows, true);
+        }
+        public void InsertCellsBelow(int numberOfRows, Boolean expandRange)
+        {
+            InsertRowsBelow(numberOfRows, expandRange);
+        }
+
+        public Int32 CellCount()
+        {
+            return this.RangeAddress.LastAddress.ColumnNumber - this.RangeAddress.FirstAddress.ColumnNumber + 1;
         }
     }
 }

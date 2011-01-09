@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        private IXLStyle style;
+        internal IXLStyle style;
         public IXLStyle Style
         {
             get
@@ -126,12 +126,17 @@ namespace ClosedXML.Excel
         {
             if (entireWorksheet)
             {
-                worksheet.Internals.ColumnsCollection.Clear();
+                worksheet.Internals.RowsCollection.Clear();
                 worksheet.Internals.CellsCollection.Clear();
             }
             else
             {
-                rows.ForEach(r => r.Delete());
+                var toDelete = new List<Int32>();
+                foreach (var r in rows)
+                    toDelete.Add(r.RowNumber());
+
+                foreach (var r in toDelete.OrderByDescending(r => r))
+                    worksheet.Row(r).Delete();
             }
         }
 

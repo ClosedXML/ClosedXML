@@ -40,34 +40,33 @@ namespace ClosedXML.Excel
         IXLCells Cells(String firstColumn, String lastColumn);
 
         /// <summary>
-        /// Converts this row to a range object.
-        /// </summary>
-        IXLRange AsRange();
-
-        /// <summary>
         /// Inserts X number of cells to the right of this row.
         /// <para>All cells to the right of this row will be shifted X number of columns.</para>
         /// </summary>
         /// <param name="numberOfColumns">Number of cells to insert.</param>
         void InsertCellsAfter(int numberOfColumns);
+        void InsertCellsAfter(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of cells to the left of this row.
         /// <para>This row and all cells to the right of it will be shifted X number of columns.</para>
         /// </summary>
         /// <param name="numberOfColumns">Number of cells to insert.</param>
         void InsertCellsBefore(int numberOfColumns);
+        void InsertCellsBefore(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of rows on top of this row.
         /// <para>This row and all cells below it will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of rows to insert.</param>
         void InsertRowsAbove(int numberOfRows);
+        void InsertRowsAbove(int numberOfRows, Boolean expandRange);
         /// <summary>
         /// Inserts X number of rows below this row.
         /// <para>All cells below this row will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of rows to insert.</param>
         void InsertRowsBelow(int numberOfRows);
+        void InsertRowsBelow(int numberOfRows, Boolean expandRange);
 
         /// <summary>
         /// Deletes this range and shifts the cells below.
@@ -78,24 +77,13 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
         void Delete(XLShiftDeletedCells shiftDeleteCells);
+
         /// <summary>
-        /// Clears the contents of the row (including styles).
+        /// Gets this row's number in the range
         /// </summary>
-        void Clear();
-        /// <summary>
-        /// Sets the formula for all cells in the row in A1 notation.
-        /// </summary>
-        /// <value>
-        /// The formula A1.
-        /// </value>
-        String FormulaA1 { set; }
-        /// <summary>
-        /// Sets the formula for all cells in the row in R1C1 notation.
-        /// </summary>
-        /// <value>
-        /// The formula R1C1.
-        /// </value>
-        String FormulaR1C1 { set; }
+        Int32 RowNumber();
+
+        Int32 CellCount();
     }
 }
 

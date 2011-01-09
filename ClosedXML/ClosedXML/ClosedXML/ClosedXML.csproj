@@ -66,6 +66,16 @@
     <Compile Include="Excel\Style\Colors\XLColor_Public.cs" />
     <Compile Include="Excel\Style\Colors\IXLColor.cs" />
     <Compile Include="Excel\Style\Colors\XLColor_Internal.cs" />
+    <Compile Include="Excel\Tables\XLTableField.cs" />
+    <Compile Include="Excel\Tables\IXLTableField.cs" />
+    <Compile Include="Excel\Tables\XLTableRows.cs" />
+    <Compile Include="Excel\Tables\IXLTableRows.cs" />
+    <Compile Include="Excel\Tables\XLTables.cs" />
+    <Compile Include="Excel\Tables\IXLTableRow.cs" />
+    <Compile Include="Excel\Tables\IXLTables.cs" />
+    <Compile Include="Excel\Tables\XLTableRow.cs" />
+    <Compile Include="Excel\Tables\XLTable.cs" />
+    <Compile Include="Excel\Tables\IXLTable.cs" />
     <Compile Include="Excel\XLOutline.cs" />
     <Compile Include="Excel\IXLOutline.cs" />
     <Compile Include="Excel\IXLWorksheetInternals.cs" />

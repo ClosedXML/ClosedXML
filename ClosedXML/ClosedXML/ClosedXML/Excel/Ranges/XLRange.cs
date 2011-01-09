@@ -8,8 +8,10 @@ namespace ClosedXML.Excel
 {
     internal class XLRange: XLRangeBase, IXLRange
     {
+        public XLRangeParameters RangeParameters { get; private set; }
         public XLRange(XLRangeParameters xlRangeParameters): base(xlRangeParameters.RangeAddress)
         {
+            this.RangeParameters = xlRangeParameters;
             Worksheet = xlRangeParameters.Worksheet;
             Worksheet.RangeShiftedRows += new RangeShiftedRowsDelegate(Worksheet_RangeShiftedRows);
             Worksheet.RangeShiftedColumns += new RangeShiftedColumnsDelegate(Worksheet_RangeShiftedColumns);
@@ -188,18 +190,22 @@ namespace ClosedXML.Excel
             var columnPairs = columns.Split(',');
             foreach (var pair in columnPairs)
             {
+                var tPair = pair.Trim();
                 String firstColumn;
                 String lastColumn;
-                if (pair.Trim().Contains(':'))
+                if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    var columnRange = pair.Trim().Split(':');
+                    if (tPair.Contains('-'))
+                        tPair = tPair.Replace('-', ':');
+
+                    var columnRange = tPair.Split(':');
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
                 }
                 else
                 {
-                    firstColumn = pair.Trim();
-                    lastColumn = pair.Trim();
+                    firstColumn = tPair;
+                    lastColumn = tPair;
                 }
 
                 Int32 tmp;
@@ -242,18 +248,22 @@ namespace ClosedXML.Excel
             var rowPairs = rows.Split(',');
             foreach (var pair in rowPairs)
             {
+                var tPair = pair.Trim();
                 String firstRow;
                 String lastRow;
-                if (pair.Trim().Contains(':'))
+                if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    var rowRange = pair.Trim().Split(':');
+                    if (tPair.Contains('-'))
+                        tPair = tPair.Replace('-', ':');
+
+                    var rowRange = tPair.Split(':');
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
                 }
                 else
                 {
-                    firstRow = pair.Trim();
-                    lastRow = pair.Trim();
+                    firstRow = tPair;
+                    lastRow = tPair;
                 }
                 foreach (var row in this.Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
                 {
@@ -273,7 +283,7 @@ namespace ClosedXML.Excel
             var lastCell = LastCell();
 
             MoveOrClearForTranspose(transposeOption, rowCount, columnCount);
-            TransposeMerged();
+            TransposeMerged(squareSide);
             TransposeRange(squareSide);
             this.RangeAddress.LastAddress = new XLAddress(
                 firstCell.Address.RowNumber + columnCount - 1,
@@ -318,33 +328,54 @@ namespace ClosedXML.Excel
             XLRange rngToTranspose = (XLRange)Worksheet.Range(
                 this.RangeAddress.FirstAddress.RowNumber,
                 this.RangeAddress.FirstAddress.ColumnNumber,
-                this.RangeAddress.FirstAddress.RowNumber + squareSide,
-                this.RangeAddress.FirstAddress.ColumnNumber + squareSide);
+                this.RangeAddress.FirstAddress.RowNumber + squareSide - 1,
+                this.RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
 
-            foreach (var c in rngToTranspose.Cells())
+            Int32 roInitial = rngToTranspose.RangeAddress.FirstAddress.RowNumber;
+            Int32 coInitial = rngToTranspose.RangeAddress.FirstAddress.ColumnNumber;
+            Int32 roCount = rngToTranspose.RowCount();
+            Int32 coCount = rngToTranspose.ColumnCount();
+            for (Int32 ro = 1; ro <= roCount; ro++)
             {
-                var newKey = new XLAddress(c.Address.ColumnNumber, c.Address.RowNumber);
-                var newCell = new XLCell(newKey, c.Style, Worksheet);
-                newCell.Value = c.Value;
-                newCell.DataType = c.DataType;
-                cellsToInsert.Add(newKey, newCell);
-                cellsToDelete.Add(c.Address);
+                for (Int32 co = 1; co <= coCount; co++)
+                {
+                    var oldCell = rngToTranspose.Cell(ro, co);
+                    var newKey = rngToTranspose.Cell(co, ro).Address; // new XLAddress(c.Address.ColumnNumber, c.Address.RowNumber);
+                    var newCell = new XLCell(newKey, oldCell.Style, Worksheet);
+                    newCell.Value = oldCell.Value;
+                    newCell.DataType = oldCell.DataType;
+                    cellsToInsert.Add(newKey, newCell);
+                    cellsToDelete.Add(oldCell.Address);
+                }
             }
+            //foreach (var c in rngToTranspose.Cells())
+            //{
+            //    var newKey = new XLAddress(c.Address.ColumnNumber, c.Address.RowNumber);
+            //    var newCell = new XLCell(newKey, c.Style, Worksheet);
+            //    newCell.Value = c.Value;
+            //    newCell.DataType = c.DataType;
+            //    cellsToInsert.Add(newKey, newCell);
+            //    cellsToDelete.Add(c.Address);
+            //}
             cellsToDelete.ForEach(c => this.Worksheet.Internals.CellsCollection.Remove(c));
             cellsToInsert.ForEach(c => this.Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
         }
 
-        private void TransposeMerged()
+        private void TransposeMerged(Int32 squareSide)
         {
+            XLRange rngToTranspose = (XLRange)Worksheet.Range(
+                this.RangeAddress.FirstAddress.RowNumber,
+                this.RangeAddress.FirstAddress.ColumnNumber,
+                this.RangeAddress.FirstAddress.RowNumber + squareSide - 1,
+                this.RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
+
             List<IXLRange> mergeToDelete = new List<IXLRange>();
             List<IXLRange> mergeToInsert = new List<IXLRange>();
             foreach (var merge in Worksheet.Internals.MergedRanges)
             {
                 if (this.Contains(merge))
                 {
-                    var lastAddress = merge.RangeAddress.LastAddress;
-                    var newLastAddress = new XLAddress(lastAddress.ColumnNumber, lastAddress.RowNumber);
-                    merge.RangeAddress.LastAddress = newLastAddress;
+                    merge.RangeAddress.LastAddress = rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address;
                 }
             }
             mergeToDelete.ForEach(m => this.Worksheet.Internals.MergedRanges.Remove(m));
@@ -357,36 +388,54 @@ namespace ClosedXML.Excel
             {
                 if (rowCount > columnCount)
                 {
-                    this.InsertColumnsAfter(rowCount - columnCount);
+                    this.InsertColumnsAfter(rowCount - columnCount, false);
                 }
                 else if (columnCount > rowCount)
                 {
-                    this.InsertRowsBelow(columnCount - rowCount);
+                    this.InsertRowsBelow(columnCount - rowCount, false);
                 }
             }
             else
             {
                 if (rowCount > columnCount)
                 {
-                    var toMove = columnCount - rowCount;
+                    var toMove = rowCount - columnCount;
                     var rngToClear = Worksheet.Range(
                         this.RangeAddress.FirstAddress.RowNumber,
-                        columnCount + 1,
+                        this.RangeAddress.LastAddress.ColumnNumber + 1,
                         this.RangeAddress.LastAddress.RowNumber,
-                        columnCount + toMove);
+                        this.RangeAddress.LastAddress.ColumnNumber + toMove);
                     rngToClear.Clear();
                 }
                 else if (columnCount > rowCount)
                 {
-                    var toMove = rowCount - columnCount;
+                    var toMove = columnCount - rowCount;
                     var rngToClear = Worksheet.Range(
-                        rowCount + 1,
+                        this.RangeAddress.LastAddress.RowNumber + 1,
                         this.RangeAddress.FirstAddress.ColumnNumber,
-                        rowCount + toMove,
+                        this.RangeAddress.LastAddress.RowNumber + toMove,
                         this.RangeAddress.LastAddress.ColumnNumber);
                     rngToClear.Clear();
                 }
             }
+        }
+
+        public IXLTable AsTable()
+        {
+            return new XLTable(this, false);
+        }
+        public IXLTable AsTable(String name)
+        {
+            return new XLTable(this, name, false);
+        }
+
+        public IXLTable CreateTable()
+        {
+            return new XLTable(this, true);
+        }
+        public IXLTable CreateTable(String name)
+        {
+            return new XLTable(this, name, true);
         }
 
         #endregion
