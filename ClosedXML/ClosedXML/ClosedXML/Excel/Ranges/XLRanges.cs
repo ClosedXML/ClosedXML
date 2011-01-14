@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLRanges : IXLRanges
+    internal class XLRanges : IXLRanges, IXLStylized
     {
         private XLWorkbook workbook;
         public XLRanges(XLWorkbook workbook, IXLStyle defaultStyle)
@@ -93,6 +93,12 @@ namespace ClosedXML.Excel
         }
 
         public Boolean UpdatingStyle { get; set; }
+
+        public IXLStyle InnerStyle
+        {
+            get { return style; }
+            set { style = new XLStyle(this, value); }
+        }
 
         #endregion
 

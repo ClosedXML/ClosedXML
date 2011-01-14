@@ -11,9 +11,15 @@ using ClosedXML_Examples.PageSetup;
 
 namespace ClosedXML_Examples
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
+        {
+            CreateFiles.CreateAllFiles();
+            LoadFiles.LoadAllFiles();
+        }
+
+        public static void ExecuteMain()
         {
             CreateFiles.CreateAllFiles();
             LoadFiles.LoadAllFiles();

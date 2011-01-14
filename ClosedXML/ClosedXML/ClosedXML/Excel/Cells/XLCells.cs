@@ -5,37 +5,89 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLCells: IXLCells
+    internal class XLCells : IXLCells, IXLStylized
     {
-        private Boolean entireWorksheet;
         private XLWorksheet worksheet;
-        public XLCells(XLWorksheet worksheet, Boolean entireWorksheet = false)
+        private Boolean usedCellsOnly;
+        private Boolean includeStyles;
+        public XLCells(XLWorksheet worksheet, Boolean entireWorksheet, Boolean usedCellsOnly, Boolean includeStyles)
         {
             this.worksheet = worksheet;
-            this.entireWorksheet = entireWorksheet;
-            Style = worksheet.Style;
+            this.style = new XLStyle(this, worksheet.Style);
+            this.usedCellsOnly = usedCellsOnly;
+            this.includeStyles = includeStyles;
         }
 
-        private List<IXLCell> cells = new List<IXLCell>();
+        private List<IXLRangeAddress> rangeAddresses = new List<IXLRangeAddress>();
         public IEnumerator<IXLCell> GetEnumerator()
         {
-            var retList = new List<IXLCell>();
-            cells.ForEach(c => retList.Add(c));
-            return retList.GetEnumerator();
+            HashSet<IXLAddress> usedCells;
+            Boolean multipleRanges = rangeAddresses.Count > 1;
+
+            if (multipleRanges)
+                usedCells = new HashSet<IXLAddress>();
+            else
+                usedCells = null;
+
+
+            if (usedCellsOnly)
+            {
+                var cells = from c in worksheet.Internals.CellsCollection
+                            where (   !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText)
+                                  || (includeStyles && !c.Value.Style.Equals(worksheet.Style)))
+                                  && rangeAddresses.Where(r=>
+                                      r.FirstAddress.RowNumber <= c.Key.RowNumber
+                                      && r.FirstAddress.ColumnNumber <= c.Key.ColumnNumber
+                                      && r.LastAddress.RowNumber >= c.Key.RowNumber
+                                      && r.LastAddress.ColumnNumber >= c.Key.ColumnNumber
+                                      ).Any()
+                            select (IXLCell)c.Value;
+                foreach (var cell in cells)
+                {
+                    yield return cell;
+                }
+            }
+            else
+            {
+                foreach (var range in rangeAddresses)
+                {
+                    Int32 firstRo = range.FirstAddress.RowNumber;
+                    Int32 lastRo = range.LastAddress.RowNumber;
+                    Int32 firstCo = range.FirstAddress.ColumnNumber;
+                    Int32 lastCo = range.LastAddress.ColumnNumber;
+
+                    for (Int32 ro = firstRo; ro <= lastRo; ro++)
+                    {
+                        for (Int32 co = firstCo; co <= lastCo; co++)
+                        {
+                            var cell = worksheet.Cell(ro, co);
+                            if (multipleRanges)
+                            {
+                                if (!usedCells.Contains(cell.Address))
+                                {
+                                    usedCells.Add(cell.Address);
+                                    yield return cell;
+                                }
+                            }
+                            else
+                            {
+                                yield return cell;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-        public void Add(XLCell cell)
+        public void Add(IXLRangeAddress rangeAddress)
         {
-            cells.Add(cell);
+            rangeAddresses.Add(rangeAddress);
         }
-        public void AddRange(IEnumerable<IXLCell> cellsToAdd)
-        {
-            cells.AddRange(cellsToAdd);
-        }
+
 
         #region IXLStylized Members
 
@@ -49,21 +101,7 @@ namespace ClosedXML.Excel
             set
             {
                 style = new XLStyle(this, value);
-
-                if (entireWorksheet)
-                {
-                    worksheet.Style = value;
-                }
-                else
-                {
-                    var maxRow = 0;
-                    if (worksheet.Internals.RowsCollection.Count > 0)
-                        maxRow = worksheet.Internals.RowsCollection.Keys.Max();
-                    foreach (var c in cells)
-                    {
-                        c.Style = value;
-                    }
-                }
+                this.ForEach(c => c.Style = style);
             }
         }
 
@@ -73,25 +111,19 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
                 yield return style;
-                if (entireWorksheet)
-                {
-                    yield return worksheet.Style;
-                }
-                else
-                {
-                    var maxRow = 0;
-                    if (worksheet.Internals.RowsCollection.Count > 0)
-                        maxRow = worksheet.Internals.RowsCollection.Keys.Max();
-                    foreach (var c in cells)
-                    {
-                        yield return c.Style;
-                    }
-                }
+                foreach (var c in this)
+                    yield return c.Style;
                 UpdatingStyle = false;
             }
         }
 
         public Boolean UpdatingStyle { get; set; }
+
+        public IXLStyle InnerStyle
+        {
+            get { return style; }
+            set { style = new XLStyle(this, value); }
+        }
 
         #endregion
 
@@ -99,7 +131,7 @@ namespace ClosedXML.Excel
         {
             set
             {
-                cells.ForEach(c => c.Value = value);
+                this.ForEach(c => c.Value = value);
             }
         }
 
@@ -107,25 +139,25 @@ namespace ClosedXML.Excel
         {
             set
             {
-                cells.ForEach(c => c.DataType = value);
+                this.ForEach(c => c.DataType = value);
             }
         }
 
         public void Clear()
         {
-            cells.ForEach(c => c.Clear());
+            this.ForEach(c => c.Clear());
         }
 
         public void ClearStyles()
         {
-            cells.ForEach(c => c.ClearStyles());
+            this.ForEach(c => c.ClearStyles());
         }
 
         public String FormulaA1
         {
             set
             {
-                cells.ForEach(c => c.FormulaA1 = value);
+                this.ForEach(c => c.FormulaA1 = value);
             }
         }
 
@@ -133,7 +165,7 @@ namespace ClosedXML.Excel
         {
             set
             {
-                cells.ForEach(c => c.FormulaR1C1 = value);
+                this.ForEach(c => c.FormulaR1C1 = value);
             }
         }
     }

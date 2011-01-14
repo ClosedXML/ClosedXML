@@ -9,15 +9,18 @@ using System.Data;
 
 namespace ClosedXML.Excel
 {
-    internal class XLCell : IXLCell
+    internal class XLCell : IXLCell, IXLStylized
     {
         public static readonly DateTime baseDate = new DateTime(1899, 12, 30);
         XLWorksheet worksheet;
         public XLCell(IXLAddress address, IXLStyle defaultStyle, XLWorksheet worksheet)
         {
             this.Address = address;
-            Style = defaultStyle;
-            if (Style == null) Style = worksheet.Style;
+            
+            if (defaultStyle == null) 
+                style = new XLStyle(this, worksheet.Style);
+            else
+                style = new XLStyle(this, defaultStyle);
             this.worksheet = worksheet;
         }
 
@@ -133,7 +136,7 @@ namespace ClosedXML.Excel
             return format;
         }
 
-        private String cellValue = String.Empty;
+        internal String cellValue = String.Empty;
         public Object Value
         {
             get
@@ -201,17 +204,8 @@ namespace ClosedXML.Excel
                     {
                         var sourceCell = (XLCell)asRange.Cell(ro, co);
                         var targetCell = (XLCell)worksheet.Cell(Address.RowNumber + ro - 1, Address.ColumnNumber + co - 1);
-                        if (!targetCell.Style.Equals(sourceCell.Style))
-                            targetCell.Style = sourceCell.Style;
-
-                        if (targetCell.InnerText != sourceCell.InnerText)
-                            targetCell.Value = sourceCell.Value;
-
-                        if (targetCell.DataType != sourceCell.DataType)
-                            targetCell.DataType = sourceCell.DataType;
-
-                        if (targetCell.FormulaA1 != sourceCell.FormulaA1)
-                            targetCell.FormulaA1 = sourceCell.FormulaA1;
+                        targetCell.CopyValues(sourceCell);
+                        targetCell.Style = sourceCell.style;
                     }
                 }
                 var rangesToMerge = new List<IXLRange>();
@@ -399,6 +393,12 @@ namespace ClosedXML.Excel
         }
 
         public Boolean UpdatingStyle { get; set; }
+
+        public IXLStyle InnerStyle
+        {
+            get { return style; }
+            set { style = new XLStyle(this, value); }
+        }
 
         #endregion
 

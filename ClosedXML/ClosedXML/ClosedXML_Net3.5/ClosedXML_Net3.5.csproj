@@ -265,6 +265,9 @@
     <Compile Include="..\ClosedXML\Excel\Style\XLStyle.cs">
       <Link>Excel\Style\XLStyle.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\XLStylizedContainer.cs">
+      <Link>Excel\Style\XLStylizedContainer.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Tables\IXLTable.cs">
       <Link>Excel\Tables\IXLTable.cs</Link>
     </Compile>

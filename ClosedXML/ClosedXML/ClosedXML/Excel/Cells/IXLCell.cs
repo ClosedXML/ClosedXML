@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
 {
     public enum XLCellValues { Text, Number, Boolean, DateTime, TimeSpan }
 
-    public interface IXLCell: IXLStylized
+    public interface IXLCell
     {
         /// <summary>
         /// Gets or sets the cell's value. To get a strongly typed object use the method GetValue&lt;T&gt;.
@@ -116,5 +116,7 @@ namespace ClosedXML.Excel
         /// Returns this cell as an IXLRange.
         /// </summary>
         IXLRange AsRange();
+
+        IXLStyle Style { get; set; }
     }
 }

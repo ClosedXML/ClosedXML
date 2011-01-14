@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal abstract class XLRangeBase : IXLRangeBase
+    internal abstract class XLRangeBase : IXLRangeBase, IXLStylized
     {
         public XLRangeBase(IXLRangeAddress rangeAddress)
         {
@@ -222,40 +222,20 @@ namespace ClosedXML.Excel
         }
         public IXLCells Cells()
         {
-            var cellHash = new HashSet<IXLCell>();
-            foreach (var row in Enumerable.Range(1, this.RowCount()))
-            {
-                foreach (var column in Enumerable.Range(1, this.ColumnCount()))
-                {
-                    cellHash.Add(this.Cell(row, column));
-                }
-            }
-            var cells = new XLCells(Worksheet);
-            cells.AddRange(cellHash);
+            var cells = new XLCells(Worksheet, false, false, false);
+            cells.Add(this.RangeAddress);
             return (IXLCells)cells;
         }
         public IXLCells CellsUsed()
         {
-            var list = this.Worksheet.Internals.CellsCollection.Where(c => !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) && this.Contains(c.Key.ToString())).Select(c => (IXLCell)c.Value);
-            var cells = new XLCells(Worksheet);
-            cells.AddRange(list.AsEnumerable());
+            var cells = new XLCells(Worksheet, false, true, false);
+            cells.Add(this.RangeAddress);
             return (IXLCells)cells;
         }
         public IXLCells CellsUsed(Boolean includeStyles)
         {
-            IEnumerable<IXLCell> list;
-            if (includeStyles)
-                list = this.Worksheet.Internals.CellsCollection.Where(c => 
-                    (!StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText) || !c.Value.Style.Equals(Worksheet.Style))
-                    && this.Contains(c.Key.ToString())
-                    ).Select(c => (IXLCell)c.Value);
-            else
-                list = this.Worksheet.Internals.CellsCollection.Where(c => 
-                    !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText)
-                    && this.Contains(c.Key.ToString())
-                    ).Select(c => (IXLCell)c.Value);
-            var cells = new XLCells(Worksheet);
-            cells.AddRange(list);
+            var cells = new XLCells(Worksheet, false, true, includeStyles);
+            cells.Add(this.RangeAddress);
             return (IXLCells)cells;
         }
 
@@ -552,7 +532,7 @@ namespace ClosedXML.Excel
         {
             foreach (var cell in CellsUsed(true))
             {
-                var newStyle = new XLStyle(cell, Worksheet.Style);
+                var newStyle = new XLStyle((XLCell)cell, Worksheet.Style);
                 newStyle.NumberFormat = cell.Style.NumberFormat;
                 cell.Style = newStyle;
             }
@@ -709,6 +689,12 @@ namespace ClosedXML.Excel
         }
 
         public virtual Boolean UpdatingStyle { get; set; }
+
+        public virtual IXLStyle InnerStyle
+        {
+            get { return this.defaultStyle; }
+            set { defaultStyle = new XLStyle(this, value); }
+        }
 
         #endregion
 

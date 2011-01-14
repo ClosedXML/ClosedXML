@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLRows: IXLRows
+    internal class XLRows : IXLRows, IXLStylized
     {
         private Boolean entireWorksheet;
         private XLWorksheet worksheet;
@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
         {
             this.worksheet = worksheet;
             this.entireWorksheet = entireWorksheet;
-            Style = worksheet.Style;
+            style = new XLStyle(this, worksheet.Style);
         }
 
         List<XLRow> rows = new List<XLRow>();
@@ -106,6 +106,12 @@ namespace ClosedXML.Excel
         }
 
         public Boolean UpdatingStyle { get; set; }
+
+        public IXLStyle InnerStyle
+        {
+            get { return style; }
+            set { style = new XLStyle(this, value); }
+        }
 
         #endregion
 
@@ -201,55 +207,31 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cellHash = new HashSet<IXLCell>();
+            var cells = new XLCells(worksheet, false, false, false);
             foreach (var container in rows)
             {
-                foreach (var cell in container.Cells())
-                {
-                    if (!cellHash.Contains(cell))
-                    {
-                        cellHash.Add(cell);
-                    }
-                }
+                cells.Add(container.RangeAddress);
             }
-            var cells = new XLCells(worksheet, entireWorksheet);
-            cells.AddRange(cellHash);
             return (IXLCells)cells;
         }
 
         public IXLCells CellsUsed()
         {
-            var cellHash = new HashSet<IXLCell>();
+            var cells = new XLCells(worksheet, false, true, false);
             foreach (var container in rows)
             {
-                foreach (var cell in container.CellsUsed())
-                {
-                    if (!cellHash.Contains(cell))
-                    {
-                        cellHash.Add(cell);
-                    }
-                }
+                cells.Add(container.RangeAddress);
             }
-            var cells = new XLCells(worksheet, entireWorksheet);
-            cells.AddRange(cellHash);
             return (IXLCells)cells;
         }
 
         public IXLCells CellsUsed(Boolean includeStyles)
         {
-            var cellHash = new HashSet<IXLCell>();
+            var cells = new XLCells(worksheet, false, true, includeStyles);
             foreach (var container in rows)
             {
-                foreach (var cell in container.CellsUsed(includeStyles))
-                {
-                    if (!cellHash.Contains(cell))
-                    {
-                        cellHash.Add(cell);
-                    }
-                }
+                cells.Add(container.RangeAddress);
             }
-            var cells = new XLCells(worksheet, entireWorksheet);
-            cells.AddRange(cellHash);
             return (IXLCells)cells;
         }
     }

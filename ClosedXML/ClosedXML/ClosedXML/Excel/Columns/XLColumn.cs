@@ -105,11 +105,11 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(String cellsInColumn)
         {
-            var retVal = new XLCells(Worksheet);
+            var retVal = new XLCells(Worksheet, false, false, false);
             var rangePairs = cellsInColumn.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.AddRange(Range(pair.Trim()).Cells());
+                retVal.Add(Range(pair.Trim()).RangeAddress);
             }
             return retVal;
         }
@@ -170,7 +170,7 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
 
-                yield return Style;
+                yield return style;
 
                 var co = this.ColumnNumber();
 
@@ -193,6 +193,28 @@ namespace ClosedXML.Excel
         }
 
         public override Boolean UpdatingStyle { get; set; }
+
+        public override IXLStyle InnerStyle
+        {
+            get
+            {
+                if (IsReference)
+                    return Worksheet.Internals.ColumnsCollection[this.ColumnNumber()].InnerStyle;
+                else
+                    return new XLStyle(new XLStylizedContainer(this.style, this), style);
+            }
+            set
+            {
+                if (IsReference)
+                {
+                    Worksheet.Internals.ColumnsCollection[this.ColumnNumber()].InnerStyle = value;
+                }
+                else
+                {
+                    style = new XLStyle(this, value);
+                }
+            }
+        }
 
         #endregion
 

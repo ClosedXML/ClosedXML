@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRows: IEnumerable<IXLRow>, IXLStylized
+    public interface IXLRows: IEnumerable<IXLRow>
     {
         /// <summary>
         /// Sets the height of all rows.
@@ -102,5 +102,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="includeStyles">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         IXLCells CellsUsed(Boolean includeStyles);
+
+        IXLStyle Style { get; set; }
     }
 }

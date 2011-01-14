@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRangeColumns: IEnumerable<IXLRangeColumn>, IXLStylized
+    public interface IXLRangeColumns: IEnumerable<IXLRangeColumn>
     {
         /// <summary>
         /// Clears the contents of the columns (including styles).
@@ -38,5 +38,7 @@ namespace ClosedXML.Excel
         /// Deletes all columns and shifts the columns at the right of them accordingly.
         /// </summary>
         void Delete();
+
+        IXLStyle Style { get; set; }
     }
 }

@@ -137,8 +137,7 @@ namespace ClosedXML.Excel
                     //IXLStylized toApply;
                     if (col.Max != XLWorksheet.MaxNumberOfColumns)
                     {
-                        var toApply = ws.Columns(col.Min, col.Max);
-                        var xlColumns = (XLColumns)toApply;
+                        var xlColumns = (XLColumns)ws.Columns(col.Min, col.Max);
                         if (col.Width != null)
                             xlColumns.Width = col.Width;
                         else
@@ -156,7 +155,7 @@ namespace ClosedXML.Excel
                         Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
                         if (styleIndex > 0)
                         {
-                            ApplyStyle(toApply, styleIndex, s, fills, borders, fonts, numberingFormats);
+                            ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
                         }
                         else
                         {
@@ -167,7 +166,7 @@ namespace ClosedXML.Excel
 
                 foreach (var row in worksheetPart.Worksheet.Descendants<Row>()) //.Where(r => r.CustomFormat != null && r.CustomFormat).Select(r => r))
                 {
-                    var xlRow = ws.Row((Int32)row.RowIndex.Value, false);
+                    var xlRow = (XLRow)ws.Row((Int32)row.RowIndex.Value, false);
                     if (row.Height != null)
                         xlRow.Height = row.Height;
                     else
@@ -206,7 +205,7 @@ namespace ClosedXML.Excel
 
                     var dCell = (Cell)cell;
                     Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : 0;
-                    var xlCell = ws.CellFast(dCell.CellReference);
+                    var xlCell = (XLCell)ws.CellFast(dCell.CellReference);
 
                     if (styleIndex > 0)
                     {
@@ -232,13 +231,13 @@ namespace ClosedXML.Excel
                             if (dCell.CellValue != null)
                             {
                                 if (!StringExtensions.IsNullOrWhiteSpace(dCell.CellValue.Text))
-                                    xlCell.Value = sharedStrings[Int32.Parse(dCell.CellValue.Text)].InnerText;
+                                    xlCell.cellValue = sharedStrings[Int32.Parse(dCell.CellValue.Text)].InnerText;
                                 else
-                                    xlCell.Value = dCell.CellValue.Text;
+                                    xlCell.cellValue = dCell.CellValue.Text;
                             }
                             else
                             {
-                                xlCell.Value = String.Empty;
+                                xlCell.cellValue = String.Empty;
                             }
                             xlCell.DataType = XLCellValues.Text;
                         }
@@ -561,13 +560,14 @@ namespace ClosedXML.Excel
                 if (fill.PatternFill != null)
                 {
                     if (fill.PatternFill.PatternType != null)
-                        xlStylized.Style.Fill.PatternType = fillPatternValues.Single(p => p.Value == fill.PatternFill.PatternType).Key;
+                        xlStylized.InnerStyle.Fill.PatternType = fillPatternValues.Single(p => p.Value == fill.PatternFill.PatternType).Key;
 
                     var fgColor = GetColor(fill.PatternFill.ForegroundColor);
-                    if (fgColor.HasValue) xlStylized.Style.Fill.PatternColor = fgColor;
+                    if (fgColor.HasValue) xlStylized.InnerStyle.Fill.PatternColor = fgColor;
 
                     var bgColor = GetColor(fill.PatternFill.BackgroundColor);
-                    if (bgColor.HasValue) xlStylized.Style.Fill.PatternBackgroundColor = bgColor;
+                    if (bgColor.HasValue) 
+                        xlStylized.InnerStyle.Fill.PatternBackgroundColor = bgColor;
                 }
             }
 
@@ -580,23 +580,23 @@ namespace ClosedXML.Excel
             if (alignment != null)
             {
                 if (alignment.Horizontal != null)
-                    xlStylized.Style.Alignment.Horizontal = alignmentHorizontalValues.Single(a => a.Value == alignment.Horizontal).Key;
+                    xlStylized.InnerStyle.Alignment.Horizontal = alignmentHorizontalValues.Single(a => a.Value == alignment.Horizontal).Key;
                 if (alignment.Indent != null)
-                    xlStylized.Style.Alignment.Indent = Int32.Parse(alignment.Indent.ToString());
+                    xlStylized.InnerStyle.Alignment.Indent = Int32.Parse(alignment.Indent.ToString());
                 if (alignment.JustifyLastLine != null)
-                    xlStylized.Style.Alignment.JustifyLastLine = alignment.JustifyLastLine;
+                    xlStylized.InnerStyle.Alignment.JustifyLastLine = alignment.JustifyLastLine;
                 if (alignment.ReadingOrder != null)
-                    xlStylized.Style.Alignment.ReadingOrder = (XLAlignmentReadingOrderValues)Int32.Parse(alignment.ReadingOrder.ToString());
+                    xlStylized.InnerStyle.Alignment.ReadingOrder = (XLAlignmentReadingOrderValues)Int32.Parse(alignment.ReadingOrder.ToString());
                 if (alignment.RelativeIndent != null)
-                    xlStylized.Style.Alignment.RelativeIndent = alignment.RelativeIndent;
+                    xlStylized.InnerStyle.Alignment.RelativeIndent = alignment.RelativeIndent;
                 if (alignment.ShrinkToFit != null)
-                    xlStylized.Style.Alignment.ShrinkToFit = alignment.ShrinkToFit;
+                    xlStylized.InnerStyle.Alignment.ShrinkToFit = alignment.ShrinkToFit;
                 if (alignment.TextRotation != null)
-                    xlStylized.Style.Alignment.TextRotation = (Int32)alignment.TextRotation.Value;
+                    xlStylized.InnerStyle.Alignment.TextRotation = (Int32)alignment.TextRotation.Value;
                 if (alignment.Vertical != null)
-                    xlStylized.Style.Alignment.Vertical = alignmentVerticalValues.Single(a => a.Value == alignment.Vertical).Key;
+                    xlStylized.InnerStyle.Alignment.Vertical = alignmentVerticalValues.Single(a => a.Value == alignment.Vertical).Key;
                 if (alignment.WrapText !=null)
-                    xlStylized.Style.Alignment.WrapText = alignment.WrapText;
+                    xlStylized.InnerStyle.Alignment.WrapText = alignment.WrapText;
             }
 
 
@@ -611,51 +611,51 @@ namespace ClosedXML.Excel
                 if (bottomBorder != null)
                 {
                     if (bottomBorder.Style != null)
-                        xlStylized.Style.Border.BottomBorder = borderStyleValues.Single(b => b.Value == bottomBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.BottomBorder = borderStyleValues.Single(b => b.Value == bottomBorder.Style.Value).Key;
 
                     var bottomBorderColor = GetColor(bottomBorder.Color);
                     if (bottomBorderColor.HasValue)
-                        xlStylized.Style.Border.BottomBorderColor = bottomBorderColor;
+                        xlStylized.InnerStyle.Border.BottomBorderColor = bottomBorderColor;
                 }
                 var topBorder = (TopBorder)border.TopBorder;
                 if (topBorder != null)
                 {
                     if (topBorder.Style != null)
-                        xlStylized.Style.Border.TopBorder = borderStyleValues.Single(b => b.Value == topBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.TopBorder = borderStyleValues.Single(b => b.Value == topBorder.Style.Value).Key;
                     var topBorderColor = GetColor(topBorder.Color);
                     if (topBorderColor.HasValue)
-                        xlStylized.Style.Border.TopBorderColor = topBorderColor;
+                        xlStylized.InnerStyle.Border.TopBorderColor = topBorderColor;
                 }
                 var leftBorder = (LeftBorder)border.LeftBorder;
                 if (leftBorder != null)
                 {
                     if (leftBorder.Style != null)
-                        xlStylized.Style.Border.LeftBorder = borderStyleValues.Single(b => b.Value == leftBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.LeftBorder = borderStyleValues.Single(b => b.Value == leftBorder.Style.Value).Key;
                     var leftBorderColor = GetColor(leftBorder.Color);
                     if (leftBorderColor.HasValue)
-                        xlStylized.Style.Border.LeftBorderColor = leftBorderColor;
+                        xlStylized.InnerStyle.Border.LeftBorderColor = leftBorderColor;
                 }
                 var rightBorder = (RightBorder)border.RightBorder;
                 if (rightBorder != null)
                 {
                     if (rightBorder.Style != null)
-                        xlStylized.Style.Border.RightBorder = borderStyleValues.Single(b => b.Value == rightBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.RightBorder = borderStyleValues.Single(b => b.Value == rightBorder.Style.Value).Key;
                     var rightBorderColor = GetColor(rightBorder.Color);
                     if (rightBorderColor.HasValue)
-                        xlStylized.Style.Border.RightBorderColor = rightBorderColor;
+                        xlStylized.InnerStyle.Border.RightBorderColor = rightBorderColor;
                 }
                 var diagonalBorder = (DiagonalBorder)border.DiagonalBorder;
                 if (diagonalBorder != null)
                 {
                     if (diagonalBorder.Style != null)
-                        xlStylized.Style.Border.DiagonalBorder = borderStyleValues.Single(b => b.Value == diagonalBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.DiagonalBorder = borderStyleValues.Single(b => b.Value == diagonalBorder.Style.Value).Key;
                     var diagonalBorderColor = GetColor(diagonalBorder.Color);
                     if (diagonalBorderColor.HasValue)
-                        xlStylized.Style.Border.DiagonalBorderColor = diagonalBorderColor;
+                        xlStylized.InnerStyle.Border.DiagonalBorderColor = diagonalBorderColor;
                     if (border.DiagonalDown != null)
-                        xlStylized.Style.Border.DiagonalDown = border.DiagonalDown;
+                        xlStylized.InnerStyle.Border.DiagonalDown = border.DiagonalDown;
                     if (border.DiagonalUp != null)
-                        xlStylized.Style.Border.DiagonalUp = border.DiagonalUp;
+                        xlStylized.InnerStyle.Border.DiagonalUp = border.DiagonalUp;
                 }
             }
 
@@ -666,41 +666,41 @@ namespace ClosedXML.Excel
             var font = (Font)fonts.ElementAt((Int32)fontId.Value);
             if (font != null)
             {
-                xlStylized.Style.Font.Bold = GetBoolean(font.Bold);
+                xlStylized.InnerStyle.Font.Bold = GetBoolean(font.Bold);
 
                 var fontColor = GetColor(font.Color);
                 if (fontColor.HasValue)
-                    xlStylized.Style.Font.FontColor = fontColor;
+                    xlStylized.InnerStyle.Font.FontColor = fontColor;
 
                 if (font.FontFamilyNumbering != null && ((FontFamilyNumbering)font.FontFamilyNumbering).Val != null)
-                    xlStylized.Style.Font.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(((FontFamilyNumbering)font.FontFamilyNumbering).Val.ToString());
+                    xlStylized.InnerStyle.Font.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(((FontFamilyNumbering)font.FontFamilyNumbering).Val.ToString());
                 if (font.FontName != null)
                 {
                     if (((FontName)font.FontName).Val != null)
-                        xlStylized.Style.Font.FontName = ((FontName)font.FontName).Val;
+                        xlStylized.InnerStyle.Font.FontName = ((FontName)font.FontName).Val;
                 }
                 if (font.FontSize != null)
                 {
                     if (((FontSize)font.FontSize).Val != null)
-                        xlStylized.Style.Font.FontSize = ((FontSize)font.FontSize).Val;
+                        xlStylized.InnerStyle.Font.FontSize = ((FontSize)font.FontSize).Val;
                 }
 
-                xlStylized.Style.Font.Italic = GetBoolean(font.Italic);
-                xlStylized.Style.Font.Shadow = GetBoolean(font.Shadow);
-                xlStylized.Style.Font.Strikethrough = GetBoolean(font.Strike);
+                xlStylized.InnerStyle.Font.Italic = GetBoolean(font.Italic);
+                xlStylized.InnerStyle.Font.Shadow = GetBoolean(font.Shadow);
+                xlStylized.InnerStyle.Font.Strikethrough = GetBoolean(font.Strike);
                 
                 if (font.Underline != null)
                     if (font.Underline.Val != null)
-                        xlStylized.Style.Font.Underline = underlineValuesList.Single(u => u.Value == ((Underline)font.Underline).Val).Key;
+                        xlStylized.InnerStyle.Font.Underline = underlineValuesList.Single(u => u.Value == ((Underline)font.Underline).Val).Key;
                     else
-                        xlStylized.Style.Font.Underline = XLFontUnderlineValues.Single;
+                        xlStylized.InnerStyle.Font.Underline = XLFontUnderlineValues.Single;
 
                 if (font.VerticalTextAlignment != null)
                     
                 if (font.VerticalTextAlignment.Val != null)
-                    xlStylized.Style.Font.VerticalAlignment = fontVerticalTextAlignmentValues.Single(f => f.Value == ((VerticalTextAlignment)font.VerticalTextAlignment).Val).Key;
+                    xlStylized.InnerStyle.Font.VerticalAlignment = fontVerticalTextAlignmentValues.Single(f => f.Value == ((VerticalTextAlignment)font.VerticalTextAlignment).Val).Key;
                 else
-                    xlStylized.Style.Font.VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline;
+                    xlStylized.InnerStyle.Font.VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline;
             }
             if (s.CellFormats != null)
             {
@@ -720,9 +720,9 @@ namespace ClosedXML.Excel
                         }
                     }
                     if (formatCode.Length > 0)
-                        xlStylized.Style.NumberFormat.Format = formatCode;
+                        xlStylized.InnerStyle.NumberFormat.Format = formatCode;
                     else
-                        xlStylized.Style.NumberFormat.NumberFormatId = (Int32)numberFormatId.Value;
+                        xlStylized.InnerStyle.NumberFormat.NumberFormatId = (Int32)numberFormatId.Value;
                 }
             }
         }

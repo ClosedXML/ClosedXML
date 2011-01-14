@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
             SheetView = new XLSheetView();
             Tables = new XLTables();
             this.workbook = workbook;
-            Style = workbook.Style;
+            style = new XLStyle(this, workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new XLRanges(workbook, workbook.Style) , workbook);
             PageSetup = new XLPageSetup(workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
@@ -118,6 +118,8 @@ namespace ClosedXML.Excel
             set
             {
                 style = new XLStyle(this, value);
+                foreach(var cell in Internals.CellsCollection.Values)
+                    cell.Style = style;
             }
         }
 
@@ -136,6 +138,12 @@ namespace ClosedXML.Excel
         }
 
         public override Boolean UpdatingStyle { get; set; }
+
+        public override IXLStyle InnerStyle
+        {
+            get { return new XLStyle(new XLStylizedContainer(this.style, this), style); }
+            set { style = new XLStyle(this, value); }
+        }
 
         #endregion
 

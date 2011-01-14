@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLColumns: IEnumerable<IXLColumn>, IXLStylized
+    public interface IXLColumns: IEnumerable<IXLColumn>
     {
         /// <summary>
         /// Sets the width of all columns.
@@ -102,5 +102,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="includeStyles">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         IXLCells CellsUsed(Boolean includeStyles);
+
+        IXLStyle Style { get; set; }
     }
 }

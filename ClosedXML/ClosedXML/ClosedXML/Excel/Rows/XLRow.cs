@@ -133,11 +133,11 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(String cellsInRow)
         {
-            var retVal = new XLCells(Worksheet);
+            var retVal = new XLCells(Worksheet, false, false, false);
             var rangePairs = cellsInRow.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.AddRange(Range(pair.Trim()).Cells());
+                retVal.Add(Range(pair.Trim()).RangeAddress);
             }
             return retVal;
         }
@@ -317,7 +317,7 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
 
-                yield return Style;
+                yield return style;
 
                 var row = this.RowNumber();
 
@@ -340,6 +340,28 @@ namespace ClosedXML.Excel
         }
 
         public override Boolean UpdatingStyle { get; set; }
+
+        public override IXLStyle InnerStyle
+        {
+            get
+            {
+                if (IsReference)
+                    return Worksheet.Internals.RowsCollection[this.RowNumber()].InnerStyle;
+                else
+                    return new XLStyle(new XLStylizedContainer(this.style, this), style);
+            }
+            set
+            {
+                if (IsReference)
+                {
+                    Worksheet.Internals.RowsCollection[this.RowNumber()].InnerStyle = value;
+                }
+                else
+                {
+                    style = new XLStyle(this, value);
+                }
+            }
+        }
 
         public override IXLRange AsRange()
         {

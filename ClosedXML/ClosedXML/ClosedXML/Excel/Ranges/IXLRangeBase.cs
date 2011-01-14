@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     public enum XLScope { Workbook, Worksheet };
 
-    public interface IXLRangeBase: IXLStylized
+    public interface IXLRangeBase
     {
         /// <summary>
         /// Returns the collection of cells.
@@ -144,5 +144,7 @@ namespace ClosedXML.Excel
         /// Converts this object to a range.
         /// </summary>
         IXLRange AsRange();
+
+        IXLStyle Style { get; set; }
     }
 }

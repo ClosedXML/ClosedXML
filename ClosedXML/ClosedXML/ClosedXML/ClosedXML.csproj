@@ -66,6 +66,7 @@
     <Compile Include="Excel\Style\Colors\XLColor_Public.cs" />
     <Compile Include="Excel\Style\Colors\IXLColor.cs" />
     <Compile Include="Excel\Style\Colors\XLColor_Internal.cs" />
+    <Compile Include="Excel\Style\XLStylizedContainer.cs" />
     <Compile Include="Excel\Tables\XLTableField.cs" />
     <Compile Include="Excel\Tables\IXLTableField.cs" />
     <Compile Include="Excel\Tables\XLTableRows.cs" />

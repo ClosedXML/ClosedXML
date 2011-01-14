@@ -6,6 +6,7 @@ using ClosedXML.Excel;
 using ClosedXML;
 using System.Drawing;
 using System.IO;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace ClosedXML_Sandbox
 {
@@ -13,32 +14,10 @@ namespace ClosedXML_Sandbox
     {
         static void xMain(string[] args)
         {
-            var wb = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            var ws = wb.Worksheets.Worksheet(0);
-            var firstCell = ws.FirstCellUsed();
-            var lastCell = ws.LastCellUsed();
-            var range = ws.Range(firstCell.Address, lastCell.Address);
-            range.Row(1).Delete();
-            range.ClearStyles();
-
-            var table = range.CreateTable();
-
-            //Int32 currentRow = 8;
-            //foreach (var cell in table.HeadersRow().Cells())
-            //{
-            //    ws.Cell(currentRow, cell.Address.ColumnNumber).Value = cell.Value;
-            //}
-            //foreach (var row in table.Rows())
-            //{
-            //    currentRow++;
-            //    foreach (var cell in row.Cells())
-            //    {
-            //        ws.Cell(currentRow, cell.Address.ColumnNumber).Value = cell.Value;
-            //    }
-            //}
+            var l = new List<String>();
             
-
-            wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
+            for(Int32 i = 1; i <= 10; i++)
+                ClosedXML_Examples.Program.ExecuteMain();
         }
         static void Main_5961(string[] args)
         {
@@ -87,6 +66,14 @@ namespace ClosedXML_Sandbox
                         //System.Threading.Thread.Sleep(10);
                     }
                 }
+                //var start3 = DateTime.Now;
+                //foreach (var ws in wb.Worksheets)
+                //{
+                //    ws.Style = wb.Style;
+                //}
+                //var end3 = DateTime.Now;
+                //Console.WriteLine("Bolded all cells in {0} secs.", (end3 - start3).TotalSeconds);
+
                 var start = DateTime.Now;
                 wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
                 var end = DateTime.Now;
@@ -98,7 +85,7 @@ namespace ClosedXML_Sandbox
                 var end1 = DateTime.Now;
                 Console.WriteLine("Loaded in {0} secs.", (end1 - start1).TotalSeconds);
                 var start2 = DateTime.Now;
-                wb1.SaveAs(@"C:\Excel Files\ForTesting\Benchmark_Saved.xlsx");
+                //wb1.SaveAs(@"C:\Excel Files\ForTesting\Benchmark_Saved.xlsx");
                 var end2 = DateTime.Now;
                 Console.WriteLine("Saved back in {0} secs.", (end2 - start2).TotalSeconds);
 

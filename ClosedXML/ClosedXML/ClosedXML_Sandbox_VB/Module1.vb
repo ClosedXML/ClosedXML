@@ -30,7 +30,7 @@ Module Module1
     Sub Main()
         Dim table = GetDataTable(17, 8280)
         DataSetToClosedXML1(table, "Center")
-        'Console.ReadKey()
+        Console.ReadKey()
     End Sub
 
     Public Function GetDataTable(ByVal NumberOfColumns As Integer, ByVal NumberOfRows As Integer)

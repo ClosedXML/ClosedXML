@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRanges: IEnumerable<IXLRange>, IXLStylized
+    public interface IXLRanges: IEnumerable<IXLRange>
     {
         /// <summary>
         /// Clears the contents of the ranges (including styles).
@@ -22,6 +22,6 @@ namespace ClosedXML.Excel
         /// <param name="range">The range to remove from this group.</param>
         void Remove(IXLRange range);
 
-
+        IXLStyle Style { get; set; }
     }
 }

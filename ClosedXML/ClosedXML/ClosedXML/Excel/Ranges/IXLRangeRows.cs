@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRangeRows: IEnumerable<IXLRangeRow>, IXLStylized
+    public interface IXLRangeRows: IEnumerable<IXLRangeRow>
     {
         /// <summary>
         /// Adds a row range to this group.
@@ -37,5 +37,7 @@ namespace ClosedXML.Excel
         /// Deletes all rows and shifts the rows below them accordingly.
         /// </summary>
         void Delete();
+
+        IXLStyle Style { get; set; }
     }
 }

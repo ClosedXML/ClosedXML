@@ -66,11 +66,11 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(String cellsInRow)
         {
-            var retVal = new XLCells(Worksheet);
+            var retVal = new XLCells(Worksheet, false, false, false);
             var rangePairs = cellsInRow.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.AddRange(Range(pair.Trim()).Cells());
+                retVal.Add(Range(pair.Trim()).RangeAddress);
             }
             return retVal;
         }

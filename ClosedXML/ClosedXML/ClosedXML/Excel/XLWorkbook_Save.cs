@@ -2119,11 +2119,17 @@ namespace ClosedXML.Excel
             OleObjects oleObjects = worksheetPart.Worksheet.Elements<OleObjects>().FirstOrDefault();
             #endregion
 
+            #region Controls
+            Controls controls = worksheetPart.Worksheet.Elements<Controls>().FirstOrDefault();
+            #endregion
+
             #region Tables
             worksheetPart.Worksheet.RemoveAllChildren<TableParts>();
             {
                 OpenXmlElement previousElement;
-                if (oleObjects != null)
+                if (controls != null)
+                    previousElement = controls;
+                else if (oleObjects != null)
                     previousElement = oleObjects;
                 else if (legacyDrawingHF != null)
                     previousElement = legacyDrawingHF;

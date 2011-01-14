@@ -5,10 +5,11 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLStylized
+    internal interface IXLStylized
     {
         IXLStyle Style { get; set; }
         IEnumerable<IXLStyle> Styles { get; }
         Boolean UpdatingStyle { get; set; }
+        IXLStyle InnerStyle { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLCells : IEnumerable<IXLCell>, IXLStylized
+    public interface IXLCells : IEnumerable<IXLCell>
     {
         /// <summary>
         /// Sets the cells' value.
@@ -51,5 +51,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <value>The formula with R1C1 references.</value>
         String FormulaR1C1 { set; }
+
+        IXLStyle Style { get; set; }
     }
 }

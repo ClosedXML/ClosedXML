@@ -33,11 +33,11 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(String cellsInColumn)
         {
-            var retVal = new XLCells(Worksheet);
+            var retVal = new XLCells(Worksheet, false, false, false);
             var rangePairs = cellsInColumn.Split(',');
             foreach (var pair in rangePairs)
             {
-                retVal.AddRange(Range(pair.Trim()).Cells());
+                retVal.Add(Range(pair.Trim()).RangeAddress);
             }
             return retVal;
         }
