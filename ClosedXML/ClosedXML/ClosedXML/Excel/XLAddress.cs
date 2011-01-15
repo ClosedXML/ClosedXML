@@ -368,10 +368,7 @@ namespace ClosedXML.Excel
 
         public override Int32 GetHashCode()
         {
-            if (columnNumber > 0 )
-                return rowNumber ^ columnNumber;
-            else
-                return rowNumber ^ columnLetter.GetHashCode();
+            return rowNumber ^ ColumnNumber;
         }
 
         #endregion

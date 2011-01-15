@@ -15,8 +15,8 @@ namespace ClosedXML_Sandbox
         static void xMain(string[] args)
         {
             var l = new List<String>();
-            
-            for(Int32 i = 1; i <= 10; i++)
+
+            for (Int32 i = 1; i <= 10; i++)
                 ClosedXML_Examples.Program.ExecuteMain();
         }
         static void Main_5961(string[] args)
@@ -50,11 +50,11 @@ namespace ClosedXML_Sandbox
             List<Double> runningSave = new List<Double>();
             List<Double> runningLoad = new List<Double>();
             List<Double> runningSavedBack = new List<Double>();
-            foreach (Int32 r in Enumerable.Range(1, 1))
+            foreach (Int32 r in Enumerable.Range(1, 5))
             {
                 var startTotal = DateTime.Now;
                 var wb = new XLWorkbook();
-                foreach (var i in Enumerable.Range(1, 5))
+                foreach (var i in Enumerable.Range(1, 1))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
                     foreach (var ro in Enumerable.Range(1, 2000))
@@ -103,7 +103,7 @@ namespace ClosedXML_Sandbox
             Console.WriteLine("Avg Save time: {0}", runningSave.Average());
             Console.WriteLine("Avg Load time: {0}", runningLoad.Average());
             Console.WriteLine("Avg Save Back time: {0}", runningSavedBack.Average());
-            //Console.ReadKey();
+            Console.ReadKey();
         }
 
         private static IXLStyle style1;
@@ -112,27 +112,27 @@ namespace ClosedXML_Sandbox
         private static void FillStyles()
         {
 
-                    style1 = XLWorkbook.DefaultStyle;
-                    style1.Font.Bold = true;
-                    style1.Fill.BackgroundColor = XLColor.Azure;
-                    style1.Border.BottomBorder = XLBorderStyleValues.Medium;
-                    style1.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            style1 = XLWorkbook.DefaultStyle;
+            style1.Font.Bold = true;
+            style1.Fill.BackgroundColor = XLColor.Azure;
+            style1.Border.BottomBorder = XLBorderStyleValues.Medium;
+            style1.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                    style2 = XLWorkbook.DefaultStyle;
-                    style2.Font.Italic = true;
-                    style2.Fill.BackgroundColor = XLColor.Orange;
-                    style2.Border.LeftBorder = XLBorderStyleValues.Medium;
-                    style2.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            style2 = XLWorkbook.DefaultStyle;
+            style2.Font.Italic = true;
+            style2.Fill.BackgroundColor = XLColor.Orange;
+            style2.Border.LeftBorder = XLBorderStyleValues.Medium;
+            style2.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
-                    style3 = XLWorkbook.DefaultStyle;
-                    style3.Font.FontColor = XLColor.FromColor(Color.Red);
-                    style3.Fill.PatternColor = XLColor.Blue;
-                    style3.Fill.PatternType = XLFillPatternValues.DarkTrellis;
-                    style3.Border.DiagonalBorder = XLBorderStyleValues.Dotted;
+            style3 = XLWorkbook.DefaultStyle;
+            style3.Font.FontColor = XLColor.FromColor(Color.Red);
+            style3.Fill.PatternColor = XLColor.Blue;
+            style3.Fill.PatternType = XLFillPatternValues.DarkTrellis;
+            style3.Border.DiagonalBorder = XLBorderStyleValues.Dotted;
         }
         private static IXLStyle GetRandomStyle()
         {
-            
+
             var val = rnd.Next(1, 4);
             if (val == 1)
             {
@@ -144,7 +144,7 @@ namespace ClosedXML_Sandbox
             }
             else
                 return style3;
-            
+
         }
         private static DateTime baseDate = DateTime.Now;
         private static Random rnd = new Random();
@@ -162,10 +162,10 @@ namespace ClosedXML_Sandbox
             else if (val == 5)
                 return rnd.Next(1, 1000);
             else
-                return (DateTime.Now - baseDate );
+                return (DateTime.Now - baseDate);
         }
 
-        
+
 
         class Person
         {
