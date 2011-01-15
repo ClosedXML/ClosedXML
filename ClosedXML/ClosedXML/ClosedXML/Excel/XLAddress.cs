@@ -302,9 +302,13 @@ namespace ClosedXML.Excel
 
         public static Boolean operator ==(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            return
-                xlCellAddressLeft.RowNumber == xlCellAddressRight.RowNumber
-                && xlCellAddressLeft.ColumnNumber == xlCellAddressRight.ColumnNumber;
+            if (xlCellAddressLeft.rowNumber == xlCellAddressRight.rowNumber)
+                if (xlCellAddressRight.columnNumber > 0)
+                    return xlCellAddressLeft.columnNumber == xlCellAddressRight.columnNumber;
+                else
+                    return xlCellAddressLeft.columnLetter == xlCellAddressRight.columnLetter;
+            else
+                return false;
         }
 
         public static Boolean operator !=(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
@@ -359,12 +363,15 @@ namespace ClosedXML.Excel
 
         public Int32 GetHashCode(Object obj)
         {
-            return obj.GetHashCode();
+            return ((XLAddress)obj).GetHashCode();
         }
 
         public override Int32 GetHashCode()
         {
-            return this.ToString().GetHashCode();
+            if (columnNumber > 0 )
+                return rowNumber ^ columnNumber;
+            else
+                return rowNumber ^ columnLetter.GetHashCode();
         }
 
         #endregion

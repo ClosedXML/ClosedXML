@@ -5,12 +5,12 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLCellCollection : IDictionary<IXLAddress, XLCell>
+    internal class XLCellCollection : IDictionary<XLAddressLight, XLCell>
     {
-        private Dictionary<IXLAddress, XLCell> dictionary = new Dictionary<IXLAddress, XLCell>();
+        private Dictionary<XLAddressLight, XLCell> dictionary = new Dictionary<XLAddressLight, XLCell>();
 
-        private Dictionary<IXLAddress, XLCell> deleted = new Dictionary<IXLAddress, XLCell>();
-        public Dictionary<IXLAddress, XLCell> Deleted
+        private Dictionary<XLAddressLight, XLCell> deleted = new Dictionary<XLAddressLight, XLCell>();
+        public Dictionary<XLAddressLight, XLCell> Deleted
         {
             get
             {
@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void Add(IXLAddress key, XLCell value)
+        public void Add(XLAddressLight key, XLCell value)
         {
             if (deleted.ContainsKey(key))
                 deleted.Remove(key);
@@ -26,17 +26,17 @@ namespace ClosedXML.Excel
             dictionary.Add(key, value);
         }
 
-        public bool ContainsKey(IXLAddress key)
+        public bool ContainsKey(XLAddressLight key)
         {
             return dictionary.ContainsKey(key);
         }
 
-        public ICollection<IXLAddress> Keys
+        public ICollection<XLAddressLight> Keys
         {
             get { return dictionary.Keys; }
         }
 
-        public bool Remove(IXLAddress key)
+        public bool Remove(XLAddressLight key)
         {
             if (!deleted.ContainsKey(key))
                 deleted.Add(key, dictionary[key]);
@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
             return dictionary.Remove(key);
         }
 
-        public bool TryGetValue(IXLAddress key, out XLCell value)
+        public bool TryGetValue(XLAddressLight key, out XLCell value)
         {
             return dictionary.TryGetValue(key, out value);
         }
@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
             get { return dictionary.Values; }
         }
 
-        public XLCell this[IXLAddress key]
+        public XLCell this[XLAddressLight key]
         {
             get
             {
@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void Add(KeyValuePair<IXLAddress, XLCell> item)
+        public void Add(KeyValuePair<XLAddressLight, XLCell> item)
         {
             if (deleted.ContainsKey(item.Key))
                 deleted.Remove(item.Key);
@@ -83,12 +83,12 @@ namespace ClosedXML.Excel
             dictionary.Clear();
         }
 
-        public bool Contains(KeyValuePair<IXLAddress, XLCell> item)
+        public bool Contains(KeyValuePair<XLAddressLight, XLCell> item)
         {
             return dictionary.Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<IXLAddress, XLCell>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<XLAddressLight, XLCell>[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
@@ -103,7 +103,7 @@ namespace ClosedXML.Excel
             get { return false; }
         }
 
-        public bool Remove(KeyValuePair<IXLAddress, XLCell> item)
+        public bool Remove(KeyValuePair<XLAddressLight, XLCell> item)
         {
             if (!deleted.ContainsKey(item.Key))
                 deleted.Add(item.Key, dictionary[item.Key]);
@@ -111,7 +111,7 @@ namespace ClosedXML.Excel
             return dictionary.Remove(item.Key);
         }
 
-        public IEnumerator<KeyValuePair<IXLAddress, XLCell>> GetEnumerator()
+        public IEnumerator<KeyValuePair<XLAddressLight, XLCell>> GetEnumerator()
         {
             return dictionary.GetEnumerator();
         }
@@ -130,8 +130,9 @@ namespace ClosedXML.Excel
         {
             foreach (var kp in dictionary.Values.Where(predicate).Select(c=>c))
             {
-                if (!deleted.ContainsKey(kp.Address))
-                    deleted.Add(kp.Address, kp);
+                var key = new XLAddressLight(kp.Address.RowNumber, kp.Address.ColumnNumber);
+                if (!deleted.ContainsKey(key))
+                    deleted.Add(key, kp);
             }
 
             dictionary.RemoveAll(predicate);

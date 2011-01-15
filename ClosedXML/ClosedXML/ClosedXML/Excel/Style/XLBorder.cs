@@ -277,23 +277,18 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hash = 17;
-                hash = hash * 23 + LeftBorder.GetHashCode();
-                hash = hash * 23 + LeftBorderColor.GetHashCode();
-                hash = hash * 23 + RightBorder.GetHashCode();
-                hash = hash * 23 + RightBorderColor.GetHashCode();
-                hash = hash * 23 + TopBorder.GetHashCode();
-                hash = hash * 23 + TopBorderColor.GetHashCode();
-                hash = hash * 23 + BottomBorder.GetHashCode();
-                hash = hash * 23 + BottomBorderColor.GetHashCode();
-                hash = hash * 23 + DiagonalBorder.GetHashCode();
-                hash = hash * 23 + DiagonalBorderColor.GetHashCode();
-                hash = hash * 23 + DiagonalUp.GetHashCode();
-                hash = hash * 23 + DiagonalDown.GetHashCode();
-                return hash;
-            }
+                return (Int32)LeftBorder
+                    ^ LeftBorderColor.GetHashCode()
+                    ^ (Int32)RightBorder
+                    ^ RightBorderColor.GetHashCode()
+                    ^ (Int32)TopBorder
+                    ^ TopBorderColor.GetHashCode()
+                    ^ (Int32)BottomBorder
+                    ^ BottomBorderColor.GetHashCode()
+                    ^ (Int32)DiagonalBorder
+                    ^ DiagonalBorderColor.GetHashCode()
+                    ^ DiagonalUp.GetHashCode()
+                    ^ DiagonalDown.GetHashCode();
         }
     }
 }

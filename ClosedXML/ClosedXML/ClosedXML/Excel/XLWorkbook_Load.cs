@@ -582,11 +582,11 @@ namespace ClosedXML.Excel
                 if (alignment.Horizontal != null)
                     xlStylized.InnerStyle.Alignment.Horizontal = alignmentHorizontalValues.Single(a => a.Value == alignment.Horizontal).Key;
                 if (alignment.Indent != null)
-                    xlStylized.InnerStyle.Alignment.Indent = Int32.Parse(alignment.Indent.ToString());
+                    xlStylized.InnerStyle.Alignment.Indent = (Int32)alignment.Indent.Value;
                 if (alignment.JustifyLastLine != null)
                     xlStylized.InnerStyle.Alignment.JustifyLastLine = alignment.JustifyLastLine;
                 if (alignment.ReadingOrder != null)
-                    xlStylized.InnerStyle.Alignment.ReadingOrder = (XLAlignmentReadingOrderValues)Int32.Parse(alignment.ReadingOrder.ToString());
+                    xlStylized.InnerStyle.Alignment.ReadingOrder = (XLAlignmentReadingOrderValues)(Int32)alignment.ReadingOrder.Value ;
                 if (alignment.RelativeIndent != null)
                     xlStylized.InnerStyle.Alignment.RelativeIndent = alignment.RelativeIndent;
                 if (alignment.ShrinkToFit != null)
@@ -672,17 +672,18 @@ namespace ClosedXML.Excel
                 if (fontColor.HasValue)
                     xlStylized.InnerStyle.Font.FontColor = fontColor;
 
-                if (font.FontFamilyNumbering != null && ((FontFamilyNumbering)font.FontFamilyNumbering).Val != null)
-                    xlStylized.InnerStyle.Font.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(((FontFamilyNumbering)font.FontFamilyNumbering).Val.ToString());
+                if (font.FontFamilyNumbering != null)
+                    if (font.FontFamilyNumbering.Val.HasValue)
+                        xlStylized.InnerStyle.Font.FontFamilyNumbering = (XLFontFamilyNumberingValues)font.FontFamilyNumbering.Val.Value;
                 if (font.FontName != null)
                 {
-                    if (((FontName)font.FontName).Val != null)
-                        xlStylized.InnerStyle.Font.FontName = ((FontName)font.FontName).Val;
+                    if (font.FontName.Val != null)
+                        xlStylized.InnerStyle.Font.FontName = font.FontName.Val;
                 }
                 if (font.FontSize != null)
                 {
-                    if (((FontSize)font.FontSize).Val != null)
-                        xlStylized.InnerStyle.Font.FontSize = ((FontSize)font.FontSize).Val;
+                    if (font.FontSize.Val != null)
+                        xlStylized.InnerStyle.Font.FontSize = font.FontSize.Val;
                 }
 
                 xlStylized.InnerStyle.Font.Italic = GetBoolean(font.Italic);

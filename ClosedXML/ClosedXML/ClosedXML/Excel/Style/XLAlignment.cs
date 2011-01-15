@@ -250,20 +250,15 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hash = 17;
-                hash = hash * 23 + Horizontal.GetHashCode();
-                hash = hash * 23 + Vertical.GetHashCode();
-                hash = hash * 23 + Indent.GetHashCode();
-                hash = hash * 23 + JustifyLastLine.GetHashCode();
-                hash = hash * 23 + ReadingOrder.GetHashCode();
-                hash = hash * 23 + RelativeIndent.GetHashCode();
-                hash = hash * 23 + ShrinkToFit.GetHashCode();
-                hash = hash * 23 + TextRotation.GetHashCode();
-                hash = hash * 23 + WrapText.GetHashCode();
-                return hash;
-            }
+            return (Int32)Horizontal
+                ^ (Int32)Vertical
+                ^ Indent
+                ^ JustifyLastLine.GetHashCode()
+                ^ (Int32)ReadingOrder
+                ^ RelativeIndent
+                ^ ShrinkToFit.GetHashCode()
+                ^ TextRotation
+                ^ WrapText.GetHashCode();
         }
 
         public bool Equals(IXLAlignment other)

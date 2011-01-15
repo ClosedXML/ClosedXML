@@ -46,14 +46,15 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            List<Double> running = new List<Double>();
+            FillStyles();
+            List<Double> runningSave = new List<Double>();
+            List<Double> runningLoad = new List<Double>();
+            List<Double> runningSavedBack = new List<Double>();
             foreach (Int32 r in Enumerable.Range(1, 1))
             {
                 var startTotal = DateTime.Now;
-
-                FillStyles();
                 var wb = new XLWorkbook();
-                foreach (var i in Enumerable.Range(1, 1))
+                foreach (var i in Enumerable.Range(1, 5))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
                     foreach (var ro in Enumerable.Range(1, 2000))
@@ -77,25 +78,32 @@ namespace ClosedXML_Sandbox
                 var start = DateTime.Now;
                 wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
                 var end = DateTime.Now;
-                Console.WriteLine("Saved in {0} secs.", (end - start).TotalSeconds);
+                var saved = (end - start).TotalSeconds;
+                runningSave.Add(saved);
+                Console.WriteLine("Saved in {0} secs.", saved);
 
                 var start1 = DateTime.Now;
                 var wb1 = new XLWorkbook(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
-
                 var end1 = DateTime.Now;
-                Console.WriteLine("Loaded in {0} secs.", (end1 - start1).TotalSeconds);
+                var loaded = (end1 - start1).TotalSeconds;
+                runningLoad.Add(loaded);
+                Console.WriteLine("Loaded in {0} secs.", loaded);
+
                 var start2 = DateTime.Now;
                 //wb1.SaveAs(@"C:\Excel Files\ForTesting\Benchmark_Saved.xlsx");
                 var end2 = DateTime.Now;
-                Console.WriteLine("Saved back in {0} secs.", (end2 - start2).TotalSeconds);
+                var savedBack = (end2 - start2).TotalSeconds;
+                runningSavedBack.Add(savedBack);
+                Console.WriteLine("Saved back in {0} secs.", savedBack);
 
                 var endTotal = DateTime.Now;
                 Console.WriteLine("It all took {0} secs.", (endTotal - startTotal).TotalSeconds);
-                running.Add((endTotal - startTotal).TotalSeconds);
             }
             Console.WriteLine("-------");
-            Console.WriteLine("Avg total time: {0}", running.Average());
-            Console.ReadKey();
+            Console.WriteLine("Avg Save time: {0}", runningSave.Average());
+            Console.WriteLine("Avg Load time: {0}", runningLoad.Average());
+            Console.WriteLine("Avg Save Back time: {0}", runningSavedBack.Average());
+            //Console.ReadKey();
         }
 
         private static IXLStyle style1;

@@ -87,16 +87,11 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hash = 17;
-                hash = hash * 23 + Font.GetHashCode();
-                hash = hash * 23 + Fill.GetHashCode();
-                hash = hash * 23 + Border.GetHashCode();
-                hash = hash * 23 + NumberFormat.GetHashCode();
-                hash = hash * 23 + Alignment.GetHashCode();
-                return hash;
-            }
+            return Font.GetHashCode()
+                ^ Fill.GetHashCode()
+                ^ Border.GetHashCode()
+                ^ NumberFormat.GetHashCode()
+                ^ Alignment.GetHashCode();
         }
     }
 }

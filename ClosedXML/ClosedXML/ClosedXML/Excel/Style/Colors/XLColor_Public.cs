@@ -146,23 +146,18 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
-            unchecked // Overflow is fine, just wrap
+            if (ColorType == XLColorType.Theme)
             {
-                if (ColorType == XLColorType.Theme)
-                {
-                    int hash = 17;
-                    hash = hash * 23 + ThemeColor.GetHashCode();
-                    hash = hash * 23 + ThemeTint.GetHashCode();
-                    return hash;
-                }
-                else if (ColorType == XLColorType.Indexed)
-                {
-                    return Indexed;
-                }
-                else
-                {
-                    return Color.GetHashCode();
-                }
+                return ThemeColor.GetHashCode()
+                    ^ ThemeTint.GetHashCode();
+            }
+            else if (ColorType == XLColorType.Indexed)
+            {
+                return Indexed;
+            }
+            else
+            {
+                return Color.GetHashCode();
             }
         }
     }

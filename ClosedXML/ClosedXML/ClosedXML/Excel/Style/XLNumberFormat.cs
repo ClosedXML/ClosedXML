@@ -93,13 +93,8 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hash = 17;
-                hash = hash * 23 + NumberFormatId.GetHashCode();
-                hash = hash * 23 + Format.GetHashCode();
-                return hash;
-            }
+            return NumberFormatId
+                ^ Format.GetHashCode();
         }
     }
 }
