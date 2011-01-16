@@ -1397,6 +1397,7 @@ namespace ClosedXML.Excel
                     if (NumberFormatsAreEqual(nf, numberFormatInfo.NumberFormat))
                     {
                         foundOne = true;
+                        numberingFormatId = (Int32)nf.NumberFormatId.Value;
                         break;
                     }
                     numberingFormatId++;

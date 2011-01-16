@@ -12,12 +12,14 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
-        static void xMain(string[] args)
+        static void Main(string[] args)
         {
-            var l = new List<String>();
+            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Blank_Modified.xlsx");
+            wb.SaveAs(@"C:\Excel Files\ForTesting\Blank_Modified2.xlsx");
+            //var l = new List<String>();
 
-            for (Int32 i = 1; i <= 10; i++)
-                ClosedXML_Examples.Program.ExecuteMain();
+            //for (Int32 i = 1; i <= 10; i++)
+            //    ClosedXML_Examples.Program.ExecuteMain();
         }
         static void Main_5961(string[] args)
         {
@@ -44,16 +46,16 @@ namespace ClosedXML_Sandbox
             wb.Save();
         }
 
-        static void Main(string[] args)
+        static void xMain(string[] args)
         {
             FillStyles();
             List<Double> runningSave = new List<Double>();
             List<Double> runningLoad = new List<Double>();
             List<Double> runningSavedBack = new List<Double>();
+            var wb = new XLWorkbook();
             foreach (Int32 r in Enumerable.Range(1, 5))
             {
                 var startTotal = DateTime.Now;
-                var wb = new XLWorkbook();
                 foreach (var i in Enumerable.Range(1, 1))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
@@ -74,7 +76,7 @@ namespace ClosedXML_Sandbox
                 //}
                 //var end3 = DateTime.Now;
                 //Console.WriteLine("Bolded all cells in {0} secs.", (end3 - start3).TotalSeconds);
-
+                
                 var start = DateTime.Now;
                 wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
                 var end = DateTime.Now;
