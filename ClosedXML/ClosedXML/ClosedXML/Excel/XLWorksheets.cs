@@ -42,6 +42,13 @@ namespace ClosedXML.Excel
             return sheet;
         }
 
+        public IXLWorksheet Add(String sheetName, Int32 position)
+        {
+            var ws = Add(sheetName);
+            ws.Position = position;
+            return ws;
+        }
+
         public void Delete(String sheetName)
         {
             Delete(worksheets[sheetName].SheetIndex);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Globalization;
 
 namespace ClosedXML
 {
@@ -108,6 +109,20 @@ namespace ClosedXML
                 }
             }
             return true;
+        }
+    }
+
+    public static class IntegerExtensions
+    {
+        private static NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
+        private static Dictionary<Int32, String> intToString = new Dictionary<int, string>();
+        public static String ToStringLookup(this Int32 value)
+        {
+            if (!intToString.ContainsKey(value))
+            {
+                intToString.Add(value, value.ToString(nfi));
+            }
+            return intToString[value];
         }
     }
 }

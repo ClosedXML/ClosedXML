@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace ClosedXML.Excel
 {
@@ -61,12 +62,12 @@ namespace ClosedXML.Excel
             if (fixedRow)
             {
                 columnLetter = cellAddressString.Substring(startPos, rowPos - 1);
-                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos + 1));
+                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos + 1), nfi);
             }
             else
             {
                 columnLetter = cellAddressString.Substring(startPos, rowPos);
-                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos));
+                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), nfi);
             }
 
             columnNumber = 0;
@@ -83,7 +84,7 @@ namespace ClosedXML.Excel
         public static Int32 GetColumnNumberFromLetter(String columnLetter)
         {
             if (columnLetter[0] <= '9')
-                return Int32.Parse(columnLetter);
+                return Int32.Parse(columnLetter, nfi);
 
             columnLetter = columnLetter.ToUpper();
             var length = columnLetter.Length;
@@ -148,7 +149,7 @@ namespace ClosedXML.Excel
             while (cellAddressString[rowPos] > '9')
                 rowPos++;
 
-                return Int32.Parse(cellAddressString.Substring(rowPos));
+                return Int32.Parse(cellAddressString.Substring(rowPos), nfi);
         }
 
         public static Int32 GetColumnNumberFromAddress1(String cellAddressString)
@@ -168,11 +169,11 @@ namespace ClosedXML.Excel
 
             if (cellAddressString[rowPos] == '$')
             {
-                return Int32.Parse(cellAddressString.Substring(rowPos + 1));
+                return Int32.Parse(cellAddressString.Substring(rowPos + 1), nfi);
             }
             else
             {
-                return Int32.Parse(cellAddressString.Substring(rowPos));
+                return Int32.Parse(cellAddressString.Substring(rowPos), nfi);
             }
         }
 
@@ -260,21 +261,30 @@ namespace ClosedXML.Excel
         #endregion
 
         #region Overrides
+        private static NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
         public override string ToString()
         {
-            var sb = new StringBuilder();
-            if (FixedColumn) sb.Append("$");
-            sb.Append(ColumnLetter);
-            if (FixedRow) sb.Append("$");
-            sb.Append(RowNumber.ToString());
-            return sb.ToString();
+            //var sb = new StringBuilder();
+            //if (FixedColumn) sb.Append("$");
+            //sb.Append(ColumnLetter);
+            //if (FixedRow) sb.Append("$");
+            //sb.Append(rowNumber.ToString());
+            //return sb.ToString();
+            
+            String retVal = ColumnLetter;
+            if (fixedColumn)
+                retVal = "$" + retVal;
+            if (fixedRow)
+                retVal += "$";
+            retVal += rowNumber.ToStringLookup();
+            return retVal;
         }
         #endregion
 
         #region Methods
         public string GetTrimmedAddress()
         {
-            return ColumnLetter + rowNumber.ToString();
+            return ColumnLetter + rowNumber.ToStringLookup();
         }
         #endregion
 

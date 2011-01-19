@@ -175,7 +175,17 @@ namespace ClosedXML.Excel
                 sheetIndex = value;
             }
         }
-
+        public Int32 Position
+        {
+            get
+            {
+                return sheetIndex + 1;
+            }
+            set
+            {
+                SheetIndex = value - 1;
+            }
+        }
         public IXLPageSetup PageSetup { get; private set; }
         public IXLOutline Outline { get; private set; }
 
@@ -501,6 +511,31 @@ namespace ClosedXML.Excel
         public IXLNamedRanges NamedRanges { get; private set; }
         public IXLSheetView SheetView { get; private set; }
         public IXLTables Tables { get; private set; }
+
+        public IXLWorksheet CopyTo(String newSheetName)
+        {
+            return CopyTo(this.workbook, newSheetName, workbook.Worksheets.Count() + 1);
+        }
+
+        public IXLWorksheet CopyTo(String newSheetName, Int32 position)
+        {
+            return CopyTo(this.workbook, newSheetName, position);
+        }
+
+        public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName)
+        {
+            return CopyTo(workbook, newSheetName, workbook.Worksheets.Count() + 1);
+        }
+
+        public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position)
+        {
+            var ws = (XLWorksheet)workbook.Worksheets.Add(newSheetName, position);
+            this.Internals.CellsCollection.ForEach(kp => ws.Internals.CellsCollection.Add(kp));
+            this.Internals.ColumnsCollection.ForEach(kp => ws.Internals.ColumnsCollection.Add(kp));
+            this.Internals.MergedRanges.ForEach(kp => ws.Internals.MergedRanges.Add(kp));
+            this.Internals.RowsCollection.ForEach(kp => ws.Internals.RowsCollection.Add(kp));
+            return ws;
+        }
 
         #region Outlines
         private Dictionary<Int32, Int32> columnOutlineCount = new Dictionary<Int32, Int32>();

@@ -26,6 +26,12 @@ namespace ClosedXML.Excel
         /// </summary>
         Int32 SheetIndex { get; set; }
         /// <summary>
+        /// Gets or sets the position of the sheet.
+        /// <para>When setting the Position all other sheets' positions are shifted accordingly.</para>
+        /// </summary>
+        Int32 Position { get; set; }
+
+        /// <summary>
         /// Gets an object to manipulate the sheet's print options.
         /// </summary>
         IXLPageSetup PageSetup { get; }
@@ -239,5 +245,12 @@ namespace ClosedXML.Excel
         IXLSheetView SheetView { get; }
 
         IXLTables Tables { get; }
+
+        IXLWorksheet CopyTo(String newSheetName);
+        IXLWorksheet CopyTo(String newSheetName, Int32 position);
+        IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName);
+        IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position);
+
+        IXLRange RangeUsed();
     }
 }

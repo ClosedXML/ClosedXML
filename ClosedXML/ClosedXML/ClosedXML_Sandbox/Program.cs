@@ -12,14 +12,19 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
-        static void Main(string[] args)
+        static void xMain(string[] args)
         {
-            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Blank_Modified.xlsx");
-            wb.SaveAs(@"C:\Excel Files\ForTesting\Blank_Modified2.xlsx");
-            //var l = new List<String>();
+            //var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
+            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Issue_6107.xlsx");
+            
 
-            //for (Int32 i = 1; i <= 10; i++)
-            //    ClosedXML_Examples.Program.ExecuteMain();
+            var templateWorksheet = wb.Worksheets.Where(w => w.Name == "TEMPLATE").FirstOrDefault();
+            var agentWorksheet = wb.Worksheets.Add("new");
+
+            agentWorksheet.FirstCell().Value = templateWorksheet.Range(templateWorksheet.FirstCellUsed(),
+                                                                       templateWorksheet.LastCellUsed());
+
+            wb.SaveAs(@"C:\Excel Files\ForTesting\Issue_6107_Saved.xlsx");
         }
         static void Main_5961(string[] args)
         {
@@ -46,15 +51,16 @@ namespace ClosedXML_Sandbox
             wb.Save();
         }
 
-        static void xMain(string[] args)
+        static void Main(string[] args)
         {
             FillStyles();
             List<Double> runningSave = new List<Double>();
             List<Double> runningLoad = new List<Double>();
             List<Double> runningSavedBack = new List<Double>();
-            var wb = new XLWorkbook();
+            
             foreach (Int32 r in Enumerable.Range(1, 5))
             {
+                var wb = new XLWorkbook();
                 var startTotal = DateTime.Now;
                 foreach (var i in Enumerable.Range(1, 1))
                 {

@@ -10,6 +10,7 @@ namespace ClosedXML.Excel
         IXLWorksheet Worksheet(String sheetName);
         IXLWorksheet Worksheet(Int32 sheetIndex);
         IXLWorksheet Add(String sheetName);
+        IXLWorksheet Add(String sheetName, Int32 position);
         void Delete(String sheetName);
         void Delete(Int32 sheetIndex);
     }

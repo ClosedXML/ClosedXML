@@ -58,6 +58,7 @@
     <Compile Include="Misc\AdjustToContents.cs" />
     <Compile Include="Misc\Collections.cs" />
     <Compile Include="Misc\BlankCells.cs" />
+    <Compile Include="Misc\CopyingWorksheets.cs" />
     <Compile Include="Misc\FreezePanes.cs" />
     <Compile Include="PageSetup\TwoPages.cs" />
     <Compile Include="Misc\ShowCase.cs" />

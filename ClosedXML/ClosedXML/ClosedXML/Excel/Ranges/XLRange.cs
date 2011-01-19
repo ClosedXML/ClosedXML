@@ -424,6 +424,7 @@ namespace ClosedXML.Excel
         {
             return new XLTable(this, false);
         }
+
         public IXLTable AsTable(String name)
         {
             return new XLTable(this, name, false);
@@ -433,11 +434,11 @@ namespace ClosedXML.Excel
         {
             return new XLTable(this, true);
         }
+
         public IXLTable CreateTable(String name)
         {
             return new XLTable(this, name, true);
         }
-
         #endregion
     }
 }

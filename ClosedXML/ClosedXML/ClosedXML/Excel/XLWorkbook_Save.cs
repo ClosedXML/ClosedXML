@@ -595,7 +595,10 @@ namespace ClosedXML.Excel
 
             foreach (var xlSheet in Worksheets.Cast<XLWorksheet>().Where(w => w.SheetId == 0).OrderBy(w => w.SheetIndex))
             {
-                var rId = relId.GetNext(RelType.Workbook);
+                String rId = relId.GetNext(RelType.Workbook);
+                while (Worksheets.Cast<XLWorksheet>().Where(w=>w.SheetId == Int32.Parse(rId.Substring(3))).Any())
+                    rId = relId.GetNext(RelType.Workbook);
+
                 xlSheet.SheetId = Int32.Parse(rId.Substring(3));
                 xlSheet.RelId = rId;
                 workbook.Sheets.Append(new Sheet() { Name = xlSheet.Name, Id = rId, SheetId = (UInt32)xlSheet.SheetId });
@@ -1577,6 +1580,9 @@ namespace ClosedXML.Excel
 
                 columns = worksheetPart.Worksheet.Elements<Columns>().First();
 
+                Dictionary<UInt32, Column> sheetColumnsByMin = columns.Elements<Column>().ToDictionary(c => c.Min.Value, c => c);
+                //Dictionary<UInt32, Column> sheetColumnsByMax = columns.Elements<Column>().ToDictionary(c => c.Max.Value, c => c);
+
                 Int32 minInColumnsCollection;
                 Int32 maxInColumnsCollection;
                 if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
@@ -1607,7 +1613,7 @@ namespace ClosedXML.Excel
                             CustomWidth = true
                         };
 
-                        UpdateColumn(column, columns);
+                        UpdateColumn(column, columns, sheetColumnsByMin); //, sheetColumnsByMax);
                     }
                 }
 
@@ -1644,7 +1650,7 @@ namespace ClosedXML.Excel
                     if (collapsed) column.Collapsed = true;
                     if (outlineLevel > 0) column.OutlineLevel = (byte)outlineLevel;
 
-                    UpdateColumn(column, columns);
+                    UpdateColumn(column, columns, sheetColumnsByMin); //, sheetColumnsByMax);
                 }
 
                 foreach (var col in columns.Elements<Column>().Where(c => c.Min > (UInt32)(maxInColumnsCollection)).OrderBy(c => c.Min.Value))
@@ -1668,6 +1674,8 @@ namespace ClosedXML.Excel
                     };
                     columns.Append(column);
                 }
+
+                CollapseColumns(columns, sheetColumnsByMin);
             }
             #endregion
 
@@ -1772,11 +1780,12 @@ namespace ClosedXML.Excel
                         var dataType = opCell.DataType;
                         var cellReference = ((XLAddress)opCell.Address).GetTrimmedAddress();
 
-                        Boolean isNewCell = false;
+                        //Boolean isNewCell = false;
+                        
                         Cell cell = row.Elements<Cell>().FirstOrDefault(c => c.CellReference.Value == cellReference);
                         if (cell == null)
                         {
-                            isNewCell = true;
+                            //isNewCell = true;
                             cell = new Cell() { CellReference = cellReference };
                             if (row.Elements<Cell>().Count() == 0)
                             {
@@ -1824,10 +1833,10 @@ namespace ClosedXML.Excel
                             {
                                 if (StringExtensions.IsNullOrWhiteSpace(opCell.InnerText))
                                 {
-                                    if (isNewCell)
-                                        cellValue = null;
-                                    else
-                                        cellValue.Text = String.Empty;
+                                    //if (isNewCell)
+                                    cellValue = null;
+                                    //else
+                                    //    cellValue.Text = String.Empty;
                                 }
                                 else
                                 {
@@ -1857,7 +1866,9 @@ namespace ClosedXML.Excel
             }
             #endregion
 
-            var phoneticProperties = worksheetPart.Worksheet.Elements<PhoneticProperties>().FirstOrDefault();
+            var autoFilter = worksheetPart.Worksheet.Elements<AutoFilter>().FirstOrDefault();
+
+            CustomSheetViews customSheetViews = worksheetPart.Worksheet.Elements<CustomSheetViews>().FirstOrDefault();
 
             #region MergeCells
             MergeCells mergeCells = null;
@@ -1866,8 +1877,10 @@ namespace ClosedXML.Excel
                 if (worksheetPart.Worksheet.Elements<MergeCells>().Count() == 0)
                 {
                     OpenXmlElement previousElement;
-                    if (phoneticProperties != null)
-                        previousElement = phoneticProperties;
+                    if (customSheetViews != null)
+                        previousElement = customSheetViews;
+                    else if (autoFilter != null)
+                        previousElement = autoFilter;
                     else if (sheetData != null)
                         previousElement = sheetData;
                     else if (columns != null)
@@ -1895,6 +1908,8 @@ namespace ClosedXML.Excel
             }
             #endregion
 
+            var phoneticProperties = worksheetPart.Worksheet.Elements<PhoneticProperties>().FirstOrDefault();
+
             var hyperlinks = worksheetPart.Worksheet.Elements<Hyperlinks>().FirstOrDefault();
 
             #region PrintOptions
@@ -1904,10 +1919,14 @@ namespace ClosedXML.Excel
                 OpenXmlElement previousElement;
                 if (hyperlinks != null)
                     previousElement = hyperlinks;
-                else if (mergeCells != null)
-                    previousElement = mergeCells;
                 else if (phoneticProperties != null)
                     previousElement = phoneticProperties;
+                else if (mergeCells != null)
+                    previousElement = mergeCells;
+                else if (customSheetViews != null)
+                    previousElement = customSheetViews;
+                else if (autoFilter != null)
+                    previousElement = autoFilter;
                 else if (sheetData != null)
                     previousElement = sheetData;
                 else if (columns != null)
@@ -1934,10 +1953,14 @@ namespace ClosedXML.Excel
                     previousElement = printOptions;
                 else if (hyperlinks != null)
                     previousElement = hyperlinks;
-                else if (mergeCells != null)
-                    previousElement = mergeCells;
                 else if (phoneticProperties != null)
                     previousElement = phoneticProperties;
+                else if (mergeCells != null)
+                    previousElement = mergeCells;
+                else if (customSheetViews != null)
+                    previousElement = customSheetViews;
+                else if (autoFilter != null)
+                    previousElement = autoFilter;
                 else if (sheetData != null)
                     previousElement = sheetData;
                 else if (columns != null)
@@ -2163,23 +2186,75 @@ namespace ClosedXML.Excel
             #endregion
         }
 
+        private void CollapseColumns(Columns columns, Dictionary<uint, Column> sheetColumns)
+        {
+            UInt32 lastMax = 1;
+            UInt32 lastMin = 1;
+            Int32 count = sheetColumns.Count;
+            foreach (var kp in sheetColumns.OrderBy(kp => kp.Key))
+            {
+                if (kp.Key < count && ColumnsAreEqual(kp.Value, sheetColumns[kp.Key + 1]))
+                {
+                    lastMax = kp.Key;
+                }
+                else
+                {
+                    var newColumn = (Column)kp.Value.CloneNode(true);
+                    newColumn.Min = lastMin;
+                    var columnsToRemove = new List<Column>();
+                    foreach (var c in columns.Elements<Column>().Where(co => co.Min >= newColumn.Min && co.Max <= newColumn.Max).Select(co => co))
+                    {
+                        columnsToRemove.Add(c);
+                    }
+                    columnsToRemove.ForEach(c => columns.RemoveChild(c));
+
+                    columns.Append(newColumn);
+                    
+                    lastMin = kp.Key + 1;
+                }
+                
+            }
+        }
+
+
+
         private Double GetColumnWidth(Double columnWidth)
         {
             return columnWidth + 0.71;
         }
 
-        private void UpdateColumn(Column column, Columns columns)
+        private void UpdateColumn(Column column, Columns columns, Dictionary<UInt32, Column> sheetColumnsByMin)//, Dictionary<UInt32, Column> sheetColumnsByMax)
         {
+            UInt32 co = column.Min.Value;
             Column newColumn;
-            Column existingColumn = columns.Elements<Column>().FirstOrDefault(c => c.Min.Value == column.Min.Value);
-            if (existingColumn == null)
+            Column existingColumn; // = columns.Elements<Column>().FirstOrDefault(c => c.Min.Value == column.Min.Value);
+            if (!sheetColumnsByMin.ContainsKey(co))
             {
+                //if (sheetColumnsByMin.ContainsKey(co + 1) && ColumnsAreEqual(column, sheetColumnsByMin[co + 1]))
+                //{
+                //    var thisColumn = sheetColumnsByMin[co + 1];
+                //    thisColumn.Min -= 1;
+                //    sheetColumnsByMin.Remove(co + 1);
+                //    sheetColumnsByMin.Add(co, thisColumn);
+                //}
+                //else if (sheetColumnsByMax.ContainsKey(co - 1) && ColumnsAreEqual(column, sheetColumnsByMin[co - 1]))
+                //{
+                //    var thisColumn = sheetColumnsByMin[co - 1];
+                //    thisColumn.Max += 1;
+                //    sheetColumnsByMax.Remove(co - 1);
+                //    sheetColumnsByMax.Add(co, thisColumn);
+                //}
+                //else
+                //{
                 newColumn = (Column)column.CloneNode(true);
-                //newColumn = new Column() { InnerXml = column.InnerXml };
                 columns.Append(newColumn);
+                sheetColumnsByMin.Add(co, newColumn);
+                //    sheetColumnsByMax.Add(co, newColumn);
+                //}
             }
             else
             {
+                existingColumn = sheetColumnsByMin[column.Min.Value];
                 newColumn = (Column)existingColumn.CloneNode(true);
                 //newColumn = new Column() { InnerXml = existingColumn.InnerXml };
                 newColumn.Min = column.Min;
@@ -2203,6 +2278,7 @@ namespace ClosedXML.Excel
                 else
                     newColumn.OutlineLevel = null;
 
+                sheetColumnsByMin.Remove(column.Min.Value);
                 if (existingColumn.Min + 1 > existingColumn.Max)
                 {
                     //existingColumn.Min = existingColumn.Min + 1;
@@ -2210,15 +2286,31 @@ namespace ClosedXML.Excel
                     //existingColumn.Remove();
                     columns.RemoveChild(existingColumn);
                     columns.Append(newColumn);
+                    sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
                 }
                 else
                 {
                     //columns.InsertBefore(existingColumn, newColumn);
                     columns.Append(newColumn);
+                    sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
                     existingColumn.Min = existingColumn.Min + 1;
+                    sheetColumnsByMin.Add(existingColumn.Min.Value, existingColumn);
                 }
             }
 
+        }
+
+        private bool ColumnsAreEqual(Column column, Column column_2)
+        {
+            return
+                column.Style.Value == column_2.Style.Value
+                && column.Width.Value == column_2.Width.Value
+                && ((column.Hidden == null && column_2.Hidden == null)
+                    || (column.Hidden != null && column_2.Hidden != null && column.Hidden.Value == column_2.Hidden.Value))
+                && ((column.Collapsed == null && column_2.Collapsed == null)
+                    || (column.Collapsed != null && column_2.Collapsed != null && column.Collapsed.Value == column_2.Collapsed.Value))
+                && ((column.OutlineLevel == null && column_2.OutlineLevel == null)
+                    || (column.OutlineLevel != null && column_2.OutlineLevel != null && column.OutlineLevel.Value == column_2.OutlineLevel.Value));
         }
         #endregion
 
@@ -2239,7 +2331,7 @@ namespace ClosedXML.Excel
                     var calculationCells = calculationChain.Elements<CalculationCell>().Where(
                         cc => cc.CellReference != null && cc.CellReference == c.Address.ToString()).Select(cc=>cc);
                     Boolean addNew = true;
-                    if (calculationCells.Count() > 0)
+                    if (calculationCells.FirstOrDefault() != null)
                     {
                         calculationCells.Where(cc=>cc.SheetId == null).Select(cc=>cc).ForEach(cc=>calculationChain.RemoveChild(cc));
                         var cCell = calculationCells.FirstOrDefault(cc=>cc.SheetId == worksheet.SheetId);
@@ -2257,17 +2349,17 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                            var cCellsToRemove = new List<CalculationCell>();
-            var m = from cc in calculationChain.Elements<CalculationCell>()
-                    where cc.SheetId == null 
-                        && calculationChain.Elements<CalculationCell>()
-                        .Where(c1 => c1.SheetId != null)
-                        .Select(c1 => c1.CellReference.Value)
-                        .Contains(cc.CellReference.Value)
-                        || worksheet.Internals.CellsCollection.Where(kp=>kp.Key.ToString() == cc.CellReference.Value && StringExtensions.IsNullOrWhiteSpace(kp.Value.FormulaA1)).Any()
-                    select cc;
-            m.ForEach(cc => cCellsToRemove.Add(cc));
-            cCellsToRemove.ForEach(cc=>calculationChain.RemoveChild(cc));
+                var cCellsToRemove = new List<CalculationCell>();
+                var m = from cc in calculationChain.Elements<CalculationCell>()
+                        where cc.SheetId == null 
+                            && calculationChain.Elements<CalculationCell>()
+                            .Where(c1 => c1.SheetId != null)
+                            .Select(c1 => c1.CellReference.Value)
+                            .Contains(cc.CellReference.Value)
+                            || worksheet.Internals.CellsCollection.Where(kp=>kp.Key.ToString() == cc.CellReference.Value && StringExtensions.IsNullOrWhiteSpace(kp.Value.FormulaA1)).Any()
+                        select cc;
+                m.ForEach(cc => cCellsToRemove.Add(cc));
+                cCellsToRemove.ForEach(cc=>calculationChain.RemoveChild(cc));
             }
 
             if (calculationChain.Count() == 0)

@@ -213,6 +213,8 @@ namespace ClosedXML.Excel
         IXLTable AsTable(String name);
         IXLTable CreateTable();
         IXLTable CreateTable(String name);
+
+        IXLRange RangeUsed();
     }
 }
 

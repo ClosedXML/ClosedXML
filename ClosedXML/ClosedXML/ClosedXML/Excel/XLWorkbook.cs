@@ -296,5 +296,14 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public IXLWorksheet Worksheet(String name)
+        {
+            return Worksheets.Worksheet(name);
+        }
+        public IXLWorksheet Worksheet(Int32 sheetIndex)
+        {
+            return Worksheets.Worksheet(sheetIndex);
+        }
     }
 }

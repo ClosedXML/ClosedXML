@@ -845,5 +845,10 @@ namespace ClosedXML.Excel
                 }
             }
         }
+
+        public IXLRange RangeUsed()
+        {
+            return this.Range(this.FirstCellUsed(), this.LastCellUsed());
+        }
     }
 }
