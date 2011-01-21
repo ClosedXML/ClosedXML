@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Globalization;
 
 
 
@@ -243,7 +244,7 @@ namespace ClosedXML.Excel
                         }
                         else if (dCell.DataType == CellValues.Date)
                         {
-                            xlCell.Value = DateTime.FromOADate(Double.Parse(dCell.CellValue.Text));
+                            xlCell.Value = DateTime.FromOADate(Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture));
                         }
                         else if (dCell.DataType == CellValues.Boolean)
                         {
@@ -251,7 +252,7 @@ namespace ClosedXML.Excel
                         }
                         else if (dCell.DataType == CellValues.Number)
                         {
-                            xlCell.Value = dCell.CellValue.Text;
+                            xlCell.Value = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture);
                             var numberFormatId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                             if (numberFormatId == 46U)
                                 xlCell.DataType = XLCellValues.TimeSpan;
@@ -263,7 +264,7 @@ namespace ClosedXML.Excel
                     {
                         //var styleIndex = Int32.Parse(dCell.StyleIndex.InnerText);
                         var numberFormatId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).NumberFormatId; //. [styleIndex].NumberFormatId;
-                        ws.Cell(dCell.CellReference).Value = dCell.CellValue.Text;
+                        ws.Cell(dCell.CellReference).Value = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture);
                         ws.Cell(dCell.CellReference).Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
                     }
 
