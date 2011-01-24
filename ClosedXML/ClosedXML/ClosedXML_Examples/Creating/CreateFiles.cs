@@ -66,6 +66,8 @@ namespace ClosedXML_Examples
             new UsingTables().Create(@"C:\Excel Files\Created\UsingTables.xlsx");
             new ShowCase().Create(@"C:\Excel Files\Created\ShowCase.xlsx");
             new CopyingWorksheets().Create();
+            new InsertingTables().Create(@"C:\Excel Files\Created\InsertingTables.xlsx");
+            new InsertingData().Create(@"C:\Excel Files\Created\InsertingData.xlsx");
         }
     }
 }

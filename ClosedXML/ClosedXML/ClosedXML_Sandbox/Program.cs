@@ -12,20 +12,17 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
-        static void xMain(string[] args)
+        static void Main(string[] args)
         {
+            new ClosedXML_Examples.Ranges.UsingTables().Create(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
             //var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Issue_6107.xlsx");
-            
-
-            var templateWorksheet = wb.Worksheets.Where(w => w.Name == "TEMPLATE").FirstOrDefault();
-            var agentWorksheet = wb.Worksheets.Add("new");
-
-            agentWorksheet.FirstCell().Value = templateWorksheet.Range(templateWorksheet.FirstCellUsed(),
-                                                                       templateWorksheet.LastCellUsed());
-
-            wb.SaveAs(@"C:\Excel Files\ForTesting\Issue_6107_Saved.xlsx");
+            //var wb = new XLWorkbook();
+            //var c = wb.Worksheets.Add("New").Cell(1, 1);
+            //c.Value = "Hello";
+            //c.ShareString = false;
+            //wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
         }
+
         static void Main_5961(string[] args)
         {
             var fi = new FileInfo(@"C:\Excel Files\ForTesting\Issue_5961.xlsx");
@@ -51,7 +48,7 @@ namespace ClosedXML_Sandbox
             wb.Save();
         }
 
-        static void Main(string[] args)
+        static void xMain(string[] args)
         {
             FillStyles();
             List<Double> runningSave = new List<Double>();
@@ -111,7 +108,7 @@ namespace ClosedXML_Sandbox
             Console.WriteLine("Avg Save time: {0}", runningSave.Average());
             Console.WriteLine("Avg Load time: {0}", runningLoad.Average());
             Console.WriteLine("Avg Save Back time: {0}", runningSavedBack.Average());
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
         private static IXLStyle style1;

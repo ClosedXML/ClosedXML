@@ -56,6 +56,10 @@
     <Compile Include="Excel\Columns\IXLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
+    <Compile Include="Excel\CustomProperties\XLCustomProperties.cs" />
+    <Compile Include="Excel\CustomProperties\IXLCustomProperties.cs" />
+    <Compile Include="Excel\CustomProperties\XLCustomProperty.cs" />
+    <Compile Include="Excel\CustomProperties\IXLCustomProperty.cs" />
     <Compile Include="Excel\IXLSheetView.cs" />
     <Compile Include="Excel\IXLTheme.cs" />
     <Compile Include="Excel\NamedRanges\XLNamedRanges.cs" />
@@ -77,7 +81,6 @@
     <Compile Include="Excel\Tables\XLTableRow.cs" />
     <Compile Include="Excel\Tables\XLTable.cs" />
     <Compile Include="Excel\Tables\IXLTable.cs" />
-    <Compile Include="Excel\XLAddressLight.cs" />
     <Compile Include="Excel\XLOutline.cs" />
     <Compile Include="Excel\IXLOutline.cs" />
     <Compile Include="Excel\IXLWorksheetInternals.cs" />

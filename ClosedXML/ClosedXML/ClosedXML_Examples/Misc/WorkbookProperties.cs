@@ -60,6 +60,12 @@ namespace ClosedXML_Examples.Misc
             wb.Properties.Company = "theCompany";
             wb.Properties.Manager = "theManager";
 
+            // Creating/Using custom properties
+            wb.CustomProperties.Add("theText", "XXX");
+            wb.CustomProperties.Add("theDate", new DateTime(2011, 1, 1));
+            wb.CustomProperties.Add("theNumber", 123.456);
+            wb.CustomProperties.Add("theBoolean", true);
+
             wb.SaveAs(filePath);
         }
 

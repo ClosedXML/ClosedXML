@@ -156,6 +156,22 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
             ws.Cell(ro, co + 1).Value = "";
 
+            ro++;
+
+            // Using inline strings (few users will ever need to use this feature)
+            //
+            // By default all strings are stored as shared so one block of text
+            // can be reference by multiple cells.
+            // You can override this by setting the .ShareString property to false
+            ws.Cell(++ro, co).Value = "Inline String:";
+            var cell = ws.Cell(ro, co + 1);
+            cell.Value = "Not Shared";
+            cell.ShareString = false;
+            // You can also add your own strings to the workbook's shared strings pool:
+            // workbook.AddSharedString("custom shared string");
+            // To view all shared strings (all texts in the workbook actually), use the following:
+            // workbook.GetSharedStrings()
+
             ws.Columns(2, 3).AdjustToContents();
 
             workbook.SaveAs(filePath);

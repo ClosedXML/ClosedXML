@@ -154,38 +154,28 @@ namespace ClosedXML.Excel
         public Int32 SheetId { get; set; }
         public String RelId { get; set; }
         
-        internal Int32 sheetIndex;
-        public Int32 SheetIndex 
+        internal Int32 position;
+        public Int32 Position 
         {
             get
             {
-                return sheetIndex;
+                return position;
             }
             set
             {
-                if (value > workbook.Worksheets.Count())
-                    throw new IndexOutOfRangeException("Index must be equal or less than the number of worksheets.");
+                if (value > workbook.Worksheets.Count() + 1)
+                    throw new IndexOutOfRangeException("Index must be equal or less than the number of worksheets + 1.");
 
-                if (value < sheetIndex)
-                    workbook.Worksheets.Where(w => w.SheetIndex >= value && w.SheetIndex < sheetIndex).ForEach(w => ((XLWorksheet)w).sheetIndex += 1);
+                if (value < position)
+                    workbook.Worksheets.Where(w => ((XLWorksheet)w).Position >= value && ((XLWorksheet)w).Position < position).ForEach(w => ((XLWorksheet)w).position += 1);
 
-                if (value > sheetIndex)
-                    workbook.Worksheets.Where(w => w.SheetIndex <= value && w.SheetIndex > sheetIndex).ForEach(w => ((XLWorksheet)w).sheetIndex -= 1);
+                if (value > position)
+                    workbook.Worksheets.Where(w => ((XLWorksheet)w).Position <= value && ((XLWorksheet)w).Position > position).ForEach(w => ((XLWorksheet)w).position -= 1);
 
-                sheetIndex = value;
+                position = value;
             }
         }
-        public Int32 Position
-        {
-            get
-            {
-                return sheetIndex + 1;
-            }
-            set
-            {
-                SheetIndex = value - 1;
-            }
-        }
+
         public IXLPageSetup PageSetup { get; private set; }
         public IXLOutline Outline { get; private set; }
 
@@ -511,6 +501,10 @@ namespace ClosedXML.Excel
         public IXLNamedRanges NamedRanges { get; private set; }
         public IXLSheetView SheetView { get; private set; }
         public IXLTables Tables { get; private set; }
+        public IXLTable Table(String name)
+        {
+            return Tables.Table(name);
+        }
 
         public IXLWorksheet CopyTo(String newSheetName)
         {
@@ -534,6 +528,11 @@ namespace ClosedXML.Excel
             this.Internals.ColumnsCollection.ForEach(kp => ws.Internals.ColumnsCollection.Add(kp));
             this.Internals.MergedRanges.ForEach(kp => ws.Internals.MergedRanges.Add(kp));
             this.Internals.RowsCollection.ForEach(kp => ws.Internals.RowsCollection.Add(kp));
+            this.PageSetup = new XLPageSetup(this.PageSetup, ws);
+            this.Outline = new XLOutline(this.Outline);
+            this.SheetView = new XLSheetView(this.SheetView);
+            this.NamedRanges.ForEach(r => ws.NamedRanges.Add(r.Name, r.Ranges));
+            this.Tables.ForEach(t => ws.Tables.Add(t));
             return ws;
         }
 

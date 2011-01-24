@@ -850,5 +850,13 @@ namespace ClosedXML.Excel
         {
             return this.Range(this.FirstCellUsed(), this.LastCellUsed());
         }
+
+        public Boolean ShareString
+        {
+            set
+            {
+                Cells().ForEach(c => c.ShareString = value);
+            }
+        }
     }
 }

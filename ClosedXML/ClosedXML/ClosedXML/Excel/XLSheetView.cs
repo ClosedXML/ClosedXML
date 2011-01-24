@@ -7,6 +7,14 @@ namespace ClosedXML.Excel
 {
     internal class XLSheetView: IXLSheetView
     {
+        public XLSheetView() { }
+        public XLSheetView(IXLSheetView sheetView)
+        {
+            this.SplitRow = sheetView.SplitRow;
+            this.SplitColumn = sheetView.SplitColumn;
+            this.FreezePanes = ((XLSheetView)sheetView).FreezePanes;
+        }
+
         public Int32 SplitRow { get; set; }
         public Int32 SplitColumn { get; set; }
         public Boolean FreezePanes { get; set; }

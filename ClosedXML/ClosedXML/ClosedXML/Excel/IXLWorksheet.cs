@@ -20,11 +20,7 @@ namespace ClosedXML.Excel
         /// Gets or sets the name (caption) of this worksheet.
         /// </summary>
         String Name { get; set; }
-        /// <summary>
-        /// Gets or sets the position of the sheet (zero based).
-        /// <para>When setting the SheetIndex all other sheets' indexes are shifted accordingly.</para>
-        /// </summary>
-        Int32 SheetIndex { get; set; }
+
         /// <summary>
         /// Gets or sets the position of the sheet.
         /// <para>When setting the Position all other sheets' positions are shifted accordingly.</para>
@@ -244,6 +240,7 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLSheetView SheetView { get; }
 
+        IXLTable Table(String name);
         IXLTables Tables { get; }
 
         IXLWorksheet CopyTo(String newSheetName);

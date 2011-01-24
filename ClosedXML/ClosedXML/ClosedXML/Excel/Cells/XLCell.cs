@@ -16,7 +16,8 @@ namespace ClosedXML.Excel
         public XLCell(IXLAddress address, IXLStyle defaultStyle, XLWorksheet worksheet)
         {
             this.Address = address;
-            
+            this.ShareString = true;
+
             if (defaultStyle == null) 
                 style = new XLStyle(this, worksheet.Style);
             else
@@ -232,11 +233,150 @@ namespace ClosedXML.Excel
         private Boolean SetEnumerable(Object collectionObject)
         {
             var asEnumerable = collectionObject as IEnumerable;
-            if (asEnumerable != null && collectionObject.GetType() != typeof(String))
+            return InsertData(asEnumerable) != null;
+        }
+
+        public IXLTable InsertTable(IEnumerable data)
+        {
+            return InsertTable(data, null, true);
+        }
+        public IXLTable InsertTable(IEnumerable data, Boolean createTable)
+        {
+            return InsertTable(data, null, createTable);
+        }
+        public IXLTable InsertTable(IEnumerable data, String tableName)
+        {
+            return InsertTable(data, tableName, true);
+        }
+        public IXLTable InsertTable(IEnumerable data, String tableName, Boolean createTable)
+        {
+            if (data != null && data.GetType() != typeof(String))
+            {
+                Int32 co;
+                Int32 ro = Address.RowNumber + 1;
+                Int32 fRo = Address.RowNumber;
+                Boolean hasTitles = false;
+                Int32 maxCo = 0;
+                Boolean isDataTable = false;
+                foreach (var m in data)
+                {
+                    co = Address.ColumnNumber;
+
+                    if (m.GetType().IsPrimitive || m.GetType() == typeof(String) || m.GetType() == typeof(DateTime))
+                    {
+                        if (!hasTitles)
+                        {
+                            SetValue(m.GetType().Name, fRo, co);
+                            hasTitles = true;
+                            co = Address.ColumnNumber;
+                        }
+                        SetValue(m, ro, co);
+                        co++;
+                    }
+                    else if (m.GetType().IsArray)
+                    {
+                        foreach (var item in (Array)m)
+                        {
+                            SetValue(item, ro, co);
+                            co++;
+                        }
+                    }
+                    else if (isDataTable || (m as DataRow) != null)
+                    {
+                        if (!isDataTable) isDataTable = true;
+                        if (!hasTitles)
+                        {
+                            foreach (DataColumn column in (m as DataRow).Table.Columns)
+                            {
+                                SetValue(column.ColumnName, fRo, co);
+                                co++;
+                            }
+                            co = Address.ColumnNumber;
+                            hasTitles = true;
+                        }
+
+                        foreach (var item in (m as DataRow).ItemArray)
+                        {
+                            SetValue(item, ro, co);
+                            co++;
+                        }
+                    }
+                    else
+                    {
+                        var fieldInfo = m.GetType().GetFields();
+                        var propertyInfo = m.GetType().GetProperties();
+                        if (!hasTitles)
+                        {
+                            foreach (var info in fieldInfo)
+                            {
+                                SetValue(info.Name, fRo, co);
+                                co++;
+                            }
+                            
+                            foreach (var info in propertyInfo)
+                            {
+                                if ((info as IEnumerable) == null)
+                                    SetValue(info.Name, fRo, co);
+                                co++;
+                            }
+                            co = Address.ColumnNumber;
+                            hasTitles = true;
+                        }
+
+                        foreach (var info in fieldInfo)
+                        {
+                            SetValue(info.GetValue(m), ro, co);
+                            co++;
+                        }
+
+                        foreach (var info in propertyInfo)
+                        {
+                            if ((info as IEnumerable) == null)
+                                SetValue(info.GetValue(m, null), ro, co);
+                            co++;
+                        }
+                    }
+
+                    if (co > maxCo)
+                        maxCo = co;
+
+                    ro++;
+                }
+                ClearMerged(ro - 1, maxCo - 1);
+                var range = worksheet.Range(
+                    Address.RowNumber,
+                    Address.ColumnNumber,
+                    ro - 1,
+                    maxCo - 1);
+
+                if (createTable)
+                {
+                    if (tableName == null)
+                        return range.CreateTable();
+                    else
+                        return range.CreateTable(tableName);
+                }
+                else
+                {
+                    if (tableName == null)
+                        return range.AsTable();
+                    else
+                        return range.AsTable(tableName);
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public IXLRange InsertData(IEnumerable data)
+        {
+            if (data != null && data.GetType() != typeof(String))
             {
                 Int32 ro = Address.RowNumber;
                 Int32 maxCo = 0;
-                foreach (var m in asEnumerable)
+                foreach (var m in data)
                 {
                     Int32 co = Address.ColumnNumber;
 
@@ -284,11 +424,15 @@ namespace ClosedXML.Excel
                     ro++;
                 }
                 ClearMerged(ro - 1, maxCo - 1);
-                return true;
-            } 
+                return worksheet.Range(
+                    Address.RowNumber,
+                    Address.ColumnNumber,
+                    Address.RowNumber + ro - 1,
+                    Address.ColumnNumber + maxCo - 1);
+            }
             else
             {
-                return false;
+                return null;
             }
         }
 
@@ -823,5 +967,7 @@ namespace ClosedXML.Excel
             else if (!StringExtensions.IsNullOrWhiteSpace(formulaA1))
                 FormulaA1 = GetFormula(formulaA1, FormulaConversionType.R1C1toA1, rowsToShift, columnsToShift);
         }
+
+        public Boolean ShareString { get; set; }
     }
 }

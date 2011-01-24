@@ -6,6 +6,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using A = DocumentFormat.OpenXml.Drawing;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
+using Op = DocumentFormat.OpenXml.CustomProperties;
 
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,6 @@ using System.Text;
 using System.IO;
 using System.Globalization;
 using DRW = System.Drawing;
-
-
-
 
 namespace ClosedXML.Excel
 {
@@ -107,14 +105,21 @@ namespace ClosedXML.Excel
             public IXLStyle Style;
         };
 
-        private CellValues GetCellValue(XLCellValues xlCellValue)
+        private CellValues GetCellValue(XLCell xlCell)
         {
+            var xlCellValue = xlCell.DataType;
             switch (xlCellValue)
             {
                 case XLCellValues.Boolean: return CellValues.Boolean;
                 case XLCellValues.DateTime: return CellValues.Date;
                 case XLCellValues.Number: return CellValues.Number;
-                case XLCellValues.Text: return CellValues.SharedString;
+                case XLCellValues.Text:
+                    {
+                        if (xlCell.ShareString)
+                            return CellValues.SharedString;
+                        else
+                            return CellValues.InlineString;
+                    }
                 case XLCellValues.TimeSpan: return CellValues.Number;
                 default: throw new NotImplementedException();
             }
@@ -297,6 +302,7 @@ namespace ClosedXML.Excel
             relId = new RelIdGenerator();
             sharedStrings = new Dictionary<String, UInt32>();
             sharedStyles = new Dictionary<IXLStyle, StyleInfo>();
+            tableNames = new HashSet<String>();
             tableId = 0;
 
             WorkbookPart workbookPart;
@@ -346,7 +352,7 @@ namespace ClosedXML.Excel
 
             GenerateWorkbookStylesPartContent(workbookStylesPart);
 
-            foreach (var worksheet in Worksheets.Cast<XLWorksheet>().OrderBy(w=>w.SheetIndex))
+            foreach (var worksheet in Worksheets.Cast<XLWorksheet>().OrderBy(w=>w.Position))
             {
                 WorksheetPart worksheetPart;
                 var sheets = workbookPart.Workbook.Sheets.Elements<Sheet>();
@@ -383,6 +389,13 @@ namespace ClosedXML.Excel
                 GenerateThemePartContent(themePart);
             }
 
+            if (CustomProperties.Count() > 0)
+            {
+                document.GetPartsOfType<CustomFilePropertiesPart>().ToList().ForEach(p => document.DeletePart(p));
+                CustomFilePropertiesPart customFilePropertiesPart = document.AddNewPart<CustomFilePropertiesPart>(relId.GetNext(RelType.Workbook));
+                
+                GenerateCustomFilePropertiesPartContent(customFilePropertiesPart);
+            }
             SetPackageProperties(document);
         }
 
@@ -439,7 +452,7 @@ namespace ClosedXML.Excel
             vTVector_Two = properties.TitlesOfParts.VTVector;
 
 
-            var modifiedWorksheets = Worksheets.Select(w => new { w.Name, Order = w.SheetIndex });
+            var modifiedWorksheets = Worksheets.Select(w => new { w.Name, Order = w.Position });
             var modifiedNamedRanges = GetModifiedNamedRanges();
 
             InsertOnVTVector(vTVector_One, "Worksheets", 0, modifiedWorksheets.Count().ToString());
@@ -593,7 +606,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            foreach (var xlSheet in Worksheets.Cast<XLWorksheet>().Where(w => w.SheetId == 0).OrderBy(w => w.SheetIndex))
+            foreach (var xlSheet in Worksheets.Cast<XLWorksheet>().Where(w => w.SheetId == 0).OrderBy(w => w.Position))
             {
                 String rId = relId.GetNext(RelType.Workbook);
                 while (Worksheets.Cast<XLWorksheet>().Where(w=>w.SheetId == Int32.Parse(rId.Substring(3))).Any())
@@ -606,7 +619,7 @@ namespace ClosedXML.Excel
 
             var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
                                 join worksheet in Worksheets.Cast<XLWorksheet>() on sheet.Id.Value equals worksheet.RelId
-                                orderby worksheet.SheetIndex
+                                orderby worksheet.Position
                                 select sheet;
 
             foreach (var sheet in sheetElements)
@@ -750,21 +763,7 @@ namespace ClosedXML.Excel
 
         private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart)
         {
-            HashSet<String> modifiedStrings = new HashSet<String>();
-            foreach (var w in Worksheets.Cast<XLWorksheet>())
-            {
-                foreach (var c in w.Internals.CellsCollection.Values)
-                {
-                    if (
-                        c.DataType == XLCellValues.Text 
-                        && !StringExtensions.IsNullOrWhiteSpace(c.InnerText)
-                        && !modifiedStrings.Contains(c.Value.ToString())
-                        )
-                    {
-                        modifiedStrings.Add(c.Value.ToString());
-                    }
-                }
-            }
+            HashSet<String> modifiedStrings = GetSharedStrings();
 
             sharedStringTablePart.SharedStringTable = new SharedStringTable() { Count = 0, UniqueCount = 0 };
 
@@ -1826,23 +1825,27 @@ namespace ClosedXML.Excel
                             if (opCell.DataType == XLCellValues.DateTime)
                                 cell.DataType = null;
                             else
-                                cell.DataType = GetCellValue(dataType);
-
+                                cell.DataType = GetCellValue(opCell);
+                            
                             CellValue cellValue = new CellValue();
                             if (dataType == XLCellValues.Text)
                             {
                                 if (StringExtensions.IsNullOrWhiteSpace(opCell.InnerText))
                                 {
-                                    //if (isNewCell)
-                                    cellValue = null;
-                                    //else
-                                    //    cellValue.Text = String.Empty;
+                                    cell.CellValue = null;
                                 }
                                 else
                                 {
-                                    cellValue.Text = sharedStrings[opCell.InnerText].ToString();
+                                    if (opCell.ShareString)
+                                    {
+                                        cellValue.Text = sharedStrings[opCell.InnerText].ToString();
+                                        cell.CellValue = cellValue;
+                                    }
+                                    else
+                                    {
+                                        cell.InlineString = new InlineString() { Text = new Text(opCell.GetString()) };
+                                    }
                                 }
-                                cell.CellValue = cellValue;
                             }
                             else if (dataType == XLCellValues.TimeSpan)
                             {
@@ -2933,6 +2936,45 @@ namespace ClosedXML.Excel
             themePart.Theme = theme1;
         }
 
+        private void GenerateCustomFilePropertiesPartContent(CustomFilePropertiesPart customFilePropertiesPart1)
+        {
+            Op.Properties properties2 = new Op.Properties();
+            properties2.AddNamespaceDeclaration("vt", "http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
+            Int32 propertyId = 1;
+            foreach (var p in CustomProperties)
+            {
+                propertyId++;
+                Op.CustomDocumentProperty customDocumentProperty = new Op.CustomDocumentProperty() { FormatId = "{D5CDD505-2E9C-101B-9397-08002B2CF9AE}", PropertyId = propertyId, Name = p.Name };
+                if (p.Type == XLCustomPropertyType.Text)
+                {
+                    Vt.VTLPWSTR vTLPWSTR1 = new Vt.VTLPWSTR();
+                    vTLPWSTR1.Text = p.GetValue<String>();
+                    customDocumentProperty.Append(vTLPWSTR1);
+                }
+                else if (p.Type == XLCustomPropertyType.Date)
+                {
+                    Vt.VTFileTime vTFileTime1 = new Vt.VTFileTime();
+                    vTFileTime1.Text = p.GetValue<DateTime>().ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+                    customDocumentProperty.Append(vTFileTime1);
+                }
+                else if (p.Type == XLCustomPropertyType.Number)
+                {
+                    Vt.VTDouble vTDouble1 = new Vt.VTDouble();
+                    vTDouble1.Text = p.GetValue<Double>().ToString(CultureInfo.InvariantCulture);
+                    customDocumentProperty.Append(vTDouble1);
+                }
+                else
+                {
+                    Vt.VTBool vTBool1 = new Vt.VTBool();
+                    vTBool1.Text = p.GetValue<Boolean>().ToString().ToLower();
+                    customDocumentProperty.Append(vTBool1);
+                }
+                properties2.Append(customDocumentProperty);
+            }
+
+            customFilePropertiesPart1.Properties = properties2;
+        }
+
         private void SetPackageProperties(OpenXmlPackage document)
         {
             var created = Properties.Created == DateTime.MinValue ? DateTime.Now : Properties.Created;
@@ -2951,16 +2993,36 @@ namespace ClosedXML.Excel
         }
 
         UInt32 tableId = 0;
+        HashSet<String> tableNames;
+        private String GetTableName(String originalTableName)
+        {
+            String tableName = originalTableName.RemoveSpecialCharacters();
+            String name = tableName;
+            if (tableNames.Contains(name))
+            {
+                Int32 i = 1;
+                name = tableName + i.ToStringLookup();
+                while (tableNames.Contains(name))
+                {
+                    i++;
+                    name = tableName + i.ToStringLookup();
+                }
+            }
+
+            tableNames.Add(name);
+            return name;
+        }
+
         private void GenerateTableDefinitionPartContent(TableDefinitionPart tableDefinitionPart, XLTable xlTable)
         {
             tableId++;
             String reference;
             reference = xlTable.RangeAddress.FirstAddress.ToString() + ":" + xlTable.RangeAddress.LastAddress.ToString();
-
+            String tableName = GetTableName(xlTable.Name);
             Table table = new Table() { 
                 Id = tableId, 
-                Name = xlTable.Name.RemoveSpecialCharacters(), 
-                DisplayName = xlTable.Name, 
+                Name = tableName, 
+                DisplayName = tableName, 
                 Reference = reference };
             
             if (xlTable.ShowTotalsRow)

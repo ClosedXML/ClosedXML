@@ -82,6 +82,18 @@
     <Compile Include="..\ClosedXML\Excel\Columns\XLColumns.cs">
       <Link>Excel\Columns\XLColumns.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\CustomProperties\IXLCustomProperties.cs">
+      <Link>Excel\CustomProperties\IXLCustomProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CustomProperties\IXLCustomProperty.cs">
+      <Link>Excel\CustomProperties\IXLCustomProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CustomProperties\XLCustomProperties.cs">
+      <Link>Excel\CustomProperties\XLCustomProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CustomProperties\XLCustomProperty.cs">
+      <Link>Excel\CustomProperties\XLCustomProperty.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLAddress.cs">
       <Link>Excel\IXLAddress.cs</Link>
     </Compile>

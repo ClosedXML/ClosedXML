@@ -16,7 +16,7 @@ namespace ClosedXML_Examples.Ranges
         public void Create(String filePath)
         {
             var wb = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            var ws = wb.Worksheets.Worksheet(0);
+            var ws = wb.Worksheet(1);
             var firstCell = ws.FirstCellUsed();
             var lastCell = ws.LastCellUsed();
             var range = ws.Range(firstCell.Address, lastCell.Address);

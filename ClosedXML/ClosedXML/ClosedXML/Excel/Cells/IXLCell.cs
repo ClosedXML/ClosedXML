@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections;
 
 
 namespace ClosedXML.Excel
@@ -118,5 +119,17 @@ namespace ClosedXML.Excel
         IXLRange AsRange();
 
         IXLStyle Style { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this cell's text should be shared or not.
+        /// </summary>
+        /// <value>
+        ///   If false the cell's text will not be shared and stored as an inline value.
+        /// </value>
+        Boolean ShareString { get; set; }
+
+        IXLRange InsertData(IEnumerable data);
+        IXLTable InsertTable(IEnumerable data);
+        IXLTable InsertTable(IEnumerable data, String tableName);
     }
 }

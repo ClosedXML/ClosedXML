@@ -6,6 +6,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using A = DocumentFormat.OpenXml.Drawing;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
+using Op = DocumentFormat.OpenXml.CustomProperties;
 
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,23 @@ namespace ClosedXML.Excel
                 sharedStrings = shareStringPart.SharedStringTable.Elements<SharedStringItem>().ToArray();
             }
 
+            if (dSpreadsheet.WorkbookPart.GetPartsOfType<CustomFilePropertiesPart>().Count() > 0)
+            {
+                CustomFilePropertiesPart customFilePropertiesPart = dSpreadsheet.WorkbookPart.GetPartsOfType<CustomFilePropertiesPart>().First();
+                foreach (Op.CustomDocumentProperty m in customFilePropertiesPart.Properties.Elements<Op.CustomDocumentProperty>())
+                {
+                    String name = m.Name.Value;
+                    if (m.VTLPWSTR != null)
+                        CustomProperties.Add(name, m.VTLPWSTR.Text);
+                    else if (m.VTFileTime != null)
+                        CustomProperties.Add(name, DateTime.ParseExact(m.VTFileTime.Text, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'", CultureInfo.InvariantCulture));
+                    else if (m.VTDouble != null)
+                        CustomProperties.Add(name, Double.Parse(m.VTDouble.Text, CultureInfo.InvariantCulture));
+                    else if (m.VTBool != null)
+                        CustomProperties.Add(name, m.VTBool.Text == "true");
+                }
+            }
+
             var referenceMode = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties.ReferenceMode;
             if (referenceMode != null)
             {
@@ -82,7 +100,7 @@ namespace ClosedXML.Excel
 
             foreach (var sheet in sheets)
             {
-                var sharedFormulas = new Dictionary<UInt32, CellFormula>();
+                var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
 
                 Sheet dSheet = ((Sheet)sheet);
                 WorksheetPart worksheetPart = (WorksheetPart)dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id);
@@ -201,9 +219,6 @@ namespace ClosedXML.Excel
 
                 foreach (var cell in worksheetPart.Worksheet.Descendants<Cell>())
                 {
-                    if (cell.CellFormula != null && cell.CellFormula.SharedIndex != null && cell.CellFormula.Reference != null)
-                        sharedFormulas.Add(cell.CellFormula.SharedIndex.Value, cell.CellFormula);
-
                     var dCell = (Cell)cell;
                     Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : 0;
                     var xlCell = (XLCell)ws.CellFast(dCell.CellReference);
@@ -218,16 +233,27 @@ namespace ClosedXML.Excel
                         xlCell.Style = DefaultStyle;
                     }
 
-                    if (dCell.CellFormula != null)
+                    if (cell.CellFormula != null && cell.CellFormula.SharedIndex != null && cell.CellFormula.Reference != null)
+                    {
+                        xlCell.FormulaA1 = cell.CellFormula.Text;
+                        sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
+                    }
+                    else if (dCell.CellFormula != null)
                     {
                         if (dCell.CellFormula.SharedIndex != null)
-                            xlCell.FormulaA1 = sharedFormulas[dCell.CellFormula.SharedIndex.Value].Text;
+                            xlCell.FormulaR1C1 = sharedFormulasR1C1[dCell.CellFormula.SharedIndex.Value];
                         else
                             xlCell.FormulaA1 = dCell.CellFormula.Text;
                     }
                     else if (dCell.DataType != null)
                     {
-                        if (dCell.DataType == CellValues.SharedString)
+                        if (dCell.DataType == CellValues.InlineString)
+                        {
+                            xlCell.Value = dCell.InlineString.Text.Text;
+                            xlCell.DataType = XLCellValues.Text;
+                            xlCell.ShareString = false;
+                        }
+                        else if (dCell.DataType == CellValues.SharedString)
                         {
                             if (dCell.CellValue != null)
                             {
@@ -487,7 +513,7 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        Worksheets.Worksheet(Int32.Parse(localSheetId)).NamedRanges.Add(name, text, comment);
+                        Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment);
                     }
                 }
             }

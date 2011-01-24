@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     internal class XLWorksheets : IXLWorksheets
     {
-        Dictionary<String, IXLWorksheet> worksheets = new Dictionary<String, IXLWorksheet>();
+        Dictionary<String, XLWorksheet> worksheets = new Dictionary<String, XLWorksheet>();
         public HashSet<String> Deleted = new HashSet<String>();
         XLWorkbook workbook;
         public XLWorksheets(XLWorkbook workbook)
@@ -22,23 +22,23 @@ namespace ClosedXML.Excel
             return worksheets[sheetName];
         }
 
-        public IXLWorksheet Worksheet(Int32 sheetIndex)
+        public IXLWorksheet Worksheet(Int32 position)
         {
-            var wsCount = worksheets.Values.Where(w => w.SheetIndex == sheetIndex).Count();
+            var wsCount = worksheets.Values.Where(w => w.Position == position).Count();
             if (wsCount == 0)
-                throw new Exception("There isn't a worksheet associated with that index.");
+                throw new Exception("There isn't a worksheet associated with that position.");
 
             if (wsCount > 1)
-                throw new Exception("Can't retrieve a worksheet because there are multiple worksheets associated with that index.");
+                throw new Exception("Can't retrieve a worksheet because there are multiple worksheets associated with that position.");
 
-            return worksheets.Values.Where(w => w.SheetIndex == sheetIndex).Single();
+            return worksheets.Values.Where(w => w.Position == position).Single();
         }
 
         public IXLWorksheet Add(String sheetName)
         {
             var sheet = new XLWorksheet(sheetName, workbook);
             worksheets.Add(sheetName, sheet);
-            sheet.sheetIndex = worksheets.Count - 1;
+            sheet.position = worksheets.Count;
             return sheet;
         }
 
@@ -51,24 +51,24 @@ namespace ClosedXML.Excel
 
         public void Delete(String sheetName)
         {
-            Delete(worksheets[sheetName].SheetIndex);
+            Delete(worksheets[sheetName].Position);
         }
 
-        public void Delete(Int32 sheetIndex)
+        public void Delete(Int32 position)
         {
-            var wsCount = worksheets.Values.Where(w => w.SheetIndex == sheetIndex).Count();
+            var wsCount = worksheets.Values.Where(w => w.Position == position).Count();
             if (wsCount == 0)
                 throw new Exception("There isn't a worksheet associated with that index.");
 
             if (wsCount > 1)
                 throw new Exception("Can't delete the worksheet because there are multiple worksheets associated with that index.");
 
-            var ws = (XLWorksheet)worksheets.Values.Where(w => w.SheetIndex == sheetIndex).Single();
+            var ws = (XLWorksheet)worksheets.Values.Where(w => w.Position == position).Single();
             if (!StringExtensions.IsNullOrWhiteSpace(ws.RelId) && !Deleted.Contains(ws.RelId))
                 Deleted.Add(ws.RelId);
 
-            worksheets.RemoveAll(w => w.SheetIndex == sheetIndex);
-            worksheets.Values.Where(w => w.SheetIndex > sheetIndex).ForEach(w => ((XLWorksheet)w).sheetIndex -= 1);
+            worksheets.RemoveAll(w => w.Position == position);
+            worksheets.Values.Where(w => w.Position > position).ForEach(w => ((XLWorksheet)w).position -= 1);
         }
         
         #endregion
@@ -77,7 +77,10 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLWorksheet> GetEnumerator()
         {
-            return worksheets.Values.GetEnumerator();
+            foreach (var w in worksheets.Values)
+            { 
+                yield return (IXLWorksheet)w;
+            }
         }
 
         #endregion

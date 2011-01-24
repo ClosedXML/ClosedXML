@@ -23,6 +23,7 @@ namespace ClosedXML.Excel
             DefaultColumnWidth = 9.140625;
             Worksheets = new XLWorksheets(this);
             NamedRanges = new XLNamedRanges(this);
+            CustomProperties = new XLCustomProperties(this);
             PopulateEnums();
             Style = DefaultStyle;
             RowHeight = DefaultRowHeight;
@@ -301,9 +302,43 @@ namespace ClosedXML.Excel
         {
             return Worksheets.Worksheet(name);
         }
-        public IXLWorksheet Worksheet(Int32 sheetIndex)
+        public IXLWorksheet Worksheet(Int32 position)
         {
-            return Worksheets.Worksheet(sheetIndex);
+            return Worksheets.Worksheet(position);
         }
+
+        private HashSet<String> addedSharedStrings = new HashSet<String>();
+        public void AddSharedString(String value)
+        {
+            addedSharedStrings.Add(value);
+        }
+
+        public HashSet<String> GetSharedStrings()
+        {
+            HashSet<String> modifiedStrings = new HashSet<String>();
+            addedSharedStrings.ForEach(s => modifiedStrings.Add(s));
+            foreach (var w in Worksheets.Cast<XLWorksheet>())
+            {
+                foreach (var c in w.Internals.CellsCollection.Values)
+                {
+                    if (
+                        c.DataType == XLCellValues.Text
+                        && !StringExtensions.IsNullOrWhiteSpace(c.InnerText)
+                        && !modifiedStrings.Contains(c.Value.ToString())
+                        )
+                    {
+                        modifiedStrings.Add(c.Value.ToString());
+                    }
+                }
+            }
+            return modifiedStrings;
+        }
+
+        public IXLCustomProperty CustomProperty(String name)
+        {
+            return CustomProperties.CustomProperty(name);
+        }
+
+        public IXLCustomProperties CustomProperties { get; private set; }
     }
 }

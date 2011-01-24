@@ -8,13 +8,28 @@ namespace ClosedXML.Excel
     internal class XLTable : XLRange, IXLTable
     {
         public String RelId { get; set; }
-        public String Name { get; set; }
         public Boolean EmphasizeFirstColumn { get; set; }
         public Boolean EmphasizeLastColumn { get; set; }
         public Boolean ShowRowStripes { get; set; }
         public Boolean ShowColumnStripes { get; set; }
         public Boolean ShowAutoFilter { get; set; }
         public XLTableTheme Theme { get; set; }
+
+        private String name;
+        public String Name 
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if (Worksheet.Tables.Where(t => t.Name == value).Any())
+                    throw new ArgumentException(String.Format("This worksheet already contains a table named '{0}'", value));
+
+                name = value;
+            }
+        }
 
         internal Boolean showTotalsRow;
         public Boolean ShowTotalsRow
@@ -53,8 +68,7 @@ namespace ClosedXML.Excel
                 if (!Worksheet.Tables.Where(t=>t.Name == tableName).Any())
                 {
                     Name = tableName;
-                    if (addToTables)
-                        Worksheet.Tables.Add(this);
+                    AddToTables(range, addToTables);
                     break;
                 }
                 id++;
@@ -74,10 +88,44 @@ namespace ClosedXML.Excel
             InitializeValues();
 
             this.Name = name;
-            if (addToTables)
-                Worksheet.Tables.Add(this);
+            AddToTables(range, addToTables);
         }
 
+        private void AddToTables(XLRange range, Boolean addToTables)
+        {
+            if (addToTables)
+            {
+                uniqueNames = new HashSet<string>();
+                Int32 co = 1;
+                foreach (var c in range.Row(1).Cells())
+                {
+                    if (StringExtensions.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                        c.Value = GetUniqueName("Column" + co.ToStringLookup());
+                    uniqueNames.Add(c.GetString());
+                    co++;
+                }
+                Worksheet.Tables.Add(this);
+            }
+        }
+
+        HashSet<String> uniqueNames;
+        private String GetUniqueName(String originalName)
+        {
+            String name = originalName;
+            if (uniqueNames.Contains(name))
+            {
+                Int32 i = 1;
+                name = originalName + i.ToStringLookup();
+                while (uniqueNames.Contains(name))
+                {
+                    i++;
+                    name = originalName + i.ToStringLookup();
+                }
+            }
+
+            uniqueNames.Add(name);
+            return name;
+        }
 
         public IXLRangeRow HeadersRow()
         {
