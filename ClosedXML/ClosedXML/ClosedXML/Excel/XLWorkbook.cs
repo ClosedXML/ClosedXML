@@ -307,16 +307,9 @@ namespace ClosedXML.Excel
             return Worksheets.Worksheet(position);
         }
 
-        private HashSet<String> addedSharedStrings = new HashSet<String>();
-        public void AddSharedString(String value)
-        {
-            addedSharedStrings.Add(value);
-        }
-
         public HashSet<String> GetSharedStrings()
         {
             HashSet<String> modifiedStrings = new HashSet<String>();
-            addedSharedStrings.ForEach(s => modifiedStrings.Add(s));
             foreach (var w in Worksheets.Cast<XLWorksheet>())
             {
                 foreach (var c in w.Internals.CellsCollection.Values)
@@ -324,6 +317,7 @@ namespace ClosedXML.Excel
                     if (
                         c.DataType == XLCellValues.Text
                         && !StringExtensions.IsNullOrWhiteSpace(c.InnerText)
+                        && c.ShareString
                         && !modifiedStrings.Contains(c.Value.ToString())
                         )
                     {

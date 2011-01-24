@@ -167,8 +167,7 @@ namespace ClosedXML_Examples.Misc
             var cell = ws.Cell(ro, co + 1);
             cell.Value = "Not Shared";
             cell.ShareString = false;
-            // You can also add your own strings to the workbook's shared strings pool:
-            // workbook.AddSharedString("custom shared string");
+
             // To view all shared strings (all texts in the workbook actually), use the following:
             // workbook.GetSharedStrings()
 

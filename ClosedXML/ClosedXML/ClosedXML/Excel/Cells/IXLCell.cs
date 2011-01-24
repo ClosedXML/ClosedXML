@@ -130,6 +130,8 @@ namespace ClosedXML.Excel
 
         IXLRange InsertData(IEnumerable data);
         IXLTable InsertTable(IEnumerable data);
+        IXLTable InsertTable(IEnumerable data, Boolean createTable);
         IXLTable InsertTable(IEnumerable data, String tableName);
+        IXLTable InsertTable(IEnumerable data, String tableName, Boolean createTable);
     }
 }
