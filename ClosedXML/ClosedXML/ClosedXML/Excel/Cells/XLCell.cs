@@ -969,5 +969,37 @@ namespace ClosedXML.Excel
         }
 
         public Boolean ShareString { get; set; }
+
+        public Boolean SettingHyperlink = false;
+        private XLHyperlink hyperlink;
+        public XLHyperlink Hyperlink 
+        {
+            get 
+            {
+                if (hyperlink == null)
+                    Hyperlink = new XLHyperlink();
+
+                return hyperlink; 
+            }
+            set
+            {
+                hyperlink = value;
+                hyperlink.Worksheet = worksheet;
+                hyperlink.Cell = this;
+                if (worksheet.Hyperlinks.Where(hl => hl.Cell.Address == Address).Any())
+                    worksheet.Hyperlinks.Delete(Address);
+
+                worksheet.Hyperlinks.Add(hyperlink);
+
+                if (!SettingHyperlink)
+                {
+                    if (Style.Font.FontColor == worksheet.Style.Font.FontColor)
+                        Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
+
+                    if (Style.Font.Underline == worksheet.Style.Font.Underline)
+                        Style.Font.Underline = XLFontUnderlineValues.Single;
+                }
+            }
+        }
     }
 }

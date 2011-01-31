@@ -220,6 +220,47 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
+        public new IXLRangeColumn Column(Int32 column)
+        {
+            return DataRange.Column(column);
+        }
+        public new IXLRangeColumn Column(String column)
+        {
+            if (XLAddress.IsValidColumn(column))
+            {
+                Int32 coNum = XLAddress.GetColumnNumberFromLetter(column);
+                if (coNum > ColumnCount())
+                {
+                    return DataRange.Column(GetFieldIndex(column) + 1);
+                }
+                else
+                {
+                    return DataRange.Column(coNum);
+                }
+            }
+            else
+            {
+                return DataRange.Column(GetFieldIndex(column) + 1);
+            }
+        }
+
+        public new IXLRangeColumns Columns()
+        {
+            return DataRange.Columns();
+        }
+        public new IXLRangeColumns Columns(Int32 firstColumn, Int32 lastColumn)
+        {
+            return DataRange.Columns(firstColumn, lastColumn);
+        }
+        public new IXLRangeColumns Columns(String firstColumn, String lastColumn)
+        {
+            return DataRange.Columns(firstColumn, lastColumn);
+        }
+        public new IXLRangeColumns Columns(String columns)
+        {
+            return DataRange.Columns(columns);
+        }
+
         public IXLTableField Field(String fieldName)
         {
             return Field(GetFieldIndex(fieldName));

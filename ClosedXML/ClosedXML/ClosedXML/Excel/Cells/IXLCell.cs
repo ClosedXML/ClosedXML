@@ -133,5 +133,7 @@ namespace ClosedXML.Excel
         IXLTable InsertTable(IEnumerable data, Boolean createTable);
         IXLTable InsertTable(IEnumerable data, String tableName);
         IXLTable InsertTable(IEnumerable data, String tableName, Boolean createTable);
+
+        XLHyperlink Hyperlink { get; set; }
     }
 }

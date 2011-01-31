@@ -12,15 +12,56 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            new ClosedXML_Examples.Ranges.UsingTables().Create(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
-            //var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
+            //new ClosedXML_Examples.Ranges.UsingTables().Create(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
+            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Hyperlinks_2.xlsx");
             //var wb = new XLWorkbook();
             //var c = wb.Worksheets.Add("New").Cell(1, 1);
             //c.Value = "Hello";
             //c.ShareString = false;
-            //wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
+            wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
+            
+            //String test = @"../file.txt";
+            //Console.WriteLine("Uri.IsWellFormedUriString says: {0}", Uri.IsWellFormedUriString(test, UriKind.RelativeOrAbsolute));
+            //Console.WriteLine("TryCreate says: {0}", TryCreate(test));
+            //Console.WriteLine("IsValidUri says: {0}", IsValidUri(test));
+            //Console.ReadKey();
+        }
+        public static String GetSheetPassword(String password)
+        {
+            Int32 pLength = password.Length;
+            Int32 hash = 0;
+            if (pLength == 0) return hash.ToString("X");
+
+            for (Int32 i = pLength - 1; i >= 0; i--)
+            {
+                hash ^= password[i];
+                hash = hash >> 14 & 0x01 | hash << 1 & 0x7fff;
+            }
+            hash ^= 0x8000 | 'N' << 8 | 'K';
+            hash ^= pLength;
+            return hash.ToString("X");
+        }
+
+        static Boolean IsValidUri(String uri) 
+        { 
+            try 
+            { 
+                new Uri(uri, UriKind.Relative); 
+                return true; 
+            }
+            catch 
+            {
+                return false; 
+            }
+        }
+
+        static Boolean TryCreate(String address)
+        {
+            Uri uri;
+            return Uri.TryCreate(address, UriKind.Absolute, out uri);
         }
 
         static void Main_5961(string[] args)

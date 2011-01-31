@@ -355,27 +355,17 @@ namespace ClosedXML.Excel
             foreach (var worksheet in Worksheets.Cast<XLWorksheet>().OrderBy(w=>w.Position))
             {
                 WorksheetPart worksheetPart;
-                var sheets = workbookPart.Workbook.Sheets.Elements<Sheet>();
                 if (workbookPart.Parts.Where(p => p.RelationshipId == worksheet.RelId).Any())
                 {
                     worksheetPart = (WorksheetPart)workbookPart.GetPartById(worksheet.RelId);
                     var wsPartsToRemove = worksheetPart.TableDefinitionParts.ToList();
                     wsPartsToRemove.ForEach(tdp=>worksheetPart.DeletePart(tdp));
-                    //foreach (var tdp in worksheetPart.TableDefinitionParts)
-                    //{
-                    //    worksheetPart.DeletePart(tdp);
-                    //    var w = workbookPart.Parts.Where(s => s.RelationshipId == tdp.RelationshipType);
-                    //    if (w.Count() > 0)
-                    //    {
-                    //        var wsPartToRemove = w.Single();
-                    //        workbookPart.DeletePart(wsPartToRemove.OpenXmlPart);
-                    //    }
-                    //}
                 }
                 else
                 {
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(worksheet.RelId);
                 }
+
                 
                 GenerateWorksheetPartContent(worksheetPart, worksheet);
             }
@@ -1551,7 +1541,7 @@ namespace ClosedXML.Excel
 
             worksheetPart.Worksheet.SheetFormatProperties.DefaultRowHeight = xlWorksheet.RowHeight;
             worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = xlWorksheet.ColumnWidth;
-            worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = true;
+            //worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = true;
 
             if (maxOutlineColumn > 0)
                 worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = (byte)maxOutlineColumn;
@@ -1738,23 +1728,33 @@ namespace ClosedXML.Excel
                 if (maxColumn > 0)
                     row.Spans = new ListValue<StringValue>() { InnerText = "1:" + maxColumn.ToString() };
 
+                row.Height = null;
+                row.CustomHeight = null;
+                row.Hidden = null;
+                row.StyleIndex = null;
+                row.CustomFormat = null;
                 if (xlWorksheet.Internals.RowsCollection.ContainsKey(distinctRow))
                 {
                     var thisRow = xlWorksheet.Internals.RowsCollection[distinctRow];
-                    //var thisRowStyleString = thisRow.Style.ToString();
-                    row.Height = thisRow.Height;
-                    row.CustomHeight = true;
-                    row.StyleIndex = sharedStyles[thisRow.Style].StyleId;
-                    row.CustomFormat = !thisRow.Style.Equals(xlWorksheet.Style);
+                    if (thisRow.Height != xlWorksheet.RowHeight)
+                    {
+                        row.Height = thisRow.Height;
+                        row.CustomHeight = true;
+                    }
+                    if (!thisRow.Style.Equals(xlWorksheet.Style))
+                    {
+                        row.StyleIndex = sharedStyles[thisRow.Style].StyleId;
+                        row.CustomFormat = true;
+                    }
                     if (thisRow.IsHidden) row.Hidden = true;
                     if (thisRow.Collapsed) row.Collapsed = true;
                     if (thisRow.OutlineLevel > 0) row.OutlineLevel = (byte)thisRow.OutlineLevel;
                 }
                 else
                 {
-                    row.Height = xlWorksheet.RowHeight;
-                    row.CustomHeight = true;
-                    row.Hidden = false;
+                    //row.Height = xlWorksheet.RowHeight;
+                    //row.CustomHeight = true;
+                    //row.Hidden = false;
                 }
 
                 List<Cell> cellsToRemove = new List<Cell>();
@@ -1913,7 +1913,66 @@ namespace ClosedXML.Excel
 
             var phoneticProperties = worksheetPart.Worksheet.Elements<PhoneticProperties>().FirstOrDefault();
 
-            var hyperlinks = worksheetPart.Worksheet.Elements<Hyperlinks>().FirstOrDefault();
+            
+
+            #region Hyperlinks
+            Hyperlinks hyperlinks = null;
+            var relToRemove = worksheetPart.HyperlinkRelationships.ToList();
+            relToRemove.ForEach(h => worksheetPart.DeleteReferenceRelationship(h));
+            if (xlWorksheet.Hyperlinks.Count() == 0)
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<Hyperlinks>();
+            }
+            else
+            {
+                worksheetPart.Worksheet.Elements<Hyperlinks>().FirstOrDefault();
+                if (worksheetPart.Worksheet.Elements<Hyperlinks>().Count() == 0)
+                {
+                    OpenXmlElement previousElement;
+                    if (phoneticProperties != null)
+                        previousElement = phoneticProperties;
+                    else if (mergeCells != null)
+                        previousElement = mergeCells;
+                    else if (customSheetViews != null)
+                        previousElement = customSheetViews;
+                    else if (autoFilter != null)
+                        previousElement = autoFilter;
+                    else if (sheetData != null)
+                        previousElement = sheetData;
+                    else if (columns != null)
+                        previousElement = columns;
+                    else
+                        previousElement = worksheetPart.Worksheet.SheetFormatProperties;
+
+                    worksheetPart.Worksheet.InsertAfter(new Hyperlinks(), previousElement);
+                }
+
+                hyperlinks = worksheetPart.Worksheet.Elements<Hyperlinks>().First();
+                hyperlinks.RemoveAllChildren<Hyperlink>();
+                foreach (var hl in xlWorksheet.Hyperlinks)
+                {
+                    Hyperlink hyperlink;
+                    if (hl.IsExternal)
+                    {
+                        String rId = relId.GetNext(RelType.Workbook);
+                        hyperlink = new Hyperlink() { Reference = hl.Cell.Address.ToString(), Id = rId };
+                        worksheetPart.AddHyperlinkRelationship(hl.ExternalAddress, true, rId);
+                    }
+                    else
+                    {
+                        hyperlink = new Hyperlink()
+                        {
+                            Reference = hl.Cell.Address.ToString(),
+                            Location = hl.InternalAddress,
+                            Display = hl.Cell.GetFormattedString()
+                        };
+                    }
+                    if (!StringExtensions.IsNullOrWhiteSpace(hl.Tooltip))
+                        hyperlink.Tooltip = hl.Tooltip;
+                    hyperlinks.Append(hyperlink);
+                }
+            }
+            #endregion
 
             #region PrintOptions
             PrintOptions printOptions = null;
@@ -2431,12 +2490,12 @@ namespace ClosedXML.Excel
             accent6Color1.Append(rgbColorModelHex8);
 
             A.Hyperlink hyperlink1 = new A.Hyperlink();
-            A.RgbColorModelHex rgbColorModelHex9 = new A.RgbColorModelHex() { Val = "0000FF" };
+            A.RgbColorModelHex rgbColorModelHex9 = new A.RgbColorModelHex() { Val = Theme.Hyperlink.Color.ToHex().Substring(2) };
 
             hyperlink1.Append(rgbColorModelHex9);
 
             A.FollowedHyperlinkColor followedHyperlinkColor1 = new A.FollowedHyperlinkColor();
-            A.RgbColorModelHex rgbColorModelHex10 = new A.RgbColorModelHex() { Val = "800080" };
+            A.RgbColorModelHex rgbColorModelHex10 = new A.RgbColorModelHex() { Val = Theme.FollowedHyperlink.Color.ToHex().Substring(2) };
 
             followedHyperlinkColor1.Append(rgbColorModelHex10);
 

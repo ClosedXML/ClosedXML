@@ -49,6 +49,8 @@ namespace ClosedXML.Excel
                 Accent4 = XLColor.FromHtml("#FF8064A2"),
                 Accent5 = XLColor.FromHtml("#FF4BACC6"),
                 Accent6 = XLColor.FromHtml("#FFF79646"),
+                Hyperlink = XLColor.FromHtml("#FF0000FF"),
+                FollowedHyperlink = XLColor.FromHtml("#FF800080")
             };
         }
 

@@ -94,6 +94,18 @@
     <Compile Include="..\ClosedXML\Excel\CustomProperties\XLCustomProperty.cs">
       <Link>Excel\CustomProperties\XLCustomProperty.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Hyperlinks\IXLHyperlinks.cs">
+      <Link>Excel\Hyperlinks\IXLHyperlinks.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Hyperlinks\XLHyperlinks.cs">
+      <Link>Excel\Hyperlinks\XLHyperlinks.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Hyperlinks\XLHyperlink_Internal.cs">
+      <Link>Excel\Hyperlinks\XLHyperlink_Internal.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Hyperlinks\XLHyperlink_public.cs">
+      <Link>Excel\Hyperlinks\XLHyperlink_public.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLAddress.cs">
       <Link>Excel\IXLAddress.cs</Link>
     </Compile>

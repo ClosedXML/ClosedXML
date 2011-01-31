@@ -249,5 +249,6 @@ namespace ClosedXML.Excel
         IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position);
 
         IXLRange RangeUsed();
+
     }
 }

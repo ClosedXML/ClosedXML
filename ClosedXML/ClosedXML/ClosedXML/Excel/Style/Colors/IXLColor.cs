@@ -18,7 +18,9 @@ namespace ClosedXML.Excel
         Accent3,
         Accent4,
         Accent5,
-        Accent6
+        Accent6,
+        Hyperlink,
+        FollowedHyperlink
     }
     public interface IXLColor: IEquatable<IXLColor>
     {

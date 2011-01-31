@@ -112,6 +112,28 @@ namespace ClosedXML.Excel
             }
         }
 
+        public static Boolean IsValidColumn(String column)
+        {
+            if (StringExtensions.IsNullOrWhiteSpace(column) || column.Length > 3)
+            {
+                return false;
+            }
+            else
+            {
+                Boolean retVal = true;
+                String theColumn = column.ToUpper();
+                for (Int32 i = 1; i <= column.Length; i++)
+                {
+                    if (theColumn[i] < 'A' || theColumn[i] > 'Z' || (i == 3 && theColumn[i] > 'D'))
+                    {
+                        retVal = false;
+                        break;
+                    }
+                }
+                return retVal;
+            }
+        }
+
         /// <summary>
         /// Gets the column letter of a given column number.
         /// </summary>

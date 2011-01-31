@@ -29,6 +29,7 @@ namespace ClosedXML.Excel
             NamedRanges = new XLNamedRanges(workbook);
             SheetView = new XLSheetView();
             Tables = new XLTables();
+            Hyperlinks = new XLHyperlinks();
             this.workbook = workbook;
             style = new XLStyle(this, workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new XLRanges(workbook, workbook.Style) , workbook);
@@ -597,5 +598,7 @@ namespace ClosedXML.Excel
                 return rowOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
         }
         #endregion
+
+        public new IXLHyperlinks Hyperlinks { get; private set; }
     }
 }

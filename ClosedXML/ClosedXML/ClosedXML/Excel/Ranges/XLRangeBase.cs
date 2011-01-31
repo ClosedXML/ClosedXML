@@ -858,5 +858,18 @@ namespace ClosedXML.Excel
                 Cells().ForEach(c => c.ShareString = value);
             }
         }
+
+        public IXLHyperlinks Hyperlinks 
+        {
+            get
+            {
+                IXLHyperlinks hyperlinks = new XLHyperlinks();
+                var hls = from hl in Worksheet.Hyperlinks
+                          where Contains(hl.Cell.AsRange())
+                          select hl;
+                hls.ForEach(hl => hyperlinks.Add(hl));
+                return hyperlinks;
+            }
+        }
     }
 }

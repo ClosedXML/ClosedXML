@@ -60,6 +60,10 @@
     <Compile Include="Excel\CustomProperties\IXLCustomProperties.cs" />
     <Compile Include="Excel\CustomProperties\XLCustomProperty.cs" />
     <Compile Include="Excel\CustomProperties\IXLCustomProperty.cs" />
+    <Compile Include="Excel\Hyperlinks\XLHyperlinks.cs" />
+    <Compile Include="Excel\Hyperlinks\IXLHyperlinks.cs" />
+    <Compile Include="Excel\Hyperlinks\XLHyperlink_Internal.cs" />
+    <Compile Include="Excel\Hyperlinks\XLHyperlink_public.cs" />
     <Compile Include="Excel\IXLSheetView.cs" />
     <Compile Include="Excel\IXLTheme.cs" />
     <Compile Include="Excel\NamedRanges\XLNamedRanges.cs" />

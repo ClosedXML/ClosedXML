@@ -154,5 +154,7 @@ namespace ClosedXML.Excel
         ///   If false the cell's text will not be shared and stored as an inline value.
         /// </value>
         Boolean ShareString { set; }
+
+        IXLHyperlinks Hyperlinks { get; }
     }
 }

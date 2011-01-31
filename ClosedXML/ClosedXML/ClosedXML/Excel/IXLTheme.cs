@@ -18,6 +18,7 @@ namespace ClosedXML.Excel
         IXLColor Accent4 { get; set; }
         IXLColor Accent5 { get; set; }
         IXLColor Accent6 { get; set; }
-
+        IXLColor Hyperlink { get; set; }
+        IXLColor FollowedHyperlink { get; set; }
     }
 }
