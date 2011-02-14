@@ -215,6 +215,8 @@ namespace ClosedXML.Excel
         IXLTable CreateTable(String name);
 
         IXLRange RangeUsed();
+
+        //IXLWorksheet Worksheet { get; }
     }
 }
 

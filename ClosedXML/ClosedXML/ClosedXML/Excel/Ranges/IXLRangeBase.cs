@@ -156,5 +156,7 @@ namespace ClosedXML.Excel
         Boolean ShareString { set; }
 
         IXLHyperlinks Hyperlinks { get; }
+
+        IXLDataValidation DataValidation { get; }
     }
 }

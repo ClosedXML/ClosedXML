@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
 
         protected IXLStyle defaultStyle;
         public IXLRangeAddress RangeAddress { get; protected set; }
-        internal XLWorksheet Worksheet { get; set; }
+        public XLWorksheet Worksheet { get; set; }
 
         public IXLCell FirstCell()
         {
@@ -526,6 +526,14 @@ namespace ClosedXML.Excel
                     );
 
             ClearMerged();
+
+            List<XLHyperlink> hyperlinksToRemove = new List<XLHyperlink>();
+            foreach (var hl in Worksheet.Hyperlinks)
+            {
+                if (this.Contains(hl.Cell.AsRange()))
+                    hyperlinksToRemove.Add(hl);
+            }
+            hyperlinksToRemove.ForEach(hl => Worksheet.Hyperlinks.Delete(hl));
         }
 
         public void ClearStyles()
@@ -649,6 +657,14 @@ namespace ClosedXML.Excel
                     mergesToRemove.Add(merge);
             }
             mergesToRemove.ForEach(r => Worksheet.Internals.MergedRanges.Remove(r));
+
+            List<XLHyperlink> hyperlinksToRemove = new List<XLHyperlink>();
+            foreach (var hl in Worksheet.Hyperlinks)
+            {
+                if (this.Contains(hl.Cell.AsRange()))
+                    hyperlinksToRemove.Add(hl);
+            }
+            hyperlinksToRemove.ForEach(hl => Worksheet.Hyperlinks.Delete(hl));
 
             var shiftedRange = (XLRange)this.AsRange();
             if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)
@@ -870,6 +886,47 @@ namespace ClosedXML.Excel
                 hls.ForEach(hl => hyperlinks.Add(hl));
                 return hyperlinks;
             }
+        }
+
+        public IXLDataValidation DataValidation
+        {
+            get 
+            {
+                String address = this.RangeAddress.ToString();
+                if (Worksheet.DataValidations.Where(dv => dv.Range.RangeAddress.ToString() == address).Any())
+                {
+                    return Worksheet.DataValidations.Where(dv => dv.Range.RangeAddress.ToString() == address).Single();
+                }
+                else
+                {
+                    var dv = DataValidationsIntersects();
+                    if (dv != null)
+                    {
+                        dv.Delete();
+                        foreach (var c in dv.Range.Cells())
+                        {
+                            if (!this.Contains(c.Address.ToString()))
+                            {
+                                c.DataValidation.CopyFrom(dv);
+                            }
+                        }
+                    }
+
+                    var dataValidation = new XLDataValidation(this.AsRange());
+                    Worksheet.DataValidations.Add(dataValidation);
+                    return dataValidation;
+                }
+            }
+        }
+
+        private IXLDataValidation DataValidationsIntersects()
+        {
+            foreach (var dv in Worksheet.DataValidations)
+            {
+                if (dv.Range.Intersects(this))
+                    return dv;
+            }
+            return null;
         }
     }
 }

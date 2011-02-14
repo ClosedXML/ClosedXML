@@ -12,7 +12,8 @@ namespace ClosedXML.Excel
     internal class XLCell : IXLCell, IXLStylized
     {
         public static readonly DateTime baseDate = new DateTime(1899, 12, 30);
-        XLWorksheet worksheet;
+        public IXLWorksheet Worksheet { get { return worksheet; } }
+        public XLWorksheet worksheet;
         public XLCell(IXLAddress address, IXLStyle defaultStyle, XLWorksheet worksheet)
         {
             this.Address = address;
@@ -999,6 +1000,14 @@ namespace ClosedXML.Excel
                     if (Style.Font.Underline == worksheet.Style.Font.Underline)
                         Style.Font.Underline = XLFontUnderlineValues.Single;
                 }
+            }
+        }
+
+        public IXLDataValidation DataValidation
+        {
+            get
+            {
+                return this.AsRange().DataValidation;
             }
         }
     }

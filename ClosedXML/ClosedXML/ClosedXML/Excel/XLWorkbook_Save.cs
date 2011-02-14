@@ -34,6 +34,9 @@ namespace ClosedXML.Excel
         private List<KeyValuePair<XLReferenceStyle, ReferenceModeValues>> referenceModeValues = new List<KeyValuePair<XLReferenceStyle, ReferenceModeValues>>();
         private List<KeyValuePair<XLAlignmentReadingOrderValues, UInt32>> alignmentReadingOrderValues = new List<KeyValuePair<XLAlignmentReadingOrderValues, UInt32>>();
         private List<KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>> totalsRowFunctionValues = new List<KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>>();
+        private List<KeyValuePair<XLAllowedValues, DataValidationValues>> dataValidationValues = new List<KeyValuePair<XLAllowedValues, DataValidationValues>>();
+        private List<KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>> dataValidationErrorStyleValues = new List<KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>>();
+        private List<KeyValuePair<XLOperator, DataValidationOperatorValues>> dataValidationOperatorValues = new List<KeyValuePair<XLOperator, DataValidationOperatorValues>>();
 
         private Boolean populated = false;
         private void PopulateEnums()
@@ -54,6 +57,9 @@ namespace ClosedXML.Excel
                 PopulateReferenceModeValues();
                 PopulateAlignmentReadingOrderValues();
                 PopulateTotalsRowFunctionValues();
+                PopulateDataValidationValues();
+                PopulateDataValidationErrorStyleValues();
+                PopulateDataValidationOperatorValues();
                 populated = true;
             }
         }
@@ -268,6 +274,37 @@ namespace ClosedXML.Excel
             totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.StandardDeviation, TotalsRowFunctionValues.StandardDeviation));
             totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.Variance, TotalsRowFunctionValues.Variance));
             totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.Custom, TotalsRowFunctionValues.Custom));
+        }
+
+        private void PopulateDataValidationValues()
+        {
+            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.AnyValue, DataValidationValues.None));
+            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.Custom, DataValidationValues.Custom));
+            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.Date, DataValidationValues.Date));
+            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.Decimal, DataValidationValues.Decimal));
+            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.List, DataValidationValues.List));
+            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.TextLength, DataValidationValues.TextLength));
+            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.Time, DataValidationValues.Time));
+            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.WholeNumber, DataValidationValues.Whole));
+        }
+
+        private void PopulateDataValidationErrorStyleValues()
+        {
+            dataValidationErrorStyleValues.Add(new KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>(XLErrorStyle.Information, DataValidationErrorStyleValues.Information));
+            dataValidationErrorStyleValues.Add(new KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>(XLErrorStyle.Warning, DataValidationErrorStyleValues.Warning));
+            dataValidationErrorStyleValues.Add(new KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>(XLErrorStyle.Stop, DataValidationErrorStyleValues.Stop));
+        }
+
+        private void PopulateDataValidationOperatorValues()
+        {
+            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.Between, DataValidationOperatorValues.Between));
+            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.EqualOrGreaterThan , DataValidationOperatorValues.GreaterThanOrEqual ));
+            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.EqualOrLessThan, DataValidationOperatorValues.LessThanOrEqual));
+            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.EqualTo, DataValidationOperatorValues.Equal));
+            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.GreaterThan, DataValidationOperatorValues.GreaterThan));
+            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.LessThan, DataValidationOperatorValues.LessThan));
+            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.NotBetween, DataValidationOperatorValues.NotBetween));
+            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.NotEqualTo, DataValidationOperatorValues.NotEqual));
         }
 
         #endregion
@@ -1913,7 +1950,66 @@ namespace ClosedXML.Excel
 
             var phoneticProperties = worksheetPart.Worksheet.Elements<PhoneticProperties>().FirstOrDefault();
 
+            #region DataValidations
+            DataValidations dataValidations = null;
             
+            if (xlWorksheet.DataValidations.Count() == 0)
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<DataValidations>();
+            }
+            else
+            {
+                worksheetPart.Worksheet.Elements<DataValidations>().FirstOrDefault();
+                if (worksheetPart.Worksheet.Elements<DataValidations>().Count() == 0)
+                {
+                    OpenXmlElement previousElement;
+                    if (phoneticProperties != null)
+                        previousElement = phoneticProperties;
+                    else if (mergeCells != null)
+                        previousElement = mergeCells;
+                    else if (customSheetViews != null)
+                        previousElement = customSheetViews;
+                    else if (autoFilter != null)
+                        previousElement = autoFilter;
+                    else if (sheetData != null)
+                        previousElement = sheetData;
+                    else if (columns != null)
+                        previousElement = columns;
+                    else
+                        previousElement = worksheetPart.Worksheet.SheetFormatProperties;
+
+                    worksheetPart.Worksheet.InsertAfter(new DataValidations(), previousElement);
+                }
+
+                dataValidations = worksheetPart.Worksheet.Elements<DataValidations>().First();
+                dataValidations.RemoveAllChildren<DataValidation>();
+                foreach (var dv in xlWorksheet.DataValidations)
+                {
+                    DataValidation dataValidation = new DataValidation()
+                    {
+                        AllowBlank = dv.IgnoreBlanks,
+                        Formula1 = new Formula1(dv.MinValue),
+                        Formula2 = new Formula2(dv.MaxValue),
+                        Type = dataValidationValues.Single(p => p.Key == dv.AllowedValues).Value,
+                        ShowErrorMessage = dv.ShowErrorMessage,
+                        Prompt = dv.InputMessage,
+                        PromptTitle = dv.InputTitle,
+                        ErrorTitle = dv.ErrorTitle,
+                        Error = dv.ErrorMessage,
+                        ShowDropDown = !dv.InCellDropdown,
+                        ShowInputMessage = dv.ShowInputMessage,
+                        ErrorStyle = dataValidationErrorStyleValues.Single(p => p.Key == dv.ErrorStyle).Value,
+                        Operator = dataValidationOperatorValues.Single(p => p.Key == dv.Operator).Value,
+                        SequenceOfReferences = new ListValue<StringValue>() { InnerText = dv.Range.RangeAddress.ToString() }
+                    };
+                    
+                    dataValidations.Append(dataValidation);
+                }
+                dataValidations.Count = (UInt32)xlWorksheet.DataValidations.Count();
+            }
+
+
+            #endregion
 
             #region Hyperlinks
             Hyperlinks hyperlinks = null;
@@ -1929,7 +2025,9 @@ namespace ClosedXML.Excel
                 if (worksheetPart.Worksheet.Elements<Hyperlinks>().Count() == 0)
                 {
                     OpenXmlElement previousElement;
-                    if (phoneticProperties != null)
+                    if (dataValidations != null)
+                        previousElement = dataValidations;
+                    else if (phoneticProperties != null)
                         previousElement = phoneticProperties;
                     else if (mergeCells != null)
                         previousElement = mergeCells;
@@ -1981,6 +2079,8 @@ namespace ClosedXML.Excel
                 OpenXmlElement previousElement;
                 if (hyperlinks != null)
                     previousElement = hyperlinks;
+                else if (dataValidations != null)
+                    previousElement = dataValidations;
                 else if (phoneticProperties != null)
                     previousElement = phoneticProperties;
                 else if (mergeCells != null)
@@ -2015,6 +2115,8 @@ namespace ClosedXML.Excel
                     previousElement = printOptions;
                 else if (hyperlinks != null)
                     previousElement = hyperlinks;
+                else if (dataValidations != null)
+                    previousElement = dataValidations;
                 else if (phoneticProperties != null)
                     previousElement = phoneticProperties;
                 else if (mergeCells != null)

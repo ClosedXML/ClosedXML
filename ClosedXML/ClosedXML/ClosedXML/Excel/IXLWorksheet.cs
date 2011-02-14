@@ -250,5 +250,6 @@ namespace ClosedXML.Excel
 
         IXLRange RangeUsed();
 
+        IXLDataValidations DataValidations { get; }
     }
 }

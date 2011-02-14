@@ -327,7 +327,8 @@ namespace ClosedXML.Excel
                 }
                 #endregion
 
-                
+                LoadDataValidations(worksheetPart, ws);
+
                 LoadHyperlinks(worksheetPart, ws);
 
                 LoadPrintOptions(worksheetPart, ws);
@@ -386,6 +387,33 @@ namespace ClosedXML.Excel
                     {
                         Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment);
                     }
+                }
+            }
+        }
+
+        private void LoadDataValidations(WorksheetPart worksheetPart, XLWorksheet ws)
+        {
+            var dataValidationList = worksheetPart.Worksheet.Descendants<DataValidations>();
+            if (dataValidationList.Count() > 0)
+            {
+                var dataValidations = (DataValidations)dataValidationList.First();
+                foreach (var dvs in dataValidations.Descendants<DataValidation>())
+                {
+                    var dvt = ws.Range(dvs.SequenceOfReferences.InnerText).DataValidation;
+                    if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
+                    if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;
+                    if (dvs.ShowErrorMessage != null) dvt.ShowErrorMessage = dvs.ShowErrorMessage;
+                    if (dvs.ShowInputMessage != null) dvt.ShowInputMessage = dvs.ShowInputMessage;
+                    if (dvs.PromptTitle != null) dvt.InputTitle = dvs.PromptTitle;
+                    if (dvs.Prompt != null) dvt.InputMessage = dvs.Prompt;
+                    if (dvs.ErrorTitle != null) dvt.ErrorTitle = dvs.ErrorTitle;
+                    if (dvs.Error != null) dvt.ErrorMessage = dvs.Error;
+                    if (dvs.ErrorStyle != null) dvt.ErrorStyle = dataValidationErrorStyleValues.Single(p => p.Value == dvs.ErrorStyle).Key;
+                    if (dvs.Type != null) dvt.AllowedValues = dataValidationValues.Single(p => p.Value == dvs.Type).Key;
+                    if (dvs.Operator != null) dvt.Operator = dataValidationOperatorValues.Single(p => p.Value == dvs.Operator).Key;
+                    if (dvs.Formula1 != null) dvt.MinValue = dvs.Formula1.Text;
+                    if (dvs.Formula2 != null) dvt.MaxValue = dvs.Formula2.Text;
+
                 }
             }
         }

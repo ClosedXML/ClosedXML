@@ -99,6 +99,16 @@ namespace ClosedXML_Examples.Misc
             // List all hyperlinks in a range:
             var hyperlinksInRange = ws.Range("A1:A3").Hyperlinks;
 
+            // Clearing a cell with a hyperlink
+            ws.Cell(++ro, 1).Value = "ERROR!";
+            ws.Cell(ro, 1).Hyperlink.InternalAddress = "A1";
+            ws.Cell(ro, 1).Clear();
+
+            // Deleting a cell with a hyperlink
+            ws.Cell(++ro, 1).Value = "ERROR!";
+            ws.Cell(ro, 1).Hyperlink.InternalAddress = "A1";
+            ws.Cell(ro, 1).Clear();
+
             ws.Columns().AdjustToContents();
 
             wb.SaveAs(filePath);

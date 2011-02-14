@@ -15,20 +15,17 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            //new ClosedXML_Examples.Ranges.UsingTables().Create(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
-            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Hyperlinks_2.xlsx");
-            //var wb = new XLWorkbook();
-            //var c = wb.Worksheets.Add("New").Cell(1, 1);
-            //c.Value = "Hello";
-            //c.ShareString = false;
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("New");
+            var dataValidation = ws.Range("A1:B2").DataValidation;
+            dataValidation.WholeNumber.Between(1, 5);
+            dataValidation.ErrorStyle = XLErrorStyle.Warning;
+            dataValidation.ErrorTitle = "Number out of range";
+            dataValidation.ErrorMessage = "Please enter a number between 1 and 5";
             wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
-            
-            //String test = @"../file.txt";
-            //Console.WriteLine("Uri.IsWellFormedUriString says: {0}", Uri.IsWellFormedUriString(test, UriKind.RelativeOrAbsolute));
-            //Console.WriteLine("TryCreate says: {0}", TryCreate(test));
-            //Console.WriteLine("IsValidUri says: {0}", IsValidUri(test));
-            //Console.ReadKey();
         }
+
+
         public static String GetSheetPassword(String password)
         {
             Int32 pLength = password.Length;

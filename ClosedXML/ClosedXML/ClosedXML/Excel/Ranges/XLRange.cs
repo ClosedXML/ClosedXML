@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
 {
     internal class XLRange: XLRangeBase, IXLRange
     {
+        //public new IXLWorksheet Worksheet { get { return base.Worksheet; } }
         public XLRangeParameters RangeParameters { get; private set; }
         public XLRange(XLRangeParameters xlRangeParameters): base(xlRangeParameters.RangeAddress)
         {

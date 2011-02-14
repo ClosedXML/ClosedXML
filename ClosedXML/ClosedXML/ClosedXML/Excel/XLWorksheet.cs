@@ -30,6 +30,7 @@ namespace ClosedXML.Excel
             SheetView = new XLSheetView();
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
+            DataValidations = new XLDataValidations();
             this.workbook = workbook;
             style = new XLStyle(this, workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new XLRanges(workbook, workbook.Style) , workbook);
@@ -600,5 +601,6 @@ namespace ClosedXML.Excel
         #endregion
 
         public new IXLHyperlinks Hyperlinks { get; private set; }
+        public IXLDataValidations DataValidations { get; private set; }
     }
 }
