@@ -151,11 +151,11 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets or sets the horizontal dpi for printing the worksheet.
         /// </summary>
-        Int32 HorizontalDpi { get; set; }
+        UInt32 HorizontalDpi { get; set; }
         /// <summary>
         /// Gets or sets the vertical dpi for printing the worksheet.
         /// </summary>
-        Int32 VerticalDpi { get; set; }
+        UInt32 VerticalDpi { get; set; }
         /// <summary>
         /// Gets or sets the page number that will begin the printout.
         /// <para>For example, the first page of your printout could be numbered page 5.</para>

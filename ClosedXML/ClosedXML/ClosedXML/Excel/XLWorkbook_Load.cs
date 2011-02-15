@@ -186,7 +186,7 @@ namespace ClosedXML.Excel
                     if (row.Collapsed != null && row.Collapsed)
                         xlRow.Collapse();
 
-                    if (row.OutlineLevel != null)
+                    if (row.OutlineLevel != null && row.OutlineLevel > 0)
                         xlRow.OutlineLevel = row.OutlineLevel;
 
                     if (row.CustomFormat != null)
@@ -559,8 +559,8 @@ namespace ClosedXML.Excel
                     ws.PageSetup.ShowComments = showCommentsValues.Single(sc => sc.Value == pageSetup.CellComments).Key;
                 if (pageSetup.Errors != null)
                     ws.PageSetup.PrintErrorValue = printErrorValues.Single(p => p.Value == pageSetup.Errors).Key;
-                if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = Int32.Parse(pageSetup.HorizontalDpi.InnerText);
-                if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = Int32.Parse(pageSetup.VerticalDpi.InnerText);
+                if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = pageSetup.HorizontalDpi.Value;
+                if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = pageSetup.VerticalDpi.Value;
                 if (pageSetup.FirstPageNumber != null) ws.PageSetup.FirstPageNumber = Int32.Parse(pageSetup.FirstPageNumber.InnerText);
             }
         }

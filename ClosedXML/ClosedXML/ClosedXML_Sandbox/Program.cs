@@ -15,14 +15,10 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("New");
-            var dataValidation = ws.Range("A1:B2").DataValidation;
-            dataValidation.WholeNumber.Between(1, 5);
-            dataValidation.ErrorStyle = XLErrorStyle.Warning;
-            dataValidation.ErrorTitle = "Number out of range";
-            dataValidation.ErrorMessage = "Please enter a number between 1 and 5";
-            wb.SaveAs(@"C:\Excel Files\ForTesting\Sandbox.xlsx");
+            var wb = new XLWorkbook(@"c:\Excel Files\ForTesting\Issue_6237.xlsx");
+
+            
+            wb.SaveAs(@"C:\Excel Files\ForTesting\Issue_6237_Saved.xlsx");
         }
 
 
