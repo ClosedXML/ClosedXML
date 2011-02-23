@@ -357,7 +357,8 @@ namespace ClosedXML.Excel
                         var sections = area.Trim().Split('!');
                         var sheetName = sections[0].Replace("\'", "");
                         var sheetArea = sections[1];
-                        Worksheets.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
+                        if (!sheetArea.Equals("#REF"))
+                            Worksheets.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                     }
                 }
                 else if (name == "_xlnm.Print_Titles")
@@ -367,25 +368,32 @@ namespace ClosedXML.Excel
                     var colSections = areas[0].Trim().Split('!');
                     var sheetNameCol = colSections[0].Replace("\'", "");
                     var sheetAreaCol = colSections[1];
-                    Worksheets.Worksheet(sheetNameCol).PageSetup.SetColumnsToRepeatAtLeft(sheetAreaCol);
+                    if (!sheetAreaCol.Equals("#REF"))
+                        Worksheets.Worksheet(sheetNameCol).PageSetup.SetColumnsToRepeatAtLeft(sheetAreaCol);
 
                     var rowSections = areas[1].Split('!');
                     var sheetNameRow = rowSections[0].Replace("\'", "");
                     var sheetAreaRow = rowSections[1];
-                    Worksheets.Worksheet(sheetNameRow).PageSetup.SetRowsToRepeatAtTop(sheetAreaRow);
+                    if (!sheetAreaRow.Equals("#REF"))
+                        Worksheets.Worksheet(sheetNameRow).PageSetup.SetRowsToRepeatAtTop(sheetAreaRow);
                 }
                 else
                 {
-                    var localSheetId = definedName.LocalSheetId;
-                    var comment = definedName.Comment;
+                    
                     var text = definedName.Text;
-                    if (localSheetId == null)
+
+                    if (!text.Equals("#REF"))
                     {
-                        NamedRanges.Add(name, text, comment);
-                    }
-                    else
-                    {
-                        Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment);
+                        var localSheetId = definedName.LocalSheetId;
+                        var comment = definedName.Comment;
+                        if (localSheetId == null)
+                        {
+                            NamedRanges.Add(name, text, comment);
+                        }
+                        else
+                        {
+                            Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment);
+                        }
                     }
                 }
             }
@@ -430,14 +438,21 @@ namespace ClosedXML.Excel
                 var hyperlinks = (Hyperlinks)hyperlinkList.First();
                 foreach (var hl in hyperlinks.Descendants<Hyperlink>())
                 {
-                    String tooltip = hl.Tooltip != null ? tooltip = hl.Tooltip.Value : tooltip = String.Empty;
-                    var xlCell = (XLCell)ws.CellFast(hl.Reference.Value);
-                    xlCell.SettingHyperlink = true;
-                    if (hl.Id != null)
-                        xlCell.Hyperlink = new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip);
-                    else
-                        xlCell.Hyperlink = new XLHyperlink(hl.Location.Value, tooltip);
-                    xlCell.SettingHyperlink = false;
+                    if (!hl.Reference.Value.Equals("#REF"))
+                    {
+                        String tooltip = hl.Tooltip != null ? tooltip = hl.Tooltip.Value : tooltip = String.Empty;
+                        var xlRange = ws.Range(hl.Reference.Value);
+                        //var xlCell = (XLCell)ws.CellFast(hl.Reference.Value);
+                        foreach (XLCell xlCell in xlRange.Cells())
+                        {
+                            xlCell.SettingHyperlink = true;
+                            if (hl.Id != null)
+                                xlCell.Hyperlink = new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip);
+                            else
+                                xlCell.Hyperlink = new XLHyperlink(hl.Location.Value, tooltip);
+                            xlCell.SettingHyperlink = false;
+                        }
+                    }
                 }
             }
         }

@@ -15,10 +15,12 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook(@"c:\Excel Files\ForTesting\Issue_6237.xlsx");
+            //var fileName = "Issue_6266";
+            var fileName = "Issue_6257";
+            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
 
-            
-            wb.SaveAs(@"C:\Excel Files\ForTesting\Issue_6237_Saved.xlsx");
+
+            wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
         }
 
 
