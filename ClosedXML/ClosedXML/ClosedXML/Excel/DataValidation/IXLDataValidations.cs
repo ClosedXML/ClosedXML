@@ -8,6 +8,5 @@ namespace ClosedXML.Excel
     public interface IXLDataValidations: IEnumerable<IXLDataValidation>
     {
         void Add(IXLDataValidation dataValidation);
-        void Delete(IXLDataValidation dataValidation);
     }
 }

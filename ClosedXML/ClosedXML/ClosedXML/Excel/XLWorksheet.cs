@@ -443,50 +443,58 @@ namespace ClosedXML.Excel
             return Range(1, 1, XLWorksheet.MaxNumberOfRows, XLWorksheet.MaxNumberOfColumns);
         }
 
-        public void CollapseRows()
+        public IXLWorksheet CollapseRows()
         {
             Enumerable.Range(1, 8).ForEach(i => CollapseRows(i));
+            return this;
         }
-        public void CollapseColumns()
+        public IXLWorksheet CollapseColumns()
         {
             Enumerable.Range(1, 8).ForEach(i => CollapseColumns(i));
+            return this;
         }
-        public void ExpandRows()
+        public IXLWorksheet ExpandRows()
         {
             Enumerable.Range(1, 8).ForEach(i => ExpandRows(i));
+            return this;
         }
-        public void ExpandColumns()
+        public IXLWorksheet ExpandColumns()
         {
             Enumerable.Range(1, 8).ForEach(i => ExpandRows(i));
+            return this;
         }
-
-        public void CollapseRows(Int32 outlineLevel)
+               
+        public IXLWorksheet CollapseRows(Int32 outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
                 throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
 
             Internals.RowsCollection.Values.Where(r => r.OutlineLevel == outlineLevel).ForEach(r => r.Collapse());
+            return this;
         }
-        public void CollapseColumns(Int32 outlineLevel)
+        public IXLWorksheet CollapseColumns(Int32 outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
                 throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
 
             Internals.ColumnsCollection.Values.Where(c => c.OutlineLevel == outlineLevel).ForEach(c => c.Collapse());
+            return this;
         }
-        public void ExpandRows(Int32 outlineLevel)
+        public IXLWorksheet ExpandRows(Int32 outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
                 throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
 
             Internals.RowsCollection.Values.Where(r => r.OutlineLevel == outlineLevel).ForEach(r => r.Expand());
+            return this;
         }
-        public void ExpandColumns(Int32 outlineLevel)
+        public IXLWorksheet ExpandColumns(Int32 outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
                 throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
 
             Internals.ColumnsCollection.Values.Where(c => c.OutlineLevel == outlineLevel).ForEach(c => c.Expand());
+            return this;
         }
 
         public void Delete()
@@ -602,5 +610,18 @@ namespace ClosedXML.Excel
 
         public new IXLHyperlinks Hyperlinks { get; private set; }
         public IXLDataValidations DataValidations { get; private set; }
+
+        public XLWorksheetVisibility Visibility { get; set; }
+        public IXLWorksheet Hide()
+        {
+            Visibility = XLWorksheetVisibility.Hidden;
+            return this;
+        }
+        public IXLWorksheet Unhide()
+        {
+            Visibility = XLWorksheetVisibility.Visible;
+            return this;
+        }
+
     }
 }

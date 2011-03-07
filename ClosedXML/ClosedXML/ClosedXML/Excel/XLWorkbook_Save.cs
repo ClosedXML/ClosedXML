@@ -37,6 +37,7 @@ namespace ClosedXML.Excel
         private List<KeyValuePair<XLAllowedValues, DataValidationValues>> dataValidationValues = new List<KeyValuePair<XLAllowedValues, DataValidationValues>>();
         private List<KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>> dataValidationErrorStyleValues = new List<KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>>();
         private List<KeyValuePair<XLOperator, DataValidationOperatorValues>> dataValidationOperatorValues = new List<KeyValuePair<XLOperator, DataValidationOperatorValues>>();
+        private List<KeyValuePair<XLWorksheetVisibility, SheetStateValues>> sheetStateValues = new List<KeyValuePair<XLWorksheetVisibility, SheetStateValues>>();
 
         private Boolean populated = false;
         private void PopulateEnums()
@@ -60,6 +61,7 @@ namespace ClosedXML.Excel
                 PopulateDataValidationValues();
                 PopulateDataValidationErrorStyleValues();
                 PopulateDataValidationOperatorValues();
+                PopulateSheetStateValues();
                 populated = true;
             }
         }
@@ -305,6 +307,13 @@ namespace ClosedXML.Excel
             dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.LessThan, DataValidationOperatorValues.LessThan));
             dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.NotBetween, DataValidationOperatorValues.NotBetween));
             dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.NotEqualTo, DataValidationOperatorValues.NotEqual));
+        }
+
+        private void PopulateSheetStateValues()
+        {
+            sheetStateValues.Add(new KeyValuePair<XLWorksheetVisibility, SheetStateValues>(XLWorksheetVisibility.Visible, SheetStateValues.Visible));
+            sheetStateValues.Add(new KeyValuePair<XLWorksheetVisibility, SheetStateValues>(XLWorksheetVisibility.Hidden, SheetStateValues.Hidden));
+            sheetStateValues.Add(new KeyValuePair<XLWorksheetVisibility, SheetStateValues>(XLWorksheetVisibility.VeryHidden, SheetStateValues.VeryHidden));
         }
 
         #endregion
@@ -641,7 +650,17 @@ namespace ClosedXML.Excel
 
                 xlSheet.SheetId = Int32.Parse(rId.Substring(3));
                 xlSheet.RelId = rId;
-                workbook.Sheets.Append(new Sheet() { Name = xlSheet.Name, Id = rId, SheetId = (UInt32)xlSheet.SheetId });
+                var newSheet = new Sheet()
+                {
+                    Name = xlSheet.Name,
+                    Id = rId,
+                    SheetId = (UInt32)xlSheet.SheetId
+                };
+                
+                if (xlSheet.Visibility != XLWorksheetVisibility.Visible)
+                    newSheet.State = sheetStateValues.Single(p => p.Key == xlSheet.Visibility).Value;
+
+                workbook.Sheets.Append(newSheet);
             }
 
             var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
@@ -1985,6 +2004,13 @@ namespace ClosedXML.Excel
                 dataValidations.RemoveAllChildren<DataValidation>();
                 foreach (var dv in xlWorksheet.DataValidations)
                 {
+                    String sequence = String.Empty;
+                    foreach (var r in dv.Ranges)
+                    {
+                        sequence += r.RangeAddress.ToString() + " ";
+                    }
+                    sequence = sequence.Substring(0, sequence.Length - 1);
+
                     DataValidation dataValidation = new DataValidation()
                     {
                         AllowBlank = dv.IgnoreBlanks,
@@ -2000,7 +2026,7 @@ namespace ClosedXML.Excel
                         ShowInputMessage = dv.ShowInputMessage,
                         ErrorStyle = dataValidationErrorStyleValues.Single(p => p.Key == dv.ErrorStyle).Value,
                         Operator = dataValidationOperatorValues.Single(p => p.Key == dv.Operator).Value,
-                        SequenceOfReferences = new ListValue<StringValue>() { InnerText = dv.Range.RangeAddress.ToString() }
+                        SequenceOfReferences = new ListValue<StringValue>() { InnerText = sequence }
                     };
                     
                     dataValidations.Append(dataValidation);

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
+    public enum XLWorksheetVisibility { Visible, Hidden, VeryHidden }
     public interface IXLWorksheet: IXLRangeBase
     {
         /// <summary>
@@ -189,40 +190,40 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Collapses all outlined rows.
         /// </summary>
-        void CollapseRows();
+        IXLWorksheet CollapseRows();
         /// <summary>
         /// Collapses all outlined columns.
         /// </summary>
-        void CollapseColumns();
+        IXLWorksheet CollapseColumns();
         /// <summary>
         /// Expands all outlined rows.
         /// </summary>
-        void ExpandRows();
+        IXLWorksheet ExpandRows();
         /// <summary>
         /// Expands all outlined columns.
         /// </summary>
-        void ExpandColumns();
+        IXLWorksheet ExpandColumns();
 
         /// <summary>
         /// Collapses the outlined rows of the specified level.
         /// </summary>
         /// <param name="outlineLevel">The outline level.</param>
-        void CollapseRows(Int32 outlineLevel);
+        IXLWorksheet CollapseRows(Int32 outlineLevel);
         /// <summary>
         /// Collapses the outlined columns of the specified level.
         /// </summary>
         /// <param name="outlineLevel">The outline level.</param>
-        void CollapseColumns(Int32 outlineLevel);
+        IXLWorksheet CollapseColumns(Int32 outlineLevel);
         /// <summary>
         /// Expands the outlined rows of the specified level.
         /// </summary>
         /// <param name="outlineLevel">The outline level.</param>
-        void ExpandRows(Int32 outlineLevel);
+        IXLWorksheet ExpandRows(Int32 outlineLevel);
         /// <summary>
         /// Expands the outlined columns of the specified level.
         /// </summary>
         /// <param name="outlineLevel">The outline level.</param>
-        void ExpandColumns(Int32 outlineLevel);
+        IXLWorksheet ExpandColumns(Int32 outlineLevel);
 
         /// <summary>
         /// Deletes this worksheet.
@@ -251,5 +252,9 @@ namespace ClosedXML.Excel
         IXLRange RangeUsed();
 
         IXLDataValidations DataValidations { get; }
+
+        XLWorksheetVisibility Visibility { get; set; }
+        IXLWorksheet Hide();
+        IXLWorksheet Unhide();
     }
 }

@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class HideUnhide
+    public class HideSheets
     {
         #region Variables
 
@@ -47,13 +47,11 @@ namespace ClosedXML_Examples.Misc
         public void Create(String filePath)
         {
             var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Hide Rows Columns");
 
-            ws.Columns(1, 3).Hide();
-            ws.Rows(1, 3).Hide();
-
-            ws.Column(2).Unhide();
-            ws.Row(2).Unhide();
+            wb.Worksheets.Add("Visible");
+            wb.Worksheets.Add("Hidden").Hide();
+            wb.Worksheets.Add("Unhidden").Hide().Unhide();
+            wb.Worksheets.Add("VeryHidden").Visibility = XLWorksheetVisibility.VeryHidden;
 
             wb.SaveAs(filePath);
         }

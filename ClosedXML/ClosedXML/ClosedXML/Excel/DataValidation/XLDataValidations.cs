@@ -7,20 +7,20 @@ namespace ClosedXML.Excel
 {
     internal class XLDataValidations: IXLDataValidations
     {
-        private Dictionary<String, IXLDataValidation> dataValidations = new Dictionary<String, IXLDataValidation>();
+        private List<IXLDataValidation> dataValidations = new List<IXLDataValidation>();
         public void Add(IXLDataValidation dataValidation)
         {
-            dataValidations.Add(dataValidation.Range.RangeAddress.ToString(), dataValidation);
+            dataValidations.Add(dataValidation);
         }
 
         public void Delete(IXLDataValidation dataValidation)
         {
-            dataValidations.Remove(dataValidation.Range.RangeAddress.ToString());
+            dataValidations.RemoveAll(dv=>dv.Ranges.Equals(dataValidation.Ranges));
         }
 
         public IEnumerator<IXLDataValidation> GetEnumerator()
         {
-            return dataValidations.Values.GetEnumerator();
+            return dataValidations.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

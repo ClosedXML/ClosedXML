@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
     public enum XLOperator { EqualTo, NotEqualTo, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan, Between, NotBetween }
     public interface IXLDataValidation
     {
-        IXLRange Range { get; set; }
+        IXLRanges Ranges { get; set; }
         void Delete();
         void CopyFrom(IXLDataValidation dataValidation);
         Boolean ShowInputMessage { get; set; }

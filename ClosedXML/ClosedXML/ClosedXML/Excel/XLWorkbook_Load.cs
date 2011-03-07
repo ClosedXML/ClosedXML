@@ -109,6 +109,10 @@ namespace ClosedXML.Excel
 
                 var ws = (XLWorksheet)Worksheets.Add(sheetName);
                 ws.RelId = dSheet.Id;
+
+                if (dSheet.State != null)
+                    ws.Visibility = sheetStateValues.Single(p => p.Value == dSheet.State).Key;
+
                 var sheetFormatProperties = (SheetFormatProperties)worksheetPart.Worksheet.Descendants<SheetFormatProperties>().First();
                 if (sheetFormatProperties.DefaultRowHeight != null)
                     ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
@@ -407,21 +411,23 @@ namespace ClosedXML.Excel
                 var dataValidations = (DataValidations)dataValidationList.First();
                 foreach (var dvs in dataValidations.Descendants<DataValidation>())
                 {
-                    var dvt = ws.Range(dvs.SequenceOfReferences.InnerText).DataValidation;
-                    if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
-                    if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;
-                    if (dvs.ShowErrorMessage != null) dvt.ShowErrorMessage = dvs.ShowErrorMessage;
-                    if (dvs.ShowInputMessage != null) dvt.ShowInputMessage = dvs.ShowInputMessage;
-                    if (dvs.PromptTitle != null) dvt.InputTitle = dvs.PromptTitle;
-                    if (dvs.Prompt != null) dvt.InputMessage = dvs.Prompt;
-                    if (dvs.ErrorTitle != null) dvt.ErrorTitle = dvs.ErrorTitle;
-                    if (dvs.Error != null) dvt.ErrorMessage = dvs.Error;
-                    if (dvs.ErrorStyle != null) dvt.ErrorStyle = dataValidationErrorStyleValues.Single(p => p.Value == dvs.ErrorStyle).Key;
-                    if (dvs.Type != null) dvt.AllowedValues = dataValidationValues.Single(p => p.Value == dvs.Type).Key;
-                    if (dvs.Operator != null) dvt.Operator = dataValidationOperatorValues.Single(p => p.Value == dvs.Operator).Key;
-                    if (dvs.Formula1 != null) dvt.MinValue = dvs.Formula1.Text;
-                    if (dvs.Formula2 != null) dvt.MaxValue = dvs.Formula2.Text;
-
+                    foreach (String rangeAddress in dvs.SequenceOfReferences.InnerText.Split(' '))
+                    {
+                        var dvt = ws.Range(rangeAddress).DataValidation;
+                        if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
+                        if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;
+                        if (dvs.ShowErrorMessage != null) dvt.ShowErrorMessage = dvs.ShowErrorMessage;
+                        if (dvs.ShowInputMessage != null) dvt.ShowInputMessage = dvs.ShowInputMessage;
+                        if (dvs.PromptTitle != null) dvt.InputTitle = dvs.PromptTitle;
+                        if (dvs.Prompt != null) dvt.InputMessage = dvs.Prompt;
+                        if (dvs.ErrorTitle != null) dvt.ErrorTitle = dvs.ErrorTitle;
+                        if (dvs.Error != null) dvt.ErrorMessage = dvs.Error;
+                        if (dvs.ErrorStyle != null) dvt.ErrorStyle = dataValidationErrorStyleValues.Single(p => p.Value == dvs.ErrorStyle).Key;
+                        if (dvs.Type != null) dvt.AllowedValues = dataValidationValues.Single(p => p.Value == dvs.Type).Key;
+                        if (dvs.Operator != null) dvt.Operator = dataValidationOperatorValues.Single(p => p.Value == dvs.Operator).Key;
+                        if (dvs.Formula1 != null) dvt.MinValue = dvs.Formula1.Text;
+                        if (dvs.Formula2 != null) dvt.MaxValue = dvs.Formula2.Text;
+                    }
                 }
             }
         }

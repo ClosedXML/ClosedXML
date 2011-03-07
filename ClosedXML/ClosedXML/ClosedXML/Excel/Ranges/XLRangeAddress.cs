@@ -86,5 +86,18 @@ namespace ClosedXML.Excel
         {
             return firstAddress.ToString() + ":" + lastAddress.ToString();
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = (XLRangeAddress)obj;
+            return this.FirstAddress.Equals(other.FirstAddress)
+                && this.LastAddress.Equals(other.LastAddress);
+        }
+
+        public override int GetHashCode()
+        {
+            return FirstAddress.GetHashCode()
+                    ^ LastAddress.GetHashCode();
+        }
     }
 }

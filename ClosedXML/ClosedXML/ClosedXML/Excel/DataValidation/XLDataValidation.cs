@@ -7,19 +7,25 @@ namespace ClosedXML.Excel
 {
     internal class XLDataValidation: IXLDataValidation
     {
-        public XLDataValidation(IXLRange range)
+        private XLWorksheet worksheet;
+        public XLDataValidation(IXLRanges ranges, XLWorksheet worksheet)
         {
-            this.Range = range;
+            this.Ranges = ranges;
             this.AllowedValues = XLAllowedValues.AnyValue;
             this.IgnoreBlanks = true;
             ShowErrorMessage = true;
             ShowInputMessage = true;
             InCellDropdown = true;
+            this.worksheet = worksheet;
         }
-        public IXLRange Range { get; set; }
+        public IXLRanges Ranges { get; set; }
+        
         public void Delete()
         {
-            ((XLRange)Range).Worksheet.DataValidations.Delete(this);
+            foreach (var dv in worksheet.DataValidations)
+            { 
+
+            }
         }
         public void CopyFrom(IXLDataValidation dataValidation)
         {

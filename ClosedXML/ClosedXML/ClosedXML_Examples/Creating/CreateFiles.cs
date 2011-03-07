@@ -70,6 +70,7 @@ namespace ClosedXML_Examples
             new InsertingData().Create(@"C:\Excel Files\Created\InsertingData.xlsx");
             new Hyperlinks().Create(@"C:\Excel Files\Created\Hyperlinks.xlsx");
             new DataValidation().Create(@"C:\Excel Files\Created\DataValidation.xlsx");
+            new HideSheets().Create(@"C:\Excel Files\Created\HideSheets.xlsx");
         }
     }
 }

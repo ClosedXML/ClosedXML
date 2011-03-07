@@ -43,7 +43,9 @@ namespace ClosedXML.Excel
         }
         public T GetValue<T>() 
         {
-            if (Value is TimeSpan)
+            if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
+                return (T)Convert.ChangeType(String.Empty, typeof(T));
+            else if (Value is TimeSpan)
                 if (typeof(T) == typeof(String))
                     return (T)Convert.ChangeType(Value.ToString(), typeof(T));
                 else
@@ -73,43 +75,49 @@ namespace ClosedXML.Excel
         }
         public String GetFormattedString()
         {
+            String cValue;
+            if (StringExtensions.IsNullOrWhiteSpace(FormulaA1))
+                cValue = cellValue;
+            else
+                cValue = GetString();
+
             if (dataType == XLCellValues.Boolean)
             {
-                return (cellValue != "0").ToString();
+                return (cValue != "0").ToString();
             }
             else if (dataType == XLCellValues.TimeSpan)
             {
-                return cellValue;
+                return cValue;
             }
             else if (dataType == XLCellValues.DateTime || IsDateFormat())
             {
                 Double dTest;
-                if (Double.TryParse(cellValue, out dTest))
+                if (Double.TryParse(cValue, out dTest))
                 {
                     String format = GetFormat();
                     return DateTime.FromOADate(dTest).ToString(format);
                 }
                 else
                 {
-                    return cellValue;
+                    return cValue;
                 }
             }
             else if (dataType == XLCellValues.Number)
             {
                 Double dTest;
-                if (Double.TryParse(cellValue, out dTest))
+                if (Double.TryParse(cValue, out dTest))
                 {
                     String format = GetFormat();
                     return dTest.ToString(format);
                 }
                 else
                 {
-                    return cellValue;
+                    return cValue;
                 }
             }
             else
             {
-                return cellValue;
+                return cValue;
             }
         }
 
@@ -145,28 +153,57 @@ namespace ClosedXML.Excel
             {
                 var fA1 = FormulaA1;
                 if (!StringExtensions.IsNullOrWhiteSpace(fA1))
-                    return fA1;
+                {
+                    String sName;
+                    String cAddress;
+                    if (fA1.Contains('!'))
+                    {
+                        sName = fA1.Substring(0, fA1.IndexOf('!'));
+                        cAddress = fA1.Substring(fA1.IndexOf('!') + 1);
+                    }
+                    else
+                    {
+                        sName = Worksheet.Name;
+                        cAddress = fA1;
+                    }
 
-                if (dataType == XLCellValues.Boolean)
-                {
-                    return cellValue != "0";
-                }
-                else if (dataType == XLCellValues.DateTime)
-                {
-                    return DateTime.FromOADate(Double.Parse(cellValue));
-                }
-                else if (dataType == XLCellValues.Number)
-                {
-                    return Double.Parse(cellValue);
-                }
-                else if (dataType == XLCellValues.TimeSpan)
-                {
-                    //return (DateTime.FromOADate(Double.Parse(cellValue)) - baseDate);
-                    return TimeSpan.Parse(cellValue);
+                    
+                    if (worksheet.Internals.Workbook.Worksheets.Where(w => w.Name == sName).Any()
+                        && XLAddress.IsValidA1Address(cAddress)
+                        )
+                    {
+                        return worksheet.Internals.Workbook.Worksheet(sName).Cell(cAddress).Value;
+                    }
+                    else
+                    {
+                        return fA1;
+                    }
+
+                    
                 }
                 else
                 {
-                    return cellValue;
+                    if (dataType == XLCellValues.Boolean)
+                    {
+                        return cellValue != "0";
+                    }
+                    else if (dataType == XLCellValues.DateTime)
+                    {
+                        return DateTime.FromOADate(Double.Parse(cellValue));
+                    }
+                    else if (dataType == XLCellValues.Number)
+                    {
+                        return Double.Parse(cellValue);
+                    }
+                    else if (dataType == XLCellValues.TimeSpan)
+                    {
+                        //return (DateTime.FromOADate(Double.Parse(cellValue)) - baseDate);
+                        return TimeSpan.Parse(cellValue);
+                    }
+                    else
+                    {
+                        return cellValue;
+                    }
                 }
             }
             set
@@ -289,7 +326,8 @@ namespace ClosedXML.Excel
                         {
                             foreach (DataColumn column in (m as DataRow).Table.Columns)
                             {
-                                SetValue(column.ColumnName, fRo, co);
+                                var fieldName = StringExtensions.IsNullOrWhiteSpace(column.Caption) ? column.ColumnName : column.Caption;
+                                SetValue(fieldName, fRo, co);
                                 co++;
                             }
                             co = Address.ColumnNumber;

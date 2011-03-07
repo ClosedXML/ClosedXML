@@ -35,12 +35,12 @@ namespace ClosedXML.Excel
                 var cells = from c in worksheet.Internals.CellsCollection
                             where (   !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText)
                                   || (includeStyles && !c.Value.Style.Equals(worksheet.Style)))
-                                  && rangeAddresses.Where(r=>
+                                  && rangeAddresses.FirstOrDefault(r=>
                                       r.FirstAddress.RowNumber <= c.Key.RowNumber
                                       && r.FirstAddress.ColumnNumber <= c.Key.ColumnNumber
                                       && r.LastAddress.RowNumber >= c.Key.RowNumber
                                       && r.LastAddress.ColumnNumber >= c.Key.ColumnNumber
-                                      ).Any()
+                                      ) != null
                             select (IXLCell)c.Value;
                 foreach (var cell in cells)
                 {

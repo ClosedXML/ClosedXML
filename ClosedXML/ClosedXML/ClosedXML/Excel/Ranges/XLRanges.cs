@@ -109,6 +109,83 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
+        public override bool Equals(object obj)
+        {
+            var other = (XLRanges)obj;
 
+            if (this.ranges.Count != other.ranges.Count)
+            {
+                return false;
+            }
+            else
+            {
+                foreach (var thisRange in this.ranges)
+                {
+                    Boolean foundOne = false;
+                    foreach (var otherRange in other.ranges)
+                    {
+                        if (thisRange.Equals(otherRange))
+                        {
+                            foundOne = true;
+                            break;
+                        }
+                    }
+
+                    if (!foundOne)
+                        return false;
+                }
+
+                return true;
+            }
+        }
+
+        public Boolean Contains(IXLRange range)
+        {
+            foreach (var r in this.ranges)
+            {
+                if (r.Equals(range)) return true;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            Int32 hash = 0;
+            foreach (var r in this.ranges)
+            {
+                hash ^= r.GetHashCode();
+            }
+            return hash;
+        }
+
+        public IXLDataValidation DataValidation
+        {
+            get
+            {
+                foreach (var range in ranges)
+                {
+                    String address = range.RangeAddress.ToString();
+                    foreach (var dv in range.Worksheet.DataValidations)
+                    {
+                        foreach (var dvRange in dv.Ranges)
+                        {
+                            if (dvRange.Intersects(range))
+                            {
+                                dv.Ranges.Remove(dvRange);
+                                foreach (var c in dvRange.Cells())
+                                {
+                                    if (!range.Contains(c.Address.ToString()))
+                                        dv.Ranges.Add(c.AsRange());
+                                }
+                            }
+                        }
+                    }
+                }
+                var dataValidation = new XLDataValidation(this, ranges.First().Worksheet);
+
+                ranges.First().Worksheet.DataValidations.Add(dataValidation);
+                return dataValidation;
+            }
+        }
     }
 }

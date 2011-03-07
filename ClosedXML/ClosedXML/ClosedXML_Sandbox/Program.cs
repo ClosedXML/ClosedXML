@@ -16,9 +16,14 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             //var fileName = "Issue_6266";
-            var fileName = "Issue_6257";
-            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-
+            //var fileName = "Issue_6257";
+            var fileName = "Sandbox";
+            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("New");
+            ws.Range("A1:B1").Value = "X";
+            ws.Cell(1, 1).AsRange().InsertRowsAbove(1);
+            
 
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
         }
@@ -91,23 +96,42 @@ namespace ClosedXML_Sandbox
             List<Double> runningLoad = new List<Double>();
             List<Double> runningSavedBack = new List<Double>();
             
-            foreach (Int32 r in Enumerable.Range(1, 5))
+            foreach (Int32 r in Enumerable.Range(1, 1))
             {
                 var wb = new XLWorkbook();
                 var startTotal = DateTime.Now;
                 foreach (var i in Enumerable.Range(1, 1))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
-                    foreach (var ro in Enumerable.Range(1, 2000))
+                    foreach (var ro in Enumerable.Range(1, 50))
                     {
-                        foreach (var co in Enumerable.Range(1, 100))
+                        foreach (var co in Enumerable.Range(1, 50))
                         {
                             ws.Cell(ro, co).Style = GetRandomStyle();
                             ws.Cell(ro, co).Value = GetRandomValue();
                         }
                         //System.Threading.Thread.Sleep(10);
                     }
+                    ws.RangeUsed().Style.Border.BottomBorder = XLBorderStyleValues.DashDot;
+                    ws.RangeUsed().Style.Border.BottomBorderColor = XLColor.AirForceBlue;
+                    ws.RangeUsed().Style.Border.TopBorder = XLBorderStyleValues.DashDotDot;
+                    ws.RangeUsed().Style.Border.TopBorderColor = XLColor.AliceBlue;
+                    ws.RangeUsed().Style.Border.LeftBorder = XLBorderStyleValues.Dashed;
+                    ws.RangeUsed().Style.Border.LeftBorderColor = XLColor.Alizarin;
+                    ws.RangeUsed().Style.Border.RightBorder = XLBorderStyleValues.Dotted;
+                    ws.RangeUsed().Style.Border.RightBorderColor = XLColor.Almond;
+
+                    ws.RangeUsed().Style.Font.Bold = true;
+                    ws.RangeUsed().Style.Font.FontColor = XLColor.Amaranth;
+                    ws.RangeUsed().Style.Font.FontSize = 10;
+                    ws.RangeUsed().Style.Font.Italic = true;
+
+                    ws.RangeUsed().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    ws.RangeUsed().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    ws.RangeUsed().Style.Alignment.WrapText = true;
                 }
+
+
                 //var start3 = DateTime.Now;
                 //foreach (var ws in wb.Worksheets)
                 //{

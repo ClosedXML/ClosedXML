@@ -29,7 +29,6 @@ namespace ClosedXML.Excel
             ShiftRows(this.RangeAddress, range, rowsShifted);
         }
 
-
         #region IXLRange Members
 
         public IXLRangeColumn FirstColumn()
@@ -441,5 +440,18 @@ namespace ClosedXML.Excel
             return new XLTable(this, name, true);
         }
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            var other = (XLRange)obj;
+            return this.RangeAddress.Equals(other.RangeAddress)
+                && this.Worksheet.Equals(other.Worksheet);
+        }
+
+        public override int GetHashCode()
+        {
+            return RangeAddress.GetHashCode()
+                    ^ this.Worksheet.GetHashCode();
+        }
     }
 }

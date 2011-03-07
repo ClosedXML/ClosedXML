@@ -122,9 +122,9 @@ namespace ClosedXML.Excel
             {
                 Boolean retVal = true;
                 String theColumn = column.ToUpper();
-                for (Int32 i = 1; i <= column.Length; i++)
+                for (Int32 i = 0; i < column.Length; i++)
                 {
-                    if (theColumn[i] < 'A' || theColumn[i] > 'Z' || (i == 3 && theColumn[i] > 'D'))
+                    if (theColumn[i] < 'A' || theColumn[i] > 'Z' || (i == 2 && theColumn[i] > 'D'))
                     {
                         retVal = false;
                         break;
@@ -133,6 +133,29 @@ namespace ClosedXML.Excel
                 return retVal;
             }
         }
+
+        public static Boolean IsValidRow(String rowString)
+        {
+            Int32 row;
+            if (Int32.TryParse(rowString, out row))
+                return row > 0 && row <= XLWorksheet.MaxNumberOfRows;
+            else
+                return false;
+        }
+
+        public static Boolean IsValidA1Address(String address)
+        {
+            address = address.Replace("$", "");
+            Int32 rowPos = 0;
+            while (rowPos < address.Length && (address[rowPos] > '9' || address[rowPos] < '0'))
+                rowPos++;
+
+            return 
+                   rowPos < address.Length
+                && IsValidRow(address.Substring(rowPos))
+                && IsValidColumn(address.Substring(0, rowPos));
+        }
+
 
         /// <summary>
         /// Gets the column letter of a given column number.

@@ -893,40 +893,56 @@ namespace ClosedXML.Excel
             get 
             {
                 String address = this.RangeAddress.ToString();
-                if (Worksheet.DataValidations.Where(dv => dv.Range.RangeAddress.ToString() == address).Any())
+                if (Worksheet.DataValidations.Where(dv => 
+                    dv.Ranges.Count() == 1
+                    && dv.Ranges.Contains(this.AsRange())
+                    ).Any())
                 {
-                    return Worksheet.DataValidations.Where(dv => dv.Range.RangeAddress.ToString() == address).Single();
+                    return Worksheet.DataValidations.Where(dv => dv.Ranges.Contains(this.AsRange())).Single();
                 }
                 else
                 {
-                    var dv = DataValidationsIntersects();
-                    if (dv != null)
+                    foreach (var dv in Worksheet.DataValidations)
                     {
-                        dv.Delete();
-                        foreach (var c in dv.Range.Cells())
+                        foreach (var dvRange in dv.Ranges)
                         {
-                            if (!this.Contains(c.Address.ToString()))
+                            if (dvRange.Intersects(this))
                             {
-                                c.DataValidation.CopyFrom(dv);
+                                dv.Ranges.Remove(dvRange);
+                                foreach (var c in dvRange.Cells())
+                                {
+                                    if (!this.Contains(c.Address.ToString()))
+                                        dv.Ranges.Add(c.AsRange());
+                                }
                             }
                         }
                     }
 
-                    var dataValidation = new XLDataValidation(this.AsRange());
+                    var newRanges = new XLRanges(Worksheet.Internals.Workbook, Style);
+                    newRanges.Add(this.AsRange());
+                    var dataValidation = new XLDataValidation(newRanges, Worksheet);
+                    
                     Worksheet.DataValidations.Add(dataValidation);
                     return dataValidation;
                 }
             }
         }
 
-        private IXLDataValidation DataValidationsIntersects()
+        public Object Value
         {
-            foreach (var dv in Worksheet.DataValidations)
+            set
             {
-                if (dv.Range.Intersects(this))
-                    return dv;
+                Cells().ForEach(c => c.Value = value);
             }
-            return null;
         }
+
+        public XLCellValues DataType
+        {
+            set
+            {
+                Cells().ForEach(c => c.DataType = value);
+            }
+        }
+
     }
 }
