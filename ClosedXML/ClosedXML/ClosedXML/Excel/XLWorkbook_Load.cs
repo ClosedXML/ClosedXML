@@ -230,15 +230,31 @@ namespace ClosedXML.Excel
 
                     if (cell.CellFormula != null && cell.CellFormula.SharedIndex != null && cell.CellFormula.Reference != null)
                     {
-                        xlCell.FormulaA1 = cell.CellFormula.Text;
-                        sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
+                        String formula;
+                        if (cell.CellFormula.FormulaType != null && cell.CellFormula.FormulaType == CellFormulaValues.Array)
+                            formula = "{" + cell.CellFormula.Text + "}";
+                        else
+                            formula = cell.CellFormula.Text;
+
+                        xlCell.FormulaA1 = formula;
+                        sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, formula);
                     }
                     else if (dCell.CellFormula != null)
                     {
                         if (dCell.CellFormula.SharedIndex != null)
+                        {
                             xlCell.FormulaR1C1 = sharedFormulasR1C1[dCell.CellFormula.SharedIndex.Value];
+                        }
                         else
-                            xlCell.FormulaA1 = dCell.CellFormula.Text;
+                        {
+                            String formula;
+                            if (cell.CellFormula.FormulaType != null && cell.CellFormula.FormulaType == CellFormulaValues.Array)
+                                formula = "{" + cell.CellFormula.Text + "}";
+                            else
+                                formula = cell.CellFormula.Text;
+
+                            xlCell.FormulaA1 = formula;
+                        }
                     }
                     else if (dCell.DataType != null)
                     {
@@ -285,8 +301,22 @@ namespace ClosedXML.Excel
                     {
                         //var styleIndex = Int32.Parse(dCell.StyleIndex.InnerText);
                         var numberFormatId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).NumberFormatId; //. [styleIndex].NumberFormatId;
-                        ws.Cell(dCell.CellReference).Value = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture);
-                        ws.Cell(dCell.CellReference).Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
+                        Double val = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture);
+                        xlCell.Value = val;
+                        if (s.NumberingFormats != null && s.NumberingFormats.Where(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId).Any())
+                            xlCell.Style.NumberFormat.Format =
+                                ((NumberingFormat)s.NumberingFormats.Where(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId).Single()).FormatCode.Value;
+                        else
+                            xlCell.Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
+
+                        if (val >= 0 && val <= DateTimeExtensions.MaxOADate)
+                        {
+                            String format = xlCell.Style.NumberFormat.Format.EndsWith(";@") ? xlCell.Style.NumberFormat.Format.Substring(0, xlCell.Style.NumberFormat.Format.Length - 2) : xlCell.Style.NumberFormat.Format;
+                            
+                            Double dTest;
+                            if (!Double.TryParse(val.ToString(format) , out dTest))
+                                xlCell.DataType = XLCellValues.DateTime;
+                        }
                     }
                 }
                 #endregion

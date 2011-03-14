@@ -625,6 +625,9 @@ namespace ClosedXML.Excel
                 workbook.WorkbookProperties.DefaultThemeVersion = (UInt32Value)124226U;
             #endregion
 
+            //if (workbook.BookViews == null)
+            //    workbook.BookViews = new BookViews();
+
             if (workbook.Sheets == null)
                 workbook.Sheets = new Sheets();
 
@@ -668,11 +671,30 @@ namespace ClosedXML.Excel
                                 orderby worksheet.Position
                                 select sheet;
 
-            foreach (var sheet in sheetElements)
-            {
-                workbook.Sheets.RemoveChild(sheet);
-                workbook.Sheets.Append(sheet);
-            }
+            //UInt32 firstSheetVisible = 0;
+
+            //foreach (var sheet in sheetElements)
+            //{
+            //    workbook.Sheets.RemoveChild(sheet);
+            //    workbook.Sheets.Append(sheet);
+            //    if (firstSheetVisible == 0 && sheet.State != null && sheet.State != SheetStateValues.Visible)
+            //        firstSheetVisible++;
+            //}
+
+            //WorkbookView workbookView = workbook.BookViews.Elements<WorkbookView>().FirstOrDefault();
+
+
+            //if (workbookView == null)
+            //{
+            //    workbookView = new WorkbookView() { ActiveTab = firstSheetVisible, FirstSheet = firstSheetVisible };
+            //    workbook.BookViews.Append(workbookView);
+            //}
+            //else
+            //{
+            //    workbookView.ActiveTab = firstSheetVisible;
+            //    workbookView.FirstSheet = firstSheetVisible;
+            //}
+            
 
             DefinedNames definedNames = new DefinedNames();
             foreach (var worksheet in Worksheets.Cast<XLWorksheet>())
@@ -850,10 +872,26 @@ namespace ClosedXML.Excel
             //Dictionary<String, AlignmentInfo> sharedAlignments = new Dictionary<String, AlignmentInfo>();
             //sharedAlignments.Add(defaultStyle.Alignment.ToString(), new AlignmentInfo() { AlignmentId = 0, Alignment = defaultStyle.Alignment });
 
+            if (workbookStylesPart.Stylesheet == null)
+                workbookStylesPart.Stylesheet = new Stylesheet();
+
+            // Cell styles = Named styles
+            if (workbookStylesPart.Stylesheet.CellStyles == null)
+                workbookStylesPart.Stylesheet.CellStyles = new CellStyles();
+
+            UInt32 defaultFormatId;
+            if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Where(c => c.Name == "Normal").Any())
+                defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Where(c => c.Name == "Normal").Single().FormatId.Value;
+            else
+                if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any())
+                    defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Max(c => c.FormatId.Value) + 1;
+                else
+                    defaultFormatId = 0;
+
             sharedStyles.Add(defaultStyle,
                 new StyleInfo()
                 {
-                    StyleId = 0,
+                    StyleId = defaultFormatId,
                     Style = defaultStyle,
                     FontId = 0,
                     FillId = 0,
@@ -903,8 +941,6 @@ namespace ClosedXML.Excel
                 }
             }
             
-            if (workbookStylesPart.Stylesheet == null)
-                workbookStylesPart.Stylesheet = new Stylesheet();
 
             var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, sharedNumberFormats);
             var allSharedFonts = ResolveFonts(workbookStylesPart, sharedFonts);
@@ -937,13 +973,10 @@ namespace ClosedXML.Excel
             var allCellStyleFormats = ResolveCellStyleFormats(workbookStylesPart);
             ResolveAlignments(workbookStylesPart);
 
-            // Cell styles = Named styles
-            if (workbookStylesPart.Stylesheet.CellStyles == null)
-                workbookStylesPart.Stylesheet.CellStyles = new CellStyles();
-
+            
             if (!workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Where(c => c.Name == "Normal").Any())
             {
-                var defaultFormatId = sharedStyles.Values.Where(s => s.Style.Equals(DefaultStyle)).Single().StyleId;
+                //var defaultFormatId = sharedStyles.Values.Where(s => s.Style.Equals(DefaultStyle)).Single().StyleId;
 
                 CellStyle cellStyle1 = new CellStyle() { Name = "Normal", FormatId = (UInt32Value)defaultFormatId, BuiltinId = (UInt32Value)0U };
                 workbookStylesPart.Stylesheet.CellStyles.Append(cellStyle1);
@@ -1871,7 +1904,18 @@ namespace ClosedXML.Excel
                         cell.StyleIndex = styleId;
                         if (!StringExtensions.IsNullOrWhiteSpace(opCell.FormulaA1))
                         {
-                            cell.CellFormula = new CellFormula(opCell.FormulaA1);
+                            String formula = opCell.FormulaA1;
+                            if (formula.StartsWith("{"))
+                            {
+                                formula = formula.Substring(1, formula.Length - 2);
+                                cell.CellFormula = new CellFormula(formula);
+                                cell.CellFormula.FormulaType = CellFormulaValues.Array;
+                                cell.CellFormula.Reference = cellReference;
+                            }
+                            else
+                            {
+                                cell.CellFormula = new CellFormula(formula);
+                            }
                             cell.CellValue = null;
                         }
                         else
@@ -1968,6 +2012,8 @@ namespace ClosedXML.Excel
             #endregion
 
             var phoneticProperties = worksheetPart.Worksheet.Elements<PhoneticProperties>().FirstOrDefault();
+            
+            var conditionalFormatting = worksheetPart.Worksheet.Elements<ConditionalFormatting>().LastOrDefault();
 
             #region DataValidations
             DataValidations dataValidations = null;
@@ -1982,7 +2028,9 @@ namespace ClosedXML.Excel
                 if (worksheetPart.Worksheet.Elements<DataValidations>().Count() == 0)
                 {
                     OpenXmlElement previousElement;
-                    if (phoneticProperties != null)
+                    if (conditionalFormatting != null)
+                        previousElement = conditionalFormatting;
+                    else if (phoneticProperties != null)
                         previousElement = phoneticProperties;
                     else if (mergeCells != null)
                         previousElement = mergeCells;
@@ -2053,6 +2101,8 @@ namespace ClosedXML.Excel
                     OpenXmlElement previousElement;
                     if (dataValidations != null)
                         previousElement = dataValidations;
+                    else if (conditionalFormatting != null)
+                        previousElement = conditionalFormatting;
                     else if (phoneticProperties != null)
                         previousElement = phoneticProperties;
                     else if (mergeCells != null)
@@ -2107,6 +2157,8 @@ namespace ClosedXML.Excel
                     previousElement = hyperlinks;
                 else if (dataValidations != null)
                     previousElement = dataValidations;
+                else if (conditionalFormatting != null)
+                    previousElement = conditionalFormatting;
                 else if (phoneticProperties != null)
                     previousElement = phoneticProperties;
                 else if (mergeCells != null)
@@ -2143,6 +2195,8 @@ namespace ClosedXML.Excel
                     previousElement = hyperlinks;
                 else if (dataValidations != null)
                     previousElement = dataValidations;
+                else if (conditionalFormatting != null)
+                    previousElement = conditionalFormatting;
                 else if (phoneticProperties != null)
                     previousElement = phoneticProperties;
                 else if (mergeCells != null)
@@ -2519,37 +2573,54 @@ namespace ClosedXML.Excel
                 foreach (var c in worksheet.Internals.CellsCollection.Values.Where(c => !StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)))
                 {
                     var calculationCells = calculationChain.Elements<CalculationCell>().Where(
-                        cc => cc.CellReference != null && cc.CellReference == c.Address.ToString()).Select(cc=>cc);
-                    Boolean addNew = true;
-                    if (calculationCells.FirstOrDefault() != null)
+                        cc => cc.CellReference != null && cc.CellReference == c.Address.ToString()).Select(cc => cc).ToList();
+
+                    calculationCells.ForEach(cc => calculationChain.RemoveChild(cc));
+
+                    
+                    if (c.FormulaA1.StartsWith("{"))
                     {
-                        calculationCells.Where(cc=>cc.SheetId == null).Select(cc=>cc).ForEach(cc=>calculationChain.RemoveChild(cc));
-                        var cCell = calculationCells.FirstOrDefault(cc=>cc.SheetId == worksheet.SheetId);
-                        if (cCell != null)
-                        {
-                            cCell.SheetId = worksheet.SheetId;
-                            addNew = false;
-                        }
+                        calculationChain.Append(new CalculationCell() { CellReference = c.Address.ToString(), SheetId = worksheet.SheetId, Array = true });
+                        calculationChain.Append(new CalculationCell() { CellReference = c.Address.ToString(), InChildChain = true });
+                    }
+                    else
+                    {
+                        calculationChain.Append(new CalculationCell() { CellReference = c.Address.ToString(), SheetId = worksheet.SheetId });
                     }
                     
-                    if (addNew)
-                    {
-                        CalculationCell calculationCell = new CalculationCell() { CellReference = c.Address.ToString(), SheetId = worksheet.SheetId };
-                        calculationChain.Append(calculationCell);
-                    }
+
+                    //Boolean addNew = true;
+                    //if (calculationCells.FirstOrDefault() != null)
+                    //{
+                    //    calculationCells.Where(cc => cc.SheetId == null).Select(cc => cc).ForEach(cc => calculationChain.RemoveChild(cc));
+                    //    var cCell = calculationCells.Where(cc => cc.SheetId != null).FirstOrDefault(cc => cc.SheetId == worksheet.SheetId);
+                    //    if (cCell != null)
+                    //    {
+                    //        cCell.SheetId = worksheet.SheetId;
+                    //        cCell.Array = null;
+                    //        addNew = false;
+                    //    }
+                    //}
+
+                    //if (addNew)
+                    //{
+                    //    CalculationCell calculationCell = new CalculationCell() { CellReference = c.Address.ToString(), SheetId = worksheet.SheetId };
+                    //    calculationChain.Append(calculationCell);
+                    //}
+
                 }
 
-                var cCellsToRemove = new List<CalculationCell>();
+                //var cCellsToRemove = new List<CalculationCell>();
                 var m = from cc in calculationChain.Elements<CalculationCell>()
-                        where cc.SheetId == null 
+                        where !(cc.SheetId != null || cc.InChildChain != null)
                             && calculationChain.Elements<CalculationCell>()
                             .Where(c1 => c1.SheetId != null)
                             .Select(c1 => c1.CellReference.Value)
                             .Contains(cc.CellReference.Value)
                             || worksheet.Internals.CellsCollection.Where(kp=>kp.Key.ToString() == cc.CellReference.Value && StringExtensions.IsNullOrWhiteSpace(kp.Value.FormulaA1)).Any()
                         select cc;
-                m.ForEach(cc => cCellsToRemove.Add(cc));
-                cCellsToRemove.ForEach(cc=>calculationChain.RemoveChild(cc));
+                //m.ToList().ForEach(cc => cCellsToRemove.Add(cc));
+                m.ToList().ForEach(cc=>calculationChain.RemoveChild(cc));
             }
 
             if (calculationChain.Count() == 0)

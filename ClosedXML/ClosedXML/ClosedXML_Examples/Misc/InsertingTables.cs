@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
-
 using System.Drawing;
 using System.Data;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace ClosedXML_Examples.Misc
 {
@@ -51,7 +52,13 @@ namespace ClosedXML_Examples.Misc
 
             var people = from p in list
                          where p.Age >= 21
-                         select new { p.Name, p.House, p.Age };
+                         select p;
+
+            //var person = new Person() { Name = "Henry", Age = 45, House = "On 5th Ave." };
+            //foreach (var p in person.GetType().GetProperties())
+            //{
+            //    var ats = p.GetCustomAttributes(true);
+            //}
 
             ws.Cell(7, 6).Value = "From Query";
             ws.Range(7, 6, 7, 8).Merge().AddToNamed("Titles");
@@ -70,9 +77,10 @@ namespace ClosedXML_Examples.Misc
 
             wb.SaveAs(filePath);
         }
-
+        
         class Person
         {
+            [Display(Name = "House Street")]
             public String House { get; set; }
             public String Name { get; set; }
             public Int32 Age { get; set; }

@@ -15,14 +15,11 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            //var fileName = "Issue_6266";
-            //var fileName = "Issue_6257";
-            var fileName = "Sandbox";
-            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-            var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("New");
-            ws.Range("A1:B1").Value = "X";
-            ws.Cell(1, 1).AsRange().InsertRowsAbove(1);
+            var fileName = "Issue_6295";
+            //var fileName = "Blank";
+            //var fileName = "Sandbox";
+            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            //var wb = new XLWorkbook();
             
 
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));

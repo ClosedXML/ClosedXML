@@ -6,10 +6,9 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using System.Data;
 
-
 namespace ClosedXML.Excel
 {
-    internal class XLCell : IXLCell, IXLStylized
+    internal partial class XLCell : IXLCell, IXLStylized
     {
         public static readonly DateTime baseDate = new DateTime(1899, 12, 30);
         public IXLWorksheet Worksheet { get { return worksheet; } }
@@ -41,6 +40,63 @@ namespace ClosedXML.Excel
         {
             return worksheet.Range(Address, Address);
         }
+        public IXLCell SetValue<T>(T value)
+        {
+            FormulaA1 = String.Empty;
+            if (value is String)
+            {
+                cellValue = value.ToString();
+                dataType = XLCellValues.Text;
+            }
+            else if (value is TimeSpan)
+            {
+                cellValue = value.ToString();
+                dataType = XLCellValues.TimeSpan;
+                Style.NumberFormat.NumberFormatId = 46;
+            }
+            else if (value is DateTime)
+            {
+                dataType = XLCellValues.DateTime;
+                DateTime dtTest = (DateTime)Convert.ChangeType(value, typeof(DateTime));
+                if (dtTest.Date == dtTest)
+                    Style.NumberFormat.NumberFormatId = 14;
+                else
+                    Style.NumberFormat.NumberFormatId = 22;
+
+                cellValue = dtTest.ToOADate().ToString();
+            }
+            else if (
+                 value is sbyte
+                || value is byte
+                || value is char
+                || value is short
+                || value is ushort
+                || value is int
+                || value is uint
+                || value is long
+                || value is ulong
+                || value is float
+                || value is double
+                || value is decimal
+                )
+            {
+                dataType = XLCellValues.Number;
+                cellValue = value.ToString();
+            }
+            else if (value is Boolean)
+            {
+                dataType = XLCellValues.Boolean;
+                cellValue = (Boolean)Convert.ChangeType(value, typeof(Boolean)) ? "1" : "0";
+            }
+            else
+            {
+                cellValue = value.ToString();
+                dataType = XLCellValues.Text;
+            }
+
+            return this;
+        }
+
         public T GetValue<T>() 
         {
             if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
@@ -304,7 +360,10 @@ namespace ClosedXML.Excel
                     {
                         if (!hasTitles)
                         {
-                            SetValue(m.GetType().Name, fRo, co);
+                            String fieldName = GetFieldName(m.GetType().GetCustomAttributes(true));
+                            if (StringExtensions.IsNullOrWhiteSpace(fieldName)) fieldName = m.GetType().Name;
+
+                            SetValue(fieldName, fRo, co);
                             hasTitles = true;
                             co = Address.ColumnNumber;
                         }
@@ -348,14 +407,25 @@ namespace ClosedXML.Excel
                         {
                             foreach (var info in fieldInfo)
                             {
-                                SetValue(info.Name, fRo, co);
+                                if ((info as IEnumerable) == null)
+                                {
+                                    String fieldName = GetFieldName(info.GetCustomAttributes(true));
+                                    if (StringExtensions.IsNullOrWhiteSpace(fieldName)) fieldName = info.Name;
+
+                                    SetValue(fieldName, fRo, co);
+                                }
                                 co++;
                             }
                             
                             foreach (var info in propertyInfo)
                             {
                                 if ((info as IEnumerable) == null)
-                                    SetValue(info.Name, fRo, co);
+                                {
+                                    String fieldName = GetFieldName(info.GetCustomAttributes(true));
+                                    if (StringExtensions.IsNullOrWhiteSpace(fieldName)) fieldName = info.Name;
+
+                                    SetValue(fieldName, fRo, co);
+                                }
                                 co++;
                             }
                             co = Address.ColumnNumber;
@@ -761,6 +831,8 @@ namespace ClosedXML.Excel
                     return String.Empty;
                 else if (formulaA1.Trim()[0] == '=')
                     return formulaA1.Substring(1);
+                else if (formulaA1.Trim().StartsWith("{="))
+                    return "{" + formulaA1.Substring(2);
                 else
                     return formulaA1;
             }
@@ -892,9 +964,14 @@ namespace ClosedXML.Excel
             else
             {
                 var bIndex = columnPart.IndexOf("[");
+                var mIndex = columnPart.IndexOf("-");
                 if (bIndex >= 0)
                     columnToReturn = XLAddress.GetColumnLetterFromNumber(
                         Address.ColumnNumber + Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
+                        );
+                else if (mIndex >= 0)
+                    columnToReturn = XLAddress.GetColumnLetterFromNumber(
+                        Address.ColumnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
                         );
                 else
                     columnToReturn = "$" + XLAddress.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)) + columnsToShift);

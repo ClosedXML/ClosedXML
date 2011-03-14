@@ -457,6 +457,7 @@
     <Compile Include="..\ClosedXML\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
+    <Compile Include="Excel\Cells\XLCell_DotNetSpecific.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -8,7 +8,9 @@ namespace ClosedXML.Excel
     public partial class XLHyperlink
     {
         internal XLHyperlink()
-        { }
+        { 
+
+        }
 
         internal void SetValues(String address, String tooltip)
         {

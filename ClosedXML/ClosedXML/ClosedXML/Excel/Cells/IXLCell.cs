@@ -38,6 +38,8 @@ namespace ClosedXML.Excel
         /// <exception cref="ArgumentException"></exception>
         XLCellValues DataType { get; set; }
 
+        IXLCell SetValue<T>(T value);
+
         /// <summary>
         /// Gets the cell's value converted to the T type.
         /// <para>ClosedXML will try to covert the current value to the T type.</para>

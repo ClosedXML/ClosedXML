@@ -534,7 +534,8 @@ namespace ClosedXML.Excel
         public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position)
         {
             var ws = (XLWorksheet)workbook.Worksheets.Add(newSheetName, position);
-            this.Internals.CellsCollection.ForEach(kp => ws.Internals.CellsCollection.Add(kp));
+            
+            this.Internals.CellsCollection.ForEach(kp => (ws.Cell(kp.Value.Address) as XLCell).CopyValues(kp.Value));
             this.Internals.ColumnsCollection.ForEach(kp => ws.Internals.ColumnsCollection.Add(kp));
             this.Internals.MergedRanges.ForEach(kp => ws.Internals.MergedRanges.Add(kp));
             this.Internals.RowsCollection.ForEach(kp => ws.Internals.RowsCollection.Add(kp));

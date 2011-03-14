@@ -112,6 +112,17 @@ namespace ClosedXML
         }
     }
 
+    public static class DateTimeExtensions
+    {
+        public static Double MaxOADate
+        {
+            get
+            {
+                return 2958465.99999999;
+            }
+        }
+    }
+
     public static class IntegerExtensions
     {
         private static NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;

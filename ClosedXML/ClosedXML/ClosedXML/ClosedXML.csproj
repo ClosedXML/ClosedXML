@@ -106,6 +106,7 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -119,6 +120,7 @@
     <Compile Include="Excel\Cells\IXLCells.cs" />
     <Compile Include="Excel\Cells\XLCellCollection.cs" />
     <Compile Include="Excel\Cells\XLCells.cs" />
+    <Compile Include="Excel\Cells\XLCell_DotNetSpecific.cs" />
     <Compile Include="Excel\Columns\IXLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
