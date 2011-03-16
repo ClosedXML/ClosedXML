@@ -15,12 +15,14 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            var fileName = "Issue_6295";
+            //var fileName = "Issue_6313";
             //var fileName = "Blank";
-            //var fileName = "Sandbox";
-            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-            //var wb = new XLWorkbook();
-            
+            var fileName = "Sandbox";
+            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            var wb = new XLWorkbook();
+
+            wb.Worksheets.Add("Hidden").Hide();
+            wb.Worksheets.Add("Unhidden").Hide().Unhide();
 
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
         }
@@ -100,12 +102,15 @@ namespace ClosedXML_Sandbox
                 foreach (var i in Enumerable.Range(1, 1))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
-                    foreach (var ro in Enumerable.Range(1, 50))
+                    foreach (var ro in Enumerable.Range(1, 200))
                     {
-                        foreach (var co in Enumerable.Range(1, 50))
+                        foreach (var co in Enumerable.Range(1, 200))
                         {
                             ws.Cell(ro, co).Style = GetRandomStyle();
-                            ws.Cell(ro, co).Value = GetRandomValue();
+                            //if (rnd.Next(1, 5) == 1)
+                                ws.Cell(ro, co).FormulaA1 = ws.Cell(ro + 1, co + 1).Address.ToString() + " & \"-Copy\"";
+                            //else
+                            //    ws.Cell(ro, co).Value = GetRandomValue();
                         }
                         //System.Threading.Thread.Sleep(10);
                     }
@@ -223,7 +228,7 @@ namespace ClosedXML_Sandbox
                 return DateTime.Now;
             else if (val == 5)
                 return rnd.Next(1, 1000);
-            else
+            else 
                 return (DateTime.Now - baseDate);
         }
 

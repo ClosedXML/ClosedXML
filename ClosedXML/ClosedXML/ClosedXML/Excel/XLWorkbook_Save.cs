@@ -625,8 +625,8 @@ namespace ClosedXML.Excel
                 workbook.WorkbookProperties.DefaultThemeVersion = (UInt32Value)124226U;
             #endregion
 
-            //if (workbook.BookViews == null)
-            //    workbook.BookViews = new BookViews();
+            if (workbook.BookViews == null)
+                workbook.BookViews = new BookViews();
 
             if (workbook.Sheets == null)
                 workbook.Sheets = new Sheets();
@@ -671,29 +671,29 @@ namespace ClosedXML.Excel
                                 orderby worksheet.Position
                                 select sheet;
 
-            //UInt32 firstSheetVisible = 0;
+            UInt32 firstSheetVisible = 0;
 
-            //foreach (var sheet in sheetElements)
-            //{
-            //    workbook.Sheets.RemoveChild(sheet);
-            //    workbook.Sheets.Append(sheet);
-            //    if (firstSheetVisible == 0 && sheet.State != null && sheet.State != SheetStateValues.Visible)
-            //        firstSheetVisible++;
-            //}
+            foreach (var sheet in sheetElements)
+            {
+                workbook.Sheets.RemoveChild(sheet);
+                workbook.Sheets.Append(sheet);
+                if (firstSheetVisible == 0 && sheet.State != null && sheet.State != SheetStateValues.Visible)
+                    firstSheetVisible++;
+            }
 
-            //WorkbookView workbookView = workbook.BookViews.Elements<WorkbookView>().FirstOrDefault();
+            WorkbookView workbookView = workbook.BookViews.Elements<WorkbookView>().FirstOrDefault();
 
 
-            //if (workbookView == null)
-            //{
-            //    workbookView = new WorkbookView() { ActiveTab = firstSheetVisible, FirstSheet = firstSheetVisible };
-            //    workbook.BookViews.Append(workbookView);
-            //}
-            //else
-            //{
-            //    workbookView.ActiveTab = firstSheetVisible;
-            //    workbookView.FirstSheet = firstSheetVisible;
-            //}
+            if (workbookView == null)
+            {
+                workbookView = new WorkbookView() { ActiveTab = firstSheetVisible, FirstSheet = firstSheetVisible };
+                workbook.BookViews.Append(workbookView);
+            }
+            else
+            {
+                workbookView.ActiveTab = firstSheetVisible;
+                workbookView.FirstSheet = firstSheetVisible;
+            }
             
 
             DefinedNames definedNames = new DefinedNames();

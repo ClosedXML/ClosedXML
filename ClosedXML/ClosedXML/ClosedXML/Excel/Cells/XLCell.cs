@@ -590,7 +590,8 @@ namespace ClosedXML.Excel
                 //    val = baseDate.Add(timeSpan).ToOADate().ToString();
                 //}
                 dataType = XLCellValues.TimeSpan;
-                Style.NumberFormat.NumberFormatId = 46;
+                if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                    Style.NumberFormat.NumberFormatId = 46;
             }
             else if (Double.TryParse(val, out dTest))
             {
@@ -600,10 +601,11 @@ namespace ClosedXML.Excel
             {
                 dataType = XLCellValues.DateTime;
 
-                if (dtTest.Date == dtTest)
-                    Style.NumberFormat.NumberFormatId = 14;
-                else
-                    Style.NumberFormat.NumberFormatId = 22;
+                if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                    if (dtTest.Date == dtTest)
+                        Style.NumberFormat.NumberFormatId = 14;
+                    else
+                        Style.NumberFormat.NumberFormatId = 22;
 
                 val = dtTest.ToOADate().ToString();
             }
