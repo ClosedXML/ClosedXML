@@ -1167,6 +1167,7 @@ namespace ClosedXML.Excel
                                     &&  shiftedRange.RangeAddress.FirstAddress.ColumnNumber <= matchRange.RangeAddress.FirstAddress.ColumnNumber
                                     &&  shiftedRange.RangeAddress.LastAddress.ColumnNumber >= matchRange.RangeAddress.LastAddress.ColumnNumber)
                                 {
+                                    #region change
                                     if (a1RowRegex.IsMatch(rangeAddress))
                                     {
                                         var rows = rangeAddress.Split(':');
@@ -1247,12 +1248,21 @@ namespace ClosedXML.Excel
                                                     matchRange.RangeAddress.LastAddress.ColumnLetter,
                                                     matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
                                     }
+                                    #endregion
                                 }
                                 else
                                 {
                                     sb.Append(matchString);
                                 }
                             }
+                            else
+                            {
+                                sb.Append(matchString);
+                            }
+                        }
+                        else
+                        {
+                            sb.Append(matchString);
                         }
                     }
                     else
@@ -1310,6 +1320,7 @@ namespace ClosedXML.Excel
                                     && shiftedRange.RangeAddress.FirstAddress.RowNumber <= matchRange.RangeAddress.FirstAddress.RowNumber
                                     && shiftedRange.RangeAddress.LastAddress.RowNumber >= matchRange.RangeAddress.LastAddress.RowNumber)
                                 {
+                                    #region change
                                     if (a1ColumnRegex.IsMatch(rangeAddress))
                                     {
                                         var columns = rangeAddress.Split(':');
@@ -1390,12 +1401,21 @@ namespace ClosedXML.Excel
                                                     matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted,
                                                     matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
                                     }
+                                    #endregion
                                 }
                                 else
                                 {
                                     sb.Append(matchString);
                                 }
                             }
+                            else
+                            {
+                                sb.Append(matchString);
+                            }
+                        }
+                        else
+                        {
+                            sb.Append(matchString);
                         }
                     }
                     else

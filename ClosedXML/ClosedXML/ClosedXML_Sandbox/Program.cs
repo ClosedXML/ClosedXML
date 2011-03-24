@@ -15,11 +15,12 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            var fileName = "Issue_6364";
+            var fileName = "Issue_6373";
             //var fileName = "Blank";
             //var fileName = "Sandbox";
             var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-
+            var ws = wb.Worksheet(2);
+            ws.Row(75).InsertRowsBelow(1);
             //var wb = new XLWorkbook();
             //var ws = wb.Worksheets.Add("Shifting Formulas");
             //ws.Cell("B2").Value = 5;
