@@ -237,7 +237,7 @@ namespace ClosedXML.Excel
                             formula = cell.CellFormula.Text;
 
                         xlCell.FormulaA1 = formula;
-                        sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, formula);
+                        sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
                     }
                     else if (dCell.CellFormula != null)
                     {
