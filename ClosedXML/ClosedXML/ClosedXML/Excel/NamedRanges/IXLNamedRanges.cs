@@ -14,12 +14,6 @@ namespace ClosedXML.Excel
         IXLNamedRange NamedRange(String rangeName);
         
         /// <summary>
-        /// Gets the specified named range's index
-        /// </summary>
-        /// <param name="rangeIndex">Index of the named range.</param>
-        IXLNamedRange NamedRange(Int32 rangeIndex);
-
-        /// <summary>
         /// Adds a new named range.
         /// </summary>
         /// <param name="rangeName">Name of the range to add.</param>

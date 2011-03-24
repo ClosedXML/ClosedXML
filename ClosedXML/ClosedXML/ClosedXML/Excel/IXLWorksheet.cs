@@ -235,6 +235,11 @@ namespace ClosedXML.Excel
         /// Gets an object to manage this worksheet's named ranges.
         /// </summary>
         IXLNamedRanges NamedRanges { get; }
+        /// <summary>
+        /// Gets the specified named range.
+        /// </summary>
+        /// <param name="rangeName">Name of the range.</param>
+        IXLNamedRange NamedRange(String rangeName);
 
         /// <summary>
         /// Gets an object to manage how the worksheet is going to displayed by Excel.

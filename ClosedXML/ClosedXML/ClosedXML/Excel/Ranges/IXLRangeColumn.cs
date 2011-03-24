@@ -32,29 +32,29 @@ namespace ClosedXML.Excel
         /// <para>All cells to the right of this range will be shifted X number of columns.</para>
         /// </summary>
         /// <param name="numberOfColumns">Number of columns to insert.</param>
-        void InsertColumnsAfter(int numberOfColumns);
-        void InsertColumnsAfter(int numberOfColumns, Boolean expandRange);
+        IXLRangeColumns InsertColumnsAfter(int numberOfColumns);
+        IXLRangeColumns InsertColumnsAfter(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of columns to the left of this range.
         /// <para>This range and all cells to the right of this range will be shifted X number of columns.</para>
         /// </summary>
         /// <param name="numberOfColumns">Number of columns to insert.</param>
-        void InsertColumnsBefore(int numberOfColumns);
-        void InsertColumnsBefore(int numberOfColumns, Boolean expandRange);
+        IXLRangeColumns InsertColumnsBefore(int numberOfColumns);
+        IXLRangeColumns InsertColumnsBefore(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of cells on top of this column.
         /// <para>This column and all cells below it will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of cells to insert.</param>
-        void InsertCellsAbove(int numberOfRows);
-        void InsertCellsAbove(int numberOfRows, Boolean expandRange);
+        IXLCells InsertCellsAbove(int numberOfRows);
+        IXLCells InsertCellsAbove(int numberOfRows, Boolean expandRange);
         /// <summary>
         /// Inserts X number of cells below this range.
         /// <para>All cells below this column will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of cells to insert.</param>
-        void InsertCellsBelow(int numberOfRows);
-        void InsertCellsBelow(int numberOfRows, Boolean expandRange);
+        IXLCells InsertCellsBelow(int numberOfRows);
+        IXLCells InsertCellsBelow(int numberOfRows, Boolean expandRange);
 
         /// <summary>
         /// Deletes this range and shifts the cells at the right.

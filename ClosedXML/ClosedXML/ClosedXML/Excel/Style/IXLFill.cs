@@ -32,11 +32,14 @@ namespace ClosedXML.Excel
     public interface IXLFill:IEquatable<IXLFill>
     {
         IXLColor BackgroundColor { get; set; }
-
         IXLColor PatternColor { get; set; }
-
         IXLColor PatternBackgroundColor { get; set; }
-
         XLFillPatternValues PatternType { get; set; }
+
+        IXLStyle SetBackgroundColor(IXLColor value);
+        IXLStyle SetPatternColor(IXLColor value);
+        IXLStyle SetPatternBackgroundColor(IXLColor value);
+        IXLStyle SetPatternType(XLFillPatternValues value);
+
     }
 }

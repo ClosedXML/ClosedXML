@@ -78,5 +78,17 @@ namespace ClosedXML.Excel
         /// <para>(as opposed to the normal left to right).</para>
         /// </summary>
         Boolean TopToBottom { get; set; }
+
+        IXLStyle SetHorizontal(XLAlignmentHorizontalValues value);
+        IXLStyle SetVertical(XLAlignmentVerticalValues value);
+        IXLStyle SetIndent(Int32 value);
+        IXLStyle SetJustifyLastLine(); IXLStyle SetJustifyLastLine(Boolean value);
+        IXLStyle SetReadingOrder(XLAlignmentReadingOrderValues value);
+        IXLStyle SetRelativeIndent(Int32 value);
+        IXLStyle SetShrinkToFit(); IXLStyle SetShrinkToFit(Boolean value);
+        IXLStyle SetTextRotation(Int32 value);
+        IXLStyle SetWrapText(); IXLStyle SetWrapText(Boolean value);
+        IXLStyle SetTopToBottom(); IXLStyle SetTopToBottom(Boolean value);
+
     }
 }

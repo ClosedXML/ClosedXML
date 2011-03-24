@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
     internal class XLColumn: XLRangeBase, IXLColumn
     {
         public XLColumn(Int32 column, XLColumnParameters xlColumnParameters)
-            : base(new XLRangeAddress(1, column, XLWorksheet.MaxNumberOfRows, column))
+            : base(new XLRangeAddress(new XLAddress(1, column, false, false), new XLAddress(XLWorksheet.MaxNumberOfRows, column, false, false)))
         {
             SetColumnNumber(column);
             Worksheet = xlColumnParameters.Worksheet;
@@ -41,8 +41,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                RangeAddress.FirstAddress = new XLAddress(1, column);
-                RangeAddress.LastAddress = new XLAddress(XLWorksheet.MaxNumberOfRows, column);
+                RangeAddress.FirstAddress = new XLAddress(1, column, RangeAddress.FirstAddress.FixedRow, RangeAddress.FirstAddress.FixedColumn);
+                RangeAddress.LastAddress = new XLAddress(XLWorksheet.MaxNumberOfRows, column, RangeAddress.LastAddress.FixedRow, RangeAddress.LastAddress.FixedColumn);
             }
         }
 
@@ -218,14 +218,15 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        public new void InsertColumnsAfter(Int32 numberOfColumns)
+        public new IXLColumns InsertColumnsAfter(Int32 numberOfColumns)
         {
             var columnNum = this.ColumnNumber();
             this.Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum + 1, numberOfColumns);
             XLRange range = (XLRange)this.Worksheet.Column(columnNum).AsRange();
             range.InsertColumnsAfter(true, numberOfColumns);
+            return Worksheet.Columns(columnNum + 1, columnNum + numberOfColumns);
         }
-        public new void InsertColumnsBefore(Int32 numberOfColumns)
+        public new IXLColumns InsertColumnsBefore(Int32 numberOfColumns)
         {
             var columnNum = this.ColumnNumber();
             this.Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum, numberOfColumns);
@@ -233,6 +234,7 @@ namespace ClosedXML.Excel
             // and we want to use the old columnNum.
             XLRange range = (XLRange)this.Worksheet.Column(columnNum).AsRange(); 
             range.InsertColumnsBefore(true, numberOfColumns);
+            return Worksheet.Columns(columnNum, columnNum + numberOfColumns - 1);
         }
 
         public override IXLRange AsRange()
@@ -265,15 +267,15 @@ namespace ClosedXML.Excel
             return Range(firstRow, 1, lastRow, 1).Column(1);
         }
 
-        public void AdjustToContents()
+        public IXLColumn AdjustToContents()
         {
-            AdjustToContents(1);
+            return AdjustToContents(1);
         }
-        public void AdjustToContents(Int32 startRow)
+        public IXLColumn AdjustToContents(Int32 startRow)
         {
-            AdjustToContents(startRow, XLWorksheet.MaxNumberOfRows);
+            return AdjustToContents(startRow, XLWorksheet.MaxNumberOfRows);
         }
-        public void AdjustToContents(Int32 startRow, Int32 endRow)
+        public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow)
         {
             Double maxWidth = 0;
             foreach (var c in CellsUsed().Where(cell=>cell.Address.RowNumber >= startRow && cell.Address.RowNumber <= endRow))
@@ -300,6 +302,8 @@ namespace ClosedXML.Excel
                 maxWidth = Worksheet.ColumnWidth;
 
             Width = maxWidth;
+
+            return this;
         }
 
         public void Hide()

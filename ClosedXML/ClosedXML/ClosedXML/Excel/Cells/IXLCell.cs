@@ -140,5 +140,11 @@ namespace ClosedXML.Excel
         IXLWorksheet Worksheet { get; }
 
         IXLDataValidation DataValidation { get; }
+
+
+        IXLCells InsertCellsAbove(int numberOfRows);
+        IXLCells InsertCellsBelow(int numberOfRows);
+        IXLCells InsertCellsAfter(int numberOfColumns);
+        IXLCells InsertCellsBefore(int numberOfColumns);
     }
 }

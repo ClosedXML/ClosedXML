@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
 
         private XLWorkbook workbook;
         public XLWorksheet(String sheetName, XLWorkbook workbook)
-            : base((IXLRangeAddress)new XLRangeAddress(new XLAddress(1, 1), new XLAddress(MaxNumberOfRows, MaxNumberOfColumns)))
+            : base((IXLRangeAddress)new XLRangeAddress(new XLAddress(1, 1, false, false), new XLAddress(MaxNumberOfRows, MaxNumberOfColumns, false, false)))
         {
             Worksheet = this;
             NamedRanges = new XLNamedRanges(workbook);
@@ -404,7 +404,7 @@ namespace ClosedXML.Excel
                     var usedColumns = from c in this.Internals.ColumnsCollection
                                       join dc in distinctColumns
                                         on c.Key equals dc
-                                      where !this.Internals.CellsCollection.ContainsKey(new XLAddress(row, c.Key))
+                                      where !this.Internals.CellsCollection.ContainsKey(new XLAddress(row, c.Key, false, false))
                                       select c.Key;
 
                     usedColumns.ForEach(c => Cell(row, c));
@@ -509,6 +509,10 @@ namespace ClosedXML.Excel
             Internals.RowsCollection.Clear();
         }
         public IXLNamedRanges NamedRanges { get; private set; }
+        public IXLNamedRange NamedRange(String rangeName)
+        {
+            return NamedRanges.NamedRange(rangeName);
+        }
         public IXLSheetView SheetView { get; private set; }
         public IXLTables Tables { get; private set; }
         public IXLTable Table(String name)

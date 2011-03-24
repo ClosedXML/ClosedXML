@@ -152,6 +152,8 @@ namespace ClosedXML.Excel
         /// </value>
         Object Value { set; }
 
+        IXLRangeBase SetValue<T>(T value);
+
         /// <summary>
         /// Sets the type of the cells' data.
         /// <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>

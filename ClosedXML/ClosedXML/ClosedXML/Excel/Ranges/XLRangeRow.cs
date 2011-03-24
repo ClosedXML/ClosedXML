@@ -46,22 +46,22 @@ namespace ClosedXML.Excel
             Delete(XLShiftDeletedCells.ShiftCellsUp);
         }
 
-        public void InsertCellsAfter(int numberOfColumns)
+        public IXLCells InsertCellsAfter(int numberOfColumns)
         {
-            InsertCellsAfter(numberOfColumns, true);
+            return InsertCellsAfter(numberOfColumns, true);
         }
-        public void InsertCellsAfter(int numberOfColumns, Boolean expandRange) 
+        public IXLCells InsertCellsAfter(int numberOfColumns, Boolean expandRange) 
         {
-            InsertColumnsAfter(numberOfColumns, expandRange);
+            return InsertColumnsAfter(numberOfColumns, expandRange).Cells();
         }
 
-        public void InsertCellsBefore(int numberOfColumns)
+        public IXLCells InsertCellsBefore(int numberOfColumns)
         {
-            InsertCellsBefore(numberOfColumns, false);
+            return InsertCellsBefore(numberOfColumns, false);
         }
-        public void InsertCellsBefore(int numberOfColumns, Boolean expandRange)
+        public IXLCells InsertCellsBefore(int numberOfColumns, Boolean expandRange)
         {
-            InsertColumnsBefore(numberOfColumns, expandRange);
+            return InsertColumnsBefore(numberOfColumns, expandRange).Cells();
         }
 
         public IXLCells Cells(String cellsInRow)

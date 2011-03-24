@@ -276,5 +276,17 @@ namespace ClosedXML.Excel
             ;
         }
 
+        public IXLStyle SetHorizontal(XLAlignmentHorizontalValues value) { Horizontal = value; return container.Style; }
+        public IXLStyle SetVertical(XLAlignmentVerticalValues value) { Vertical = value; return container.Style; }
+        public IXLStyle SetIndent(Int32 value) { Indent = value; return container.Style; }
+        public IXLStyle SetJustifyLastLine() { JustifyLastLine = true; return container.Style; }	public IXLStyle SetJustifyLastLine(Boolean value) { JustifyLastLine = value; return container.Style; }
+        public IXLStyle SetReadingOrder(XLAlignmentReadingOrderValues value) { ReadingOrder = value; return container.Style; }
+        public IXLStyle SetRelativeIndent(Int32 value) { RelativeIndent = value; return container.Style; }
+        public IXLStyle SetShrinkToFit() { ShrinkToFit = true; return container.Style; }	public IXLStyle SetShrinkToFit(Boolean value) { ShrinkToFit = value; return container.Style; }
+        public IXLStyle SetTextRotation(Int32 value) { TextRotation = value; return container.Style; }
+        public IXLStyle SetWrapText() { WrapText = true; return container.Style; }	public IXLStyle SetWrapText(Boolean value) { WrapText = value; return container.Style; }
+        public IXLStyle SetTopToBottom() { TopToBottom = true; return container.Style; }	public IXLStyle SetTopToBottom(Boolean value) { TopToBottom = value; return container.Style; }
+
+
     }
 }

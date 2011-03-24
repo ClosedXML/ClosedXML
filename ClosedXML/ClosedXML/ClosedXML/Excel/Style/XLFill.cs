@@ -79,6 +79,12 @@ namespace ClosedXML.Excel
             }
         }
 
+        public IXLStyle SetBackgroundColor(IXLColor value) { BackgroundColor = value; return container.Style; }
+        public IXLStyle SetPatternColor(IXLColor value) { PatternColor = value; return container.Style; }
+        public IXLStyle SetPatternBackgroundColor(IXLColor value) { PatternBackgroundColor = value; return container.Style; }
+        public IXLStyle SetPatternType(XLFillPatternValues value) { PatternType = value; return container.Style; }
+
+
         #endregion
 
         #region Constructors

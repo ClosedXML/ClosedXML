@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
     internal class XLRow: XLRangeBase, IXLRow
     {
         public XLRow(Int32 row, XLRowParameters xlRowParameters)
-            : base(new XLRangeAddress(row, 1, row, XLWorksheet.MaxNumberOfColumns))
+            : base(new XLRangeAddress(new XLAddress(row, 1, false, false), new XLAddress(row, XLWorksheet.MaxNumberOfColumns, false, false)))
         {
             SetRowNumber(row);
             Worksheet = xlRowParameters.Worksheet;
@@ -46,8 +46,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                RangeAddress.FirstAddress = new XLAddress(row, 1);
-                RangeAddress.LastAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns);
+                RangeAddress.FirstAddress = new XLAddress(row, 1, RangeAddress.FirstAddress.FixedRow, RangeAddress.FirstAddress.FixedColumn);
+                RangeAddress.LastAddress = new XLAddress(row, XLWorksheet.MaxNumberOfColumns, RangeAddress.LastAddress.FixedRow, RangeAddress.LastAddress.FixedColumn);
             }
         }
 
@@ -97,15 +97,16 @@ namespace ClosedXML.Excel
         }
 
 
-        public new void InsertRowsBelow(Int32 numberOfRows)
+        public new IXLRows InsertRowsBelow(Int32 numberOfRows)
         {
             var rowNum = this.RowNumber();
             this.Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum + 1, numberOfRows);
             XLRange range = (XLRange)this.Worksheet.Row(rowNum).AsRange();
             range.InsertRowsBelow(true, numberOfRows);
+            return Worksheet.Rows(rowNum + 1, rowNum + numberOfRows);
         }
 
-        public new void InsertRowsAbove(Int32 numberOfRows)
+        public new IXLRows InsertRowsAbove(Int32 numberOfRows)
         {
             var rowNum = this.RowNumber();
             this.Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum, numberOfRows);
@@ -113,6 +114,7 @@ namespace ClosedXML.Excel
             // and we want to use the old rowNum.
             XLRange range = (XLRange)this.Worksheet.Row(rowNum).AsRange(); 
             range.InsertRowsAbove(true, numberOfRows);
+            return Worksheet.Rows(rowNum, rowNum + numberOfRows - 1);
         }
 
         public new void Clear()
@@ -174,15 +176,15 @@ namespace ClosedXML.Excel
             return Cells(XLAddress.GetColumnNumberFromLetter(firstColumn) + ":" 
                 + XLAddress.GetColumnNumberFromLetter(lastColumn));
         }
-        public void AdjustToContents()
+        public IXLRow AdjustToContents()
         {
-            AdjustToContents(1);
+            return AdjustToContents(1);
         }
-        public void AdjustToContents(Int32 startColumn)
+        public IXLRow AdjustToContents(Int32 startColumn)
         {
-            AdjustToContents(startColumn, XLWorksheet.MaxNumberOfColumns);
+            return AdjustToContents(startColumn, XLWorksheet.MaxNumberOfColumns);
         }
-        public void AdjustToContents(Int32 startColumn, Int32 endColumn)
+        public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn)
         {
             Double maxHeight = 0;
             foreach (var c in CellsUsed().Where(cell => cell.Address.ColumnNumber >= startColumn && cell.Address.ColumnNumber <= endColumn))
@@ -209,6 +211,7 @@ namespace ClosedXML.Excel
                 maxHeight = Worksheet.RowHeight;
 
             Height = maxHeight;
+            return this;
         }
 
         public void Hide()

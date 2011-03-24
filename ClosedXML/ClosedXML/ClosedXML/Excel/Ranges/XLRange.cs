@@ -139,8 +139,8 @@ namespace ClosedXML.Excel
 
         public IXLRangeRow Row(Int32 row)
         {
-            IXLAddress firstCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.FirstAddress.ColumnNumber);
-            IXLAddress lastCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.LastAddress.ColumnNumber);
+            IXLAddress firstCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.FirstAddress.ColumnNumber, false, false);
+            IXLAddress lastCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.LastAddress.ColumnNumber, false, false);
             return new XLRangeRow(
                 new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), 
                     Worksheet, 
@@ -149,8 +149,8 @@ namespace ClosedXML.Excel
         }
         public IXLRangeColumn Column(Int32 column)
         {
-            IXLAddress firstCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1);
-            IXLAddress lastCellAddress = new XLAddress(RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1);
+            IXLAddress firstCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
+            IXLAddress lastCellAddress = new XLAddress(RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
             return new XLRangeColumn(
                 new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress),
                     Worksheet,
@@ -287,7 +287,8 @@ namespace ClosedXML.Excel
             TransposeRange(squareSide);
             this.RangeAddress.LastAddress = new XLAddress(
                 firstCell.Address.RowNumber + columnCount - 1,
-                firstCell.Address.ColumnNumber + rowCount - 1);
+                firstCell.Address.ColumnNumber + rowCount - 1,
+                RangeAddress.LastAddress.FixedRow, RangeAddress.LastAddress.FixedColumn);
             if (rowCount > columnCount)
             {
                 var rng = Worksheet.Range(

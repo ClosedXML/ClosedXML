@@ -151,17 +151,20 @@ namespace ClosedXML.Excel
             rows.Add(row);
         }
 
-        public void AdjustToContents()
+        public IXLRows AdjustToContents()
         {
             rows.ForEach(r => r.AdjustToContents());
+            return this;
         }
-        public void AdjustToContents(Int32 startColumn)
+        public IXLRows AdjustToContents(Int32 startColumn)
         {
             rows.ForEach(r => r.AdjustToContents(startColumn));
+            return this;
         }
-        public void AdjustToContents(Int32 startColumn, Int32 endColumn)
+        public IXLRows AdjustToContents(Int32 startColumn, Int32 endColumn)
         {
             rows.ForEach(r => r.AdjustToContents(startColumn, endColumn));
+            return this;
         }
         public void Hide()
         {

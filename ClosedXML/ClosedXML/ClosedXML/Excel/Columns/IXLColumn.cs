@@ -35,14 +35,14 @@ namespace ClosedXML.Excel
         /// <para>All columns at the right will be shifted accordingly.</para>
         /// </summary>
         /// <param name="numberOfColumns">The number of columns to insert.</param>
-        void InsertColumnsAfter(Int32 numberOfColumns);
+        IXLColumns InsertColumnsAfter(Int32 numberOfColumns);
 
         /// <summary>
         /// Inserts X number of columns at the left of this one.
         /// <para>This column and all at the right will be shifted accordingly.</para>
         /// </summary>
         /// <param name="numberOfColumns">The number of columns to insert.</param>
-        void InsertColumnsBefore(Int32 numberOfColumns);
+        IXLColumns InsertColumnsBefore(Int32 numberOfColumns);
 
         /// <summary>
         /// Gets the cell in the specified row.
@@ -67,18 +67,18 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Adjusts the width of the column based on its contents.
         /// </summary>
-        void AdjustToContents();
+        IXLColumn AdjustToContents();
         /// <summary>
         /// Adjusts the width of the column based on its contents, starting from the startRow.
         /// </summary>
         /// <param name="startRow">The row to start calculating the column width.</param>
-        void AdjustToContents(Int32 startRow);
+        IXLColumn AdjustToContents(Int32 startRow);
         /// <summary>
         /// Adjusts the width of the column based on its contents, starting from the startRow and ending at endRow.
         /// </summary>
         /// <param name="startRow">The row to start calculating the column width.</param>
         /// <param name="endRow">The row to end calculating the column width.</param>
-        void AdjustToContents(Int32 startRow, Int32 endRow);
+        IXLColumn AdjustToContents(Int32 startRow, Int32 endRow);
 
 
         /// <summary>

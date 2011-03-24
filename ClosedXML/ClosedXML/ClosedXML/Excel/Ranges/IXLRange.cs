@@ -173,29 +173,29 @@ namespace ClosedXML.Excel
         /// <para>All cells to the right of this range will be shifted X number of columns.</para>
         /// </summary>
         /// <param name="numberOfColumns">Number of columns to insert.</param>
-        void InsertColumnsAfter(int numberOfColumns);
-        void InsertColumnsAfter(int numberOfColumns, Boolean expandRange);
+        IXLRangeColumns InsertColumnsAfter(int numberOfColumns);
+        IXLRangeColumns InsertColumnsAfter(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of columns to the left of this range.
         /// <para>This range and all cells to the right of this range will be shifted X number of columns.</para>
         /// </summary>
         /// <param name="numberOfColumns">Number of columns to insert.</param>
-        void InsertColumnsBefore(int numberOfColumns);
-        void InsertColumnsBefore(int numberOfColumns, Boolean expandRange);
+        IXLRangeColumns InsertColumnsBefore(int numberOfColumns);
+        IXLRangeColumns InsertColumnsBefore(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of rows on top of this range.
         /// <para>This range and all cells below this range will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of rows to insert.</param>
-        void InsertRowsAbove(int numberOfRows);
-        void InsertRowsAbove(int numberOfRows, Boolean expandRange);
+        IXLRangeRows InsertRowsAbove(int numberOfRows);
+        IXLRangeRows InsertRowsAbove(int numberOfRows, Boolean expandRange);
         /// <summary>
         /// Inserts X number of rows below this range.
         /// <para>All cells below this range will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of rows to insert.</param>
-        void InsertRowsBelow(int numberOfRows);
-        void InsertRowsBelow(int numberOfRows, Boolean expandRange);
+        IXLRangeRows InsertRowsBelow(int numberOfRows);
+        IXLRangeRows InsertRowsBelow(int numberOfRows, Boolean expandRange);
 
         /// <summary>
         /// Deletes this range and shifts the surrounding cells accordingly.
@@ -215,8 +215,6 @@ namespace ClosedXML.Excel
         IXLTable CreateTable(String name);
 
         IXLRange RangeUsed();
-
-        //IXLWorksheet Worksheet { get; }
     }
 }
 

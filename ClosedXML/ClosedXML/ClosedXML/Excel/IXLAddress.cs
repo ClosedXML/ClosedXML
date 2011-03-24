@@ -10,5 +10,7 @@ namespace ClosedXML.Excel
         Int32 RowNumber { get; }
         Int32 ColumnNumber { get; }
         String ColumnLetter { get; }
+        Boolean FixedRow { get; }
+        Boolean FixedColumn { get; }
     }
 }

@@ -9,5 +9,7 @@ namespace ClosedXML.Excel
     {
         Int32 NumberFormatId { get; set; }
         String Format { get; set; }
+        IXLStyle SetNumberFormatId(Int32 value);
+        IXLStyle SetFormat(String value);
     }
 }

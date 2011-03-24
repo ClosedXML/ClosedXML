@@ -30,26 +30,26 @@ namespace ClosedXML.Excel
         /// <para>All rows below will be shifted accordingly.</para>
         /// </summary>
         /// <param name="numberOfRows">The number of rows to insert.</param>
-        void InsertRowsBelow(Int32 numberOfRows);
+        IXLRows InsertRowsBelow(Int32 numberOfRows);
 
         /// <summary>
         /// Inserts X number of rows above this one.
         /// <para>This row and all below will be shifted accordingly.</para>
         /// </summary>
         /// <param name="numberOfRows">The number of rows to insert.</param>
-        void InsertRowsAbove(Int32 numberOfRows);
+        IXLRows InsertRowsAbove(Int32 numberOfRows);
 
         /// <summary>
         /// Adjusts the height of the row based on its contents, starting from the startColumn.
         /// </summary>
         /// <param name="startColumn">The column to start calculating the row height.</param>
-        void AdjustToContents(Int32 startColumn);
+        IXLRow AdjustToContents(Int32 startColumn);
         /// <summary>
         /// Adjusts the height of the row based on its contents, starting from the startColumn and ending at endColumn.
         /// </summary>
         /// <param name="startColumn">The column to start calculating the row height.</param>
         /// <param name="endColumn">The column to end calculating the row height.</param>
-        void AdjustToContents(Int32 startColumn, Int32 endColumn);
+        IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn);
 
         /// <summary>Hides this row.</summary>
         void Hide();

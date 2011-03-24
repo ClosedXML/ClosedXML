@@ -77,22 +77,22 @@ namespace ClosedXML.Excel
         {
             Delete(XLShiftDeletedCells.ShiftCellsLeft);
         }
-        public void InsertCellsAbove(int numberOfRows)
+        public IXLCells InsertCellsAbove(int numberOfRows)
         {
-            InsertCellsAbove(numberOfRows, false);
+            return InsertCellsAbove(numberOfRows, false);
         }
-        public void InsertCellsAbove(int numberOfRows, Boolean expandRange)
+        public IXLCells InsertCellsAbove(int numberOfRows, Boolean expandRange)
         {
-            InsertRowsAbove(numberOfRows, expandRange);
+            return InsertRowsAbove(numberOfRows, expandRange).Cells();
         }
 
-        public void InsertCellsBelow(int numberOfRows)
+        public IXLCells InsertCellsBelow(int numberOfRows)
         {
-            InsertCellsBelow(numberOfRows, true);
+            return InsertCellsBelow(numberOfRows, true);
         }
-        public void InsertCellsBelow(int numberOfRows, Boolean expandRange)
+        public IXLCells InsertCellsBelow(int numberOfRows, Boolean expandRange)
         {
-            InsertRowsBelow(numberOfRows, expandRange);
+            return InsertRowsBelow(numberOfRows, expandRange).Cells();
         }
 
         public Int32 CellCount()

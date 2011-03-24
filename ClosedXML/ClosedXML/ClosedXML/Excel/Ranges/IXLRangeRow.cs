@@ -44,29 +44,29 @@ namespace ClosedXML.Excel
         /// <para>All cells to the right of this row will be shifted X number of columns.</para>
         /// </summary>
         /// <param name="numberOfColumns">Number of cells to insert.</param>
-        void InsertCellsAfter(int numberOfColumns);
-        void InsertCellsAfter(int numberOfColumns, Boolean expandRange);
+        IXLCells InsertCellsAfter(int numberOfColumns);
+        IXLCells InsertCellsAfter(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of cells to the left of this row.
         /// <para>This row and all cells to the right of it will be shifted X number of columns.</para>
         /// </summary>
         /// <param name="numberOfColumns">Number of cells to insert.</param>
-        void InsertCellsBefore(int numberOfColumns);
-        void InsertCellsBefore(int numberOfColumns, Boolean expandRange);
+        IXLCells InsertCellsBefore(int numberOfColumns);
+        IXLCells InsertCellsBefore(int numberOfColumns, Boolean expandRange);
         /// <summary>
         /// Inserts X number of rows on top of this row.
         /// <para>This row and all cells below it will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of rows to insert.</param>
-        void InsertRowsAbove(int numberOfRows);
-        void InsertRowsAbove(int numberOfRows, Boolean expandRange);
+        IXLRangeRows InsertRowsAbove(int numberOfRows);
+        IXLRangeRows InsertRowsAbove(int numberOfRows, Boolean expandRange);
         /// <summary>
         /// Inserts X number of rows below this row.
         /// <para>All cells below this row will be shifted X number of rows.</para>
         /// </summary>
         /// <param name="numberOfRows">Number of rows to insert.</param>
-        void InsertRowsBelow(int numberOfRows);
-        void InsertRowsBelow(int numberOfRows, Boolean expandRange);
+        IXLRangeRows InsertRowsBelow(int numberOfRows);
+        IXLRangeRows InsertRowsBelow(int numberOfRows, Boolean expandRange);
 
         /// <summary>
         /// Deletes this range and shifts the cells below.

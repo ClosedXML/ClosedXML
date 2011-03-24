@@ -187,5 +187,33 @@ namespace ClosedXML.Excel
                 return dataValidation;
             }
         }
+
+        public IXLRanges AddToNamed(String rangeName)
+        {
+            return AddToNamed(rangeName, XLScope.Workbook);
+        }
+        public IXLRanges AddToNamed(String rangeName, XLScope scope)
+        {
+            return AddToNamed(rangeName, XLScope.Workbook, null);
+        }
+        public IXLRanges AddToNamed(String rangeName, XLScope scope, String comment)
+        {
+            ranges.ForEach(r => r.AddToNamed(rangeName, scope, comment));
+            return this;
+        }
+
+        public Object Value
+        {
+            set
+            {
+                ranges.ForEach(r => r.Value = value);
+            }
+        }
+
+        public IXLRanges SetValue<T>(T value)
+        {
+            ranges.ForEach(r => r.SetValue(value));
+            return this;
+        }
     }
 }

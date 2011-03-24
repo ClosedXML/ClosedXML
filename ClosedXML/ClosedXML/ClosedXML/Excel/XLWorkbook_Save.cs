@@ -1547,7 +1547,7 @@ namespace ClosedXML.Excel
             {
                 maxColumn = (UInt32)xlWorksheet.Internals.CellsCollection.Select(c => c.Key.ColumnNumber).Max();
                 maxRow = (UInt32)xlWorksheet.Internals.CellsCollection.Select(c => c.Key.RowNumber).Max();
-                sheetDimensionReference = "A1:" + new XLAddress((Int32)maxRow, (Int32)maxColumn).ToString();
+                sheetDimensionReference = "A1:" + XLAddress.GetColumnLetterFromNumber((Int32)maxColumn) + ((Int32)maxRow).ToStringLookup();
             }
 
             if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
@@ -2057,7 +2057,9 @@ namespace ClosedXML.Excel
                     {
                         sequence += r.RangeAddress.ToString() + " ";
                     }
-                    sequence = sequence.Substring(0, sequence.Length - 1);
+
+                    if (sequence.Length > 0)
+                        sequence = sequence.Substring(0, sequence.Length - 1);
 
                     DataValidation dataValidation = new DataValidation()
                     {
@@ -2459,8 +2461,6 @@ namespace ClosedXML.Excel
                 
             }
         }
-
-
 
         private Double GetColumnWidth(Double columnWidth)
         {
@@ -3329,7 +3329,7 @@ namespace ClosedXML.Excel
 
                 if (xlTable.ShowTotalsRow)
                     autoFilter1.Reference = xlTable.RangeAddress.FirstAddress.ToString() + ":" +
-                        new XLAddress(xlTable.RangeAddress.LastAddress.RowNumber - 1, xlTable.RangeAddress.LastAddress.ColumnNumber).ToString();
+                        XLAddress.GetColumnLetterFromNumber(xlTable.RangeAddress.LastAddress.ColumnNumber) + (xlTable.RangeAddress.LastAddress.RowNumber - 1).ToStringLookup();
                 else
                     autoFilter1.Reference = reference;
 

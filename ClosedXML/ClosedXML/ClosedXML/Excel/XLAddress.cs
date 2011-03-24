@@ -9,20 +9,19 @@ namespace ClosedXML.Excel
 {
     internal struct XLAddress: IXLAddress
     {
-        private static Regex a1Regex = new Regex(@"^(\$?[a-zA-Z]{1,3})(\$?\d+)$");
         #region Constructors
         /// <summary>
         /// Initializes a new <see cref="XLAddress"/> struct using R1C1 notation.
         /// </summary>
         /// <param name="rowNumber">The row number of the cell address.</param>
         /// <param name="columnNumber">The column number of the cell address.</param>
-        public XLAddress(Int32 rowNumber, Int32 columnNumber)
+        public XLAddress(Int32 rowNumber, Int32 columnNumber, Boolean fixedRow, Boolean fixedColumn)
         {
             this.rowNumber = rowNumber;
             this.columnNumber = columnNumber;
             this.columnLetter = null;
-            fixedColumn = false;
-            fixedRow = false;
+            this.fixedColumn = fixedColumn;
+            this.fixedRow = fixedRow;
         }
 
         /// <summary>
@@ -30,13 +29,13 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rowNumber">The row number of the cell address.</param>
         /// <param name="columnLetter">The column letter of the cell address.</param>
-        public XLAddress(Int32 rowNumber, String columnLetter)
+        public XLAddress(Int32 rowNumber, String columnLetter, Boolean fixedRow, Boolean fixedColumn)
         {
             this.rowNumber = rowNumber;
             this.columnNumber = 0;
             this.columnLetter = columnLetter;
-            fixedColumn = false;
-            fixedRow = false;
+            this.fixedColumn = fixedColumn;
+            this.fixedRow = fixedRow;
         }
 
 
@@ -61,12 +60,20 @@ namespace ClosedXML.Excel
 
             if (fixedRow)
             {
-                columnLetter = cellAddressString.Substring(startPos, rowPos - 1);
+                if (fixedColumn)
+                    columnLetter = cellAddressString.Substring(startPos, rowPos - 1);
+                else
+                    columnLetter = cellAddressString.Substring(startPos, rowPos);
+
                 rowNumber = Int32.Parse(cellAddressString.Substring(rowPos + 1), nfi);
             }
             else
             {
-                columnLetter = cellAddressString.Substring(startPos, rowPos);
+                if (fixedColumn)
+                    columnLetter = cellAddressString.Substring(startPos, rowPos - 1);
+                else
+                    columnLetter = cellAddressString.Substring(startPos, rowPos);
+
                 rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), nfi);
             }
 
@@ -76,6 +83,7 @@ namespace ClosedXML.Excel
         #endregion
 
         #region Static
+        private static NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
         private static readonly Int32 twoT26 = 26 * 26;
         /// <summary>
         /// Gets the column number of a given column letter.
@@ -147,11 +155,12 @@ namespace ClosedXML.Excel
         {
             address = address.Replace("$", "");
             Int32 rowPos = 0;
-            while (rowPos < address.Length && (address[rowPos] > '9' || address[rowPos] < '0'))
+            Int32 addressLength = address.Length;
+            while (rowPos < addressLength && (address[rowPos] > '9' || address[rowPos] < '0'))
                 rowPos++;
 
             return 
-                   rowPos < address.Length
+                   rowPos < addressLength
                 && IsValidRow(address.Substring(rowPos))
                 && IsValidColumn(address.Substring(0, rowPos));
         }
@@ -306,7 +315,6 @@ namespace ClosedXML.Excel
         #endregion
 
         #region Overrides
-        private static NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
         public override string ToString()
         {
             //var sb = new StringBuilder();
@@ -337,22 +345,26 @@ namespace ClosedXML.Excel
 
         public static XLAddress operator +(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            return new XLAddress(xlCellAddressLeft.RowNumber + xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber + xlCellAddressRight.ColumnNumber);
+            return new XLAddress(xlCellAddressLeft.RowNumber + xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber + xlCellAddressRight.ColumnNumber,
+                xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
         }
 
         public static XLAddress operator -(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            return new XLAddress(xlCellAddressLeft.RowNumber - xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber - xlCellAddressRight.ColumnNumber);
+            return new XLAddress(xlCellAddressLeft.RowNumber - xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber - xlCellAddressRight.ColumnNumber,
+                xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
         }
 
         public static XLAddress operator +(XLAddress xlCellAddressLeft, Int32 right)
         {
-            return new XLAddress(xlCellAddressLeft.RowNumber + right, xlCellAddressLeft.ColumnNumber + right);
+            return new XLAddress(xlCellAddressLeft.RowNumber + right, xlCellAddressLeft.ColumnNumber + right,
+                xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
         }
 
         public static XLAddress operator -(XLAddress xlCellAddressLeft, Int32 right)
         {
-            return new XLAddress(xlCellAddressLeft.RowNumber - right, xlCellAddressLeft.ColumnNumber - right);
+            return new XLAddress(xlCellAddressLeft.RowNumber - right, xlCellAddressLeft.ColumnNumber - right,
+                xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
         }
 
         public static Boolean operator ==(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)

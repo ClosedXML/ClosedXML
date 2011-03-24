@@ -290,5 +290,19 @@ namespace ClosedXML.Excel
                     ^ DiagonalUp.GetHashCode()
                     ^ DiagonalDown.GetHashCode();
         }
+
+        public IXLStyle SetLeftBorder(XLBorderStyleValues value) { LeftBorder = value; return container.Style; }
+        public IXLStyle SetLeftBorderColor(IXLColor value) { LeftBorderColor = value; return container.Style; }
+        public IXLStyle SetRightBorder(XLBorderStyleValues value) { RightBorder = value; return container.Style; }
+        public IXLStyle SetRightBorderColor(IXLColor value) { RightBorderColor = value; return container.Style; }
+        public IXLStyle SetTopBorder(XLBorderStyleValues value) { TopBorder = value; return container.Style; }
+        public IXLStyle SetTopBorderColor(IXLColor value) { TopBorderColor = value; return container.Style; }
+        public IXLStyle SetBottomBorder(XLBorderStyleValues value) { BottomBorder = value; return container.Style; }
+        public IXLStyle SetBottomBorderColor(IXLColor value) { BottomBorderColor = value; return container.Style; }
+        public IXLStyle SetDiagonalUp() { DiagonalUp = true; return container.Style; }	public IXLStyle SetDiagonalUp(Boolean value) { DiagonalUp = value; return container.Style; }
+        public IXLStyle SetDiagonalDown() { DiagonalDown = true; return container.Style; }	public IXLStyle SetDiagonalDown(Boolean value) { DiagonalDown = value; return container.Style; }
+        public IXLStyle SetDiagonalBorder(XLBorderStyleValues value) { DiagonalBorder = value; return container.Style; }
+        public IXLStyle SetDiagonalBorderColor(IXLColor value) { DiagonalBorderColor = value; return container.Style; }
+
     }
 }

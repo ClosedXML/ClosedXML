@@ -43,12 +43,6 @@ namespace ClosedXML.Excel
             LastAddress = new XLAddress(lastCellAddress);
         }
 
-        public XLRangeAddress(Int32 firstCellRow, Int32 firstCellColumn, Int32 lastCellRow, Int32 lastCellColumn)
-        {
-            FirstAddress = new XLAddress(firstCellRow, firstCellColumn);
-            LastAddress = new XLAddress(lastCellRow, lastCellColumn);
-        }
-
         public XLRangeAddress(IXLAddress firstAddress, IXLAddress lastAddress)
         {
             FirstAddress = firstAddress;

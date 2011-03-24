@@ -220,6 +220,18 @@ namespace ClosedXML.Excel
             }
         }
 
+        public IXLStyle SetBold() { Bold = true; return container.Style; }	public IXLStyle SetBold(Boolean value) { Bold = value; return container.Style; }
+        public IXLStyle SetItalic() { Italic = true; return container.Style; }	public IXLStyle SetItalic(Boolean value) { Italic = value; return container.Style; }
+        public IXLStyle SetUnderline() { Underline = XLFontUnderlineValues.Single; return container.Style; }	public IXLStyle SetUnderline(XLFontUnderlineValues value) { Underline = value; return container.Style; }
+        public IXLStyle SetStrikethrough() { Strikethrough = true; return container.Style; }	public IXLStyle SetStrikethrough(Boolean value) { Strikethrough = value; return container.Style; }
+        public IXLStyle SetVerticalAlignment(XLFontVerticalTextAlignmentValues value) { VerticalAlignment = value; return container.Style; }
+        public IXLStyle SetShadow() { Shadow = true; return container.Style; }	public IXLStyle SetShadow(Boolean value) { Shadow = value; return container.Style; }
+        public IXLStyle SetFontSize(Double value) { FontSize = value; return container.Style; }
+        public IXLStyle SetFontColor(IXLColor value) { FontColor = value; return container.Style; }
+        public IXLStyle SetFontName(String value) { FontName = value; return container.Style; }
+        public IXLStyle SetFontFamilyNumbering(XLFontFamilyNumberingValues value) { FontFamilyNumbering = value; return container.Style; }
+        
+
         #endregion
 
         public Double GetWidth(String text)

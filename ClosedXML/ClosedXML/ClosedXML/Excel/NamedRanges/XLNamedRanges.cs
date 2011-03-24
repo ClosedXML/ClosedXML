@@ -22,11 +22,6 @@ namespace ClosedXML.Excel
             return namedRanges[rangeName];
         }
 
-        public IXLNamedRange NamedRange(Int32 rangeIndex)
-        {
-            return namedRanges.ElementAt(rangeIndex).Value;
-        }
-
         public IXLNamedRange Add(String rangeName, String rangeAddress)
         {
             return Add(rangeName, rangeAddress, null);

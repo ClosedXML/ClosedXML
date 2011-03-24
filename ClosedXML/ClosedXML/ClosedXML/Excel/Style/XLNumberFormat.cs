@@ -47,6 +47,9 @@ namespace ClosedXML.Excel
             }
         }
 
+        public IXLStyle SetNumberFormatId(Int32 value) { NumberFormatId = value; return container.Style; }
+        public IXLStyle SetFormat(String value) { Format = value; return container.Style; }
+
         #endregion
 
         #region Constructors

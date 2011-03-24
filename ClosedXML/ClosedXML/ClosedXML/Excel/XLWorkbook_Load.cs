@@ -216,7 +216,7 @@ namespace ClosedXML.Excel
                 {
                     var dCell = (Cell)cell;
                     Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : 0;
-                    var xlCell = (XLCell)ws.CellFast(dCell.CellReference);
+                    var xlCell = (XLCell)ws.Cell(dCell.CellReference);
 
                     if (styleIndex > 0)
                     {
@@ -312,10 +312,20 @@ namespace ClosedXML.Excel
                         if (val >= 0 && val <= DateTimeExtensions.MaxOADate)
                         {
                             String format = xlCell.Style.NumberFormat.Format.EndsWith(";@") ? xlCell.Style.NumberFormat.Format.Substring(0, xlCell.Style.NumberFormat.Format.Length - 2) : xlCell.Style.NumberFormat.Format;
-                            
+
                             Double dTest;
-                            if (!Double.TryParse(val.ToString(format) , out dTest))
+                            if (!Double.TryParse(val.ToString(format), out dTest))
                                 xlCell.DataType = XLCellValues.DateTime;
+
+                            ////String format = xlCell.Style.NumberFormat.Format.EndsWith(";@") ? xlCell.Style.NumberFormat.Format.Substring(0, xlCell.Style.NumberFormat.Format.Length - 2) : xlCell.Style.NumberFormat.Format;
+                            
+                            ////Double dTest;
+                            ////if (!Double.TryParse(val.ToString(format) , out dTest))
+                            ////DateTime dTest;
+                            ////if (DateTime.TryParseExact(DateTime.FromOADate(val).ToString(format), format, CultureInfo.InvariantCulture, DateTimeStyles.None , out dTest))
+                            ////if (DateTime.TryParse(val.ToString(format), out dTest))
+                            //if ((numberFormatId >= 14 && numberFormatId <= 22) || (numberFormatId >= 165 && numberFormatId <= 180))
+                            //    xlCell.DataType = XLCellValues.DateTime;
                         }
                     }
                 }
