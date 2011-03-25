@@ -339,6 +339,17 @@ namespace ClosedXML.Excel
         {
             return ColumnLetter + rowNumber.ToStringLookup();
         }
+
+        public string ToStringRelative()
+        {
+            return ColumnLetter + rowNumber.ToStringLookup();
+        }
+
+        public string ToStringFixed()
+        {
+            return "$" + ColumnLetter + "$" + rowNumber.ToStringLookup();
+        }
+
         #endregion
 
         #region Operator Overloads

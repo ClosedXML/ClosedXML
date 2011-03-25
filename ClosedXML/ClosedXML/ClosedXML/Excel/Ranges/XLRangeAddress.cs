@@ -81,6 +81,15 @@ namespace ClosedXML.Excel
             return firstAddress.ToString() + ":" + lastAddress.ToString();
         }
 
+        public String ToStringRelative()
+        {
+            return firstAddress.ToStringRelative() + ":" + lastAddress.ToStringRelative();
+        }
+        public String ToStringFixed()
+        {
+            return firstAddress.ToStringFixed() + ":" + lastAddress.ToStringFixed();
+        }
+
         public override bool Equals(object obj)
         {
             var other = (XLRangeAddress)obj;

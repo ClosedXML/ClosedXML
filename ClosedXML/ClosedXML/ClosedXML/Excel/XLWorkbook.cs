@@ -106,6 +106,11 @@ namespace ClosedXML.Excel
         /// </summary>
         public IXLNamedRanges NamedRanges { get; private set; }
 
+        public IXLNamedRange NamedRange(String rangeName)
+        {
+            return NamedRanges.NamedRange(rangeName);
+        }
+
         /// <summary>
         /// Gets the file name of the workbook.
         /// </summary>

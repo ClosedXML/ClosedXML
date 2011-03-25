@@ -2568,46 +2568,44 @@ namespace ClosedXML.Excel
                 workbookPart.CalculationChainPart.CalculationChain = new CalculationChain();
 
             CalculationChain calculationChain =  workbookPart.CalculationChainPart.CalculationChain;
+            calculationChain.RemoveAllChildren<CalculationCell>();
+            //var calculationCells = new Dictionary<String, List<CalculationCell>>();
+            //foreach(var calculationCell in calculationChain.Elements<CalculationCell>().Where(cc => cc.CellReference != null))
+            //{
+            //    String cellReference = calculationCell.CellReference.Value;
+            //    if (!calculationCells.ContainsKey(cellReference))
+            //        calculationCells.Add(cellReference, new List<CalculationCell>());
+            //    calculationCell.
+            //    calculationCells[cellReference].Add(calculationCell);
+            //}
+                
             foreach (var worksheet in Worksheets.Cast<XLWorksheet>())
             {
-                foreach (var c in worksheet.Internals.CellsCollection.Values.Where(c => !StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)))
+                var cellsWithoutFormulas = new HashSet<String>();
+                foreach (var c in worksheet.Internals.CellsCollection.Values)
                 {
-                    var calculationCells = calculationChain.Elements<CalculationCell>().Where(
-                        cc => cc.CellReference != null && cc.CellReference == c.Address.ToString()).Select(cc => cc).ToList();
-
-                    calculationCells.ForEach(cc => calculationChain.RemoveChild(cc));
-
-                    
-                    if (c.FormulaA1.StartsWith("{"))
+                    if (StringExtensions.IsNullOrWhiteSpace(c.FormulaA1))
                     {
-                        calculationChain.Append(new CalculationCell() { CellReference = c.Address.ToString(), SheetId = worksheet.SheetId, Array = true });
-                        calculationChain.Append(new CalculationCell() { CellReference = c.Address.ToString(), InChildChain = true });
+                        cellsWithoutFormulas.Add(c.Address.ToStringRelative());
                     }
                     else
                     {
-                        calculationChain.Append(new CalculationCell() { CellReference = c.Address.ToString(), SheetId = worksheet.SheetId });
+                        //var calculationCells = calculationChain.Elements<CalculationCell>().Where(
+                        //    cc => cc.CellReference != null && cc.CellReference == c.Address.ToString()).Select(cc => cc).ToList();
+
+                        //calculationCells.ForEach(cc => calculationChain.RemoveChild(cc));
+
+
+                        if (c.FormulaA1.StartsWith("{"))
+                        {
+                            calculationChain.Append(new CalculationCell() { CellReference = c.Address.ToString(), SheetId = worksheet.SheetId, Array = true });
+                            calculationChain.Append(new CalculationCell() { CellReference = c.Address.ToString(), InChildChain = true });
+                        }
+                        else
+                        {
+                            calculationChain.Append(new CalculationCell() { CellReference = c.Address.ToString(), SheetId = worksheet.SheetId });
+                        }
                     }
-                    
-
-                    //Boolean addNew = true;
-                    //if (calculationCells.FirstOrDefault() != null)
-                    //{
-                    //    calculationCells.Where(cc => cc.SheetId == null).Select(cc => cc).ForEach(cc => calculationChain.RemoveChild(cc));
-                    //    var cCell = calculationCells.Where(cc => cc.SheetId != null).FirstOrDefault(cc => cc.SheetId == worksheet.SheetId);
-                    //    if (cCell != null)
-                    //    {
-                    //        cCell.SheetId = worksheet.SheetId;
-                    //        cCell.Array = null;
-                    //        addNew = false;
-                    //    }
-                    //}
-
-                    //if (addNew)
-                    //{
-                    //    CalculationCell calculationCell = new CalculationCell() { CellReference = c.Address.ToString(), SheetId = worksheet.SheetId };
-                    //    calculationChain.Append(calculationCell);
-                    //}
-
                 }
 
                 //var cCellsToRemove = new List<CalculationCell>();
@@ -2617,7 +2615,7 @@ namespace ClosedXML.Excel
                             .Where(c1 => c1.SheetId != null)
                             .Select(c1 => c1.CellReference.Value)
                             .Contains(cc.CellReference.Value)
-                            || worksheet.Internals.CellsCollection.Where(kp=>kp.Key.ToString() == cc.CellReference.Value && StringExtensions.IsNullOrWhiteSpace(kp.Value.FormulaA1)).Any()
+                            || cellsWithoutFormulas.Contains(cc.CellReference.Value) 
                         select cc;
                 //m.ToList().ForEach(cc => cCellsToRemove.Add(cc));
                 m.ToList().ForEach(cc=>calculationChain.RemoveChild(cc));

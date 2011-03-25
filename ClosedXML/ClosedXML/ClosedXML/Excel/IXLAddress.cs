@@ -12,5 +12,7 @@ namespace ClosedXML.Excel
         String ColumnLetter { get; }
         Boolean FixedRow { get; }
         Boolean FixedColumn { get; }
+        String ToStringRelative();
+        String ToStringFixed();
     }
 }

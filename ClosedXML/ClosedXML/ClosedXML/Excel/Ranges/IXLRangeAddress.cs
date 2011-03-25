@@ -28,5 +28,8 @@ namespace ClosedXML.Excel
         /// 	<c>true</c> if this instance is invalid; otherwise, <c>false</c>.
         /// </value>
         Boolean IsInvalid { get; set; }
+
+        String ToStringRelative();
+        String ToStringFixed();
     }
 }

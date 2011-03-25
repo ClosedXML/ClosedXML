@@ -13,14 +13,24 @@ namespace ClosedXML_Sandbox
     class Program
     {
 
-        static void Main(string[] args)
+        static void xMain(string[] args)
         {
-            var fileName = "Issue_6373";
+            var fileName = "Issue_6313";
             //var fileName = "Blank";
             //var fileName = "Sandbox";
             var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-            var ws = wb.Worksheet(2);
-            ws.Row(75).InsertRowsBelow(1);
+            
+            IXLWorksheet sheet = wb.Worksheets.Add("Query Results");
+            
+            // Add the table to the Excel sheet
+            var table = sheet.Cell(1, 1).InsertTable(new List<StringSplitOptions>());
+            // run autofit on all the columns
+            sheet.Columns().AdjustToContents();
+            // Freeze the top row and the first five columns
+            sheet.SheetView.Freeze(1, 5);
+            // Mark the first row as BOLD
+            table.HeadersRow().Style.Font.Bold = true;
+
             //var wb = new XLWorkbook();
             //var ws = wb.Worksheets.Add("Shifting Formulas");
             //ws.Cell("B2").Value = 5;
@@ -120,7 +130,7 @@ namespace ClosedXML_Sandbox
             wb.Save();
         }
 
-        static void xMain(string[] args)
+        static void Main(string[] args)
         {
             FillStyles();
             List<Double> runningSave = new List<Double>();
@@ -134,9 +144,9 @@ namespace ClosedXML_Sandbox
                 foreach (var i in Enumerable.Range(1, 1))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
-                    foreach (var ro in Enumerable.Range(1, 200))
+                    foreach (var ro in Enumerable.Range(1, 1000))
                     {
-                        foreach (var co in Enumerable.Range(1, 200))
+                        foreach (var co in Enumerable.Range(1, 100))
                         {
                             ws.Cell(ro, co).Style = GetRandomStyle();
                             //if (rnd.Next(1, 5) == 1)
@@ -202,7 +212,7 @@ namespace ClosedXML_Sandbox
             Console.WriteLine("Avg Save time: {0}", runningSave.Average());
             Console.WriteLine("Avg Load time: {0}", runningLoad.Average());
             Console.WriteLine("Avg Save Back time: {0}", runningSavedBack.Average());
-            //Console.ReadKey();
+            Console.ReadKey();
         }
 
         private static IXLStyle style1;

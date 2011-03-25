@@ -196,6 +196,8 @@ namespace ClosedXML.Excel
 
         IXLDataValidation DataValidation { get; }
 
+        String ToStringRelative();
+        String ToStringFixed();
 
     }
 }

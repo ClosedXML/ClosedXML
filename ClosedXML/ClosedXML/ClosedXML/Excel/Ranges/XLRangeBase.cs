@@ -768,6 +768,16 @@ namespace ClosedXML.Excel
             return String.Format("'{0}'!{1}:{2}", Worksheet.Name, RangeAddress.FirstAddress.ToString(), RangeAddress.LastAddress.ToString());
         }
 
+        public  string ToStringRelative()
+        {
+            return String.Format("'{0}'!{1}:{2}", Worksheet.Name, RangeAddress.FirstAddress.ToStringRelative(), RangeAddress.LastAddress.ToStringRelative());
+        }
+
+        public  string ToStringFixed()
+        {
+            return String.Format("'{0}'!{1}:{2}", Worksheet.Name, RangeAddress.FirstAddress.ToStringFixed(), RangeAddress.LastAddress.ToStringFixed());
+        }
+
         public String FormulaA1
         {
             set
@@ -806,11 +816,11 @@ namespace ClosedXML.Excel
             if (namedRanges.Where(nr => nr.Name.ToLower() == rangeName.ToLower()).Any())
             {
                 var namedRange = namedRanges.Where(nr => nr.Name.ToLower() == rangeName.ToLower()).Single();
-                namedRange.Add(this.AsRange());
+                namedRange.Add(this.ToStringFixed());
             }
             else
             {
-                namedRanges.Add(rangeName, this.AsRange(), comment);
+                namedRanges.Add(rangeName, this.ToStringFixed(), comment);
             }
             return AsRange();
         }
