@@ -16,6 +16,7 @@ namespace ClosedXML.Excel
             ShowErrorMessage = true;
             ShowInputMessage = true;
             InCellDropdown = true;
+            Operator = XLOperator.Between;
             this.worksheet = worksheet;
         }
         public IXLRanges Ranges { get; set; }

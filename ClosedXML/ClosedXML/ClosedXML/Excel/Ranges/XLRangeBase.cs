@@ -799,7 +799,7 @@ namespace ClosedXML.Excel
         }
         public IXLRange AddToNamed(String rangeName, XLScope scope)
         {
-            return AddToNamed(rangeName, XLScope.Workbook, null);
+            return AddToNamed(rangeName, scope, null);
         }
         public IXLRange AddToNamed(String rangeName, XLScope scope, String comment)
         {
@@ -955,6 +955,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
+                    List<IXLDataValidation> dvEmpty = new List<IXLDataValidation>();
                     foreach (var dv in Worksheet.DataValidations)
                     {
                         foreach (var dvRange in dv.Ranges)
@@ -967,9 +968,13 @@ namespace ClosedXML.Excel
                                     if (!this.Contains(c.Address.ToString()))
                                         dv.Ranges.Add(c.AsRange());
                                 }
+                                if (dv.Ranges.Count() == 0)
+                                    dvEmpty.Add(dv);
                             }
                         }
                     }
+
+                    dvEmpty.ForEach(dv => (Worksheet.DataValidations as XLDataValidations).Delete(dv));
 
                     var newRanges = new XLRanges(Worksheet.Internals.Workbook, Style);
                     newRanges.Add(this.AsRange());

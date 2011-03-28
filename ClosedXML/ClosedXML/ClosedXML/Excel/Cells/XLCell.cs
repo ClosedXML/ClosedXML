@@ -288,7 +288,9 @@ namespace ClosedXML.Excel
                     maxRows = lastCellUsed.Address.RowNumber;
                     maxColumns = lastCellUsed.Address.ColumnNumber;
                     //if (asRange is XLRow)
+                    //{
                     //    worksheet.Range(Address.RowNumber, Address.ColumnNumber,  , maxColumns).Clear();
+                    //}
                 }
                 else
                 {
@@ -1127,6 +1129,7 @@ namespace ClosedXML.Excel
         //        FormulaA1 = GetFormula(formulaR1C1, FormulaConversionType.R1C1toA1, rowsToShift, columnsToShift);
         //}
 
+
         internal void ShiftFormulaRows(XLRange shiftedRange, int rowsShifted)
         {
             if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
@@ -1490,6 +1493,23 @@ namespace ClosedXML.Excel
         public IXLCells InsertCellsBefore(int numberOfColumns)
         {
             return this.AsRange().InsertColumnsBefore(numberOfColumns).Cells();
+        }
+
+
+        public IXLCell AddToNamed(String rangeName)
+        {
+            this.AsRange().AddToNamed(rangeName);
+            return this;
+        }
+        public IXLCell AddToNamed(String rangeName, XLScope scope)
+        {
+            this.AsRange().AddToNamed(rangeName, scope);
+            return this;
+        }
+        public IXLCell AddToNamed(String rangeName, XLScope scope, String comment)
+        {
+            this.AsRange().AddToNamed(rangeName, scope, comment);
+            return this;
         }
     }
 }

@@ -54,11 +54,6 @@ namespace ClosedXML_Examples.Misc
                          where p.Age >= 21
                          select p;
 
-            //var person = new Person() { Name = "Henry", Age = 45, House = "On 5th Ave." };
-            //foreach (var p in person.GetType().GetProperties())
-            //{
-            //    var ats = p.GetCustomAttributes(true);
-            //}
 
             ws.Cell(7, 6).Value = "From Query";
             ws.Range(7, 6, 7, 8).Merge().AddToNamed("Titles");

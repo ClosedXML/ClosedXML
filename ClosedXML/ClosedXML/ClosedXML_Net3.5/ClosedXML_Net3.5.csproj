@@ -454,6 +454,9 @@
     <Compile Include="..\ClosedXML\Excel\XLWorksheets.cs">
       <Link>Excel\XLWorksheets.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLWSContentManager.cs">
+      <Link>Excel\XLWSContentManager.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>

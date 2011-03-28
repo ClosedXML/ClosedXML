@@ -231,6 +231,7 @@
     <Compile Include="Excel\XLWorksheetInternals.cs" />
     <Compile Include="Excel\XLWorkbookProperties.cs" />
     <Compile Include="Excel\XLWorksheets.cs" />
+    <Compile Include="Excel\XLWSContentManager.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
