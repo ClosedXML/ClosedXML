@@ -80,14 +80,13 @@ namespace ClosedXML_Examples
             rngTable.Row(1).Merge(); // We could've also used: rngTable.Range("A1:E1").Merge()
             
             //Add thick borders
-            //Left border
-            rngTable.FirstColumn().Style.Border.LeftBorder = XLBorderStyleValues.Thick;
-            //Right border
-            rngTable.LastColumn().Style.Border.RightBorder = XLBorderStyleValues.Thick;
-            //Top border
-            rngTable.FirstRow().Style.Border.TopBorder = XLBorderStyleValues.Thick;
-            //Bottom border
-            rngTable.LastRow().Style.Border.BottomBorder = XLBorderStyleValues.Thick;
+            rngTable.Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
+
+            // You can also specify the border for each side with:
+            // rngTable.FirstColumn().Style.Border.LeftBorder = XLBorderStyleValues.Thick;
+            // rngTable.LastColumn().Style.Border.RightBorder = XLBorderStyleValues.Thick;
+            // rngTable.FirstRow().Style.Border.TopBorder = XLBorderStyleValues.Thick;
+            // rngTable.LastRow().Style.Border.BottomBorder = XLBorderStyleValues.Thick;
 
             // Adjust column widths to their content
             ws.Columns(2, 6).AdjustToContents();

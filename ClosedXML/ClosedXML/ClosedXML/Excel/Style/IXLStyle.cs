@@ -13,5 +13,6 @@ namespace ClosedXML.Excel
         IXLFont Font { get; set; }
         IXLNumberFormat NumberFormat { get; set; }
         IXLNumberFormat DateFormat { get; }
+        IXLProtection Protection { get; set; }
     }
 }

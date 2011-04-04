@@ -971,7 +971,7 @@ namespace ClosedXML.Excel
             }
 
             var allCellStyleFormats = ResolveCellStyleFormats(workbookStylesPart);
-            ResolveAlignments(workbookStylesPart);
+            ResolveRest(workbookStylesPart);
 
             
             if (!workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Where(c => c.Name == "Normal").Any())
@@ -1005,7 +1005,7 @@ namespace ClosedXML.Excel
             //workbookStylesPart.Stylesheet.Append(tableStyles1);
         }
 
-        private void ResolveAlignments(WorkbookStylesPart workbookStylesPart)
+        private void ResolveRest(WorkbookStylesPart workbookStylesPart)
         {
             if (workbookStylesPart.Stylesheet.CellFormats == null)
                 workbookStylesPart.Stylesheet.CellFormats = new CellFormats();
@@ -1033,7 +1033,9 @@ namespace ClosedXML.Excel
                         styleId++;
                     }
 
-                    CellFormat cellFormat = new CellFormat() { NumberFormatId = (UInt32)styleInfo.NumberFormatId, FontId = (UInt32)styleInfo.FontId, FillId = (UInt32)styleInfo.FillId, BorderId = (UInt32)styleInfo.BorderId, ApplyNumberFormat = false, ApplyFill = ApplyFill(styleInfo), ApplyBorder = ApplyBorder(styleInfo), ApplyAlignment = false, ApplyProtection = false, FormatId = (UInt32)formatId };
+                    //CellFormat cellFormat = new CellFormat() { NumberFormatId = (UInt32)styleInfo.NumberFormatId, FontId = (UInt32)styleInfo.FontId, FillId = (UInt32)styleInfo.FillId, BorderId = (UInt32)styleInfo.BorderId, ApplyNumberFormat = false, ApplyFill = ApplyFill(styleInfo), ApplyBorder = ApplyBorder(styleInfo), ApplyAlignment = false, ApplyProtection = false, FormatId = (UInt32)formatId };
+                    CellFormat cellFormat = GetCellFormat(styleInfo);
+                    cellFormat.FormatId = (UInt32)formatId;
                     Alignment alignment = new Alignment()
                     {
                         Horizontal = alignmentHorizontalValues.Single(a => a.Key == styleInfo.Style.Alignment.Horizontal).Value,
@@ -1047,6 +1049,10 @@ namespace ClosedXML.Excel
                         JustifyLastLine = styleInfo.Style.Alignment.JustifyLastLine
                     };
                     cellFormat.Append(alignment);
+
+                    if (cellFormat.ApplyProtection.Value)
+                        cellFormat.Append(GetProtection(styleInfo));
+
                     workbookStylesPart.Stylesheet.CellFormats.Append(cellFormat);
                 }
             }
@@ -1074,7 +1080,12 @@ namespace ClosedXML.Excel
                 }
                 if (!foundOne)
                 {
-                    CellFormat cellStyleFormat = new CellFormat() { NumberFormatId = (UInt32)styleInfo.NumberFormatId, FontId = (UInt32)styleInfo.FontId, FillId = (UInt32)styleInfo.FillId, BorderId = (UInt32)styleInfo.BorderId, ApplyNumberFormat = false, ApplyFill = ApplyFill(styleInfo), ApplyBorder = ApplyBorder(styleInfo), ApplyAlignment = false, ApplyProtection = false };
+                    //CellFormat cellStyleFormat = new CellFormat() { NumberFormatId = (UInt32)styleInfo.NumberFormatId, FontId = (UInt32)styleInfo.FontId, FillId = (UInt32)styleInfo.FillId, BorderId = (UInt32)styleInfo.BorderId, ApplyNumberFormat = false, ApplyFill = ApplyFill(styleInfo), ApplyBorder = ApplyBorder(styleInfo), ApplyAlignment = false, ApplyProtection = false };
+                    CellFormat cellStyleFormat = GetCellFormat(styleInfo);
+
+                    if (cellStyleFormat.ApplyProtection.Value)
+                        cellStyleFormat.Append(GetProtection(styleInfo));
+
                     workbookStylesPart.Stylesheet.CellStyleFormats.Append(cellStyleFormat);
                 }
                 allSharedStyles.Add(styleInfo.Style, new StyleInfo() { Style = styleInfo.Style, StyleId = (UInt32)styleId });
@@ -1100,6 +1111,26 @@ namespace ClosedXML.Excel
                 || borderStyleValues.Single(b => b.Key == opBorder.TopBorder).Value != BorderStyleValues.None);
         }
 
+        private Boolean ApplyProtection(StyleInfo styleInfo)
+        {
+            return styleInfo.Style.Protection != null;
+        }
+
+        private CellFormat GetCellFormat(StyleInfo styleInfo)
+        {
+            var cellFormat = new CellFormat() { NumberFormatId = (UInt32)styleInfo.NumberFormatId, FontId = (UInt32)styleInfo.FontId, FillId = (UInt32)styleInfo.FillId, BorderId = (UInt32)styleInfo.BorderId, ApplyNumberFormat = false, ApplyFill = ApplyFill(styleInfo), ApplyBorder = ApplyBorder(styleInfo), ApplyAlignment = false, ApplyProtection = ApplyProtection(styleInfo) };
+            return cellFormat;
+        }
+
+        private static Protection GetProtection(StyleInfo styleInfo)
+        {
+            return new Protection()
+            {
+                Locked = styleInfo.Style.Protection.Locked,
+                Hidden = styleInfo.Style.Protection.Hidden
+            };
+        }
+
         private bool CellFormatsAreEqual(CellFormat f, StyleInfo styleInfo)
         {
             return
@@ -1109,12 +1140,26 @@ namespace ClosedXML.Excel
                 && styleInfo.NumberFormatId == f.NumberFormatId
                 && f.ApplyNumberFormat != null && f.ApplyNumberFormat == false
                 && f.ApplyAlignment != null && f.ApplyAlignment == false
-                && f.ApplyProtection != null && f.ApplyProtection == false
                 && f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo)
                 && f.ApplyBorder != null && f.ApplyBorder == ApplyBorder(styleInfo)
                 && AlignmentsAreEqual(f.Alignment, styleInfo.Style.Alignment)
+                && ProtectionsAreEqual(f.Protection, styleInfo.Style.Protection)
                 ;
         }
+
+        private bool ProtectionsAreEqual(Protection protection, IXLProtection xlProtection)
+        {
+            var p = new XLProtection();
+            if (protection != null)
+            {
+                if (protection.Locked != null)
+                    p.Locked = protection.Locked.Value;
+                if (protection.Hidden != null)
+                    p.Hidden = protection.Hidden.Value;
+            }
+            return p.Equals(xlProtection);
+        }
+
 
         private bool AlignmentsAreEqual(Alignment alignment, IXLAlignment xlAlignment)
         {
@@ -1981,6 +2026,44 @@ namespace ClosedXML.Excel
             }
             #endregion
 
+            #region SheetProtection
+            SheetProtection sheetProtection = null;
+            if (xlWorksheet.Protection.Protected)
+            {
+                if (worksheetPart.Worksheet.Elements<SheetProtection>().Count() == 0)
+                {
+                    OpenXmlElement previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.SheetProtection);
+                    worksheetPart.Worksheet.InsertAfter(new SheetProtection(), previousElement);
+                }
+
+                sheetProtection = worksheetPart.Worksheet.Elements<SheetProtection>().First();
+                cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, sheetProtection);
+
+                var protection = (XLSheetProtection)xlWorksheet.Protection;
+                sheetProtection.Sheet = protection.Protected;
+                if (!StringExtensions.IsNullOrWhiteSpace(protection.PasswordHash))
+                    sheetProtection.Password = protection.PasswordHash;
+                sheetProtection.FormatCells = protection.FormatCells;
+                sheetProtection.FormatColumns = protection.FormatColumns;
+                sheetProtection.FormatRows = protection.FormatRows;
+                sheetProtection.InsertColumns = protection.InsertColumns;
+                sheetProtection.InsertHyperlinks = protection.InsertHyperlinks;
+                sheetProtection.InsertRows = protection.InsertRows;
+                sheetProtection.DeleteColumns = protection.DeleteColumns;
+                sheetProtection.DeleteRows = protection.DeleteRows;
+                sheetProtection.AutoFilter = protection.AutoFilter;
+                sheetProtection.PivotTables = protection.PivotTables;
+                sheetProtection.Sort = protection.Sort;
+                sheetProtection.SelectLockedCells = !protection.SelectLockedCells;
+                sheetProtection.SelectUnlockedCells = !protection.SelectUnlockedCells;
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<SheetProtection>();
+                cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, null);
+            }
+            #endregion
+
             #region MergeCells
             MergeCells mergeCells = null;
             if (xlWorksheet.Internals.MergedRanges.Count() > 0)
@@ -2006,6 +2089,7 @@ namespace ClosedXML.Excel
             else
             {
                 worksheetPart.Worksheet.RemoveAllChildren<MergeCells>();
+                cm.SetElement(XLWSContentManager.XLWSContents.MergeCells, null);
             }
             #endregion
 
@@ -2015,6 +2099,7 @@ namespace ClosedXML.Excel
             if (xlWorksheet.DataValidations.Count() == 0)
             {
                 worksheetPart.Worksheet.RemoveAllChildren<DataValidations>();
+                cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, null);
             }
             else
             {
@@ -2072,6 +2157,7 @@ namespace ClosedXML.Excel
             if (xlWorksheet.Hyperlinks.Count() == 0)
             {
                 worksheetPart.Worksheet.RemoveAllChildren<Hyperlinks>();
+                cm.SetElement(XLWSContentManager.XLWSContents.Hyperlinks, null);
             }
             else
             {
@@ -2350,7 +2436,10 @@ namespace ClosedXML.Excel
 
         private Double GetColumnWidth(Double columnWidth)
         {
-            return columnWidth + 0.71;
+            if (columnWidth > 0)
+                return columnWidth + 0.71;
+            else
+                return columnWidth;
         }
 
         private void UpdateColumn(Column column, Columns columns, Dictionary<UInt32, Column> sheetColumnsByMin)//, Dictionary<UInt32, Column> sheetColumnsByMax)

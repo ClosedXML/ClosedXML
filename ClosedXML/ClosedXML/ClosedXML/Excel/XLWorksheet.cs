@@ -32,6 +32,7 @@ namespace ClosedXML.Excel
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations();
+            Protection = new XLSheetProtection();
             this.workbook = workbook;
             style = new XLStyle(this, workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new XLRanges(workbook, workbook.Style) , workbook);
@@ -629,7 +630,23 @@ namespace ClosedXML.Excel
             return this;
         }
 
-
+        public IXLSheetProtection Protection { get; private set; }
+        public IXLSheetProtection Protect()
+        {
+            return Protection.Protect();
+        }
+        public IXLSheetProtection Protect(String password)
+        {
+            return Protection.Protect(password);
+        }
+        public IXLSheetProtection Unprotect()
+        {
+            return Protection.Unprotect();
+        }
+        public IXLSheetProtection Unprotect(String password)
+        {
+            return Protection.Unprotect(password);
+        }
        
     }
 }

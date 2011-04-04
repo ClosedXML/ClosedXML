@@ -211,6 +211,9 @@
     <Compile Include="..\ClosedXML\Excel\IXLOutline.cs">
       <Link>Excel\IXLOutline.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\IXLSheetProtection.cs">
+      <Link>Excel\IXLSheetProtection.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLSheetView.cs">
       <Link>Excel\IXLSheetView.cs</Link>
     </Compile>
@@ -364,6 +367,9 @@
     <Compile Include="..\ClosedXML\Excel\Style\IXLNumberFormat.cs">
       <Link>Excel\Style\IXLNumberFormat.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLProtection.cs">
+      <Link>Excel\Style\IXLProtection.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Style\IXLStyle.cs">
       <Link>Excel\Style\IXLStyle.cs</Link>
     </Compile>
@@ -384,6 +390,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Style\XLNumberFormat.cs">
       <Link>Excel\Style\XLNumberFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\XLProtection.cs">
+      <Link>Excel\Style\XLProtection.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Style\XLStyle.cs">
       <Link>Excel\Style\XLStyle.cs</Link>
@@ -426,6 +435,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\XLOutline.cs">
       <Link>Excel\XLOutline.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLSheetProtection.cs">
+      <Link>Excel\XLSheetProtection.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\XLSheetView.cs">
       <Link>Excel\XLSheetView.cs</Link>

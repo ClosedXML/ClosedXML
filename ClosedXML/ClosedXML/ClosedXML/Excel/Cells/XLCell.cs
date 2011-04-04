@@ -47,6 +47,8 @@ namespace ClosedXML.Excel
             {
                 cellValue = value.ToString();
                 dataType = XLCellValues.Text;
+                if (cellValue.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                    Style.Alignment.WrapText = true;
             }
             else if (value is TimeSpan)
             {
@@ -585,16 +587,11 @@ namespace ClosedXML.Excel
             {
                 val = val.Substring(1, val.Length - 1);
                 dataType = XLCellValues.Text;
+                if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                    Style.Alignment.WrapText = true;
             }
             else if (value is TimeSpan || (TimeSpan.TryParse(val, out tsTest) && !Double.TryParse(val, out dTest)))
             {
-                //if (TimeSpan.TryParse(val, out tsTest))
-                //    val = baseDate.Add(tsTest).ToOADate().ToString();
-                //else
-                //{
-                //    TimeSpan timeSpan = (TimeSpan)value;
-                //    val = baseDate.Add(timeSpan).ToOADate().ToString();
-                //}
                 dataType = XLCellValues.TimeSpan;
                 if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
                     Style.NumberFormat.NumberFormatId = 46;
@@ -623,6 +620,8 @@ namespace ClosedXML.Excel
             else
             {
                 dataType = XLCellValues.Text;
+                if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                    Style.Alignment.WrapText = true;
             }
 
             cellValue = val;
@@ -1510,6 +1509,16 @@ namespace ClosedXML.Excel
         {
             this.AsRange().AddToNamed(rangeName, scope, comment);
             return this;
+        }
+
+        public IXLRanges RangesUsed
+        {
+            get
+            {
+                var retVal = new XLRanges(worksheet.Internals.Workbook, this.Style);
+                retVal.Add(this.AsRange());
+                return retVal;
+            }
         }
     }
 }

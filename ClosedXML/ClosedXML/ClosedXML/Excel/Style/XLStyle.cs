@@ -16,6 +16,7 @@ namespace ClosedXML.Excel
                 Border = new XLBorder(container, initialStyle.Border);
                 Fill = new XLFill(container, initialStyle.Fill);
                 NumberFormat = new XLNumberFormat(container, initialStyle.NumberFormat);
+                Protection = new XLProtection(container, initialStyle.Protection);
             }
             else
             {
@@ -24,6 +25,7 @@ namespace ClosedXML.Excel
                 Border = new XLBorder(container, null);
                 Fill = new XLFill(container);
                 NumberFormat = new XLNumberFormat(container, null);
+                Protection = new XLProtection(container, null);
             }
 
             DateFormat = NumberFormat;
@@ -51,6 +53,8 @@ namespace ClosedXML.Excel
             }
         }
 
+        public IXLProtection Protection { get; set; }
+
         public IXLNumberFormat DateFormat { get; private set; }
 
         public override string ToString()
@@ -66,6 +70,8 @@ namespace ClosedXML.Excel
             sb.Append(NumberFormat.ToString());
             sb.Append(" Alignment: ");
             sb.Append(Alignment.ToString());
+            sb.Append(" Protection: ");
+            sb.Append(Protection.ToString());
             return sb.ToString();
         }
 
@@ -77,6 +83,7 @@ namespace ClosedXML.Excel
             && this.Border.Equals(other.Border)
             && this.NumberFormat.Equals(other.NumberFormat)
             && this.Alignment.Equals(other.Alignment)
+            && this.Protection.Equals(other.Protection)
             ;
         }
 
@@ -91,7 +98,8 @@ namespace ClosedXML.Excel
                 ^ Fill.GetHashCode()
                 ^ Border.GetHashCode()
                 ^ NumberFormat.GetHashCode()
-                ^ Alignment.GetHashCode();
+                ^ Alignment.GetHashCode()
+                ^ Protection.GetHashCode();
         }
     }
 }

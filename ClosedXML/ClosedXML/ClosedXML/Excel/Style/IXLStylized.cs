@@ -11,6 +11,7 @@ namespace ClosedXML.Excel
         IEnumerable<IXLStyle> Styles { get; }
         Boolean UpdatingStyle { get; set; }
         IXLStyle InnerStyle { get; set; }
+        IXLRanges RangesUsed { get; }
         //Boolean IsDefault { get; set; }
     }
 }

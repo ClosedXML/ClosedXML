@@ -143,6 +143,7 @@
     <Compile Include="Excel\Hyperlinks\IXLHyperlinks.cs" />
     <Compile Include="Excel\Hyperlinks\XLHyperlink_Internal.cs" />
     <Compile Include="Excel\Hyperlinks\XLHyperlink_public.cs" />
+    <Compile Include="Excel\IXLSheetProtection.cs" />
     <Compile Include="Excel\IXLSheetView.cs" />
     <Compile Include="Excel\IXLTheme.cs" />
     <Compile Include="Excel\NamedRanges\XLNamedRanges.cs" />
@@ -153,6 +154,8 @@
     <Compile Include="Excel\Style\Colors\XLColor_Public.cs" />
     <Compile Include="Excel\Style\Colors\IXLColor.cs" />
     <Compile Include="Excel\Style\Colors\XLColor_Internal.cs" />
+    <Compile Include="Excel\Style\IXLProtection.cs" />
+    <Compile Include="Excel\Style\XLProtection.cs" />
     <Compile Include="Excel\Style\XLStylizedContainer.cs" />
     <Compile Include="Excel\Tables\XLTableField.cs" />
     <Compile Include="Excel\Tables\IXLTableField.cs" />
@@ -181,6 +184,7 @@
     <Compile Include="Excel\Ranges\IXLRangeBase.cs" />
     <Compile Include="Excel\Ranges\XLRangeBase.cs" />
     <Compile Include="Excel\Rows\XLRowCollection.cs" />
+    <Compile Include="Excel\XLSheetProtection.cs" />
     <Compile Include="Excel\XLSheetView.cs" />
     <Compile Include="Excel\XLTheme.cs" />
     <Compile Include="Excel\XLWorkbook_Load.cs" />

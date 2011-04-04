@@ -215,5 +215,13 @@ namespace ClosedXML.Excel
             ranges.ForEach(r => r.SetValue(value));
             return this;
         }
+
+        public IXLRanges RangesUsed
+        {
+            get
+            {
+                return this;
+            }
+        }
     }
 }

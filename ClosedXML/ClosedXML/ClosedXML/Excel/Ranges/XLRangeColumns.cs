@@ -123,5 +123,15 @@ namespace ClosedXML.Excel
             }
             return (IXLCells)cells;
         }
+
+        public IXLRanges RangesUsed
+        {
+            get
+            {
+                var retVal = new XLRanges(worksheet.Internals.Workbook, this.Style);
+                this.ForEach(c => retVal.Add(c.AsRange()));
+                return retVal;
+            }
+        }
     }
 }

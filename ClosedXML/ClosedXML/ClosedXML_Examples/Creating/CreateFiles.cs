@@ -71,6 +71,7 @@ namespace ClosedXML_Examples
             new Hyperlinks().Create(@"C:\Excel Files\Created\Hyperlinks.xlsx");
             new DataValidation().Create(@"C:\Excel Files\Created\DataValidation.xlsx");
             new HideSheets().Create(@"C:\Excel Files\Created\HideSheets.xlsx");
+            new SheetProtection().Create(@"C:\Excel Files\Created\SheetProtection.xlsx");
         }
     }
 }

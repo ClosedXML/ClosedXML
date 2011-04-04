@@ -25,29 +25,29 @@ namespace ClosedXML_Examples
             ws.Cell("B3").Value = "FName";
             ws.Cell("B4").Value = "John";
             ws.Cell("B5").Value = "Hank";
-            ws.Cell("B6").Value = "Dagny";
+            ws.Cell("B6").SetValue("Dagny"); // Another way to set the value
             //Last Names
             ws.Cell("C3").Value = "LName";
             ws.Cell("C4").Value = "Galt";
             ws.Cell("C5").Value = "Rearden";
-            ws.Cell("C6").Value = "Taggart";
+            ws.Cell("C6").SetValue("Taggart"); // Another way to set the value
 
             //Adding more data types
             //Is an outcast?
             ws.Cell("D3").Value = "Outcast";
             ws.Cell("D4").Value = true;
             ws.Cell("D5").Value = false;
-            ws.Cell("D6").Value = false;
+            ws.Cell("D6").SetValue(false); // Another way to set the value
             //Date of Birth
             ws.Cell("E3").Value = "DOB";
             ws.Cell("E4").Value = new DateTime(1919, 1, 21);
             ws.Cell("E5").Value = new DateTime(1907, 3, 4);
-            ws.Cell("E6").Value = new DateTime(1921, 12, 15);
+            ws.Cell("E6").SetValue(new DateTime(1921, 12, 15)); // Another way to set the value
             //Income
             ws.Cell("F3").Value = "Income";
             ws.Cell("F4").Value = 2000;
             ws.Cell("F5").Value = 40000;
-            ws.Cell("F6").Value = 10000;
+            ws.Cell("F6").SetValue(10000); // Another way to set the value
 
             //Defining ranges
             //From worksheet
@@ -62,10 +62,11 @@ namespace ClosedXML_Examples
             //Using a custom format
             rngNumbers.Style.NumberFormat.Format = "$ #,##0";
 
-            //Format title cell
-            rngTable.Cell(1, 1).Style.Font.Bold = true;
-            rngTable.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.CornflowerBlue;
-            rngTable.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //Format title cell in one shot
+            rngTable.Cell(1, 1).Style
+                .Font.SetBold()
+                .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+                .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
             //Merge title cells
             rngTable.Row(1).Merge(); // We could've also used: rngTable.Range("A1:E1").Merge()
@@ -95,14 +96,14 @@ namespace ClosedXML_Examples
             var lastCell = ws.LastCellUsed();
             var contents = ws.Range(firstCell.Address, lastCell.Address);
 
-            //Left border
-            contents.FirstColumn().Style.Border.LeftBorder = XLBorderStyleValues.Thick;
-            //Right border
-            contents.LastColumn().Style.Border.RightBorder = XLBorderStyleValues.Thick;
-            //Top border
-            contents.FirstRow().Style.Border.TopBorder = XLBorderStyleValues.Thick;
-            //Bottom border
-            contents.LastRow().Style.Border.BottomBorder = XLBorderStyleValues.Thick;
+            //Add thick borders
+            contents.Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
+
+            // You can also specify the border for each side with:
+            // contents.FirstColumn().Style.Border.LeftBorder = XLBorderStyleValues.Thick;
+            // contents.LastColumn().Style.Border.RightBorder = XLBorderStyleValues.Thick;
+            // contents.FirstRow().Style.Border.TopBorder = XLBorderStyleValues.Thick;
+            // contents.LastRow().Style.Border.BottomBorder = XLBorderStyleValues.Thick;
 
             // Adjust column widths to their content
             ws.Columns(2, 6).AdjustToContents();

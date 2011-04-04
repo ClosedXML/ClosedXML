@@ -1008,5 +1008,14 @@ namespace ClosedXML.Excel
             }
         }
 
+        public IXLRanges RangesUsed
+        {
+            get
+            {
+                var retVal = new XLRanges(Worksheet.Internals.Workbook, this.Style);
+                retVal.Add(this.AsRange());
+                return retVal;
+            }
+        }
     }
 }

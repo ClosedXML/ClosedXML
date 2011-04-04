@@ -252,7 +252,12 @@ namespace ClosedXML.Excel
                             TextRotation = 0,
                             Vertical = XLAlignmentVerticalValues.Bottom,
                             WrapText = false
-                        }
+                            },
+                        Protection = new XLProtection(null)
+                            {
+                                Locked = true,
+                                Hidden = false
+                            }
                 };
                 return defaultStyle;
             }

@@ -25,6 +25,9 @@ namespace ClosedXML.Excel
     }
     public interface IXLBorder: IEquatable<IXLBorder>
     {
+        XLBorderStyleValues OutsideBorder { set; }
+        IXLColor OutsideBorderColor { set; }
+
         XLBorderStyleValues LeftBorder { get; set; }
         IXLColor LeftBorderColor { get; set; }
         XLBorderStyleValues RightBorder { get; set; }
@@ -37,6 +40,9 @@ namespace ClosedXML.Excel
         Boolean DiagonalDown { get; set; }
         XLBorderStyleValues DiagonalBorder { get; set; }
         IXLColor DiagonalBorderColor { get; set; }
+
+        IXLStyle SetOutsideBorder(XLBorderStyleValues value);
+        IXLStyle SetOutsideBorderColor(IXLColor value);
 
         IXLStyle SetLeftBorder(XLBorderStyleValues value);
         IXLStyle SetLeftBorderColor(IXLColor value);

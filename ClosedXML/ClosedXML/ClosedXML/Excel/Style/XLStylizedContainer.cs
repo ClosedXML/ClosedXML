@@ -12,6 +12,7 @@ namespace ClosedXML.Excel
         {
             this.Style = style;
             this.container = container;
+            this.RangesUsed = container.RangesUsed;
         }
 
         public IXLStyle Style { get; set; }
@@ -29,5 +30,7 @@ namespace ClosedXML.Excel
         public bool UpdatingStyle { get; set; }
 
         public IXLStyle InnerStyle { get; set; }
+
+        public IXLRanges RangesUsed { get; set; }
     }
 }

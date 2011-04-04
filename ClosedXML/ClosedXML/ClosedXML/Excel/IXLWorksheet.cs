@@ -261,5 +261,11 @@ namespace ClosedXML.Excel
         XLWorksheetVisibility Visibility { get; set; }
         IXLWorksheet Hide();
         IXLWorksheet Unhide();
+
+        IXLSheetProtection Protection { get; }
+        IXLSheetProtection Protect();
+        IXLSheetProtection Protect(String password);
+        IXLSheetProtection Unprotect();
+        IXLSheetProtection Unprotect(String password);
     }
 }

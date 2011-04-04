@@ -31,6 +31,40 @@ namespace ClosedXML.Excel
             }
         }
 
+        public XLBorderStyleValues OutsideBorder
+        {
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                {
+                    foreach (var r in container.RangesUsed)
+                    {
+                        r.FirstColumn().Style.Border.LeftBorder = value;
+                        r.LastColumn().Style.Border.RightBorder = value;
+                        r.FirstRow().Style.Border.TopBorder = value;
+                        r.LastRow().Style.Border.BottomBorder = value;
+                    }
+                }
+            }
+        }
+
+        public IXLColor OutsideBorderColor
+        {
+            set
+            {
+                if (container != null && !container.UpdatingStyle)
+                {
+                    foreach (var r in container.RangesUsed)
+                    {
+                        r.FirstColumn().Style.Border.LeftBorderColor = value;
+                        r.LastColumn().Style.Border.RightBorderColor = value;
+                        r.FirstRow().Style.Border.TopBorderColor = value;
+                        r.LastRow().Style.Border.BottomBorderColor = value;
+                    }
+                }
+            }
+        }
+
         private XLBorderStyleValues leftBorder;
         public XLBorderStyleValues LeftBorder
         {
@@ -290,6 +324,9 @@ namespace ClosedXML.Excel
                     ^ DiagonalUp.GetHashCode()
                     ^ DiagonalDown.GetHashCode();
         }
+
+        public IXLStyle SetOutsideBorder(XLBorderStyleValues value) { OutsideBorder = value; return container.Style; }
+        public IXLStyle SetOutsideBorderColor(IXLColor value) { OutsideBorderColor = value; return container.Style; }
 
         public IXLStyle SetLeftBorder(XLBorderStyleValues value) { LeftBorder = value; return container.Style; }
         public IXLStyle SetLeftBorderColor(IXLColor value) { LeftBorderColor = value; return container.Style; }

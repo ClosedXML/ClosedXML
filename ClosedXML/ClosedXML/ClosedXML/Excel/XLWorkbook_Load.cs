@@ -386,6 +386,8 @@ namespace ClosedXML.Excel
                 }
                 #endregion
 
+                LoadSheetProtection(worksheetPart, ws);
+
                 LoadDataValidations(worksheetPart, ws);
 
                 LoadHyperlinks(worksheetPart, ws);
@@ -473,6 +475,30 @@ namespace ClosedXML.Excel
                     return XLCellValues.DateTime;
             }
             return XLCellValues.Text;
+        }
+
+        private void LoadSheetProtection(WorksheetPart worksheetPart, XLWorksheet ws)
+        {
+            var sheetProtectionQuery = worksheetPart.Worksheet.Descendants<SheetProtection>();
+            if (sheetProtectionQuery.Count() > 0)
+            {
+                var sp = (SheetProtection)sheetProtectionQuery.First();
+                if (sp.Sheet != null) ws.Protection.Protected = sp.Sheet.Value;
+                if (sp.Password != null) (ws.Protection as XLSheetProtection).PasswordHash = sp.Password.Value;
+                if (sp.FormatCells != null) ws.Protection.Protected = sp.FormatCells.Value;
+                if (sp.FormatColumns != null) ws.Protection.Protected = sp.FormatColumns.Value;
+                if (sp.FormatRows != null) ws.Protection.Protected = sp.FormatRows.Value;
+                if (sp.InsertColumns != null) ws.Protection.Protected = sp.InsertColumns.Value;
+                if (sp.InsertHyperlinks != null) ws.Protection.Protected = sp.InsertHyperlinks.Value;
+                if (sp.InsertRows != null) ws.Protection.Protected = sp.InsertRows.Value;
+                if (sp.DeleteColumns != null) ws.Protection.Protected = sp.DeleteColumns.Value;
+                if (sp.DeleteRows != null) ws.Protection.Protected = sp.DeleteRows.Value;
+                if (sp.AutoFilter != null) ws.Protection.Protected = sp.AutoFilter.Value;
+                if (sp.PivotTables != null) ws.Protection.Protected = sp.PivotTables.Value;
+                if (sp.Sort != null) ws.Protection.Protected = sp.Sort.Value;
+                if (sp.SelectLockedCells != null) ws.Protection.Protected = !sp.SelectLockedCells.Value;
+                if (sp.SelectUnlockedCells != null) ws.Protection.Protected = !sp.SelectUnlockedCells.Value;
+            }
         }
 
         private void LoadDataValidations(WorksheetPart worksheetPart, XLWorksheet ws)
@@ -771,9 +797,20 @@ namespace ClosedXML.Excel
 
         private void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders, Fonts fonts, NumberingFormats numberingFormats)
         {
-            //if (fills.ContainsKey(styleIndex))
-            //{
-            //    var fill = fills[styleIndex];
+            var applyProtection = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).ApplyProtection;
+            if (applyProtection != null)
+            {
+                var protection = (Protection)((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).Protection;
+
+                if (protection == null)
+                    xlStylized.InnerStyle.Protection = DefaultStyle.Protection;
+                else
+                {
+                    xlStylized.InnerStyle.Protection.Hidden = protection.Hidden != null && protection.Hidden.HasValue && protection.Hidden.Value;
+                    xlStylized.InnerStyle.Protection.Locked = protection.Locked != null && protection.Locked.HasValue && protection.Locked.Value;
+                }
+            }
+
             var fillId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).FillId.Value;
             if (fillId > 0)
             {
