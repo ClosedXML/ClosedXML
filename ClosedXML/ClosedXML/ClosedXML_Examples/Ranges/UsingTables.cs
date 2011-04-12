@@ -17,6 +17,7 @@ namespace ClosedXML_Examples.Ranges
         {
             var wb = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
             var ws = wb.Worksheet(1);
+            ws.Name = "Contacts Table";
             var firstCell = ws.FirstCellUsed();
             var lastCell = ws.LastCellUsed();
             var range = ws.Range(firstCell.Address, lastCell.Address);

@@ -87,23 +87,16 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-
-            if (this.Locked)
-                sb.Append("Locked");
-
-            if (this.Hidden)
-            {
-                if (this.Locked)
-                    sb.Append("-");
-
-                sb.Append("Hidden");
-            }
-
-            if (sb.Length < 0)
-                sb.Append("None");
-
-            return sb.ToString();
+            if (Locked)
+                if (Hidden)
+                    return "Locked-Hidden";
+                else
+                    return "Locked";
+            else
+                if (Hidden)
+                    return "Hidden";
+                else
+                    return "None";
         }
 
         public IXLStyle SetLocked() { Locked = true; return container.Style; }	public IXLStyle SetLocked(Boolean value) { Locked = value; return container.Style; }

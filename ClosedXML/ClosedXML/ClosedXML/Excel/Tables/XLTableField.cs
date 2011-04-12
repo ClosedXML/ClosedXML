@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
         public Int32 Index { get; set; }
         public String Name { get; set; }
 
-        private String totalsRowLabel;
+        internal String totalsRowLabel;
         public String TotalsRowLabel
         {
             get { return totalsRowLabel; }
@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private XLTotalsRowFunction totalsRowFunction;
+        internal XLTotalsRowFunction totalsRowFunction;
         public XLTotalsRowFunction TotalsRowFunction
         {
             get { return totalsRowFunction; }

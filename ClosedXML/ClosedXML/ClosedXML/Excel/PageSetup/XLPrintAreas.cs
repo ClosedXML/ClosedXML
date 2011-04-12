@@ -14,6 +14,12 @@ namespace ClosedXML.Excel
             this.worksheet = worksheet;
         }
 
+        public XLPrintAreas(XLPrintAreas defaultPrintAreas, XLWorksheet worksheet)
+        {
+            ranges = defaultPrintAreas.ranges.ToList();
+            this.worksheet = worksheet;
+        }
+
         public void Clear()
         {
             ranges.Clear();

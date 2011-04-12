@@ -154,7 +154,20 @@ namespace ClosedXML.Excel
         public Double ColumnWidth { get; set; }
         public Double RowHeight { get; set; }
 
-        public String Name { get; set; }
+        private String name;
+        public String Name 
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+                (workbook.Worksheets as XLWorksheets).Rename(name, value);
+            }
+        }
+
         public Int32 SheetId { get; set; }
         public String RelId { get; set; }
         
@@ -541,15 +554,54 @@ namespace ClosedXML.Excel
         {
             var ws = (XLWorksheet)workbook.Worksheets.Add(newSheetName, position);
             
-            this.Internals.CellsCollection.ForEach(kp => (ws.Cell(kp.Value.Address) as XLCell).CopyValues(kp.Value));
-            this.Internals.ColumnsCollection.ForEach(kp => ws.Internals.ColumnsCollection.Add(kp));
-            this.Internals.MergedRanges.ForEach(kp => ws.Internals.MergedRanges.Add(kp));
-            this.Internals.RowsCollection.ForEach(kp => ws.Internals.RowsCollection.Add(kp));
-            this.PageSetup = new XLPageSetup(this.PageSetup, ws);
-            this.Outline = new XLOutline(this.Outline);
-            this.SheetView = new XLSheetView(this.SheetView);
-            this.NamedRanges.ForEach(r => ws.NamedRanges.Add(r.Name, r.Ranges));
-            this.Tables.ForEach(t => ws.Tables.Add(t));
+            this.Internals.CellsCollection.ForEach(kp => (ws.Cell(kp.Value.Address) as XLCell).CopyFrom(kp.Value));
+            this.DataValidations.ForEach(dv => ws.DataValidations.Add(new XLDataValidation(dv, ws)));
+            this.Internals.ColumnsCollection.ForEach(kp => ws.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value, ws)));
+            this.Internals.RowsCollection.ForEach(kp => ws.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value, ws)));
+            ws.Visibility = this.Visibility;
+            ws.ColumnWidth = this.ColumnWidth;
+            ws.RowHeight = this.RowHeight;
+            ws.style = new XLStyle(ws, this.style);
+            ws.PageSetup = new XLPageSetup(this.PageSetup, ws);
+            ws.Outline = new XLOutline(this.Outline);
+            ws.SheetView = new XLSheetView(this.SheetView);
+            this.Internals.MergedRanges.ForEach(kp => ws.Internals.MergedRanges.Add(ws.Range(kp.RangeAddress.ToString())));
+
+            foreach (var r in this.NamedRanges)
+            {
+                var ranges = new XLRanges(workbook, this.style);
+                r.Ranges.ForEach(rr => ranges.Add(rr));
+                ws.NamedRanges.Add(r.Name, ranges);
+            }
+
+            foreach(var t in this.Tables)
+            {
+                XLTable table;
+                if (ws.Tables.Where(tt => tt.Name == t.Name).Any())
+                    table = new XLTable((XLRange)ws.Range(t.RangeAddress.ToString()), true);
+                else
+                    table = new XLTable((XLRange)ws.Range(t.RangeAddress.ToString()), t.Name, true);
+                
+                table.RelId = (t as XLTable).RelId;
+                table.EmphasizeFirstColumn = t.EmphasizeFirstColumn;
+                table.EmphasizeLastColumn = t.EmphasizeLastColumn;
+                table.ShowRowStripes = t.ShowRowStripes;
+                table.ShowColumnStripes = t.ShowColumnStripes;
+                table.ShowAutoFilter = t.ShowAutoFilter;
+                table.Theme = t.Theme;
+                table.showTotalsRow = t.ShowTotalsRow;
+
+                (t as XLTable).uniqueNames.ForEach(n => table.uniqueNames.Add(n));
+                Int32 fieldCount = t.ColumnCount();
+                for (Int32 f = 0; f < fieldCount; f++)
+                {
+                    table.Field(f).Index = t.Field(f).Index;
+                    table.Field(f).Name = t.Field(f).Name;
+                    (table.Field(f) as XLTableField).totalsRowLabel = (t.Field(f) as XLTableField).totalsRowLabel;
+                    (table.Field(f) as XLTableField).totalsRowFunction = (t.Field(f) as XLTableField).totalsRowFunction;
+                }
+            }
+
             return ws;
         }
 

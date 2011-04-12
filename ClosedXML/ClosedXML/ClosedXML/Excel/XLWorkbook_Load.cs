@@ -109,6 +109,7 @@ namespace ClosedXML.Excel
 
                 var ws = (XLWorksheet)Worksheets.Add(sheetName);
                 ws.RelId = dSheet.Id;
+                ws.SheetId = (Int32)dSheet.SheetId.Value;
 
                 if (dSheet.State != null)
                     ws.Visibility = sheetStateValues.Single(p => p.Value == dSheet.State).Key;
@@ -218,6 +219,9 @@ namespace ClosedXML.Excel
                     Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : 0;
                     var xlCell = (XLCell)ws.Cell(dCell.CellReference);
 
+                    //if (dCell.CellReference.Value == "A56")
+                    //    dCell.CellReference = dCell.CellReference.Value;
+
                     if (styleIndex > 0)
                     {
                         //styleIndex = Int32.Parse(dCell.StyleIndex.InnerText);
@@ -315,7 +319,7 @@ namespace ClosedXML.Excel
                         else
                             if ((numberFormatId >= 14 && numberFormatId <= 22) || (numberFormatId >= 45 && numberFormatId <= 47))
                                 xlCell.DataType = XLCellValues.DateTime;
-                            else if (numberFormatId == 0 || numberFormatId == 49)
+                            else if (numberFormatId == 49)
                                 xlCell.DataType = XLCellValues.Text;
                             else
                                 xlCell.DataType = XLCellValues.Number;
@@ -485,19 +489,19 @@ namespace ClosedXML.Excel
                 var sp = (SheetProtection)sheetProtectionQuery.First();
                 if (sp.Sheet != null) ws.Protection.Protected = sp.Sheet.Value;
                 if (sp.Password != null) (ws.Protection as XLSheetProtection).PasswordHash = sp.Password.Value;
-                if (sp.FormatCells != null) ws.Protection.Protected = sp.FormatCells.Value;
-                if (sp.FormatColumns != null) ws.Protection.Protected = sp.FormatColumns.Value;
-                if (sp.FormatRows != null) ws.Protection.Protected = sp.FormatRows.Value;
-                if (sp.InsertColumns != null) ws.Protection.Protected = sp.InsertColumns.Value;
-                if (sp.InsertHyperlinks != null) ws.Protection.Protected = sp.InsertHyperlinks.Value;
-                if (sp.InsertRows != null) ws.Protection.Protected = sp.InsertRows.Value;
-                if (sp.DeleteColumns != null) ws.Protection.Protected = sp.DeleteColumns.Value;
-                if (sp.DeleteRows != null) ws.Protection.Protected = sp.DeleteRows.Value;
-                if (sp.AutoFilter != null) ws.Protection.Protected = sp.AutoFilter.Value;
-                if (sp.PivotTables != null) ws.Protection.Protected = sp.PivotTables.Value;
-                if (sp.Sort != null) ws.Protection.Protected = sp.Sort.Value;
-                if (sp.SelectLockedCells != null) ws.Protection.Protected = !sp.SelectLockedCells.Value;
-                if (sp.SelectUnlockedCells != null) ws.Protection.Protected = !sp.SelectUnlockedCells.Value;
+               if (sp.FormatCells != null) ws.Protection.FormatCells = sp.FormatCells.Value;
+               if (sp.FormatColumns != null) ws.Protection.FormatColumns = sp.FormatColumns.Value;
+               if (sp.FormatRows != null) ws.Protection.FormatRows = sp.FormatRows.Value;
+               if (sp.InsertColumns != null) ws.Protection.InsertColumns = sp.InsertColumns.Value;
+               if (sp.InsertHyperlinks != null) ws.Protection.InsertHyperlinks = sp.InsertHyperlinks.Value;
+               if (sp.InsertRows != null) ws.Protection.InsertRows = sp.InsertRows.Value;
+               if (sp.DeleteColumns != null) ws.Protection.DeleteColumns = sp.DeleteColumns.Value;
+               if (sp.DeleteRows != null) ws.Protection.DeleteRows = sp.DeleteRows.Value;
+               if (sp.AutoFilter != null) ws.Protection.AutoFilter = sp.AutoFilter.Value;
+               if (sp.PivotTables != null) ws.Protection.PivotTables = sp.PivotTables.Value;
+               if (sp.Sort != null) ws.Protection.Sort = sp.Sort.Value;
+               if (sp.SelectLockedCells != null) ws.Protection.SelectLockedCells = !sp.SelectLockedCells.Value;
+               if (sp.SelectUnlockedCells != null) ws.Protection.SelectUnlockedCells = !sp.SelectUnlockedCells.Value;
             }
         }
 
@@ -807,7 +811,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     xlStylized.InnerStyle.Protection.Hidden = protection.Hidden != null && protection.Hidden.HasValue && protection.Hidden.Value;
-                    xlStylized.InnerStyle.Protection.Locked = protection.Locked != null && protection.Locked.HasValue && protection.Locked.Value;
+                    xlStylized.InnerStyle.Protection.Locked = protection.Locked == null || (protection.Locked != null && protection.Locked.HasValue && protection.Locked.Value);
                 }
             }
 

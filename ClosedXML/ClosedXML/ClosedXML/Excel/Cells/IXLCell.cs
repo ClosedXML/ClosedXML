@@ -169,5 +169,7 @@ namespace ClosedXML.Excel
         /// <param name="scope">The scope for the named range.</param>
         /// <param name="comment">The comments for the named range.</param>
         IXLCell AddToNamed(String rangeName, XLScope scope, String comment);
+
+        IXLCell CopyFrom(IXLCell otherCell);
     }
 }

@@ -7,6 +7,12 @@ namespace ClosedXML.Excel
 {
     internal class XLHFItem : IXLHFItem
     {
+        public XLHFItem()
+        { }
+        public XLHFItem(XLHFItem defaultHFItem)
+        {
+            defaultHFItem.texts.ForEach(kp => texts.Add(kp.Key, kp.Value));
+        }
         private Dictionary<XLHFOccurrence, String> texts = new Dictionary<XLHFOccurrence, String>();
         public String GetText(XLHFOccurrence occurrence)
         {

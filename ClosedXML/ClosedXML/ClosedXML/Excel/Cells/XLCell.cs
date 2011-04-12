@@ -1120,6 +1120,24 @@ namespace ClosedXML.Excel
             this.formulaR1C1 = source.formulaR1C1;
         }
 
+        public IXLCell CopyFrom(IXLCell otherCell)
+        {
+            var source = otherCell as XLCell;
+            cellValue = source.cellValue;
+            dataType = source.dataType;
+            formulaA1 = source.formulaA1;
+            formulaR1C1 = source.formulaR1C1;
+            style = new XLStyle(this, source.style);
+            if (source.hyperlink != null)
+            {
+                SettingHyperlink = true;
+                Hyperlink = new XLHyperlink(source.Hyperlink);
+                SettingHyperlink = false;
+            }
+
+            return this;
+        }
+
         //internal void ShiftFormula(Int32 rowsToShift, Int32 columnsToShift)
         //{
         //    if (!StringExtensions.IsNullOrWhiteSpace(formulaA1))

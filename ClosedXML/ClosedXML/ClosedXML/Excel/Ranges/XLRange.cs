@@ -454,5 +454,16 @@ namespace ClosedXML.Excel
             return RangeAddress.GetHashCode()
                     ^ this.Worksheet.GetHashCode();
         }
+
+        public IXLRange SortBy(String columns)
+        {
+            SortRange(this, columns.Split(','));
+            return this;
+        }
+
+        private void SortRange(XLRange xLRange, string[] columns)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -27,6 +27,18 @@ namespace ClosedXML.Excel
             }
         }
 
+        public XLColumn(XLColumn column, XLWorksheet worksheet)
+            : base(new XLRangeAddress(new XLAddress(1, column.ColumnNumber(), false, false), new XLAddress(XLWorksheet.MaxNumberOfRows, column.ColumnNumber(), false, false)))
+        { 
+            width = column.width;
+            IsReference = column.IsReference;
+            collapsed = column.collapsed;
+            isHidden = column.isHidden;
+            outlineLevel = column.outlineLevel;
+            this.Worksheet = worksheet;
+            style = new XLStyle(this, column.Style);
+        }
+
         void Worksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
         {
             if (range.RangeAddress.FirstAddress.ColumnNumber <= this.ColumnNumber())

@@ -12,6 +12,14 @@ namespace ClosedXML.Excel
 
         }
 
+        internal XLHyperlink(XLHyperlink hyperlink)
+        {
+            externalAddress = hyperlink.externalAddress;
+            internalAddress = hyperlink.internalAddress;
+            Tooltip = hyperlink.Tooltip;
+            IsExternal = hyperlink.IsExternal;
+        }
+
         internal void SetValues(String address, String tooltip)
         {
             Tooltip = tooltip;

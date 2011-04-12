@@ -12,18 +12,39 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
-
         static void Main(string[] args)
         {
             //var fileName = "DifferentKinds";
-            var fileName = "Sandbox";
-            //var fileName = "Issue_6405";
-            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-            var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
-            ws.Range("A1:C3").Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
+            //var fileName = "Sandbox";
+            var fileName = "Issue_6375";
+            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            //var wb = new XLWorkbook();
+            //wbSource.Worksheet(1).CopyTo(wb, "Sheet1");
+            //String source = @"c:\Excel Files\Created\{0}.xlsx";
+
+
+            //CopyWorksheets(String.Format(source, "UsingTables"), wb);
+            //CopyWorksheets(String.Format(source, "NamedRanges"), wb);
+            //CopyWorksheets(String.Format(source, "MergedCells"), wb);
+            //CopyWorksheets(String.Format(source, "HideSheets"), wb);
+            //CopyWorksheets(String.Format(source, "HideUnhide"), wb);
+            //CopyWorksheets(String.Format(source, "Outline"), wb);
+            //CopyWorksheets(String.Format(source, "RowCollection"), wb);
+            //CopyWorksheets(String.Format(source, "ColumnCollection"), wb);
+            //CopyWorksheets(String.Format(source, "ShowCase"), wb);
+            //CopyWorksheets(String.Format(source, "DataValidation"), wb);
+            //CopyWorksheets(String.Format(source, "Hyperlinks"), wb);
 
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
+        }
+
+        static void CopyWorksheets(String source, XLWorkbook target)
+        {
+            var wb = new XLWorkbook(source);
+            foreach (var ws in wb.Worksheets)
+            {
+                ws.CopyTo(target, ws.Name);
+            }
         }
 
         static void xMain(string[] args)

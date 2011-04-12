@@ -637,11 +637,13 @@ namespace ClosedXML.Excel
             foreach (var sheet in workbook.Sheets.Elements<Sheet>())
             {
                 var sName = sheet.Name.Value;
-                if (Worksheets.Where(w => w.Name.ToLower() == sName.ToLower()).Any())
+                //if (Worksheets.Where(w => w.Name.ToLower() == sName.ToLower()).Any())
+                if (Worksheets.Where(w=>(w as XLWorksheet).SheetId == (Int32)sheet.SheetId.Value).Any())
                 {
-                    var wks = (XLWorksheet)Worksheets.Where(w => w.Name.ToLower() == sName.ToLower()).Single();
-                    wks.SheetId = (Int32)sheet.SheetId.Value;
+                    var wks = (XLWorksheet)Worksheets.Where(w => (w as XLWorksheet).SheetId == (Int32)sheet.SheetId.Value).Single();
+                    //wks.SheetId = (Int32)sheet.SheetId.Value;
                     wks.RelId = sheet.Id;
+                    sheet.Name = wks.Name;
                 }
             }
 
@@ -672,13 +674,17 @@ namespace ClosedXML.Excel
                                 select sheet;
 
             UInt32 firstSheetVisible = 0;
-
+            Boolean foundVisible = false;
             foreach (var sheet in sheetElements)
             {
                 workbook.Sheets.RemoveChild(sheet);
                 workbook.Sheets.Append(sheet);
-                if (firstSheetVisible == 0 && sheet.State != null && sheet.State != SheetStateValues.Visible)
-                    firstSheetVisible++;
+
+                if (!foundVisible)
+                    if (sheet.State == null || sheet.State == SheetStateValues.Visible)
+                        foundVisible = true;
+                    else
+                        firstSheetVisible++;
             }
 
             WorkbookView workbookView = workbook.BookViews.Elements<WorkbookView>().FirstOrDefault();

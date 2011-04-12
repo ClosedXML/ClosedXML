@@ -65,7 +65,7 @@ namespace ClosedXML.Excel
             while (true)
             {
                 String tableName = String.Format("Table{0}", id);
-                if (!Worksheet.Tables.Where(t=>t.Name == tableName).Any())
+                if (!Worksheet.Tables.Where(t => t.Name == tableName).Any())
                 {
                     Name = tableName;
                     AddToTables(range, addToTables);
@@ -108,7 +108,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        HashSet<String> uniqueNames;
+        internal HashSet<String> uniqueNames;
         private String GetUniqueName(String originalName)
         {
             String name = originalName;
@@ -266,7 +266,7 @@ namespace ClosedXML.Excel
             return Field(GetFieldIndex(fieldName));
         }
 
-        private Dictionary<Int32, IXLTableField> fields = new Dictionary<Int32, IXLTableField>();
+        internal Dictionary<Int32, IXLTableField> fields = new Dictionary<Int32, IXLTableField>();
         public IXLTableField Field(Int32 fieldIndex)
         {
             if (!fields.ContainsKey(fieldIndex))

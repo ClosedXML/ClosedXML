@@ -112,6 +112,8 @@ namespace ClosedXML.Excel
         {
             return this.RangeAddress.LastAddress.ColumnNumber - this.RangeAddress.FirstAddress.ColumnNumber + 1;
         }
+
+        //public Int32 CompareTo(
     }
 }
 

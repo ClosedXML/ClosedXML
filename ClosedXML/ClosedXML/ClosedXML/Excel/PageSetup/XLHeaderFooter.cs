@@ -13,6 +13,15 @@ namespace ClosedXML.Excel
             Right = new XLHFItem();
             Center = new XLHFItem();
         }
+
+        public XLHeaderFooter(XLHeaderFooter defaultHF)
+        {
+            defaultHF.innerTexts.ForEach(kp => innerTexts.Add(kp.Key, kp.Value));
+            Left = new XLHFItem(defaultHF.Left as XLHFItem);
+            Center = new XLHFItem(defaultHF.Center as XLHFItem);
+            Right = new XLHFItem(defaultHF.Right as XLHFItem);
+        }
+
         public IXLHFItem Left { get; private set; }
         public IXLHFItem Center { get; private set; }
         public IXLHFItem Right { get; private set; }

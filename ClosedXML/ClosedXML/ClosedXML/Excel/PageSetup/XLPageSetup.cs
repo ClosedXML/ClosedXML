@@ -9,9 +9,10 @@ namespace ClosedXML.Excel
     {
         public XLPageSetup(IXLPageSetup defaultPageOptions, XLWorksheet worksheet)
         {
-            this.PrintAreas = new XLPrintAreas(worksheet);
+            
             if (defaultPageOptions != null)
             {
+                this.PrintAreas = new XLPrintAreas(defaultPageOptions.PrintAreas as XLPrintAreas, worksheet);
                 this.CenterHorizontally = defaultPageOptions.CenterHorizontally;
                 this.CenterVertically = defaultPageOptions.CenterVertically;
                 this.FirstPageNumber = defaultPageOptions.FirstPageNumber;
@@ -44,12 +45,20 @@ namespace ClosedXML.Excel
                 this.DraftQuality = defaultPageOptions.DraftQuality;
                 this.PageOrder = defaultPageOptions.PageOrder;
 
-                this.ColumnBreaks = new List<Int32>();
-                this.RowBreaks = new List<Int32>();
+                this.ColumnBreaks = defaultPageOptions.ColumnBreaks.ToList();
+                this.RowBreaks = defaultPageOptions.RowBreaks.ToList();
+                Header = new XLHeaderFooter(defaultPageOptions.Header as XLHeaderFooter);
+                Footer = new XLHeaderFooter(defaultPageOptions.Footer as XLHeaderFooter);
                 this.PrintErrorValue = defaultPageOptions.PrintErrorValue;
             }
-            Header = new XLHeaderFooter();
-            Footer = new XLHeaderFooter();
+            else
+            {
+                this.PrintAreas = new XLPrintAreas(worksheet);
+                Header = new XLHeaderFooter();
+                Footer = new XLHeaderFooter();
+                this.ColumnBreaks = new List<Int32>();
+                this.RowBreaks = new List<Int32>();
+            }
         }
         public IXLPrintAreas PrintAreas { get; private set; }
 

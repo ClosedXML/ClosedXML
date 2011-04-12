@@ -34,6 +34,16 @@ namespace ClosedXML.Excel
             return worksheets.Values.Where(w => w.Position == position).Single();
         }
 
+        public void Rename(String oldSheetName, String newSheetName)
+        {
+            if (!StringExtensions.IsNullOrWhiteSpace(oldSheetName) && worksheets.ContainsKey(oldSheetName))
+            {
+                var ws = worksheets[oldSheetName];
+                worksheets.Remove(oldSheetName);
+                worksheets.Add(newSheetName, ws);
+            }
+        }
+
         public IXLWorksheet Add(String sheetName)
         {
             var sheet = new XLWorksheet(sheetName, workbook);

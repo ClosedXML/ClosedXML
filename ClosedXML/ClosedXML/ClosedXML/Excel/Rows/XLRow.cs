@@ -26,6 +26,18 @@ namespace ClosedXML.Excel
             }
         }
 
+        public XLRow(XLRow row, XLWorksheet worksheet)
+            : base(new XLRangeAddress(new XLAddress(row.RowNumber(), 1, false, false), new XLAddress(row.RowNumber(), XLWorksheet.MaxNumberOfColumns, false, false)))
+        {
+            height = row.height;
+            IsReference = row.IsReference;
+            collapsed = row.collapsed;
+            isHidden = row.isHidden;
+            outlineLevel = row.outlineLevel;
+            this.Worksheet = worksheet;
+            style = new XLStyle(this, row.Style);
+        }
+
         void Worksheet_RangeShiftedRows(XLRange range, int rowsShifted)
         {
             if (range.RangeAddress.FirstAddress.RowNumber <= this.RowNumber())

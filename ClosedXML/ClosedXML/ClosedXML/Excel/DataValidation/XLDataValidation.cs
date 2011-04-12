@@ -19,6 +19,13 @@ namespace ClosedXML.Excel
             Operator = XLOperator.Between;
             this.worksheet = worksheet;
         }
+
+        public XLDataValidation(IXLDataValidation dataValidation, XLWorksheet worksheet)
+        {
+            this.worksheet = worksheet;
+            this.CopyFrom(dataValidation);
+        }
+
         public IXLRanges Ranges { get; set; }
         
         public void Delete()
@@ -30,6 +37,9 @@ namespace ClosedXML.Excel
         }
         public void CopyFrom(IXLDataValidation dataValidation)
         {
+            Ranges = new XLRanges(worksheet.Internals.Workbook, worksheet.Style);
+            dataValidation.Ranges.ForEach(r => Ranges.Add(r));
+
             IgnoreBlanks = dataValidation.IgnoreBlanks;
             InCellDropdown = dataValidation.InCellDropdown;
             ShowErrorMessage = dataValidation.ShowErrorMessage;

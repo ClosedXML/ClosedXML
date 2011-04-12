@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
     {
         IXLRanges Ranges { get; set; }
         void Delete();
-        void CopyFrom(IXLDataValidation dataValidation);
+        //void CopyFrom(IXLDataValidation dataValidation);
         Boolean ShowInputMessage { get; set; }
         Boolean ShowErrorMessage { get; set; }
         Boolean IgnoreBlanks { get; set; }
