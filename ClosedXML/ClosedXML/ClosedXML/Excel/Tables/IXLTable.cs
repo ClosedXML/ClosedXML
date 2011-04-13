@@ -121,5 +121,8 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rows">The rows to return.</param>
         new IXLTableRows Rows(string rows);
+
+        void CopyTo(IXLCell target);
+        void CopyTo(IXLRangeBase target);
     }
 }

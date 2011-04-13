@@ -170,6 +170,8 @@ namespace ClosedXML.Excel
         /// <param name="comment">The comments for the named range.</param>
         IXLCell AddToNamed(String rangeName, XLScope scope, String comment);
 
-        IXLCell CopyFrom(IXLCell otherCell);
+        //IXLCell CopyFrom(IXLCell otherCell);
+
+        void CopyTo(IXLCell target);
     }
 }

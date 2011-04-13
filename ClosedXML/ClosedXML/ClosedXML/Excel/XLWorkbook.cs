@@ -73,6 +73,7 @@ namespace ClosedXML.Excel
         }
 
         private String originalFile;
+        private Stream originalStream;
         /// <summary>
         /// Opens an existing workbook from a file.
         /// </summary>
@@ -92,6 +93,7 @@ namespace ClosedXML.Excel
             : this()
         {
             loadSource = XLLoadSource.Stream;
+            originalStream = stream;
             Load(stream);
         }
 
@@ -131,9 +133,9 @@ namespace ClosedXML.Excel
         public void Save()
         {
             if (loadSource == XLLoadSource.New)
-                throw new Exception("This is a new file, please use one of the SaveAs method.");
+                throw new Exception("This is a new file, please use one of the SaveAs methods.");
             else if (loadSource == XLLoadSource.Stream)
-                throw new Exception("The file was loaded from a stream, please use one of the SaveAs method.");
+                CreatePackage(originalStream, false);
             else
                 CreatePackage(originalFile);
         }
@@ -142,20 +144,71 @@ namespace ClosedXML.Excel
         /// </summary>
         public void SaveAs(String file)
         {
-            if (originalFile == null)
-                File.Delete(file);
-            else if (originalFile.Trim().ToLower() != file.Trim().ToLower())
-                File.Copy(originalFile, file, true);
+            if (loadSource == XLLoadSource.New)
+            {
+                if (File.Exists(file))
+                    File.Delete(file);
 
-            CreatePackage(file);
+                CreatePackage(file);
+            }
+            else if (loadSource == XLLoadSource.File)
+            {
+                if (originalFile.Trim().ToLower() != file.Trim().ToLower())
+                    File.Copy(originalFile, file, true);
+
+                CreatePackage(file);
+            }
+            else if (loadSource == XLLoadSource.Stream)
+            {
+                originalStream.Position = 0;
+                
+                using (var fileStream = File.Create(file))
+                {
+                    CopyStream(originalStream, fileStream);
+                    //fileStream.Position = 0;
+                    CreatePackage(fileStream, false);
+                    fileStream.Close();
+                }
+            }
         }
         /// <summary>
         /// Saves the current workbook to a stream.
         /// </summary>
         public void SaveAs(Stream stream)
         {
-            CreatePackage(stream);
+            if (loadSource == XLLoadSource.New)
+            {
+                CreatePackage(stream, true);
+            }
+            else if (loadSource == XLLoadSource.File)
+            {
+                using (var fileStream = new FileStream(originalFile, FileMode.Open))
+                {
+                    CopyStream(fileStream, stream);
+                    fileStream.Close();
+                }
+                CreatePackage(stream, false);
+            }
+            else if (loadSource == XLLoadSource.Stream)
+            {
+                originalStream.Position = 0;
+                if (originalStream != stream)
+                    CopyStream(originalStream, stream);
+
+                CreatePackage(stream, false);
+            }
         }
+
+        internal void CopyStream(Stream input, Stream output)
+        {
+            byte[] buffer = new byte[8 * 1024];
+            int len;
+            while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                output.Write(buffer, 0, len);
+            }  
+        }
+
 
         /// <summary>
         /// Gets or sets the default style for the workbook.

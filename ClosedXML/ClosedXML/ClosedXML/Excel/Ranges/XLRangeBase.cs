@@ -1017,5 +1017,28 @@ namespace ClosedXML.Excel
                 return retVal;
             }
         }
+
+        public void CopyTo(IXLRangeBase target)
+        {
+            CopyTo(target.FirstCell());
+        }
+
+        public void CopyTo(IXLCell target)
+        {
+            target.Value = this;
+        }
+
+        public void SetAutoFilter()
+        {
+            SetAutoFilter(true);
+        }
+
+        public void SetAutoFilter(Boolean autoFilter)
+        {
+            if (autoFilter)
+                Worksheet.AutoFilterRange = this;
+            else
+                Worksheet.AutoFilterRange = null;
+        }
     }
 }

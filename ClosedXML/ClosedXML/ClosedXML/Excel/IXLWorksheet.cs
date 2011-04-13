@@ -267,5 +267,7 @@ namespace ClosedXML.Excel
         IXLSheetProtection Protect(String password);
         IXLSheetProtection Unprotect();
         IXLSheetProtection Unprotect(String password);
+
+        IXLRangeBase AutoFilterRange { get; set; }
     }
 }

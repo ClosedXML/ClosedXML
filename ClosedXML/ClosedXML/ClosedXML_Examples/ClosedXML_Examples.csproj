@@ -90,6 +90,7 @@
     <Compile Include="Misc\AdjustToContents.cs" />
     <Compile Include="Misc\Collections.cs" />
     <Compile Include="Misc\BlankCells.cs" />
+    <Compile Include="Misc\AutoFilter.cs" />
     <Compile Include="Misc\SheetProtection.cs" />
     <Compile Include="Misc\ShiftingFormulas.cs" />
     <Compile Include="Misc\HideSheets.cs" />

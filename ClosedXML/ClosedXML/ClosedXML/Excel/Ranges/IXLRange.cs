@@ -217,6 +217,12 @@ namespace ClosedXML.Excel
         IXLRange RangeUsed();
 
         IXLRange SortBy(String columns);
+
+        void CopyTo(IXLCell target);
+        void CopyTo(IXLRangeBase target);
+
+        void SetAutoFilter();
+        void SetAutoFilter(Boolean autoFilter);
     }
 }
 

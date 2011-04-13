@@ -332,9 +332,14 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void CreatePackage(Stream stream)
+        private void CreatePackage(Stream stream, Boolean newStream)
         {
-            SpreadsheetDocument package = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook);
+            SpreadsheetDocument package;
+            if (newStream)
+                package = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook);
+            else
+                package = SpreadsheetDocument.Open(stream, true);
+
             using (package)
             {
                 CreateParts(package);
@@ -2067,6 +2072,27 @@ namespace ClosedXML.Excel
             {
                 worksheetPart.Worksheet.RemoveAllChildren<SheetProtection>();
                 cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, null);
+            }
+            #endregion
+
+            #region AutoFilter
+            if (xlWorksheet.AutoFilterRange != null)
+            {
+                if (worksheetPart.Worksheet.Elements<AutoFilter>().Count() == 0)
+                {
+                    OpenXmlElement previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.AutoFilter);
+                    worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
+                }
+
+                var autoFilter = worksheetPart.Worksheet.Elements<AutoFilter>().First();
+                cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, autoFilter);
+
+                autoFilter.Reference = xlWorksheet.AutoFilterRange.RangeAddress.ToString();
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<AutoFilter>();
+                cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, null);
             }
             #endregion
 

@@ -390,6 +390,8 @@ namespace ClosedXML.Excel
                 }
                 #endregion
 
+                LoadAutoFilter(worksheetPart, ws);
+
                 LoadSheetProtection(worksheetPart, ws);
 
                 LoadDataValidations(worksheetPart, ws);
@@ -479,6 +481,16 @@ namespace ClosedXML.Excel
                     return XLCellValues.DateTime;
             }
             return XLCellValues.Text;
+        }
+
+        private void LoadAutoFilter(WorksheetPart worksheetPart, XLWorksheet ws)
+        {
+            var autoFilterQuery = worksheetPart.Worksheet.Descendants<AutoFilter>();
+            if (autoFilterQuery.Count() > 0)
+            {
+                var af = (AutoFilter)autoFilterQuery.First();
+                ws.Range(af.Reference.Value).SetAutoFilter();
+            }
         }
 
         private void LoadSheetProtection(WorksheetPart worksheetPart, XLWorksheet ws)

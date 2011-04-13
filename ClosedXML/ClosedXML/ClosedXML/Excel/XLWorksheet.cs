@@ -602,6 +602,9 @@ namespace ClosedXML.Excel
                 }
             }
 
+            if (this.AutoFilterRange != null)
+                ws.Range(this.AutoFilterRange.RangeAddress).SetAutoFilter();
+
             return ws;
         }
 
@@ -699,6 +702,7 @@ namespace ClosedXML.Excel
         {
             return Protection.Unprotect(password);
         }
-       
+
+        public IXLRangeBase AutoFilterRange { get; set; }
     }
 }

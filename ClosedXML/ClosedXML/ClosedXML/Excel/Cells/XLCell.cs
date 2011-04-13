@@ -280,6 +280,13 @@ namespace ClosedXML.Excel
         private Boolean SetRange(Object rangeObject)
         {
             var asRange = rangeObject as XLRangeBase;
+            if (asRange == null)
+            {
+                var tmp = rangeObject as XLCell;
+                if (tmp != null)
+                    asRange = tmp.AsRange() as XLRangeBase;
+            }
+
             if (asRange != null)
             {
                 Int32 maxRows;
@@ -307,8 +314,8 @@ namespace ClosedXML.Excel
                     {
                         var sourceCell = (XLCell)asRange.Cell(ro, co);
                         var targetCell = (XLCell)worksheet.Cell(Address.RowNumber + ro - 1, Address.ColumnNumber + co - 1);
-                        targetCell.CopyValues(sourceCell);
-                        targetCell.Style = sourceCell.style;
+                        targetCell.CopyFrom(sourceCell);
+                        //targetCell.Style = sourceCell.style;
                     }
                 }
                 var rangesToMerge = new List<IXLRange>();
@@ -1537,6 +1544,11 @@ namespace ClosedXML.Excel
                 retVal.Add(this.AsRange());
                 return retVal;
             }
+        }
+
+        public void CopyTo(IXLCell target)
+        {
+            target.Value = this;
         }
     }
 }

@@ -84,6 +84,12 @@ namespace ClosedXML.Excel
         Int32 RowNumber();
 
         Int32 CellCount();
+
+        void CopyTo(IXLCell target);
+        void CopyTo(IXLRangeBase target);
+
+        void SetAutoFilter();
+        void SetAutoFilter(Boolean autoFilter);
     }
 }
 
