@@ -732,8 +732,8 @@ namespace ClosedXML.Excel
                     foreach (var printArea in worksheet.PageSetup.PrintAreas)
                     {
                         definedNameText += "'" + worksheet.Name + "'!"
-                        + printArea.RangeAddress.FirstAddress.ToString()
-                        + ":" + printArea.RangeAddress.LastAddress.ToString() + ",";
+                        + printArea.RangeAddress.FirstAddress.ToStringFixed()
+                        + ":" + printArea.RangeAddress.LastAddress.ToStringFixed() + ",";
                     }
                     definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
                     definedNames.Append(definedName);

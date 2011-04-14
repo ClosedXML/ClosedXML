@@ -150,6 +150,7 @@
     <Compile Include="Excel\NamedRanges\IXLNamedRanges.cs" />
     <Compile Include="Excel\NamedRanges\XLNamedRange.cs" />
     <Compile Include="Excel\NamedRanges\IXLNamedRange.cs" />
+    <Compile Include="Excel\Ranges\Sort\XLSortColumn.cs" />
     <Compile Include="Excel\Style\Colors\XLColor_Static.cs" />
     <Compile Include="Excel\Style\Colors\XLColor_Public.cs" />
     <Compile Include="Excel\Style\Colors\IXLColor.cs" />

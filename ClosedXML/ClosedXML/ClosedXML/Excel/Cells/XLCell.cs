@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
             this.worksheet = worksheet;
         }
 
-        public IXLAddress Address { get; private set; }
+        public IXLAddress Address { get; internal set; }
         public String InnerText
         {
             get 

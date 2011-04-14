@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
 
         /// <summary>Gets this cell's address, relative to the worksheet.</summary>
         /// <value>The cell's address.</value>
-        IXLAddress Address { get; }
+        IXLAddress Address { get;  }
 
         /// <summary>
         /// Gets or sets the type of this cell's data.

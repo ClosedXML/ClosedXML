@@ -113,7 +113,23 @@ namespace ClosedXML.Excel
             return this.RangeAddress.LastAddress.ColumnNumber - this.RangeAddress.FirstAddress.ColumnNumber + 1;
         }
 
-        //public Int32 CompareTo(
+        public Int32 CompareTo(XLRangeRow otherRow, List<String> columnsToSort)
+        {
+            foreach (String co in columnsToSort)
+            {
+                var thisCell = (XLCell)this.Cell(Int32.Parse(co));
+                var otherCell = (XLCell)otherRow.Cell(Int32.Parse(co));
+                Int32 comparison;
+                if (thisCell.DataType == otherCell.DataType)
+                    comparison = thisCell.InnerText.CompareTo(otherCell.InnerText);
+                else
+                    comparison = thisCell.GetString().CompareTo(otherCell.GetString());
+
+                if (comparison != 0)
+                    return comparison;
+            }
+            return 0;
+        }
     }
 }
 

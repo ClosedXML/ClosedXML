@@ -455,15 +455,69 @@ namespace ClosedXML.Excel
                     ^ this.Worksheet.GetHashCode();
         }
 
-        public IXLRange SortBy(String columns)
-        {
-            SortRange(this, columns.Split(','));
-            return this;
-        }
-
         private void SortRange(XLRange xLRange, string[] columns)
         {
             throw new NotImplementedException();
+        }
+
+        public IXLRange Sort(String columnsToSort)
+        {
+            var cols = columnsToSort.Split(',').ToList();
+            q_sort(1, this.RowCount(), cols);
+            return this;
+        }
+
+        public void q_sort(int left, int right, List<String> columnsToSort)
+        {
+            int i, j;
+            XLRangeRow x, y;
+
+            i = left; j = right;
+            x = (XLRangeRow)Row(((left + right) / 2));
+
+            do
+            {
+                while ((((XLRangeRow)Row(i)).CompareTo(x, columnsToSort) < 0) && (i < right)) i++;
+                while ((0 < ((XLRangeRow)Row(j)).CompareTo(x, columnsToSort)) && (j > left)) j--;
+
+                if (i < j)
+                {
+                    SwapRows(i, j);
+                    i++; j--;
+                }
+                else if (i == j)
+                {
+                    i++; j--;
+                }
+            } while (i <= j);
+
+            if (left < j) q_sort(left, j, columnsToSort);
+            if (i < right) q_sort(i, right, columnsToSort);
+
+        }
+
+        public void SwapRows(Int32 row1, Int32 row2)
+        {
+
+            Int32 cellCount = ColumnCount();
+
+            for (Int32 co = 1; co <= cellCount; co++)
+            {
+
+                var cell1 = (XLCell)Row(row1).Cell(co);
+                var cell1Address = cell1.Address;
+                var cell2 = (XLCell)Row(row2).Cell(co);
+
+                cell1.Address = cell2.Address;
+
+                cell2.Address = cell1Address;
+                Worksheet.Internals.CellsCollection.Remove(cell1.Address);
+                Worksheet.Internals.CellsCollection.Remove(cell2.Address);
+                Worksheet.Internals.CellsCollection.Add(cell1.Address, cell1);
+                Worksheet.Internals.CellsCollection.Add(cell2.Address, cell2);
+
+            }
+
         }
     }
 }

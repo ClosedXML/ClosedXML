@@ -15,53 +15,16 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             //var fileName = "BasicTable";
-            //var fileName = "Sandbox";
-            var fileName = "Issue_6429";
-            var sourceFile = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsm", fileName));
-            //var wb = new XLWorkbook();
-            
-            using (var tempStream = new FileStream(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsm", fileName), FileMode.Create))
-            {
-                sourceFile.SaveAs(tempStream);
-            }
+            var fileName = "Sandbox";
+            //var fileName = "Issue_6429";
+            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            var wb = new XLWorkbook();
+            var wsData = wb.Worksheets.Add("Data");
+            var xcell = wsData.Cell(1, 1);
+            xcell.Value = "Test";
+            wsData.NamedRanges.Add("RangeName", xcell.AsRange(), "Comment");
 
-            sourceFile.SaveAs(@"c:\Excel Files\ForTesting\Issue_6429_FileToFile.xlsm");
-            using (var stream = new FileStream(@"c:\Excel Files\ForTesting\Issue_6429_FileToStream.xlsm", FileMode.Create))
-            {
-                sourceFile.SaveAs(stream);
-            }
-
-            using (var stream = new FileStream(
-                String.Format(@"c:\Excel Files\ForTesting\{0}.xlsm", fileName), FileMode.Open))
-            {
-                var sourceStream = new XLWorkbook(stream);
-                sourceStream.SaveAs(@"c:\Excel Files\ForTesting\Issue_6429_StreamToFile.xlsm");
-
-                using (var stream2 = new FileStream(@"c:\Excel Files\ForTesting\Issue_6429_StreamToStream.xlsm", FileMode.Create))
-                {
-                    sourceStream.SaveAs(stream2);
-                }
-            }
-
-            //var ws = wb.Worksheet(1);
-            //var table = ws.RangeUsed();
-            //var newColumn = table.Column(1).InsertColumnsAfter(1).Single();
-            //table.Column(1).CopyTo(newColumn);
-            //newColumn.SetAutoFilter();
-
-            //CopyWorksheets(String.Format(source, "UsingTables"), wb);
-            //CopyWorksheets(String.Format(source, "NamedRanges"), wb);
-            //CopyWorksheets(String.Format(source, "MergedCells"), wb);
-            //CopyWorksheets(String.Format(source, "HideSheets"), wb);
-            //CopyWorksheets(String.Format(source, "HideUnhide"), wb);
-            //CopyWorksheets(String.Format(source, "Outline"), wb);
-            //CopyWorksheets(String.Format(source, "RowCollection"), wb);
-            //CopyWorksheets(String.Format(source, "ColumnCollection"), wb);
-            //CopyWorksheets(String.Format(source, "ShowCase"), wb);
-            //CopyWorksheets(String.Format(source, "DataValidation"), wb);
-            //CopyWorksheets(String.Format(source, "Hyperlinks"), wb);
-
-            //wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsm", fileName));
+            wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
         }
 
         static void CopyWorksheets(String source, XLWorkbook target)

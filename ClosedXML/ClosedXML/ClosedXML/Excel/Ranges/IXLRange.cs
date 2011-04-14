@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
 {
     public enum XLShiftDeletedCells { ShiftCellsUp, ShiftCellsLeft }
     public enum XLTransposeOptions { MoveCells, ReplaceCells }
+    public enum XLSortOrder { Ascending, Descending }
     public interface IXLRange: IXLRangeBase
     {
         /// <summary>
@@ -216,7 +217,10 @@ namespace ClosedXML.Excel
 
         IXLRange RangeUsed();
 
-        IXLRange SortBy(String columns);
+        //IXLRange SortRows();
+        //IXLRange SortRows(XLSortOrder sortOrder);
+        //IXLRange SortRows(String columnToSortBy);
+        //IXLRange SortRows(XLSortOrder sortOrder, String columnOrder);
 
         void CopyTo(IXLCell target);
         void CopyTo(IXLRangeBase target);
