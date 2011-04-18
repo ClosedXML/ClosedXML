@@ -9,6 +9,7 @@ namespace ClosedXML.Excel
 
     public interface IXLRangeBase
     {
+
         /// <summary>
         /// Returns the collection of cells.
         /// </summary>

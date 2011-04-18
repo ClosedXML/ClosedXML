@@ -104,8 +104,8 @@ namespace ClosedXML.Excel
 
         public XLPageOrientation PageOrientation { get; set; }
         public XLPaperSize PaperSize { get; set; }
-        public UInt32 HorizontalDpi { get; set; }
-        public UInt32 VerticalDpi { get; set; }
+        public Int32 HorizontalDpi { get; set; }
+        public Int32 VerticalDpi { get; set; }
         public Int32 FirstPageNumber { get; set; }
         public Boolean CenterHorizontally { get; set; }
         public Boolean CenterVertically { get; set; }

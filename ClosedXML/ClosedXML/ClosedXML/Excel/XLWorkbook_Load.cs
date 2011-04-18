@@ -562,7 +562,6 @@ namespace ClosedXML.Excel
                     {
                         String tooltip = hl.Tooltip != null ? tooltip = hl.Tooltip.Value : tooltip = String.Empty;
                         var xlRange = ws.Range(hl.Reference.Value);
-                        //var xlCell = (XLCell)ws.CellFast(hl.Reference.Value);
                         foreach (XLCell xlCell in xlRange.Cells())
                         {
                             xlCell.SettingHyperlink = true;
@@ -694,8 +693,8 @@ namespace ClosedXML.Excel
                     ws.PageSetup.ShowComments = showCommentsValues.Single(sc => sc.Value == pageSetup.CellComments).Key;
                 if (pageSetup.Errors != null)
                     ws.PageSetup.PrintErrorValue = printErrorValues.Single(p => p.Value == pageSetup.Errors).Key;
-                if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = pageSetup.HorizontalDpi.Value;
-                if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = pageSetup.VerticalDpi.Value;
+                if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = (Int32)pageSetup.HorizontalDpi.Value;
+                if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = (Int32)pageSetup.VerticalDpi.Value;
                 if (pageSetup.FirstPageNumber != null) ws.PageSetup.FirstPageNumber = Int32.Parse(pageSetup.FirstPageNumber.InnerText);
             }
         }

@@ -24,5 +24,26 @@ namespace ClosedXML.Excel
             Int32 fieldIndex = table.GetFieldIndex(name);
             return Cell(fieldIndex + 1);
         }
+
+        public new IXLTableRow Sort()
+        {
+            this.AsRange().Sort(XLSortOrientation.LeftToRight);
+            return this;
+        }
+        public new IXLTableRow Sort(XLSortOrder sortOrder)
+        {
+            this.AsRange().Sort(XLSortOrientation.LeftToRight, sortOrder);
+            return this;
+        }
+        public new IXLTableRow Sort(Boolean matchCase)
+        {
+            this.AsRange().Sort(XLSortOrientation.LeftToRight, matchCase);
+            return this;
+        }
+        public new IXLTableRow Sort(XLSortOrder sortOrder, Boolean matchCase)
+        {
+            this.AsRange().Sort(XLSortOrientation.LeftToRight, sortOrder, matchCase);
+            return this;
+        }
     }
 }

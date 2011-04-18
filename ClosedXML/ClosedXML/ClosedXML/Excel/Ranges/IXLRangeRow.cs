@@ -85,11 +85,16 @@ namespace ClosedXML.Excel
 
         Int32 CellCount();
 
-        void CopyTo(IXLCell target);
-        void CopyTo(IXLRangeBase target);
+        IXLRangeRow CopyTo(IXLCell target);
+        IXLRangeRow CopyTo(IXLRangeBase target);
 
         void SetAutoFilter();
         void SetAutoFilter(Boolean autoFilter);
+
+        IXLRangeRow Sort();
+        IXLRangeRow Sort(Boolean matchCase);
+        IXLRangeRow Sort(XLSortOrder sortOrder);
+        IXLRangeRow Sort(XLSortOrder sortOrder, Boolean matchCase);
     }
 }
 

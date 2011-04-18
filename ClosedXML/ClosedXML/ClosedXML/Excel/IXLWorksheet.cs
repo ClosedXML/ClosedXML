@@ -269,5 +269,22 @@ namespace ClosedXML.Excel
         IXLSheetProtection Unprotect(String password);
 
         IXLRangeBase AutoFilterRange { get; set; }
+
+        IXLSortElements SortRows { get; }
+        IXLSortElements SortColumns { get; }
+
+        IXLRange Sort();
+        IXLRange Sort(Boolean matchCase);
+        IXLRange Sort(XLSortOrder sortOrder);
+        IXLRange Sort(XLSortOrder sortOrder, Boolean matchCase);
+        IXLRange Sort(String columnsToSortBy);
+        IXLRange Sort(String columnsToSortBy, Boolean matchCase);
+
+        IXLRange Sort(XLSortOrientation sortOrientation);
+        IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder);
+        IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy);
+        IXLRange Sort(XLSortOrientation sortOrientation, Boolean matchCase);
+        IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase);
+        IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase);
     }
 }

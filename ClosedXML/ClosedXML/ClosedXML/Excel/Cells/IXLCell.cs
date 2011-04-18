@@ -172,6 +172,6 @@ namespace ClosedXML.Excel
 
         //IXLCell CopyFrom(IXLCell otherCell);
 
-        void CopyTo(IXLCell target);
+        IXLCell CopyTo(IXLCell target);
     }
 }

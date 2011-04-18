@@ -92,7 +92,7 @@ namespace ClosedXML.Excel
             else
             {
                 IXLStyle style = this.Style;
-                if (this.Style.Equals(this.Worksheet.Style))
+                if (this.Style != null && this.Style.Equals(this.Worksheet.Style))
                 {
                     if (this.Worksheet.Internals.RowsCollection.ContainsKey(absoluteAddress.RowNumber)
                         && !this.Worksheet.Internals.RowsCollection[absoluteAddress.RowNumber].Style.Equals(this.Worksheet.Style))
@@ -484,7 +484,7 @@ namespace ClosedXML.Excel
                             oldCell = this.Worksheet.Cell(oldKey);
                         }
                         var newCell = new XLCell(newKey, oldCell.Style, Worksheet);
-                        newCell.CopyValues((XLCell)oldCell);
+                        newCell.CopyFrom(oldCell);
                         cellsToInsert.Add(newKey, newCell);
                         cellsToDelete.Add(oldKey);
                         if (oldKey.RowNumber < firstRow + numberOfRows)
@@ -504,7 +504,7 @@ namespace ClosedXML.Excel
                     var newRow = c.Key.RowNumber + numberOfRows;
                     var newKey = new XLAddress(newRow, c.Key.ColumnNumber, false, false);
                     var newCell = new XLCell(newKey, c.Value.Style, Worksheet);
-                    newCell.CopyValues(c.Value);
+                    newCell.CopyFrom(c.Value);
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Key);
                     if (c.Key.RowNumber < firstRow + numberOfRows)

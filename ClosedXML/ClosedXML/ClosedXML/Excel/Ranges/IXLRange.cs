@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
 {
     public enum XLShiftDeletedCells { ShiftCellsUp, ShiftCellsLeft }
     public enum XLTransposeOptions { MoveCells, ReplaceCells }
-    public enum XLSortOrder { Ascending, Descending }
+
     public interface IXLRange: IXLRangeBase
     {
         /// <summary>
@@ -217,16 +217,28 @@ namespace ClosedXML.Excel
 
         IXLRange RangeUsed();
 
-        //IXLRange SortRows();
-        //IXLRange SortRows(XLSortOrder sortOrder);
-        //IXLRange SortRows(String columnToSortBy);
-        //IXLRange SortRows(XLSortOrder sortOrder, String columnOrder);
-
-        void CopyTo(IXLCell target);
-        void CopyTo(IXLRangeBase target);
+        IXLRange CopyTo(IXLCell target);
+        IXLRange CopyTo(IXLRangeBase target);
 
         void SetAutoFilter();
         void SetAutoFilter(Boolean autoFilter);
+
+        IXLSortElements SortRows { get; }
+        IXLSortElements SortColumns { get; }
+
+        IXLRange Sort();
+        IXLRange Sort(Boolean matchCase);
+        IXLRange Sort(XLSortOrder sortOrder);
+        IXLRange Sort(XLSortOrder sortOrder, Boolean matchCase);
+        IXLRange Sort(String columnsToSortBy);
+        IXLRange Sort(String columnsToSortBy, Boolean matchCase);
+
+        IXLRange Sort(XLSortOrientation sortOrientation);
+        IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder);
+        IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy);
+        IXLRange Sort(XLSortOrientation sortOrientation, Boolean matchCase);
+        IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase);
+        IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase);
     }
 }
 

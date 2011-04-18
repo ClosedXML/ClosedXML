@@ -19,11 +19,10 @@ namespace ClosedXML.Excel
             foreach (var ro in dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
             {
                 var rowToMove = dictionary[ro];
-                var newRow = ro + rowsToShift;
+                Int32 newRow = ro + rowsToShift;
                 if (newRow <= XLWorksheet.MaxNumberOfRows)
                 {
-                    var xlRowParameters = new XLRowParameters(rowToMove.Worksheet, rowToMove.Style, false);
-                    dictionary.Add(newRow, new XLRow(newRow, xlRowParameters));
+                    dictionary.Add(newRow, new XLRow(rowToMove, rowToMove.Worksheet));
                 }
                 dictionary.Remove(ro);
             }

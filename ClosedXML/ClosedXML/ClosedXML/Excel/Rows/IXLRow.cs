@@ -150,10 +150,19 @@ namespace ClosedXML.Excel
 
         Int32 CellCount();
 
-        void CopyTo(IXLCell target);
-        void CopyTo(IXLRangeBase target);
+        IXLRangeRow CopyTo(IXLCell cell);
+        IXLRangeRow CopyTo(IXLRangeBase range);
+        IXLRow CopyTo(IXLRow row);
 
         void SetAutoFilter();
         void SetAutoFilter(Boolean autoFilter);
+
+        IXLRow Sort();
+        IXLRow Sort(Boolean matchCase);
+        IXLRow Sort(XLSortOrder sortOrder);
+        IXLRow Sort(XLSortOrder sortOrder, Boolean matchCase);
+
+        IXLRangeRow Row(Int32 start, Int32 end);
+
     }
 }

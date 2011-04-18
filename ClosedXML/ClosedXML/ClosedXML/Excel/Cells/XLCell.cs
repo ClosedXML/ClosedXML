@@ -645,7 +645,7 @@ namespace ClosedXML.Excel
             }
             set
             {
-                style = new XLStyle(null, value);
+                style = new XLStyle(this, value);
             }
         }
 
@@ -1546,9 +1546,10 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void CopyTo(IXLCell target)
+        public IXLCell CopyTo(IXLCell target)
         {
             target.Value = this;
+            return target;
         }
     }
 }

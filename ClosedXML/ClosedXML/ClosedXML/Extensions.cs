@@ -5,6 +5,8 @@ using System.Text;
 using System.Drawing;
 using System.Globalization;
 
+
+[assembly: CLSCompliantAttribute(true)]
 namespace ClosedXML
 {
     public static class Extensions

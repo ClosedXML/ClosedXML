@@ -13,43 +13,43 @@ namespace ClosedXML.Excel
             
         }
 
-        public void EqualTo(UInt32 value)
+        public void EqualTo(Int32 value)
         {
             dataValidation.Value = value.ToString();
             dataValidation.Operator = XLOperator.EqualTo;
         }
-        public void NotEqualTo(UInt32 value)
+        public void NotEqualTo(Int32 value)
         {
             dataValidation.Value = value.ToString();
             dataValidation.Operator = XLOperator.NotEqualTo;
         }
-        public void GreaterThan(UInt32 value)
+        public void GreaterThan(Int32 value)
         {
             dataValidation.Value = value.ToString();
             dataValidation.Operator = XLOperator.GreaterThan;
         }
-        public void LessThan(UInt32 value)
+        public void LessThan(Int32 value)
         {
             dataValidation.Value = value.ToString();
             dataValidation.Operator = XLOperator.LessThan;
         }
-        public void EqualOrGreaterThan(UInt32 value)
+        public void EqualOrGreaterThan(Int32 value)
         {
             dataValidation.Value = value.ToString();
             dataValidation.Operator = XLOperator.EqualOrGreaterThan;
         }
-        public void EqualOrLessThan(UInt32 value)
+        public void EqualOrLessThan(Int32 value)
         {
             dataValidation.Value = value.ToString();
             dataValidation.Operator = XLOperator.EqualOrLessThan;
         }
-        public void Between(UInt32 minValue, UInt32 maxValue)
+        public void Between(Int32 minValue, Int32 maxValue)
         {
             dataValidation.MinValue = minValue.ToString();
             dataValidation.MaxValue = maxValue.ToString();
             dataValidation.Operator = XLOperator.Between;
         }
-        public void NotBetween(UInt32 minValue, UInt32 maxValue)
+        public void NotBetween(Int32 minValue, Int32 maxValue)
         {
             dataValidation.MinValue = minValue.ToString();
             dataValidation.MaxValue = maxValue.ToString();

@@ -295,6 +295,18 @@
     <Compile Include="..\ClosedXML\Excel\Ranges\IXLRanges.cs">
       <Link>Excel\Ranges\IXLRanges.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\Sort\IXLSortElement.cs">
+      <Link>Excel\Ranges\Sort\IXLSortElement.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\Sort\IXLSortElements.cs">
+      <Link>Excel\Ranges\Sort\IXLSortElements.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\Sort\XLSortElement.cs">
+      <Link>Excel\Ranges\Sort\XLSortElement.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Ranges\Sort\XLSortElements.cs">
+      <Link>Excel\Ranges\Sort\XLSortElements.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Ranges\XLRange.cs">
       <Link>Excel\Ranges\XLRange.cs</Link>
     </Compile>

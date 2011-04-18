@@ -39,7 +39,8 @@ namespace ClosedXML.Excel
             PageSetup = new XLPageSetup(workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
             ColumnWidth = workbook.ColumnWidth;
-            RowHeight = workbook.RowHeight;
+            rowHeight = workbook.RowHeight;
+            RowHeightChanged = workbook.RowHeight != XLWorkbook.DefaultRowHeight;
             this.Name = sheetName;
             RangeShiftedRows += new RangeShiftedRowsDelegate(XLWorksheet_RangeShiftedRows);
             RangeShiftedColumns += new RangeShiftedColumnsDelegate(XLWorksheet_RangeShiftedColumns);
@@ -152,7 +153,20 @@ namespace ClosedXML.Excel
         #endregion
 
         public Double ColumnWidth { get; set; }
-        public Double RowHeight { get; set; }
+        internal Boolean RowHeightChanged { get; set; }
+        Double rowHeight;
+        public Double RowHeight 
+        {
+            get
+            {
+                return rowHeight;
+            }
+            set
+            {
+                RowHeightChanged = true;
+                rowHeight = value;
+            }
+        }
 
         private String name;
         public String Name 
@@ -704,5 +718,94 @@ namespace ClosedXML.Excel
         }
 
         public IXLRangeBase AutoFilterRange { get; set; }
+
+        IXLSortElements sortRows;
+        public IXLSortElements SortRows
+        {
+            get
+            {
+                if (sortRows == null) sortRows = new XLSortElements();
+                return sortRows;
+            }
+        }
+
+        IXLSortElements sortColumns;
+        public IXLSortElements SortColumns
+        {
+            get
+            {
+                if (sortColumns == null) sortColumns = new XLSortElements();
+                return sortColumns;
+            }
+        }
+
+        public IXLRange Sort()
+        {
+            var range = GetRangeForSort();
+            return range.Sort();
+        }
+        public IXLRange Sort(Boolean matchCase)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(matchCase);
+        }
+        public IXLRange Sort(XLSortOrder sortOrder)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(sortOrder);
+        }
+        public IXLRange Sort(XLSortOrder sortOrder, Boolean matchCase)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(sortOrder, matchCase);
+        }
+        public IXLRange Sort(String columnsToSortBy)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(columnsToSortBy);
+        }
+        public IXLRange Sort(String columnsToSortBy, Boolean matchCase)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(columnsToSortBy, matchCase);
+        }
+        public IXLRange Sort(XLSortOrientation sortOrientation)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(sortOrientation);
+        }
+        public IXLRange Sort(XLSortOrientation sortOrientation, Boolean matchCase)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(sortOrientation, matchCase);
+        }
+        public IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(sortOrientation, sortOrder);
+        }
+        public IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(sortOrientation, sortOrder, matchCase);
+        }
+        public IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(sortOrientation, elementsToSortBy);
+        }
+        public IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase)
+        {
+            var range = GetRangeForSort();
+            return range.Sort(sortOrientation, elementsToSortBy, matchCase);
+        }
+
+        private IXLRange GetRangeForSort()
+        {
+            var range = this.RangeUsed();
+            SortColumns.ForEach(e => range.SortColumns.Add(e.ElementNumber, e.SortOrder, e.IgnoreBlanks, e.MatchCase));
+            SortRows.ForEach(e => range.SortRows.Add(e.ElementNumber, e.SortOrder, e.IgnoreBlanks, e.MatchCase));
+            return range;
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace ClosedXML.Excel
         public Boolean ShowAutoFilter { get; set; }
         public XLTableTheme Theme { get; set; }
 
+
         private String name;
         public String Name 
         {
@@ -315,6 +316,38 @@ namespace ClosedXML.Excel
                     throw new ArgumentOutOfRangeException("The header row doesn't contain field name '" + name + "'.");
                 }
             }
+        }
+
+        public new IXLRange Sort(String elementsToSortBy)
+        {
+            StringBuilder toSortBy = new StringBuilder();
+            foreach (String coPair in elementsToSortBy.Split(','))
+            {
+                String coPairTrimmed = coPair.Trim();
+                String coString;
+                String order;
+                if (coPairTrimmed.Contains(' '))
+                {
+                    var pair = coPairTrimmed.Split(' ');
+                    coString = pair[0];
+                    order = pair[1];
+                }
+                else
+                {
+                    coString = coPairTrimmed;
+                    order = "ASC";
+                }
+
+                Int32 co;
+                if (!Int32.TryParse(coString, out co))
+                    co = this.Field(coString).Index + 1;
+
+                toSortBy.Append(co);
+                toSortBy.Append(" ");
+                toSortBy.Append(order);
+                toSortBy.Append(",");
+            }
+            return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1));
         }
     }
 }

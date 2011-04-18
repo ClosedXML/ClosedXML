@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRangeColumn: IXLRangeBase
+    public interface IXLRangeColumn : IXLRangeBase
     {
         /// <summary>
         /// Gets the cell in the specified row.
@@ -78,11 +78,16 @@ namespace ClosedXML.Excel
 
         Int32 CellCount();
 
-        void CopyTo(IXLCell target);
-        void CopyTo(IXLRangeBase target);
+        IXLRangeColumn CopyTo(IXLCell target);
+        IXLRangeColumn CopyTo(IXLRangeBase target);
 
         void SetAutoFilter();
         void SetAutoFilter(Boolean autoFilter);
+
+        IXLRangeColumn Sort();
+        IXLRangeColumn Sort(Boolean matchCase);
+        IXLRangeColumn Sort(XLSortOrder sortOrder);
+        IXLRangeColumn Sort(XLSortOrder sortOrder, Boolean matchCase);
     }
 }
 

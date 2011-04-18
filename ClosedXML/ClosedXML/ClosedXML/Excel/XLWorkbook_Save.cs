@@ -1697,7 +1697,9 @@ namespace ClosedXML.Excel
 
             worksheetPart.Worksheet.SheetFormatProperties.DefaultRowHeight = xlWorksheet.RowHeight;
             worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = xlWorksheet.ColumnWidth;
-            //worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = true;
+            if (xlWorksheet.RowHeightChanged)
+                worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = true;
+            
 
             if (maxOutlineColumn > 0)
                 worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = (byte)maxOutlineColumn;

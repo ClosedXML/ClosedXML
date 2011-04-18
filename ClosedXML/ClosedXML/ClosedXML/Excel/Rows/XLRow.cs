@@ -494,5 +494,92 @@ namespace ClosedXML.Excel
         {
             return this.RangeAddress.LastAddress.ColumnNumber - this.RangeAddress.FirstAddress.ColumnNumber + 1;
         }
+
+        public IXLRow Sort()
+        {
+            this.RangeUsed().Sort(XLSortOrientation.LeftToRight);
+            return this;
+        }
+        public IXLRow Sort(XLSortOrder sortOrder)
+        {
+            this.RangeUsed().Sort(XLSortOrientation.LeftToRight, sortOrder);
+            return this;
+        }
+        public IXLRow Sort(Boolean matchCase)
+        {
+            this.AsRange().Sort(XLSortOrientation.LeftToRight, matchCase);
+            return this;
+        }
+        public IXLRow Sort(XLSortOrder sortOrder, Boolean matchCase)
+        {
+            this.AsRange().Sort(XLSortOrientation.LeftToRight, sortOrder, matchCase);
+            return this;
+        }
+
+        private void CopyToCell(IXLRangeRow rngRow, IXLCell cell)
+        {
+            Int32 cellCount = rngRow.CellCount();
+            Int32 roStart = cell.Address.RowNumber;
+            Int32 coStart = cell.Address.ColumnNumber;
+            for (Int32 co = coStart; co <= cellCount + coStart - 1; co++)
+            {
+                (cell.Worksheet.Cell(roStart, co) as XLCell).CopyFrom(rngRow.Cell(co - coStart + 1));
+            }
+        }
+
+        public new IXLRangeRow CopyTo(IXLCell target)
+        {
+            var rngUsed = RangeUsed().Row(1);
+            CopyToCell(rngUsed, target);
+            
+            Int32 lastColumnNumber =  target.Address.ColumnNumber + rngUsed.CellCount() - 1;
+            if (lastColumnNumber > XLWorksheet.MaxNumberOfColumns) lastColumnNumber = XLWorksheet.MaxNumberOfColumns;
+
+            return target.Worksheet.Range(
+                target.Address.RowNumber,
+                target.Address.ColumnNumber,
+                target.Address.RowNumber,
+                lastColumnNumber)
+                .Row(1);
+        }
+        public new IXLRangeRow CopyTo(IXLRangeBase target)
+        {
+            var thisRangeUsed = RangeUsed();
+            Int32 thisColumnCount = thisRangeUsed.ColumnCount();
+            var targetRangeUsed = target.AsRange().RangeUsed();
+            Int32 targetColumnCount = targetRangeUsed.ColumnCount();
+            Int32 maxColumn = thisColumnCount > targetColumnCount ? thisColumnCount : targetColumnCount;
+
+            CopyToCell(this.Range(1, 1, 1, maxColumn).Row(1), target.FirstCell());
+
+            Int32 lastColumnNumber = target.RangeAddress.LastAddress.ColumnNumber + maxColumn - 1;
+            if (lastColumnNumber > XLWorksheet.MaxNumberOfColumns) lastColumnNumber = XLWorksheet.MaxNumberOfColumns;
+
+            return (target as XLRangeBase).Worksheet.Range(
+                target.RangeAddress.FirstAddress.RowNumber,
+                target.RangeAddress.LastAddress.ColumnNumber,
+                target.RangeAddress.FirstAddress.RowNumber,
+                lastColumnNumber)
+                .Row(1);
+        }
+        public IXLRow CopyTo(IXLRow row)
+        {
+            var thisRangeUsed = RangeUsed();
+            Int32 thisColumnCount = thisRangeUsed.ColumnCount();
+            //var targetRangeUsed = column target.AsRange().RangeUsed();
+            Int32 targetColumnCount = row.LastCellUsed(true).Address.ColumnNumber;
+            Int32 maxColumn = thisColumnCount > targetColumnCount ? thisColumnCount : targetColumnCount;
+
+            CopyToCell(this.Row(1, maxColumn), row.FirstCell());
+            var newRow = row as XLRow;
+            newRow.height = height;
+            newRow.style = new XLStyle(newRow, Style);
+            return newRow;
+        }
+
+        public IXLRangeRow Row(Int32 start, Int32 end)
+        {
+            return this.AsRange().Range(1, start, 1, end).Row(1);
+        }
     }
 }

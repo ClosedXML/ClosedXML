@@ -102,6 +102,8 @@
     <Compile Include="Misc\FreezePanes.cs" />
     <Compile Include="PageSetup\TwoPages.cs" />
     <Compile Include="Misc\ShowCase.cs" />
+    <Compile Include="Ranges\SortExample.cs" />
+    <Compile Include="Ranges\Sorting.cs" />
     <Compile Include="Ranges\UsingTables.cs" />
     <Compile Include="Ranges\CopyingRanges.cs" />
     <Compile Include="Ranges\NamedRanges.cs" />

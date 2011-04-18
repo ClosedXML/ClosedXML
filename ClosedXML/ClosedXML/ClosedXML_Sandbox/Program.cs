@@ -19,13 +19,14 @@ namespace ClosedXML_Sandbox
             //var fileName = "Issue_6429";
             //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
             var wb = new XLWorkbook();
-            var wsData = wb.Worksheets.Add("Data");
-            var xcell = wsData.Cell(1, 1);
-            xcell.Value = "Test";
-            wsData.NamedRanges.Add("RangeName", xcell.AsRange(), "Comment");
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Row(5).Height = 50;
+            ws.Row(2).InsertRowsAbove(1);
 
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
         }
+
+
 
         static void CopyWorksheets(String source, XLWorkbook target)
         {
@@ -50,35 +51,42 @@ namespace ClosedXML_Sandbox
                 foreach (var i in Enumerable.Range(1, 1))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
-                    foreach (var ro in Enumerable.Range(1, 1000))
+                    foreach (var ro in Enumerable.Range(1, 10000))
                     {
-                        foreach (var co in Enumerable.Range(1, 100))
+                        foreach (var co in Enumerable.Range(1, 5))
                         {
-                            ws.Cell(ro, co).Style = GetRandomStyle();
+                            //ws.Cell(ro, co).Style = GetRandomStyle();
                             //if (rnd.Next(1, 5) == 1)
-                                ws.Cell(ro, co).FormulaA1 = ws.Cell(ro + 1, co + 1).Address.ToString() + " & \"-Copy\"";
+                                //ws.Cell(ro, co).FormulaA1 = ws.Cell(ro + 1, co + 1).Address.ToString() + " & \"-Copy\"";
                             //else
-                            //    ws.Cell(ro, co).Value = GetRandomValue();
+                                ws.Cell(ro, co).Value = GetRandomValue();
                         }
                         //System.Threading.Thread.Sleep(10);
                     }
-                    ws.RangeUsed().Style.Border.BottomBorder = XLBorderStyleValues.DashDot;
-                    ws.RangeUsed().Style.Border.BottomBorderColor = XLColor.AirForceBlue;
-                    ws.RangeUsed().Style.Border.TopBorder = XLBorderStyleValues.DashDotDot;
-                    ws.RangeUsed().Style.Border.TopBorderColor = XLColor.AliceBlue;
-                    ws.RangeUsed().Style.Border.LeftBorder = XLBorderStyleValues.Dashed;
-                    ws.RangeUsed().Style.Border.LeftBorderColor = XLColor.Alizarin;
-                    ws.RangeUsed().Style.Border.RightBorder = XLBorderStyleValues.Dotted;
-                    ws.RangeUsed().Style.Border.RightBorderColor = XLColor.Almond;
+                    //ws.RangeUsed().Style.Border.BottomBorder = XLBorderStyleValues.DashDot;
+                    //ws.RangeUsed().Style.Border.BottomBorderColor = XLColor.AirForceBlue;
+                    //ws.RangeUsed().Style.Border.TopBorder = XLBorderStyleValues.DashDotDot;
+                    //ws.RangeUsed().Style.Border.TopBorderColor = XLColor.AliceBlue;
+                    //ws.RangeUsed().Style.Border.LeftBorder = XLBorderStyleValues.Dashed;
+                    //ws.RangeUsed().Style.Border.LeftBorderColor = XLColor.Alizarin;
+                    //ws.RangeUsed().Style.Border.RightBorder = XLBorderStyleValues.Dotted;
+                    //ws.RangeUsed().Style.Border.RightBorderColor = XLColor.Almond;
 
-                    ws.RangeUsed().Style.Font.Bold = true;
-                    ws.RangeUsed().Style.Font.FontColor = XLColor.Amaranth;
-                    ws.RangeUsed().Style.Font.FontSize = 10;
-                    ws.RangeUsed().Style.Font.Italic = true;
+                    //ws.RangeUsed().Style.Font.Bold = true;
+                    //ws.RangeUsed().Style.Font.FontColor = XLColor.Amaranth;
+                    //ws.RangeUsed().Style.Font.FontSize = 10;
+                    //ws.RangeUsed().Style.Font.Italic = true;
 
-                    ws.RangeUsed().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    ws.RangeUsed().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    ws.RangeUsed().Style.Alignment.WrapText = true;
+                    //ws.RangeUsed().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    //ws.RangeUsed().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    //ws.RangeUsed().Style.Alignment.WrapText = true;
+
+                    var startS = DateTime.Now;
+                    ws.Sort();
+                    var endS = DateTime.Now;
+                    var savedS = (endS - startS).TotalSeconds;
+                    runningSave.Add(savedS);
+                    Console.WriteLine("Sorted in {0} secs.", savedS);
                 }
 
 
@@ -91,14 +99,14 @@ namespace ClosedXML_Sandbox
                 //Console.WriteLine("Bolded all cells in {0} secs.", (end3 - start3).TotalSeconds);
                 
                 var start = DateTime.Now;
-                wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
+                //wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
                 var end = DateTime.Now;
                 var saved = (end - start).TotalSeconds;
                 runningSave.Add(saved);
                 Console.WriteLine("Saved in {0} secs.", saved);
 
                 var start1 = DateTime.Now;
-                var wb1 = new XLWorkbook(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
+                //var wb1 = new XLWorkbook(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
                 var end1 = DateTime.Now;
                 var loaded = (end1 - start1).TotalSeconds;
                 runningLoad.Add(loaded);

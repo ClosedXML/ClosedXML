@@ -20,6 +20,7 @@ namespace ClosedXML.Excel
         public IXLRangeAddress RangeAddress { get; private set; }
         public XLWorksheet Worksheet { get; private set; }
         public IXLStyle DefaultStyle { get; private set; }
+        public Boolean IgnoreEvents { get; set; }
 
         // Private
 

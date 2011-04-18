@@ -73,6 +73,8 @@ namespace ClosedXML_Examples
             new HideSheets().Create(@"C:\Excel Files\Created\HideSheets.xlsx");
             new SheetProtection().Create(@"C:\Excel Files\Created\SheetProtection.xlsx");
             new AutoFilter().Create(@"C:\Excel Files\Created\AutoFilter.xlsx");
+            new Sorting().Create(@"C:\Excel Files\Created\Sorting.xlsx");
+            new SortExample().Create(@"C:\Excel Files\Created\SortExample.xlsx");
         }
     }
 }
