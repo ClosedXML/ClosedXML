@@ -20,8 +20,12 @@ namespace ClosedXML_Sandbox
             //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
-            ws.Row(5).Height = 50;
-            ws.Row(2).InsertRowsAbove(1);
+            ws.Cell("A1").Value = "Category";
+            ws.Cell("A2").Value = "A";
+            ws.Cell("A3").Value = "B";
+            ws.Cell("B1").Value = "Value";
+            ws.Cell("B2").Value = 5;
+            ws.Cell("B3").Value = 10;
 
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
         }

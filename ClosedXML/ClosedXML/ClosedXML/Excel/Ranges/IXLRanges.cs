@@ -64,5 +64,9 @@ namespace ClosedXML.Excel
         Object Value { set; }
 
         IXLRanges SetValue<T>(T value);
+
+        IXLRanges Replace(String oldValue, String newValue);
+        IXLRanges Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLRanges Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }

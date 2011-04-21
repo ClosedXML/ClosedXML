@@ -104,5 +104,9 @@ namespace ClosedXML.Excel
         IXLCells CellsUsed(Boolean includeStyles);
 
         IXLStyle Style { get; set; }
+
+        IXLRows Replace(String oldValue, String newValue);
+        IXLRows Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLRows Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }

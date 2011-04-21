@@ -959,5 +959,51 @@ namespace ClosedXML.Excel
                 lastRowNumber,
                 lastColumnNumber);
         }
+
+        public IXLRangeColumns FindColumns(String search)
+        {
+            return FindColumns(search, XLSearchContents.ValuesAndFormulas);
+        }
+        public IXLRangeColumns FindColumns(String search, XLSearchContents searchContents)
+        {
+            return FindColumns(search, searchContents, false, false);
+        }
+        public IXLRangeColumns FindColumns(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
+        { 
+        }
+        public IXLRangeColumns FindColumns(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
+        { 
+        }
+
+        public IXLRangeRows FindRows(String search)
+        {
+            return FindRows(search, XLSearchContents.ValuesAndFormulas);
+        }
+        public IXLRangeRows FindRows(String search, XLSearchContents searchContents)
+        {
+            return FindRows(search, searchContents, false, false);
+        }
+        public IXLRangeRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+        }
+        public IXLRangeRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
+        {
+        }
+
+        public new IXLRange Replace(String oldValue, String newValue)
+        {
+            base.Replace(oldValue, newValue);
+            return this;
+        }
+        public new IXLRange Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        {
+            base.Replace(oldValue, newValue, searchContents);
+            return this;
+        }
+        public new IXLRange Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+            base.Replace(oldValue, newValue, searchContents, useRegularExpressions);
+            return this;
+        }
     }
 }

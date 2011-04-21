@@ -130,6 +130,24 @@
     <Compile Include="..\ClosedXML\Excel\Cells\XLCells.cs">
       <Link>Excel\Cells\XLCells.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Charts\IXLChart.cs">
+      <Link>Excel\Charts\IXLChart.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Charts\IXLCharts.cs">
+      <Link>Excel\Charts\IXLCharts.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Charts\IXLDrawingPosition.cs">
+      <Link>Excel\Charts\IXLDrawingPosition.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Charts\XLChart.cs">
+      <Link>Excel\Charts\XLChart.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Charts\XLCharts.cs">
+      <Link>Excel\Charts\XLCharts.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Charts\XLDrawingPosition.cs">
+      <Link>Excel\Charts\XLDrawingPosition.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Columns\IXLColumn.cs">
       <Link>Excel\Columns\IXLColumn.cs</Link>
     </Compile>

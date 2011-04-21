@@ -44,6 +44,7 @@ namespace ClosedXML.Excel
             this.Name = sheetName;
             RangeShiftedRows += new RangeShiftedRowsDelegate(XLWorksheet_RangeShiftedRows);
             RangeShiftedColumns += new RangeShiftedColumnsDelegate(XLWorksheet_RangeShiftedColumns);
+            Charts = new XLCharts();
         }
 
         void XLWorksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
@@ -806,6 +807,54 @@ namespace ClosedXML.Excel
             SortColumns.ForEach(e => range.SortColumns.Add(e.ElementNumber, e.SortOrder, e.IgnoreBlanks, e.MatchCase));
             SortRows.ForEach(e => range.SortRows.Add(e.ElementNumber, e.SortOrder, e.IgnoreBlanks, e.MatchCase));
             return range;
+        }
+
+        public IXLCharts Charts { get; private set; }
+
+        public IXLColumns FindColumns(String search)
+        {
+            return FindColumns(search, XLSearchContents.ValuesAndFormulas);
+        }
+        public IXLColumns FindColumns(String search, XLSearchContents searchContents)
+        {
+            return FindColumns(search, searchContents, false, false);
+        }
+        public IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+        }
+        public IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
+        {
+        }
+
+        public IXLRows FindRows(String search)
+        {
+            return FindRows(search, XLSearchContents.ValuesAndFormulas);
+        }
+        public IXLRows FindRows(String search, XLSearchContents searchContents)
+        {
+            return FindRows(search, searchContents, false, false);
+        }
+        public IXLRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+        }
+        public IXLRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
+        {
+        }
+
+        public new IXLWorksheet Replace(String oldValue, String newValue)
+        {
+            base.Replace(oldValue, newValue);
+            return this;
+        }
+        public new IXLWorksheet Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        {
+            base.Replace(oldValue, newValue, searchContents);
+            return this;
+        }
+        public new IXLWorksheet Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+            base.Replace(oldValue, newValue, searchContents, useRegularExpressions);
+            return this;
         }
     }
 }

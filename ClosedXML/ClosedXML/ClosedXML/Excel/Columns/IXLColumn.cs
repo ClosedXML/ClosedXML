@@ -163,5 +163,9 @@ namespace ClosedXML.Excel
         IXLColumn Sort(XLSortOrder sortOrder, Boolean matchCase);
 
         IXLRangeColumn Column(Int32 start, Int32 end);
+
+        IXLColumn Replace(String oldValue, String newValue);
+        IXLColumn Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLColumn Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }

@@ -1040,5 +1040,33 @@ namespace ClosedXML.Excel
             else
                 Worksheet.AutoFilterRange = null;
         }
+
+        public IXLCells FindCells(String search)
+        {
+            return FindCells(search, XLSearchContents.ValuesAndFormulas);
+        }
+        public IXLCells FindCells(String search, XLSearchContents searchContents)
+        {
+            return FindCells(search, searchContents, false, false);
+        }
+        public IXLCells FindCells(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+        }
+        public IXLCells FindCells(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
+        {
+        }
+
+        public IXLRangeBase Replace(String oldValue, String newValue)
+        {
+            return Replace(oldValue, newValue, XLSearchContents.ValuesAndFormulas);
+        }
+        public IXLRangeBase Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        {
+            return Replace(oldValue, newValue, XLSearchContents.ValuesAndFormulas, false);
+        }
+        public IXLRangeBase Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+            
+        }
     }
 }

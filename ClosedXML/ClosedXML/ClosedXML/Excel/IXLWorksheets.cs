@@ -13,5 +13,9 @@ namespace ClosedXML.Excel
         IXLWorksheet Add(String sheetName, Int32 position);
         void Delete(String sheetName);
         void Delete(Int32 position);
+
+        IXLWorksheets Replace(String oldValue, String newValue);
+        IXLWorksheets Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLWorksheets Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }

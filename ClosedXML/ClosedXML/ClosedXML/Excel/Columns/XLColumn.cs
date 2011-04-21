@@ -549,5 +549,21 @@ namespace ClosedXML.Excel
         {
             return AsRange().Range(start, 1, end, 1).Column(1);
         }
+
+        public new IXLColumn Replace(String oldValue, String newValue)
+        {
+            base.Replace(oldValue, newValue);
+            return this;
+        }
+        public new IXLColumn Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        {
+            base.Replace(oldValue, newValue, searchContents);
+            return this;
+        }
+        public new IXLColumn Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+            base.Replace(oldValue, newValue, searchContents, useRegularExpressions);
+            return this;
+        }
     }
 }

@@ -349,5 +349,36 @@ namespace ClosedXML.Excel
             }
             return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1));
         }
+
+        public new IXLTableRows FindRows(String search)
+        {
+            return FindRows(search, XLSearchContents.ValuesAndFormulas);
+        }
+        public new IXLTableRows FindRows(String search, XLSearchContents searchContents)
+        {
+            return FindRows(search, searchContents, false, false);
+        }
+        public new IXLTableRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+        }
+        public new IXLTableRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
+        {
+        }
+
+        public new IXLTable Replace(String oldValue, String newValue)
+        {
+            base.Replace(oldValue, newValue);
+            return this;
+        }
+        public new IXLTable Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        {
+            base.Replace(oldValue, newValue, searchContents);
+            return this;
+        }
+        public new IXLTable Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+            base.Replace(oldValue, newValue, searchContents, useRegularExpressions);
+            return this;
+        }
     }
 }

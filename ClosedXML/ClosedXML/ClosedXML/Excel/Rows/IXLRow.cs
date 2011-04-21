@@ -164,5 +164,8 @@ namespace ClosedXML.Excel
 
         IXLRangeRow Row(Int32 start, Int32 end);
 
+        IXLRow Replace(String oldValue, String newValue);
+        IXLRow Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLRow Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }

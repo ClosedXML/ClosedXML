@@ -286,5 +286,21 @@ namespace ClosedXML.Excel
         IXLRange Sort(XLSortOrientation sortOrientation, Boolean matchCase);
         IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase);
         IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase);
+
+        IXLCharts Charts { get; }
+
+        IXLRows FindRows(String search);
+        IXLRows FindRows(String search, XLSearchContents searchContents);
+        IXLRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
+        IXLRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
+
+        IXLColumns FindColumns(String search);
+        IXLColumns FindColumns(String search, XLSearchContents searchContents);
+        IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
+        IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
+
+        IXLWorksheet Replace(String oldValue, String newValue);
+        IXLWorksheet Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLWorksheet Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }

@@ -399,5 +399,21 @@ namespace ClosedXML.Excel
         }
 
         public IXLCustomProperties CustomProperties { get; private set; }
+
+        public XLWorkbook Replace(String oldValue, String newValue)
+        {
+            Worksheets.Replace(oldValue, newValue);
+            return this;
+        }
+        public XLWorkbook Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        {
+            Worksheets.Replace(oldValue, newValue, searchContents);
+            return this;
+        }
+        public XLWorkbook Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+            Worksheets.Replace(oldValue, newValue, searchContents, useRegularExpressions);
+            return this;
+        }
     }
 }

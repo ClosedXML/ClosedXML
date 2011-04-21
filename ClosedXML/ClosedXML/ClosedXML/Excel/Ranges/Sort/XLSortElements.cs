@@ -68,5 +68,10 @@ namespace ClosedXML.Excel
         {
             elements.Clear();
         }
+
+        public void Remove(Int32 elementNumber)
+        {
+            elements.RemoveAt(elementNumber - 1);
+        }
     }
 }

@@ -104,6 +104,20 @@ namespace ClosedXML.Excel
 
         #endregion
 
-
+        public IXLWorksheets Replace(String oldValue, String newValue)
+        {
+            worksheets.Values.ForEach(r => r.Replace(oldValue, newValue));
+            return this;
+        }
+        public IXLWorksheets Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        {
+            worksheets.Values.ForEach(r => r.Replace(oldValue, newValue, searchContents));
+            return this;
+        }
+        public IXLWorksheets Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+            worksheets.Values.ForEach(r => r.Replace(oldValue, newValue, searchContents, useRegularExpressions));
+            return this;
+        }
     }
 }

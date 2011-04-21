@@ -121,6 +121,12 @@
     <Compile Include="Excel\Cells\XLCellCollection.cs" />
     <Compile Include="Excel\Cells\XLCells.cs" />
     <Compile Include="Excel\Cells\XLCell_DotNetSpecific.cs" />
+    <Compile Include="Excel\Charts\XLDrawingPosition.cs" />
+    <Compile Include="Excel\Charts\IXLCharts.cs" />
+    <Compile Include="Excel\Charts\IXLDrawingPosition.cs" />
+    <Compile Include="Excel\Charts\XLCharts.cs" />
+    <Compile Include="Excel\Charts\XLChart.cs" />
+    <Compile Include="Excel\Charts\IXLChart.cs" />
     <Compile Include="Excel\Columns\IXLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />

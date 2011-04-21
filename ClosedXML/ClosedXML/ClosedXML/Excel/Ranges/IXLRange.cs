@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
 {
     public enum XLShiftDeletedCells { ShiftCellsUp, ShiftCellsLeft }
     public enum XLTransposeOptions { MoveCells, ReplaceCells }
-
+    public enum XLSearchContents { Values, Formulas, ValuesAndFormulas }
     public interface IXLRange: IXLRangeBase
     {
         /// <summary>
@@ -239,6 +239,20 @@ namespace ClosedXML.Excel
         IXLRange Sort(XLSortOrientation sortOrientation, Boolean matchCase);
         IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase);
         IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase);
+
+        IXLRangeRows FindRows(String search);
+        IXLRangeRows FindRows(String search, XLSearchContents searchContents);
+        IXLRangeRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
+        IXLRangeRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
+
+        IXLRangeColumns FindColumns(String search);
+        IXLRangeColumns FindColumns(String search, XLSearchContents searchContents);
+        IXLRangeColumns FindColumns(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
+        IXLRangeColumns FindColumns(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
+
+        IXLRange Replace(String oldValue, String newValue);
+        IXLRange Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLRange Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }
 

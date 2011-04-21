@@ -419,8 +419,11 @@ namespace ClosedXML.Excel
 
                 
                 GenerateWorksheetPartContent(worksheetPart, worksheet);
+
+                //DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>(relId.GetNext(RelType.Workbook));
+                //GenerateDrawingsPartContent(drawingsPart);
             }
-            
+
 
             GenerateCalculationChainPartContent(workbookPart);
 
@@ -3348,5 +3351,102 @@ namespace ClosedXML.Excel
 
             tableDefinitionPart.Table = table;
         }
+
+        /*
+        // Generates content of drawingsPart1.
+        private void GenerateDrawingsPartContent(DrawingsPart drawingsPart, XLWorksheet worksheet)
+        {
+            if (drawingsPart.WorksheetDrawing == null)
+                drawingsPart.WorksheetDrawing = new Xdr.WorksheetDrawing();
+
+            var worksheetDrawing = drawingsPart.WorksheetDrawing;
+            
+            if (!worksheetDrawing.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("xdr", "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing")))
+                worksheetDrawing.AddNamespaceDeclaration("xdr", "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing");
+            if (!worksheetDrawing.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("a", "http://schemas.openxmlformats.org/drawingml/2006/main")))
+                worksheetDrawing.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+
+            foreach (var chart in worksheet.Charts.OrderBy(c=>c.Position.ZOrder).Select(c=>c))
+            {
+                Xdr.TwoCellAnchor twoCellAnchor = new Xdr.TwoCellAnchor();
+                twoCellAnchor.
+            }
+
+            
+
+            Xdr.FromMarker fromMarker1 = new Xdr.FromMarker();
+            Xdr.ColumnId columnId1 = new Xdr.ColumnId();
+            columnId1.Text = "3";
+            Xdr.ColumnOffset columnOffset1 = new Xdr.ColumnOffset();
+            columnOffset1.Text = "152400";
+            Xdr.RowId rowId1 = new Xdr.RowId();
+            rowId1.Text = "0";
+            Xdr.RowOffset rowOffset1 = new Xdr.RowOffset();
+            rowOffset1.Text = "133350";
+
+            fromMarker1.Append(columnId1);
+            fromMarker1.Append(columnOffset1);
+            fromMarker1.Append(rowId1);
+            fromMarker1.Append(rowOffset1);
+
+            Xdr.ToMarker toMarker1 = new Xdr.ToMarker();
+            Xdr.ColumnId columnId2 = new Xdr.ColumnId();
+            columnId2.Text = "10";
+            Xdr.ColumnOffset columnOffset2 = new Xdr.ColumnOffset();
+            columnOffset2.Text = "457200";
+            Xdr.RowId rowId2 = new Xdr.RowId();
+            rowId2.Text = "15";
+            Xdr.RowOffset rowOffset2 = new Xdr.RowOffset();
+            rowOffset2.Text = "19050";
+
+            toMarker1.Append(columnId2);
+            toMarker1.Append(columnOffset2);
+            toMarker1.Append(rowId2);
+            toMarker1.Append(rowOffset2);
+
+            Xdr.GraphicFrame graphicFrame1 = new Xdr.GraphicFrame() { Macro = "" };
+
+            Xdr.NonVisualGraphicFrameProperties nonVisualGraphicFrameProperties1 = new Xdr.NonVisualGraphicFrameProperties();
+            Xdr.NonVisualDrawingProperties nonVisualDrawingProperties1 = new Xdr.NonVisualDrawingProperties() { Id = (UInt32Value)5U, Name = "Chart 4" };
+            Xdr.NonVisualGraphicFrameDrawingProperties nonVisualGraphicFrameDrawingProperties1 = new Xdr.NonVisualGraphicFrameDrawingProperties();
+
+            nonVisualGraphicFrameProperties1.Append(nonVisualDrawingProperties1);
+            nonVisualGraphicFrameProperties1.Append(nonVisualGraphicFrameDrawingProperties1);
+
+            Xdr.Transform transform1 = new Xdr.Transform();
+            A.Offset offset1 = new A.Offset() { X = 0L, Y = 0L };
+            A.Extents extents1 = new A.Extents() { Cx = 0L, Cy = 0L };
+
+            transform1.Append(offset1);
+            transform1.Append(extents1);
+
+            A.Graphic graphic1 = new A.Graphic();
+
+            A.GraphicData graphicData1 = new A.GraphicData() { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" };
+
+            C.ChartReference chartReference1 = new C.ChartReference() { Id = "rId1" };
+            chartReference1.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
+            chartReference1.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+
+            graphicData1.Append(chartReference1);
+
+            graphic1.Append(graphicData1);
+
+            graphicFrame1.Append(nonVisualGraphicFrameProperties1);
+            graphicFrame1.Append(transform1);
+            graphicFrame1.Append(graphic1);
+            Xdr.ClientData clientData1 = new Xdr.ClientData();
+
+            twoCellAnchor1.Append(fromMarker1);
+            twoCellAnchor1.Append(toMarker1);
+            twoCellAnchor1.Append(graphicFrame1);
+            twoCellAnchor1.Append(clientData1);
+
+            worksheetDrawing1.Append(twoCellAnchor1);
+
+            drawingsPart1.WorksheetDrawing = worksheetDrawing1;
+
+        }
+        */
     }
 }

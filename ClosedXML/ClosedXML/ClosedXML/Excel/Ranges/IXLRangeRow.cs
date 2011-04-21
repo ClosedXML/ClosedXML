@@ -95,6 +95,10 @@ namespace ClosedXML.Excel
         IXLRangeRow Sort(Boolean matchCase);
         IXLRangeRow Sort(XLSortOrder sortOrder);
         IXLRangeRow Sort(XLSortOrder sortOrder, Boolean matchCase);
+
+        IXLRangeRow Replace(String oldValue, String newValue);
+        IXLRangeRow Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLRangeRow Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }
 

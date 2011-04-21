@@ -245,5 +245,21 @@ namespace ClosedXML.Excel
                 return retVal;
             }
         }
+
+        public IXLColumns Replace(String oldValue, String newValue)
+        {
+            columns.ForEach(r => r.Replace(oldValue, newValue));
+            return this;
+        }
+        public IXLColumns Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        {
+            columns.ForEach(r => r.Replace(oldValue, newValue, searchContents));
+            return this;
+        }
+        public IXLColumns Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
+        {
+            columns.ForEach(r => r.Replace(oldValue, newValue, searchContents, useRegularExpressions));
+            return this;
+        }
     }
 }

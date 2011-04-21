@@ -62,7 +62,9 @@ namespace ClosedXML_Examples.Misc
             table.Sort("Column2, Column3 Desc, Column1 ASC");
 
             wsTable.Row(1).InsertRowsAbove(2);
-            wsTable.Cell(1, 1).SetValue(".Sort(\"Column2, Column3 Desc, Column1 ASC\") = Sort table Top to Bottom, Col 2 Asc, Col 3 Desc, Col 1 Asc, Ignore Blanks, Ignore Case").Style.Font.SetBold();
+            wsTable.Cell(1, 1)
+                .SetValue(".Sort(\"Column2, Column3 Desc, Column1 ASC\") = Sort table Top to Bottom, Col 2 Asc, Col 3 Desc, Col 1 Asc, Ignore Blanks, Ignore Case")
+                .Style.Font.SetBold();
             #endregion
 
             #region Sort a simple range left to right
@@ -75,7 +77,9 @@ namespace ClosedXML_Examples.Misc
             copyLeftToRight.Sort(XLSortOrientation.LeftToRight);
 
             wsLeftToRight.Row(1).InsertRowsAbove(2);
-            wsLeftToRight.Cell(1, 1).SetValue(".Sort(XLSortOrientation.LeftToRight) = Sort Range Left to Right, Ascendingly, Ignore Blanks, Ignore Case").Style.Font.SetBold();
+            wsLeftToRight.Cell(1, 1)
+                .SetValue(".Sort(XLSortOrientation.LeftToRight) = Sort Range Left to Right, Ascendingly, Ignore Blanks, Ignore Case")
+                .Style.Font.SetBold();
             #endregion
 
             #region Sort a range

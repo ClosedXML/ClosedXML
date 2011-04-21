@@ -35,5 +35,9 @@ namespace ClosedXML.Excel
         IXLCells CellsUsed(Boolean includeStyles);
 
         IXLStyle Style { get; set; }
+
+        IXLTableRows Replace(String oldValue, String newValue);
+        IXLTableRows Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLTableRows Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }

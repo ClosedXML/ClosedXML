@@ -200,5 +200,9 @@ namespace ClosedXML.Excel
         String ToStringRelative();
         String ToStringFixed();
 
+        IXLCells FindCells(String search);
+        IXLCells FindCells(String search, XLSearchContents searchContents);
+        IXLCells FindCells(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
+        IXLCells FindCells(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
     }
 }

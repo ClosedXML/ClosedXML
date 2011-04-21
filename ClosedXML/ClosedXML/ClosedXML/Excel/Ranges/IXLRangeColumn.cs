@@ -88,6 +88,10 @@ namespace ClosedXML.Excel
         IXLRangeColumn Sort(Boolean matchCase);
         IXLRangeColumn Sort(XLSortOrder sortOrder);
         IXLRangeColumn Sort(XLSortOrder sortOrder, Boolean matchCase);
+
+        IXLRangeColumn Replace(String oldValue, String newValue);
+        IXLRangeColumn Replace(String oldValue, String newValue, XLSearchContents searchContents);
+        IXLRangeColumn Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
     }
 }
 

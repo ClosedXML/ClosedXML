@@ -18,5 +18,7 @@ namespace ClosedXML.Excel
         void Add(String elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks, Boolean matchCase);
 
         void Clear();
+
+        void Remove(Int32 elementNumber);
     }
 }
