@@ -821,9 +821,11 @@ namespace ClosedXML.Excel
         }
         public IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
         {
+            throw new NotImplementedException();
         }
         public IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
         {
+            throw new NotImplementedException();
         }
 
         public IXLRows FindRows(String search)
@@ -836,9 +838,11 @@ namespace ClosedXML.Excel
         }
         public IXLRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
         {
+            throw new NotImplementedException();
         }
         public IXLRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
         {
+            throw new NotImplementedException();
         }
 
         public new IXLWorksheet Replace(String oldValue, String newValue)

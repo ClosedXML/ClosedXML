@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace ClosedXML.Excel
 {
-    internal struct XLAddress: IXLAddress
+    internal class XLAddress: IXLAddress
     {
         #region Constructors
         /// <summary>

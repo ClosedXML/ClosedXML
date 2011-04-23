@@ -15,19 +15,20 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             //var fileName = "BasicTable";
-            var fileName = "Sandbox";
-            //var fileName = "Issue_6429";
-            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-            var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
-            ws.Cell("A1").Value = "Category";
-            ws.Cell("A2").Value = "A";
-            ws.Cell("A3").Value = "B";
-            ws.Cell("B1").Value = "Value";
-            ws.Cell("B2").Value = 5;
-            ws.Cell("B3").Value = 10;
+            //var fileName = "Sandbox";
+            var fileName = "Issue_6510";
+            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            //var wb = new XLWorkbook();
+            //var ws = wb.Worksheets.Add("Sheet1");
+            //ws.Cell("A1").Value = "Category";
+            //ws.Cell("A2").Value = "A";
+            //ws.Cell("A3").Value = "B";
+            //ws.Cell("B1").Value = "Value";
+            //ws.Cell("B2").Value = 5;
+            //ws.Cell("B3").Value = 10;
 
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
+            //Console.ReadKey();
         }
 
 
@@ -59,7 +60,7 @@ namespace ClosedXML_Sandbox
                     {
                         foreach (var co in Enumerable.Range(1, 5))
                         {
-                            //ws.Cell(ro, co).Style = GetRandomStyle();
+                            ws.Cell(ro, co).Style = GetRandomStyle();
                             //if (rnd.Next(1, 5) == 1)
                                 //ws.Cell(ro, co).FormulaA1 = ws.Cell(ro + 1, co + 1).Address.ToString() + " & \"-Copy\"";
                             //else
@@ -67,6 +68,13 @@ namespace ClosedXML_Sandbox
                         }
                         //System.Threading.Thread.Sleep(10);
                     }
+                    
+                    Int32 rowCount = ws.LastRowUsed().RowNumber();
+                    for (Int32 ro = 1; ro <= rowCount; ro += 100)
+                    {
+                        var dv = ws.Range(ro, 1, ro + 99, 5).DataValidation;
+                    }
+
                     //ws.RangeUsed().Style.Border.BottomBorder = XLBorderStyleValues.DashDot;
                     //ws.RangeUsed().Style.Border.BottomBorderColor = XLColor.AirForceBlue;
                     //ws.RangeUsed().Style.Border.TopBorder = XLBorderStyleValues.DashDotDot;
@@ -85,12 +93,12 @@ namespace ClosedXML_Sandbox
                     //ws.RangeUsed().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
                     //ws.RangeUsed().Style.Alignment.WrapText = true;
 
-                    var startS = DateTime.Now;
-                    ws.Sort();
-                    var endS = DateTime.Now;
-                    var savedS = (endS - startS).TotalSeconds;
-                    runningSave.Add(savedS);
-                    Console.WriteLine("Sorted in {0} secs.", savedS);
+                    //var startS = DateTime.Now;
+                    //ws.Sort();
+                    //var endS = DateTime.Now;
+                    //var savedS = (endS - startS).TotalSeconds;
+                    //runningSave.Add(savedS);
+                    //Console.WriteLine("Sorted in {0} secs.", savedS);
                 }
 
 
@@ -103,7 +111,7 @@ namespace ClosedXML_Sandbox
                 //Console.WriteLine("Bolded all cells in {0} secs.", (end3 - start3).TotalSeconds);
                 
                 var start = DateTime.Now;
-                //wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
+                wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
                 var end = DateTime.Now;
                 var saved = (end - start).TotalSeconds;
                 runningSave.Add(saved);
@@ -130,7 +138,7 @@ namespace ClosedXML_Sandbox
             Console.WriteLine("Avg Save time: {0}", runningSave.Average());
             Console.WriteLine("Avg Load time: {0}", runningLoad.Average());
             Console.WriteLine("Avg Save Back time: {0}", runningSavedBack.Average());
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
         private static IXLStyle style1;

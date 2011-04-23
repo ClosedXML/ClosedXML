@@ -360,9 +360,11 @@ namespace ClosedXML.Excel
         }
         public new IXLTableRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
         {
+            throw new NotImplementedException();
         }
         public new IXLTableRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
         {
+            throw new NotImplementedException();
         }
 
         public new IXLTable Replace(String oldValue, String newValue)

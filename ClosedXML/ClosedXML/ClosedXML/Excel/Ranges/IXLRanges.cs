@@ -22,6 +22,8 @@ namespace ClosedXML.Excel
         /// <param name="range">The range to remove from this group.</param>
         void Remove(IXLRange range);
 
+        Int32 Count { get; }
+
         Boolean Contains(IXLRange range);
 
         IXLStyle Style { get; set; }

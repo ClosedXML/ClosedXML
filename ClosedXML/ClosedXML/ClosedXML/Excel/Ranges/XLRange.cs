@@ -969,10 +969,12 @@ namespace ClosedXML.Excel
             return FindColumns(search, searchContents, false, false);
         }
         public IXLRangeColumns FindColumns(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
-        { 
+        {
+            throw new NotImplementedException();
         }
         public IXLRangeColumns FindColumns(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
-        { 
+        {
+            throw new NotImplementedException();
         }
 
         public IXLRangeRows FindRows(String search)
@@ -985,9 +987,11 @@ namespace ClosedXML.Excel
         }
         public IXLRangeRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
         {
+            throw new NotImplementedException();
         }
         public IXLRangeRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
         {
+            throw new NotImplementedException();
         }
 
         public new IXLRange Replace(String oldValue, String newValue)

@@ -27,5 +27,15 @@ namespace ClosedXML.Excel
         {
             return GetEnumerator();
         }
+
+        public Boolean ContainsSingle(IXLRange range)
+        {
+            foreach (var dv in dataValidations)
+            {
+                if (dv.Ranges.Count == 1 && dv.Ranges.Contains(range))
+                    return true;
+            }
+            return false;
+        }
     }
 }

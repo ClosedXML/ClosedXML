@@ -945,13 +945,10 @@ namespace ClosedXML.Excel
         {
             get 
             {
-                String address = this.RangeAddress.ToString();
-                if (Worksheet.DataValidations.Where(dv => 
-                    dv.Ranges.Count() == 1
-                    && dv.Ranges.Contains(this.AsRange())
-                    ).Any())
+                var thisRange = this.AsRange();
+                if (Worksheet.DataValidations.ContainsSingle(thisRange))
                 {
-                    return Worksheet.DataValidations.Where(dv => dv.Ranges.Contains(this.AsRange())).Single();
+                    return Worksheet.DataValidations.Where(dv => dv.Ranges.Contains(thisRange)).Single();
                 }
                 else
                 {
@@ -1051,9 +1048,11 @@ namespace ClosedXML.Excel
         }
         public IXLCells FindCells(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
         {
+            throw new NotImplementedException();
         }
         public IXLCells FindCells(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
         {
+            throw new NotImplementedException();
         }
 
         public IXLRangeBase Replace(String oldValue, String newValue)
@@ -1066,7 +1065,7 @@ namespace ClosedXML.Excel
         }
         public IXLRangeBase Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
         {
-            
+            throw new NotImplementedException();
         }
     }
 }

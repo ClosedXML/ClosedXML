@@ -23,10 +23,12 @@ namespace ClosedXML.Excel
 
         public void Add(IXLRange range)
         {
+            count++;
             ranges.Add((XLRange)range);
         }
         public void Add(String rangeAddress)
         {
+            count++;
             var byExclamation = rangeAddress.Split('!');
             var wsName = byExclamation[0].Replace("'", "");
             var rng = byExclamation[1];
@@ -35,7 +37,14 @@ namespace ClosedXML.Excel
         }
         public void Remove(IXLRange range)
         {
+            count--;
             ranges.RemoveAll(r => r.ToString() == range.ToString());
+        }
+
+        private Int32 count;
+        public Int32 Count {
+            get { return count; }
+            private set { count = value; }
         }
 
         public IEnumerator<IXLRange> GetEnumerator()
