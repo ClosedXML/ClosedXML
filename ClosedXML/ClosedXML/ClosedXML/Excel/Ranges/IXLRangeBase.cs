@@ -204,5 +204,7 @@ namespace ClosedXML.Excel
         IXLCells FindCells(String search, XLSearchContents searchContents);
         IXLCells FindCells(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
         IXLCells FindCells(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
+
+        IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
     }
 }

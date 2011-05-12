@@ -21,22 +21,24 @@ namespace ClosedXML_Examples.PageSetup
             // Simple left header to be placed on all pages
             ws.PageSetup.Header.Left.AddText("Created with ClosedXML");
 
-            // Using various fonts for the right header on the first page only
-            var font1 = XLWorkbook.GetXLFont();
-            font1.Bold = true;
-            ws.PageSetup.Header.Right.AddText("The ", XLHFOccurrence.FirstPage, font1);
+            // Using various font decorations for the right header on the first page only
+            // Here we show different methods for setting font decorations.
+            
+            // Set single font decorations immediately
+            ws.PageSetup.Header.Right.AddText("The ", XLHFOccurrence.FirstPage).SetBold();
+            ws.PageSetup.Header.Right.AddText("First ", XLHFOccurrence.FirstPage).SetFontColor(XLColor.Red);
 
-            var font2 = XLWorkbook.GetXLFont();
-            font2.FontColor = XLColor.Red;
-            ws.PageSetup.Header.Right.AddText("First ", XLHFOccurrence.FirstPage, font2);
+            // Use the IXLRichText returned by the AddText(...) method to later on modify the font
+            var richText = ws.PageSetup.Header.Right.AddText("Colorful ", XLHFOccurrence.FirstPage);
+            richText.FontColor = XLColor.Blue;
+            richText.Underline = XLFontUnderlineValues.Double;
 
-            var font3 = XLWorkbook.GetXLFont();
-            font3.Underline = XLFontUnderlineValues.Double;
-            ws.PageSetup.Header.Right.AddText("Colorful ", XLHFOccurrence.FirstPage, font3);
+            // Set multiple font decorations chained
+            ws.PageSetup.Header.Right.AddText("Page", XLHFOccurrence.FirstPage)
+                .SetBold()
+                .SetItalic()
+                .SetFontName("Broadway");
 
-            var font4 = XLWorkbook.GetXLFont();
-            font4.FontName = "Broadway";
-            ws.PageSetup.Header.Right.AddText("Page", XLHFOccurrence.FirstPage, font4);
 
             // Using predefined header/footer text:
 

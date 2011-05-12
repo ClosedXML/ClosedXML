@@ -331,10 +331,10 @@ namespace ClosedXML.Excel
                     Margins = new XLMargins()
                     {
                         Top = 0.75,
-                        Bottom = 0.75,
+                        Bottom = 0.5,
                         Left = 0.75,
                         Right = 0.75,
-                        Header = 0.75,
+                        Header = 0.5,
                         Footer = 0.75
                     },
                     ScaleHFWithDocument = true,
@@ -356,10 +356,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static IXLFont GetXLFont()
-        {
-            return new XLFont();
-        }
 
         #endregion
 

@@ -219,12 +219,11 @@ namespace ClosedXML.Excel
                     Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : 0;
                     var xlCell = (XLCell)ws.Cell(dCell.CellReference);
 
-                    //if (dCell.CellReference.Value == "A56")
+                    //if (dCell.CellReference.Value == "A9")
                     //    dCell.CellReference = dCell.CellReference.Value;
 
                     if (styleIndex > 0)
                     {
-                        //styleIndex = Int32.Parse(dCell.StyleIndex.InnerText);
                         ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
                     }
                     else
@@ -303,8 +302,7 @@ namespace ClosedXML.Excel
                     }
                     else if (dCell.CellValue != null)
                     {
-                        //var styleIndex = Int32.Parse(dCell.StyleIndex.InnerText);
-                        var numberFormatId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).NumberFormatId; //. [styleIndex].NumberFormatId;
+                        var numberFormatId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                         Double val = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture);
                         xlCell.Value = val;
                         if (s.NumberingFormats != null && s.NumberingFormats.Where(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId).Any())
@@ -323,29 +321,6 @@ namespace ClosedXML.Excel
                                 xlCell.DataType = XLCellValues.Text;
                             else
                                 xlCell.DataType = XLCellValues.Number;
-                                
-
-                        //if (val >= 0 && val <= DateTimeExtensions.MaxOADate)
-                        //{
-                        //    xlCell.DataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
-                        //    //String format = xlCell.Style.NumberFormat.Format.EndsWith(";@") ? xlCell.Style.NumberFormat.Format.Substring(0, xlCell.Style.NumberFormat.Format.Length - 2) : xlCell.Style.NumberFormat.Format;
-
-                        //    //Double dTest;
-                        //    //if (!Double.TryParse(val.ToString(format), out dTest))
-                        //    //    xlCell.DataType = XLCellValues.DateTime;
-
-                        //    //String format = xlCell.Style.NumberFormat.Format.EndsWith(";@") ? xlCell.Style.NumberFormat.Format.Substring(0, xlCell.Style.NumberFormat.Format.Length - 2) : xlCell.Style.NumberFormat.Format;
-                        //    //format = FixFormatForDates(format);
-                        //    ////Double dTest;
-                        //    ////if (!Double.TryParse(val.ToString(format) , out dTest))
-                        //    //DateTime dTest;
-                        //    //if (DateTime.TryParseExact(DateTime.FromOADate(val).ToString(format), format, CultureInfo.InvariantCulture, DateTimeStyles.None , out dTest))
-                        //    //    xlCell.DataType = XLCellValues.DateTime;
-
-                        //    ////if (DateTime.TryParse(val.ToString(format), out dTest))
-                        //    //if ((numberFormatId >= 14 && numberFormatId <= 22) || (numberFormatId >= 165 && numberFormatId <= 180))
-                        //    //    xlCell.DataType = XLCellValues.DateTime;
-                        //}
                     }
                 }
                 #endregion

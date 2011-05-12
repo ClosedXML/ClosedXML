@@ -579,7 +579,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeRow Row(Int32 start, Int32 end)
         {
-            return this.AsRange().Range(1, start, 1, end).Row(1);
+            return Range(1, start, 1, end).Row(1);
         }
 
         public new IXLRow Replace(String oldValue, String newValue)

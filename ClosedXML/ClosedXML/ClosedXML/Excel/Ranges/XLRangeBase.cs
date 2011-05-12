@@ -1067,5 +1067,16 @@ namespace ClosedXML.Excel
         {
             throw new NotImplementedException();
         }
+
+        public IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn)
+        {
+            IXLChart chart = new XLChart(Worksheet);
+            chart.FirstRow = firstRow;
+            chart.LastRow = lastRow;
+            chart.LastColumn = lastColumn;
+            chart.FirstColumn = firstColumn;
+            Worksheet.Charts.Add(chart);
+            return chart;
+        }
     }
 }

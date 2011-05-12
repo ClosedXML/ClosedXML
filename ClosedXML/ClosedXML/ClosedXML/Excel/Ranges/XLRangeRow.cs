@@ -242,6 +242,11 @@ namespace ClosedXML.Excel
             base.Replace(oldValue, newValue, searchContents, useRegularExpressions);
             return this;
         }
+
+        public IXLRangeRow Row(Int32 start, Int32 end)
+        {
+            return Range(1, start, 1, end).Row(1);
+        }
     }
 }
 

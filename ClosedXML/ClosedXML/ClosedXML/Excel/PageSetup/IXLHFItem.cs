@@ -26,43 +26,27 @@ namespace ClosedXML.Excel
         /// Adds the given text to this header/footer item.
         /// </summary>
         /// <param name="text">The text to add to this header/footer item.</param>
-        void AddText(String text);
+        IXLRichText AddText(String text);
 
         /// <summary>
         /// Adds the given predefined text to this header/footer item.
         /// </summary>
         /// <param name="text">The predefined text to add to this header/footer item.</param>
-        void AddText(XLHFPredefinedText predefinedText);
+        IXLRichText AddText(XLHFPredefinedText predefinedText);
 
         /// <summary>
         /// Adds the given text to this header/footer item.
         /// </summary>
         /// <param name="text">The text to add to this header/footer item.</param>
         /// <param name="occurrence">The occurrence for the text.</param>
-        void AddText(String text, XLHFOccurrence occurrence);
+        IXLRichText AddText(String text, XLHFOccurrence occurrence);
 
         /// <summary>
         /// Adds the given predefined text to this header/footer item.
         /// </summary>
         /// <param name="text">The predefined text to add to this header/footer item.</param>
         /// <param name="occurrence">The occurrence for the predefined text.</param>
-        void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence);
-
-        /// <summary>
-        /// Adds the given text to this header/footer item.
-        /// </summary>
-        /// <param name="text">The text to add to this header/footer item.</param>
-        /// <param name="occurrence">The occurrence for the text.</param>
-        /// <param name="xlFont">The font for the text.</param>
-        void AddText(String text, XLHFOccurrence occurrence, IXLFont xlFont);
-
-        /// <summary>
-        /// Adds the given predefined text to this header/footer item.
-        /// </summary>
-        /// <param name="text">The predefined text to add to this header/footer item.</param>
-        /// <param name="occurrence">The occurrence for the predefined text.</param>
-        /// <param name="xlFont">The font for the text.</param>
-        void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence, IXLFont xlFont);
+        IXLRichText AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence);
 
         /// <summary>Clears the text/formats of this header/footer item.</summary>
         /// <param name="occurrence">The occurrence to clear.</param>

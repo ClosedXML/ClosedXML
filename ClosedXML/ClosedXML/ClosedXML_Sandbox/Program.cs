@@ -16,7 +16,7 @@ namespace ClosedXML_Sandbox
         {
             //var fileName = "BasicTable";
             //var fileName = "Sandbox";
-            var fileName = "Issue_6510";
+            var fileName = "Issue_6609";
             var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
             //var wb = new XLWorkbook();
             //var ws = wb.Worksheets.Add("Sheet1");
@@ -27,6 +27,13 @@ namespace ClosedXML_Sandbox
             //ws.Cell("B2").Value = 5;
             //ws.Cell("B3").Value = 10;
 
+            //ws.RangeUsed().CreateChart(4, 4, 22, 12);
+
+
+
+            var ws = wb.Worksheet(1);
+            String a = ws.Cell("A9").GetValue<String>();
+ 
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
             //Console.ReadKey();
         }

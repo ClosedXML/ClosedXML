@@ -56,6 +56,5 @@ namespace ClosedXML.Excel
         IXLStyle SetFontName(String value);
         IXLStyle SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
 
-
     }
 }

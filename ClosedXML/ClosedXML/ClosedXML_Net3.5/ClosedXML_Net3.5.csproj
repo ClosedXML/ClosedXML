@@ -136,8 +136,8 @@
     <Compile Include="..\ClosedXML\Excel\Charts\IXLCharts.cs">
       <Link>Excel\Charts\IXLCharts.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\Charts\IXLDrawingPosition.cs">
-      <Link>Excel\Charts\IXLDrawingPosition.cs</Link>
+    <Compile Include="..\ClosedXML\Excel\Charts\IXLDrawing.cs">
+      <Link>Excel\Charts\IXLDrawing.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Charts\XLChart.cs">
       <Link>Excel\Charts\XLChart.cs</Link>
@@ -145,8 +145,8 @@
     <Compile Include="..\ClosedXML\Excel\Charts\XLCharts.cs">
       <Link>Excel\Charts\XLCharts.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\Charts\XLDrawingPosition.cs">
-      <Link>Excel\Charts\XLDrawingPosition.cs</Link>
+    <Compile Include="..\ClosedXML\Excel\Charts\XLDrawing.cs">
+      <Link>Excel\Charts\XLDrawing.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Columns\IXLColumn.cs">
       <Link>Excel\Columns\IXLColumn.cs</Link>
@@ -280,6 +280,9 @@
     <Compile Include="..\ClosedXML\Excel\PageSetup\XLHFItem.cs">
       <Link>Excel\PageSetup\XLHFItem.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\PageSetup\XLHFText.cs">
+      <Link>Excel\PageSetup\XLHFText.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\PageSetup\XLMargins.cs">
       <Link>Excel\PageSetup\XLMargins.cs</Link>
     </Compile>
@@ -351,6 +354,12 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Ranges\XLRanges.cs">
       <Link>Excel\Ranges\XLRanges.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\RichText\IXLRichText.cs">
+      <Link>Excel\RichText\IXLRichText.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\RichText\XLRichText.cs">
+      <Link>Excel\RichText\XLRichText.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Rows\IXLRow.cs">
       <Link>Excel\Rows\IXLRow.cs</Link>

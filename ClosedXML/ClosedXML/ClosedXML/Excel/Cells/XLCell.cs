@@ -764,7 +764,9 @@ namespace ClosedXML.Excel
                                     format = formatCodes[Style.NumberFormat.NumberFormatId];
                                 else
                                     format = Style.NumberFormat.Format;
-                                cellValue = Double.Parse(cellValue).ToString(format);
+
+                                if (!StringExtensions.IsNullOrWhiteSpace(format) && format != "@")
+                                    cellValue = Double.Parse(cellValue).ToString(format);
                             }
                             else if (dataType == XLCellValues.DateTime)
                             {
@@ -1123,8 +1125,7 @@ namespace ClosedXML.Excel
         {
             this.cellValue = source.cellValue;
             this.dataType = source.dataType;
-            this.formulaA1 = source.formulaA1;
-            this.formulaR1C1 = source.formulaR1C1;
+            this.FormulaR1C1 = source.FormulaR1C1;
         }
 
         public IXLCell CopyFrom(IXLCell otherCell)
@@ -1132,9 +1133,9 @@ namespace ClosedXML.Excel
             var source = otherCell as XLCell;
             cellValue = source.cellValue;
             dataType = source.dataType;
-            formulaA1 = source.formulaA1;
-            formulaR1C1 = source.formulaR1C1;
+            FormulaR1C1 = source.FormulaR1C1;
             style = new XLStyle(this, source.style);
+            
             if (source.hyperlink != null)
             {
                 SettingHyperlink = true;

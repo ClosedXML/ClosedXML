@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private enum RelType { General, Workbook, Worksheet }
+        private enum RelType { General, Workbook, Worksheet, Drawing }
         private class RelIdGenerator
         {
             private Dictionary<RelType, List<String>> relIds = new Dictionary<RelType, List<String>>();
@@ -417,11 +417,16 @@ namespace ClosedXML.Excel
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(worksheet.RelId);
                 }
 
-                
                 GenerateWorksheetPartContent(worksheetPart, worksheet);
 
-                //DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>(relId.GetNext(RelType.Workbook));
-                //GenerateDrawingsPartContent(drawingsPart);
+                //DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>("rId1");
+                //GenerateDrawingsPartContent(drawingsPart, worksheet);
+
+                //foreach (var chart in worksheet.Charts)
+                //{
+                //    ChartPart chartPart = drawingsPart.AddNewPart<ChartPart>("rId1");
+                //    GenerateChartPartContent(chartPart, (XLChart)chart);
+                //}
             }
 
 
@@ -1494,7 +1499,7 @@ namespace ClosedXML.Excel
 
         private bool FontsAreEqual(Font f, IXLFont xlFont)
         {
-            var nf = XLWorkbook.GetXLFont();
+            var nf = new XLFont();
             nf.Bold = f.Bold != null;
             nf.Italic = f.Italic != null;
             if (f.Underline != null)
@@ -1601,7 +1606,6 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.SheetProperties.PageSetupProperties.FitToPage = true;
 
             #endregion
-
 
             UInt32 maxColumn = 0;
             UInt32 maxRow = 0;
@@ -2418,6 +2422,17 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.RemoveAllChildren<ColumnBreaks>();
                 cm.SetElement(XLWSContentManager.XLWSContents.ColumnBreaks, null);
             }
+            #endregion
+
+            #region Drawings
+            //worksheetPart.Worksheet.RemoveAllChildren<Drawing>();
+            //{
+            //    OpenXmlElement previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Drawing);
+            //    worksheetPart.Worksheet.InsertAfter(new Drawing() { Id = String.Format("rId{0}", 1) }, previousElement);
+            //}
+
+            //Drawing drawing = worksheetPart.Worksheet.Elements<Drawing>().First();
+            //cm.SetElement(XLWSContentManager.XLWSContents.Drawing, drawing);
             #endregion
 
             #region Tables
@@ -3352,101 +3367,378 @@ namespace ClosedXML.Excel
             tableDefinitionPart.Table = table;
         }
 
-        /*
-        // Generates content of drawingsPart1.
-        private void GenerateDrawingsPartContent(DrawingsPart drawingsPart, XLWorksheet worksheet)
-        {
-            if (drawingsPart.WorksheetDrawing == null)
-                drawingsPart.WorksheetDrawing = new Xdr.WorksheetDrawing();
+        //private void GenerateDrawingsPartContent(DrawingsPart drawingsPart, XLWorksheet worksheet)
+        //{
+        //    if (drawingsPart.WorksheetDrawing == null)
+        //        drawingsPart.WorksheetDrawing = new Xdr.WorksheetDrawing();
 
-            var worksheetDrawing = drawingsPart.WorksheetDrawing;
+        //    var worksheetDrawing = drawingsPart.WorksheetDrawing;
             
-            if (!worksheetDrawing.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("xdr", "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing")))
-                worksheetDrawing.AddNamespaceDeclaration("xdr", "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing");
-            if (!worksheetDrawing.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("a", "http://schemas.openxmlformats.org/drawingml/2006/main")))
-                worksheetDrawing.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-
-            foreach (var chart in worksheet.Charts.OrderBy(c=>c.Position.ZOrder).Select(c=>c))
-            {
-                Xdr.TwoCellAnchor twoCellAnchor = new Xdr.TwoCellAnchor();
-                twoCellAnchor.
-            }
+        //    if (!worksheetDrawing.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("xdr", "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing")))
+        //        worksheetDrawing.AddNamespaceDeclaration("xdr", "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing");
+        //    if (!worksheetDrawing.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("a", "http://schemas.openxmlformats.org/drawingml/2006/main")))
+        //        worksheetDrawing.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 
             
+        //    foreach (var chart in worksheet.Charts.OrderBy(c=>c.ZOrder).Select(c=>c))
+        //    {
+        //        Xdr.TwoCellAnchor twoCellAnchor = new Xdr.TwoCellAnchor();
+        //        worksheetDrawing.Append(twoCellAnchor);
+        //        if (chart.Anchor == XLDrawingAnchor.MoveAndSizeWithCells)
+        //            twoCellAnchor.EditAs = Xdr.EditAsValues.TwoCell;
+        //        else if (chart.Anchor == XLDrawingAnchor.MoveWithCells)
+        //            twoCellAnchor.EditAs = Xdr.EditAsValues.OneCell;
+        //        else
+        //            twoCellAnchor.EditAs = Xdr.EditAsValues.Absolute;
 
-            Xdr.FromMarker fromMarker1 = new Xdr.FromMarker();
-            Xdr.ColumnId columnId1 = new Xdr.ColumnId();
-            columnId1.Text = "3";
-            Xdr.ColumnOffset columnOffset1 = new Xdr.ColumnOffset();
-            columnOffset1.Text = "152400";
-            Xdr.RowId rowId1 = new Xdr.RowId();
-            rowId1.Text = "0";
-            Xdr.RowOffset rowOffset1 = new Xdr.RowOffset();
-            rowOffset1.Text = "133350";
+        //        if (twoCellAnchor.FromMarker == null)
+        //            twoCellAnchor.FromMarker = new Xdr.FromMarker();
+        //        twoCellAnchor.FromMarker.RowId = new Xdr.RowId((chart.FirstRow - 1).ToString());
+        //        twoCellAnchor.FromMarker.RowOffset = new Xdr.RowOffset(chart.FirstRowOffset.ToString());
+        //        twoCellAnchor.FromMarker.ColumnId = new Xdr.ColumnId((chart.FirstColumn - 1).ToString());
+        //        twoCellAnchor.FromMarker.ColumnOffset = new Xdr.ColumnOffset(chart.FirstColumnOffset.ToString());
 
-            fromMarker1.Append(columnId1);
-            fromMarker1.Append(columnOffset1);
-            fromMarker1.Append(rowId1);
-            fromMarker1.Append(rowOffset1);
+        //        if (twoCellAnchor.ToMarker == null)
+        //            twoCellAnchor.ToMarker = new Xdr.ToMarker();
+        //        twoCellAnchor.ToMarker.RowId = new Xdr.RowId((chart.LastRow - 1).ToString());
+        //        twoCellAnchor.ToMarker.RowOffset = new Xdr.RowOffset(chart.LastRowOffset.ToString());
+        //        twoCellAnchor.ToMarker.ColumnId = new Xdr.ColumnId((chart.LastColumn - 1).ToString());
+        //        twoCellAnchor.ToMarker.ColumnOffset = new Xdr.ColumnOffset(chart.LastColumnOffset.ToString());
 
-            Xdr.ToMarker toMarker1 = new Xdr.ToMarker();
-            Xdr.ColumnId columnId2 = new Xdr.ColumnId();
-            columnId2.Text = "10";
-            Xdr.ColumnOffset columnOffset2 = new Xdr.ColumnOffset();
-            columnOffset2.Text = "457200";
-            Xdr.RowId rowId2 = new Xdr.RowId();
-            rowId2.Text = "15";
-            Xdr.RowOffset rowOffset2 = new Xdr.RowOffset();
-            rowOffset2.Text = "19050";
 
-            toMarker1.Append(columnId2);
-            toMarker1.Append(columnOffset2);
-            toMarker1.Append(rowId2);
-            toMarker1.Append(rowOffset2);
 
-            Xdr.GraphicFrame graphicFrame1 = new Xdr.GraphicFrame() { Macro = "" };
+        //        Xdr.GraphicFrame graphicFrame = new Xdr.GraphicFrame();
+        //        twoCellAnchor.Append(graphicFrame);
 
-            Xdr.NonVisualGraphicFrameProperties nonVisualGraphicFrameProperties1 = new Xdr.NonVisualGraphicFrameProperties();
-            Xdr.NonVisualDrawingProperties nonVisualDrawingProperties1 = new Xdr.NonVisualDrawingProperties() { Id = (UInt32Value)5U, Name = "Chart 4" };
-            Xdr.NonVisualGraphicFrameDrawingProperties nonVisualGraphicFrameDrawingProperties1 = new Xdr.NonVisualGraphicFrameDrawingProperties();
+        //        if (graphicFrame.NonVisualGraphicFrameProperties == null)
+        //            graphicFrame.NonVisualGraphicFrameProperties = new Xdr.NonVisualGraphicFrameProperties();
 
-            nonVisualGraphicFrameProperties1.Append(nonVisualDrawingProperties1);
-            nonVisualGraphicFrameProperties1.Append(nonVisualGraphicFrameDrawingProperties1);
+        //        if (graphicFrame.NonVisualGraphicFrameProperties.NonVisualDrawingProperties == null)
+        //            graphicFrame.NonVisualGraphicFrameProperties.NonVisualDrawingProperties = new Xdr.NonVisualDrawingProperties() { Id = (UInt32)chart.Id, Name = chart.Name, Description = chart.Description, Hidden = chart.Hidden };
+        //        if (graphicFrame.NonVisualGraphicFrameProperties.NonVisualGraphicFrameDrawingProperties == null)
+        //            graphicFrame.NonVisualGraphicFrameProperties.NonVisualGraphicFrameDrawingProperties = new Xdr.NonVisualGraphicFrameDrawingProperties();
 
-            Xdr.Transform transform1 = new Xdr.Transform();
-            A.Offset offset1 = new A.Offset() { X = 0L, Y = 0L };
-            A.Extents extents1 = new A.Extents() { Cx = 0L, Cy = 0L };
+        //        if (graphicFrame.Transform == null)
+        //            graphicFrame.Transform = new Xdr.Transform();
 
-            transform1.Append(offset1);
-            transform1.Append(extents1);
+        //        if (chart.HorizontalFlip)
+        //            graphicFrame.Transform.HorizontalFlip = true;
+        //        else
+        //            graphicFrame.Transform.HorizontalFlip = null;
 
-            A.Graphic graphic1 = new A.Graphic();
+        //        if (chart.VerticalFlip)
+        //            graphicFrame.Transform.VerticalFlip = true;
+        //        else
+        //            graphicFrame.Transform.VerticalFlip = null;
 
-            A.GraphicData graphicData1 = new A.GraphicData() { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" };
+        //        if (chart.Rotation != 0)
+        //            graphicFrame.Transform.Rotation = chart.Rotation;
+        //        else
+        //            graphicFrame.Transform.Rotation = null;
 
-            C.ChartReference chartReference1 = new C.ChartReference() { Id = "rId1" };
-            chartReference1.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
-            chartReference1.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+        //        if (graphicFrame.Transform.Offset == null)
+        //            graphicFrame.Transform.Offset = new A.Offset();
 
-            graphicData1.Append(chartReference1);
+        //        graphicFrame.Transform.Offset.X = chart.OffsetX;
+        //        graphicFrame.Transform.Offset.Y = chart.OffsetY;
 
-            graphic1.Append(graphicData1);
+        //        if (graphicFrame.Transform.Extents == null)
+        //            graphicFrame.Transform.Extents = new A.Extents();
 
-            graphicFrame1.Append(nonVisualGraphicFrameProperties1);
-            graphicFrame1.Append(transform1);
-            graphicFrame1.Append(graphic1);
-            Xdr.ClientData clientData1 = new Xdr.ClientData();
+        //        graphicFrame.Transform.Extents.Cx = chart.ExtentLength;
+        //        graphicFrame.Transform.Extents.Cy = chart.ExtentWidth;
 
-            twoCellAnchor1.Append(fromMarker1);
-            twoCellAnchor1.Append(toMarker1);
-            twoCellAnchor1.Append(graphicFrame1);
-            twoCellAnchor1.Append(clientData1);
+        //        if (graphicFrame.Graphic == null)
+        //            graphicFrame.Graphic = new A.Graphic();
 
-            worksheetDrawing1.Append(twoCellAnchor1);
+        //        if (graphicFrame.Graphic.GraphicData == null)
+        //            graphicFrame.Graphic.GraphicData = new A.GraphicData() { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" };
 
-            drawingsPart1.WorksheetDrawing = worksheetDrawing1;
+        //        if (!graphicFrame.Graphic.GraphicData.Elements<C.ChartReference>().Any())
+        //        {
+        //            C.ChartReference chartReference = new C.ChartReference() { Id = "rId" + chart.Id.ToStringLookup() };
+        //            chartReference.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
+        //            chartReference.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 
-        }
-        */
+        //            graphicFrame.Graphic.GraphicData.Append(chartReference);
+        //        }
+
+        //        if (!twoCellAnchor.Elements<Xdr.ClientData>().Any())
+        //            twoCellAnchor.Append(new Xdr.ClientData());
+        //    }
+        //}
+
+        //private void GenerateChartPartContent(ChartPart chartPart, XLChart xlChart)
+        //{
+        //    if (chartPart.ChartSpace == null)
+        //        chartPart.ChartSpace = new C.ChartSpace();
+
+        //    C.ChartSpace chartSpace = chartPart.ChartSpace;
+
+        //    if (!chartSpace.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("c", "http://schemas.openxmlformats.org/drawingml/2006/chart")))
+        //        chartSpace.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
+        //    if (!chartSpace.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("a", "http://schemas.openxmlformats.org/drawingml/2006/main")))
+        //        chartSpace.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+        //    if (!chartSpace.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships")))
+        //        chartSpace.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+
+        //    if (chartSpace.EditingLanguage == null)
+        //        chartSpace.EditingLanguage = new C.EditingLanguage() { Val = CultureInfo.CurrentCulture.Name };
+        //    else
+        //        chartSpace.EditingLanguage.Val = CultureInfo.CurrentCulture.Name;
+
+        //    C.Chart chart = new C.Chart();
+        //    chartSpace.Append(chart);
+
+        //    if (chart.Title == null)
+        //        chart.Title = new C.Title();
+
+        //    if (chart.Title.Layout == null)
+        //        chart.Title.Layout = new C.Layout();
+
+        //    if (chart.View3D == null)
+        //        chart.View3D = new C.View3D();
+
+        //    if (chart.View3D.RightAngleAxes == null)
+        //        chart.View3D.RightAngleAxes = new C.RightAngleAxes();
+
+        //    chart.View3D.RightAngleAxes.Val = xlChart.RightAngleAxes;
+
+        //    if (chart.PlotArea == null)
+        //        chart.PlotArea = new C.PlotArea();
+
+        //    if (chart.PlotArea.Layout == null)
+        //        chart.PlotArea.Layout = new C.Layout();
+
+        //    OpenXmlElement chartElement = GetChartElement(xlChart);
+
+        //    chart.PlotArea.Append(chartElement);
+
+
+
+        //    C.CategoryAxis categoryAxis1 = new C.CategoryAxis();
+        //    C.AxisId axisId4 = new C.AxisId() { Val = (UInt32Value)71429120U };
+
+        //    C.Scaling scaling1 = new C.Scaling();
+        //    C.Orientation orientation1 = new C.Orientation() { Val = C.OrientationValues.MinMax };
+
+        //    scaling1.Append(orientation1);
+        //    C.AxisPosition axisPosition1 = new C.AxisPosition() { Val = C.AxisPositionValues.Bottom };
+        //    C.TickLabelPosition tickLabelPosition1 = new C.TickLabelPosition() { Val = C.TickLabelPositionValues.NextTo };
+        //    C.CrossingAxis crossingAxis1 = new C.CrossingAxis() { Val = (UInt32Value)71432064U };
+        //    C.Crosses crosses1 = new C.Crosses() { Val = C.CrossesValues.AutoZero };
+        //    C.AutoLabeled autoLabeled1 = new C.AutoLabeled() { Val = true };
+        //    C.LabelAlignment labelAlignment1 = new C.LabelAlignment() { Val = C.LabelAlignmentValues.Center };
+        //    C.LabelOffset labelOffset1 = new C.LabelOffset() { Val = (UInt16Value)100U };
+
+        //    categoryAxis1.Append(axisId4);
+        //    categoryAxis1.Append(scaling1);
+        //    categoryAxis1.Append(axisPosition1);
+        //    categoryAxis1.Append(tickLabelPosition1);
+        //    categoryAxis1.Append(crossingAxis1);
+        //    categoryAxis1.Append(crosses1);
+        //    categoryAxis1.Append(autoLabeled1);
+        //    categoryAxis1.Append(labelAlignment1);
+        //    categoryAxis1.Append(labelOffset1);
+
+        //    C.ValueAxis valueAxis1 = new C.ValueAxis();
+        //    C.AxisId axisId5 = new C.AxisId() { Val = (UInt32Value)71432064U };
+
+        //    C.Scaling scaling2 = new C.Scaling();
+        //    C.Orientation orientation2 = new C.Orientation() { Val = C.OrientationValues.MinMax };
+
+        //    scaling2.Append(orientation2);
+        //    C.AxisPosition axisPosition2 = new C.AxisPosition() { Val = C.AxisPositionValues.Left };
+        //    C.MajorGridlines majorGridlines1 = new C.MajorGridlines();
+        //    C.NumberingFormat numberingFormat1 = new C.NumberingFormat() { FormatCode = "General", SourceLinked = true };
+        //    C.TickLabelPosition tickLabelPosition2 = new C.TickLabelPosition() { Val = C.TickLabelPositionValues.NextTo };
+        //    C.CrossingAxis crossingAxis2 = new C.CrossingAxis() { Val = (UInt32Value)71429120U };
+        //    C.Crosses crosses2 = new C.Crosses() { Val = C.CrossesValues.AutoZero };
+        //    C.CrossBetween crossBetween1 = new C.CrossBetween() { Val = C.CrossBetweenValues.Between };
+
+        //    valueAxis1.Append(axisId5);
+        //    valueAxis1.Append(scaling2);
+        //    valueAxis1.Append(axisPosition2);
+        //    valueAxis1.Append(majorGridlines1);
+        //    valueAxis1.Append(numberingFormat1);
+        //    valueAxis1.Append(tickLabelPosition2);
+        //    valueAxis1.Append(crossingAxis2);
+        //    valueAxis1.Append(crosses2);
+        //    valueAxis1.Append(crossBetween1);
+
+
+        //    plotArea.Append(bar3DChart1);
+        //    plotArea.Append(categoryAxis1);
+        //    plotArea.Append(valueAxis1);
+
+        //    C.Legend legend1 = new C.Legend();
+        //    C.LegendPosition legendPosition1 = new C.LegendPosition() { Val = C.LegendPositionValues.Right };
+        //    C.Layout layout3 = new C.Layout();
+
+        //    legend1.Append(legendPosition1);
+        //    legend1.Append(layout3);
+        //    C.PlotVisibleOnly plotVisibleOnly1 = new C.PlotVisibleOnly() { Val = true };
+
+
+
+        //    chart.Append(legend1);
+        //    chart.Append(plotVisibleOnly1);
+
+        //    C.PrintSettings printSettings1 = new C.PrintSettings();
+        //    C.HeaderFooter headerFooter1 = new C.HeaderFooter();
+        //    C.PageMargins pageMargins4 = new C.PageMargins() { Left = 0.70000000000000018D, Right = 0.70000000000000018D, Top = 0.75000000000000022D, Bottom = 0.75000000000000022D, Header = 0.3000000000000001D, Footer = 0.3000000000000001D };
+        //    C.PageSetup pageSetup1 = new C.PageSetup();
+
+        //    printSettings1.Append(headerFooter1);
+        //    printSettings1.Append(pageMargins4);
+        //    printSettings1.Append(pageSetup1);
+
+
+
+        //    chartSpace.Append(printSettings1);
+
+        //}
+
+        //private OpenXmlElement GetChartElement(XLChart xlChart)
+        //{
+        //    if (xlChart.ChartTypeCategory == XLChartTypeCategory.Bar3D)
+        //        return GetBar3DChart(xlChart);
+        //    else
+        //        return null;
+        //}
+
+        //private OpenXmlElement GetBar3DChart(XLChart xlChart)
+        //{
+
+        //    C.Bar3DChart bar3DChart = new C.Bar3DChart();
+        //    bar3DChart.BarDirection = new C.BarDirection() { Val = GetBarDirection(xlChart) };
+        //    bar3DChart.BarGrouping = new C.BarGrouping() { Val = GetBarGrouping(xlChart) };
+
+        //    C.BarChartSeries barChartSeries = new C.BarChartSeries();
+        //    barChartSeries.Index = new C.Index() { Val = (UInt32Value)0U };
+        //    barChartSeries.Order = new C.Order() { Val = (UInt32Value)0U };
+
+        //    C.SeriesText seriesText1 = new C.SeriesText();
+
+        //    C.StringReference stringReference1 = new C.StringReference();
+        //    C.Formula formula1 = new C.Formula();
+        //    formula1.Text = "Sheet1!$B$1";
+        //    C.StringCache stringCache1 = new C.StringCache();
+        //    C.PointCount pointCount1 = new C.PointCount() { Val = (UInt32Value)1U };
+        //    C.StringPoint stringPoint1 = new C.StringPoint() { Index = (UInt32Value)0U };
+        //    C.NumericValue numericValue1 = new C.NumericValue();
+        //    numericValue1.Text = "Value";
+
+        //    stringPoint1.Append(numericValue1);
+        //    stringCache1.Append(pointCount1);
+        //    stringCache1.Append(stringPoint1);
+        //    stringReference1.Append(formula1);
+        //    stringReference1.Append(stringCache1);
+        //    seriesText1.Append(stringReference1);
+
+        //    C.CategoryAxisData categoryAxisData1 = new C.CategoryAxisData();
+
+        //    C.StringReference stringReference2 = new C.StringReference();
+        //    C.Formula formula2 = new C.Formula();
+        //    formula2.Text = "Sheet1!$A$2:$A$3";
+
+        //    C.StringCache stringCache2 = new C.StringCache();
+        //    C.PointCount pointCount2 = new C.PointCount() { Val = (UInt32Value)2U };
+
+        //    C.StringPoint stringPoint2 = new C.StringPoint() { Index = (UInt32Value)0U };
+        //    C.NumericValue numericValue2 = new C.NumericValue();
+        //    numericValue2.Text = "A";
+
+        //    stringPoint2.Append(numericValue2);
+
+        //    C.StringPoint stringPoint3 = new C.StringPoint() { Index = (UInt32Value)1U };
+        //    C.NumericValue numericValue3 = new C.NumericValue();
+        //    numericValue3.Text = "B";
+
+        //    stringPoint3.Append(numericValue3);
+
+        //    stringCache2.Append(pointCount2);
+        //    stringCache2.Append(stringPoint2);
+        //    stringCache2.Append(stringPoint3);
+
+        //    stringReference2.Append(formula2);
+        //    stringReference2.Append(stringCache2);
+
+        //    categoryAxisData1.Append(stringReference2);
+
+        //    C.Values values1 = new C.Values();
+
+        //    C.NumberReference numberReference1 = new C.NumberReference();
+        //    C.Formula formula3 = new C.Formula();
+        //    formula3.Text = "Sheet1!$B$2:$B$3";
+
+        //    C.NumberingCache numberingCache1 = new C.NumberingCache();
+        //    C.FormatCode formatCode1 = new C.FormatCode();
+        //    formatCode1.Text = "General";
+        //    C.PointCount pointCount3 = new C.PointCount() { Val = (UInt32Value)2U };
+
+        //    C.NumericPoint numericPoint1 = new C.NumericPoint() { Index = (UInt32Value)0U };
+        //    C.NumericValue numericValue4 = new C.NumericValue();
+        //    numericValue4.Text = "5";
+
+        //    numericPoint1.Append(numericValue4);
+
+        //    C.NumericPoint numericPoint2 = new C.NumericPoint() { Index = (UInt32Value)1U };
+        //    C.NumericValue numericValue5 = new C.NumericValue();
+        //    numericValue5.Text = "10";
+
+        //    numericPoint2.Append(numericValue5);
+
+        //    numberingCache1.Append(formatCode1);
+        //    numberingCache1.Append(pointCount3);
+        //    numberingCache1.Append(numericPoint1);
+        //    numberingCache1.Append(numericPoint2);
+
+        //    numberReference1.Append(formula3);
+        //    numberReference1.Append(numberingCache1);
+
+        //    values1.Append(numberReference1);
+
+        //    barChartSeries.Append(index1);
+        //    barChartSeries.Append(order1);
+        //    barChartSeries.Append(seriesText1);
+        //    barChartSeries.Append(categoryAxisData1);
+        //    barChartSeries.Append(values1);
+        //    C.Shape shape1 = new C.Shape() { Val = C.ShapeValues.Box };
+        //    C.AxisId axisId1 = new C.AxisId() { Val = (UInt32Value)71429120U };
+        //    C.AxisId axisId2 = new C.AxisId() { Val = (UInt32Value)71432064U };
+        //    C.AxisId axisId3 = new C.AxisId() { Val = (UInt32Value)0U };
+
+
+        //    bar3DChart.Append(barChartSeries);
+        //    bar3DChart.Append(shape1);
+        //    bar3DChart.Append(axisId1);
+        //    bar3DChart.Append(axisId2);
+        //    bar3DChart.Append(axisId3);
+
+        //    return bar3DChart;
+        //}
+
+        //private C.BarGroupingValues GetBarGrouping(XLChart xlChart)
+        //{
+        //    if (xlChart.BarGrouping == XLBarGrouping.Clustered)
+        //        return C.BarGroupingValues.Clustered;
+        //    else if (xlChart.BarGrouping == XLBarGrouping.Percent)
+        //        return C.BarGroupingValues.PercentStacked;
+        //    else if (xlChart.BarGrouping == XLBarGrouping.Stacked)
+        //        return C.BarGroupingValues.Stacked;
+        //    else
+        //        return C.BarGroupingValues.Standard;
+        //}
+
+        //private C.BarDirectionValues GetBarDirection(XLChart xlChart)
+        //{
+        //    if (xlChart.BarOrientation == XLBarOrientation.Vertical)
+        //        return C.BarDirectionValues.Column;
+        //    else
+        //        return C.BarDirectionValues.Bar;
+        //}
+
+        
     }
 }

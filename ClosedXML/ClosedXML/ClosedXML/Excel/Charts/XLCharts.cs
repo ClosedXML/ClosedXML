@@ -7,14 +7,20 @@ namespace ClosedXML.Excel
 {
     internal class XLCharts: IXLCharts
     {
+        private List<IXLChart> charts = new List<IXLChart>();
         public IEnumerator<IXLChart> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return charts.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
+        }
+
+        public void Add(IXLChart chart)
+        {
+            charts.Add(chart);
         }
     }
 }

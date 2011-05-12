@@ -13,64 +13,56 @@ namespace ClosedXML.Excel
         {
             defaultHFItem.texts.ForEach(kp => texts.Add(kp.Key, kp.Value));
         }
-        private Dictionary<XLHFOccurrence, String> texts = new Dictionary<XLHFOccurrence, String>();
+        private Dictionary<XLHFOccurrence, List<XLHFText>> texts = new Dictionary<XLHFOccurrence, List<XLHFText>>();
         public String GetText(XLHFOccurrence occurrence)
         {
+            var sb = new StringBuilder();
             if(texts.ContainsKey(occurrence))
-                return texts[occurrence];
+            {
+                foreach (var hfText in texts[occurrence])
+                    sb.Append(hfText.HFText);
+            }
+
+            return sb.ToString();
+        }
+
+        public IXLRichText AddText(String text)
+        {
+            return AddText(text, XLHFOccurrence.AllPages);
+        }
+        public IXLRichText AddText(XLHFPredefinedText predefinedText)
+        {
+            return AddText(predefinedText, XLHFOccurrence.AllPages);
+        }
+
+        public IXLRichText AddText(String text, XLHFOccurrence occurrence)
+        {
+            IXLRichText richText = new XLRichText(text);
+
+            var hfText = new XLHFText(richText);
+            if (occurrence == XLHFOccurrence.AllPages)
+            {
+                AddTextToOccurrence(hfText, XLHFOccurrence.EvenPages);
+                AddTextToOccurrence(hfText, XLHFOccurrence.FirstPage);
+                AddTextToOccurrence(hfText, XLHFOccurrence.OddPages);
+            }
             else
-                return String.Empty;
-        }
-
-        public void AddText(String text)
-        {
-            AddText(text, XLHFOccurrence.AllPages);
-        }
-        public void AddText(XLHFPredefinedText predefinedText)
-        {
-            AddText(predefinedText, XLHFOccurrence.AllPages);
-        }
-        public void AddText(String text, XLHFOccurrence occurrence)
-        {
-            AddText(text, occurrence, null);
-        }
-        public void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)
-        {
-            AddText(predefinedText, occurrence, null);
-        }
-
-        public void AddText(String text, XLHFOccurrence occurrence, IXLFont xlFont)
-        {
-            if (text.Length > 0)
             {
-                var newText = xlFont != null ? GetHFFont(text, xlFont) : text;
-                //var newText = hfFont + text;
-                if (occurrence == XLHFOccurrence.AllPages)
-                {
-                    AddTextToOccurrence(newText, XLHFOccurrence.EvenPages);
-                    AddTextToOccurrence(newText, XLHFOccurrence.FirstPage);
-                    AddTextToOccurrence(newText, XLHFOccurrence.OddPages);
-                }
-                else
-                {
-                    AddTextToOccurrence(newText, occurrence);
-                }
+                AddTextToOccurrence(hfText, occurrence);
             }
+
+            return richText;
         }
 
-        private void AddTextToOccurrence(String text, XLHFOccurrence occurrence)
+        private void AddTextToOccurrence(XLHFText hfText, XLHFOccurrence occurrence)
         {
-            if (text.Length > 0)
-            {
-                var newText = text;
-                if (texts.ContainsKey(occurrence))
-                    texts[occurrence] = texts[occurrence] + newText;
-                else
-                    texts.Add(occurrence, newText);
-            }
+            if (texts.ContainsKey(occurrence))
+                texts[occurrence].Add(hfText);
+            else
+                texts.Add(occurrence, new List<XLHFText>() { hfText });
         }
 
-        public void AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence, IXLFont xlFont)
+        public IXLRichText AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)
         {
             String hfText;
             switch (predefinedText)
@@ -85,7 +77,7 @@ namespace ClosedXML.Excel
                 case XLHFPredefinedText.FullPath: hfText = "&Z&F"; break;
                 default: throw new NotImplementedException();
             }
-            AddText(hfText, occurrence, xlFont);
+            return AddText(hfText, occurrence);
         }
 
         public void Clear(XLHFOccurrence occurrence = XLHFOccurrence.AllPages)

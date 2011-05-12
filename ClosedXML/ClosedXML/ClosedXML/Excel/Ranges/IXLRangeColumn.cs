@@ -92,6 +92,8 @@ namespace ClosedXML.Excel
         IXLRangeColumn Replace(String oldValue, String newValue);
         IXLRangeColumn Replace(String oldValue, String newValue, XLSearchContents searchContents);
         IXLRangeColumn Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
+
+        IXLRangeColumn Column(Int32 start, Int32 end);
     }
 }
 
