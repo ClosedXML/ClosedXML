@@ -15,8 +15,8 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             //var fileName = "BasicTable";
-            //var fileName = "Sandbox";
-            var fileName = "Issue_6609";
+            var fileName = "Sandbox";
+            //var fileName = "Issue_6609";
             var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
             //var wb = new XLWorkbook();
             //var ws = wb.Worksheets.Add("Sheet1");
@@ -32,7 +32,7 @@ namespace ClosedXML_Sandbox
 
 
             var ws = wb.Worksheet(1);
-            String a = ws.Cell("A9").GetValue<String>();
+            String a = ws.Cell("c1").ValueCached;
  
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
             //Console.ReadKey();

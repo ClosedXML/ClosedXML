@@ -241,6 +241,9 @@ namespace ClosedXML.Excel
 
                         xlCell.FormulaA1 = formula;
                         sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
+
+                        if (dCell.CellValue != null)
+                            xlCell.ValueCached = dCell.CellValue.Text;
                     }
                     else if (dCell.CellFormula != null)
                     {
@@ -258,6 +261,9 @@ namespace ClosedXML.Excel
 
                             xlCell.FormulaA1 = formula;
                         }
+
+                        if (dCell.CellValue != null)
+                            xlCell.ValueCached = dCell.CellValue.Text;
                     }
                     else if (dCell.DataType != null)
                     {

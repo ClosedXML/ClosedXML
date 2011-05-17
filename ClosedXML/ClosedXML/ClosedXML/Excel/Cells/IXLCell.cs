@@ -173,5 +173,7 @@ namespace ClosedXML.Excel
         //IXLCell CopyFrom(IXLCell otherCell);
 
         IXLCell CopyTo(IXLCell target);
+
+        String ValueCached { get; }
     }
 }

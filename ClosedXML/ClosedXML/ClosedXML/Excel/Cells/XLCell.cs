@@ -1552,5 +1552,7 @@ namespace ClosedXML.Excel
             target.Value = this;
             return target;
         }
+
+        public String ValueCached { get; internal set; }
     }
 }

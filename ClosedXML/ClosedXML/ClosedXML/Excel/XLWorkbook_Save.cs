@@ -3373,14 +3373,14 @@ namespace ClosedXML.Excel
         //        drawingsPart.WorksheetDrawing = new Xdr.WorksheetDrawing();
 
         //    var worksheetDrawing = drawingsPart.WorksheetDrawing;
-            
+
         //    if (!worksheetDrawing.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("xdr", "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing")))
         //        worksheetDrawing.AddNamespaceDeclaration("xdr", "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing");
         //    if (!worksheetDrawing.NamespaceDeclarations.Contains(new KeyValuePair<string, string>("a", "http://schemas.openxmlformats.org/drawingml/2006/main")))
         //        worksheetDrawing.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 
-            
-        //    foreach (var chart in worksheet.Charts.OrderBy(c=>c.ZOrder).Select(c=>c))
+
+        //    foreach (var chart in worksheet.Charts.OrderBy(c => c.ZOrder).Select(c => c))
         //    {
         //        Xdr.TwoCellAnchor twoCellAnchor = new Xdr.TwoCellAnchor();
         //        worksheetDrawing.Append(twoCellAnchor);
@@ -3623,17 +3623,9 @@ namespace ClosedXML.Excel
         //    C.StringReference stringReference1 = new C.StringReference();
         //    C.Formula formula1 = new C.Formula();
         //    formula1.Text = "Sheet1!$B$1";
-        //    C.StringCache stringCache1 = new C.StringCache();
-        //    C.PointCount pointCount1 = new C.PointCount() { Val = (UInt32Value)1U };
-        //    C.StringPoint stringPoint1 = new C.StringPoint() { Index = (UInt32Value)0U };
-        //    C.NumericValue numericValue1 = new C.NumericValue();
-        //    numericValue1.Text = "Value";
-
-        //    stringPoint1.Append(numericValue1);
-        //    stringCache1.Append(pointCount1);
-        //    stringCache1.Append(stringPoint1);
+            
         //    stringReference1.Append(formula1);
-        //    stringReference1.Append(stringCache1);
+            
         //    seriesText1.Append(stringReference1);
 
         //    C.CategoryAxisData categoryAxisData1 = new C.CategoryAxisData();
