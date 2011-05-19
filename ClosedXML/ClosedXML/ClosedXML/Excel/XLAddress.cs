@@ -15,8 +15,9 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rowNumber">The row number of the cell address.</param>
         /// <param name="columnNumber">The column number of the cell address.</param>
-        public XLAddress(Int32 rowNumber, Int32 columnNumber, Boolean fixedRow, Boolean fixedColumn)
+        public XLAddress(IXLWorksheet worksheet, Int32 rowNumber, Int32 columnNumber, Boolean fixedRow, Boolean fixedColumn)
         {
+            this.Worksheet = worksheet;
             this.rowNumber = rowNumber;
             this.columnNumber = columnNumber;
             this.columnLetter = null;
@@ -29,8 +30,9 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rowNumber">The row number of the cell address.</param>
         /// <param name="columnLetter">The column letter of the cell address.</param>
-        public XLAddress(Int32 rowNumber, String columnLetter, Boolean fixedRow, Boolean fixedColumn)
+        public XLAddress(IXLWorksheet worksheet, Int32 rowNumber, String columnLetter, Boolean fixedRow, Boolean fixedColumn)
         {
+            this.Worksheet = worksheet;
             this.rowNumber = rowNumber;
             this.columnNumber = 0;
             this.columnLetter = columnLetter;
@@ -43,8 +45,10 @@ namespace ClosedXML.Excel
         /// Initializes a new <see cref="XLAddress"/> struct using A1 notation.
         /// </summary>
         /// <param name="cellAddressString">The cell address.</param>
-        public XLAddress(String cellAddressString)
+        public XLAddress(IXLWorksheet worksheet, String cellAddressString)
         {
+            this.Worksheet = worksheet;
+
             fixedColumn = cellAddressString[0] == '$';
             Int32 startPos;
             if (fixedColumn)
@@ -79,7 +83,6 @@ namespace ClosedXML.Excel
 
             columnNumber = 0;
         }
-
         #endregion
 
         #region Static
@@ -256,6 +259,8 @@ namespace ClosedXML.Excel
 
         #region Properties
 
+        public IXLWorksheet Worksheet { get; private set; }
+
         private Boolean fixedRow;
         public Boolean FixedRow
         {
@@ -356,25 +361,25 @@ namespace ClosedXML.Excel
 
         public static XLAddress operator +(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            return new XLAddress(xlCellAddressLeft.RowNumber + xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber + xlCellAddressRight.ColumnNumber,
+            return new XLAddress(Worksheet, xlCellAddressLeft.RowNumber + xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber + xlCellAddressRight.ColumnNumber,
                 xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
         }
 
         public static XLAddress operator -(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            return new XLAddress(xlCellAddressLeft.RowNumber - xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber - xlCellAddressRight.ColumnNumber,
+            return new XLAddress(Worksheet, xlCellAddressLeft.RowNumber - xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber - xlCellAddressRight.ColumnNumber,
                 xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
         }
 
         public static XLAddress operator +(XLAddress xlCellAddressLeft, Int32 right)
         {
-            return new XLAddress(xlCellAddressLeft.RowNumber + right, xlCellAddressLeft.ColumnNumber + right,
+            return new XLAddress(Worksheet, xlCellAddressLeft.RowNumber + right, xlCellAddressLeft.ColumnNumber + right,
                 xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
         }
 
         public static XLAddress operator -(XLAddress xlCellAddressLeft, Int32 right)
         {
-            return new XLAddress(xlCellAddressLeft.RowNumber - right, xlCellAddressLeft.ColumnNumber - right,
+            return new XLAddress(Worksheet, xlCellAddressLeft.RowNumber - right, xlCellAddressLeft.ColumnNumber - right,
                 xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
         }
 

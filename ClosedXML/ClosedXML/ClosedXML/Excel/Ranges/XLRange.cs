@@ -143,8 +143,8 @@ namespace ClosedXML.Excel
 
         public IXLRangeRow Row(Int32 row)
         {
-            IXLAddress firstCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.FirstAddress.ColumnNumber, false, false);
-            IXLAddress lastCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.LastAddress.ColumnNumber, false, false);
+            IXLAddress firstCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.FirstAddress.ColumnNumber, false, false);
+            IXLAddress lastCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.LastAddress.ColumnNumber, false, false);
             return new XLRangeRow(
                 new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), 
                     Worksheet, 
@@ -153,8 +153,8 @@ namespace ClosedXML.Excel
         }
         public IXLRangeRow RowQuick(Int32 row)
         {
-            IXLAddress firstCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.FirstAddress.ColumnNumber, false, false);
-            IXLAddress lastCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.LastAddress.ColumnNumber, false, false);
+            IXLAddress firstCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.FirstAddress.ColumnNumber, false, false);
+            IXLAddress lastCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.LastAddress.ColumnNumber, false, false);
             return new XLRangeRow(
                 new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress),
                     Worksheet,
@@ -163,8 +163,8 @@ namespace ClosedXML.Excel
         }
         public IXLRangeColumn Column(Int32 column)
         {
-            IXLAddress firstCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
-            IXLAddress lastCellAddress = new XLAddress(RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
+            IXLAddress firstCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
+            IXLAddress lastCellAddress = new XLAddress(Worksheet, RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
             return new XLRangeColumn(
                 new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress),
                     Worksheet,
@@ -172,8 +172,8 @@ namespace ClosedXML.Excel
         }
         public IXLRangeColumn ColumnQuick(Int32 column)
         {
-            IXLAddress firstCellAddress = new XLAddress(RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
-            IXLAddress lastCellAddress = new XLAddress(RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
+            IXLAddress firstCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
+            IXLAddress lastCellAddress = new XLAddress(Worksheet, RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
             return new XLRangeColumn(
                 new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress),
                     Worksheet,
@@ -308,7 +308,7 @@ namespace ClosedXML.Excel
             MoveOrClearForTranspose(transposeOption, rowCount, columnCount);
             TransposeMerged(squareSide);
             TransposeRange(squareSide);
-            this.RangeAddress.LastAddress = new XLAddress(
+            this.RangeAddress.LastAddress = new XLAddress(Worksheet, 
                 firstCell.Address.RowNumber + columnCount - 1,
                 firstCell.Address.ColumnNumber + rowCount - 1,
                 RangeAddress.LastAddress.FixedRow, RangeAddress.LastAddress.FixedColumn);
@@ -364,7 +364,7 @@ namespace ClosedXML.Excel
                 for (Int32 co = 1; co <= coCount; co++)
                 {
                     var oldCell = rngToTranspose.Cell(ro, co);
-                    var newKey = rngToTranspose.Cell(co, ro).Address; // new XLAddress(c.Address.ColumnNumber, c.Address.RowNumber);
+                    var newKey = rngToTranspose.Cell(co, ro).Address; // new XLAddress(Worksheet, c.Address.ColumnNumber, c.Address.RowNumber);
                     var newCell = new XLCell(newKey, oldCell.Style, Worksheet);
                     newCell.CopyFrom(oldCell);
                     cellsToInsert.Add(newKey, newCell);
@@ -373,7 +373,7 @@ namespace ClosedXML.Excel
             }
             //foreach (var c in rngToTranspose.Cells())
             //{
-            //    var newKey = new XLAddress(c.Address.ColumnNumber, c.Address.RowNumber);
+            //    var newKey = new XLAddress(Worksheet, c.Address.ColumnNumber, c.Address.RowNumber);
             //    var newCell = new XLCell(newKey, c.Style, Worksheet);
             //    newCell.Value = c.Value;
             //    newCell.DataType = c.DataType;

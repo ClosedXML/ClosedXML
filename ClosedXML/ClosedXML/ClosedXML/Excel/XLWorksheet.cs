@@ -24,8 +24,9 @@ namespace ClosedXML.Excel
 
         private XLWorkbook workbook;
         public XLWorksheet(String sheetName, XLWorkbook workbook)
-            : base((IXLRangeAddress)new XLRangeAddress(new XLAddress(1, 1, false, false), new XLAddress(MaxNumberOfRows, MaxNumberOfColumns, false, false)))
+            : base((IXLRangeAddress)new XLRangeAddress(new XLAddress(null, 1, 1, false, false), new XLAddress(null, MaxNumberOfRows, MaxNumberOfColumns, false, false)))
         {
+            RangeAddress.FirstAddress.Worksheet
             Worksheet = this;
             NamedRanges = new XLNamedRanges(workbook);
             SheetView = new XLSheetView();

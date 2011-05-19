@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
     internal class XLColumn: XLRangeBase, IXLColumn
     {
         public XLColumn(Int32 column, XLColumnParameters xlColumnParameters)
-            : base(new XLRangeAddress(new XLAddress(1, column, false, false), new XLAddress(XLWorksheet.MaxNumberOfRows, column, false, false)))
+            : base(new XLRangeAddress(new XLAddress(xlColumnParameters.Worksheet, 1, column, false, false), new XLAddress(xlColumnParameters.Worksheet, XLWorksheet.MaxNumberOfRows, column, false, false)))
         {
             SetColumnNumber(column);
             Worksheet = xlColumnParameters.Worksheet;
@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
         }
 
         public XLColumn(XLColumn column, XLWorksheet worksheet)
-            : base(new XLRangeAddress(new XLAddress(1, column.ColumnNumber(), false, false), new XLAddress(XLWorksheet.MaxNumberOfRows, column.ColumnNumber(), false, false)))
+            : base(new XLRangeAddress(new XLAddress(worksheet, 1, column.ColumnNumber(), false, false), new XLAddress(worksheet, XLWorksheet.MaxNumberOfRows, column.ColumnNumber(), false, false)))
         { 
             width = column.width;
             IsReference = column.IsReference;
@@ -53,8 +53,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                RangeAddress.FirstAddress = new XLAddress(1, column, RangeAddress.FirstAddress.FixedRow, RangeAddress.FirstAddress.FixedColumn);
-                RangeAddress.LastAddress = new XLAddress(XLWorksheet.MaxNumberOfRows, column, RangeAddress.LastAddress.FixedRow, RangeAddress.LastAddress.FixedColumn);
+                RangeAddress.FirstAddress = new XLAddress(Worksheet, 1, column, RangeAddress.FirstAddress.FixedRow, RangeAddress.FirstAddress.FixedColumn);
+                RangeAddress.LastAddress = new XLAddress(Worksheet, XLWorksheet.MaxNumberOfRows, column, RangeAddress.LastAddress.FixedRow, RangeAddress.LastAddress.FixedColumn);
             }
         }
 
