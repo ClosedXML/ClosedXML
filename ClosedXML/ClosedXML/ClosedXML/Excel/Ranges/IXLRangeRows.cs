@@ -40,8 +40,6 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        IXLRangeRows Replace(String oldValue, String newValue);
-        IXLRangeRows Replace(String oldValue, String newValue, XLSearchContents searchContents);
-        IXLRangeRows Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
+        
     }
 }

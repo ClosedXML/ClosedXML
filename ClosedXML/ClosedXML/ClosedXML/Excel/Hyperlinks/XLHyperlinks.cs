@@ -32,5 +32,6 @@ namespace ClosedXML.Excel
         {
             hyperlinks.Remove(address);
         }
+
     }
 }

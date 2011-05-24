@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var ranges = new XLRanges(namedRanges.Workbook, namedRanges.Workbook.Style);
+                var ranges = new XLRanges();
                 foreach (var rangeAddress in rangeList)
                 {
                     var byExclamation = rangeAddress.Split('!');
@@ -51,15 +51,20 @@ namespace ClosedXML.Excel
         }
         public String Comment { get; set; }
 
-        public IXLRanges Add(String rangeAddress)
+        public IXLRanges Add(XLWorkbook workbook, String rangeAddress)
         {
-            var ranges = new XLRanges(namedRanges.Workbook, namedRanges.Workbook.Style);
-            ranges.Add(rangeAddress);
+            var ranges = new XLRanges();
+            var byExclamation = rangeAddress.Split('!');
+            var wsName = byExclamation[0].Replace("'", "");
+            var rng = byExclamation[1];
+            var rangeToAdd = workbook.Worksheets.Worksheet(wsName).Range(rng);
+
+            ranges.Add(rangeToAdd);
             return Add(ranges);
         }
         public IXLRanges Add(IXLRange range)
         {
-            var ranges = new XLRanges(((XLRange)range).Worksheet.Internals.Workbook, range.Style);
+            var ranges = new XLRanges();
             ranges.Add(range);
             return Add(ranges);
         }

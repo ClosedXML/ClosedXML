@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 namespace ClosedXML.Excel
 {
@@ -104,20 +105,17 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        public IXLWorksheets Replace(String oldValue, String newValue)
+        public IXLWorksheet Add(DataTable dataTable)
         {
-            worksheets.Values.ForEach(r => r.Replace(oldValue, newValue));
-            return this;
+            var ws = Add(dataTable.TableName);
+            ws.Cell(1, 1).InsertTable(dataTable.AsEnumerable());
+            ws.Columns().AdjustToContents(1, 75);
+            return ws;
         }
-        public IXLWorksheets Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        public void Add(DataSet dataSet)
         {
-            worksheets.Values.ForEach(r => r.Replace(oldValue, newValue, searchContents));
-            return this;
-        }
-        public IXLWorksheets Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            worksheets.Values.ForEach(r => r.Replace(oldValue, newValue, searchContents, useRegularExpressions));
-            return this;
+            foreach (DataTable t in dataSet.Tables)
+                Add(t);
         }
     }
 }

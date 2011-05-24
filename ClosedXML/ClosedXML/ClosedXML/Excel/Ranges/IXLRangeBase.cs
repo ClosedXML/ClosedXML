@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
 {
@@ -9,6 +10,8 @@ namespace ClosedXML.Excel
 
     public interface IXLRangeBase
     {
+
+        IXLWorksheet Worksheet { get; }
 
         /// <summary>
         /// Returns the collection of cells.
@@ -200,11 +203,8 @@ namespace ClosedXML.Excel
         String ToStringRelative();
         String ToStringFixed();
 
-        IXLCells FindCells(String search);
-        IXLCells FindCells(String search, XLSearchContents searchContents);
-        IXLCells FindCells(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
-        IXLCells FindCells(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
 
-        IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
+
+        //IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
     }
 }

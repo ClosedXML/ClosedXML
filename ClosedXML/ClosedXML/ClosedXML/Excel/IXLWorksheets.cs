@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 namespace ClosedXML.Excel
 {
@@ -11,11 +12,11 @@ namespace ClosedXML.Excel
         IXLWorksheet Worksheet(Int32 position);
         IXLWorksheet Add(String sheetName);
         IXLWorksheet Add(String sheetName, Int32 position);
+        IXLWorksheet Add(DataTable dataTable);
+        void Add(DataSet dataSet);
         void Delete(String sheetName);
         void Delete(Int32 position);
 
-        IXLWorksheets Replace(String oldValue, String newValue);
-        IXLWorksheets Replace(String oldValue, String newValue, XLSearchContents searchContents);
-        IXLWorksheets Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
+        
     }
 }

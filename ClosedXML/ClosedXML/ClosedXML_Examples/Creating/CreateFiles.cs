@@ -75,6 +75,8 @@ namespace ClosedXML_Examples
             new AutoFilter().Create(@"C:\Excel Files\Created\AutoFilter.xlsx");
             new Sorting().Create(@"C:\Excel Files\Created\Sorting.xlsx");
             new SortExample().Create(@"C:\Excel Files\Created\SortExample.xlsx");
+            new AddingDataSet().Create(@"C:\Excel Files\Created\AddingDataSet.xlsx");
+            new AddingDataTableAsWorksheet().Create(@"C:\Excel Files\Created\AddingDataTableAsWorksheet.xlsx");
         }
     }
 }

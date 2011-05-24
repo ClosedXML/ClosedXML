@@ -11,15 +11,14 @@ namespace ClosedXML.Excel
         public XLRangeColumn(XLRangeParameters xlRangeParameters)
             : base(xlRangeParameters.RangeAddress)
         {
-            Worksheet = xlRangeParameters.Worksheet;
-            Worksheet.RangeShiftedRows += new RangeShiftedRowsDelegate(Worksheet_RangeShiftedRows);
-            Worksheet.RangeShiftedColumns += new RangeShiftedColumnsDelegate(Worksheet_RangeShiftedColumns);
+            (Worksheet as XLWorksheet).RangeShiftedRows += new RangeShiftedRowsDelegate(Worksheet_RangeShiftedRows);
+            (Worksheet as XLWorksheet).RangeShiftedColumns += new RangeShiftedColumnsDelegate(Worksheet_RangeShiftedColumns);
             this.defaultStyle = new XLStyle(this, xlRangeParameters.DefaultStyle);
         }
         public XLRangeColumn(XLRangeParameters xlRangeParameters, Boolean quick)
             : base(xlRangeParameters.RangeAddress)
         {
-            Worksheet = xlRangeParameters.Worksheet;
+            
         }
 
         void Worksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
@@ -38,7 +37,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(String cellsInColumn)
         {
-            var retVal = new XLCells(Worksheet, false, false, false);
+            var retVal = new XLCells(false, false, false);
             var rangePairs = cellsInColumn.Split(',');
             foreach (var pair in rangePairs)
             {
@@ -74,7 +73,7 @@ namespace ClosedXML.Excel
                 rangeAddressToUse = FixColumnAddress(rangeAddressStr);
             }
 
-            var rangeAddress = new XLRangeAddress(rangeAddressToUse);
+            var rangeAddress = new XLRangeAddress(Worksheet, rangeAddressToUse);
             return Range(rangeAddress);
         }
 
@@ -214,25 +213,37 @@ namespace ClosedXML.Excel
                 .Column(1);
         }
 
-        public new IXLRangeColumn Replace(String oldValue, String newValue)
-        {
-            base.Replace(oldValue, newValue);
-            return this;
-        }
-        public new IXLRangeColumn Replace(String oldValue, String newValue, XLSearchContents searchContents)
-        {
-            base.Replace(oldValue, newValue, searchContents);
-            return this;
-        }
-        public new IXLRangeColumn Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            base.Replace(oldValue, newValue, searchContents, useRegularExpressions);
-            return this;
-        }
 
         public IXLRangeColumn Column(Int32 start, Int32 end)
         {
-            return Range(start, 1, end, 1).Column(1);
+            return Range(start, end).FirstColumn();
+        }
+        public IXLRangeColumns Columns(String columns)
+        {
+            var retVal = new XLRangeColumns();
+            var rowPairs = columns.Split(',');
+            foreach (var pair in rowPairs)
+            {
+                var tPair = pair.Trim();
+                String firstRow;
+                String lastRow;
+                if (tPair.Contains(':') || tPair.Contains('-'))
+                {
+                    if (tPair.Contains('-'))
+                        tPair = tPair.Replace('-', ':');
+
+                    var rowRange = tPair.Split(':');
+                    firstRow = rowRange[0];
+                    lastRow = rowRange[1];
+                }
+                else
+                {
+                    firstRow = tPair;
+                    lastRow = tPair;
+                }
+                retVal.Add(this.Range(firstRow, lastRow).FirstColumn());
+            }
+            return retVal;
         }
     }
 }

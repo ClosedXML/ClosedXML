@@ -105,8 +105,6 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        IXLColumns Replace(String oldValue, String newValue);
-        IXLColumns Replace(String oldValue, String newValue, XLSearchContents searchContents);
-        IXLColumns Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
+        
     }
 }

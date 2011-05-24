@@ -118,6 +118,8 @@ namespace ClosedXML.Excel
                 if (sheetFormatProperties.DefaultRowHeight != null)
                     ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
 
+                ws.RowHeightChanged = (sheetFormatProperties.CustomHeight != null && sheetFormatProperties.CustomHeight.Value);
+
                 if (sheetFormatProperties.DefaultColumnWidth != null)
                     ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth;
 
@@ -135,7 +137,7 @@ namespace ClosedXML.Excel
                 if (defaultColumns.Count() > 0)
                     wsDefaultColumn = defaultColumns.Single();
 
-                if (wsDefaultColumn != null && wsDefaultColumn.Width != null) ws.ColumnWidth = wsDefaultColumn.Width;
+                if (wsDefaultColumn != null && wsDefaultColumn.Width != null) ws.ColumnWidth = wsDefaultColumn.Width - COLUMN_WIDTH_OFFSET;
 
                 Int32 styleIndexDefault = wsDefaultColumn != null && wsDefaultColumn.Style != null ? Int32.Parse(wsDefaultColumn.Style.InnerText) : -1;
                 if (styleIndexDefault >= 0)
@@ -150,7 +152,7 @@ namespace ClosedXML.Excel
                     {
                         var xlColumns = (XLColumns)ws.Columns(col.Min, col.Max);
                         if (col.Width != null)
-                            xlColumns.Width = col.Width;
+                            xlColumns.Width = col.Width - COLUMN_WIDTH_OFFSET;
                         else
                             xlColumns.Width = ws.ColumnWidth;
 
@@ -218,9 +220,6 @@ namespace ClosedXML.Excel
                     var dCell = (Cell)cell;
                     Int32 styleIndex = dCell.StyleIndex != null ? Int32.Parse(dCell.StyleIndex.InnerText) : 0;
                     var xlCell = (XLCell)ws.Cell(dCell.CellReference);
-
-                    //if (dCell.CellReference.Value == "A9")
-                    //    dCell.CellReference = dCell.CellReference.Value;
 
                     if (styleIndex > 0)
                     {
@@ -311,7 +310,7 @@ namespace ClosedXML.Excel
                         var numberFormatId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                         Double val = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture);
                         xlCell.Value = val;
-                        if (s.NumberingFormats != null && s.NumberingFormats.Where(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId).Any())
+                        if (s.NumberingFormats != null && s.NumberingFormats.Any(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId))
                             xlCell.Style.NumberFormat.Format =
                                 ((NumberingFormat)s.NumberingFormats.Where(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId).Single()).FormatCode.Value;
                         else
@@ -723,6 +722,14 @@ namespace ClosedXML.Excel
             var sheetView = (SheetView)worksheetPart.Worksheet.Descendants<SheetView>().FirstOrDefault();
             if (sheetView != null)
             {
+                if (sheetView.ShowFormulas != null) ws.ShowFormulas = sheetView.ShowFormulas.Value;
+                if (sheetView.ShowGridLines != null) ws.ShowGridLines = sheetView.ShowGridLines.Value;
+                if (sheetView.ShowOutlineSymbols != null) ws.ShowOutlineSymbols = sheetView.ShowOutlineSymbols.Value;
+                if (sheetView.ShowRowColHeaders != null) ws.ShowRowColHeaders = sheetView.ShowRowColHeaders.Value;
+                if (sheetView.ShowRuler != null) ws.ShowRuler = sheetView.ShowRuler.Value;
+                if (sheetView.ShowWhiteSpace != null) ws.ShowWhiteSpace = sheetView.ShowWhiteSpace.Value;
+                if (sheetView.ShowZeros != null) ws.ShowZeros = sheetView.ShowZeros.Value;
+
                 var pane = (Pane)sheetView.Descendants<Pane>().FirstOrDefault();
                 if (pane != null)
                 {

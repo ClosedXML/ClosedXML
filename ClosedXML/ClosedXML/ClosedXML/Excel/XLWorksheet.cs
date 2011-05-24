@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-
 
 namespace ClosedXML.Excel
 {
@@ -22,21 +20,24 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        private XLWorkbook workbook;
+
+        public XLWorkbook Workbook { get; private set; }
         public XLWorksheet(String sheetName, XLWorkbook workbook)
             : base((IXLRangeAddress)new XLRangeAddress(new XLAddress(null, 1, 1, false, false), new XLAddress(null, MaxNumberOfRows, MaxNumberOfColumns, false, false)))
         {
-            RangeAddress.FirstAddress.Worksheet
-            Worksheet = this;
+            (RangeAddress as XLRangeAddress).Worksheet = this;
+            (RangeAddress.FirstAddress as XLAddress).Worksheet = this;
+            (RangeAddress.LastAddress as XLAddress).Worksheet = this;
+
             NamedRanges = new XLNamedRanges(workbook);
             SheetView = new XLSheetView();
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations();
             Protection = new XLSheetProtection();
-            this.workbook = workbook;
+            this.Workbook = workbook;
             style = new XLStyle(this, workbook.Style);
-            Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new XLRanges(workbook, workbook.Style) , workbook);
+            Internals = new XLWorksheetInternals(new XLCellCollection(), new XLColumnsCollection(), new XLRowsCollection(), new XLRanges() , workbook);
             PageSetup = new XLPageSetup(workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
             ColumnWidth = workbook.ColumnWidth;
@@ -46,11 +47,18 @@ namespace ClosedXML.Excel
             RangeShiftedRows += new RangeShiftedRowsDelegate(XLWorksheet_RangeShiftedRows);
             RangeShiftedColumns += new RangeShiftedColumnsDelegate(XLWorksheet_RangeShiftedColumns);
             Charts = new XLCharts();
+            ShowFormulas = workbook.ShowFormulas;
+            ShowGridLines = workbook.ShowGridLines;
+            ShowOutlineSymbols = workbook.ShowOutlineSymbols;
+            ShowRowColHeaders = workbook.ShowRowColHeaders;
+            ShowRuler = workbook.ShowRuler;
+            ShowWhiteSpace = workbook.ShowWhiteSpace;
+            ShowZeros = workbook.ShowZeros;
         }
 
         void XLWorksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            var newMerge = new XLRanges(workbook, workbook.Style);
+            var newMerge = new XLRanges();
             foreach (var rngMerged in Internals.MergedRanges)
             {
                 if (range.RangeAddress.FirstAddress.ColumnNumber <= rngMerged.RangeAddress.FirstAddress.ColumnNumber
@@ -76,7 +84,7 @@ namespace ClosedXML.Excel
 
         void XLWorksheet_RangeShiftedRows(XLRange range, int rowsShifted)
         {
-            var newMerge = new XLRanges(workbook, workbook.Style);
+            var newMerge = new XLRanges();
             foreach (var rngMerged in Internals.MergedRanges)
             {
                 if (range.RangeAddress.FirstAddress.RowNumber <= rngMerged.RangeAddress.FirstAddress.RowNumber
@@ -179,8 +187,8 @@ namespace ClosedXML.Excel
             }
             set
             {
+                (Workbook.Worksheets as XLWorksheets).Rename(name, value);
                 name = value;
-                (workbook.Worksheets as XLWorksheets).Rename(name, value);
             }
         }
 
@@ -196,14 +204,14 @@ namespace ClosedXML.Excel
             }
             set
             {
-                if (value > workbook.Worksheets.Count() + 1)
+                if (value > Workbook.Worksheets.Count() + 1)
                     throw new IndexOutOfRangeException("Index must be equal or less than the number of worksheets + 1.");
 
                 if (value < position)
-                    workbook.Worksheets.Where(w => ((XLWorksheet)w).Position >= value && ((XLWorksheet)w).Position < position).ForEach(w => ((XLWorksheet)w).position += 1);
+                    Workbook.Worksheets.Where(w => ((XLWorksheet)w).Position >= value && ((XLWorksheet)w).Position < position).ForEach(w => ((XLWorksheet)w).position += 1);
 
                 if (value > position)
-                    workbook.Worksheets.Where(w => ((XLWorksheet)w).Position <= value && ((XLWorksheet)w).Position > position).ForEach(w => ((XLWorksheet)w).position -= 1);
+                    Workbook.Worksheets.Where(w => ((XLWorksheet)w).Position <= value && ((XLWorksheet)w).Position > position).ForEach(w => ((XLWorksheet)w).position -= 1);
 
                 position = value;
             }
@@ -280,7 +288,7 @@ namespace ClosedXML.Excel
 
         public IXLColumns Columns()
         {
-            var retVal = new XLColumns(this, true);
+            var retVal = new XLColumns(this);
             var columnList = new List<Int32>();
 
             if (this.Internals.CellsCollection.Count > 0)
@@ -298,7 +306,7 @@ namespace ClosedXML.Excel
         }
         public IXLColumns Columns(String columns)
         {
-            var retVal = new XLColumns(this);
+            var retVal = new XLColumns(null);
             var columnPairs = columns.Split(',');
             foreach (var pair in columnPairs)
             {
@@ -340,7 +348,7 @@ namespace ClosedXML.Excel
         }
         public IXLColumns Columns( Int32 firstColumn, Int32 lastColumn)
         {
-            var retVal = new XLColumns(this);
+            var retVal = new XLColumns(null);
 
             for (var co = firstColumn; co <= lastColumn; co++)
             {
@@ -351,7 +359,7 @@ namespace ClosedXML.Excel
 
         public IXLRows Rows()
         {
-            var retVal = new XLRows(this, true);
+            var retVal = new XLRows(this);
             var rowList = new List<Int32>();
 
             if (this.Internals.CellsCollection.Count > 0)
@@ -367,9 +375,9 @@ namespace ClosedXML.Excel
 
             return retVal;
         }
-        public IXLRows Rows( String rows)
+        public IXLRows Rows(String rows)
         {
-            var retVal = new XLRows(this);
+            var retVal = new XLRows(null);
             var rowPairs = rows.Split(',');
             foreach (var pair in rowPairs)
             {
@@ -399,7 +407,7 @@ namespace ClosedXML.Excel
         }
         public IXLRows Rows( Int32 firstRow, Int32 lastRow)
         {
-            var retVal = new XLRows(this);
+            var retVal = new XLRows(null);
 
             for (var ro = firstRow; ro <= lastRow; ro++)
             {
@@ -435,7 +443,7 @@ namespace ClosedXML.Excel
                     var usedColumns = from c in this.Internals.ColumnsCollection
                                       join dc in distinctColumns
                                         on c.Key equals dc
-                                      where !this.Internals.CellsCollection.ContainsKey(new XLAddress(row, c.Key, false, false))
+                                      where !this.Internals.CellsCollection.ContainsKey(new XLAddress(Worksheet, row, c.Key, false, false))
                                       select c.Key;
 
                     usedColumns.ForEach(c => Cell(row, c));
@@ -530,7 +538,7 @@ namespace ClosedXML.Excel
 
         public void Delete()
         {
-            workbook.Worksheets.Delete(Name);
+            Workbook.Worksheets.Delete(Name);
         }
         public new void Clear()
         {
@@ -553,12 +561,12 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet CopyTo(String newSheetName)
         {
-            return CopyTo(this.workbook, newSheetName, workbook.Worksheets.Count() + 1);
+            return CopyTo(this.Workbook, newSheetName, Workbook.Worksheets.Count() + 1);
         }
 
         public IXLWorksheet CopyTo(String newSheetName, Int32 position)
         {
-            return CopyTo(this.workbook, newSheetName, position);
+            return CopyTo(this.Workbook, newSheetName, position);
         }
 
         public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName)
@@ -570,10 +578,10 @@ namespace ClosedXML.Excel
         {
             var ws = (XLWorksheet)workbook.Worksheets.Add(newSheetName, position);
             
-            this.Internals.CellsCollection.ForEach(kp => (ws.Cell(kp.Value.Address) as XLCell).CopyFrom(kp.Value));
+            this.Internals.CellsCollection.ForEach(kp => (ws.Cell(kp.Value.Address.RowNumber, kp.Value.Address.ColumnNumber) as XLCell).CopyFrom(kp.Value));
             this.DataValidations.ForEach(dv => ws.DataValidations.Add(new XLDataValidation(dv, ws)));
-            this.Internals.ColumnsCollection.ForEach(kp => ws.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value, ws)));
-            this.Internals.RowsCollection.ForEach(kp => ws.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value, ws)));
+            this.Internals.ColumnsCollection.ForEach(kp => ws.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
+            this.Internals.RowsCollection.ForEach(kp => ws.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
             ws.Visibility = this.Visibility;
             ws.ColumnWidth = this.ColumnWidth;
             ws.RowHeight = this.RowHeight;
@@ -585,7 +593,7 @@ namespace ClosedXML.Excel
 
             foreach (var r in this.NamedRanges)
             {
-                var ranges = new XLRanges(workbook, this.style);
+                var ranges = new XLRanges();
                 r.Ranges.ForEach(rr => ranges.Add(rr));
                 ws.NamedRanges.Add(r.Name, ranges);
             }
@@ -593,7 +601,7 @@ namespace ClosedXML.Excel
             foreach(var t in this.Tables)
             {
                 XLTable table;
-                if (ws.Tables.Where(tt => tt.Name == t.Name).Any())
+                if (ws.Tables.Any(tt => tt.Name == t.Name))
                     table = new XLTable((XLRange)ws.Range(t.RangeAddress.ToString()), true);
                 else
                     table = new XLTable((XLRange)ws.Range(t.RangeAddress.ToString()), t.Name, true);
@@ -606,6 +614,7 @@ namespace ClosedXML.Excel
                 table.ShowAutoFilter = t.ShowAutoFilter;
                 table.Theme = t.Theme;
                 table.showTotalsRow = t.ShowTotalsRow;
+                table.uniqueNames.Clear();
 
                 (t as XLTable).uniqueNames.ForEach(n => table.uniqueNames.Add(n));
                 Int32 fieldCount = t.ColumnCount();
@@ -812,54 +821,13 @@ namespace ClosedXML.Excel
 
         public IXLCharts Charts { get; private set; }
 
-        public IXLColumns FindColumns(String search)
-        {
-            return FindColumns(search, XLSearchContents.ValuesAndFormulas);
-        }
-        public IXLColumns FindColumns(String search, XLSearchContents searchContents)
-        {
-            return FindColumns(search, searchContents, false, false);
-        }
-        public IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            throw new NotImplementedException();
-        }
-        public IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
-        {
-            throw new NotImplementedException();
-        }
+        public Boolean ShowFormulas { get; set; }
+        public Boolean ShowGridLines { get; set; }
+        public Boolean ShowOutlineSymbols { get; set; }
+        public Boolean ShowRowColHeaders { get; set; }
+        public Boolean ShowRuler { get; set; }
+        public Boolean ShowWhiteSpace { get; set; }
+        public Boolean ShowZeros { get; set; }
 
-        public IXLRows FindRows(String search)
-        {
-            return FindRows(search, XLSearchContents.ValuesAndFormulas);
-        }
-        public IXLRows FindRows(String search, XLSearchContents searchContents)
-        {
-            return FindRows(search, searchContents, false, false);
-        }
-        public IXLRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            throw new NotImplementedException();
-        }
-        public IXLRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
-        {
-            throw new NotImplementedException();
-        }
-
-        public new IXLWorksheet Replace(String oldValue, String newValue)
-        {
-            base.Replace(oldValue, newValue);
-            return this;
-        }
-        public new IXLWorksheet Replace(String oldValue, String newValue, XLSearchContents searchContents)
-        {
-            base.Replace(oldValue, newValue, searchContents);
-            return this;
-        }
-        public new IXLWorksheet Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            base.Replace(oldValue, newValue, searchContents, useRegularExpressions);
-            return this;
-        }
     }
 }

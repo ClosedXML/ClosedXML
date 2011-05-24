@@ -34,6 +34,13 @@ namespace ClosedXML.Excel
             CalculateMode = XLCalculateMode.Default;
             ReferenceStyle = XLReferenceStyle.Default;
             InitializeTheme();
+            ShowFormulas = DefaultShowFormulas;
+            ShowGridLines = DefaultShowGridLines;
+            ShowOutlineSymbols = DefaultShowOutlineSymbols;
+            ShowRowColHeaders = DefaultShowRowColHeaders;
+            ShowRuler = DefaultShowRuler;
+            ShowWhiteSpace = DefaultShowWhiteSpace;
+            ShowZeros = DefaultShowZeros;
         }
 
         private void InitializeTheme()
@@ -396,20 +403,61 @@ namespace ClosedXML.Excel
 
         public IXLCustomProperties CustomProperties { get; private set; }
 
-        public XLWorkbook Replace(String oldValue, String newValue)
+        public IXLCells FindCells(Func<IXLCell, Boolean> predicate)
         {
-            Worksheets.Replace(oldValue, newValue);
-            return this;
+            var cells = new XLCells(false, false, false);
+            foreach (var ws in Worksheets)
+            {
+                foreach (var cell in ws.CellsUsed(true))
+                {
+                    if (predicate(cell))
+                        cells.Add(cell);
+                }
+            }
+            return cells;
         }
-        public XLWorkbook Replace(String oldValue, String newValue, XLSearchContents searchContents)
+        public IXLRows FindRows(Func<IXLRow, Boolean> predicate)
         {
-            Worksheets.Replace(oldValue, newValue, searchContents);
-            return this;
+            var rows = new XLRows(null);
+            foreach (var ws in Worksheets)
+            {
+                foreach (var row in ws.Rows())
+                {
+                    if (predicate(row))
+                        rows.Add(row as XLRow);
+                }
+            }
+            return rows;
         }
-        public XLWorkbook Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
+        public IXLColumns FindColumns(Func<IXLColumn, Boolean> predicate)
         {
-            Worksheets.Replace(oldValue, newValue, searchContents, useRegularExpressions);
-            return this;
+            var columns = new XLColumns(null);
+            foreach (var ws in Worksheets)
+            {
+                foreach (var column in ws.Columns())
+                {
+                    if (predicate(column))
+                        columns.Add(column as XLColumn);
+                }
+            }
+            return columns;
         }
+
+        public Boolean ShowFormulas { get; set; }
+        public Boolean ShowGridLines { get; set; }
+        public Boolean ShowOutlineSymbols { get; set; }
+        public Boolean ShowRowColHeaders { get; set; }
+        public Boolean ShowRuler { get; set; }
+        public Boolean ShowWhiteSpace { get; set; }
+        public Boolean ShowZeros { get; set; }
+
+        public Boolean DefaultShowFormulas { get { return false; } }
+        public Boolean DefaultShowGridLines { get { return true; } }
+        public Boolean DefaultShowOutlineSymbols { get { return true; } }
+        public Boolean DefaultShowRowColHeaders { get { return true; } }
+        public Boolean DefaultShowRuler { get { return true; } }
+        public Boolean DefaultShowWhiteSpace { get { return true; } }
+        public Boolean DefaultShowZeros { get { return true; } }
     }
 }
+

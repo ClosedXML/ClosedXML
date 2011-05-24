@@ -7,6 +7,7 @@ namespace ClosedXML.Excel
 {
     public interface IXLColumn : IXLRangeBase
     {
+
         /// <summary>
         /// Gets or sets the width of this column.
         /// </summary>
@@ -163,9 +164,6 @@ namespace ClosedXML.Excel
         IXLColumn Sort(XLSortOrder sortOrder, Boolean matchCase);
 
         IXLRangeColumn Column(Int32 start, Int32 end);
-
-        IXLColumn Replace(String oldValue, String newValue);
-        IXLColumn Replace(String oldValue, String newValue, XLSearchContents searchContents);
-        IXLColumn Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
+        IXLRangeColumns Columns(String columns);
     }
 }

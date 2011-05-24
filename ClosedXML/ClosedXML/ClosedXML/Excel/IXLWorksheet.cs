@@ -8,6 +8,8 @@ namespace ClosedXML.Excel
     public enum XLWorksheetVisibility { Visible, Hidden, VeryHidden }
     public interface IXLWorksheet: IXLRangeBase
     {
+        XLWorkbook Workbook { get; }
+
         /// <summary>
         /// Gets or sets the default column width for this worksheet.
         /// </summary>
@@ -287,20 +289,20 @@ namespace ClosedXML.Excel
         IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase);
         IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase);
 
-        IXLCharts Charts { get; }
+        //IXLCharts Charts { get; }
 
-        IXLRows FindRows(String search);
-        IXLRows FindRows(String search, XLSearchContents searchContents);
-        IXLRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
-        IXLRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
+        Boolean ShowFormulas { get; set; }
 
-        IXLColumns FindColumns(String search);
-        IXLColumns FindColumns(String search, XLSearchContents searchContents);
-        IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
-        IXLColumns FindColumns(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
+        Boolean ShowGridLines { get; set; }
 
-        IXLWorksheet Replace(String oldValue, String newValue);
-        IXLWorksheet Replace(String oldValue, String newValue, XLSearchContents searchContents);
-        IXLWorksheet Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
-    }
+        Boolean ShowOutlineSymbols { get; set; }
+
+        Boolean ShowRowColHeaders { get; set; }
+
+        Boolean ShowRuler { get; set; }
+
+        Boolean ShowWhiteSpace { get; set; }
+
+        Boolean ShowZeros { get; set; }
+        }
 }

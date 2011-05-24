@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
                 Int32 newColumn = ro + columnsToShift;
                 if (newColumn <= XLWorksheet.MaxNumberOfColumns)
                 {
-                    dictionary.Add(newColumn, new XLColumn(columnToMove, columnToMove.Worksheet));
+                    dictionary.Add(newColumn, new XLColumn(columnToMove));
                 }
                 dictionary.Remove(ro);
             }

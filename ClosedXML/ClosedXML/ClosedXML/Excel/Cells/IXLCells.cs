@@ -53,5 +53,7 @@ namespace ClosedXML.Excel
         String FormulaR1C1 { set; }
 
         IXLStyle Style { get; set; }
+
+        
     }
 }

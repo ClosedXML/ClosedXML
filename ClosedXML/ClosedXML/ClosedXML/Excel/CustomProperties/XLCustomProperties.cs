@@ -42,5 +42,7 @@ namespace ClosedXML.Excel
         {
             return GetEnumerator();
         }
+
+      
     }
 }

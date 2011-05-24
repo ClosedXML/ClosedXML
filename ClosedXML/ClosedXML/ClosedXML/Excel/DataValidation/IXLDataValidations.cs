@@ -9,5 +9,6 @@ namespace ClosedXML.Excel
     {
         void Add(IXLDataValidation dataValidation);
         Boolean ContainsSingle(IXLRange range);
+        
     }
 }

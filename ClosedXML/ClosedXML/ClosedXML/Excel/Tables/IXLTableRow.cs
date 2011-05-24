@@ -15,8 +15,6 @@ namespace ClosedXML.Excel
         new IXLTableRow Sort(XLSortOrder sortOrder);
         new IXLTableRow Sort(XLSortOrder sortOrder, Boolean matchCase);
 
-        new IXLTableRow Replace(String oldValue, String newValue);
-        new IXLTableRow Replace(String oldValue, String newValue, XLSearchContents searchContents);
-        new IXLTableRow Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
+        
     }
 }

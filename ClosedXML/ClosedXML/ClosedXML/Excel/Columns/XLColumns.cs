@@ -7,13 +7,11 @@ namespace ClosedXML.Excel
 {
     internal class XLColumns : IXLColumns, IXLStylized
     {
-        private Boolean entireWorksheet;
         private XLWorksheet worksheet;
-        public XLColumns(XLWorksheet worksheet, Boolean entireWorksheet = false)
+        public XLColumns(XLWorksheet worksheet)
         {
             this.worksheet = worksheet;
-            this.entireWorksheet = entireWorksheet;
-            style = new XLStyle(this, worksheet.Style);
+            style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
         List<XLColumn> columns = new List<XLColumn>();
@@ -41,29 +39,16 @@ namespace ClosedXML.Excel
             set
             {
                 style = new XLStyle(this, value);
-                //Styles.ForEach(s => s = new XLStyle(this, value));
 
-                if (entireWorksheet)
+                if (worksheet != null)
                 {
                     worksheet.Style = value;
                 }
                 else
                 {
-                    var maxRow = 0;
-                    if (worksheet.Internals.RowsCollection.Count > 0)
-                        maxRow = worksheet.Internals.RowsCollection.Keys.Max();
-                    foreach (var col in columns)
+                    foreach (var column in columns)
                     {
-                        col.Style = value;
-                        foreach (var c in col.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == col.RangeAddress.FirstAddress.ColumnNumber))
-                        {
-                            c.Style = value;
-                        }
-
-                        for (var ro = 1; ro <= maxRow; ro++)
-                        {
-                            worksheet.Cell(ro, col.ColumnNumber()).Style = value;
-                        }
+                        column.Style = value;
                     }
                 }
             }
@@ -75,27 +60,16 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
                 yield return style;
-                if (entireWorksheet)
+                if (worksheet != null)
                 {
                     yield return worksheet.Style;
                 }
                 else
                 {
-                    var maxRow = 0;
-                    if (worksheet.Internals.RowsCollection.Count > 0)
-                        maxRow = worksheet.Internals.RowsCollection.Keys.Max();
                     foreach (var col in columns)
                     {
-                        yield return col.Style;
-                        foreach (var c in col.Worksheet.Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == col.RangeAddress.FirstAddress.ColumnNumber))
-                        {
-                            yield return c.Style;
-                        }
-
-                        for (var ro = 1; ro <= maxRow; ro++)
-                        {
-                            yield return worksheet.Cell(ro, col.ColumnNumber()).Style;
-                        }
+                        foreach (var s in col.Styles)
+                            yield return s;
                     }
                 }
                 UpdatingStyle = false;
@@ -118,7 +92,7 @@ namespace ClosedXML.Excel
             {
                 columns.ForEach(c => c.Width = value);
 
-                if (entireWorksheet)
+                if (worksheet !=null)
                 {
                     worksheet.ColumnWidth = value;
                     worksheet.Internals.ColumnsCollection.ForEach(c => c.Value.Width = value);
@@ -128,20 +102,28 @@ namespace ClosedXML.Excel
 
         public void Delete()
         {
-            if (entireWorksheet)
+            if (worksheet != null)
             {
                 worksheet.Internals.ColumnsCollection.Clear();
                 worksheet.Internals.CellsCollection.Clear();
             }
             else
             {
-                var toDelete = new List<Int32>();
+                var toDelete = new Dictionary<IXLWorksheet, List<Int32>>();
                 foreach (var c in columns)
-                    toDelete.Add(c.ColumnNumber());
+                {
+                    if (!toDelete.ContainsKey(c.Worksheet))
+                        toDelete.Add(c.Worksheet, new List<Int32>());
 
-                foreach(var c in toDelete.OrderByDescending(c=>c))
-                    worksheet.Column(c).Delete();
-            }
+                    toDelete[c.Worksheet].Add(c.ColumnNumber());
+                }
+
+                foreach (var kp in toDelete)
+                { 
+                    foreach(var c in kp.Value.OrderByDescending(c=>c))
+                        kp.Key.Column(c).Delete();
+                }
+           }
         }
 
         public void Add(XLColumn column)
@@ -208,7 +190,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells(worksheet, false, false, false);
+            var cells = new XLCells(false, false, false);
             foreach (var container in columns)
             {
                 cells.Add(container.RangeAddress);
@@ -218,7 +200,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(worksheet, false, true, false);
+            var cells = new XLCells(false, true, false);
             foreach (var container in columns)
             {
                 cells.Add(container.RangeAddress);
@@ -228,7 +210,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(Boolean includeStyles)
         {
-            var cells = new XLCells(worksheet, false, true, includeStyles);
+            var cells = new XLCells(false, true, includeStyles);
             foreach (var container in columns)
             {
                 cells.Add(container.RangeAddress);
@@ -240,26 +222,12 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var retVal = new XLRanges(worksheet.Internals.Workbook, this.Style);
+                var retVal = new XLRanges();
                 this.ForEach(c => retVal.Add(c.AsRange()));
                 return retVal;
             }
         }
 
-        public IXLColumns Replace(String oldValue, String newValue)
-        {
-            columns.ForEach(r => r.Replace(oldValue, newValue));
-            return this;
-        }
-        public IXLColumns Replace(String oldValue, String newValue, XLSearchContents searchContents)
-        {
-            columns.ForEach(r => r.Replace(oldValue, newValue, searchContents));
-            return this;
-        }
-        public IXLColumns Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            columns.ForEach(r => r.Replace(oldValue, newValue, searchContents, useRegularExpressions));
-            return this;
-        }
+        
     }
 }

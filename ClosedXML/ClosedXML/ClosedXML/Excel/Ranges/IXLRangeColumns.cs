@@ -41,8 +41,7 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        IXLRangeColumns Replace(String oldValue, String newValue);
-        IXLRangeColumns Replace(String oldValue, String newValue, XLSearchContents searchContents);
-        IXLRangeColumns Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
+        
+
     }
 }

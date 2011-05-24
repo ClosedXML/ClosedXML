@@ -7,6 +7,8 @@ namespace ClosedXML.Excel
 {
     public interface IXLRangeAddress
     {
+        IXLWorksheet Worksheet { get; }
+
         /// <summary>
         /// Gets or sets the first address in the range.
         /// </summary>

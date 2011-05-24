@@ -7,11 +7,9 @@ namespace ClosedXML.Excel
 {
     internal class XLRangeColumns : IXLRangeColumns, IXLStylized
     {
-        XLWorksheet worksheet;
-        public XLRangeColumns(XLWorksheet worksheet)
+        public XLRangeColumns()
         {
-            style = new XLStyle(this, worksheet.Style);
-            this.worksheet = worksheet;
+            style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
         List<XLRangeColumn> ranges = new List<XLRangeColumn>();
@@ -69,7 +67,7 @@ namespace ClosedXML.Excel
                 foreach (var rng in ranges)
                 {
                     yield return rng.Style;
-                    foreach (var r in rng.Worksheet.Internals.CellsCollection.Values.Where(c =>
+                    foreach (var r in (rng.Worksheet as XLWorksheet).Internals.CellsCollection.Values.Where(c =>
                         c.Address.RowNumber >= rng.RangeAddress.FirstAddress.RowNumber
                         && c.Address.RowNumber <= rng.RangeAddress.LastAddress.RowNumber
                         && c.Address.ColumnNumber >= rng.RangeAddress.FirstAddress.ColumnNumber
@@ -96,7 +94,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells(worksheet, false, false, false);
+            var cells = new XLCells(false, false, false);
             foreach (var container in ranges)
             {
                 cells.Add(container.RangeAddress);
@@ -106,7 +104,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(worksheet, false, true, false);
+            var cells = new XLCells(false, true, false);
             foreach (var container in ranges)
             {
                 cells.Add(container.RangeAddress);
@@ -116,7 +114,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(Boolean includeStyles)
         {
-            var cells = new XLCells(worksheet, false, true, includeStyles);
+            var cells = new XLCells(false, true, includeStyles);
             foreach (var container in ranges)
             {
                 cells.Add(container.RangeAddress);
@@ -128,26 +126,13 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var retVal = new XLRanges(worksheet.Internals.Workbook, this.Style);
+                var retVal = new XLRanges();
                 this.ForEach(c => retVal.Add(c.AsRange()));
                 return retVal;
             }
         }
 
-        public IXLRangeColumns Replace(String oldValue, String newValue)
-        {
-            ranges.ForEach(r => r.Replace(oldValue, newValue));
-            return this;
-        }
-        public IXLRangeColumns Replace(String oldValue, String newValue, XLSearchContents searchContents)
-        {
-            ranges.ForEach(r => r.Replace(oldValue, newValue, searchContents));
-            return this;
-        }
-        public IXLRangeColumns Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            ranges.ForEach(r => r.Replace(oldValue, newValue, searchContents, useRegularExpressions));
-            return this;
-        }
+
+
     }
 }

@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
             }
             set
             {
-                if (workbook.CustomProperties.Where(t => t.Name == value).Any())
+                if (workbook.CustomProperties.Any(t => t.Name == value))
                     throw new ArgumentException(String.Format("This workbook already contains a custom property named '{0}'", value));
 
                 name = value;

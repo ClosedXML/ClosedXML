@@ -7,73 +7,105 @@ namespace ClosedXML.Excel
 {
     internal class XLCells : IXLCells, IXLStylized
     {
-        private XLWorksheet worksheet;
         private Boolean usedCellsOnly;
         private Boolean includeStyles;
-        public XLCells(XLWorksheet worksheet, Boolean entireWorksheet, Boolean usedCellsOnly, Boolean includeStyles)
+        public XLCells(Boolean entireWorksheet, Boolean usedCellsOnly, Boolean includeStyles)
         {
-            this.worksheet = worksheet;
-            this.style = new XLStyle(this, worksheet.Style);
+            this.style = new XLStyle(this, XLWorkbook.DefaultStyle);
             this.usedCellsOnly = usedCellsOnly;
             this.includeStyles = includeStyles;
         }
 
         private List<IXLRangeAddress> rangeAddresses = new List<IXLRangeAddress>();
+        private struct MinMax { public Int32 MinRow; public Int32 MaxRow; public Int32 MinColumn; public Int32 MaxColumn; }
         public IEnumerator<IXLCell> GetEnumerator()
         {
-            HashSet<IXLAddress> usedCells;
-            Boolean multipleRanges = rangeAddresses.Count > 1;
+            var cellsInRanges = new Dictionary<IXLWorksheet, HashSet<IXLAddress>>();
+            foreach (var range in rangeAddresses)
+            {
+                HashSet<IXLAddress> hash;
+                if (cellsInRanges.ContainsKey(range.Worksheet))
+                {
+                    hash = cellsInRanges[range.Worksheet];
+                }
+                else
+                {
+                    hash = new HashSet<IXLAddress>();
+                    cellsInRanges.Add(range.Worksheet, hash);
+                }
 
-            if (multipleRanges)
-                usedCells = new HashSet<IXLAddress>();
-            else
-                usedCells = null;
+                if (usedCellsOnly)
+                {
+                    var addressList = (range.Worksheet as XLWorksheet).Internals.CellsCollection.Keys.Where(a =>
+                            a.RowNumber >= range.FirstAddress.RowNumber
+                            && a.RowNumber <= range.LastAddress.RowNumber
+                            && a.ColumnNumber >= range.FirstAddress.ColumnNumber
+                            && a.ColumnNumber <= range.LastAddress.ColumnNumber).Select(a => a);
 
+                    foreach (var a in addressList)
+                    {
+                        if (!hash.Contains(a))
+                            hash.Add(a);
+                    }
+
+                }
+                else
+                {
+                    var mm = new MinMax();
+                    mm.MinRow = range.FirstAddress.RowNumber;
+                    mm.MaxRow = range.LastAddress.RowNumber;
+                    mm.MinColumn = range.FirstAddress.ColumnNumber;
+                    mm.MaxColumn = range.LastAddress.ColumnNumber;
+                    if (mm.MaxRow > 0 && mm.MaxColumn > 0)
+                    {
+                        for (Int32 ro = mm.MinRow; ro <= mm.MaxRow; ro++)
+                        {
+                            for (Int32 co = mm.MinColumn; co <= mm.MaxColumn; co++)
+                            {
+                                var address = new XLAddress(range.Worksheet, ro, co, false, false);
+                                if (!hash.Contains(address))
+                                    hash.Add(address);
+                            }
+                        }
+                    }
+                }
+            }
 
             if (usedCellsOnly)
             {
-                var cells = from c in worksheet.Internals.CellsCollection
-                            where (   !StringExtensions.IsNullOrWhiteSpace(c.Value.InnerText)
-                                  || (includeStyles && !c.Value.Style.Equals(worksheet.Style)))
-                                  && rangeAddresses.FirstOrDefault(r=>
-                                      r.FirstAddress.RowNumber <= c.Key.RowNumber
-                                      && r.FirstAddress.ColumnNumber <= c.Key.ColumnNumber
-                                      && r.LastAddress.RowNumber >= c.Key.RowNumber
-                                      && r.LastAddress.ColumnNumber >= c.Key.ColumnNumber
-                                      ) != null
-                            select (IXLCell)c.Value;
-                foreach (var cell in cells)
+                foreach (var cir in cellsInRanges)
                 {
-                    yield return cell;
-                }
-            }
-            else
-            {
-                foreach (var range in rangeAddresses)
-                {
-                    Int32 firstRo = range.FirstAddress.RowNumber;
-                    Int32 lastRo = range.LastAddress.RowNumber;
-                    Int32 firstCo = range.FirstAddress.ColumnNumber;
-                    Int32 lastCo = range.LastAddress.ColumnNumber;
-
-                    for (Int32 ro = firstRo; ro <= lastRo; ro++)
+                    var cellsCollection = (cir.Key as XLWorksheet).Internals.CellsCollection;
+                    foreach (var a in cir.Value)
                     {
-                        for (Int32 co = firstCo; co <= lastCo; co++)
-                        {
-                            var cell = worksheet.Cell(ro, co);
-                            if (multipleRanges)
-                            {
-                                if (!usedCells.Contains(cell.Address))
-                                {
-                                    usedCells.Add(cell.Address);
-                                    yield return cell;
-                                }
-                            }
-                            else
+                        if (cellsCollection.ContainsKey(a))
+                        { 
+                            var cell = cellsCollection[a];
+                            if (!StringExtensions.IsNullOrWhiteSpace((cell as XLCell).InnerText)
+                                || (includeStyles && !cell.Style.Equals(cir.Key.Style)))
                             {
                                 yield return cell;
                             }
                         }
+                    }
+
+                    //foreach (var cell in (cir.Key as XLWorksheet).Internals.CellsCollection
+                    //    .Where(kp => cir.Value.Contains(kp.Key)
+                    //        && (!StringExtensions.IsNullOrWhiteSpace((kp.Value as XLCell).InnerText)
+                    //            || (includeStyles && !kp.Value.Style.Equals(cir.Key.Style))))
+                    //    .Select(kp => kp.Value))
+                    //{
+                    //    yield return cell;
+                    //}
+                }
+            }
+            else
+            {
+                foreach (var cir in cellsInRanges)
+                {
+                    foreach (var address in cir.Value)
+                    {
+                        yield return cir.Key.Cell(address);
                     }
                 }
             }
@@ -88,6 +120,10 @@ namespace ClosedXML.Excel
             rangeAddresses.Add(rangeAddress);
         }
 
+        public void Add(IXLCell cell)
+        {
+            rangeAddresses.Add(new XLRangeAddress(cell.Address, cell.Address));
+        }
 
         #region IXLStylized Members
 
@@ -173,10 +209,12 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var retVal = new XLRanges(worksheet.Internals.Workbook, this.Style);
+                var retVal = new XLRanges();
                 this.ForEach(c => retVal.Add(c.AsRange()));
                 return retVal;
             }
         }
+
+  
     }
 }

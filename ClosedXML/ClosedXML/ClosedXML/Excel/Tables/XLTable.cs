@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
             }
             set
             {
-                if (Worksheet.Tables.Where(t => t.Name == value).Any())
+                if (Worksheet.Tables.Any(t => t.Name == value))
                     throw new ArgumentException(String.Format("This worksheet already contains a table named '{0}'", value));
 
                 name = value;
@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
             while (true)
             {
                 String tableName = String.Format("Table{0}", id);
-                if (!Worksheet.Tables.Where(t => t.Name == tableName).Any())
+                if (!Worksheet.Tables.Any(t => t.Name == tableName))
                 {
                     Name = tableName;
                     AddToTables(range, addToTables);
@@ -171,7 +171,7 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows Rows()
         {
-            var retVal = new XLTableRows(Worksheet);
+            var retVal = new XLTableRows(Worksheet as XLWorksheet);
             foreach (var r in Enumerable.Range(1, DataRange.RowCount()))
             {
                 retVal.Add(this.Row(r));
@@ -181,7 +181,7 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows Rows(int firstRow, int lastRow)
         {
-            var retVal = new XLTableRows(Worksheet);
+            var retVal = new XLTableRows(Worksheet as XLWorksheet);
 
             for (var ro = firstRow; ro <= lastRow; ro++)
             {
@@ -192,7 +192,7 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows Rows(string rows)
         {
-            var retVal = new XLTableRows(Worksheet);
+            var retVal = new XLTableRows(Worksheet as XLWorksheet);
             var rowPairs = rows.Split(',');
             foreach (var pair in rowPairs)
             {
@@ -350,37 +350,6 @@ namespace ClosedXML.Excel
             return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1));
         }
 
-        public new IXLTableRows FindRows(String search)
-        {
-            return FindRows(search, XLSearchContents.ValuesAndFormulas);
-        }
-        public new IXLTableRows FindRows(String search, XLSearchContents searchContents)
-        {
-            return FindRows(search, searchContents, false, false);
-        }
-        public new IXLTableRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            throw new NotImplementedException();
-        }
-        public new IXLTableRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
-        {
-            throw new NotImplementedException();
-        }
 
-        public new IXLTable Replace(String oldValue, String newValue)
-        {
-            base.Replace(oldValue, newValue);
-            return this;
-        }
-        public new IXLTable Replace(String oldValue, String newValue, XLSearchContents searchContents)
-        {
-            base.Replace(oldValue, newValue, searchContents);
-            return this;
-        }
-        public new IXLTable Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            base.Replace(oldValue, newValue, searchContents, useRegularExpressions);
-            return this;
-        }
     }
 }

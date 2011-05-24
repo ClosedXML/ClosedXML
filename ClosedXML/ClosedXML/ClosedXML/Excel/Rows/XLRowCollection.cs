@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
                 Int32 newRow = ro + rowsToShift;
                 if (newRow <= XLWorksheet.MaxNumberOfRows)
                 {
-                    dictionary.Add(newRow, new XLRow(rowToMove, rowToMove.Worksheet));
+                    dictionary.Add(newRow, new XLRow(rowToMove));
                 }
                 dictionary.Remove(ro);
             }

@@ -78,5 +78,7 @@ namespace ClosedXML.Excel
         /// Deletes all named ranges (not the cells).
         /// </summary>
         void DeleteAll();
+
+        
     }
 }

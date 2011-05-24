@@ -7,6 +7,8 @@ namespace ClosedXML.Excel
 {
     public interface IXLRow : IXLRangeBase
     {
+        
+
         /// <summary>
         /// Gets or sets the height of this row.
         /// </summary>
@@ -163,9 +165,6 @@ namespace ClosedXML.Excel
         IXLRow Sort(XLSortOrder sortOrder, Boolean matchCase);
 
         IXLRangeRow Row(Int32 start, Int32 end);
-
-        IXLRow Replace(String oldValue, String newValue);
-        IXLRow Replace(String oldValue, String newValue, XLSearchContents searchContents);
-        IXLRow Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
+        IXLRangeRows Rows(String columns);
     }
 }

@@ -11,5 +11,6 @@ namespace ClosedXML.Excel
         void Add<T>(String name, T value);
         void Delete(String name);
         IXLCustomProperty CustomProperty(String name);
+        
     }
 }

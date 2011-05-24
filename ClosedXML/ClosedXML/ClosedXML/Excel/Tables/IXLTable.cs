@@ -305,13 +305,6 @@ namespace ClosedXML.Excel
          IXLSortElements SortRows { get; }
          IXLSortElements SortColumns { get; }
 
-         IXLTableRows FindRows(String search);
-         IXLTableRows FindRows(String search, XLSearchContents searchContents);
-         IXLTableRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions);
-         IXLTableRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell);
-
-         IXLTable Replace(String oldValue, String newValue);
-         IXLTable Replace(String oldValue, String newValue, XLSearchContents searchContents);
-         IXLTable Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions);
+         
     }
 }

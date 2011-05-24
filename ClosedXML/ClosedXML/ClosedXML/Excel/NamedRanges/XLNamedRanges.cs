@@ -42,7 +42,7 @@ namespace ClosedXML.Excel
         }
         public IXLNamedRange Add(String rangeName, IXLRange range, String comment)
         {
-            var ranges = new XLRanges(((XLRange)range).Worksheet.Internals.Workbook, range.Style);
+            var ranges = new XLRanges();
             ranges.Add(range);
             return Add(rangeName, ranges, comment);
         }
@@ -85,6 +85,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
 
     }
 }

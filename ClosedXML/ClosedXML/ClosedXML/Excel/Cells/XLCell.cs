@@ -231,8 +231,8 @@ namespace ClosedXML.Excel
                         cAddress = fA1;
                     }
 
-                    
-                    if (worksheet.Internals.Workbook.Worksheets.Where(w => w.Name.ToLower().Equals(sName.ToLower())).Any()
+
+                    if (worksheet.Internals.Workbook.Worksheets.Any(w => w.Name.ToLower().Equals(sName.ToLower()))
                         && XLAddress.IsValidA1Address(cAddress)
                         )
                     {
@@ -319,7 +319,7 @@ namespace ClosedXML.Excel
                     }
                 }
                 var rangesToMerge = new List<IXLRange>();
-                foreach (var mergedRange in asRange.Worksheet.Internals.MergedRanges)
+                foreach (var mergedRange in (asRange.Worksheet as XLWorksheet).Internals.MergedRanges)
                 {
                     if (asRange.Contains(mergedRange))
                     {
@@ -1076,7 +1076,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var address = new XLAddress(a1Address);
+                var address = new XLAddress(worksheet, a1Address);
 
                 String rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, rowsToShift);
                 String columnPart = GetR1C1Column(address.ColumnNumber, address.FixedRow, columnsToShift);
@@ -1143,6 +1143,10 @@ namespace ClosedXML.Excel
                 SettingHyperlink = false;
             }
 
+            var asRange = source.AsRange();
+            if (source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
+                (DataValidation as XLDataValidation).CopyFrom(source.DataValidation);
+            
             return this;
         }
 
@@ -1224,21 +1228,21 @@ namespace ClosedXML.Excel
                                         {
                                             if (useSheetName)
                                                 sb.Append(String.Format("'{0}'!{1}:{2}", sheetName,
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted,
                                                         matchRange.RangeAddress.FirstAddress.ColumnLetter,
                                                         matchRange.RangeAddress.FirstAddress.FixedRow, matchRange.RangeAddress.FirstAddress.FixedColumn),
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted,
                                                         matchRange.RangeAddress.LastAddress.ColumnLetter,
                                                         matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
                                             else
                                                 sb.Append(String.Format("{0}:{1}",
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted,
                                                         matchRange.RangeAddress.FirstAddress.ColumnLetter,
                                                         matchRange.RangeAddress.FirstAddress.FixedRow, matchRange.RangeAddress.FirstAddress.FixedColumn),
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted,
                                                         matchRange.RangeAddress.LastAddress.ColumnLetter,
                                                         matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
@@ -1247,13 +1251,13 @@ namespace ClosedXML.Excel
                                         {
                                             if (useSheetName)
                                                 sb.Append(String.Format("'{0}'!{1}", sheetName,
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted,
                                                         matchRange.RangeAddress.FirstAddress.ColumnLetter,
                                                         matchRange.RangeAddress.FirstAddress.FixedRow, matchRange.RangeAddress.FirstAddress.FixedColumn)));
                                             else
                                                 sb.Append(String.Format("{0}",
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted,
                                                         matchRange.RangeAddress.FirstAddress.ColumnLetter,
                                                         matchRange.RangeAddress.FirstAddress.FixedRow, matchRange.RangeAddress.FirstAddress.FixedColumn)));
@@ -1264,14 +1268,14 @@ namespace ClosedXML.Excel
                                         if (useSheetName)
                                             sb.Append(String.Format("'{0}'!{1}:{2}", sheetName,
                                                 matchRange.RangeAddress.FirstAddress.ToString(),
-                                                new XLAddress(
+                                                new XLAddress(worksheet, 
                                                     matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted,
                                                     matchRange.RangeAddress.LastAddress.ColumnLetter,
                                                     matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
                                         else
                                             sb.Append(String.Format("{0}:{1}",
                                                 matchRange.RangeAddress.FirstAddress.ToString(),
-                                                new XLAddress(
+                                                new XLAddress(worksheet, 
                                                     matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted,
                                                     matchRange.RangeAddress.LastAddress.ColumnLetter,
                                                     matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
@@ -1377,21 +1381,21 @@ namespace ClosedXML.Excel
                                         {
                                             if (useSheetName)
                                                 sb.Append(String.Format("'{0}'!{1}:{2}", sheetName,
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.FirstAddress.RowNumber,
                                                         matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted,
                                                         matchRange.RangeAddress.FirstAddress.FixedRow, matchRange.RangeAddress.FirstAddress.FixedColumn),
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.LastAddress.RowNumber,
                                                         matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted,
                                                         matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
                                             else
                                                 sb.Append(String.Format("{0}:{1}",
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.FirstAddress.RowNumber,
                                                         matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted,
                                                         matchRange.RangeAddress.FirstAddress.FixedRow, matchRange.RangeAddress.FirstAddress.FixedColumn),
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.LastAddress.RowNumber,
                                                         matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted,
                                                         matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
@@ -1400,13 +1404,13 @@ namespace ClosedXML.Excel
                                         {
                                             if (useSheetName)
                                                 sb.Append(String.Format("'{0}'!{1}", sheetName,
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.FirstAddress.RowNumber,
                                                         matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted,
                                                         matchRange.RangeAddress.FirstAddress.FixedRow, matchRange.RangeAddress.FirstAddress.FixedColumn)));
                                             else
                                                 sb.Append(String.Format("{0}",
-                                                    new XLAddress(
+                                                    new XLAddress(worksheet, 
                                                         matchRange.RangeAddress.FirstAddress.RowNumber,
                                                         matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted,
                                                         matchRange.RangeAddress.FirstAddress.FixedRow, matchRange.RangeAddress.FirstAddress.FixedColumn)));
@@ -1417,14 +1421,14 @@ namespace ClosedXML.Excel
                                         if (useSheetName)
                                             sb.Append(String.Format("'{0}'!{1}:{2}", sheetName,
                                                 matchRange.RangeAddress.FirstAddress.ToString(),
-                                                new XLAddress(
+                                                new XLAddress(worksheet, 
                                                     matchRange.RangeAddress.LastAddress.RowNumber,
                                                     matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted,
                                                     matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
                                         else
                                             sb.Append(String.Format("{0}:{1}",
                                                 matchRange.RangeAddress.FirstAddress.ToString(),
-                                                new XLAddress(
+                                                new XLAddress(worksheet, 
                                                     matchRange.RangeAddress.LastAddress.RowNumber,
                                                     matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted,
                                                     matchRange.RangeAddress.LastAddress.FixedRow, matchRange.RangeAddress.LastAddress.FixedColumn)));
@@ -1479,7 +1483,7 @@ namespace ClosedXML.Excel
                 hyperlink = value;
                 hyperlink.Worksheet = worksheet;
                 hyperlink.Cell = this;
-                if (worksheet.Hyperlinks.Where(hl => hl.Cell.Address == Address).Any())
+                if (worksheet.Hyperlinks.Any(hl => hl.Cell.Address == Address))
                     worksheet.Hyperlinks.Delete(Address);
 
                 worksheet.Hyperlinks.Add(hyperlink);
@@ -1541,7 +1545,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var retVal = new XLRanges(worksheet.Internals.Workbook, this.Style);
+                var retVal = new XLRanges();
                 retVal.Add(this.AsRange());
                 return retVal;
             }

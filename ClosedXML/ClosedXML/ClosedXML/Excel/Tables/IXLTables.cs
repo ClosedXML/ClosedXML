@@ -10,5 +10,6 @@ namespace ClosedXML.Excel
         void Add(IXLTable table);
         //IXLTable Table(Int32 index);
         IXLTable Table(String name);
+        
     }
 }

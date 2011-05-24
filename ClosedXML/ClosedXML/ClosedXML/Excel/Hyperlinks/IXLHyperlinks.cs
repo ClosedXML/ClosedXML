@@ -10,5 +10,6 @@ namespace ClosedXML.Excel
         void Add(XLHyperlink hyperlink);
         void Delete(XLHyperlink hyperlink);
         void Delete(IXLAddress address);
+        
     }
 }

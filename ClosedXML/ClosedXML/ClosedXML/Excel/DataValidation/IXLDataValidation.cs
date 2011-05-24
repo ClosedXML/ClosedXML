@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
     public interface IXLDataValidation
     {
         IXLRanges Ranges { get; set; }
-        void Delete();
+        //void Delete();
         //void CopyFrom(IXLDataValidation dataValidation);
         Boolean ShowInputMessage { get; set; }
         Boolean ShowErrorMessage { get; set; }

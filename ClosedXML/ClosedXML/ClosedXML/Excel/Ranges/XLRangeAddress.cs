@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     internal class XLRangeAddress: IXLRangeAddress
     {
-        //public IXLWorksheet Worksheet { get; set; }
+        public IXLWorksheet Worksheet { get; internal set; }
 
         private IXLAddress firstAddress;
         public IXLAddress FirstAddress
@@ -37,19 +37,17 @@ namespace ClosedXML.Excel
 
         public Boolean IsInvalid { get; set; }
 
-        public XLRangeAddress(String firstCellAddress, String lastCellAddress)
-        {
-            FirstAddress = new XLAddress(firstCellAddress);
-            LastAddress = new XLAddress(lastCellAddress);
-        }
-
         public XLRangeAddress(IXLAddress firstAddress, IXLAddress lastAddress)
         {
+            if (firstAddress.Worksheet != lastAddress.Worksheet)
+                throw new ArgumentException("First and last addresses must be in the same worksheet");
+
+            Worksheet = firstAddress.Worksheet;
             FirstAddress = firstAddress;
             LastAddress = lastAddress;
         }
 
-        public XLRangeAddress(String rangeAddress)
+        public XLRangeAddress(IXLWorksheet worksheet, String rangeAddress)
         {
             String addressToUse;
             if (rangeAddress.Contains("!"))
@@ -64,16 +62,17 @@ namespace ClosedXML.Excel
                 String[] arrRange = addressToUse.Split(':');
                 var firstPart = arrRange[0];
                 var secondPart = arrRange[1];
-                firstAddress = new XLAddress(firstPart);
-                lastAddress = new XLAddress(secondPart);
+                firstAddress = new XLAddress(worksheet, firstPart);
+                lastAddress = new XLAddress(worksheet, secondPart);
             }
             else
             {
-                firstAddress = new XLAddress(addressToUse);
-                lastAddress = new XLAddress(addressToUse);
+                firstAddress = new XLAddress(worksheet, addressToUse);
+                lastAddress = new XLAddress(worksheet, addressToUse);
             }
             FirstAddress = firstAddress;
             LastAddress = lastAddress;
+            Worksheet = worksheet;
         }
 
         public override string ToString()
@@ -93,14 +92,18 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             var other = (XLRangeAddress)obj;
-            return this.FirstAddress.Equals(other.FirstAddress)
+            return 
+                    this.Worksheet.Equals(other.Worksheet)
+                && this.FirstAddress.Equals(other.FirstAddress)
                 && this.LastAddress.Equals(other.LastAddress);
         }
 
         public override int GetHashCode()
         {
-            return FirstAddress.GetHashCode()
-                    ^ LastAddress.GetHashCode();
+            return
+                Worksheet.GetHashCode()
+                ^ FirstAddress.GetHashCode()
+                ^ LastAddress.GetHashCode();
         }
     }
 }

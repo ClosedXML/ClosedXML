@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
         /// <param name="rangeAddress">The range address to add.</param>
-        IXLRanges Add(String rangeAddress);
+        IXLRanges Add(XLWorkbook workbook, String rangeAddress);
 
         /// <summary>
         /// Adds the specified range to this named range.

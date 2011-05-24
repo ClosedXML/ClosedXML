@@ -7,11 +7,9 @@ namespace ClosedXML.Excel
 {
     internal class XLRanges : IXLRanges, IXLStylized
     {
-        private XLWorkbook workbook;
-        public XLRanges(XLWorkbook workbook, IXLStyle defaultStyle)
+        public XLRanges()
         {
-            this.workbook = workbook;
-            Style = defaultStyle;
+            this.style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
         List<XLRange> ranges = new List<XLRange>();
@@ -26,15 +24,15 @@ namespace ClosedXML.Excel
             count++;
             ranges.Add((XLRange)range);
         }
-        public void Add(String rangeAddress)
-        {
-            count++;
-            var byExclamation = rangeAddress.Split('!');
-            var wsName = byExclamation[0].Replace("'", "");
-            var rng = byExclamation[1];
-            var rangeToAdd = workbook.Worksheets.Worksheet(wsName).Range(rng);
-            ranges.Add((XLRange)rangeToAdd);
-        }
+        //public void Add(String rangeAddress)
+        //{
+        //    count++;
+        //    var byExclamation = rangeAddress.Split('!');
+        //    var wsName = byExclamation[0].Replace("'", "");
+        //    var rng = byExclamation[1];
+        //    var rangeToAdd = workbook.Worksheets.Worksheet(wsName).Range(rng);
+        //    ranges.Add((XLRange)rangeToAdd);
+        //}
         public void Remove(IXLRange range)
         {
             count--;
@@ -87,7 +85,7 @@ namespace ClosedXML.Excel
                 foreach (var rng in ranges)
                 {
                     yield return rng.Style;
-                    foreach (var r in rng.Worksheet.Internals.CellsCollection.Values.Where(c =>
+                    foreach (var r in (rng.Worksheet as XLWorksheet).Internals.CellsCollection.Values.Where(c =>
                         c.Address.RowNumber >= rng.RangeAddress.FirstAddress.RowNumber
                         && c.Address.RowNumber <= rng.RangeAddress.LastAddress.RowNumber
                         && c.Address.ColumnNumber >= rng.RangeAddress.FirstAddress.ColumnNumber
@@ -152,7 +150,7 @@ namespace ClosedXML.Excel
         {
             foreach (var r in this.ranges)
             {
-                if (r.Equals(range)) return true;
+                if (!r.RangeAddress.IsInvalid && r.Equals(range)) return true;
             }
             return false;
         }
@@ -190,7 +188,7 @@ namespace ClosedXML.Excel
                         }
                     }
                 }
-                var dataValidation = new XLDataValidation(this, ranges.First().Worksheet);
+                var dataValidation = new XLDataValidation(this, ranges.First().Worksheet as XLWorksheet);
 
                 ranges.First().Worksheet.DataValidations.Add(dataValidation);
                 return dataValidation;
@@ -232,21 +230,6 @@ namespace ClosedXML.Excel
                 return this;
             }
         }
-
-        public IXLRanges Replace(String oldValue, String newValue)
-        {
-            ranges.ForEach(r => r.Replace(oldValue, newValue));
-            return this;
-        }
-        public IXLRanges Replace(String oldValue, String newValue, XLSearchContents searchContents)
-        {
-            ranges.ForEach(r => r.Replace(oldValue, newValue, searchContents));
-            return this;
-        }
-        public IXLRanges Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            ranges.ForEach(r => r.Replace(oldValue, newValue, searchContents, useRegularExpressions));
-            return this;
-        }
+       
     }
 }

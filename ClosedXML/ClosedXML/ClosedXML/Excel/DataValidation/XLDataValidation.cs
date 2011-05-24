@@ -30,15 +30,17 @@ namespace ClosedXML.Excel
         
         public void Delete()
         {
-            foreach (var dv in worksheet.DataValidations)
-            { 
+            throw new NotImplementedException();
+            //foreach (var dv in worksheet.DataValidations)
+            //{ 
 
-            }
+            //}
         }
         public void CopyFrom(IXLDataValidation dataValidation)
         {
-            Ranges = new XLRanges(worksheet.Internals.Workbook, worksheet.Style);
-            dataValidation.Ranges.ForEach(r => Ranges.Add(r));
+            if (Ranges == null)
+                Ranges = new XLRanges();
+            //dataValidation.Ranges.ForEach(r => Ranges.Add(r));
 
             IgnoreBlanks = dataValidation.IgnoreBlanks;
             InCellDropdown = dataValidation.InCellDropdown;

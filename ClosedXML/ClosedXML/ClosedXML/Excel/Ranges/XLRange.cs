@@ -13,11 +13,11 @@ namespace ClosedXML.Excel
         public XLRange(XLRangeParameters xlRangeParameters): base(xlRangeParameters.RangeAddress)
         {
             this.RangeParameters = xlRangeParameters;
-            Worksheet = xlRangeParameters.Worksheet;
+            
             if (!xlRangeParameters.IgnoreEvents)
             {
-                Worksheet.RangeShiftedRows += new RangeShiftedRowsDelegate(Worksheet_RangeShiftedRows);
-                Worksheet.RangeShiftedColumns += new RangeShiftedColumnsDelegate(Worksheet_RangeShiftedColumns);
+                (Worksheet as XLWorksheet).RangeShiftedRows += new RangeShiftedRowsDelegate(Worksheet_RangeShiftedRows);
+                (Worksheet as XLWorksheet).RangeShiftedColumns += new RangeShiftedColumnsDelegate(Worksheet_RangeShiftedColumns);
                 xlRangeParameters.IgnoreEvents = true;
             }
             this.defaultStyle = new XLStyle(this, xlRangeParameters.DefaultStyle);
@@ -49,13 +49,13 @@ namespace ClosedXML.Excel
             var columnCount = this.ColumnCount();
             Int32 minColumnUsed = Int32.MaxValue;
             Int32 minColumnInCells = Int32.MaxValue;
-            if (this.Worksheet.Internals.CellsCollection.Any(c => c.Key.ColumnNumber >= firstColumn && c.Key.ColumnNumber <= columnCount))
-                minColumnInCells = this.Worksheet.Internals.CellsCollection
+            if ((Worksheet as XLWorksheet).Internals.CellsCollection.Any(c => c.Key.ColumnNumber >= firstColumn && c.Key.ColumnNumber <= columnCount))
+                minColumnInCells = (Worksheet as XLWorksheet).Internals.CellsCollection
                     .Where(c => c.Key.ColumnNumber >= firstColumn && c.Key.ColumnNumber <= columnCount).Select(c => c.Key.ColumnNumber).Min();
 
             Int32 minCoInColumns = Int32.MaxValue;
-            if (this.Worksheet.Internals.ColumnsCollection.Any(c => c.Key >= firstColumn && c.Key <= columnCount))
-                minCoInColumns = this.Worksheet.Internals.ColumnsCollection
+            if ((Worksheet as XLWorksheet).Internals.ColumnsCollection.Any(c => c.Key >= firstColumn && c.Key <= columnCount))
+                minCoInColumns = (Worksheet as XLWorksheet).Internals.ColumnsCollection
                     .Where(c => c.Key >= firstColumn && c.Key <= columnCount).Select(c => c.Key).Min();
 
             minColumnUsed = minColumnInCells < minCoInColumns ? minColumnInCells : minCoInColumns;
@@ -71,13 +71,13 @@ namespace ClosedXML.Excel
             var columnCount = this.ColumnCount();
             Int32 maxColumnUsed = 0;
             Int32 maxColumnInCells = 0;
-            if (this.Worksheet.Internals.CellsCollection.Any(c => c.Key.ColumnNumber >= firstColumn && c.Key.ColumnNumber <= columnCount))
-                maxColumnInCells = this.Worksheet.Internals.CellsCollection
+            if ((Worksheet as XLWorksheet).Internals.CellsCollection.Any(c => c.Key.ColumnNumber >= firstColumn && c.Key.ColumnNumber <= columnCount))
+                maxColumnInCells = (Worksheet as XLWorksheet).Internals.CellsCollection
                     .Where(c => c.Key.ColumnNumber >= firstColumn && c.Key.ColumnNumber <= columnCount).Select(c => c.Key.ColumnNumber).Max();
 
             Int32 maxCoInColumns = 0;
-            if (this.Worksheet.Internals.ColumnsCollection.Any(c => c.Key >= firstColumn && c.Key <= columnCount))
-                maxCoInColumns = this.Worksheet.Internals.ColumnsCollection
+            if ((Worksheet as XLWorksheet).Internals.ColumnsCollection.Any(c => c.Key >= firstColumn && c.Key <= columnCount))
+                maxCoInColumns = (Worksheet as XLWorksheet).Internals.ColumnsCollection
                     .Where(c => c.Key >= firstColumn && c.Key <= columnCount).Select(c => c.Key).Max();
 
             maxColumnUsed = maxColumnInCells > maxCoInColumns ? maxColumnInCells : maxCoInColumns;
@@ -102,13 +102,13 @@ namespace ClosedXML.Excel
             var rowCount = this.RowCount();
             Int32 minRowUsed = Int32.MaxValue;
             Int32 minRowInCells = Int32.MaxValue;
-            if (this.Worksheet.Internals.CellsCollection.Any(c => c.Key.RowNumber >= firstRow && c.Key.RowNumber <= rowCount))
-                minRowInCells = this.Worksheet.Internals.CellsCollection
+            if ((Worksheet as XLWorksheet).Internals.CellsCollection.Any(c => c.Key.RowNumber >= firstRow && c.Key.RowNumber <= rowCount))
+                minRowInCells = (Worksheet as XLWorksheet).Internals.CellsCollection
                     .Where(c => c.Key.RowNumber >= firstRow && c.Key.RowNumber <= rowCount).Select(c => c.Key.RowNumber).Min();
 
             Int32 minRoInRows = Int32.MaxValue;
-            if (this.Worksheet.Internals.RowsCollection.Any(r => r.Key >= firstRow && r.Key <= rowCount))
-                minRoInRows = this.Worksheet.Internals.RowsCollection
+            if ((Worksheet as XLWorksheet).Internals.RowsCollection.Any(r => r.Key >= firstRow && r.Key <= rowCount))
+                minRoInRows = (Worksheet as XLWorksheet).Internals.RowsCollection
                     .Where(r => r.Key >= firstRow && r.Key <= rowCount).Select(r => r.Key).Min();
 
             minRowUsed = minRowInCells < minRoInRows ? minRowInCells : minRoInRows;
@@ -124,13 +124,13 @@ namespace ClosedXML.Excel
             var rowCount = this.RowCount();
             Int32 maxRowUsed = 0;
             Int32 maxRowInCells = 0;
-            if (this.Worksheet.Internals.CellsCollection.Any(c => c.Key.RowNumber >= firstRow && c.Key.RowNumber <= rowCount))
-                maxRowInCells = this.Worksheet.Internals.CellsCollection
+            if ((Worksheet as XLWorksheet).Internals.CellsCollection.Any(c => c.Key.RowNumber >= firstRow && c.Key.RowNumber <= rowCount))
+                maxRowInCells = (Worksheet as XLWorksheet).Internals.CellsCollection
                     .Where(c => c.Key.RowNumber >= firstRow && c.Key.RowNumber <= rowCount).Select(c => c.Key.RowNumber).Max();
 
             Int32 maxRoInRows = 0;
-            if (this.Worksheet.Internals.RowsCollection.Any(r => r.Key >= firstRow && r.Key <= rowCount))
-                maxRoInRows = this.Worksheet.Internals.RowsCollection
+            if ((Worksheet as XLWorksheet).Internals.RowsCollection.Any(r => r.Key >= firstRow && r.Key <= rowCount))
+                maxRoInRows = (Worksheet as XLWorksheet).Internals.RowsCollection
                     .Where(r => r.Key >= firstRow && r.Key <= rowCount).Select(r => r.Key).Max();
 
             maxRowUsed = maxRowInCells > maxRoInRows ? maxRowInCells : maxRoInRows;
@@ -146,9 +146,7 @@ namespace ClosedXML.Excel
             IXLAddress firstCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.FirstAddress.ColumnNumber, false, false);
             IXLAddress lastCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.LastAddress.ColumnNumber, false, false);
             return new XLRangeRow(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), 
-                    Worksheet, 
-                    Worksheet.Style));
+                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style));
                 
         }
         public IXLRangeRow RowQuick(Int32 row)
@@ -156,9 +154,7 @@ namespace ClosedXML.Excel
             IXLAddress firstCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.FirstAddress.ColumnNumber, false, false);
             IXLAddress lastCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + row - 1, RangeAddress.LastAddress.ColumnNumber, false, false);
             return new XLRangeRow(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress),
-                    Worksheet,
-                    Worksheet.Style), true);
+                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress),Worksheet.Style), true);
 
         }
         public IXLRangeColumn Column(Int32 column)
@@ -166,18 +162,14 @@ namespace ClosedXML.Excel
             IXLAddress firstCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
             IXLAddress lastCellAddress = new XLAddress(Worksheet, RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
             return new XLRangeColumn(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress),
-                    Worksheet,
-                    Worksheet.Style));
+                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress),Worksheet.Style));
         }
         public IXLRangeColumn ColumnQuick(Int32 column)
         {
             IXLAddress firstCellAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
             IXLAddress lastCellAddress = new XLAddress(Worksheet, RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber + column - 1, false, false);
             return new XLRangeColumn(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress),
-                    Worksheet,
-                    Worksheet.Style), true);
+                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), true);
         }
         public IXLRangeColumn Column(String column)
         {
@@ -186,7 +178,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeColumns Columns()
         {
-            var retVal = new XLRangeColumns(Worksheet);
+            var retVal = new XLRangeColumns();
             foreach (var c in Enumerable.Range(1, this.ColumnCount()))
             {
                 retVal.Add(this.Column(c));
@@ -195,7 +187,7 @@ namespace ClosedXML.Excel
         }
         public IXLRangeColumns Columns(Int32 firstColumn, Int32 lastColumn)
         {
-            var retVal = new XLRangeColumns(Worksheet);
+            var retVal = new XLRangeColumns();
 
             for (var co = firstColumn; co <= lastColumn; co++)
             {
@@ -209,7 +201,7 @@ namespace ClosedXML.Excel
         }
         public IXLRangeColumns Columns(String columns)
         {
-            var retVal = new XLRangeColumns(Worksheet);
+            var retVal = new XLRangeColumns();
             var columnPairs = columns.Split(',');
             foreach (var pair in columnPairs)
             {
@@ -248,7 +240,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeRows Rows()
         {
-            var retVal = new XLRangeRows(Worksheet);
+            var retVal = new XLRangeRows();
             foreach (var r in Enumerable.Range(1, this.RowCount()))
             {
                 retVal.Add(this.Row(r));
@@ -257,7 +249,7 @@ namespace ClosedXML.Excel
         }
         public IXLRangeRows Rows(Int32 firstRow, Int32 lastRow)
         {
-            var retVal = new XLRangeRows(Worksheet);
+            var retVal = new XLRangeRows();
 
             for (var ro = firstRow; ro <= lastRow; ro++)
             {
@@ -267,7 +259,7 @@ namespace ClosedXML.Excel
         }
         public IXLRangeRows Rows(String rows)
         {
-            var retVal = new XLRangeRows(Worksheet);
+            var retVal = new XLRangeRows();
             var rowPairs = rows.Split(',');
             foreach (var pair in rowPairs)
             {
@@ -365,7 +357,7 @@ namespace ClosedXML.Excel
                 {
                     var oldCell = rngToTranspose.Cell(ro, co);
                     var newKey = rngToTranspose.Cell(co, ro).Address; // new XLAddress(Worksheet, c.Address.ColumnNumber, c.Address.RowNumber);
-                    var newCell = new XLCell(newKey, oldCell.Style, Worksheet);
+                    var newCell = new XLCell(newKey, oldCell.Style, Worksheet as XLWorksheet);
                     newCell.CopyFrom(oldCell);
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(oldCell.Address);
@@ -380,8 +372,8 @@ namespace ClosedXML.Excel
             //    cellsToInsert.Add(newKey, newCell);
             //    cellsToDelete.Add(c.Address);
             //}
-            cellsToDelete.ForEach(c => this.Worksheet.Internals.CellsCollection.Remove(c));
-            cellsToInsert.ForEach(c => this.Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
+            cellsToDelete.ForEach(c => (Worksheet as XLWorksheet).Internals.CellsCollection.Remove(c));
+            cellsToInsert.ForEach(c => (Worksheet as XLWorksheet).Internals.CellsCollection.Add(c.Key, c.Value));
         }
 
         private void TransposeMerged(Int32 squareSide)
@@ -394,15 +386,15 @@ namespace ClosedXML.Excel
 
             List<IXLRange> mergeToDelete = new List<IXLRange>();
             List<IXLRange> mergeToInsert = new List<IXLRange>();
-            foreach (var merge in Worksheet.Internals.MergedRanges)
+            foreach (var merge in (Worksheet as XLWorksheet).Internals.MergedRanges)
             {
                 if (this.Contains(merge))
                 {
                     merge.RangeAddress.LastAddress = rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address;
                 }
             }
-            mergeToDelete.ForEach(m => this.Worksheet.Internals.MergedRanges.Remove(m));
-            mergeToInsert.ForEach(m => this.Worksheet.Internals.MergedRanges.Add(m));
+            mergeToDelete.ForEach(m => (Worksheet as XLWorksheet).Internals.MergedRanges.Remove(m));
+            mergeToInsert.ForEach(m => (Worksheet as XLWorksheet).Internals.MergedRanges.Add(m));
         }
 
         private void MoveOrClearForTranspose(XLTransposeOptions transposeOption, int rowCount, int columnCount)
@@ -789,8 +781,8 @@ namespace ClosedXML.Excel
                 cell1.Address = cell2.Address;
                 cell2.Address = cell1Address;
 
-                Worksheet.Internals.CellsCollection[cell1.Address] = cell1;
-                Worksheet.Internals.CellsCollection[cell2.Address] = cell2;
+                (Worksheet as XLWorksheet).Internals.CellsCollection[cell1.Address] = cell1;
+                (Worksheet as XLWorksheet).Internals.CellsCollection[cell2.Address] = cell2;
             }
 
         }
@@ -871,8 +863,8 @@ namespace ClosedXML.Excel
                 cell1.Address = cell2.Address;
                 cell2.Address = cell1Address;
 
-                Worksheet.Internals.CellsCollection[cell1.Address] = cell1;
-                Worksheet.Internals.CellsCollection[cell2.Address] = cell2;
+                (Worksheet as XLWorksheet).Internals.CellsCollection[cell1.Address] = cell1;
+                (Worksheet as XLWorksheet).Internals.CellsCollection[cell2.Address] = cell2;
             }
 
         }
@@ -960,54 +952,6 @@ namespace ClosedXML.Excel
                 lastColumnNumber);
         }
 
-        public IXLRangeColumns FindColumns(String search)
-        {
-            return FindColumns(search, XLSearchContents.ValuesAndFormulas);
-        }
-        public IXLRangeColumns FindColumns(String search, XLSearchContents searchContents)
-        {
-            return FindColumns(search, searchContents, false, false);
-        }
-        public IXLRangeColumns FindColumns(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            throw new NotImplementedException();
-        }
-        public IXLRangeColumns FindColumns(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
-        {
-            throw new NotImplementedException();
-        }
 
-        public IXLRangeRows FindRows(String search)
-        {
-            return FindRows(search, XLSearchContents.ValuesAndFormulas);
-        }
-        public IXLRangeRows FindRows(String search, XLSearchContents searchContents)
-        {
-            return FindRows(search, searchContents, false, false);
-        }
-        public IXLRangeRows FindRows(String search, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            throw new NotImplementedException();
-        }
-        public IXLRangeRows FindRows(String search, XLSearchContents searchContents, Boolean matchCase, Boolean entireCell)
-        {
-            throw new NotImplementedException();
-        }
-
-        public new IXLRange Replace(String oldValue, String newValue)
-        {
-            base.Replace(oldValue, newValue);
-            return this;
-        }
-        public new IXLRange Replace(String oldValue, String newValue, XLSearchContents searchContents)
-        {
-            base.Replace(oldValue, newValue, searchContents);
-            return this;
-        }
-        public new IXLRange Replace(String oldValue, String newValue, XLSearchContents searchContents, Boolean useRegularExpressions)
-        {
-            base.Replace(oldValue, newValue, searchContents, useRegularExpressions);
-            return this;
-        }
     }
 }

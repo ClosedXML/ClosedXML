@@ -14,11 +14,11 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            //var fileName = "BasicTable";
+            //var fileName = "DataValidation";
             var fileName = "Sandbox";
             //var fileName = "Issue_6609";
-            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-            //var wb = new XLWorkbook();
+            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            var wb = new XLWorkbook();
             //var ws = wb.Worksheets.Add("Sheet1");
             //ws.Cell("A1").Value = "Category";
             //ws.Cell("A2").Value = "A";
@@ -30,10 +30,11 @@ namespace ClosedXML_Sandbox
             //ws.RangeUsed().CreateChart(4, 4, 22, 12);
 
 
-
-            var ws = wb.Worksheet(1);
-            String a = ws.Cell("c1").ValueCached;
- 
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Name = "Sheet X";
+            var wsX = wb.Worksheet("Sheet X");
+            wsX.Cell(1, 1).Value = "Hello";
+            
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
             //Console.ReadKey();
         }
@@ -63,9 +64,9 @@ namespace ClosedXML_Sandbox
                 foreach (var i in Enumerable.Range(1, 1))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
-                    foreach (var ro in Enumerable.Range(1, 10000))
+                    foreach (var ro in Enumerable.Range(1, 2000))
                     {
-                        foreach (var co in Enumerable.Range(1, 5))
+                        foreach (var co in Enumerable.Range(1, 100))
                         {
                             ws.Cell(ro, co).Style = GetRandomStyle();
                             //if (rnd.Next(1, 5) == 1)
@@ -76,12 +77,13 @@ namespace ClosedXML_Sandbox
                         //System.Threading.Thread.Sleep(10);
                     }
                     
-                    Int32 rowCount = ws.LastRowUsed().RowNumber();
-                    for (Int32 ro = 1; ro <= rowCount; ro += 100)
-                    {
-                        var dv = ws.Range(ro, 1, ro + 99, 5).DataValidation;
-                    }
+                    //Int32 rowCount = ws.LastRowUsed().RowNumber();
+                    //for (Int32 ro = 1; ro <= rowCount; ro += 100)
+                    //{
+                    //    var dv = ws.Range(ro, 1, ro + 99, 5).DataValidation;
+                    //}
 
+                    //var rngUsed = ws.RangeUsed();
                     //ws.RangeUsed().Style.Border.BottomBorder = XLBorderStyleValues.DashDot;
                     //ws.RangeUsed().Style.Border.BottomBorderColor = XLColor.AirForceBlue;
                     //ws.RangeUsed().Style.Border.TopBorder = XLBorderStyleValues.DashDotDot;
@@ -125,14 +127,14 @@ namespace ClosedXML_Sandbox
                 Console.WriteLine("Saved in {0} secs.", saved);
 
                 var start1 = DateTime.Now;
-                //var wb1 = new XLWorkbook(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
+                var wb1 = new XLWorkbook(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
                 var end1 = DateTime.Now;
                 var loaded = (end1 - start1).TotalSeconds;
                 runningLoad.Add(loaded);
                 Console.WriteLine("Loaded in {0} secs.", loaded);
 
                 var start2 = DateTime.Now;
-                //wb1.SaveAs(@"C:\Excel Files\ForTesting\Benchmark_Saved.xlsx");
+                wb1.SaveAs(@"C:\Excel Files\ForTesting\Benchmark_Saved.xlsx");
                 var end2 = DateTime.Now;
                 var savedBack = (end2 - start2).TotalSeconds;
                 runningSavedBack.Add(savedBack);
@@ -145,7 +147,7 @@ namespace ClosedXML_Sandbox
             Console.WriteLine("Avg Save time: {0}", runningSave.Average());
             Console.WriteLine("Avg Load time: {0}", runningLoad.Average());
             Console.WriteLine("Avg Save Back time: {0}", runningSavedBack.Average());
-            //Console.ReadKey();
+            Console.ReadKey();
         }
 
         private static IXLStyle style1;
