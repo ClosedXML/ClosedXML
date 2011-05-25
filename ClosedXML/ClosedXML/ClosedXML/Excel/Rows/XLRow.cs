@@ -234,7 +234,7 @@ namespace ClosedXML.Excel
         }
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
-            Double rowMaxHeight = 0;
+            Double rowMaxHeight = minHeight;
             foreach (var c in CellsUsed().Where(cell => cell.Address.ColumnNumber >= startColumn && cell.Address.ColumnNumber <= endColumn))
             {
                 Boolean isMerged = false;
