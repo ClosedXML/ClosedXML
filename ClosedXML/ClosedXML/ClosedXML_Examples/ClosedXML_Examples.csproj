@@ -93,6 +93,7 @@
     <Compile Include="Misc\AutoFilter.cs" />
     <Compile Include="Misc\AddingDataTableAsWorksheet.cs" />
     <Compile Include="Misc\AddingDataSet.cs" />
+    <Compile Include="Misc\TabColors.cs" />
     <Compile Include="Misc\SheetProtection.cs" />
     <Compile Include="Misc\ShiftingFormulas.cs" />
     <Compile Include="Misc\HideSheets.cs" />

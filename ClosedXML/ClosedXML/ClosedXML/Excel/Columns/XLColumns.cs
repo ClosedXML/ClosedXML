@@ -147,6 +147,22 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLColumns AdjustToContents(Double minWidth, Double maxWidth)
+        {
+            columns.ForEach(c => c.AdjustToContents(minWidth, maxWidth));
+            return this;
+        }
+        public IXLColumns AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth)
+        {
+            columns.ForEach(c => c.AdjustToContents(startRow, minWidth, maxWidth));
+            return this;
+        }
+        public IXLColumns AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
+        {
+            columns.ForEach(c => c.AdjustToContents(startRow, endRow, minWidth, maxWidth));
+            return this;
+        }
+
         public void Hide()
         {
             columns.ForEach(c => c.Hide());

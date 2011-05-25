@@ -77,6 +77,7 @@ namespace ClosedXML_Examples
             new SortExample().Create(@"C:\Excel Files\Created\SortExample.xlsx");
             new AddingDataSet().Create(@"C:\Excel Files\Created\AddingDataSet.xlsx");
             new AddingDataTableAsWorksheet().Create(@"C:\Excel Files\Created\AddingDataTableAsWorksheet.xlsx");
+            new TabColors().Create(@"C:\Excel Files\Created\TabColors.xlsx");
         }
     }
 }

@@ -224,6 +224,46 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLRow AdjustToContents(Double minHeight, Double maxHeight)
+        {
+            return AdjustToContents(1, XLWorksheet.MaxNumberOfColumns, minHeight, maxHeight);
+        }
+        public IXLRow AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight)
+        {
+            return AdjustToContents(startColumn, XLWorksheet.MaxNumberOfColumns, minHeight, maxHeight);
+        }
+        public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
+        {
+            Double rowMaxHeight = 0;
+            foreach (var c in CellsUsed().Where(cell => cell.Address.ColumnNumber >= startColumn && cell.Address.ColumnNumber <= endColumn))
+            {
+                Boolean isMerged = false;
+                var cellAsRange = c.AsRange();
+                foreach (var m in (Worksheet as XLWorksheet).Internals.MergedRanges)
+                {
+                    if (cellAsRange.Intersects(m))
+                    {
+                        isMerged = true;
+                        break;
+                    }
+                }
+                if (!isMerged)
+                {
+                    var thisHeight = ((XLFont)c.Style.Font).GetHeight();
+                    if (thisHeight >= maxHeight)
+                    {
+                        rowMaxHeight = maxHeight;
+                        break;
+                    }
+                    else if (thisHeight > rowMaxHeight)
+                        rowMaxHeight = thisHeight;
+                }
+            }
+
+            Height = rowMaxHeight;
+            return this;
+        }
+
         public void Hide()
         {
             IsHidden = true;

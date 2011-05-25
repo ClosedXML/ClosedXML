@@ -81,6 +81,9 @@ namespace ClosedXML.Excel
         /// <param name="endRow">The row to end calculating the column width.</param>
         IXLColumn AdjustToContents(Int32 startRow, Int32 endRow);
 
+        IXLColumn AdjustToContents(Double minWidth, Double maxWidth);
+        IXLColumn AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth);
+        IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth);
 
         /// <summary>
         /// Hides this column.

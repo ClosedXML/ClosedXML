@@ -1501,6 +1501,22 @@ namespace ClosedXML.Excel
             return color;
         }
 
+        private TabColor GetTabColor(IXLColor xlColor)
+        {
+            TabColor color = new TabColor();
+            if (xlColor.ColorType == XLColorType.Color)
+                color.Rgb = xlColor.Color.ToHex();
+            else if (xlColor.ColorType == XLColorType.Indexed)
+                color.Indexed = (UInt32)xlColor.Indexed;
+            else
+            {
+                color.Theme = (UInt32)xlColor.ThemeColor;
+                if (xlColor.ThemeTint != 1)
+                    color.Tint = xlColor.ThemeTint;
+            }
+            return color;
+        }
+
         private bool FontsAreEqual(Font f, IXLFont xlFont)
         {
             var nf = new XLFont();
@@ -1594,6 +1610,12 @@ namespace ClosedXML.Excel
             #region SheetProperties
             if (worksheetPart.Worksheet.SheetProperties == null)
                 worksheetPart.Worksheet.SheetProperties = new SheetProperties() { CodeName = xlWorksheet.Name.RemoveSpecialCharacters() };
+
+            if (xlWorksheet.TabColor.HasValue)
+                worksheetPart.Worksheet.SheetProperties.TabColor = GetTabColor(xlWorksheet.TabColor);
+            else
+                worksheetPart.Worksheet.SheetProperties.TabColor = null;
+            
 
             cm.SetElement(XLWSContentManager.XLWSContents.SheetProperties, worksheetPart.Worksheet.SheetProperties);
 
@@ -2102,19 +2124,19 @@ namespace ClosedXML.Excel
                 sheetProtection.Sheet = protection.Protected;
                 if (!StringExtensions.IsNullOrWhiteSpace(protection.PasswordHash))
                     sheetProtection.Password = protection.PasswordHash;
-                sheetProtection.FormatCells = protection.FormatCells;
-                sheetProtection.FormatColumns = protection.FormatColumns;
-                sheetProtection.FormatRows = protection.FormatRows;
-                sheetProtection.InsertColumns = protection.InsertColumns;
-                sheetProtection.InsertHyperlinks = protection.InsertHyperlinks;
-                sheetProtection.InsertRows = protection.InsertRows;
-                sheetProtection.DeleteColumns = protection.DeleteColumns;
-                sheetProtection.DeleteRows = protection.DeleteRows;
-                sheetProtection.AutoFilter = protection.AutoFilter;
-                sheetProtection.PivotTables = protection.PivotTables;
-                sheetProtection.Sort = protection.Sort;
-                sheetProtection.SelectLockedCells = !protection.SelectLockedCells;
-                sheetProtection.SelectUnlockedCells = !protection.SelectUnlockedCells;
+                sheetProtection.FormatCells = GetBooleanValue(!protection.FormatCells, true);
+                sheetProtection.FormatColumns = GetBooleanValue(!protection.FormatColumns, true);
+                sheetProtection.FormatRows = GetBooleanValue(!protection.FormatRows, true);
+                sheetProtection.InsertColumns = GetBooleanValue(!protection.InsertColumns, true);
+                sheetProtection.InsertHyperlinks = GetBooleanValue(!protection.InsertHyperlinks, true);
+                sheetProtection.InsertRows = GetBooleanValue(!protection.InsertRows, true);
+                sheetProtection.DeleteColumns = GetBooleanValue(!protection.DeleteColumns, true);
+                sheetProtection.DeleteRows = GetBooleanValue(!protection.DeleteRows, true);
+                sheetProtection.AutoFilter = GetBooleanValue(!protection.AutoFilter, true);
+                sheetProtection.PivotTables = GetBooleanValue(!protection.PivotTables, true);
+                sheetProtection.Sort = GetBooleanValue(!protection.Sort, true);
+                sheetProtection.SelectLockedCells = GetBooleanValue(!protection.SelectLockedCells, false);
+                sheetProtection.SelectUnlockedCells = GetBooleanValue(!protection.SelectUnlockedCells, false);
             }
             else
             {
@@ -2493,6 +2515,14 @@ namespace ClosedXML.Excel
             }
 
             #endregion
+        }
+
+        private BooleanValue GetBooleanValue(bool value, bool defaultValue)
+        {
+            if (value == defaultValue)
+                return null;
+            else
+                return new BooleanValue(value);
         }
 
         private void CollapseColumns(Columns columns, Dictionary<uint, Column> sheetColumns)

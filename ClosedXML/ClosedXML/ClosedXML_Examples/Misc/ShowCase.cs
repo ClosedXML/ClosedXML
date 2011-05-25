@@ -69,7 +69,7 @@ namespace ClosedXML_Examples
                 .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
             //Merge title cells
-            rngTable.Row(1).Merge(); // We could've also used: rngTable.Range("A1:E1").Merge()
+            rngTable.FirstRow().Merge(); // We could've also used: rngTable.Range("A1:E1").Merge() or rngTable.Row(1).Merge()
 
             //Formatting headers
             var rngHeaders = rngTable.Range("A2:E2"); // The address is relative to rngTable (NOT the worksheet)

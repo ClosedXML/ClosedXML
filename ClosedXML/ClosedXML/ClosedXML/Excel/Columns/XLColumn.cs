@@ -295,8 +295,8 @@ namespace ClosedXML.Excel
         }
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow)
         {
-            Double maxWidth = 0;
-            foreach (var c in CellsUsed().Where(cell=>cell.Address.RowNumber >= startRow && cell.Address.RowNumber <= endRow))
+            Double colMaxWidth = 0;
+            foreach (var c in CellsUsed().Where(cell => cell.Address.RowNumber >= startRow && cell.Address.RowNumber <= endRow))
             {
                 Boolean isMerged = false;
                 var cellAsRange = c.AsRange();
@@ -311,16 +311,56 @@ namespace ClosedXML.Excel
                 if (!isMerged)
                 {
                     var thisWidth = ((XLFont)c.Style.Font).GetWidth(c.GetFormattedString());
-                    if (thisWidth > maxWidth)
-                        maxWidth = thisWidth;
+                    if (thisWidth > colMaxWidth)
+                        colMaxWidth = thisWidth;
                 }
             }
 
-            if (maxWidth == 0)
-                maxWidth = Worksheet.ColumnWidth;
+            if (colMaxWidth == 0)
+                colMaxWidth = Worksheet.ColumnWidth;
 
-            Width = maxWidth;
+            Width = colMaxWidth;
 
+            return this;
+        }
+
+        public IXLColumn AdjustToContents(Double minWidth, Double maxWidth)
+        {
+            return AdjustToContents(1, XLWorksheet.MaxNumberOfRows, minWidth, maxWidth);
+        }
+        public IXLColumn AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth)
+        {
+            return AdjustToContents(startRow, XLWorksheet.MaxNumberOfRows, minWidth, maxWidth);
+        }
+        public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
+        {
+            Double colMaxWidth = minWidth;
+            foreach (var c in CellsUsed().Where(cell => cell.Address.RowNumber >= startRow && cell.Address.RowNumber <= endRow))
+            {
+                Boolean isMerged = false;
+                var cellAsRange = c.AsRange();
+                foreach (var m in (Worksheet as XLWorksheet).Internals.MergedRanges)
+                {
+                    if (cellAsRange.Intersects(m))
+                    {
+                        isMerged = true;
+                        break;
+                    }
+                }
+                if (!isMerged)
+                {
+                    var thisWidth = ((XLFont)c.Style.Font).GetWidth(c.GetFormattedString());
+                    if (thisWidth >= maxWidth)
+                    {
+                        colMaxWidth = maxWidth;
+                        break;
+                    }
+                    else if (thisWidth > colMaxWidth)
+                        colMaxWidth = thisWidth;
+                }
+            }
+
+            Width = colMaxWidth;
             return this;
         }
 

@@ -54,6 +54,7 @@ namespace ClosedXML.Excel
             ShowRuler = workbook.ShowRuler;
             ShowWhiteSpace = workbook.ShowWhiteSpace;
             ShowZeros = workbook.ShowZeros;
+            TabColor = new XLColor();
         }
 
         void XLWorksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
@@ -829,5 +830,20 @@ namespace ClosedXML.Excel
         public Boolean ShowWhiteSpace { get; set; }
         public Boolean ShowZeros { get; set; }
 
+        public IXLWorksheet SetShowFormulas() { ShowFormulas = true; return this; }	public IXLWorksheet SetShowFormulas(Boolean value) { ShowFormulas = value; return this; }
+        public IXLWorksheet SetShowGridLines() { ShowGridLines = true; return this; }	public IXLWorksheet SetShowGridLines(Boolean value) { ShowGridLines = value; return this; }
+        public IXLWorksheet SetShowOutlineSymbols() { ShowOutlineSymbols = true; return this; }	public IXLWorksheet SetShowOutlineSymbols(Boolean value) { ShowOutlineSymbols = value; return this; }
+        public IXLWorksheet SetShowRowColHeaders() { ShowRowColHeaders = true; return this; }	public IXLWorksheet SetShowRowColHeaders(Boolean value) { ShowRowColHeaders = value; return this; }
+        public IXLWorksheet SetShowRuler() { ShowRuler = true; return this; }	public IXLWorksheet SetShowRuler(Boolean value) { ShowRuler = value; return this; }
+        public IXLWorksheet SetShowWhiteSpace() { ShowWhiteSpace = true; return this; }	public IXLWorksheet SetShowWhiteSpace(Boolean value) { ShowWhiteSpace = value; return this; }
+        public IXLWorksheet SetShowZeros() { ShowZeros = true; return this; }	public IXLWorksheet SetShowZeros(Boolean value) { ShowZeros = value; return this; }
+
+
+        public IXLColor TabColor { get; set; }
+        public IXLWorksheet SetTabColor(IXLColor color)
+        {
+            TabColor = color;
+            return this;
+        }
     }
 }

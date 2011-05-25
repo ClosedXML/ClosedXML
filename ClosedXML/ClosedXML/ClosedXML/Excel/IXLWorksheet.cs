@@ -6,7 +6,7 @@ using System.Text;
 namespace ClosedXML.Excel
 {
     public enum XLWorksheetVisibility { Visible, Hidden, VeryHidden }
-    public interface IXLWorksheet: IXLRangeBase
+    public interface IXLWorksheet : IXLRangeBase
     {
         XLWorkbook Workbook { get; }
 
@@ -292,17 +292,23 @@ namespace ClosedXML.Excel
         //IXLCharts Charts { get; }
 
         Boolean ShowFormulas { get; set; }
-
         Boolean ShowGridLines { get; set; }
-
         Boolean ShowOutlineSymbols { get; set; }
-
         Boolean ShowRowColHeaders { get; set; }
-
         Boolean ShowRuler { get; set; }
-
         Boolean ShowWhiteSpace { get; set; }
-
         Boolean ShowZeros { get; set; }
-        }
+
+        IXLWorksheet SetShowFormulas(); IXLWorksheet SetShowFormulas(Boolean value);
+        IXLWorksheet SetShowGridLines(); IXLWorksheet SetShowGridLines(Boolean value);
+        IXLWorksheet SetShowOutlineSymbols(); IXLWorksheet SetShowOutlineSymbols(Boolean value);
+        IXLWorksheet SetShowRowColHeaders(); IXLWorksheet SetShowRowColHeaders(Boolean value);
+        IXLWorksheet SetShowRuler(); IXLWorksheet SetShowRuler(Boolean value);
+        IXLWorksheet SetShowWhiteSpace(); IXLWorksheet SetShowWhiteSpace(Boolean value);
+        IXLWorksheet SetShowZeros(); IXLWorksheet SetShowZeros(Boolean value);
+
+
+        IXLColor TabColor { get; set; }
+        IXLWorksheet SetTabColor(IXLColor color);
+    }
 }

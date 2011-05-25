@@ -53,6 +53,11 @@ namespace ClosedXML.Excel
         /// <param name="endColumn">The column to end calculating the row height.</param>
         IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn);
 
+
+        IXLRow AdjustToContents(Double minHeight, Double maxHeight);
+        IXLRow AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight);
+        IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight);
+
         /// <summary>Hides this row.</summary>
         void Hide();
 

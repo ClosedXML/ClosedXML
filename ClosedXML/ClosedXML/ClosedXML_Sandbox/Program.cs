@@ -16,7 +16,7 @@ namespace ClosedXML_Sandbox
         {
             //var fileName = "DataValidation";
             var fileName = "Sandbox";
-            //var fileName = "Issue_6609";
+            //var fileName = "Issue_6706";
             //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
             var wb = new XLWorkbook();
             //var ws = wb.Worksheets.Add("Sheet1");
@@ -31,10 +31,10 @@ namespace ClosedXML_Sandbox
 
 
             var ws = wb.Worksheets.Add("Sheet1");
-            ws.Name = "Sheet X";
-            var wsX = wb.Worksheet("Sheet X");
-            wsX.Cell(1, 1).Value = "Hello";
-            
+            ws.Cell(1,1).Value = "X";
+            ws.Protect()
+                .SetInsertRows()
+                .SetSelectLockedCells(false);
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
             //Console.ReadKey();
         }

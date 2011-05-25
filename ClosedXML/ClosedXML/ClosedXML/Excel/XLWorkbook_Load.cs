@@ -589,6 +589,9 @@ namespace ClosedXML.Excel
             if (sheetProperties.Count() > 0)
             {
                 var sheetProperty = (SheetProperties)sheetProperties.First();
+                if (sheetProperty.TabColor != null)
+                    ws.TabColor = GetColor(sheetProperty.TabColor);
+
                 if (sheetProperty.OutlineProperties != null)
                 {
                     if (sheetProperty.OutlineProperties.SummaryBelow != null)
