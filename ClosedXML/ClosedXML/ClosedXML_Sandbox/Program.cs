@@ -16,7 +16,7 @@ namespace ClosedXML_Sandbox
         {
             //var fileName = "DataValidation";
             var fileName = "Sandbox";
-            //var fileName = "Issue_6706";
+            //var fileName = "Issue_6724";
             //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
             var wb = new XLWorkbook();
             //var ws = wb.Worksheets.Add("Sheet1");
@@ -29,14 +29,22 @@ namespace ClosedXML_Sandbox
 
             //ws.RangeUsed().CreateChart(4, 4, 22, 12);
 
+            //workbook.Worksheet("CCR").Column("C").LastCellUsed().Address is: {C29}
+            //workbook.Worksheet("CCR").Column("B").LastCellUsed().Address is : {B25}
+
+            //Now, when i use workbook.Worksheet("CCR").Range("B1:C34").RangeUsed().
+            //The expect is B1:C29.
 
             var ws = wb.Worksheets.Add("Sheet1");
-            ws.Cell(1,1).Value = "X";
-            ws.Protect()
-                .SetInsertRows()
-                .SetSelectLockedCells(false);
-            wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
-            //Console.ReadKey();
+            ws.Cells("A1:C1").Value = "Initial";
+            ws.Cells("C29,B25").Value = "Final";
+            
+
+            Console.WriteLine(ws.Column("C").LastCellUsed().Address.ToString( XLReferenceStyle.A1) );
+            Console.WriteLine(ws.Column("B").LastCellUsed().Address.ToString(XLReferenceStyle.R1C1 ));
+            Console.WriteLine(ws.Range("B1:C34").RangeUsed().RangeAddress.ToString());
+            //wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
+            Console.ReadKey();
         }
 
 

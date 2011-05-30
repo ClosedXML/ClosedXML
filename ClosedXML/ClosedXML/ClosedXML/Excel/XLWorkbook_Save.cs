@@ -730,13 +730,6 @@ namespace ClosedXML.Excel
                     sheetId++;
                 }
 
-                if (!worksheet.PageSetup.PrintAreas.Any())
-                {
-                    var minCell = worksheet.FirstCellUsed();
-                    var maxCell = worksheet.LastCellUsed();
-                    if (minCell != null && maxCell != null)
-                        worksheet.PageSetup.PrintAreas.Add(minCell.Address.ToString(), maxCell.Address.ToString());
-                }
                 if (worksheet.PageSetup.PrintAreas.Any())
                 {
                     DefinedName definedName = new DefinedName() { Name = "_xlnm.Print_Area", LocalSheetId = sheetId};

@@ -56,7 +56,7 @@ namespace ClosedXML.Excel
         /// <para>e.g. Cells("1"), Cells("1:5"), Cells("1,3:5")</para>
         /// </summary>
         /// <param name="cellsInColumn">The column cells to return.</param>
-        IXLCells Cells(String cellsInColumn);
+        new IXLCells Cells(String cellsInColumn);
 
         /// <summary>
         /// Returns the specified group of cells.

@@ -228,6 +228,10 @@ namespace ClosedXML.Excel
             cells.Add(this.RangeAddress);
             return (IXLCells)cells;
         }
+        public IXLCells Cells(String cells)
+        {
+            return Ranges(cells).Cells();
+        }
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(false, true, false);
@@ -929,7 +933,7 @@ namespace ClosedXML.Excel
 
         public IXLRange RangeUsed()
         {
-            return this.Range(this.FirstCellUsed(), this.LastCellUsed());
+            return Worksheet.Range(this.FirstCellUsed(), this.LastCellUsed());
         }
 
         public Boolean ShareString

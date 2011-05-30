@@ -338,10 +338,10 @@ namespace ClosedXML.Excel
             if (referenceStyle == XLReferenceStyle.A1)
                 return ColumnLetter + rowNumber.ToStringLookup();
             else if (referenceStyle == XLReferenceStyle.R1C1)
-                return rowNumber.ToStringLookup() + "," + ColumnLetter;
+                return rowNumber.ToStringLookup() + "," + ColumnNumber;
             else
                 if ((Worksheet as XLWorksheet).Internals.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
-                    return rowNumber.ToStringLookup() + "," + ColumnLetter;
+                    return rowNumber.ToStringLookup() + "," + ColumnNumber;
                 else
                     return ColumnLetter + rowNumber.ToStringLookup();
         }

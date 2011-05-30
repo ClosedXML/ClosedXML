@@ -143,7 +143,7 @@ namespace ClosedXML.Excel
             return base.Cell(1, columnLetter);
         }
 
-        public IXLCells Cells(String cellsInRow)
+        public new IXLCells Cells(String cellsInRow)
         {
             var retVal = new XLCells(false, false, false);
             var rangePairs = cellsInRow.Split(',');

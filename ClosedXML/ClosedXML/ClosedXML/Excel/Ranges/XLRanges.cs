@@ -230,6 +230,35 @@ namespace ClosedXML.Excel
                 return this;
             }
         }
-       
+
+        public IXLCells Cells()
+        {
+            var cells = new XLCells(false, false, false);
+            foreach (var container in ranges)
+            {
+                cells.Add(container.RangeAddress);
+            }
+            return (IXLCells)cells;
+        }
+
+        public IXLCells CellsUsed()
+        {
+            var cells = new XLCells(false, true, false);
+            foreach (var container in ranges)
+            {
+                cells.Add(container.RangeAddress);
+            }
+            return (IXLCells)cells;
+        }
+
+        public IXLCells CellsUsed(Boolean includeStyles)
+        {
+            var cells = new XLCells(false, true, includeStyles);
+            foreach (var container in ranges)
+            {
+                cells.Add(container.RangeAddress);
+            }
+            return (IXLCells)cells;
+        }
     }
 }

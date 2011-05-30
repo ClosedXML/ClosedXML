@@ -70,7 +70,7 @@ namespace ClosedXML.Excel
             return InsertColumnsBefore(numberOfColumns, expandRange).Cells();
         }
 
-        public IXLCells Cells(String cellsInRow)
+        public new IXLCells Cells(String cellsInRow)
         {
             var retVal = new XLCells(false, false, false);
             var rangePairs = cellsInRow.Split(',');

@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
             return Cell(row, 1);
         }
 
-        public IXLCells Cells(String cellsInColumn)
+        public new IXLCells Cells(String cellsInColumn)
         {
             var retVal = new XLCells(false, false, false);
             var rangePairs = cellsInColumn.Split(',');

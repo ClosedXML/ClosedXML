@@ -15,5 +15,6 @@ namespace ClosedXML.Excel
         Boolean FixedColumn { get; }
         String ToStringRelative();
         String ToStringFixed();
+        String ToString(XLReferenceStyle referenceStyle);
     }
 }

@@ -95,7 +95,7 @@ namespace ClosedXML.Excel
         /// Returns the collection of cells.
         /// </summary>
         IXLCells Cells();
-
+        
         /// <summary>
         /// Returns the collection of cells that have a value.
         /// </summary>

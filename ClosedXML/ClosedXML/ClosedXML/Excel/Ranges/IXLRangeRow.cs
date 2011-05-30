@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
         /// <para>e.g. Cells("1"), Cells("1:5"), Cells("1:2,4:5")</para>
         /// </summary>
         /// <param name="cellsInRow">The row's cells to return.</param>
-        IXLCells Cells(String cellsInRow);
+        new IXLCells Cells(String cellsInRow);
         /// <summary>
         /// Returns the specified group of cells.
         /// </summary>

@@ -18,6 +18,8 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLCells Cells();
 
+        IXLCells Cells(String cells);
+
         /// <summary>
         /// Returns the collection of cells that have a value.
         /// </summary>
