@@ -15,10 +15,10 @@ namespace ClosedXML_Sandbox
         static void Main(string[] args)
         {
             //var fileName = "DataValidation";
-            var fileName = "Sandbox";
-            //var fileName = "Issue_6724";
-            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-            var wb = new XLWorkbook();
+            //var fileName = "Sandbox";
+            var fileName = "Issue_6756";
+            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            //var wb = new XLWorkbook();
             //var ws = wb.Worksheets.Add("Sheet1");
             //ws.Cell("A1").Value = "Category";
             //ws.Cell("A2").Value = "A";
@@ -35,16 +35,10 @@ namespace ClosedXML_Sandbox
             //Now, when i use workbook.Worksheet("CCR").Range("B1:C34").RangeUsed().
             //The expect is B1:C29.
 
-            var ws = wb.Worksheets.Add("Sheet1");
-            ws.Cells("A1:C1").Value = "Initial";
-            ws.Cells("C29,B25").Value = "Final";
-            
-
-            Console.WriteLine(ws.Column("C").LastCellUsed().Address.ToString( XLReferenceStyle.A1) );
-            Console.WriteLine(ws.Column("B").LastCellUsed().Address.ToString(XLReferenceStyle.R1C1 ));
-            Console.WriteLine(ws.Range("B1:C34").RangeUsed().RangeAddress.ToString());
-            //wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
-            Console.ReadKey();
+            var ws = wb.Worksheet(1);
+            ws.CopyTo("012345678901234567890123456789");
+            wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
+            //Console.ReadKey();
         }
 
 

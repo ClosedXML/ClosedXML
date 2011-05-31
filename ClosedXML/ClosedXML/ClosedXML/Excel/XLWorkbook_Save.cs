@@ -1602,7 +1602,7 @@ namespace ClosedXML.Excel
 
             #region SheetProperties
             if (worksheetPart.Worksheet.SheetProperties == null)
-                worksheetPart.Worksheet.SheetProperties = new SheetProperties() { CodeName = xlWorksheet.Name.RemoveSpecialCharacters() };
+                worksheetPart.Worksheet.SheetProperties = new SheetProperties();// { CodeName = xlWorksheet.Name.RemoveSpecialCharacters() };
 
             if (xlWorksheet.TabColor.HasValue)
                 worksheetPart.Worksheet.SheetProperties.TabColor = GetTabColor(xlWorksheet.TabColor);
