@@ -809,7 +809,7 @@ namespace ClosedXML.Excel
                 var protection = (Protection)((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).Protection;
 
                 if (protection == null)
-                    xlStylized.InnerStyle.Protection = DefaultStyle.Protection;
+                    xlStylized.InnerStyle.Protection = new XLProtection(null, DefaultStyle.Protection);
                 else
                 {
                     xlStylized.InnerStyle.Protection.Hidden = protection.Hidden != null && protection.Hidden.HasValue && protection.Hidden.Value;

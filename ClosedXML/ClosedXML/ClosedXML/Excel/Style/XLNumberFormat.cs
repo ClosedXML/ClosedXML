@@ -83,9 +83,10 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLNumberFormat other)
         {
+            var otherNF = other as XLNumberFormat;
             return
-            this.NumberFormatId.Equals(other.NumberFormatId)
-            && this.Format.Equals(other.Format)
+            numberFormatId == otherNF.numberFormatId
+            && format == otherNF.format
             ;
         }
 

@@ -12,11 +12,11 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
-        static void Main(string[] args)
+        static void xMain(string[] args)
         {
             //var fileName = "DataValidation";
             //var fileName = "Sandbox";
-            var fileName = "Issue_6756";
+            var fileName = "Issue_0000";
             var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
             //var wb = new XLWorkbook();
             //var ws = wb.Worksheets.Add("Sheet1");
@@ -35,8 +35,7 @@ namespace ClosedXML_Sandbox
             //Now, when i use workbook.Worksheet("CCR").Range("B1:C34").RangeUsed().
             //The expect is B1:C29.
 
-            var ws = wb.Worksheet(1);
-            ws.CopyTo("012345678901234567890123456789");
+            
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
             //Console.ReadKey();
         }
@@ -52,7 +51,7 @@ namespace ClosedXML_Sandbox
             }
         }
 
-        static void xMain(string[] args)
+        static void Main(string[] args)
         {
             FillStyles();
             List<Double> runningSave = new List<Double>();
@@ -66,11 +65,11 @@ namespace ClosedXML_Sandbox
                 foreach (var i in Enumerable.Range(1, 1))
                 {
                     var ws = wb.Worksheets.Add("Sheet" + i);
-                    foreach (var ro in Enumerable.Range(1, 2000))
+                    foreach (var ro in Enumerable.Range(1, 10000))
                     {
-                        foreach (var co in Enumerable.Range(1, 100))
+                        foreach (var co in Enumerable.Range(1, 20))
                         {
-                            ws.Cell(ro, co).Style = GetRandomStyle();
+                            //ws.Cell(ro, co).Style = GetRandomStyle();
                             //if (rnd.Next(1, 5) == 1)
                                 //ws.Cell(ro, co).FormulaA1 = ws.Cell(ro + 1, co + 1).Address.ToString() + " & \"-Copy\"";
                             //else

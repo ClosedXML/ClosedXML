@@ -17,15 +17,15 @@ namespace ClosedXML.Excel
             if (defaultBorder != null)
             {
                 leftBorder = defaultBorder.LeftBorder;
-                leftBorderColor = defaultBorder.LeftBorderColor;
+                leftBorderColor = new XLColor(defaultBorder.LeftBorderColor);
                 rightBorder = defaultBorder.RightBorder;
-                rightBorderColor = defaultBorder.RightBorderColor;
+                rightBorderColor = new XLColor(defaultBorder.RightBorderColor);
                 topBorder = defaultBorder.TopBorder;
-                topBorderColor = defaultBorder.TopBorderColor;
+                topBorderColor = new XLColor(defaultBorder.TopBorderColor);
                 bottomBorder = defaultBorder.BottomBorder;
-                bottomBorderColor = defaultBorder.BottomBorderColor;
+                bottomBorderColor = new XLColor(defaultBorder.BottomBorderColor);
                 diagonalBorder = defaultBorder.DiagonalBorder;
-                diagonalBorderColor = defaultBorder.DiagonalBorderColor;
+                diagonalBorderColor = new XLColor(defaultBorder.DiagonalBorderColor);
                 diagonalUp = defaultBorder.DiagonalUp;
                 diagonalDown = defaultBorder.DiagonalDown;
             }
@@ -288,19 +288,20 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLBorder other)
         {
+            var otherB = other as XLBorder;
             return
-                   this.LeftBorder.Equals(other.LeftBorder)
-                && this.LeftBorderColor.Equals(other.LeftBorderColor)
-                && this.RightBorder.Equals(other.RightBorder)
-                && this.RightBorderColor.Equals(other.RightBorderColor)
-                && this.TopBorder.Equals(other.TopBorder)
-                && this.TopBorderColor.Equals(other.TopBorderColor)
-                && this.BottomBorder.Equals(other.BottomBorder)
-                && this.BottomBorderColor.Equals(other.BottomBorderColor)
-                && this.DiagonalBorder.Equals(other.DiagonalBorder)
-                && this.DiagonalBorderColor.Equals(other.DiagonalBorderColor)
-                && this.DiagonalUp.Equals(other.DiagonalUp)
-                && this.DiagonalDown.Equals(other.DiagonalDown)
+                   leftBorder == otherB.leftBorder
+                && leftBorderColor.Equals(otherB.leftBorderColor)
+                && rightBorder==otherB.rightBorder
+                && rightBorderColor.Equals(otherB.rightBorderColor)
+                && topBorder==otherB.topBorder
+                && topBorderColor.Equals(otherB.topBorderColor)
+                && bottomBorder==otherB.bottomBorder
+                && bottomBorderColor.Equals(otherB.bottomBorderColor)
+                && diagonalBorder==otherB.diagonalBorder
+                && diagonalBorderColor.Equals(otherB.diagonalBorderColor)
+                && diagonalUp==otherB.diagonalUp
+                && diagonalDown==otherB.diagonalDown
                 ;
         }
 

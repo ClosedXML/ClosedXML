@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
             VerticalAlignment = defaultFont.VerticalAlignment;
             Shadow = defaultFont.Shadow;
             FontSize = defaultFont.FontSize;
-            FontColor = defaultFont.FontColor;
+            FontColor = new XLColor(defaultFont.FontColor);
             FontName = defaultFont.FontName;
             FontFamilyNumbering = defaultFont.FontFamilyNumbering;
         }

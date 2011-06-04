@@ -27,7 +27,7 @@ namespace ClosedXML_Examples.Ranges
             var table = range.CreateTable();    // You can also use range.AsTable() if you want to
                                                 // manipulate the range as a table but don't want 
                                                 // to create the table in the worksheet.
-
+            
             // Let's activate the Totals row and add the sum of Income
             table.ShowTotalsRow = true;
             table.Field("Income").TotalsRowFunction = XLTotalsRowFunction.Sum;
@@ -54,7 +54,6 @@ namespace ClosedXML_Examples.Ranges
             // Add a custom formula to the headersTable
             headersTable.ShowTotalsRow = true;
             headersTable.Field(0).TotalsRowFormulaA1 = "CONCATENATE(\"Count: \", CountA(Headers[Table Headers]))";
-
 
             // Copy the names
             Int32 columnWithNames = columnWithHeaders + 2;

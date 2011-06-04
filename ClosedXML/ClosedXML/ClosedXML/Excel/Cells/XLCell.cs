@@ -1490,7 +1490,7 @@ namespace ClosedXML.Excel
 
                 if (!SettingHyperlink)
                 {
-                    if (Style.Font.FontColor == worksheet.Style.Font.FontColor)
+                    if (Style.Font.FontColor.Equals(worksheet.Style.Font.FontColor))
                         Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
 
                     if (Style.Font.Underline == worksheet.Style.Font.Underline)

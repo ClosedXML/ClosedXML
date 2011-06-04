@@ -27,7 +27,7 @@ namespace ClosedXML.Excel
                 verticalAlignment = defaultFont.VerticalAlignment;
                 shadow = defaultFont.Shadow;
                 fontSize = defaultFont.FontSize;
-                fontColor = defaultFont.FontColor;
+                fontColor = new XLColor(defaultFont.FontColor);
                 fontName = defaultFont.FontName;
                 fontFamilyNumbering = defaultFont.FontFamilyNumbering;
             }
@@ -268,17 +268,18 @@ namespace ClosedXML.Excel
 
         public Boolean Equals(IXLFont other)
         {
+            var otherF = other as XLFont;
             return
-                   this.Bold.Equals(other.Bold)
-                && this.Italic.Equals(other.Italic)
-                && this.Underline.Equals(other.Underline)
-                && this.Strikethrough.Equals(other.Strikethrough)
-                && this.VerticalAlignment.Equals(other.VerticalAlignment)
-                && this.Shadow.Equals(other.Shadow)
-                && this.FontSize.Equals(other.FontSize)
-                && this.FontColor.Equals(other.FontColor)
-                && this.FontName.Equals(other.FontName)
-                && this.FontFamilyNumbering.Equals(other.FontFamilyNumbering)
+                   bold == otherF.bold
+                && italic == otherF.italic
+                && underline == otherF.underline
+                && strikethrough == otherF.strikethrough
+                && verticalAlignment == otherF.verticalAlignment
+                && shadow == otherF.shadow
+                && fontSize == otherF.fontSize
+                && fontColor.Equals(otherF.fontColor)
+                && fontName == otherF.fontName
+                && fontFamilyNumbering == otherF.fontFamilyNumbering
                 ;
         }
 

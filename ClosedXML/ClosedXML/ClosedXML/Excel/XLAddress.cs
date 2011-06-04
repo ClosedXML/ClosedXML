@@ -23,6 +23,8 @@ namespace ClosedXML.Excel
             this.columnLetter = null;
             this.fixedColumn = fixedColumn;
             this.fixedRow = fixedRow;
+
+            hashCode = rowNumber ^ columnNumber;
         }
 
         /// <summary>
@@ -38,6 +40,7 @@ namespace ClosedXML.Excel
             this.columnLetter = columnLetter;
             this.fixedColumn = fixedColumn;
             this.fixedRow = fixedRow;
+            hashCode = rowNumber ^ ColumnNumber;
         }
 
 
@@ -82,6 +85,8 @@ namespace ClosedXML.Excel
             }
 
             columnNumber = 0;
+
+            hashCode =  rowNumber ^ ColumnNumber;
         }
         #endregion
 
@@ -393,14 +398,7 @@ namespace ClosedXML.Excel
 
         public static Boolean operator ==(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            if (//xlCellAddressLeft.Worksheet == xlCellAddressRight.Worksheet && 
-                xlCellAddressLeft.rowNumber == xlCellAddressRight.rowNumber)
-                if (xlCellAddressRight.columnNumber > 0)
-                    return xlCellAddressLeft.ColumnNumber == xlCellAddressRight.columnNumber;
-                else
-                    return xlCellAddressLeft.ColumnLetter == xlCellAddressRight.columnLetter;
-            else
-                return false;
+            return xlCellAddressLeft.Equals(xlCellAddressRight);
         }
 
         public static Boolean operator !=(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
@@ -456,12 +454,10 @@ namespace ClosedXML.Excel
             return ((XLAddress)obj).GetHashCode();
         }
 
+        int hashCode;
         public override Int32 GetHashCode()
         {
-            return
-                Worksheet.GetHashCode()
-                ^ rowNumber 
-                ^ ColumnNumber;
+            return hashCode;
         }
 
         #endregion
@@ -471,6 +467,9 @@ namespace ClosedXML.Excel
         public Boolean Equals(IXLAddress other)
         {
             var right = other as XLAddress;
+            if (hashCode != right.hashCode)
+                return false;
+
             if (this.rowNumber == right.rowNumber)
                 if (right.columnNumber > 0)
                     return this.ColumnNumber == right.columnNumber;
@@ -482,7 +481,7 @@ namespace ClosedXML.Excel
 
         public override Boolean Equals(Object other)
         {
-            return this == (XLAddress)other;
+            return Equals((XLAddress)other);
         }
 
         #endregion

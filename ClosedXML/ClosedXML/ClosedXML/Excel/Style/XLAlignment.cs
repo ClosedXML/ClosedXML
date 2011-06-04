@@ -263,16 +263,17 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLAlignment other)
         {
+            var otherA = other as XLAlignment;
             return 
-               this.Horizontal.Equals(other.Horizontal)
-            && this.Vertical.Equals(other.Vertical)
-            && this.Indent.Equals(other.Indent)
-            && this.JustifyLastLine.Equals(other.JustifyLastLine)
-            && this.ReadingOrder.Equals(other.ReadingOrder)
-            && this.RelativeIndent.Equals(other.RelativeIndent)
-            && this.ShrinkToFit.Equals(other.ShrinkToFit)
-            && this.TextRotation.Equals(other.TextRotation)
-            && this.WrapText.Equals(other.WrapText)
+               horizontal == otherA.horizontal
+            && vertical == otherA.vertical
+            && indent == otherA.indent
+            && justifyLastLine == otherA.justifyLastLine
+            && readingOrder == otherA.readingOrder
+            && relativeIndent == otherA.relativeIndent
+            && shrinkToFit == otherA.shrinkToFit
+            && textRotation == otherA.textRotation
+            && wrapText == otherA.wrapText
             ;
         }
 

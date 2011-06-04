@@ -100,8 +100,8 @@ namespace ClosedXML.Excel
             if (defaultFill != null)
             {
                 patternType = defaultFill.PatternType;
-                patternColor = defaultFill.PatternColor;
-                patternBackgroundColor = defaultFill.PatternBackgroundColor;
+                patternColor = new XLColor(defaultFill.PatternColor);
+                patternBackgroundColor = new XLColor(defaultFill.PatternBackgroundColor);
             }
         }
 
@@ -125,9 +125,8 @@ namespace ClosedXML.Excel
         public bool Equals(IXLFill other)
         {
             return
-            this.BackgroundColor.Equals(other.BackgroundColor)
-            && this.PatternType.Equals(other.PatternType)
-            && this.PatternColor.Equals(other.PatternColor)
+                patternType == other.PatternType
+            && patternColor.Equals(other.PatternColor)
             ;
         }
 

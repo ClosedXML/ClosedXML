@@ -78,12 +78,19 @@ namespace ClosedXML.Excel
         public bool Equals(IXLStyle other)
         {
             return
-            this.Font.Equals(other.Font)
-            && this.Fill.Equals(other.Fill)
-            && this.Border.Equals(other.Border)
-            && this.NumberFormat.Equals(other.NumberFormat)
-            && this.Alignment.Equals(other.Alignment)
-            && this.Protection.Equals(other.Protection)
+            //    this.Font.GetHashCode().Equals(other.Font.GetHashCode()) 
+            //&&  this.Fill.GetHashCode().Equals(other.Fill.GetHashCode())
+            //&& this.Border.GetHashCode().Equals(other.Border.GetHashCode())
+            //&& this.NumberFormat.GetHashCode().Equals(other.NumberFormat.GetHashCode())
+            //&& this.Alignment.GetHashCode().Equals(other.Alignment.GetHashCode())
+            //&& this.Protection.GetHashCode().Equals(other.Protection.GetHashCode()) 
+
+                this.Font.Equals(other.Font)
+            &&  this.Fill.Equals(other.Fill)
+            &&  this.Border.Equals(other.Border)
+            &&  this.NumberFormat.Equals(other.NumberFormat)
+            &&  this.Alignment.Equals(other.Alignment)
+            &&  this.Protection.Equals(other.Protection)
             ;
         }
 

@@ -62,8 +62,9 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLProtection other)
         {
-            return this.Locked.Equals(other.Locked)
-                   && this.Hidden.Equals(other.Hidden);
+            var otherP = other as XLProtection;
+            return locked == otherP.locked
+                   && hidden == otherP.hidden;
         }
 
         public override bool Equals(object obj)

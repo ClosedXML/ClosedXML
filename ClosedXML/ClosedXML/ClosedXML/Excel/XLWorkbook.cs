@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
             NamedRanges = new XLNamedRanges(this);
             CustomProperties = new XLCustomProperties(this);
             PopulateEnums();
-            Style = DefaultStyle;
+            Style = new XLStyle(null, DefaultStyle);
             RowHeight = DefaultRowHeight;
             ColumnWidth = DefaultColumnWidth;
             PageOptions = DefaultPageOptions;
@@ -258,67 +258,70 @@ namespace ClosedXML.Excel
         #endregion
 
         #region Static
-
+        private static IXLStyle defaultStyle;
         public static IXLStyle DefaultStyle
         {
             get
             {
-                var defaultStyle = new XLStyle(null, null)
+                if (defaultStyle == null)
                 {
-                    Font = new XLFont(null, null)
+                    defaultStyle = new XLStyle(null, null)
                     {
-                        Bold = false,
-                        Italic = false,
-                        Underline = XLFontUnderlineValues.None,
-                        Strikethrough = false,
-                        VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
-                        FontSize = 11,
-                        FontColor = XLColor.FromArgb(0, 0, 0),
-                        FontName = "Calibri",
-                        FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
-                    },
-
-                    Fill = new XLFill(null)
-                   {
-                       BackgroundColor = XLColor.FromIndex(64),
-                       PatternType = XLFillPatternValues.None,
-                       PatternColor = XLColor.FromIndex(64)
-                   },
-
-                    Border = new XLBorder(null, null)
+                        Font = new XLFont(null, null)
                         {
-                            BottomBorder = XLBorderStyleValues.None,
-                            DiagonalBorder = XLBorderStyleValues.None,
-                            DiagonalDown = false,
-                            DiagonalUp = false,
-                            LeftBorder = XLBorderStyleValues.None,
-                            RightBorder = XLBorderStyleValues.None,
-                            TopBorder = XLBorderStyleValues.None,
-                            BottomBorderColor = XLColor.Black,
-                            DiagonalBorderColor = XLColor.Black,
-                            LeftBorderColor = XLColor.Black,
-                            RightBorderColor = XLColor.Black,
-                            TopBorderColor = XLColor.Black
+                            Bold = false,
+                            Italic = false,
+                            Underline = XLFontUnderlineValues.None,
+                            Strikethrough = false,
+                            VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline,
+                            FontSize = 11,
+                            FontColor = XLColor.FromArgb(0, 0, 0),
+                            FontName = "Calibri",
+                            FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
                         },
-                    NumberFormat = new XLNumberFormat(null, null) { NumberFormatId = 0 },
-                    Alignment = new XLAlignment(null)
-                        {
-                            Horizontal = XLAlignmentHorizontalValues.General,
-                            Indent = 0,
-                            JustifyLastLine = false,
-                            ReadingOrder = XLAlignmentReadingOrderValues.ContextDependent,
-                            RelativeIndent = 0,
-                            ShrinkToFit = false,
-                            TextRotation = 0,
-                            Vertical = XLAlignmentVerticalValues.Bottom,
-                            WrapText = false
+
+                        Fill = new XLFill(null)
+                       {
+                           BackgroundColor = XLColor.FromIndex(64),
+                           PatternType = XLFillPatternValues.None,
+                           PatternColor = XLColor.FromIndex(64)
+                       },
+
+                        Border = new XLBorder(null, null)
+                            {
+                                BottomBorder = XLBorderStyleValues.None,
+                                DiagonalBorder = XLBorderStyleValues.None,
+                                DiagonalDown = false,
+                                DiagonalUp = false,
+                                LeftBorder = XLBorderStyleValues.None,
+                                RightBorder = XLBorderStyleValues.None,
+                                TopBorder = XLBorderStyleValues.None,
+                                BottomBorderColor = XLColor.Black,
+                                DiagonalBorderColor = XLColor.Black,
+                                LeftBorderColor = XLColor.Black,
+                                RightBorderColor = XLColor.Black,
+                                TopBorderColor = XLColor.Black
+                            },
+                        NumberFormat = new XLNumberFormat(null, null) { NumberFormatId = 0 },
+                        Alignment = new XLAlignment(null)
+                            {
+                                Horizontal = XLAlignmentHorizontalValues.General,
+                                Indent = 0,
+                                JustifyLastLine = false,
+                                ReadingOrder = XLAlignmentReadingOrderValues.ContextDependent,
+                                RelativeIndent = 0,
+                                ShrinkToFit = false,
+                                TextRotation = 0,
+                                Vertical = XLAlignmentVerticalValues.Bottom,
+                                WrapText = false
                             },
                         Protection = new XLProtection(null)
                             {
                                 Locked = true,
                                 Hidden = false
                             }
-                };
+                    };
+                }
                 return defaultStyle;
             }
         }

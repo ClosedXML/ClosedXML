@@ -10,20 +10,30 @@ namespace ClosedXML.Excel
     {
         public Boolean HasValue { get; private set; }
 
-        public XLColorType ColorType { get; private set; }
+        XLColorType colorType;
+        public XLColorType ColorType {
+            get
+            {
+                return colorType;
+            }
+            private set
+            {
+                colorType = value;
+            }
+        }
         private Color color;
         public Color Color 
         {
             get
             {
-                if (ColorType == XLColorType.Theme)
+                if (colorType == XLColorType.Theme)
                 {
                     //if (workbook == null)
                         throw new Exception("Cannot convert theme color to Color.");
                     //else
                     //    return workbook.GetXLColor(themeColor).Color;
                 }
-                else if (ColorType == XLColorType.Indexed)
+                else if (colorType == XLColorType.Indexed)
                 {
                     return IndexedColors[indexed].Color;
                 }
@@ -35,7 +45,7 @@ namespace ClosedXML.Excel
             private set
             {
                 color = value;
-                ColorType = XLColorType.Color;
+                colorType = XLColorType.Color;
             }
         }
 
@@ -60,7 +70,7 @@ namespace ClosedXML.Excel
             private set
             {
                 indexed = value;
-                ColorType = XLColorType.Indexed;
+                colorType = XLColorType.Indexed;
             }
         }
 
@@ -87,7 +97,7 @@ namespace ClosedXML.Excel
                 themeColor = value;
                 if (themeTint == 0)
                     themeTint = 1;
-                ColorType = XLColorType.Theme;
+                colorType = XLColorType.Theme;
             }
         }
 
@@ -112,31 +122,32 @@ namespace ClosedXML.Excel
             private set
             {
                 themeTint = value;
-                ColorType = XLColorType.Theme;
+                colorType = XLColorType.Theme;
             }
         }
 
         public bool Equals(IXLColor other)
         {
-            if (ColorType != other.ColorType)
+            var otherC = other as XLColor;
+            if (colorType == otherC.colorType)
             {
-                return false;
-            }
-            else
-            {
-                if (ColorType == XLColorType.Theme)
+                if (colorType == XLColorType.Color)
                 {
-                    return this.ThemeColor.Equals(other.ThemeColor)
-                        && this.ThemeTint.Equals(other.ThemeTint);
+                    return color == otherC.color;
                 }
-                else if (ColorType == XLColorType.Indexed)
+                if (colorType == XLColorType.Theme)
                 {
-                    return this.Indexed.Equals(other.Indexed);
+                    return themeColor == otherC.themeColor
+                        && themeTint == otherC.themeTint;
                 }
                 else
                 {
-                    return this.Color.Equals(other.Color);
+                    return indexed == otherC.indexed;
                 }
+            }
+            else
+            {
+                return false;
             }
         }
         public override bool Equals(object obj)
@@ -144,21 +155,10 @@ namespace ClosedXML.Excel
             return this.Equals((XLColor)obj);
         }
 
+        int hashCode;
         public override int GetHashCode()
         {
-            if (ColorType == XLColorType.Theme)
-            {
-                return ThemeColor.GetHashCode()
-                    ^ ThemeTint.GetHashCode();
-            }
-            else if (ColorType == XLColorType.Indexed)
-            {
-                return Indexed;
-            }
-            else
-            {
-                return Color.GetHashCode();
-            }
+            return hashCode;
         }
     }
 }

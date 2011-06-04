@@ -331,6 +331,7 @@ namespace ClosedXML.Excel
             using (package)
             {
                 CreateParts(package);
+                //package.Close();
             }
         }
 
@@ -345,6 +346,7 @@ namespace ClosedXML.Excel
             using (package)
             {
                 CreateParts(package);
+                //package.Close();
             }
         }
 
@@ -856,13 +858,15 @@ namespace ClosedXML.Excel
             Int32 stringId = 0;
             foreach (var s in modifiedStrings)
             {
-                    SharedStringItem sharedStringItem = new SharedStringItem();
-                    Text text = new Text();
-                    text.Text = s;
-                    sharedStringItem.Append(text);
-                    sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
-                    sharedStringTablePart.SharedStringTable.Count += 1;
-                    sharedStringTablePart.SharedStringTable.UniqueCount += 1;
+                SharedStringItem sharedStringItem = new SharedStringItem();
+                Text text = new Text();
+                text.Text = s;
+                if (s.StartsWith(" ") || s.EndsWith(" "))
+                    text.Space = SpaceProcessingModeValues.Preserve;
+                sharedStringItem.Append(text);
+                sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
+                sharedStringTablePart.SharedStringTable.Count += 1;
+                sharedStringTablePart.SharedStringTable.UniqueCount += 1;
 
                 sharedStrings.Add(s, (UInt32)stringId);
                 stringId++;
@@ -872,7 +876,7 @@ namespace ClosedXML.Excel
         #region GenerateWorkbookStylesPartContent
         private void GenerateWorkbookStylesPartContent(WorkbookStylesPart workbookStylesPart)
         {
-            var defaultStyle = DefaultStyle;
+            var defaultStyle = new XLStyle(null, DefaultStyle);
             Dictionary<IXLFont, FontInfo> sharedFonts = new Dictionary<IXLFont, FontInfo>();
             sharedFonts.Add(defaultStyle.Font, new FontInfo() { FontId = 0, Font = defaultStyle.Font });
 
@@ -1602,7 +1606,7 @@ namespace ClosedXML.Excel
 
             #region SheetProperties
             if (worksheetPart.Worksheet.SheetProperties == null)
-                worksheetPart.Worksheet.SheetProperties = new SheetProperties();// { CodeName = xlWorksheet.Name.RemoveSpecialCharacters() };
+                worksheetPart.Worksheet.SheetProperties = new SheetProperties();
 
             if (xlWorksheet.TabColor.HasValue)
                 worksheetPart.Worksheet.SheetProperties.TabColor = GetTabColor(xlWorksheet.TabColor);
