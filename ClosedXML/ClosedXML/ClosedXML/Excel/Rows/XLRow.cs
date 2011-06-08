@@ -211,7 +211,38 @@ namespace ClosedXML.Excel
                 }
                 if (!isMerged)
                 {
-                    var thisHeight = ((XLFont)c.Style.Font).GetHeight();
+                    //var thisHeight = ((XLFont)c.Style.Font).GetHeight();
+
+                    Int32 textRotation = c.Style.Alignment.TextRotation;
+                    var f = (XLFont)c.Style.Font;
+                    Double thisHeight;
+                    if (textRotation == 0)
+                    {
+                        thisHeight = f.GetHeight();
+                    }
+                    else
+                    {
+                        if (textRotation == 255)
+                        {
+                            thisHeight = f.GetHeight() * c.GetFormattedString().Length;
+                        }
+                        else
+                        {
+                            Int32 rotation;
+                            if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                                rotation = 90;
+                            else
+                                rotation = textRotation % 90;
+
+                            Double r = DegreeToRadian(rotation);
+                            Double b = f.GetHeight();
+                            Double m = f.GetHeight() * c.GetFormattedString().Length;
+                            Double t = m - b;
+                            thisHeight = (rotation / 90) * t;
+                            
+                        }
+                    }
+
                     if (thisHeight > maxHeight)
                         maxHeight = thisHeight;
                 }
@@ -222,6 +253,11 @@ namespace ClosedXML.Excel
 
             Height = maxHeight;
             return this;
+        }
+
+        private double DegreeToRadian(double angle)
+        {
+            return Math.PI * angle / 180.0;
         }
 
         public IXLRow AdjustToContents(Double minHeight, Double maxHeight)
@@ -249,7 +285,36 @@ namespace ClosedXML.Excel
                 }
                 if (!isMerged)
                 {
-                    var thisHeight = ((XLFont)c.Style.Font).GetHeight();
+                    Int32 textRotation = c.Style.Alignment.TextRotation;
+                    var f = (XLFont)c.Style.Font;
+                    Double thisHeight;
+                    if (textRotation == 0)
+                    {
+                        thisHeight = f.GetHeight();
+                    }
+                    else
+                    {
+                        if (textRotation == 255)
+                        {
+                            thisHeight = f.GetHeight() * c.GetFormattedString().Length;
+                        }
+                        else
+                        {
+                            Int32 rotation;
+                            if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                                rotation = 90;
+                            else
+                                rotation = textRotation % 90;
+
+                            Double r = DegreeToRadian(rotation);
+                            Double b = f.GetHeight();
+                            Double m = f.GetHeight() * c.GetFormattedString().Length;
+                            Double t = m - b;
+                            thisHeight = (rotation / 90) * t;
+
+                        }
+                    }
+
                     if (thisHeight >= maxHeight)
                     {
                         rowMaxHeight = maxHeight;

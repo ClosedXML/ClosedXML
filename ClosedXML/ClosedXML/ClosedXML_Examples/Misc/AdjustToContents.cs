@@ -84,6 +84,24 @@ namespace ClosedXML_Examples.Misc
             // You can also specify the starting row to start calculating the widths:
             // e.g. ws.Column(3).AdjustToContents(9);
 
+            var ws2 = wb.Worksheets.Add("Adjust Widths");
+            ws2.Cell(1, 1).SetValue("Text to adjust - 255").Style.Alignment.TextRotation = 255;
+            for (Int32 co = 0; co < 90; co += 5)
+            {
+                ws2.Cell(1, (co / 5) + 2).SetValue("Text to adjust - " + co).Style.Alignment.TextRotation = co;
+            }
+
+            ws2.Columns().AdjustToContents();
+
+            var ws3 = wb.Worksheets.Add("Adjust Heights");
+            ws3.Cell(1, 1).SetValue("Text to adjust - 255").Style.Alignment.TextRotation = 255;
+            for (Int32 ro = 0; ro < 90; ro += 5)
+            {
+                ws3.Cell((ro / 5) + 2, 1).SetValue("Text to adjust - " + ro).Style.Alignment.TextRotation = ro;
+            }
+
+            ws3.Rows().AdjustToContents();
+
             wb.SaveAs(filePath);
         }
 

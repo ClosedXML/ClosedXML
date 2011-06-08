@@ -310,7 +310,32 @@ namespace ClosedXML.Excel
                 }
                 if (!isMerged)
                 {
-                    var thisWidth = ((XLFont)c.Style.Font).GetWidth(c.GetFormattedString());
+                    Int32 textRotation = c.Style.Alignment.TextRotation;
+                    var f = (XLFont)c.Style.Font;
+                    Double thisWidth;
+                    if (textRotation == 0)
+                    { 
+                         thisWidth = f.GetWidth(c.GetFormattedString());
+                    }
+                    else
+                    {
+                        if (textRotation == 255)
+                        {
+                            thisWidth = f.GetWidth("X");
+                        }
+                        else
+                        {
+                            Int32 rotation;
+                            if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                                rotation = 90;
+                            else
+                                rotation = textRotation % 90;
+                            
+                            Double r = DegreeToRadian(rotation);
+                            thisWidth = f.GetWidth(c.GetFormattedString())  * Math.Cos(r) + Math.Sin(r) * f.GetWidth("X");
+                        }
+                    }
+
                     if (thisWidth > colMaxWidth)
                         colMaxWidth = thisWidth;
                 }
@@ -322,6 +347,11 @@ namespace ClosedXML.Excel
             Width = colMaxWidth;
 
             return this;
+        }
+
+        private double DegreeToRadian(double angle)
+        {
+            return Math.PI * angle / 180.0;
         }
 
         public IXLColumn AdjustToContents(Double minWidth, Double maxWidth)
@@ -349,7 +379,32 @@ namespace ClosedXML.Excel
                 }
                 if (!isMerged)
                 {
-                    var thisWidth = ((XLFont)c.Style.Font).GetWidth(c.GetFormattedString());
+                    Int32 textRotation = c.Style.Alignment.TextRotation;
+                    var f = (XLFont)c.Style.Font;
+                    Double thisWidth;
+                    if (textRotation == 0)
+                    {
+                        thisWidth = f.GetWidth(c.GetFormattedString());
+                    }
+                    else
+                    {
+                        if (textRotation == 255)
+                        {
+                            thisWidth = f.GetWidth("X");
+                        }
+                        else
+                        {
+                            Int32 rotation;
+                            if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                                rotation = 90;
+                            else
+                                rotation = textRotation % 90;
+
+                            Double r = DegreeToRadian(rotation);
+                            thisWidth = f.GetWidth(c.GetFormattedString()) * Math.Cos(r) + Math.Sin(r) * f.GetWidth("X");
+                        }
+                    }
+
                     if (thisWidth >= maxWidth)
                     {
                         colMaxWidth = maxWidth;

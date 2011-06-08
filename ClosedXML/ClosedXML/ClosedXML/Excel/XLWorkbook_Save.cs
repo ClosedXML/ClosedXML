@@ -1957,6 +1957,7 @@ namespace ClosedXML.Excel
                 row.Hidden = null;
                 row.StyleIndex = null;
                 row.CustomFormat = null;
+                row.Collapsed = null; 
                 if ((xlWorksheet as XLWorksheet).Internals.RowsCollection.ContainsKey(distinctRow))
                 {
                     var thisRow = (xlWorksheet as XLWorksheet).Internals.RowsCollection[distinctRow];
@@ -1993,7 +1994,7 @@ namespace ClosedXML.Excel
                 
                 if (cellsByRow.ContainsKey(distinctRow))
                 {
-
+                    var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference.Value, c => c);
                     foreach (var opCell in cellsByRow[distinctRow]
                         .OrderBy(c => c.Address.ColumnNumber)
                         .Select(c => (XLCell)c))
@@ -2005,8 +2006,12 @@ namespace ClosedXML.Excel
 
                         //Boolean isNewCell = false;
                         
-                        Cell cell = row.Elements<Cell>().FirstOrDefault(c => c.CellReference.Value == cellReference);
-                        if (cell == null)
+                        Cell cell;
+                        if (cellsByReference.ContainsKey(cellReference))
+                        {
+                            cell = cellsByReference[cellReference];
+                        }
+                        else
                         {
                             //isNewCell = true;
                             cell = new Cell() { CellReference = cellReference };

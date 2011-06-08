@@ -199,6 +199,10 @@ namespace ClosedXML.Excel
         {
             columns.ForEach(c => c.Collapse());
         }
+        public void CollapseOnly()
+        {
+            columns.ForEach(c => c.Collapsed = true );
+        }
         public void Expand()
         {
             columns.ForEach(c => c.Expand());

@@ -177,13 +177,18 @@ namespace ClosedXML.Excel
             }
             set
             {
-                if ( value != 255 && (value < 0 || value > 180) )
-                    throw new ArgumentException("TextRotation must be between 0 and 180 degrees, or 255.");
+                Int32 rotation = value;
+
+                if (rotation != 255 && (rotation < -90 || rotation > 180))
+                    throw new ArgumentException("TextRotation must be between -90 and 180 degrees, or 255.");
+
+                if (rotation < 0)
+                    rotation = 90 + (rotation * -1);
 
                 if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.TextRotation = value);
+                    container.Styles.ForEach(s => s.Alignment.TextRotation = rotation);
                 else
-                    textRotation = value;
+                    textRotation = rotation;
             }
         }
 

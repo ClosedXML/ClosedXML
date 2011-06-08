@@ -12,14 +12,21 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
-        static void xMain(string[] args)
+        static void Main(string[] args)
         {
             //var fileName = "DataValidation";
-            //var fileName = "Sandbox";
-            var fileName = "Issue_0000";
-            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-            //var wb = new XLWorkbook();
-            //var ws = wb.Worksheets.Add("Sheet1");
+            var fileName = "Sandbox";
+            //var fileName = "Issue_6788";
+            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            for (Int32 co = 0; co < 90; co += 5)
+            {
+                ws.Cell(1, (co / 5) + 1).SetValue("Text to adjust - " + co).Style.Alignment.TextRotation = co;
+            }
+            
+            ws.Columns().AdjustToContents();
+
             //ws.Cell("A1").Value = "Category";
             //ws.Cell("A2").Value = "A";
             //ws.Cell("A3").Value = "B";
@@ -35,8 +42,16 @@ namespace ClosedXML_Sandbox
             //Now, when i use workbook.Worksheet("CCR").Range("B1:C34").RangeUsed().
             //The expect is B1:C29.
 
-            
             wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
+
+
+            //var start = DateTime.Now;
+            //var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Issue_0000_2.xlsx");
+            //var end = DateTime.Now;
+            //Console.WriteLine(String.Format("Opened file in {0} seconds", (end - start).TotalSeconds));
+            //var ws = wb.Worksheet(1);
+            //var cell = ws.Cell(100000, 13);
+            //Console.WriteLine(cell.GetString());
             //Console.ReadKey();
         }
 
@@ -51,82 +66,82 @@ namespace ClosedXML_Sandbox
             }
         }
 
-        static void Main(string[] args)
+        static void xMain(string[] args)
         {
             FillStyles();
             List<Double> runningSave = new List<Double>();
             List<Double> runningLoad = new List<Double>();
             List<Double> runningSavedBack = new List<Double>();
-            
-            foreach (Int32 r in Enumerable.Range(1, 1))
+
+            var wb = new XLWorkbook();
+            var startTotal = DateTime.Now;
+            foreach (var i in Enumerable.Range(1, 1))
             {
-                var wb = new XLWorkbook();
-                var startTotal = DateTime.Now;
-                foreach (var i in Enumerable.Range(1, 1))
+                var ws = wb.Worksheets.Add("Sheet" + i);
+                foreach (var ro in Enumerable.Range(1, 10000))
                 {
-                    var ws = wb.Worksheets.Add("Sheet" + i);
-                    foreach (var ro in Enumerable.Range(1, 10000))
+                    foreach (var co in Enumerable.Range(1, 20))
                     {
-                        foreach (var co in Enumerable.Range(1, 20))
-                        {
-                            //ws.Cell(ro, co).Style = GetRandomStyle();
-                            //if (rnd.Next(1, 5) == 1)
-                                //ws.Cell(ro, co).FormulaA1 = ws.Cell(ro + 1, co + 1).Address.ToString() + " & \"-Copy\"";
-                            //else
-                                ws.Cell(ro, co).Value = GetRandomValue();
-                        }
-                        //System.Threading.Thread.Sleep(10);
+                        //ws.Cell(ro, co).Style = GetRandomStyle();
+                        //if (rnd.Next(1, 5) == 1)
+                        //ws.Cell(ro, co).FormulaA1 = ws.Cell(ro + 1, co + 1).Address.ToString() + " & \"-Copy\"";
+                        //else
+                        ws.Cell(ro, co).Value = GetRandomValue();
                     }
-                    
-                    //Int32 rowCount = ws.LastRowUsed().RowNumber();
-                    //for (Int32 ro = 1; ro <= rowCount; ro += 100)
-                    //{
-                    //    var dv = ws.Range(ro, 1, ro + 99, 5).DataValidation;
-                    //}
-
-                    //var rngUsed = ws.RangeUsed();
-                    //ws.RangeUsed().Style.Border.BottomBorder = XLBorderStyleValues.DashDot;
-                    //ws.RangeUsed().Style.Border.BottomBorderColor = XLColor.AirForceBlue;
-                    //ws.RangeUsed().Style.Border.TopBorder = XLBorderStyleValues.DashDotDot;
-                    //ws.RangeUsed().Style.Border.TopBorderColor = XLColor.AliceBlue;
-                    //ws.RangeUsed().Style.Border.LeftBorder = XLBorderStyleValues.Dashed;
-                    //ws.RangeUsed().Style.Border.LeftBorderColor = XLColor.Alizarin;
-                    //ws.RangeUsed().Style.Border.RightBorder = XLBorderStyleValues.Dotted;
-                    //ws.RangeUsed().Style.Border.RightBorderColor = XLColor.Almond;
-
-                    //ws.RangeUsed().Style.Font.Bold = true;
-                    //ws.RangeUsed().Style.Font.FontColor = XLColor.Amaranth;
-                    //ws.RangeUsed().Style.Font.FontSize = 10;
-                    //ws.RangeUsed().Style.Font.Italic = true;
-
-                    //ws.RangeUsed().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    //ws.RangeUsed().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    //ws.RangeUsed().Style.Alignment.WrapText = true;
-
-                    //var startS = DateTime.Now;
-                    //ws.Sort();
-                    //var endS = DateTime.Now;
-                    //var savedS = (endS - startS).TotalSeconds;
-                    //runningSave.Add(savedS);
-                    //Console.WriteLine("Sorted in {0} secs.", savedS);
+                    //System.Threading.Thread.Sleep(10);
                 }
 
-
-                //var start3 = DateTime.Now;
-                //foreach (var ws in wb.Worksheets)
+                //Int32 rowCount = ws.LastRowUsed().RowNumber();
+                //for (Int32 ro = 1; ro <= rowCount; ro += 100)
                 //{
-                //    ws.Style = wb.Style;
+                //    var dv = ws.Range(ro, 1, ro + 99, 5).DataValidation;
                 //}
-                //var end3 = DateTime.Now;
-                //Console.WriteLine("Bolded all cells in {0} secs.", (end3 - start3).TotalSeconds);
-                
-                var start = DateTime.Now;
-                wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
-                var end = DateTime.Now;
-                var saved = (end - start).TotalSeconds;
-                runningSave.Add(saved);
-                Console.WriteLine("Saved in {0} secs.", saved);
 
+                //var rngUsed = ws.RangeUsed();
+                //ws.RangeUsed().Style.Border.BottomBorder = XLBorderStyleValues.DashDot;
+                //ws.RangeUsed().Style.Border.BottomBorderColor = XLColor.AirForceBlue;
+                //ws.RangeUsed().Style.Border.TopBorder = XLBorderStyleValues.DashDotDot;
+                //ws.RangeUsed().Style.Border.TopBorderColor = XLColor.AliceBlue;
+                //ws.RangeUsed().Style.Border.LeftBorder = XLBorderStyleValues.Dashed;
+                //ws.RangeUsed().Style.Border.LeftBorderColor = XLColor.Alizarin;
+                //ws.RangeUsed().Style.Border.RightBorder = XLBorderStyleValues.Dotted;
+                //ws.RangeUsed().Style.Border.RightBorderColor = XLColor.Almond;
+
+                //ws.RangeUsed().Style.Font.Bold = true;
+                //ws.RangeUsed().Style.Font.FontColor = XLColor.Amaranth;
+                //ws.RangeUsed().Style.Font.FontSize = 10;
+                //ws.RangeUsed().Style.Font.Italic = true;
+
+                //ws.RangeUsed().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                //ws.RangeUsed().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                //ws.RangeUsed().Style.Alignment.WrapText = true;
+
+                //var startS = DateTime.Now;
+                //ws.Sort();
+                //var endS = DateTime.Now;
+                //var savedS = (endS - startS).TotalSeconds;
+                //runningSave.Add(savedS);
+                //Console.WriteLine("Sorted in {0} secs.", savedS);
+            }
+
+
+            //var start3 = DateTime.Now;
+            //foreach (var ws in wb.Worksheets)
+            //{
+            //    ws.Style = wb.Style;
+            //}
+            //var end3 = DateTime.Now;
+            //Console.WriteLine("Bolded all cells in {0} secs.", (end3 - start3).TotalSeconds);
+
+            var start = DateTime.Now;
+            wb.SaveAs(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
+            var end = DateTime.Now;
+            var saved = (end - start).TotalSeconds;
+            runningSave.Add(saved);
+            Console.WriteLine("Saved in {0} secs.", saved);
+
+            foreach (Int32 r in Enumerable.Range(1, 1))
+            {
                 var start1 = DateTime.Now;
                 var wb1 = new XLWorkbook(@"C:\Excel Files\ForTesting\Benchmark.xlsx");
                 var end1 = DateTime.Now;
@@ -135,7 +150,7 @@ namespace ClosedXML_Sandbox
                 Console.WriteLine("Loaded in {0} secs.", loaded);
 
                 var start2 = DateTime.Now;
-                wb1.SaveAs(@"C:\Excel Files\ForTesting\Benchmark_Saved.xlsx");
+                //wb1.SaveAs(@"C:\Excel Files\ForTesting\Benchmark_Saved.xlsx");
                 var end2 = DateTime.Now;
                 var savedBack = (end2 - start2).TotalSeconds;
                 runningSavedBack.Add(savedBack);
