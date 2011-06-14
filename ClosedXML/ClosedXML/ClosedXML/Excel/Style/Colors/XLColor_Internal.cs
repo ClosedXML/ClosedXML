@@ -12,23 +12,20 @@ namespace ClosedXML.Excel
         internal XLColor(IXLColor defaultColor)
         {
             XLColor dColor = (XLColor)defaultColor;
-            if (dColor.colorType == XLColorType.Theme)
+            if (dColor.colorType == XLColorType.Color)
+                color = dColor.color;
+            else if (dColor.colorType == XLColorType.Theme)
             {
-                this.themeColor = dColor.themeColor;
-                this.themeTint = dColor.themeTint;
-                hashCode = 7 ^ themeColor.GetHashCode() ^ themeTint.GetHashCode();
+                themeColor = dColor.themeColor;
+                themeTint = dColor.themeTint;
             }
-            else if (dColor.ColorType == XLColorType.Indexed)
+            else 
             {
-                this.indexed = dColor.indexed;
-                hashCode = 11 ^ indexed;
-            }
-            else
-            {
-                this.color = dColor.color;
-                hashCode = 13 ^ color.GetHashCode();
-            }
+                indexed = dColor.indexed;
+            } 
+
             HasValue = true;
+            hashCode = dColor.hashCode;
             colorType = dColor.colorType;
         }
         internal XLColor()

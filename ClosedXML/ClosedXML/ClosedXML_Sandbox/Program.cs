@@ -12,15 +12,15 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
-        static void Main(string[] args)
+        static void xMain(string[] args)
         {
             //var fileName = "DataValidation";
-            var fileName = "Sandbox";
-            //var fileName = "Issue_6788";
-            var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
+            //var fileName = "Sandbox";
+            var fileName = "Issue_0000";
+            //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
             //var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("SheetX");
-            ws.SetTabSelected();
+            //var ws = wb.Worksheets.Add("SheetX");
+            
             
             //ws.Cell("A1").Value = "Category";
             //ws.Cell("A2").Value = "A";
@@ -37,17 +37,17 @@ namespace ClosedXML_Sandbox
             //Now, when i use workbook.Worksheet("CCR").Range("B1:C34").RangeUsed().
             //The expect is B1:C29.
 
-            wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
+            //wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
 
 
-            //var start = DateTime.Now;
-            //var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Issue_0000_2.xlsx");
-            //var end = DateTime.Now;
-            //Console.WriteLine(String.Format("Opened file in {0} seconds", (end - start).TotalSeconds));
-            //var ws = wb.Worksheet(1);
-            //var cell = ws.Cell(100000, 13);
-            //Console.WriteLine(cell.GetString());
-            //Console.ReadKey();
+            var start = DateTime.Now;
+            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Issue_0000.xlsx");
+            var end = DateTime.Now;
+            Console.WriteLine(String.Format("Opened file in {0} seconds", (end - start).TotalSeconds));
+            var ws = wb.Worksheet(1);
+            var cell = ws.Cell(100000, 13);
+            Console.WriteLine(cell.GetString());
+            Console.ReadKey();
         }
 
 
@@ -61,7 +61,7 @@ namespace ClosedXML_Sandbox
             }
         }
 
-        static void xMain(string[] args)
+        static void Main(string[] args)
         {
             FillStyles();
             List<Double> runningSave = new List<Double>();
@@ -98,7 +98,7 @@ namespace ClosedXML_Sandbox
             runningSave.Add(saved);
             Console.WriteLine("Saved in {0} secs.", saved);
 
-            foreach (Int32 r in Enumerable.Range(1, 100))
+            foreach (Int32 r in Enumerable.Range(1, 1))
             {
                 var start1 = DateTime.Now;
                 var wb1 = new XLWorkbook(@"C:\Excel Files\ForTesting\Benchmark.xlsx");

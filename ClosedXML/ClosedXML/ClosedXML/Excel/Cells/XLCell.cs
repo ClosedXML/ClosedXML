@@ -636,11 +636,21 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
+        private Boolean initialStyle = true;
+        public void SetStyle(XLStyle style)
+        {
+            this.style = style;
+        }
         private IXLStyle style;
         public IXLStyle Style
         {
             get
             {
+                if (initialStyle)
+                {
+                    style = new XLStyle(this, style);
+                    initialStyle = false;
+                }
                 return style;
             }
             set
@@ -654,7 +664,7 @@ namespace ClosedXML.Excel
             get
             {
                 UpdatingStyle = true;
-                yield return style;
+                yield return Style;
                 UpdatingStyle = false;
             }
         }
@@ -663,13 +673,13 @@ namespace ClosedXML.Excel
 
         public IXLStyle InnerStyle
         {
-            get { return style; }
-            set { style = new XLStyle(this, value); }
+            get { return Style; }
+            set { Style = value; }
         }
 
         #endregion
 
-        private XLCellValues dataType;
+        internal XLCellValues dataType;
         public XLCellValues DataType
         {
             get
