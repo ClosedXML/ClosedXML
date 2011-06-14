@@ -145,6 +145,7 @@
     <Compile Include="Excel\DataValidation\XLValidationCriteria.cs" />
     <Compile Include="Excel\DataValidation\IXLDataValidation.cs" />
     <Compile Include="Excel\DataValidation\IXLValidationCriteria.cs" />
+    <Compile Include="Excel\EnumConverter.cs" />
     <Compile Include="Excel\Hyperlinks\XLHyperlinks.cs" />
     <Compile Include="Excel\Hyperlinks\IXLHyperlinks.cs" />
     <Compile Include="Excel\Hyperlinks\XLHyperlink_Internal.cs" />

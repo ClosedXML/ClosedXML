@@ -109,6 +109,9 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        
+        /// <summary>
+        /// Adds a vertical page break after these columns.
+        /// </summary>
+        IXLColumns AddVerticalPageBreaks();        
     }
 }

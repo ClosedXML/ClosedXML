@@ -109,6 +109,9 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        
+        /// <summary>
+        /// Adds a horizontal page break after these rows.
+        /// </summary>
+        IXLRows AddHorizontalPageBreaks();
     }
 }

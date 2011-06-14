@@ -22,52 +22,7 @@ namespace ClosedXML.Excel
     {
         private const Double COLUMN_WIDTH_OFFSET = 0.71;
 
-        private List<KeyValuePair<XLFillPatternValues, PatternValues>> fillPatternValues = new List<KeyValuePair<XLFillPatternValues, PatternValues>>();
-        private List<KeyValuePair<XLAlignmentHorizontalValues, HorizontalAlignmentValues>> alignmentHorizontalValues = new List<KeyValuePair<XLAlignmentHorizontalValues, HorizontalAlignmentValues>>();
-        private List<KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>> alignmentVerticalValues = new List<KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>>();
-        private List<KeyValuePair<XLBorderStyleValues, BorderStyleValues>> borderStyleValues = new List<KeyValuePair<XLBorderStyleValues, BorderStyleValues>>();
-        private List<KeyValuePair<XLFontUnderlineValues, UnderlineValues>> underlineValuesList = new List<KeyValuePair<XLFontUnderlineValues, UnderlineValues>>();
-        private List<KeyValuePair<XLFontVerticalTextAlignmentValues, VerticalAlignmentRunValues>> fontVerticalTextAlignmentValues = new List<KeyValuePair<XLFontVerticalTextAlignmentValues, VerticalAlignmentRunValues>>();
-        private List<KeyValuePair<XLPageOrderValues, PageOrderValues>> pageOrderValues = new List<KeyValuePair<XLPageOrderValues, PageOrderValues>>();
-        private List<KeyValuePair<XLPageOrientation, OrientationValues>> pageOrientationValues = new List<KeyValuePair<XLPageOrientation, OrientationValues>>();
-        private List<KeyValuePair<XLShowCommentsValues, CellCommentsValues>> showCommentsValues = new List<KeyValuePair<XLShowCommentsValues, CellCommentsValues>>();
-        private List<KeyValuePair<XLPrintErrorValues, PrintErrorValues>> printErrorValues = new List<KeyValuePair<XLPrintErrorValues, PrintErrorValues>>();
-        private List<KeyValuePair<XLCalculateMode, CalculateModeValues>> calculateModeValues = new List<KeyValuePair<XLCalculateMode, CalculateModeValues>>();
-        private List<KeyValuePair<XLReferenceStyle, ReferenceModeValues>> referenceModeValues = new List<KeyValuePair<XLReferenceStyle, ReferenceModeValues>>();
-        private List<KeyValuePair<XLAlignmentReadingOrderValues, UInt32>> alignmentReadingOrderValues = new List<KeyValuePair<XLAlignmentReadingOrderValues, UInt32>>();
-        private List<KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>> totalsRowFunctionValues = new List<KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>>();
-        private List<KeyValuePair<XLAllowedValues, DataValidationValues>> dataValidationValues = new List<KeyValuePair<XLAllowedValues, DataValidationValues>>();
-        private List<KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>> dataValidationErrorStyleValues = new List<KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>>();
-        private List<KeyValuePair<XLOperator, DataValidationOperatorValues>> dataValidationOperatorValues = new List<KeyValuePair<XLOperator, DataValidationOperatorValues>>();
-        private List<KeyValuePair<XLWorksheetVisibility, SheetStateValues>> sheetStateValues = new List<KeyValuePair<XLWorksheetVisibility, SheetStateValues>>();
-
-        private Boolean populated = false;
-        private void PopulateEnums()
-        {
-            if (!populated)
-            {
-                PopulateFillPatternValues();
-                PopulateAlignmentHorizontalValues();
-                PopulateAlignmentVerticalValues();
-                PupulateBorderStyleValues();
-                PopulateUnderlineValues();
-                PopulateFontVerticalTextAlignmentValues();
-                PopulatePageOrderValues();
-                PopulatePageOrientationValues();
-                PopulateShowCommentsValues();
-                PopulatePrintErrorValues();
-                PopulateCalculateModeValues();
-                PopulateReferenceModeValues();
-                PopulateAlignmentReadingOrderValues();
-                PopulateTotalsRowFunctionValues();
-                PopulateDataValidationValues();
-                PopulateDataValidationErrorStyleValues();
-                PopulateDataValidationOperatorValues();
-                PopulateSheetStateValues();
-                populated = true;
-            }
-        }
-
+       
         private enum RelType { General, Workbook, Worksheet, Drawing }
         private class RelIdGenerator
         {
@@ -134,191 +89,6 @@ namespace ClosedXML.Excel
                 default: throw new NotImplementedException();
             }
         }
-
-        #region Pouplate Values
-        private void PopulateUnderlineValues()
-        {
-
-            underlineValuesList.Add(new KeyValuePair<XLFontUnderlineValues, UnderlineValues>(XLFontUnderlineValues.Double, UnderlineValues.Double));
-            underlineValuesList.Add(new KeyValuePair<XLFontUnderlineValues, UnderlineValues>(XLFontUnderlineValues.DoubleAccounting, UnderlineValues.DoubleAccounting));
-            underlineValuesList.Add(new KeyValuePair<XLFontUnderlineValues, UnderlineValues>(XLFontUnderlineValues.None, UnderlineValues.None));
-            underlineValuesList.Add(new KeyValuePair<XLFontUnderlineValues, UnderlineValues>(XLFontUnderlineValues.Single, UnderlineValues.Single));
-            underlineValuesList.Add(new KeyValuePair<XLFontUnderlineValues, UnderlineValues>(XLFontUnderlineValues.SingleAccounting, UnderlineValues.SingleAccounting));
-        }
-
-        private void PopulatePageOrientationValues()
-        {
-            pageOrientationValues.Add(new KeyValuePair<XLPageOrientation, OrientationValues>(XLPageOrientation.Default, OrientationValues.Default));
-            pageOrientationValues.Add(new KeyValuePair<XLPageOrientation, OrientationValues>(XLPageOrientation.Landscape, OrientationValues.Landscape));
-            pageOrientationValues.Add(new KeyValuePair<XLPageOrientation, OrientationValues>(XLPageOrientation.Portrait, OrientationValues.Portrait));
-        }
-
-        private void PopulateFontVerticalTextAlignmentValues()
-        {
-            fontVerticalTextAlignmentValues.Add(new KeyValuePair<XLFontVerticalTextAlignmentValues, VerticalAlignmentRunValues>(XLFontVerticalTextAlignmentValues.Baseline, VerticalAlignmentRunValues.Baseline));
-            fontVerticalTextAlignmentValues.Add(new KeyValuePair<XLFontVerticalTextAlignmentValues, VerticalAlignmentRunValues>(XLFontVerticalTextAlignmentValues.Subscript, VerticalAlignmentRunValues.Subscript));
-            fontVerticalTextAlignmentValues.Add(new KeyValuePair<XLFontVerticalTextAlignmentValues, VerticalAlignmentRunValues>(XLFontVerticalTextAlignmentValues.Superscript, VerticalAlignmentRunValues.Superscript));
-        }
-
-        private void PopulateFillPatternValues()
-        { 
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkDown, PatternValues.DarkDown));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkGray, PatternValues.DarkGray));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkGrid, PatternValues.DarkGrid));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkHorizontal, PatternValues.DarkHorizontal));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkTrellis, PatternValues.DarkTrellis));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkUp, PatternValues.DarkUp));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.DarkVertical, PatternValues.DarkVertical));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.Gray0625, PatternValues.Gray0625));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.Gray125, PatternValues.Gray125));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightDown, PatternValues.LightDown));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightGray, PatternValues.LightGray));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightGrid, PatternValues.LightGrid));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightHorizontal, PatternValues.LightHorizontal));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightTrellis, PatternValues.LightTrellis));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightUp, PatternValues.LightUp));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.LightVertical, PatternValues.LightVertical));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.MediumGray, PatternValues.MediumGray));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.None, PatternValues.None));
-                fillPatternValues.Add(new KeyValuePair<XLFillPatternValues,PatternValues>(XLFillPatternValues.Solid, PatternValues.Solid));
-        }
-
-        private void PupulateBorderStyleValues()
-        {
-
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.DashDot, BorderStyleValues.DashDot));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.DashDotDot, BorderStyleValues.DashDotDot));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.Dashed, BorderStyleValues.Dashed));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.Dotted, BorderStyleValues.Dotted));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.Double, BorderStyleValues.Double));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.Hair, BorderStyleValues.Hair));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.Medium, BorderStyleValues.Medium));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.MediumDashDot, BorderStyleValues.MediumDashDot));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.MediumDashDotDot, BorderStyleValues.MediumDashDotDot));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.MediumDashed, BorderStyleValues.MediumDashed));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.None, BorderStyleValues.None));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.SlantDashDot, BorderStyleValues.SlantDashDot));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.Thick, BorderStyleValues.Thick));
-            borderStyleValues.Add(new KeyValuePair<XLBorderStyleValues, BorderStyleValues>(XLBorderStyleValues.Thin, BorderStyleValues.Thin));
-
-        }
-
-        private void PopulateAlignmentHorizontalValues()
-        {
-                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Center, HorizontalAlignmentValues.Center));
-                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.CenterContinuous, HorizontalAlignmentValues.CenterContinuous));
-                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Distributed, HorizontalAlignmentValues.Distributed));
-                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Fill, HorizontalAlignmentValues.Fill));
-                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.General, HorizontalAlignmentValues.General));
-                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Justify, HorizontalAlignmentValues.Justify));
-                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Left, HorizontalAlignmentValues.Left));
-                alignmentHorizontalValues.Add(new KeyValuePair<XLAlignmentHorizontalValues,HorizontalAlignmentValues>(XLAlignmentHorizontalValues.Right, HorizontalAlignmentValues.Right));
-        }
-
-        private void PopulateAlignmentVerticalValues()
-        {
-
-            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Bottom, VerticalAlignmentValues.Bottom));
-            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Center, VerticalAlignmentValues.Center));
-            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Distributed, VerticalAlignmentValues.Distributed));
-            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Justify, VerticalAlignmentValues.Justify));
-            alignmentVerticalValues.Add(new KeyValuePair<XLAlignmentVerticalValues, VerticalAlignmentValues>(XLAlignmentVerticalValues.Top, VerticalAlignmentValues.Top));
-        }
-
-        private void PopulatePageOrderValues()
-        {
-            pageOrderValues.Add(new KeyValuePair<XLPageOrderValues, PageOrderValues>(XLPageOrderValues.DownThenOver, PageOrderValues.DownThenOver));
-            pageOrderValues.Add(new KeyValuePair<XLPageOrderValues, PageOrderValues>(XLPageOrderValues.OverThenDown, PageOrderValues.OverThenDown));
-        }
-
-        private void PopulateShowCommentsValues()
-        {
-            showCommentsValues.Add(new KeyValuePair<XLShowCommentsValues, CellCommentsValues>(XLShowCommentsValues.AsDisplayed, CellCommentsValues.AsDisplayed));
-            showCommentsValues.Add(new KeyValuePair<XLShowCommentsValues, CellCommentsValues>(XLShowCommentsValues.AtEnd, CellCommentsValues.AtEnd));
-            showCommentsValues.Add(new KeyValuePair<XLShowCommentsValues, CellCommentsValues>(XLShowCommentsValues.None, CellCommentsValues.None));
-        }
-
-        private void PopulatePrintErrorValues()
-        {
-            printErrorValues.Add(new KeyValuePair<XLPrintErrorValues, PrintErrorValues>(XLPrintErrorValues.Blank, PrintErrorValues.Blank));
-            printErrorValues.Add(new KeyValuePair<XLPrintErrorValues, PrintErrorValues>(XLPrintErrorValues.Dash, PrintErrorValues.Dash));
-            printErrorValues.Add(new KeyValuePair<XLPrintErrorValues, PrintErrorValues>(XLPrintErrorValues.Displayed, PrintErrorValues.Displayed));
-            printErrorValues.Add(new KeyValuePair<XLPrintErrorValues, PrintErrorValues>(XLPrintErrorValues.NA, PrintErrorValues.NA));
-        }
-
-        private void PopulateCalculateModeValues()
-        {
-            calculateModeValues.Add(new KeyValuePair<XLCalculateMode, CalculateModeValues>(XLCalculateMode.Auto, CalculateModeValues.Auto)) ;
-            calculateModeValues.Add(new KeyValuePair<XLCalculateMode, CalculateModeValues>(XLCalculateMode.AutoNoTable, CalculateModeValues.AutoNoTable));
-            calculateModeValues.Add(new KeyValuePair<XLCalculateMode, CalculateModeValues>(XLCalculateMode.Manual, CalculateModeValues.Manual));
-        }
-
-        private void PopulateReferenceModeValues()
-        {
-            referenceModeValues.Add(new KeyValuePair<XLReferenceStyle, ReferenceModeValues>(XLReferenceStyle.R1C1, ReferenceModeValues.R1C1));
-            referenceModeValues.Add(new KeyValuePair<XLReferenceStyle, ReferenceModeValues>(XLReferenceStyle.A1, ReferenceModeValues.A1));
-        }
-
-        private void PopulateAlignmentReadingOrderValues()
-        {
-            alignmentReadingOrderValues.Add(new KeyValuePair<XLAlignmentReadingOrderValues, uint>(XLAlignmentReadingOrderValues.ContextDependent, 0));
-            alignmentReadingOrderValues.Add(new KeyValuePair<XLAlignmentReadingOrderValues, uint>(XLAlignmentReadingOrderValues.LeftToRight, 1));
-            alignmentReadingOrderValues.Add(new KeyValuePair<XLAlignmentReadingOrderValues, uint>(XLAlignmentReadingOrderValues.RightToLeft, 2));
-        }
-
-        private void PopulateTotalsRowFunctionValues()
-        {
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.None, TotalsRowFunctionValues.None));
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.Sum, TotalsRowFunctionValues.Sum));
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.Minimum, TotalsRowFunctionValues.Minimum));
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.Maximum, TotalsRowFunctionValues.Maximum));
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.Average, TotalsRowFunctionValues.Average));
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.Count, TotalsRowFunctionValues.Count));
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.CountNumbers, TotalsRowFunctionValues.CountNumbers));
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.StandardDeviation, TotalsRowFunctionValues.StandardDeviation));
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.Variance, TotalsRowFunctionValues.Variance));
-            totalsRowFunctionValues.Add(new KeyValuePair<XLTotalsRowFunction, TotalsRowFunctionValues>(XLTotalsRowFunction.Custom, TotalsRowFunctionValues.Custom));
-        }
-
-        private void PopulateDataValidationValues()
-        {
-            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.AnyValue, DataValidationValues.None));
-            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.Custom, DataValidationValues.Custom));
-            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.Date, DataValidationValues.Date));
-            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.Decimal, DataValidationValues.Decimal));
-            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.List, DataValidationValues.List));
-            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.TextLength, DataValidationValues.TextLength));
-            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.Time, DataValidationValues.Time));
-            dataValidationValues.Add(new KeyValuePair<XLAllowedValues, DataValidationValues>(XLAllowedValues.WholeNumber, DataValidationValues.Whole));
-        }
-
-        private void PopulateDataValidationErrorStyleValues()
-        {
-            dataValidationErrorStyleValues.Add(new KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>(XLErrorStyle.Information, DataValidationErrorStyleValues.Information));
-            dataValidationErrorStyleValues.Add(new KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>(XLErrorStyle.Warning, DataValidationErrorStyleValues.Warning));
-            dataValidationErrorStyleValues.Add(new KeyValuePair<XLErrorStyle, DataValidationErrorStyleValues>(XLErrorStyle.Stop, DataValidationErrorStyleValues.Stop));
-        }
-
-        private void PopulateDataValidationOperatorValues()
-        {
-            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.Between, DataValidationOperatorValues.Between));
-            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.EqualOrGreaterThan , DataValidationOperatorValues.GreaterThanOrEqual ));
-            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.EqualOrLessThan, DataValidationOperatorValues.LessThanOrEqual));
-            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.EqualTo, DataValidationOperatorValues.Equal));
-            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.GreaterThan, DataValidationOperatorValues.GreaterThan));
-            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.LessThan, DataValidationOperatorValues.LessThan));
-            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.NotBetween, DataValidationOperatorValues.NotBetween));
-            dataValidationOperatorValues.Add(new KeyValuePair<XLOperator, DataValidationOperatorValues>(XLOperator.NotEqualTo, DataValidationOperatorValues.NotEqual));
-        }
-
-        private void PopulateSheetStateValues()
-        {
-            sheetStateValues.Add(new KeyValuePair<XLWorksheetVisibility, SheetStateValues>(XLWorksheetVisibility.Visible, SheetStateValues.Visible));
-            sheetStateValues.Add(new KeyValuePair<XLWorksheetVisibility, SheetStateValues>(XLWorksheetVisibility.Hidden, SheetStateValues.Hidden));
-            sheetStateValues.Add(new KeyValuePair<XLWorksheetVisibility, SheetStateValues>(XLWorksheetVisibility.VeryHidden, SheetStateValues.VeryHidden));
-        }
-
-        #endregion
 
         private void CreatePackage(String filePath)
         {
@@ -680,9 +450,9 @@ namespace ClosedXML.Excel
                     Id = rId,
                     SheetId = (UInt32)xlSheet.SheetId
                 };
-                
+
                 if (xlSheet.Visibility != XLWorksheetVisibility.Visible)
-                    newSheet.State = sheetStateValues.Single(p => p.Key == xlSheet.Visibility).Value;
+                    newSheet.State = xlSheet.Visibility.ToOpenXml();
 
                 workbook.Sheets.Append(newSheet);
             }
@@ -708,15 +478,24 @@ namespace ClosedXML.Excel
 
             WorkbookView workbookView = workbook.BookViews.Elements<WorkbookView>().FirstOrDefault();
 
+            UInt32 activeTab = firstSheetVisible;
+            foreach (var ws in worksheets)
+            {
+                if (ws.TabActive)
+                {
+                    activeTab = (UInt32)(ws.Position - 1);
+                    break;
+                }
+            }
 
             if (workbookView == null)
             {
-                workbookView = new WorkbookView() { ActiveTab = firstSheetVisible, FirstSheet = firstSheetVisible };
+                workbookView = new WorkbookView() { ActiveTab = activeTab, FirstSheet = firstSheetVisible };
                 workbook.BookViews.Append(workbookView);
             }
             else
             {
-                workbookView.ActiveTab = firstSheetVisible;
+                workbookView.ActiveTab = activeTab;
                 workbookView.FirstSheet = firstSheetVisible;
             }
             
@@ -837,13 +616,13 @@ namespace ClosedXML.Excel
             if (CalculateMode == XLCalculateMode.Default)
                 workbook.CalculationProperties.CalculationMode = null;
             else
-                workbook.CalculationProperties.CalculationMode = calculateModeValues.Single(p => p.Key == CalculateMode).Value;
+                workbook.CalculationProperties.CalculationMode = CalculateMode.ToOpenXml();
 
 
             if (ReferenceStyle == XLReferenceStyle.Default)
                 workbook.CalculationProperties.ReferenceMode = null;
             else
-                workbook.CalculationProperties.ReferenceMode = referenceModeValues.Single(p => p.Key == ReferenceStyle).Value;
+                workbook.CalculationProperties.ReferenceMode = ReferenceStyle.ToOpenXml();
            
         }
 
@@ -1058,8 +837,8 @@ namespace ClosedXML.Excel
                     cellFormat.FormatId = (UInt32)formatId;
                     Alignment alignment = new Alignment()
                     {
-                        Horizontal = alignmentHorizontalValues.Single(a => a.Key == styleInfo.Style.Alignment.Horizontal).Value,
-                        Vertical = alignmentVerticalValues.Single(a => a.Key == styleInfo.Style.Alignment.Vertical).Value,
+                        Horizontal = styleInfo.Style.Alignment.Horizontal.ToOpenXml(),
+                        Vertical = styleInfo.Style.Alignment.Vertical.ToOpenXml(),
                         Indent = (UInt32)styleInfo.Style.Alignment.Indent,
                         ReadingOrder = (UInt32)styleInfo.Style.Alignment.ReadingOrder,
                         WrapText = styleInfo.Style.Alignment.WrapText,
@@ -1117,18 +896,18 @@ namespace ClosedXML.Excel
 
         private Boolean ApplyFill(StyleInfo styleInfo)
         {
-            return fillPatternValues.Single(p => p.Key == styleInfo.Style.Fill.PatternType).Value == PatternValues.None;
+            return styleInfo.Style.Fill.PatternType.ToOpenXml() == PatternValues.None;
         }
 
         private Boolean ApplyBorder(StyleInfo styleInfo)
         {
             IXLBorder opBorder = styleInfo.Style.Border;
             return (
-                   borderStyleValues.Single(b => b.Key == opBorder.BottomBorder).Value != BorderStyleValues.None
-                || borderStyleValues.Single(b => b.Key == opBorder.DiagonalBorder).Value != BorderStyleValues.None
-                || borderStyleValues.Single(b => b.Key == opBorder.RightBorder).Value != BorderStyleValues.None
-                || borderStyleValues.Single(b => b.Key == opBorder.LeftBorder).Value != BorderStyleValues.None
-                || borderStyleValues.Single(b => b.Key == opBorder.TopBorder).Value != BorderStyleValues.None);
+                   opBorder.BottomBorder.ToOpenXml() != BorderStyleValues.None
+                || opBorder.DiagonalBorder.ToOpenXml() != BorderStyleValues.None
+                || opBorder.RightBorder.ToOpenXml() != BorderStyleValues.None
+                || opBorder.LeftBorder.ToOpenXml() != BorderStyleValues.None
+                || opBorder.TopBorder.ToOpenXml() != BorderStyleValues.None);
         }
 
         private Boolean ApplyProtection(StyleInfo styleInfo)
@@ -1187,13 +966,13 @@ namespace ClosedXML.Excel
             if (alignment != null)
             {
                 if (alignment.Horizontal != null)
-                    a.Horizontal = alignmentHorizontalValues.Single(p => p.Value == alignment.Horizontal.Value).Key;
+                    a.Horizontal = alignment.Horizontal.Value.ToClosedXml();
                 if (alignment.Vertical != null)
-                    a.Vertical = alignmentVerticalValues.Single(p => p.Value == alignment.Vertical.Value).Key;
+                    a.Vertical = alignment.Vertical.Value.ToClosedXml();
                 if (alignment.Indent != null)
                     a.Indent = (Int32)alignment.Indent.Value;
                 if (alignment.ReadingOrder != null)
-                    a.ReadingOrder = alignmentReadingOrderValues.Single(p => p.Value == alignment.ReadingOrder.Value).Key;
+                    a.ReadingOrder = alignment.ReadingOrder.Value.ToClosedXml();
                 if (alignment.WrapText != null)
                     a.WrapText = alignment.WrapText.Value;
                 if (alignment.TextRotation != null)
@@ -1242,27 +1021,27 @@ namespace ClosedXML.Excel
         {
             Border border = new Border() { DiagonalUp = borderInfo.Border.DiagonalUp, DiagonalDown = borderInfo.Border.DiagonalDown };
 
-            LeftBorder leftBorder = new LeftBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.LeftBorder).Value };
+            LeftBorder leftBorder = new LeftBorder() { Style = borderInfo.Border.LeftBorder.ToOpenXml() };
             Color leftBorderColor = GetNewColor(borderInfo.Border.LeftBorderColor);
             leftBorder.Append(leftBorderColor);
             border.Append(leftBorder);
 
-            RightBorder rightBorder = new RightBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.RightBorder).Value };
+            RightBorder rightBorder = new RightBorder() { Style = borderInfo.Border.RightBorder.ToOpenXml() };
             Color rightBorderColor = GetNewColor(borderInfo.Border.RightBorderColor);
             rightBorder.Append(rightBorderColor);
             border.Append(rightBorder);
 
-            TopBorder topBorder = new TopBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.TopBorder).Value };
+            TopBorder topBorder = new TopBorder() { Style = borderInfo.Border.TopBorder.ToOpenXml() };
             Color topBorderColor = GetNewColor(borderInfo.Border.TopBorderColor);
             topBorder.Append(topBorderColor);
             border.Append(topBorder);
 
-            BottomBorder bottomBorder = new BottomBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.BottomBorder).Value };
+            BottomBorder bottomBorder = new BottomBorder() { Style = borderInfo.Border.BottomBorder.ToOpenXml() };
             Color bottomBorderColor = GetNewColor(borderInfo.Border.BottomBorderColor);
             bottomBorder.Append(bottomBorderColor);
             border.Append(bottomBorder);
 
-            DiagonalBorder diagonalBorder = new DiagonalBorder() { Style = borderStyleValues.Single(b => b.Key == borderInfo.Border.DiagonalBorder).Value };
+            DiagonalBorder diagonalBorder = new DiagonalBorder() { Style = borderInfo.Border.DiagonalBorder.ToOpenXml() };
             Color diagonalBorderColor = GetNewColor(borderInfo.Border.DiagonalBorderColor);
             diagonalBorder.Append(diagonalBorderColor);
             border.Append(diagonalBorder);
@@ -1282,7 +1061,7 @@ namespace ClosedXML.Excel
             if (b.LeftBorder != null)
             {
                 if (b.LeftBorder.Style != null)
-                    nb.LeftBorder = borderStyleValues.Single(p => p.Value == b.LeftBorder.Style).Key;
+                    nb.LeftBorder = b.LeftBorder.Style.Value.ToClosedXml();
                 var bColor = GetColor(b.LeftBorder.Color);
                 if (bColor.HasValue)
                     nb.LeftBorderColor = bColor;
@@ -1291,7 +1070,7 @@ namespace ClosedXML.Excel
             if (b.RightBorder != null)
             {
                 if (b.RightBorder.Style != null)
-                    nb.RightBorder = borderStyleValues.Single(p => p.Value == b.RightBorder.Style).Key;
+                    nb.RightBorder = b.RightBorder.Style.Value.ToClosedXml();
                 var bColor = GetColor(b.RightBorder.Color);
                 if (bColor.HasValue)
                     nb.RightBorderColor = bColor;
@@ -1300,7 +1079,7 @@ namespace ClosedXML.Excel
             if (b.TopBorder != null)
             {
                 if (b.TopBorder.Style != null)
-                    nb.TopBorder = borderStyleValues.Single(p => p.Value == b.TopBorder.Style).Key;
+                    nb.TopBorder = b.TopBorder.Style.Value.ToClosedXml();
                 var bColor = GetColor(b.TopBorder.Color);
                 if (bColor.HasValue)
                     nb.TopBorderColor = bColor;
@@ -1309,7 +1088,7 @@ namespace ClosedXML.Excel
             if (b.BottomBorder != null)
             {
                 if (b.BottomBorder.Style != null)
-                    nb.BottomBorder = borderStyleValues.Single(p => p.Value == b.BottomBorder.Style).Key;
+                    nb.BottomBorder = b.BottomBorder.Style.Value.ToClosedXml();
                 var bColor = GetColor(b.BottomBorder.Color);
                 if (bColor.HasValue)
                     nb.BottomBorderColor = bColor;
@@ -1372,7 +1151,7 @@ namespace ClosedXML.Excel
         {
             Fill fill = new Fill();
 
-            PatternFill patternFill = new PatternFill() { PatternType = fillPatternValues.Single(p => p.Key == fillInfo.Fill.PatternType).Value };
+            PatternFill patternFill = new PatternFill() { PatternType = fillInfo.Fill.PatternType.ToOpenXml() };
             ForegroundColor foregroundColor = new ForegroundColor();
             if (fillInfo.Fill.PatternColor.ColorType == XLColorType.Color)
                 foregroundColor.Rgb = fillInfo.Fill.PatternColor.Color.ToHex();
@@ -1410,7 +1189,7 @@ namespace ClosedXML.Excel
             if (f.PatternFill != null)
             {
                 if (f.PatternFill.PatternType != null)
-                    nF.PatternType = fillPatternValues.Single(p => p.Value == f.PatternFill.PatternType).Key;
+                    nF.PatternType = f.PatternFill.PatternType.Value.ToClosedXml();
 
                 var fColor = GetColor(f.PatternFill.ForegroundColor);
                 if (fColor.HasValue)
@@ -1458,9 +1237,9 @@ namespace ClosedXML.Excel
             Font font = new Font();
             Bold bold = fontInfo.Font.Bold ? new Bold() : null;
             Italic italic = fontInfo.Font.Italic ? new Italic() : null;
-            Underline underline = fontInfo.Font.Underline != XLFontUnderlineValues.None ? new Underline() { Val = underlineValuesList.Single(u => u.Key == fontInfo.Font.Underline).Value } : null;
+            Underline underline = fontInfo.Font.Underline != XLFontUnderlineValues.None ? new Underline() { Val = fontInfo.Font.Underline.ToOpenXml() } : null;
             Strike strike = fontInfo.Font.Strikethrough ? new Strike() : null;
-            VerticalTextAlignment verticalAlignment = new VerticalTextAlignment() { Val = fontVerticalTextAlignmentValues.Single(f => f.Key == fontInfo.Font.VerticalAlignment).Value };
+            VerticalTextAlignment verticalAlignment = new VerticalTextAlignment() { Val = fontInfo.Font.VerticalAlignment.ToOpenXml() };
             Shadow shadow = fontInfo.Font.Shadow ? new Shadow() : null;
             FontSize fontSize = new FontSize() { Val = fontInfo.Font.FontSize };
             Color color = GetNewColor(fontInfo.Font.FontColor);
@@ -1521,13 +1300,13 @@ namespace ClosedXML.Excel
             nf.Italic = f.Italic != null;
             if (f.Underline != null)
                 if (f.Underline.Val != null)
-                    nf.Underline = underlineValuesList.Single(u => u.Value == f.Underline.Val).Key;
+                    nf.Underline = f.Underline.Val.Value.ToClosedXml();
                 else
                     nf.Underline = XLFontUnderlineValues.Single;
             nf.Strikethrough = f.Strike != null;
             if (f.VerticalTextAlignment != null)
                 if (f.VerticalTextAlignment.Val != null)
-                    nf.VerticalAlignment = fontVerticalTextAlignmentValues.Single(v => v.Value == f.VerticalTextAlignment.Val).Key;
+                    nf.VerticalAlignment = f.VerticalTextAlignment.Val.Value.ToClosedXml();
                 else
                     nf.VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline;
             nf.Shadow = f.Shadow != null;
@@ -1670,6 +1449,9 @@ namespace ClosedXML.Excel
                 sheetView = new SheetView() { WorkbookViewId = (UInt32Value)0U };
                 worksheetPart.Worksheet.SheetViews.Append(sheetView);
             }
+
+            sheetView.TabSelected = xlWorksheet.TabSelected;
+
 
             if (xlWorksheet.ShowFormulas)
                 sheetView.ShowFormulas = true;
@@ -2233,7 +2015,7 @@ namespace ClosedXML.Excel
                         AllowBlank = dv.IgnoreBlanks,
                         Formula1 = new Formula1(dv.MinValue),
                         Formula2 = new Formula2(dv.MaxValue),
-                        Type = dataValidationValues.Single(p => p.Key == dv.AllowedValues).Value,
+                        Type = dv.AllowedValues.ToOpenXml(),
                         ShowErrorMessage = dv.ShowErrorMessage,
                         Prompt = dv.InputMessage,
                         PromptTitle = dv.InputTitle,
@@ -2241,8 +2023,8 @@ namespace ClosedXML.Excel
                         Error = dv.ErrorMessage,
                         ShowDropDown = !dv.InCellDropdown,
                         ShowInputMessage = dv.ShowInputMessage,
-                        ErrorStyle = dataValidationErrorStyleValues.Single(p => p.Key == dv.ErrorStyle).Value,
-                        Operator = dataValidationOperatorValues.Single(p => p.Key == dv.Operator).Value,
+                        ErrorStyle = dv.ErrorStyle.ToOpenXml(),
+                        Operator = dv.Operator.ToOpenXml(),
                         SequenceOfReferences = new ListValue<StringValue>() { InnerText = sequence }
                     };
                     
@@ -2344,13 +2126,13 @@ namespace ClosedXML.Excel
             PageSetup pageSetup = worksheetPart.Worksheet.Elements<PageSetup>().First();
             cm.SetElement(XLWSContentManager.XLWSContents.PageSetup, pageSetup);
 
-            pageSetup.Orientation = pageOrientationValues.Single(p => p.Key == xlWorksheet.PageSetup.PageOrientation).Value;
+            pageSetup.Orientation = xlWorksheet.PageSetup.PageOrientation.ToOpenXml();
             pageSetup.PaperSize = (UInt32)xlWorksheet.PageSetup.PaperSize;
             pageSetup.BlackAndWhite = xlWorksheet.PageSetup.BlackAndWhite;
             pageSetup.Draft = xlWorksheet.PageSetup.DraftQuality;
-            pageSetup.PageOrder = pageOrderValues.Single(p => p.Key == xlWorksheet.PageSetup.PageOrder).Value;
-            pageSetup.CellComments = showCommentsValues.Single(s => s.Key == xlWorksheet.PageSetup.ShowComments).Value;
-            pageSetup.Errors = printErrorValues.Single(p => p.Key == xlWorksheet.PageSetup.PrintErrorValue).Value;
+            pageSetup.PageOrder = xlWorksheet.PageSetup.PageOrder.ToOpenXml();
+            pageSetup.CellComments = xlWorksheet.PageSetup.ShowComments.ToOpenXml();
+            pageSetup.Errors = xlWorksheet.PageSetup.PrintErrorValue.ToOpenXml();
 
             if (xlWorksheet.PageSetup.FirstPageNumber > 0)
             {
@@ -3399,7 +3181,7 @@ namespace ClosedXML.Excel
                 {
                     if (xlField.TotalsRowFunction != XLTotalsRowFunction.None)
                     {
-                        tableColumn1.TotalsRowFunction = totalsRowFunctionValues.Single(p => p.Key == xlField.TotalsRowFunction).Value;
+                        tableColumn1.TotalsRowFunction = xlField.TotalsRowFunction.ToOpenXml();
 
                         if (xlField.TotalsRowFunction == XLTotalsRowFunction.Custom)
                             tableColumn1.TotalsRowFormula = new TotalsRowFormula(xlField.TotalsRowFormulaA1);

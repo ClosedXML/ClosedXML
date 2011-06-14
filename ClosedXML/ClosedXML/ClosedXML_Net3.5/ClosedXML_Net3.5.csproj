@@ -211,6 +211,9 @@
     <Compile Include="..\ClosedXML\Excel\DataValidation\XLWholeNumberCriteria.cs">
       <Link>Excel\DataValidation\XLWholeNumberCriteria.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\EnumConverter.cs">
+      <Link>Excel\EnumConverter.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Hyperlinks\IXLHyperlinks.cs">
       <Link>Excel\Hyperlinks\IXLHyperlinks.cs</Link>
     </Compile>

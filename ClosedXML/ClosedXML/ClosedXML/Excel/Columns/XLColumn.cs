@@ -661,5 +661,13 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
+        /// <summary>
+        /// Adds a vertical page break after this column.
+        /// </summary>
+        public IXLColumn AddVerticalPageBreak()
+        {
+            Worksheet.PageSetup.AddVerticalPageBreak(this.ColumnNumber());
+            return this;
+        }
     }
 }

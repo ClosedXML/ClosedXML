@@ -168,5 +168,10 @@ namespace ClosedXML.Excel
 
         IXLRangeColumn Column(Int32 start, Int32 end);
         IXLRangeColumns Columns(String columns);
+
+        /// <summary>
+        /// Adds a vertical page break after this column.
+        /// </summary>
+        IXLColumn AddVerticalPageBreak();
     }
 }

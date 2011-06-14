@@ -310,5 +310,12 @@ namespace ClosedXML.Excel
 
         IXLColor TabColor { get; set; }
         IXLWorksheet SetTabColor(IXLColor color);
+
+        Boolean TabSelected { get; set; }
+        Boolean TabActive { get; set; }
+
+        IXLWorksheet SetTabSelected(); IXLWorksheet SetTabSelected(Boolean value);
+        IXLWorksheet SetTabActive(); IXLWorksheet SetTabActive(Boolean value);
+
     }
 }

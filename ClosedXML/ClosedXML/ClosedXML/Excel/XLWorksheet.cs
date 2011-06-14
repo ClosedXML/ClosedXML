@@ -845,5 +845,26 @@ namespace ClosedXML.Excel
             TabColor = color;
             return this;
         }
+
+        public Boolean TabSelected { get; set; }
+        Boolean tabActive;
+        public Boolean TabActive 
+        {
+            get { return tabActive; }
+            set 
+            {
+                if (value && !tabActive)
+                {
+                    foreach (var ws in Worksheet.Workbook.Worksheets)
+                    {
+                        (ws as XLWorksheet).tabActive = false;
+                    }
+                }
+                tabActive = value;
+            }
+        }
+        public IXLWorksheet SetTabSelected() { TabSelected = true; return this; }	public IXLWorksheet SetTabSelected(Boolean value) { TabSelected = value; return this; }
+        public IXLWorksheet SetTabActive() { TabActive = true; return this; }	public IXLWorksheet SetTabActive(Boolean value) { TabActive = value; return this; }
+
     }
 }

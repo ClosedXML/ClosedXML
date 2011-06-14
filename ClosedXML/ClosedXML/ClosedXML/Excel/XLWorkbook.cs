@@ -24,7 +24,6 @@ namespace ClosedXML.Excel
             Worksheets = new XLWorksheets(this);
             NamedRanges = new XLNamedRanges(this);
             CustomProperties = new XLCustomProperties(this);
-            PopulateEnums();
             Style = new XLStyle(null, DefaultStyle);
             RowHeight = DefaultRowHeight;
             ColumnWidth = DefaultColumnWidth;

@@ -247,6 +247,13 @@ namespace ClosedXML.Excel
             }
         }
 
-        
+        public IXLRows AddHorizontalPageBreaks()
+        {
+            foreach (var row in rows)
+            {
+                row.Worksheet.PageSetup.AddHorizontalPageBreak(row.RowNumber());
+            }
+            return this;
+        }        
     }
 }

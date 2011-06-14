@@ -933,7 +933,16 @@ namespace ClosedXML.Excel
 
         public IXLRange RangeUsed()
         {
-            return Worksheet.Range(this.FirstCellUsed(), this.LastCellUsed());
+            var firstCell = FirstCellUsed();
+            if (firstCell == null)
+            {
+                return null;
+            }
+            else
+            {
+                var lastCell = LastCellUsed();
+                return Worksheet.Range(firstCell, lastCell);
+            }
         }
 
         public Boolean ShareString

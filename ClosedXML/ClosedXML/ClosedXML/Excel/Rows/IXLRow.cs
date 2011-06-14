@@ -171,5 +171,10 @@ namespace ClosedXML.Excel
 
         IXLRangeRow Row(Int32 start, Int32 end);
         IXLRangeRows Rows(String columns);
+
+        /// <summary>
+        /// Adds a horizontal page break after this row.
+        /// </summary>
+        IXLRow AddHorizontalPageBreak();
     }
 }

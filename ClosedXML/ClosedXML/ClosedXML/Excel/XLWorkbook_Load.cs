@@ -74,13 +74,13 @@ namespace ClosedXML.Excel
             var referenceMode = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties.ReferenceMode;
             if (referenceMode != null)
             {
-                ReferenceStyle = referenceModeValues.Single(p => p.Value == referenceMode.Value).Key;
+                ReferenceStyle = referenceMode.Value.ToClosedXml();
             }
 
             var calculateMode = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties.CalculationMode;
             if (calculateMode != null)
             {
-                CalculateMode = calculateModeValues.Single(p => p.Value == calculateMode.Value).Key;
+                CalculateMode = calculateMode.Value.ToClosedXml();
             }
 
             if (dSpreadsheet.ExtendedFilePropertiesPart.Properties.Elements<Ap.Company>().Count() > 0)
@@ -114,8 +114,9 @@ namespace ClosedXML.Excel
                 ws.RelId = dSheet.Id;
                 ws.SheetId = (Int32)dSheet.SheetId.Value;
 
+                
                 if (dSheet.State != null)
-                    ws.Visibility = sheetStateValues.Single(p => p.Value == dSheet.State).Key;
+                    ws.Visibility = dSheet.State.Value.ToClosedXml();
 
                 var sheetFormatProperties = worksheetPart.Worksheet.SheetFormatProperties;
                 if (sheetFormatProperties != null)
@@ -373,7 +374,7 @@ namespace ClosedXML.Excel
                     {
                         var tableColumn = (TableColumn)column;
                         if (tableColumn.TotalsRowFunction != null)
-                            xlTable.Field(tableColumn.Name.Value).TotalsRowFunction = totalsRowFunctionValues.Single(p => p.Value == tableColumn.TotalsRowFunction.Value).Key;
+                            xlTable.Field(tableColumn.Name.Value).TotalsRowFunction = tableColumn.TotalsRowFunction.Value.ToClosedXml();
 
                         if (tableColumn.TotalsRowFormula != null)
                             xlTable.Field(tableColumn.Name.Value).TotalsRowFormulaA1 = tableColumn.TotalsRowFormula.Text;
@@ -408,6 +409,11 @@ namespace ClosedXML.Excel
             }
 
             var workbook = (Workbook)dSpreadsheet.WorkbookPart.Workbook;
+
+            var workbookView = (WorkbookView)workbook.BookViews.FirstOrDefault();
+            if (workbookView != null && workbookView.ActiveTab != null)
+                Worksheet((Int32)(workbookView.ActiveTab.Value + 1)).SetTabActive();
+            
             if (workbook.DefinedNames != null)
             {
                 foreach (DefinedName definedName in workbook.DefinedNames)
@@ -528,9 +534,9 @@ namespace ClosedXML.Excel
                         if (dvs.Prompt != null) dvt.InputMessage = dvs.Prompt;
                         if (dvs.ErrorTitle != null) dvt.ErrorTitle = dvs.ErrorTitle;
                         if (dvs.Error != null) dvt.ErrorMessage = dvs.Error;
-                        if (dvs.ErrorStyle != null) dvt.ErrorStyle = dataValidationErrorStyleValues.Single(p => p.Value == dvs.ErrorStyle).Key;
-                        if (dvs.Type != null) dvt.AllowedValues = dataValidationValues.Single(p => p.Value == dvs.Type).Key;
-                        if (dvs.Operator != null) dvt.Operator = dataValidationOperatorValues.Single(p => p.Value == dvs.Operator).Key;
+                        if (dvs.ErrorStyle != null) dvt.ErrorStyle = dvs.ErrorStyle.Value.ToClosedXml();
+                        if (dvs.Type != null) dvt.AllowedValues = dvs.Type.Value.ToClosedXml();
+                        if (dvs.Operator != null) dvt.Operator = dvs.Operator.Value.ToClosedXml();
                         if (dvs.Formula1 != null) dvt.MinValue = dvs.Formula1.Text;
                         if (dvs.Formula2 != null) dvt.MaxValue = dvs.Formula2.Text;
                     }
@@ -679,17 +685,17 @@ namespace ClosedXML.Excel
                         ws.PageSetup.PagesTall = Int32.Parse(pageSetup.FitToHeight.InnerText);
                 }
                 if (pageSetup.PageOrder != null)
-                    ws.PageSetup.PageOrder = pageOrderValues.Single(p => p.Value == pageSetup.PageOrder).Key;
+                    ws.PageSetup.PageOrder = pageSetup.PageOrder.Value.ToClosedXml();
                 if (pageSetup.Orientation != null)
-                    ws.PageSetup.PageOrientation = pageOrientationValues.Single(p => p.Value == pageSetup.Orientation).Key;
+                    ws.PageSetup.PageOrientation = pageSetup.Orientation.Value.ToClosedXml();
                 if (pageSetup.BlackAndWhite != null)
                     ws.PageSetup.BlackAndWhite = pageSetup.BlackAndWhite;
                 if (pageSetup.Draft != null)
                     ws.PageSetup.DraftQuality = pageSetup.Draft;
                 if (pageSetup.CellComments != null)
-                    ws.PageSetup.ShowComments = showCommentsValues.Single(sc => sc.Value == pageSetup.CellComments).Key;
+                    ws.PageSetup.ShowComments = pageSetup.CellComments.Value.ToClosedXml();
                 if (pageSetup.Errors != null)
-                    ws.PageSetup.PrintErrorValue = printErrorValues.Single(p => p.Value == pageSetup.Errors).Key;
+                    ws.PageSetup.PrintErrorValue = pageSetup.Errors.Value.ToClosedXml();
                 if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = (Int32)pageSetup.HorizontalDpi.Value;
                 if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = (Int32)pageSetup.VerticalDpi.Value;
                 if (pageSetup.FirstPageNumber != null) ws.PageSetup.FirstPageNumber = Int32.Parse(pageSetup.FirstPageNumber.InnerText);
@@ -747,6 +753,7 @@ namespace ClosedXML.Excel
                     if (sheetView.ShowRuler != null) ws.ShowRuler = sheetView.ShowRuler.Value;
                     if (sheetView.ShowWhiteSpace != null) ws.ShowWhiteSpace = sheetView.ShowWhiteSpace.Value;
                     if (sheetView.ShowZeros != null) ws.ShowZeros = sheetView.ShowZeros.Value;
+                    if (sheetView.TabSelected != null) ws.TabSelected = sheetView.TabSelected.Value;
 
                     var pane = (Pane)sheetView.Elements<Pane>().FirstOrDefault();
                     if (pane != null)
@@ -841,7 +848,7 @@ namespace ClosedXML.Excel
                 if (fill.PatternFill != null)
                 {
                     if (fill.PatternFill.PatternType != null)
-                        xlStylized.InnerStyle.Fill.PatternType = fillPatternValues.Single(p => p.Value == fill.PatternFill.PatternType).Key;
+                        xlStylized.InnerStyle.Fill.PatternType = fill.PatternFill.PatternType.Value.ToClosedXml();
 
                     var fgColor = GetColor(fill.PatternFill.ForegroundColor);
                     if (fgColor.HasValue) xlStylized.InnerStyle.Fill.PatternColor = fgColor;
@@ -861,7 +868,7 @@ namespace ClosedXML.Excel
             if (alignment != null)
             {
                 if (alignment.Horizontal != null)
-                    xlStylized.InnerStyle.Alignment.Horizontal = alignmentHorizontalValues.Single(a => a.Value == alignment.Horizontal).Key;
+                    xlStylized.InnerStyle.Alignment.Horizontal = alignment.Horizontal.Value.ToClosedXml();
                 if (alignment.Indent != null)
                     xlStylized.InnerStyle.Alignment.Indent = Int32.Parse(alignment.Indent.ToString());
                 if (alignment.JustifyLastLine != null)
@@ -875,7 +882,7 @@ namespace ClosedXML.Excel
                 if (alignment.TextRotation != null)
                     xlStylized.InnerStyle.Alignment.TextRotation = (Int32)alignment.TextRotation.Value;
                 if (alignment.Vertical != null)
-                    xlStylized.InnerStyle.Alignment.Vertical = alignmentVerticalValues.Single(a => a.Value == alignment.Vertical).Key;
+                    xlStylized.InnerStyle.Alignment.Vertical = alignment.Vertical.Value.ToClosedXml();
                 if (alignment.WrapText !=null)
                     xlStylized.InnerStyle.Alignment.WrapText = alignment.WrapText;
             }
@@ -892,7 +899,7 @@ namespace ClosedXML.Excel
                 if (bottomBorder != null)
                 {
                     if (bottomBorder.Style != null)
-                        xlStylized.InnerStyle.Border.BottomBorder = borderStyleValues.Single(b => b.Value == bottomBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.BottomBorder = bottomBorder.Style.Value.ToClosedXml();
 
                     var bottomBorderColor = GetColor(bottomBorder.Color);
                     if (bottomBorderColor.HasValue)
@@ -902,7 +909,7 @@ namespace ClosedXML.Excel
                 if (topBorder != null)
                 {
                     if (topBorder.Style != null)
-                        xlStylized.InnerStyle.Border.TopBorder = borderStyleValues.Single(b => b.Value == topBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.TopBorder = topBorder.Style.Value.ToClosedXml();
                     var topBorderColor = GetColor(topBorder.Color);
                     if (topBorderColor.HasValue)
                         xlStylized.InnerStyle.Border.TopBorderColor = topBorderColor;
@@ -911,7 +918,7 @@ namespace ClosedXML.Excel
                 if (leftBorder != null)
                 {
                     if (leftBorder.Style != null)
-                        xlStylized.InnerStyle.Border.LeftBorder = borderStyleValues.Single(b => b.Value == leftBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.LeftBorder = leftBorder.Style.Value.ToClosedXml();
                     var leftBorderColor = GetColor(leftBorder.Color);
                     if (leftBorderColor.HasValue)
                         xlStylized.InnerStyle.Border.LeftBorderColor = leftBorderColor;
@@ -920,7 +927,7 @@ namespace ClosedXML.Excel
                 if (rightBorder != null)
                 {
                     if (rightBorder.Style != null)
-                        xlStylized.InnerStyle.Border.RightBorder = borderStyleValues.Single(b => b.Value == rightBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.RightBorder = rightBorder.Style.Value.ToClosedXml();
                     var rightBorderColor = GetColor(rightBorder.Color);
                     if (rightBorderColor.HasValue)
                         xlStylized.InnerStyle.Border.RightBorderColor = rightBorderColor;
@@ -929,7 +936,7 @@ namespace ClosedXML.Excel
                 if (diagonalBorder != null)
                 {
                     if (diagonalBorder.Style != null)
-                        xlStylized.InnerStyle.Border.DiagonalBorder = borderStyleValues.Single(b => b.Value == diagonalBorder.Style.Value).Key;
+                        xlStylized.InnerStyle.Border.DiagonalBorder = diagonalBorder.Style.Value.ToClosedXml();
                     var diagonalBorderColor = GetColor(diagonalBorder.Color);
                     if (diagonalBorderColor.HasValue)
                         xlStylized.InnerStyle.Border.DiagonalBorderColor = diagonalBorderColor;
@@ -972,14 +979,14 @@ namespace ClosedXML.Excel
                 
                 if (font.Underline != null)
                     if (font.Underline.Val != null)
-                        xlStylized.InnerStyle.Font.Underline = underlineValuesList.Single(u => u.Value == ((Underline)font.Underline).Val).Key;
+                        xlStylized.InnerStyle.Font.Underline = ((Underline)font.Underline).Val.Value.ToClosedXml();
                     else
                         xlStylized.InnerStyle.Font.Underline = XLFontUnderlineValues.Single;
 
                 if (font.VerticalTextAlignment != null)
                     
                 if (font.VerticalTextAlignment.Val != null)
-                    xlStylized.InnerStyle.Font.VerticalAlignment = fontVerticalTextAlignmentValues.Single(f => f.Value == ((VerticalTextAlignment)font.VerticalTextAlignment).Val).Key;
+                    xlStylized.InnerStyle.Font.VerticalAlignment = ((VerticalTextAlignment)font.VerticalTextAlignment).Val.Value.ToClosedXml();
                 else
                     xlStylized.InnerStyle.Font.VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline;
             }

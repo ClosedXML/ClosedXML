@@ -248,6 +248,14 @@ namespace ClosedXML.Excel
             }
         }
 
-        
+        /// <summary>
+        /// Adds a vertical page break after this column.
+        /// </summary>
+        public IXLColumns AddVerticalPageBreaks()
+        {
+            foreach (var col in columns)
+                col.Worksheet.PageSetup.AddVerticalPageBreak(col.ColumnNumber());
+            return this;
+        }        
     }
 }

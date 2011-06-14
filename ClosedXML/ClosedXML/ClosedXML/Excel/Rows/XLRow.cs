@@ -702,5 +702,11 @@ namespace ClosedXML.Excel
             }
             return retVal;
         }
+
+        public IXLRow AddHorizontalPageBreak()
+        {
+            Worksheet.PageSetup.AddHorizontalPageBreak(this.RowNumber());
+            return this;
+        }
     }
 }
