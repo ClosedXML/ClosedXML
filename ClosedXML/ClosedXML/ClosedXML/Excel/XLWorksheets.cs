@@ -1,55 +1,80 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data;
+using System.Diagnostics;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
     internal class XLWorksheets : IXLWorksheets
     {
-        Dictionary<String, XLWorksheet> worksheets = new Dictionary<String, XLWorksheet>();
+        #region Constructor
+        private readonly Dictionary<String, XLWorksheet> m_worksheets = new Dictionary<String, XLWorksheet>();
+        private readonly XLWorkbook m_workbook;
+        #endregion
         public HashSet<String> Deleted = new HashSet<String>();
-        XLWorkbook workbook;
+        #region Constructor
         public XLWorksheets(XLWorkbook workbook)
         {
-            this.workbook = workbook;
+            m_workbook = workbook;
+        }
+        #endregion
+        #region IXLWorksheets Members
+        public int Count
+        {
+            [DebuggerStepThrough]
+            get { return m_worksheets.Count; }
         }
 
-        #region IXLWorksheets Members
+        public bool TryGetWorksheet(string sheetName, out IXLWorksheet worksheet)
+        {
+            XLWorksheet w;
+            if (m_worksheets.TryGetValue(sheetName, out w))
+            {
+                worksheet = w;
+                return true;
+            }
+            worksheet = null;
+            return false;
+        }
 
         public IXLWorksheet Worksheet(String sheetName)
         {
-            return worksheets[sheetName];
+            return m_worksheets[sheetName];
         }
 
         public IXLWorksheet Worksheet(Int32 position)
         {
-            var wsCount = worksheets.Values.Where(w => w.Position == position).Count();
+            var wsCount = m_worksheets.Values.Where(w => w.Position == position).Count();
             if (wsCount == 0)
+            {
                 throw new Exception("There isn't a worksheet associated with that position.");
+            }
 
             if (wsCount > 1)
+            {
                 throw new Exception("Can't retrieve a worksheet because there are multiple worksheets associated with that position.");
+            }
 
-            return worksheets.Values.Where(w => w.Position == position).Single();
+            return m_worksheets.Values.Where(w => w.Position == position).Single();
         }
 
         public void Rename(String oldSheetName, String newSheetName)
         {
-            if (!StringExtensions.IsNullOrWhiteSpace(oldSheetName) && worksheets.ContainsKey(oldSheetName))
+            if (!StringExtensions.IsNullOrWhiteSpace(oldSheetName) && m_worksheets.ContainsKey(oldSheetName))
             {
-                var ws = worksheets[oldSheetName];
-                worksheets.Remove(oldSheetName);
-                worksheets.Add(newSheetName, ws);
+                var ws = m_worksheets[oldSheetName];
+                m_worksheets.Remove(oldSheetName);
+                m_worksheets.Add(newSheetName, ws);
             }
         }
 
         public IXLWorksheet Add(String sheetName)
         {
-            var sheet = new XLWorksheet(sheetName, workbook);
-            worksheets.Add(sheetName, sheet);
-            sheet.position = worksheets.Count;
+            var sheet = new XLWorksheet(sheetName, m_workbook);
+            m_worksheets.Add(sheetName, sheet);
+            sheet.position = m_worksheets.Count;
             return sheet;
         }
 
@@ -62,49 +87,47 @@ namespace ClosedXML.Excel
 
         public void Delete(String sheetName)
         {
-            Delete(worksheets[sheetName].Position);
+            Delete(m_worksheets[sheetName].Position);
         }
 
         public void Delete(Int32 position)
         {
-            var wsCount = worksheets.Values.Where(w => w.Position == position).Count();
+            var wsCount = m_worksheets.Values.Where(w => w.Position == position).Count();
             if (wsCount == 0)
+            {
                 throw new Exception("There isn't a worksheet associated with that index.");
+            }
 
             if (wsCount > 1)
+            {
                 throw new Exception("Can't delete the worksheet because there are multiple worksheets associated with that index.");
+            }
 
-            var ws = (XLWorksheet)worksheets.Values.Where(w => w.Position == position).Single();
+            var ws = m_worksheets.Values.Where(w => w.Position == position).Single();
             if (!StringExtensions.IsNullOrWhiteSpace(ws.RelId) && !Deleted.Contains(ws.RelId))
+            {
                 Deleted.Add(ws.RelId);
+            }
 
-            worksheets.RemoveAll(w => w.Position == position);
-            worksheets.Values.Where(w => w.Position > position).ForEach(w => ((XLWorksheet)w).position -= 1);
+            m_worksheets.RemoveAll(w => w.Position == position);
+            m_worksheets.Values.Where(w => w.Position > position).ForEach(w => (w).position -= 1);
         }
-        
         #endregion
-
         #region IEnumerable<IXLWorksheet> Members
-
         public IEnumerator<IXLWorksheet> GetEnumerator()
         {
-            foreach (var w in worksheets.Values)
-            { 
-                yield return (IXLWorksheet)w;
+            foreach (var w in m_worksheets.Values)
+            {
+                yield return w;
             }
         }
-
         #endregion
-
         #region IEnumerable Members
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-
         #endregion
-
         public IXLWorksheet Add(DataTable dataTable)
         {
             var ws = Add(dataTable.TableName);
@@ -115,7 +138,9 @@ namespace ClosedXML.Excel
         public void Add(DataSet dataSet)
         {
             foreach (DataTable t in dataSet.Tables)
+            {
                 Add(t);
+            }
         }
     }
 }

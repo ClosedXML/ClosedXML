@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data;
 
 namespace ClosedXML.Excel
 {
     public interface IXLWorksheets: IEnumerable<IXLWorksheet>
     {
+        int Count { get; }
+        bool TryGetWorksheet(string sheetName,out IXLWorksheet worksheet);
+
         IXLWorksheet Worksheet(String sheetName);
         IXLWorksheet Worksheet(Int32 position);
         IXLWorksheet Add(String sheetName);
