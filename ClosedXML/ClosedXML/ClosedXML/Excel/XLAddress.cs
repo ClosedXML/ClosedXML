@@ -462,21 +462,7 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            if (m_rowNumber == right.m_rowNumber)
-            {
-                if (right.m_columnNumber > 0)
-                {
-                    return ColumnNumber == right.m_columnNumber;
-                }
-                else
-                {
-                    return ColumnLetter == right.m_columnLetter;
-                }
-            }
-            else
-            {
-                return false;
-            }
+            return m_rowNumber == right.m_rowNumber && m_columnNumber == right.m_columnNumber;
         }
 
         public override Boolean Equals(Object other)
