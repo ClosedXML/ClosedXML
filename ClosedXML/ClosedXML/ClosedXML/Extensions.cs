@@ -5,7 +5,6 @@ using System.Text;
 using System.Drawing;
 using System.Globalization;
 
-
 [assembly: CLSCompliantAttribute(true)]
 namespace ClosedXML
 {
@@ -18,7 +17,7 @@ namespace ClosedXML
                 action(item);
         }
 
-        static char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
         public static String ToHex(this Color color)
         {
@@ -128,8 +127,8 @@ namespace ClosedXML
 
     public static class IntegerExtensions
     {
-        private static NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
-        private static Dictionary<Int32, String> intToString = new Dictionary<int, string>();
+        private static readonly NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
+        private static readonly Dictionary<Int32, String> intToString = new Dictionary<int, string>();
         public static String ToStringLookup(this Int32 value)
         {
             if (!intToString.ContainsKey(value))
@@ -139,7 +138,5 @@ namespace ClosedXML
             return intToString[value];
         }
     }
-
-
 }
 

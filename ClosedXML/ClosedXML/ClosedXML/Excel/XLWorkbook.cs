@@ -150,6 +150,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public void SaveAs(String file)
         {
+            PathHelper.CreateDirectory(Path.GetDirectoryName(file));
             if (loadSource == XLLoadSource.New)
             {
                 if (File.Exists(file))

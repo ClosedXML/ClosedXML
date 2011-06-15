@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLAddress : IEqualityComparer<IXLAddress>, IEquatable<IXLAddress>, IComparable, IComparable<IXLAddress>
+    public interface IXLAddress : IEqualityComparer<IXLAddress>, IEquatable<IXLAddress>
     {
         IXLWorksheet Worksheet { get; }
         Int32 RowNumber { get; }

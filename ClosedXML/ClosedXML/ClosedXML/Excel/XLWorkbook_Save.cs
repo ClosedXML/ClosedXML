@@ -92,6 +92,7 @@ namespace ClosedXML.Excel
 
         private void CreatePackage(String filePath)
         {
+            PathHelper.CreateDirectory(Path.GetDirectoryName(filePath));
             SpreadsheetDocument package;
             if (File.Exists(filePath))
                 package = SpreadsheetDocument.Open(filePath, true);
@@ -1768,7 +1769,7 @@ namespace ClosedXML.Excel
                 foreach (var cell in row.Elements<Cell>())
                 {
                     var cellReference = cell.CellReference;
-                    if ((xlWorksheet as XLWorksheet).Internals.CellsCollection.Deleted.ContainsKey(new XLAddress(xlWorksheet, cellReference)))
+                    if ((xlWorksheet as XLWorksheet).Internals.CellsCollection.Deleted.ContainsKey(XLAddress.Create(xlWorksheet, cellReference)))
                         cellsToRemove.Add(cell);
                 }
                 cellsToRemove.ForEach(cell => row.RemoveChild(cell));

@@ -8,12 +8,16 @@ namespace ClosedXML.Excel
 {
     internal abstract class XLRangeBase : IXLRangeBase, IXLStylized
     {
-        public XLRangeBase(IXLRangeAddress rangeAddress)
+        #region Fields
+        protected IXLStyle defaultStyle;
+        #endregion
+        #region Constructor
+        protected XLRangeBase(IXLRangeAddress rangeAddress)
         {
             RangeAddress = rangeAddress;
         }
-
-        protected IXLStyle defaultStyle;
+        #endregion
+        
         public IXLRangeAddress RangeAddress { get; protected set; }
         public IXLWorksheet Worksheet
         {
@@ -81,7 +85,7 @@ namespace ClosedXML.Excel
         }
         public IXLCell Cell(String cellAddressInRange)
         {
-            return this.Cell(new XLAddress(Worksheet, cellAddressInRange));
+            return this.Cell(XLAddress.Create(Worksheet, cellAddressInRange));
         }
 
         public IXLCell Cell(Int32 row, String column)
@@ -151,7 +155,7 @@ namespace ClosedXML.Excel
         }
         public IXLRange Range(String firstCellAddress, String lastCellAddress)
         {
-            var rangeAddress = new XLRangeAddress(new XLAddress(Worksheet, firstCellAddress), new XLAddress(Worksheet, lastCellAddress));
+            var rangeAddress = new XLRangeAddress(XLAddress.Create(Worksheet, firstCellAddress), XLAddress.Create(Worksheet, lastCellAddress));
             return Range(rangeAddress);
         }
         public IXLRange Range(Int32 firstCellRow, Int32 firstCellColumn, Int32 lastCellRow, Int32 lastCellColumn)
@@ -169,9 +173,11 @@ namespace ClosedXML.Excel
             var newFirstCellAddress = (XLAddress)rangeAddress.FirstAddress + (XLAddress)this.RangeAddress.FirstAddress - 1;
             newFirstCellAddress.FixedRow = rangeAddress.FirstAddress.FixedRow;
             newFirstCellAddress.FixedColumn = rangeAddress.FirstAddress.FixedColumn;
+
             var newLastCellAddress = (XLAddress)rangeAddress.LastAddress + (XLAddress)this.RangeAddress.FirstAddress - 1;
             newLastCellAddress.FixedRow = rangeAddress.LastAddress.FixedRow;
             newLastCellAddress.FixedColumn = rangeAddress.LastAddress.FixedColumn;
+
             var newRangeAddress = new XLRangeAddress(newFirstCellAddress, newLastCellAddress);
             var xlRangeParameters = new XLRangeParameters(newRangeAddress, this.Style);
             if (
@@ -603,25 +609,33 @@ namespace ClosedXML.Excel
             if (addressToUse.Contains(':'))
             {
                 String[] arrRange = addressToUse.Split(':');
-                firstAddress = new XLAddress(Worksheet, arrRange[0]);
-                lastAddress = new XLAddress(Worksheet, arrRange[1]);
+                firstAddress = XLAddress.Create(Worksheet, arrRange[0]);
+                lastAddress = XLAddress.Create(Worksheet, arrRange[1]);
             }
             else
             {
-                firstAddress = new XLAddress(Worksheet, addressToUse);
-                lastAddress = new XLAddress(Worksheet, addressToUse);
+                firstAddress = XLAddress.Create(Worksheet, addressToUse);
+                lastAddress = XLAddress.Create(Worksheet, addressToUse);
             }
-            return
-                firstAddress >= (XLAddress)this.RangeAddress.FirstAddress
-                && lastAddress <= (XLAddress)this.RangeAddress.LastAddress;
+            return Contains(firstAddress, lastAddress);
         }
 
         public Boolean Contains(IXLRangeBase range)
         {
-            return
-                (XLAddress)range.RangeAddress.FirstAddress >= (XLAddress)this.RangeAddress.FirstAddress
-                && (XLAddress)range.RangeAddress.LastAddress <= (XLAddress)this.RangeAddress.LastAddress;
+            return Contains((XLAddress)range.RangeAddress.FirstAddress, (XLAddress)range.RangeAddress.LastAddress);
         }
+
+        public Boolean Contains(XLAddress first, XLAddress last)
+        {
+            return Contains(first) && Contains(last);
+        }
+
+        public Boolean Contains(XLAddress address)
+        {
+            return RangeAddress.FirstAddress.RowNumber <= address.RowNumber && address.RowNumber <= RangeAddress.LastAddress.RowNumber &&
+                   RangeAddress.FirstAddress.ColumnNumber <= address.ColumnNumber && address.ColumnNumber <= RangeAddress.LastAddress.ColumnNumber;
+        }
+
 
         public Boolean Intersects(String rangeAddress)
         {

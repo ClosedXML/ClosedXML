@@ -1,106 +1,75 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Globalization;
 
 namespace ClosedXML.Excel
 {
-    internal class XLAddress: IXLAddress
+    internal class XLAddress : IXLAddress
     {
-        #region Constructors
-        /// <summary>
-        /// Initializes a new <see cref="XLAddress"/> struct using R1C1 notation.
-        /// </summary>
-        /// <param name="rowNumber">The row number of the cell address.</param>
-        /// <param name="columnNumber">The column number of the cell address.</param>
-        public XLAddress(IXLWorksheet worksheet, Int32 rowNumber, Int32 columnNumber, Boolean fixedRow, Boolean fixedColumn)
+        #region Static
+        public static XLAddress Create(IXLWorksheet worksheet, string cellAddressString)
         {
-            this.Worksheet = worksheet;
-            this.rowNumber = rowNumber;
-            this.columnNumber = columnNumber;
-            this.columnLetter = null;
-            this.fixedColumn = fixedColumn;
-            this.fixedRow = fixedRow;
-
-            hashCode = rowNumber ^ columnNumber;
-        }
-
-        /// <summary>
-        /// Initializes a new <see cref="XLAddress"/> struct using a mixed notation.
-        /// </summary>
-        /// <param name="rowNumber">The row number of the cell address.</param>
-        /// <param name="columnLetter">The column letter of the cell address.</param>
-        public XLAddress(IXLWorksheet worksheet, Int32 rowNumber, String columnLetter, Boolean fixedRow, Boolean fixedColumn)
-        {
-            this.Worksheet = worksheet;
-            this.rowNumber = rowNumber;
-            this.columnNumber = 0;
-            this.columnLetter = columnLetter;
-            this.fixedColumn = fixedColumn;
-            this.fixedRow = fixedRow;
-            hashCode = rowNumber ^ ColumnNumber;
-        }
-
-
-        /// <summary>
-        /// Initializes a new <see cref="XLAddress"/> struct using A1 notation.
-        /// </summary>
-        /// <param name="cellAddressString">The cell address.</param>
-        public XLAddress(IXLWorksheet worksheet, String cellAddressString)
-        {
-            this.Worksheet = worksheet;
-
-            fixedColumn = cellAddressString[0] == '$';
+            var fixedColumn = cellAddressString[0] == '$';
             Int32 startPos;
             if (fixedColumn)
+            {
                 startPos = 1;
+            }
             else
+            {
                 startPos = 0;
+            }
 
-            Int32 rowPos = startPos;
+            int rowPos = startPos;
             while (cellAddressString[rowPos] > '9')
+            {
                 rowPos++;
+            }
 
-            fixedRow = cellAddressString[rowPos] == '$';
-
+            var fixedRow = cellAddressString[rowPos] == '$';
+            string columnLetter = null;
+            int rowNumber;
             if (fixedRow)
             {
-                if (fixedColumn)
-                    columnLetter = cellAddressString.Substring(startPos, rowPos - 1);
-                else
-                    columnLetter = cellAddressString.Substring(startPos, rowPos);
 
-                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos + 1), nfi);
+                if (fixedColumn)
+                {
+                    columnLetter = cellAddressString.Substring(startPos, rowPos - 1);
+                }
+                else
+                {
+                    columnLetter = cellAddressString.Substring(startPos, rowPos);
+                }
+
+                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos + 1), ms_nfi);
             }
             else
             {
                 if (fixedColumn)
+                {
                     columnLetter = cellAddressString.Substring(startPos, rowPos - 1);
+                }
                 else
+                {
                     columnLetter = cellAddressString.Substring(startPos, rowPos);
+                }
 
-                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), nfi);
+                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), ms_nfi);
             }
-
-            columnNumber = 0;
-
-            hashCode =  rowNumber ^ ColumnNumber;
+            return new XLAddress(worksheet, rowNumber, columnLetter, fixedRow, fixedColumn);
         }
-        #endregion
 
-        #region Static
-        private static NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
-        private static readonly Int32 twoT26 = 26 * 26;
+        private static readonly NumberFormatInfo ms_nfi = CultureInfo.InvariantCulture.NumberFormat;
+        private const Int32 TwoT26 = 26 * 26;
         /// <summary>
-        /// Gets the column number of a given column letter.
+        /// 	Gets the column number of a given column letter.
         /// </summary>
-        /// <param name="columnLetter">The column letter to translate into a column number.</param>
+        /// <param name = "columnLetter">The column letter to translate into a column number.</param>
         public static Int32 GetColumnNumberFromLetter(String columnLetter)
         {
             if (columnLetter[0] <= '9')
-                return Int32.Parse(columnLetter, nfi);
+            {
+                return Int32.Parse(columnLetter, ms_nfi);
+            }
 
             columnLetter = columnLetter.ToUpper();
             var length = columnLetter.Length;
@@ -108,24 +77,20 @@ namespace ClosedXML.Excel
             {
                 return Convert.ToByte(columnLetter[0]) - 64;
             }
-            else if (length == 2)
+            if (length == 2)
             {
                 return
-                    ((Convert.ToByte(columnLetter[0]) - 64) * 26) +
-                    (Convert.ToByte(columnLetter[1]) - 64);
-
+                        ((Convert.ToByte(columnLetter[0]) - 64) * 26) +
+                        (Convert.ToByte(columnLetter[1]) - 64);
             }
-            else if (length == 3)
+            if (length == 3)
             {
                 return
-                    ((Convert.ToByte(columnLetter[0]) - 64) * twoT26) +
-                    ((Convert.ToByte(columnLetter[1]) - 64) * 26) +
-                    (Convert.ToByte(columnLetter[2]) - 64);
+                        ((Convert.ToByte(columnLetter[0]) - 64) * TwoT26) +
+                        ((Convert.ToByte(columnLetter[1]) - 64) * 26) +
+                        (Convert.ToByte(columnLetter[2]) - 64);
             }
-            else
-            {
-                throw new ApplicationException("Column Length must be between 1 and 3.");
-            }
+            throw new ApplicationException("Column Length must be between 1 and 3.");
         }
 
         public static Boolean IsValidColumn(String column)
@@ -134,29 +99,31 @@ namespace ClosedXML.Excel
             {
                 return false;
             }
-            else
+
+            Boolean retVal = true;
+            String theColumn = column.ToUpper();
+            for (Int32 i = 0; i < column.Length; i++)
             {
-                Boolean retVal = true;
-                String theColumn = column.ToUpper();
-                for (Int32 i = 0; i < column.Length; i++)
+                if (theColumn[i] < 'A' || theColumn[i] > 'Z' || (i == 2 && theColumn[i] > 'D'))
                 {
-                    if (theColumn[i] < 'A' || theColumn[i] > 'Z' || (i == 2 && theColumn[i] > 'D'))
-                    {
-                        retVal = false;
-                        break;
-                    }
+                    retVal = false;
+                    break;
                 }
-                return retVal;
             }
+            return retVal;
         }
 
         public static Boolean IsValidRow(String rowString)
         {
             Int32 row;
             if (Int32.TryParse(rowString, out row))
+            {
                 return row > 0 && row <= XLWorksheet.MaxNumberOfRows;
+            }
             else
+            {
                 return false;
+            }
         }
 
         public static Boolean IsValidA1Address(String address)
@@ -165,36 +132,37 @@ namespace ClosedXML.Excel
             Int32 rowPos = 0;
             Int32 addressLength = address.Length;
             while (rowPos < addressLength && (address[rowPos] > '9' || address[rowPos] < '0'))
+            {
                 rowPos++;
+            }
 
-            return 
-                   rowPos < addressLength
-                && IsValidRow(address.Substring(rowPos))
-                && IsValidColumn(address.Substring(0, rowPos));
+            return
+                    rowPos < addressLength
+                    && IsValidRow(address.Substring(rowPos))
+                    && IsValidColumn(address.Substring(0, rowPos));
         }
 
-
         /// <summary>
-        /// Gets the column letter of a given column number.
+        /// 	Gets the column letter of a given column number.
         /// </summary>
-        /// <param name="columnNumber">The column number to translate into a column letter.</param>
+        /// <param name = "columnNumber">The column number to translate into a column letter.</param>
         public static String GetColumnLetterFromNumber(Int32 columnNumber)
         {
             String s = String.Empty;
             for (
-                Int32 i = Convert.ToInt32(
-                    Math.Log(
-                        Convert.ToDouble(
-                            25 * (
-                                Convert.ToDouble(columnNumber)
-                                + 1
-                            )
-                         )
-                     ) / Math.Log(26)
-                 ) - 1
-                ; i >= 0
-                ; i--
-                )
+                    Int32 i = Convert.ToInt32(
+                            Math.Log(
+                                    Convert.ToDouble(
+                                            25 * (
+                                                       Convert.ToDouble(columnNumber)
+                                                       + 1
+                                               )
+                                            )
+                                    ) / Math.Log(26)
+                                      ) - 1
+                    ; i >= 0
+                    ; i--
+                    )
             {
                 Int32 x = Convert.ToInt32(Math.Pow(26, i + 1) - 1) / 25 - 1;
                 if (columnNumber > x)
@@ -209,16 +177,20 @@ namespace ClosedXML.Excel
         {
             Int32 rowPos = 1;
             while (cellAddressString[rowPos] > '9')
+            {
                 rowPos++;
+            }
 
-                return Int32.Parse(cellAddressString.Substring(rowPos), nfi);
+            return Int32.Parse(cellAddressString.Substring(rowPos), ms_nfi);
         }
 
         public static Int32 GetColumnNumberFromAddress1(String cellAddressString)
         {
             Int32 rowPos = 0;
             while (cellAddressString[rowPos] > '9')
+            {
                 rowPos++;
+            }
 
             return GetColumnNumberFromLetter(cellAddressString.Substring(0, rowPos));
         }
@@ -227,15 +199,17 @@ namespace ClosedXML.Excel
         {
             Int32 rowPos = 1;
             while (cellAddressString[rowPos] > '9')
+            {
                 rowPos++;
+            }
 
             if (cellAddressString[rowPos] == '$')
             {
-                return Int32.Parse(cellAddressString.Substring(rowPos + 1), nfi);
+                return Int32.Parse(cellAddressString.Substring(rowPos + 1), ms_nfi);
             }
             else
             {
-                return Int32.Parse(cellAddressString.Substring(rowPos), nfi);
+                return Int32.Parse(cellAddressString.Substring(rowPos), ms_nfi);
             }
         }
 
@@ -243,14 +217,20 @@ namespace ClosedXML.Excel
         {
             Int32 startPos;
             if (cellAddressString[0] == '$')
+            {
                 startPos = 1;
+            }
             else
+            {
                 startPos = 0;
+            }
 
             Int32 rowPos = startPos;
             while (cellAddressString[rowPos] > '9')
+            {
                 rowPos++;
-            
+            }
+
             if (cellAddressString[rowPos] == '$')
             {
                 return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos - 1));
@@ -260,140 +240,179 @@ namespace ClosedXML.Excel
                 return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos));
             }
         }
-
-
         #endregion
+        #region Private fields
+        private bool m_fixedRow;
+        private bool m_fixedColumn;
+        private string m_columnLetter;
 
+        private readonly int m_rowNumber;
+        private readonly int m_columnNumber;
+        private readonly int m_hashCode;
+        #endregion
+        #region Constructors
+        /// <summary>
+        /// 	Initializes a new <see cref = "XLAddress" /> struct using a mixed notation.
+        /// </summary>
+        /// <param name = "worksheet"></param>
+        /// <param name = "rowNumber">The row number of the cell address.</param>
+        /// <param name = "columnLetter">The column letter of the cell address.</param>
+        /// <param name = "fixedRow"></param>
+        /// <param name = "fixedColumn"></param>
+        public XLAddress(IXLWorksheet worksheet, int rowNumber, string columnLetter, bool fixedRow, bool fixedColumn)
+            : this(worksheet, rowNumber, GetColumnNumberFromLetter(columnLetter), fixedRow, fixedColumn)
+        {
+            m_columnLetter = columnLetter;
+        }
+
+        /// <summary>
+        /// 	Initializes a new <see cref = "XLAddress" /> struct using R1C1 notation.
+        /// </summary>
+        /// <param name = "worksheet"></param>
+        /// <param name = "rowNumber">The row number of the cell address.</param>
+        /// <param name = "columnNumber">The column number of the cell address.</param>
+        /// <param name = "fixedRow"></param>
+        /// <param name = "fixedColumn"></param>
+        public XLAddress(IXLWorksheet worksheet, int rowNumber, int columnNumber, bool fixedRow, bool fixedColumn)
+            
+        {
+            Worksheet = worksheet;
+
+            m_rowNumber = rowNumber;
+            m_columnNumber = columnNumber;
+            m_columnLetter = null;
+            m_fixedColumn = fixedColumn;
+            m_fixedRow = fixedRow;
+
+            m_hashCode = m_rowNumber ^ m_columnNumber;
+        }
+        #endregion
         #region Properties
-
         public IXLWorksheet Worksheet { get; internal set; }
 
-        private Boolean fixedRow;
         public Boolean FixedRow
         {
-            get { return fixedRow; }
-            set { fixedRow = value; }
+            get { return m_fixedRow; }
+            set { m_fixedRow = value; }
         }
 
-        private Boolean fixedColumn;
         public Boolean FixedColumn
         {
-            get { return fixedColumn; }
-            set { fixedColumn = value; }
+            get { return m_fixedColumn; }
+            set { m_fixedColumn = value; }
         }
 
-        private Int32 rowNumber;
         /// <summary>
-        /// Gets the row number of this address.
+        /// 	Gets the row number of this address.
         /// </summary>
         public Int32 RowNumber
         {
-            get { return rowNumber; }
-            private set { rowNumber = value; }
+            get { return m_rowNumber; }
         }
 
-        private Int32 columnNumber;
         /// <summary>
-        /// Gets the column number of this address.
+        /// 	Gets the column number of this address.
         /// </summary>
         public Int32 ColumnNumber
         {
-            get 
+            get
             {
-                if (columnNumber == 0)
-                    columnNumber = GetColumnNumberFromLetter(columnLetter);
-
-                return columnNumber; 
+                return m_columnNumber;
             }
-            private set { columnNumber = value; }
         }
 
-        private String columnLetter;
         /// <summary>
-        /// Gets the column letter(s) of this address.
+        /// 	Gets the column letter(s) of this address.
         /// </summary>
         public String ColumnLetter
         {
-            get 
-            { 
-                if (columnLetter == null)
-                    columnLetter = GetColumnLetterFromNumber(columnNumber);
-
-                return columnLetter; 
-            }
-            private set { columnLetter = value; }
+            get { return m_columnLetter ?? (m_columnLetter = GetColumnLetterFromNumber(m_columnNumber)); }
         }
-
         #endregion
-
         #region Overrides
         public override string ToString()
         {
             String retVal = ColumnLetter;
-            if (fixedColumn)
+            if (m_fixedColumn)
+            {
                 retVal = "$" + retVal;
-            if (fixedRow)
+            }
+            if (m_fixedRow)
+            {
                 retVal += "$";
-            retVal += rowNumber.ToStringLookup();
+            }
+            retVal += m_rowNumber.ToStringLookup();
             return retVal;
         }
 
         public String ToString(XLReferenceStyle referenceStyle)
         {
             if (referenceStyle == XLReferenceStyle.A1)
-                return ColumnLetter + rowNumber.ToStringLookup();
-            else if (referenceStyle == XLReferenceStyle.R1C1)
-                return rowNumber.ToStringLookup() + "," + ColumnNumber;
-            else
-                if ((Worksheet as XLWorksheet).Internals.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
-                    return rowNumber.ToStringLookup() + "," + ColumnNumber;
-                else
-                    return ColumnLetter + rowNumber.ToStringLookup();
+            {
+                return ColumnLetter + m_rowNumber.ToStringLookup();
+            }
+            if (referenceStyle == XLReferenceStyle.R1C1)
+            {
+                return m_rowNumber.ToStringLookup() + "," + ColumnNumber;
+            }
+            if ((Worksheet as XLWorksheet).Internals.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
+            {
+                return m_rowNumber.ToStringLookup() + "," + ColumnNumber;
+            }
+            return ColumnLetter + m_rowNumber.ToStringLookup();
         }
         #endregion
-
         #region Methods
         public string GetTrimmedAddress()
         {
-            return ColumnLetter + rowNumber.ToStringLookup();
+            return ColumnLetter + m_rowNumber.ToStringLookup();
         }
 
         public string ToStringRelative()
         {
-            return ColumnLetter + rowNumber.ToStringLookup();
+            return ColumnLetter + m_rowNumber.ToStringLookup();
         }
 
         public string ToStringFixed()
         {
-            return "$" + ColumnLetter + "$" + rowNumber.ToStringLookup();
+            return "$" + ColumnLetter + "$" + m_rowNumber.ToStringLookup();
         }
-
         #endregion
-
         #region Operator Overloads
-
         public static XLAddress operator +(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            return new XLAddress(xlCellAddressLeft.Worksheet, xlCellAddressLeft.RowNumber + xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber + xlCellAddressRight.ColumnNumber,
-                xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
+            return new XLAddress(xlCellAddressLeft.Worksheet,
+                                 xlCellAddressLeft.RowNumber + xlCellAddressRight.RowNumber,
+                                 xlCellAddressLeft.ColumnNumber + xlCellAddressRight.ColumnNumber,
+                                 xlCellAddressLeft.m_fixedRow,
+                                 xlCellAddressLeft.m_fixedColumn);
         }
 
         public static XLAddress operator -(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
         {
-            return new XLAddress(xlCellAddressLeft.Worksheet, xlCellAddressLeft.RowNumber - xlCellAddressRight.RowNumber, xlCellAddressLeft.ColumnNumber - xlCellAddressRight.ColumnNumber,
-                xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
+            return new XLAddress(xlCellAddressLeft.Worksheet,
+                                 xlCellAddressLeft.RowNumber - xlCellAddressRight.RowNumber,
+                                 xlCellAddressLeft.ColumnNumber - xlCellAddressRight.ColumnNumber,
+                                 xlCellAddressLeft.m_fixedRow,
+                                 xlCellAddressLeft.m_fixedColumn);
         }
 
         public static XLAddress operator +(XLAddress xlCellAddressLeft, Int32 right)
         {
-            return new XLAddress(xlCellAddressLeft.Worksheet, xlCellAddressLeft.RowNumber + right, xlCellAddressLeft.ColumnNumber + right,
-                xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
+            return new XLAddress(xlCellAddressLeft.Worksheet,
+                                 xlCellAddressLeft.RowNumber + right,
+                                 xlCellAddressLeft.ColumnNumber + right,
+                                 xlCellAddressLeft.m_fixedRow,
+                                 xlCellAddressLeft.m_fixedColumn);
         }
 
         public static XLAddress operator -(XLAddress xlCellAddressLeft, Int32 right)
         {
-            return new XLAddress(xlCellAddressLeft.Worksheet, xlCellAddressLeft.RowNumber - right, xlCellAddressLeft.ColumnNumber - right,
-                xlCellAddressLeft.fixedRow, xlCellAddressLeft.fixedColumn);
+            return new XLAddress(xlCellAddressLeft.Worksheet,
+                                 xlCellAddressLeft.RowNumber - right,
+                                 xlCellAddressLeft.ColumnNumber - right,
+                                 xlCellAddressLeft.m_fixedRow,
+                                 xlCellAddressLeft.m_fixedColumn);
         }
 
         public static Boolean operator ==(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
@@ -405,35 +424,9 @@ namespace ClosedXML.Excel
         {
             return !(xlCellAddressLeft == xlCellAddressRight);
         }
-
-        public static Boolean operator >(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
-        {
-            return  (xlCellAddressLeft.RowNumber > xlCellAddressRight.RowNumber 
-                || xlCellAddressLeft.ColumnNumber > xlCellAddressRight.ColumnNumber);
-        }
-
-        public static Boolean operator <(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
-        {
-            return (xlCellAddressLeft.RowNumber < xlCellAddressRight.RowNumber 
-                || xlCellAddressLeft.ColumnNumber < xlCellAddressRight.ColumnNumber);
-        }
-
-        public static Boolean operator >=(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
-        {
-            return xlCellAddressLeft == xlCellAddressRight || xlCellAddressLeft > xlCellAddressRight;
-        }
-
-        public static Boolean operator <=(XLAddress xlCellAddressLeft, XLAddress xlCellAddressRight)
-        {
-            return xlCellAddressLeft == xlCellAddressRight || xlCellAddressLeft < xlCellAddressRight;
-        }
-
         #endregion
-
         #region Interface Requirements
-
         #region IEqualityComparer<XLCellAddress> Members
-
         public Boolean Equals(IXLAddress x, IXLAddress y)
         {
             return x == y;
@@ -444,72 +437,53 @@ namespace ClosedXML.Excel
             return obj.GetHashCode();
         }
 
-        new public Boolean Equals(Object x, Object y)
+        public new Boolean Equals(Object x, Object y)
         {
             return x == y;
         }
 
         public Int32 GetHashCode(Object obj)
         {
-            return ((XLAddress)obj).GetHashCode();
+            return (obj).GetHashCode();
         }
 
-        int hashCode;
+        
         public override Int32 GetHashCode()
         {
-            return hashCode;
+            return m_hashCode;
         }
-
         #endregion
-
         #region IEquatable<XLCellAddress> Members
-
         public Boolean Equals(IXLAddress other)
         {
             var right = other as XLAddress;
-            if (hashCode != right.hashCode)
+            if (m_hashCode != right.m_hashCode)
+            {
                 return false;
+            }
 
-            if (this.rowNumber == right.rowNumber)
-                if (right.columnNumber > 0)
-                    return this.ColumnNumber == right.columnNumber;
+            if (m_rowNumber == right.m_rowNumber)
+            {
+                if (right.m_columnNumber > 0)
+                {
+                    return ColumnNumber == right.m_columnNumber;
+                }
                 else
-                    return this.ColumnLetter == right.columnLetter;
+                {
+                    return ColumnLetter == right.m_columnLetter;
+                }
+            }
             else
+            {
                 return false;
+            }
         }
 
         public override Boolean Equals(Object other)
         {
-            return Equals((XLAddress)other);
+            return Equals((XLAddress) other);
         }
-
         #endregion
-
-        #region IComparable Members
-
-        public Int32 CompareTo(object obj)
-        {
-            var other = (XLAddress)obj;
-            if (this == other)
-                return 0;
-            else if (this > other)
-                return 1;
-            else
-                return -1;
-        }
-
-        #endregion
-
-        #region IComparable<XLCellAddress> Members
-
-        public Int32 CompareTo(IXLAddress other)
-        {
-            return CompareTo((Object)other);
-        }
-
-        #endregion
-
         #endregion
     }
 }

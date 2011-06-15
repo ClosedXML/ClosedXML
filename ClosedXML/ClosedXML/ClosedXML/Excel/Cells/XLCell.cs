@@ -1086,7 +1086,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var address = new XLAddress(worksheet, a1Address);
+                var address = XLAddress.Create(worksheet, a1Address);
 
                 String rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, rowsToShift);
                 String columnPart = GetR1C1Column(address.ColumnNumber, address.FixedRow, columnsToShift);
