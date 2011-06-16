@@ -9,6 +9,10 @@ namespace ClosedXML.Excel
     {
         public XLRichText(String text)
         {
+        }
+
+        public XLRichText(String text, IXLRichText defaultRichText)
+        {
             Text = text;
 
             var defaultFont = XLWorkbook.DefaultStyle.Font;
