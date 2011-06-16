@@ -40,6 +40,6 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        
+        IXLRangeRows SetDataType(XLCellValues dataType);
     }
 }

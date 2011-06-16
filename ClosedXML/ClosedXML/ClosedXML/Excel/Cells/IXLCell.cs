@@ -38,6 +38,8 @@ namespace ClosedXML.Excel
         /// <exception cref="ArgumentException"></exception>
         XLCellValues DataType { get; set; }
 
+        IXLCell SetDataType(XLCellValues dataType);
+
         IXLCell SetValue<T>(T value);
 
         /// <summary>

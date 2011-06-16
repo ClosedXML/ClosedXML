@@ -112,6 +112,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Adds a vertical page break after these columns.
         /// </summary>
-        IXLColumns AddVerticalPageBreaks();        
+        IXLColumns AddVerticalPageBreaks();
+
+        IXLColumns SetDataType(XLCellValues dataType);
     }
 }

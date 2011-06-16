@@ -30,6 +30,8 @@ namespace ClosedXML.Excel
         /// <exception cref="ArgumentException"></exception>
         XLCellValues DataType { set; }
 
+        IXLCells SetDataType(XLCellValues dataType);
+
         /// <summary>
         /// Clears the contents of these cells (including styles).
         /// </summary>

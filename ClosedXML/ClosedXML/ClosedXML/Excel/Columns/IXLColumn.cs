@@ -173,5 +173,7 @@ namespace ClosedXML.Excel
         /// Adds a vertical page break after this column.
         /// </summary>
         IXLColumn AddVerticalPageBreak();
+
+        IXLColumn SetDataType(XLCellValues dataType);
     }
 }

@@ -131,6 +131,10 @@ namespace ClosedXML.Excel
             }
         }
 
- 
+        public IXLRangeRows SetDataType(XLCellValues dataType)
+        {
+            ranges.ForEach(c => c.DataType = dataType);
+            return this;
+        }
     }
 }

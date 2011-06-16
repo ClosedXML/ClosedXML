@@ -669,5 +669,11 @@ namespace ClosedXML.Excel
             Worksheet.PageSetup.AddVerticalPageBreak(this.ColumnNumber());
             return this;
         }
+
+        public IXLColumn SetDataType(XLCellValues dataType)
+        {
+            DataType = dataType;
+            return this;
+        }
     }
 }

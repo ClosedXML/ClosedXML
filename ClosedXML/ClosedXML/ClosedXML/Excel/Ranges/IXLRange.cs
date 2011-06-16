@@ -240,6 +240,7 @@ namespace ClosedXML.Excel
         IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase);
         IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase);
 
+        IXLRange SetDataType(XLCellValues dataType);
     }
 }
 

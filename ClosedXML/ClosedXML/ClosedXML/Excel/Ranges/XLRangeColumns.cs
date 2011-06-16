@@ -132,7 +132,11 @@ namespace ClosedXML.Excel
             }
         }
 
-
+        public IXLRangeColumns SetDataType(XLCellValues dataType)
+        {
+            ranges.ForEach(c => c.DataType = dataType);
+            return this;
+        }
 
     }
 }

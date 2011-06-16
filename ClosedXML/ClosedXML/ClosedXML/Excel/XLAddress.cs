@@ -363,14 +363,15 @@ namespace ClosedXML.Excel
         }
         #endregion
         #region Methods
+        private String trimmedAddress;
         public string GetTrimmedAddress()
         {
-            return ColumnLetter + m_rowNumber.ToStringLookup();
+            return trimmedAddress ?? (trimmedAddress = ColumnLetter + m_rowNumber.ToStringLookup());
         }
 
         public string ToStringRelative()
         {
-            return ColumnLetter + m_rowNumber.ToStringLookup();
+            return GetTrimmedAddress();
         }
 
         public string ToStringFixed()

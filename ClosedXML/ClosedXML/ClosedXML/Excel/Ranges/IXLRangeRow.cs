@@ -99,6 +99,8 @@ namespace ClosedXML.Excel
 
         IXLRangeRow Row(Int32 start, Int32 end);
         IXLRangeRows Rows(String rows);
+
+        IXLRangeRow SetDataType(XLCellValues dataType);
     }
 }
 

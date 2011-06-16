@@ -952,6 +952,10 @@ namespace ClosedXML.Excel
                 lastColumnNumber);
         }
 
-
+        public IXLRange SetDataType(XLCellValues dataType)
+        {
+            DataType = dataType;
+            return this;
+        }
     }
 }

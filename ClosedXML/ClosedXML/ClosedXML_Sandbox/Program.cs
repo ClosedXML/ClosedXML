@@ -15,12 +15,12 @@ namespace ClosedXML_Sandbox
         static void xMain(string[] args)
         {
             //var fileName = "DataValidation";
-            //var fileName = "Sandbox";
-            var fileName = "Issue_0000";
+            var fileName = "Sandbox";
+            //var fileName = "Issue_0000";
             //var wb = new XLWorkbook(String.Format(@"c:\Excel Files\ForTesting\{0}.xlsx", fileName));
-            //var wb = new XLWorkbook();
-            //var ws = wb.Worksheets.Add("SheetX");
-            
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("SheetX");
+            ws.Cell(1, 1).Value = "1 234";
             
             //ws.Cell("A1").Value = "Category";
             //ws.Cell("A2").Value = "A";
@@ -37,16 +37,16 @@ namespace ClosedXML_Sandbox
             //Now, when i use workbook.Worksheet("CCR").Range("B1:C34").RangeUsed().
             //The expect is B1:C29.
 
-            //wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
+            wb.SaveAs(String.Format(@"c:\Excel Files\ForTesting\{0}_Saved.xlsx", fileName));
 
 
-            var start = DateTime.Now;
-            var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Issue_0000.xlsx");
-            var end = DateTime.Now;
-            Console.WriteLine(String.Format("Opened file in {0} seconds", (end - start).TotalSeconds));
-            var ws = wb.Worksheet(1);
-            var cell = ws.Cell(100000, 13);
-            Console.WriteLine(cell.GetString());
+            //var start = DateTime.Now;
+            //var wb = new XLWorkbook(@"C:\Excel Files\ForTesting\Issue_0000.xlsx");
+            //var end = DateTime.Now;
+            //Console.WriteLine(String.Format("Opened file in {0} seconds", (end - start).TotalSeconds));
+            //var ws = wb.Worksheet(1);
+            //var cell = ws.Cell(100000, 13);
+            //Console.WriteLine(cell.GetString());
             Console.ReadKey();
         }
 

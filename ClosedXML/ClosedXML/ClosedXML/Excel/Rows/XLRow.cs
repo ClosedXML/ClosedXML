@@ -708,5 +708,11 @@ namespace ClosedXML.Excel
             Worksheet.PageSetup.AddHorizontalPageBreak(this.RowNumber());
             return this;
         }
+
+        public IXLRow SetDataType(XLCellValues dataType)
+        {
+            DataType = dataType;
+            return this;
+        }
     }
 }

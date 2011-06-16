@@ -70,22 +70,27 @@ namespace ClosedXML.Excel
             public IXLStyle Style;
         };
 
-        private CellValues GetCellValue(XLCell xlCell)
+        private readonly EnumValue<CellValues> cvSharedString = new EnumValue<CellValues>(CellValues.SharedString);
+        private readonly EnumValue<CellValues> cvInlineString = new EnumValue<CellValues>(CellValues.InlineString);
+        private readonly EnumValue<CellValues> cvNumber = new EnumValue<CellValues>(CellValues.Number);
+        private readonly EnumValue<CellValues> cvDate = new EnumValue<CellValues>(CellValues.Date);
+        private readonly EnumValue<CellValues> cvBoolean = new EnumValue<CellValues>(CellValues.Boolean);
+        
+        private EnumValue<CellValues> GetCellValue(XLCell xlCell)
         {
-            var xlCellValue = xlCell.DataType;
-            switch (xlCellValue)
+            switch (xlCell.DataType)
             {
-                case XLCellValues.Boolean: return CellValues.Boolean;
-                case XLCellValues.DateTime: return CellValues.Date;
-                case XLCellValues.Number: return CellValues.Number;
                 case XLCellValues.Text:
                     {
                         if (xlCell.ShareString)
-                            return CellValues.SharedString;
+                            return cvSharedString;
                         else
-                            return CellValues.InlineString;
+                            return cvInlineString;
                     }
-                case XLCellValues.TimeSpan: return CellValues.Number;
+                case XLCellValues.Number: return   cvNumber;
+                case XLCellValues.DateTime: return cvDate;
+                case XLCellValues.Boolean: return  cvBoolean;
+                case XLCellValues.TimeSpan: return cvNumber;
                 default: throw new NotImplementedException();
             }
         }
@@ -705,14 +710,26 @@ namespace ClosedXML.Excel
             UInt32 fillCount = 3;
             UInt32 borderCount = 1;
             Int32 numberFormatCount = 1;
-            var xlStyles = new List<IXLStyle>();
+            var xlStyles = new HashSet<IXLStyle>();
 
 
             foreach (var worksheet in Worksheets.Cast<XLWorksheet>())
             {
-                xlStyles.AddRange(worksheet.Styles);
-                worksheet.Internals.ColumnsCollection.Values.ForEach(c => xlStyles.Add(c.Style));
-                worksheet.Internals.RowsCollection.Values.ForEach(c => xlStyles.Add(c.Style));
+                foreach (var s in worksheet.Styles)
+                    if (!xlStyles.Contains(s))
+                        xlStyles.Add(s);
+
+                foreach (var s in worksheet.Internals.ColumnsCollection.Select(kp=>kp.Value.Style))
+                    if (!xlStyles.Contains(s))
+                        xlStyles.Add(s);
+
+                foreach (var s in worksheet.Internals.RowsCollection.Select(kp => kp.Value.Style))
+                    if (!xlStyles.Contains(s))
+                        xlStyles.Add(s);
+
+                //xlStyles.AddRange(worksheet.Styles);
+                //worksheet.Internals.ColumnsCollection.Values.ForEach(c => xlStyles.Add(c.Style));
+                //worksheet.Internals.RowsCollection.Values.ForEach(c => xlStyles.Add(c.Style));
             }
 
 
@@ -1778,6 +1795,7 @@ namespace ClosedXML.Excel
                 if (cellsByRow.ContainsKey(distinctRow))
                 {
                     var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference.Value, c => c);
+                    Boolean isNewRow = !row.Elements<Cell>().Any();
                     foreach (var opCell in cellsByRow[distinctRow]
                         .OrderBy(c => c.Address.ColumnNumber)
                         .Select(c => (XLCell)c))
@@ -1797,8 +1815,8 @@ namespace ClosedXML.Excel
                         else
                         {
                             //isNewCell = true;
-                            cell = new Cell() { CellReference = cellReference };
-                            if (!row.Elements<Cell>().Any())
+                            cell = new Cell() { CellReference = new StringValue(cellReference) };
+                            if (isNewRow)
                             {
                                 row.Append(cell);
                             }

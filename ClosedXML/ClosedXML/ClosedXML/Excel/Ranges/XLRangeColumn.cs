@@ -245,6 +245,12 @@ namespace ClosedXML.Excel
             }
             return retVal;
         }
+
+        public IXLRangeColumn SetDataType(XLCellValues dataType)
+        {
+            DataType = dataType;
+            return this;
+        }
     }
 }
 

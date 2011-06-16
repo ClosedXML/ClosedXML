@@ -256,6 +256,12 @@ namespace ClosedXML.Excel
             foreach (var col in columns)
                 col.Worksheet.PageSetup.AddVerticalPageBreak(col.ColumnNumber());
             return this;
-        }        
+        }
+
+        public IXLColumns SetDataType(XLCellValues dataType)
+        {
+            columns.ForEach(c => c.DataType = dataType);
+            return this;
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        
+        IXLRangeColumns SetDataType(XLCellValues dataType);
 
     }
 }

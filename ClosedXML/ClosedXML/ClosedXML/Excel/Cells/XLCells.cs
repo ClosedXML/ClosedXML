@@ -171,6 +171,12 @@ namespace ClosedXML.Excel
             }
         }
 
+        public IXLCells SetDataType(XLCellValues dataType)
+        {
+            this.ForEach(c => c.DataType = dataType);
+            return this;
+        }
+
         public XLCellValues DataType
         {
             set

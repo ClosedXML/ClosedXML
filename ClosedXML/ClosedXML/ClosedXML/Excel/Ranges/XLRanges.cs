@@ -260,5 +260,11 @@ namespace ClosedXML.Excel
             }
             return (IXLCells)cells;
         }
+
+        public IXLRanges SetDataType(XLCellValues dataType)
+        {
+            ranges.ForEach(c => c.DataType = dataType);
+            return this;
+        }
     }
 }

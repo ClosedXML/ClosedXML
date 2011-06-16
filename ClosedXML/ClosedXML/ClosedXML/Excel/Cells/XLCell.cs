@@ -679,6 +679,12 @@ namespace ClosedXML.Excel
 
         #endregion
 
+        public IXLCell SetDataType(XLCellValues dataType)
+        {
+            DataType = dataType;
+            return this;
+        }
+
         internal XLCellValues dataType;
         public XLCellValues DataType
         {

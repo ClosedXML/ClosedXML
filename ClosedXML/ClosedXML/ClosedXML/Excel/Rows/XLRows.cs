@@ -254,6 +254,12 @@ namespace ClosedXML.Excel
                 row.Worksheet.PageSetup.AddHorizontalPageBreak(row.RowNumber());
             }
             return this;
-        }        
+        }
+
+        public IXLRows SetDataType(XLCellValues dataType)
+        {
+            rows.ForEach(c => c.DataType = dataType);
+            return this;
+        }
     }
 }

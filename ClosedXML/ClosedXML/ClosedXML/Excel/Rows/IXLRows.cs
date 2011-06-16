@@ -113,5 +113,7 @@ namespace ClosedXML.Excel
         /// Adds a horizontal page break after these rows.
         /// </summary>
         IXLRows AddHorizontalPageBreaks();
+
+        IXLRows SetDataType(XLCellValues dataType);
     }
 }
