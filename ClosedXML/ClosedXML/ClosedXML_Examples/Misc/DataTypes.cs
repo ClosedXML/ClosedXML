@@ -87,6 +87,14 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(++ro, co).Value = "Number as Text:";
             ws.Cell(ro, co + 1).Value = "'123.45";
 
+            ws.Cell(++ro, co).Value = "Number with @ format:";
+            ws.Cell(ro, co + 1).Style.NumberFormat.Format = "@";
+            ws.Cell(ro, co + 1).Value = 123.45;
+
+            ws.Cell(++ro, co).Value = "Format number with @:";
+            ws.Cell(ro, co + 1).Value = 123.45;
+            ws.Cell(ro, co + 1).Style.NumberFormat.Format = "@";
+
             ws.Cell(++ro, co).Value = "TimeSpan as Text:";
             ws.Cell(ro, co + 1).Value = "'" + new TimeSpan(33, 45, 22).ToString();
 
@@ -130,6 +138,11 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(++ro, co).Value = "Text to Number:";
             ws.Cell(ro, co + 1).Value = "'123.45";
+            ws.Cell(ro, co + 1).DataType = XLCellValues.Number;
+
+            ws.Cell(++ro, co).Value = "@ format to Number:";
+            ws.Cell(ro, co + 1).Style.NumberFormat.Format = "@";
+            ws.Cell(ro, co + 1).Value = 123.45;
             ws.Cell(ro, co + 1).DataType = XLCellValues.Number;
 
             ws.Cell(++ro, co).Value = "Text to TimeSpan:";

@@ -586,51 +586,60 @@ namespace ClosedXML.Excel
         {
             FormulaA1 = String.Empty;
             String val = value.ToString();
-            Double dTest;
-            DateTime dtTest;
-            Boolean bTest;
-            TimeSpan tsTest;
-            if (val.Length > 0 && val.Substring(0, 1) == "'")
-            {
-                val = val.Substring(1, val.Length - 1);
-                dataType = XLCellValues.Text;
-                if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
-                    Style.Alignment.WrapText = true;
-            }
-            else if (value is TimeSpan || (TimeSpan.TryParse(val, out tsTest) && !Double.TryParse(val, out dTest)))
-            {
-                dataType = XLCellValues.TimeSpan;
-                if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
-                    Style.NumberFormat.NumberFormatId = 46;
-            }
-            else if (Double.TryParse(val, out dTest))
-            {
-                dataType = XLCellValues.Number;
-            }
-            else if (DateTime.TryParse(val, out dtTest))
-            {
-                dataType = XLCellValues.DateTime;
 
-                if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
-                    if (dtTest.Date == dtTest)
-                        Style.NumberFormat.NumberFormatId = 14;
-                    else
-                        Style.NumberFormat.NumberFormatId = 22;
-
-                val = dtTest.ToOADate().ToString();
-            }
-            else if (Boolean.TryParse(val, out bTest))
+            if (val.Length > 0)
             {
-                dataType = XLCellValues.Boolean;
-                val = bTest ? "1" : "0";
-            }
-            else
-            {
-                dataType = XLCellValues.Text;
-                if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
-                    Style.Alignment.WrapText = true;
-            }
+                Double dTest;
+                DateTime dtTest;
+                Boolean bTest;
+                TimeSpan tsTest;
+                if (style.NumberFormat.Format == "@")
+                {
+                    dataType = XLCellValues.Text;
+                    if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                        Style.Alignment.WrapText = true;
+                }
+                else if (val[0] == '\'')
+                {
+                    val = val.Substring(1, val.Length - 1);
+                    dataType = XLCellValues.Text;
+                    if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                        Style.Alignment.WrapText = true;
+                }
+                else if (value is TimeSpan || (TimeSpan.TryParse(val, out tsTest) && !Double.TryParse(val, out dTest)))
+                {
+                    dataType = XLCellValues.TimeSpan;
+                    if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                        Style.NumberFormat.NumberFormatId = 46;
+                }
+                else if (Double.TryParse(val, out dTest))
+                {
+                    dataType = XLCellValues.Number;
+                }
+                else if (DateTime.TryParse(val, out dtTest))
+                {
+                    dataType = XLCellValues.DateTime;
 
+                    if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                        if (dtTest.Date == dtTest)
+                            Style.NumberFormat.NumberFormatId = 14;
+                        else
+                            Style.NumberFormat.NumberFormatId = 22;
+
+                    val = dtTest.ToOADate().ToString();
+                }
+                else if (Boolean.TryParse(val, out bTest))
+                {
+                    dataType = XLCellValues.Boolean;
+                    val = bTest ? "1" : "0";
+                }
+                else
+                {
+                    dataType = XLCellValues.Text;
+                    if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                        Style.Alignment.WrapText = true;
+                }
+            }
             cellValue = val;
         }
 
