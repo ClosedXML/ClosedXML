@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
         public static readonly DateTime baseDate = new DateTime(1899, 12, 30);
         public IXLWorksheet Worksheet { get { return worksheet; } }
         public XLWorksheet worksheet;
-        public XLCell(IXLAddress address, IXLStyle defaultStyle, XLWorksheet worksheet)
+        public XLCell(XLWorksheet worksheet, IXLAddress address, IXLStyle defaultStyle)
         {
             this.Address = address;
             this.ShareString = true;

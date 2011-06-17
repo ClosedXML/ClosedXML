@@ -357,7 +357,7 @@ namespace ClosedXML.Excel
                 {
                     var oldCell = rngToTranspose.Cell(ro, co);
                     var newKey = rngToTranspose.Cell(co, ro).Address; // new XLAddress(Worksheet, c.Address.ColumnNumber, c.Address.RowNumber);
-                    var newCell = new XLCell(newKey, oldCell.Style, Worksheet as XLWorksheet);
+                    var newCell = new XLCell(Worksheet as XLWorksheet, newKey, oldCell.Style);
                     newCell.CopyFrom(oldCell);
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(oldCell.Address);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ClosedXML_Examples.Delete;
 using ClosedXML_Examples.Styles;
 using ClosedXML_Examples.Columns;
 using ClosedXML_Examples.Rows;
@@ -11,14 +12,11 @@ using ClosedXML_Examples.PageSetup;
 
 namespace ClosedXML_Examples
 {
-    public class Program
+    public class ModifyFiles
     {
-        static void Main(string[] args)
+        public static void Run()
         {
-            CreateFiles.CreateAllFiles();
-            LoadFiles.LoadAllFiles();
-
-            ModifyFiles.Run();
+            new DeleteRows().Create(@"C:\Excel Files\Modify\DeleteRows.xlsx");
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
 {
@@ -116,7 +114,7 @@ namespace ClosedXML.Excel
                         && !(Worksheet as XLWorksheet).Internals.ColumnsCollection[absoluteAddress.ColumnNumber].Style.Equals(this.Worksheet.Style))
                         style = (Worksheet as XLWorksheet).Internals.ColumnsCollection[absoluteAddress.ColumnNumber].Style;
                 }
-                var newCell = new XLCell(absoluteAddress, style, Worksheet as XLWorksheet);
+                var newCell = new XLCell(Worksheet as XLWorksheet, absoluteAddress, style);
                 (Worksheet as XLWorksheet).Internals.CellsCollection.Add(absoluteAddress, newCell);
                 return newCell;
             }
@@ -370,7 +368,7 @@ namespace ClosedXML.Excel
                         {
                             oldCell = this.Worksheet.Cell(oldKey);
                         }
-                        var newCell = new XLCell(newKey, oldCell.Style, Worksheet as XLWorksheet);
+                        var newCell = new XLCell(Worksheet as XLWorksheet, newKey, oldCell.Style);
                         newCell.CopyValues((XLCell)oldCell);
                         cellsToInsert.Add(newKey, newCell);
                         cellsToDelete.Add(oldKey);
@@ -390,7 +388,7 @@ namespace ClosedXML.Excel
                 {
                     var newColumn = c.Key.ColumnNumber + numberOfColumns;
                     var newKey = new XLAddress(Worksheet, c.Key.RowNumber, newColumn, false, false);
-                    var newCell = new XLCell(newKey, c.Value.Style, Worksheet as XLWorksheet);
+                    var newCell = new XLCell(Worksheet as XLWorksheet, newKey, c.Value.Style);
                     newCell.CopyValues(c.Value);
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Key);
@@ -504,7 +502,7 @@ namespace ClosedXML.Excel
                         {
                             oldCell = this.Worksheet.Cell(oldKey);
                         }
-                        var newCell = new XLCell(newKey, oldCell.Style, Worksheet as XLWorksheet);
+                        var newCell = new XLCell(Worksheet as XLWorksheet, newKey, oldCell.Style);
                         newCell.CopyFrom(oldCell);
                         cellsToInsert.Add(newKey, newCell);
                         cellsToDelete.Add(oldKey);
@@ -524,7 +522,7 @@ namespace ClosedXML.Excel
                 {
                     var newRow = c.Key.RowNumber + numberOfRows;
                     var newKey = new XLAddress(Worksheet, newRow, c.Key.ColumnNumber, false, false);
-                    var newCell = new XLCell(newKey, c.Value.Style, Worksheet as XLWorksheet);
+                    var newCell = new XLCell(Worksheet as XLWorksheet, newKey, c.Value.Style);
                     newCell.CopyFrom(c.Value);
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Key);
@@ -709,7 +707,7 @@ namespace ClosedXML.Excel
             foreach (var c in cellsQuery)
             {
                 var newKey = new XLAddress(Worksheet, c.Key.RowNumber - rowModifier, c.Key.ColumnNumber - columnModifier, false, false);
-                var newCell = new XLCell(newKey, c.Value.Style, Worksheet as XLWorksheet);
+                var newCell = new XLCell(Worksheet as XLWorksheet, newKey, c.Value.Style);
                 newCell.CopyValues(c.Value);
                 //newCell.ShiftFormula(rowModifier * -1, columnModifier * -1);
                 cellsToDelete.Add(c.Key);
