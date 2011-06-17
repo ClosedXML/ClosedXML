@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Collections;
-using System.Data;
 
 namespace ClosedXML.Excel
 {
@@ -22,6 +22,7 @@ namespace ClosedXML.Excel
                 style = new XLStyle(this, worksheet.Style);
             else
                 style = new XLStyle(this, defaultStyle);
+
             this.worksheet = worksheet;
         }
 
@@ -43,6 +44,7 @@ namespace ClosedXML.Excel
         public IXLCell SetValue<T>(T value)
         {
             FormulaA1 = String.Empty;
+            richText = null;
             if (value is String)
             {
                 cellValue = value.ToString();
@@ -264,7 +266,10 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        return cellValue;
+                        if (richText == null)
+                            return cellValue;
+                        else
+                            return richText.ToString();
                     }
                 }
             }
@@ -273,8 +278,25 @@ namespace ClosedXML.Excel
                 FormulaA1 = String.Empty;
                 if (!SetEnumerable(value))
                     if (!SetRange(value))
-                        SetValue(value);
+                        if (!SetRichText(value))
+                            SetValue(value);
             }
+        }
+
+        private bool SetRichText(object value)
+        {
+            var asRichString = value as XLRichString;
+            if (asRichString == null)
+            {
+                return false;
+            }
+            else
+            {
+                richText = asRichString;
+                dataType = XLCellValues.Text;
+                return true;
+            }
+
         }
 
         private Boolean SetRange(Object rangeObject)
@@ -586,7 +608,7 @@ namespace ClosedXML.Excel
         {
             FormulaA1 = String.Empty;
             String val = value.ToString();
-
+            richText = null;
             if (val.Length > 0)
             {
                 Double dTest;
@@ -705,6 +727,12 @@ namespace ClosedXML.Excel
             {
                 if (dataType != value)
                 {
+                    if (richText != null)
+                    {
+                        cellValue = richText.ToString();
+                        richText = null;
+                    }
+                    
                     if (cellValue.Length > 0)
                     {
                         if (value == XLCellValues.Boolean)
@@ -1151,12 +1179,14 @@ namespace ClosedXML.Excel
             this.cellValue = source.cellValue;
             this.dataType = source.dataType;
             this.FormulaR1C1 = source.FormulaR1C1;
+            richText = source.richText;
         }
 
         public IXLCell CopyFrom(IXLCell otherCell)
         {
             var source = otherCell as XLCell;
             cellValue = source.cellValue;
+            richText = source.richText;
             dataType = source.dataType;
             FormulaR1C1 = source.FormulaR1C1;
             style = new XLStyle(this, source.style);
@@ -1583,5 +1613,24 @@ namespace ClosedXML.Excel
         }
 
         public String ValueCached { get; internal set; }
+
+        XLRichString richText;
+        public IXLRichString RichText 
+        {
+            get
+            {
+                if (richText == null)
+                { 
+                    if (StringExtensions.IsNullOrWhiteSpace(cellValue))
+                        richText = new XLRichString(style.Font);
+                    else
+                        richText = new XLRichString(GetFormattedString(), style.Font);
+                    dataType = XLCellValues.Text;
+                }
+                return richText;
+            }
+        }
+
+        public Boolean HasRichText { get { return richText != null; } }
     }
 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections;
-
 
 namespace ClosedXML.Excel
 {
@@ -177,5 +173,8 @@ namespace ClosedXML.Excel
         IXLCell CopyTo(IXLCell target);
 
         String ValueCached { get; }
+
+        IXLRichString RichText { get; }
+        Boolean HasRichText { get; }
     }
 }

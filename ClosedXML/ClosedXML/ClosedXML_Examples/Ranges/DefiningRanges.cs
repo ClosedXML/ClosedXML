@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ClosedXML.Excel;
 
-using System.Drawing;
 
 namespace ClosedXML_Examples.Ranges
 {

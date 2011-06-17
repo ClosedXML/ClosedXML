@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
     public interface IXLRichText: IXLFontBase, IEquatable<IXLRichText>
     {
         String Text { get; }
+        IXLRichText Apply(IXLFontBase font);
 
         IXLRichText SetBold(); IXLRichText SetBold(Boolean value);
         IXLRichText SetItalic(); IXLRichText SetItalic(Boolean value);

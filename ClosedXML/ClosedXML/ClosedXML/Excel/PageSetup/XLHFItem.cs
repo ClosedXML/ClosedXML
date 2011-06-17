@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace ClosedXML.Excel
@@ -37,7 +36,7 @@ namespace ClosedXML.Excel
 
         public IXLRichText AddText(String text, XLHFOccurrence occurrence)
         {
-            IXLRichText richText = new XLRichText(text);
+            IXLRichText richText = new XLRichText(text, XLWorkbook.DefaultStyle.Font);
 
             var hfText = new XLHFText(richText);
             if (occurrence == XLHFOccurrence.AllPages)

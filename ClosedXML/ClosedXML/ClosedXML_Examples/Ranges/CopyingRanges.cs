@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ClosedXML.Excel;
-using System.Drawing;
-using ClosedXML;
+﻿using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
 {

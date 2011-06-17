@@ -1,35 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
     internal class XLRichText: IXLRichText
     {
-        public XLRichText(String text)
-            : this(text, XLWorkbook.DefaultStyle.Font)
-        {
-           
-        }
 
-        public XLRichText(String text, IXLFontBase defaultFont)
+        public XLRichText(String text, IXLFontBase font)
         {
             Text = text;
-
-            Bold = defaultFont.Bold;
-            Italic = defaultFont.Italic;
-            Underline = defaultFont.Underline;
-            Strikethrough = defaultFont.Strikethrough;
-            VerticalAlignment = defaultFont.VerticalAlignment;
-            Shadow = defaultFont.Shadow;
-            FontSize = defaultFont.FontSize;
-            FontColor = new XLColor(defaultFont.FontColor);
-            FontName = defaultFont.FontName;
-            FontFamilyNumbering = defaultFont.FontFamilyNumbering;
+            Apply(font);
         }
 
         public String Text { get; private set; }
+        public IXLRichText Apply(IXLFontBase font)
+        { 
+            Bold = font.Bold;
+            Italic = font.Italic;
+            Underline = font.Underline;
+            Strikethrough = font.Strikethrough;
+            VerticalAlignment = font.VerticalAlignment;
+            Shadow = font.Shadow;
+            FontSize = font.FontSize;
+            FontColor = new XLColor(font.FontColor);
+            FontName = font.FontName;
+            FontFamilyNumbering = font.FontFamilyNumbering;
+            return this;
+        }
 
         public Boolean Bold { get; set; }
         public Boolean Italic { get; set; }
@@ -56,7 +52,8 @@ namespace ClosedXML.Excel
         public Boolean Equals(IXLRichText other)
         {
             return
-                   this.Bold.Equals(other.Bold)
+                    Text == other.Text
+                && this.Bold.Equals(other.Bold)
                 && this.Italic.Equals(other.Italic)
                 && this.Underline.Equals(other.Underline)
                 && this.Strikethrough.Equals(other.Strikethrough)
@@ -76,7 +73,8 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
-            return Bold.GetHashCode()
+            return Text.GetHashCode()
+                ^ Bold.GetHashCode()
                 ^ Italic.GetHashCode()
                 ^ (Int32)Underline
                 ^ Strikethrough.GetHashCode()
