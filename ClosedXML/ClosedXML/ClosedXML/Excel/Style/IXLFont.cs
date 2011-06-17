@@ -32,18 +32,9 @@ namespace ClosedXML.Excel
         Decorative = 5
     }
 
-    public interface IXLFont : IEquatable<IXLFont>
+    public interface IXLFont : IXLFontBase, IEquatable<IXLFont>
     {
-        Boolean Bold { get; set; }
-        Boolean Italic { get; set; }
-        XLFontUnderlineValues Underline { get; set; }
-        Boolean Strikethrough { get; set; }
-        XLFontVerticalTextAlignmentValues VerticalAlignment { get; set; }
-        Boolean Shadow { get; set; }
-        Double FontSize { get; set; }
-        IXLColor FontColor { get; set; }
-        String FontName { get; set; }
-        XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
+
 
         IXLStyle SetBold(); IXLStyle SetBold(Boolean value);
         IXLStyle SetItalic(); IXLStyle SetItalic(Boolean value);

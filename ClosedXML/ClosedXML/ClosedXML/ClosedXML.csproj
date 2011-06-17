@@ -170,6 +170,7 @@
     <Compile Include="Excel\Style\Colors\XLColor_Public.cs" />
     <Compile Include="Excel\Style\Colors\IXLColor.cs" />
     <Compile Include="Excel\Style\Colors\XLColor_Internal.cs" />
+    <Compile Include="Excel\Style\IXLFontBase.cs" />
     <Compile Include="Excel\Style\IXLProtection.cs" />
     <Compile Include="Excel\Style\XLProtection.cs" />
     <Compile Include="Excel\Style\XLStylizedContainer.cs" />

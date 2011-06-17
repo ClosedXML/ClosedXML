@@ -5,17 +5,10 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    //internal delegate void RowDeletingDelegate(Int32 deletedRow, Boolean beingShifted);
-    //internal delegate void RowShiftedDelegate(Int32 startingRow, Int32 rowsShifted);
     internal class XLRowsCollection: IDictionary<Int32, XLRow>
     {
-        //public event RowDeletingDelegate RowDeleting;
-        //public event RowShiftedDelegate RowShifted;
-
-        //private Boolean beingShifted = false;
         public void ShiftRowsDown(Int32 startingRow, Int32 rowsToShift)
         {
-            //beingShifted = true;
             foreach (var ro in dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
             {
                 var rowToMove = dictionary[ro];
@@ -26,17 +19,23 @@ namespace ClosedXML.Excel
                 }
                 dictionary.Remove(ro);
             }
-
-            //if (RowShifted != null)
-            //    RowShifted(startingRow, rowsToShift);
-
-            //beingShifted = false;
         }
 
         private Dictionary<Int32, XLRow> dictionary = new Dictionary<Int32, XLRow>();
+        private Dictionary<Int32, XLRow> deleted = new Dictionary<Int32, XLRow>();
+        public Dictionary<Int32, XLRow> Deleted
+        {
+            get
+            {
+                return deleted;
+            }
+        }
 
         public void Add(int key, XLRow value)
         {
+            if (deleted.ContainsKey(key))
+                deleted.Remove(key);
+
             dictionary.Add(key, value);
         }
 
@@ -52,8 +51,8 @@ namespace ClosedXML.Excel
 
         public bool Remove(int key)
         {
-            //if (RowDeleting != null)
-            //    RowDeleting(key, beingShifted);
+            if (!deleted.ContainsKey(key))
+                deleted.Add(key, dictionary[key]);
 
             return dictionary.Remove(key);
         }
@@ -82,13 +81,19 @@ namespace ClosedXML.Excel
 
         public void Add(KeyValuePair<int, XLRow> item)
         {
+            if (deleted.ContainsKey(item.Key))
+                deleted.Remove(item.Key);
+
             dictionary.Add(item.Key, item.Value);
         }
 
         public void Clear()
         {
-            //if (RowDeleting != null)
-            //    dictionary.ForEach(r => RowDeleting(r.Key, beingShifted));
+            foreach (var kp in dictionary)
+            {
+                if (!deleted.ContainsKey(kp.Key))
+                    deleted.Add(kp.Key, kp.Value);
+            }
 
             dictionary.Clear();
         }
@@ -115,8 +120,8 @@ namespace ClosedXML.Excel
 
         public bool Remove(KeyValuePair<int, XLRow> item)
         {
-            //if (RowDeleting != null)
-            //    RowDeleting(item.Key, beingShifted);
+            if (!deleted.ContainsKey(item.Key))
+                deleted.Add(item.Key, dictionary[item.Key]);
 
             return dictionary.Remove(item.Key);
         }
@@ -129,6 +134,17 @@ namespace ClosedXML.Excel
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return dictionary.GetEnumerator();
+        }
+
+        public void RemoveAll(Func<XLRow, Boolean> predicate)
+        {
+            foreach (var kp in dictionary.Values.Where(predicate).Select(c=>c))
+            {
+                if (!deleted.ContainsKey(kp.RowNumber()))
+                    deleted.Add(kp.RowNumber(), kp);
+            }
+
+            dictionary.RemoveAll(predicate);
         }
     }
 }

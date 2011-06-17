@@ -133,7 +133,7 @@ namespace ClosedXML.Excel
             {
                 if (colorType == XLColorType.Color)
                 {
-                    return color == otherC.color;
+                    return color.ToArgb() == otherC.color.ToArgb();
                 }
                 if (colorType == XLColorType.Theme)
                 {

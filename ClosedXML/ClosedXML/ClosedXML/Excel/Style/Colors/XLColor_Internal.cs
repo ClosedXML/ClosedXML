@@ -36,7 +36,7 @@ namespace ClosedXML.Excel
         internal XLColor(Color color)
         {
             this.color = color;
-            hashCode = 13 ^ this.color.GetHashCode();
+            hashCode = 13 ^ color.ToArgb();
             HasValue = true;
             colorType = XLColorType.Color;
         }

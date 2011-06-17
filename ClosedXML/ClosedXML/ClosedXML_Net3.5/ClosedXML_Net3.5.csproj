@@ -358,8 +358,14 @@
     <Compile Include="..\ClosedXML\Excel\Ranges\XLRanges.cs">
       <Link>Excel\Ranges\XLRanges.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\RichText\IXLRichString.cs">
+      <Link>Excel\RichText\IXLRichString.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\RichText\IXLRichText.cs">
       <Link>Excel\RichText\IXLRichText.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\RichText\XLRichString.cs">
+      <Link>Excel\RichText\XLRichString.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\RichText\XLRichText.cs">
       <Link>Excel\RichText\XLRichText.cs</Link>
@@ -405,6 +411,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Style\IXLFont.cs">
       <Link>Excel\Style\IXLFont.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLFontBase.cs">
+      <Link>Excel\Style\IXLFontBase.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Style\IXLNumberFormat.cs">
       <Link>Excel\Style\IXLNumberFormat.cs</Link>

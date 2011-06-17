@@ -49,6 +49,7 @@ namespace ClosedXML.Excel.RichText
                 }
             }
             richTexts = newRichTexts;
+            throw new NotImplementedException();
         }
     }
 }

@@ -8,14 +8,15 @@ namespace ClosedXML.Excel
     internal class XLRichText: IXLRichText
     {
         public XLRichText(String text)
+            : this(text, XLWorkbook.DefaultStyle.Font)
         {
+           
         }
 
-        public XLRichText(String text, IXLRichText defaultRichText)
+        public XLRichText(String text, IXLFontBase defaultFont)
         {
             Text = text;
 
-            var defaultFont = XLWorkbook.DefaultStyle.Font;
             Bold = defaultFont.Bold;
             Italic = defaultFont.Italic;
             Underline = defaultFont.Underline;

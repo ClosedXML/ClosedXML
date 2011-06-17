@@ -5,17 +5,10 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    //internal delegate void ColumnDeletingDelegate(Int32 deletedColumn, Boolean beingShifted);
-    //internal delegate void ColumnShiftedDelegate(Int32 startingColumn, Int32 columnsShifted);
     internal class XLColumnsCollection : IDictionary<Int32, XLColumn>
     {
-        //public event ColumnDeletingDelegate ColumnDeleting;
-        //public event ColumnShiftedDelegate ColumnShifted;
-
-        //private Boolean beingShifted = false;
         public void ShiftColumnsRight(Int32 startingColumn, Int32 columnsToShift)
         {
-            //beingShifted = true;
             foreach (var ro in dictionary.Keys.Where(k => k >= startingColumn).OrderByDescending(k => k))
             {
                 var columnToMove = dictionary[ro];
@@ -27,10 +20,6 @@ namespace ClosedXML.Excel
                 dictionary.Remove(ro);
             }
 
-            //if (ColumnShifted != null)
-            //    ColumnShifted(startingColumn, columnsToShift);
-
-            //beingShifted = false;
         }
 
         private Dictionary<Int32, XLColumn> dictionary = new Dictionary<Int32, XLColumn>();
@@ -52,9 +41,6 @@ namespace ClosedXML.Excel
 
         public bool Remove(int key)
         {
-            //if (ColumnDeleting != null)
-            //    ColumnDeleting(key, beingShifted);
-
             return dictionary.Remove(key);
         }
 
@@ -87,9 +73,6 @@ namespace ClosedXML.Excel
 
         public void Clear()
         {
-            //if (ColumnDeleting != null)
-            //    dictionary.ForEach(r => ColumnDeleting(r.Key, beingShifted));
-
             dictionary.Clear();
         }
 
@@ -115,9 +98,6 @@ namespace ClosedXML.Excel
 
         public bool Remove(KeyValuePair<int, XLColumn> item)
         {
-            //if (ColumnDeleting != null)
-            //    ColumnDeleting(item.Key, beingShifted);
-
             return dictionary.Remove(item.Key);
         }
 
@@ -129,6 +109,11 @@ namespace ClosedXML.Excel
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return dictionary.GetEnumerator();
+        }
+
+        public void RemoveAll(Func<XLColumn, Boolean> predicate)
+        {
+            dictionary.RemoveAll(predicate);
         }
     }
 }

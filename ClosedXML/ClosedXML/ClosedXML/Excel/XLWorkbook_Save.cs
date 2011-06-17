@@ -1716,9 +1716,20 @@ namespace ClosedXML.Excel
                 cellsByRow[rowNum].Add(c);
             }
 
+            
+            
+            var sheetDataRows = sheetData.Elements<Row>().ToDictionary(r => (Int32)r.RowIndex.Value, r => r);
+            foreach (var r in xlWorksheet.Internals.RowsCollection.Deleted)
+            {
+                if (sheetDataRows.ContainsKey(r.Key))
+                {
+                    sheetData.RemoveChild(sheetDataRows[r.Key]);
+                    sheetDataRows.Remove(r.Key);
+                }
+            }
+
             var distinctRows = cellsByRow.Keys.Union((xlWorksheet as XLWorksheet).Internals.RowsCollection.Keys);
             Boolean noRows = (sheetData.Elements<Row>().FirstOrDefault() == null);
-            var sheetDataRows = sheetData.Elements<Row>().ToDictionary(r => (Int32)r.RowIndex.Value, r => r);
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
                 Row row; // = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex.Value == (UInt32)distinctRow);
@@ -1782,19 +1793,27 @@ namespace ClosedXML.Excel
                     //row.Hidden = false;
                 }
 
-                List<Cell> cellsToRemove = new List<Cell>();
-                foreach (var cell in row.Elements<Cell>())
+                var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference.Value, c => c);
+
+                foreach (var c in xlWorksheet.Internals.CellsCollection.Deleted)
                 {
-                    var cellReference = cell.CellReference;
-                    if ((xlWorksheet as XLWorksheet).Internals.CellsCollection.Deleted.ContainsKey(XLAddress.Create(xlWorksheet, cellReference)))
-                        cellsToRemove.Add(cell);
+                    if (cellsByReference.ContainsKey(c.Key.ToStringRelative()))
+                        row.RemoveChild(cellsByReference[c.Key.ToStringRelative()]);
                 }
-                cellsToRemove.ForEach(cell => row.RemoveChild(cell));
+
+                //List<Cell> cellsToRemove = new List<Cell>();
+                //foreach (var cell in row.Elements<Cell>())
+                //{
+                //    var cellReference = cell.CellReference;
+                //    if (xlWorksheet.Internals.CellsCollection.Deleted.ContainsKey(XLAddress.Create(xlWorksheet, cellReference)))
+                //        cellsToRemove.Add(cell);
+                //}
+                //cellsToRemove.ForEach(cell => row.RemoveChild(cell));
 
                 
                 if (cellsByRow.ContainsKey(distinctRow))
                 {
-                    var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference.Value, c => c);
+                    
                     Boolean isNewRow = !row.Elements<Cell>().Any();
                     foreach (var opCell in cellsByRow[distinctRow]
                         .OrderBy(c => c.Address.ColumnNumber)
