@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLWorksheets : IXLWorksheets
+    internal class XLWorksheets : IXLWorksheets,IEnumerable<XLWorksheet>
     {
         #region Constructor
         private readonly Dictionary<String, XLWorksheet> m_worksheets = new Dictionary<String, XLWorksheet>();
@@ -74,7 +74,7 @@ namespace ClosedXML.Excel
         {
             var sheet = new XLWorksheet(sheetName, m_workbook);
             m_worksheets.Add(sheetName, sheet);
-            sheet.position = m_worksheets.Count;
+            sheet.m_position = m_worksheets.Count;
             return sheet;
         }
 
@@ -110,11 +110,20 @@ namespace ClosedXML.Excel
             }
 
             m_worksheets.RemoveAll(w => w.Position == position);
-            m_worksheets.Values.Where(w => w.Position > position).ForEach(w => (w).position -= 1);
+            m_worksheets.Values.Where(w => w.Position > position).ForEach(w => (w).m_position -= 1);
         }
         #endregion
         #region IEnumerable<IXLWorksheet> Members
-        public IEnumerator<IXLWorksheet> GetEnumerator()
+        public IEnumerator<XLWorksheet> GetEnumerator()
+        {
+            foreach (var w in m_worksheets.Values)
+            {
+                yield return w;
+            }
+        }
+        #endregion
+        #region IEnumerable<XLWorksheet> Members
+        IEnumerator<IXLWorksheet> IEnumerable<IXLWorksheet>.GetEnumerator()
         {
             foreach (var w in m_worksheets.Values)
             {

@@ -1,26 +1,30 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLCells : IXLCells, IXLStylized
+    internal class XLCells : IXLCells, IXLStylized, IEnumerable<XLCell>
     {
-        private Boolean usedCellsOnly;
-        private Boolean includeStyles;
-        public XLCells(Boolean entireWorksheet, Boolean usedCellsOnly, Boolean includeStyles)
+        #region Fields
+        private readonly bool m_usedCellsOnly;
+        private readonly bool m_includeStyles;
+        private readonly List<XLRangeAddress> m_rangeAddresses = new List<XLRangeAddress>();
+        private IXLStyle m_style;
+        #endregion
+        #region Constructor
+        public XLCells(bool entireWorksheet, bool usedCellsOnly, bool includeStyles)
         {
-            this.style = new XLStyle(this, XLWorkbook.DefaultStyle);
-            this.usedCellsOnly = usedCellsOnly;
-            this.includeStyles = includeStyles;
+            m_style = new XLStyle(this, XLWorkbook.DefaultStyle);
+            m_usedCellsOnly = usedCellsOnly;
+            m_includeStyles = includeStyles;
         }
-
-        private List<IXLRangeAddress> rangeAddresses = new List<IXLRangeAddress>();
-        private struct MinMax { public Int32 MinRow; public Int32 MaxRow; public Int32 MinColumn; public Int32 MaxColumn; }
-        public IEnumerator<IXLCell> GetEnumerator()
+        #endregion
+        public IEnumerator<XLCell> GetEnumerator()
         {
-            var cellsInRanges = new Dictionary<IXLWorksheet, HashSet<IXLAddress>>();
-            foreach (var range in rangeAddresses)
+            var cellsInRanges = new Dictionary<XLWorksheet, HashSet<IXLAddress>>();
+            foreach (var range in m_rangeAddresses)
             {
                 HashSet<IXLAddress> hash;
                 if (cellsInRanges.ContainsKey(range.Worksheet))
@@ -33,20 +37,22 @@ namespace ClosedXML.Excel
                     cellsInRanges.Add(range.Worksheet, hash);
                 }
 
-                if (usedCellsOnly)
+                if (m_usedCellsOnly)
                 {
-                    var addressList = (range.Worksheet as XLWorksheet).Internals.CellsCollection.Keys.Where(a =>
-                            a.RowNumber >= range.FirstAddress.RowNumber
-                            && a.RowNumber <= range.LastAddress.RowNumber
-                            && a.ColumnNumber >= range.FirstAddress.ColumnNumber
-                            && a.ColumnNumber <= range.LastAddress.ColumnNumber).Select(a => a);
+                    var tmpRange = range;
+                    var addressList = range.Worksheet.Internals.CellsCollection.Keys
+                            .Where(a => a.RowNumber >= tmpRange.FirstAddress.RowNumber &&
+                                        a.RowNumber <= tmpRange.LastAddress.RowNumber &&
+                                        a.ColumnNumber >= tmpRange.FirstAddress.ColumnNumber &&
+                                        a.ColumnNumber <= tmpRange.LastAddress.ColumnNumber);
 
                     foreach (var a in addressList)
                     {
                         if (!hash.Contains(a))
+                        {
                             hash.Add(a);
+                        }
                     }
-
                 }
                 else
                 {
@@ -63,25 +69,27 @@ namespace ClosedXML.Excel
                             {
                                 var address = new XLAddress(range.Worksheet, ro, co, false, false);
                                 if (!hash.Contains(address))
+                                {
                                     hash.Add(address);
+                                }
                             }
                         }
                     }
                 }
             }
 
-            if (usedCellsOnly)
+            if (m_usedCellsOnly)
             {
                 foreach (var cir in cellsInRanges)
                 {
-                    var cellsCollection = (cir.Key as XLWorksheet).Internals.CellsCollection;
+                    var cellsCollection = cir.Key.Internals.CellsCollection;
                     foreach (var a in cir.Value)
                     {
                         if (cellsCollection.ContainsKey(a))
-                        { 
+                        {
                             var cell = cellsCollection[a];
-                            if (!StringExtensions.IsNullOrWhiteSpace((cell as XLCell).InnerText)
-                                || (includeStyles && !cell.Style.Equals(cir.Key.Style)))
+                            if (!StringExtensions.IsNullOrWhiteSpace((cell).InnerText)
+                                || (m_includeStyles && !cell.Style.Equals(cir.Key.Style)))
                             {
                                 yield return cell;
                             }
@@ -109,34 +117,34 @@ namespace ClosedXML.Excel
                 }
             }
         }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator<IXLCell> IEnumerable<IXLCell>.GetEnumerator()
+        {
+            foreach (var cell in this)
+            {
+                yield return cell;
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-        public void Add(IXLRangeAddress rangeAddress)
+        public void Add(XLRangeAddress rangeAddress)
         {
-            rangeAddresses.Add(rangeAddress);
+            m_rangeAddresses.Add(rangeAddress);
         }
 
-        public void Add(IXLCell cell)
+        public void Add(XLCell cell)
         {
-            rangeAddresses.Add(new XLRangeAddress(cell.Address, cell.Address));
+            m_rangeAddresses.Add(new XLRangeAddress(cell.Address, cell.Address));
         }
-
         #region IXLStylized Members
-
-        private IXLStyle style;
         public IXLStyle Style
         {
-            get
-            {
-                return style;
-            }
+            get { return m_style; }
             set
             {
-                style = new XLStyle(this, value);
-                this.ForEach(c => c.Style = style);
+                m_style = new XLStyle(this, value);
+                this.ForEach<XLCell>(c => c.Style = m_style);
             }
         }
 
@@ -145,9 +153,11 @@ namespace ClosedXML.Excel
             get
             {
                 UpdatingStyle = true;
-                yield return style;
+                yield return m_style;
                 foreach (var c in this)
+                {
                     yield return c.Style;
+                }
                 UpdatingStyle = false;
             }
         }
@@ -156,58 +166,44 @@ namespace ClosedXML.Excel
 
         public IXLStyle InnerStyle
         {
-            get { return style; }
-            set { style = new XLStyle(this, value); }
+            get { return m_style; }
+            set { m_style = new XLStyle(this, value); }
         }
-
         #endregion
-
-        public Object Value 
+        public Object Value
         {
-            set
-            {
-                this.ForEach(c => c.Value = value);
-            }
+            set { this.ForEach<XLCell>(c => c.Value = value); }
         }
 
         public IXLCells SetDataType(XLCellValues dataType)
         {
-            this.ForEach(c => c.DataType = dataType);
+            this.ForEach<XLCell>(c => c.DataType = dataType);
             return this;
         }
 
         public XLCellValues DataType
         {
-            set
-            {
-                this.ForEach(c => c.DataType = value);
-            }
+            set { this.ForEach<XLCell>(c => c.DataType = value); }
         }
 
         public void Clear()
         {
-            this.ForEach(c => c.Clear());
+            this.ForEach<XLCell>(c => c.Clear());
         }
 
         public void ClearStyles()
         {
-            this.ForEach(c => c.ClearStyles());
+            this.ForEach<XLCell>(c => c.ClearStyles());
         }
 
         public String FormulaA1
         {
-            set
-            {
-                this.ForEach(c => c.FormulaA1 = value);
-            }
+            set { this.ForEach<XLCell>(c => c.FormulaA1 = value); }
         }
 
         public String FormulaR1C1
         {
-            set
-            {
-                this.ForEach(c => c.FormulaR1C1 = value);
-            }
+            set { this.ForEach<XLCell>(c => c.FormulaR1C1 = value); }
         }
 
         public IXLRanges RangesUsed
@@ -215,11 +211,19 @@ namespace ClosedXML.Excel
             get
             {
                 var retVal = new XLRanges();
-                this.ForEach(c => retVal.Add(c.AsRange()));
+                this.ForEach<XLCell>(c => retVal.Add(c.AsRange()));
                 return retVal;
             }
         }
-
-  
+        //--
+        #region  Nested type: MinMax
+        private struct MinMax
+        {
+            public Int32 MinRow;
+            public Int32 MaxRow;
+            public Int32 MinColumn;
+            public Int32 MaxColumn;
+        }
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,85 +7,85 @@ namespace ClosedXML.Excel
 {
     internal class XLCellCollection : IDictionary<IXLAddress, XLCell>
     {
-        private Dictionary<IXLAddress, XLCell> dictionary = new Dictionary<IXLAddress, XLCell>();
-
-        private Dictionary<IXLAddress, XLCell> deleted = new Dictionary<IXLAddress, XLCell>();
+        #region Private fields
+        private readonly Dictionary<IXLAddress, XLCell> m_dictionary = new Dictionary<IXLAddress, XLCell>();
+        private readonly Dictionary<IXLAddress, XLCell> m_deleted = new Dictionary<IXLAddress, XLCell>();
+        #endregion
         public Dictionary<IXLAddress, XLCell> Deleted
         {
-            get
-            {
-                return deleted;
-            }
+            get { return m_deleted; }
         }
 
         public void Add(IXLAddress key, XLCell value)
         {
-            if (deleted.ContainsKey(key))
-                deleted.Remove(key);
+            if (m_deleted.ContainsKey(key))
+            {
+                m_deleted.Remove(key);
+            }
 
-            dictionary.Add(key, value);
+            m_dictionary.Add(key, value);
         }
 
         public bool ContainsKey(IXLAddress key)
         {
-            return dictionary.ContainsKey(key);
+            return m_dictionary.ContainsKey(key);
         }
 
         public ICollection<IXLAddress> Keys
         {
-            get { return dictionary.Keys; }
+            get { return m_dictionary.Keys; }
         }
 
         public bool Remove(IXLAddress key)
         {
-            if (!deleted.ContainsKey(key))
-                deleted.Add(key, dictionary[key]);
+            if (!m_deleted.ContainsKey(key))
+            {
+                m_deleted.Add(key, m_dictionary[key]);
+            }
 
-            return dictionary.Remove(key);
+            return m_dictionary.Remove(key);
         }
 
         public bool TryGetValue(IXLAddress key, out XLCell value)
         {
-            return dictionary.TryGetValue(key, out value);
+            return m_dictionary.TryGetValue(key, out value);
         }
 
         public ICollection<XLCell> Values
         {
-            get { return dictionary.Values; }
+            get { return m_dictionary.Values; }
         }
 
         public XLCell this[IXLAddress key]
         {
-            get
-            {
-                return dictionary[key];
-            }
-            set
-            {
-                dictionary[key] = value;
-            }
+            get { return m_dictionary[key]; }
+            set { m_dictionary[key] = value; }
         }
 
         public void Add(KeyValuePair<IXLAddress, XLCell> item)
         {
-            if (deleted.ContainsKey(item.Key))
-                deleted.Remove(item.Key);
-            dictionary.Add(item.Key, item.Value);
+            if (m_deleted.ContainsKey(item.Key))
+            {
+                m_deleted.Remove(item.Key);
+            }
+            m_dictionary.Add(item.Key, item.Value);
         }
 
         public void Clear()
         {
-            foreach (var kp in dictionary)
+            foreach (var kp in m_dictionary)
             {
-                if (!deleted.ContainsKey(kp.Key))
-                    deleted.Add(kp.Key, kp.Value);
+                if (!m_deleted.ContainsKey(kp.Key))
+                {
+                    m_deleted.Add(kp.Key, kp.Value);
+                }
             }
-            dictionary.Clear();
+            m_dictionary.Clear();
         }
 
         public bool Contains(KeyValuePair<IXLAddress, XLCell> item)
         {
-            return dictionary.Contains(item);
+            return m_dictionary.Contains(item);
         }
 
         public void CopyTo(KeyValuePair<IXLAddress, XLCell>[] array, int arrayIndex)
@@ -94,7 +95,7 @@ namespace ClosedXML.Excel
 
         public int Count
         {
-            get { return dictionary.Count; }
+            get { return m_dictionary.Count; }
         }
 
         public bool IsReadOnly
@@ -104,20 +105,22 @@ namespace ClosedXML.Excel
 
         public bool Remove(KeyValuePair<IXLAddress, XLCell> item)
         {
-            if (!deleted.ContainsKey(item.Key))
-                deleted.Add(item.Key, dictionary[item.Key]);
+            if (!m_deleted.ContainsKey(item.Key))
+            {
+                m_deleted.Add(item.Key, m_dictionary[item.Key]);
+            }
 
-            return dictionary.Remove(item.Key);
+            return m_dictionary.Remove(item.Key);
         }
 
         public IEnumerator<KeyValuePair<IXLAddress, XLCell>> GetEnumerator()
         {
-            return dictionary.GetEnumerator();
+            return m_dictionary.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return dictionary.GetEnumerator();
+            return m_dictionary.GetEnumerator();
         }
 
         public void RemoveAll()
@@ -127,13 +130,15 @@ namespace ClosedXML.Excel
 
         public void RemoveAll(Func<XLCell, Boolean> predicate)
         {
-            foreach (var kp in dictionary.Values.Where(predicate).Select(c=>c))
+            foreach (var kp in m_dictionary.Values.Where(predicate).Select(c => c))
             {
-                if (!deleted.ContainsKey(kp.Address))
-                    deleted.Add(kp.Address, kp);
+                if (!m_deleted.ContainsKey(kp.Address))
+                {
+                    m_deleted.Add(kp.Address, kp);
+                }
             }
 
-            dictionary.RemoveAll(predicate);
+            m_dictionary.RemoveAll(predicate);
         }
     }
 }

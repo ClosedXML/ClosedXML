@@ -104,7 +104,7 @@ namespace ClosedXML.Excel
 
                 var sheetName = dSheet.Name;
 
-                var ws = (XLWorksheet)Worksheets.Add(sheetName);
+                var ws = (XLWorksheet)WorksheetsInternal.Add(sheetName);
                 ws.RelId = dSheet.Id;
                 ws.SheetId = (Int32)dSheet.SheetId.Value;
 
@@ -209,7 +209,7 @@ namespace ClosedXML.Excel
                     var reference = dTable.Reference.Value;
                     var xlTable = ws.Range(reference).CreateTable(dTable.Name);
                     if (dTable.TotalsRowCount != null && dTable.TotalsRowCount.Value > 0)
-                        ((XLTable)xlTable).showTotalsRow = true;
+                        ((XLTable)xlTable).m_showTotalsRow = true;
 
                     if (dTable.TableStyleInfo != null)
                     {
@@ -262,7 +262,7 @@ namespace ClosedXML.Excel
                             var sheetName = sections[0].Replace("\'", "");
                             var sheetArea = sections[1];
                             if (!sheetArea.Equals("#REF"))
-                                Worksheets.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
+                                WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                         }
                     }
                     else if (name == "_xlnm.Print_Titles")
@@ -273,13 +273,13 @@ namespace ClosedXML.Excel
                         var sheetNameCol = colSections[0].Replace("\'", "");
                         var sheetAreaCol = colSections[1];
                         if (!sheetAreaCol.Equals("#REF"))
-                            Worksheets.Worksheet(sheetNameCol).PageSetup.SetColumnsToRepeatAtLeft(sheetAreaCol);
+                            WorksheetsInternal.Worksheet(sheetNameCol).PageSetup.SetColumnsToRepeatAtLeft(sheetAreaCol);
 
                         var rowSections = areas[1].Split('!');
                         var sheetNameRow = rowSections[0].Replace("\'", "");
                         var sheetAreaRow = rowSections[1];
                         if (!sheetAreaRow.Equals("#REF"))
-                            Worksheets.Worksheet(sheetNameRow).PageSetup.SetRowsToRepeatAtTop(sheetAreaRow);
+                            WorksheetsInternal.Worksheet(sheetNameRow).PageSetup.SetRowsToRepeatAtTop(sheetAreaRow);
                     }
                     else
                     {
@@ -357,8 +357,8 @@ namespace ClosedXML.Excel
             {
                 if (dCell.DataType == CellValues.InlineString)
                 {
-                    xlCell.cellValue = dCell.InlineString.Text.Text;
-                    xlCell.dataType = XLCellValues.Text;
+                    xlCell.m_cellValue = dCell.InlineString.Text.Text;
+                    xlCell.m_dataType = XLCellValues.Text;
                     xlCell.ShareString = false;
                 }
                 else if (dCell.DataType == CellValues.SharedString)
@@ -366,41 +366,41 @@ namespace ClosedXML.Excel
                     if (dCell.CellValue != null)
                     {
                         if (!StringExtensions.IsNullOrWhiteSpace(dCell.CellValue.Text))
-                            xlCell.cellValue = sharedStrings[Int32.Parse(dCell.CellValue.Text)].InnerText;
+                            xlCell.m_cellValue = sharedStrings[Int32.Parse(dCell.CellValue.Text)].InnerText;
                         else
-                            xlCell.cellValue = dCell.CellValue.Text;
+                            xlCell.m_cellValue = dCell.CellValue.Text;
                     }
                     else
                     {
-                        xlCell.cellValue = String.Empty;
+                        xlCell.m_cellValue = String.Empty;
                     }
-                    xlCell.dataType = XLCellValues.Text;
+                    xlCell.m_dataType = XLCellValues.Text;
                 }
                 else if (dCell.DataType == CellValues.Date)
                 {
                     //xlCell.cellValue = DateTime.FromOADate(Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture));
-                    xlCell.cellValue = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
-                    xlCell.dataType = XLCellValues.DateTime;
+                    xlCell.m_cellValue = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                    xlCell.m_dataType = XLCellValues.DateTime;
                 }
                 else if (dCell.DataType == CellValues.Boolean)
                 {
-                    xlCell.cellValue = dCell.CellValue.Text;
-                    xlCell.dataType = XLCellValues.Boolean;
+                    xlCell.m_cellValue = dCell.CellValue.Text;
+                    xlCell.m_dataType = XLCellValues.Boolean;
                 }
                 else if (dCell.DataType == CellValues.Number)
                 {
-                    xlCell.cellValue = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                    xlCell.m_cellValue = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
                     var numberFormatId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                     if (numberFormatId == 46U)
                         xlCell.DataType = XLCellValues.TimeSpan;
                     else
-                        xlCell.dataType = XLCellValues.Number;
+                        xlCell.m_dataType = XLCellValues.Number;
                 }
             }
             else if (dCell.CellValue != null)
             {
                 var numberFormatId = ((CellFormat)((CellFormats)s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                xlCell.cellValue = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                xlCell.m_cellValue = Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
                 if (s.NumberingFormats != null && s.NumberingFormats.Any(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId))
                     xlCell.Style.NumberFormat.Format =
                         ((NumberingFormat)s.NumberingFormats.Where(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId).Single()).FormatCode.Value;
@@ -409,14 +409,14 @@ namespace ClosedXML.Excel
 
 
                 if (!StringExtensions.IsNullOrWhiteSpace(xlCell.Style.NumberFormat.Format))
-                    xlCell.dataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
+                    xlCell.m_dataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
                 else
                     if ((numberFormatId >= 14 && numberFormatId <= 22) || (numberFormatId >= 45 && numberFormatId <= 47))
-                        xlCell.dataType = XLCellValues.DateTime;
+                        xlCell.m_dataType = XLCellValues.DateTime;
                     else if (numberFormatId == 49)
-                        xlCell.dataType = XLCellValues.Text;
+                        xlCell.m_dataType = XLCellValues.Text;
                     else
-                        xlCell.dataType = XLCellValues.Number;
+                        xlCell.m_dataType = XLCellValues.Number;
             }
         }
 

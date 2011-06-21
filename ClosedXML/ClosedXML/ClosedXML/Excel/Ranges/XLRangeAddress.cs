@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -6,11 +7,13 @@ namespace ClosedXML.Excel
     internal class XLRangeAddress : IXLRangeAddress
     {
         #region Private fields
-        private IXLAddress m_firstAddress;
-        private IXLAddress m_lastAddress;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private XLAddress m_firstAddress;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private XLAddress m_lastAddress;
         #endregion
         #region Constructor
-        public XLRangeAddress(IXLAddress firstAddress, IXLAddress lastAddress)
+        public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress)
         {
             if (firstAddress.Worksheet != lastAddress.Worksheet)
             {
@@ -22,7 +25,7 @@ namespace ClosedXML.Excel
             LastAddress = lastAddress;
         }
 
-        public XLRangeAddress(IXLWorksheet worksheet, String rangeAddress)
+        public XLRangeAddress(XLWorksheet worksheet, String rangeAddress)
         {
             String addressToUse;
             if (rangeAddress.Contains("!"))
@@ -55,9 +58,10 @@ namespace ClosedXML.Excel
         }
         #endregion
         #region Public properties
-        public IXLWorksheet Worksheet { get; internal set; }
-
-        public IXLAddress FirstAddress
+        public XLWorksheet Worksheet { get; internal set; }
+        IXLWorksheet IXLRangeAddress.Worksheet { get { return Worksheet; } }
+        
+        public XLAddress FirstAddress
         {
             get
             {
@@ -71,7 +75,14 @@ namespace ClosedXML.Excel
             set { m_firstAddress = value; }
         }
 
-        public IXLAddress LastAddress
+        IXLAddress IXLRangeAddress.FirstAddress
+        {
+            [DebuggerStepThrough]
+            get { return FirstAddress; }
+            set { FirstAddress = value as XLAddress; }
+        }
+
+        public XLAddress LastAddress
         {
             get
             {
@@ -84,8 +95,15 @@ namespace ClosedXML.Excel
             }
             set { m_lastAddress = value; }
         }
+        IXLAddress IXLRangeAddress.LastAddress
+        {
+            [DebuggerStepThrough]
+            get { return LastAddress; }
+            set { LastAddress = value as XLAddress; }
+        }
 
-        public Boolean IsInvalid { get; set; }
+
+        public bool IsInvalid { get; set; }
         #endregion
         #region Public methods
         public override string ToString()

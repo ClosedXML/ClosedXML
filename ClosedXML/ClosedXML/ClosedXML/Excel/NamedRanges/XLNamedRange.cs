@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
                     var byExclamation = rangeAddress.Split('!');
                     var wsName = byExclamation[0].Replace("'", "");
                     var rng = byExclamation[1];
-                    var rangeToAdd = namedRanges.Workbook.Worksheets.Worksheet(wsName).Range(rng);
+                    var rangeToAdd = namedRanges.Workbook.WorksheetsInternal.Worksheet(wsName).Range(rng);
                     ranges.Add(rangeToAdd);
                 }
                 return ranges;
@@ -56,7 +56,7 @@ namespace ClosedXML.Excel
             var byExclamation = rangeAddress.Split('!');
             var wsName = byExclamation[0].Replace("'", "");
             var rng = byExclamation[1];
-            var rangeToAdd = workbook.Worksheets.Worksheet(wsName).Range(rng);
+            var rangeToAdd = workbook.WorksheetsInternal.Worksheet(wsName).Range(rng);
 
             ranges.Add(rangeToAdd);
             return Add(ranges);

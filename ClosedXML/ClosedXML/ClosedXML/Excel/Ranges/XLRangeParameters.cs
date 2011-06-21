@@ -1,30 +1,20 @@
-﻿using System;
-
-
-namespace ClosedXML.Excel
+﻿namespace ClosedXML.Excel
 {
     internal class XLRangeParameters
     {
-        public XLRangeParameters(IXLRangeAddress rangeAddress, IXLStyle defaultStyle)
+        #region Constructor
+        public XLRangeParameters(XLRangeAddress rangeAddress, IXLStyle defaultStyle)
         {
             RangeAddress = rangeAddress;
-          
+
             DefaultStyle = defaultStyle;
         }
-        #region Properties
-
-        // Public
-        public IXLRangeAddress RangeAddress { get; private set; }
-        
-        public IXLStyle DefaultStyle { get; private set; }
-        public Boolean IgnoreEvents { get; set; }
-
-        // Private
-
-        // Override
-
-
         #endregion
+        #region Properties
+        public XLRangeAddress RangeAddress { get; private set; }
 
+        public IXLStyle DefaultStyle { get; private set; }
+        public bool IgnoreEvents { get; set; }
+        #endregion
     }
 }

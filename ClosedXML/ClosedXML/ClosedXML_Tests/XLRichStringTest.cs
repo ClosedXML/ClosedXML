@@ -1,39 +1,28 @@
-﻿using ClosedXML.Excel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
 using System.Linq;
-using System;
+using ClosedXML.Excel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ClosedXML_Tests
 {
-    
-    
-    /// <summary>
-    ///This is a test class for XLRichStringTest and is intended
-    ///to contain all XLRichStringTest Unit Tests
+    ///<summary>
+    ///	This is a test class for XLRichStringTest and is intended
+    ///	to contain all XLRichStringTest Unit Tests
     ///</summary>
-    [TestClass()]
+    [TestClass]
     public class XLRichStringTest
     {
-
-
         private TestContext testContextInstance;
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
+        ///<summary>
+        ///	Gets or sets the test context which provides
+        ///	information about and functionality for the current test run.
         ///</summary>
         public TestContext TestContext
         {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
+            get { return testContextInstance; }
+            set { testContextInstance = value; }
         }
-
         #region Additional test attributes
         // 
         //You can use the following additional attributes as you write your tests:
@@ -63,17 +52,15 @@ namespace ClosedXML_Tests
         //}
         //
         #endregion
-
-
-        /// <summary>
-        ///A test for ToString
+        ///<summary>
+        ///	A test for ToString
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         public void ToStringTest()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             var richString = ws.Cell(1, 1).RichText;
-            
+
             richString.AddText("Hello");
             richString.AddText(" ");
             richString.AddText("World");
@@ -92,10 +79,10 @@ namespace ClosedXML_Tests
             Assert.AreEqual(expected, actual);
         }
 
-        /// <summary>
-        ///A test for AddText
+        ///<summary>
+        ///	A test for AddText
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         public void AddTextTest1()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -104,7 +91,7 @@ namespace ClosedXML_Tests
 
             string text = "Hello";
             richString.AddText(text).SetBold().SetFontColor(XLColor.Red);
-            
+
             Assert.AreEqual(cell.GetString(), text);
             Assert.AreEqual(cell.RichText.First().Bold, true);
             Assert.AreEqual(cell.RichText.First().FontColor, XLColor.Red);
@@ -115,7 +102,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual(richString.First().Text, text, "Item in collection is not the same as the one returned");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void AddTextTest2()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -123,9 +110,9 @@ namespace ClosedXML_Tests
             Int32 number = 123;
 
             cell.SetValue(number).Style
-                .Font.SetBold()
-                .Font.SetFontColor(XLColor.Red);
-            
+                    .Font.SetBold()
+                    .Font.SetFontColor(XLColor.Red);
+
             string text = number.ToString();
 
             Assert.AreEqual(cell.RichText.ToString(), text);
@@ -138,7 +125,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual(cell.RichText.First().Text, text, "Item in collection is not the same as the one returned");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void AddTextTest3()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -146,8 +133,8 @@ namespace ClosedXML_Tests
             Int32 number = 123;
             cell.Value = number;
             cell.Style
-                .Font.SetBold()
-                .Font.SetFontColor(XLColor.Red);
+                    .Font.SetBold()
+                    .Font.SetFontColor(XLColor.Red);
 
             string text = number.ToString();
 
@@ -161,7 +148,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual(cell.RichText.First().Text, text, "Item in collection is not the same as the one returned");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void HasRichTextTest1()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -193,19 +180,18 @@ namespace ClosedXML_Tests
             cell.SetValue("123");
 
             Assert.AreEqual(false, cell.HasRichText);
-
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void AccessRichTextTest1()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.RichText.AddText("12");
             cell.DataType = XLCellValues.Number;
-            
+
             Assert.AreEqual(12.0, cell.GetDouble());
-            
+
             var richText = cell.RichText;
 
             Assert.AreEqual("12", richText.ToString());
@@ -219,13 +205,12 @@ namespace ClosedXML_Tests
             cell.DataType = XLCellValues.Number;
 
             Assert.AreEqual(1234.0, cell.GetDouble());
-
         }
 
-        /// <summary>
-        ///A test for Characters
+        ///<summary>
+        ///	A test for Characters
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         public void CharactersTest()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -240,10 +225,10 @@ namespace ClosedXML_Tests
             Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
-        /// <summary>
-        ///A test for Clear
+        ///<summary>
+        ///	A test for Clear
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         public void ClearTest()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -252,7 +237,7 @@ namespace ClosedXML_Tests
             richString.AddText("Hello");
             richString.AddText(" ");
             richString.AddText("World!");
-            
+
             richString.Clear();
             String expected = String.Empty;
             String actual = richString.ToString();
@@ -261,7 +246,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual(0, richString.Count);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CountTest()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -273,6 +258,5 @@ namespace ClosedXML_Tests
 
             Assert.AreEqual(3, richString.Count);
         }
-
     }
 }

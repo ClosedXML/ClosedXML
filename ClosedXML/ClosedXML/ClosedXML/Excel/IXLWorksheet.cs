@@ -254,6 +254,7 @@ namespace ClosedXML.Excel
         IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position);
 
         IXLRange RangeUsed();
+        IXLRange RangeUsed(bool includeStyles);
 
         IXLDataValidations DataValidations { get; }
 
