@@ -130,6 +130,7 @@
     <Compile Include="Excel\Columns\IXLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
+    <Compile Include="Excel\XLWorkbook_Save.NestedTypes.cs" />
     <Compile Include="Excel\CustomProperties\XLCustomProperties.cs" />
     <Compile Include="Excel\CustomProperties\IXLCustomProperties.cs" />
     <Compile Include="Excel\CustomProperties\XLCustomProperty.cs" />

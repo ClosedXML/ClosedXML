@@ -508,6 +508,9 @@
     <Compile Include="..\ClosedXML\Excel\XLWorkbook_Save.cs">
       <Link>Excel\XLWorkbook_Save.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLWorkbook_Save.NestedTypes.cs">
+      <Link>Excel\XLWorkbook_Save.NestedTypes.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\XLWorksheet.cs">
       <Link>Excel\XLWorksheet.cs</Link>
     </Compile>
