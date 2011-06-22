@@ -690,7 +690,7 @@ namespace ClosedXML.Excel
             Int32 stringId = 0;
 
             Dictionary<String, Int32> newStrings = new Dictionary<String, Int32>();
-            Dictionary<IXLRichString, Int32> newRichStrings = new Dictionary<IXLRichString, Int32>();
+            Dictionary<IXLRichText, Int32> newRichStrings = new Dictionary<IXLRichText, Int32>();
             foreach (var w in Worksheets.Cast<XLWorksheet>())
             {
                 foreach (var c in w.Internals.CellsCollection.Values)
@@ -712,9 +712,9 @@ namespace ClosedXML.Excel
                                 SharedStringItem sharedStringItem = new SharedStringItem();
                                 foreach (var rt in c.RichText)
                                 {
-                                    var run = new A.Run();
+                                    var run = new DocumentFormat.OpenXml.Spreadsheet.Run();
 
-                                    var runProperties = new A.RunProperties();
+                                    var runProperties = new DocumentFormat.OpenXml.Spreadsheet.RunProperties();
 
                                     Bold bold = rt.Bold ? new Bold() : null;
                                     Italic italic = rt.Italic ? new Italic() : null;
@@ -724,7 +724,7 @@ namespace ClosedXML.Excel
                                     Shadow shadow = rt.Shadow ? new Shadow() : null;
                                     FontSize fontSize = new FontSize() { Val = rt.FontSize };
                                     Color color = GetNewColor(rt.FontColor);
-                                    FontName fontName = new FontName() { Val = rt.FontName };
+                                    RunFont fontName = new RunFont() { Val = rt.FontName };
                                     FontFamilyNumbering fontFamilyNumbering = new FontFamilyNumbering() { Val = (Int32)rt.FontFamilyNumbering };
 
                                     if (bold != null) runProperties.Append(bold);
@@ -854,7 +854,7 @@ namespace ClosedXML.Excel
             Int32 numberFormatCount = 1;
             var xlStyles = new HashSet<IXLStyle>();
 
-            foreach (var worksheet in WorksheetsInternal.Cast<XLWorksheet>())
+            foreach (var worksheet in WorksheetsInternal)
             {
                 foreach (var s in worksheet.Styles)
                 {

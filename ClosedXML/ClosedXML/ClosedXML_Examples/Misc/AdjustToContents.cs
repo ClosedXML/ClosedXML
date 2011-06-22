@@ -97,9 +97,9 @@ namespace ClosedXML_Examples.Misc
                 
                 c.RichText.AddText("Text to adjust - " + co).SetBold();
                 c.RichText.AddText(Environment.NewLine);
-                c.RichText.AddText("World!").SetBold().SetFontColor(XLColor.Blue).SetFontSize(10);
+                c.RichText.AddText("World!").SetBold().SetFontColor(XLColor.Blue).SetFontSize(25);
                 c.RichText.AddText(Environment.NewLine);
-                c.RichText.AddText("Hello Cruel and unsusual world").SetBold().SetFontSize(15);
+                c.RichText.AddText("Hello Cruel and unsusual world").SetBold().SetFontSize(20);
                 c.RichText.AddText(Environment.NewLine);
                 c.RichText.AddText("Hello").SetBold();
                 c.Style.Alignment.SetTextRotation(co);

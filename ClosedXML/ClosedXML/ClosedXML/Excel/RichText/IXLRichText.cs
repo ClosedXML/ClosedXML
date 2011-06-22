@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRichText: IXLFontBase, IEquatable<IXLRichText>
+    public interface IXLRichText : IEnumerable<IXLRichString>
     {
-        String Text { get; }
-        IXLRichText Apply(IXLFontBase font);
+        Boolean Bold { set; }
+        Boolean Italic { set; }
+        XLFontUnderlineValues Underline { set; }
+        Boolean Strikethrough { set; }
+        XLFontVerticalTextAlignmentValues VerticalAlignment { set; }
+        Boolean Shadow { set; }
+        Double FontSize { set; }
+        IXLColor FontColor { set; }
+        String FontName { set; }
+        XLFontFamilyNumberingValues FontFamilyNumbering { set; }
 
         IXLRichText SetBold(); IXLRichText SetBold(Boolean value);
         IXLRichText SetItalic(); IXLRichText SetItalic(Boolean value);
@@ -17,5 +26,15 @@ namespace ClosedXML.Excel
         IXLRichText SetFontColor(IXLColor value);
         IXLRichText SetFontName(String value);
         IXLRichText SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
+
+        IXLRichString AddText(String text);
+        IXLRichString AddText(String text, IXLFontBase font);
+        IXLRichText Clear();
+        IXLRichText Substring(Int32 index);
+        IXLRichText Substring(Int32 index, Int32 length);
+        Int32 Count { get; }
+        Int32 Length { get; }
+
+
     }
 }

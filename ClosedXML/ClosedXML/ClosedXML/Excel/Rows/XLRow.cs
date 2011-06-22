@@ -214,70 +214,7 @@ namespace ClosedXML.Excel
         }
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn)
         {
-            Double maxHeight = 0;
-            foreach (var c in CellsUsed().Where(cell => cell.Address.ColumnNumber >= startColumn && cell.Address.ColumnNumber <= endColumn))
-            {
-                Boolean isMerged = false;
-                var cellAsRange = c.AsRange();
-                foreach (var m in (Worksheet).Internals.MergedRanges)
-                {
-                    if (cellAsRange.Intersects(m))
-                    {
-                        isMerged = true;
-                        break;
-                    }
-                }
-                if (!isMerged)
-                {
-                    //var thisHeight = ((XLFont)c.Style.Font).GetHeight();
-
-                    Int32 textRotation = c.Style.Alignment.TextRotation;
-                    var f = (XLFont) c.Style.Font;
-                    Double thisHeight;
-                    if (textRotation == 0)
-                    {
-                        thisHeight = f.GetHeight();
-                    }
-                    else
-                    {
-                        if (textRotation == 255)
-                        {
-                            thisHeight = f.GetHeight()*c.GetFormattedString().Length;
-                        }
-                        else
-                        {
-                            Int32 rotation;
-                            if (textRotation == 90 || textRotation == 180 || textRotation == 255)
-                            {
-                                rotation = 90;
-                            }
-                            else
-                            {
-                                rotation = textRotation%90;
-                            }
-
-                            Double r = DegreeToRadian(rotation);
-                            Double b = f.GetHeight();
-                            Double m = f.GetHeight()*c.GetFormattedString().Length;
-                            Double t = m - b;
-                            thisHeight = (rotation/90)*t;
-                        }
-                    }
-
-                    if (thisHeight > maxHeight)
-                    {
-                        maxHeight = thisHeight;
-                    }
-                }
-            }
-
-            if (maxHeight == 0)
-            {
-                maxHeight = Worksheet.RowHeight;
-            }
-
-            Height = maxHeight;
-            return this;
+            return AdjustToContents(startColumn, endColumn, 0, Double.MaxValue);
         }
 
         public IXLRow AdjustToContents(Double minHeight, Double maxHeight)
@@ -291,11 +228,12 @@ namespace ClosedXML.Excel
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
             Double rowMaxHeight = minHeight;
-            foreach (var c in CellsUsed().Where(cell => cell.Address.ColumnNumber >= startColumn && cell.Address.ColumnNumber <= endColumn))
+            foreach (var cell in Row(startColumn, endColumn).CellsUsed())
             {
+                var c = cell as XLCell;
                 Boolean isMerged = false;
                 var cellAsRange = c.AsRange();
-                foreach (var m in (Worksheet).Internals.MergedRanges)
+                foreach (var m in Worksheet.Internals.MergedRanges)
                 {
                     if (cellAsRange.Intersects(m))
                     {
@@ -305,37 +243,73 @@ namespace ClosedXML.Excel
                 }
                 if (!isMerged)
                 {
-                    Int32 textRotation = c.Style.Alignment.TextRotation;
-                    var f = (XLFont) c.Style.Font;
                     Double thisHeight;
-                    if (textRotation == 0)
+                    Int32 textRotation = c.Style.Alignment.TextRotation;
+                    if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
                     {
-                        thisHeight = f.GetHeight();
-                    }
-                    else
-                    {
-                        if (textRotation == 255)
+                        List<KeyValuePair<IXLFontBase, String>> kpList = new List<KeyValuePair<IXLFontBase, string>>();
+                        if (c.HasRichText)
                         {
-                            thisHeight = f.GetHeight()*c.GetFormattedString().Length;
+                            foreach (var rt in c.RichText)
+                            {
+                                String formattedString = rt.Text;
+                                var arr = formattedString.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                                Int32 arrCount = arr.Count();
+                                for (Int32 i = 0; i < arrCount; i++)
+                                {
+                                    String s = arr[i];
+                                    if (i < arrCount - 1)
+                                        s += Environment.NewLine;
+                                    kpList.Add(new KeyValuePair<IXLFontBase, String>(rt, s));
+                                }
+                            }
                         }
                         else
                         {
-                            Int32 rotation;
-                            if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                            String formattedString = c.GetFormattedString();
+                            var arr = formattedString.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                            Int32 arrCount = arr.Count();
+                            for (Int32 i = 0; i < arrCount; i++)
                             {
-                                rotation = 90;
+                                String s = arr[i];
+                                if (i < arrCount - 1)
+                                    s += Environment.NewLine;
+                                kpList.Add(new KeyValuePair<IXLFontBase, String>(c.Style.Font, s));
+                            }
+                        }
+                        
+                        Double maxLongCol = kpList.Max(kp => kp.Value.Length);
+                        Double maxHeightCol = kpList.Max(kp => kp.Key.GetHeight());
+                        Int32 lineCount = kpList.Count(kp => kp.Value.Contains(Environment.NewLine));
+                        if (textRotation == 0)
+                        {
+                            thisHeight = maxHeightCol * lineCount;
+                        }
+                        else
+                        {
+                            if (textRotation == 255)
+                            {
+                                thisHeight = maxLongCol * maxHeightCol;
                             }
                             else
                             {
-                                rotation = textRotation%90;
-                            }
+                                Double rotation;
+                                if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                                {
+                                    rotation = 90;
+                                }
+                                else
+                                {
+                                    rotation = textRotation % 90;
+                                }
 
-                            Double r = DegreeToRadian(rotation);
-                            Double b = f.GetHeight();
-                            Double m = f.GetHeight()*c.GetFormattedString().Length;
-                            Double t = m - b;
-                            thisHeight = (rotation/90)*t;
+                                thisHeight = (rotation / 90.0) * maxHeightCol * maxLongCol * 0.5;
+                            }
                         }
+                    }
+                    else
+                    {
+                        thisHeight = c.Style.Font.GetHeight();
                     }
 
                     if (thisHeight >= maxHeight)
@@ -349,6 +323,9 @@ namespace ClosedXML.Excel
                     }
                 }
             }
+
+            if (rowMaxHeight == 0)
+                rowMaxHeight = Worksheet.RowHeight;
 
             Height = rowMaxHeight;
             return this;

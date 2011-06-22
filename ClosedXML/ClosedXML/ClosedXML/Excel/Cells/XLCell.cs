@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
         #region Private fields
         private readonly XLWorksheet m_worksheet;
-        private XLRichString m_richText;
+        private XLRichText m_richText;
         private XLHyperlink m_hyperlink;
         #endregion
         #region Constructor
@@ -139,7 +139,7 @@ namespace ClosedXML.Excel
                     return (T)Convert.ChangeType(Value.ToString(), typeof(T));
                 else
                     return (T)Value;
-            else if (Value is IXLRichString)
+            else if (Value is IXLRichText)
                 return (T)RichText;
             else
                 return (T)Convert.ChangeType(Value, typeof(T));
@@ -164,7 +164,7 @@ namespace ClosedXML.Excel
         {
             return GetValue<TimeSpan>();
         }
-        public IXLRichString GetRichText()
+        public IXLRichText GetRichText()
         {
             return RichText;
         }
@@ -322,7 +322,7 @@ namespace ClosedXML.Excel
 
         private bool SetRichText(object value)
         {
-            var asRichString = value as XLRichString;
+            var asRichString = value as XLRichText;
             if (asRichString == null)
             {
                 return false;
@@ -751,24 +751,18 @@ namespace ClosedXML.Excel
             m_cellValue = val;
         }
         #region IXLStylized Members
-        private Boolean m_initialStyle = true;
-        public void SetStyle(XLStyle style)
-        {
-            m_style = style;
-        }
+
         private IXLStyle m_style;
         public IXLStyle Style
         {
             get
             {
-                if (m_initialStyle)
-                {
                     m_style = new XLStyle(this, m_style);
-                    m_initialStyle = false;
-                }
                 return m_style;
             }
-            set { m_style = new XLStyle(this, value); }
+            set { 
+                m_style = new XLStyle(this, value);
+            }
         }
 
         public IEnumerable<IXLStyle> Styles
@@ -798,7 +792,9 @@ namespace ClosedXML.Excel
         internal XLCellValues m_dataType;
         public XLCellValues DataType
         {
-            get { return m_dataType; }
+            get { 
+                return m_dataType; 
+            }
             set
             {
                 if (m_dataType != value)
@@ -1852,7 +1848,7 @@ namespace ClosedXML.Excel
 
         public String ValueCached { get; internal set; }
 
-        public IXLRichString RichText
+        public IXLRichText RichText
         {
             get
             {
@@ -1860,10 +1856,10 @@ namespace ClosedXML.Excel
                 {
                     if (StringExtensions.IsNullOrWhiteSpace(m_cellValue))
                     {
-                        m_richText = new XLRichString(m_style.Font);
+                        m_richText = new XLRichText(m_style.Font);
                     }
                     else
-                        m_richText = new XLRichString(GetFormattedString(), m_style.Font);
+                        m_richText = new XLRichText(GetFormattedString(), m_style.Font);
 
                     m_dataType = XLCellValues.Text;
                     if (!Style.Alignment.WrapText)

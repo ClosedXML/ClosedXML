@@ -23,27 +23,27 @@ namespace ClosedXML.Excel
         /// Adds the given text to this header/footer item.
         /// </summary>
         /// <param name="text">The text to add to this header/footer item.</param>
-        IXLRichText AddText(String text);
+        IXLRichString AddText(String text);
 
         /// <summary>
         /// Adds the given predefined text to this header/footer item.
         /// </summary>
         /// <param name="text">The predefined text to add to this header/footer item.</param>
-        IXLRichText AddText(XLHFPredefinedText predefinedText);
+        IXLRichString AddText(XLHFPredefinedText predefinedText);
 
         /// <summary>
         /// Adds the given text to this header/footer item.
         /// </summary>
         /// <param name="text">The text to add to this header/footer item.</param>
         /// <param name="occurrence">The occurrence for the text.</param>
-        IXLRichText AddText(String text, XLHFOccurrence occurrence);
+        IXLRichString AddText(String text, XLHFOccurrence occurrence);
 
         /// <summary>
         /// Adds the given predefined text to this header/footer item.
         /// </summary>
         /// <param name="text">The predefined text to add to this header/footer item.</param>
         /// <param name="occurrence">The occurrence for the predefined text.</param>
-        IXLRichText AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence);
+        IXLRichString AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence);
 
         /// <summary>Clears the text/formats of this header/footer item.</summary>
         /// <param name="occurrence">The occurrence to clear.</param>

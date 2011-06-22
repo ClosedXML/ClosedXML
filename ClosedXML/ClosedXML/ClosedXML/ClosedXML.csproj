@@ -163,10 +163,10 @@
     <Compile Include="Excel\Ranges\Sort\XLSortElements.cs" />
     <Compile Include="Excel\Ranges\Sort\IXLSortElement.cs" />
     <Compile Include="Excel\Ranges\Sort\IXLSortElements.cs" />
-    <Compile Include="Excel\RichText\XLRichString.cs" />
-    <Compile Include="Excel\RichText\IXLRichString.cs" />
     <Compile Include="Excel\RichText\XLRichText.cs" />
     <Compile Include="Excel\RichText\IXLRichText.cs" />
+    <Compile Include="Excel\RichText\XLRichString.cs" />
+    <Compile Include="Excel\RichText\IXLRichString.cs" />
     <Compile Include="Excel\Style\Colors\XLColor_Static.cs" />
     <Compile Include="Excel\Style\Colors\XLColor_Public.cs" />
     <Compile Include="Excel\Style\Colors\IXLColor.cs" />

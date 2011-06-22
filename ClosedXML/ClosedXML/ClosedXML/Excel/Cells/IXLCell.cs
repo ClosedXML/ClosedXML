@@ -85,7 +85,7 @@ namespace ClosedXML.Excel
         /// </summary>
         TimeSpan GetTimeSpan();
 
-        IXLRichString GetRichText();
+        IXLRichText GetRichText();
 
         /// <summary>
         /// Clears the contents of this cell (including styles).
@@ -176,7 +176,7 @@ namespace ClosedXML.Excel
 
         String ValueCached { get; }
 
-        IXLRichString RichText { get; }
+        IXLRichText RichText { get; }
         Boolean HasRichText { get; }
     }
 }

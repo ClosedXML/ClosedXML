@@ -25,18 +25,18 @@ namespace ClosedXML.Excel
             return sb.ToString();
         }
 
-        public IXLRichText AddText(String text)
+        public IXLRichString AddText(String text)
         {
             return AddText(text, XLHFOccurrence.AllPages);
         }
-        public IXLRichText AddText(XLHFPredefinedText predefinedText)
+        public IXLRichString AddText(XLHFPredefinedText predefinedText)
         {
             return AddText(predefinedText, XLHFOccurrence.AllPages);
         }
 
-        public IXLRichText AddText(String text, XLHFOccurrence occurrence)
+        public IXLRichString AddText(String text, XLHFOccurrence occurrence)
         {
-            IXLRichText richText = new XLRichText(text, XLWorkbook.DefaultStyle.Font);
+            IXLRichString richText = new XLRichString(text, XLWorkbook.DefaultStyle.Font);
 
             var hfText = new XLHFText(richText);
             if (occurrence == XLHFOccurrence.AllPages)
@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
                 texts.Add(occurrence, new List<XLHFText>() { hfText });
         }
 
-        public IXLRichText AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)
+        public IXLRichString AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)
         {
             String hfText;
             switch (predefinedText)

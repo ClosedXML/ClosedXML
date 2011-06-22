@@ -4,11 +4,11 @@ namespace ClosedXML.Excel
 {
     internal class XLHFText
     {
-        public XLHFText(IXLRichText richText)
+        public XLHFText(IXLRichString richText)
         {
             RichText = richText;
         }
-        public IXLRichText RichText { get; private set; }
+        public IXLRichString RichText { get; private set; }
 
         public String HFText
         {
@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private String GetHFFontBoldItalic(IXLRichText xlFont)
+        private String GetHFFontBoldItalic(IXLRichString xlFont)
         {
             String retVal = String.Empty;
             if (xlFont.Bold && xlFont.Italic)
