@@ -85,6 +85,8 @@ namespace ClosedXML.Excel
         /// </summary>
         TimeSpan GetTimeSpan();
 
+        IXLRichString GetRichText();
+
         /// <summary>
         /// Clears the contents of this cell (including styles).
         /// </summary>

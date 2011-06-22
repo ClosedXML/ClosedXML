@@ -86,14 +86,8 @@ namespace ClosedXML_Examples
             // Put a label on the totals cell of the field "DOB"
             excelTable.Field("DOB").TotalsRowLabel = "Average:";
             
-            //Add thick borders
-            // This range will contain the entire contents of our spreadsheet:
-            var firstCell = ws.FirstCellUsed();
-            var lastCell = ws.LastCellUsed();
-            var contents = ws.Range(firstCell.Address, lastCell.Address);
-
-            //Add thick borders
-            contents.Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
+            //Add thick borders to the contents of our spreadsheet
+            ws.RangeUsed().Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
 
             // You can also specify the border for each side with:
             // contents.FirstColumn().Style.Border.LeftBorder = XLBorderStyleValues.Thick;

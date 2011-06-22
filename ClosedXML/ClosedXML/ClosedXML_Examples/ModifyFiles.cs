@@ -6,7 +6,7 @@ namespace ClosedXML_Examples
     {
         public static void Run()
         {
-            new DeleteRows().Create(@"C:\Excel Files\Modify\DeleteRows.xlsx");
+            new DeleteRows().Create(@"C:\Excel Files\Modified\DeleteRows.xlsx");
         }
     }
 }

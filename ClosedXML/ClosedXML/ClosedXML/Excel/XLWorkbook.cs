@@ -408,27 +408,6 @@ namespace ClosedXML.Excel
             return WorksheetsInternal.Worksheet(position);
         }
 
-        public HashSet<String> GetSharedStrings()
-        {
-            HashSet<String> modifiedStrings = new HashSet<String>();
-            foreach (var w in WorksheetsInternal)
-            {
-                foreach (var c in w.Internals.CellsCollection.Values)
-                {
-                    if (
-                            c.DataType == XLCellValues.Text
-                            && !StringExtensions.IsNullOrWhiteSpace(c.InnerText)
-                            && c.ShareString
-                            && !modifiedStrings.Contains(c.Value.ToString())
-                            )
-                    {
-                        modifiedStrings.Add(c.Value.ToString());
-                    }
-                }
-            }
-            return modifiedStrings;
-        }
-
         public IXLCustomProperty CustomProperty(String name)
         {
             return CustomProperties.CustomProperty(name);

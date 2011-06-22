@@ -4,9 +4,10 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 [assembly: CLSCompliantAttribute(true)]
-namespace ClosedXML
+namespace ClosedXML.Excel
 {
     public static class Extensions
     {
@@ -137,6 +138,31 @@ namespace ClosedXML
             }
             return intToString[value];
         }
+    }
+
+    public static class FontBaseExtensions
+    {
+        public static Double GetWidth(this IXLFontBase font, String text)
+        {
+            if (StringExtensions.IsNullOrWhiteSpace(text))
+                return 0;
+
+            System.Drawing.Font stringFont = new System.Drawing.Font(font.FontName, (float)font.FontSize);
+
+            Size textSize = TextRenderer.MeasureText(text, stringFont);
+            double width = (double)(((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
+            width = (double)decimal.Round((decimal)width + 0.2M, 2);
+
+            return width ;
+        }
+
+        public static Double GetHeight(this IXLFontBase font)
+        {
+            System.Drawing.Font stringFont = new System.Drawing.Font(font.FontName, (float)font.FontSize);
+            Size textSize = TextRenderer.MeasureText("X", stringFont);
+            return (double)textSize.Height * 0.85;
+        }
+
     }
 }
 

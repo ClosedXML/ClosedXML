@@ -50,7 +50,15 @@ namespace ClosedXML.Excel
         public XLAddress Address { get; internal set; }
         public String InnerText
         {
-            get { return StringExtensions.IsNullOrWhiteSpace(m_cellValue) ? FormulaA1 : m_cellValue; }
+            get 
+            {
+                if (HasRichText)
+                    return m_richText.ToString();
+                else if (StringExtensions.IsNullOrWhiteSpace(m_cellValue))
+                    return FormulaA1;
+                else
+                    return m_cellValue;
+            }
         }
         public IXLRange AsRange()
         {
@@ -125,18 +133,16 @@ namespace ClosedXML.Excel
         public T GetValue<T>()
         {
             if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
-            {
-                return (T) Convert.ChangeType(String.Empty, typeof (T));
-            }
-            if (Value is TimeSpan)
-            {
-                if (typeof (T) == typeof (String))
-                {
-                    return (T) Convert.ChangeType(Value.ToString(), typeof (T));
-                }
-                return (T) Value;
-            }
-            return (T) Convert.ChangeType(Value, typeof (T));
+                return (T)Convert.ChangeType(String.Empty, typeof(T));
+            else if (Value is TimeSpan)
+                if (typeof(T) == typeof(String))
+                    return (T)Convert.ChangeType(Value.ToString(), typeof(T));
+                else
+                    return (T)Value;
+            else if (Value is IXLRichString)
+                return (T)RichText;
+            else
+                return (T)Convert.ChangeType(Value, typeof(T));
         }
         public String GetString()
         {
@@ -157,6 +163,10 @@ namespace ClosedXML.Excel
         public TimeSpan GetTimeSpan()
         {
             return GetValue<TimeSpan>();
+        }
+        public IXLRichString GetRichText()
+        {
+            return RichText;
         }
         public String GetFormattedString()
         {
@@ -1853,15 +1863,17 @@ namespace ClosedXML.Excel
                         m_richText = new XLRichString(m_style.Font);
                     }
                     else
-                    {
                         m_richText = new XLRichString(GetFormattedString(), m_style.Font);
-                    }
+
                     m_dataType = XLCellValues.Text;
+                    if (!Style.Alignment.WrapText)
+                        Style.Alignment.WrapText = true;
                 }
                 return m_richText;
             }
         }
 
+        public Int32 SharedStringId;
         public Boolean HasRichText
         {
             get { return m_richText != null; }

@@ -89,6 +89,23 @@ namespace ClosedXML_Examples.Misc
 
             ws2.Columns().AdjustToContents();
 
+            var ws4 = wb.Worksheets.Add("Adjust Widths 2");
+            ws4.Cell(1, 1).SetValue("Text to adjust - 255").Style.Alignment.TextRotation = 255;
+            for (Int32 co = 0; co < 90; co += 5)
+            {
+                var c = ws4.Cell(1, (co / 5) + 2);
+                
+                c.RichText.AddText("Text to adjust - " + co).SetBold();
+                c.RichText.AddText(Environment.NewLine);
+                c.RichText.AddText("World!").SetBold().SetFontColor(XLColor.Blue).SetFontSize(10);
+                c.RichText.AddText(Environment.NewLine);
+                c.RichText.AddText("Hello Cruel and unsusual world").SetBold().SetFontSize(15);
+                c.RichText.AddText(Environment.NewLine);
+                c.RichText.AddText("Hello").SetBold();
+                c.Style.Alignment.SetTextRotation(co);
+            }
+            ws4.Columns().AdjustToContents();
+
             var ws3 = wb.Worksheets.Add("Adjust Heights");
             ws3.Cell(1, 1).SetValue("Text to adjust - 255").Style.Alignment.TextRotation = 255;
             for (Int32 ro = 0; ro < 90; ro += 5)
@@ -97,6 +114,23 @@ namespace ClosedXML_Examples.Misc
             }
 
             ws3.Rows().AdjustToContents();
+
+            var ws5 = wb.Worksheets.Add("Adjust Heights 2");
+            ws5.Cell(1, 1).SetValue("Text to adjust - 255").Style.Alignment.TextRotation = 255;
+            for (Int32 ro = 0; ro < 90; ro += 5)
+            {
+                var c = ws5.Cell((ro / 5) + 2, 1);
+                c.RichText.AddText("Text to adjust - " + ro).SetBold();
+                c.RichText.AddText(Environment.NewLine);
+                c.RichText.AddText("World!").SetBold().SetFontColor(XLColor.Blue).SetFontSize(10);
+                c.RichText.AddText(Environment.NewLine);
+                c.RichText.AddText("Hello Cruel and unsusual world").SetBold().SetFontSize(15);
+                c.RichText.AddText(Environment.NewLine);
+                c.RichText.AddText("Hello").SetBold();
+                c.Style.Alignment.SetTextRotation(ro);
+            }
+
+            ws5.Rows().AdjustToContents();
 
             wb.SaveAs(filePath);
         }

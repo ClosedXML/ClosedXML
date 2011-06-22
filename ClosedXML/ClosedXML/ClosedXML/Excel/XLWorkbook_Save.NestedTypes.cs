@@ -17,8 +17,6 @@ namespace ClosedXML.Excel
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly RelIdGenerator m_relIdGenerator;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly Dictionary<string, uint> m_sharedStrings;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly Dictionary<IXLStyle, StyleInfo> m_sharedStyles;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly HashSet<string> m_tableNames;
@@ -29,7 +27,6 @@ namespace ClosedXML.Excel
             public SaveContext()
             {
                 m_relIdGenerator = new RelIdGenerator();
-                m_sharedStrings = new Dictionary<String, UInt32>();
                 m_sharedStyles = new Dictionary<IXLStyle, StyleInfo>();
                 m_tableNames = new HashSet<String>();
                 m_tableId = 0;
@@ -40,11 +37,6 @@ namespace ClosedXML.Excel
             {
                 [DebuggerStepThrough]
                 get { return m_relIdGenerator; }
-            }
-            public Dictionary<string, uint> SharedStrings
-            {
-                [DebuggerStepThrough]
-                get { return m_sharedStrings; }
             }
             public Dictionary<IXLStyle, StyleInfo> SharedStyles
             {

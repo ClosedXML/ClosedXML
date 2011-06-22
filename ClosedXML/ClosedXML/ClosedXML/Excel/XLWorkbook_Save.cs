@@ -115,11 +115,6 @@ namespace ClosedXML.Excel
         {
             var context = new SaveContext();
 
-            //sharedStrings = new Dictionary<String, UInt32>();
-            //context.SharedStyles = new Dictionary<IXLStyle, StyleInfo>();
-            //tableNames = new HashSet<String>();
-            //tableId = 0;
-
             WorkbookPart workbookPart = document.WorkbookPart ?? document.AddWorkbookPart();
 
             var worksheets = WorksheetsInternal;
@@ -153,7 +148,7 @@ namespace ClosedXML.Excel
                                                           workbookPart.AddNewPart<SharedStringTablePart>(
                                                                   context.RelIdGenerator.GetNext(RelType.Workbook));
 
-            GenerateSharedStringTablePartContent(sharedStringTablePart, context);
+            GenerateSharedStringTablePartContent(sharedStringTablePart);
 
             WorkbookStylesPart workbookStylesPart = workbookPart.WorkbookStylesPart ??
                                                     workbookPart.AddNewPart<WorkbookStylesPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
@@ -688,31 +683,111 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart, SaveContext context)
+        private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart)
         {
-            HashSet<String> modifiedStrings = GetSharedStrings();
-
-            sharedStringTablePart.SharedStringTable = new SharedStringTable {Count = 0, UniqueCount = 0};
-
-            UInt32 stringCount = (UInt32) modifiedStrings.Count();
+            sharedStringTablePart.SharedStringTable = new SharedStringTable() { Count = 0, UniqueCount = 0 };
 
             Int32 stringId = 0;
-            foreach (var s in modifiedStrings)
-            {
-                SharedStringItem sharedStringItem = new SharedStringItem();
-                Text text = new Text();
-                text.Text = s;
-                if (s.StartsWith(" ") || s.EndsWith(" "))
-                {
-                    text.Space = SpaceProcessingModeValues.Preserve;
-                }
-                sharedStringItem.AppendChild(text);
-                sharedStringTablePart.SharedStringTable.AppendChild(sharedStringItem);
-                sharedStringTablePart.SharedStringTable.Count += 1;
-                sharedStringTablePart.SharedStringTable.UniqueCount += 1;
 
-                context.SharedStrings.Add(s, (UInt32) stringId);
-                stringId++;
+            Dictionary<String, Int32> newStrings = new Dictionary<String, Int32>();
+            Dictionary<IXLRichString, Int32> newRichStrings = new Dictionary<IXLRichString, Int32>();
+            foreach (var w in Worksheets.Cast<XLWorksheet>())
+            {
+                foreach (var c in w.Internals.CellsCollection.Values)
+                {
+                    if (
+                           c.DataType == XLCellValues.Text
+                        && c.ShareString
+                        && !StringExtensions.IsNullOrWhiteSpace(c.InnerText))
+                    {
+                        if (c.HasRichText)
+                        {
+                            if (newRichStrings.ContainsKey(c.RichText))
+                            {
+                                c.SharedStringId = newRichStrings[c.RichText];
+                            }
+                            else
+                            {
+
+                                SharedStringItem sharedStringItem = new SharedStringItem();
+                                foreach (var rt in c.RichText)
+                                {
+                                    var run = new A.Run();
+
+                                    var runProperties = new A.RunProperties();
+
+                                    Bold bold = rt.Bold ? new Bold() : null;
+                                    Italic italic = rt.Italic ? new Italic() : null;
+                                    Underline underline = rt.Underline != XLFontUnderlineValues.None ? new Underline() { Val = rt.Underline.ToOpenXml() } : null;
+                                    Strike strike = rt.Strikethrough ? new Strike() : null;
+                                    VerticalTextAlignment verticalAlignment = new VerticalTextAlignment() { Val = rt.VerticalAlignment.ToOpenXml() };
+                                    Shadow shadow = rt.Shadow ? new Shadow() : null;
+                                    FontSize fontSize = new FontSize() { Val = rt.FontSize };
+                                    Color color = GetNewColor(rt.FontColor);
+                                    FontName fontName = new FontName() { Val = rt.FontName };
+                                    FontFamilyNumbering fontFamilyNumbering = new FontFamilyNumbering() { Val = (Int32)rt.FontFamilyNumbering };
+
+                                    if (bold != null) runProperties.Append(bold);
+                                    if (italic != null) runProperties.Append(italic);
+                                    if (underline != null) runProperties.Append(underline);
+                                    if (strike != null) runProperties.Append(strike);
+                                    runProperties.Append(verticalAlignment);
+                                    if (shadow != null) runProperties.Append(shadow);
+                                    runProperties.Append(fontSize);
+                                    runProperties.Append(color);
+                                    runProperties.Append(fontName);
+                                    runProperties.Append(fontFamilyNumbering);
+
+                                    Text text = new Text();
+                                    text.Text = rt.Text;
+                                    if (rt.Text.StartsWith(" ") || rt.Text.EndsWith(" ") || rt.Text.Contains(Environment.NewLine))
+                                        text.Space = SpaceProcessingModeValues.Preserve;
+
+                                    run.Append(runProperties);
+                                    run.Append(text);
+
+                                    sharedStringItem.Append(run);
+                                }
+
+
+                                sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
+                                sharedStringTablePart.SharedStringTable.Count += 1;
+                                sharedStringTablePart.SharedStringTable.UniqueCount += 1;
+
+                                newRichStrings.Add(c.RichText, stringId);
+                                c.SharedStringId = stringId;
+
+                                stringId++;
+                            }
+                        }
+                        else
+                        {
+                            if (newStrings.ContainsKey(c.Value.ToString()))
+                            {
+                                c.SharedStringId = newStrings[c.Value.ToString()];
+                            }
+                            else
+                            {
+                                String s = c.Value.ToString();
+                                SharedStringItem sharedStringItem = new SharedStringItem();
+                                Text text = new Text();
+                                text.Text = s;
+                                if (s.StartsWith(" ") || s.EndsWith(" "))
+                                    text.Space = SpaceProcessingModeValues.Preserve;
+                                sharedStringItem.Append(text);
+                                sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
+                                sharedStringTablePart.SharedStringTable.Count += 1;
+                                sharedStringTablePart.SharedStringTable.UniqueCount += 1;
+
+                                newStrings.Add(c.Value.ToString(), stringId);
+                                c.SharedStringId = stringId;
+
+                                stringId++;
+
+                            }
+                        }
+                    }
+                }
             }
         }
         #region GenerateWorkbookStylesPartContent
@@ -2223,7 +2298,7 @@ namespace ClosedXML.Excel
                                 {
                                     if (opCell.ShareString)
                                     {
-                                        cellValue.Text = context.SharedStrings[opCell.InnerText].ToString();
+                                        cellValue.Text = opCell.SharedStringId.ToString();
                                         cell.CellValue = cellValue;
                                     }
                                     else

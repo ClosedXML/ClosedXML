@@ -232,38 +232,6 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        public Double GetWidth(String text)
-        {
-            if (StringExtensions.IsNullOrWhiteSpace(text))
-                return 0;
-
-            System.Drawing.Font stringFont = new System.Drawing.Font(fontName, (float)fontSize);
-            return GetWidth(stringFont, text);
-        }
-        private Double GetWidth(System.Drawing.Font stringFont, string text)
-        {
-            //String textToUse = new String('X', text.Length);
-            Size textSize = TextRenderer.MeasureText(text, stringFont);
-            double width = (double)(((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
-            width = (double)decimal.Round((decimal)width + 0.2M, 2);
-
-            return width + 1;
-        }
-
-        public Double GetHeight()
-        {
-            System.Drawing.Font stringFont = new System.Drawing.Font(fontName, (float)fontSize);
-            return GetHeight(stringFont);
-        }
-
-        private Double GetHeight(System.Drawing.Font stringFont)
-        {
-            Size textSize = TextRenderer.MeasureText("X", stringFont);
-            var val = (double)textSize.Height * 0.85;
-            return val;
-        }
-
-
         public Boolean Equals(IXLFont other)
         {
             var otherF = other as XLFont;

@@ -326,7 +326,7 @@ namespace ClosedXML.Excel
             {
                 Boolean isMerged = false;
                 var cellAsRange = c.AsRange();
-                foreach (var m in (Worksheet).Internals.MergedRanges)
+                foreach (var m in (Worksheet as XLWorksheet).Internals.MergedRanges)
                 {
                     if (cellAsRange.Intersects(m))
                     {
@@ -337,46 +337,138 @@ namespace ClosedXML.Excel
                 if (!isMerged)
                 {
                     Int32 textRotation = c.Style.Alignment.TextRotation;
-                    var f = (XLFont) c.Style.Font;
-                    Double thisWidth;
-                    if (textRotation == 0)
+                    List<KeyValuePair<IXLFontBase, String>> kpList = new List<KeyValuePair<IXLFontBase, string>>();
+
+                    if (c.HasRichText)
                     {
-                        thisWidth = f.GetWidth(c.GetFormattedString());
+                        foreach (var rt in c.RichText)
+                        {
+                            String formattedString = rt.Text;
+                            var arr = formattedString.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                            Int32 arrCount = arr.Count();
+                            for (Int32 i = 0; i < arrCount; i++)
+                            {
+                                String s = arr[i];
+                                if (i < arrCount - 1)
+                                    s += Environment.NewLine;
+                                kpList.Add(new KeyValuePair<IXLFontBase, String>(c.Style.Font, s));
+                            }
+                        }
                     }
                     else
                     {
-                        if (textRotation == 255)
+                        String formattedString = c.GetFormattedString();
+                        var arr = formattedString.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                        Int32 arrCount = arr.Count();
+                        for (Int32 i = 0; i < arrCount; i++)
                         {
-                            thisWidth = f.GetWidth("X");
+                            String s = arr[i];
+                            if (i < arrCount - 1)
+                                s += Environment.NewLine;
+                            kpList.Add(new KeyValuePair<IXLFontBase, String>(c.Style.Font, s));
                         }
-                        else
+                    }
+
+                    Double thisWidthMax = 0;
+                    Double runningWidth = 0;
+                    Boolean rotated = false;
+                    Double rotationAdd = 0;
+                    Double rotationMod = 0;
+                    Double rotationIncrement = 0;
+                    foreach (var kp in kpList)
+                    {
+                        IXLFontBase f = kp.Key;
+                        String formattedString = kp.Value;
+
+                        Int32 newLinePosition = formattedString.IndexOf(Environment.NewLine);
+                        if (textRotation == 0)
                         {
-                            Int32 rotation;
-                            if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                            if (newLinePosition >= 0)
                             {
-                                rotation = 90;
+                                if (newLinePosition > 0)
+                                    runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition));
+
+                                if (runningWidth > thisWidthMax)
+                                    thisWidthMax = runningWidth;
+
+                                if (newLinePosition < formattedString.Length - 2)
+                                    runningWidth = f.GetWidth(formattedString.Substring(newLinePosition + 2));
+                                else
+                                    runningWidth = 0;
                             }
                             else
                             {
-                                rotation = textRotation%90;
+                                runningWidth += f.GetWidth(formattedString);
                             }
+                        }
+                        else
+                        {
+                            if (textRotation == 255)
+                            {
+                                if (runningWidth == 0)
+                                    runningWidth = f.GetWidth("X");
 
-                            Double r = DegreeToRadian(rotation);
-                            thisWidth = f.GetWidth(c.GetFormattedString())*Math.Cos(r) + Math.Sin(r)*f.GetWidth("X");
+                                if (newLinePosition >= 0)
+                                    runningWidth += f.GetWidth("X");
+                            }
+                            else
+                            {
+                                rotated = true;
+                                Double vWidth = f.GetWidth("X");
+                                if (vWidth > rotationAdd)
+                                    rotationAdd = vWidth;
+
+                                if (newLinePosition >= 0)
+                                {
+                                    rotationIncrement += 0.5;
+                                    rotationMod += 2 + rotationIncrement;
+
+                                    if (newLinePosition > 0)
+                                        runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition));
+
+                                    if (runningWidth > thisWidthMax)
+                                        thisWidthMax = runningWidth;
+
+                                    if (newLinePosition < formattedString.Length - 2)
+                                        runningWidth = f.GetWidth(formattedString.Substring(newLinePosition + 2));
+                                    else
+                                        runningWidth = 0;
+
+                                }
+                                else
+                                {
+                                    runningWidth += f.GetWidth(formattedString);
+                                }
+                            }
                         }
                     }
 
-                    if (thisWidth > colMaxWidth)
+                    if (runningWidth > thisWidthMax)
+                        thisWidthMax = runningWidth;
+
+                    if (rotated)
                     {
-                        colMaxWidth = thisWidth;
+                        Int32 rotation;
+                        if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                            rotation = 90;
+                        else
+                            rotation = textRotation % 90;
+
+                        Double r = DegreeToRadian(rotation);
+                        if (rotationMod == 0)
+                            rotationMod = 1;
+                        thisWidthMax = (thisWidthMax * Math.Cos(r) + (Math.Sin(r) * rotationAdd * rotationMod)) + 1;
                     }
+
+
+
+                    if (thisWidthMax > colMaxWidth)
+                        colMaxWidth = thisWidthMax + 1;
                 }
             }
 
             if (colMaxWidth == 0)
-            {
                 colMaxWidth = Worksheet.ColumnWidth;
-            }
 
             Width = colMaxWidth;
 
@@ -385,7 +477,7 @@ namespace ClosedXML.Excel
 
         private double DegreeToRadian(double angle)
         {
-            return Math.PI*angle/180.0;
+            return Math.PI * angle / 180.0;
         }
 
         public IXLColumn AdjustToContents(Double minWidth, Double maxWidth)
