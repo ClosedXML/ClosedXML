@@ -374,7 +374,7 @@ namespace ClosedXML.Excel
                                 foreach (var run in runElements)
                                 {
                                     var runProperties = run.RunProperties;
-                                    String text = run.Text.InnerText;
+                                    String text = run.Text.InnerText.Replace("\n", Environment.NewLine);
 
                                     if (runProperties == null)
                                     {
@@ -388,7 +388,7 @@ namespace ClosedXML.Excel
                                         if (fontColor.HasValue)
                                             rt.FontColor = fontColor;
 
-                                        var fontFamilyNumbering = runProperties.Elements<FontFamilyNumbering>().FirstOrDefault();
+                                        var fontFamilyNumbering = runProperties.Elements<FontFamily>().FirstOrDefault();
                                         if (fontFamilyNumbering != null && fontFamilyNumbering.Val != null)
                                             rt.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
                                         var runFont = runProperties.Elements<RunFont>().FirstOrDefault();

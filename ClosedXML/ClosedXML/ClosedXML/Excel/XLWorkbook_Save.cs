@@ -725,14 +725,16 @@ namespace ClosedXML.Excel
                                     FontSize fontSize = new FontSize() { Val = rt.FontSize };
                                     Color color = GetNewColor(rt.FontColor);
                                     RunFont fontName = new RunFont() { Val = rt.FontName };
-                                    FontFamilyNumbering fontFamilyNumbering = new FontFamilyNumbering() { Val = (Int32)rt.FontFamilyNumbering };
+                                    FontFamily fontFamilyNumbering = new FontFamily() { Val = (Int32)rt.FontFamilyNumbering };
 
                                     if (bold != null) runProperties.Append(bold);
                                     if (italic != null) runProperties.Append(italic);
-                                    if (underline != null) runProperties.Append(underline);
+
                                     if (strike != null) runProperties.Append(strike);
-                                    runProperties.Append(verticalAlignment);
                                     if (shadow != null) runProperties.Append(shadow);
+                                    if (underline != null) runProperties.Append(underline);
+                                    runProperties.Append(verticalAlignment);
+
                                     runProperties.Append(fontSize);
                                     runProperties.Append(color);
                                     runProperties.Append(fontName);
