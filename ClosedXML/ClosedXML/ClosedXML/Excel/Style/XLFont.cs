@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
         {
 
         }
-        public XLFont(IXLStylized container, IXLFont defaultFont)
+        public XLFont(IXLStylized container, IXLFontBase defaultFont)
         {
             this.container = container;
             if (defaultFont != null)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRichText : IEnumerable<IXLRichString>
+    public interface IXLRichText : IEnumerable<IXLRichString>, IEquatable<IXLRichText>
     {
         Boolean Bold { set; }
         Boolean Italic { set; }
@@ -29,12 +29,15 @@ namespace ClosedXML.Excel
 
         IXLRichString AddText(String text);
         IXLRichString AddText(String text, IXLFontBase font);
-        IXLRichText Clear();
+        IXLRichText ClearText();
+        IXLRichText ClearFont();
         IXLRichText Substring(Int32 index);
         IXLRichText Substring(Int32 index, Int32 length);
         Int32 Count { get; }
         Int32 Length { get; }
 
-
+        String Text { get; }
+        IXLPhonetics Phonetics { get; }
+        Boolean HasPhonetics { get; }
     }
 }

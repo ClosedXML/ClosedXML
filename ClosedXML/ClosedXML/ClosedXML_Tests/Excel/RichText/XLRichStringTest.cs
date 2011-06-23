@@ -86,7 +86,7 @@ namespace ClosedXML_Tests
             actual = richString.ToString();
             Assert.AreEqual(expected, actual);
 
-            richString.Clear();
+            richString.ClearText();
             expected = String.Empty;
             actual = richString.ToString();
             Assert.AreEqual(expected, actual);
@@ -710,7 +710,7 @@ namespace ClosedXML_Tests
             richString.AddText(" ");
             richString.AddText("World!");
             
-            richString.Clear();
+            richString.ClearText();
             String expected = String.Empty;
             String actual = richString.ToString();
             Assert.AreEqual(expected, actual);

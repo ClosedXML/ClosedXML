@@ -148,7 +148,7 @@ namespace ClosedXML.Excel
                                                           workbookPart.AddNewPart<SharedStringTablePart>(
                                                                   context.RelIdGenerator.GetNext(RelType.Workbook));
 
-            GenerateSharedStringTablePartContent(sharedStringTablePart);
+            GenerateSharedStringTablePartContent(sharedStringTablePart, context);
 
             WorkbookStylesPart workbookStylesPart = workbookPart.WorkbookStylesPart ??
                                                     workbookPart.AddNewPart<WorkbookStylesPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
@@ -683,7 +683,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart)
+        private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart, SaveContext context)
         {
             sharedStringTablePart.SharedStringTable = new SharedStringTable() { Count = 0, UniqueCount = 0 };
 
@@ -751,6 +751,35 @@ namespace ClosedXML.Excel
                                     sharedStringItem.Append(run);
                                 }
 
+                                if (c.RichText.HasPhonetics)
+                                {
+                                    foreach (var p in c.RichText.Phonetics)
+                                    {
+                                        PhoneticRun phoneticRun = new PhoneticRun()
+                                        {
+                                            BaseTextStartIndex = (UInt32)p.Start,
+                                            EndingBaseIndex = (UInt32)p.End
+                                        };
+
+                                        Text text = new Text();
+                                        text.Text = p.Text;
+
+                                        phoneticRun.Append(text);
+                                        sharedStringItem.Append(phoneticRun);
+                                    }
+                                    var f = new XLFont(null, c.RichText.Phonetics);
+                                    context.SharedFonts.Add(f, new FontInfo() { Font = f });
+
+                                    PhoneticProperties phoneticProperties = new PhoneticProperties() { 
+                                        FontId = context.SharedFonts[new XLFont(null, c.RichText.Phonetics)].FontId
+                                    };
+                                    if (c.RichText.Phonetics.Alignment != XLPhoneticAlignment.Left)
+                                        phoneticProperties.Alignment = c.RichText.Phonetics.Alignment.ToOpenXml();
+                                    if (c.RichText.Phonetics.Type != XLPhoneticType.FullWidthKatakana)
+                                        phoneticProperties.Type = c.RichText.Phonetics.Type.ToOpenXml();
+
+                                    sharedStringItem.Append(phoneticProperties);
+                                }
 
                                 sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
                                 sharedStringTablePart.SharedStringTable.Count += 1;
@@ -785,7 +814,6 @@ namespace ClosedXML.Excel
                                 c.SharedStringId = stringId;
 
                                 stringId++;
-
                             }
                         }
                     }
@@ -796,8 +824,8 @@ namespace ClosedXML.Excel
         private void GenerateWorkbookStylesPartContent(WorkbookStylesPart workbookStylesPart, SaveContext context)
         {
             var defaultStyle = new XLStyle(null, DefaultStyle);
-            Dictionary<IXLFont, FontInfo> sharedFonts = new Dictionary<IXLFont, FontInfo>();
-            sharedFonts.Add(defaultStyle.Font, new FontInfo {FontId = 0, Font = defaultStyle.Font});
+            if (!context.SharedFonts.ContainsKey(defaultStyle.Font))
+                context.SharedFonts.Add(defaultStyle.Font, new FontInfo { FontId = 0, Font = defaultStyle.Font });
 
             Dictionary<IXLFill, FillInfo> sharedFills = new Dictionary<IXLFill, FillInfo>();
             sharedFills.Add(defaultStyle.Fill, new FillInfo {FillId = 2, Fill = defaultStyle.Fill});
@@ -889,9 +917,9 @@ namespace ClosedXML.Excel
 
             foreach (var xlStyle in xlStyles)
             {
-                if (!sharedFonts.ContainsKey(xlStyle.Font))
+                if (!context.SharedFonts.ContainsKey(xlStyle.Font))
                 {
-                    sharedFonts.Add(xlStyle.Font, new FontInfo {FontId = fontCount++, Font = xlStyle.Font});
+                    context.SharedFonts.Add(xlStyle.Font, new FontInfo { FontId = fontCount++, Font = xlStyle.Font });
                 }
 
                 if (!sharedFills.ContainsKey(xlStyle.Fill))
@@ -913,7 +941,7 @@ namespace ClosedXML.Excel
             }
 
             var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, sharedNumberFormats);
-            var allSharedFonts = ResolveFonts(workbookStylesPart, sharedFonts);
+            ResolveFonts(workbookStylesPart, context);
             var allSharedFills = ResolveFills(workbookStylesPart, sharedFills);
             var allSharedBorders = ResolveBorders(workbookStylesPart, sharedBorders);
 
@@ -936,7 +964,7 @@ namespace ClosedXML.Excel
                                                  {
                                                          StyleId = styleCount++,
                                                          Style = xlStyle,
-                                                         FontId = allSharedFonts[xlStyle.Font].FontId,
+                                                         FontId = context.SharedFonts[xlStyle.Font].FontId,
                                                          FillId = allSharedFills[xlStyle.Fill].FillId,
                                                          BorderId = allSharedBorders[xlStyle.Border].BorderId,
                                                          NumberFormatId = numberFormatId
@@ -1464,15 +1492,15 @@ namespace ClosedXML.Excel
             return nF.Equals(xlFill);
         }
 
-        private Dictionary<IXLFont, FontInfo> ResolveFonts(WorkbookStylesPart workbookStylesPart, Dictionary<IXLFont, FontInfo> sharedFonts)
+        private void ResolveFonts(WorkbookStylesPart workbookStylesPart, SaveContext context)
         {
             if (workbookStylesPart.Stylesheet.Fonts == null)
             {
                 workbookStylesPart.Stylesheet.Fonts = new Fonts();
             }
 
-            var allSharedFonts = new Dictionary<IXLFont, FontInfo>();
-            foreach (var fontInfo in sharedFonts.Values)
+            var newFonts = new Dictionary<IXLFont, FontInfo>();
+            foreach (var fontInfo in context.SharedFonts.Values)
             {
                 Int32 fontId = 0;
                 Boolean foundOne = false;
@@ -1490,10 +1518,13 @@ namespace ClosedXML.Excel
                     Font font = GetNewFont(fontInfo);
                     workbookStylesPart.Stylesheet.Fonts.AppendChild(font);
                 }
-                allSharedFonts.Add(fontInfo.Font, new FontInfo {Font = fontInfo.Font, FontId = (UInt32) fontId});
+                newFonts.Add(fontInfo.Font, new FontInfo { Font = fontInfo.Font, FontId = (UInt32)fontId });
             }
+            context.SharedFonts.Clear();
+            foreach (var kp in newFonts)
+                context.SharedFonts.Add(kp.Key, kp.Value);
+
             workbookStylesPart.Stylesheet.Fonts.Count = (UInt32) workbookStylesPart.Stylesheet.Fonts.Count();
-            return allSharedFonts;
         }
 
         private Font GetNewFont(FontInfo fontInfo)

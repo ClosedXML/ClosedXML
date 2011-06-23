@@ -368,10 +368,14 @@ namespace ClosedXML.Excel
                         if (!StringExtensions.IsNullOrWhiteSpace(dCell.CellValue.Text))
                         {
                             SharedStringItem sharedString = sharedStrings[Int32.Parse(dCell.CellValue.Text)];
-                            var runElements = sharedString.Elements<Run>();
-                            if (runElements.Any())
+                           
+                            var runs = sharedString.Elements<Run>();
+                            var phoneticRuns = sharedString.Elements<PhoneticRun>();
+                            var phoneticProperties = sharedString.Elements<PhoneticProperties>();
+                            if (runs.Any())
                             {
-                                foreach (var run in runElements)
+                                #region Load Runs
+                                foreach (var run in runs)
                                 {
                                     var runProperties = run.RunProperties;
                                     String text = run.Text.InnerText.Replace("\n", Environment.NewLine);
@@ -383,52 +387,34 @@ namespace ClosedXML.Excel
                                     else
                                     {
                                         var rt = xlCell.RichText.AddText(text);
-                                        rt.Bold = GetBoolean(runProperties.Elements<Bold>().FirstOrDefault());
-                                        var fontColor = GetColor(runProperties.Elements<Color>().FirstOrDefault());
-                                        if (fontColor.HasValue)
-                                            rt.FontColor = fontColor;
-
-                                        var fontFamilyNumbering = runProperties.Elements<FontFamily>().FirstOrDefault();
-                                        if (fontFamilyNumbering != null && fontFamilyNumbering.Val != null)
-                                            rt.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
-                                        var runFont = runProperties.Elements<RunFont>().FirstOrDefault();
-                                        if (runFont != null)
-                                        {
-                                            if (runFont.Val != null)
-                                                rt.FontName = runFont.Val;
-                                        }
-                                        var fontSize = runProperties.Elements<FontSize>().FirstOrDefault();
-                                        if (fontSize != null)
-                                        {
-                                            if (((FontSize)fontSize).Val != null)
-                                                rt.FontSize = ((FontSize)fontSize).Val;
-                                        }
-
-                                        rt.Italic = GetBoolean(runProperties.Elements<Italic>().FirstOrDefault());
-                                        rt.Shadow = GetBoolean(runProperties.Elements<Shadow>().FirstOrDefault());
-                                        rt.Strikethrough = GetBoolean(runProperties.Elements<Strike>().FirstOrDefault());
-
-                                        var underline = runProperties.Elements<Underline>().FirstOrDefault();
-                                        if (underline != null)
-                                            if (underline.Val != null)
-                                                rt.Underline = underline.Val.Value.ToClosedXml();
-                                            else
-                                                rt.Underline = XLFontUnderlineValues.Single;
-
-                                        var verticalTextAlignment = runProperties.Elements<VerticalTextAlignment>().FirstOrDefault();
-                                        if (verticalTextAlignment != null)
-
-                                            if (verticalTextAlignment.Val != null)
-                                                rt.VerticalAlignment = verticalTextAlignment.Val.Value.ToClosedXml();
-                                            else
-                                                rt.VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline;
+                                        LoadFont(runProperties, rt);
                                     }
                                 }
+                                #endregion
                             }
                             else
                             {
-                                xlCell.m_cellValue = sharedString.InnerText;
+                                xlCell.m_cellValue = sharedString.Text.InnerText;
                             }
+
+                            #region Load PhoneticProperties
+                            if (phoneticProperties.Any())
+                            {
+                                var pp = phoneticProperties.First();
+                                if (pp.Alignment != null)
+                                    xlCell.RichText.Phonetics.Alignment = pp.Alignment.Value.ToClosedXml();
+                                if (pp.Type != null)
+                                    xlCell.RichText.Phonetics.Type = pp.Type.Value.ToClosedXml();
+
+                                LoadFont(pp, xlCell.RichText.Phonetics);
+                            }
+                            #endregion
+                            #region Load Phonetic Runs
+                            foreach (var pr in phoneticRuns)
+                            {
+                                xlCell.RichText.Phonetics.Add(pr.Text.InnerText, (Int32)pr.BaseTextStartIndex.Value, (Int32)pr.EndingBaseIndex.Value);
+                            }
+                            #endregion
                         }
                         else
                             xlCell.m_cellValue = dCell.CellValue.Text;
@@ -481,6 +467,49 @@ namespace ClosedXML.Excel
                     else
                         xlCell.m_dataType = XLCellValues.Number;
             }
+        }
+
+        private void LoadFont(OpenXmlElement fontSource, IXLFontBase fontBase)
+        {
+            fontBase.Bold = GetBoolean(fontSource.Elements<Bold>().FirstOrDefault());
+            var fontColor = GetColor(fontSource.Elements<Color>().FirstOrDefault());
+            if (fontColor.HasValue)
+                fontBase.FontColor = fontColor;
+
+            var fontFamilyNumbering = fontSource.Elements<FontFamily>().FirstOrDefault();
+            if (fontFamilyNumbering != null && fontFamilyNumbering.Val != null)
+                fontBase.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
+            var runFont = fontSource.Elements<RunFont>().FirstOrDefault();
+            if (runFont != null)
+            {
+                if (runFont.Val != null)
+                    fontBase.FontName = runFont.Val;
+            }
+            var fontSize = fontSource.Elements<FontSize>().FirstOrDefault();
+            if (fontSize != null)
+            {
+                if (((FontSize)fontSize).Val != null)
+                    fontBase.FontSize = ((FontSize)fontSize).Val;
+            }
+
+            fontBase.Italic = GetBoolean(fontSource.Elements<Italic>().FirstOrDefault());
+            fontBase.Shadow = GetBoolean(fontSource.Elements<Shadow>().FirstOrDefault());
+            fontBase.Strikethrough = GetBoolean(fontSource.Elements<Strike>().FirstOrDefault());
+
+            var underline = fontSource.Elements<Underline>().FirstOrDefault();
+            if (underline != null)
+                if (underline.Val != null)
+                    fontBase.Underline = underline.Val.Value.ToClosedXml();
+                else
+                    fontBase.Underline = XLFontUnderlineValues.Single;
+
+            var verticalTextAlignment = fontSource.Elements<VerticalTextAlignment>().FirstOrDefault();
+            if (verticalTextAlignment != null)
+
+                if (verticalTextAlignment.Val != null)
+                    fontBase.VerticalAlignment = verticalTextAlignment.Val.Value.ToClosedXml();
+                else
+                    fontBase.VerticalAlignment = XLFontVerticalTextAlignmentValues.Baseline;
         }
 
         private void LoadRows(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders, Fonts fonts, XLWorksheet ws, SharedStringItem[] sharedStrings, Dictionary<uint, string> sharedFormulasR1C1, Dictionary<Int32, IXLStyle> styleList, Row row)

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLRichText: IXLRichText, IEquatable<IXLRichText>
+    internal class XLRichText: IXLRichText
     {
         List<IXLRichString> richTexts = new List<IXLRichString>();
 
@@ -46,10 +46,17 @@ namespace ClosedXML.Excel
             m_length += richText.Text.Length;
             return richText;
         }
-        public IXLRichText Clear()
+        public IXLRichText ClearText()
         {
             richTexts.Clear();
             m_length = 0;
+            return this;
+        }
+        public IXLRichText ClearFont()
+        {
+            String text = Text;
+            ClearText();
+            AddText(text);
             return this;
         }
 
@@ -153,7 +160,26 @@ namespace ClosedXML.Excel
                     return false;
             }
 
-            return true;
+            if (phonetics == null)
+                return true;
+            else
+                return Phonetics.Equals(other.Phonetics);
         }
+
+        public String Text { get { return ToString(); } }
+
+        private IXLPhonetics phonetics;
+        public IXLPhonetics Phonetics 
+        {
+            get
+            {
+                if (phonetics == null)
+                    phonetics = new XLPhonetics(m_defaultFont);
+
+                return phonetics;
+            }
+        }
+
+        public Boolean HasPhonetics { get { return phonetics != null; } }
     }
 }

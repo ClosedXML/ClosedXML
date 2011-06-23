@@ -19,6 +19,8 @@ namespace ClosedXML.Excel
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly Dictionary<IXLStyle, StyleInfo> m_sharedStyles;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private readonly Dictionary<IXLFont, FontInfo> m_sharedFonts;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly HashSet<string> m_tableNames;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private uint m_tableId;
@@ -28,6 +30,7 @@ namespace ClosedXML.Excel
             {
                 m_relIdGenerator = new RelIdGenerator();
                 m_sharedStyles = new Dictionary<IXLStyle, StyleInfo>();
+                m_sharedFonts = new Dictionary<IXLFont, FontInfo>();
                 m_tableNames = new HashSet<String>();
                 m_tableId = 0;
             }
@@ -42,6 +45,11 @@ namespace ClosedXML.Excel
             {
                 [DebuggerStepThrough]
                 get { return m_sharedStyles; }
+            }
+            public Dictionary<IXLFont, FontInfo> SharedFonts
+            {
+                [DebuggerStepThrough]
+                get { return m_sharedFonts; }
             }
             public HashSet<string> TableNames
             {

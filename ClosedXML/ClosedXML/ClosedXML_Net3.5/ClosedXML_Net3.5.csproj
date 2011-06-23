@@ -358,11 +358,23 @@
     <Compile Include="..\ClosedXML\Excel\Ranges\XLRanges.cs">
       <Link>Excel\Ranges\XLRanges.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\RichText\IXLPhonetic.cs">
+      <Link>Excel\RichText\IXLPhonetic.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\RichText\IXLPhonetics.cs">
+      <Link>Excel\RichText\IXLPhonetics.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\RichText\IXLRichString.cs">
       <Link>Excel\RichText\IXLRichString.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\RichText\IXLRichText.cs">
       <Link>Excel\RichText\IXLRichText.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\RichText\XLPhonetic.cs">
+      <Link>Excel\RichText\XLPhonetic.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\RichText\XLPhonetics.cs">
+      <Link>Excel\RichText\XLPhonetics.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\RichText\XLRichString.cs">
       <Link>Excel\RichText\XLRichString.cs</Link>

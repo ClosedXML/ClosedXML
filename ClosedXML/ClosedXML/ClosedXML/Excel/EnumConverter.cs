@@ -398,6 +398,42 @@ namespace ClosedXML.Excel
                     #endregion
             }
         }
+        public static PhoneticAlignmentValues ToOpenXml(this XLPhoneticAlignment value)
+        {
+            switch (value)
+            {
+                case XLPhoneticAlignment.Center :
+                    return  PhoneticAlignmentValues.Center;
+                case XLPhoneticAlignment.Distributed:
+                    return PhoneticAlignmentValues.Distributed;
+                case XLPhoneticAlignment.Left:
+                    return PhoneticAlignmentValues.Left;
+                case XLPhoneticAlignment.NoControl:
+                    return PhoneticAlignmentValues.NoControl;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+        public static PhoneticValues ToOpenXml(this XLPhoneticType value)
+        {
+            switch (value)
+            {
+                case XLPhoneticType.FullWidthKatakana:
+                    return PhoneticValues.FullWidthKatakana;
+                case XLPhoneticType.HalfWidthKatakana:
+                    return PhoneticValues.HalfWidthKatakana;
+                case XLPhoneticType.Hiragana:
+                    return PhoneticValues.Hiragana;
+                case XLPhoneticType.NoConversion:
+                    return PhoneticValues.NoConversion;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
         #endregion
         #region To ClosedXml
         public static XLFontUnderlineValues ToClosedXml(this UnderlineValues value)
@@ -790,6 +826,42 @@ namespace ClosedXML.Excel
                 default:
                     throw new ApplicationException("Not implemented value!");
                     #endregion
+            }
+        }
+        public static XLPhoneticAlignment ToClosedXml(this PhoneticAlignmentValues value)
+        {
+            switch (value)
+            {
+                case PhoneticAlignmentValues.Center:
+                    return XLPhoneticAlignment.Center;
+                case PhoneticAlignmentValues.Distributed:
+                    return XLPhoneticAlignment.Distributed;
+                case PhoneticAlignmentValues.Left:
+                    return XLPhoneticAlignment.Left;
+                case PhoneticAlignmentValues.NoControl:
+                    return XLPhoneticAlignment.NoControl;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+        public static XLPhoneticType ToClosedXml(this PhoneticValues value)
+        {
+            switch (value)
+            {
+                case PhoneticValues.FullWidthKatakana:
+                    return XLPhoneticType.FullWidthKatakana;
+                case PhoneticValues.HalfWidthKatakana:
+                    return XLPhoneticType.HalfWidthKatakana;
+                case PhoneticValues.Hiragana:
+                    return XLPhoneticType.Hiragana;
+                case PhoneticValues.NoConversion:
+                    return XLPhoneticType.NoConversion;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
             }
         }
         #endregion
