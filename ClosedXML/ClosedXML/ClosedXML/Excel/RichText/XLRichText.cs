@@ -7,12 +7,23 @@ namespace ClosedXML.Excel
 {
     internal class XLRichText: IXLRichText
     {
-        List<IXLRichString> richTexts = new List<IXLRichString>();
+        List<IXLRichString> _richTexts = new List<IXLRichString>();
 
-        IXLFontBase m_defaultFont;
+        readonly IXLFontBase _defaultFont;
         public XLRichText(IXLFontBase defaultFont)
         {
-            m_defaultFont = defaultFont;
+            _defaultFont = defaultFont;
+        }
+
+        public XLRichText(IXLRichText defaultRichText, IXLFontBase defaultFont)
+        {
+            _defaultFont = defaultFont;
+            foreach (var rt in defaultRichText)
+                AddText(rt.Text, rt);
+            if (defaultRichText.HasPhonetics)
+            {
+                phonetics = new XLPhonetics(defaultRichText.Phonetics, defaultFont);
+            }
         }
 
         public XLRichText(String text, IXLFontBase defaultFont)
@@ -21,7 +32,7 @@ namespace ClosedXML.Excel
             AddText(text);
         }
 
-        public Int32 Count { get { return richTexts.Count; } }
+        public Int32 Count { get { return _richTexts.Count; } }
         private Int32 m_length = 0;
         public Int32 Length
         {
@@ -32,7 +43,7 @@ namespace ClosedXML.Excel
         }
         public IXLRichString AddText(String text)
         {
-            return AddText(text, m_defaultFont);
+            return AddText(text, _defaultFont);
         }
         public IXLRichString AddText(String text, IXLFontBase font)
         {
@@ -42,13 +53,13 @@ namespace ClosedXML.Excel
 
         public IXLRichString AddText(IXLRichString richText)
         {
-            richTexts.Add(richText);
+            _richTexts.Add(richText);
             m_length += richText.Text.Length;
             return richText;
         }
         public IXLRichText ClearText()
         {
-            richTexts.Clear();
+            _richTexts.Clear();
             m_length = 0;
             return this;
         }
@@ -62,8 +73,8 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            var sb = new StringBuilder(richTexts.Count);
-            richTexts.ForEach(rt => sb.Append(rt.Text));
+            var sb = new StringBuilder(_richTexts.Count);
+            _richTexts.ForEach(rt => sb.Append(rt.Text));
             return sb.ToString();
         }
 
@@ -77,10 +88,10 @@ namespace ClosedXML.Excel
                 throw new IndexOutOfRangeException("Index and length must refer to a location within the string.");
 
             List<IXLRichString> newRichTexts = new List<IXLRichString>();
-            XLRichText retVal = new XLRichText(m_defaultFont);
+            XLRichText retVal = new XLRichText(_defaultFont);
 
             Int32 lastPosition = 0;
-            foreach (var rt in richTexts)
+            foreach (var rt in _richTexts)
             {
                 if (lastPosition >= index + 1 + length) // We already have what we need
                 {
@@ -112,13 +123,13 @@ namespace ClosedXML.Excel
                 }
                 lastPosition += rt.Text.Length;
             }
-            richTexts = newRichTexts;
+            _richTexts = newRichTexts;
             return retVal;
         }
 
         public IEnumerator<IXLRichString> GetEnumerator()
         {
-            return richTexts.GetEnumerator();
+            return _richTexts.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -126,16 +137,16 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Boolean Bold { set { richTexts.ForEach(rt => rt.Bold = value); } }
-        public Boolean Italic { set { richTexts.ForEach(rt => rt.Italic = value); } }
-        public XLFontUnderlineValues Underline { set { richTexts.ForEach(rt => rt.Underline = value); } }
-        public Boolean Strikethrough { set { richTexts.ForEach(rt => rt.Strikethrough = value); } }
-        public XLFontVerticalTextAlignmentValues VerticalAlignment { set { richTexts.ForEach(rt => rt.VerticalAlignment = value); } }
-        public Boolean Shadow { set { richTexts.ForEach(rt => rt.Shadow = value); } }
-        public Double FontSize { set { richTexts.ForEach(rt => rt.FontSize = value); } }
-        public IXLColor FontColor { set { richTexts.ForEach(rt => rt.FontColor = value); } }
-        public String FontName { set { richTexts.ForEach(rt => rt.FontName = value); } }
-        public XLFontFamilyNumberingValues FontFamilyNumbering { set { richTexts.ForEach(rt => rt.FontFamilyNumbering = value); } }
+        public Boolean Bold { set { _richTexts.ForEach(rt => rt.Bold = value); } }
+        public Boolean Italic { set { _richTexts.ForEach(rt => rt.Italic = value); } }
+        public XLFontUnderlineValues Underline { set { _richTexts.ForEach(rt => rt.Underline = value); } }
+        public Boolean Strikethrough { set { _richTexts.ForEach(rt => rt.Strikethrough = value); } }
+        public XLFontVerticalTextAlignmentValues VerticalAlignment { set { _richTexts.ForEach(rt => rt.VerticalAlignment = value); } }
+        public Boolean Shadow { set { _richTexts.ForEach(rt => rt.Shadow = value); } }
+        public Double FontSize { set { _richTexts.ForEach(rt => rt.FontSize = value); } }
+        public IXLColor FontColor { set { _richTexts.ForEach(rt => rt.FontColor = value); } }
+        public String FontName { set { _richTexts.ForEach(rt => rt.FontName = value); } }
+        public XLFontFamilyNumberingValues FontFamilyNumbering { set { _richTexts.ForEach(rt => rt.FontFamilyNumbering = value); } }
 
         public IXLRichText SetBold() { Bold = true; return this; }	public IXLRichText SetBold(Boolean value) { Bold = value; return this; }
         public IXLRichText SetItalic() { Italic = true; return this; }	public IXLRichText SetItalic(Boolean value) { Italic = value; return this; }
@@ -156,7 +167,7 @@ namespace ClosedXML.Excel
 
             for (Int32 i = 0; i < count; i++)
             {
-                if (richTexts.ElementAt(i) != other.ElementAt(i))
+                if (_richTexts.ElementAt(i) != other.ElementAt(i))
                     return false;
             }
 
@@ -174,7 +185,7 @@ namespace ClosedXML.Excel
             get
             {
                 if (phonetics == null)
-                    phonetics = new XLPhonetics(m_defaultFont);
+                    phonetics = new XLPhonetics(_defaultFont);
 
                 return phonetics;
             }

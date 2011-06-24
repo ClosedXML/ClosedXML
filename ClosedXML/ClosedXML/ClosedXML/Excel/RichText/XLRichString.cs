@@ -8,24 +8,11 @@ namespace ClosedXML.Excel
         public XLRichString(String text, IXLFontBase font)
         {
             Text = text;
-            Apply(font);
+            this.CopyFont(font);
         }
 
         public String Text { get; private set; }
-        public IXLRichString Apply(IXLFontBase font)
-        { 
-            Bold = font.Bold;
-            Italic = font.Italic;
-            Underline = font.Underline;
-            Strikethrough = font.Strikethrough;
-            VerticalAlignment = font.VerticalAlignment;
-            Shadow = font.Shadow;
-            FontSize = font.FontSize;
-            FontColor = new XLColor(font.FontColor);
-            FontName = font.FontName;
-            FontFamilyNumbering = font.FontFamilyNumbering;
-            return this;
-        }
+
 
         public Boolean Bold { get; set; }
         public Boolean Italic { get; set; }

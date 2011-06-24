@@ -147,9 +147,9 @@ namespace ClosedXML.Excel
             if (StringExtensions.IsNullOrWhiteSpace(text))
                 return 0;
 
-            System.Drawing.Font stringFont = new System.Drawing.Font(font.FontName, (float)font.FontSize);
+            var stringFont = new Font(font.FontName, (float)font.FontSize);
 
-            Size textSize = TextRenderer.MeasureText(text, stringFont);
+            var textSize = TextRenderer.MeasureText(text, stringFont);
             double width = (double)(((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
             width = (double)decimal.Round((decimal)width + 0.2M, 2);
 
@@ -158,11 +158,24 @@ namespace ClosedXML.Excel
 
         public static Double GetHeight(this IXLFontBase font)
         {
-            System.Drawing.Font stringFont = new System.Drawing.Font(font.FontName, (float)font.FontSize);
-            Size textSize = TextRenderer.MeasureText("X", stringFont);
+            var stringFont = new Font(font.FontName, (float)font.FontSize);
+            var textSize = TextRenderer.MeasureText("X", stringFont);
             return (double)textSize.Height * 0.85;
         }
 
+        public static void CopyFont(this IXLFontBase font, IXLFontBase sourceFont)
+        {
+            font.Bold = sourceFont.Bold;
+            font.Italic = sourceFont.Italic;
+            font.Underline = sourceFont.Underline;
+            font.Strikethrough = sourceFont.Strikethrough;
+            font.VerticalAlignment = sourceFont.VerticalAlignment;
+            font.Shadow = sourceFont.Shadow;
+            font.FontSize = sourceFont.FontSize;
+            font.FontColor = new XLColor(sourceFont.FontColor);
+            font.FontName = sourceFont.FontName;
+            font.FontFamilyNumbering = sourceFont.FontFamilyNumbering;
+        }
     }
 }
 

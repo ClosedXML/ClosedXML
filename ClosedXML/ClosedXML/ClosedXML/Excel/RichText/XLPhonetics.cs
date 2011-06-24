@@ -6,15 +6,24 @@ namespace ClosedXML.Excel
 {
     internal class XLPhonetics : IXLPhonetics
     {
-        private List<IXLPhonetic> phonetics = new List<IXLPhonetic>();
+        private readonly List<IXLPhonetic> _phonetics = new List<IXLPhonetic>();
 
-        IXLFontBase m_defaultFont;
+        readonly IXLFontBase _defaultFont;
         public XLPhonetics(IXLFontBase defaultFont)
         {
-            m_defaultFont = defaultFont;
+            _defaultFont = defaultFont;
             Type = XLPhoneticType.FullWidthKatakana;
             Alignment = XLPhoneticAlignment.Left;
-            ClearFont();
+            this.CopyFont(_defaultFont);
+        }
+
+        public XLPhonetics(IXLPhonetics defaultPhonetics, IXLFontBase defaultFont)
+        {
+            _defaultFont = defaultFont;
+            Type = defaultPhonetics.Type;
+            Alignment = defaultPhonetics.Alignment;
+            
+            this.CopyFont(defaultPhonetics);
         }
 
         public Boolean Bold { get; set; }
@@ -41,29 +50,21 @@ namespace ClosedXML.Excel
 
         public IXLPhonetics Add(String text, Int32 start, Int32 end)
         {
-            phonetics.Add(new XLPhonetic(text, start, end));
+            _phonetics.Add(new XLPhonetic(text, start, end));
             return this;
         }
         public IXLPhonetics ClearText()
         {
-            phonetics.Clear();
+            _phonetics.Clear();
             return this;
         }
         public IXLPhonetics ClearFont()
         {
-            Bold = m_defaultFont.Bold;
-            Italic = m_defaultFont.Italic;
-            Underline = m_defaultFont.Underline;
-            Strikethrough = m_defaultFont.Strikethrough;
-            VerticalAlignment = m_defaultFont.VerticalAlignment;
-            Shadow = m_defaultFont.Shadow;
-            FontSize = m_defaultFont.FontSize;
-            FontColor = new XLColor(m_defaultFont.FontColor);
-            FontName = m_defaultFont.FontName;
-            FontFamilyNumbering = m_defaultFont.FontFamilyNumbering;
+            this.CopyFont(_defaultFont);
             return this;
         }
-        public Int32 Count { get { return phonetics.Count; } }
+
+        public Int32 Count { get { return _phonetics.Count; } }
 
         public XLPhoneticAlignment Alignment { get; set; }
         public XLPhoneticType Type { get; set; }
@@ -73,7 +74,7 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLPhonetic> GetEnumerator()
         {
-            return phonetics.GetEnumerator();
+            return _phonetics.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -86,10 +87,10 @@ namespace ClosedXML.Excel
             if (other == null)
                 return false;
 
-            Int32 phoneticsCount = phonetics.Count;
+            Int32 phoneticsCount = _phonetics.Count;
             for (Int32 i = 0; i < phoneticsCount; i++)
             {
-                if (!phonetics[i].Equals(other.ElementAt(i)))
+                if (!_phonetics[i].Equals(other.ElementAt(i)))
                     return false;
             }
 
