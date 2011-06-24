@@ -250,9 +250,9 @@ namespace ClosedXML.Excel
         }
         public new IXLRangeColumn Column(String column)
         {
-            if (XLAddress.IsValidColumn(column))
+            if (ExcelHelper.IsValidColumn(column))
             {
-                Int32 coNum = XLAddress.GetColumnNumberFromLetter(column);
+                Int32 coNum = ExcelHelper.GetColumnNumberFromLetter(column);
                 if (coNum > ColumnCount())
                 {
                     return DataRange.Column(GetFieldIndex(column) + 1);

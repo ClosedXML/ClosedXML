@@ -106,6 +106,11 @@ namespace ClosedXML.Excel
         public bool IsInvalid { get; set; }
         #endregion
         #region Public methods
+        public SheetRange GetSheetRange()
+        {
+            return new SheetRange(m_firstAddress.GetSheetPoint(), m_lastAddress.GetSheetPoint());
+        }
+
         public override string ToString()
         {
             return m_firstAddress + ":" + m_lastAddress;

@@ -1,5 +1,4 @@
-﻿
-namespace ClosedXML.Excel
+﻿namespace ClosedXML.Excel
 {
     internal class XLWorksheetInternals: IXLWorksheetInternals
     {
@@ -7,7 +6,7 @@ namespace ClosedXML.Excel
             XLCellCollection cellsCollection, 
             XLColumnsCollection columnsCollection,
             XLRowsCollection rowsCollection,
-            XLRanges mergedRanges,
+            XLMergedRanges mergedRanges,
             XLWorkbook workbook
             )
         {
@@ -21,7 +20,7 @@ namespace ClosedXML.Excel
         public XLCellCollection CellsCollection { get; private set; }
         public XLColumnsCollection ColumnsCollection { get; private set; }
         public XLRowsCollection RowsCollection { get; private set; }
-        public XLRanges MergedRanges { get; internal set; }
+        public XLMergedRanges MergedRanges { get; internal set; }
         public XLWorkbook Workbook { get; internal set; }
     }
 }

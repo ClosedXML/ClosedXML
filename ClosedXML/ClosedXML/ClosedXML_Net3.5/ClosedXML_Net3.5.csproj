@@ -115,6 +115,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ClosedXML\ExcelHelper.cs">
+      <Link>ExcelHelper.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Cells\IXLCell.cs">
       <Link>Excel\Cells\IXLCell.cs</Link>
     </Compile>
@@ -165,6 +168,12 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Columns\XLColumns.cs">
       <Link>Excel\Columns\XLColumns.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Coordinate\SheetPoint.cs">
+      <Link>Excel\Coordinate\SheetPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Coordinate\SheetRange.cs">
+      <Link>Excel\Coordinate\SheetRange.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\CustomProperties\IXLCustomProperties.cs">
       <Link>Excel\CustomProperties\IXLCustomProperties.cs</Link>
@@ -495,6 +504,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\XLAddress.cs">
       <Link>Excel\XLAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\XLMergedRanges.cs">
+      <Link>Excel\XLMergedRanges.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\XLOutline.cs">
       <Link>Excel\XLOutline.cs</Link>

@@ -111,8 +111,8 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(String firstColumn, String lastColumn)
         {
-            return Cells(XLAddress.GetColumnNumberFromLetter(firstColumn) + ":"
-                         + XLAddress.GetColumnNumberFromLetter(lastColumn));
+            return Cells(ExcelHelper.GetColumnNumberFromLetter(firstColumn) + ":"
+                         + ExcelHelper.GetColumnNumberFromLetter(lastColumn));
         }
 
         public Int32 CellCount()

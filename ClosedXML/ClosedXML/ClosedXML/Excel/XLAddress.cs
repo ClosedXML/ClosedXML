@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Globalization;
 
 namespace ClosedXML.Excel
 {
@@ -40,7 +39,7 @@ namespace ClosedXML.Excel
                     columnLetter = cellAddressString.Substring(startPos, rowPos);
                 }
 
-                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos + 1), ms_nfi);
+                rowNumber = int.Parse(cellAddressString.Substring(rowPos + 1), ExcelHelper.NumberFormatForParse);
             }
             else
             {
@@ -53,183 +52,9 @@ namespace ClosedXML.Excel
                     columnLetter = cellAddressString.Substring(startPos, rowPos);
                 }
 
-                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), ms_nfi);
+                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), ExcelHelper.NumberFormatForParse);
             }
             return new XLAddress(worksheet, rowNumber, columnLetter, fixedRow, fixedColumn);
-        }
-
-        private static readonly NumberFormatInfo ms_nfi = CultureInfo.InvariantCulture.NumberFormat;
-        private const Int32 TwoT26 = 26*26;
-        /// <summary>
-        /// 	Gets the column number of a given column letter.
-        /// </summary>
-        /// <param name = "columnLetter">The column letter to translate into a column number.</param>
-        public static Int32 GetColumnNumberFromLetter(String columnLetter)
-        {
-            if (columnLetter[0] <= '9')
-            {
-                return Int32.Parse(columnLetter, ms_nfi);
-            }
-
-            columnLetter = columnLetter.ToUpper();
-            var length = columnLetter.Length;
-            if (length == 1)
-            {
-                return Convert.ToByte(columnLetter[0]) - 64;
-            }
-            if (length == 2)
-            {
-                return
-                        ((Convert.ToByte(columnLetter[0]) - 64)*26) +
-                        (Convert.ToByte(columnLetter[1]) - 64);
-            }
-            if (length == 3)
-            {
-                return
-                        ((Convert.ToByte(columnLetter[0]) - 64)*TwoT26) +
-                        ((Convert.ToByte(columnLetter[1]) - 64)*26) +
-                        (Convert.ToByte(columnLetter[2]) - 64);
-            }
-            throw new ApplicationException("Column Length must be between 1 and 3.");
-        }
-
-        public static Boolean IsValidColumn(String column)
-        {
-            if (StringExtensions.IsNullOrWhiteSpace(column) || column.Length > 3)
-            {
-                return false;
-            }
-
-            Boolean retVal = true;
-            String theColumn = column.ToUpper();
-            for (Int32 i = 0; i < column.Length; i++)
-            {
-                if (theColumn[i] < 'A' || theColumn[i] > 'Z' || (i == 2 && theColumn[i] > 'D'))
-                {
-                    retVal = false;
-                    break;
-                }
-            }
-            return retVal;
-        }
-
-        public static Boolean IsValidRow(String rowString)
-        {
-            Int32 row;
-            if (Int32.TryParse(rowString, out row))
-            {
-                return row > 0 && row <= XLWorksheet.MaxNumberOfRows;
-            }
-            return false;
-        }
-
-        public static Boolean IsValidA1Address(String address)
-        {
-            address = address.Replace("$", "");
-            Int32 rowPos = 0;
-            Int32 addressLength = address.Length;
-            while (rowPos < addressLength && (address[rowPos] > '9' || address[rowPos] < '0'))
-            {
-                rowPos++;
-            }
-
-            return
-                    rowPos < addressLength
-                    && IsValidRow(address.Substring(rowPos))
-                    && IsValidColumn(address.Substring(0, rowPos));
-        }
-
-        /// <summary>
-        /// 	Gets the column letter of a given column number.
-        /// </summary>
-        /// <param name = "columnNumber">The column number to translate into a column letter.</param>
-        public static String GetColumnLetterFromNumber(Int32 columnNumber)
-        {
-            String s = String.Empty;
-            for (
-                    Int32 i = Convert.ToInt32(
-                            Math.Log(
-                                    Convert.ToDouble(
-                                            25*(
-                                                       Convert.ToDouble(columnNumber)
-                                                       + 1
-                                               )
-                                            )
-                                    )/Math.Log(26)
-                                      ) - 1
-                    ; i >= 0
-                    ; i--
-                    )
-            {
-                Int32 x = Convert.ToInt32(Math.Pow(26, i + 1) - 1)/25 - 1;
-                if (columnNumber > x)
-                {
-                    s += (Char) (((columnNumber - x - 1)/Convert.ToInt32(Math.Pow(26, i)))%26 + 65);
-                }
-            }
-            return s;
-        }
-
-        public static Int32 GetRowFromAddress1(String cellAddressString)
-        {
-            Int32 rowPos = 1;
-            while (cellAddressString[rowPos] > '9')
-            {
-                rowPos++;
-            }
-
-            return Int32.Parse(cellAddressString.Substring(rowPos), ms_nfi);
-        }
-
-        public static Int32 GetColumnNumberFromAddress1(String cellAddressString)
-        {
-            Int32 rowPos = 0;
-            while (cellAddressString[rowPos] > '9')
-            {
-                rowPos++;
-            }
-
-            return GetColumnNumberFromLetter(cellAddressString.Substring(0, rowPos));
-        }
-
-        public static Int32 GetRowFromAddress2(String cellAddressString)
-        {
-            Int32 rowPos = 1;
-            while (cellAddressString[rowPos] > '9')
-            {
-                rowPos++;
-            }
-
-            if (cellAddressString[rowPos] == '$')
-            {
-                return Int32.Parse(cellAddressString.Substring(rowPos + 1), ms_nfi);
-            }
-            return Int32.Parse(cellAddressString.Substring(rowPos), ms_nfi);
-        }
-
-        public static Int32 GetColumnNumberFromAddress2(String cellAddressString)
-        {
-            Int32 startPos;
-            if (cellAddressString[0] == '$')
-            {
-                startPos = 1;
-            }
-            else
-            {
-                startPos = 0;
-            }
-
-            Int32 rowPos = startPos;
-            while (cellAddressString[rowPos] > '9')
-            {
-                rowPos++;
-            }
-
-            if (cellAddressString[rowPos] == '$')
-            {
-                return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos - 1));
-            }
-            return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos));
         }
         #endregion
         #region Private fields
@@ -258,7 +83,7 @@ namespace ClosedXML.Excel
         /// <param name = "fixedRow"></param>
         /// <param name = "fixedColumn"></param>
         public XLAddress(XLWorksheet worksheet, int rowNumber, string columnLetter, bool fixedRow, bool fixedColumn)
-                : this(worksheet, rowNumber, GetColumnNumberFromLetter(columnLetter), fixedRow, fixedColumn)
+                : this(worksheet, rowNumber, ExcelHelper.GetColumnNumberFromLetter(columnLetter), fixedRow, fixedColumn)
         {
             m_columnLetter = columnLetter;
         }
@@ -326,7 +151,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public String ColumnLetter
         {
-            get { return m_columnLetter ?? (m_columnLetter = GetColumnLetterFromNumber(m_columnNumber)); }
+            get { return m_columnLetter ?? (m_columnLetter = ExcelHelper.GetColumnLetterFromNumber(m_columnNumber)); }
         }
         #endregion
         #region Overrides
@@ -376,6 +201,11 @@ namespace ClosedXML.Excel
         public string ToStringFixed()
         {
             return "$" + ColumnLetter + "$" + m_rowNumber.ToStringLookup();
+        }
+
+        public SheetPoint GetSheetPoint()
+        {
+            return new SheetPoint(m_rowNumber, m_columnNumber);
         }
         #endregion
         #region Operator Overloads

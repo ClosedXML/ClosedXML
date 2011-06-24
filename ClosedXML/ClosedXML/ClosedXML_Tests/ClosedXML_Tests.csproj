@@ -59,6 +59,9 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cells\XLCellTests.cs" />
+    <Compile Include="Excel\Misc\CopyContentsTest.cs" />
+    <Compile Include="TestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Excel\RichText\XLRichStringTest.cs" />
   </ItemGroup>

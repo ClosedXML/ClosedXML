@@ -219,7 +219,7 @@ namespace ClosedXML.Excel
         }
         public IXLRangeColumn Column(String column)
         {
-            return Column(XLAddress.GetColumnNumberFromLetter(column));
+            return Column(ExcelHelper.GetColumnNumberFromLetter(column));
         }
         public XLRangeColumn ColumnQuick(Int32 column)
         {
@@ -258,7 +258,7 @@ namespace ClosedXML.Excel
         }
         public IXLRangeColumns Columns(String firstColumn, String lastColumn)
         {
-            return Columns(XLAddress.GetColumnNumberFromLetter(firstColumn), XLAddress.GetColumnNumberFromLetter(lastColumn));
+            return Columns(ExcelHelper.GetColumnNumberFromLetter(firstColumn), ExcelHelper.GetColumnNumberFromLetter(lastColumn));
         }
         public IXLRangeColumns Columns(String columns)
         {
@@ -489,23 +489,26 @@ namespace ClosedXML.Excel
 
         private void TransposeMerged(Int32 squareSide)
         {
-            XLRange rngToTranspose = (XLRange) Worksheet.Range(
+            
+            var rngToTranspose = new SheetRange(
                     RangeAddress.FirstAddress.RowNumber,
                     RangeAddress.FirstAddress.ColumnNumber,
                     RangeAddress.FirstAddress.RowNumber + squareSide - 1,
                     RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
 
-            List<IXLRange> mergeToDelete = new List<IXLRange>();
-            List<IXLRange> mergeToInsert = new List<IXLRange>();
+            var mranges = new List<SheetRange>();
             foreach (var merge in (Worksheet).Internals.MergedRanges)
             {
                 if (Contains(merge))
                 {
-                    merge.RangeAddress.LastAddress = rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address;
+                    mranges.Add(new SheetRange(merge.FirstAddress,
+                                                           new SheetPoint(rngToTranspose.FirstAddress.RowNumber + merge.ColumnCount,
+                                                                          rngToTranspose.FirstAddress.ColumnNumber + merge.RowCount)));
+
                 }
             }
-            mergeToDelete.ForEach(m => (Worksheet).Internals.MergedRanges.Remove(m));
-            mergeToInsert.ForEach(m => (Worksheet).Internals.MergedRanges.Add(m));
+            mranges.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
+            mranges.ForEach(m => Worksheet.Internals.MergedRanges.Add(m));
         }
 
         private void MoveOrClearForTranspose(XLTransposeOptions transposeOption, int rowCount, int columnCount)
@@ -668,7 +671,7 @@ namespace ClosedXML.Excel
                 Int32 co;
                 if (!Int32.TryParse(coString, out co))
                 {
-                    co = XLAddress.GetColumnNumberFromLetter(coString);
+                    co = ExcelHelper.GetColumnNumberFromLetter(coString);
                 }
 
                 if (order.ToUpper().Equals("ASC"))
@@ -707,7 +710,7 @@ namespace ClosedXML.Excel
                 Int32 co;
                 if (!Int32.TryParse(coString, out co))
                 {
-                    co = XLAddress.GetColumnNumberFromLetter(coString);
+                    co = ExcelHelper.GetColumnNumberFromLetter(coString);
                 }
 
                 if (order.ToUpper().Equals("ASC"))

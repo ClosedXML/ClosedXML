@@ -204,5 +204,6 @@ namespace ClosedXML.Excel
 
 
         //IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
+        bool Intersects(SheetRange range);
     }
 }

@@ -134,15 +134,14 @@ namespace ClosedXML.Excel
         {
             if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
                 return (T)Convert.ChangeType(String.Empty, typeof(T));
-            else if (Value is TimeSpan)
+            if (Value is TimeSpan)
                 if (typeof(T) == typeof(String))
                     return (T)Convert.ChangeType(Value.ToString(), typeof(T));
                 else
                     return (T)Value;
-            else if (Value is IXLRichText)
+            if (Value is IXLRichText)
                 return (T)RichText;
-            else
-                return (T)Convert.ChangeType(Value, typeof(T));
+            return (T)Convert.ChangeType(Value, typeof(T));
         }
         public String GetString()
         {
@@ -268,7 +267,7 @@ namespace ClosedXML.Excel
                     }
 
                     if (m_worksheet.Internals.Workbook.WorksheetsInternal.Any<XLWorksheet>(w => w.Name.ToLower().Equals(sName.ToLower()))
-                        && XLAddress.IsValidA1Address(cAddress)
+                        && ExcelHelper.IsValidA1Address(cAddress)
                             )
                     {
                         return m_worksheet.Internals.Workbook.Worksheet(sName).Cell(cAddress).Value;
@@ -353,7 +352,7 @@ namespace ClosedXML.Excel
                 Int32 maxColumns;
                 if (asRange is XLRow || asRange is XLColumn)
                 {
-                    var lastCellUsed = asRange.LastCellUsed();
+                    var lastCellUsed = asRange.LastCellUsed(true);
                     maxRows = lastCellUsed.Address.RowNumber;
                     maxColumns = lastCellUsed.Address.ColumnNumber;
                     //if (asRange is XLRow)
@@ -384,23 +383,20 @@ namespace ClosedXML.Excel
                     if (asRange.Contains(mergedRange))
                     {
                         var initialRo = Address.RowNumber +
-                                        (mergedRange.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
+                                        (mergedRange.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
                         var initialCo = Address.ColumnNumber +
-                                        (mergedRange.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
+                                        (mergedRange.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
                         rangesToMerge.Add(m_worksheet.Range(initialRo,
                                                             initialCo,
-                                                            initialRo + mergedRange.RowCount() - 1,
-                                                            initialCo + mergedRange.ColumnCount() - 1));
+                                                            initialRo + mergedRange.RowCount - 1,
+                                                            initialCo + mergedRange.ColumnCount - 1));
                     }
                 }
                 rangesToMerge.ForEach(r => r.Merge());
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         private Boolean SetEnumerable(Object collectionObject)
@@ -646,18 +642,17 @@ namespace ClosedXML.Excel
                         Address.RowNumber + ro - 1,
                         Address.ColumnNumber + maxCo - 1);
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         private void ClearMerged(Int32 rowCount, Int32 columnCount)
         {
-            List<IXLRange> mergeToDelete = new List<IXLRange>();
+            var point = Address.GetSheetPoint();
+            var range = new SheetRange(point, point);
+            var mergeToDelete = new List<SheetRange>();
             foreach (var merge in m_worksheet.Internals.MergedRanges)
             {
-                if (merge.Intersects(AsRange()))
+                if (merge.Intersects(range))
                 {
                     mergeToDelete.Add(merge);
                 }
@@ -1178,7 +1173,7 @@ namespace ClosedXML.Excel
             String columnToReturn;
             if (columnPart == "C")
             {
-                columnToReturn = XLAddress.GetColumnLetterFromNumber(Address.ColumnNumber + columnsToShift);
+                columnToReturn = ExcelHelper.GetColumnLetterFromNumber(Address.ColumnNumber + columnsToShift);
             }
             else
             {
@@ -1186,19 +1181,19 @@ namespace ClosedXML.Excel
                 var mIndex = columnPart.IndexOf("-");
                 if (bIndex >= 0)
                 {
-                    columnToReturn = XLAddress.GetColumnLetterFromNumber(
+                    columnToReturn = ExcelHelper.GetColumnLetterFromNumber(
                             Address.ColumnNumber + Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
                             );
                 }
                 else if (mIndex >= 0)
                 {
-                    columnToReturn = XLAddress.GetColumnLetterFromNumber(
+                    columnToReturn = ExcelHelper.GetColumnLetterFromNumber(
                             Address.ColumnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
                             );
                 }
                 else
                 {
-                    columnToReturn = "$" + XLAddress.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)) + columnsToShift);
+                    columnToReturn = "$" + ExcelHelper.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)) + columnsToShift);
                 }
             }
             return columnToReturn;
@@ -1244,8 +1239,8 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    var column1 = XLAddress.GetColumnNumberFromLetter(p1.Replace("$", ""));
-                    var column2 = XLAddress.GetColumnNumberFromLetter(p2.Replace("$", ""));
+                    var column1 = ExcelHelper.GetColumnNumberFromLetter(p1.Replace("$", ""));
+                    var column2 = ExcelHelper.GetColumnNumberFromLetter(p2.Replace("$", ""));
                     var leftPart = GetR1C1Column(column1, p1.Contains('$'), columnsToShift);
                     var rightPart = GetR1C1Column(column2, p2.Contains('$'), columnsToShift);
                     return leftPart + ":" + rightPart;
@@ -1596,13 +1591,13 @@ namespace ClosedXML.Excel
                                         if (column1String[0] == '$')
                                         {
                                             column1 = "$" +
-                                                      XLAddress.GetColumnLetterFromNumber(
-                                                              XLAddress.GetColumnNumberFromLetter(column1String.Substring(1)) + columnsShifted);
+                                                      ExcelHelper.GetColumnLetterFromNumber(
+                                                              ExcelHelper.GetColumnNumberFromLetter(column1String.Substring(1)) + columnsShifted);
                                         }
                                         else
                                         {
                                             column1 =
-                                                    XLAddress.GetColumnLetterFromNumber(XLAddress.GetColumnNumberFromLetter(column1String) +
+                                                    ExcelHelper.GetColumnLetterFromNumber(ExcelHelper.GetColumnNumberFromLetter(column1String) +
                                                                                         columnsShifted);
                                         }
 
@@ -1610,13 +1605,13 @@ namespace ClosedXML.Excel
                                         if (column2String[0] == '$')
                                         {
                                             column2 = "$" +
-                                                      XLAddress.GetColumnLetterFromNumber(
-                                                              XLAddress.GetColumnNumberFromLetter(column2String.Substring(1)) + columnsShifted);
+                                                      ExcelHelper.GetColumnLetterFromNumber(
+                                                              ExcelHelper.GetColumnNumberFromLetter(column2String.Substring(1)) + columnsShifted);
                                         }
                                         else
                                         {
                                             column2 =
-                                                    XLAddress.GetColumnLetterFromNumber(XLAddress.GetColumnNumberFromLetter(column2String) +
+                                                    ExcelHelper.GetColumnLetterFromNumber(ExcelHelper.GetColumnNumberFromLetter(column2String) +
                                                                                         columnsShifted);
                                         }
 

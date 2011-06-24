@@ -201,8 +201,8 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(String firstColumn, String lastColumn)
         {
-            return Cells(XLAddress.GetColumnNumberFromLetter(firstColumn) + ":"
-                         + XLAddress.GetColumnNumberFromLetter(lastColumn));
+            return Cells(ExcelHelper.GetColumnNumberFromLetter(firstColumn) + ":"
+                         + ExcelHelper.GetColumnNumberFromLetter(lastColumn));
         }
         public IXLRow AdjustToContents()
         {
@@ -230,24 +230,14 @@ namespace ClosedXML.Excel
             Double rowMaxHeight = minHeight;
             foreach (var cell in Row(startColumn, endColumn).CellsUsed())
             {
-                var c = cell as XLCell;
-                Boolean isMerged = false;
-                var cellAsRange = c.AsRange();
-                foreach (var m in Worksheet.Internals.MergedRanges)
-                {
-                    if (cellAsRange.Intersects(m))
-                    {
-                        isMerged = true;
-                        break;
-                    }
-                }
-                if (!isMerged)
+                var c = (XLCell) cell;
+                if (!Worksheet.Internals.MergedRanges.Intersects(c.Address))
                 {
                     Double thisHeight;
                     Int32 textRotation = c.Style.Alignment.TextRotation;
                     if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
                     {
-                        List<KeyValuePair<IXLFontBase, String>> kpList = new List<KeyValuePair<IXLFontBase, string>>();
+                        var kpList = new List<KeyValuePair<IXLFontBase, string>>();
                         if (c.HasRichText)
                         {
                             foreach (var rt in c.RichText)
@@ -688,13 +678,13 @@ namespace ClosedXML.Excel
         }
         public IXLRow CopyTo(IXLRow row)
         {
-            var thisRangeUsed = RangeUsed();
+            var thisRangeUsed = RangeUsed(true);
 
-            Int32 thisColumnCount = ReferenceEquals(thisRangeUsed, null) ? 0 : thisRangeUsed.ColumnCount();
+            int thisColumnCount = ReferenceEquals(thisRangeUsed, null) ? 0 : thisRangeUsed.ColumnCount();
             //var targetRangeUsed = column target.AsRange().RangeUsed();
             var lastCellUsed = row.LastCellUsed(true);
-            Int32 targetColumnCount = ReferenceEquals(lastCellUsed, null) ? 0 : row.LastCellUsed(true).Address.ColumnNumber;
-            Int32 maxColumn = thisColumnCount > targetColumnCount ? thisColumnCount : targetColumnCount;
+            int targetColumnCount = ReferenceEquals(lastCellUsed, null) ? 0 : row.LastCellUsed(true).Address.ColumnNumber;
+            int maxColumn = thisColumnCount > targetColumnCount ? thisColumnCount : targetColumnCount;
 
             CopyToCell(Row(1, maxColumn), (XLCell) row.FirstCell());
             var newRow = (XLRow) row;
