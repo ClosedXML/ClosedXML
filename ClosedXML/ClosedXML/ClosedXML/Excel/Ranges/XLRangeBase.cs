@@ -158,9 +158,13 @@ namespace ClosedXML.Excel
             }
             var firstRow = cellsUsed.Min<XLCell>(c => c.Address.RowNumber);
             var firstColumn = cellsUsed.Min<XLCell>(c => c.Address.ColumnNumber);
+            var mergedRanges = Worksheet.Internals.MergedRanges.GetContainingMergedRanges(GetSheetRange());
+            foreach (var mrange in mergedRanges)
+            {
+                firstRow = Math.Max(mrange.FirstAddress.RowNumber, firstRow);
+                firstColumn = Math.Max(mrange.FirstAddress.ColumnNumber, firstColumn);
+            }
             return Worksheet.Cell(firstRow, firstColumn);
-            //var firstAddress = cellsUsed.Min(c => c.Address);
-            //return Worksheet.Cell(firstAddress);
         }
 
         IXLCell IXLRangeBase.LastCellUsed()
@@ -1205,12 +1209,12 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public void CopyTo(IXLRangeBase target)
+        public virtual void CopyTo(IXLRangeBase target)
         {
             CopyTo(target.FirstCell());
         }
 
-        public void CopyTo(IXLCell target)
+        public virtual void CopyTo(IXLCell target)
         {
             target.Value = this;
         }

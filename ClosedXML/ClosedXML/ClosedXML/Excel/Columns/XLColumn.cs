@@ -7,10 +7,11 @@ namespace ClosedXML.Excel
     internal class XLColumn : XLRangeBase, IXLColumn
     {
         #region Private fields
-        private bool m_isHidden;
-        private IXLStyle m_style;
-        private bool m_collapsed;
-        private int m_outlineLevel;
+        private bool _isHidden;
+        private IXLStyle _style;
+        private bool _collapsed;
+        private int _outlineLevel;
+        private Double _width;
         #endregion
         #region Constructor
         public XLColumn(Int32 column, XLColumnParameters xlColumnParameters)
@@ -27,8 +28,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                m_style = new XLStyle(this, xlColumnParameters.DefaultStyle);
-                width = xlColumnParameters.Worksheet.ColumnWidth;
+                _style = new XLStyle(this, xlColumnParameters.DefaultStyle);
+                _width = xlColumnParameters.Worksheet.ColumnWidth;
             }
         }
 
@@ -37,12 +38,12 @@ namespace ClosedXML.Excel
                         new XLRangeAddress(new XLAddress(column.Worksheet, 1, column.ColumnNumber(), false, false),
                                            new XLAddress(column.Worksheet, ExcelHelper.MaxRowNumber, column.ColumnNumber(), false, false)))
         {
-            width = column.width;
+            _width = column._width;
             IsReference = column.IsReference;
-            m_collapsed = column.m_collapsed;
-            m_isHidden = column.m_isHidden;
-            m_outlineLevel = column.m_outlineLevel;
-            m_style = new XLStyle(this, column.Style);
+            _collapsed = column._collapsed;
+            _isHidden = column._isHidden;
+            _outlineLevel = column._outlineLevel;
+            _style = new XLStyle(this, column.Style);
         }
         #endregion
         private void Worksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
@@ -76,7 +77,7 @@ namespace ClosedXML.Excel
 
         public Boolean IsReference { get; private set; }
         #region IXLColumn Members
-        private Double width;
+        
         public Double Width
         {
             get
@@ -87,7 +88,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    return width;
+                    return _width;
                 }
             }
             set
@@ -98,7 +99,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    width = value;
+                    _width = value;
                 }
             }
         }
@@ -156,7 +157,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    return m_style;
+                    return _style;
                 }
             }
             set
@@ -167,7 +168,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    m_style = new XLStyle(this, value);
+                    _style = new XLStyle(this, value);
 
                     Int32 minRow = 1;
                     Int32 maxRow = 0;
@@ -250,7 +251,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    return new XLStyle(new XLStylizedContainer(m_style, this), m_style);
+                    return new XLStyle(new XLStylizedContainer(_style, this), _style);
                 }
             }
             set
@@ -261,7 +262,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    m_style = new XLStyle(this, value);
+                    _style = new XLStyle(this, value);
                 }
             }
         }
@@ -573,7 +574,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    return m_isHidden;
+                    return _isHidden;
                 }
             }
             set
@@ -584,14 +585,14 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    m_isHidden = value;
+                    _isHidden = value;
                 }
             }
         }
 
         public Boolean Collapsed
         {
-            get { return IsReference ? (Worksheet).Internals.ColumnsCollection[ColumnNumber()].Collapsed : m_collapsed; }
+            get { return IsReference ? (Worksheet).Internals.ColumnsCollection[ColumnNumber()].Collapsed : _collapsed; }
             set
             {
                 if (IsReference)
@@ -600,14 +601,14 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    m_collapsed = value;
+                    _collapsed = value;
                 }
             }
         }
 
         public Int32 OutlineLevel
         {
-            get { return IsReference ? (Worksheet).Internals.ColumnsCollection[ColumnNumber()].OutlineLevel : m_outlineLevel; }
+            get { return IsReference ? (Worksheet).Internals.ColumnsCollection[ColumnNumber()].OutlineLevel : _outlineLevel; }
             set
             {
                 if (value < 0 || value > 8)
@@ -622,8 +623,8 @@ namespace ClosedXML.Excel
                 else
                 {
                     (Worksheet).IncrementColumnOutline(value);
-                    (Worksheet).DecrementColumnOutline(m_outlineLevel);
-                    m_outlineLevel = value;
+                    (Worksheet).DecrementColumnOutline(_outlineLevel);
+                    _outlineLevel = value;
                 }
             }
         }
@@ -716,9 +717,10 @@ namespace ClosedXML.Excel
             }
         }
 
-        public new IXLRangeColumn CopyTo(IXLCell target)
+
+        IXLRangeColumn IXLColumn.CopyTo(IXLCell target)
         {
-            var rngUsed = RangeUsed().Column(1);
+            var rngUsed = RangeUsed(true).Column(1);
             CopyToCell(rngUsed, (XLCell) target);
 
             Int32 lastRowNumber = target.Address.RowNumber + rngUsed.CellCount() - 1;
@@ -734,9 +736,13 @@ namespace ClosedXML.Excel
                     target.Address.ColumnNumber)
                     .Column(1);
         }
-        public new IXLRangeColumn CopyTo(IXLRangeBase target)
+        public override void CopyTo(IXLCell target)
         {
-            var thisRangeUsed = RangeUsed();
+            ((IXLColumn) this).CopyTo(target);
+        }
+        IXLRangeColumn IXLColumn.CopyTo(IXLRangeBase target)
+        {
+            var thisRangeUsed = RangeUsed(true);
             Int32 thisRowCount = thisRangeUsed.RowCount();
             var targetRangeUsed = target.AsRange().RangeUsed();
             Int32 targetRowCount = targetRangeUsed.RowCount();
@@ -757,18 +763,27 @@ namespace ClosedXML.Excel
                     target.RangeAddress.LastAddress.ColumnNumber)
                     .Column(1);
         }
+        public override void CopyTo(IXLRangeBase target)
+        {
+            ((IXLColumn)this).CopyTo(target);
+        }
+
         public IXLColumn CopyTo(IXLColumn column)
         {
-            var thisRangeUsed = RangeUsed();
-            Int32 thisRowCount = thisRangeUsed.RowCount();
-            //var targetRangeUsed = column target.AsRange().RangeUsed();
-            Int32 targetRowCount = column.LastCellUsed(true).Address.RowNumber;
-            Int32 maxRow = thisRowCount > targetRowCount ? thisRowCount : targetRowCount;
-
-            CopyToCell(Column(1, maxRow), (XLCell) column.FirstCell());
+            column.Clear();
+            var originalRange = RangeUsed(true);
+            if (!ReferenceEquals(originalRange, null))
+            {
+                int rowNumber = originalRange.RowCount();
+                var destRange = column.Worksheet.Range(ExcelHelper.MinRowNumber, column.ColumnNumber(), rowNumber, column.ColumnNumber());
+                originalRange.CopyTo(destRange);
+                //Old
+                //CopyToCell(Column(1, rowNumber), (XLCell) column.FirstCell());
+            }
+            
             var newColumn = (XLColumn) column;
-            newColumn.width = width;
-            newColumn.m_style = new XLStyle(newColumn, Style);
+            newColumn._width = _width;
+            newColumn._style = new XLStyle(newColumn, Style);
             return newColumn;
         }
 
