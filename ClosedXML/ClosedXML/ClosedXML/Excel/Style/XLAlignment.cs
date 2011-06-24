@@ -1,178 +1,163 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Text;
+
+#endregion
 
 namespace ClosedXML.Excel
 {
     internal class XLAlignment : IXLAlignment
     {
-        IXLStylized container;
+        private readonly IXLStylized _container;
+        private XLAlignmentHorizontalValues _horizontal;
+        private Int32 _indent;
+        private Boolean _justifyLastLine;
+        private XLAlignmentReadingOrderValues _readingOrder;
+        private Int32 _relativeIndent;
+        private Boolean _shrinkToFit;
+        private Int32 _textRotation;
+        private XLAlignmentVerticalValues _vertical;
+        private Boolean _wrapText;
 
-        public XLAlignment() : this(null, XLWorkbook.DefaultStyle.Alignment) { }
+        public XLAlignment() : this(null, XLWorkbook.DefaultStyle.Alignment)
+        {
+        }
 
         public XLAlignment(IXLStylized container, IXLAlignment d = null)
         {
-            this.container = container;
+            _container = container;
             if (d != null)
             {
-                horizontal = d.Horizontal;
-                vertical = d.Vertical;
-                indent = d.Indent;
-                justifyLastLine = d.JustifyLastLine;
-                readingOrder = d.ReadingOrder;
-                relativeIndent = d.RelativeIndent;
-                shrinkToFit = d.ShrinkToFit;
-                textRotation = d.TextRotation;
-                wrapText = d.WrapText;
+                _horizontal = d.Horizontal;
+                _vertical = d.Vertical;
+                _indent = d.Indent;
+                _justifyLastLine = d.JustifyLastLine;
+                _readingOrder = d.ReadingOrder;
+                _relativeIndent = d.RelativeIndent;
+                _shrinkToFit = d.ShrinkToFit;
+                _textRotation = d.TextRotation;
+                _wrapText = d.WrapText;
             }
         }
 
-        private XLAlignmentHorizontalValues horizontal;
+        #region IXLAlignment Members
+
         public XLAlignmentHorizontalValues Horizontal
         {
-            get
-            {
-                return horizontal;
-            }
+            get { return _horizontal; }
             set
             {
                 Boolean updateIndent = !(
-                    value == XLAlignmentHorizontalValues.Left
-                    || value == XLAlignmentHorizontalValues.Right
-                    || value == XLAlignmentHorizontalValues.Distributed
-                    );
+                                            value == XLAlignmentHorizontalValues.Left
+                                            || value == XLAlignmentHorizontalValues.Right
+                                            || value == XLAlignmentHorizontalValues.Distributed
+                                        );
 
-                if (container != null && !container.UpdatingStyle)
+                if (_container != null && !_container.UpdatingStyle)
                 {
-                    container.Styles.ForEach(s => {
-                        s.Alignment.Horizontal = value;
-                        if (updateIndent)
-                            s.Alignment.Indent = 0;
-                    });
+                    _container.Styles.ForEach(s =>
+                                                  {
+                                                      s.Alignment.Horizontal = value;
+                                                      if (updateIndent)
+                                                          s.Alignment.Indent = 0;
+                                                  });
                 }
                 else
                 {
-                    horizontal = value;
+                    _horizontal = value;
                     if (updateIndent)
-                        indent = 0;
+                        _indent = 0;
                 }
             }
         }
 
-        private XLAlignmentVerticalValues vertical;
         public XLAlignmentVerticalValues Vertical
         {
-            get
-            {
-                return vertical;
-            }
+            get { return _vertical; }
             set
             {
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.Vertical = value);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Alignment.Vertical = value);
                 else
-                    vertical = value;
+                    _vertical = value;
             }
         }
 
-        private Int32 indent;
         public Int32 Indent
         {
-            get
-            {
-                return indent;
-            }
+            get { return _indent; }
             set
             {
                 if (Horizontal == XLAlignmentHorizontalValues.General)
                     Horizontal = XLAlignmentHorizontalValues.Left;
 
                 if (value > 0 && !(
-                    Horizontal == XLAlignmentHorizontalValues.Left
-                    || Horizontal == XLAlignmentHorizontalValues.Right
-                    || Horizontal == XLAlignmentHorizontalValues.Distributed
-                    ))
-                {
-                    throw new ArgumentException("For indents, only left, right, and distributed horizontal alignments are supported.");
-                }
+                                      Horizontal == XLAlignmentHorizontalValues.Left
+                                      || Horizontal == XLAlignmentHorizontalValues.Right
+                                      || Horizontal == XLAlignmentHorizontalValues.Distributed
+                                  ))
+                    throw new ArgumentException(
+                        "For indents, only left, right, and distributed horizontal alignments are supported.");
 
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.Indent = value);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Alignment.Indent = value);
                 else
-                    indent = value;
+                    _indent = value;
             }
         }
 
-        private Boolean justifyLastLine;
         public Boolean JustifyLastLine
         {
-            get
-            {
-                return justifyLastLine;
-            }
+            get { return _justifyLastLine; }
             set
             {
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.JustifyLastLine = value);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Alignment.JustifyLastLine = value);
                 else
-                    justifyLastLine = value;
+                    _justifyLastLine = value;
             }
         }
 
-        private XLAlignmentReadingOrderValues readingOrder;
         public XLAlignmentReadingOrderValues ReadingOrder
         {
-            get
-            {
-                return readingOrder;
-            }
+            get { return _readingOrder; }
             set
             {
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.ReadingOrder = value);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Alignment.ReadingOrder = value);
                 else
-                    readingOrder = value;
+                    _readingOrder = value;
             }
         }
 
-        private Int32 relativeIndent;
         public Int32 RelativeIndent
         {
-            get
-            {
-                return relativeIndent;
-            }
+            get { return _relativeIndent; }
             set
             {
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.RelativeIndent = value);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Alignment.RelativeIndent = value);
                 else
-                    relativeIndent = value;
+                    _relativeIndent = value;
             }
         }
 
-        private Boolean shrinkToFit;
         public Boolean ShrinkToFit
         {
-            get
-            {
-                return shrinkToFit;
-            }
+            get { return _shrinkToFit; }
             set
             {
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.ShrinkToFit = value);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Alignment.ShrinkToFit = value);
                 else
-                    shrinkToFit = value;
+                    _shrinkToFit = value;
             }
         }
 
-        private Int32 textRotation;
         public Int32 TextRotation
         {
-            get
-            {
-                return textRotation;
-            }
+            get { return _textRotation; }
             set
             {
                 Int32 rotation = value;
@@ -181,46 +166,147 @@ namespace ClosedXML.Excel
                     throw new ArgumentException("TextRotation must be between -90 and 180 degrees, or 255.");
 
                 if (rotation < 0)
-                    rotation = 90 + (rotation * -1);
+                    rotation = 90 + (rotation*-1);
 
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.TextRotation = rotation);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Alignment.TextRotation = rotation);
                 else
-                    textRotation = rotation;
+                    _textRotation = rotation;
             }
         }
 
-        private Boolean wrapText;
         public Boolean WrapText
         {
-            get
-            {
-                return wrapText;
-            }
+            get { return _wrapText; }
             set
             {
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.WrapText = value);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Alignment.WrapText = value);
                 else
-                    wrapText = value;
+                    _wrapText = value;
             }
         }
 
         public Boolean TopToBottom
         {
-            get
-            {
-                return textRotation == 255;
-            }
+            get { return _textRotation == 255; }
             set
             {
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Alignment.TextRotation = value ? 255 : 0 );
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Alignment.TextRotation = value ? 255 : 0);
                 else
-                    textRotation = value ? 255 : 0;
+                    _textRotation = value ? 255 : 0;
             }
         }
 
+
+        public bool Equals(IXLAlignment other)
+        {
+            if (other == null)
+                return false;
+
+            var otherA = other as XLAlignment;
+            if (otherA == null)
+                return false;
+
+            return
+                _horizontal == otherA._horizontal
+                && _vertical == otherA._vertical
+                && _indent == otherA._indent
+                && _justifyLastLine == otherA._justifyLastLine
+                && _readingOrder == otherA._readingOrder
+                && _relativeIndent == otherA._relativeIndent
+                && _shrinkToFit == otherA._shrinkToFit
+                && _textRotation == otherA._textRotation
+                && _wrapText == otherA._wrapText
+                ;
+        }
+
+        public IXLStyle SetHorizontal(XLAlignmentHorizontalValues value)
+        {
+            Horizontal = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetVertical(XLAlignmentVerticalValues value)
+        {
+            Vertical = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetIndent(Int32 value)
+        {
+            Indent = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetJustifyLastLine()
+        {
+            JustifyLastLine = true;
+            return _container.Style;
+        }
+
+        public IXLStyle SetJustifyLastLine(Boolean value)
+        {
+            JustifyLastLine = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetReadingOrder(XLAlignmentReadingOrderValues value)
+        {
+            ReadingOrder = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetRelativeIndent(Int32 value)
+        {
+            RelativeIndent = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetShrinkToFit()
+        {
+            ShrinkToFit = true;
+            return _container.Style;
+        }
+
+        public IXLStyle SetShrinkToFit(Boolean value)
+        {
+            ShrinkToFit = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetTextRotation(Int32 value)
+        {
+            TextRotation = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetWrapText()
+        {
+            WrapText = true;
+            return _container.Style;
+        }
+
+        public IXLStyle SetWrapText(Boolean value)
+        {
+            WrapText = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetTopToBottom()
+        {
+            TopToBottom = true;
+            return _container.Style;
+        }
+
+        public IXLStyle SetTopToBottom(Boolean value)
+        {
+            TopToBottom = value;
+            return _container.Style;
+        }
+
+        #endregion
 
         public override string ToString()
         {
@@ -248,49 +334,20 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            return this.Equals((XLAlignment)obj);
+            return Equals((XLAlignment) obj);
         }
 
         public override int GetHashCode()
         {
-            return (Int32)Horizontal
-                ^ (Int32)Vertical
-                ^ Indent
-                ^ JustifyLastLine.GetHashCode()
-                ^ (Int32)ReadingOrder
-                ^ RelativeIndent
-                ^ ShrinkToFit.GetHashCode()
-                ^ TextRotation
-                ^ WrapText.GetHashCode();
+            return (Int32) Horizontal
+                   ^ (Int32) Vertical
+                   ^ Indent
+                   ^ JustifyLastLine.GetHashCode()
+                   ^ (Int32) ReadingOrder
+                   ^ RelativeIndent
+                   ^ ShrinkToFit.GetHashCode()
+                   ^ TextRotation
+                   ^ WrapText.GetHashCode();
         }
-
-        public bool Equals(IXLAlignment other)
-        {
-            var otherA = other as XLAlignment;
-            return 
-               horizontal == otherA.horizontal
-            && vertical == otherA.vertical
-            && indent == otherA.indent
-            && justifyLastLine == otherA.justifyLastLine
-            && readingOrder == otherA.readingOrder
-            && relativeIndent == otherA.relativeIndent
-            && shrinkToFit == otherA.shrinkToFit
-            && textRotation == otherA.textRotation
-            && wrapText == otherA.wrapText
-            ;
-        }
-
-        public IXLStyle SetHorizontal(XLAlignmentHorizontalValues value) { Horizontal = value; return container.Style; }
-        public IXLStyle SetVertical(XLAlignmentVerticalValues value) { Vertical = value; return container.Style; }
-        public IXLStyle SetIndent(Int32 value) { Indent = value; return container.Style; }
-        public IXLStyle SetJustifyLastLine() { JustifyLastLine = true; return container.Style; }	public IXLStyle SetJustifyLastLine(Boolean value) { JustifyLastLine = value; return container.Style; }
-        public IXLStyle SetReadingOrder(XLAlignmentReadingOrderValues value) { ReadingOrder = value; return container.Style; }
-        public IXLStyle SetRelativeIndent(Int32 value) { RelativeIndent = value; return container.Style; }
-        public IXLStyle SetShrinkToFit() { ShrinkToFit = true; return container.Style; }	public IXLStyle SetShrinkToFit(Boolean value) { ShrinkToFit = value; return container.Style; }
-        public IXLStyle SetTextRotation(Int32 value) { TextRotation = value; return container.Style; }
-        public IXLStyle SetWrapText() { WrapText = true; return container.Style; }	public IXLStyle SetWrapText(Boolean value) { WrapText = value; return container.Style; }
-        public IXLStyle SetTopToBottom() { TopToBottom = true; return container.Style; }	public IXLStyle SetTopToBottom(Boolean value) { TopToBottom = value; return container.Style; }
-
-
     }
 }

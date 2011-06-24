@@ -22,14 +22,14 @@ namespace ClosedXML.Excel
     public partial class XLWorkbook
     {
         #region Static
-        private static IXLStyle ms_defaultStyle;
+        private static IXLStyle _defaultStyle;
         public static IXLStyle DefaultStyle
         {
             get
             {
-                if (ms_defaultStyle == null)
+                if (_defaultStyle == null)
                 {
-                    ms_defaultStyle = new XLStyle(null, null)
+                    _defaultStyle = new XLStyle(null, null)
                                        {
                                                Font = new XLFont(null, null)
                                                           {
@@ -67,15 +67,15 @@ namespace ClosedXML.Excel
                                                NumberFormat = new XLNumberFormat(null, null) {NumberFormatId = 0},
                                                Alignment = new XLAlignment(null)
                                                                {
-                                                                       Horizontal = XLAlignmentHorizontalValues.General,
-                                                                       Indent = 0,
-                                                                       JustifyLastLine = false,
-                                                                       ReadingOrder = XLAlignmentReadingOrderValues.ContextDependent,
-                                                                       RelativeIndent = 0,
-                                                                       ShrinkToFit = false,
-                                                                       TextRotation = 0,
-                                                                       Vertical = XLAlignmentVerticalValues.Bottom,
-                                                                       WrapText = false
+                                                                    Indent = 0,
+                                                                    Horizontal = XLAlignmentHorizontalValues.General,
+                                                                    JustifyLastLine = false,
+                                                                    ReadingOrder = XLAlignmentReadingOrderValues.ContextDependent,
+                                                                    RelativeIndent = 0,
+                                                                    ShrinkToFit = false,
+                                                                    TextRotation = 0,
+                                                                    Vertical = XLAlignmentVerticalValues.Bottom,
+                                                                    WrapText = false
                                                                },
                                                Protection = new XLProtection(null)
                                                                 {
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
                                                                 }
                                        };
                 }
-                return ms_defaultStyle;
+                return _defaultStyle;
             }
         }
 
@@ -190,9 +190,6 @@ namespace ClosedXML.Excel
         {
             DefaultRowHeight = 15;
             DefaultColumnWidth = 9.140625;
-            WorksheetsInternal = new XLWorksheets(this);
-            NamedRanges = new XLNamedRanges(this);
-            CustomProperties = new XLCustomProperties(this);
             Style = new XLStyle(null, DefaultStyle);
             RowHeight = DefaultRowHeight;
             ColumnWidth = DefaultColumnWidth;
@@ -209,6 +206,9 @@ namespace ClosedXML.Excel
             ShowRuler = DefaultShowRuler;
             ShowWhiteSpace = DefaultShowWhiteSpace;
             ShowZeros = DefaultShowZeros;
+            WorksheetsInternal = new XLWorksheets(this);
+            NamedRanges = new XLNamedRanges(this);
+            CustomProperties = new XLCustomProperties(this);
         }
         /// <summary>
         /// 	Opens an existing workbook from a file.
