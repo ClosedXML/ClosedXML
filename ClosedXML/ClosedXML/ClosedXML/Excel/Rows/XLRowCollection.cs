@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
             {
                 var rowToMove = dictionary[ro];
                 Int32 newRow = ro + rowsToShift;
-                if (newRow <= XLWorksheet.MaxNumberOfRows)
+                if (newRow <= ExcelHelper.MaxRowNumber)
                 {
                     dictionary.Add(newRow, new XLRow(rowToMove));
                 }

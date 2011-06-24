@@ -88,7 +88,21 @@ namespace ClosedXML.Excel
                      || range.LastAddress.RowNumber < FirstAddress.RowNumber
                     );
         }
-        
+
+        public Boolean Contains(SheetRange range)
+        {
+            return Contains(range.FirstAddress, range.LastAddress);
+        }
+        public bool Contains(SheetPoint first, SheetPoint last)
+        {
+            return Contains(first) && Contains(last);
+        }
+        public bool Contains(SheetPoint point)
+        {
+            return FirstAddress.RowNumber <= point.RowNumber && point.RowNumber <= LastAddress.RowNumber &&
+                   FirstAddress.ColumnNumber <= point.ColumnNumber && point.ColumnNumber <= LastAddress.ColumnNumber;
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -108,6 +122,7 @@ namespace ClosedXML.Excel
                 return (m_begin.GetHashCode()*397) ^ m_end.GetHashCode();
             }
         }
+
         internal string ToStringA1()
         {
             return IsOneCell ? m_begin.ToStringA1() : string.Format("{0}:{1}", m_begin.ToStringA1(), m_end.ToStringA1());

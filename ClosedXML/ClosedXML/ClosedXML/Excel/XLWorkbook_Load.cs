@@ -564,7 +564,7 @@ namespace ClosedXML.Excel
             if (columns != null)
             {
                 var wsDefaultColumn =
-                    columns.Elements<Column>().Where(c => c.Max == XLWorksheet.MaxNumberOfColumns).FirstOrDefault();
+                    columns.Elements<Column>().Where(c => c.Max == ExcelHelper.MaxColumnNumber).FirstOrDefault();
 
                 if (wsDefaultColumn != null && wsDefaultColumn.Width != null)
                     ws.ColumnWidth = wsDefaultColumn.Width - COLUMN_WIDTH_OFFSET;
@@ -578,7 +578,7 @@ namespace ClosedXML.Excel
                 foreach (Column col in columns.Elements<Column>())
                 {
                     //IXLStylized toApply;
-                    if (col.Max != XLWorksheet.MaxNumberOfColumns)
+                    if (col.Max != ExcelHelper.MaxColumnNumber)
                     {
                         var xlColumns = (XLColumns) ws.Columns(col.Min, col.Max);
                         if (col.Width != null)

@@ -11,8 +11,7 @@ namespace ClosedXML.Excel
     internal class XLWorksheet : XLRangeBase, IXLWorksheet
     {
         #region Constants
-        public const Int32 MaxNumberOfRows = 1048576;
-        public const Int32 MaxNumberOfColumns = 16384;
+        
         #endregion
         #region Events
         public event RangeShiftedRowsDelegate RangeShiftedRows;
@@ -33,8 +32,8 @@ namespace ClosedXML.Excel
         #endregion
         #region Constructor
         public XLWorksheet(String sheetName, XLWorkbook workbook)
-                : base(new XLRangeAddress(new XLAddress(null, 1, 1, false, false),
-                                          new XLAddress(null, MaxNumberOfRows, MaxNumberOfColumns, false, false)))
+            : base(new XLRangeAddress(new XLAddress(null, ExcelHelper.MinRowNumber, ExcelHelper.MinColumnNumber, false, false),
+                                          new XLAddress(null, ExcelHelper.MaxRowNumber, ExcelHelper.MaxColumnNumber, false, false)))
         {
             RangeAddress.Worksheet = this;
             RangeAddress.FirstAddress.Worksheet = this;
@@ -256,7 +255,7 @@ namespace ClosedXML.Excel
 
         public IXLColumn LastColumn()
         {
-            return Column(MaxNumberOfColumns);
+            return Column(ExcelHelper.MaxColumnNumber);
         }
         public IXLColumn FirstColumn()
         {
@@ -268,7 +267,7 @@ namespace ClosedXML.Excel
         }
         public IXLRow LastRow()
         {
-            return Row(MaxNumberOfRows);
+            return Row(ExcelHelper.MaxRowNumber);
         }
         public IXLColumn FirstColumnUsed()
         {
@@ -541,7 +540,7 @@ namespace ClosedXML.Excel
 
         public override IXLRange AsRange()
         {
-            return Range(1, 1, MaxNumberOfRows, MaxNumberOfColumns);
+            return Range(1, 1, ExcelHelper.MaxRowNumber, ExcelHelper.MaxColumnNumber);
         }
 
         public IXLWorksheet CollapseRows()

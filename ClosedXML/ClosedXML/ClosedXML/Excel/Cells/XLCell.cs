@@ -11,10 +11,13 @@ namespace ClosedXML.Excel
     internal partial class XLCell : IXLCell, IXLStylized
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
-        #region Private fields
+        #region Fields
         private readonly XLWorksheet m_worksheet;
         private XLRichText m_richText;
         private XLHyperlink m_hyperlink;
+
+        internal String m_cellValue = String.Empty;
+        internal XLCellValues m_dataType;
         #endregion
         #region Constructor
         public XLCell(XLWorksheet worksheet, XLAddress address, IXLStyle defaultStyle)
@@ -235,7 +238,7 @@ namespace ClosedXML.Excel
             return format;
         }
 
-        internal String m_cellValue = String.Empty;
+        
         public Object Value
         {
             get
@@ -551,31 +554,11 @@ namespace ClosedXML.Excel
 
                 if (createTable)
                 {
-                    if (tableName == null)
-                    {
-                        return range.CreateTable();
-                    }
-                    else
-                    {
-                        return range.CreateTable(tableName);
-                    }
+                    return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
                 }
-                else
-                {
-                    if (tableName == null)
-                    {
-                        return range.AsTable();
-                    }
-                    else
-                    {
-                        return range.AsTable(tableName);
-                    }
-                }
+                return tableName == null ? range.AsTable() : range.AsTable(tableName);
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         public IXLRange InsertData(IEnumerable data)
@@ -647,17 +630,9 @@ namespace ClosedXML.Excel
 
         private void ClearMerged(Int32 rowCount, Int32 columnCount)
         {
-            var point = Address.GetSheetPoint();
-            var range = new SheetRange(point, point);
-            var mergeToDelete = new List<SheetRange>();
-            foreach (var merge in m_worksheet.Internals.MergedRanges)
-            {
-                if (merge.Intersects(range))
-                {
-                    mergeToDelete.Add(merge);
-                }
-            }
-            mergeToDelete.ForEach(m => m_worksheet.Internals.MergedRanges.Remove(m));
+            //TODO: For MDLeon: Need review why parameters is never used(see compare with revision 67871 before VF changes)
+            var intersectingRanges = m_worksheet.Internals.MergedRanges.GetIntersectingMergedRanges(Address.GetSheetPoint());
+            intersectingRanges.ForEach(m => m_worksheet.Internals.MergedRanges.Remove(m));
         }
 
         private void SetValue(object objWithValue, int ro, int co)
@@ -784,7 +759,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        internal XLCellValues m_dataType;
+        
         public XLCellValues DataType
         {
             get { 
@@ -828,8 +803,7 @@ namespace ClosedXML.Excel
                             }
                             else
                             {
-                                throw new ArgumentException("Cannot set data type to DateTime because '" + m_cellValue +
-                                                            "' is not recognized as a date.");
+                                throw new ArgumentException(string.Format("Cannot set data type to DateTime because '{0}' is not recognized as a date.", m_cellValue));
                             }
 
                             if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
@@ -863,8 +837,7 @@ namespace ClosedXML.Excel
                                 }
                                 catch
                                 {
-                                    throw new ArgumentException("Cannot set data type to TimeSpan because '" + m_cellValue +
-                                                                "' is not recognized as a TimeSpan.");
+                                    throw new ArgumentException(string.Format("Cannot set data type to TimeSpan because '{0}' is not recognized as a TimeSpan.", m_cellValue));
                                 }
                             }
                         }
@@ -877,8 +850,7 @@ namespace ClosedXML.Excel
                             }
                             else
                             {
-                                throw new ArgumentException("Cannot set data type to Number because '" + m_cellValue +
-                                                            "' is not recognized as a number.");
+                                throw new ArgumentException(string.Format("Cannot set data type to Number because '{0}' is not recognized as a number.", m_cellValue));
                             }
                         }
                         else

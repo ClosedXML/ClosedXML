@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
             {
                 var columnToMove = dictionary[ro];
                 Int32 newColumn = ro + columnsToShift;
-                if (newColumn <= XLWorksheet.MaxNumberOfColumns)
+                if (newColumn <= ExcelHelper.MaxColumnNumber)
                 {
                     dictionary.Add(newColumn, new XLColumn(columnToMove));
                 }

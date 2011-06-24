@@ -182,11 +182,17 @@ namespace ClosedXML.Excel
             {
                 return null;
             }
+
             var lastRow = cellsUsed.Max<XLCell>(c => c.Address.RowNumber);
             var lastColumn = cellsUsed.Max<XLCell>(c => c.Address.ColumnNumber);
+            var mergedRanges = Worksheet.Internals.MergedRanges.GetContainingMergedRanges(GetSheetRange());
+            foreach (var mrange in mergedRanges)
+            {
+                lastRow = Math.Max(mrange.LastAddress.RowNumber, lastRow);
+                lastColumn = Math.Max(mrange.LastAddress.ColumnNumber, lastColumn);
+            }
             return Worksheet.Cell(lastRow, lastColumn);
-            // var lastAddress = cellsUsed.Max(c => c.Address);
-            // return Worksheet.Cell(lastAddress);
+            
         }
 
         public XLCell Cell(Int32 row, Int32 column)
@@ -330,6 +336,7 @@ namespace ClosedXML.Excel
             }
             return retVal;
         }
+
         protected String FixColumnAddress(String address)
         {
             Int32 test;
@@ -348,6 +355,7 @@ namespace ClosedXML.Excel
             }
             return address;
         }
+
         public IXLCells Cells()
         {
             var cells = new XLCells(false, false, false);
@@ -394,7 +402,6 @@ namespace ClosedXML.Excel
             }
             return AsRange();
         }
-
         public IXLRange Unmerge()
         {
             foreach (var m in (Worksheet).Internals.MergedRanges)
@@ -441,21 +448,21 @@ namespace ClosedXML.Excel
         {
             var columnCount = ColumnCount();
             var firstColumn = RangeAddress.FirstAddress.ColumnNumber + columnCount;
-            if (firstColumn > XLWorksheet.MaxNumberOfColumns)
+            if (firstColumn > ExcelHelper.MaxColumnNumber)
             {
-                firstColumn = XLWorksheet.MaxNumberOfColumns;
+                firstColumn = ExcelHelper.MaxColumnNumber;
             }
             var lastColumn = firstColumn + ColumnCount() - 1;
-            if (lastColumn > XLWorksheet.MaxNumberOfColumns)
+            if (lastColumn > ExcelHelper.MaxColumnNumber)
             {
-                lastColumn = XLWorksheet.MaxNumberOfColumns;
+                lastColumn = ExcelHelper.MaxColumnNumber;
             }
 
             var firstRow = RangeAddress.FirstAddress.RowNumber;
             var lastRow = firstRow + RowCount() - 1;
-            if (lastRow > XLWorksheet.MaxNumberOfRows)
+            if (lastRow > ExcelHelper.MaxRowNumber)
             {
-                lastRow = XLWorksheet.MaxNumberOfRows;
+                lastRow = ExcelHelper.MaxRowNumber;
             }
 
             var newRange = Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
@@ -607,21 +614,21 @@ namespace ClosedXML.Excel
         {
             var rowCount = RowCount();
             var firstRow = RangeAddress.FirstAddress.RowNumber + rowCount;
-            if (firstRow > XLWorksheet.MaxNumberOfRows)
+            if (firstRow > ExcelHelper.MaxRowNumber)
             {
-                firstRow = XLWorksheet.MaxNumberOfRows;
+                firstRow = ExcelHelper.MaxRowNumber;
             }
             var lastRow = firstRow + RowCount() - 1;
-            if (lastRow > XLWorksheet.MaxNumberOfRows)
+            if (lastRow > ExcelHelper.MaxRowNumber)
             {
-                lastRow = XLWorksheet.MaxNumberOfRows;
+                lastRow = ExcelHelper.MaxRowNumber;
             }
 
             var firstColumn = RangeAddress.FirstAddress.ColumnNumber;
             var lastColumn = firstColumn + ColumnCount() - 1;
-            if (lastColumn > XLWorksheet.MaxNumberOfColumns)
+            if (lastColumn > ExcelHelper.MaxColumnNumber)
             {
-                lastColumn = XLWorksheet.MaxNumberOfColumns;
+                lastColumn = ExcelHelper.MaxColumnNumber;
             }
 
             var newRange = Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
@@ -791,7 +798,7 @@ namespace ClosedXML.Excel
             mergeToDelete.ForEach(m => (Worksheet).Internals.MergedRanges.Remove(m));
         }
 
-        public Boolean Contains(String rangeAddress)
+        public bool Contains(String rangeAddress)
         {
             String addressToUse;
             if (rangeAddress.Contains("!"))
@@ -818,44 +825,37 @@ namespace ClosedXML.Excel
             }
             return Contains(firstAddress, lastAddress);
         }
-
-        public Boolean Contains(IXLRangeBase range)
+        public bool Contains(IXLRangeBase range)
         {
             return Contains((XLAddress) range.RangeAddress.FirstAddress, (XLAddress) range.RangeAddress.LastAddress);
         }
-
         public bool Contains(XLAddress first, XLAddress last)
         {
             return Contains(first) && Contains(last);
         }
-
         public bool Contains(XLAddress address)
         {
             return RangeAddress.FirstAddress.RowNumber <= address.RowNumber && address.RowNumber <= RangeAddress.LastAddress.RowNumber &&
                    RangeAddress.FirstAddress.ColumnNumber <= address.ColumnNumber && address.ColumnNumber <= RangeAddress.LastAddress.ColumnNumber;
         }
-
-        public Boolean Contains(SheetRange range)
+        public bool Contains(SheetRange range)
         {
             return Contains(range.FirstAddress, range.LastAddress);
         }
-
         public bool Contains(SheetPoint first, SheetPoint last)
         {
             return Contains(first) && Contains(last);
         }
-
         public bool Contains(SheetPoint point)
         {
             return RangeAddress.FirstAddress.RowNumber <= point.RowNumber && point.RowNumber <= RangeAddress.LastAddress.RowNumber &&
                    RangeAddress.FirstAddress.ColumnNumber <= point.ColumnNumber && point.ColumnNumber <= RangeAddress.LastAddress.ColumnNumber;
         }
 
-        public Boolean Intersects(String rangeAddress)
+        public bool Intersects(string rangeAddress)
         {
             return Intersects(Range(rangeAddress));
         }
-
         public bool Intersects(IXLRangeBase range)
         {
             if (range.RangeAddress.IsInvalid || RangeAddress.IsInvalid)
@@ -872,7 +872,6 @@ namespace ClosedXML.Excel
                     || ma.LastAddress.RowNumber < ra.FirstAddress.RowNumber
                     );
         }
-
         public bool Intersects(SheetRange range)
         {
             if (RangeAddress.IsInvalid)
@@ -896,7 +895,7 @@ namespace ClosedXML.Excel
             IXLRange shiftedRangeFormula;
             if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)
             {
-                var lastCell = Worksheet.Cell(XLWorksheet.MaxNumberOfRows, RangeAddress.LastAddress.ColumnNumber);
+                var lastCell = Worksheet.Cell(ExcelHelper.MaxRowNumber, RangeAddress.LastAddress.ColumnNumber);
                 shiftedRangeFormula = Worksheet.Range(RangeAddress.FirstAddress, lastCell.Address);
                 if (StringExtensions.IsNullOrWhiteSpace(lastCell.GetString()) && StringExtensions.IsNullOrWhiteSpace(lastCell.FormulaA1))
                 {
@@ -905,7 +904,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var lastCell = Worksheet.Cell(RangeAddress.LastAddress.RowNumber, XLWorksheet.MaxNumberOfColumns);
+                var lastCell = Worksheet.Cell(RangeAddress.LastAddress.RowNumber, ExcelHelper.MaxColumnNumber);
                 shiftedRangeFormula = Worksheet.Range(RangeAddress.FirstAddress, lastCell.Address);
                 if (StringExtensions.IsNullOrWhiteSpace(lastCell.GetString()) && StringExtensions.IsNullOrWhiteSpace(lastCell.FormulaA1))
                 {

@@ -2091,12 +2091,12 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                if (maxInColumnsCollection < XLWorksheet.MaxNumberOfColumns)
+                if (maxInColumnsCollection < ExcelHelper.MaxColumnNumber)
                 {
                     Column column = new Column()
                                         {
                                                 Min = (UInt32) (maxInColumnsCollection + 1),
-                                                Max = (UInt32) (XLWorksheet.MaxNumberOfColumns),
+                                                Max = (UInt32) (ExcelHelper.MaxColumnNumber),
                                                 Style = context.SharedStyles[xlWorksheet.Style].StyleId,
                                                 Width = worksheetColumnWidth,
                                                 CustomWidth = true

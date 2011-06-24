@@ -1028,14 +1028,14 @@ namespace ClosedXML.Excel
             base.CopyTo(target);
 
             Int32 lastRowNumber = target.Address.RowNumber + RowCount() - 1;
-            if (lastRowNumber > XLWorksheet.MaxNumberOfRows)
+            if (lastRowNumber > ExcelHelper.MaxRowNumber)
             {
-                lastRowNumber = XLWorksheet.MaxNumberOfRows;
+                lastRowNumber = ExcelHelper.MaxRowNumber;
             }
             Int32 lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
-            if (lastColumnNumber > XLWorksheet.MaxNumberOfColumns)
+            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
             {
-                lastColumnNumber = XLWorksheet.MaxNumberOfColumns;
+                lastColumnNumber = ExcelHelper.MaxColumnNumber;
             }
 
             return target.Worksheet.Range(target.Address.RowNumber,
@@ -1048,14 +1048,14 @@ namespace ClosedXML.Excel
             base.CopyTo(target);
 
             Int32 lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
-            if (lastRowNumber > XLWorksheet.MaxNumberOfRows)
+            if (lastRowNumber > ExcelHelper.MaxRowNumber)
             {
-                lastRowNumber = XLWorksheet.MaxNumberOfRows;
+                lastRowNumber = ExcelHelper.MaxRowNumber;
             }
             Int32 lastColumnNumber = target.RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
-            if (lastColumnNumber > XLWorksheet.MaxNumberOfColumns)
+            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
             {
-                lastColumnNumber = XLWorksheet.MaxNumberOfColumns;
+                lastColumnNumber = ExcelHelper.MaxColumnNumber;
             }
 
             return target.Worksheet.Range(target.RangeAddress.FirstAddress.RowNumber,

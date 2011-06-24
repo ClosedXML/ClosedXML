@@ -71,7 +71,7 @@ namespace ClosedXML.Excel
         private readonly int m_columnNumber;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly int m_hashCode;
-        private String m_trimmedAddress;
+        private string m_trimmedAddress;
         #endregion
         #region Constructors
         /// <summary>
@@ -118,13 +118,13 @@ namespace ClosedXML.Excel
             get { return Worksheet; }
         }
 
-        public Boolean FixedRow
+        public bool FixedRow
         {
             get { return m_fixedRow; }
             set { m_fixedRow = value; }
         }
 
-        public Boolean FixedColumn
+        public bool FixedColumn
         {
             get { return m_fixedColumn; }
             set { m_fixedColumn = value; }

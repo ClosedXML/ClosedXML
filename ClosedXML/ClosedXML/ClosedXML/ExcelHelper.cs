@@ -10,6 +10,11 @@ namespace ClosedXML
     /// </summary>
     public static class ExcelHelper
     {
+        public const int MinRowNumber = 1;
+        public const int MinColumnNumber = 1;
+        public const int MaxRowNumber = 1048576;
+        public const int MaxColumnNumber = 16384;
+
         internal static readonly NumberFormatInfo NumberFormatForParse = CultureInfo.InvariantCulture.NumberFormat;
         private const Int32 TwoT26 = 26 * 26;
         /// <summary>
@@ -95,7 +100,7 @@ namespace ClosedXML
             Int32 row;
             if (Int32.TryParse(rowString, out row))
             {
-                return row > 0 && row <= XLWorksheet.MaxNumberOfRows;
+                return row > 0 && row <= MaxRowNumber;
             }
             return false;
         }

@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
         #region Constructor
         public XLRow(Int32 row, XLRowParameters xlRowParameters)
                 : base(new XLRangeAddress(new XLAddress(xlRowParameters.Worksheet, row, 1, false, false),
-                                          new XLAddress(xlRowParameters.Worksheet, row, XLWorksheet.MaxNumberOfColumns, false, false)))
+                                          new XLAddress(xlRowParameters.Worksheet, row, ExcelHelper.MaxColumnNumber, false, false)))
         {
             SetRowNumber(row);
 
@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
 
         public XLRow(XLRow row)
                 : base(new XLRangeAddress(new XLAddress(row.Worksheet, row.RowNumber(), 1, false, false),
-                                          new XLAddress(row.Worksheet, row.RowNumber(), XLWorksheet.MaxNumberOfColumns, false, false)))
+                                          new XLAddress(row.Worksheet, row.RowNumber(), ExcelHelper.MaxColumnNumber, false, false)))
         {
             m_height = row.m_height;
             IsReference = row.IsReference;
@@ -78,7 +78,7 @@ namespace ClosedXML.Excel
                 RangeAddress.FirstAddress = new XLAddress(Worksheet, row, 1, RangeAddress.FirstAddress.FixedRow, RangeAddress.FirstAddress.FixedColumn);
                 RangeAddress.LastAddress = new XLAddress(Worksheet,
                                                          row,
-                                                         XLWorksheet.MaxNumberOfColumns,
+                                                         ExcelHelper.MaxColumnNumber,
                                                          RangeAddress.LastAddress.FixedRow,
                                                          RangeAddress.LastAddress.FixedColumn);
             }
@@ -210,7 +210,7 @@ namespace ClosedXML.Excel
         }
         public IXLRow AdjustToContents(Int32 startColumn)
         {
-            return AdjustToContents(startColumn, XLWorksheet.MaxNumberOfColumns);
+            return AdjustToContents(startColumn, ExcelHelper.MaxColumnNumber);
         }
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn)
         {
@@ -219,11 +219,11 @@ namespace ClosedXML.Excel
 
         public IXLRow AdjustToContents(Double minHeight, Double maxHeight)
         {
-            return AdjustToContents(1, XLWorksheet.MaxNumberOfColumns, minHeight, maxHeight);
+            return AdjustToContents(1, ExcelHelper.MaxColumnNumber, minHeight, maxHeight);
         }
         public IXLRow AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight)
         {
-            return AdjustToContents(startColumn, XLWorksheet.MaxNumberOfColumns, minHeight, maxHeight);
+            return AdjustToContents(startColumn, ExcelHelper.MaxColumnNumber, minHeight, maxHeight);
         }
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
@@ -489,7 +489,7 @@ namespace ClosedXML.Excel
 
         public override IXLRange AsRange()
         {
-            return Range(1, 1, 1, XLWorksheet.MaxNumberOfColumns);
+            return Range(1, 1, 1, ExcelHelper.MaxColumnNumber);
         }
         #endregion
         public Boolean Collapsed
@@ -642,9 +642,9 @@ namespace ClosedXML.Excel
             CopyToCell(rngUsed, (XLCell) target);
 
             Int32 lastColumnNumber = target.Address.ColumnNumber + rngUsed.CellCount() - 1;
-            if (lastColumnNumber > XLWorksheet.MaxNumberOfColumns)
+            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
             {
-                lastColumnNumber = XLWorksheet.MaxNumberOfColumns;
+                lastColumnNumber = ExcelHelper.MaxColumnNumber;
             }
 
             return target.Worksheet.Range(
@@ -665,9 +665,9 @@ namespace ClosedXML.Excel
             CopyToCell(Range(1, 1, 1, maxColumn).Row(1), (XLCell) target.FirstCell());
 
             Int32 lastColumnNumber = target.RangeAddress.LastAddress.ColumnNumber + maxColumn - 1;
-            if (lastColumnNumber > XLWorksheet.MaxNumberOfColumns)
+            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
             {
-                lastColumnNumber = XLWorksheet.MaxNumberOfColumns;
+                lastColumnNumber = ExcelHelper.MaxColumnNumber;
             }
 
             return target.Worksheet.Range(target.RangeAddress.FirstAddress.RowNumber,
