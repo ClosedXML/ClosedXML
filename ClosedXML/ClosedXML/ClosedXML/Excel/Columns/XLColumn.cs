@@ -542,17 +542,8 @@ namespace ClosedXML.Excel
 
         private Boolean CellIsMerged(IXLCell c)
         {
-            Boolean isMerged = false;
             var cellAsRange = c.AsRange();
-            foreach (var m in Worksheet.Internals.MergedRanges)
-            {
-                if (cellAsRange.Intersects(m))
-                {
-                    isMerged = true;
-                    break;
-                }
-            }
-            return isMerged;
+            return Worksheet.Internals.MergedRanges.Any(m => cellAsRange.Intersects(m));
         }
 
         public void Hide()

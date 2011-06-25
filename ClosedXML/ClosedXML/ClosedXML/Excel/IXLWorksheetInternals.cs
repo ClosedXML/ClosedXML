@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
         XLCellCollection CellsCollection { get; }
         XLColumnsCollection ColumnsCollection { get; }
         XLRowsCollection RowsCollection { get; }
-        XLMergedRanges MergedRanges { get; }
+        XLRanges MergedRanges { get; }
         XLWorkbook Workbook { get; }
     }
 }

@@ -203,10 +203,6 @@ namespace ClosedXML.Excel
             return "$" + ColumnLetter + "$" + m_rowNumber.ToStringLookup();
         }
 
-        public SheetPoint GetSheetPoint()
-        {
-            return new SheetPoint(m_rowNumber, m_columnNumber);
-        }
         #endregion
         #region Operator Overloads
         public static XLAddress operator +(XLAddress left, XLAddress right)

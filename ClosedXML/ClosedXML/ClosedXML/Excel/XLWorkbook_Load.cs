@@ -126,7 +126,7 @@ namespace ClosedXML.Excel
                 if (dSheet.State != null)
                     ws.Visibility = dSheet.State.Value.ToClosedXml();
 
-                var styleList = new Dictionary<int, IXLStyle>();
+                var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
 
                 var reader = OpenXmlReader.Create(wsPart);
                 while (reader.Read())
@@ -956,10 +956,9 @@ namespace ClosedXML.Excel
                 }
             }
 
-            uint fillId = cellFormat.FillId.Value;
-            if (fillId > 0)
+            if (cellFormat.FillId != null)
             {
-                var fill = (Fill) fills.ElementAt((Int32) fillId);
+                var fill = (Fill)fills.ElementAt((Int32)cellFormat.FillId.Value);
                 if (fill.PatternFill != null)
                 {
                     if (fill.PatternFill.PatternType != null)

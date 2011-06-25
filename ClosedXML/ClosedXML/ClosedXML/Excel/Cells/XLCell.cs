@@ -476,7 +476,7 @@
                     ro++;
                 }
 
-                ClearMerged(ro - 1, maxCo - 1);
+                ClearMerged();
                 var range = _worksheet.Range(
                     Address.RowNumber, 
                     Address.ColumnNumber, 
@@ -544,7 +544,7 @@
                     ro++;
                 }
 
-                ClearMerged(ro - 1, maxCo - 1);
+                ClearMerged();
                 return _worksheet.Range(
                     Address.RowNumber, 
                     Address.ColumnNumber, 
@@ -934,74 +934,72 @@
             return true;
         }
 
-        private bool SetRange(object rangeObject)
+        private Boolean SetRange(Object rangeObject)
         {
             var asRange = rangeObject as XLRangeBase;
             if (asRange == null)
             {
                 var tmp = rangeObject as XLCell;
                 if (tmp != null)
+                {
                     asRange = tmp.AsRange() as XLRangeBase;
+                }
             }
 
             if (asRange != null)
             {
-                int maxRows;
-                int maxColumns;
+                Int32 maxRows;
+                Int32 maxColumns;
                 if (asRange is XLRow || asRange is XLColumn)
                 {
-                    var lastCellUsed = asRange.LastCellUsed(true);
+                    var lastCellUsed = asRange.LastCellUsed();
                     maxRows = lastCellUsed.Address.RowNumber;
                     maxColumns = lastCellUsed.Address.ColumnNumber;
-
-// if (asRange is XLRow)
-                    // {
-                    // worksheet.Range(Address.RowNumber, Address.ColumnNumber,  , maxColumns).Clear();
-                    // }
+                    //if (asRange is XLRow)
+                    //{
+                    //    worksheet.Range(Address.RowNumber, Address.ColumnNumber,  , maxColumns).Clear();
+                    //}
                 }
                 else
                 {
                     maxRows = asRange.RowCount();
                     maxColumns = asRange.ColumnCount();
-                    _worksheet.Range(Address.RowNumber, Address.ColumnNumber, maxRows, maxColumns).Clear();
+                    Worksheet.Range(Address.RowNumber, Address.ColumnNumber, maxRows, maxColumns).Clear();
                 }
 
-                for (int ro = 1; ro <= maxRows; ro++)
+                for (var ro = 1; ro <= maxRows; ro++)
                 {
-                    for (int co = 1; co <= maxColumns; co++)
+                    for (var co = 1; co <= maxColumns; co++)
                     {
                         var sourceCell = asRange.Cell(ro, co);
-                        var targetCell = _worksheet.Cell(Address.RowNumber + ro - 1, Address.ColumnNumber + co - 1);
+                        var targetCell = Worksheet.Cell(Address.RowNumber + ro - 1, Address.ColumnNumber + co - 1);
                         targetCell.CopyFrom(sourceCell);
-
-// targetCell.Style = sourceCell.style;
+                        //targetCell.Style = sourceCell.style;
                     }
                 }
-
                 var rangesToMerge = new List<IXLRange>();
-                foreach (SheetRange mergedRange in asRange.Worksheet.Internals.MergedRanges)
+                foreach (var mergedRange in (asRange.Worksheet).Internals.MergedRanges)
                 {
                     if (asRange.Contains(mergedRange))
                     {
-                        int initialRo = Address.RowNumber +
-                                        (mergedRange.FirstAddress.RowNumber -
-                                         asRange.RangeAddress.FirstAddress.RowNumber);
-                        int initialCo = Address.ColumnNumber +
-                                        (mergedRange.FirstAddress.ColumnNumber -
-                                         asRange.RangeAddress.FirstAddress.ColumnNumber);
-                        rangesToMerge.Add(_worksheet.Range(initialRo, 
-                                                           initialCo, 
-                                                           initialRo + mergedRange.RowCount - 1, 
-                                                           initialCo + mergedRange.ColumnCount - 1));
+                        var initialRo = Address.RowNumber +
+                                        (mergedRange.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
+                        var initialCo = Address.ColumnNumber +
+                                        (mergedRange.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
+                        rangesToMerge.Add(Worksheet.Range(initialRo,
+                                                            initialCo,
+                                                            initialRo + mergedRange.RowCount() - 1,
+                                                            initialCo + mergedRange.ColumnCount() - 1));
                     }
                 }
-
                 rangesToMerge.ForEach(r => r.Merge());
 
                 return true;
             }
-
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         private bool SetEnumerable(object collectionObject)
@@ -1010,12 +1008,17 @@
             return InsertData(asEnumerable) != null;
         }
 
-        private void ClearMerged(int rowCount, int columnCount)
+        private void ClearMerged()
         {
-            // TODO: For MDLeon: Need review why parameters is never used(see compare with revision 67871 before VF changes)
-            var intersectingRanges =
-                _worksheet.Internals.MergedRanges.GetIntersectingMergedRanges(Address.GetSheetPoint());
-            intersectingRanges.ForEach(m => _worksheet.Internals.MergedRanges.Remove(m));
+            List<IXLRange> mergeToDelete = new List<IXLRange>();
+            foreach (var merge in Worksheet.Internals.MergedRanges)
+            {
+                if (merge.Intersects(AsRange()))
+                {
+                    mergeToDelete.Add(merge);
+                }
+            }
+            mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
         private void SetValue(object objWithValue, int ro, int co)

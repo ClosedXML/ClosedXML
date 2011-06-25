@@ -231,7 +231,9 @@ namespace ClosedXML.Excel
             foreach (var cell in Row(startColumn, endColumn).CellsUsed())
             {
                 var c = (XLCell) cell;
-                if (!Worksheet.Internals.MergedRanges.Intersects(c.Address))
+                var cellAsRange = c.AsRange();
+                Boolean isMerged = Worksheet.Internals.MergedRanges.Any(m => cellAsRange.Intersects(m));
+                if (!isMerged)
                 {
                     Double thisHeight;
                     Int32 textRotation = c.Style.Alignment.TextRotation;

@@ -117,8 +117,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Excel\Coordinate\SheetPoint.cs" />
-    <Compile Include="Excel\Coordinate\SheetRange.cs" />
     <Compile Include="ExcelHelper.cs" />
     <Compile Include="Excel\Cells\IXLCells.cs" />
     <Compile Include="Excel\Cells\XLCellCollection.cs" />
@@ -137,7 +135,6 @@
     <Compile Include="Excel\RichText\XLPhonetic.cs" />
     <Compile Include="Excel\RichText\IXLPhonetics.cs" />
     <Compile Include="Excel\RichText\IXLPhonetic.cs" />
-    <Compile Include="Excel\XLMergedRanges.cs" />
     <Compile Include="Excel\XLWorkbook_Save.NestedTypes.cs" />
     <Compile Include="Excel\CustomProperties\XLCustomProperties.cs" />
     <Compile Include="Excel\CustomProperties\IXLCustomProperties.cs" />
@@ -240,7 +237,7 @@
     <Compile Include="Excel\Ranges\XLRangeParameters.cs" />
     <Compile Include="Excel\Rows\XLRowParameters.cs" />
     <Compile Include="Excel\XLWorkbook_Save.cs" />
-    <Compile Include="Excel\IXLAddress.cs" />
+    <Compile Include="Excel\Coordinates\IXLAddress.cs" />
     <Compile Include="Excel\Cells\IXLCell.cs" />
     <Compile Include="Excel\Columns\IXLColumn.cs" />
     <Compile Include="Excel\Ranges\IXLRange.cs" />
@@ -251,7 +248,7 @@
     <Compile Include="Excel\Style\IXLStylized.cs" />
     <Compile Include="Excel\Style\XLFont.cs" />
     <Compile Include="Excel\Style\XLStyle.cs" />
-    <Compile Include="Excel\XLAddress.cs" />
+    <Compile Include="Excel\Coordinates\XLAddress.cs" />
     <Compile Include="Excel\Cells\XLCell.cs" />
     <Compile Include="Excel\Columns\XLColumn.cs" />
     <Compile Include="Excel\Ranges\XLRange.cs" />

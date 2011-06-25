@@ -6,7 +6,7 @@
             XLCellCollection cellsCollection, 
             XLColumnsCollection columnsCollection,
             XLRowsCollection rowsCollection,
-            XLMergedRanges mergedRanges,
+            XLRanges mergedRanges,
             XLWorkbook workbook
             )
         {
@@ -20,7 +20,7 @@
         public XLCellCollection CellsCollection { get; private set; }
         public XLColumnsCollection ColumnsCollection { get; private set; }
         public XLRowsCollection RowsCollection { get; private set; }
-        public XLMergedRanges MergedRanges { get; internal set; }
+        public XLRanges MergedRanges { get; internal set; }
         public XLWorkbook Workbook { get; internal set; }
     }
 }

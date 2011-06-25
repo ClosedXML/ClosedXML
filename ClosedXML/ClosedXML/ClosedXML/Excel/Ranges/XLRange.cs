@@ -489,26 +489,19 @@ namespace ClosedXML.Excel
 
         private void TransposeMerged(Int32 squareSide)
         {
-            
-            var rngToTranspose = new SheetRange(
+            XLRange rngToTranspose = (XLRange)Worksheet.Range(
                     RangeAddress.FirstAddress.RowNumber,
                     RangeAddress.FirstAddress.ColumnNumber,
                     RangeAddress.FirstAddress.RowNumber + squareSide - 1,
                     RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
 
-            var mranges = new List<SheetRange>();
             foreach (var merge in Worksheet.Internals.MergedRanges)
             {
                 if (Contains(merge))
                 {
-                    mranges.Add(new SheetRange(merge.FirstAddress,
-                                                           new SheetPoint(rngToTranspose.FirstAddress.RowNumber + merge.ColumnCount,
-                                                                          rngToTranspose.FirstAddress.ColumnNumber + merge.RowCount)));
-
+                    merge.RangeAddress.LastAddress = rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address;
                 }
             }
-            mranges.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
-            mranges.ForEach(m => Worksheet.Internals.MergedRanges.Add(m));
         }
 
         private void MoveOrClearForTranspose(XLTransposeOptions transposeOption, int rowCount, int columnCount)

@@ -169,11 +169,11 @@
     <Compile Include="..\ClosedXML\Excel\Columns\XLColumns.cs">
       <Link>Excel\Columns\XLColumns.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\Coordinate\SheetPoint.cs">
-      <Link>Excel\Coordinate\SheetPoint.cs</Link>
+    <Compile Include="..\ClosedXML\Excel\Coordinates\IXLAddress.cs">
+      <Link>Excel\Coordinate\IXLAddress.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\Coordinate\SheetRange.cs">
-      <Link>Excel\Coordinate\SheetRange.cs</Link>
+    <Compile Include="..\ClosedXML\Excel\Coordinates\XLAddress.cs">
+      <Link>Excel\Coordinate\XLAddress.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\CustomProperties\IXLCustomProperties.cs">
       <Link>Excel\CustomProperties\IXLCustomProperties.cs</Link>
@@ -234,9 +234,6 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Hyperlinks\XLHyperlink_public.cs">
       <Link>Excel\Hyperlinks\XLHyperlink_public.cs</Link>
-    </Compile>
-    <Compile Include="..\ClosedXML\Excel\IXLAddress.cs">
-      <Link>Excel\IXLAddress.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLOutline.cs">
       <Link>Excel\IXLOutline.cs</Link>
@@ -501,12 +498,6 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Tables\XLTables.cs">
       <Link>Excel\Tables\XLTables.cs</Link>
-    </Compile>
-    <Compile Include="..\ClosedXML\Excel\XLAddress.cs">
-      <Link>Excel\XLAddress.cs</Link>
-    </Compile>
-    <Compile Include="..\ClosedXML\Excel\XLMergedRanges.cs">
-      <Link>Excel\XLMergedRanges.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\XLOutline.cs">
       <Link>Excel\XLOutline.cs</Link>
