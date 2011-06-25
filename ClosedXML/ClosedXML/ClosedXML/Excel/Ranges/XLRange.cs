@@ -483,8 +483,8 @@ namespace ClosedXML.Excel
             //    cellsToInsert.Add(newKey, newCell);
             //    cellsToDelete.Add(c.Address);
             //}
-            cellsToDelete.ForEach(c => (Worksheet).Internals.CellsCollection.Remove(c));
-            cellsToInsert.ForEach(c => (Worksheet).Internals.CellsCollection.Add(c.Key, c.Value));
+            cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c));
+            cellsToInsert.ForEach(c => Worksheet.Internals.CellsCollection.Add(c.Key, c.Value));
         }
 
         private void TransposeMerged(Int32 squareSide)
@@ -497,7 +497,7 @@ namespace ClosedXML.Excel
                     RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
 
             var mranges = new List<SheetRange>();
-            foreach (var merge in (Worksheet).Internals.MergedRanges)
+            foreach (var merge in Worksheet.Internals.MergedRanges)
             {
                 if (Contains(merge))
                 {

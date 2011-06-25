@@ -645,38 +645,38 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position)
         {
-            var ws = (XLWorksheet) workbook.WorksheetsInternal.Add(newSheetName, position);
+            var targetSheet = (XLWorksheet) workbook.WorksheetsInternal.Add(newSheetName, position);
 
-            Internals.CellsCollection.ForEach(kp => ws.Cell(kp.Value.Address.RowNumber, kp.Value.Address.ColumnNumber).CopyFrom(kp.Value));
-            DataValidations.ForEach(dv => ws.DataValidations.Add(new XLDataValidation(dv, ws)));
-            Internals.ColumnsCollection.ForEach(kp => ws.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
-            Internals.RowsCollection.ForEach(kp => ws.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
-            ws.Visibility = Visibility;
-            ws.ColumnWidth = ColumnWidth;
-            ws.RowHeight = RowHeight;
-            ws.style = new XLStyle(ws, style);
-            ws.PageSetup = new XLPageSetup(PageSetup, ws);
-            ws.Outline = new XLOutline(Outline);
-            ws.SheetView = new XLSheetView(SheetView);
-            Internals.MergedRanges = ws.Internals.MergedRanges.Clone();
+            Internals.CellsCollection.ForEach(kp => targetSheet.Cell(kp.Value.Address.RowNumber, kp.Value.Address.ColumnNumber).CopyFrom(kp.Value));
+            DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv, targetSheet)));
+            Internals.ColumnsCollection.ForEach(kp => targetSheet.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
+            Internals.RowsCollection.ForEach(kp => targetSheet.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
+            targetSheet.Visibility = Visibility;
+            targetSheet.ColumnWidth = ColumnWidth;
+            targetSheet.RowHeight = RowHeight;
+            targetSheet.style = new XLStyle(targetSheet, style);
+            targetSheet.PageSetup = new XLPageSetup(PageSetup, targetSheet);
+            targetSheet.Outline = new XLOutline(Outline);
+            targetSheet.SheetView = new XLSheetView(SheetView);
+            targetSheet.Internals.MergedRanges = Internals.MergedRanges.Clone();
 
             foreach (var r in NamedRanges)
             {
                 var ranges = new XLRanges();
                 r.Ranges.ForEach(ranges.Add);
-                ws.NamedRanges.Add(r.Name, ranges);
+                targetSheet.NamedRanges.Add(r.Name, ranges);
             }
 
             foreach (var t in Tables.Cast<XLTable>())
             {
                 XLTable table;
-                if (ws.Tables.Any(tt => tt.Name == t.Name))
+                if (targetSheet.Tables.Any(tt => tt.Name == t.Name))
                 {
-                    table = new XLTable(ws.Range(t.RangeAddress.ToString()), true);
+                    table = new XLTable(targetSheet.Range(t.RangeAddress.ToString()), true);
                 }
                 else
                 {
-                    table = new XLTable(ws.Range(t.RangeAddress.ToString()), t.Name, true);
+                    table = new XLTable(targetSheet.Range(t.RangeAddress.ToString()), t.Name, true);
                 }
 
                 table.RelId = t.RelId;
@@ -702,10 +702,10 @@ namespace ClosedXML.Excel
 
             if (AutoFilterRange != null)
             {
-                ws.Range(AutoFilterRange.RangeAddress).SetAutoFilter();
+                targetSheet.Range(AutoFilterRange.RangeAddress).SetAutoFilter();
             }
 
-            return ws;
+            return targetSheet;
         }
         #region Outlines
         public void IncrementColumnOutline(Int32 level)
