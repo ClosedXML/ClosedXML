@@ -344,8 +344,8 @@ namespace ClosedXML.Excel
             {
                 if (cell.DataType == CellValues.InlineString)
                 {
-                    xlCell.m_cellValue = cell.InlineString.Text.Text;
-                    xlCell.m_dataType = XLCellValues.Text;
+                    xlCell._cellValue = cell.InlineString.Text.Text;
+                    xlCell._dataType = XLCellValues.Text;
                     xlCell.ShareString = false;
                 }
                 else if (cell.DataType == CellValues.SharedString)
@@ -380,7 +380,7 @@ namespace ClosedXML.Excel
                                 #endregion
                             }
                             else
-                                xlCell.m_cellValue = sharedString.Text.InnerText;
+                                xlCell._cellValue = sharedString.Text.InnerText;
 
                             #region Load PhoneticProperties
 
@@ -408,37 +408,37 @@ namespace ClosedXML.Excel
                             #endregion
                         }
                         else
-                            xlCell.m_cellValue = cell.CellValue.Text;
+                            xlCell._cellValue = cell.CellValue.Text;
                     }
                     else
-                        xlCell.m_cellValue = String.Empty;
-                    xlCell.m_dataType = XLCellValues.Text;
+                        xlCell._cellValue = String.Empty;
+                    xlCell._dataType = XLCellValues.Text;
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
                     //xlCell.cellValue = DateTime.FromOADate(Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture));
-                    xlCell.m_cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
-                    xlCell.m_dataType = XLCellValues.DateTime;
+                    xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                    xlCell._dataType = XLCellValues.DateTime;
                 }
                 else if (cell.DataType == CellValues.Boolean)
                 {
-                    xlCell.m_cellValue = cell.CellValue.Text;
-                    xlCell.m_dataType = XLCellValues.Boolean;
+                    xlCell._cellValue = cell.CellValue.Text;
+                    xlCell._dataType = XLCellValues.Boolean;
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
-                    xlCell.m_cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                    xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
                     var numberFormatId = ((CellFormat) (s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                     if (numberFormatId == 46U)
                         xlCell.DataType = XLCellValues.TimeSpan;
                     else
-                        xlCell.m_dataType = XLCellValues.Number;
+                        xlCell._dataType = XLCellValues.Number;
                 }
             }
             else if (cell.CellValue != null)
             {
                 var numberFormatId = ((CellFormat) (s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                xlCell.m_cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
                 if (s.NumberingFormats != null &&
                     s.NumberingFormats.Any(nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId))
                 {
@@ -452,13 +452,13 @@ namespace ClosedXML.Excel
 
 
                 if (!StringExtensions.IsNullOrWhiteSpace(xlCell.Style.NumberFormat.Format))
-                    xlCell.m_dataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
+                    xlCell._dataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
                 else if ((numberFormatId >= 14 && numberFormatId <= 22) || (numberFormatId >= 45 && numberFormatId <= 47))
-                    xlCell.m_dataType = XLCellValues.DateTime;
+                    xlCell._dataType = XLCellValues.DateTime;
                 else if (numberFormatId == 49)
-                    xlCell.m_dataType = XLCellValues.Text;
+                    xlCell._dataType = XLCellValues.Text;
                 else
-                    xlCell.m_dataType = XLCellValues.Number;
+                    xlCell._dataType = XLCellValues.Number;
             }
         }
 

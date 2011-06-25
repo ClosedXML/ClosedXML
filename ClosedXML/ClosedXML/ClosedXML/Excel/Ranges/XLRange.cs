@@ -185,7 +185,7 @@ namespace ClosedXML.Excel
                                                 false,
                                                 false);
             return new XLRangeRow(
-                    new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style));
+                    new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), false);
         }
         public XLRangeRow RowQuick(Int32 row)
         {
@@ -215,7 +215,7 @@ namespace ClosedXML.Excel
                                                 false,
                                                 false);
             return new XLRangeColumn(
-                    new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style));
+                    new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), false);
         }
         public IXLRangeColumn Column(String column)
         {

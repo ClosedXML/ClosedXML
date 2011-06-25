@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     {
         private XLTable table;
         public XLTableRow(XLTable table, XLRangeRow rangeRow)
-            : base(rangeRow.RangeParameters)
+            : base(rangeRow.RangeParameters, false)
         {
             this.table = table;
         }
