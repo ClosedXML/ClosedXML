@@ -1339,28 +1339,29 @@
             _cellValue = source._cellValue;
             _dataType = source._dataType;
             FormulaR1C1 = source.FormulaR1C1;
-            _richText = new XLRichText(source._richText, source.Style.Font);
+            _richText = source._richText != null ? new XLRichText(source._richText, source.Style.Font) : null;
         }
 
         public IXLCell CopyFrom(XLCell otherCell)
         {
-            var source = otherCell;
-            _cellValue = source._cellValue;
-            _richText = new XLRichText(source._richText, source.Style.Font);
-            _dataType = source._dataType;
-            FormulaR1C1 = source.FormulaR1C1;
-            m_style = new XLStyle(this, source.m_style);
-
-            if (source._hyperlink != null)
+            _cellValue = otherCell._cellValue;
+            _dataType = otherCell._dataType;
+            FormulaR1C1 = otherCell.FormulaR1C1;
+            m_style = new XLStyle(this, otherCell.m_style);
+            if (otherCell._richText != null)
+            {
+                _richText = new XLRichText(otherCell._richText, otherCell.Style.Font);
+            }
+            if (otherCell._hyperlink != null)
             {
                 SettingHyperlink = true;
-                Hyperlink = new XLHyperlink(source.Hyperlink);
+                Hyperlink = new XLHyperlink(otherCell.Hyperlink);
                 SettingHyperlink = false;
             }
 
-            var asRange = source.AsRange();
-            if (source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
-                (DataValidation as XLDataValidation).CopyFrom(source.DataValidation);
+            var asRange = otherCell.AsRange();
+            if (otherCell.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
+                (DataValidation as XLDataValidation).CopyFrom(otherCell.DataValidation);
 
             return this;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,37 @@ namespace ClosedXML_Tests.Excel.Misc
                 originalRow.CopyTo(destinationRow);
             }
             TestHelper.SaveWorkbook(workbook, "CopyRowContents.xlsx");
+        }
+
+        [TestMethod]
+        public void TestDefaultRowHeight()
+        {
+            var workbook = new XLWorkbook(Path.Combine(TestHelper.TestsOutputDirectory, "TestDefaultRowHeight.xlsx"));
+
+            var originalSheet = workbook.Worksheets.Add("original");
+            var copyRowSheet = workbook.Worksheets.Add("copy row");
+            var copyRowAsRangeSheet = workbook.Worksheets.Add("copy row as range");
+            var copyRangeSheet = workbook.Worksheets.Add("copy range");
+
+            originalSheet.Cell("A2").SetValue("test value");
+            originalSheet.Range("A2:E2").Merge();
+
+            {
+                var originalRange = originalSheet.Range("A2:E2");
+                var destinationRange = copyRangeSheet.Range("A2:E2");
+
+                originalRange.CopyTo(destinationRange);
+            }
+            CopyRowAsRange(originalSheet, 2, copyRowAsRangeSheet, 3);
+            {
+                var originalRow = originalSheet.Row(2);
+                var destinationRow = copyRowSheet.Row(2);
+                copyRowSheet.Cell("G2").Value = "must be removed after copy";
+                originalRow.CopyTo(destinationRow);
+            }
+
+            TestHelper.SaveWorkbook(workbook, "TestDefaultRowHeight_SavedByClosedXML.xlsx");
+
         }
 
         private static void CopyRowAsRange(IXLWorksheet originalSheet,  int originalRowNumber, IXLWorksheet destSheet, int destRowNumber)
