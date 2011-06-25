@@ -1339,29 +1339,29 @@
             _cellValue = source._cellValue;
             _dataType = source._dataType;
             FormulaR1C1 = source.FormulaR1C1;
-            _richText = source._richText != null ? new XLRichText(source._richText, source.Style.Font) : null;
+            _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
         }
 
         public IXLCell CopyFrom(XLCell otherCell)
         {
-            _cellValue = otherCell._cellValue;
-            _dataType = otherCell._dataType;
-            FormulaR1C1 = otherCell.FormulaR1C1;
-            m_style = new XLStyle(this, otherCell.m_style);
-            if (otherCell._richText != null)
-            {
-                _richText = new XLRichText(otherCell._richText, otherCell.Style.Font);
-            }
-            if (otherCell._hyperlink != null)
+            var source = otherCell;
+            _cellValue = source._cellValue;
+            _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
+
+            _dataType = source._dataType;
+            FormulaR1C1 = source.FormulaR1C1;
+            m_style = new XLStyle(this, source.m_style);
+
+            if (source._hyperlink != null)
             {
                 SettingHyperlink = true;
-                Hyperlink = new XLHyperlink(otherCell.Hyperlink);
+                Hyperlink = new XLHyperlink(source.Hyperlink);
                 SettingHyperlink = false;
             }
 
-            var asRange = otherCell.AsRange();
-            if (otherCell.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
-                (DataValidation as XLDataValidation).CopyFrom(otherCell.DataValidation);
+            var asRange = source.AsRange();
+            if (source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
+                (DataValidation as XLDataValidation).CopyFrom(source.DataValidation);
 
             return this;
         }

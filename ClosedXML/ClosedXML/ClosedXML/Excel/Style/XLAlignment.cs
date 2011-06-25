@@ -89,21 +89,25 @@ namespace ClosedXML.Excel
             get { return _indent; }
             set
             {
-                if (Horizontal == XLAlignmentHorizontalValues.General)
-                    Horizontal = XLAlignmentHorizontalValues.Left;
-
-                if (value > 0 && !(
-                                      Horizontal == XLAlignmentHorizontalValues.Left
-                                      || Horizontal == XLAlignmentHorizontalValues.Right
-                                      || Horizontal == XLAlignmentHorizontalValues.Distributed
-                                  ))
-                    throw new ArgumentException(
-                        "For indents, only left, right, and distributed horizontal alignments are supported.");
-
                 if (_container != null && !_container.UpdatingStyle)
+                {
                     _container.Styles.ForEach(s => s.Alignment.Indent = value);
+                }
                 else
+                {
+                    if (_horizontal == XLAlignmentHorizontalValues.General)
+                        _horizontal = XLAlignmentHorizontalValues.Left;
+
+                    if (value > 0 && !(
+                      _horizontal == XLAlignmentHorizontalValues.Left
+                      || _horizontal == XLAlignmentHorizontalValues.Right
+                      || _horizontal == XLAlignmentHorizontalValues.Distributed
+                  ))
+                        throw new ArgumentException(
+                            "For indents, only left, right, and distributed horizontal alignments are supported.");
+
                     _indent = value;
+                }
             }
         }
 

@@ -362,30 +362,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        private List<String> GetExistingWorksheets(WorkbookPart workbookPart)
-        {
-            if (workbookPart != null && workbookPart.Workbook != null && workbookPart.Workbook.Sheets != null)
-            {
-                return workbookPart.Workbook.Sheets.Select(s => ((Sheet) s).Name.Value).ToList();
-            }
-            else
-            {
-                return new List<String>();
-            }
-        }
-
-        private List<String> GetExistingNamedRanges(VTVector vTVector_Two)
-        {
-            if (vTVector_Two.Any())
-            {
-                return vTVector_Two.Elements<VTLPSTR>().Select(e => e.Text).ToList();
-            }
-            else
-            {
-                return new List<String>();
-            }
-        }
-
         private List<String> GetModifiedNamedRanges()
         {
             var namedRanges = new List<String>();
@@ -1196,6 +1172,11 @@ namespace ClosedXML.Excel
             var a = new XLAlignment();
             if (alignment != null)
             {
+                if (alignment.Indent != null)
+                {
+                    a.Indent = (Int32)alignment.Indent.Value;
+                }
+
                 if (alignment.Horizontal != null)
                 {
                     a.Horizontal = alignment.Horizontal.Value.ToClosedXml();
@@ -1204,10 +1185,7 @@ namespace ClosedXML.Excel
                 {
                     a.Vertical = alignment.Vertical.Value.ToClosedXml();
                 }
-                if (alignment.Indent != null)
-                {
-                    a.Indent = (Int32) alignment.Indent.Value;
-                }
+
                 if (alignment.ReadingOrder != null)
                 {
                     a.ReadingOrder = alignment.ReadingOrder.Value.ToClosedXml();

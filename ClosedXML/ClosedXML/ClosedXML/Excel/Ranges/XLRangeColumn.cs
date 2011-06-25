@@ -238,10 +238,7 @@
                     {
                         if (thisCell.DataType == XLCellValues.Text)
                         {
-                            if (e.MatchCase)
-                                comparison = thisCell.InnerText.CompareTo(otherCell.InnerText);
-                            else
-                                comparison = thisCell.InnerText.ToLower().CompareTo(otherCell.InnerText.ToLower());
+                            comparison = e.MatchCase ? thisCell.InnerText.CompareTo(otherCell.InnerText) : thisCell.InnerText.ToLower().CompareTo(otherCell.InnerText.ToLower());
                         }
                         else if (thisCell.DataType == XLCellValues.TimeSpan)
                             comparison = thisCell.GetTimeSpan().CompareTo(otherCell.GetTimeSpan());

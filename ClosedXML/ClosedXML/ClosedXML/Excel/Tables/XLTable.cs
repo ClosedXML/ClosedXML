@@ -416,5 +416,13 @@ namespace ClosedXML.Excel
             }
             return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1));
         }
+
+        public IXLTable SetEmphasizeFirstColumn() { EmphasizeFirstColumn = true; return this; }	public IXLTable SetEmphasizeFirstColumn(Boolean value) { EmphasizeFirstColumn = value; return this; }
+        public IXLTable SetEmphasizeLastColumn() { EmphasizeLastColumn = true; return this; }	public IXLTable SetEmphasizeLastColumn(Boolean value) { EmphasizeLastColumn = value; return this; }
+        public IXLTable SetShowRowStripes() { ShowRowStripes = true; return this; }	public IXLTable SetShowRowStripes(Boolean value) { ShowRowStripes = value; return this; }
+        public IXLTable SetShowColumnStripes() { ShowColumnStripes = true; return this; }	public IXLTable SetShowColumnStripes(Boolean value) { ShowColumnStripes = value; return this; }
+        public IXLTable SetShowTotalsRow() { ShowTotalsRow = true; return this; }	public IXLTable SetShowTotalsRow(Boolean value) { ShowTotalsRow = value; return this; }
+        public IXLTable SetShowAutoFilter() { ShowAutoFilter = true; return this; }	public IXLTable SetShowAutoFilter(Boolean value) { ShowAutoFilter = value; return this; }
+
     }
 }
