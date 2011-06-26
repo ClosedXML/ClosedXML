@@ -8,11 +8,12 @@ namespace ClosedXML_Tests
     internal static class TestHelper
     {
         //Note: Run example tests parameters
-        public const string TestsOutputDirectory = @"C:\Excel Files\";
+        public const string TestsOutputDirectory = @"C:\Excel Files\Tests\";
+        public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
         private const bool RemoveSuccessExampleFiles = false;
-        private const bool CompareWithResources = false;
+        private const bool CompareWithResources = true;
 
-        private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resources.");
+        private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resource.Examples.");
 
         public static void SaveWorkbook(XLWorkbook workbook, string fileName)
         {
@@ -23,7 +24,7 @@ namespace ClosedXML_Tests
                 where T : IXLExample, new()
         {
             var example = new T();
-            string filePath = Path.Combine(TestsOutputDirectory, filePartName);
+            string filePath = Path.Combine(TestsExampleOutputDirectory, filePartName);
 
             //Run test
             example.Create(filePath);

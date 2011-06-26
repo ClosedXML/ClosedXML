@@ -3,4 +3,8 @@ obj
 </Value></Property><Property><Name>svn:ignore</Name><Value>bin
 obj
 ClosedXML_Tests.csproj.user
-</Value></Property><Property><Name>bugtraq:number</Name><Value>true</Value></Property></Properties></ItemProperties>
+</Value></Property><Property><Name>bugtraq:number</Name><Value>true</Value></Property><Property><Name>bugtraq:number</Name><Value>true</Value></Property><Property><Name>svn:ignore</Name><Value>bin
+obj
+ClosedXML_Tests.csproj.user
+ClosedXML_Tests.csproj.ReSharper
+</Value></Property></Properties></ItemProperties>
