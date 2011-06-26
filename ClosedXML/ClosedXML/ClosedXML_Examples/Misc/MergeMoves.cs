@@ -1,88 +1,53 @@
-﻿using ClosedXML.Excel;
+﻿using System.IO;
+using ClosedXML.Excel;
 
 
 namespace ClosedXML_Examples.Misc
 {
-    public class MergeMoves
+    public class MergeMoves : IXLExample
     {
-        #region Variables
 
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Constructors
-
-        // Public
-
-
-        // Private
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Methods
-
-        // Public
-        public void Create()
+        public void Create(string filePath)
         {
-            var workbook = new XLWorkbook(@"C:\Excel Files\Created\MergedCells.xlsx");
-            var ws = workbook.Worksheet(1);
+            string tempFile = ExampleHelper.GetTempFilePath();
+            try
+            {
+                new MergeCells().Create(tempFile);
+                var workbook = new XLWorkbook(tempFile);
 
-            ws.Range("B1:F1").InsertRowsBelow(1);
-            ws.Range("A3:A9").InsertColumnsAfter(1);
-            ws.Row(1).Delete();
-            ws.Column(1).Delete();
+                var ws = workbook.Worksheet(1);
 
-            ws.Range("E8:E9").InsertColumnsAfter(1);
-            ws.Range("F2:F8").Merge();
-            ws.Range("E3:E4").InsertColumnsAfter(1);
-            ws.Range("F2:F8").Merge();
-            ws.Range("E1:E2").InsertColumnsAfter(1);
-            ws.Range("G2:G8").Merge();
-            ws.Range("E1:E2").Delete(XLShiftDeletedCells.ShiftCellsLeft);
+                ws.Range("B1:F1").InsertRowsBelow(1);
+                ws.Range("A3:A9").InsertColumnsAfter(1);
+                ws.Row(1).Delete();
+                ws.Column(1).Delete();
 
-            ws.Range("D3:E3").InsertRowsBelow(1);
-            ws.Range("A1:B1").InsertRowsBelow(1);
-            ws.Range("B3:D3").Merge();
-            ws.Range("A1:B1").Delete(XLShiftDeletedCells.ShiftCellsUp);
+                ws.Range("E8:E9").InsertColumnsAfter(1);
+                ws.Range("F2:F8").Merge();
+                ws.Range("E3:E4").InsertColumnsAfter(1);
+                ws.Range("F2:F8").Merge();
+                ws.Range("E1:E2").InsertColumnsAfter(1);
+                ws.Range("G2:G8").Merge();
+                ws.Range("E1:E2").Delete(XLShiftDeletedCells.ShiftCellsLeft);
 
-            ws.Range("B8:D8").Merge();
-            ws.Range("D8:D9").Clear();
+                ws.Range("D3:E3").InsertRowsBelow(1);
+                ws.Range("A1:B1").InsertRowsBelow(1);
+                ws.Range("B3:D3").Merge();
+                ws.Range("A1:B1").Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-            workbook.SaveAs(@"C:\Excel Files\Created\MergedMoves.xlsx");
+                ws.Range("B8:D8").Merge();
+                ws.Range("D8:D9").Clear();
+
+                workbook.SaveAs(filePath);
+            }
+            finally
+            {
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+            }
         }
 
-        // Private
-
-        // Override
-
-
-        #endregion
     }
 }

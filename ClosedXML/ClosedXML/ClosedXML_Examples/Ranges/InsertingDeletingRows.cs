@@ -3,7 +3,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
 {
-    public class InsertingDeletingRows
+    public class InsertingDeletingRows : IXLExample
     {
         public void Create(String filePath)
         {

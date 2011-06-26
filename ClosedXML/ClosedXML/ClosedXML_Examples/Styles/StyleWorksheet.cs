@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Styles
 {
-    public class StyleWorksheet
+    public class StyleWorksheet : IXLExample
     {
         public void Create(String filePath)
         {

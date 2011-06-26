@@ -59,8 +59,18 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cells\XLCellTests.cs" />
+    <Compile Include="Examples\PageSetupTests.cs" />
+    <Compile Include="Examples\RowsTests.cs" />
+    <Compile Include="Examples\StylesTests.cs" />
+    <Compile Include="ExcelDocsComparer.cs" />
+    <Compile Include="Examples\DeleteTests.cs" />
+    <Compile Include="Examples\LoadingTests.cs" />
+    <Compile Include="Examples\MiscTests.cs" />
+    <Compile Include="Excel\Misc\ExcelHelperTests.cs" />
+    <Compile Include="Examples\ColumnsTests.cs" />
     <Compile Include="Excel\Misc\CopyContentsTest.cs" />
+    <Compile Include="Examples\RangeTests.cs" />
+    <Compile Include="ResourceFileExtractor.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Excel\RichText\XLRichStringTest.cs" />
@@ -70,6 +80,13 @@
       <Project>{BD5E6BFE-E837-4A35-BCA9-39667D873A20}</Project>
       <Name>ClosedXML</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj">
+      <Project>{03A518D0-1CB7-488E-861C-C4E782B27A46}</Project>
+      <Name>ClosedXML_Examples</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class HideSheets
+    public class HideSheets : IXLExample
     {
         #region Variables
 

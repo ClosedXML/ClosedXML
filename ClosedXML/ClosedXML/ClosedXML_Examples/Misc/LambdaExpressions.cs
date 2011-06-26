@@ -1,35 +1,49 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using ClosedXML;
 using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
 {
-    public class LambdaExpressions
+    public class LambdaExpressions : IXLExample
     {
-        public void Create()
+        public void Create(string filePath)
         {
-            var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            var ws = workbook.Worksheet(1);
 
-            // Define a range with the data
-            var firstDataCell = ws.Cell("B4");
-            var lastDataCell = ws.LastCellUsed();
-            var rngData = ws.Range(firstDataCell.Address, lastDataCell.Address);
+            string tempFile = ExampleHelper.GetTempFilePath();
+            try
+            {
+                new BasicTable().Create(tempFile);
+                var workbook = new XLWorkbook(tempFile);
+                var ws = workbook.Worksheet(1);
 
-            // Delete all rows where Outcast = false (the 3rd column)
-            rngData.Rows() // From all rows
-                .Where(r => !r.Cell(3).GetBoolean()) // where the 3rd cell of each row is false
-                .ForEach(r => r.Delete()); // delete the row and shift the cells up (the default for rows in a range)
+                // Define a range with the data
+                var firstDataCell = ws.Cell("B4");
+                var lastDataCell = ws.LastCellUsed();
+                var rngData = ws.Range(firstDataCell.Address, lastDataCell.Address);
 
-            // Put a light gray background to all text cells
-            rngData.Cells() // From all cells
-                .Where(c => c.DataType == XLCellValues.Text) // where the data type is Text
-                .ForEach(c => c.Style.Fill.BackgroundColor = XLColor.LightGray); // Fill with a light gray
+                // Delete all rows where Outcast = false (the 3rd column)
+                rngData.Rows() // From all rows
+                        .Where(r => !r.Cell(3).GetBoolean()) // where the 3rd cell of each row is false
+                        .ForEach(r => r.Delete()); // delete the row and shift the cells up (the default for rows in a range)
 
-            // Put a thick border to the bottom of the table (we may have deleted the bottom cells with the border)
-            rngData.LastRow().Style.Border.BottomBorder = XLBorderStyleValues.Thick;
+                // Put a light gray background to all text cells
+                rngData.Cells() // From all cells
+                        .Where(c => c.DataType == XLCellValues.Text) // where the data type is Text
+                        .ForEach(c => c.Style.Fill.BackgroundColor = XLColor.LightGray); // Fill with a light gray
 
-            workbook.SaveAs(@"C:\Excel Files\Created\LambdaExpressions.xlsx");
+                // Put a thick border to the bottom of the table (we may have deleted the bottom cells with the border)
+                rngData.LastRow().Style.Border.BottomBorder = XLBorderStyleValues.Thick;
+
+                workbook.SaveAs(filePath);
+            }
+            finally
+            {
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+            }
         }
     }
 }

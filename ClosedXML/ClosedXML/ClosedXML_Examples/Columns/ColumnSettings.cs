@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Columns
 {
-    public class ColumnSettings
+    public class ColumnSettings : IXLExample
     {
         #region Variables
 

@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
 {
-    public class DeletingColumns
+    public class DeletingColumns : IXLExample
     {
         #region Variables
 

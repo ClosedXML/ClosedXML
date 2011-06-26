@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Styles
 {
-    public class StyleAlignment
+    public class StyleAlignment : IXLExample
     {
         #region Variables
 

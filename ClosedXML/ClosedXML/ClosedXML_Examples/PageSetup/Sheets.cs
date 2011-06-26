@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.PageSetup
 {
-    public class Sheets
+    public class Sheets : IXLExample
     {
         #region Methods
 

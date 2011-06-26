@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class AddingDataTableAsWorksheet
+    public class AddingDataTableAsWorksheet : IXLExample
     {
         #region Variables
 

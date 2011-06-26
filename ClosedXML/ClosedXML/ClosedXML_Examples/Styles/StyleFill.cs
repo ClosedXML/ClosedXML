@@ -6,7 +6,7 @@ namespace ClosedXML_Examples.Styles
 {
 
 
-    public class StyleFill
+    public class StyleFill : IXLExample
     {
         public void Create(String filePath)
         {

@@ -123,6 +123,7 @@
     <Compile Include="Columns\ColumnSettings.cs" />
     <Compile Include="Columns\ColumnCells.cs" />
     <Compile Include="Columns\DeletingColumns.cs" />
+    <Compile Include="IXLExample.cs" />
     <Compile Include="ModifyFiles.cs" />
     <Compile Include="Creating\CreateFiles.cs" />
     <Compile Include="Loading\ChangingBasicTable.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Misc\FreezePanes.cs" />
     <Compile Include="PageSetup\TwoPages.cs" />
     <Compile Include="Misc\ShowCase.cs" />
+    <Compile Include="ExampleHelper.cs" />
     <Compile Include="Ranges\SortExample.cs" />
     <Compile Include="Ranges\Sorting.cs" />
     <Compile Include="Ranges\UsingTables.cs" />
@@ -171,9 +173,9 @@
     <Compile Include="Ranges\DefiningRanges.cs" />
     <Compile Include="Ranges\ShiftingRanges.cs" />
     <Compile Include="Ranges\MultipleRanges.cs" />
-    <Compile Include="Delete\RemoveRows.cs" />
+    <Compile Include="Delete\DeleteRows.cs" />
     <Compile Include="Rows\RowCells.cs" />
-    <Compile Include="Rows\RowCollections.cs" />
+    <Compile Include="Rows\RowCollection.cs" />
     <Compile Include="Columns\InsertColumns.cs" />
     <Compile Include="HelloWorld.cs" />
     <Compile Include="Misc\MultipleSheets.cs" />

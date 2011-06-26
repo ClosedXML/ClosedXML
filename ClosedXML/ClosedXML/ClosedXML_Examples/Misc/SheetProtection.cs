@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class SheetProtection
+    public class SheetProtection : IXLExample
     {
         #region Variables
 

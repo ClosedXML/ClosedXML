@@ -5,7 +5,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Ranges
 {
-    public class ClearingRanges
+    public class ClearingRanges : IXLExample
     {
         #region Methods
 

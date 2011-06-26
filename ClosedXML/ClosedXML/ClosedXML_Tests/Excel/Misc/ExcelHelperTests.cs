@@ -12,10 +12,13 @@ namespace ClosedXML_Tests.Excel
     /// Summary description for UnitTest1
     /// </summary>
     [TestClass]
-    public class XLCellTests
+    public class ExcelHelperTests
     {
-        
 
+        [TestMethod]
+        public void GetFile()
+        {
+        }
         [TestMethod]
         public void TestConvertColumnLetterToNumberAnd()
         {

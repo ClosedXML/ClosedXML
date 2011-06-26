@@ -156,12 +156,9 @@ namespace ClosedXML.Excel
             {
                 return null;
             }
-            else
-            {
-                var firstRow = cellsUsed.Min<XLCell>(c => c.Address.RowNumber);
-                var firstColumn = cellsUsed.Min<XLCell>(c => c.Address.ColumnNumber);
-                return Worksheet.Cell(firstRow, firstColumn);
-            }
+            var firstRow = cellsUsed.Min<XLCell>(c => c.Address.RowNumber);
+            var firstColumn = cellsUsed.Min<XLCell>(c => c.Address.ColumnNumber);
+            return Worksheet.Cell(firstRow, firstColumn);
         }
 
         IXLCell IXLRangeBase.LastCellUsed()

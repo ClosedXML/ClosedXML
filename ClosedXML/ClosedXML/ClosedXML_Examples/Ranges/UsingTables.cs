@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Ranges
 {
-    public class UsingTables
+    public class UsingTables : IXLExample
     {
         #region Methods
 

@@ -5,7 +5,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.PageSetup
 {
-    public class TwoPages
+    public class TwoPages : IXLExample
     {
         #region Methods
 

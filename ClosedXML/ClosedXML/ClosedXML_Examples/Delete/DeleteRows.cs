@@ -5,7 +5,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Delete
 {
-    public class DeleteRows
+    public class DeleteRows : IXLExample
     {
         #region Variables
 

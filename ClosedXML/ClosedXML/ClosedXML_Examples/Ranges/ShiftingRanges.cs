@@ -1,27 +1,40 @@
-﻿using ClosedXML.Excel;
+﻿using System.IO;
+using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
 {
-    public class ShiftingRanges
+    public class ShiftingRanges : IXLExample
     {
-        public void Create()
+        public void Create(string filePath)
         {
-            var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            var ws = workbook.Worksheet(1);
+            string tempFile = ExampleHelper.GetTempFilePath();
+            try
+            {
+                new BasicTable().Create(tempFile);
+                var workbook = new XLWorkbook(tempFile);
+                var ws = workbook.Worksheet(1);
 
-            // Get a range object
-            var rngHeaders = ws.Range("B3:F3");
+                // Get a range object
+                var rngHeaders = ws.Range("B3:F3");
 
-            // Insert some rows/columns before the range
-            ws.Row(1).InsertRowsAbove(2);
-            ws.Column(1).InsertColumnsBefore(2);
+                // Insert some rows/columns before the range
+                ws.Row(1).InsertRowsAbove(2);
+                ws.Column(1).InsertColumnsBefore(2);
 
-            // Change the background color of the headers
-            rngHeaders.Style.Fill.BackgroundColor = XLColor.LightSalmon;
+                // Change the background color of the headers
+                rngHeaders.Style.Fill.BackgroundColor = XLColor.LightSalmon;
 
-            ws.Columns().AdjustToContents();
-            
-            workbook.SaveAs(@"C:\Excel Files\Created\ShiftingRanges.xlsx");
+                ws.Columns().AdjustToContents();
+
+                workbook.SaveAs(filePath);
+            }
+            finally
+            {
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+            }
         }
     }
 }

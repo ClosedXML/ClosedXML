@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
 {
-    public class ShowCase
+    public class ShowCase : IXLExample
     {
         public void Create(String filePath)
         {

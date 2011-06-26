@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class AutoFilter
+    public class AutoFilter : IXLExample
     {
         #region Variables
 

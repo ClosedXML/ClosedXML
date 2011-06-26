@@ -8,7 +8,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class InsertingTables
+    public class InsertingTables : IXLExample
     {
         #region Methods
 

@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class MergeCells
+    public class MergeCells : IXLExample
     {
         #region Variables
 

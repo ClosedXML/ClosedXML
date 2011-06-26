@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class TabColors
+    public class TabColors : IXLExample
     {
         #region Variables
 

@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class FreezePanes
+    public class FreezePanes : IXLExample
     {
         #region Variables
 

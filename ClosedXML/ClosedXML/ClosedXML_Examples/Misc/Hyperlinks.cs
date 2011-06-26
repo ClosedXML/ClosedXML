@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class Hyperlinks
+    public class Hyperlinks : IXLExample
     {
         #region Variables
 

@@ -5,7 +5,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class ShiftingFormulas
+    public class ShiftingFormulas : IXLExample
     {
         #region Variables
 

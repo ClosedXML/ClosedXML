@@ -3,7 +3,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
 {
-    public class MultipleRanges
+    public class MultipleRanges : IXLExample
     {
         public void Create(String filePath)
         {

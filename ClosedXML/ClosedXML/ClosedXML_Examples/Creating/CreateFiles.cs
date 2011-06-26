@@ -13,9 +13,10 @@ namespace ClosedXML_Examples
         {
             new HelloWorld().Create(@"C:\Excel Files\Created\HelloWorld.xlsx");
             new BasicTable().Create(@"C:\Excel Files\Created\BasicTable.xlsx");
+
             new StyleExamples().Create();
-            new ChangingBasicTable().Create();
-            new ShiftingRanges().Create();
+            new ChangingBasicTable().Create(@"C:\Excel Files\Created\BasicTable_Modified.xlsx");
+            new ShiftingRanges().Create(@"C:\Excel Files\Created\ShiftingRanges.xlsx");
             new ColumnSettings().Create(@"C:\Excel Files\Created\ColumnSettings.xlsx");
             new RowSettings().Create(@"C:\Excel Files\Created\RowSettings.xlsx");
             new MergeCells().Create(@"C:\Excel Files\Created\MergedCells.xlsx");
@@ -23,7 +24,7 @@ namespace ClosedXML_Examples
             new InsertColumns().Create(@"C:\Excel Files\Created\InsertColumns.xlsx");
             new ColumnCollection().Create(@"C:\Excel Files\Created\ColumnCollection.xlsx");
             new DataTypes().Create(@"C:\Excel Files\Created\DataTypes.xlsx");
-            new MultipleSheets().Create();
+            new MultipleSheets().Create(@"C:\Excel Files\Created\MultipleSheets.xlsx");
             new RowCollection().Create(@"C:\Excel Files\Created\RowCollection.xlsx");
             new DefiningRanges().Create(@"C:\Excel Files\Created\DefiningRanges.xlsx");
             new ClearingRanges().Create(@"C:\Excel Files\Created\ClearingRanges.xlsx");
@@ -40,11 +41,11 @@ namespace ClosedXML_Examples
             new InsertingDeletingColumns().Create(@"C:\Excel Files\Created\InsertingDeletingColumns.xlsx");
             new DeletingColumns().Create(@"C:\Excel Files\Created\DeletingColumns.xlsx");
             new CellValues().Create(@"C:\Excel Files\Created\CellValues.xlsx");
-            new LambdaExpressions().Create();
+            new LambdaExpressions().Create(@"C:\Excel Files\Created\LambdaExpressions.xlsx");
             new DefaultStyles().Create(@"C:\Excel Files\Created\DefaultStyles.xlsx");
-            new TransposeRanges().Create();
-            new TransposeRangesPlus().Create();
-            new MergeMoves().Create();
+            new TransposeRanges().Create(@"C:\Excel Files\Created\TransposeRanges.xlsx");
+            new TransposeRangesPlus().Create(@"C:\Excel Files\Created\TransposeRangesPlus.xlsx");
+            new MergeMoves().Create(@"C:\Excel Files\Created\MergedMoves.xlsx");
             new WorkbookProperties().Create(@"C:\Excel Files\Created\WorkbookProperties.xlsx");
             new AdjustToContents().Create(@"C:\Excel Files\Created\AdjustToContents.xlsx");
             new HideUnhide().Create(@"C:\Excel Files\Created\HideUnhide.xlsx");
@@ -52,16 +53,17 @@ namespace ClosedXML_Examples
             new Formulas().Create(@"C:\Excel Files\Created\Formulas.xlsx");
             new Collections().Create(@"C:\Excel Files\Created\Collections.xlsx");
             new NamedRanges().Create(@"C:\Excel Files\Created\NamedRanges.xlsx");
-            new CopyingRanges().Create();
+            new CopyingRanges().Create(@"C:\Excel Files\Created\CopyingRanges.xlsx");
             new BlankCells().Create(@"C:\Excel Files\Created\BlankCells.xlsx");
             new TwoPages().Create(@"C:\Excel Files\Created\TwoPages.xlsx");
             new UsingColors().Create(@"C:\Excel Files\Created\UsingColors.xlsx");
+
             new ColumnCells().Create(@"C:\Excel Files\Created\ColumnCells.xlsx");
             new RowCells().Create(@"C:\Excel Files\Created\RowCells.xlsx");
             new FreezePanes().Create(@"C:\Excel Files\Created\FreezePanes.xlsx");
             new UsingTables().Create(@"C:\Excel Files\Created\UsingTables.xlsx");
             new ShowCase().Create(@"C:\Excel Files\Created\ShowCase.xlsx");
-            new CopyingWorksheets().Create();
+            new CopyingWorksheets().Create(@"C:\Excel Files\Created\CopyingWorksheets.xlsx");
             new InsertingTables().Create(@"C:\Excel Files\Created\InsertingTables.xlsx");
             new InsertingData().Create(@"C:\Excel Files\Created\InsertingData.xlsx");
             new Hyperlinks().Create(@"C:\Excel Files\Created\Hyperlinks.xlsx");

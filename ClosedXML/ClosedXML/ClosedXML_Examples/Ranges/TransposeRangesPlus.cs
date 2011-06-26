@@ -1,33 +1,46 @@
-﻿using ClosedXML.Excel;
-
+﻿using System.IO;
+using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
 {
-    public class TransposeRangesPlus
+    public class TransposeRangesPlus : IXLExample
     {
-        public void Create()
+        public void Create(string filePath)
         {
-            var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            var ws = workbook.Worksheet(1);
+            string tempFile = ExampleHelper.GetTempFilePath();
+            try
+            {
+                new BasicTable().Create(tempFile);
+                var workbook = new XLWorkbook(tempFile);
 
-            var rngTable = ws.Range("B2:F6");
+                var ws = workbook.Worksheet(1);
 
-            rngTable.Row(rngTable.RowCount() - 1).Delete(XLShiftDeletedCells.ShiftCellsUp);
+                var rngTable = ws.Range("B2:F6");
 
-            // Place some markers
-            var cellNextRow = ws.Cell(rngTable.RangeAddress.LastAddress.RowNumber + 1, rngTable.RangeAddress.LastAddress.ColumnNumber);
-            cellNextRow.Value = "Next Row";
-            var cellNextColumn = ws.Cell(rngTable.RangeAddress.LastAddress.RowNumber, rngTable.RangeAddress.LastAddress.ColumnNumber + 1);
-            cellNextColumn.Value = "Next Column";
+                rngTable.Row(rngTable.RowCount() - 1).Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-            rngTable.Transpose(XLTransposeOptions.MoveCells);
-            rngTable.Transpose(XLTransposeOptions.MoveCells);
-            rngTable.Transpose(XLTransposeOptions.ReplaceCells);
-            rngTable.Transpose(XLTransposeOptions.ReplaceCells);
+                // Place some markers
+                var cellNextRow = ws.Cell(rngTable.RangeAddress.LastAddress.RowNumber + 1, rngTable.RangeAddress.LastAddress.ColumnNumber);
+                cellNextRow.Value = "Next Row";
+                var cellNextColumn = ws.Cell(rngTable.RangeAddress.LastAddress.RowNumber, rngTable.RangeAddress.LastAddress.ColumnNumber + 1);
+                cellNextColumn.Value = "Next Column";
 
-            ws.Columns().AdjustToContents();
+                rngTable.Transpose(XLTransposeOptions.MoveCells);
+                rngTable.Transpose(XLTransposeOptions.MoveCells);
+                rngTable.Transpose(XLTransposeOptions.ReplaceCells);
+                rngTable.Transpose(XLTransposeOptions.ReplaceCells);
 
-            workbook.SaveAs(@"C:\Excel Files\Created\TransposeRangesPlus.xlsx");
+                ws.Columns().AdjustToContents();
+
+                workbook.SaveAs(filePath);
+            }
+            finally
+            {
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+            }
         }
     }
 }

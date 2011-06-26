@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Ranges
 {
-    public class DeletingRanges
+    public class DeletingRanges : IXLExample
     {
         #region Methods
 

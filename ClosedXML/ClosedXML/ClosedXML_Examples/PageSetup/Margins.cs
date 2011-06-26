@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.PageSetup
 {
-    public class Margins
+    public class Margins : IXLExample
     {
         #region Methods
 

@@ -4,7 +4,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class Sorting
+    public class Sorting : IXLExample
     {
         #region Variables
 

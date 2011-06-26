@@ -6,7 +6,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class Collections
+    public class Collections : IXLExample
     {
         #region Variables
 

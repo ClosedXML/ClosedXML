@@ -1,65 +1,45 @@
-﻿using ClosedXML.Excel;
-
+﻿using System.IO;
+using ClosedXML.Excel;
+using ClosedXML_Examples.Ranges;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class CopyingWorksheets
+    public class CopyingWorksheets : IXLExample
     {
-        #region Variables
-
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Methods
-
-        // Public
-        public void Create()
+        public void Create(string filePath)
         {
-            var wb = new XLWorkbook(@"C:\Excel Files\Created\UsingTables.xlsx");
-            var wsSource = wb.Worksheet(1);
-            // Copy the worksheet to a new sheet in this workbook
-            wsSource.CopyTo("Copy");
+            string tempFile1 = ExampleHelper.GetTempFilePath();
+            string tempFile2 = ExampleHelper.GetTempFilePath();
+            try
+            {
+                new UsingTables().Create(tempFile1);
+                var wb = new XLWorkbook(tempFile1);
 
-            // We're going to open another workbook to show that you can
-            // copy a sheet from one workbook to another:
-            var wbSource = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            wbSource.Worksheet(1).CopyTo(wb, "Copy From Other");
+                var wsSource = wb.Worksheet(1);
+                // Copy the worksheet to a new sheet in this workbook
+                wsSource.CopyTo("Copy");
+                
+                // We're going to open another workbook to show that you can
+                // copy a sheet from one workbook to another:
+                new BasicTable().Create(tempFile2);
+                var wbSource = new XLWorkbook(tempFile2);
+                wbSource.Worksheet(1).CopyTo(wb, "Copy From Other");
 
-            // Save the workbook with the 2 copies
-            wb.SaveAs(@"C:\Excel Files\Created\CopyingWorksheets.xlsx");
+                // Save the workbook with the 2 copies
+                wb.SaveAs(filePath);
+            }
+            finally
+            {
+                if (File.Exists(tempFile1))
+                {
+                    File.Delete(tempFile1);
+                }
+                if (File.Exists(tempFile2))
+                {
+                    File.Delete(tempFile2);
+                }
+            }
         }
 
-        // Private
-
-        // Override
-
-
-        #endregion
     }
 }

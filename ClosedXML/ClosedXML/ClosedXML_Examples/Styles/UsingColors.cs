@@ -5,7 +5,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Styles
 {
-    public class UsingColors
+    public class UsingColors : IXLExample
     {
         public void Create(String filePath)
         {

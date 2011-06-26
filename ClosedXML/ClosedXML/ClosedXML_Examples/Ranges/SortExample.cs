@@ -5,7 +5,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class SortExample
+    public class SortExample : IXLExample
     {
         #region Variables
 

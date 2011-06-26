@@ -1,22 +1,37 @@
-﻿using ClosedXML.Excel;
+﻿using System.IO;
+using ClosedXML.Excel;
 
 
 namespace ClosedXML_Examples
 {
-    public class TransposeRanges
+    public class TransposeRanges:IXLExample
     {
-        public void Create()
+        public void Create(string filePath)
         {
-            var workbook = new XLWorkbook(@"C:\Excel Files\Created\BasicTable.xlsx");
-            var ws = workbook.Worksheet(1);
+            string tempFile = ExampleHelper.GetTempFilePath();
+            try
+            {
+                new BasicTable().Create(tempFile);
+                var workbook = new XLWorkbook(tempFile);
 
-            var rngTable = ws.Range("B2:F6");
+                var ws = workbook.Worksheet(1);
 
-            rngTable.Transpose(XLTransposeOptions.MoveCells);
+                var rngTable = ws.Range("B2:F6");
 
-            ws.Columns().AdjustToContents();
+                rngTable.Transpose(XLTransposeOptions.MoveCells);
 
-            workbook.SaveAs(@"C:\Excel Files\Created\TransposeRanges.xlsx");
+                ws.Columns().AdjustToContents();
+
+                workbook.SaveAs(filePath);
+            }
+            finally
+            {
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+            }
+            
         }
     }
 }

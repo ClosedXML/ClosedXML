@@ -4,9 +4,9 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
 {
-    public class BasicTable
+    public class BasicTable : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             // Creating a new workbook
             var wb = new XLWorkbook();

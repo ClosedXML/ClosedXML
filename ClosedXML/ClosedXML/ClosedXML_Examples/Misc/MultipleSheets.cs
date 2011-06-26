@@ -4,43 +4,10 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
-    public class MultipleSheets
+    public class MultipleSheets : IXLExample
     {
-        #region Variables
-
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Methods
-
-        // Public
-        public void Create()
+        
+        public void Create(string filePath)
         {
             var wb = new XLWorkbook();
             foreach (var wsNum in Enumerable.Range(1, 5))
@@ -57,14 +24,7 @@ namespace ClosedXML_Examples.Misc
             // Swap sheets in positions 1 and 2
             wb.Worksheet(2).Position = 1;
 
-            wb.SaveAs(@"C:\Excel Files\Created\OrganizingSheets.xlsx");
+            wb.SaveAs(filePath);
         }
-
-        // Private
-
-        // Override
-
-
-        #endregion
     }
 }

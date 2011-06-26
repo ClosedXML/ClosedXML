@@ -3,7 +3,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Styles
 {
-    public class StyleNumberFormat
+    public class StyleNumberFormat : IXLExample
     {
         #region Variables
 
