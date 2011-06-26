@@ -955,10 +955,6 @@
                     var lastCellUsed = asRange.LastCellUsed();
                     maxRows = lastCellUsed.Address.RowNumber;
                     maxColumns = lastCellUsed.Address.ColumnNumber;
-                    //if (asRange is XLRow)
-                    //{
-                    //    worksheet.Range(Address.RowNumber, Address.ColumnNumber,  , maxColumns).Clear();
-                    //}
                 }
                 else
                 {
@@ -969,7 +965,7 @@
 
                 Int32 minRow = asRange.RangeAddress.FirstAddress.RowNumber;
                 Int32 minColumn = asRange.RangeAddress.FirstAddress.ColumnNumber;
-                foreach (var sourceCell in asRange.CellsUsed())
+                foreach (var sourceCell in asRange.CellsUsed(true))
                 {
                     Worksheet.Cell(
                         Address.RowNumber + sourceCell.Address.RowNumber - minRow,
