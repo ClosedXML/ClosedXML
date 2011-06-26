@@ -967,16 +967,16 @@
                     Worksheet.Range(Address.RowNumber, Address.ColumnNumber, maxRows, maxColumns).Clear();
                 }
 
-                for (var ro = 1; ro <= maxRows; ro++)
+                Int32 minRow = asRange.RangeAddress.FirstAddress.RowNumber;
+                Int32 minColumn = asRange.RangeAddress.FirstAddress.ColumnNumber;
+                foreach (var sourceCell in asRange.CellsUsed())
                 {
-                    for (var co = 1; co <= maxColumns; co++)
-                    {
-                        var sourceCell = asRange.Cell(ro, co);
-                        var targetCell = Worksheet.Cell(Address.RowNumber + ro - 1, Address.ColumnNumber + co - 1);
-                        targetCell.CopyFrom(sourceCell);
-                        //targetCell.Style = sourceCell.style;
-                    }
+                    Worksheet.Cell(
+                        Address.RowNumber + sourceCell.Address.RowNumber - minRow,
+                        Address.ColumnNumber + sourceCell.Address.ColumnNumber - minColumn
+                        ).CopyFrom(sourceCell as XLCell);
                 }
+                
                 var rangesToMerge = new List<IXLRange>();
                 foreach (var mergedRange in (asRange.Worksheet).Internals.MergedRanges)
                 {

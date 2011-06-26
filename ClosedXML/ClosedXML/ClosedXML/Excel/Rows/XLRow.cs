@@ -627,79 +627,29 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        private void CopyToCell(IXLRangeRow rngRow, XLCell cell)
-        {
-            Int32 cellCount = rngRow.CellCount();
-            Int32 roStart = cell.Address.RowNumber;
-            Int32 coStart = cell.Address.ColumnNumber;
-            for (Int32 co = coStart; co <= cellCount + coStart - 1; co++)
-            {
-                (cell.Worksheet.Cell(roStart, co)).CopyFrom((XLCell) rngRow.Cell(co - coStart + 1));
-            }
-        }
-
         IXLRangeRow IXLRow.CopyTo(IXLCell target)
         {
-            var rngUsed = RangeUsed(true).Row(1);
-            CopyToCell(rngUsed, (XLCell) target);
-
-            Int32 lastColumnNumber = target.Address.ColumnNumber + rngUsed.CellCount() - 1;
-            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
-            {
-                lastColumnNumber = ExcelHelper.MaxColumnNumber;
-            }
-
-            return target.Worksheet.Range(
-                    target.Address.RowNumber,
-                    target.Address.ColumnNumber,
-                    target.Address.RowNumber,
-                    lastColumnNumber)
-                    .Row(1);
+            return AsRange().CopyTo(target).Row(1);
         }
         public override void CopyTo(IXLCell target)
         {
-            ((IXLRow)this).CopyTo(target);
+            CopyTo(target);
         }
         IXLRangeRow IXLRow.CopyTo(IXLRangeBase target)
         {
-            var thisRangeUsed = RangeUsed(true);
-            Int32 thisColumnCount = thisRangeUsed.ColumnCount();
-            var targetRangeUsed = target.AsRange().RangeUsed();
-            Int32 targetColumnCount = targetRangeUsed.ColumnCount();
-            Int32 maxColumn = thisColumnCount > targetColumnCount ? thisColumnCount : targetColumnCount;
-
-            CopyToCell(Range(1, 1, 1, maxColumn).Row(1), (XLCell)target.FirstCell());
-
-            Int32 lastColumnNumber = target.RangeAddress.LastAddress.ColumnNumber + maxColumn - 1;
-            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
-            {
-                lastColumnNumber = ExcelHelper.MaxColumnNumber;
-            }
-
-            return target.Worksheet.Range(target.RangeAddress.FirstAddress.RowNumber,
-                                          target.RangeAddress.LastAddress.ColumnNumber,
-                                          target.RangeAddress.FirstAddress.RowNumber,
-                                          lastColumnNumber)
-                    .Row(1);
+            return AsRange().CopyTo(target).Row(1);
         }
         public override void CopyTo(IXLRangeBase target)
         {
-            ((IXLRow) this).CopyTo(target);
+            CopyTo(target);
         }
 
         public IXLRow CopyTo(IXLRow row)
         {
             row.Clear();
-            var originalRange = RangeUsed(true);
-            if (!ReferenceEquals(originalRange, null))
-            {
-                int columnNumber = originalRange.ColumnCount();
-                var destRange = row.Worksheet.Range(row.RowNumber(), ExcelHelper.MinColumnNumber, row.RowNumber(), columnNumber);
-                originalRange.CopyTo(destRange);
-                //Old
-                //CopyToCell(Row(1, columnNumber), (XLCell) row.FirstCell());
-            }
-            var newRow = (XLRow) row;
+            AsRange().CopyTo(row);
+
+            var newRow = (XLRow)row;
             newRow.m_height = m_height;
             newRow.style = new XLStyle(newRow, Style);
             return newRow;
