@@ -178,5 +178,7 @@ namespace ClosedXML.Excel
 
         IXLRichText RichText { get; }
         Boolean HasRichText { get; }
+
+        Boolean IsMerged();
     }
 }

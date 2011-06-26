@@ -132,7 +132,7 @@ namespace ClosedXML.Excel
 
         public new IXLCells Cells(String cellsInColumn)
         {
-            var retVal = new XLCells(false, false, false);
+            var retVal = new XLCells( false, false);
             var rangePairs = cellsInColumn.Split(',');
             foreach (var pair in rangePairs)
             {
@@ -347,12 +347,9 @@ namespace ClosedXML.Excel
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
             Double colMaxWidth = minWidth;
-            foreach (var cell in Column(startRow, endRow).CellsUsed())
+            foreach (XLCell c in Column(startRow, endRow).CellsUsed())
             {
-                var c = cell as XLCell;
-                Boolean isMerged = CellIsMerged(c);
-
-                if (!isMerged)
+                if (!c.IsMerged())
                 {
                     Double thisWidthMax = 0;
                     Int32 textRotation = c.Style.Alignment.TextRotation;
@@ -540,11 +537,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        private Boolean CellIsMerged(IXLCell c)
-        {
-            var cellAsRange = c.AsRange();
-            return Worksheet.Internals.MergedRanges.Any(m => cellAsRange.Intersects(m));
-        }
+
 
         public void Hide()
         {

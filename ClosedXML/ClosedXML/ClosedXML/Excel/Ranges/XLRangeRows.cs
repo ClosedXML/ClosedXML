@@ -92,7 +92,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells(false, false, false);
+            var cells = new XLCells( false, false);
             foreach (var container in ranges)
             {
                 cells.Add(container.RangeAddress);
@@ -102,7 +102,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(false, true, false);
+            var cells = new XLCells( true, false);
             foreach (var container in ranges)
             {
                 cells.Add(container.RangeAddress);
@@ -112,7 +112,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed(Boolean includeStyles)
         {
-            var cells = new XLCells(false, true, includeStyles);
+            var cells = new XLCells( true, includeStyles);
             foreach (var container in ranges)
             {
                 cells.Add(container.RangeAddress);

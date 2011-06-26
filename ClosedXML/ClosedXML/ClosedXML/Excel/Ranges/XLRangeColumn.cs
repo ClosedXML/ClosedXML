@@ -14,7 +14,7 @@
             {
                 Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
                 Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
-                m_defaultStyle = new XLStyle(this, rangeParameters.DefaultStyle);
+                DefaultStyle = new XLStyle(this, rangeParameters.DefaultStyle);
             }
         }
 
@@ -29,7 +29,7 @@
 
         public new IXLCells Cells(string cellsInColumn)
         {
-            var retVal = new XLCells(false, false, false);
+            var retVal = new XLCells( false, false);
             var rangePairs = cellsInColumn.Split(',');
             foreach (string pair in rangePairs)
                 retVal.Add(Range(pair.Trim()).RangeAddress);

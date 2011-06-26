@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
                 (Worksheet).RangeShiftedColumns += Worksheet_RangeShiftedColumns;
                 xlRangeParameters.IgnoreEvents = true;
             }
-            m_defaultStyle = new XLStyle(this, xlRangeParameters.DefaultStyle);
+            DefaultStyle = new XLStyle(this, xlRangeParameters.DefaultStyle);
         }
         #endregion
         public XLRangeParameters RangeParameters { get; private set; }

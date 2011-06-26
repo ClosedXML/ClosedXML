@@ -567,7 +567,7 @@ namespace ClosedXML.Excel
                     columns.Elements<Column>().Where(c => c.Max == ExcelHelper.MaxColumnNumber).FirstOrDefault();
 
                 if (wsDefaultColumn != null && wsDefaultColumn.Width != null)
-                    ws.ColumnWidth = wsDefaultColumn.Width - COLUMN_WIDTH_OFFSET;
+                    ws.ColumnWidth = wsDefaultColumn.Width - ColumnWidthOffset;
 
                 Int32 styleIndexDefault = wsDefaultColumn != null && wsDefaultColumn.Style != null
                                               ? Int32.Parse(wsDefaultColumn.Style.InnerText)
@@ -582,7 +582,7 @@ namespace ClosedXML.Excel
                     {
                         var xlColumns = (XLColumns) ws.Columns(col.Min, col.Max);
                         if (col.Width != null)
-                            xlColumns.Width = col.Width - COLUMN_WIDTH_OFFSET;
+                            xlColumns.Width = col.Width - ColumnWidthOffset;
                         else
                             xlColumns.Width = ws.ColumnWidth;
 

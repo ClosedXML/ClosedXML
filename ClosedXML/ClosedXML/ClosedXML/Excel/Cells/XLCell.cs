@@ -1836,5 +1836,11 @@
         };
 
         #endregion
+
+
+        public Boolean IsMerged()
+        {
+            return Worksheet.Internals.MergedRanges.Any(AsRange().Intersects);
+        }
     }
 }

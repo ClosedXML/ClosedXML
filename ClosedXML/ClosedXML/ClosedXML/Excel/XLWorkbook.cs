@@ -417,7 +417,7 @@ namespace ClosedXML.Excel
 
         public IXLCells FindCells(Func<IXLCell, Boolean> predicate)
         {
-            var cells = new XLCells(false, false, false);
+            var cells = new XLCells( false, false);
             foreach (var ws in WorksheetsInternal)
             {
                 foreach (var cell in ws.CellsUsed(true))
