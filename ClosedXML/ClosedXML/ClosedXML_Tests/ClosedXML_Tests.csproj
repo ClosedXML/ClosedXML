@@ -62,7 +62,8 @@
     <Compile Include="Examples\PageSetupTests.cs" />
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
-    <Compile Include="ExcelDocsComparer.cs" />
+    <Compile Include="ExcelDocsComparerTests.cs" />
+    <Compile Include="Utils\ExcelDocsComparer.cs" />
     <Compile Include="Examples\DeleteTests.cs" />
     <Compile Include="Examples\LoadingTests.cs" />
     <Compile Include="Examples\MiscTests.cs" />
@@ -70,7 +71,9 @@
     <Compile Include="Examples\ColumnsTests.cs" />
     <Compile Include="Excel\Misc\CopyContentsTest.cs" />
     <Compile Include="Examples\RangeTests.cs" />
-    <Compile Include="ResourceFileExtractor.cs" />
+    <Compile Include="Utils\PackageHelper.cs" />
+    <Compile Include="Utils\ResourceFileExtractor.cs" />
+    <Compile Include="Utils\StreamHelper.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Excel\RichText\XLRichStringTest.cs" />

@@ -40,13 +40,11 @@ namespace ClosedXML_Tests
                 {
                     string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');
                     using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
+                    using (var streamActual = File.OpenRead(filePath))
                     {
-                        using (var streamActual = _extractor.ReadFileFromResToStream(resourcePath))
-                        {
-                            string message;
-                            success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);
-                            Assert.IsTrue(success, message);
-                        }
+                        string message;
+                        success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);
+                        Assert.IsTrue(success, message);
                     }
                 }
             }
