@@ -142,6 +142,10 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<WorkbookProperties>(@"Misc\WorkbookProperties.xlsx");
         }
-
+        [TestMethod]
+        public void CopyingRowsAndColumns()
+        {
+            TestHelper.RunTestExample<CopyingRowsAndColumns>(@"Misc\CopyingRowsAndColumns.xlsx");
+        }
     }
 }

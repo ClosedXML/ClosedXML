@@ -159,6 +159,13 @@
   <ItemGroup>
     <EmbeddedResource Include="Resource\Examples\Delete\DeleteFewWorksheets.xlsx" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Examples\Misc\CopyingWorksheets.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\UsingTables.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Examples\Misc\CopyingRowsAndColumns.xlsx" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
