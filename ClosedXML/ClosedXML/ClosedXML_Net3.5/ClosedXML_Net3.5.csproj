@@ -127,11 +127,14 @@
     <Compile Include="..\ClosedXML\Excel\Cells\XLCell.cs">
       <Link>Excel\Cells\XLCell.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\Cells\XLCellCollection.cs">
-      <Link>Excel\Cells\XLCellCollection.cs</Link>
+    <Compile Include="..\ClosedXML\Excel\Cells\XLCellCollectionOLD.cs">
+      <Link>Excel\Cells\XLCellCollectionOLD.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Cells\XLCells.cs">
       <Link>Excel\Cells\XLCells.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Cells\XLCellsCollection.cs">
+      <Link>Excel\Cells\XLCellsCollection.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Charts\IXLChart.cs">
       <Link>Excel\Charts\IXLChart.cs</Link>
@@ -174,6 +177,12 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Coordinates\XLAddress.cs">
       <Link>Excel\Coordinate\XLAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Coordinates\XLSheetPoint.cs">
+      <Link>Excel\Coordinate\XLSheetPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Coordinates\XLSheetRange.cs">
+      <Link>Excel\Coordinate\XLSheetRange.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\CustomProperties\IXLCustomProperties.cs">
       <Link>Excel\CustomProperties\IXLCustomProperties.cs</Link>
@@ -249,9 +258,6 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLWorksheet.cs">
       <Link>Excel\IXLWorksheet.cs</Link>
-    </Compile>
-    <Compile Include="..\ClosedXML\Excel\IXLWorksheetInternals.cs">
-      <Link>Excel\IXLWorksheetInternals.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLWorksheets.cs">
       <Link>Excel\IXLWorksheets.cs</Link>

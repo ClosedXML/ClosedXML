@@ -180,5 +180,7 @@ namespace ClosedXML.Excel
         Boolean HasRichText { get; }
 
         Boolean IsMerged();
+        Boolean IsUsed();
+        Boolean IsUsed(Boolean includeFormats);
     }
 }

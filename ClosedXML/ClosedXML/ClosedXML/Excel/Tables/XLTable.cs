@@ -192,7 +192,7 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows Rows()
         {
-            var retVal = new XLTableRows(Worksheet);
+            var retVal = new XLTableRows(Worksheet.Style);
             foreach (var r in Enumerable.Range(1, DataRange.RowCount()))
             {
                 retVal.Add(Row(r));
@@ -202,7 +202,7 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows Rows(int firstRow, int lastRow)
         {
-            var retVal = new XLTableRows(Worksheet);
+            var retVal = new XLTableRows(Worksheet.Style);
 
             for (var ro = firstRow; ro <= lastRow; ro++)
             {
@@ -213,7 +213,7 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows Rows(string rows)
         {
-            var retVal = new XLTableRows(Worksheet);
+            var retVal = new XLTableRows(Worksheet.Style);
             var rowPairs = rows.Split(',');
             foreach (var pair in rowPairs)
             {
@@ -424,5 +424,21 @@ namespace ClosedXML.Excel
         public IXLTable SetShowTotalsRow() { ShowTotalsRow = true; return this; }	public IXLTable SetShowTotalsRow(Boolean value) { ShowTotalsRow = value; return this; }
         public IXLTable SetShowAutoFilter() { ShowAutoFilter = true; return this; }	public IXLTable SetShowAutoFilter(Boolean value) { ShowAutoFilter = value; return this; }
 
+
+
+        IXLRangeColumn IXLTable.FirstColumn()
+        {
+            return FirstColumn();
+        }
+
+        IXLRangeColumn IXLTable.FirstColumnUsed()
+        {
+            return FirstColumnUsed();
+        }
+
+        IXLRangeColumn IXLTable.LastColumnUsed()
+        {
+            return LastColumnUsed();
+        }
     }
 }

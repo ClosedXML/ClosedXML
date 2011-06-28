@@ -182,5 +182,12 @@ namespace ClosedXML
             }
             return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos));
         }
+
+        public static T[,] ResizeArray<T>(T[,] original, int rows, int cols)
+        {
+            var newArray = new T[rows, cols];
+            Array.Copy(original, newArray, original.Length);
+            return newArray;
+        }
     }
 }

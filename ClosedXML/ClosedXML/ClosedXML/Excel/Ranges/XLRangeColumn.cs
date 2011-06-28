@@ -22,9 +22,14 @@
 
         #region IXLRangeColumn Members
 
-        public IXLCell Cell(int row)
+        public XLCell Cell(int row)
         {
             return Cell(row, 1);
+        }
+
+        IXLCell IXLRangeColumn.Cell(int row)
+        {
+            return Cell(row);
         }
 
         public new IXLCells Cells(string cellsInColumn)
@@ -215,11 +220,11 @@
         {
             foreach (IXLSortElement e in rowsToSort)
             {
-                var thisCell = (XLCell)Cell(e.ElementNumber);
-                var otherCell = (XLCell)otherColumn.Cell(e.ElementNumber);
+                var thisCell = Cell(e.ElementNumber);
+                var otherCell = otherColumn.Cell(e.ElementNumber);
                 int comparison;
-                bool thisCellIsBlank = StringExtensions.IsNullOrWhiteSpace(thisCell.InnerText);
-                bool otherCellIsBlank = StringExtensions.IsNullOrWhiteSpace(otherCell.InnerText);
+                bool thisCellIsBlank = !thisCell.IsUsed();
+                bool otherCellIsBlank = !otherCell.IsUsed();
                 if (e.IgnoreBlanks && (thisCellIsBlank || otherCellIsBlank))
                 {
                     if (thisCellIsBlank && otherCellIsBlank)

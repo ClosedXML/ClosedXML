@@ -4,25 +4,32 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
+    using System.Collections;
+
     internal class XLRanges : IXLRanges, IXLStylized
     {
+        private readonly List<XLRange> _ranges = new List<XLRange>();
+        private Int32 _count;
+        private IXLStyle _style;
+
         public XLRanges()
         {
-            this.style = new XLStyle(this, XLWorkbook.DefaultStyle);
+            _style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
-        List<XLRange> ranges = new List<XLRange>();
+        #region IXLRanges Members
 
         public void Clear()
         {
-            ranges.ForEach(r => r.Clear());
+            _ranges.ForEach(r => r.Clear());
         }
 
         public void Add(IXLRange range)
         {
-            count++;
-            ranges.Add((XLRange)range);
+            _count++;
+            _ranges.Add((XLRange)range);
         }
+
         //public void Add(String rangeAddress)
         //{
         //    count++;
@@ -34,65 +41,148 @@ namespace ClosedXML.Excel
         //}
         public void Remove(IXLRange range)
         {
-            count--;
-            ranges.RemoveAll(r => r.ToString() == range.ToString());
+            _count--;
+            _ranges.RemoveAll(r => r.ToString() == range.ToString());
         }
 
-        private Int32 count;
-        public Int32 Count {
-            get { return count; }
-            private set { count = value; }
+        public Int32 Count
+        {
+            get { return _count; }
         }
 
         public IEnumerator<IXLRange> GetEnumerator()
         {
             var retList = new List<IXLRange>();
-            ranges.ForEach(c => retList.Add(c));
+            _ranges.ForEach(retList.Add);
             return retList.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
-        #region IXLStylized Members
-
-        private IXLStyle style;
         public IXLStyle Style
+        {
+            get { return _style; }
+            set
+            {
+                _style = new XLStyle(this, value);
+                foreach (XLRange rng in _ranges)
+                    rng.Style = value;
+            }
+        }
+
+        public Boolean Contains(IXLRange range)
+        {
+            return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Equals(range));
+        }
+
+        public IXLDataValidation DataValidation
         {
             get
             {
-                return style;
-            }
-            set
-            {
-                style = new XLStyle(this, value);
-                foreach (var rng in ranges)
+                foreach (XLRange range in _ranges)
                 {
-                    rng.Style = value;
+                    foreach (IXLDataValidation dv in range.Worksheet.DataValidations)
+                    {
+                        foreach (IXLRange dvRange in dv.Ranges)
+                        {
+                            if (dvRange.Intersects(range))
+                            {
+                                dv.Ranges.Remove(dvRange);
+                                foreach (IXLCell c in dvRange.Cells())
+                                {
+                                    if (!range.Contains(c.Address.ToString()))
+                                        dv.Ranges.Add(c.AsRange());
+                                }
+                            }
+                        }
+                    }
                 }
+                var dataValidation = new XLDataValidation(this, _ranges.First().Worksheet);
+
+                _ranges.First().Worksheet.DataValidations.Add(dataValidation);
+                return dataValidation;
             }
         }
+
+        public IXLRanges AddToNamed(String rangeName)
+        {
+            return AddToNamed(rangeName, XLScope.Workbook);
+        }
+
+        public IXLRanges AddToNamed(String rangeName, XLScope scope)
+        {
+            return AddToNamed(rangeName, XLScope.Workbook, null);
+        }
+
+        public IXLRanges AddToNamed(String rangeName, XLScope scope, String comment)
+        {
+            _ranges.ForEach(r => r.AddToNamed(rangeName, scope, comment));
+            return this;
+        }
+
+        public Object Value
+        {
+            set { _ranges.ForEach(r => r.Value = value); }
+        }
+
+        public IXLRanges SetValue<T>(T value)
+        {
+            _ranges.ForEach(r => r.SetValue(value));
+            return this;
+        }
+
+        public IXLCells Cells()
+        {
+            var cells = new XLCells(false, false);
+            foreach (XLRange container in _ranges)
+                cells.Add(container.RangeAddress);
+            return cells;
+        }
+
+        public IXLCells CellsUsed()
+        {
+            var cells = new XLCells(true, false);
+            foreach (XLRange container in _ranges)
+                cells.Add(container.RangeAddress);
+            return cells;
+        }
+
+        public IXLCells CellsUsed(Boolean includeStyles)
+        {
+            var cells = new XLCells(true, includeStyles);
+            foreach (XLRange container in _ranges)
+                cells.Add(container.RangeAddress);
+            return cells;
+        }
+
+        public IXLRanges SetDataType(XLCellValues dataType)
+        {
+            _ranges.ForEach(c => c.DataType = dataType);
+            return this;
+        }
+
+        #endregion
+
+        #region IXLStylized Members
 
         public IEnumerable<IXLStyle> Styles
         {
             get
             {
                 UpdatingStyle = true;
-                yield return style;
-                foreach (var rng in ranges)
+                yield return _style;
+                foreach (XLRange rng in _ranges)
                 {
                     yield return rng.Style;
-                    foreach (var r in (rng.Worksheet as XLWorksheet).Internals.CellsCollection.Values.Where(c =>
-                        c.Address.RowNumber >= rng.RangeAddress.FirstAddress.RowNumber
-                        && c.Address.RowNumber <= rng.RangeAddress.LastAddress.RowNumber
-                        && c.Address.ColumnNumber >= rng.RangeAddress.FirstAddress.ColumnNumber
-                        && c.Address.ColumnNumber <= rng.RangeAddress.LastAddress.ColumnNumber
-                        ))
-                    {
+                    foreach (XLCell r in rng.Worksheet.Internals.CellsCollection.GetCells(
+                        rng.RangeAddress.FirstAddress.RowNumber,
+                        rng.RangeAddress.FirstAddress.ColumnNumber,
+                        rng.RangeAddress.LastAddress.RowNumber,
+                        rng.RangeAddress.LastAddress.ColumnNumber))
                         yield return r.Style;
-                    }
                 }
                 UpdatingStyle = false;
             }
@@ -102,15 +192,20 @@ namespace ClosedXML.Excel
 
         public IXLStyle InnerStyle
         {
-            get { return style; }
-            set { style = new XLStyle(this, value); }
+            get { return _style; }
+            set { _style = new XLStyle(this, value); }
+        }
+
+        public IXLRanges RangesUsed
+        {
+            get { return this; }
         }
 
         #endregion
 
         public override string ToString()
         {
-            String retVal = ranges.Aggregate(String.Empty, (agg, r)=> agg += r.ToString() + ",");
+            String retVal = _ranges.Aggregate(String.Empty, (agg, r) => agg + (r.ToString() + ","));
             if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
             return retVal;
         }
@@ -119,151 +214,15 @@ namespace ClosedXML.Excel
         {
             var other = (XLRanges)obj;
 
-            if (this.ranges.Count != other.ranges.Count)
-            {
+            if (_ranges.Count != other._ranges.Count)
                 return false;
-            }
-            else
-            {
-                foreach (var thisRange in this.ranges)
-                {
-                    Boolean foundOne = false;
-                    foreach (var otherRange in other.ranges)
-                    {
-                        if (thisRange.Equals(otherRange))
-                        {
-                            foundOne = true;
-                            break;
-                        }
-                    }
 
-                    if (!foundOne)
-                        return false;
-                }
-
-                return true;
-            }
-        }
-
-        public Boolean Contains(IXLRange range)
-        {
-            foreach (var r in this.ranges)
-            {
-                if (!r.RangeAddress.IsInvalid && r.Equals(range)) return true;
-            }
-            return false;
+            return _ranges.Select(thisRange => Enumerable.Contains(other._ranges, thisRange)).All(foundOne => foundOne);
         }
 
         public override int GetHashCode()
         {
-            Int32 hash = 0;
-            foreach (var r in this.ranges)
-            {
-                hash ^= r.GetHashCode();
-            }
-            return hash;
-        }
-
-        public IXLDataValidation DataValidation
-        {
-            get
-            {
-                foreach (var range in ranges)
-                {
-                    String address = range.RangeAddress.ToString();
-                    foreach (var dv in range.Worksheet.DataValidations)
-                    {
-                        foreach (var dvRange in dv.Ranges)
-                        {
-                            if (dvRange.Intersects(range))
-                            {
-                                dv.Ranges.Remove(dvRange);
-                                foreach (var c in dvRange.Cells())
-                                {
-                                    if (!range.Contains(c.Address.ToString()))
-                                        dv.Ranges.Add(c.AsRange());
-                                }
-                            }
-                        }
-                    }
-                }
-                var dataValidation = new XLDataValidation(this, ranges.First().Worksheet as XLWorksheet);
-
-                ranges.First().Worksheet.DataValidations.Add(dataValidation);
-                return dataValidation;
-            }
-        }
-
-        public IXLRanges AddToNamed(String rangeName)
-        {
-            return AddToNamed(rangeName, XLScope.Workbook);
-        }
-        public IXLRanges AddToNamed(String rangeName, XLScope scope)
-        {
-            return AddToNamed(rangeName, XLScope.Workbook, null);
-        }
-        public IXLRanges AddToNamed(String rangeName, XLScope scope, String comment)
-        {
-            ranges.ForEach(r => r.AddToNamed(rangeName, scope, comment));
-            return this;
-        }
-
-        public Object Value
-        {
-            set
-            {
-                ranges.ForEach(r => r.Value = value);
-            }
-        }
-
-        public IXLRanges SetValue<T>(T value)
-        {
-            ranges.ForEach(r => r.SetValue(value));
-            return this;
-        }
-
-        public IXLRanges RangesUsed
-        {
-            get
-            {
-                return this;
-            }
-        }
-
-        public IXLCells Cells()
-        {
-            var cells = new XLCells( false, false);
-            foreach (var container in ranges)
-            {
-                cells.Add(container.RangeAddress);
-            }
-            return (IXLCells)cells;
-        }
-
-        public IXLCells CellsUsed()
-        {
-            var cells = new XLCells( true, false);
-            foreach (var container in ranges)
-            {
-                cells.Add(container.RangeAddress);
-            }
-            return (IXLCells)cells;
-        }
-
-        public IXLCells CellsUsed(Boolean includeStyles)
-        {
-            var cells = new XLCells( true, includeStyles);
-            foreach (var container in ranges)
-            {
-                cells.Add(container.RangeAddress);
-            }
-            return (IXLCells)cells;
-        }
-
-        public IXLRanges SetDataType(XLCellValues dataType)
-        {
-            ranges.ForEach(c => c.DataType = dataType);
-            return this;
+            return _ranges.Aggregate(0, (current, r) => current ^ r.GetHashCode());
         }
     }
 }

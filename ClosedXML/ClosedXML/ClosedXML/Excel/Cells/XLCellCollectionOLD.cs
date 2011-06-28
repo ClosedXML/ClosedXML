@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLCellCollection : IDictionary<IXLAddress, XLCell>
+    internal class XLCellCollectionOLD : IDictionary<IXLAddress, XLCell>
     {
         #region Private fields
         private readonly Dictionary<IXLAddress, XLCell> m_dictionary = new Dictionary<IXLAddress, XLCell>();

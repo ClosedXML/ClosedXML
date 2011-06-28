@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     internal class XLColumnParameters
     {
-        public XLColumnParameters(XLWorksheet worksheet, IXLStyle defaultStyle, Boolean isReference = true)
+        public XLColumnParameters(XLWorksheet worksheet, IXLStyle defaultStyle, Boolean isReference)
         {
             Worksheet = worksheet;
             DefaultStyle = defaultStyle;

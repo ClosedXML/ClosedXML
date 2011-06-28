@@ -76,6 +76,7 @@ namespace ClosedXML_Examples
             new AddingDataSet().Create(@"C:\Excel Files\Created\AddingDataSet.xlsx");
             new AddingDataTableAsWorksheet().Create(@"C:\Excel Files\Created\AddingDataTableAsWorksheet.xlsx");
             new TabColors().Create(@"C:\Excel Files\Created\TabColors.xlsx");
+            new ShiftingFormulas().Create(@"C:\Excel Files\Created\ShiftingFormulas.xlsx");
         }
     }
 }

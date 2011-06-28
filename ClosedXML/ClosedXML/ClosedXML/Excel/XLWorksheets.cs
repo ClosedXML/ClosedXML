@@ -74,7 +74,7 @@ namespace ClosedXML.Excel
         {
             var sheet = new XLWorksheet(sheetName, m_workbook);
             m_worksheets.Add(sheetName, sheet);
-            sheet.m_position = m_worksheets.Count;
+            sheet._position = m_worksheets.Count;
             return sheet;
         }
 
@@ -110,7 +110,7 @@ namespace ClosedXML.Excel
             }
 
             m_worksheets.RemoveAll(w => w.Position == position);
-            m_worksheets.Values.Where(w => w.Position > position).ForEach(w => (w).m_position -= 1);
+            m_worksheets.Values.Where(w => w.Position > position).ForEach(w => (w)._position -= 1);
         }
         #endregion
         #region IEnumerable<IXLWorksheet> Members

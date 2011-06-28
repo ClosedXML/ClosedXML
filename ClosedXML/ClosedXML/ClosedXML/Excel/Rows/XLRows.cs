@@ -4,88 +4,50 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
+    using System.Collections;
+
     internal class XLRows : IXLRows, IXLStylized
     {
-        private XLWorksheet worksheet;
+        private readonly List<XLRow> rows = new List<XLRow>();
+        private readonly XLWorksheet worksheet;
+        internal IXLStyle style;
+
         public XLRows(XLWorksheet worksheet)
         {
             this.worksheet = worksheet;
             style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
-        List<XLRow> rows = new List<XLRow>();
+        #region IXLRows Members
 
         public IEnumerator<IXLRow> GetEnumerator()
         {
             var retList = new List<IXLRow>();
-            rows.ForEach(c => retList.Add(c));
+            rows.ForEach(retList.Add);
             return retList.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
-        #region IXLStylized Members
-
-        internal IXLStyle style;
         public IXLStyle Style
         {
-            get
-            {
-                return style;
-            }
+            get { return style; }
             set
             {
                 style = new XLStyle(this, value);
 
                 if (worksheet != null)
-                {
                     worksheet.Style = value;
-                }
                 else
                 {
-                    foreach (var row in rows)
-                    {
+                    foreach (XLRow row in rows)
                         row.Style = value;
-                    }
                 }
-
             }
         }
-
-        public IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                UpdatingStyle = true;
-                yield return style;
-                if (worksheet != null)
-                {
-                    yield return worksheet.Style;
-                }
-                else
-                {
-                    foreach (var row in rows)
-                    {
-                        foreach (var s in row.Styles)
-                            yield return s;
-                    }
-                }
-                UpdatingStyle = false;
-            }
-        }
-
-        public Boolean UpdatingStyle { get; set; }
-
-        public IXLStyle InnerStyle
-        {
-            get { return style; }
-            set { style = new XLStyle(this, value); }
-        }
-
-        #endregion
 
         public double Height
         {
@@ -110,7 +72,7 @@ namespace ClosedXML.Excel
             else
             {
                 var toDelete = new Dictionary<IXLWorksheet, List<Int32>>();
-                foreach (var r in rows)
+                foreach (XLRow r in rows)
                 {
                     if (!toDelete.ContainsKey(r.Worksheet))
                         toDelete.Add(r.Worksheet, new List<Int32>());
@@ -118,17 +80,12 @@ namespace ClosedXML.Excel
                     toDelete[r.Worksheet].Add(r.RowNumber());
                 }
 
-                foreach (var kp in toDelete)
+                foreach (KeyValuePair<IXLWorksheet, List<int>> kp in toDelete)
                 {
-                    foreach (var r in kp.Value.OrderByDescending(r => r))
+                    foreach (int r in kp.Value.OrderByDescending(r => r))
                         kp.Key.Row(r).Delete();
                 }
             }
-        }
-
-        public void Add(XLRow row)
-        {
-            rows.Add(row);
         }
 
         public IXLRows AdjustToContents()
@@ -136,11 +93,13 @@ namespace ClosedXML.Excel
             rows.ForEach(r => r.AdjustToContents());
             return this;
         }
+
         public IXLRows AdjustToContents(Int32 startColumn)
         {
             rows.ForEach(r => r.AdjustToContents(startColumn));
             return this;
         }
+
         public IXLRows AdjustToContents(Int32 startColumn, Int32 endColumn)
         {
             rows.ForEach(r => r.AdjustToContents(startColumn, endColumn));
@@ -152,11 +111,13 @@ namespace ClosedXML.Excel
             rows.ForEach(r => r.AdjustToContents(minHeight, maxHeight));
             return this;
         }
+
         public IXLRows AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight)
         {
             rows.ForEach(r => r.AdjustToContents(startColumn, minHeight, maxHeight));
             return this;
         }
+
         public IXLRows AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
             rows.ForEach(r => r.AdjustToContents(startColumn, endColumn, minHeight, maxHeight));
@@ -168,6 +129,7 @@ namespace ClosedXML.Excel
         {
             rows.ForEach(r => r.Hide());
         }
+
         public void Unhide()
         {
             rows.ForEach(r => r.Unhide());
@@ -177,30 +139,37 @@ namespace ClosedXML.Excel
         {
             Group(false);
         }
+
         public void Group(Int32 outlineLevel)
         {
             Group(outlineLevel, false);
         }
+
         public void Ungroup()
         {
             Ungroup(false);
         }
+
         public void Group(Boolean collapse)
         {
             rows.ForEach(r => r.Group(collapse));
         }
+
         public void Group(Int32 outlineLevel, Boolean collapse)
         {
             rows.ForEach(r => r.Group(outlineLevel, collapse));
         }
+
         public void Ungroup(Boolean ungroupFromAll)
         {
             rows.ForEach(r => r.Ungroup(ungroupFromAll));
         }
+
         public void Collapse()
         {
             rows.ForEach(r => r.Collapse());
         }
+
         public void Expand()
         {
             rows.ForEach(r => r.Expand());
@@ -208,32 +177,71 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells( false, false);
-            foreach (var container in rows)
-            {
+            var cells = new XLCells(false, false);
+            foreach (XLRow container in rows)
                 cells.Add(container.RangeAddress);
-            }
-            return (IXLCells)cells;
+            return cells;
         }
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells( true, false);
-            foreach (var container in rows)
-            {
+            var cells = new XLCells(true, false);
+            foreach (XLRow container in rows)
                 cells.Add(container.RangeAddress);
-            }
-            return (IXLCells)cells;
+            return cells;
         }
 
         public IXLCells CellsUsed(Boolean includeStyles)
         {
-            var cells = new XLCells( true, includeStyles);
-            foreach (var container in rows)
-            {
+            var cells = new XLCells(true, includeStyles);
+            foreach (XLRow container in rows)
                 cells.Add(container.RangeAddress);
+            return cells;
+        }
+
+        public IXLRows AddHorizontalPageBreaks()
+        {
+            foreach (XLRow row in rows)
+                row.Worksheet.PageSetup.AddHorizontalPageBreak(row.RowNumber());
+            return this;
+        }
+
+        public IXLRows SetDataType(XLCellValues dataType)
+        {
+            rows.ForEach(c => c.DataType = dataType);
+            return this;
+        }
+
+        #endregion
+
+        #region IXLStylized Members
+
+        public IEnumerable<IXLStyle> Styles
+        {
+            get
+            {
+                UpdatingStyle = true;
+                yield return style;
+                if (worksheet != null)
+                    yield return worksheet.Style;
+                else
+                {
+                    foreach (XLRow row in rows)
+                    {
+                        foreach (IXLStyle s in row.Styles)
+                            yield return s;
+                    }
+                }
+                UpdatingStyle = false;
             }
-            return (IXLCells)cells;
+        }
+
+        public Boolean UpdatingStyle { get; set; }
+
+        public IXLStyle InnerStyle
+        {
+            get { return style; }
+            set { style = new XLStyle(this, value); }
         }
 
         public IXLRanges RangesUsed
@@ -246,19 +254,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLRows AddHorizontalPageBreaks()
-        {
-            foreach (var row in rows)
-            {
-                row.Worksheet.PageSetup.AddHorizontalPageBreak(row.RowNumber());
-            }
-            return this;
-        }
+        #endregion
 
-        public IXLRows SetDataType(XLCellValues dataType)
+        public void Add(XLRow row)
         {
-            rows.ForEach(c => c.DataType = dataType);
-            return this;
+            rows.Add(row);
         }
     }
 }

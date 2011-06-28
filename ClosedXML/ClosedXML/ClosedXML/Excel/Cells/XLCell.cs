@@ -1842,5 +1842,14 @@
         {
             return Worksheet.Internals.MergedRanges.Any(AsRange().Intersects);
         }
+
+        public Boolean IsUsed()
+        {
+            return IsUsed(false);
+        }
+        public Boolean IsUsed(Boolean includeFormats)
+        {
+            return !StringExtensions.IsNullOrWhiteSpace(InnerText) || (includeFormats && (!Style.Equals(Worksheet.Style) || IsMerged()));
+        }
     }
 }

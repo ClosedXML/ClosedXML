@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -31,28 +30,28 @@ namespace ClosedXML.Excel
 
         public IEnumerator<XLCell> GetEnumerator()
         {
-            var cellsInRanges = new Dictionary<XLWorksheet, HashSet<IXLAddress>>();
+            var cellsInRanges = new Dictionary<XLWorksheet, HashSet<XLSheetPoint>>();
             foreach (XLRangeAddress range in _rangeAddresses)
             {
-                HashSet<IXLAddress> hash;
+                HashSet<XLSheetPoint> hash;
                 if (cellsInRanges.ContainsKey(range.Worksheet))
                     hash = cellsInRanges[range.Worksheet];
                 else
                 {
-                    hash = new HashSet<IXLAddress>();
+                    hash = new HashSet<XLSheetPoint>();
                     cellsInRanges.Add(range.Worksheet, hash);
                 }
 
                 if (_usedCellsOnly)
                 {
                     var tmpRange = range;
-                    var addressList = range.Worksheet.Internals.CellsCollection.Keys
-                        .Where(a => a.RowNumber >= tmpRange.FirstAddress.RowNumber &&
-                                    a.RowNumber <= tmpRange.LastAddress.RowNumber &&
-                                    a.ColumnNumber >= tmpRange.FirstAddress.ColumnNumber &&
-                                    a.ColumnNumber <= tmpRange.LastAddress.ColumnNumber);
+                    var addressList = range.Worksheet.Internals.CellsCollection.GetSheetPoints(
+                        tmpRange.FirstAddress.RowNumber,
+                        tmpRange.FirstAddress.ColumnNumber,
+                        tmpRange.LastAddress.RowNumber,
+                        tmpRange.LastAddress.ColumnNumber);
 
-                    foreach (IXLAddress a in addressList)
+                    foreach (XLSheetPoint a in addressList)
                     {
                         if (!hash.Contains(a))
                             hash.Add(a);
@@ -73,7 +72,7 @@ namespace ClosedXML.Excel
                         {
                             for (Int32 co = mm.MinColumn; co <= mm.MaxColumn; co++)
                             {
-                                var address = new XLAddress(range.Worksheet, ro, co, false, false);
+                                var address = new XLSheetPoint(ro, co);
                                 if (!hash.Contains(address))
                                     hash.Add(address);
                             }
@@ -84,27 +83,22 @@ namespace ClosedXML.Excel
 
             if (_usedCellsOnly)
             {
-                foreach (KeyValuePair<XLWorksheet, HashSet<IXLAddress>> cir in cellsInRanges)
+                foreach (var cir in cellsInRanges)
                 {
-                    var cellsCollection = cir.Key.Internals.CellsCollection;
-                    foreach (IXLAddress a in cir.Value)
+                    foreach (XLSheetPoint a in cir.Value)
                     {
-                        if (cellsCollection.ContainsKey(a))
-                        {
-                            var cell = cellsCollection[a];
-                            if (!StringExtensions.IsNullOrWhiteSpace((cell).InnerText)
-                                || (_includeFormats && (!cell.Style.Equals(cir.Key.Style) || cell.IsMerged())))
-                                yield return cell;
-                        }
+                        var cell = cir.Key.Internals.CellsCollection.GetCell(a);
+                        if (cell != null && cell.IsUsed(_includeFormats))
+                            yield return cell;
                     }
                 }
             }
             else
             {
-                foreach (KeyValuePair<XLWorksheet, HashSet<IXLAddress>> cir in cellsInRanges)
+                foreach (var cir in cellsInRanges)
                 {
-                    foreach (IXLAddress address in cir.Value)
-                        yield return cir.Key.Cell(address);
+                    foreach (XLSheetPoint a in cir.Value)
+                        yield return cir.Key.Cell(a.Row, a.Column);
                 }
             }
         }

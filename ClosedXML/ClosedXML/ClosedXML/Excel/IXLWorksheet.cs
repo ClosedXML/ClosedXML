@@ -44,6 +44,7 @@ namespace ClosedXML.Excel
         /// Gets the first row of the worksheet that contains a cell with a value.
         /// </summary>
         IXLRow FirstRowUsed();
+        IXLRow FirstRowUsed(Boolean includeFormats);
         /// <summary>
         /// Gets the last row of the worksheet.
         /// </summary>
@@ -52,6 +53,7 @@ namespace ClosedXML.Excel
         /// Gets the last row of the worksheet that contains a cell with a value.
         /// </summary>
         IXLRow LastRowUsed();
+        IXLRow LastRowUsed(Boolean includeFormats);
         /// <summary>
         /// Gets the first column of the worksheet.
         /// </summary>
@@ -60,6 +62,7 @@ namespace ClosedXML.Excel
         /// Gets the first column of the worksheet that contains a cell with a value.
         /// </summary>
         IXLColumn FirstColumnUsed();
+        IXLColumn FirstColumnUsed(Boolean includeFormats);
         /// <summary>
         /// Gets the last column of the worksheet.
         /// </summary>
@@ -68,6 +71,7 @@ namespace ClosedXML.Excel
         /// Gets the last column of the worksheet that contains a cell with a value.
         /// </summary>
         IXLColumn LastColumnUsed();
+        IXLColumn LastColumnUsed(Boolean includeFormats);
         /// <summary>
         /// Gets a collection of all columns in this worksheet.
         /// </summary>

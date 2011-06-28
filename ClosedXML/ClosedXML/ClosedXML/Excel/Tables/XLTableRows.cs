@@ -1,76 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
+    using System.Collections;
+
     internal class XLTableRows : IXLTableRows, IXLStylized
     {
-        XLWorksheet worksheet;
-        public XLTableRows(XLWorksheet worksheet)
-        {
-            style = new XLStyle(this, worksheet.Style);
-            this.worksheet = worksheet;
-        }
+        private readonly List<XLTableRow> _ranges = new List<XLTableRow>();
+        private IXLStyle _style;
+        
 
-        List<XLTableRow> ranges = new List<XLTableRow>();
-
-        public void Clear()
+        public XLTableRows(IXLStyle defaultStyle)
         {
-            ranges.ForEach(r => r.Clear());
-        }
-
-        public void Add(IXLTableRow range)
-        {
-            ranges.Add((XLTableRow)range);
-        }
-
-        public IEnumerator<IXLTableRow> GetEnumerator()
-        {
-            var retList = new List<IXLTableRow>();
-            ranges.ForEach(c => retList.Add(c));
-            return retList.GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            _style = new XLStyle(this, defaultStyle);
         }
 
         #region IXLStylized Members
-
-        private IXLStyle style;
-        public IXLStyle Style
-        {
-            get
-            {
-                return style;
-            }
-            set
-            {
-                style = new XLStyle(this, value);
-                ranges.ForEach(r => r.Style = value);
-            }
-        }
 
         public IEnumerable<IXLStyle> Styles
         {
             get
             {
                 UpdatingStyle = true;
-                yield return style;
-                foreach (var rng in ranges)
+                yield return _style;
+                foreach (XLTableRow rng in _ranges)
                 {
                     yield return rng.Style;
-                    foreach (var r in (rng.Worksheet as XLWorksheet).Internals.CellsCollection.Values.Where(c =>
-                        c.Address.RowNumber >= rng.RangeAddress.FirstAddress.RowNumber
-                        && c.Address.RowNumber <= rng.RangeAddress.LastAddress.RowNumber
-                        && c.Address.ColumnNumber >= rng.RangeAddress.FirstAddress.ColumnNumber
-                        && c.Address.ColumnNumber <= rng.RangeAddress.LastAddress.ColumnNumber
-                        ))
-                    {
+                    foreach (XLCell r in rng.Worksheet.Internals.CellsCollection.GetCells(
+                        rng.RangeAddress.FirstAddress.RowNumber,
+                        rng.RangeAddress.FirstAddress.ColumnNumber,
+                        rng.RangeAddress.LastAddress.RowNumber,
+                        rng.RangeAddress.LastAddress.ColumnNumber))
                         yield return r.Style;
-                    }
                 }
                 UpdatingStyle = false;
             }
@@ -80,40 +42,8 @@ namespace ClosedXML.Excel
 
         public IXLStyle InnerStyle
         {
-            get { return style; }
-            set { style = new XLStyle(this, value); }
-        }
-
-        #endregion
-
-        public IXLCells Cells()
-        {
-            var cells = new XLCells( false, false);
-            foreach (var container in ranges)
-            {
-                cells.Add(container.RangeAddress);
-            }
-            return (IXLCells)cells;
-        }
-
-        public IXLCells CellsUsed()
-        {
-            var cells = new XLCells( true, false);
-            foreach (var container in ranges)
-            {
-                cells.Add(container.RangeAddress);
-            }
-            return (IXLCells)cells;
-        }
-
-        public IXLCells CellsUsed(Boolean includeStyles)
-        {
-            var cells = new XLCells( false, includeStyles);
-            foreach (var container in ranges)
-            {
-                cells.Add(container.RangeAddress);
-            }
-            return (IXLCells)cells;
+            get { return _style; }
+            set { _style = new XLStyle(this, value); }
         }
 
         public IXLRanges RangesUsed
@@ -125,6 +55,67 @@ namespace ClosedXML.Excel
                 return retVal;
             }
         }
-  
+
+        #endregion
+
+        #region IXLTableRows Members
+
+        public void Clear()
+        {
+            _ranges.ForEach(r => r.Clear());
+        }
+
+        public void Add(IXLTableRow range)
+        {
+            _ranges.Add((XLTableRow)range);
+        }
+
+        public IEnumerator<IXLTableRow> GetEnumerator()
+        {
+            var retList = new List<IXLTableRow>();
+            _ranges.ForEach(retList.Add);
+            return retList.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IXLStyle Style
+        {
+            get { return _style; }
+            set
+            {
+                _style = new XLStyle(this, value);
+                _ranges.ForEach(r => r.Style = value);
+            }
+        }
+
+        public IXLCells Cells()
+        {
+            var cells = new XLCells(false, false);
+            foreach (XLTableRow container in _ranges)
+                cells.Add(container.RangeAddress);
+            return cells;
+        }
+
+        public IXLCells CellsUsed()
+        {
+            var cells = new XLCells(true, false);
+            foreach (XLTableRow container in _ranges)
+                cells.Add(container.RangeAddress);
+            return cells;
+        }
+
+        public IXLCells CellsUsed(Boolean includeStyles)
+        {
+            var cells = new XLCells(false, includeStyles);
+            foreach (XLTableRow container in _ranges)
+                cells.Add(container.RangeAddress);
+            return cells;
+        }
+
+        #endregion
     }
 }

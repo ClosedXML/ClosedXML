@@ -51,6 +51,7 @@ namespace ClosedXML.Excel
         /// Gets the first column of the range that contains a cell with a value.
         /// </summary>
         IXLRangeColumn FirstColumnUsed();
+        IXLRangeColumn FirstColumnUsed(Boolean includeFormats);
         /// <summary>
         /// Gets the last column of the range.
         /// </summary>
@@ -59,6 +60,7 @@ namespace ClosedXML.Excel
         /// Gets the last column of the range that contains a cell with a value.
         /// </summary>
         IXLRangeColumn LastColumnUsed();
+        IXLRangeColumn LastColumnUsed(Boolean includeFormats);
         /// <summary>
         /// Gets a collection of all columns in this range.
         /// </summary>
@@ -90,6 +92,7 @@ namespace ClosedXML.Excel
         /// Gets the first row of the range that contains a cell with a value.
         /// </summary>
         IXLRangeRow FirstRowUsed();
+        IXLRangeRow FirstRowUsed(Boolean includeFormats);
         /// <summary>
         /// Gets the last row of the range.
         /// </summary>
@@ -98,6 +101,7 @@ namespace ClosedXML.Excel
         /// Gets the last row of the range that contains a cell with a value.
         /// </summary>
         IXLRangeRow LastRowUsed();
+        IXLRangeRow LastRowUsed(Boolean includeFormats);
         /// <summary>
         /// Gets the specified row of the range.
         /// </summary>

@@ -119,8 +119,9 @@
   <ItemGroup>
     <Compile Include="ExcelHelper.cs" />
     <Compile Include="Excel\Cells\IXLCells.cs" />
-    <Compile Include="Excel\Cells\XLCellCollection.cs" />
+    <Compile Include="Excel\Cells\XLCellCollectionOLD.cs" />
     <Compile Include="Excel\Cells\XLCells.cs" />
+    <Compile Include="Excel\Cells\XLCellsCollection.cs" />
     <Compile Include="Excel\Cells\XLCell_DotNetSpecific.cs" />
     <Compile Include="Excel\Charts\XLDrawing.cs" />
     <Compile Include="Excel\Charts\IXLCharts.cs" />
@@ -131,6 +132,8 @@
     <Compile Include="Excel\Columns\IXLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumns.cs" />
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
+    <Compile Include="Excel\Coordinates\XLSheetRange.cs" />
+    <Compile Include="Excel\Coordinates\XLSheetPoint.cs" />
     <Compile Include="Excel\RichText\XLPhonetics.cs" />
     <Compile Include="Excel\RichText\XLPhonetic.cs" />
     <Compile Include="Excel\RichText\IXLPhonetics.cs" />
@@ -192,7 +195,6 @@
     <Compile Include="Excel\Tables\IXLTable.cs" />
     <Compile Include="Excel\XLOutline.cs" />
     <Compile Include="Excel\IXLOutline.cs" />
-    <Compile Include="Excel\IXLWorksheetInternals.cs" />
     <Compile Include="Excel\PageSetup\IXLMargins.cs" />
     <Compile Include="Excel\Ranges\IXLRangeAddress.cs" />
     <Compile Include="Excel\Ranges\XLRangeAddress.cs" />

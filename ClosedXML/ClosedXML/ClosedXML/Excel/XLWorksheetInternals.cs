@@ -1,9 +1,9 @@
 ﻿namespace ClosedXML.Excel
 {
-    internal class XLWorksheetInternals: IXLWorksheetInternals
+    internal class XLWorksheetInternals
     {
         public XLWorksheetInternals(
-            XLCellCollection cellsCollection, 
+            XLCellsCollection cellsCollection, 
             XLColumnsCollection columnsCollection,
             XLRowsCollection rowsCollection,
             XLRanges mergedRanges,
@@ -17,7 +17,7 @@
             Workbook = workbook;
         }
 
-        public XLCellCollection CellsCollection { get; private set; }
+        public XLCellsCollection CellsCollection { get; private set; }
         public XLColumnsCollection ColumnsCollection { get; private set; }
         public XLRowsCollection RowsCollection { get; private set; }
         public XLRanges MergedRanges { get; internal set; }

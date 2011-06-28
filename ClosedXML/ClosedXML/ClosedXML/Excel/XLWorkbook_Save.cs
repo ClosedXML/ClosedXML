@@ -600,7 +600,7 @@ namespace ClosedXML.Excel
             var newRichStrings = new Dictionary<IXLRichText, Int32>();
             foreach (XLWorksheet w in Worksheets.Cast<XLWorksheet>())
             {
-                foreach (XLCell c in w.Internals.CellsCollection.Values)
+                foreach (XLCell c in w.Internals.CellsCollection.GetCells())
                 {
                     if (
                         c.DataType == XLCellValues.Text
@@ -752,7 +752,7 @@ namespace ClosedXML.Excel
             foreach (XLWorksheet worksheet in WorksheetsInternal)
             {
                 var cellsWithoutFormulas = new HashSet<String>();
-                foreach (XLCell c in worksheet.Internals.CellsCollection.Values)
+                foreach (XLCell c in worksheet.Internals.CellsCollection.GetCells())
                 {
                     if (StringExtensions.IsNullOrWhiteSpace(c.FormulaA1))
                         cellsWithoutFormulas.Add(c.Address.ToStringRelative());
@@ -2380,8 +2380,8 @@ namespace ClosedXML.Excel
             String sheetDimensionReference = "A1";
             if (xlWorksheet.Internals.CellsCollection.Count > 0)
             {
-                maxColumn = xlWorksheet.Internals.CellsCollection.Select(c => c.Key.ColumnNumber).Max();
-                Int32 maxRow = xlWorksheet.Internals.CellsCollection.Select(c => c.Key.RowNumber).Max();
+                maxColumn = xlWorksheet.Internals.CellsCollection.MaxColumnUsed;
+                Int32 maxRow = xlWorksheet.Internals.CellsCollection.MaxRowUsed;
                 sheetDimensionReference = "A1:" + ExcelHelper.GetColumnLetterFromNumber(maxColumn) +
                                           maxRow.ToStringLookup();
             }
@@ -2642,7 +2642,7 @@ namespace ClosedXML.Excel
             cm.SetElement(XLWSContentManager.XLWSContents.SheetData, sheetData);
 
             var cellsByRow = new Dictionary<Int32, List<IXLCell>>();
-            foreach (XLCell c in xlWorksheet.Internals.CellsCollection.Values)
+            foreach (XLCell c in xlWorksheet.Internals.CellsCollection.GetCells())
             {
                 Int32 rowNum = c.Address.RowNumber;
                 if (!cellsByRow.ContainsKey(rowNum))
@@ -2722,10 +2722,11 @@ namespace ClosedXML.Excel
 
                 var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference.Value, c => c);
 
-                foreach (KeyValuePair<IXLAddress, XLCell> c in xlWorksheet.Internals.CellsCollection.Deleted)
+                foreach (var c in xlWorksheet.Internals.CellsCollection.Deleted)
                 {
-                    if (cellsByReference.ContainsKey(c.Key.ToStringRelative()))
-                        row.RemoveChild(cellsByReference[c.Key.ToStringRelative()]);
+                    String key = ExcelHelper.GetColumnLetterFromNumber(c.Column) + c.Row.ToStringLookup();
+                    if (cellsByReference.ContainsKey(key))
+                        row.RemoveChild(cellsByReference[key]);
                 }
 
                 if (cellsByRow.ContainsKey(distinctRow))

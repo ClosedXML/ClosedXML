@@ -361,7 +361,7 @@ namespace ClosedXML.Excel
                 style = new XLStyle(this, value);
 
                 var row = RowNumber();
-                foreach (var c in (Worksheet).Internals.CellsCollection.Values.Where(c => c.Address.RowNumber == row))
+                foreach (var c in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
                 {
                     c.Style = value;
                 }
@@ -394,14 +394,10 @@ namespace ClosedXML.Excel
                     Int32 minColumn = 1;
                     Int32 maxColumn = 0;
                     var row = RowNumber();
-                    if ((Worksheet).Internals.CellsCollection.Values.Any(c => c.Address.RowNumber == row))
+                    if (Worksheet.Internals.CellsCollection.RowsUsed.ContainsKey(row))
                     {
-                        minColumn = (Worksheet).Internals.CellsCollection.Values
-                                .Where(c => c.Address.RowNumber == row)
-                                .Min(c => c.Address.ColumnNumber);
-                        maxColumn = (Worksheet).Internals.CellsCollection.Values
-                                .Where(c => c.Address.RowNumber == row)
-                                .Max(c => c.Address.ColumnNumber);
+                        minColumn = Worksheet.Internals.CellsCollection.MinColumnInRow(row);
+                        maxColumn = Worksheet.Internals.CellsCollection.MaxColumnInRow(row);
                     }
 
                     if ((Worksheet).Internals.ColumnsCollection.Count > 0)
@@ -437,11 +433,9 @@ namespace ClosedXML.Excel
                 var row = RowNumber();
                 Int32 minColumn = 1;
                 Int32 maxColumn = 0;
-                if ((Worksheet).Internals.CellsCollection.Values.Any(c => c.Address.RowNumber == row))
+                if ((Worksheet).Internals.CellsCollection.RowsUsed.ContainsKey(row))
                 {
-                    maxColumn =
-                            (Worksheet).Internals.CellsCollection.Values.Where(c => c.Address.RowNumber == row).Max(
-                                    c => c.Address.ColumnNumber);
+                    maxColumn = Worksheet.Internals.CellsCollection.MaxColumnInRow(row);
                 }
 
                 if ((Worksheet).Internals.ColumnsCollection.Count > 0)

@@ -173,14 +173,10 @@ namespace ClosedXML.Excel
                     Int32 minRow = 1;
                     Int32 maxRow = 0;
                     var column = ColumnNumber();
-                    if ((Worksheet).Internals.CellsCollection.Values.Any(c => c.Address.ColumnNumber == column))
+                    if (Worksheet.Internals.CellsCollection.ColumnsUsed.ContainsKey(column))
                     {
-                        minRow = (Worksheet).Internals.CellsCollection.Values
-                                .Where(c => c.Address.ColumnNumber == column)
-                                .Min(c => c.Address.RowNumber);
-                        maxRow = (Worksheet).Internals.CellsCollection.Values
-                                .Where(c => c.Address.ColumnNumber == column)
-                                .Max(c => c.Address.RowNumber);
+                        minRow = Worksheet.Internals.CellsCollection.MinRowInColumn(column);
+                        maxRow = Worksheet.Internals.CellsCollection.MaxRowInColumn(column);
                     }
 
                     if ((Worksheet).Internals.RowsCollection.Count > 0)
@@ -216,9 +212,9 @@ namespace ClosedXML.Excel
                 var column = ColumnNumber();
                 Int32 minRow = 1;
                 Int32 maxRow = 0;
-                if ((Worksheet).Internals.CellsCollection.Values.Any(c => c.Address.ColumnNumber == column))
+                if (Worksheet.Internals.CellsCollection.ColumnsUsed.ContainsKey(column))
                 {
-                    maxRow = (Worksheet).Internals.CellsCollection.Values.Where(c => c.Address.ColumnNumber == column).Max(c => c.Address.RowNumber);
+                    maxRow = Worksheet.Internals.CellsCollection.MaxRowInColumn(column);
                 }
 
                 if ((Worksheet).Internals.RowsCollection.Count > 0)
