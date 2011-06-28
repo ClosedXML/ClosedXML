@@ -12,5 +12,11 @@ namespace ClosedXML_Tests.Examples
             TestHelper.RunTestExample<DeleteRows>(@"Delete\RemoveRows.xlsx");
         }
 
+        [TestMethod]
+        public void DeleteFewWorksheets()
+        {
+            TestHelper.RunTestExample<DeleteFewWorksheets>(@"Delete\DeleteFewWorksheets.xlsx");
+        }
+
     }
 }

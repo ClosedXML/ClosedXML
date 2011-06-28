@@ -2,4 +2,8 @@
 </Value></Property><Property><Name>bugtraq:number</Name><Value>true</Value></Property><Property><Name>svn:ignore</Name><Value>*.suo
 TestResults
 *.user
-</Value></Property></Properties></ItemProperties>
+</Value></Property><Property><Name>svn:ignore</Name><Value>*.suo
+TestResults
+*.user
+ClosedXML.6.0.ReSharper
+</Value></Property><Property><Name>bugtraq:number</Name><Value>true</Value></Property></Properties></ItemProperties>

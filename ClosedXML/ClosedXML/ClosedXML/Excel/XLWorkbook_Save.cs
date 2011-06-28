@@ -356,7 +356,7 @@ namespace ClosedXML.Excel
                 workbook.Sheets = new Sheets();
 
             var worksheets = WorksheetsInternal;
-            workbook.Sheets.Elements<Sheet>().Where(s => worksheets.Deleted.Contains(s.Id)).ForEach(s => s.Remove());
+            workbook.Sheets.Elements<Sheet>().Where(s => worksheets.Deleted.Contains(s.Id)).ToList().ForEach(s => s.Remove());
 
             foreach (Sheet sheet in workbook.Sheets.Elements<Sheet>())
             {
