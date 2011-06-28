@@ -187,6 +187,9 @@ namespace ClosedXML.Excel
 
         public new IXLTableRow Row(int row)
         {
+            if (row <= 0 || row > ExcelHelper.MaxRowNumber)
+                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}", ExcelHelper.MaxRowNumber));
+
             return new XLTableRow(this, (XLRangeRow) base.Row(row + 1));
         }
 

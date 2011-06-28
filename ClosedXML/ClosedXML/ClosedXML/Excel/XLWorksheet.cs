@@ -433,6 +433,9 @@ namespace ClosedXML.Excel
 
         public XLColumn Column(Int32 column)
         {
+            if (column <= 0 || column > ExcelHelper.MaxColumnNumber)
+                throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}", ExcelHelper.MaxColumnNumber));
+
             if (!Internals.ColumnsCollection.ContainsKey(column))
             {
                 // This is a new row so we're going to reference all 
@@ -1074,6 +1077,9 @@ namespace ClosedXML.Excel
 
         public XLRow Row(Int32 row, Boolean pingCells)
         {
+            if(row <= 0 || row > ExcelHelper.MaxRowNumber)
+                throw  new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}", ExcelHelper.MaxRowNumber));
+
             IXLStyle styleToUse;
             if (Internals.RowsCollection.ContainsKey(row))
                 styleToUse = Internals.RowsCollection[row].Style;

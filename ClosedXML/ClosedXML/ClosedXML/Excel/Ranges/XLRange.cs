@@ -837,6 +837,9 @@ namespace ClosedXML.Excel
 
         public XLRangeRow Row(Int32 row)
         {
+            if (row <= 0 || row > ExcelHelper.MaxRowNumber)
+                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}", ExcelHelper.MaxRowNumber));
+
             var firstCellAddress = new XLAddress(Worksheet,
                                                  RangeAddress.FirstAddress.RowNumber + row - 1,
                                                  RangeAddress.FirstAddress.ColumnNumber,
@@ -869,6 +872,9 @@ namespace ClosedXML.Excel
 
         public XLRangeColumn Column(Int32 column)
         {
+            if (column <= 0 || column > ExcelHelper.MaxColumnNumber)
+                throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}", ExcelHelper.MaxColumnNumber));
+
             var firstCellAddress = new XLAddress(Worksheet,
                                                  RangeAddress.FirstAddress.RowNumber,
                                                  RangeAddress.FirstAddress.ColumnNumber + column - 1,

@@ -435,8 +435,15 @@ namespace ClosedXML.Excel
         {
             var absoluteAddress = cellAddressInRange + RangeAddress.FirstAddress - 1;
 
+            if (absoluteAddress.RowNumber <= 0 || absoluteAddress.RowNumber > ExcelHelper.MaxRowNumber)
+                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}", ExcelHelper.MaxRowNumber));
+
+            if (absoluteAddress.ColumnNumber <= 0 || absoluteAddress.ColumnNumber > ExcelHelper.MaxColumnNumber)
+                throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}", ExcelHelper.MaxColumnNumber));
+
             var cell = Worksheet.Internals.CellsCollection.GetCell(absoluteAddress.RowNumber,
                                                                    absoluteAddress.ColumnNumber);
+
             if(cell!=null)
                 return cell;
 
