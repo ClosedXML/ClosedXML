@@ -8,22 +8,26 @@ namespace ClosedXML.Excel
     internal class XLTable : XLRange, IXLTable
     {
         #region Private fields
-        private string m_name;
-        internal bool m_showTotalsRow;
-        internal Dictionary<Int32, IXLTableField> m_fields = new Dictionary<Int32, IXLTableField>();
-        private readonly Dictionary<String, IXLTableField> m_fieldNames = new Dictionary<String, IXLTableField>();
-        internal HashSet<String> m_uniqueNames;
+
+        private readonly Dictionary<String, IXLTableField> _fieldNames = new Dictionary<String, IXLTableField>();
+        internal Dictionary<Int32, IXLTableField> _fields = new Dictionary<Int32, IXLTableField>();
+        private string _name;
+        internal bool _showTotalsRow;
+        internal HashSet<String> _uniqueNames;
+
         #endregion
+
         #region Constructor
+
         public XLTable(XLRange range, Boolean addToTables)
-                : base(range.RangeParameters)
+            : base(range.RangeParameters)
         {
             InitializeValues();
 
             Int32 id = 1;
             while (true)
             {
-                var tableName = String.Format("Table{0}", id);
+                string tableName = String.Format("Table{0}", id);
                 if (!Worksheet.Tables.Any(t => t.Name == tableName))
                 {
                     Name = tableName;
@@ -33,16 +37,33 @@ namespace ClosedXML.Excel
                 id++;
             }
         }
+
         public XLTable(XLRange range, String name, Boolean addToTables)
-                : base(range.RangeParameters)
+            : base(range.RangeParameters)
         {
             InitializeValues();
 
             Name = name;
             AddToTables(range, addToTables);
         }
+
         #endregion
+
         public String RelId { get; set; }
+
+        public IXLRange DataRange
+        {
+            get
+            {
+                if (_showTotalsRow)
+                    return Range(2, 1, RowCount() - 1, ColumnCount());
+                
+                    return Range(2, 1, RowCount(), ColumnCount());
+            }
+        }
+
+        #region IXLTable Members
+
         public Boolean EmphasizeFirstColumn { get; set; }
         public Boolean EmphasizeLastColumn { get; set; }
         public Boolean ShowRowStripes { get; set; }
@@ -52,110 +73,42 @@ namespace ClosedXML.Excel
 
         public String Name
         {
-            get { return m_name; }
+            get { return _name; }
             set
             {
                 if (Worksheet.Tables.Any(t => t.Name == value))
-                {
-                    throw new ArgumentException(String.Format("This worksheet already contains a table named '{0}'", value));
-                }
+                    throw new ArgumentException(String.Format("This worksheet already contains a table named '{0}'",
+                                                              value));
 
-                m_name = value;
+                _name = value;
             }
         }
 
         public Boolean ShowTotalsRow
         {
-            get { return m_showTotalsRow; }
+            get { return _showTotalsRow; }
             set
             {
-                if (value && !m_showTotalsRow)
-                {
+                if (value && !_showTotalsRow)
                     InsertRowsBelow(1);
-                }
-                else if (!value && m_showTotalsRow)
-                {
+                else if (!value && _showTotalsRow)
                     TotalsRow().Delete();
-                }
 
-                m_showTotalsRow = value;
+                _showTotalsRow = value;
             }
-        }
-
-        public IXLRange DataRange
-        {
-            get
-            {
-                if (m_showTotalsRow)
-                {
-                    return base.Range(2, 1, RowCount() - 1, ColumnCount());
-                }
-                else
-                {
-                    return base.Range(2, 1, RowCount(), ColumnCount());
-                }
-            }
-        }
-
-        private void InitializeValues()
-        {
-            ShowRowStripes = true;
-            ShowAutoFilter = true;
-            Theme = XLTableTheme.TableStyleLight9;
-        }
-
-        private void AddToTables(XLRange range, Boolean addToTables)
-        {
-            if (addToTables)
-            {
-                m_uniqueNames = new HashSet<string>();
-                Int32 co = 1;
-                foreach (var c in range.Row(1).Cells())
-                {
-                    if (StringExtensions.IsNullOrWhiteSpace(((XLCell) c).InnerText))
-                    {
-                        c.Value = GetUniqueName("Column" + co.ToStringLookup());
-                    }
-                    m_uniqueNames.Add(c.GetString());
-                    co++;
-                }
-                Worksheet.Tables.Add(this);
-            }
-        }
-
-        private String GetUniqueName(String originalName)
-        {
-            String name = originalName;
-            if (m_uniqueNames.Contains(name))
-            {
-                Int32 i = 1;
-                name = originalName + i.ToStringLookup();
-                while (m_uniqueNames.Contains(name))
-                {
-                    i++;
-                    name = originalName + i.ToStringLookup();
-                }
-            }
-
-            m_uniqueNames.Add(name);
-            return name;
         }
 
         public IXLRangeRow HeadersRow()
         {
-            return new XLTableRow(this, (XLRangeRow) base.FirstRow());
+            return new XLTableRow(this, base.FirstRow());
         }
 
         public IXLRangeRow TotalsRow()
         {
             if (ShowTotalsRow)
-            {
-                return new XLTableRow(this, (XLRangeRow) base.LastRow());
-            }
-            else
-            {
+                return new XLTableRow(this, (XLRangeRow)base.LastRow());
+            
                 throw new InvalidOperationException("Cannot access TotalsRow if ShowTotals property is false");
-            }
         }
 
         public new IXLTableRow FirstRow()
@@ -165,41 +118,36 @@ namespace ClosedXML.Excel
 
         public new IXLTableRow FirstRowUsed()
         {
-            return new XLTableRow(this, (XLRangeRow) (DataRange.FirstRowUsed()));
+            return new XLTableRow(this, (XLRangeRow)(DataRange.FirstRowUsed()));
         }
 
         public new IXLTableRow LastRow()
         {
             if (ShowTotalsRow)
-            {
-                return new XLTableRow(this, (XLRangeRow) base.Row(RowCount() - 1));
-            }
-            else
-            {
-                return new XLTableRow(this, (XLRangeRow) base.Row(RowCount()));
-            }
+                return new XLTableRow(this, base.Row(RowCount() - 1));
+            
+                return new XLTableRow(this, base.Row(RowCount()));
         }
 
         public new IXLTableRow LastRowUsed()
         {
-            return new XLTableRow(this, (XLRangeRow) (DataRange.LastRowUsed()));
+            return new XLTableRow(this, (XLRangeRow)(DataRange.LastRowUsed()));
         }
 
         public new IXLTableRow Row(int row)
         {
             if (row <= 0 || row > ExcelHelper.MaxRowNumber)
-                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}", ExcelHelper.MaxRowNumber));
+                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
+                                                                 ExcelHelper.MaxRowNumber));
 
-            return new XLTableRow(this, (XLRangeRow) base.Row(row + 1));
+            return new XLTableRow(this, base.Row(row + 1));
         }
 
         public new IXLTableRows Rows()
         {
             var retVal = new XLTableRows(Worksheet.Style);
-            foreach (var r in Enumerable.Range(1, DataRange.RowCount()))
-            {
+            foreach (int r in Enumerable.Range(1, DataRange.RowCount()))
                 retVal.Add(Row(r));
-            }
             return retVal;
         }
 
@@ -207,10 +155,8 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLTableRows(Worksheet.Style);
 
-            for (var ro = firstRow; ro <= lastRow; ro++)
-            {
+            for (int ro = firstRow; ro <= lastRow; ro++)
                 retVal.Add(Row(ro));
-            }
             return retVal;
         }
 
@@ -218,17 +164,15 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLTableRows(Worksheet.Style);
             var rowPairs = rows.Split(',');
-            foreach (var pair in rowPairs)
+            foreach (string pair in rowPairs)
             {
-                var tPair = pair.Trim();
+                string tPair = pair.Trim();
                 String firstRow;
                 String lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
                     if (tPair.Contains('-'))
-                    {
                         tPair = tPair.Replace('-', ':');
-                    }
 
                     var rowRange = tPair.Split(':');
                     firstRow = rowRange[0];
@@ -239,10 +183,8 @@ namespace ClosedXML.Excel
                     firstRow = tPair;
                     lastRow = tPair;
                 }
-                foreach (var row in Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
-                {
+                foreach (IXLTableRow row in Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
                     retVal.Add(row);
-                }
             }
             return retVal;
         }
@@ -251,38 +193,36 @@ namespace ClosedXML.Excel
         {
             return DataRange.Column(column);
         }
+
         public new IXLRangeColumn Column(String column)
         {
             if (ExcelHelper.IsValidColumn(column))
             {
                 Int32 coNum = ExcelHelper.GetColumnNumberFromLetter(column);
                 if (coNum > ColumnCount())
-                {
                     return DataRange.Column(GetFieldIndex(column) + 1);
-                }
-                else
-                {
-                    return DataRange.Column(coNum);
-                }
+
+                return DataRange.Column(coNum);
             }
-            else
-            {
-                return DataRange.Column(GetFieldIndex(column) + 1);
-            }
+
+            return DataRange.Column(GetFieldIndex(column) + 1);
         }
 
         public new IXLRangeColumns Columns()
         {
             return DataRange.Columns();
         }
+
         public new IXLRangeColumns Columns(Int32 firstColumn, Int32 lastColumn)
         {
             return DataRange.Columns(firstColumn, lastColumn);
         }
+
         public new IXLRangeColumns Columns(String firstColumn, String lastColumn)
         {
             return DataRange.Columns(firstColumn, lastColumn);
         }
+
         public new IXLRangeColumns Columns(String columns)
         {
             return DataRange.Columns(columns);
@@ -292,14 +232,17 @@ namespace ClosedXML.Excel
         {
             return Cell(row, column);
         }
+
         IXLCell IXLTable.Cell(string cellAddressInRange)
         {
             return Cell(cellAddressInRange);
         }
+
         IXLCell IXLTable.Cell(int row, string column)
         {
             return Cell(row, column);
         }
+
         IXLCell IXLTable.Cell(IXLAddress cellAddressInRange)
         {
             return Cell(cellAddressInRange);
@@ -309,22 +252,27 @@ namespace ClosedXML.Excel
         {
             return Range(rangeAddress);
         }
+
         IXLRange IXLTable.Range(string rangeAddress)
         {
             return Range(rangeAddress);
         }
+
         IXLRange IXLTable.Range(IXLCell firstCell, IXLCell lastCell)
         {
             return Range(firstCell, lastCell);
         }
+
         IXLRange IXLTable.Range(string firstCellAddress, string lastCellAddress)
         {
             return Range(firstCellAddress, lastCellAddress);
         }
+
         IXLRange IXLTable.Range(IXLAddress firstCellAddress, IXLAddress lastCellAddress)
         {
             return Range(firstCellAddress, lastCellAddress);
         }
+
         IXLRange IXLTable.Range(int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn)
         {
             return Range(firstCellRow, firstCellColumn, lastCellRow, lastCellColumn);
@@ -337,58 +285,32 @@ namespace ClosedXML.Excel
 
         public IXLTableField Field(Int32 fieldIndex)
         {
-            if (!m_fields.ContainsKey(fieldIndex))
+            if (!_fields.ContainsKey(fieldIndex))
             {
                 if (fieldIndex >= HeadersRow().CellCount())
-                {
                     throw new ArgumentOutOfRangeException();
-                }
 
-                var newField = new XLTableField(this) {Index = fieldIndex, Name = HeadersRow().Cell(fieldIndex + 1).GetString()};
-                m_fields.Add(fieldIndex, newField);
+                var newField = new XLTableField(this)
+                                   {Index = fieldIndex, Name = HeadersRow().Cell(fieldIndex + 1).GetString()};
+                _fields.Add(fieldIndex, newField);
             }
 
-            return m_fields[fieldIndex];
+            return _fields[fieldIndex];
         }
 
-        public Int32 GetFieldIndex(String name)
+        public IEnumerable<IXLTableField> Fields
         {
-            if (m_fieldNames.ContainsKey(name))
+            get
             {
-                return m_fieldNames[name].Index;
-            }
-            else
-            {
-                var headersRow = HeadersRow();
-                Int32 cellCount = headersRow.CellCount();
-                for (Int32 cellPos = 1; cellPos <= cellCount; cellPos++)
-                {
-                    if (headersRow.Cell(cellPos).GetString().Equals(name))
-                    {
-                        if (m_fieldNames.ContainsKey(name))
-                        {
-                            throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
-                        }
-                        else
-                        {
-                            m_fieldNames.Add(name, Field(cellPos - 1));
-                        }
-                    }
-                }
-                if (m_fieldNames.ContainsKey(name))
-                {
-                    return m_fieldNames[name].Index;
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException("The header row doesn't contain field name '" + name + "'.");
-                }
+                Int32 columnCount = ColumnCount();
+                for (int co = 0; co < columnCount; co++)
+                    yield return Field(co);
             }
         }
 
         public new IXLRange Sort(String elementsToSortBy)
         {
-            StringBuilder toSortBy = new StringBuilder();
+            var toSortBy = new StringBuilder();
             foreach (String coPair in elementsToSortBy.Split(','))
             {
                 String coPairTrimmed = coPair.Trim();
@@ -408,9 +330,7 @@ namespace ClosedXML.Excel
 
                 Int32 co;
                 if (!Int32.TryParse(coString, out co))
-                {
                     co = Field(coString).Index + 1;
-                }
 
                 toSortBy.Append(co);
                 toSortBy.Append(" ");
@@ -420,13 +340,77 @@ namespace ClosedXML.Excel
             return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1));
         }
 
-        public IXLTable SetEmphasizeFirstColumn() { EmphasizeFirstColumn = true; return this; }	public IXLTable SetEmphasizeFirstColumn(Boolean value) { EmphasizeFirstColumn = value; return this; }
-        public IXLTable SetEmphasizeLastColumn() { EmphasizeLastColumn = true; return this; }	public IXLTable SetEmphasizeLastColumn(Boolean value) { EmphasizeLastColumn = value; return this; }
-        public IXLTable SetShowRowStripes() { ShowRowStripes = true; return this; }	public IXLTable SetShowRowStripes(Boolean value) { ShowRowStripes = value; return this; }
-        public IXLTable SetShowColumnStripes() { ShowColumnStripes = true; return this; }	public IXLTable SetShowColumnStripes(Boolean value) { ShowColumnStripes = value; return this; }
-        public IXLTable SetShowTotalsRow() { ShowTotalsRow = true; return this; }	public IXLTable SetShowTotalsRow(Boolean value) { ShowTotalsRow = value; return this; }
-        public IXLTable SetShowAutoFilter() { ShowAutoFilter = true; return this; }	public IXLTable SetShowAutoFilter(Boolean value) { ShowAutoFilter = value; return this; }
+        public IXLTable SetEmphasizeFirstColumn()
+        {
+            EmphasizeFirstColumn = true;
+            return this;
+        }
 
+        public IXLTable SetEmphasizeFirstColumn(Boolean value)
+        {
+            EmphasizeFirstColumn = value;
+            return this;
+        }
+
+        public IXLTable SetEmphasizeLastColumn()
+        {
+            EmphasizeLastColumn = true;
+            return this;
+        }
+
+        public IXLTable SetEmphasizeLastColumn(Boolean value)
+        {
+            EmphasizeLastColumn = value;
+            return this;
+        }
+
+        public IXLTable SetShowRowStripes()
+        {
+            ShowRowStripes = true;
+            return this;
+        }
+
+        public IXLTable SetShowRowStripes(Boolean value)
+        {
+            ShowRowStripes = value;
+            return this;
+        }
+
+        public IXLTable SetShowColumnStripes()
+        {
+            ShowColumnStripes = true;
+            return this;
+        }
+
+        public IXLTable SetShowColumnStripes(Boolean value)
+        {
+            ShowColumnStripes = value;
+            return this;
+        }
+
+        public IXLTable SetShowTotalsRow()
+        {
+            ShowTotalsRow = true;
+            return this;
+        }
+
+        public IXLTable SetShowTotalsRow(Boolean value)
+        {
+            ShowTotalsRow = value;
+            return this;
+        }
+
+        public IXLTable SetShowAutoFilter()
+        {
+            ShowAutoFilter = true;
+            return this;
+        }
+
+        public IXLTable SetShowAutoFilter(Boolean value)
+        {
+            ShowAutoFilter = value;
+            return this;
+        }
 
 
         IXLRangeColumn IXLTable.FirstColumn()
@@ -442,6 +426,76 @@ namespace ClosedXML.Excel
         IXLRangeColumn IXLTable.LastColumnUsed()
         {
             return LastColumnUsed();
+        }
+
+        #endregion
+
+        private void InitializeValues()
+        {
+            ShowRowStripes = true;
+            ShowAutoFilter = true;
+            Theme = XLTableTheme.TableStyleLight9;
+        }
+
+        private void AddToTables(XLRange range, Boolean addToTables)
+        {
+            if (addToTables)
+            {
+                _uniqueNames = new HashSet<string>();
+                Int32 co = 1;
+                foreach (IXLCell c in range.Row(1).Cells())
+                {
+                    if (StringExtensions.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                        c.Value = GetUniqueName("Column" + co.ToStringLookup());
+                    _uniqueNames.Add(c.GetString());
+                    co++;
+                }
+                Worksheet.Tables.Add(this);
+            }
+        }
+
+        private String GetUniqueName(String originalName)
+        {
+            String name = originalName;
+            if (_uniqueNames.Contains(name))
+            {
+                Int32 i = 1;
+                name = originalName + i.ToStringLookup();
+                while (_uniqueNames.Contains(name))
+                {
+                    i++;
+                    name = originalName + i.ToStringLookup();
+                }
+            }
+
+            _uniqueNames.Add(name);
+            return name;
+        }
+
+        public Int32 GetFieldIndex(String name)
+        {
+            if (_fieldNames.ContainsKey(name))
+                return _fieldNames[name].Index;
+            else
+            {
+                var headersRow = HeadersRow();
+                Int32 cellCount = headersRow.CellCount();
+                for (Int32 cellPos = 1; cellPos <= cellCount; cellPos++)
+                {
+                    if (headersRow.Cell(cellPos).GetString().Equals(name))
+                    {
+                        if (_fieldNames.ContainsKey(name))
+                            throw new ArgumentException("The header row contains more than one field name '" + name +
+                                                        "'.");
+                        else
+                            _fieldNames.Add(name, Field(cellPos - 1));
+                    }
+                }
+                if (_fieldNames.ContainsKey(name))
+                    return _fieldNames[name].Index;
+                else
+                    throw new ArgumentOutOfRangeException("The header row doesn't contain field name '" + name + "'.");
+            }
         }
     }
 }

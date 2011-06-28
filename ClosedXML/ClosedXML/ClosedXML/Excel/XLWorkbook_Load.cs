@@ -199,7 +199,7 @@ namespace ClosedXML.Excel
                     string reference = dTable.Reference.Value;
                     var xlTable = ws.Range(reference).CreateTable(dTable.Name);
                     if (dTable.TotalsRowCount != null && dTable.TotalsRowCount.Value > 0)
-                        ((XLTable) xlTable).m_showTotalsRow = true;
+                        ((XLTable) xlTable)._showTotalsRow = true;
 
                     if (dTable.TableStyleInfo != null)
                     {

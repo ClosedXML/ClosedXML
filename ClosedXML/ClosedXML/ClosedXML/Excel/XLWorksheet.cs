@@ -599,6 +599,10 @@ namespace ClosedXML.Excel
         public IXLSheetView SheetView { get; private set; }
         public IXLTables Tables { get; private set; }
 
+        public IXLTable Table(Int32 index)
+        {
+            return Tables.Table(index);
+        }
         public IXLTable Table(String name)
         {
             return Tables.Table(name);
@@ -661,10 +665,10 @@ namespace ClosedXML.Excel
                 table.ShowColumnStripes = t.ShowColumnStripes;
                 table.ShowAutoFilter = t.ShowAutoFilter;
                 table.Theme = t.Theme;
-                table.m_showTotalsRow = t.ShowTotalsRow;
-                table.m_uniqueNames.Clear();
+                table._showTotalsRow = t.ShowTotalsRow;
+                table._uniqueNames.Clear();
 
-                t.m_uniqueNames.ForEach(n => table.m_uniqueNames.Add(n));
+                t._uniqueNames.ForEach(n => table._uniqueNames.Add(n));
                 Int32 fieldCount = t.ColumnCount();
                 for (Int32 f = 0; f < fieldCount; f++)
                 {

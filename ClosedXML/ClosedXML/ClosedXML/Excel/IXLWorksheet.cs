@@ -249,6 +249,7 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLSheetView SheetView { get; }
 
+        IXLTable Table(Int32 index);
         IXLTable Table(String name);
         IXLTables Tables { get; }
 

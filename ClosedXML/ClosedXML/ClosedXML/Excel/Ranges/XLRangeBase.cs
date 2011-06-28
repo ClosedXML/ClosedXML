@@ -70,13 +70,13 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLDataValidation DataValidation
+        public XLDataValidation DataValidation
         {
             get
             {
                 var thisRange = AsRange();
                 if (Worksheet.DataValidations.ContainsSingle(thisRange))
-                    return Worksheet.DataValidations.Where(dv => dv.Ranges.Contains(thisRange)).Single();
+                    return Worksheet.DataValidations.Where(dv => dv.Ranges.Contains(thisRange)).Single() as XLDataValidation;
                 var dvEmpty = new List<IXLDataValidation>();
                 foreach (IXLDataValidation dv in Worksheet.DataValidations)
                 {
@@ -104,6 +104,11 @@ namespace ClosedXML.Excel
                 Worksheet.DataValidations.Add(dataValidation);
                 return dataValidation;
             }
+        }
+
+        IXLDataValidation IXLRangeBase.DataValidation
+        {
+            get { return DataValidation; }
         }
 
         public Object Value

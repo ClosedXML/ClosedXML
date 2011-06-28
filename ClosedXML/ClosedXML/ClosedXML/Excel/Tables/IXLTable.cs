@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace ClosedXML.Excel
 {
     public enum XLTableTheme
@@ -81,6 +82,7 @@ namespace ClosedXML.Excel
         IXLRangeRow TotalsRow();
         IXLTableField Field(string fieldName);
         IXLTableField Field(int fieldIndex);
+        IEnumerable<IXLTableField> Fields { get; }
 
         /// <summary>
         ///   Gets the first data row of the table.
