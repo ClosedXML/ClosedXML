@@ -56,7 +56,7 @@ namespace ClosedXML.Excel
             Workbook = workbook;
             _style = new XLStyle(this, workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
-                                                 new XLRowsCollection(), new XLRanges(), workbook);
+                                                 new XLRowsCollection(), new XLRanges());
             PageSetup = new XLPageSetup(workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
             ColumnWidth = workbook.ColumnWidth;

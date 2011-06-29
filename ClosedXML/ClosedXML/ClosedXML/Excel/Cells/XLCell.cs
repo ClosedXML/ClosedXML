@@ -294,11 +294,11 @@
                         cAddress = fA1;
                     }
 
-                    if (_worksheet.Internals.Workbook.WorksheetsInternal.Any<XLWorksheet>(
+                    if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
                         w => w.Name.ToLower().Equals(sName.ToLower()))
                         && ExcelHelper.IsValidA1Address(cAddress)
                         )
-                        return _worksheet.Internals.Workbook.Worksheet(sName).Cell(cAddress).Value;
+                        return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
                     return fA1;
                 }
 
@@ -1264,7 +1264,7 @@
             var address = XLAddress.Create(_worksheet, a1Address);
 
             string rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, rowsToShift);
-            string columnPart = GetR1C1Column(address.ColumnNumber, address.FixedRow, columnsToShift);
+            string columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, columnsToShift);
 
             return rowPart + columnPart;
         }
@@ -1368,7 +1368,7 @@
                             string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                             if (!a1ColumnRegex.IsMatch(rangeAddress))
                             {
-                                var matchRange = _worksheet.Internals.Workbook.Worksheet(sheetName).Range(rangeAddress);
+                                var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
                                 if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
                                     matchRange.RangeAddress.LastAddress.RowNumber
                                     &&
@@ -1586,7 +1586,7 @@
                             string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                             if (!a1RowRegex.IsMatch(rangeAddress))
                             {
-                                var matchRange = _worksheet.Internals.Workbook.Worksheet(sheetName).Range(rangeAddress);
+                                var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
                                 if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
                                     matchRange.RangeAddress.LastAddress.ColumnNumber
                                     &&

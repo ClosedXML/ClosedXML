@@ -330,13 +330,13 @@ namespace ClosedXML.Excel
         public IXLRange AddToNamed(String rangeName, XLScope scope, String comment)
         {
             var namedRanges = scope == XLScope.Workbook
-                                  ? Worksheet.Internals.Workbook.NamedRanges
+                                  ? Worksheet.Workbook.NamedRanges
                                   : Worksheet.NamedRanges;
 
             if (namedRanges.Any(nr => nr.Name.ToLower() == rangeName.ToLower()))
             {
                 var namedRange = namedRanges.Where(nr => nr.Name.ToLower() == rangeName.ToLower()).Single();
-                namedRange.Add(Worksheet.Internals.Workbook, ToStringFixed());
+                namedRange.Add(Worksheet.Workbook, ToStringFixed());
             }
             else
                 namedRanges.Add(rangeName, ToStringFixed(), comment);
@@ -668,7 +668,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeColumns InsertColumnsBefore(Boolean onlyUsedCells, Int32 numberOfColumns)
         {
-            foreach (XLWorksheet ws in Worksheet.Internals.Workbook.WorksheetsInternal)
+            foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
                 foreach (
                     XLCell cell in
@@ -816,7 +816,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeRows InsertRowsAbove(Boolean onlyUsedCells, Int32 numberOfRows)
         {
-            foreach (XLWorksheet ws in Worksheet.Internals.Workbook.WorksheetsInternal)
+            foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
                 foreach (
                     XLCell cell in
@@ -942,7 +942,7 @@ namespace ClosedXML.Excel
             //        Worksheet.Internals.CellsCollection.Remove(lastCell.Address.RowNumber, lastCell.Address.ColumnNumber);
             //}
 
-            foreach (IXLWorksheet ws in Worksheet.Internals.Workbook.Worksheets)
+            foreach (IXLWorksheet ws in Worksheet.Workbook.Worksheets)
             {
                 var xlWorksheet = (XLWorksheet)ws;
                 foreach (

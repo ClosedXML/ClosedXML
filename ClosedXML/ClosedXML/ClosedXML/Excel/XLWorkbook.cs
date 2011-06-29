@@ -19,6 +19,15 @@ namespace ClosedXML.Excel
         Default
     };
 
+
+    public enum XLCellSetValueBehavior
+    {
+        /// <summary>Analyze input string and convert value. For avoid analyzing use escape symbol ' </summary>
+        Smart = 0,
+        /// <summary>Direct set value. If value has unsupported type - value will be stored as string returned by <see cref="object.ToString()"/></summary>
+        Simple = 1,
+    }
+
     public partial class XLWorkbook
     {
         #region Static
@@ -129,6 +138,10 @@ namespace ClosedXML.Excel
                            };
             }
         }
+        /// <summary>
+        /// Behavior for <see cref="IXLCell.set_Value"/>
+        /// </summary>
+        public static XLCellSetValueBehavior CellSetValueBehavior { get; set; }
         #endregion
         private void InitializeTheme()
         {

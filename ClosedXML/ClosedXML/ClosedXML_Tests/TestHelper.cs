@@ -9,6 +9,7 @@ namespace ClosedXML_Tests
     {
         //Note: Run example tests parameters
         public const string TestsOutputDirectory = @"C:\Excel Files\Tests\";
+        public const string ActualTestResultPostFix = "(Actual)";
         public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
         private const bool RemoveSuccessExampleFiles = false;
         private const bool CompareWithResources = true;
@@ -26,6 +27,14 @@ namespace ClosedXML_Tests
             var example = new T();
             string filePath = Path.Combine(TestsExampleOutputDirectory, filePartName);
 
+            var extension = Path.GetExtension(filePath);
+            var directory = Path.GetDirectoryName(filePath);
+
+            var fileName= Path.GetFileNameWithoutExtension(filePath);
+            fileName += ActualTestResultPostFix;
+            fileName = Path.ChangeExtension(fileName, extension);
+
+            filePath = Path.Combine(directory, fileName);
             //Run test
             example.Create(filePath);
             bool success = true;
