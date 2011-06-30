@@ -144,7 +144,9 @@ namespace ClosedXML.Excel
                                                    sheetFormatProperties.CustomHeight.Value);
 
                             if (sheetFormatProperties.DefaultColumnWidth != null)
+                            {
                                 ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth;
+                            }
                         }
                     }
                     else if (reader.ElementType == typeof (SheetViews))

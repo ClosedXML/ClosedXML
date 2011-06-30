@@ -36,7 +36,7 @@ namespace ClosedXML.Excel
 {
     public partial class XLWorkbook
     {
-        private const Double ColumnWidthOffset = 0.71;
+        private const Double ColumnWidthOffset = 0.710625;
 
         //private Dictionary<String, UInt32> sharedStrings;
         //private Dictionary<IXLStyle, StyleInfo> context.SharedStyles;
@@ -360,7 +360,7 @@ namespace ClosedXML.Excel
 
             foreach (Sheet sheet in workbook.Sheets.Elements<Sheet>())
             {
-                Int32 sheetId = (Int32)sheet.SheetId.Value;
+                var sheetId = (Int32)sheet.SheetId.Value;
                 if (WorksheetsInternal.Any<XLWorksheet>(w => (w).SheetId == sheetId))
                 {
                     var wks =
@@ -605,7 +605,7 @@ namespace ClosedXML.Excel
                     if (
                         c.DataType == XLCellValues.Text
                         && c.ShareString
-                        && !StringExtensions.IsNullOrWhiteSpace(c.InnerText))
+                        && c.InnerText.Length > 0)
                     {
                         if (c.HasRichText)
                         {
@@ -674,7 +674,8 @@ namespace ClosedXML.Excel
                                         sharedStringItem.Append(phoneticRun);
                                     }
                                     var f = new XLFont(null, c.RichText.Phonetics);
-                                    context.SharedFonts.Add(f, new FontInfo {Font = f});
+                                    if (!context.SharedFonts.ContainsKey(f))
+                                        context.SharedFonts.Add(f, new FontInfo {Font = f});
 
                                     var phoneticProperties = new PhoneticProperties
                                                                  {
@@ -2489,9 +2490,19 @@ namespace ClosedXML.Excel
                           worksheetPart.Worksheet.SheetFormatProperties);
 
             worksheetPart.Worksheet.SheetFormatProperties.DefaultRowHeight = xlWorksheet.RowHeight;
-            worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = xlWorksheet.ColumnWidth;
+
             if (xlWorksheet.RowHeightChanged)
                 worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = true;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = null;
+
+
+            double worksheetColumnWidth = GetColumnWidth(xlWorksheet.ColumnWidth);
+            if (xlWorksheet.ColumnWidthChanged)
+                worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = worksheetColumnWidth;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = null;
+                
 
             if (maxOutlineColumn > 0)
                 worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = (byte)maxOutlineColumn;
@@ -2512,7 +2523,7 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.RemoveAllChildren<Columns>();
             else
             {
-                double worksheetColumnWidth = GetColumnWidth(xlWorksheet.ColumnWidth);
+                
 
                 if (!worksheetPart.Worksheet.Elements<Columns>().Any())
                 {
@@ -2539,11 +2550,12 @@ namespace ClosedXML.Excel
                     maxInColumnsCollection = 0;
                 }
 
+                uint worksheetStyleId = context.SharedStyles[xlWorksheet.Style].StyleId;
                 if (minInColumnsCollection > 1)
                 {
                     UInt32Value min = 1;
                     UInt32Value max = (UInt32)(minInColumnsCollection - 1);
-                    uint styleId = context.SharedStyles[xlWorksheet.Style].StyleId;
+                    
 
                     for (var co = min; co <= max; co++)
                     {
@@ -2551,7 +2563,7 @@ namespace ClosedXML.Excel
                                          {
                                              Min = co,
                                              Max = co,
-                                             Style = styleId,
+                                             Style = worksheetStyleId,
                                              Width = worksheetColumnWidth,
                                              CustomWidth = true
                                          };
@@ -2589,6 +2601,7 @@ namespace ClosedXML.Excel
                                          Width = columnWidth,
                                          CustomWidth = true
                                      };
+
                     if (isHidden)
                         column.Hidden = true;
                     if (collapsed)
@@ -2605,20 +2618,21 @@ namespace ClosedXML.Excel
                         columns.Elements<Column>().Where(c => c.Min > (UInt32)(collection)).OrderBy(
                             c => c.Min.Value))
                 {
-                    col.Style = context.SharedStyles[xlWorksheet.Style].StyleId;
-                    col.Width = worksheetColumnWidth;
-                    col.CustomWidth = true;
+                    col.Style = worksheetStyleId;
+                        col.Width = worksheetColumnWidth;
+                        col.CustomWidth = true;
+                    
                     if ((Int32)col.Max.Value > maxInColumnsCollection)
                         maxInColumnsCollection = (Int32)col.Max.Value;
                 }
 
-                if (maxInColumnsCollection < ExcelHelper.MaxColumnNumber)
+                if (maxInColumnsCollection < ExcelHelper.MaxColumnNumber && !xlWorksheet.Style.Equals(DefaultStyle))
                 {
                     var column = new Column
                                      {
                                          Min = (UInt32)(maxInColumnsCollection + 1),
                                          Max = (UInt32)(ExcelHelper.MaxColumnNumber),
-                                         Style = context.SharedStyles[xlWorksheet.Style].StyleId,
+                                         Style = worksheetStyleId,
                                          Width = worksheetColumnWidth,
                                          CustomWidth = true
                                      };
@@ -2626,6 +2640,12 @@ namespace ClosedXML.Excel
                 }
 
                 CollapseColumns(columns, sheetColumnsByMin);
+
+                if (!columns.Any())
+                {
+                    worksheetPart.Worksheet.RemoveAllChildren<Columns>();
+                    cm.SetElement( XLWSContentManager.XLWSContents.Columns, null);
+                }
             }
 
             #endregion
@@ -2801,7 +2821,7 @@ namespace ClosedXML.Excel
                             var cellValue = new CellValue();
                             if (dataType == XLCellValues.Text)
                             {
-                                if (StringExtensions.IsNullOrWhiteSpace(opCell.InnerText))
+                                if (opCell.InnerText.Length == 0 )
                                     cell.CellValue = null;
                                 else
                                 {
@@ -3388,8 +3408,10 @@ namespace ClosedXML.Excel
         private static bool ColumnsAreEqual(Column left, Column right)
         {
             return
-                left.Style.Value == right.Style.Value
-                && left.Width.Value == right.Width.Value
+                   ((left.Style == null && right.Style == null)
+                    || (left.Style != null && right.Style != null && left.Style.Value == right.Style.Value))
+                && ((left.Width == null && right.Width == null)
+                    || (left.Width != null && right.Width != null && left.Width.Value == right.Width.Value))
                 && ((left.Hidden == null && right.Hidden == null)
                     || (left.Hidden != null && right.Hidden != null && left.Hidden.Value == right.Hidden.Value))
                 && ((left.Collapsed == null && right.Collapsed == null)

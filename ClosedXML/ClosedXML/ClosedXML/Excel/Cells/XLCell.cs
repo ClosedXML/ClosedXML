@@ -234,7 +234,7 @@
 
         public string GetFormattedString()
         {
-            string cValue = StringExtensions.IsNullOrWhiteSpace(FormulaA1) ? _cellValue : GetString();
+            string cValue = FormulaA1.Length > 0 ? String.Empty : _cellValue;
 
             if (_dataType == XLCellValues.Boolean)
                 return (cValue != "0").ToString();
@@ -544,8 +544,8 @@
                 return _worksheet.Range(
                     Address.RowNumber,
                     Address.ColumnNumber,
-                    Address.RowNumber + ro - 1,
-                    Address.ColumnNumber + maxCo - 1);
+                    ro - 1,
+                    maxCo - 1);
             }
 
             return null;
@@ -836,11 +836,9 @@
             {
                 if (_richText == null)
                 {
-                    _richText = StringExtensions.IsNullOrWhiteSpace(_cellValue) ? new XLRichText(_style.Font) : new XLRichText(GetFormattedString(), _style.Font);
+                    _richText = _cellValue.Length == 0 ? new XLRichText(_style.Font) : new XLRichText(GetFormattedString(), _style.Font);
 
                     _dataType = XLCellValues.Text;
-                    if (!Style.Alignment.WrapText)
-                        Style.Alignment.WrapText = true;
                 }
 
                 return _richText;
@@ -1005,7 +1003,11 @@
             FormulaA1 = String.Empty;
             string val = value.ToString();
             _richText = null;
-            if (val.Length > 0)
+            if (val.Length == 0)
+            {
+                _dataType = XLCellValues.Text;
+            }
+            else
             {
                 double dTest;
                 DateTime dtTest;

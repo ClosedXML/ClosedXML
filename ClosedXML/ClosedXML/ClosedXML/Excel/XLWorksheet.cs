@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
                                                  new XLRowsCollection(), new XLRanges());
             PageSetup = new XLPageSetup(workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
-            ColumnWidth = workbook.ColumnWidth;
+            _columnWidth = workbook.ColumnWidth;
             _rowHeight = workbook.RowHeight;
             RowHeightChanged = workbook.RowHeight != XLWorkbook.DefaultRowHeight;
             Name = sheetName;
@@ -102,6 +102,7 @@ namespace ClosedXML.Excel
         }
 
         internal Boolean RowHeightChanged { get; set; }
+        internal Boolean ColumnWidthChanged { get; set; }
 
         public Int32 SheetId { get; set; }
         public String RelId { get; set; }
@@ -123,7 +124,19 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Double ColumnWidth { get; set; }
+        private Double _columnWidth;
+        public Double ColumnWidth
+        {
+            get
+            {
+                return _columnWidth;
+            }
+            set
+            {
+                ColumnWidthChanged = true;
+                _columnWidth = value;
+            }
+        }
 
         public Double RowHeight
         {

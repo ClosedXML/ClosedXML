@@ -46,10 +46,12 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<StyleWorksheet>(@"Styles\StyleWorksheet.xlsx");
         }
-        [TestMethod]
-        public void UsingColors()
+      
+         [TestMethod]
+        public void UsingRichText()
         {
-            TestHelper.RunTestExample<UsingColors>(@"Styles\UsingColors.xlsx");
+            TestHelper.RunTestExample<UsingRichText>(@"Styles\UsingRichText.xlsx");
         }
+
     }
 }

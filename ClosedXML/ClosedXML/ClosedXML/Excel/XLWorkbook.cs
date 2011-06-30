@@ -19,7 +19,6 @@ namespace ClosedXML.Excel
         Default
     };
 
-
     public enum XLCellSetValueBehavior
     {
         /// <summary>Analyze input string and convert value. For avoid analyzing use escape symbol ' </summary>
@@ -27,7 +26,6 @@ namespace ClosedXML.Excel
         /// <summary>Direct set value. If value has unsupported type - value will be stored as string returned by <see cref="object.ToString()"/></summary>
         Simple = 1,
     }
-
     public partial class XLWorkbook
     {
         #region Static
@@ -138,7 +136,7 @@ namespace ClosedXML.Excel
                            };
             }
         }
-        /// <summary>
+/// <summary>
         /// Behavior for <see cref="IXLCell.set_Value"/>
         /// </summary>
         public static XLCellSetValueBehavior CellSetValueBehavior { get; set; }
@@ -202,7 +200,7 @@ namespace ClosedXML.Excel
         public XLWorkbook()
         {
             DefaultRowHeight = 15;
-            DefaultColumnWidth = 9.140625;
+            DefaultColumnWidth = 8.43;
             Style = new XLStyle(null, DefaultStyle);
             RowHeight = DefaultRowHeight;
             ColumnWidth = DefaultColumnWidth;
