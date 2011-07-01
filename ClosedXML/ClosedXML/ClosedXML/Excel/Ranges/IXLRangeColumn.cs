@@ -90,6 +90,11 @@ namespace ClosedXML.Excel
         IXLRangeColumns Columns(String columns);
 
         IXLRangeColumn SetDataType(XLCellValues dataType);
+
+        IXLRangeColumn ColumnLeft();
+        IXLRangeColumn ColumnLeft(Int32 step);
+        IXLRangeColumn ColumnRight();
+        IXLRangeColumn ColumnRight(Int32 step);
     }
 }
 

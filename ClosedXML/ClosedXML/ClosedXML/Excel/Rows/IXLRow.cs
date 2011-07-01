@@ -175,5 +175,10 @@ namespace ClosedXML.Excel
         IXLRow AddHorizontalPageBreak();
 
         IXLRow SetDataType(XLCellValues dataType);
+
+        IXLRow RowAbove();
+        IXLRow RowAbove(Int32 step);
+        IXLRow RowBelow();
+        IXLRow RowBelow(Int32 step);
     }
 }

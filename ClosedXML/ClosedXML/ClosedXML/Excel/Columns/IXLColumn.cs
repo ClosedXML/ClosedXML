@@ -172,5 +172,10 @@ namespace ClosedXML.Excel
         IXLColumn AddVerticalPageBreak();
 
         IXLColumn SetDataType(XLCellValues dataType);
+
+        IXLColumn ColumnLeft();
+        IXLColumn ColumnLeft(Int32 step);
+        IXLColumn ColumnRight();
+        IXLColumn ColumnRight(Int32 step);
     }
 }

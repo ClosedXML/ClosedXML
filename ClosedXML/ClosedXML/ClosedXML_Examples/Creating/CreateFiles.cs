@@ -80,7 +80,7 @@ namespace ClosedXML_Examples
             new CopyingRowsAndColumns().Create(@"C:\Excel Files\Created\CopyingRowsAndColumns.xlsx");
             new UsingRichText().Create(@"C:\Excel Files\Created\UsingRichText.xlsx");
             new UsingPhonetics().Create(@"C:\Excel Files\Created\UsingPhonetics.xlsx");
-            new CellMoves().Create(@"C:\Excel Files\Created\CellMoves.xlsx");
+            new WalkingRanges().Create(@"C:\Excel Files\Created\CellMoves.xlsx");
         }
     }
 }

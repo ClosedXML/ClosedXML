@@ -98,6 +98,11 @@ namespace ClosedXML.Excel
         IXLRangeRows Rows(String rows);
 
         IXLRangeRow SetDataType(XLCellValues dataType);
+
+        IXLRangeRow RowAbove();
+        IXLRangeRow RowAbove(Int32 step);
+        IXLRangeRow RowBelow();
+        IXLRangeRow RowBelow(Int32 step);
     }
 }
 

@@ -262,5 +262,53 @@
 
             return 0;
         }
+
+        #region XLRangeColumn Left
+        public XLRangeColumn ColumnLeft()
+        {
+            return ColumnLeft(1);
+        }
+        IXLRangeColumn IXLRangeColumn.ColumnLeft()
+        {
+            return ColumnLeft();
+        }
+        public XLRangeColumn ColumnLeft(Int32 step)
+        {
+            return ColumnShift(step * -1);
+        }
+        IXLRangeColumn IXLRangeColumn.ColumnLeft(Int32 step)
+        {
+            return ColumnLeft(step);
+        }
+        #endregion
+
+        #region XLRangeColumn Right
+        public XLRangeColumn ColumnRight()
+        {
+            return ColumnRight(1);
+        }
+        IXLRangeColumn IXLRangeColumn.ColumnRight()
+        {
+            return ColumnRight();
+        }
+        public XLRangeColumn ColumnRight(Int32 step)
+        {
+            return ColumnShift(step);
+        }
+        IXLRangeColumn IXLRangeColumn.ColumnRight(Int32 step)
+        {
+            return ColumnRight(step);
+        }
+        #endregion
+
+        private XLRangeColumn ColumnShift(Int32 columnsToShift)
+        {
+            Int32 columnNumber = ColumnNumber() + columnsToShift;
+            return Worksheet.Range(
+                RangeAddress.FirstAddress.RowNumber,
+                columnNumber,
+                RangeAddress.LastAddress.RowNumber,
+                columnNumber).FirstColumn();
+        }
     }
 }

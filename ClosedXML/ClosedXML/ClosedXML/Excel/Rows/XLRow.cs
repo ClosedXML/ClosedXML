@@ -612,5 +612,48 @@ namespace ClosedXML.Excel
         {
             CopyTo(target);
         }
+
+        #region XLRow Above
+        public XLRow RowAbove()
+        {
+            return RowAbove(1);
+        }
+        IXLRow IXLRow.RowAbove()
+        {
+            return RowAbove();
+        }
+        public XLRow RowAbove(Int32 step)
+        {
+            return RowShift(step * -1);
+        }
+        IXLRow IXLRow.RowAbove(Int32 step)
+        {
+            return RowAbove(step);
+        }
+        #endregion
+
+        #region XLRow Below
+        public XLRow RowBelow()
+        {
+            return RowBelow(1);
+        }
+        IXLRow IXLRow.RowBelow()
+        {
+            return RowBelow();
+        }
+        public XLRow RowBelow(Int32 step)
+        {
+            return RowShift(step);
+        }
+        IXLRow IXLRow.RowBelow(Int32 step)
+        {
+            return RowBelow(step);
+        }
+        #endregion
+
+        private XLRow RowShift(Int32 rowsToShift)
+        {
+            return Worksheet.Row(RowNumber() + rowsToShift);
+        }
     }
 }

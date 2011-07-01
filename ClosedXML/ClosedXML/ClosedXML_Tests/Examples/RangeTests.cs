@@ -79,9 +79,9 @@ namespace ClosedXML_Tests.Examples
             TestHelper.RunTestExample<UsingTables>(@"Ranges\UsingTables.xlsx");
         }
         [TestMethod]
-        public void CellMoves()
+        public void WalkingRanges()
         {
-            TestHelper.RunTestExample<CellMoves>(@"Ranges\CellMoves.xlsx");
+            TestHelper.RunTestExample<WalkingRanges>(@"Ranges\WalkingRanges.xlsx");
         }
     }
 }

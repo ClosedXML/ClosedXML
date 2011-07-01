@@ -677,5 +677,48 @@ namespace ClosedXML.Excel
         {
             CopyTo(target);
         }
+
+        #region XLColumn Left
+        public XLColumn ColumnLeft()
+        {
+            return ColumnLeft(1);
+        }
+        IXLColumn IXLColumn.ColumnLeft()
+        {
+            return ColumnLeft();
+        }
+        public XLColumn ColumnLeft(Int32 step)
+        {
+            return ColumnShift(step * -1);
+        }
+        IXLColumn IXLColumn.ColumnLeft(Int32 step)
+        {
+            return ColumnLeft(step);
+        }
+        #endregion
+
+        #region XLColumn Right
+        public XLColumn ColumnRight()
+        {
+            return ColumnRight(1);
+        }
+        IXLColumn IXLColumn.ColumnRight()
+        {
+            return ColumnRight();
+        }
+        public XLColumn ColumnRight(Int32 step)
+        {
+            return ColumnShift(step);
+        }
+        IXLColumn IXLColumn.ColumnRight(Int32 step)
+        {
+            return ColumnRight(step);
+        }
+        #endregion
+
+        private XLColumn ColumnShift(Int32 columnsToShift)
+        {
+            return Worksheet.Column(ColumnNumber() + columnsToShift);
+        }
     }
 }
