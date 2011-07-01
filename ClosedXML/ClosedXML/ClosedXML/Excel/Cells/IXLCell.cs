@@ -160,6 +160,7 @@ namespace ClosedXML.Excel
         /// <para>If the named range exists, it will add this range to that named range.</para>
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
+        /// </summary>
         IXLCell AddToNamed(String rangeName, XLScope scope);
 
         /// <summary>
@@ -168,6 +169,7 @@ namespace ClosedXML.Excel
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
         /// <param name="comment">The comments for the named range.</param>
+        /// </summary>
         IXLCell AddToNamed(String rangeName, XLScope scope, String comment);
 
         //IXLCell CopyFrom(IXLCell otherCell);
@@ -182,5 +184,14 @@ namespace ClosedXML.Excel
         Boolean IsMerged();
         Boolean IsUsed();
         Boolean IsUsed(Boolean includeFormats);
+
+        IXLCell CellAbove();
+        IXLCell CellAbove(Int32 step);
+        IXLCell CellBelow();
+        IXLCell CellBelow(Int32 step);
+        IXLCell CellLeft();
+        IXLCell CellLeft(Int32 step);
+        IXLCell CellRight();
+        IXLCell CellRight(Int32 step);
     }
 }

@@ -5,12 +5,9 @@ namespace ClosedXML.Excel
 {
     internal class XLCellsCollection
     {
-        private const Int32 InitialRowCapacity = 5;
-        private const Int32 InitialColumnCapacity = 10;
-        //private XLCell[,] _cells;
+
         private readonly Dictionary<XLSheetPoint, XLCell> _cellsDictionary = new Dictionary<XLSheetPoint, XLCell>();
-        private Int32 _columnCapacity = InitialColumnCapacity;
-        private Int32 _rowCapacity = InitialRowCapacity;
+
 
         public Int32 MaxColumnUsed;
         public Int32 MaxRowUsed;
@@ -101,24 +98,9 @@ namespace ClosedXML.Excel
             RowsUsed.Clear();
             ColumnsUsed.Clear();
 
-            //for (int ro = 1; ro <= MaxRowUsed; ro++)
-            //{
-            //    for (int co = 1; co <= MaxColumnUsed; co++)
-            //    {
-            //        if (_cells[ro, co] != null)
-            //        {
-            //            var sp = new XLSheetPoint(ro, co);
-            //            if (!Deleted.Contains(sp))
-            //                Deleted.Add(sp);
-            //        }
-            //    }
-            //}
             _cellsDictionary.Clear();
-            _rowCapacity = InitialRowCapacity;
-            _columnCapacity = InitialColumnCapacity;
             MaxRowUsed = 0;
             MaxColumnUsed = 0;
-            //_cells = new XLCell[_rowCapacity,_columnCapacity];
         }
 
         public void Remove(XLSheetPoint sheetPoint)

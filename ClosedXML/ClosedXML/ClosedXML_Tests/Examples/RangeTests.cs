@@ -78,6 +78,10 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<UsingTables>(@"Ranges\UsingTables.xlsx");
         }
-
+        [TestMethod]
+        public void CellMoves()
+        {
+            TestHelper.RunTestExample<CellMoves>(@"Ranges\CellMoves.xlsx");
+        }
     }
 }

@@ -14,12 +14,12 @@
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
         private static Dictionary<int, string> _formatCodes;
 
-        private static readonly Regex _a1Regex = new Regex(
+        private static readonly Regex A1Regex = new Regex(
             @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
             + @"|(?<=\W)(\d{1,7}:\d{1,7})(?=\W)" // 1:1
             + @"|(?<=\W)([a-zA-Z]{1,3}:[a-zA-Z]{1,3})(?=\W)"); // A:A
 
-        private static readonly Regex _a1SimpleRegex = new Regex(
+        private static readonly Regex A1SimpleRegex = new Regex(
             @"(?<=\W)" // Start with non word
             + @"(" // Start Group to pick
             + @"(" // Start Sheet Name, optional
@@ -41,15 +41,15 @@
             + @"(?=\W)" // End with non word
             );
 
-        private static readonly Regex a1RowRegex = new Regex(
+        private static readonly Regex A1RowRegex = new Regex(
             @"(\d{1,7}:\d{1,7})" // 1:1
             );
 
-        private static readonly Regex a1ColumnRegex = new Regex(
+        private static readonly Regex A1ColumnRegex = new Regex(
             @"([a-zA-Z]{1,3}:[a-zA-Z]{1,3})" // A:A
             );
 
-        private static readonly Regex r1c1Regex = new Regex(
+        private static readonly Regex R1C1Regex = new Regex(
             @"(?<=\W)([Rr]\[?-?\d{0,7}\]?[Cc]\[?-?\d{0,7}\]?)(?=\W)" // R1C1
             + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
             + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)"); // C:C
@@ -365,7 +365,7 @@
                 {
                     int co = Address.ColumnNumber;
 
-                    if (m.GetType().IsPrimitive || m.GetType() == typeof(String) || m.GetType() == typeof(DateTime))
+                    if (m.GetType().IsPrimitive || m is string || m is DateTime)
                     {
                         if (!hasTitles)
                         {
@@ -497,7 +497,7 @@
                 {
                     int co = Address.ColumnNumber;
 
-                    if (m.GetType().IsPrimitive || m.GetType() == typeof(String) || m.GetType() == typeof(DateTime))
+                    if (m.GetType().IsPrimitive || m is string || m is DateTime)
                         SetValue(m, ro, co);
                     else if (m.GetType().IsArray)
                     {
@@ -1120,7 +1120,7 @@
 
             string value = ">" + strValue + "<";
 
-            var regex = conversionType == FormulaConversionType.A1ToR1C1 ? _a1Regex : r1c1Regex;
+            var regex = conversionType == FormulaConversionType.A1ToR1C1 ? A1Regex : R1C1Regex;
 
             var sb = new StringBuilder();
             int lastIndex = 0;
@@ -1340,7 +1340,7 @@
             {
                 string value = ">" + _formulaA1 + "<";
 
-                var regex = _a1SimpleRegex;
+                var regex = A1SimpleRegex;
 
                 var sb = new StringBuilder();
                 int lastIndex = 0;
@@ -1368,7 +1368,7 @@
                         if (sheetName.ToLower().Equals(shiftedRange.Worksheet.Name.ToLower()))
                         {
                             string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
-                            if (!a1ColumnRegex.IsMatch(rangeAddress))
+                            if (!A1ColumnRegex.IsMatch(rangeAddress))
                             {
                                 var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
                                 if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
@@ -1380,7 +1380,7 @@
                                     shiftedRange.RangeAddress.LastAddress.ColumnNumber >=
                                     matchRange.RangeAddress.LastAddress.ColumnNumber)
                                 {
-                                    if (a1RowRegex.IsMatch(rangeAddress))
+                                    if (A1RowRegex.IsMatch(rangeAddress))
                                     {
                                         var rows = rangeAddress.Split(':');
                                         string row1String = rows[0];
@@ -1558,7 +1558,7 @@
             {
                 string value = ">" + _formulaA1 + "<";
 
-                var regex = _a1SimpleRegex;
+                var regex = A1SimpleRegex;
 
                 var sb = new StringBuilder();
                 int lastIndex = 0;
@@ -1586,7 +1586,7 @@
                         if (sheetName.ToLower().Equals(shiftedRange.Worksheet.Name.ToLower()))
                         {
                             string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
-                            if (!a1RowRegex.IsMatch(rangeAddress))
+                            if (!A1RowRegex.IsMatch(rangeAddress))
                             {
                                 var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
                                 if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
@@ -1598,7 +1598,7 @@
                                     shiftedRange.RangeAddress.LastAddress.RowNumber >=
                                     matchRange.RangeAddress.LastAddress.RowNumber)
                                 {
-                                    if (a1ColumnRegex.IsMatch(rangeAddress))
+                                    if (A1ColumnRegex.IsMatch(rangeAddress))
                                     {
                                         var columns = rangeAddress.Split(':');
                                         string column1String = columns[0];
@@ -1796,5 +1796,86 @@
         } ;
 
         #endregion
+
+        #region XLCell Above
+        public XLCell CellAbove()
+        {
+            return CellAbove(1);
+        }
+        IXLCell IXLCell.CellAbove()
+        {
+            return CellAbove();
+        }
+        public XLCell CellAbove(Int32 step)
+        {
+            return CellShift(step * -1, 0);
+        }
+        IXLCell IXLCell.CellAbove(Int32 step)
+        {
+            return CellAbove(step);
+        }
+        #endregion
+
+        #region XLCell Below
+        public XLCell CellBelow()
+        {
+            return CellBelow(1);
+        }
+        IXLCell IXLCell.CellBelow()
+        {
+            return CellBelow();
+        }
+        public XLCell CellBelow(Int32 step)
+        {
+            return CellShift(step, 0);
+        }
+        IXLCell IXLCell.CellBelow(Int32 step)
+        {
+            return CellBelow(step);
+        }
+        #endregion
+
+        #region XLCell Left
+        public XLCell CellLeft()
+        {
+            return CellLeft(1);
+        }
+        IXLCell IXLCell.CellLeft()
+        {
+            return CellLeft();
+        }
+        public XLCell CellLeft(Int32 step)
+        {
+            return CellShift(0, step * -1);
+        }
+        IXLCell IXLCell.CellLeft(Int32 step)
+        {
+            return CellLeft(step);
+        }
+        #endregion
+
+        #region XLCell Right
+        public XLCell CellRight()
+        {
+            return CellRight(1);
+        }
+        IXLCell IXLCell.CellRight()
+        {
+            return CellRight();
+        }
+        public XLCell CellRight(Int32 step)
+        {
+            return CellShift(0, step);
+        }
+        IXLCell IXLCell.CellRight(Int32 step)
+        {
+            return CellRight(step);
+        }
+        #endregion
+
+        private XLCell CellShift(Int32 rowsToShift, Int32 columnsToShift)
+        {
+            return Worksheet.Cell(Address.RowNumber + rowsToShift, Address.ColumnNumber + columnsToShift);
+        }
     }
 }

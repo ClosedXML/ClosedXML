@@ -11,7 +11,7 @@ namespace ClosedXML_Tests
         public const string TestsOutputDirectory = @"C:\Excel Files\Tests\";
         public const string ActualTestResultPostFix = "(Actual)";
         public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
-        private const bool RemoveSuccessExampleFiles = false;
+        
         private const bool CompareWithResources = true;
 
         private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resource.Examples.");
@@ -59,12 +59,7 @@ namespace ClosedXML_Tests
             }
             finally
             {
-                // ReSharper disable ConditionIsAlwaysTrueOrFalse
-                if (RemoveSuccessExampleFiles && success && File.Exists(filePath))
-                        // ReSharper restore ConditionIsAlwaysTrueOrFalse
-                {
-                    File.Delete(filePath);
-                }
+                //if (success && File.Exists(filePath)) File.Delete(filePath);
             }
 #pragma warning restore 162
         }
