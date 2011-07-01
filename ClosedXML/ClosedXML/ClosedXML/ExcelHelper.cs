@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Text;
 using ClosedXML.Excel;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace ClosedXML
 {
@@ -183,10 +184,25 @@ namespace ClosedXML
             return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos));
         }
 
+        public static T[,] ResizeArrayX<T>(T[,] original, int rows, int cols)
+        {
+            var newArray = new T[rows,cols];
+            Array.Copy(original, newArray, original.Length);
+            return newArray;
+        }
         public static T[,] ResizeArray<T>(T[,] original, int rows, int cols)
         {
-            var newArray = new T[rows, cols];
-            Array.Copy(original, newArray, original.Length);
+            var newArray = new T[rows,cols];
+            Utils.CopyArray(original, newArray);
+            //int originalSize = original.Length;
+            //int xLength = original.GetLength(0);
+            //int yLength = original.GetLength(1);
+            
+            //for (int x = 0; x < xLength; x++)
+            //{
+            //    Array.Copy(original, x * originalSize, newArray, 0, yLength);
+            //}
+
             return newArray;
         }
     }

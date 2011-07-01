@@ -78,6 +78,8 @@ namespace ClosedXML_Examples
             new TabColors().Create(@"C:\Excel Files\Created\TabColors.xlsx");
             new ShiftingFormulas().Create(@"C:\Excel Files\Created\ShiftingFormulas.xlsx");
             new CopyingRowsAndColumns().Create(@"C:\Excel Files\Created\CopyingRowsAndColumns.xlsx");
+            new UsingRichText().Create(@"C:\Excel Files\Created\UsingRichText.xlsx");
+            new UsingPhonetics().Create(@"C:\Excel Files\Created\UsingPhonetics.xlsx");
         }
     }
 }
