@@ -318,5 +318,11 @@
                 rowNum,
                 RangeAddress.LastAddress.ColumnNumber).FirstRow();
         }
+
+        
+        public IXLRow WorksheetRow()
+        {
+            return Worksheet.Row(RangeAddress.FirstAddress.RowNumber);
+        }
     }
 }

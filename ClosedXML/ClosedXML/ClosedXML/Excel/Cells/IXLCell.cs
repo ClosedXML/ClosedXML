@@ -193,5 +193,8 @@ namespace ClosedXML.Excel
         IXLCell CellLeft(Int32 step);
         IXLCell CellRight();
         IXLCell CellRight(Int32 step);
+
+        IXLColumn WorksheetColumn();
+        IXLRow WorksheetRow();
     }
 }

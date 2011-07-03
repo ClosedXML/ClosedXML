@@ -103,6 +103,8 @@ namespace ClosedXML.Excel
         IXLRangeRow RowAbove(Int32 step);
         IXLRangeRow RowBelow();
         IXLRangeRow RowBelow(Int32 step);
+
+        IXLRow WorksheetRow();
     }
 }
 

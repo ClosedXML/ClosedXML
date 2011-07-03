@@ -95,6 +95,9 @@ namespace ClosedXML.Excel
         IXLRangeColumn ColumnLeft(Int32 step);
         IXLRangeColumn ColumnRight();
         IXLRangeColumn ColumnRight(Int32 step);
+
+        IXLColumn WorksheetColumn();
+        
     }
 }
 

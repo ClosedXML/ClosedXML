@@ -1877,5 +1877,14 @@
         {
             return Worksheet.Cell(Address.RowNumber + rowsToShift, Address.ColumnNumber + columnsToShift);
         }
+
+        public IXLColumn WorksheetColumn()
+        {
+            return Worksheet.Column(Address.ColumnNumber);
+        }
+        public IXLRow WorksheetRow()
+        {
+            return Worksheet.Row(Address.RowNumber);
+        }
     }
 }

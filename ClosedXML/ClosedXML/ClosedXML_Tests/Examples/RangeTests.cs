@@ -83,5 +83,11 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<WalkingRanges>(@"Ranges\WalkingRanges.xlsx");
         }
+        [TestMethod]
+        public void CurrentRowColumn()
+        {
+            TestHelper.RunTestExample<CurrentRowColumn>(@"Ranges\CurrentRowColumn.xlsx");
+        }
+
     }
 }

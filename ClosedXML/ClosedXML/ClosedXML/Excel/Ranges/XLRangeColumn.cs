@@ -310,5 +310,11 @@
                 RangeAddress.LastAddress.RowNumber,
                 columnNumber).FirstColumn();
         }
+
+        public IXLColumn WorksheetColumn()
+        {
+            return Worksheet.Column(RangeAddress.FirstAddress.ColumnNumber);
+        }
+
     }
 }
