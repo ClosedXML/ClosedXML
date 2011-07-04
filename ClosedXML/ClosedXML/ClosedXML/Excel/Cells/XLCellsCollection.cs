@@ -5,56 +5,28 @@ namespace ClosedXML.Excel
 {
     internal class XLCellsCollection
     {
-
         private readonly Dictionary<XLSheetPoint, XLCell> _cellsDictionary = new Dictionary<XLSheetPoint, XLCell>();
+        public Dictionary<Int32, Int32> ColumnsUsed = new Dictionary<int, int>();
+        public HashSet<XLSheetPoint> Deleted = new HashSet<XLSheetPoint>();
 
 
         public Int32 MaxColumnUsed;
         public Int32 MaxRowUsed;
-        public Int32 Count { get; private set; }
-        public HashSet<XLSheetPoint> Deleted = new HashSet<XLSheetPoint>();
         public Dictionary<Int32, Int32> RowsUsed = new Dictionary<int, int>();
-        public Dictionary<Int32, Int32> ColumnsUsed = new Dictionary<int, int>();
 
         public XLCellsCollection()
         {
             Clear();
         }
 
-        //private void ResizeIfNecessary(Int32 row, Int32 column)
-        //{
-        //    if (row >= _rowCapacity || column >= _columnCapacity)
-        //    {
-        //        if (row >= _rowCapacity)
-        //        {
-        //            _rowCapacity = (Int32)((Double)_rowCapacity * 2);
-                    
-        //            if (_rowCapacity < row)
-        //                _rowCapacity = (Int32)((Double)row * 1.5);
+        public Int32 Count { get; private set; }
 
-        //            if (_rowCapacity > ExcelHelper.MaxRowNumber)
-        //                _rowCapacity = ExcelHelper.MaxRowNumber;
-        //        }
-
-        //        if (column >= _columnCapacity)
-        //        {
-        //            _columnCapacity = (Int32)((Double)_columnCapacity * 2);
-
-        //            if (_columnCapacity < column)
-        //                _columnCapacity = (Int32)((Double)column * 1.5);
-
-        //            if (_columnCapacity > ExcelHelper.MaxColumnNumber)
-        //                _columnCapacity = ExcelHelper.MaxColumnNumber;
-        //        }
-                
-        //        _cells = ExcelHelper.ResizeArray(_cells, _rowCapacity + 1, _columnCapacity + 1);
-        //    }
-        //}
 
         public void Add(XLSheetPoint sheetPoint, XLCell cell)
         {
             Add(sheetPoint.Row, sheetPoint.Column, cell);
         }
+
         public void Add(Int32 row, Int32 column, XLCell cell)
         {
             Count++;
@@ -62,9 +34,7 @@ namespace ClosedXML.Excel
             IncrementUsage(RowsUsed, row);
             IncrementUsage(ColumnsUsed, column);
 
-            //ResizeIfNecessary(row, column);
-            _cellsDictionary.Add(new XLSheetPoint(row, column),cell );
-            //_cells[row, column] = cell;
+            _cellsDictionary.Add(new XLSheetPoint(row, column), cell);
             if (row > MaxRowUsed) MaxRowUsed = row;
             if (column > MaxColumnUsed) MaxColumnUsed = column;
             var sp = new XLSheetPoint(row, column);
@@ -72,7 +42,7 @@ namespace ClosedXML.Excel
                 Deleted.Remove(sp);
         }
 
-        private static void IncrementUsage(Dictionary<int,int> dictionary, Int32 key)
+        private static void IncrementUsage(Dictionary<int, int> dictionary, Int32 key)
         {
             if (dictionary.ContainsKey(key))
                 dictionary[key]++;
@@ -83,13 +53,12 @@ namespace ClosedXML.Excel
         private static void DecrementUsage(Dictionary<int, int> dictionary, Int32 key)
         {
             Int32 count;
-            if (dictionary.TryGetValue(key, out count))
-            {
-                if (count > 0)
-                    dictionary[key]--;
-                else
-                    dictionary.Remove(key);
-            }
+            if (!dictionary.TryGetValue(key, out count)) return;
+
+            if (count > 0)
+                dictionary[key]--;
+            else
+                dictionary.Remove(key);
         }
 
         public void Clear()
@@ -105,8 +74,9 @@ namespace ClosedXML.Excel
 
         public void Remove(XLSheetPoint sheetPoint)
         {
-            Remove(sheetPoint.Row,sheetPoint.Column);
+            Remove(sheetPoint.Row, sheetPoint.Column);
         }
+
         public void Remove(Int32 row, Int32 column)
         {
             Count--;
@@ -114,7 +84,7 @@ namespace ClosedXML.Excel
             DecrementUsage(ColumnsUsed, row);
             var sp = new XLSheetPoint(row, column);
             Deleted.Add(sp);
-                _cellsDictionary.Remove(sp);
+            _cellsDictionary.Remove(sp);
             //_cells[row, column] = null;
         }
 
@@ -128,16 +98,14 @@ namespace ClosedXML.Excel
                 for (int co = columnStart; co <= finalColumn; co++)
                 {
                     XLCell cell;
-                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro,co), out cell ))
-                    {
+                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell))
                         yield return cell;
-                    }
                 }
             }
         }
 
         public void RemoveAll(Int32 rowStart, Int32 columnStart,
-                                    Int32 rowEnd, Int32 columnEnd)
+                              Int32 rowEnd, Int32 columnEnd)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -147,15 +115,13 @@ namespace ClosedXML.Excel
                 {
                     var sp = new XLSheetPoint(ro, co);
                     if (_cellsDictionary.ContainsKey(sp))
-                    {
                         Remove(sp);
-                    }
                 }
             }
         }
 
         public IEnumerable<XLSheetPoint> GetSheetPoints(Int32 rowStart, Int32 columnStart,
-                                    Int32 rowEnd, Int32 columnEnd)
+                                                        Int32 rowEnd, Int32 columnEnd)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -166,9 +132,7 @@ namespace ClosedXML.Excel
                 {
                     var sp = new XLSheetPoint(ro, co);
                     if (_cellsDictionary.ContainsKey(sp))
-                    {
                         yield return sp;
-                    }
                 }
             }
         }
@@ -179,21 +143,13 @@ namespace ClosedXML.Excel
                 return null;
             var sp = new XLSheetPoint(row, column);
             XLCell cell;
-            if (_cellsDictionary.TryGetValue(sp, out cell))
-                return cell;
-
-            return null;
-            //return _cells[row, column];
+            return _cellsDictionary.TryGetValue(sp, out cell) ? cell : null;
         }
 
         public XLCell GetCell(XLSheetPoint sheetPoint)
         {
             XLCell cell;
-            if (_cellsDictionary.TryGetValue(sheetPoint, out cell))
-                return cell;
-
-            return null;
-            //return _cells[sheetPoint.Row, sheetPoint.Column];
+            return _cellsDictionary.TryGetValue(sheetPoint, out cell) ? cell : null;
         }
 
         internal void SwapRanges(XLSheetRange sheetRange1, XLSheetRange sheetRange2)
@@ -209,26 +165,23 @@ namespace ClosedXML.Excel
                     var cell1 = GetCell(sp1);
                     var cell2 = GetCell(sp2);
 
-                    if (cell1 != null || cell2 != null)
+                    if (cell1 == null && cell2 == null) continue;
+
+                    if (cell1 != null)
                     {
-                        if (cell1 != null)
-                        {
-                            cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
-                            _cellsDictionary.Remove(sp1);
-                            if (cell2 != null)
-                                Add(sp1, cell2);
-                        }
-
+                        cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
+                        _cellsDictionary.Remove(sp1);
                         if (cell2 != null)
-                        {
-                            cell2.Address = new XLAddress(cell2.Worksheet, sp1.Row, sp1.Column, false, false);
-                            _cellsDictionary.Remove(sp2);
-                            if (cell1 != null)
-                                Add(sp2, cell1);
-                        }
-
+                            Add(sp1, cell2);
                     }
-                }    
+
+                    if (cell2 == null) continue;
+
+                    cell2.Address = new XLAddress(cell2.Worksheet, sp1.Row, sp1.Column, false, false);
+                    _cellsDictionary.Remove(sp2);
+                    if (cell1 != null)
+                        Add(sp2, cell1);
+                }
             }
         }
 
@@ -245,9 +198,7 @@ namespace ClosedXML.Excel
                 {
                     var cell = GetCell(ro, co);
                     if (cell != null && predicate(cell))
-                    {
                         yield return cell;
-                    }
                 }
             }
         }

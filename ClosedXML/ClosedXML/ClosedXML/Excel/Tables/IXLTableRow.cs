@@ -12,6 +12,9 @@ namespace ClosedXML.Excel
         new IXLTableRow Sort(XLSortOrder sortOrder);
         new IXLTableRow Sort(XLSortOrder sortOrder, Boolean matchCase);
 
-        
+        new IXLTableRow RowAbove();
+        new IXLTableRow RowAbove(Int32 step);
+        new IXLTableRow RowBelow();
+        new IXLTableRow RowBelow(Int32 step);
     }
 }

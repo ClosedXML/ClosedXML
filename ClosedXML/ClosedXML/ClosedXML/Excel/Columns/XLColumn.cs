@@ -88,10 +88,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (IsReference)
-                    return (Worksheet).Internals.ColumnsCollection[ColumnNumber()].InnerStyle;
-                
-                    return new XLStyle(new XLStylizedContainer(_style, this), _style);
+                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].InnerStyle : new XLStyle(new XLStylizedContainer(_style, this), _style);
             }
             set
             {
@@ -120,10 +117,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (IsReference)
-                    return (Worksheet).Internals.ColumnsCollection[ColumnNumber()].Width;
-                
-                    return _width;
+                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Width : _width;
             }
             set
             {
@@ -179,10 +173,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (IsReference)
-                    return (Worksheet).Internals.ColumnsCollection[ColumnNumber()].Style;
-                
-                    return _style;
+                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Style : _style;
             }
             set
             {
@@ -275,35 +266,21 @@ namespace ClosedXML.Excel
             Double colMaxWidth = minWidth;
             foreach (XLCell c in Column(startRow, endRow).CellsUsed())
             {
-                if (!c.IsMerged())
+                if (c.IsMerged()) continue;
+
+                Double thisWidthMax = 0;
+                Int32 textRotation = c.Style.Alignment.TextRotation;
+                if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
                 {
-                    Double thisWidthMax = 0;
-                    Int32 textRotation = c.Style.Alignment.TextRotation;
-                    if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
+                    var kpList = new List<KeyValuePair<IXLFontBase, string>>();
+
+                    #region if (c.HasRichText)
+
+                    if (c.HasRichText)
                     {
-                        var kpList = new List<KeyValuePair<IXLFontBase, string>>();
-
-                        #region if (c.HasRichText)
-
-                        if (c.HasRichText)
+                        foreach (IXLRichString rt in c.RichText)
                         {
-                            foreach (IXLRichString rt in c.RichText)
-                            {
-                                String formattedString = rt.Text;
-                                var arr = formattedString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
-                                Int32 arrCount = arr.Count();
-                                for (Int32 i = 0; i < arrCount; i++)
-                                {
-                                    String s = arr[i];
-                                    if (i < arrCount - 1)
-                                        s += Environment.NewLine;
-                                    kpList.Add(new KeyValuePair<IXLFontBase, String>(rt, s));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            String formattedString = c.GetFormattedString();
+                            String formattedString = rt.Text;
                             var arr = formattedString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
                             Int32 arrCount = arr.Count();
                             for (Int32 i = 0; i < arrCount; i++)
@@ -311,118 +288,135 @@ namespace ClosedXML.Excel
                                 String s = arr[i];
                                 if (i < arrCount - 1)
                                     s += Environment.NewLine;
-                                kpList.Add(new KeyValuePair<IXLFontBase, String>(c.Style.Font, s));
+                                kpList.Add(new KeyValuePair<IXLFontBase, String>(rt, s));
                             }
                         }
-
-                        #endregion
-
-                        #region foreach (var kp in kpList)
-
-                        Double runningWidth = 0;
-                        Boolean rotated = false;
-                        Double maxLineWidth = 0;
-                        Int32 lineCount = 1;
-                        foreach (KeyValuePair<IXLFontBase, string> kp in kpList)
+                    }
+                    else
+                    {
+                        String formattedString = c.GetFormattedString();
+                        var arr = formattedString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+                        Int32 arrCount = arr.Count();
+                        for (Int32 i = 0; i < arrCount; i++)
                         {
-                            var f = kp.Key;
-                            String formattedString = kp.Value;
+                            String s = arr[i];
+                            if (i < arrCount - 1)
+                                s += Environment.NewLine;
+                            kpList.Add(new KeyValuePair<IXLFontBase, String>(c.Style.Font, s));
+                        }
+                    }
 
-                            Int32 newLinePosition = formattedString.IndexOf(Environment.NewLine);
-                            if (textRotation == 0)
+                    #endregion
+
+                    #region foreach (var kp in kpList)
+
+                    Double runningWidth = 0;
+                    Boolean rotated = false;
+                    Double maxLineWidth = 0;
+                    Int32 lineCount = 1;
+                    foreach (KeyValuePair<IXLFontBase, string> kp in kpList)
+                    {
+                        var f = kp.Key;
+                        String formattedString = kp.Value;
+
+                        Int32 newLinePosition = formattedString.IndexOf(Environment.NewLine);
+                        if (textRotation == 0)
+                        {
+                            #region if (newLinePosition >= 0)
+
+                            if (newLinePosition >= 0)
                             {
-                                #region if (newLinePosition >= 0)
+                                if (newLinePosition > 0)
+                                    runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition));
+
+                                if (runningWidth > thisWidthMax)
+                                    thisWidthMax = runningWidth;
+
+                                runningWidth = newLinePosition < formattedString.Length - 2
+                                                   ? f.GetWidth(formattedString.Substring(newLinePosition + 2))
+                                                   : 0;
+                            }
+                            else
+                                runningWidth += f.GetWidth(formattedString);
+
+                            #endregion
+                        }
+                        else
+                        {
+                            #region if (textRotation == 255)
+
+                            if (textRotation == 255)
+                            {
+                                if (runningWidth <= 0)
+                                    runningWidth = f.GetWidth("X");
+
+                                if (newLinePosition >= 0)
+                                    runningWidth += f.GetWidth("X");
+                            }
+                            else
+                            {
+                                rotated = true;
+                                Double vWidth = f.GetWidth("X");
+                                if (vWidth > maxLineWidth)
+                                    maxLineWidth = vWidth;
 
                                 if (newLinePosition >= 0)
                                 {
+                                    lineCount++;
+
                                     if (newLinePosition > 0)
                                         runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition));
 
                                     if (runningWidth > thisWidthMax)
                                         thisWidthMax = runningWidth;
 
-                                    runningWidth = newLinePosition < formattedString.Length - 2 ? f.GetWidth(formattedString.Substring(newLinePosition + 2)) : 0;
+                                    runningWidth = newLinePosition < formattedString.Length - 2
+                                                       ? f.GetWidth(formattedString.Substring(newLinePosition + 2))
+                                                       : 0;
                                 }
                                 else
                                     runningWidth += f.GetWidth(formattedString);
-
-                                #endregion
                             }
-                            else
-                            {
-                                #region if (textRotation == 255)
 
-                                if (textRotation == 255)
-                                {
-                                    if (runningWidth == 0)
-                                        runningWidth = f.GetWidth("X");
-
-                                    if (newLinePosition >= 0)
-                                        runningWidth += f.GetWidth("X");
-                                }
-                                else
-                                {
-                                    rotated = true;
-                                    Double vWidth = f.GetWidth("X");
-                                    if (vWidth > maxLineWidth)
-                                        maxLineWidth = vWidth;
-
-                                    if (newLinePosition >= 0)
-                                    {
-                                        lineCount++;
-
-                                        if (newLinePosition > 0)
-                                            runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition));
-
-                                        if (runningWidth > thisWidthMax)
-                                            thisWidthMax = runningWidth;
-
-                                        runningWidth = newLinePosition < formattedString.Length - 2 ? f.GetWidth(formattedString.Substring(newLinePosition + 2)) : 0;
-                                    }
-                                    else
-                                        runningWidth += f.GetWidth(formattedString);
-                                }
-
-                                #endregion
-                            }
+                            #endregion
                         }
-
-                        #endregion
-
-                        if (runningWidth > thisWidthMax)
-                            thisWidthMax = runningWidth;
-
-                        #region if (rotated)
-
-                        if (rotated)
-                        {
-                            Int32 rotation;
-                            if (textRotation == 90 || textRotation == 180 || textRotation == 255)
-                                rotation = 90;
-                            else
-                                rotation = textRotation % 90;
-
-                            Double r = DegreeToRadian(rotation);
-
-                            thisWidthMax = (thisWidthMax * Math.Cos(r)) + (maxLineWidth * lineCount);
-                        }
-
-                        #endregion
                     }
-                    else
-                        thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString());
-                    if (thisWidthMax >= maxWidth)
+
+                    #endregion
+
+                    if (runningWidth > thisWidthMax)
+                        thisWidthMax = runningWidth;
+
+                    #region if (rotated)
+
+                    if (rotated)
                     {
-                        colMaxWidth = maxWidth;
-                        break;
+                        Int32 rotation;
+                        if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                            rotation = 90;
+                        else
+                            rotation = textRotation % 90;
+
+                        Double r = DegreeToRadian(rotation);
+
+                        thisWidthMax = (thisWidthMax * Math.Cos(r)) + (maxLineWidth * lineCount);
                     }
-                    
-                    if (thisWidthMax > colMaxWidth)
-                        colMaxWidth = thisWidthMax + 1;
+
+                    #endregion
                 }
+                else
+                    thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString());
+                if (thisWidthMax >= maxWidth)
+                {
+                    colMaxWidth = maxWidth;
+                    break;
+                }
+
+                if (thisWidthMax > colMaxWidth)
+                    colMaxWidth = thisWidthMax + 1;
             }
 
-            if (colMaxWidth == 0)
+            if (colMaxWidth <= 0)
                 colMaxWidth = Worksheet.ColumnWidth;
 
             Width = colMaxWidth;
@@ -445,10 +439,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (IsReference)
-                    return (Worksheet).Internals.ColumnsCollection[ColumnNumber()].IsHidden;
-
-                return _isHidden;
+                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].IsHidden : _isHidden;
             }
             set
             {
@@ -668,57 +659,58 @@ namespace ClosedXML.Excel
             return Math.PI * angle / 180.0;
         }
 
-        public override void CopyTo(IXLCell target)
-        {
-            CopyTo(target);
-        }
-
-        public override void CopyTo(IXLRangeBase target)
-        {
-            CopyTo(target);
-        }
-
-        #region XLColumn Left
-        public XLColumn ColumnLeft()
-        {
-            return ColumnLeft(1);
-        }
-        IXLColumn IXLColumn.ColumnLeft()
-        {
-            return ColumnLeft();
-        }
-        public XLColumn ColumnLeft(Int32 step)
-        {
-            return ColumnShift(step * -1);
-        }
-        IXLColumn IXLColumn.ColumnLeft(Int32 step)
-        {
-            return ColumnLeft(step);
-        }
-        #endregion
-
-        #region XLColumn Right
-        public XLColumn ColumnRight()
-        {
-            return ColumnRight(1);
-        }
-        IXLColumn IXLColumn.ColumnRight()
-        {
-            return ColumnRight();
-        }
-        public XLColumn ColumnRight(Int32 step)
-        {
-            return ColumnShift(step);
-        }
-        IXLColumn IXLColumn.ColumnRight(Int32 step)
-        {
-            return ColumnRight(step);
-        }
-        #endregion
 
         private XLColumn ColumnShift(Int32 columnsToShift)
         {
             return Worksheet.Column(ColumnNumber() + columnsToShift);
         }
+
+        #region XLColumn Left
+
+        IXLColumn IXLColumn.ColumnLeft()
+        {
+            return ColumnLeft();
+        }
+
+        IXLColumn IXLColumn.ColumnLeft(Int32 step)
+        {
+            return ColumnLeft(step);
+        }
+
+        public XLColumn ColumnLeft()
+        {
+            return ColumnLeft(1);
+        }
+
+        public XLColumn ColumnLeft(Int32 step)
+        {
+            return ColumnShift(step * -1);
+        }
+
+        #endregion
+
+        #region XLColumn Right
+
+        IXLColumn IXLColumn.ColumnRight()
+        {
+            return ColumnRight();
+        }
+
+        IXLColumn IXLColumn.ColumnRight(Int32 step)
+        {
+            return ColumnRight(step);
+        }
+
+        public XLColumn ColumnRight()
+        {
+            return ColumnRight(1);
+        }
+
+        public XLColumn ColumnRight(Int32 step)
+        {
+            return ColumnShift(step);
+        }
+
+        #endregion
     }
 }
