@@ -99,6 +99,7 @@ namespace ClosedXML.Excel
         public void List(String list, Boolean inCellDropdown)
         {
             AllowedValues = XLAllowedValues.List;
+            InCellDropdown = inCellDropdown;
             Value = list;
         }
 
@@ -110,7 +111,8 @@ namespace ClosedXML.Excel
         public void List(IXLRange range, Boolean inCellDropdown)
         {
             AllowedValues = XLAllowedValues.List;
-            Value = String.Format("'{0}'!{1}", ((XLRange)range).Worksheet.Name, range.RangeAddress);
+            InCellDropdown = inCellDropdown;
+            Value = String.Format("'{0}'!{1}", ((XLRange)range).Worksheet.Name, range.RangeAddress.ToStringFixed());
         }
 
         public void Custom(String customValidation)

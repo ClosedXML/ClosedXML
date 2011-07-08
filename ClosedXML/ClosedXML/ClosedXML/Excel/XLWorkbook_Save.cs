@@ -3243,20 +3243,33 @@ namespace ClosedXML.Excel
         {
             return value == defaultValue ? null : new BooleanValue(value);
         }
-
+        private struct  MinMax
+        {
+            public MinMax (UInt32 min, UInt32 max)
+            {
+                Min = min;
+                Max = max;
+            }
+            public UInt32 Min;
+            public UInt32 Max;
+        }
         private static void CollapseColumns(Columns columns, Dictionary<uint, Column> sheetColumns)
         {
             UInt32 lastMin = 1;
             Int32 count = sheetColumns.Count;
-            foreach (KeyValuePair<uint, Column> kp in sheetColumns.OrderBy(kp => kp.Key))
+            //var minMaxList = new List<MinMax>();
+            //var columnsToAdd = new List<Column>();
+            foreach (KeyValuePair<uint, Column> kp in sheetColumns
+                .Where(kp => !(kp.Key < count && ColumnsAreEqual(kp.Value, sheetColumns[kp.Key + 1])))
+                .OrderBy(kp => kp.Key))
             {
-                if ((kp.Key < count && ColumnsAreEqual(kp.Value, sheetColumns[kp.Key + 1]))) continue;
-
                 var newColumn = (Column)kp.Value.CloneNode(true);
                 newColumn.Min = lastMin;
                 uint newColumnMax = newColumn.Max.Value;
+                //minMaxList.Add(new MinMax(lastMin, newColumnMax));
+                //columnsToAdd.Add(newColumn);
                 var columnsToRemove =
-                    columns.Elements<Column>().Where(co => co.Min.Value >= lastMin && co.Max.Value <= newColumnMax).
+                    columns.Elements<Column>().Where(co => co.Min >= lastMin && co.Max <= newColumnMax).
                         Select(co => co).ToList();
                 columnsToRemove.ForEach(c => columns.RemoveChild(c));
 
@@ -3264,6 +3277,7 @@ namespace ClosedXML.Excel
 
                 lastMin = kp.Key + 1;
             }
+
         }
 
         private static double GetColumnWidth(double columnWidth)

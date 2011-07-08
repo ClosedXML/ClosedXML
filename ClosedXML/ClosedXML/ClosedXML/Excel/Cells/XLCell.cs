@@ -1028,7 +1028,7 @@
                 }
                 else if (Double.TryParse(val, out dTest))
                     _dataType = XLCellValues.Number;
-                else if (DateTime.TryParse(val, out dtTest))
+                else if (DateTime.TryParse(val, out dtTest) && dtTest >= BaseDate)
                 {
                     _dataType = XLCellValues.DateTime;
 
