@@ -66,12 +66,12 @@ namespace ClosedXML.Excel
                 int row = RowNumber();
 
                 Int32 maxColumn = 0;
-                if ((Worksheet).Internals.CellsCollection.RowsUsed.ContainsKey(row))
+                if (Worksheet.Internals.CellsCollection.RowsUsed.ContainsKey(row))
                     maxColumn = Worksheet.Internals.CellsCollection.MaxColumnInRow(row);
 
-                if ((Worksheet).Internals.ColumnsCollection.Count > 0)
+                if (Worksheet.Internals.ColumnsCollection.Count > 0)
                 {
-                    Int32 maxInCollection = (Worksheet).Internals.ColumnsCollection.Keys.Max();
+                    Int32 maxInCollection = Worksheet.Internals.ColumnsCollection.Keys.Max();
                     if (maxInCollection > maxColumn)
                         maxColumn = maxInCollection;
                 }
@@ -98,7 +98,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (IsReference)
-                    (Worksheet).Internals.RowsCollection[RowNumber()].InnerStyle = value;
+                    Worksheet.Internals.RowsCollection[RowNumber()].InnerStyle = value;
                 else
                     _style = new XLStyle(this, value);
             }
@@ -110,7 +110,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (IsReference)
-                    (Worksheet).Internals.RowsCollection[RowNumber()].Collapsed = value;
+                    Worksheet.Internals.RowsCollection[RowNumber()].Collapsed = value;
                 else
                     _collapsed = value;
             }
@@ -124,7 +124,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (IsReference)
-                    (Worksheet).Internals.RowsCollection[RowNumber()].Height = value;
+                    Worksheet.Internals.RowsCollection[RowNumber()].Height = value;
                 else
                     _height = value;
             }
@@ -134,20 +134,20 @@ namespace ClosedXML.Excel
         {
             int rowNumber = RowNumber();
             AsRange().Delete(XLShiftDeletedCells.ShiftCellsUp);
-            (Worksheet).Internals.RowsCollection.Remove(rowNumber);
+            Worksheet.Internals.RowsCollection.Remove(rowNumber);
             var rowsToMove = new List<Int32>();
-            rowsToMove.AddRange((Worksheet).Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key));
+            rowsToMove.AddRange(Worksheet.Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key));
             foreach (int row in rowsToMove.OrderBy(r => r))
             {
-                (Worksheet).Internals.RowsCollection.Add(row - 1, (Worksheet).Internals.RowsCollection[row]);
-                (Worksheet).Internals.RowsCollection.Remove(row);
+                Worksheet.Internals.RowsCollection.Add(row - 1, Worksheet.Internals.RowsCollection[row]);
+                Worksheet.Internals.RowsCollection.Remove(row);
             }
         }
 
         public new IXLRows InsertRowsBelow(Int32 numberOfRows)
         {
             int rowNum = RowNumber();
-            (Worksheet).Internals.RowsCollection.ShiftRowsDown(rowNum + 1, numberOfRows);
+            Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum + 1, numberOfRows);
             var range = (XLRange)Worksheet.Row(rowNum).AsRange();
             range.InsertRowsBelow(true, numberOfRows);
             return Worksheet.Rows(rowNum + 1, rowNum + numberOfRows);
@@ -156,7 +156,7 @@ namespace ClosedXML.Excel
         public new IXLRows InsertRowsAbove(Int32 numberOfRows)
         {
             int rowNum = RowNumber();
-            (Worksheet).Internals.RowsCollection.ShiftRowsDown(rowNum, numberOfRows);
+            Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum, numberOfRows);
             // We can't use this.AsRange() because we've shifted the rows
             // and we want to use the old rowNum.
             var range = (XLRange)Worksheet.Row(rowNum).AsRange();
@@ -313,11 +313,11 @@ namespace ClosedXML.Excel
 
         public Boolean IsHidden
         {
-            get { return IsReference ? (Worksheet).Internals.RowsCollection[RowNumber()].IsHidden : _isHidden; }
+            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].IsHidden : _isHidden; }
             set
             {
                 if (IsReference)
-                    (Worksheet).Internals.RowsCollection[RowNumber()].IsHidden = value;
+                    Worksheet.Internals.RowsCollection[RowNumber()].IsHidden = value;
                 else
                     _isHidden = value;
             }
@@ -329,7 +329,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (IsReference)
-                    (Worksheet).Internals.RowsCollection[RowNumber()].Style = value;
+                    Worksheet.Internals.RowsCollection[RowNumber()].Style = value;
                 else
                 {
                     _style = new XLStyle(this, value);
@@ -343,10 +343,10 @@ namespace ClosedXML.Excel
                         maxColumn = Worksheet.Internals.CellsCollection.MaxColumnInRow(row);
                     }
 
-                    if ((Worksheet).Internals.ColumnsCollection.Count > 0)
+                    if (Worksheet.Internals.ColumnsCollection.Count > 0)
                     {
-                        Int32 minInCollection = (Worksheet).Internals.ColumnsCollection.Keys.Min();
-                        Int32 maxInCollection = (Worksheet).Internals.ColumnsCollection.Keys.Max();
+                        Int32 minInCollection = Worksheet.Internals.ColumnsCollection.Keys.Min();
+                        Int32 maxInCollection = Worksheet.Internals.ColumnsCollection.Keys.Max();
                         if (minInCollection < minColumn)
                             minColumn = minInCollection;
                         if (maxInCollection > maxColumn)
@@ -565,7 +565,7 @@ namespace ClosedXML.Excel
         internal void SetStyleNoColumns(IXLStyle value)
         {
             if (IsReference)
-                (Worksheet).Internals.RowsCollection[RowNumber()].SetStyleNoColumns(value);
+                Worksheet.Internals.RowsCollection[RowNumber()].SetStyleNoColumns(value);
             else
             {
                 _style = new XLStyle(this, value);

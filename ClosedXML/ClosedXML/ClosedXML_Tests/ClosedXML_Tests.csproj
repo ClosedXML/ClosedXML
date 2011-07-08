@@ -63,6 +63,8 @@
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
+    <Compile Include="Excel\Cells\XLCellTest.cs" />
+    <Compile Include="Excel\Ranges\XLRangeBaseTest.cs" />
     <Compile Include="Utils\ExcelDocsComparer.cs" />
     <Compile Include="Examples\DeleteTests.cs" />
     <Compile Include="Examples\LoadingTests.cs" />

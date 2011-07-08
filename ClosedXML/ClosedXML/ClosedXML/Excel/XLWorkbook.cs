@@ -312,7 +312,7 @@ namespace ClosedXML.Excel
             }
             else if (m_loadSource == XLLoadSource.File)
             {
-                if (m_originalFile.Trim().ToLower() != file.Trim().ToLower())
+                if (String.Compare(m_originalFile.Trim(), file.Trim(), true) != 0)
                 {
                     File.Copy(m_originalFile, file, true);
                 }

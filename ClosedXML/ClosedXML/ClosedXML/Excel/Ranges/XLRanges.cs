@@ -86,21 +86,17 @@ namespace ClosedXML.Excel
                 {
                     foreach (IXLDataValidation dv in range.Worksheet.DataValidations)
                     {
-                        foreach (IXLRange dvRange in dv.Ranges)
+                        foreach (IXLRange dvRange in dv.Ranges.Where(dvRange => dvRange.Intersects(range)))
                         {
-                            if (dvRange.Intersects(range))
+                            dv.Ranges.Remove(dvRange);
+                            foreach (IXLCell c in dvRange.Cells().Where(c => !range.Contains(c.Address.ToString())))
                             {
-                                dv.Ranges.Remove(dvRange);
-                                foreach (IXLCell c in dvRange.Cells())
-                                {
-                                    if (!range.Contains(c.Address.ToString()))
-                                        dv.Ranges.Add(c.AsRange());
-                                }
+                                dv.Ranges.Add(c.AsRange());
                             }
                         }
                     }
                 }
-                var dataValidation = new XLDataValidation(this, _ranges.First().Worksheet);
+                var dataValidation = new XLDataValidation(this);
 
                 _ranges.First().Worksheet.DataValidations.Add(dataValidation);
                 return dataValidation;
@@ -214,10 +210,7 @@ namespace ClosedXML.Excel
         {
             var other = (XLRanges)obj;
 
-            if (_ranges.Count != other._ranges.Count)
-                return false;
-
-            return _ranges.Select(thisRange => Enumerable.Contains(other._ranges, thisRange)).All(foundOne => foundOne);
+            return _ranges.Count == other._ranges.Count && _ranges.Select(thisRange => Enumerable.Contains(other._ranges, thisRange)).All(foundOne => foundOne);
         }
 
         public override int GetHashCode()

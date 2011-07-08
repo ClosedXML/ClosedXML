@@ -182,8 +182,8 @@ namespace ClosedXML.Excel
         Boolean HasRichText { get; }
 
         Boolean IsMerged();
-        Boolean IsUsed();
-        Boolean IsUsed(Boolean includeFormats);
+        Boolean IsEmpty();
+        Boolean IsEmpty(Boolean includeFormats);
 
         IXLCell CellAbove();
         IXLCell CellAbove(Int32 step);

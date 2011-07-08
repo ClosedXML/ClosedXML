@@ -3,39 +3,40 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    internal class XLDataValidations: IXLDataValidations
+    using System.Collections;
+    using System.Linq;
+
+    internal class XLDataValidations : IXLDataValidations
     {
-        private List<IXLDataValidation> dataValidations = new List<IXLDataValidation>();
+        private readonly List<IXLDataValidation> _dataValidations = new List<IXLDataValidation>();
+
+        #region IXLDataValidations Members
+
         public void Add(IXLDataValidation dataValidation)
         {
-            dataValidations.Add(dataValidation);
-        }
-
-        public void Delete(IXLDataValidation dataValidation)
-        {
-            dataValidations.RemoveAll(dv=>dv.Ranges.Equals(dataValidation.Ranges));
+            _dataValidations.Add(dataValidation);
         }
 
         public IEnumerator<IXLDataValidation> GetEnumerator()
         {
-            return dataValidations.GetEnumerator();
+            return _dataValidations.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
         public Boolean ContainsSingle(IXLRange range)
         {
-            foreach (var dv in dataValidations)
-            {
-                if (dv.Ranges.Count == 1 && dv.Ranges.Contains(range))
-                    return true;
-            }
-            return false;
+            return _dataValidations.Any(dv => dv.Ranges.Count == 1 && dv.Ranges.Contains(range));
         }
 
-        
+        #endregion
+
+        public void Delete(IXLDataValidation dataValidation)
+        {
+            _dataValidations.RemoveAll(dv => dv.Ranges.Equals(dataValidation.Ranges));
+        }
     }
 }

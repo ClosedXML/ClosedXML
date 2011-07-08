@@ -8,76 +8,76 @@ namespace ClosedXML.Excel
     {
         public void ShiftColumnsRight(Int32 startingColumn, Int32 columnsToShift)
         {
-            foreach (var ro in dictionary.Keys.Where(k => k >= startingColumn).OrderByDescending(k => k))
+            foreach (var ro in _dictionary.Keys.Where(k => k >= startingColumn).OrderByDescending(k => k))
             {
-                var columnToMove = dictionary[ro];
+                var columnToMove = _dictionary[ro];
                 Int32 newColumn = ro + columnsToShift;
                 if (newColumn <= ExcelHelper.MaxColumnNumber)
                 {
-                    dictionary.Add(newColumn, new XLColumn(columnToMove));
+                    _dictionary.Add(newColumn, new XLColumn(columnToMove));
                 }
-                dictionary.Remove(ro);
+                _dictionary.Remove(ro);
             }
 
         }
 
-        private Dictionary<Int32, XLColumn> dictionary = new Dictionary<Int32, XLColumn>();
+        private readonly Dictionary<Int32, XLColumn> _dictionary = new Dictionary<Int32, XLColumn>();
 
         public void Add(int key, XLColumn value)
         {
-            dictionary.Add(key, value);
+            _dictionary.Add(key, value);
         }
 
         public bool ContainsKey(int key)
         {
-            return dictionary.ContainsKey(key);
+            return _dictionary.ContainsKey(key);
         }
 
         public ICollection<int> Keys
         {
-            get { return dictionary.Keys; }
+            get { return _dictionary.Keys; }
         }
 
         public bool Remove(int key)
         {
-            return dictionary.Remove(key);
+            return _dictionary.Remove(key);
         }
 
         public bool TryGetValue(int key, out XLColumn value)
         {
-            return dictionary.TryGetValue(key, out value);
+            return _dictionary.TryGetValue(key, out value);
         }
 
         public ICollection<XLColumn> Values
         {
-            get { return dictionary.Values; }
+            get { return _dictionary.Values; }
         }
 
         public XLColumn this[int key]
         {
             get
             {
-                return dictionary[key];
+                return _dictionary[key];
             }
             set
             {
-                dictionary[key] = value;
+                _dictionary[key] = value;
             }
         }
 
         public void Add(KeyValuePair<int, XLColumn> item)
         {
-            dictionary.Add(item.Key, item.Value);
+            _dictionary.Add(item.Key, item.Value);
         }
 
         public void Clear()
         {
-            dictionary.Clear();
+            _dictionary.Clear();
         }
 
         public bool Contains(KeyValuePair<int, XLColumn> item)
         {
-            return dictionary.Contains(item);
+            return _dictionary.Contains(item);
         }
 
         public void CopyTo(KeyValuePair<int, XLColumn>[] array, int arrayIndex)
@@ -87,7 +87,7 @@ namespace ClosedXML.Excel
 
         public int Count
         {
-            get { return dictionary.Count; }
+            get { return _dictionary.Count; }
         }
 
         public bool IsReadOnly
@@ -97,22 +97,22 @@ namespace ClosedXML.Excel
 
         public bool Remove(KeyValuePair<int, XLColumn> item)
         {
-            return dictionary.Remove(item.Key);
+            return _dictionary.Remove(item.Key);
         }
 
         public IEnumerator<KeyValuePair<int, XLColumn>> GetEnumerator()
         {
-            return dictionary.GetEnumerator();
+            return _dictionary.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return dictionary.GetEnumerator();
+            return _dictionary.GetEnumerator();
         }
 
         public void RemoveAll(Func<XLColumn, Boolean> predicate)
         {
-            dictionary.RemoveAll(predicate);
+            _dictionary.RemoveAll(predicate);
         }
     }
 }

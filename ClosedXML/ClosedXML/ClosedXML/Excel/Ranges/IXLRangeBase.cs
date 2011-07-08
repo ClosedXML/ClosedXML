@@ -216,6 +216,10 @@ namespace ClosedXML.Excel
         String ToStringRelative();
         String ToStringFixed();
 
+        Boolean IsMerged();
+        Boolean IsEmpty();
+        Boolean IsEmpty(Boolean includeFormats);
+
 
         //IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
     }

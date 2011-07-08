@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
                 AddText(rt.Text, rt);
             if (defaultRichText.HasPhonetics)
             {
-                phonetics = new XLPhonetics(defaultRichText.Phonetics, defaultFont);
+                _phonetics = new XLPhonetics(defaultRichText.Phonetics, defaultFont);
             }
         }
 
@@ -33,12 +33,12 @@ namespace ClosedXML.Excel
         }
 
         public Int32 Count { get { return _richTexts.Count; } }
-        private Int32 m_length = 0;
+        private Int32 _length = 0;
         public Int32 Length
         {
             get
             {
-                return m_length;
+                return _length;
             }
         }
         public IXLRichString AddText(String text)
@@ -54,13 +54,13 @@ namespace ClosedXML.Excel
         public IXLRichString AddText(IXLRichString richText)
         {
             _richTexts.Add(richText);
-            m_length += richText.Text.Length;
+            _length += richText.Text.Length;
             return richText;
         }
         public IXLRichText ClearText()
         {
             _richTexts.Clear();
-            m_length = 0;
+            _length = 0;
             return this;
         }
         public IXLRichText ClearFont()
@@ -80,11 +80,11 @@ namespace ClosedXML.Excel
 
         public IXLRichText Substring(Int32 index)
         {
-            return Substring(index, m_length - index);
+            return Substring(index, _length - index);
         }
         public IXLRichText Substring(Int32 index, Int32 length)
         {
-            if (index + 1 > m_length || (m_length - index + 1) < length || length <= 0)
+            if (index + 1 > _length || (_length - index + 1) < length || length <= 0)
                 throw new IndexOutOfRangeException("Index and length must refer to a location within the string.");
 
             List<IXLRichString> newRichTexts = new List<IXLRichString>();
@@ -110,9 +110,9 @@ namespace ClosedXML.Excel
                     if (leftToTake > rt.Text.Length - startIndex)
                         leftToTake = rt.Text.Length - startIndex;
                     
-                    XLRichString newRT = new XLRichString(rt.Text.Substring(startIndex, leftToTake), rt);
-                    newRichTexts.Add(newRT);
-                    retVal.AddText(newRT);
+                    XLRichString newRt = new XLRichString(rt.Text.Substring(startIndex, leftToTake), rt);
+                    newRichTexts.Add(newRt);
+                    retVal.AddText(newRt);
 
                     if (startIndex + leftToTake < rt.Text.Length)
                         newRichTexts.Add(new XLRichString(rt.Text.Substring(startIndex + leftToTake), rt));
@@ -171,26 +171,17 @@ namespace ClosedXML.Excel
                     return false;
             }
 
-            if (phonetics == null)
-                return true;
-            else
-                return Phonetics.Equals(other.Phonetics);
+            return _phonetics == null || Phonetics.Equals(other.Phonetics);
         }
 
         public String Text { get { return ToString(); } }
 
-        private IXLPhonetics phonetics;
+        private IXLPhonetics _phonetics;
         public IXLPhonetics Phonetics 
         {
-            get
-            {
-                if (phonetics == null)
-                    phonetics = new XLPhonetics(_defaultFont);
-
-                return phonetics;
-            }
+            get { return _phonetics ?? (_phonetics = new XLPhonetics(_defaultFont)); }
         }
 
-        public Boolean HasPhonetics { get { return phonetics != null; } }
+        public Boolean HasPhonetics { get { return _phonetics != null; } }
     }
 }

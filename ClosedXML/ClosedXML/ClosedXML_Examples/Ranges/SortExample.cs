@@ -200,12 +200,12 @@ namespace ClosedXML_Examples.Misc
             ws.Cell("A2").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
             ws.Cell("A3").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
             ws.Cell("A4").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
-            ws.Cell("A5").SetValue(" ").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
+            ws.Cell("A5").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
             ws.Cell("A6").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
             ws.Cell("A7").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.IndianRed);
             ws.Cell("A8").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
 
-            ws.Cell("B1").SetValue(" ").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
+            ws.Cell("B1").SetValue("").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
             ws.Cell("B2").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
             ws.Cell("B3").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
             ws.Cell("B4").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
@@ -215,13 +215,13 @@ namespace ClosedXML_Examples.Misc
             ws.Cell("B8").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
 
             ws.Cell("C1").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
-            ws.Cell("C2").SetValue(" ").Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
+            ws.Cell("C2").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
             ws.Cell("C3").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
             ws.Cell("C4").SetValue("a").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
             ws.Cell("C5").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.DarkSalmon);
             ws.Cell("C6").SetValue("b").Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
             ws.Cell("C7").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.IndianRed);
-            ws.Cell("C8").SetValue(" ").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
+            ws.Cell("C8").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
         }
         // Private
 

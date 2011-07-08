@@ -136,7 +136,7 @@ namespace ClosedXML
             int partsCount = Math.Min(firstPathParts.Length, secondPathParts.Length);
             for (int i = 0; i < partsCount; i++)
             {
-                if (!firstPathParts[i].ToLower().Equals(secondPathParts[i].ToLower()))
+                if (String.Compare(firstPathParts[i], secondPathParts[i], true) != 0)
                 {
                     break;
                 }

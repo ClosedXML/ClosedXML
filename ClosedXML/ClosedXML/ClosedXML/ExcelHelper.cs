@@ -5,8 +5,10 @@ using ClosedXML.Excel;
 
 namespace ClosedXML
 {
+    using System.Linq;
+
     /// <summary>
-    /// Common methods
+    ///   Common methods
     /// </summary>
     public static class ExcelHelper
     {
@@ -15,30 +17,27 @@ namespace ClosedXML
         public const int MaxRowNumber = 1048576;
         public const int MaxColumnNumber = 16384;
 
-        internal static readonly NumberFormatInfo NumberFormatForParse = CultureInfo.InvariantCulture.NumberFormat;
         private const Int32 TwoT26 = 26 * 26;
+        internal static readonly NumberFormatInfo NumberFormatForParse = CultureInfo.InvariantCulture.NumberFormat;
+
         /// <summary>
-        /// 	Gets the column number of a given column letter.
+        ///   Gets the column number of a given column letter.
         /// </summary>
         /// <param name = "columnLetter">The column letter to translate into a column number.</param>
         public static int GetColumnNumberFromLetter(string columnLetter)
         {
             if (columnLetter[0] <= '9')
-            {
                 return Int32.Parse(columnLetter, NumberFormatForParse);
-            }
 
             columnLetter = columnLetter.ToUpper();
-            var length = columnLetter.Length;
+            int length = columnLetter.Length;
             if (length == 1)
-            {
                 return Convert.ToByte(columnLetter[0]) - 64;
-            }
             if (length == 2)
             {
                 return
-                        ((Convert.ToByte(columnLetter[0]) - 64) * 26) +
-                        (Convert.ToByte(columnLetter[1]) - 64);
+                    ((Convert.ToByte(columnLetter[0]) - 64) * 26) +
+                    (Convert.ToByte(columnLetter[1]) - 64);
             }
             if (length == 3)
             {
@@ -48,18 +47,20 @@ namespace ClosedXML
             }
             throw new ApplicationException("Column Length must be between 1 and 3.");
         }
+
         /// <summary>
-        /// 	Gets the column letter of a given column number.
+        ///   Gets the column letter of a given column number.
         /// </summary>
         /// <param name = "column">The column number to translate into a column letter.</param>
         public static string GetColumnLetterFromNumber(int column)
         {
             #region Check
+
             if (column <= 0)
-            {
                 throw new ArgumentOutOfRangeException("column", "Must be more than 0");
-            }
+
             #endregion
+
             var value = new StringBuilder(6);
             while (column > 0)
             {
@@ -78,30 +79,18 @@ namespace ClosedXML
         public static bool IsValidColumn(string column)
         {
             if (StringExtensions.IsNullOrWhiteSpace(column) || column.Length > 3)
-            {
                 return false;
-            }
 
-            Boolean retVal = true;
             String theColumn = column.ToUpper();
-            for (Int32 i = 0; i < column.Length; i++)
-            {
-                if (theColumn[i] < 'A' || theColumn[i] > 'Z' || (i == 2 && theColumn[i] > 'D'))
-                {
-                    retVal = false;
-                    break;
-                }
-            }
-            return retVal;
+            return
+                !column.Where((t, i) => theColumn[i] < 'A' || theColumn[i] > 'Z' || (i == 2 && theColumn[i] > 'D')).Any();
         }
 
         public static bool IsValidRow(string rowString)
         {
             Int32 row;
             if (Int32.TryParse(rowString, out row))
-            {
                 return row > 0 && row <= MaxRowNumber;
-            }
             return false;
         }
 
@@ -111,23 +100,19 @@ namespace ClosedXML
             Int32 rowPos = 0;
             Int32 addressLength = address.Length;
             while (rowPos < addressLength && (address[rowPos] > '9' || address[rowPos] < '0'))
-            {
                 rowPos++;
-            }
 
             return
-                    rowPos < addressLength
-                    && IsValidRow(address.Substring(rowPos))
-                    && IsValidColumn(address.Substring(0, rowPos));
+                rowPos < addressLength
+                && IsValidRow(address.Substring(rowPos))
+                && IsValidColumn(address.Substring(0, rowPos));
         }
 
         public static int GetRowFromAddress1(string cellAddressString)
         {
             Int32 rowPos = 1;
             while (cellAddressString[rowPos] > '9')
-            {
                 rowPos++;
-            }
 
             return Int32.Parse(cellAddressString.Substring(rowPos), NumberFormatForParse);
         }
@@ -136,9 +121,7 @@ namespace ClosedXML
         {
             Int32 rowPos = 0;
             while (cellAddressString[rowPos] > '9')
-            {
                 rowPos++;
-            }
 
             return GetColumnNumberFromLetter(cellAddressString.Substring(0, rowPos));
         }
@@ -147,42 +130,27 @@ namespace ClosedXML
         {
             Int32 rowPos = 1;
             while (cellAddressString[rowPos] > '9')
-            {
                 rowPos++;
-            }
 
-            if (cellAddressString[rowPos] == '$')
-            {
-                return Int32.Parse(cellAddressString.Substring(rowPos + 1), NumberFormatForParse);
-            }
-            return Int32.Parse(cellAddressString.Substring(rowPos), NumberFormatForParse);
+            return
+                Int32.Parse(
+                    cellAddressString[rowPos] == '$'
+                        ? cellAddressString.Substring(rowPos + 1)
+                        : cellAddressString.Substring(rowPos), NumberFormatForParse);
         }
 
         public static int GetColumnNumberFromAddress2(string cellAddressString)
         {
-            Int32 startPos;
-            if (cellAddressString[0] == '$')
-            {
-                startPos = 1;
-            }
-            else
-            {
-                startPos = 0;
-            }
+            int startPos = cellAddressString[0] == '$' ? 1 : 0;
 
             Int32 rowPos = startPos;
             while (cellAddressString[rowPos] > '9')
-            {
                 rowPos++;
-            }
 
-            if (cellAddressString[rowPos] == '$')
-            {
-                return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos - 1));
-            }
-            return GetColumnNumberFromLetter(cellAddressString.Substring(startPos, rowPos));
+            return
+                GetColumnNumberFromLetter(cellAddressString[rowPos] == '$'
+                                              ? cellAddressString.Substring(startPos, rowPos - 1)
+                                              : cellAddressString.Substring(startPos, rowPos));
         }
-
-
     }
 }

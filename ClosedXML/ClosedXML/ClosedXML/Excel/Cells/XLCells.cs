@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
+    using System.Linq;
+
     internal class XLCells : IXLCells, IXLStylized, IEnumerable<XLCell>
     {
         #region Fields
@@ -51,10 +53,9 @@ namespace ClosedXML.Excel
                         tmpRange.LastAddress.RowNumber,
                         tmpRange.LastAddress.ColumnNumber);
 
-                    foreach (XLSheetPoint a in addressList)
+                    foreach (XLSheetPoint a in addressList.Where(a => !hash.Contains(a)))
                     {
-                        if (!hash.Contains(a))
-                            hash.Add(a);
+                        hash.Add(a);
                     }
                 }
                 else
@@ -83,14 +84,9 @@ namespace ClosedXML.Excel
 
             if (_usedCellsOnly)
             {
-                foreach (var cir in cellsInRanges)
+                foreach (var cell in cellsInRanges.SelectMany(cir => cir.Value.Select(a => cir.Key.Internals.CellsCollection.GetCell(a)).Where(cell => cell != null && !cell.IsEmpty(_includeFormats))))
                 {
-                    foreach (XLSheetPoint a in cir.Value)
-                    {
-                        var cell = cir.Key.Internals.CellsCollection.GetCell(a);
-                        if (cell != null && cell.IsUsed(_includeFormats))
-                            yield return cell;
-                    }
+                    yield return cell;
                 }
             }
             else

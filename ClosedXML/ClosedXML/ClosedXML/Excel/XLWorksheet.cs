@@ -641,7 +641,7 @@ namespace ClosedXML.Excel
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
 
             Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c));
-            DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv, targetSheet)));
+            DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv)));
             Internals.ColumnsCollection.ForEach(
                 kp => targetSheet.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
             Internals.RowsCollection.ForEach(kp => targetSheet.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
@@ -719,7 +719,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSheetProtection Protection { get; private set; }
+        public XLSheetProtection Protection { get; private set; }
+
+        IXLSheetProtection IXLWorksheet.Protection { get { return Protection; } }
 
         public IXLSheetProtection Protect()
         {

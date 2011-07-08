@@ -119,7 +119,6 @@
   <ItemGroup>
     <Compile Include="ExcelHelper.cs" />
     <Compile Include="Excel\Cells\IXLCells.cs" />
-    <Compile Include="Excel\Cells\XLCellCollectionOLD.cs" />
     <Compile Include="Excel\Cells\XLCells.cs" />
     <Compile Include="Excel\Cells\XLCellsCollection.cs" />
     <Compile Include="Excel\Cells\XLCell_DotNetSpecific.cs" />

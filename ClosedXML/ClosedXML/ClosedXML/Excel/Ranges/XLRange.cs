@@ -22,8 +22,8 @@ namespace ClosedXML.Excel
 
             if (!xlRangeParameters.IgnoreEvents)
             {
-                (Worksheet).RangeShiftedRows += WorksheetRangeShiftedRows;
-                (Worksheet).RangeShiftedColumns += WorksheetRangeShiftedColumns;
+                Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
+                Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
                 xlRangeParameters.IgnoreEvents = true;
             }
             DefaultStyle = new XLStyle(this, xlRangeParameters.DefaultStyle);
@@ -138,17 +138,14 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRangeColumns();
             var columnPairs = columns.Split(',');
-            foreach (string pair in columnPairs)
+            foreach (string tPair in columnPairs.Select(pair => pair.Trim()))
             {
-                string tPair = pair.Trim();
                 String firstColumn;
                 String lastColumn;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    if (tPair.Contains('-'))
-                        tPair = tPair.Replace('-', ':');
+                    string[] columnRange = tPair.Contains('-') ? tPair.Replace('-', ':').Split(':') : tPair.Split(':');
 
-                    var columnRange = tPair.Split(':');
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
                 }
@@ -245,17 +242,14 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRangeRows();
             var rowPairs = rows.Split(',');
-            foreach (string pair in rowPairs)
+            foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
             {
-                string tPair = pair.Trim();
                 String firstRow;
                 String lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    if (tPair.Contains('-'))
-                        tPair = tPair.Replace('-', ':');
+                    string[] rowRange = tPair.Contains('-') ? tPair.Replace('-', ':').Split(':') : tPair.Split(':');
 
-                    var rowRange = tPair.Split(':');
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
                 }
@@ -402,9 +396,8 @@ namespace ClosedXML.Excel
         public IXLRange Sort(String columnsToSortBy)
         {
             SortColumns.Clear();
-            foreach (String coPair in columnsToSortBy.Split(','))
+            foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
             {
-                String coPairTrimmed = coPair.Trim();
                 String coString;
                 String order;
                 if (coPairTrimmed.Contains(' '))
@@ -423,7 +416,7 @@ namespace ClosedXML.Excel
                 if (!Int32.TryParse(coString, out co))
                     co = ExcelHelper.GetColumnNumberFromLetter(coString);
 
-                SortColumns.Add(co, order.ToUpper().Equals("ASC") ? XLSortOrder.Ascending : XLSortOrder.Descending);
+                SortColumns.Add(co, String.Compare(order, "ASC", true) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending);
             }
 
             SortRangeRows();
@@ -433,9 +426,8 @@ namespace ClosedXML.Excel
         public IXLRange Sort(String columnsToSortBy, Boolean matchCase)
         {
             SortColumns.Clear();
-            foreach (String coPair in columnsToSortBy.Split(','))
+            foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
             {
-                String coPairTrimmed = coPair.Trim();
                 String coString;
                 String order;
                 if (coPairTrimmed.Contains(' '))
@@ -454,7 +446,7 @@ namespace ClosedXML.Excel
                 if (!Int32.TryParse(coString, out co))
                     co = ExcelHelper.GetColumnNumberFromLetter(coString);
 
-                SortColumns.Add(co, order.ToUpper().Equals("ASC") ? XLSortOrder.Ascending : XLSortOrder.Descending, true,
+                SortColumns.Add(co, String.Compare(order, "ASC", true) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending, true,
                                 matchCase);
             }
 
@@ -525,9 +517,8 @@ namespace ClosedXML.Excel
             if (sortOrientation == XLSortOrientation.TopToBottom)
                 return Sort(elementsToSortBy);
             SortRows.Clear();
-            foreach (String roPair in elementsToSortBy.Split(','))
+            foreach (string roPairTrimmed in elementsToSortBy.Split(',').Select(roPair => roPair.Trim()))
             {
-                String roPairTrimmed = roPair.Trim();
                 String roString;
                 String order;
                 if (roPairTrimmed.Contains(' '))
@@ -544,7 +535,7 @@ namespace ClosedXML.Excel
 
                 Int32 ro = Int32.Parse(roString);
 
-                SortRows.Add(ro, order.ToUpper().Equals("ASC") ? XLSortOrder.Ascending : XLSortOrder.Descending);
+                SortRows.Add(ro, String.Compare(order, "ASC",true)==0 ? XLSortOrder.Ascending : XLSortOrder.Descending);
             }
 
             SortRangeColumns();
@@ -556,9 +547,8 @@ namespace ClosedXML.Excel
             if (sortOrientation == XLSortOrientation.TopToBottom)
                 return Sort(elementsToSortBy, matchCase);
             SortRows.Clear();
-            foreach (String roPair in elementsToSortBy.Split(','))
+            foreach (string roPairTrimmed in elementsToSortBy.Split(',').Select(roPair => roPair.Trim()))
             {
-                String roPairTrimmed = roPair.Trim();
                 String roString;
                 String order;
                 if (roPairTrimmed.Contains(' '))
@@ -575,7 +565,7 @@ namespace ClosedXML.Excel
 
                 Int32 ro = Int32.Parse(roString);
 
-                SortRows.Add(ro, order.ToUpper().Equals("ASC") ? XLSortOrder.Ascending : XLSortOrder.Descending, true,
+                SortRows.Add(ro, String.Compare(order, "ASC", true) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending, true,
                              matchCase);
             }
 
@@ -777,10 +767,7 @@ namespace ClosedXML.Excel
         public XLRangeColumn FirstColumnUsed(bool includeFormats)
         {
             var firstCellUsed = FirstCellUsed(includeFormats);
-            if (firstCellUsed == null)
-                return null;
-
-            return Column(firstCellUsed.Address.ColumnNumber);
+            return firstCellUsed == null ? null : Column(firstCellUsed.Address.ColumnNumber);
         }
 
         public XLRangeColumn LastColumnUsed()
@@ -791,10 +778,7 @@ namespace ClosedXML.Excel
         public XLRangeColumn LastColumnUsed(bool includeFormats)
         {
             var lastCellUsed = LastCellUsed(includeFormats);
-            if (lastCellUsed == null)
-                return null;
-
-            return Column(lastCellUsed.Address.ColumnNumber);
+            return lastCellUsed == null ? null : Column(lastCellUsed.Address.ColumnNumber);
         }
 
         public XLRangeRow FirstRow()
@@ -815,10 +799,7 @@ namespace ClosedXML.Excel
         public XLRangeRow LastRowUsed(bool includeFormats)
         {
             var lastCellUsed = LastCellUsed(includeFormats);
-            if (lastCellUsed == null)
-                return null;
-
-            return Row(lastCellUsed.Address.RowNumber);
+            return lastCellUsed == null ? null : Row(lastCellUsed.Address.RowNumber);
         }
 
         public XLRangeRow FirstRowUsed()
@@ -829,10 +810,7 @@ namespace ClosedXML.Excel
         public XLRangeRow FirstRowUsed(bool includeFormats)
         {
             var firstCellUsed = FirstCellUsed(includeFormats);
-            if (firstCellUsed == null)
-                return null;
-
-            return Row(firstCellUsed.Address.RowNumber);
+            return firstCellUsed == null ? null : Row(firstCellUsed.Address.RowNumber);
         }
 
         public XLRangeRow Row(Int32 row)
@@ -948,10 +926,9 @@ namespace ClosedXML.Excel
                 RangeAddress.FirstAddress.RowNumber + squareSide - 1,
                 RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
 
-            foreach (IXLRange merge in Worksheet.Internals.MergedRanges)
+            foreach (IXLRange merge in Worksheet.Internals.MergedRanges.Where(Contains))
             {
-                if (Contains(merge))
-                    merge.RangeAddress.LastAddress = rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address;
+                merge.RangeAddress.LastAddress = rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address;
             }
         }
 

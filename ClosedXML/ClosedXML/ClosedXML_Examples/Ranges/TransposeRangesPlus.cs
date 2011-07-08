@@ -21,9 +21,9 @@ namespace ClosedXML_Examples
 
                 // Place some markers
                 var cellNextRow = ws.Cell(rngTable.RangeAddress.LastAddress.RowNumber + 1, rngTable.RangeAddress.LastAddress.ColumnNumber);
-                cellNextRow.Value = "Next Row";
+                cellNextRow.Value = "ColumnRight Row";
                 var cellNextColumn = ws.Cell(rngTable.RangeAddress.LastAddress.RowNumber, rngTable.RangeAddress.LastAddress.ColumnNumber + 1);
-                cellNextColumn.Value = "Next Column";
+                cellNextColumn.Value = "ColumnRight Column";
 
                 rngTable.Transpose(XLTransposeOptions.MoveCells);
                 rngTable.Transpose(XLTransposeOptions.MoveCells);

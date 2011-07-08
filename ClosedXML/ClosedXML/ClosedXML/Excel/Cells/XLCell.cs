@@ -99,10 +99,7 @@
                 if (HasRichText)
                     return _richText.ToString();
 
-                if (StringExtensions.IsNullOrWhiteSpace(_cellValue))
-                    return FormulaA1;
-
-                return _cellValue;
+                return StringExtensions.IsNullOrWhiteSpace(_cellValue) ? FormulaA1 : _cellValue;
             }
         }
 
@@ -295,7 +292,7 @@
                     }
 
                     if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
-                        w => w.Name.ToLower().Equals(sName.ToLower()))
+                        w => String.Compare(w.Name, sName, true)==0)
                         && ExcelHelper.IsValidA1Address(cAddress)
                         )
                         return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
@@ -317,23 +314,18 @@
                     return TimeSpan.Parse(_cellValue);
                 }
 
-                if (_richText == null)
-                    return _cellValue;
-
-                return _richText.ToString();
+                return _richText == null ? _cellValue : _richText.ToString();
             }
 
             set
             {
                 FormulaA1 = String.Empty;
-                if (!SetEnumerable(value))
-                {
-                    if (!SetRange(value))
-                    {
-                        if (!SetRichText(value))
-                            SetValue(value);
-                    }
-                }
+                if (SetEnumerable(value)) return;
+
+                if (SetRange(value)) return;
+
+                if (!SetRichText(value))
+                    SetValue(value);
             }
         }
 
@@ -395,11 +387,10 @@
                             isDataTable = true;
                         if (!hasTitles)
                         {
-                            foreach (DataColumn column in ((DataRow)m).Table.Columns)
+                            foreach (string fieldName in from DataColumn column in ((DataRow)m).Table.Columns select StringExtensions.IsNullOrWhiteSpace(column.Caption)
+                                                                                                                         ? column.ColumnName
+                                                                                                                         : column.Caption)
                             {
-                                string fieldName = StringExtensions.IsNullOrWhiteSpace(column.Caption)
-                                                       ? column.ColumnName
-                                                       : column.Caption;
                                 SetValue(fieldName, fRo, co);
                                 co++;
                             }
@@ -574,106 +565,105 @@
             get { return _dataType; }
             set
             {
-                if (_dataType != value)
+                if (_dataType == value) return;
+
+                if (_richText != null)
                 {
-                    if (_richText != null)
+                    _cellValue = _richText.ToString();
+                    _richText = null;
+                }
+
+                if (_cellValue.Length > 0)
+                {
+                    if (value == XLCellValues.Boolean)
                     {
-                        _cellValue = _richText.ToString();
-                        _richText = null;
+                        bool bTest;
+                        if (Boolean.TryParse(_cellValue, out bTest))
+                            _cellValue = bTest ? "1" : "0";
+                        else
+                            _cellValue = _cellValue == "0" || String.IsNullOrEmpty(_cellValue) ? "0" : "1";
                     }
-
-                    if (_cellValue.Length > 0)
+                    else if (value == XLCellValues.DateTime)
                     {
-                        if (value == XLCellValues.Boolean)
+                        DateTime dtTest;
+                        double dblTest;
+                        if (DateTime.TryParse(_cellValue, out dtTest))
+                            _cellValue = dtTest.ToOADate().ToString();
+                        else if (Double.TryParse(_cellValue, out dblTest))
+                            _cellValue = dblTest.ToString();
+                        else
                         {
-                            bool bTest;
-                            if (Boolean.TryParse(_cellValue, out bTest))
-                                _cellValue = bTest ? "1" : "0";
-                            else
-                                _cellValue = _cellValue == "0" || String.IsNullOrEmpty(_cellValue) ? "0" : "1";
+                            throw new ArgumentException(
+                                string.Format(
+                                    "Cannot set data type to DateTime because '{0}' is not recognized as a date.",
+                                    _cellValue));
                         }
-                        else if (value == XLCellValues.DateTime)
-                        {
-                            DateTime dtTest;
-                            double dblTest;
-                            if (DateTime.TryParse(_cellValue, out dtTest))
-                                _cellValue = dtTest.ToOADate().ToString();
-                            else if (Double.TryParse(_cellValue, out dblTest))
-                                _cellValue = dblTest.ToString();
-                            else
-                            {
-                                throw new ArgumentException(
-                                    string.Format(
-                                        "Cannot set data type to DateTime because '{0}' is not recognized as a date.",
-                                        _cellValue));
-                            }
 
+                        if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                        {
+                            Style.NumberFormat.NumberFormatId = _cellValue.Contains('.') ? 22 : 14;
+                        }
+                    }
+                    else if (value == XLCellValues.TimeSpan)
+                    {
+                        TimeSpan tsTest;
+                        if (TimeSpan.TryParse(_cellValue, out tsTest))
+                        {
+                            _cellValue = tsTest.ToString();
                             if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
-                            {
-                                Style.NumberFormat.NumberFormatId = _cellValue.Contains('.') ? 22 : 14;
-                            }
-                        }
-                        else if (value == XLCellValues.TimeSpan)
-                        {
-                            TimeSpan tsTest;
-                            if (TimeSpan.TryParse(_cellValue, out tsTest))
-                            {
-                                _cellValue = tsTest.ToString();
-                                if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
-                                    Style.NumberFormat.NumberFormatId = 46;
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    _cellValue = (DateTime.FromOADate(Double.Parse(_cellValue)) - BaseDate).ToString();
-                                }
-                                catch
-                                {
-                                    throw new ArgumentException(
-                                        string.Format(
-                                            "Cannot set data type to TimeSpan because '{0}' is not recognized as a TimeSpan.",
-                                            _cellValue));
-                                }
-                            }
-                        }
-                        else if (value == XLCellValues.Number)
-                        {
-                            double dTest;
-                            if (Double.TryParse(_cellValue, out dTest))
-                                _cellValue = Double.Parse(_cellValue).ToString();
-                            else
-                            {
-                                throw new ArgumentException(
-                                    string.Format(
-                                        "Cannot set data type to Number because '{0}' is not recognized as a number.",
-                                        _cellValue));
-                            }
+                                Style.NumberFormat.NumberFormatId = 46;
                         }
                         else
                         {
-                            var formatCodes = GetFormatCodes();
-                            if (_dataType == XLCellValues.Boolean)
-                                _cellValue = (_cellValue != "0").ToString();
-                            else if (_dataType == XLCellValues.TimeSpan)
-                                _cellValue = TimeSpan.Parse(_cellValue).ToString();
-                            else if (_dataType == XLCellValues.Number)
+                            try
                             {
-                                string format = Style.NumberFormat.NumberFormatId > 0 ? formatCodes[Style.NumberFormat.NumberFormatId] : Style.NumberFormat.Format;
-
-                                if (!StringExtensions.IsNullOrWhiteSpace(format) && format != "@")
-                                    _cellValue = Double.Parse(_cellValue).ToString(format);
+                                _cellValue = (DateTime.FromOADate(Double.Parse(_cellValue)) - BaseDate).ToString();
                             }
-                            else if (_dataType == XLCellValues.DateTime)
+                            catch
                             {
-                                string format = Style.NumberFormat.NumberFormatId > 0 ? formatCodes[Style.NumberFormat.NumberFormatId] : Style.NumberFormat.Format;
-                                _cellValue = DateTime.FromOADate(Double.Parse(_cellValue)).ToString(format);
+                                throw new ArgumentException(
+                                    string.Format(
+                                        "Cannot set data type to TimeSpan because '{0}' is not recognized as a TimeSpan.",
+                                        _cellValue));
                             }
                         }
                     }
+                    else if (value == XLCellValues.Number)
+                    {
+                        double dTest;
+                        if (Double.TryParse(_cellValue, out dTest))
+                            _cellValue = Double.Parse(_cellValue).ToString();
+                        else
+                        {
+                            throw new ArgumentException(
+                                string.Format(
+                                    "Cannot set data type to Number because '{0}' is not recognized as a number.",
+                                    _cellValue));
+                        }
+                    }
+                    else
+                    {
+                        var formatCodes = GetFormatCodes();
+                        if (_dataType == XLCellValues.Boolean)
+                            _cellValue = (_cellValue != "0").ToString();
+                        else if (_dataType == XLCellValues.TimeSpan)
+                            _cellValue = TimeSpan.Parse(_cellValue).ToString();
+                        else if (_dataType == XLCellValues.Number)
+                        {
+                            string format = Style.NumberFormat.NumberFormatId > 0 ? formatCodes[Style.NumberFormat.NumberFormatId] : Style.NumberFormat.Format;
 
-                    _dataType = value;
+                            if (!StringExtensions.IsNullOrWhiteSpace(format) && format != "@")
+                                _cellValue = Double.Parse(_cellValue).ToString(format);
+                        }
+                        else if (_dataType == XLCellValues.DateTime)
+                        {
+                            string format = Style.NumberFormat.NumberFormatId > 0 ? formatCodes[Style.NumberFormat.NumberFormatId] : Style.NumberFormat.Format;
+                            _cellValue = DateTime.FromOADate(Double.Parse(_cellValue)).ToString(format);
+                        }
+                    }
                 }
+
+                _dataType = value;
             }
         }
 
@@ -764,14 +754,13 @@
 
                 _worksheet.Hyperlinks.Add(_hyperlink);
 
-                if (!SettingHyperlink)
-                {
-                    if (Style.Font.FontColor.Equals(_worksheet.Style.Font.FontColor))
-                        Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
+                if (SettingHyperlink) return;
 
-                    if (Style.Font.Underline == _worksheet.Style.Font.Underline)
-                        Style.Font.Underline = XLFontUnderlineValues.Single;
-                }
+                if (Style.Font.FontColor.Equals(_worksheet.Style.Font.FontColor))
+                    Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
+
+                if (Style.Font.Underline == _worksheet.Style.Font.Underline)
+                    Style.Font.Underline = XLFontUnderlineValues.Single;
             }
         }
 
@@ -855,15 +844,20 @@
             return Worksheet.Internals.MergedRanges.Any(AsRange().Intersects);
         }
 
-        public Boolean IsUsed()
+        public Boolean IsEmpty()
         {
-            return IsUsed(false);
+            return IsEmpty(false);
         }
 
-        public Boolean IsUsed(Boolean includeFormats)
+        public Boolean IsEmpty(Boolean includeFormats)
         {
-            return !StringExtensions.IsNullOrWhiteSpace(InnerText) ||
-                   (includeFormats && (!Style.Equals(Worksheet.Style) || IsMerged()));
+            if (InnerText.Length > 0)
+                return false;
+
+            if (includeFormats)
+                return Style.Equals(Worksheet.Style) && !IsMerged();
+
+            return true;
         }
 
         #endregion
@@ -1001,7 +995,7 @@
         private void SetValue(object value)
         {
             FormulaA1 = String.Empty;
-            string val = value.ToString();
+            string val = value == null ? String.Empty : value.ToString();
             _richText = null;
             if (val.Length == 0)
             {
@@ -1336,172 +1330,97 @@
 
         internal void ShiftFormulaRows(XLRange shiftedRange, int rowsShifted)
         {
-            if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
+            if (StringExtensions.IsNullOrWhiteSpace(FormulaA1)) return;
+
+            string value = ">" + _formulaA1 + "<";
+
+            var regex = A1SimpleRegex;
+
+            var sb = new StringBuilder();
+            int lastIndex = 0;
+
+            String shiftedWsName = shiftedRange.Worksheet.Name;
+            foreach (Match match in regex.Matches(value).Cast<Match>())
             {
-                string value = ">" + _formulaA1 + "<";
-
-                var regex = A1SimpleRegex;
-
-                var sb = new StringBuilder();
-                int lastIndex = 0;
-
-                foreach (Match match in regex.Matches(value).Cast<Match>())
+                string matchString = match.Value;
+                int matchIndex = match.Index;
+                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
                 {
-                    string matchString = match.Value;
-                    int matchIndex = match.Index;
-                    if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
-                    {
 // Check that the match is not between quotes
-                        sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
-                        string sheetName;
-                        bool useSheetName = false;
-                        if (matchString.Contains('!'))
-                        {
-                            sheetName = matchString.Substring(0, matchString.IndexOf('!'));
-                            if (sheetName[0] == '\'')
-                                sheetName = sheetName.Substring(1, sheetName.Length - 2);
-                            useSheetName = true;
-                        }
-                        else
-                            sheetName = _worksheet.Name;
+                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
+                    string sheetName;
+                    bool useSheetName = false;
+                    if (matchString.Contains('!'))
+                    {
+                        sheetName = matchString.Substring(0, matchString.IndexOf('!'));
+                        if (sheetName[0] == '\'')
+                            sheetName = sheetName.Substring(1, sheetName.Length - 2);
+                        useSheetName = true;
+                    }
+                    else
+                        sheetName = _worksheet.Name;
 
-                        if (sheetName.ToLower().Equals(shiftedRange.Worksheet.Name.ToLower()))
+                    if (String.Compare(sheetName, shiftedWsName, true)==0)
+                    {
+                        string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
+                        if (!A1ColumnRegex.IsMatch(rangeAddress))
                         {
-                            string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
-                            if (!A1ColumnRegex.IsMatch(rangeAddress))
+                            var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
+                            if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
+                                matchRange.RangeAddress.LastAddress.RowNumber
+                                &&
+                                shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
+                                matchRange.RangeAddress.FirstAddress.ColumnNumber
+                                &&
+                                shiftedRange.RangeAddress.LastAddress.ColumnNumber >=
+                                matchRange.RangeAddress.LastAddress.ColumnNumber)
                             {
-                                var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
-                                if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
-                                    matchRange.RangeAddress.LastAddress.RowNumber
-                                    &&
-                                    shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
-                                    matchRange.RangeAddress.FirstAddress.ColumnNumber
-                                    &&
-                                    shiftedRange.RangeAddress.LastAddress.ColumnNumber >=
-                                    matchRange.RangeAddress.LastAddress.ColumnNumber)
+                                if (A1RowRegex.IsMatch(rangeAddress))
                                 {
-                                    if (A1RowRegex.IsMatch(rangeAddress))
+                                    var rows = rangeAddress.Split(':');
+                                    string row1String = rows[0];
+                                    string row2String = rows[1];
+                                    string row1;
+                                    if (row1String[0] == '$')
                                     {
-                                        var rows = rangeAddress.Split(':');
-                                        string row1String = rows[0];
-                                        string row2String = rows[1];
-                                        string row1;
-                                        if (row1String[0] == '$')
-                                        {
-                                            row1 = "$" +
-                                                   (Int32.Parse(row1String.Substring(1)) + rowsShifted).ToStringLookup();
-                                        }
-                                        else
-                                            row1 = (Int32.Parse(row1String) + rowsShifted).ToStringLookup();
-
-                                        string row2;
-                                        if (row2String[0] == '$')
-                                        {
-                                            row2 = "$" +
-                                                   (Int32.Parse(row2String.Substring(1)) + rowsShifted).ToStringLookup();
-                                        }
-                                        else
-                                            row2 = (Int32.Parse(row2String) + rowsShifted).ToStringLookup();
-
-                                        sb.Append(useSheetName
-                                                      ? String.Format("'{0}'!{1}:{2}", sheetName, row1, row2)
-                                                      : String.Format("{0}:{1}", row1, row2));
-                                    }
-                                    else if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
-                                             matchRange.RangeAddress.FirstAddress.RowNumber)
-                                    {
-                                        if (rangeAddress.Contains(':'))
-                                        {
-                                            if (useSheetName)
-                                            {
-                                                sb.Append(String.Format("'{0}'!{1}:{2}",
-                                                                        sheetName,
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber +
-                                                                                      rowsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn),
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.RowNumber +
-                                                                                      rowsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedColumn)));
-                                            }
-                                            else
-                                            {
-                                                sb.Append(String.Format("{0}:{1}",
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber +
-                                                                                      rowsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn),
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.RowNumber +
-                                                                                      rowsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedColumn)));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (useSheetName)
-                                            {
-                                                sb.Append(String.Format("'{0}'!{1}",
-                                                                        sheetName,
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber +
-                                                                                      rowsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn)));
-                                            }
-                                            else
-                                            {
-                                                sb.Append(String.Format("{0}",
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber +
-                                                                                      rowsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn)));
-                                            }
-                                        }
+                                        row1 = "$" +
+                                               (Int32.Parse(row1String.Substring(1)) + rowsShifted).ToStringLookup();
                                     }
                                     else
+                                        row1 = (Int32.Parse(row1String) + rowsShifted).ToStringLookup();
+
+                                    string row2;
+                                    if (row2String[0] == '$')
+                                    {
+                                        row2 = "$" +
+                                               (Int32.Parse(row2String.Substring(1)) + rowsShifted).ToStringLookup();
+                                    }
+                                    else
+                                        row2 = (Int32.Parse(row2String) + rowsShifted).ToStringLookup();
+
+                                    sb.Append(useSheetName
+                                                  ? String.Format("'{0}'!{1}:{2}", sheetName, row1, row2)
+                                                  : String.Format("{0}:{1}", row1, row2));
+                                }
+                                else if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
+                                         matchRange.RangeAddress.FirstAddress.RowNumber)
+                                {
+                                    if (rangeAddress.Contains(':'))
                                     {
                                         if (useSheetName)
                                         {
                                             sb.Append(String.Format("'{0}'!{1}:{2}",
                                                                     sheetName,
-                                                                    matchRange.RangeAddress.FirstAddress,
+                                                                    new XLAddress(_worksheet,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.RowNumber +
+                                                                                  rowsShifted,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.ColumnLetter,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedRow,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedColumn),
                                                                     new XLAddress(_worksheet,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber +
@@ -1516,7 +1435,16 @@
                                         else
                                         {
                                             sb.Append(String.Format("{0}:{1}",
-                                                                    matchRange.RangeAddress.FirstAddress,
+                                                                    new XLAddress(_worksheet,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.RowNumber +
+                                                                                  rowsShifted,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.ColumnLetter,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedRow,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedColumn),
                                                                     new XLAddress(_worksheet,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber +
@@ -1529,9 +1457,73 @@
                                                                                       LastAddress.FixedColumn)));
                                         }
                                     }
+                                    else
+                                    {
+                                        if (useSheetName)
+                                        {
+                                            sb.Append(String.Format("'{0}'!{1}",
+                                                                    sheetName,
+                                                                    new XLAddress(_worksheet,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.RowNumber +
+                                                                                  rowsShifted,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.ColumnLetter,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedRow,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedColumn)));
+                                        }
+                                        else
+                                        {
+                                            sb.Append(String.Format("{0}",
+                                                                    new XLAddress(_worksheet,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.RowNumber +
+                                                                                  rowsShifted,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.ColumnLetter,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedRow,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedColumn)));
+                                        }
+                                    }
                                 }
                                 else
-                                    sb.Append(matchString);
+                                {
+                                    if (useSheetName)
+                                    {
+                                        sb.Append(String.Format("'{0}'!{1}:{2}",
+                                                                sheetName,
+                                                                matchRange.RangeAddress.FirstAddress,
+                                                                new XLAddress(_worksheet,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.RowNumber +
+                                                                              rowsShifted,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.ColumnLetter,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.FixedRow,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.FixedColumn)));
+                                    }
+                                    else
+                                    {
+                                        sb.Append(String.Format("{0}:{1}",
+                                                                matchRange.RangeAddress.FirstAddress,
+                                                                new XLAddress(_worksheet,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.RowNumber +
+                                                                              rowsShifted,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.ColumnLetter,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.FixedRow,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.FixedColumn)));
+                                    }
+                                }
                             }
                             else
                                 sb.Append(matchString);
@@ -1540,200 +1532,126 @@
                             sb.Append(matchString);
                     }
                     else
-                        sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
-                    lastIndex = matchIndex + matchString.Length;
+                        sb.Append(matchString);
                 }
-
-                if (lastIndex < value.Length)
-                    sb.Append(value.Substring(lastIndex));
-
-                string retVal = sb.ToString();
-                _formulaA1 = retVal.Substring(1, retVal.Length - 2);
+                else
+                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
+                lastIndex = matchIndex + matchString.Length;
             }
+
+            if (lastIndex < value.Length)
+                sb.Append(value.Substring(lastIndex));
+
+            string retVal = sb.ToString();
+            _formulaA1 = retVal.Substring(1, retVal.Length - 2);
         }
 
         internal void ShiftFormulaColumns(XLRange shiftedRange, int columnsShifted)
         {
-            if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
+            if (StringExtensions.IsNullOrWhiteSpace(FormulaA1)) return;
+
+            string value = ">" + _formulaA1 + "<";
+
+            var regex = A1SimpleRegex;
+
+            var sb = new StringBuilder();
+            int lastIndex = 0;
+
+            foreach (Match match in regex.Matches(value).Cast<Match>())
             {
-                string value = ">" + _formulaA1 + "<";
-
-                var regex = A1SimpleRegex;
-
-                var sb = new StringBuilder();
-                int lastIndex = 0;
-
-                foreach (Match match in regex.Matches(value).Cast<Match>())
+                string matchString = match.Value;
+                int matchIndex = match.Index;
+                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
                 {
-                    string matchString = match.Value;
-                    int matchIndex = match.Index;
-                    if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
-                    {
 // Check that the match is not between quotes
-                        sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
-                        string sheetName;
-                        bool useSheetName = false;
-                        if (matchString.Contains('!'))
-                        {
-                            sheetName = matchString.Substring(0, matchString.IndexOf('!'));
-                            if (sheetName[0] == '\'')
-                                sheetName = sheetName.Substring(1, sheetName.Length - 2);
-                            useSheetName = true;
-                        }
-                        else
-                            sheetName = _worksheet.Name;
+                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
+                    string sheetName;
+                    bool useSheetName = false;
+                    if (matchString.Contains('!'))
+                    {
+                        sheetName = matchString.Substring(0, matchString.IndexOf('!'));
+                        if (sheetName[0] == '\'')
+                            sheetName = sheetName.Substring(1, sheetName.Length - 2);
+                        useSheetName = true;
+                    }
+                    else
+                        sheetName = _worksheet.Name;
 
-                        if (sheetName.ToLower().Equals(shiftedRange.Worksheet.Name.ToLower()))
+                    if (String.Compare(sheetName, shiftedRange.Worksheet.Name, true) == 0)
+                    {
+                        string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
+                        if (!A1RowRegex.IsMatch(rangeAddress))
                         {
-                            string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
-                            if (!A1RowRegex.IsMatch(rangeAddress))
+                            var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
+                            if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
+                                matchRange.RangeAddress.LastAddress.ColumnNumber
+                                &&
+                                shiftedRange.RangeAddress.FirstAddress.RowNumber <=
+                                matchRange.RangeAddress.FirstAddress.RowNumber
+                                &&
+                                shiftedRange.RangeAddress.LastAddress.RowNumber >=
+                                matchRange.RangeAddress.LastAddress.RowNumber)
                             {
-                                var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
-                                if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
-                                    matchRange.RangeAddress.LastAddress.ColumnNumber
-                                    &&
-                                    shiftedRange.RangeAddress.FirstAddress.RowNumber <=
-                                    matchRange.RangeAddress.FirstAddress.RowNumber
-                                    &&
-                                    shiftedRange.RangeAddress.LastAddress.RowNumber >=
-                                    matchRange.RangeAddress.LastAddress.RowNumber)
+                                if (A1ColumnRegex.IsMatch(rangeAddress))
                                 {
-                                    if (A1ColumnRegex.IsMatch(rangeAddress))
+                                    var columns = rangeAddress.Split(':');
+                                    string column1String = columns[0];
+                                    string column2String = columns[1];
+                                    string column1;
+                                    if (column1String[0] == '$')
                                     {
-                                        var columns = rangeAddress.Split(':');
-                                        string column1String = columns[0];
-                                        string column2String = columns[1];
-                                        string column1;
-                                        if (column1String[0] == '$')
-                                        {
-                                            column1 = "$" +
-                                                      ExcelHelper.GetColumnLetterFromNumber(
-                                                          ExcelHelper.GetColumnNumberFromLetter(
-                                                              column1String.Substring(1)) + columnsShifted);
-                                        }
-                                        else
-                                        {
-                                            column1 =
-                                                ExcelHelper.GetColumnLetterFromNumber(
-                                                    ExcelHelper.GetColumnNumberFromLetter(column1String) +
-                                                    columnsShifted);
-                                        }
-
-                                        string column2;
-                                        if (column2String[0] == '$')
-                                        {
-                                            column2 = "$" +
-                                                      ExcelHelper.GetColumnLetterFromNumber(
-                                                          ExcelHelper.GetColumnNumberFromLetter(
-                                                              column2String.Substring(1)) + columnsShifted);
-                                        }
-                                        else
-                                        {
-                                            column2 =
-                                                ExcelHelper.GetColumnLetterFromNumber(
-                                                    ExcelHelper.GetColumnNumberFromLetter(column2String) +
-                                                    columnsShifted);
-                                        }
-
-                                        sb.Append(useSheetName
-                                                      ? String.Format("'{0}'!{1}:{2}", sheetName, column1, column2)
-                                                      : String.Format("{0}:{1}", column1, column2));
-                                    }
-                                    else if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
-                                             matchRange.RangeAddress.FirstAddress.ColumnNumber)
-                                    {
-                                        if (rangeAddress.Contains(':'))
-                                        {
-                                            if (useSheetName)
-                                            {
-                                                sb.Append(String.Format("'{0}'!{1}:{2}",
-                                                                        sheetName,
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnNumber +
-                                                                                      columnsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn),
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.RowNumber,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.ColumnNumber +
-                                                                                      columnsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedColumn)));
-                                            }
-                                            else
-                                            {
-                                                sb.Append(String.Format("{0}:{1}",
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnNumber +
-                                                                                      columnsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn),
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.RowNumber,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.ColumnNumber +
-                                                                                      columnsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedColumn)));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (useSheetName)
-                                            {
-                                                sb.Append(String.Format("'{0}'!{1}",
-                                                                        sheetName,
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnNumber +
-                                                                                      columnsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn)));
-                                            }
-                                            else
-                                            {
-                                                sb.Append(String.Format("{0}",
-                                                                        new XLAddress(_worksheet,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnNumber +
-                                                                                      columnsShifted,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn)));
-                                            }
-                                        }
+                                        column1 = "$" +
+                                                  ExcelHelper.GetColumnLetterFromNumber(
+                                                      ExcelHelper.GetColumnNumberFromLetter(
+                                                          column1String.Substring(1)) + columnsShifted);
                                     }
                                     else
+                                    {
+                                        column1 =
+                                            ExcelHelper.GetColumnLetterFromNumber(
+                                                ExcelHelper.GetColumnNumberFromLetter(column1String) +
+                                                columnsShifted);
+                                    }
+
+                                    string column2;
+                                    if (column2String[0] == '$')
+                                    {
+                                        column2 = "$" +
+                                                  ExcelHelper.GetColumnLetterFromNumber(
+                                                      ExcelHelper.GetColumnNumberFromLetter(
+                                                          column2String.Substring(1)) + columnsShifted);
+                                    }
+                                    else
+                                    {
+                                        column2 =
+                                            ExcelHelper.GetColumnLetterFromNumber(
+                                                ExcelHelper.GetColumnNumberFromLetter(column2String) +
+                                                columnsShifted);
+                                    }
+
+                                    sb.Append(useSheetName
+                                                  ? String.Format("'{0}'!{1}:{2}", sheetName, column1, column2)
+                                                  : String.Format("{0}:{1}", column1, column2));
+                                }
+                                else if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
+                                         matchRange.RangeAddress.FirstAddress.ColumnNumber)
+                                {
+                                    if (rangeAddress.Contains(':'))
                                     {
                                         if (useSheetName)
                                         {
                                             sb.Append(String.Format("'{0}'!{1}:{2}",
                                                                     sheetName,
-                                                                    matchRange.RangeAddress.FirstAddress,
+                                                                    new XLAddress(_worksheet,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.RowNumber,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.ColumnNumber +
+                                                                                  columnsShifted,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedRow,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedColumn),
                                                                     new XLAddress(_worksheet,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber,
@@ -1748,7 +1666,16 @@
                                         else
                                         {
                                             sb.Append(String.Format("{0}:{1}",
-                                                                    matchRange.RangeAddress.FirstAddress,
+                                                                    new XLAddress(_worksheet,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.RowNumber,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.ColumnNumber +
+                                                                                  columnsShifted,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedRow,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedColumn),
                                                                     new XLAddress(_worksheet,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber,
@@ -1761,9 +1688,73 @@
                                                                                       LastAddress.FixedColumn)));
                                         }
                                     }
+                                    else
+                                    {
+                                        if (useSheetName)
+                                        {
+                                            sb.Append(String.Format("'{0}'!{1}",
+                                                                    sheetName,
+                                                                    new XLAddress(_worksheet,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.RowNumber,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.ColumnNumber +
+                                                                                  columnsShifted,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedRow,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedColumn)));
+                                        }
+                                        else
+                                        {
+                                            sb.Append(String.Format("{0}",
+                                                                    new XLAddress(_worksheet,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.RowNumber,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.ColumnNumber +
+                                                                                  columnsShifted,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedRow,
+                                                                                  matchRange.RangeAddress.
+                                                                                      FirstAddress.FixedColumn)));
+                                        }
+                                    }
                                 }
                                 else
-                                    sb.Append(matchString);
+                                {
+                                    if (useSheetName)
+                                    {
+                                        sb.Append(String.Format("'{0}'!{1}:{2}",
+                                                                sheetName,
+                                                                matchRange.RangeAddress.FirstAddress,
+                                                                new XLAddress(_worksheet,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.RowNumber,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.ColumnNumber +
+                                                                              columnsShifted,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.FixedRow,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.FixedColumn)));
+                                    }
+                                    else
+                                    {
+                                        sb.Append(String.Format("{0}:{1}",
+                                                                matchRange.RangeAddress.FirstAddress,
+                                                                new XLAddress(_worksheet,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.RowNumber,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.ColumnNumber +
+                                                                              columnsShifted,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.FixedRow,
+                                                                              matchRange.RangeAddress.
+                                                                                  LastAddress.FixedColumn)));
+                                    }
+                                }
                             }
                             else
                                 sb.Append(matchString);
@@ -1772,17 +1763,19 @@
                             sb.Append(matchString);
                     }
                     else
-                        sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
-                    lastIndex = matchIndex + matchString.Length;
+                        sb.Append(matchString);
                 }
-
-                if (lastIndex < value.Length)
-                    sb.Append(value.Substring(lastIndex));
-
-                string retVal = sb.ToString();
-
-                _formulaA1 = retVal.Substring(1, retVal.Length - 2);
+                else
+                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
+                lastIndex = matchIndex + matchString.Length;
             }
+
+            if (lastIndex < value.Length)
+                sb.Append(value.Substring(lastIndex));
+
+            string retVal = sb.ToString();
+
+            _formulaA1 = retVal.Substring(1, retVal.Length - 2);
         }
 
         // --

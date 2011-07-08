@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -13,8 +10,8 @@ namespace ClosedXML.Excel
             LastPoint = lastPoint;
         }
 
-        public XLSheetPoint FirstPoint;
-        public XLSheetPoint LastPoint;
+        public readonly XLSheetPoint FirstPoint;
+        public readonly XLSheetPoint LastPoint;
 
         public bool Equals(XLSheetRange other)
         {

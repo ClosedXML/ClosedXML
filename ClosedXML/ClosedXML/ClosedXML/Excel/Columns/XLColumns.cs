@@ -8,13 +8,13 @@ namespace ClosedXML.Excel
 
     internal class XLColumns : IXLColumns, IXLStylized
     {
-        private readonly List<XLColumn> columns = new List<XLColumn>();
-        private readonly XLWorksheet worksheet;
+        private readonly List<XLColumn> _columns = new List<XLColumn>();
+        private readonly XLWorksheet _worksheet;
         internal IXLStyle style;
 
         public XLColumns(XLWorksheet worksheet)
         {
-            this.worksheet = worksheet;
+            _worksheet = worksheet;
             style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
         public IEnumerator<IXLColumn> GetEnumerator()
         {
             var retList = new List<IXLColumn>();
-            columns.ForEach(retList.Add);
+            _columns.ForEach(retList.Add);
             return retList.GetEnumerator();
         }
 
@@ -39,11 +39,11 @@ namespace ClosedXML.Excel
             {
                 style = new XLStyle(this, value);
 
-                if (worksheet != null)
-                    worksheet.Style = value;
+                if (_worksheet != null)
+                    _worksheet.Style = value;
                 else
                 {
-                    foreach (XLColumn column in columns)
+                    foreach (XLColumn column in _columns)
                         column.Style = value;
                 }
             }
@@ -53,27 +53,26 @@ namespace ClosedXML.Excel
         {
             set
             {
-                columns.ForEach(c => c.Width = value);
+                _columns.ForEach(c => c.Width = value);
 
-                if (worksheet != null)
-                {
-                    worksheet.ColumnWidth = value;
-                    worksheet.Internals.ColumnsCollection.ForEach(c => c.Value.Width = value);
-                }
+                if (_worksheet == null) return;
+
+                _worksheet.ColumnWidth = value;
+                _worksheet.Internals.ColumnsCollection.ForEach(c => c.Value.Width = value);
             }
         }
 
         public void Delete()
         {
-            if (worksheet != null)
+            if (_worksheet != null)
             {
-                worksheet.Internals.ColumnsCollection.Clear();
-                worksheet.Internals.CellsCollection.Clear();
+                _worksheet.Internals.ColumnsCollection.Clear();
+                _worksheet.Internals.CellsCollection.Clear();
             }
             else
             {
                 var toDelete = new Dictionary<IXLWorksheet, List<Int32>>();
-                foreach (XLColumn c in columns)
+                foreach (XLColumn c in _columns)
                 {
                     if (!toDelete.ContainsKey(c.Worksheet))
                         toDelete.Add(c.Worksheet, new List<Int32>());
@@ -91,48 +90,48 @@ namespace ClosedXML.Excel
 
         public IXLColumns AdjustToContents()
         {
-            columns.ForEach(c => c.AdjustToContents());
+            _columns.ForEach(c => c.AdjustToContents());
             return this;
         }
 
         public IXLColumns AdjustToContents(Int32 startRow)
         {
-            columns.ForEach(c => c.AdjustToContents(startRow));
+            _columns.ForEach(c => c.AdjustToContents(startRow));
             return this;
         }
 
         public IXLColumns AdjustToContents(Int32 startRow, Int32 endRow)
         {
-            columns.ForEach(c => c.AdjustToContents(startRow, endRow));
+            _columns.ForEach(c => c.AdjustToContents(startRow, endRow));
             return this;
         }
 
         public IXLColumns AdjustToContents(Double minWidth, Double maxWidth)
         {
-            columns.ForEach(c => c.AdjustToContents(minWidth, maxWidth));
+            _columns.ForEach(c => c.AdjustToContents(minWidth, maxWidth));
             return this;
         }
 
         public IXLColumns AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth)
         {
-            columns.ForEach(c => c.AdjustToContents(startRow, minWidth, maxWidth));
+            _columns.ForEach(c => c.AdjustToContents(startRow, minWidth, maxWidth));
             return this;
         }
 
         public IXLColumns AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
-            columns.ForEach(c => c.AdjustToContents(startRow, endRow, minWidth, maxWidth));
+            _columns.ForEach(c => c.AdjustToContents(startRow, endRow, minWidth, maxWidth));
             return this;
         }
 
         public void Hide()
         {
-            columns.ForEach(c => c.Hide());
+            _columns.ForEach(c => c.Hide());
         }
 
         public void Unhide()
         {
-            columns.ForEach(c => c.Unhide());
+            _columns.ForEach(c => c.Unhide());
         }
 
         public void Group()
@@ -152,33 +151,33 @@ namespace ClosedXML.Excel
 
         public void Group(Boolean collapse)
         {
-            columns.ForEach(c => c.Group(collapse));
+            _columns.ForEach(c => c.Group(collapse));
         }
 
         public void Group(Int32 outlineLevel, Boolean collapse)
         {
-            columns.ForEach(c => c.Group(outlineLevel, collapse));
+            _columns.ForEach(c => c.Group(outlineLevel, collapse));
         }
 
         public void Ungroup(Boolean ungroupFromAll)
         {
-            columns.ForEach(c => c.Ungroup(ungroupFromAll));
+            _columns.ForEach(c => c.Ungroup(ungroupFromAll));
         }
 
         public void Collapse()
         {
-            columns.ForEach(c => c.Collapse());
+            _columns.ForEach(c => c.Collapse());
         }
 
         public void Expand()
         {
-            columns.ForEach(c => c.Expand());
+            _columns.ForEach(c => c.Expand());
         }
 
         public IXLCells Cells()
         {
             var cells = new XLCells(false, false);
-            foreach (XLColumn container in columns)
+            foreach (XLColumn container in _columns)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -186,7 +185,7 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(true, false);
-            foreach (XLColumn container in columns)
+            foreach (XLColumn container in _columns)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -194,7 +193,7 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed(Boolean includeStyles)
         {
             var cells = new XLCells(true, includeStyles);
-            foreach (XLColumn container in columns)
+            foreach (XLColumn container in _columns)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -204,14 +203,14 @@ namespace ClosedXML.Excel
         /// </summary>
         public IXLColumns AddVerticalPageBreaks()
         {
-            foreach (XLColumn col in columns)
+            foreach (XLColumn col in _columns)
                 col.Worksheet.PageSetup.AddVerticalPageBreak(col.ColumnNumber());
             return this;
         }
 
         public IXLColumns SetDataType(XLCellValues dataType)
         {
-            columns.ForEach(c => c.DataType = dataType);
+            _columns.ForEach(c => c.DataType = dataType);
             return this;
         }
 
@@ -225,14 +224,13 @@ namespace ClosedXML.Excel
             {
                 UpdatingStyle = true;
                 yield return style;
-                if (worksheet != null)
-                    yield return worksheet.Style;
+                if (_worksheet != null)
+                    yield return _worksheet.Style;
                 else
                 {
-                    foreach (XLColumn col in columns)
+                    foreach (IXLStyle s in _columns.SelectMany(col => col.Styles))
                     {
-                        foreach (IXLStyle s in col.Styles)
-                            yield return s;
+                        yield return s;
                     }
                 }
                 UpdatingStyle = false;
@@ -261,12 +259,12 @@ namespace ClosedXML.Excel
 
         public void Add(XLColumn column)
         {
-            columns.Add(column);
+            _columns.Add(column);
         }
 
         public void CollapseOnly()
         {
-            columns.ForEach(c => c.Collapsed = true);
+            _columns.ForEach(c => c.Collapsed = true);
         }
     }
 }

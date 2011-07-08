@@ -127,9 +127,6 @@
     <Compile Include="..\ClosedXML\Excel\Cells\XLCell.cs">
       <Link>Excel\Cells\XLCell.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\Cells\XLCellCollectionOLD.cs">
-      <Link>Excel\Cells\XLCellCollectionOLD.cs</Link>
-    </Compile>
     <Compile Include="..\ClosedXML\Excel\Cells\XLCells.cs">
       <Link>Excel\Cells\XLCells.cs</Link>
     </Compile>

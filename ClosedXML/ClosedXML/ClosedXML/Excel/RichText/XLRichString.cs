@@ -40,22 +40,22 @@ namespace ClosedXML.Excel
         {
             return
                     Text == other.Text
-                && this.Bold.Equals(other.Bold)
-                && this.Italic.Equals(other.Italic)
-                && this.Underline.Equals(other.Underline)
-                && this.Strikethrough.Equals(other.Strikethrough)
-                && this.VerticalAlignment.Equals(other.VerticalAlignment)
-                && this.Shadow.Equals(other.Shadow)
-                && this.FontSize.Equals(other.FontSize)
-                && this.FontColor.Equals(other.FontColor)
-                && this.FontName.Equals(other.FontName)
-                && this.FontFamilyNumbering.Equals(other.FontFamilyNumbering)
+                && Bold.Equals(other.Bold)
+                && Italic.Equals(other.Italic)
+                && Underline.Equals(other.Underline)
+                && Strikethrough.Equals(other.Strikethrough)
+                && VerticalAlignment.Equals(other.VerticalAlignment)
+                && Shadow.Equals(other.Shadow)
+                && FontSize.Equals(other.FontSize)
+                && FontColor.Equals(other.FontColor)
+                && FontName.Equals(other.FontName)
+                && FontFamilyNumbering.Equals(other.FontFamilyNumbering)
                 ;
         }
 
         public override bool Equals(object obj)
         {
-            return this.Equals((XLRichString)obj);
+            return Equals((XLRichString)obj);
         }
 
         public override int GetHashCode()

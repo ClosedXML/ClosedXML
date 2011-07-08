@@ -11,6 +11,7 @@ namespace ClosedXML.Excel
             DefaultStyle = defaultStyle;
             IsReference = isReference;
         }
+
         public IXLStyle DefaultStyle { get; set; }
         public XLWorksheet Worksheet { get; private set; }
         public Boolean IsReference { get; private set; }

@@ -36,32 +36,28 @@ namespace ClosedXML.Excel
             {
                 var thisRange = AsRange();
                 if (Worksheet.DataValidations.ContainsSingle(thisRange))
+                {
                     return
                         Worksheet.DataValidations.Where(dv => dv.Ranges.Contains(thisRange)).Single() as
                         XLDataValidation;
+                }
                 var dvEmpty = new List<IXLDataValidation>();
                 foreach (IXLDataValidation dv in Worksheet.DataValidations)
                 {
-                    foreach (IXLRange dvRange in dv.Ranges)
+                    foreach (IXLRange dvRange in dv.Ranges.Where(dvRange => dvRange.Intersects(this)))
                     {
-                        if (dvRange.Intersects(this))
-                        {
-                            dv.Ranges.Remove(dvRange);
-                            foreach (IXLCell c in dvRange.Cells())
-                            {
-                                if (!Contains(c.Address.ToString()))
-                                    dv.Ranges.Add(c.AsRange());
-                            }
-                            if (dv.Ranges.Count() == 0)
-                                dvEmpty.Add(dv);
-                        }
+                        dv.Ranges.Remove(dvRange);
+                        foreach (IXLCell c in dvRange.Cells().Where(c => !Contains(c.Address.ToString())))
+                            dv.Ranges.Add(c.AsRange());
+                        if (dv.Ranges.Count() == 0)
+                            dvEmpty.Add(dv);
                     }
                 }
 
                 dvEmpty.ForEach(dv => Worksheet.DataValidations.Delete(dv));
 
                 var newRanges = new XLRanges {AsRange()};
-                var dataValidation = new XLDataValidation(newRanges, Worksheet);
+                var dataValidation = new XLDataValidation(newRanges);
 
                 Worksheet.DataValidations.Add(dataValidation);
                 return dataValidation;
@@ -335,9 +331,9 @@ namespace ClosedXML.Excel
                                   ? Worksheet.Workbook.NamedRanges
                                   : Worksheet.NamedRanges;
 
-            if (namedRanges.Any(nr => nr.Name.ToLower() == rangeName.ToLower()))
+            if (namedRanges.Any(nr => String.Compare(nr.Name, rangeName, true) == 0))
             {
-                var namedRange = namedRanges.Where(nr => nr.Name.ToLower() == rangeName.ToLower()).Single();
+                var namedRange = namedRanges.Where(nr => String.Compare(nr.Name, rangeName, true) == 0).Single();
                 namedRange.Add(Worksheet.Workbook, ToStringFixed());
             }
             else
@@ -349,6 +345,22 @@ namespace ClosedXML.Excel
         {
             Cells().ForEach(c => c.SetValue(value));
             return this;
+        }
+
+        public Boolean IsMerged()
+        {
+            return CellsUsed().Any(c => c.IsMerged());
+        }
+
+        public Boolean IsEmpty()
+        {
+            return !CellsUsed().Any() || CellsUsed().Any(c => c.IsEmpty());
+        }
+
+        public Boolean IsEmpty(Boolean includeFormats)
+        {
+            return !CellsUsed(includeFormats).Any<XLCell>() ||
+                   CellsUsed(includeFormats).Any<XLCell>(c => c.IsEmpty(includeFormats));
         }
 
         #endregion
@@ -443,12 +455,16 @@ namespace ClosedXML.Excel
             var absoluteAddress = cellAddressInRange + RangeAddress.FirstAddress - 1;
 
             if (absoluteAddress.RowNumber <= 0 || absoluteAddress.RowNumber > ExcelHelper.MaxRowNumber)
+            {
                 throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
                                                                  ExcelHelper.MaxRowNumber));
+            }
 
             if (absoluteAddress.ColumnNumber <= 0 || absoluteAddress.ColumnNumber > ExcelHelper.MaxColumnNumber)
+            {
                 throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}",
                                                                  ExcelHelper.MaxColumnNumber));
+            }
 
             var cell = Worksheet.Internals.CellsCollection.GetCell(absoluteAddress.RowNumber,
                                                                    absoluteAddress.ColumnNumber);
@@ -931,19 +947,16 @@ namespace ClosedXML.Excel
                 RangeAddress.LastAddress.ColumnNumber);
 
 
-            foreach (IXLWorksheet ws in Worksheet.Workbook.Worksheets)
+            foreach (
+                XLCell cell in
+                    Worksheet.Workbook.Worksheets.Cast<XLWorksheet>().SelectMany(
+                        xlWorksheet => (xlWorksheet).Internals.CellsCollection.GetCells(
+                            c => !StringExtensions.IsNullOrWhiteSpace(c.FormulaA1))))
             {
-                var xlWorksheet = (XLWorksheet)ws;
-                foreach (
-                    XLCell cell in
-                        (xlWorksheet).Internals.CellsCollection.GetCells(
-                            c => !StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)))
-                {
-                    if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)
-                        cell.ShiftFormulaRows((XLRange)shiftedRangeFormula, numberOfRows * -1);
-                    else
-                        cell.ShiftFormulaColumns((XLRange)shiftedRangeFormula, numberOfColumns * -1);
-                }
+                if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)
+                    cell.ShiftFormulaRows((XLRange)shiftedRangeFormula, numberOfRows * -1);
+                else
+                    cell.ShiftFormulaColumns((XLRange)shiftedRangeFormula, numberOfColumns * -1);
             }
 
             // Range to shift...
@@ -1006,64 +1019,63 @@ namespace ClosedXML.Excel
 
         protected void ShiftColumns(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int columnsShifted)
         {
-            if (!thisRangeAddress.IsInvalid && !shiftedRange.RangeAddress.IsInvalid)
-            {
-                if ((columnsShifted < 0
-                     // all columns
-                     &&
-                     thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber
-                     &&
-                     thisRangeAddress.LastAddress.ColumnNumber <=
-                     shiftedRange.RangeAddress.FirstAddress.ColumnNumber - columnsShifted
-                     // all rows
-                     && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber
-                     && thisRangeAddress.LastAddress.RowNumber <= shiftedRange.RangeAddress.LastAddress.RowNumber
-                    ) || (
-                             shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
-                             thisRangeAddress.FirstAddress.ColumnNumber
-                             &&
-                             shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.FirstAddress.RowNumber
-                             &&
-                             shiftedRange.RangeAddress.LastAddress.RowNumber >= thisRangeAddress.LastAddress.RowNumber
-                             && shiftedRange.ColumnCount() >
-                             (thisRangeAddress.LastAddress.ColumnNumber - thisRangeAddress.FirstAddress.ColumnNumber + 1)
-                             +
-                             (thisRangeAddress.FirstAddress.ColumnNumber -
-                              shiftedRange.RangeAddress.FirstAddress.ColumnNumber)))
-                    thisRangeAddress.IsInvalid = true;
-                else
-                {
-                    if (shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.FirstAddress.RowNumber
-                        && shiftedRange.RangeAddress.LastAddress.RowNumber >= thisRangeAddress.LastAddress.RowNumber)
-                    {
-                        if (
-                            (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
-                             thisRangeAddress.FirstAddress.ColumnNumber &&
-                             columnsShifted > 0)
-                            ||
-                            (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <
-                             thisRangeAddress.FirstAddress.ColumnNumber &&
-                             columnsShifted < 0)
-                            )
-                        {
-                            thisRangeAddress.FirstAddress = new XLAddress(Worksheet,
-                                                                          thisRangeAddress.FirstAddress.RowNumber,
-                                                                          thisRangeAddress.FirstAddress.ColumnNumber +
-                                                                          columnsShifted,
-                                                                          thisRangeAddress.FirstAddress.FixedRow,
-                                                                          thisRangeAddress.FirstAddress.FixedColumn);
-                        }
+            if (thisRangeAddress.IsInvalid || shiftedRange.RangeAddress.IsInvalid) return;
 
-                        if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
-                            thisRangeAddress.LastAddress.ColumnNumber)
-                        {
-                            thisRangeAddress.LastAddress = new XLAddress(Worksheet,
-                                                                         thisRangeAddress.LastAddress.RowNumber,
-                                                                         thisRangeAddress.LastAddress.ColumnNumber +
-                                                                         columnsShifted,
-                                                                         thisRangeAddress.LastAddress.FixedRow,
-                                                                         thisRangeAddress.LastAddress.FixedColumn);
-                        }
+            if ((columnsShifted < 0
+                 // all columns
+                 &&
+                 thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber
+                 &&
+                 thisRangeAddress.LastAddress.ColumnNumber <=
+                 shiftedRange.RangeAddress.FirstAddress.ColumnNumber - columnsShifted
+                 // all rows
+                 && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber
+                 && thisRangeAddress.LastAddress.RowNumber <= shiftedRange.RangeAddress.LastAddress.RowNumber
+                ) || (
+                         shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
+                         thisRangeAddress.FirstAddress.ColumnNumber
+                         &&
+                         shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.FirstAddress.RowNumber
+                         &&
+                         shiftedRange.RangeAddress.LastAddress.RowNumber >= thisRangeAddress.LastAddress.RowNumber
+                         && shiftedRange.ColumnCount() >
+                         (thisRangeAddress.LastAddress.ColumnNumber - thisRangeAddress.FirstAddress.ColumnNumber + 1)
+                         +
+                         (thisRangeAddress.FirstAddress.ColumnNumber -
+                          shiftedRange.RangeAddress.FirstAddress.ColumnNumber)))
+                thisRangeAddress.IsInvalid = true;
+            else
+            {
+                if (shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.FirstAddress.RowNumber
+                    && shiftedRange.RangeAddress.LastAddress.RowNumber >= thisRangeAddress.LastAddress.RowNumber)
+                {
+                    if (
+                        (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
+                         thisRangeAddress.FirstAddress.ColumnNumber &&
+                         columnsShifted > 0)
+                        ||
+                        (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <
+                         thisRangeAddress.FirstAddress.ColumnNumber &&
+                         columnsShifted < 0)
+                        )
+                    {
+                        thisRangeAddress.FirstAddress = new XLAddress(Worksheet,
+                                                                      thisRangeAddress.FirstAddress.RowNumber,
+                                                                      thisRangeAddress.FirstAddress.ColumnNumber +
+                                                                      columnsShifted,
+                                                                      thisRangeAddress.FirstAddress.FixedRow,
+                                                                      thisRangeAddress.FirstAddress.FixedColumn);
+                    }
+
+                    if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
+                        thisRangeAddress.LastAddress.ColumnNumber)
+                    {
+                        thisRangeAddress.LastAddress = new XLAddress(Worksheet,
+                                                                     thisRangeAddress.LastAddress.RowNumber,
+                                                                     thisRangeAddress.LastAddress.ColumnNumber +
+                                                                     columnsShifted,
+                                                                     thisRangeAddress.LastAddress.FixedRow,
+                                                                     thisRangeAddress.LastAddress.FixedColumn);
                     }
                 }
             }
@@ -1071,63 +1083,62 @@ namespace ClosedXML.Excel
 
         protected void ShiftRows(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int rowsShifted)
         {
-            if (!thisRangeAddress.IsInvalid && !shiftedRange.RangeAddress.IsInvalid)
-            {
-                if ((rowsShifted < 0
-                     // all columns
-                     &&
-                     thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber
-                     && thisRangeAddress.LastAddress.ColumnNumber <= shiftedRange.RangeAddress.FirstAddress.ColumnNumber
-                     // all rows
-                     && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber
-                     &&
-                     thisRangeAddress.LastAddress.RowNumber <=
-                     shiftedRange.RangeAddress.LastAddress.RowNumber - rowsShifted
-                    ) || (
-                             shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.FirstAddress.RowNumber
-                             &&
-                             shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
-                             thisRangeAddress.FirstAddress.ColumnNumber
-                             &&
-                             shiftedRange.RangeAddress.LastAddress.ColumnNumber >=
-                             thisRangeAddress.LastAddress.ColumnNumber
-                             && shiftedRange.RowCount() >
-                             (thisRangeAddress.LastAddress.RowNumber - thisRangeAddress.FirstAddress.RowNumber + 1)
-                             +
-                             (thisRangeAddress.FirstAddress.RowNumber - shiftedRange.RangeAddress.FirstAddress.RowNumber)))
-                    thisRangeAddress.IsInvalid = true;
-                else
-                {
-                    if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
-                        thisRangeAddress.FirstAddress.ColumnNumber
-                        &&
-                        shiftedRange.RangeAddress.LastAddress.ColumnNumber >= thisRangeAddress.LastAddress.ColumnNumber)
-                    {
-                        if (
-                            (shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.FirstAddress.RowNumber &&
-                             rowsShifted > 0)
-                            ||
-                            (shiftedRange.RangeAddress.FirstAddress.RowNumber < thisRangeAddress.FirstAddress.RowNumber &&
-                             rowsShifted < 0)
-                            )
-                        {
-                            thisRangeAddress.FirstAddress = new XLAddress(Worksheet,
-                                                                          thisRangeAddress.FirstAddress.RowNumber +
-                                                                          rowsShifted,
-                                                                          thisRangeAddress.FirstAddress.ColumnNumber,
-                                                                          thisRangeAddress.FirstAddress.FixedRow,
-                                                                          thisRangeAddress.FirstAddress.FixedColumn);
-                        }
+            if (thisRangeAddress.IsInvalid || shiftedRange.RangeAddress.IsInvalid) return;
 
-                        if (shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.LastAddress.RowNumber)
-                        {
-                            thisRangeAddress.LastAddress = new XLAddress(Worksheet,
-                                                                         thisRangeAddress.LastAddress.RowNumber +
-                                                                         rowsShifted,
-                                                                         thisRangeAddress.LastAddress.ColumnNumber,
-                                                                         thisRangeAddress.LastAddress.FixedRow,
-                                                                         thisRangeAddress.LastAddress.FixedColumn);
-                        }
+            if ((rowsShifted < 0
+                 // all columns
+                 &&
+                 thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber
+                 && thisRangeAddress.LastAddress.ColumnNumber <= shiftedRange.RangeAddress.FirstAddress.ColumnNumber
+                 // all rows
+                 && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber
+                 &&
+                 thisRangeAddress.LastAddress.RowNumber <=
+                 shiftedRange.RangeAddress.LastAddress.RowNumber - rowsShifted
+                ) || (
+                         shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.FirstAddress.RowNumber
+                         &&
+                         shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
+                         thisRangeAddress.FirstAddress.ColumnNumber
+                         &&
+                         shiftedRange.RangeAddress.LastAddress.ColumnNumber >=
+                         thisRangeAddress.LastAddress.ColumnNumber
+                         && shiftedRange.RowCount() >
+                         (thisRangeAddress.LastAddress.RowNumber - thisRangeAddress.FirstAddress.RowNumber + 1)
+                         +
+                         (thisRangeAddress.FirstAddress.RowNumber - shiftedRange.RangeAddress.FirstAddress.RowNumber)))
+                thisRangeAddress.IsInvalid = true;
+            else
+            {
+                if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
+                    thisRangeAddress.FirstAddress.ColumnNumber
+                    &&
+                    shiftedRange.RangeAddress.LastAddress.ColumnNumber >= thisRangeAddress.LastAddress.ColumnNumber)
+                {
+                    if (
+                        (shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.FirstAddress.RowNumber &&
+                         rowsShifted > 0)
+                        ||
+                        (shiftedRange.RangeAddress.FirstAddress.RowNumber < thisRangeAddress.FirstAddress.RowNumber &&
+                         rowsShifted < 0)
+                        )
+                    {
+                        thisRangeAddress.FirstAddress = new XLAddress(Worksheet,
+                                                                      thisRangeAddress.FirstAddress.RowNumber +
+                                                                      rowsShifted,
+                                                                      thisRangeAddress.FirstAddress.ColumnNumber,
+                                                                      thisRangeAddress.FirstAddress.FixedRow,
+                                                                      thisRangeAddress.FirstAddress.FixedColumn);
+                    }
+
+                    if (shiftedRange.RangeAddress.FirstAddress.RowNumber <= thisRangeAddress.LastAddress.RowNumber)
+                    {
+                        thisRangeAddress.LastAddress = new XLAddress(Worksheet,
+                                                                     thisRangeAddress.LastAddress.RowNumber +
+                                                                     rowsShifted,
+                                                                     thisRangeAddress.LastAddress.ColumnNumber,
+                                                                     thisRangeAddress.LastAddress.FixedRow,
+                                                                     thisRangeAddress.LastAddress.FixedColumn);
                     }
                 }
             }

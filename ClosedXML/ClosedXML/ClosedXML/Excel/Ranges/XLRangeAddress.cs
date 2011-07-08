@@ -7,18 +7,18 @@ namespace ClosedXML.Excel
     internal class XLRangeAddress : IXLRangeAddress
     {
         #region Private fields
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private XLAddress m_firstAddress;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private XLAddress m_lastAddress;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)] private XLAddress _firstAddress;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)] private XLAddress _lastAddress;
+
         #endregion
+
         #region Constructor
+
         public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress)
         {
             if (firstAddress.Worksheet != lastAddress.Worksheet)
-            {
                 throw new ArgumentException("First and last addresses must be in the same worksheet");
-            }
 
             Worksheet = firstAddress.Worksheet;
             FirstAddress = firstAddress;
@@ -27,23 +27,17 @@ namespace ClosedXML.Excel
 
         public XLRangeAddress(XLWorksheet worksheet, String rangeAddress)
         {
-            String addressToUse;
-            if (rangeAddress.Contains("!"))
-            {
-                addressToUse = rangeAddress.Substring(rangeAddress.IndexOf("!") + 1);
-            }
-            else
-            {
-                addressToUse = rangeAddress;
-            }
+            string addressToUse = rangeAddress.Contains("!")
+                                      ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
+                                      : rangeAddress;
 
             XLAddress firstAddress;
             XLAddress lastAddress;
             if (addressToUse.Contains(':'))
             {
-                String[] arrRange = addressToUse.Split(':');
-                var firstPart = arrRange[0];
-                var secondPart = arrRange[1];
+                var arrRange = addressToUse.Split(':');
+                string firstPart = arrRange[0];
+                string secondPart = arrRange[1];
                 firstAddress = XLAddress.Create(worksheet, firstPart);
                 lastAddress = XLAddress.Create(worksheet, secondPart);
             }
@@ -56,23 +50,40 @@ namespace ClosedXML.Excel
             LastAddress = lastAddress;
             Worksheet = worksheet;
         }
+
         #endregion
+
         #region Public properties
+
         public XLWorksheet Worksheet { get; internal set; }
-        IXLWorksheet IXLRangeAddress.Worksheet { get { return Worksheet; } }
-        
+
         public XLAddress FirstAddress
         {
             get
             {
                 if (IsInvalid)
-                {
                     throw new Exception("Range is invalid.");
-                }
 
-                return m_firstAddress;
+                return _firstAddress;
             }
-            set { m_firstAddress = value; }
+            set { _firstAddress = value; }
+        }
+
+        public XLAddress LastAddress
+        {
+            get
+            {
+                if (IsInvalid)
+                    throw new Exception("Range is an invalid state.");
+
+                return _lastAddress;
+            }
+            set { _lastAddress = value; }
+        }
+
+        IXLWorksheet IXLRangeAddress.Worksheet
+        {
+            get { return Worksheet; }
         }
 
         IXLAddress IXLRangeAddress.FirstAddress
@@ -82,19 +93,6 @@ namespace ClosedXML.Excel
             set { FirstAddress = value as XLAddress; }
         }
 
-        public XLAddress LastAddress
-        {
-            get
-            {
-                if (IsInvalid)
-                {
-                    throw new Exception("Range is an invalid state.");
-                }
-
-                return m_lastAddress;
-            }
-            set { m_lastAddress = value; }
-        }
         IXLAddress IXLRangeAddress.LastAddress
         {
             [DebuggerStepThrough]
@@ -104,38 +102,42 @@ namespace ClosedXML.Excel
 
 
         public bool IsInvalid { get; set; }
-        #endregion
-        #region Public methods
 
-        public override string ToString()
-        {
-            return m_firstAddress + ":" + m_lastAddress;
-        }
+        #endregion
+
+        #region Public methods
 
         public String ToStringRelative()
         {
-            return m_firstAddress.ToStringRelative() + ":" + m_lastAddress.ToStringRelative();
+            return _firstAddress.ToStringRelative() + ":" + _lastAddress.ToStringRelative();
         }
+
         public String ToStringFixed()
         {
-            return m_firstAddress.ToStringFixed() + ":" + m_lastAddress.ToStringFixed();
+            return _firstAddress.ToStringFixed() + ":" + _lastAddress.ToStringFixed();
+        }
+
+        public override string ToString()
+        {
+            return _firstAddress + ":" + _lastAddress;
         }
 
         public override bool Equals(object obj)
         {
-            var other = (XLRangeAddress) obj;
+            var other = (XLRangeAddress)obj;
             return Worksheet.Equals(other.Worksheet)
-                    && FirstAddress.Equals(other.FirstAddress)
-                    && LastAddress.Equals(other.LastAddress);
+                   && FirstAddress.Equals(other.FirstAddress)
+                   && LastAddress.Equals(other.LastAddress);
         }
 
         public override int GetHashCode()
         {
             return
-                    Worksheet.GetHashCode()
-                    ^ FirstAddress.GetHashCode()
-                    ^ LastAddress.GetHashCode();
+                Worksheet.GetHashCode()
+                ^ FirstAddress.GetHashCode()
+                ^ LastAddress.GetHashCode();
         }
+
         #endregion
     }
 }
