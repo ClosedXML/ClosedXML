@@ -33,6 +33,7 @@ namespace ClosedXML.Excel
         public IEnumerator<XLCell> GetEnumerator()
         {
             var cellsInRanges = new Dictionary<XLWorksheet, HashSet<XLSheetPoint>>();
+            Boolean oneRange = _rangeAddresses.Count == 1;
             foreach (XLRangeAddress range in _rangeAddresses)
             {
                 HashSet<XLSheetPoint> hash;
@@ -46,16 +47,30 @@ namespace ClosedXML.Excel
 
                 if (_usedCellsOnly)
                 {
-                    var tmpRange = range;
-                    var addressList = range.Worksheet.Internals.CellsCollection.GetSheetPoints(
-                        tmpRange.FirstAddress.RowNumber,
-                        tmpRange.FirstAddress.ColumnNumber,
-                        tmpRange.LastAddress.RowNumber,
-                        tmpRange.LastAddress.ColumnNumber);
-
-                    foreach (XLSheetPoint a in addressList.Where(a => !hash.Contains(a)))
+                    if (oneRange)
                     {
-                        hash.Add(a);
+                        foreach(var cell in range.Worksheet.Internals.CellsCollection.GetCells(
+                            range.FirstAddress.RowNumber,
+                            range.FirstAddress.ColumnNumber,
+                            range.LastAddress.RowNumber,
+                            range.LastAddress.ColumnNumber))
+                        {
+                            yield return cell;
+                        }
+                    }
+                    else
+                    {
+                        var tmpRange = range;
+                        var addressList = range.Worksheet.Internals.CellsCollection.GetSheetPoints(
+                            tmpRange.FirstAddress.RowNumber,
+                            tmpRange.FirstAddress.ColumnNumber,
+                            tmpRange.LastAddress.RowNumber,
+                            tmpRange.LastAddress.ColumnNumber);
+
+                        foreach (XLSheetPoint a in addressList.Where(a => !hash.Contains(a)))
+                        {
+                            hash.Add(a);
+                        }
                     }
                 }
                 else
@@ -73,28 +88,43 @@ namespace ClosedXML.Excel
                         {
                             for (Int32 co = mm.MinColumn; co <= mm.MaxColumn; co++)
                             {
-                                var address = new XLSheetPoint(ro, co);
-                                if (!hash.Contains(address))
-                                    hash.Add(address);
+                                if (oneRange)
+                                {
+                                    yield return range.Worksheet.Cell(ro, co);
+                                }
+                                else
+                                {
+                                    var address = new XLSheetPoint(ro, co);
+                                    if (!hash.Contains(address))
+                                        hash.Add(address);
+                                }
                             }
                         }
                     }
                 }
             }
 
-            if (_usedCellsOnly)
+            if (!oneRange)
             {
-                foreach (var cell in cellsInRanges.SelectMany(cir => cir.Value.Select(a => cir.Key.Internals.CellsCollection.GetCell(a)).Where(cell => cell != null && !cell.IsEmpty(_includeFormats))))
+                if (_usedCellsOnly)
                 {
-                    yield return cell;
+                    foreach (
+                        var cell in
+                            cellsInRanges.SelectMany(
+                                cir =>
+                                cir.Value.Select(a => cir.Key.Internals.CellsCollection.GetCell(a)).Where(
+                                    cell => cell != null && !cell.IsEmpty(_includeFormats))))
+                    {
+                        yield return cell;
+                    }
                 }
-            }
-            else
-            {
-                foreach (var cir in cellsInRanges)
+                else
                 {
-                    foreach (XLSheetPoint a in cir.Value)
-                        yield return cir.Key.Cell(a.Row, a.Column);
+                    foreach (var cir in cellsInRanges)
+                    {
+                        foreach (XLSheetPoint a in cir.Value)
+                            yield return cir.Key.Cell(a.Row, a.Column);
+                    }
                 }
             }
         }
