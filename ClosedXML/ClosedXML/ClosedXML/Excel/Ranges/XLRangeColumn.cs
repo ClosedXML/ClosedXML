@@ -137,6 +137,11 @@
             return Range(start, end).FirstColumn();
         }
 
+        public IXLRangeColumn Column(IXLCell start, IXLCell end)
+        {
+            return Column(start.Address.RowNumber, end.Address.RowNumber);
+        }
+
         public IXLRangeColumns Columns(string columns)
         {
             var retVal = new XLRangeColumns();

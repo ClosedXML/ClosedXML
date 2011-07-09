@@ -144,7 +144,7 @@ namespace ClosedXML.Excel
                 String lastColumn;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    string[] columnRange = tPair.Contains('-') ? tPair.Replace('-', ':').Split(':') : tPair.Split(':');
+                    string[] columnRange = ExcelHelper.SplitRange(tPair);
 
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
@@ -248,7 +248,7 @@ namespace ClosedXML.Excel
                 String lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    string[] rowRange = tPair.Contains('-') ? tPair.Replace('-', ':').Split(':') : tPair.Split(':');
+                    string[] rowRange = ExcelHelper.SplitRange(tPair);
 
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];

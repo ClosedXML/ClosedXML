@@ -164,6 +164,7 @@ namespace ClosedXML.Excel
         IXLColumn Sort(XLSortOrder sortOrder, Boolean matchCase);
 
         IXLRangeColumn Column(Int32 start, Int32 end);
+        IXLRangeColumn Column(IXLCell start, IXLCell end);
         IXLRangeColumns Columns(String columns);
 
         /// <summary>

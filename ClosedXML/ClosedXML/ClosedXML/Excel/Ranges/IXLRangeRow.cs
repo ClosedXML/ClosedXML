@@ -95,6 +95,7 @@ namespace ClosedXML.Excel
 
 
         IXLRangeRow Row(Int32 start, Int32 end);
+        IXLRangeRow Row(IXLCell start, IXLCell end);
         IXLRangeRows Rows(String rows);
 
         IXLRangeRow SetDataType(XLCellValues dataType);

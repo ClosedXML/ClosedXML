@@ -63,8 +63,8 @@ namespace ClosedXML.Excel
             _rowHeight = workbook.RowHeight;
             RowHeightChanged = workbook.RowHeight != XLWorkbook.DefaultRowHeight;
             Name = sheetName;
-            RangeShiftedRows += XLWorksheet_RangeShiftedRows;
-            RangeShiftedColumns += XLWorksheet_RangeShiftedColumns;
+            RangeShiftedRows += XLWorksheetRangeShiftedRows;
+            RangeShiftedColumns += XLWorksheetRangeShiftedColumns;
             Charts = new XLCharts();
             ShowFormulas = workbook.ShowFormulas;
             ShowGridLines = workbook.ShowGridLines;
@@ -200,9 +200,7 @@ namespace ClosedXML.Excel
         public XLRow FirstRowUsed(Boolean includeFormats)
         {
             var rngRow = AsRange().FirstRowUsed(includeFormats);
-            if (rngRow != null)
-                return Row(rngRow.RangeAddress.FirstAddress.RowNumber);
-            return null;
+            return rngRow != null ? Row(rngRow.RangeAddress.FirstAddress.RowNumber) : null;
         }
 
         IXLRow IXLWorksheet.FirstRowUsed(Boolean includeFormats)
@@ -221,10 +219,7 @@ namespace ClosedXML.Excel
         public XLRow LastRowUsed(Boolean includeFormats)
         {
             var rngRow = AsRange().LastRowUsed(includeFormats);
-            if (rngRow != null)
-                return Row(rngRow.RangeAddress.LastAddress.RowNumber);
-
-            return null;
+            return rngRow != null ? Row(rngRow.RangeAddress.LastAddress.RowNumber) : null;
         }
         IXLRow IXLWorksheet.LastRowUsed(Boolean includeFormats)
         {
@@ -297,10 +292,7 @@ namespace ClosedXML.Excel
         public XLColumn LastColumnUsed(Boolean includeFormats)
         {
             var rngColumn = AsRange().LastColumnUsed(includeFormats);
-            if (rngColumn != null)
-                return Column(rngColumn.RangeAddress.LastAddress.ColumnNumber);
-
-            return null;
+            return rngColumn != null ? Column(rngColumn.RangeAddress.LastAddress.ColumnNumber) : null;
         }
         IXLColumn IXLWorksheet.LastColumnUsed(Boolean includeFormats)
         {
@@ -320,7 +312,7 @@ namespace ClosedXML.Excel
                 columnList.AddRange(Internals.ColumnsCollection.Keys.Where(c => !columnList.Contains(c)));
 
             foreach (int c in columnList)
-                retVal.Add((XLColumn)Column(c));
+                retVal.Add(Column(c));
 
             return retVal;
         }
@@ -329,17 +321,13 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLColumns(null);
             var columnPairs = columns.Split(',');
-            foreach (string pair in columnPairs)
+            foreach (string tPair in columnPairs.Select(pair => pair.Trim()))
             {
-                string tPair = pair.Trim();
                 String firstColumn;
                 String lastColumn;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    if (tPair.Contains('-'))
-                        tPair = tPair.Replace('-', ':');
-
-                    var columnRange = tPair.Split(':');
+                    var columnRange = ExcelHelper.SplitRange(tPair);
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
                 }
@@ -375,7 +363,7 @@ namespace ClosedXML.Excel
             var retVal = new XLColumns(null);
 
             for (int co = firstColumn; co <= lastColumn; co++)
-                retVal.Add((XLColumn)Column(co));
+                retVal.Add(Column(co));
             return retVal;
         }
 
@@ -391,7 +379,7 @@ namespace ClosedXML.Excel
                 rowList.AddRange(Internals.RowsCollection.Keys.Where(r => !rowList.Contains(r)));
 
             foreach (int r in rowList)
-                retVal.Add((XLRow)Row(r));
+                retVal.Add(Row(r));
 
             return retVal;
         }
@@ -400,17 +388,13 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRows(null);
             var rowPairs = rows.Split(',');
-            foreach (string pair in rowPairs)
+            foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
             {
-                string tPair = pair.Trim();
                 String firstRow;
                 String lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    if (tPair.Contains('-'))
-                        tPair = tPair.Replace('-', ':');
-
-                    var rowRange = tPair.Split(':');
+                    var rowRange = ExcelHelper.SplitRange(tPair);
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
                 }
@@ -430,7 +414,7 @@ namespace ClosedXML.Excel
             var retVal = new XLRows(null);
 
             for (int ro = firstRow; ro <= lastRow; ro++)
-                retVal.Add((XLRow)Row(ro));
+                retVal.Add(Row(ro));
             return retVal;
         }
 
@@ -556,7 +540,7 @@ namespace ClosedXML.Excel
         public IXLWorksheet CollapseRows(Int32 outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
-                throw new ArgumentOutOfRangeException("Outline level must be between 1 and 8.");
+                throw new ArgumentOutOfRangeException("outlineLevel", "Outline level must be between 1 and 8.");
 
             Internals.RowsCollection.Values.Where(r => r.OutlineLevel == outlineLevel).ForEach(r => r.Collapse());
             return this;
@@ -664,12 +648,10 @@ namespace ClosedXML.Excel
 
             foreach (XLTable t in Tables.Cast<XLTable>())
             {
-                XLTable table;
                 String tableName = t.Name;
-                if (targetSheet.Tables.Any(tt => tt.Name == tableName))
-                    table = new XLTable(targetSheet.Range(t.RangeAddress.ToString()), true);
-                else
-                    table = new XLTable(targetSheet.Range(t.RangeAddress.ToString()), tableName, true);
+                XLTable table = targetSheet.Tables.Any(tt => tt.Name == tableName) 
+                                    ? new XLTable(targetSheet.Range(t.RangeAddress.ToString()), true) 
+                                    : new XLTable(targetSheet.Range(t.RangeAddress.ToString()), tableName, true);
 
                 table.RelId = t.RelId;
                 table.EmphasizeFirstColumn = t.EmphasizeFirstColumn;
@@ -973,67 +955,55 @@ namespace ClosedXML.Excel
 
         public void IncrementColumnOutline(Int32 level)
         {
-            if (level > 0)
-            {
-                if (!_columnOutlineCount.ContainsKey(level))
-                    _columnOutlineCount.Add(level, 0);
+            if (level <= 0) return;
+            if (!_columnOutlineCount.ContainsKey(level))
+                _columnOutlineCount.Add(level, 0);
 
-                _columnOutlineCount[level]++;
-            }
+            _columnOutlineCount[level]++;
         }
 
         public void DecrementColumnOutline(Int32 level)
         {
-            if (level > 0)
-            {
-                if (!_columnOutlineCount.ContainsKey(level))
-                    _columnOutlineCount.Add(level, 0);
+            if (level <= 0) return;
+            if (!_columnOutlineCount.ContainsKey(level))
+                _columnOutlineCount.Add(level, 0);
 
-                if (_columnOutlineCount[level] > 0)
-                    _columnOutlineCount[level]--;
-            }
+            if (_columnOutlineCount[level] > 0)
+                _columnOutlineCount[level]--;
         }
 
         public Int32 GetMaxColumnOutline()
         {
-            if (_columnOutlineCount.Count == 0)
-                return 0;
-            return _columnOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
+            return _columnOutlineCount.Count == 0 ? 0 : _columnOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
         }
 
         public void IncrementRowOutline(Int32 level)
         {
-            if (level > 0)
-            {
-                if (!_rowOutlineCount.ContainsKey(level))
-                    _rowOutlineCount.Add(level, 0);
+            if (level <= 0) return;
+            if (!_rowOutlineCount.ContainsKey(level))
+                _rowOutlineCount.Add(level, 0);
 
-                _rowOutlineCount[level]++;
-            }
+            _rowOutlineCount[level]++;
         }
 
         public void DecrementRowOutline(Int32 level)
         {
-            if (level > 0)
-            {
-                if (!_rowOutlineCount.ContainsKey(level))
-                    _rowOutlineCount.Add(level, 0);
+            if (level <= 0) return;
+            if (!_rowOutlineCount.ContainsKey(level))
+                _rowOutlineCount.Add(level, 0);
 
-                if (_rowOutlineCount[level] > 0)
-                    _rowOutlineCount[level]--;
-            }
+            if (_rowOutlineCount[level] > 0)
+                _rowOutlineCount[level]--;
         }
 
         public Int32 GetMaxRowOutline()
         {
-            if (_rowOutlineCount.Count == 0)
-                return 0;
-            return _rowOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
+            return _rowOutlineCount.Count == 0 ? 0 : _rowOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
         }
 
         #endregion
 
-        private void XLWorksheet_RangeShiftedColumns(XLRange range, int columnsShifted)
+        private void XLWorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
             var newMerge = new XLRanges();
             foreach (IXLRange rngMerged in Internals.MergedRanges)
@@ -1057,7 +1027,7 @@ namespace ClosedXML.Excel
             Internals.MergedRanges = newMerge;
         }
 
-        private void XLWorksheet_RangeShiftedRows(XLRange range, int rowsShifted)
+        private void XLWorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             var newMerge = new XLRanges();
             foreach (IXLRange rngMerged in Internals.MergedRanges)
@@ -1121,7 +1091,7 @@ namespace ClosedXML.Excel
                 Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, styleToUse, false)));
             }
 
-            return new XLRow(row, new XLRowParameters(this, styleToUse, true));
+            return new XLRow(row, new XLRowParameters(this, styleToUse));
         }
 
         private IXLRange GetRangeForSort()

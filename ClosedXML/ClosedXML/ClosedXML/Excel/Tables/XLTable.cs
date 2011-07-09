@@ -162,7 +162,7 @@ namespace ClosedXML.Excel
                 String lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    string[] rowRange = tPair.Contains('-') ? tPair.Replace('-', ':').Split(':') : tPair.Split(':');
+                    string[] rowRange = ExcelHelper.SplitRange(tPair);
 
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];

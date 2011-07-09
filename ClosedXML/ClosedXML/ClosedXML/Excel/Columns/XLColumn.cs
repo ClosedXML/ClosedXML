@@ -578,6 +578,11 @@ namespace ClosedXML.Excel
             return Range(start, 1, end, 1).Column(1);
         }
 
+        public IXLRangeColumn Column(IXLCell start, IXLCell end)
+        {
+            return Column(start.Address.RowNumber, end.Address.RowNumber);
+        }
+
         public IXLRangeColumns Columns(String columns)
         {
             var retVal = new XLRangeColumns();

@@ -152,5 +152,10 @@ namespace ClosedXML
                                               ? cellAddressString.Substring(startPos, rowPos - 1)
                                               : cellAddressString.Substring(startPos, rowPos));
         }
+
+        public static string[] SplitRange(string range)
+        {
+            return range.Contains('-') ? range.Replace('-', ':').Split(':') : range.Split(':');
+        }
     }
 }

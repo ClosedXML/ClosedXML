@@ -492,6 +492,11 @@ namespace ClosedXML.Excel
             return Range(1, start, 1, end).Row(1);
         }
 
+        public IXLRangeRow Row(IXLCell start, IXLCell end)
+        {
+            return Row(start.Address.ColumnNumber, end.Address.ColumnNumber);
+        }
+
         public IXLRangeRows Rows(String rows)
         {
             var retVal = new XLRangeRows();

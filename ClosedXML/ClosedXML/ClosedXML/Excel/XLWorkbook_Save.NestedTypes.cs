@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using A = DocumentFormat.OpenXml.Drawing;
-using Ap = DocumentFormat.OpenXml.ExtendedProperties;
-using Op = DocumentFormat.OpenXml.CustomProperties;
-using Vt = DocumentFormat.OpenXml.VariantTypes;
 
 namespace ClosedXML.Excel
 {
@@ -15,53 +11,53 @@ namespace ClosedXML.Excel
         {
             #region Private fields
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly RelIdGenerator m_relIdGenerator;
+            private readonly RelIdGenerator _relIdGenerator;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly Dictionary<IXLStyle, StyleInfo> m_sharedStyles;
+            private readonly Dictionary<IXLStyle, StyleInfo> _sharedStyles;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly Dictionary<IXLFont, FontInfo> m_sharedFonts;
+            private readonly Dictionary<IXLFont, FontInfo> _sharedFonts;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly HashSet<string> m_tableNames;
+            private readonly HashSet<string> _tableNames;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private uint m_tableId;
+            private uint _tableId;
             #endregion
             #region Constructor
             public SaveContext()
             {
-                m_relIdGenerator = new RelIdGenerator();
-                m_sharedStyles = new Dictionary<IXLStyle, StyleInfo>();
-                m_sharedFonts = new Dictionary<IXLFont, FontInfo>();
-                m_tableNames = new HashSet<String>();
-                m_tableId = 0;
+                _relIdGenerator = new RelIdGenerator();
+                _sharedStyles = new Dictionary<IXLStyle, StyleInfo>();
+                _sharedFonts = new Dictionary<IXLFont, FontInfo>();
+                _tableNames = new HashSet<String>();
+                _tableId = 0;
             }
             #endregion
             #region Public properties
             public RelIdGenerator RelIdGenerator
             {
                 [DebuggerStepThrough]
-                get { return m_relIdGenerator; }
+                get { return _relIdGenerator; }
             }
             public Dictionary<IXLStyle, StyleInfo> SharedStyles
             {
                 [DebuggerStepThrough]
-                get { return m_sharedStyles; }
+                get { return _sharedStyles; }
             }
             public Dictionary<IXLFont, FontInfo> SharedFonts
             {
                 [DebuggerStepThrough]
-                get { return m_sharedFonts; }
+                get { return _sharedFonts; }
             }
             public HashSet<string> TableNames
             {
                 [DebuggerStepThrough]
-                get { return m_tableNames; }
+                get { return _tableNames; }
             }
             public uint TableId
             {
                 [DebuggerStepThrough]
-                get { return m_tableId; }
+                get { return _tableId; }
                 [DebuggerStepThrough]
-                set { m_tableId = value; }
+                set { _tableId = value; }
             }
             #endregion
         }
@@ -69,30 +65,27 @@ namespace ClosedXML.Excel
         #region Nested type: RelType
         private enum RelType
         {
-            General,
-            Workbook,
-            Worksheet,
-            Drawing
+            Workbook
         }
         #endregion
         #region Nested type: RelIdGenerator
         private sealed class RelIdGenerator
         {
-            private readonly Dictionary<RelType, List<String>> m_relIds = new Dictionary<RelType, List<String>>();
+            private readonly Dictionary<RelType, List<String>> _relIds = new Dictionary<RelType, List<String>>();
             public String GetNext(RelType relType)
             {
-                if (!m_relIds.ContainsKey(relType))
+                if (!_relIds.ContainsKey(relType))
                 {
-                    m_relIds.Add(relType, new List<String>());
+                    _relIds.Add(relType, new List<String>());
                 }
 
                 Int32 id = 1;
                 while (true)
                 {
                     String relId = String.Format("rId{0}", id);
-                    if (!m_relIds[relType].Contains(relId))
+                    if (!_relIds[relType].Contains(relId))
                     {
-                        m_relIds[relType].Add(relId);
+                        _relIds[relType].Add(relId);
                         return relId;
                     }
                     id++;
@@ -100,11 +93,11 @@ namespace ClosedXML.Excel
             }
             public void AddValues(List<String> values, RelType relType)
             {
-                if (!m_relIds.ContainsKey(relType))
+                if (!_relIds.ContainsKey(relType))
                 {
-                    m_relIds.Add(relType, new List<String>());
+                    _relIds.Add(relType, new List<String>());
                 }
-                m_relIds[relType].AddRange(values);
+                _relIds[relType].AddRange(values);
             }
         }
         #endregion
