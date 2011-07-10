@@ -301,6 +301,8 @@ namespace ClosedXML.Excel
             return Worksheet.Range(RangeAddress.FirstAddress, RangeAddress.LastAddress);
         }
 
+        
+
         public string ToStringRelative()
         {
             return String.Format("'{0}'!{1}:{2}",

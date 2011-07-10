@@ -24,10 +24,15 @@ namespace ClosedXML.Excel
             _ranges.ForEach(r => r.Clear());
         }
 
-        public void Add(IXLRange range)
+        public void Add(IXLRangeBase range)
         {
             _count++;
-            _ranges.Add((XLRange)range);
+            _ranges.Add(range.AsRange() as XLRange);
+        }
+
+        public void Add(IXLCell cell)
+        {
+            Add(cell.AsRange());
         }
 
         //public void Add(String rangeAddress)
