@@ -978,5 +978,7 @@ namespace ClosedXML.Excel
             return RangeAddress.GetHashCode()
                    ^ Worksheet.GetHashCode();
         }
+
+
     }
 }

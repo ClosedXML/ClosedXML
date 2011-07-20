@@ -320,5 +320,7 @@ namespace ClosedXML.Excel
         IXLWorksheet SetTabSelected(); IXLWorksheet SetTabSelected(Boolean value);
         IXLWorksheet SetTabActive(); IXLWorksheet SetTabActive(Boolean value);
 
+        IXLPivotTable PivotTable(String name);
+        IXLPivotTables PivotTables { get; }
     }
 }

@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
         {
         }
 
-        private String GetXLTime(TimeSpan value)
+        private static String GetXLTime(TimeSpan value)
         {
             return (value.TotalHours / 24.0).ToString();
         }

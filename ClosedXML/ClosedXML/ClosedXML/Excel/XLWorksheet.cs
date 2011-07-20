@@ -52,6 +52,7 @@ namespace ClosedXML.Excel
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations();
+            PivotTables = new XLPivotTables();
             Protection = new XLSheetProtection();
             Workbook = workbook;
             _style = new XLStyle(this, workbook.Style);
@@ -1101,5 +1102,15 @@ namespace ClosedXML.Excel
             SortRows.ForEach(e => range.SortRows.Add(e.ElementNumber, e.SortOrder, e.IgnoreBlanks, e.MatchCase));
             return range;
         }
+
+        IXLPivotTable IXLWorksheet.PivotTable(String name)
+        {
+            return PivotTable(name);
+        }
+        public XLPivotTable PivotTable(String name)
+        {
+            return (XLPivotTable)PivotTables.PivotTable(name);
+        }
+        public IXLPivotTables PivotTables { get; private set; }
     }
 }

@@ -148,6 +148,7 @@
     <Compile Include="PageSetup\TwoPages.cs" />
     <Compile Include="Misc\ShowCase.cs" />
     <Compile Include="ExampleHelper.cs" />
+    <Compile Include="PivotTables\PivotTables.cs" />
     <Compile Include="Ranges\CurrentRowColumn.cs" />
     <Compile Include="Ranges\WalkingRanges.cs" />
     <Compile Include="Ranges\SortExample.cs" />

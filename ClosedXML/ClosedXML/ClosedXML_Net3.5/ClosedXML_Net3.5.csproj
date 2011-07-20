@@ -304,6 +304,54 @@
     <Compile Include="..\ClosedXML\Excel\PageSetup\XLPrintAreas.cs">
       <Link>Excel\PageSetup\XLPrintAreas.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\IXLPivotField.cs">
+      <Link>Excel\PivotTables\IXLPivotField.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\IXLPivotFields.cs">
+      <Link>Excel\PivotTables\IXLPivotFields.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\IXLPivotTable.cs">
+      <Link>Excel\PivotTables\IXLPivotTable.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\IXLPivotTables.cs">
+      <Link>Excel\PivotTables\IXLPivotTables.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\PivotValues\IXLPivotValue.cs">
+      <Link>Excel\PivotTables\PivotValues\IXLPivotValue.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\PivotValues\IXLPivotValueCombination.cs">
+      <Link>Excel\PivotTables\PivotValues\IXLPivotValueCombination.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\PivotValues\IXLPivotValueFormat.cs">
+      <Link>Excel\PivotTables\PivotValues\IXLPivotValueFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\PivotValues\IXLPivotValues.cs">
+      <Link>Excel\PivotTables\PivotValues\IXLPivotValues.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\PivotValues\XLPivotValue.cs">
+      <Link>Excel\PivotTables\PivotValues\XLPivotValue.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\PivotValues\XLPivotValueCombination.cs">
+      <Link>Excel\PivotTables\PivotValues\XLPivotValueCombination.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\PivotValues\XLPivotValueFormat.cs">
+      <Link>Excel\PivotTables\PivotValues\XLPivotValueFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\PivotValues\XLPivotValues.cs">
+      <Link>Excel\PivotTables\PivotValues\XLPivotValues.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\XLPivotField.cs">
+      <Link>Excel\PivotTables\XLPivotField.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\XLPivotFields.cs">
+      <Link>Excel\PivotTables\XLPivotFields.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\XLPivotTable.cs">
+      <Link>Excel\PivotTables\XLPivotTable.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\PivotTables\XLPivotTables.cs">
+      <Link>Excel\PivotTables\XLPivotTables.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Ranges\IXLRange.cs">
       <Link>Excel\Ranges\IXLRange.cs</Link>
     </Compile>
@@ -438,6 +486,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Style\IXLNumberFormat.cs">
       <Link>Excel\Style\IXLNumberFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Style\IXLNumberFormatBase.cs">
+      <Link>Excel\Style\IXLNumberFormatBase.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Style\IXLProtection.cs">
       <Link>Excel\Style\IXLProtection.cs</Link>

@@ -133,10 +133,27 @@
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
     <Compile Include="Excel\Coordinates\XLSheetRange.cs" />
     <Compile Include="Excel\Coordinates\XLSheetPoint.cs" />
+    <Compile Include="Excel\PivotTables\PivotValues\XLPivotValueCombination.cs" />
+    <Compile Include="Excel\PivotTables\PivotValues\IXLPivotValueCombination.cs" />
+    <Compile Include="Excel\PivotTables\PivotValues\XLPivotValueFormat.cs" />
+    <Compile Include="Excel\PivotTables\PivotValues\IXLPivotValueFormat.cs" />
+    <Compile Include="Excel\PivotTables\PivotValues\XLPivotValue.cs" />
+    <Compile Include="Excel\PivotTables\PivotValues\XLPivotValues.cs" />
+    <Compile Include="Excel\PivotTables\XLPivotFields.cs" />
+    <Compile Include="Excel\PivotTables\XLPivotField.cs" />
+    <Compile Include="Excel\PivotTables\PivotValues\IXLPivotValues.cs" />
+    <Compile Include="Excel\PivotTables\IXLPivotFields.cs" />
+    <Compile Include="Excel\PivotTables\PivotValues\IXLPivotValue.cs" />
+    <Compile Include="Excel\PivotTables\IXLPivotField.cs" />
+    <Compile Include="Excel\PivotTables\IXLPivotTables.cs" />
+    <Compile Include="Excel\PivotTables\XLPivotTables.cs" />
+    <Compile Include="Excel\PivotTables\XLPivotTable.cs" />
+    <Compile Include="Excel\PivotTables\IXLPivotTable.cs" />
     <Compile Include="Excel\RichText\XLPhonetics.cs" />
     <Compile Include="Excel\RichText\XLPhonetic.cs" />
     <Compile Include="Excel\RichText\IXLPhonetics.cs" />
     <Compile Include="Excel\RichText\IXLPhonetic.cs" />
+    <Compile Include="Excel\Style\IXLNumberFormatBase.cs" />
     <Compile Include="Excel\XLWorkbook_Save.NestedTypes.cs" />
     <Compile Include="Excel\CustomProperties\XLCustomProperties.cs" />
     <Compile Include="Excel\CustomProperties\IXLCustomProperties.cs" />
@@ -264,9 +281,7 @@
     <Compile Include="PathHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Excel\PivotTables\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

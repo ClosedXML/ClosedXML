@@ -1190,5 +1190,22 @@ namespace ClosedXML.Excel
         //    Worksheet.Charts.Add(chart);
         //    return chart;
         //}
+
+        IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell)
+        {
+            return CreatePivotTable(targetCell);
+        }
+        public XLPivotTable CreatePivotTable(IXLCell targetCell)
+        {
+            throw new NotImplementedException();
+        }
+        IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell, String name)
+        {
+            return CreatePivotTable(targetCell, name);
+        }
+        public XLPivotTable CreatePivotTable(IXLCell targetCell, String name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

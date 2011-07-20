@@ -64,6 +64,7 @@
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
     <Compile Include="Excel\Cells\XLCellTest.cs" />
+    <Compile Include="Excel\PivotTables\XLPivotTableTest.cs" />
     <Compile Include="Excel\Ranges\XLRangeBaseTest.cs" />
     <Compile Include="Utils\ExcelDocsComparer.cs" />
     <Compile Include="Examples\DeleteTests.cs" />
