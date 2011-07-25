@@ -47,8 +47,51 @@ namespace ClosedXML.Excel
                     foreach (IXLRange dvRange in dv.Ranges.Where(dvRange => dvRange.Intersects(this)))
                     {
                         dv.Ranges.Remove(dvRange);
-                        foreach (IXLCell c in dvRange.Cells().Where(c => !Contains(c.Address.ToString())))
-                            dv.Ranges.Add(c.AsRange());
+                        foreach (var column in dvRange.Columns())
+                        {
+                            if (column.Intersects(this))
+                            {
+                                Int32 dvStart = column.RangeAddress.FirstAddress.RowNumber;
+                                Int32 dvEnd = column.RangeAddress.LastAddress.RowNumber;
+                                Int32 thisStart = RangeAddress.FirstAddress.RowNumber;
+                                Int32 thisEnd = RangeAddress.LastAddress.RowNumber;
+
+                                if (thisStart > dvStart && thisEnd < dvEnd)
+                                {
+                                    dv.Ranges.Add(Worksheet.Column(column.ColumnNumber()).Column(
+                                        dvStart, 
+                                        thisStart - 1));
+                                    dv.Ranges.Add(Worksheet.Column(column.ColumnNumber()).Column(
+                                        thisEnd + 1,
+                                        dvEnd));
+                                }
+                                else
+                                {
+                                    Int32 coStart;
+                                    if (dvStart < thisStart)
+                                        coStart = dvStart;
+                                    else
+                                        coStart = thisEnd + 1;
+
+                                    if (coStart <= dvEnd)
+                                    {
+                                        Int32 coEnd;
+                                        if (dvEnd > thisEnd)
+                                            coEnd = dvEnd;
+                                        else
+                                            coEnd = thisStart - 1;
+
+                                        if (coEnd >= dvStart)
+                                            dv.Ranges.Add(Worksheet.Column(column.ColumnNumber()).Column(coStart, coEnd));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                dv.Ranges.Add(column);
+                            }
+                        }
+
                         if (dv.Ranges.Count() == 0)
                             dvEmpty.Add(dv);
                     }
@@ -301,21 +344,7 @@ namespace ClosedXML.Excel
             return Worksheet.Range(RangeAddress.FirstAddress, RangeAddress.LastAddress);
         }
 
-        
-
-        public string ToStringRelative()
-        {
-            return String.Format("'{0}'!{1}:{2}",
-                                 Worksheet.Name,
-                                 RangeAddress.FirstAddress.ToStringRelative(),
-                                 RangeAddress.LastAddress.ToStringRelative());
-        }
-
-        public string ToStringFixed()
-        {
-            return String.Format("'{0}'!{1}:{2}", Worksheet.Name, RangeAddress.FirstAddress.ToStringFixed(),
-                                 RangeAddress.LastAddress.ToStringFixed());
-        }
+      
 
         public IXLRange AddToNamed(String rangeName)
         {
@@ -336,10 +365,10 @@ namespace ClosedXML.Excel
             if (namedRanges.Any(nr => String.Compare(nr.Name, rangeName, true) == 0))
             {
                 var namedRange = namedRanges.Where(nr => String.Compare(nr.Name, rangeName, true) == 0).Single();
-                namedRange.Add(Worksheet.Workbook, ToStringFixed());
+                namedRange.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
             }
             else
-                namedRanges.Add(rangeName, ToStringFixed(), comment);
+                namedRanges.Add(rangeName, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true), comment);
             return AsRange();
         }
 

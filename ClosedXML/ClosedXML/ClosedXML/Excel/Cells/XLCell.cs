@@ -489,7 +489,10 @@
                     int co = Address.ColumnNumber;
 
                     if (m.GetType().IsPrimitive || m is string || m is DateTime)
+                    {
                         SetValue(m, ro, co);
+                        co++;
+                    }
                     else if (m.GetType().IsArray)
                     {
                         // dynamic arr = m;

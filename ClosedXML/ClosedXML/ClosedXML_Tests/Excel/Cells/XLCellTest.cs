@@ -95,5 +95,13 @@ namespace ClosedXML_Tests
             var expected = String.Empty;
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod()]
+        public void InsertData1()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" });
+            Assert.AreEqual("'Sheet1'!B2:B4", range.ToString());
+        }
     }
 }

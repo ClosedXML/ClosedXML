@@ -6,22 +6,22 @@ namespace ClosedXML.Excel
 {
     internal class XLNamedRange: IXLNamedRange
     {
-        private List<String> rangeList = new List<String>();
-        private XLNamedRanges namedRanges;
+        private readonly List<String> _rangeList = new List<String>();
+        private readonly XLNamedRanges _namedRanges;
         public XLNamedRange(XLNamedRanges namedRanges , String rangeName, String range,  String comment = null)
         {
             Name = rangeName;
-            rangeList.Add(range);
+            _rangeList.Add(range);
             Comment = comment;
-            this.namedRanges = namedRanges;
+            _namedRanges = namedRanges;
         }
 
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
         {
             Name = rangeName;
-            ranges.ForEach(r => rangeList.Add(r.ToStringFixed()));
+            ranges.ForEach(r => _rangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1)));
             Comment = comment;
-            this.namedRanges = namedRanges;
+            _namedRanges = namedRanges;
         }
 
         public String Name { get; set; }
@@ -30,12 +30,8 @@ namespace ClosedXML.Excel
             get
             {
                 var ranges = new XLRanges();
-                foreach (var rangeAddress in rangeList)
+                foreach (var rangeToAdd in from rangeAddress in _rangeList select rangeAddress.Split('!') into byExclamation let wsName = byExclamation[0].Replace("'", "") let rng = byExclamation[1] select _namedRanges.Workbook.WorksheetsInternal.Worksheet(wsName).Range(rng))
                 {
-                    var byExclamation = rangeAddress.Split('!');
-                    var wsName = byExclamation[0].Replace("'", "");
-                    var rng = byExclamation[1];
-                    var rangeToAdd = namedRanges.Workbook.WorksheetsInternal.Worksheet(wsName).Range(rng);
                     ranges.Add(rangeToAdd);
                 }
                 return ranges;
@@ -63,41 +59,40 @@ namespace ClosedXML.Excel
         }
         public IXLRanges Add(IXLRange range)
         {
-            var ranges = new XLRanges();
-            ranges.Add(range);
+            var ranges = new XLRanges {range};
             return Add(ranges);
         }
         public IXLRanges Add(IXLRanges ranges)
         {
-            ranges.ForEach(r => rangeList.Add(r.ToString()));
+            ranges.ForEach(r => _rangeList.Add(r.ToString()));
             return ranges;
         }
 
         public void Delete()
         {
-            namedRanges.Delete(Name);
+            _namedRanges.Delete(Name);
         }
         public void Clear()
         {
-            rangeList.Clear();
+            _rangeList.Clear();
         }
         public void Remove(String rangeAddress)
         {
-            rangeList.Remove(rangeAddress);
+            _rangeList.Remove(rangeAddress);
         }
         public void Remove(IXLRange range)
         {
-            rangeList.Remove(range.ToString());
+            _rangeList.Remove(range.ToString());
         }
         public void Remove(IXLRanges ranges)
         {
-            ranges.ForEach(r => rangeList.Remove(r.ToString()));
+            ranges.ForEach(r => _rangeList.Remove(r.ToString()));
         }
 
 
         public override string ToString()
         {
-            String retVal = rangeList.Aggregate(String.Empty, (agg, r) => agg += r + ",");
+            String retVal = _rangeList.Aggregate(String.Empty, (agg, r) => agg + (r + ","));
             if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
             return retVal;
         }

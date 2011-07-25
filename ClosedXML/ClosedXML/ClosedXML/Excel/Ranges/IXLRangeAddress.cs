@@ -29,6 +29,9 @@ namespace ClosedXML.Excel
         Boolean IsInvalid { get; set; }
 
         String ToStringRelative();
+        String ToStringRelative(Boolean includeSheet);
         String ToStringFixed();
+        String ToStringFixed(XLReferenceStyle referenceStyle);
+        String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet);
     }
 }

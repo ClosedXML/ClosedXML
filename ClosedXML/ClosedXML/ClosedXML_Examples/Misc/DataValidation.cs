@@ -75,17 +75,47 @@ namespace ClosedXML_Examples.Misc
 
             // Validate with multiple ranges
             var ws2 = wb.Worksheets.Add("Validate Ranges");
-            var rng1Validation = ws2.Ranges("A1:B2,B4:D7,F4:G5").DataValidation;
+            var rng1 = ws2.Ranges("A1:B2,B4:D7,F4:G5");
+            rng1.Style.Fill.SetBackgroundColor(XLColor.YellowGreen);
+            var rng1Validation = rng1.DataValidation;
             rng1Validation.Decimal.EqualTo(1);
             rng1Validation.IgnoreBlanks = false;
 
-            var rng2Validation = ws2.Range("A11:E14").DataValidation;
+            var rng2 = ws2.Range("A11:E14");
+            rng2.Style.Fill.SetBackgroundColor(XLColor.YellowGreen);
+            var rng2Validation = rng2.DataValidation;
             rng2Validation.Decimal.EqualTo(2);
             rng2Validation.IgnoreBlanks = false;
 
-            var rng3Validation = ws2.Range("B2:B12").DataValidation;
+            var rng3 = ws2.Range("B2:B12");
+            //rng3.Style.Fill.SetBackgroundColor(XLColor.YellowGreen);
+            var rng3Validation = rng3.DataValidation;
             rng3Validation.Decimal.EqualTo(3);
             rng3Validation.IgnoreBlanks = true;
+
+            var rng4 = ws2.Range("D5:D6");
+            //rng4.Style.Fill.SetBackgroundColor(XLColor.YellowGreen);
+            var rng4Validation = rng4.DataValidation;
+            rng4Validation.Decimal.EqualTo(4);
+            rng4Validation.IgnoreBlanks = true;
+
+            var rng5 = ws2.Range("C13:C14");
+            //rng5.Style.Fill.SetBackgroundColor(XLColor.YellowGreen);
+            var rng5Validation = rng5.DataValidation;
+            rng5Validation.Decimal.EqualTo(5);
+            rng5Validation.IgnoreBlanks = true;
+
+            var rng6 = ws2.Range("D11:D12");
+            //rng6.Style.Fill.SetBackgroundColor(XLColor.YellowGreen);
+            var rng6Validation =rng6.DataValidation;
+            rng6Validation.Decimal.EqualTo(5);
+            rng6Validation.IgnoreBlanks = true;
+
+            var rng7 = ws2.Range("G4:G5");
+            //rng7.Style.Fill.SetBackgroundColor(XLColor.YellowGreen);
+            var rng7Validation = rng7.DataValidation;
+            rng7Validation.Decimal.EqualTo(5);
+            rng7Validation.IgnoreBlanks = true;
 
             wb.SaveAs(filePath);
         }

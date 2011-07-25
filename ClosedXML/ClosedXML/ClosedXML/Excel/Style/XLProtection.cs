@@ -4,37 +4,37 @@ namespace ClosedXML.Excel
 {
     internal class XLProtection : IXLProtection
     {
-        IXLStylized container;
+        readonly IXLStylized _container;
 
-        private Boolean locked;
+        private Boolean _locked;
         public Boolean Locked
         {
             get
             {
-                return locked;
+                return _locked;
             }
             set
             {
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Protection.Locked = value);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Protection.Locked = value);
                 else
-                    locked = value;
+                    _locked = value;
             }
         }
 
-        private Boolean hidden;
+        private Boolean _hidden;
         public Boolean Hidden
         {
             get
             {
-                return hidden;
+                return _hidden;
             }
             set
             {
-                if (container != null && !container.UpdatingStyle)
-                    container.Styles.ForEach(s => s.Protection.Hidden = value);
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Protection.Hidden = value);
                 else
-                    hidden = value;
+                    _hidden = value;
             }
         }
 
@@ -47,12 +47,11 @@ namespace ClosedXML.Excel
 
         public XLProtection(IXLStylized container, IXLProtection defaultProtection = null)
         {
-            this.container = container;
-            if (defaultProtection != null)
-            {
-                locked = defaultProtection.Locked;
-                hidden = defaultProtection.Hidden;
-            }
+            _container = container;
+            if (defaultProtection == null) return;
+
+            _locked = defaultProtection.Locked;
+            _hidden = defaultProtection.Hidden;
         }
 
         #endregion
@@ -60,45 +59,36 @@ namespace ClosedXML.Excel
         public bool Equals(IXLProtection other)
         {
             var otherP = other as XLProtection;
-            return locked == otherP.locked
-                   && hidden == otherP.hidden;
+            if (otherP == null)
+                return false;
+
+            return _locked == otherP._locked
+                   && _hidden == otherP._hidden;
         }
 
         public override bool Equals(object obj)
         {
-            return this.Equals((IXLProtection)obj);
+            return Equals((IXLProtection)obj);
         }
 
         public override int GetHashCode()
         {
             if (Locked)
-                if (Hidden)
-                    return 11;
-                else
-                    return 10;
-            else
-                if (Hidden)
-                    return 1;
-                else
-                    return 0;
+                return Hidden ? 11 : 10;
+
+            return Hidden ? 1 : 0;
         }
 
         public override string ToString()
         {
             if (Locked)
-                if (Hidden)
-                    return "Locked-Hidden";
-                else
-                    return "Locked";
-            else
-                if (Hidden)
-                    return "Hidden";
-                else
-                    return "None";
+                return Hidden ? "Locked-Hidden" : "Locked";
+
+            return Hidden ? "Hidden" : "None";
         }
 
-        public IXLStyle SetLocked() { Locked = true; return container.Style; }	public IXLStyle SetLocked(Boolean value) { Locked = value; return container.Style; }
-        public IXLStyle SetHidden() { Hidden = true; return container.Style; }	public IXLStyle SetHidden(Boolean value) { Hidden = value; return container.Style; }
+        public IXLStyle SetLocked() { Locked = true; return _container.Style; }	public IXLStyle SetLocked(Boolean value) { Locked = value; return _container.Style; }
+        public IXLStyle SetHidden() { Hidden = true; return _container.Style; }	public IXLStyle SetHidden(Boolean value) { Hidden = value; return _container.Style; }
 
     }
 

@@ -357,10 +357,10 @@ namespace ClosedXML.Excel
             {
                 int sheetId = (Int32)sheet.SheetId.Value;
 
-                if (!WorksheetsInternal.Any<XLWorksheet>(w => (w).SheetId == sheetId)) continue;
+                if (!WorksheetsInternal.Any<XLWorksheet>(w => w.SheetId == sheetId)) continue;
 
                 var wks =
-                    WorksheetsInternal.Where<XLWorksheet>(w => (w).SheetId == sheetId).Single();
+                    WorksheetsInternal.Where<XLWorksheet>(w => w.SheetId == sheetId).Single();
                 wks.RelId = sheet.Id;
                 sheet.Name = wks.Name;
             }
@@ -390,24 +390,41 @@ namespace ClosedXML.Excel
             }
 
             var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
-                                join worksheet in ((IEnumerable<XLWorksheet>)WorksheetsInternal) on sheet.Id.Value
-                                    equals worksheet.RelId
+                                join worksheet in ((IEnumerable<XLWorksheet>)WorksheetsInternal) on sheet.Id.Value equals worksheet.RelId
                                 orderby worksheet.Position
                                 select sheet;
 
             UInt32 firstSheetVisible = 0;
             Boolean foundVisible = false;
+            Int32 position = 0;
             foreach (Sheet sheet in sheetElements)
             {
-                workbook.Sheets.RemoveChild(sheet);
-                workbook.Sheets.AppendChild(sheet);
-
-                if (foundVisible) continue;
-
-                if (sheet.State == null || sheet.State == SheetStateValues.Visible)
-                    foundVisible = true;
+                position++;
+                if (_unsupportedSheets.ContainsKey(position))
+                {
+                    Sheet unsupportedSheet =
+                        workbook.Sheets.Elements<Sheet>().Where(s => s.SheetId == _unsupportedSheets[position]).First();
+                    workbook.Sheets.RemoveChild(unsupportedSheet);
+                    workbook.Sheets.AppendChild(unsupportedSheet);
+                    _unsupportedSheets.Remove(position);
+                }
                 else
-                    firstSheetVisible++;
+                {
+                    workbook.Sheets.RemoveChild(sheet);
+                    workbook.Sheets.AppendChild(sheet);
+
+                    if (foundVisible) continue;
+
+                    if (sheet.State == null || sheet.State == SheetStateValues.Visible)
+                        foundVisible = true;
+                    else
+                        firstSheetVisible++;
+                }
+            }
+            foreach (Sheet unsupportedSheet in _unsupportedSheets.Values.Select(sheetId => workbook.Sheets.Elements<Sheet>().Where(s => s.SheetId == sheetId).First()))
+            {
+                workbook.Sheets.RemoveChild(unsupportedSheet);
+                workbook.Sheets.AppendChild(unsupportedSheet);
             }
 
             var workbookView = workbook.BookViews.Elements<WorkbookView>().FirstOrDefault();

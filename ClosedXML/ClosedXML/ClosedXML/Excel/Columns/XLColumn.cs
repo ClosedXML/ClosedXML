@@ -63,21 +63,10 @@ namespace ClosedXML.Excel
                 yield return Style;
 
                 int column = ColumnNumber();
-                Int32 maxRow = 0;
-                if (Worksheet.Internals.CellsCollection.ColumnsUsed.ContainsKey(column))
-                    maxRow = Worksheet.Internals.CellsCollection.MaxRowInColumn(column);
 
-                if (Worksheet.Internals.RowsCollection.Count > 0)
-                {
-                    Int32 maxInCollection = Worksheet.Internals.RowsCollection.Keys.Max();
-                    if (maxInCollection > maxRow)
-                        maxRow = maxInCollection;
-                }
-                if (maxRow > 0)
-                {
-                    for (int ro = 1; ro <= maxRow; ro++)
-                        yield return Worksheet.Cell(ro, column).Style;
-                }
+                foreach (var cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
+                    yield return cell.Style;
+
                 UpdatingStyle = false;
             }
         }

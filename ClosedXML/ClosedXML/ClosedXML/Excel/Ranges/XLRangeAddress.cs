@@ -109,12 +109,39 @@ namespace ClosedXML.Excel
 
         public String ToStringRelative()
         {
-            return _firstAddress.ToStringRelative() + ":" + _lastAddress.ToStringRelative();
+            return ToStringRelative(false);
         }
 
         public String ToStringFixed()
         {
-            return _firstAddress.ToStringFixed() + ":" + _lastAddress.ToStringFixed();
+            return ToStringFixed(XLReferenceStyle.A1);
+        }
+
+        public String ToStringRelative(Boolean includeSheet)
+        {
+            if (includeSheet)
+                return String.Format("'{0}'!{1}:{2}", 
+                    Worksheet.Name, 
+                    _firstAddress.ToStringRelative(),
+                    _lastAddress.ToStringRelative());
+
+            return _firstAddress.ToStringRelative() + ":" + _lastAddress.ToStringRelative();
+        }
+
+        public String ToStringFixed(XLReferenceStyle referenceStyle)
+        {
+            return ToStringFixed(referenceStyle, false);
+        }
+
+        public String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet)
+        {
+            if (includeSheet)
+                return String.Format("'{0}'!{1}:{2}",
+                    Worksheet.Name,
+                    _firstAddress.ToStringFixed(referenceStyle),
+                    _lastAddress.ToStringFixed(referenceStyle));
+
+            return _firstAddress.ToStringFixed(referenceStyle) + ":" + _lastAddress.ToStringFixed(referenceStyle);           
         }
 
         public override string ToString()

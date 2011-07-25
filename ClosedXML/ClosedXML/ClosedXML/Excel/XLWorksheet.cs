@@ -149,12 +149,22 @@ namespace ClosedXML.Excel
             }
         }
 
+        private const String InvalidNameChars = @":\/?*[]";
         public String Name
         {
             get { return _name; }
             set
             {
-                (Workbook.WorksheetsInternal).Rename(_name, value);
+                if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
+                    throw new ArgumentException("Worksheet names cannot contain any of the following characters: " + InvalidNameChars);
+
+                if (StringExtensions.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Worksheet names cannot be empty");
+
+                if (value.Length > 31)
+                    throw new ArgumentException("Worksheet names cannot be more than 31 characters");
+
+                Workbook.WorksheetsInternal.Rename(_name, value);
                 _name = value;
             }
         }

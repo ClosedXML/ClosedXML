@@ -5,6 +5,9 @@ namespace ClosedXML.Excel
     public enum XLWorksheetVisibility { Visible, Hidden, VeryHidden }
     public interface IXLWorksheet : IXLRangeBase
     {
+        /// <summary>
+        /// Gets the workbook that contains this worksheet
+        /// </summary>
         XLWorkbook Workbook { get; }
 
         /// <summary>
@@ -42,8 +45,13 @@ namespace ClosedXML.Excel
         IXLRow FirstRow();
         /// <summary>
         /// Gets the first row of the worksheet that contains a cell with a value.
+        /// <para>Formatted empty cells do not count.</para>
         /// </summary>
         IXLRow FirstRowUsed();
+        /// <summary>
+        /// Gets the first row of the worksheet that contains a cell with a value.
+        /// </summary>
+        /// <param name="includeFormats">If set to <c>true</c> formatted empty cells will count as used.</param>
         IXLRow FirstRowUsed(Boolean includeFormats);
         /// <summary>
         /// Gets the last row of the worksheet.
@@ -53,6 +61,10 @@ namespace ClosedXML.Excel
         /// Gets the last row of the worksheet that contains a cell with a value.
         /// </summary>
         IXLRow LastRowUsed();
+        /// <summary>
+        /// Gets the last row of the worksheet that contains a cell with a value.
+        /// </summary>
+        /// <param name="includeFormats">If set to <c>true</c> formatted empty cells will count as used.</param>
         IXLRow LastRowUsed(Boolean includeFormats);
         /// <summary>
         /// Gets the first column of the worksheet.
@@ -62,6 +74,10 @@ namespace ClosedXML.Excel
         /// Gets the first column of the worksheet that contains a cell with a value.
         /// </summary>
         IXLColumn FirstColumnUsed();
+        /// <summary>
+        /// Gets the first column of the worksheet that contains a cell with a value.
+        /// </summary>
+        /// <param name="includeFormats">If set to <c>true</c> formatted empty cells will count as used.</param>
         IXLColumn FirstColumnUsed(Boolean includeFormats);
         /// <summary>
         /// Gets the last column of the worksheet.
@@ -71,6 +87,10 @@ namespace ClosedXML.Excel
         /// Gets the last column of the worksheet that contains a cell with a value.
         /// </summary>
         IXLColumn LastColumnUsed();
+        /// <summary>
+        /// Gets the last column of the worksheet that contains a cell with a value.
+        /// </summary>
+        /// <param name="includeFormats">If set to <c>true</c> formatted empty cells will count as used.</param>
         IXLColumn LastColumnUsed(Boolean includeFormats);
         /// <summary>
         /// Gets a collection of all columns in this worksheet.
@@ -184,10 +204,10 @@ namespace ClosedXML.Excel
         /// <returns>.</returns>
         IXLRange Range(int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn);
 
-        /// <summary>Gets the number of rows in this range.</summary>
+        /// <summary>Gets the number of rows in this worksheet.</summary>
         int RowCount();
 
-        /// <summary>Gets the number of columns in this range.</summary>
+        /// <summary>Gets the number of columns in this worksheet.</summary>
         int ColumnCount();
 
         /// <summary>
@@ -249,10 +269,26 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLSheetView SheetView { get; }
 
+        /// <summary>
+        /// Gets the Excel table of the given index
+        /// </summary>
+        /// <param name="index">Index of the table to return</param>
         IXLTable Table(Int32 index);
+        /// <summary>
+        /// Gets the Excel table of the given name
+        /// </summary>
+        /// <param name="name">Name of the table to return</param>
         IXLTable Table(String name);
+        /// <summary>
+        /// Gets an object to manage this worksheet's Excel tables
+        /// </summary>
         IXLTables Tables { get; }
 
+        /// <summary>
+        /// Copies the 
+        /// </summary>
+        /// <param name="newSheetName"></param>
+        /// <returns></returns>
         IXLWorksheet CopyTo(String newSheetName);
         IXLWorksheet CopyTo(String newSheetName, Int32 position);
         IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName);
@@ -322,5 +358,7 @@ namespace ClosedXML.Excel
 
         IXLPivotTable PivotTable(String name);
         IXLPivotTables PivotTables { get; }
+
+        
     }
 }

@@ -6,19 +6,19 @@ namespace ClosedXML.Excel
 {
     internal class XLNamedRanges: IXLNamedRanges
     {
-        Dictionary<String, IXLNamedRange> namedRanges = new Dictionary<String, IXLNamedRange>();
+        readonly Dictionary<String, IXLNamedRange> _namedRanges = new Dictionary<String, IXLNamedRange>();
         internal XLWorkbook Workbook { get; set; }
        
         public XLNamedRanges(XLWorkbook workbook)
         {
-            this.Workbook = workbook;
+            Workbook = workbook;
         }
 
         #region IXLNamedRanges Members
 
         public IXLNamedRange NamedRange(String rangeName)
         {
-            return namedRanges[rangeName];
+            return _namedRanges[rangeName];
         }
 
         public IXLNamedRange Add(String rangeName, String rangeAddress)
@@ -36,33 +36,32 @@ namespace ClosedXML.Excel
         public IXLNamedRange Add(String rangeName, String rangeAddress, String comment )
         {
             var namedRange = new XLNamedRange(this, rangeName, rangeAddress, comment);
-            namedRanges.Add(rangeName, namedRange);
+            _namedRanges.Add(rangeName, namedRange);
             return namedRange;
         }
         public IXLNamedRange Add(String rangeName, IXLRange range, String comment)
         {
-            var ranges = new XLRanges();
-            ranges.Add(range);
+            var ranges = new XLRanges {range};
             return Add(rangeName, ranges, comment);
         }
         public IXLNamedRange Add(String rangeName, IXLRanges ranges, String comment)
         {
             var namedRange = new XLNamedRange(this, rangeName, ranges, comment);
-            namedRanges.Add(rangeName, namedRange);
+            _namedRanges.Add(rangeName, namedRange);
             return namedRange;
         }
 
         public void Delete(String rangeName)
         {
-            namedRanges.Remove(rangeName);
+            _namedRanges.Remove(rangeName);
         }
         public void Delete(Int32 rangeIndex)
         {
-            namedRanges.Remove(namedRanges.ElementAt(rangeIndex).Key);
+            _namedRanges.Remove(_namedRanges.ElementAt(rangeIndex).Key);
         }
         public void DeleteAll()
         {
-            namedRanges.Clear();
+            _namedRanges.Clear();
         }
         
         #endregion
@@ -71,7 +70,7 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLNamedRange> GetEnumerator()
         {
-            return namedRanges.Values.GetEnumerator();
+            return _namedRanges.Values.GetEnumerator();
         }
 
         #endregion

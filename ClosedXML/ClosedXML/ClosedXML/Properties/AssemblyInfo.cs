@@ -33,3 +33,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.56.3.0")]
 [assembly: AssemblyFileVersion("0.56.3.0")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ClosedXML_Tests")]

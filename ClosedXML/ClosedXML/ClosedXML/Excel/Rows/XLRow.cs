@@ -65,22 +65,9 @@ namespace ClosedXML.Excel
 
                 int row = RowNumber();
 
-                Int32 maxColumn = 0;
-                if (Worksheet.Internals.CellsCollection.RowsUsed.ContainsKey(row))
-                    maxColumn = Worksheet.Internals.CellsCollection.MaxColumnInRow(row);
+                foreach (var cell in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
+                    yield return cell.Style;
 
-                if (Worksheet.Internals.ColumnsCollection.Count > 0)
-                {
-                    Int32 maxInCollection = Worksheet.Internals.ColumnsCollection.Keys.Max();
-                    if (maxInCollection > maxColumn)
-                        maxColumn = maxInCollection;
-                }
-
-                if (maxColumn > 0)
-                {
-                    for (int co = 1; co <= maxColumn; co++)
-                        yield return Worksheet.Cell(row, co).Style;
-                }
                 UpdatingStyle = false;
             }
         }

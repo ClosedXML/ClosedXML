@@ -1,16 +1,16 @@
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
-using ClosedXML.Excel;
 
-namespace ClosedXML
+namespace ClosedXML.Excel
 {
     using System.Linq;
 
     /// <summary>
     ///   Common methods
     /// </summary>
-    public static class ExcelHelper
+    internal static class ExcelHelper
     {
         public const int MinRowNumber = 1;
         public const int MinColumnNumber = 1;

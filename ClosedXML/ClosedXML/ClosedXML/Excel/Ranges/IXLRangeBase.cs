@@ -213,9 +213,6 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRange AsRange();
 
-        String ToStringRelative();
-        String ToStringFixed();
-
         Boolean IsMerged();
         Boolean IsEmpty();
         Boolean IsEmpty(Boolean includeFormats);

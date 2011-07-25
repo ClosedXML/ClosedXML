@@ -214,11 +214,11 @@ namespace ClosedXML.Excel
             }
             if (referenceStyle == XLReferenceStyle.R1C1)
             {
-                return _rowNumber.ToStringLookup() + "," + ColumnNumber;
+                return String.Format("R{0}C{1}", _rowNumber.ToStringLookup(), ColumnNumber);
             }
             if (HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
             {
-                return _rowNumber.ToStringLookup() + "," + ColumnNumber;
+                return String.Format("R{0}C{1}", _rowNumber.ToStringLookup(), ColumnNumber);
             }
             return ColumnLetter + _rowNumber.ToStringLookup();
         }
@@ -229,15 +229,7 @@ namespace ClosedXML.Excel
             return _trimmedAddress ?? (_trimmedAddress = ColumnLetter + _rowNumber.ToStringLookup());
         }
 
-        public string ToStringRelative()
-        {
-            return GetTrimmedAddress();
-        }
 
-        public string ToStringFixed()
-        {
-            return "$" + ColumnLetter + "$" + _rowNumber.ToStringLookup();
-        }
 
         #endregion
         #region Operator Overloads
@@ -283,11 +275,7 @@ namespace ClosedXML.Excel
             {
                 return true;
             }
-            if (ReferenceEquals(left, null))
-            {
-                return false;
-            }
-            return left.Equals(right);
+            return !ReferenceEquals(left, null) && left.Equals(right);
         }
 
         public static Boolean operator !=(XLAddress left, XLAddress right)
@@ -339,5 +327,51 @@ namespace ClosedXML.Excel
         }
         #endregion
         #endregion
+
+        public String ToStringRelative()
+        {
+            return ToStringRelative(false);
+        }
+
+        public String ToStringFixed()
+        {
+            return ToStringFixed(XLReferenceStyle.Default);
+        }
+
+        public String ToStringRelative(Boolean includeSheet)
+        {
+            if (includeSheet)
+                return String.Format("'{0}'!{1}",
+                    Worksheet.Name,
+                    GetTrimmedAddress());
+
+            return GetTrimmedAddress();
+        }
+
+        public String ToStringFixed(XLReferenceStyle referenceStyle)
+        {
+            return ToStringFixed(referenceStyle, false);
+        }
+
+        public String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet)
+        {
+            String address;
+            if (referenceStyle == XLReferenceStyle.A1)
+                address = String.Format("${0}${1}", ColumnLetter, _rowNumber.ToStringLookup());
+            else if (referenceStyle == XLReferenceStyle.R1C1)
+                address = String.Format("R{0}C{1}", _rowNumber.ToStringLookup(), ColumnNumber);
+            else if (HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
+                address = String.Format("R{0}C{1}", _rowNumber.ToStringLookup(), ColumnNumber);
+            else
+                address = String.Format("${0}${1}", ColumnLetter, _rowNumber.ToStringLookup());
+
+            if (includeSheet)
+                return String.Format("'{0}'!{1}",
+                    Worksheet.Name,
+                    address);
+
+            return address;
+        }
+
     }
 }

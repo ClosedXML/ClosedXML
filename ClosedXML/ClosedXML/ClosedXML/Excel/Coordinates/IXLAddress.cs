@@ -12,7 +12,10 @@ namespace ClosedXML.Excel
         Boolean FixedRow { get; }
         Boolean FixedColumn { get; }
         String ToStringRelative();
+        String ToStringRelative(Boolean includeSheet);
         String ToStringFixed();
+        String ToStringFixed(XLReferenceStyle referenceStyle);
+        String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet);
         String ToString(XLReferenceStyle referenceStyle);
     }
 }

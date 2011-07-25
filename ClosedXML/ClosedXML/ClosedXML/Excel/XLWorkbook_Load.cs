@@ -108,13 +108,19 @@ namespace ClosedXML.Excel
             var fonts = s.Fonts;
 
             var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
-
-            foreach (OpenXmlElement sheet in sheets)
+            Int32 position = 0;
+            foreach (Sheet dSheet in sheets.OfType<Sheet>())
             {
+                position++;
                 var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
 
-                var dSheet = ((Sheet) sheet);
-                var wsPart = (WorksheetPart) dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id);
+                var wsPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
+
+                if (wsPart == null)
+                {
+                    _unsupportedSheets.Add(position, dSheet.SheetId.Value);
+                    continue;
+                }
 
                 var sheetName = dSheet.Name;
 
