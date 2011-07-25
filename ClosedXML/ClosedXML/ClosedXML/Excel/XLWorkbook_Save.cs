@@ -408,8 +408,7 @@ namespace ClosedXML.Excel
                     workbook.Sheets.AppendChild(unsupportedSheet);
                     _unsupportedSheets.Remove(position);
                 }
-                else
-                {
+                
                     workbook.Sheets.RemoveChild(sheet);
                     workbook.Sheets.AppendChild(sheet);
 
@@ -419,7 +418,7 @@ namespace ClosedXML.Excel
                         foundVisible = true;
                     else
                         firstSheetVisible++;
-                }
+                
             }
             foreach (Sheet unsupportedSheet in _unsupportedSheets.Values.Select(sheetId => workbook.Sheets.Elements<Sheet>().Where(s => s.SheetId == sheetId).First()))
             {
