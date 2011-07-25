@@ -246,7 +246,7 @@ namespace ClosedXML.Excel
             var workbook = dSpreadsheet.WorkbookPart.Workbook;
 
             var workbookView = (WorkbookView) workbook.BookViews.FirstOrDefault();
-            if (workbookView != null && workbookView.ActiveTab != null)
+            if (workbookView != null && workbookView.ActiveTab != null && !_unsupportedSheets.ContainsKey((Int32)(workbookView.ActiveTab.Value + 1)))
                 Worksheet((Int32) (workbookView.ActiveTab.Value + 1)).SetTabActive();
 
             if (workbook.DefinedNames == null) return;
