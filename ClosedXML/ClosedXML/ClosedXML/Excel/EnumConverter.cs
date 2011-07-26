@@ -434,6 +434,48 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
+        public static DataConsolidateFunctionValues ToOpenXml(this XLPivotSummary value)
+        {
+            switch (value)
+            {
+                case XLPivotSummary.Sum: return DataConsolidateFunctionValues.Sum;
+                case XLPivotSummary.Count: return DataConsolidateFunctionValues.Count;
+                case XLPivotSummary.Average: return DataConsolidateFunctionValues.Average;
+                case XLPivotSummary.Minimum: return DataConsolidateFunctionValues.Minimum;
+                case XLPivotSummary.Maximum: return DataConsolidateFunctionValues.Maximum;
+                case XLPivotSummary.Product: return DataConsolidateFunctionValues.Product;
+                case XLPivotSummary.CountNumbers: return DataConsolidateFunctionValues.CountNumbers;
+                case XLPivotSummary.StandardDeviation: return DataConsolidateFunctionValues.StandardDeviation;
+                case XLPivotSummary.PopulationStandardDeviation: return DataConsolidateFunctionValues.StandardDeviationP;
+                case XLPivotSummary.Variance: return DataConsolidateFunctionValues.Variance;
+                case XLPivotSummary.PopulationVariance: return DataConsolidateFunctionValues.VarianceP;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+        public static ShowDataAsValues ToOpenXml(this XLPivotCalculation value)
+        {
+            switch (value)
+            {
+                case XLPivotCalculation.Normal: return ShowDataAsValues.Normal;
+                case XLPivotCalculation.DifferenceFrom: return ShowDataAsValues.Difference;
+                case XLPivotCalculation.PctOf: return ShowDataAsValues.Percent;
+                case XLPivotCalculation.PctDifferenceFrom: return ShowDataAsValues.PercentageDifference;
+                case XLPivotCalculation.RunningTotal: return ShowDataAsValues.RunTotal;
+                case XLPivotCalculation.PctOfRow: return ShowDataAsValues.PercentOfRaw; // There's a typo in the OpenXML SDK =)
+                case XLPivotCalculation.PctOfColumn: return ShowDataAsValues.PercentOfColumn;
+                case XLPivotCalculation.PctOfTotal: return ShowDataAsValues.PercentOfTotal;
+                case XLPivotCalculation.Index: return ShowDataAsValues.Index;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
         #endregion
         #region To ClosedXml
         public static XLFontUnderlineValues ToClosedXml(this UnderlineValues value)
@@ -850,14 +892,54 @@ namespace ClosedXML.Excel
         {
             switch (value)
             {
-                case PhoneticValues.FullWidthKatakana:
-                    return XLPhoneticType.FullWidthKatakana;
+                case PhoneticValues.FullWidthKatakana: return XLPhoneticType.FullWidthKatakana;
                 case PhoneticValues.HalfWidthKatakana:
                     return XLPhoneticType.HalfWidthKatakana;
                 case PhoneticValues.Hiragana:
                     return XLPhoneticType.Hiragana;
                 case PhoneticValues.NoConversion:
                     return XLPhoneticType.NoConversion;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+        public static XLPivotSummary ToClosedXml(this DataConsolidateFunctionValues value)
+        {
+            switch (value)
+            {
+                case DataConsolidateFunctionValues.Sum: return XLPivotSummary.Sum;
+                case DataConsolidateFunctionValues.Count: return XLPivotSummary.Count;
+                case DataConsolidateFunctionValues.Average: return XLPivotSummary.Average;
+                case DataConsolidateFunctionValues.Minimum: return XLPivotSummary.Minimum;
+                case DataConsolidateFunctionValues.Maximum: return XLPivotSummary.Maximum;
+                case DataConsolidateFunctionValues.Product: return XLPivotSummary.Product;
+                case DataConsolidateFunctionValues.CountNumbers: return XLPivotSummary.CountNumbers;
+                case DataConsolidateFunctionValues.StandardDeviation: return XLPivotSummary.StandardDeviation;
+                case DataConsolidateFunctionValues.StandardDeviationP: return XLPivotSummary.PopulationStandardDeviation;
+                case DataConsolidateFunctionValues.Variance: return XLPivotSummary.Variance;
+                case DataConsolidateFunctionValues.VarianceP: return XLPivotSummary.PopulationVariance;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+        public static XLPivotCalculation ToClosedXml(this ShowDataAsValues value)
+        {
+            switch (value)
+            {
+                case ShowDataAsValues.Normal: return XLPivotCalculation.Normal;
+                case ShowDataAsValues.Difference: return XLPivotCalculation.DifferenceFrom;
+                case ShowDataAsValues.Percent: return XLPivotCalculation.PctOf;
+                case ShowDataAsValues.PercentageDifference: return XLPivotCalculation.PctDifferenceFrom;
+                case ShowDataAsValues.RunTotal: return XLPivotCalculation.RunningTotal;
+                case ShowDataAsValues.PercentOfRaw: return XLPivotCalculation.PctOfRow; // There's a typo in the OpenXML SDK =)
+                case ShowDataAsValues.PercentOfColumn: return XLPivotCalculation.PctOfColumn;
+                case ShowDataAsValues.PercentOfTotal: return XLPivotCalculation.PctOfTotal;
+                case ShowDataAsValues.Index: return XLPivotCalculation.Index;
+
                 #region default
                 default:
                     throw new ApplicationException("Not implemented value!");
