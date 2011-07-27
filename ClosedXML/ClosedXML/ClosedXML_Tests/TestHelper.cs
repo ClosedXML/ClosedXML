@@ -9,7 +9,7 @@ namespace ClosedXML_Tests
     {
         //Note: Run example tests parameters
         public const string TestsOutputDirectory = @"C:\Excel Files\Tests\";
-        public const string ActualTestResultPostFix = "(Actual)";
+        public const string ActualTestResultPostFix = "";
         public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
         
         private const bool CompareWithResources = true;
@@ -25,18 +25,20 @@ namespace ClosedXML_Tests
                 where T : IXLExample, new()
         {
             var example = new T();
-            string filePath = Path.Combine(TestsExampleOutputDirectory, filePartName);
+            string filePath1 = Path.Combine(TestsExampleOutputDirectory, filePartName);
 
-            var extension = Path.GetExtension(filePath);
-            var directory = Path.GetDirectoryName(filePath);
+            var extension = Path.GetExtension(filePath1);
+            var directory = Path.GetDirectoryName(filePath1);
 
-            var fileName= Path.GetFileNameWithoutExtension(filePath);
+            var fileName= Path.GetFileNameWithoutExtension(filePath1);
             fileName += ActualTestResultPostFix;
             fileName = Path.ChangeExtension(fileName, extension);
 
-            filePath = Path.Combine(directory, fileName);
+            filePath1 = Path.Combine(directory, "z" + fileName);
+            var filePath2 = Path.Combine(directory, fileName);
             //Run test
-            example.Create(filePath);
+            example.Create(filePath1);
+            new XLWorkbook(filePath1).SaveAs(filePath2);
             bool success = true;
 #pragma warning disable 162
             try
@@ -49,7 +51,7 @@ namespace ClosedXML_Tests
                 {
                     string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');
                     using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
-                    using (var streamActual = File.OpenRead(filePath))
+                    using (var streamActual = File.OpenRead(filePath2))
                     {
                         string message;
                         success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);

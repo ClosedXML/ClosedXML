@@ -74,6 +74,7 @@ namespace ClosedXML.Excel
             ShowRuler = workbook.ShowRuler;
             ShowWhiteSpace = workbook.ShowWhiteSpace;
             ShowZeros = workbook.ShowZeros;
+            RightToLeft = workbook.RightToLeft;
             TabColor = new XLColor();
         }
 

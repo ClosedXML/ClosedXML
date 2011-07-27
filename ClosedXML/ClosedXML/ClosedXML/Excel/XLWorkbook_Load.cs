@@ -255,6 +255,11 @@ namespace ClosedXML.Excel
                     Worksheet((Int32)(workbookView.ActiveTab.Value + 1)).SetTabActive();
             }
 
+            LoadDefinedNames(workbook);
+        }
+
+        private void LoadDefinedNames(Workbook workbook)
+        {
             if (workbook.DefinedNames == null) return;
 
             foreach (DefinedName definedName in workbook.DefinedNames)
@@ -264,28 +269,15 @@ namespace ClosedXML.Excel
                 {
                     foreach (string area in definedName.Text.Split(','))
                     {
-                        var sections = area.Trim().Split('!');
-                        string sheetName = sections[0].Replace("\'", "");
-                        string sheetArea = sections[1];
+                        string sheetName, sheetArea;
+                        ParseReference(area, out sheetName, out sheetArea);
                         if (!sheetArea.Equals("#REF"))
                             WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                     }
                 }
                 else if (name == "_xlnm.Print_Titles")
                 {
-                    var areas = definedName.Text.Split(',');
-
-                    var colSections = areas[0].Trim().Split('!');
-                    string sheetNameCol = colSections[0].Replace("\'", "");
-                    string sheetAreaCol = colSections[1];
-                    if (!sheetAreaCol.Equals("#REF"))
-                        WorksheetsInternal.Worksheet(sheetNameCol).PageSetup.SetColumnsToRepeatAtLeft(sheetAreaCol);
-
-                    var rowSections = areas[1].Split('!');
-                    string sheetNameRow = rowSections[0].Replace("\'", "");
-                    string sheetAreaRow = rowSections[1];
-                    if (!sheetAreaRow.Equals("#REF"))
-                        WorksheetsInternal.Worksheet(sheetNameRow).PageSetup.SetRowsToRepeatAtTop(sheetAreaRow);
+                    LoadPrintTitles(definedName);
                 }
                 else
                 {
@@ -302,6 +294,50 @@ namespace ClosedXML.Excel
                     }
                 }
             }
+        }
+
+        private void LoadPrintTitles(DefinedName definedName)
+        {
+            var areas = definedName.Text.Split(',');
+            if (areas.Length > 0)
+            {
+                foreach (var item in areas)
+                {
+                    SetColumnsOrRowsToRepeat(item);
+                }
+                return;
+            }
+
+            SetColumnsOrRowsToRepeat(definedName.Text);
+        }
+
+        private void SetColumnsOrRowsToRepeat(string area)
+        {
+            string sheetName, sheetArea;
+            ParseReference(area, out sheetName, out sheetArea);
+            if (sheetArea.Equals("#REF")) return;
+            if (IsColReference(sheetArea))
+                WorksheetsInternal.Worksheet(sheetName).PageSetup.SetColumnsToRepeatAtLeft(sheetArea);
+            if (IsRowReference(sheetArea))
+                WorksheetsInternal.Worksheet(sheetName).PageSetup.SetRowsToRepeatAtTop(sheetArea);
+        }
+
+        // either $A:$X => true or $1:$99 => false
+        private static bool IsColReference(string sheetArea)
+        {
+            return char.IsLetter(sheetArea[1]);
+        }
+
+        private static bool IsRowReference(string sheetArea)
+        {
+            return char.IsNumber(sheetArea[1]);
+        }
+
+        private static void ParseReference(string item, out string sheetName, out string sheetArea)
+        {
+            var sections = item.Trim().Split('!');
+            sheetName = sections[0].Replace("\'", "");
+            sheetArea = sections[1];
         }
 
         private void LoadCells(SharedStringItem[] sharedStrings, Stylesheet s, NumberingFormats numberingFormats,

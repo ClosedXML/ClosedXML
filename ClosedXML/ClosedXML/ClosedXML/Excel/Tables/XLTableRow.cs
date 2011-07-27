@@ -92,12 +92,12 @@ namespace ClosedXML.Excel
             return RowBelow(step);
         }
 
-        public XLTableRow RowBelow()
+        public new XLTableRow RowBelow()
         {
             return RowBelow(1);
         }
 
-        public XLTableRow RowBelow(Int32 step)
+        public new XLTableRow RowBelow(Int32 step)
         {
             return RowShift(step);
         }
