@@ -359,6 +359,9 @@ namespace ClosedXML.Excel
         IXLPivotTable PivotTable(String name);
         IXLPivotTables PivotTables { get; }
 
+        Boolean RightToLeft { get; set; }
+        IXLWorksheet SetRightToLeft(); IXLWorksheet SetRightToLeft(Boolean value);
+
         
     }
 }

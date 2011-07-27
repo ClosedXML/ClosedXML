@@ -2431,6 +2431,11 @@ namespace ClosedXML.Excel
             else
                 sheetView.ShowZeros = false;
 
+            if (xlWorksheet.RightToLeft)
+                sheetView.RightToLeft = true;
+            else
+                sheetView.RightToLeft = null;
+
             var pane = sheetView.Elements<Pane>().FirstOrDefault();
             if (pane == null)
             {

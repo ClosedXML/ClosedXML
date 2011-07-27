@@ -1122,5 +1122,19 @@ namespace ClosedXML.Excel
             return (XLPivotTable)PivotTables.PivotTable(name);
         }
         public IXLPivotTables PivotTables { get; private set; }
+
+        public Boolean RightToLeft { get; set; }
+
+        public IXLWorksheet SetRightToLeft()
+        {
+            RightToLeft = true;
+            return this;
+        }
+
+        public IXLWorksheet SetRightToLeft(Boolean value)
+        {
+            RightToLeft = value;
+            return this;
+        }
     }
 }
