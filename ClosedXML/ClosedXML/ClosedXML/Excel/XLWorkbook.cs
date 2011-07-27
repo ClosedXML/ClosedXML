@@ -509,7 +509,12 @@ namespace ClosedXML.Excel
             get { return true; }
         }
 
-        private Dictionary<Int32, UInt32> _unsupportedSheets = new Dictionary<int, UInt32>();
+        private class UnsupportedSheet
+        {
+            public UInt32 SheetId;
+            public Boolean IsActive;
+        }
+        private Dictionary<Int32, UnsupportedSheet> _unsupportedSheets = new Dictionary<int, UnsupportedSheet>();
         //--
         #region  Nested Type: XLLoadSource
         private enum XLLoadSource

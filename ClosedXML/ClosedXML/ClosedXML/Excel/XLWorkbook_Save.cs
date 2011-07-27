@@ -395,6 +395,7 @@ namespace ClosedXML.Excel
                                 select sheet;
 
             UInt32 firstSheetVisible = 0;
+            UInt32 activeTab = (from us in _unsupportedSheets where us.Value.IsActive select (UInt32)us.Key - 1).FirstOrDefault();
             Boolean foundVisible = false;
             Int32 position = 0;
             foreach (Sheet sheet in sheetElements)
@@ -403,7 +404,7 @@ namespace ClosedXML.Excel
                 if (_unsupportedSheets.ContainsKey(position))
                 {
                     Sheet unsupportedSheet =
-                        workbook.Sheets.Elements<Sheet>().Where(s => s.SheetId == _unsupportedSheets[position]).First();
+                        workbook.Sheets.Elements<Sheet>().Where(s => s.SheetId == _unsupportedSheets[position].SheetId).First();
                     workbook.Sheets.RemoveChild(unsupportedSheet);
                     workbook.Sheets.AppendChild(unsupportedSheet);
                     _unsupportedSheets.Remove(position);
@@ -420,7 +421,7 @@ namespace ClosedXML.Excel
                         firstSheetVisible++;
                 
             }
-            foreach (Sheet unsupportedSheet in _unsupportedSheets.Values.Select(sheetId => workbook.Sheets.Elements<Sheet>().Where(s => s.SheetId == sheetId).First()))
+            foreach (Sheet unsupportedSheet in _unsupportedSheets.Values.Select(us => workbook.Sheets.Elements<Sheet>().Where(s => s.SheetId == us.SheetId).First()))
             {
                 workbook.Sheets.RemoveChild(unsupportedSheet);
                 workbook.Sheets.AppendChild(unsupportedSheet);
@@ -428,13 +429,16 @@ namespace ClosedXML.Excel
 
             var workbookView = workbook.BookViews.Elements<WorkbookView>().FirstOrDefault();
 
-            UInt32 activeTab = firstSheetVisible;
-            foreach (XLWorksheet ws in worksheets)
+            if (activeTab == 0)
             {
-                if (!ws.TabActive) continue;
+                activeTab = firstSheetVisible;
+                foreach (XLWorksheet ws in worksheets)
+                {
+                    if (!ws.TabActive) continue;
 
-                activeTab = (UInt32)(ws.Position - 1);
-                break;
+                    activeTab = (UInt32)(ws.Position - 1);
+                    break;
+                }
             }
 
             if (workbookView == null)
