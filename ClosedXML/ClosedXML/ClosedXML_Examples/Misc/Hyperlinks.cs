@@ -60,6 +60,9 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(++ro, 1).Value = "Link to a file - same folder";
             ws.Cell(ro, 1).Hyperlink = new XLHyperlink("Test.xlsx");
 
+            ws.Cell(++ro, 1).Value = "Link to a file - Absolute";
+            ws.Cell(ro, 1).Hyperlink = new XLHyperlink(@"c:\Test.xlsx");
+
             ws.Cell(++ro, 1).Value = "Link to a file - relative address";
             ws.Cell(ro, 1).Hyperlink = new XLHyperlink(@"../Test.xlsx");
 
