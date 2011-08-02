@@ -65,6 +65,7 @@
     <Compile Include="ExcelDocsComparerTests.cs" />
     <Compile Include="Excel\Cells\XLCellTest.cs" />
     <Compile Include="Excel\Coordinates\XLAddressTest.cs" />
+    <Compile Include="Excel\Misc\Extensions.cs" />
     <Compile Include="Excel\PivotTables\XLPivotTableTest.cs" />
     <Compile Include="Excel\Ranges\XLRangeAddressTest.cs" />
     <Compile Include="Excel\Ranges\XLRangeBaseTest.cs" />

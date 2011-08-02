@@ -986,13 +986,12 @@
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
-        private void SetValue(object objWithValue, int ro, int co)
+        private void SetValue<T>(T value, int ro, int co) where T: class
         {
-            string str = String.Empty;
-            if (objWithValue != null)
-                str = objWithValue.ToString();
-
-            _worksheet.Cell(ro, co).Value = str;
+            if (value == null)
+                _worksheet.Cell(ro, co).SetValue(String.Empty);
+            else
+                _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
         }
 
         private void SetValue(object value)

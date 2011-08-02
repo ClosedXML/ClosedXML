@@ -15,10 +15,6 @@ namespace ClosedXML_Tests.Excel
     {
 
         [TestMethod]
-        public void GetFile()
-        {
-        }
-        [TestMethod]
         public void TestConvertColumnLetterToNumberAnd()
         {
             CheckColumnNumber(1);

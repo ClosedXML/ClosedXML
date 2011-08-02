@@ -392,7 +392,7 @@ namespace ClosedXML.Excel
             {
                 if (cell.DataType == CellValues.InlineString)
                 {
-                    xlCell._cellValue = cell.InlineString.Text.Text;
+                    xlCell._cellValue = cell.InlineString.Text.Text.FixNewLines(); 
                     xlCell._dataType = XLCellValues.Text;
                     xlCell.ShareString = false;
                 }
@@ -411,7 +411,7 @@ namespace ClosedXML.Excel
                             foreach (Run run in runs)
                             {
                                 var runProperties = run.RunProperties;
-                                String text = run.Text.InnerText.Replace("\n", Environment.NewLine);
+                                String text = run.Text.InnerText.FixNewLines();
 
                                 if (runProperties == null)
                                     xlCell.RichText.AddText(text, xlCell.Style.Font);
@@ -446,14 +446,14 @@ namespace ClosedXML.Excel
 
                             foreach (PhoneticRun pr in phoneticRuns)
                             {
-                                xlCell.RichText.Phonetics.Add(pr.Text.InnerText, (Int32) pr.BaseTextStartIndex.Value,
+                                xlCell.RichText.Phonetics.Add(pr.Text.InnerText.FixNewLines(), (Int32)pr.BaseTextStartIndex.Value,
                                                               (Int32) pr.EndingBaseIndex.Value);
                             }
 
                             #endregion
                         }
                         else
-                            xlCell._cellValue = cell.CellValue.Text;
+                            xlCell._cellValue = cell.CellValue.Text.FixNewLines();
                     }
                     else
                         xlCell._cellValue = String.Empty;

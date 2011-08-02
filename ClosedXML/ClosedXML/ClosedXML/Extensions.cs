@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 [assembly: CLSCompliantAttribute(true)]
 namespace ClosedXML.Excel
@@ -112,6 +113,17 @@ namespace ClosedXML.Excel
                 }
             }
             return true;
+        }
+
+        private static readonly Regex RegexNewLine = new Regex(@"((?<!\r)\n|\r\n)");
+        public static String FixNewLines(this String value)
+        {
+            return value.Contains("\n") ? RegexNewLine.Replace(value, Environment.NewLine) : value;
+        }
+
+        public static Boolean PreserveSpaces(this String value)
+        {
+            return value.StartsWith(" ") || value.EndsWith(" ") || value.Contains(Environment.NewLine);
         }
     }
 

@@ -19,7 +19,7 @@ namespace ClosedXML_Examples.Misc
             // From a list of strings
             var listOfStrings = new List<String>();
             listOfStrings.Add("House");
-            listOfStrings.Add("Car");
+            listOfStrings.Add("001");
             ws.Cell(1, 1).Value = "From Strings";
             ws.Cell(1, 1).AsRange().AddToNamed("Titles");
             ws.Cell(2, 1).InsertData(listOfStrings);

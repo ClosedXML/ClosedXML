@@ -157,5 +157,7 @@ namespace ClosedXML.Excel
         {
             return range.Contains('-') ? range.Replace('-', ':').Split(':') : range.Split(':');
         }
+
+
     }
 }

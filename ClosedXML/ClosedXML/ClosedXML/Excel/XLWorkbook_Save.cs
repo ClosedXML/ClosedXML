@@ -639,8 +639,7 @@ namespace ClosedXML.Excel
                             runProperties.Append(fontFamilyNumbering);
 
                             var text = new Text {Text = rt.Text};
-                            if (rt.Text.StartsWith(" ") || rt.Text.EndsWith(" ") ||
-                                rt.Text.Contains(Environment.NewLine))
+                            if (rt.Text.PreserveSpaces())
                                 text.Space = SpaceProcessingModeValues.Preserve;
 
                             run.Append(runProperties);
@@ -660,6 +659,8 @@ namespace ClosedXML.Excel
                                                       };
 
                                 var text = new Text {Text = p.Text};
+                                if (p.Text.PreserveSpaces())
+                                    text.Space = SpaceProcessingModeValues.Preserve;
 
                                 phoneticRun.Append(text);
                                 sharedStringItem.Append(phoneticRun);
@@ -2814,7 +2815,14 @@ namespace ClosedXML.Excel
                                     cell.CellValue = cellValue;
                                 }
                                 else
-                                    cell.InlineString = new InlineString {Text = new Text(opCell.GetString())};
+                                {
+                                    String text = opCell.GetString();
+                                    var t = new Text(text);
+                                    if (text.PreserveSpaces())
+                                        t.Space = SpaceProcessingModeValues.Preserve;
+
+                                    cell.InlineString = new InlineString {Text = t};
+                                }
                             }
                         }
                         else if (dataType == XLCellValues.TimeSpan)

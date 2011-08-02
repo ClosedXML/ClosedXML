@@ -49,11 +49,13 @@ namespace ClosedXML.Excel
                 {
                     if (oneRange)
                     {
-                        foreach(var cell in range.Worksheet.Internals.CellsCollection.GetCells(
-                            range.FirstAddress.RowNumber,
-                            range.FirstAddress.ColumnNumber,
-                            range.LastAddress.RowNumber,
-                            range.LastAddress.ColumnNumber))
+                        foreach(var cell in range.Worksheet.Internals.CellsCollection
+                                                .GetCells(
+                                                range.FirstAddress.RowNumber,
+                                                range.FirstAddress.ColumnNumber,
+                                                range.LastAddress.RowNumber,
+                                                range.LastAddress.ColumnNumber)
+                                                .Where(c => !c.IsEmpty(_includeFormats)))
                         {
                             yield return cell;
                         }
@@ -61,7 +63,8 @@ namespace ClosedXML.Excel
                     else
                     {
                         var tmpRange = range;
-                        var addressList = range.Worksheet.Internals.CellsCollection.GetSheetPoints(
+                        var addressList = range.Worksheet.Internals.CellsCollection
+                            .GetSheetPoints(
                             tmpRange.FirstAddress.RowNumber,
                             tmpRange.FirstAddress.ColumnNumber,
                             tmpRange.LastAddress.RowNumber,
@@ -90,6 +93,7 @@ namespace ClosedXML.Excel
                             {
                                 if (oneRange)
                                 {
+                                    
                                     yield return range.Worksheet.Cell(ro, co);
                                 }
                                 else
