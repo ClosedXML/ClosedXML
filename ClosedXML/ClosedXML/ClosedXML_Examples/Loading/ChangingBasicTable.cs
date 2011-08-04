@@ -27,8 +27,9 @@ namespace ClosedXML_Examples
                 var rngNumbers = ws.Range("F4:F6");
                 foreach (var cell in rngNumbers.Cells())
                 {
+                    string formattedString = cell.GetFormattedString();
                     cell.DataType = XLCellValues.Text;
-                    cell.Value += " Dollars";
+                    cell.Value = formattedString + " Dollars";
                 }
 
                 ws.Columns().AdjustToContents();

@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -646,23 +647,10 @@
                     }
                     else
                     {
-                        var formatCodes = GetFormatCodes();
                         if (_dataType == XLCellValues.Boolean)
                             _cellValue = (_cellValue != "0").ToString();
                         else if (_dataType == XLCellValues.TimeSpan)
-                            _cellValue = TimeSpan.Parse(_cellValue).ToString();
-                        else if (_dataType == XLCellValues.Number)
-                        {
-                            string format = Style.NumberFormat.NumberFormatId > 0 ? formatCodes[Style.NumberFormat.NumberFormatId] : Style.NumberFormat.Format;
-
-                            if (!StringExtensions.IsNullOrWhiteSpace(format) && format != "@")
-                                _cellValue = Double.Parse(_cellValue).ToString(format);
-                        }
-                        else if (_dataType == XLCellValues.DateTime)
-                        {
-                            string format = Style.NumberFormat.NumberFormatId > 0 ? formatCodes[Style.NumberFormat.NumberFormatId] : Style.NumberFormat.Format;
-                            _cellValue = DateTime.FromOADate(Double.Parse(_cellValue)).ToString(format);
-                        }
+                            _cellValue = BaseDate.Add(GetTimeSpan()).ToOADate().ToString(CultureInfo.InvariantCulture);
                     }
                 }
 
