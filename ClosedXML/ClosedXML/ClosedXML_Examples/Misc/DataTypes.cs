@@ -180,6 +180,19 @@ namespace ClosedXML_Examples.Misc
             // To view all shared strings (all texts in the workbook actually), use the following:
             // workbook.GetSharedStrings()
 
+            ws.Cell(++ro, co)
+                .SetDataType(XLCellValues.Text)
+                .SetDataType(XLCellValues.Boolean)
+                .SetDataType(XLCellValues.DateTime)
+                .SetDataType(XLCellValues.Number)
+                .SetDataType(XLCellValues.TimeSpan)
+                .SetDataType(XLCellValues.Text)
+                .SetDataType(XLCellValues.TimeSpan)
+                .SetDataType(XLCellValues.Number)
+                .SetDataType(XLCellValues.DateTime)
+                .SetDataType(XLCellValues.Boolean)
+                .SetDataType(XLCellValues.Text);
+                    
             ws.Columns(2, 3).AdjustToContents();
 
             workbook.SaveAs(filePath);

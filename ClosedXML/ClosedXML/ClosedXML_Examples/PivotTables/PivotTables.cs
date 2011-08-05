@@ -19,11 +19,11 @@ namespace ClosedXML_Examples
             ws.Cell("B3").Value = 150;
             ws.Cell("B4").Value = 75;
 
-            var pivotTable = ws.Range("A1:B4").CreatePivotTable(ws.Cell("D1"));
-            pivotTable.RowLabels.Add("Category");
-            pivotTable.Values.Add("Number")
-                .ShowAsPctFrom("Category").And("A")
-                .NumberFormat.Format = "0%";
+            //var pivotTable = ws.Range("A1:B4").CreatePivotTable(ws.Cell("D1"));
+            //pivotTable.RowLabels.Add("Category");
+            //pivotTable.Values.Add("Number")
+            //    .ShowAsPctFrom("Category").And("A")
+            //    .NumberFormat.Format = "0%";
 
             wb.SaveAs(filePath);
         }

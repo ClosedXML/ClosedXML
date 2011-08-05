@@ -225,11 +225,6 @@
             return GetValue<TimeSpan>();
         }
 
-        public IXLRichText GetRichText()
-        {
-            return RichText;
-        }
-
         public string GetFormattedString()
         {
             string cValue = FormulaA1.Length > 0 ? String.Empty : _cellValue;
@@ -658,15 +653,16 @@
             }
         }
 
-        public void Clear()
+        public IXLCell Clear()
         {
             AsRange().Clear();
+            return this;
         }
 
-        public void ClearStyles()
+        public IXLCell ClearStyles()
         {
-            var newStyle = new XLStyle(this, _worksheet.Style) {NumberFormat = Style.NumberFormat};
-            Style = newStyle;
+            Style = _worksheet.Style;
+            return this;
         }
 
         public void Delete(XLShiftDeletedCells shiftDeleteCells)
