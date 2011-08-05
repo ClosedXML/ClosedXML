@@ -134,69 +134,71 @@ namespace ClosedXML.Excel
 
                 var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
 
-                var reader = OpenXmlReader.Create(wsPart);
-                while (reader.Read())
+                using (var reader = OpenXmlReader.Create(wsPart))
                 {
-#pragma warning disable 252,253
-                    if (reader.ElementType == typeof (SheetFormatProperties))
+                    while (reader.Read())
                     {
-                        var sheetFormatProperties = (SheetFormatProperties) reader.LoadCurrentElement();
-                        if (sheetFormatProperties != null)
+                        if (reader.ElementType == typeof(SheetFormatProperties))
                         {
-                            if (sheetFormatProperties.DefaultRowHeight != null)
-                                ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
-
-                            ws.RowHeightChanged = (sheetFormatProperties.CustomHeight != null &&
-                                                   sheetFormatProperties.CustomHeight.Value);
-
-                            if (sheetFormatProperties.DefaultColumnWidth != null)
+                            var sheetFormatProperties = (SheetFormatProperties)reader.LoadCurrentElement();
+                            if (sheetFormatProperties != null)
                             {
-                                ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth;
+                                if (sheetFormatProperties.DefaultRowHeight != null)
+                                    ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
+
+                                ws.RowHeightChanged = (sheetFormatProperties.CustomHeight != null &&
+                                                       sheetFormatProperties.CustomHeight.Value);
+
+                                if (sheetFormatProperties.DefaultColumnWidth != null)
+                                {
+                                    ws.ColumnWidth = sheetFormatProperties.DefaultColumnWidth;
+                                }
                             }
                         }
-                    }
-                    else if (reader.ElementType == typeof (SheetViews))
-                        LoadSheetViews((SheetViews) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (MergeCells))
-                    {
-                        var mergedCells = (MergeCells) reader.LoadCurrentElement();
-                        if (mergedCells != null)
+                        else if (reader.ElementType == typeof(SheetViews))
+                            LoadSheetViews((SheetViews)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(MergeCells))
                         {
-                            foreach (MergeCell mergeCell in mergedCells.Elements<MergeCell>())
-                                ws.Range(mergeCell.Reference).Merge();
+                            var mergedCells = (MergeCells)reader.LoadCurrentElement();
+                            if (mergedCells != null)
+                            {
+                                foreach (MergeCell mergeCell in mergedCells.Elements<MergeCell>())
+                                    ws.Range(mergeCell.Reference).Merge();
+                            }
                         }
+                        else if (reader.ElementType == typeof(Columns))
+                            LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
+                                        (Columns)reader.LoadCurrentElement());
+                        else if (reader.ElementType == typeof(Row))
+                        {
+                            LoadRows(s, numberingFormats, fills, borders, fonts, ws, sharedStrings, sharedFormulasR1C1,
+                                     styleList, (Row)reader.LoadCurrentElement());
+                        }
+                        else if (reader.ElementType == typeof(AutoFilter))
+                            LoadAutoFilter((AutoFilter)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(SheetProtection))
+                            LoadSheetProtection((SheetProtection)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(DataValidations))
+                            LoadDataValidations((DataValidations)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(Hyperlinks))
+                            LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), wsPart, ws);
+                        else if (reader.ElementType == typeof(PrintOptions))
+                            LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(PageMargins))
+                            LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(PageSetup))
+                            LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(HeaderFooter))
+                            LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(SheetProperties))
+                            LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(RowBreaks))
+                            LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(ColumnBreaks))
+                            LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
+
                     }
-                    else if (reader.ElementType == typeof (Columns))
-                        LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
-                                    (Columns) reader.LoadCurrentElement());
-                    else if (reader.ElementType == typeof (Row))
-                    {
-                        LoadRows(s, numberingFormats, fills, borders, fonts, ws, sharedStrings, sharedFormulasR1C1,
-                                 styleList, (Row) reader.LoadCurrentElement());
-                    }
-                    else if (reader.ElementType == typeof (AutoFilter))
-                        LoadAutoFilter((AutoFilter) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (SheetProtection))
-                        LoadSheetProtection((SheetProtection) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (DataValidations))
-                        LoadDataValidations((DataValidations) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (Hyperlinks))
-                        LoadHyperlinks((Hyperlinks) reader.LoadCurrentElement(), wsPart, ws);
-                    else if (reader.ElementType == typeof (PrintOptions))
-                        LoadPrintOptions((PrintOptions) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (PageMargins))
-                        LoadPageMargins((PageMargins) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (PageSetup))
-                        LoadPageSetup((PageSetup) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (HeaderFooter))
-                        LoadHeaderFooter((HeaderFooter) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (SheetProperties))
-                        LoadSheetProperties((SheetProperties) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (RowBreaks))
-                        LoadRowBreaks((RowBreaks) reader.LoadCurrentElement(), ws);
-                    else if (reader.ElementType == typeof (ColumnBreaks))
-                        LoadColumnBreaks((ColumnBreaks) reader.LoadCurrentElement(), ws);
-#pragma warning restore 252,253
+                    reader.Close();
                 }
 
                 #region LoadTables

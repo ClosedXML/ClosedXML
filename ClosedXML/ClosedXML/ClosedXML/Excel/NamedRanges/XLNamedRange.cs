@@ -4,8 +4,15 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
+    using System.Text.RegularExpressions;
+
     internal class XLNamedRange: IXLNamedRange
     {
+        private static readonly Regex _namedRangeReferenceRegex =
+            new Regex(
+                @"^('?(?<Sheet>[^'!]+)'?!(?<Range>.+))|((?<Table>[^\[]+)\[(?<Column>[^\]]+)\])$",
+                RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture
+            );
         private readonly List<String> _rangeList = new List<String>();
         private readonly XLNamedRanges _namedRanges;
         public XLNamedRange(XLNamedRanges namedRanges , String rangeName, String range,  String comment = null)
@@ -30,8 +37,14 @@ namespace ClosedXML.Excel
             get
             {
                 var ranges = new XLRanges();
-                foreach (var rangeToAdd in from rangeAddress in _rangeList select rangeAddress.Split('!') into byExclamation let wsName = byExclamation[0].Replace("'", "") let rng = byExclamation[1] select _namedRanges.Workbook.WorksheetsInternal.Worksheet(wsName).Range(rng))
-                {
+                                foreach (var rangeToAdd in 
+                   from rangeAddress in _rangeList 
+                   let match = _namedRangeReferenceRegex.Match(rangeAddress)
+                   select
+                       match.Groups["Sheet"].Success
+                       ?  _namedRanges.Workbook.WorksheetsInternal.Worksheet(match.Groups["Sheet"].Value).Range(match.Groups["Range"].Value) as IXLRangeBase
+                       : _namedRanges.Workbook.Worksheets.SelectMany(sheet => sheet.Tables).Where(table => table.Name == match.Groups["Table"].Value).Single().Column(match.Groups["Column"].Value) )
+                 {
                     ranges.Add(rangeToAdd);
                 }
                 return ranges;

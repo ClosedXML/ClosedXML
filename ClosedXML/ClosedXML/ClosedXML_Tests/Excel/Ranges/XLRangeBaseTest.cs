@@ -78,5 +78,35 @@ namespace ClosedXML_Tests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TableRange()
+        {
+                var wb = new XLWorkbook();
+                var ws = wb.Worksheets.Add("Sheet1");
+                var rangeColumn = ws.Column(1).Column(1, 4);
+                rangeColumn.Cell(1).Value = "FName";
+                rangeColumn.Cell(2).Value = "John";
+                rangeColumn.Cell(3).Value = "Hank";
+                rangeColumn.Cell(4).Value = "Dagny";
+                var table = rangeColumn.CreateTable();
+                wb.NamedRanges.Add("FNameColumn", String.Format("{0}[{1}]", table.Name, "FName"));
+                
+                var namedRange = wb.NamedRange( "FNameColumn" ).Range;
+                Assert.AreEqual(3, namedRange.Cells().Count());
+                Assert.IsTrue(namedRange.CellsUsed().Select(cell => cell.GetString()).SequenceEqual(new[] { "John", "Hank", "Dagny" }));
+        }
+
+        [TestMethod]
+        public void SingleCell()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Cell(1, 1).Value = "Hello World!";
+            wb.NamedRanges.Add("SingleCell", "Sheet1!$A$1");
+            var range = wb.NamedRange( "SingleCell" ).Range;
+            Assert.AreEqual( 1, range.CellsUsed().Count() );
+            Assert.AreEqual("Hello World!", range.CellsUsed().Single().GetString());
+        }
+
     }
 }

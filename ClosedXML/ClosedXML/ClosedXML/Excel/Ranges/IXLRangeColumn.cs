@@ -98,7 +98,11 @@ namespace ClosedXML.Excel
         IXLRangeColumn ColumnRight(Int32 step);
 
         IXLColumn WorksheetColumn();
-        
+
+        IXLTable AsTable();
+        IXLTable AsTable(String name);
+        IXLTable CreateTable();
+        IXLTable CreateTable(String name);
     }
 }
 

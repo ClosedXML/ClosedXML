@@ -330,5 +330,26 @@
         }
 
         #endregion
+
+
+        public IXLTable AsTable()
+        {
+            return AsRange().AsTable();
+        }
+
+        public IXLTable AsTable(string name)
+        {
+            return AsRange().AsTable(name);
+        }
+
+        public IXLTable CreateTable()
+        {
+            return AsRange().CreateTable();
+        }
+
+        public IXLTable CreateTable(string name)
+        {
+            return AsRange().CreateTable(name);
+        }
     }
 }
