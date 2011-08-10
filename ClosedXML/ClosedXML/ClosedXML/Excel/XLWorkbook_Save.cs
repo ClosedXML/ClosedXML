@@ -2663,6 +2663,7 @@ namespace ClosedXML.Excel
             {
                 sheetData.RemoveChild(sheetDataRows[r.Key]);
                 sheetDataRows.Remove(r.Key);
+                xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == r.Key);
             }
 
             var distinctRows = cellsByRow.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
@@ -2726,11 +2727,14 @@ namespace ClosedXML.Excel
 
                 var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference.Value, c => c);
 
-                foreach (XLSheetPoint c in xlWorksheet.Internals.CellsCollection.Deleted)
+                foreach (XLSheetPoint c in xlWorksheet.Internals.CellsCollection.Deleted.ToList())
                 {
                     String key = ExcelHelper.GetColumnLetterFromNumber(c.Column) + c.Row.ToStringLookup();
                     if (cellsByReference.ContainsKey(key))
+                    {
                         row.RemoveChild(cellsByReference[key]);
+                        xlWorksheet.Internals.CellsCollection.Deleted.Remove(c);
+                    }
                 }
 
                 if (!cellsByRow.ContainsKey(distinctRow)) continue;
@@ -2843,6 +2847,15 @@ namespace ClosedXML.Excel
                             cell.CellValue = cellValue;
                         }
                     }
+                }
+                xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == distinctRow);
+            }
+            foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Select(c=>c.Row).Distinct())
+            {
+                if (sheetDataRows.ContainsKey(r))
+                {
+                    sheetData.RemoveChild(sheetDataRows[r]);
+                    sheetDataRows.Remove(r);
                 }
             }
 

@@ -752,6 +752,7 @@ namespace ClosedXML.Excel
 
                             var newCell = new XLCell(Worksheet, newKey, oldCell.Style);
                             newCell.CopyValues(oldCell);
+                            newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
                             cellsToDelete.Add(oldKey);
                             if (oldKey.ColumnNumber < firstColumn + numberOfColumns)
@@ -771,6 +772,7 @@ namespace ClosedXML.Excel
                     var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
                     var newCell = new XLCell(Worksheet, newKey, c.Style);
                     newCell.CopyValues(c);
+                    newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
                     if (c.Address.ColumnNumber < firstColumn + numberOfColumns)
@@ -903,6 +905,7 @@ namespace ClosedXML.Excel
 
                             var newCell = new XLCell(Worksheet, newKey, oldCell.Style);
                             newCell.CopyFrom(oldCell);
+                            newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
                             cellsToDelete.Add(oldKey);
                             if (oldKey.RowNumber < firstRow + numberOfRows)
@@ -923,6 +926,7 @@ namespace ClosedXML.Excel
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
                     var newCell = new XLCell(Worksheet, newKey, c.Style);
                     newCell.CopyFrom(c);
+                    newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
                     if (c.Address.RowNumber < firstRow + numberOfRows)
@@ -1016,7 +1020,7 @@ namespace ClosedXML.Excel
                                            false, false);
                 var newCell = new XLCell(Worksheet, newKey, c.Style);
                 newCell.CopyValues(c);
-                //newCell.ShiftFormula(rowModifier * -1, columnModifier * -1);
+                newCell.FormulaA1 = c.FormulaA1;
                 cellsToDelete.Add(c.Address);
 
                 bool canInsert = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft
