@@ -9,17 +9,21 @@ namespace ClosedXML.Excel
     {
         public XLPivotTable()
         {
+            Fields = new XLPivotFields();
             ReportFilters = new XLPivotFields();
             ColumnLabels=new XLPivotFields();
             RowLabels = new XLPivotFields();
             Values = new XLPivotValues();
+            Theme = XLPivotTableTheme.PivotStyleLight16;
         }
 
+        public IXLPivotFields Fields { get; private set; }
         public IXLPivotFields ReportFilters { get; private set; }
         public IXLPivotFields ColumnLabels { get; private set; }
         public IXLPivotFields RowLabels { get; private set; }
         public IXLPivotValues Values { get; private set; }
 
+        public XLPivotTableTheme Theme { get; set; }		public IXLPivotTable SetTheme(XLPivotTableTheme value) { Theme = value; return this; }
         public String Name { get; set; }		public IXLPivotTable SetName(String value) { Name = value; return this; }
         public String Title { get; set; }		public IXLPivotTable SetTitle(String value) { Title = value; return this; }
         public String Description { get; set; }		public IXLPivotTable SetDescription(String value) { Description = value; return this; }
@@ -59,6 +63,27 @@ namespace ClosedXML.Excel
         public Boolean RefreshDataOnOpen { get; set; }	public IXLPivotTable SetRefreshDataOnOpen() { RefreshDataOnOpen = true; return this; }	public IXLPivotTable SetRefreshDataOnOpen(Boolean value) { RefreshDataOnOpen = value; return this; }
         public XLItemsToRetain ItemsToRetainPerField { get; set; }		public IXLPivotTable SetItemsToRetainPerField(XLItemsToRetain value) { ItemsToRetainPerField = value; return this; }
         public Boolean EnableCellEditing { get; set; }	public IXLPivotTable SetEnableCellEditing() { EnableCellEditing = true; return this; }	public IXLPivotTable SetEnableCellEditing(Boolean value) { EnableCellEditing = value; return this; }
+
+
+        public Boolean ShowRowHeaders { get; set; }	public IXLPivotTable SetShowRowHeaders() { ShowRowHeaders = true; return this; }	public IXLPivotTable SetShowRowHeaders(Boolean value) { ShowRowHeaders = value; return this; }
+        public Boolean ShowColumnHeaders { get; set; }	public IXLPivotTable SetShowColumnHeaders() { ShowColumnHeaders = true; return this; }	public IXLPivotTable SetShowColumnHeaders(Boolean value) { ShowColumnHeaders = value; return this; }
+        public Boolean ShowRowStripes { get; set; }	public IXLPivotTable SetShowRowStripes() { ShowRowStripes = true; return this; }	public IXLPivotTable SetShowRowStripes(Boolean value) { ShowRowStripes = value; return this; }
+        public Boolean ShowColumnStripes { get; set; }	public IXLPivotTable SetShowColumnStripes() { ShowColumnStripes = true; return this; }	public IXLPivotTable SetShowColumnStripes(Boolean value) { ShowColumnStripes = value; return this; }
+        public XLPivotSubtotals Subtotals { get; set; }		public IXLPivotTable SetSubtotals(XLPivotSubtotals value) { Subtotals = value; return this; }
+
+        public XLPivotLayout Layout
+        {
+            set { Fields.ForEach(f=>f.SetLayout(value)); }
+        }
+
+        public IXLPivotTable SetLayout(XLPivotLayout value) { Layout = value; return this; }
+
+        public Boolean InsertBlankLines
+        {
+            set { Fields.ForEach(f=>f.SetInsertBlankLines(value)); }
+        }
+
+        public IXLPivotTable SetInsertBlankLines() { InsertBlankLines = true; return this; }	public IXLPivotTable SetInsertBlankLines(Boolean value) { InsertBlankLines = value; return this; }
 
     }
 }

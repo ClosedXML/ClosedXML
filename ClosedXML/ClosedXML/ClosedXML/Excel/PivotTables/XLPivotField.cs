@@ -19,8 +19,7 @@ namespace ClosedXML.Excel
         public XLSubtotalFunction Subtotals { get; set; }		public IXLPivotField SetSubtotals(XLSubtotalFunction value) { Subtotals = value; return this; }
         public Boolean IncludeNewItemsInFilter { get; set; }	public IXLPivotField SetIncludeNewItemsInFilter() { IncludeNewItemsInFilter = true; return this; }	public IXLPivotField SetIncludeNewItemsInFilter(Boolean value) { IncludeNewItemsInFilter = value; return this; }
 
-        public XLLabelForm ItemLabelsForm { get; set; }		public IXLPivotField SetItemLabelsForm(XLLabelForm value) { ItemLabelsForm = value; return this; }
-        public Boolean CompactForm { get; set; }	public IXLPivotField SetCompactForm() { CompactForm = true; return this; }	public IXLPivotField SetCompactForm(Boolean value) { CompactForm = value; return this; }
+        public XLPivotLayout Layout { get; set; }		public IXLPivotField SetLayout(XLPivotLayout value) { Layout = value; return this; }
         public Boolean SubtotalsAtTop { get; set; }	public IXLPivotField SetSubtotalsAtTop() { SubtotalsAtTop = true; return this; }	public IXLPivotField SetSubtotalsAtTop(Boolean value) { SubtotalsAtTop = value; return this; }
         public Boolean RepeatItemLabels { get; set; }	public IXLPivotField SetRepeatItemLabels() { RepeatItemLabels = true; return this; }	public IXLPivotField SetRepeatItemLabels(Boolean value) { RepeatItemLabels = value; return this; }
         public Boolean InsertBlankLines { get; set; }	public IXLPivotField SetInsertBlankLines() { InsertBlankLines = true; return this; }	public IXLPivotField SetInsertBlankLines(Boolean value) { InsertBlankLines = value; return this; }

@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
         Variance,
         PopulationVariance,
     }
-    public enum XLLabelForm { Outline, Tabular }
+    public enum XLPivotLayout { Outline, Tabular, Compact }
     public interface IXLPivotField
     {
         String SourceName { get; }
@@ -30,8 +30,7 @@ namespace ClosedXML.Excel
         XLSubtotalFunction Subtotals { get; set; }
         Boolean IncludeNewItemsInFilter { get; set; }
 
-        XLLabelForm ItemLabelsForm { get; set; }
-        Boolean CompactForm { get; set; }
+        XLPivotLayout Layout { get; set; }
         Boolean SubtotalsAtTop { get; set; }
         Boolean RepeatItemLabels { get; set; }
         Boolean InsertBlankLines  { get; set; }
@@ -43,8 +42,7 @@ namespace ClosedXML.Excel
         IXLPivotField SetSubtotals(XLSubtotalFunction value);
         IXLPivotField SetIncludeNewItemsInFilter(); IXLPivotField SetIncludeNewItemsInFilter(Boolean value);
 
-        IXLPivotField SetItemLabelsForm(XLLabelForm value);
-        IXLPivotField SetCompactForm(); IXLPivotField SetCompactForm(Boolean value);
+        IXLPivotField SetLayout(XLPivotLayout value);
         IXLPivotField SetSubtotalsAtTop(); IXLPivotField SetSubtotalsAtTop(Boolean value);
         IXLPivotField SetRepeatItemLabels(); IXLPivotField SetRepeatItemLabels(Boolean value);
         IXLPivotField SetInsertBlankLines(); IXLPivotField SetInsertBlankLines(Boolean value);
