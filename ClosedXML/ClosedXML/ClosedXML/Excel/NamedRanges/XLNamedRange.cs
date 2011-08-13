@@ -50,13 +50,7 @@ namespace ClosedXML.Excel
                 return ranges;
             }
         }
-        public IXLRange Range 
-        {
-            get
-            {
-                return Ranges.Single();
-            }
-        }
+
         public String Comment { get; set; }
 
         public IXLRanges Add(XLWorkbook workbook, String rangeAddress)

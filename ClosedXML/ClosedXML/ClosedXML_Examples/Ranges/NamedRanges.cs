@@ -41,7 +41,7 @@ namespace ClosedXML_Examples.Misc
 
             // Copy the data in a named range:
             wsPresentation.Cell(4, 1).Value = "People Data:";
-            wsPresentation.Cell(5, 1).Value = wb.NamedRanges.NamedRange("PeopleData").Range;
+            wsPresentation.Cell(5, 1).Value = wb.Range("PeopleData");
             
 
             /////////////////////////////////////////////////////////////////////////

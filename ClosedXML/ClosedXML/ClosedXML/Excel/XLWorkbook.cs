@@ -554,6 +554,28 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        //--
+        public IXLCell Cell(String namedCell)
+        {
+            return NamedRange(namedCell).Ranges.First().FirstCell();
+        }
+
+        public IXLCells Cells(String namedCells)
+        {
+            return Ranges(namedCells).Cells();
+        }
+
+        public IXLRange Range(String namedRange)
+        {
+            return NamedRange(namedRange).Ranges.First();
+        }
+
+        public IXLRanges Ranges(String namedRanges)
+        {
+            var retVal = new XLRanges();
+            var rangePairs = namedRanges.Split(',');
+            foreach (string pair in rangePairs)
+                retVal.Add(Range(pair.Trim()));
+            return retVal;
+        }
     }
 }

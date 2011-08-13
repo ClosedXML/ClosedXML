@@ -468,7 +468,11 @@ namespace ClosedXML.Excel
 
         public XLCell Cell(String cellAddressInRange)
         {
-            return Cell(XLAddress.Create(Worksheet, cellAddressInRange));
+
+            if (ExcelHelper.IsValidA1Address(cellAddressInRange))
+                return Cell(XLAddress.Create(Worksheet, cellAddressInRange));
+
+            return (XLCell)Worksheet.NamedRange(cellAddressInRange).Ranges.First().FirstCell();
         }
 
         public XLCell Cell(Int32 row, String column)

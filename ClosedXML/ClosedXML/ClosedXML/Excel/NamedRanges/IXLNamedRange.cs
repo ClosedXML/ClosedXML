@@ -19,12 +19,6 @@ namespace ClosedXML.Excel
         IXLRanges Ranges { get; }
 
         /// <summary>
-        /// Gets the single range associated with this named range.
-        /// <para>An exception will be thrown if there are multiple ranges associated with this named range.</para>
-        /// </summary>
-        IXLRange Range { get; }
-
-        /// <summary>
         /// Gets or sets the comment for this named range.
         /// </summary>
         /// <value>
@@ -36,6 +30,7 @@ namespace ClosedXML.Excel
         /// Adds the specified range to this named range.
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
+        /// <param name="workbook">Workbook containing the range</param>
         /// <param name="rangeAddress">The range address to add.</param>
         IXLRanges Add(XLWorkbook workbook, String rangeAddress);
 
@@ -43,14 +38,14 @@ namespace ClosedXML.Excel
         /// Adds the specified range to this named range.
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
-        /// <param name="rangeAddress">The range to add.</param>
+        /// <param name="range">The range to add.</param>
         IXLRanges Add(IXLRange range);
 
         /// <summary>
         /// Adds the specified ranges to this named range.
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
-        /// <param name="rangeAddress">The ranges to add.</param>
+        /// <param name="ranges">The ranges to add.</param>
         IXLRanges Add(IXLRanges ranges);
 
 

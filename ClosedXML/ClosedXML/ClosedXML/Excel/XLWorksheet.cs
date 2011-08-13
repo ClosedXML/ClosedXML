@@ -1137,5 +1137,36 @@ namespace ClosedXML.Excel
             RightToLeft = value;
             return this;
         }
+
+        public new XLCell Cell(String cellAddressInRange)
+        {
+
+            if (ExcelHelper.IsValidA1Address(cellAddressInRange))
+                return Cell(XLAddress.Create(this, cellAddressInRange));
+
+            if (NamedRanges.Any(n=> String.Compare(n.Name, cellAddressInRange, true) == 0))
+                return (XLCell)NamedRange(cellAddressInRange).Ranges.First().FirstCell();
+
+            return (XLCell)Workbook.NamedRanges.First(n =>
+                                                    String.Compare(n.Name, cellAddressInRange, true) == 0 
+                                                    && n.Ranges.First().Worksheet == this
+                                                    && n.Ranges.Count == 1)
+                                               .Ranges.First().FirstCell();
+        }
+
+        public override XLRange Range(String rangeAddressStr)
+        {
+            if (ExcelHelper.IsValidRangeAddress(rangeAddressStr))
+                return Range(new XLRangeAddress(Worksheet, rangeAddressStr));
+
+            if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))
+                return (XLRange)NamedRange(rangeAddressStr).Ranges.First();
+
+            return (XLRange)Workbook.NamedRanges.First(n =>
+                                                    String.Compare(n.Name, rangeAddressStr, true) == 0
+                                                    && n.Ranges.First().Worksheet == this
+                                                    && n.Ranges.Count == 1)
+                                               .Ranges.First();
+        }
     }
 }

@@ -96,6 +96,9 @@ namespace ClosedXML.Excel
 
         public static bool IsValidA1Address(string address)
         {
+            if (StringExtensions.IsNullOrWhiteSpace(address))
+                return false;
+
             address = address.Replace("$", "");
             Int32 rowPos = 0;
             Int32 addressLength = address.Length;
@@ -106,6 +109,26 @@ namespace ClosedXML.Excel
                 rowPos < addressLength
                 && IsValidRow(address.Substring(rowPos))
                 && IsValidColumn(address.Substring(0, rowPos));
+        }
+
+        public static Boolean IsValidRangeAddress(String rangeAddress)
+        {
+            if (StringExtensions.IsNullOrWhiteSpace(rangeAddress))
+                return false;
+        
+            string addressToUse = rangeAddress.Contains("!")
+                                      ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
+                                      : rangeAddress;
+
+            if (addressToUse.Contains(':'))
+            {
+                var arrRange = addressToUse.Split(':');
+                string firstPart = arrRange[0];
+                string secondPart = arrRange[1];
+                return IsValidA1Address(firstPart) && IsValidA1Address(secondPart);
+            }
+
+            return IsValidA1Address(addressToUse);
         }
 
         public static int GetRowFromAddress1(string cellAddressString)
