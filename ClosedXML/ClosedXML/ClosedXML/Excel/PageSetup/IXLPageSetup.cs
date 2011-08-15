@@ -282,5 +282,25 @@ namespace ClosedXML.Excel
         /// </summary>
         XLPrintErrorValues PrintErrorValue { get; set; }
 
+        IXLPageSetup SetPageOrientation(XLPageOrientation value);
+        IXLPageSetup SetPagesWide(Int32 value);
+        IXLPageSetup SetPagesTall(Int32 value);
+        IXLPageSetup SetScale(Int32 value);
+        IXLPageSetup SetHorizontalDpi(Int32 value);
+        IXLPageSetup SetVerticalDpi(Int32 value);
+        IXLPageSetup SetFirstPageNumber(Int32 value);
+        IXLPageSetup SetCenterHorizontally(); IXLPageSetup SetCenterHorizontally(Boolean value);
+        IXLPageSetup SetCenterVertically(); IXLPageSetup SetCenterVertically(Boolean value);
+        IXLPageSetup SetPaperSize(XLPaperSize value);
+        IXLPageSetup SetScaleHFWithDocument(); IXLPageSetup SetScaleHFWithDocument(Boolean value);
+        IXLPageSetup SetAlignHFWithMargins(); IXLPageSetup SetAlignHFWithMargins(Boolean value);
+        IXLPageSetup SetShowGridlines(); IXLPageSetup SetShowGridlines(Boolean value);
+        IXLPageSetup SetShowRowAndColumnHeadings(); IXLPageSetup SetShowRowAndColumnHeadings(Boolean value);
+        IXLPageSetup SetBlackAndWhite(); IXLPageSetup SetBlackAndWhite(Boolean value);
+        IXLPageSetup SetDraftQuality(); IXLPageSetup SetDraftQuality(Boolean value);
+        IXLPageSetup SetPageOrder(XLPageOrderValues value);
+        IXLPageSetup SetShowComments(XLShowCommentsValues value);
+        IXLPageSetup SetPrintErrorValue(XLPrintErrorValues value);
+
     }
 }

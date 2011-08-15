@@ -58,7 +58,7 @@ namespace ClosedXML.Excel
             _style = new XLStyle(this, workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
                                                  new XLRowsCollection(), new XLRanges());
-            PageSetup = new XLPageSetup(workbook.PageOptions, this);
+            PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
             Outline = new XLOutline(workbook.Outline);
             _columnWidth = workbook.ColumnWidth;
             _rowHeight = workbook.RowHeight;
@@ -645,7 +645,7 @@ namespace ClosedXML.Excel
             targetSheet.ColumnWidth = ColumnWidth;
             targetSheet.RowHeight = RowHeight;
             targetSheet._style = new XLStyle(targetSheet, _style);
-            targetSheet.PageSetup = new XLPageSetup(PageSetup, targetSheet);
+            targetSheet.PageSetup = new XLPageSetup((XLPageSetup)PageSetup, targetSheet);
             targetSheet.Outline = new XLOutline(Outline);
             targetSheet.SheetView = new XLSheetView(SheetView);
             Internals.MergedRanges.ForEach(

@@ -27,5 +27,13 @@ namespace ClosedXML.Excel
         /// <summary>Gets or sets the Footer margin.</summary>
         /// <value>The Footer margin.</value>
         Double Footer { get; set; }
+
+        IXLMargins SetLeft(Double value);
+        IXLMargins SetRight(Double value);
+        IXLMargins SetTop(Double value);
+        IXLMargins SetBottom(Double value);
+        IXLMargins SetHeader(Double value);
+        IXLMargins SetFooter(Double value);
+
     }
 }

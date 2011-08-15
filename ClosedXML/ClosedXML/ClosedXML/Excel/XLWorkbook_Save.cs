@@ -2353,7 +2353,7 @@ namespace ClosedXML.Excel
                  XLOutlineSummaryHLocation.Right);
 
             if (worksheetPart.Worksheet.SheetProperties.PageSetupProperties == null
-                && xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0)
+                && (xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0))
                 worksheetPart.Worksheet.SheetProperties.PageSetupProperties = new PageSetupProperties {FitToPage = true};
 
             #endregion

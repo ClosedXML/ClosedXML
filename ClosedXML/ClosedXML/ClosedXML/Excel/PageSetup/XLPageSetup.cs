@@ -6,28 +6,28 @@ namespace ClosedXML.Excel
 {
     internal class XLPageSetup : IXLPageSetup
     {
-        public XLPageSetup(IXLPageSetup defaultPageOptions, XLWorksheet worksheet)
+        public XLPageSetup(XLPageSetup defaultPageOptions, XLWorksheet worksheet)
         {
             
             if (defaultPageOptions != null)
             {
-                this.PrintAreas = new XLPrintAreas(defaultPageOptions.PrintAreas as XLPrintAreas, worksheet);
-                this.CenterHorizontally = defaultPageOptions.CenterHorizontally;
-                this.CenterVertically = defaultPageOptions.CenterVertically;
-                this.FirstPageNumber = defaultPageOptions.FirstPageNumber;
-                this.HorizontalDpi = defaultPageOptions.HorizontalDpi;
-                this.PageOrientation = defaultPageOptions.PageOrientation;
-                this.VerticalDpi = defaultPageOptions.VerticalDpi;
+                PrintAreas = new XLPrintAreas(defaultPageOptions.PrintAreas as XLPrintAreas, worksheet);
+                CenterHorizontally = defaultPageOptions.CenterHorizontally;
+                CenterVertically = defaultPageOptions.CenterVertically;
+                FirstPageNumber = defaultPageOptions.FirstPageNumber;
+                HorizontalDpi = defaultPageOptions.HorizontalDpi;
+                PageOrientation = defaultPageOptions.PageOrientation;
+                VerticalDpi = defaultPageOptions.VerticalDpi;
 
-                this.PaperSize = defaultPageOptions.PaperSize;
-                this.pagesTall = defaultPageOptions.PagesTall;
-                this.pagesWide = defaultPageOptions.PagesWide;
-                this.scale = defaultPageOptions.Scale;
+                PaperSize = defaultPageOptions.PaperSize;
+                _pagesTall = defaultPageOptions.PagesTall;
+                _pagesWide = defaultPageOptions.PagesWide;
+                _scale = defaultPageOptions.Scale;
 
                 if (defaultPageOptions.Margins != null)
                 {
-                    this.Margins = new XLMargins()
-                            {
+                    Margins = new XLMargins
+                                  {
                                 Top = defaultPageOptions.Margins.Top,
                                 Bottom = defaultPageOptions.Margins.Bottom,
                                 Left = defaultPageOptions.Margins.Left,
@@ -36,27 +36,27 @@ namespace ClosedXML.Excel
                                 Footer = defaultPageOptions.Margins.Footer
                             };
                 }
-                this.AlignHFWithMargins = defaultPageOptions.AlignHFWithMargins;
-                this.ScaleHFWithDocument = defaultPageOptions.ScaleHFWithDocument;
-                this.ShowGridlines = defaultPageOptions.ShowGridlines;
-                this.ShowRowAndColumnHeadings = defaultPageOptions.ShowRowAndColumnHeadings;
-                this.BlackAndWhite = defaultPageOptions.BlackAndWhite;
-                this.DraftQuality = defaultPageOptions.DraftQuality;
-                this.PageOrder = defaultPageOptions.PageOrder;
+                AlignHFWithMargins = defaultPageOptions.AlignHFWithMargins;
+                ScaleHFWithDocument = defaultPageOptions.ScaleHFWithDocument;
+                ShowGridlines = defaultPageOptions.ShowGridlines;
+                ShowRowAndColumnHeadings = defaultPageOptions.ShowRowAndColumnHeadings;
+                BlackAndWhite = defaultPageOptions.BlackAndWhite;
+                DraftQuality = defaultPageOptions.DraftQuality;
+                PageOrder = defaultPageOptions.PageOrder;
 
-                this.ColumnBreaks = defaultPageOptions.ColumnBreaks.ToList();
-                this.RowBreaks = defaultPageOptions.RowBreaks.ToList();
+                ColumnBreaks = defaultPageOptions.ColumnBreaks.ToList();
+                RowBreaks = defaultPageOptions.RowBreaks.ToList();
                 Header = new XLHeaderFooter(defaultPageOptions.Header as XLHeaderFooter);
                 Footer = new XLHeaderFooter(defaultPageOptions.Footer as XLHeaderFooter);
-                this.PrintErrorValue = defaultPageOptions.PrintErrorValue;
+                PrintErrorValue = defaultPageOptions.PrintErrorValue;
             }
             else
             {
-                this.PrintAreas = new XLPrintAreas(worksheet);
+                PrintAreas = new XLPrintAreas(worksheet);
                 Header = new XLHeaderFooter();
                 Footer = new XLHeaderFooter();
-                this.ColumnBreaks = new List<Int32>();
-                this.RowBreaks = new List<Int32>();
+                ColumnBreaks = new List<Int32>();
+                RowBreaks = new List<Int32>();
             }
         }
         public IXLPrintAreas PrintAreas { get; private set; }
@@ -111,65 +111,63 @@ namespace ClosedXML.Excel
         public XLPrintErrorValues PrintErrorValue { get; set; }
         public IXLMargins Margins { get; set; }
 
-        private Int32 pagesWide;
+        private Int32 _pagesWide;
         public Int32 PagesWide 
         {
             get
             {
-                return pagesWide;
+                return _pagesWide;
             }
             set
             {
-                pagesWide = value;
-                if (pagesWide >0)
-                    scale = 0;
+                _pagesWide = value;
+                if (_pagesWide >0)
+                    _scale = 0;
             }
         }
         
-        private Int32 pagesTall;
+        private Int32 _pagesTall;
         public Int32 PagesTall
         {
             get
             {
-                return pagesTall;
+                return _pagesTall;
             }
             set
             {
-                pagesTall = value;
-                if (pagesTall >0)
-                    scale = 0;
+                _pagesTall = value;
+                if (_pagesTall >0)
+                    _scale = 0;
             }
         }
 
-        private Int32 scale;
+        private Int32 _scale;
         public Int32 Scale
         {
             get
             {
-                return scale;
+                return _scale;
             }
             set
             {
-                scale = value;
-                if (scale > 0)
-                {
-                    pagesTall = 0;
-                    pagesWide = 0;
-                }
+                _scale = value;
+                if (_scale <= 0) return;
+                _pagesTall = 0;
+                _pagesWide = 0;
             }
         }
 
         public void AdjustTo(Int32 pctOfNormalSize)
         {
             Scale = pctOfNormalSize;
-            pagesWide = 0;
-            pagesTall = 0;
+            _pagesWide = 0;
+            _pagesTall = 0;
         }
         public void FitToPages(Int32 pagesWide, Int32 pagesTall)
         {
-            this.pagesWide = pagesWide;
-            this.pagesTall = pagesTall;
-            scale = 0;
+            _pagesWide = pagesWide;
+            this._pagesTall = pagesTall;
+            _scale = 0;
         }
 
 
@@ -211,5 +209,26 @@ namespace ClosedXML.Excel
         //        default: throw new NotImplementedException();
         //    }
         //}
+
+        public IXLPageSetup SetPageOrientation(XLPageOrientation value) { PageOrientation = value; return this; }
+        public IXLPageSetup SetPagesWide(Int32 value) { PagesWide = value; return this; }
+        public IXLPageSetup SetPagesTall(Int32 value) { PagesTall = value; return this; }
+        public IXLPageSetup SetScale(Int32 value) { Scale = value; return this; }
+        public IXLPageSetup SetHorizontalDpi(Int32 value) { HorizontalDpi = value; return this; }
+        public IXLPageSetup SetVerticalDpi(Int32 value) { VerticalDpi = value; return this; }
+        public IXLPageSetup SetFirstPageNumber(Int32 value) { FirstPageNumber = value; return this; }
+        public IXLPageSetup SetCenterHorizontally() { CenterHorizontally = true; return this; }	public IXLPageSetup SetCenterHorizontally(Boolean value) { CenterHorizontally = value; return this; }
+        public IXLPageSetup SetCenterVertically() { CenterVertically = true; return this; }	public IXLPageSetup SetCenterVertically(Boolean value) { CenterVertically = value; return this; }
+        public IXLPageSetup SetPaperSize(XLPaperSize value) { PaperSize = value; return this; }
+        public IXLPageSetup SetScaleHFWithDocument() { ScaleHFWithDocument = true; return this; }	public IXLPageSetup SetScaleHFWithDocument(Boolean value) { ScaleHFWithDocument = value; return this; }
+        public IXLPageSetup SetAlignHFWithMargins() { AlignHFWithMargins = true; return this; }	public IXLPageSetup SetAlignHFWithMargins(Boolean value) { AlignHFWithMargins = value; return this; }
+        public IXLPageSetup SetShowGridlines() { ShowGridlines = true; return this; }	public IXLPageSetup SetShowGridlines(Boolean value) { ShowGridlines = value; return this; }
+        public IXLPageSetup SetShowRowAndColumnHeadings() { ShowRowAndColumnHeadings = true; return this; }	public IXLPageSetup SetShowRowAndColumnHeadings(Boolean value) { ShowRowAndColumnHeadings = value; return this; }
+        public IXLPageSetup SetBlackAndWhite() { BlackAndWhite = true; return this; }	public IXLPageSetup SetBlackAndWhite(Boolean value) { BlackAndWhite = value; return this; }
+        public IXLPageSetup SetDraftQuality() { DraftQuality = true; return this; }	public IXLPageSetup SetDraftQuality(Boolean value) { DraftQuality = value; return this; }
+        public IXLPageSetup SetPageOrder(XLPageOrderValues value) { PageOrder = value; return this; }
+        public IXLPageSetup SetShowComments(XLShowCommentsValues value) { ShowComments = value; return this; }
+        public IXLPageSetup SetPrintErrorValue(XLPrintErrorValues value) { PrintErrorValue = value; return this; }
+
     }
 }

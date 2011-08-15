@@ -676,19 +676,19 @@ namespace ClosedXML.Excel
 
             if (sp.Sheet != null) ws.Protection.Protected = sp.Sheet.Value;
             if (sp.Password != null) ws.Protection.PasswordHash = sp.Password.Value;
-            if (sp.FormatCells != null) ws.Protection.FormatCells = sp.FormatCells.Value;
-            if (sp.FormatColumns != null) ws.Protection.FormatColumns = sp.FormatColumns.Value;
-            if (sp.FormatRows != null) ws.Protection.FormatRows = sp.FormatRows.Value;
-            if (sp.InsertColumns != null) ws.Protection.InsertColumns = sp.InsertColumns.Value;
-            if (sp.InsertHyperlinks != null) ws.Protection.InsertHyperlinks = sp.InsertHyperlinks.Value;
-            if (sp.InsertRows != null) ws.Protection.InsertRows = sp.InsertRows.Value;
-            if (sp.DeleteColumns != null) ws.Protection.DeleteColumns = sp.DeleteColumns.Value;
-            if (sp.DeleteRows != null) ws.Protection.DeleteRows = sp.DeleteRows.Value;
-            if (sp.AutoFilter != null) ws.Protection.AutoFilter = sp.AutoFilter.Value;
-            if (sp.PivotTables != null) ws.Protection.PivotTables = sp.PivotTables.Value;
-            if (sp.Sort != null) ws.Protection.Sort = sp.Sort.Value;
-            if (sp.SelectLockedCells != null) ws.Protection.SelectLockedCells = !sp.SelectLockedCells.Value;
-            if (sp.SelectUnlockedCells != null) ws.Protection.SelectUnlockedCells = !sp.SelectUnlockedCells.Value;
+            if (sp.FormatCells != null) ws.Protection.FormatCells = !sp.FormatCells.Value;
+            if (sp.FormatColumns != null) ws.Protection.FormatColumns = !sp.FormatColumns.Value;
+            if (sp.FormatRows != null) ws.Protection.FormatRows = !sp.FormatRows.Value;
+            if (sp.InsertColumns != null) ws.Protection.InsertColumns = !sp.InsertColumns.Value;
+            if (sp.InsertHyperlinks != null) ws.Protection.InsertHyperlinks = !sp.InsertHyperlinks.Value;
+            if (sp.InsertRows != null) ws.Protection.InsertRows = !sp.InsertRows.Value;
+            if (sp.DeleteColumns != null) ws.Protection.DeleteColumns = !sp.DeleteColumns.Value;
+            if (sp.DeleteRows != null) ws.Protection.DeleteRows = !sp.DeleteRows.Value;
+            if (sp.AutoFilter != null) ws.Protection.AutoFilter = !sp.AutoFilter.Value;
+            if (sp.PivotTables != null) ws.Protection.PivotTables = !sp.PivotTables.Value;
+            if (sp.Sort != null) ws.Protection.Sort = !sp.Sort.Value;
+            if (sp.SelectLockedCells != null) ws.Protection.SelectLockedCells = sp.SelectLockedCells.Value;
+            if (sp.SelectUnlockedCells != null) ws.Protection.SelectUnlockedCells = sp.SelectUnlockedCells.Value;
         }
 
         private static void LoadDataValidations(DataValidations dataValidations, XLWorksheet ws)
