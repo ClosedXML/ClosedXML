@@ -155,6 +155,10 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
+        public new IXLCells Cells()
+        {
+            return CellsUsed(true);
+        }
         public IXLCells Cells(Int32 firstRow, Int32 lastRow)
         {
             return Cells(firstRow + ":" + lastRow);

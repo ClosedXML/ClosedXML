@@ -168,6 +168,11 @@ namespace ClosedXML.Excel
             return Cell(1, columnLetter);
         }
 
+        public new IXLCells Cells()
+        {
+            return CellsUsed(true);
+        }
+
         public new IXLCells Cells(String cellsInRow)
         {
             var retVal = new XLCells(false, false);

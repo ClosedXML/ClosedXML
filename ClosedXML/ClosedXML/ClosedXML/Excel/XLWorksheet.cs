@@ -1167,6 +1167,11 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public new XLCells Cells()
+        {
+            return CellsUsed(true);
+        }
+
         public new XLCell Cell(String cellAddressInRange)
         {
 
