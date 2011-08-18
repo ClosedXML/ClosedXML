@@ -228,17 +228,21 @@ namespace ClosedXML.Excel
 
                     xlTable.ShowAutoFilter = dTable.AutoFilter != null;
 
-                    foreach (var tableColumn in dTable.TableColumns.Cast<TableColumn>())
+                    if (xlTable.ShowTotalsRow)
                     {
-                        if (tableColumn.TotalsRowFunction != null)
-                            xlTable.Field(tableColumn.Name.Value).TotalsRowFunction =
-                                tableColumn.TotalsRowFunction.Value.ToClosedXml();
+                        foreach (var tableColumn in dTable.TableColumns.Cast<TableColumn>())
+                        {
+                            if (tableColumn.TotalsRowFunction != null)
+                                xlTable.Field(tableColumn.Name.Value).TotalsRowFunction =
+                                    tableColumn.TotalsRowFunction.Value.ToClosedXml();
 
-                        if (tableColumn.TotalsRowFormula != null)
-                            xlTable.Field(tableColumn.Name.Value).TotalsRowFormulaA1 = tableColumn.TotalsRowFormula.Text;
+                            if (tableColumn.TotalsRowFormula != null)
+                                xlTable.Field(tableColumn.Name.Value).TotalsRowFormulaA1 =
+                                    tableColumn.TotalsRowFormula.Text;
 
-                        if (tableColumn.TotalsRowLabel != null)
-                            xlTable.Field(tableColumn.Name.Value).TotalsRowLabel = tableColumn.TotalsRowLabel.Value;
+                            if (tableColumn.TotalsRowLabel != null)
+                                xlTable.Field(tableColumn.Name.Value).TotalsRowLabel = tableColumn.TotalsRowLabel.Value;
+                        }
                     }
                 }
 
