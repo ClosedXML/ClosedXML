@@ -38,5 +38,11 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public IXLTables Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        {
+            _tables.Values.ForEach(t => t.Clear(clearOptions));
+            return this;
+        }
     }
 }

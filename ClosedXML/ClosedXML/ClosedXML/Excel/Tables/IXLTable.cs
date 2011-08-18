@@ -351,5 +351,10 @@ namespace ClosedXML.Excel
         IXLTable SetShowTotalsRow(); IXLTable SetShowTotalsRow(Boolean value);
         IXLTable SetShowAutoFilter(); IXLTable SetShowAutoFilter(Boolean value);
 
+        /// <summary>
+        /// Clears the contents of this table.
+        /// </summary>
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
     }
 }

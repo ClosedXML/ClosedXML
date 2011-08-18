@@ -14,7 +14,7 @@
             if (quickLoad) return;
             Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
             Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
-            DefaultStyle = new XLStyle(this, rangeParameters.DefaultStyle);
+            SetStyle(rangeParameters.DefaultStyle);
         }
 
         #endregion
@@ -336,5 +336,11 @@
         }
 
         #endregion
+
+        public new IXLRangeRow Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        {
+            base.Clear(clearOptions);
+            return this;
+        }
     }
 }

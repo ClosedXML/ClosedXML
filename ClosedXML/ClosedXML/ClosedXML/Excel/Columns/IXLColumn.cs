@@ -178,5 +178,11 @@ namespace ClosedXML.Excel
         IXLColumn ColumnLeft(Int32 step);
         IXLColumn ColumnRight();
         IXLColumn ColumnRight(Int32 step);
+
+        /// <summary>
+        /// Clears the contents of this column.
+        /// </summary>
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        new IXLColumn Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
     }
 }

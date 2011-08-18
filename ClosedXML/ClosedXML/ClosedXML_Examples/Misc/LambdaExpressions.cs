@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using ClosedXML;
 using ClosedXML.Excel;
 
 namespace ClosedXML_Examples
@@ -27,10 +26,18 @@ namespace ClosedXML_Examples
                         .Where(r => !r.Cell(3).GetBoolean()) // where the 3rd cell of each row is false
                         .ForEach(r => r.Delete()); // delete the row and shift the cells up (the default for rows in a range)
 
-                // Put a light gray background to all text cells
-                rngData.Cells() // From all cells
-                        .Where(c => c.DataType == XLCellValues.Text) // where the data type is Text
-                        .ForEach(c => c.Style.Fill.BackgroundColor = XLColor.LightGray); // Fill with a light gray
+                //// Put a light gray background to all text cells
+                //rngData.Cells() // From all cells
+                //        .Where(c => c.DataType == XLCellValues.Text) // where the data type is Text
+                //        .ForEach(c => c.Style.Fill.BackgroundColor = XLColor.LightGray); // Fill with a light gray
+
+                var cells = rngData.Cells();
+                var filtered = cells.Where(c => c.DataType == XLCellValues.Text);
+                var list = filtered.ToList();
+                foreach (var c in list)
+                {
+                    c.Style.Fill.BackgroundColor = XLColor.LightGray;
+                }
 
                 // Put a thick border to the bottom of the table (we may have deleted the bottom cells with the border)
                 rngData.LastRow().Style.Border.BottomBorder = XLBorderStyleValues.Thick;

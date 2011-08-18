@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
 
     internal class XLRangeColumns : IXLRangeColumns, IXLStylized
     {
+        public Boolean StyleChanged { get; set; }
         private readonly List<XLRangeColumn> _ranges = new List<XLRangeColumn>();
         private IXLStyle _style;
 
@@ -18,9 +19,10 @@ namespace ClosedXML.Excel
 
         #region IXLRangeColumns Members
 
-        public void Clear()
+        public IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
         {
-            _ranges.ForEach(r => r.Clear());
+            _ranges.ForEach(c => c.Clear(clearOptions));
+            return this;
         }
 
         public void Delete()

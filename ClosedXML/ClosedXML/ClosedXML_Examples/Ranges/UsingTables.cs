@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ClosedXML.Excel;
+using System.Linq;
 
 
 namespace ClosedXML_Examples.Ranges
@@ -22,8 +23,13 @@ namespace ClosedXML_Examples.Ranges
                 var firstCell = ws.FirstCellUsed();
                 var lastCell = ws.LastCellUsed();
                 var range = ws.Range(firstCell.Address, lastCell.Address);
-                range.Row(1).Delete(); // Deleting the "Contacts" header (we don't need it for our purposes)
-                range.ClearStyles(); // We want to use a theme for table, not the hard coded format of the BasicTable
+                range.FirstRow().Delete(); // Deleting the "Contacts" header (we don't need it for our purposes)
+
+                // We want to use a theme for table, not the hard coded format of the BasicTable
+                range.Clear(XLClearOptions.Formats); 
+                // Put back the date and number formats
+                range.Column(4).Style.NumberFormat.NumberFormatId = 15;
+                range.Column(5).Style.NumberFormat.Format = "$ #,##0";
 
                 var table = range.CreateTable(); // You can also use range.AsTable() if you want to
                 // manipulate the range as a table but don't want 

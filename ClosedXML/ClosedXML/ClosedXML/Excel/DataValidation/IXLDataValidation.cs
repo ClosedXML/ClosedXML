@@ -38,6 +38,7 @@ namespace ClosedXML.Excel
         void List(IXLRange range, Boolean inCellDropdown);
 
         void Custom(String customValidation);
-        
+        void Clear();
+        Boolean IsDirty();
     }
 }

@@ -2,15 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace ClosedXML.Excel
 {
     internal abstract class XLRangeBase : IXLRangeBase, IXLStylized
     {
+        public Boolean StyleChanged { get; set; }
         #region Fields
 
-        protected IXLStyle DefaultStyle;
+        private IXLStyle _style;
 
         #endregion
+
+        private Int32 _styleCacheId;
+        protected void SetStyle(IXLStyle styleToUse)
+        {
+            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
+            _style = null;
+            StyleChanged = false;
+        }
+        public Int32 GetStyleId()
+        {
+            if (StyleChanged)
+                SetStyle(Style);
+
+            return _styleCacheId;
+        }
+        protected IXLStyle GetStyle()
+        {
+            return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
+        }
 
         #region Constructor
 
@@ -261,30 +282,35 @@ namespace ClosedXML.Excel
             return AsRange();
         }
 
-        public void Clear()
+        public IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
         {
-            // Remove cells inside range
-            Worksheet.Internals.CellsCollection.RemoveAll(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.LastAddress.RowNumber,
-                RangeAddress.LastAddress.ColumnNumber
-                );
-
-            ClearMerged();
-
-            var hyperlinksToRemove = Worksheet.Hyperlinks.Where(hl => Contains(hl.Cell.AsRange())).ToList();
-            hyperlinksToRemove.ForEach(hl => Worksheet.Hyperlinks.Delete(hl));
-        }
-
-        public void ClearStyles()
-        {
-            foreach (XLCell cell in CellsUsed(true))
+            var includeFormats = clearOptions == XLClearOptions.Formats ||
+                                 clearOptions == XLClearOptions.ContentsAndFormats;
+            foreach (var cell in CellsUsed(includeFormats))
             {
-                var newStyle = new XLStyle(cell, Worksheet.Style) {NumberFormat = cell.Style.NumberFormat};
-                cell.Style = newStyle;
+                cell.Clear(clearOptions);
             }
+
+            if (includeFormats)
+            {
+                ClearMerged();
+
+                var hyperlinksToRemove = Worksheet.Hyperlinks.Where(hl => Contains(hl.Cell.AsRange())).ToList();
+                hyperlinksToRemove.ForEach(hl => Worksheet.Hyperlinks.Delete(hl));
+            }
+
+            if (clearOptions == XLClearOptions.ContentsAndFormats)
+            {
+                Worksheet.Internals.CellsCollection.RemoveAll(
+                    RangeAddress.FirstAddress.RowNumber,
+                    RangeAddress.FirstAddress.ColumnNumber,
+                    RangeAddress.LastAddress.RowNumber,
+                    RangeAddress.LastAddress.ColumnNumber
+                    );
+            }
+            return this;
         }
+
 
         public bool Contains(String rangeAddress)
         {
@@ -335,7 +361,7 @@ namespace ClosedXML.Excel
 
         public virtual IXLStyle Style
         {
-            get { return DefaultStyle; }
+            get { return GetStyle(); }
             set { Cells().ForEach(c => c.Style = value); }
         }
 
@@ -413,8 +439,8 @@ namespace ClosedXML.Excel
 
         public virtual IXLStyle InnerStyle
         {
-            get { return DefaultStyle; }
-            set { DefaultStyle = new XLStyle(this, value); }
+            get { return GetStyle(); }
+            set { SetStyle(value); }
         }
 
         #endregion
@@ -676,7 +702,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRangeColumns InsertColumnsAfter(Boolean onlyUsedCells, Int32 numberOfColumns)
+        public IXLRangeColumns InsertColumnsAfter(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true)
         {
             int columnCount = ColumnCount();
             int firstColumn = RangeAddress.FirstAddress.ColumnNumber + columnCount;
@@ -692,7 +718,7 @@ namespace ClosedXML.Excel
                 lastRow = ExcelHelper.MaxRowNumber;
 
             var newRange = Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
-            return newRange.InsertColumnsBefore(onlyUsedCells, numberOfColumns);
+            return newRange.InsertColumnsBefore(onlyUsedCells, numberOfColumns, formatFromLeft);
         }
 
         public IXLRangeColumns InsertColumnsBefore(Int32 numberOfColumns)
@@ -721,7 +747,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRangeColumns InsertColumnsBefore(Boolean onlyUsedCells, Int32 numberOfColumns)
+        public IXLRangeColumns InsertColumnsBefore(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true)
         {
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
@@ -734,7 +760,7 @@ namespace ClosedXML.Excel
 
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             var cellsToDelete = new List<IXLAddress>();
-            var cellsToBlank = new List<IXLAddress>();
+            //var cellsToBlank = new List<IXLAddress>();
             int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
             int firstRow = RangeAddress.FirstAddress.RowNumber;
             int lastRow = RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
@@ -759,8 +785,8 @@ namespace ClosedXML.Excel
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
                             cellsToDelete.Add(oldKey);
-                            if (oldKey.ColumnNumber < firstColumn + numberOfColumns)
-                                cellsToBlank.Add(oldKey);
+                            //if (oldKey.ColumnNumber < firstColumn + numberOfColumns)
+                            //    cellsToBlank.Add(oldKey);
                         }
                     }
                 }
@@ -779,28 +805,58 @@ namespace ClosedXML.Excel
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
-                    if (c.Address.ColumnNumber < firstColumn + numberOfColumns)
-                        cellsToBlank.Add(c.Address);
+                    //if (c.Address.ColumnNumber < firstColumn + numberOfColumns)
+                    //    cellsToBlank.Add(c.Address);
                 }
             }
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(
                 c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
-            foreach (IXLAddress c in cellsToBlank)
-            {
-                var styleToUse = Worksheet.Internals.RowsCollection.ContainsKey(c.RowNumber)
-                                     ? Worksheet.Internals.RowsCollection[c.RowNumber].Style
-                                     : Worksheet.Style;
-                Worksheet.Cell(c.RowNumber, c.ColumnNumber).Style = styleToUse;
-            }
 
             Worksheet.NotifyRangeShiftedColumns((XLRange)AsRange(), numberOfColumns);
-            return Worksheet.Range(
+            var rangeToReturn = Worksheet.Range(
                 RangeAddress.FirstAddress.RowNumber,
                 RangeAddress.FirstAddress.ColumnNumber - numberOfColumns,
                 RangeAddress.LastAddress.RowNumber,
                 RangeAddress.LastAddress.ColumnNumber - numberOfColumns
-                ).Columns();
+                );
+
+            if (formatFromLeft && rangeToReturn.RangeAddress.FirstAddress.ColumnNumber > 1)
+            {
+                var model = rangeToReturn.FirstColumn().ColumnLeft();
+                var modelFirstRow = model.FirstCellUsed(true);
+                var modelLastRow = model.LastCellUsed(true);
+                if (modelLastRow != null)
+                {
+                    Int32 firstRoReturned = modelFirstRow.Address.RowNumber
+                                            - model.RangeAddress.FirstAddress.RowNumber + 1;
+                    Int32 lastRoReturned = modelLastRow.Address.RowNumber
+                                            - model.RangeAddress.FirstAddress.RowNumber + 1;
+                    for (Int32 ro = firstRoReturned; ro <= lastRoReturned; ro++)
+                    {
+                        rangeToReturn.Row(ro).Style = model.Cell(ro).Style;
+                    }
+                }
+            }
+            else
+            {
+                var lastRoUsed = rangeToReturn.LastRowUsed(true);
+                if (lastRoUsed != null)
+                {
+                    Int32 lastRoReturned = lastRoUsed.RowNumber();
+                    for (Int32 ro = 1; ro <= lastRoReturned; ro++)
+                    {
+                        var styleToUse = Worksheet.Internals.RowsCollection.ContainsKey(ro)
+                                             ? Worksheet.Internals.RowsCollection[ro].Style
+                                             : Worksheet.Style;
+                        rangeToReturn.Row(ro).Style = styleToUse;
+                    }
+                    
+                }
+            }
+
+            
+            return rangeToReturn.Columns();
         }
 
         public IXLRangeRows InsertRowsBelow(Int32 numberOfRows)
@@ -829,7 +885,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRangeRows InsertRowsBelow(Boolean onlyUsedCells, Int32 numberOfRows)
+        public IXLRangeRows InsertRowsBelow(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
         {
             int rowCount = RowCount();
             int firstRow = RangeAddress.FirstAddress.RowNumber + rowCount;
@@ -845,7 +901,7 @@ namespace ClosedXML.Excel
                 lastColumn = ExcelHelper.MaxColumnNumber;
 
             var newRange = Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
-            return newRange.InsertRowsAbove(onlyUsedCells, numberOfRows);
+            return newRange.InsertRowsAbove(onlyUsedCells, numberOfRows, formatFromAbove);
         }
 
         public IXLRangeRows InsertRowsAbove(Int32 numberOfRows)
@@ -874,7 +930,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRangeRows InsertRowsAbove(Boolean onlyUsedCells, Int32 numberOfRows)
+        public IXLRangeRows InsertRowsAbove(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
         {
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
@@ -887,7 +943,7 @@ namespace ClosedXML.Excel
 
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             var cellsToDelete = new List<IXLAddress>();
-            var cellsToBlank = new List<IXLAddress>();
+            //var cellsToBlank = new List<IXLAddress>();
             int firstRow = RangeAddress.FirstAddress.RowNumber;
             int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
             int lastColumn = RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
@@ -912,8 +968,8 @@ namespace ClosedXML.Excel
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
                             cellsToDelete.Add(oldKey);
-                            if (oldKey.RowNumber < firstRow + numberOfRows)
-                                cellsToBlank.Add(oldKey);
+                            //if (oldKey.RowNumber < firstRow + numberOfRows)
+                            //    cellsToBlank.Add(oldKey);
                         }
                     }
                 }
@@ -933,27 +989,65 @@ namespace ClosedXML.Excel
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
-                    if (c.Address.RowNumber < firstRow + numberOfRows)
-                        cellsToBlank.Add(c.Address);
+                    //if (c.Address.RowNumber < firstRow + numberOfRows)
+                    //    cellsToBlank.Add(c.Address);
                 }
             }
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(
                 c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
-            foreach (IXLAddress c in cellsToBlank)
-            {
-                var styleToUse = Worksheet.Internals.ColumnsCollection.ContainsKey(c.ColumnNumber)
-                                     ? Worksheet.Internals.ColumnsCollection[c.ColumnNumber].Style
-                                     : Worksheet.Style;
-                Worksheet.Cell(c.RowNumber, c.ColumnNumber).Style = styleToUse;
-            }
+            
+            //foreach (IXLAddress c in cellsToBlank)
+            //{
+            //    IXLStyle styleToUse;
+                
+            //    styleToUse = Worksheet.Internals.ColumnsCollection.ContainsKey(c.ColumnNumber)
+            //                         ? Worksheet.Internals.ColumnsCollection[c.ColumnNumber].Style
+            //                         : Worksheet.Style;
+            //    Worksheet.Cell(c.RowNumber, c.ColumnNumber).Style = styleToUse;
+            //}
             Worksheet.NotifyRangeShiftedRows((XLRange)AsRange(), numberOfRows);
-            return Worksheet.Range(
+            var rangeToReturn = Worksheet.Range(
                 RangeAddress.FirstAddress.RowNumber - numberOfRows,
                 RangeAddress.FirstAddress.ColumnNumber,
                 RangeAddress.LastAddress.RowNumber - numberOfRows,
                 RangeAddress.LastAddress.ColumnNumber
-                ).Rows();
+                );
+
+            if (formatFromAbove && rangeToReturn.RangeAddress.FirstAddress.RowNumber > 1)
+            {
+                var model = rangeToReturn.FirstRow().RowAbove();
+                var modelFirstColumn = model.FirstCellUsed(true);
+                var modelLastColumn = model.LastCellUsed(true);
+                if (modelLastColumn != null)
+                {
+                    Int32 firstCoReturned = modelFirstColumn.Address.ColumnNumber
+                                            - model.RangeAddress.FirstAddress.ColumnNumber + 1;
+                    Int32 lastCoReturned = modelLastColumn.Address.ColumnNumber
+                                            - model.RangeAddress.FirstAddress.ColumnNumber + 1;
+                    for (Int32 co = firstCoReturned; co <= lastCoReturned; co++)
+                    {
+                        rangeToReturn.Column(co).Style = model.Cell(co).Style;
+                    }
+                }
+            }
+            else
+            {
+                var lastCoUsed = rangeToReturn.LastColumnUsed(true);
+                if (lastCoUsed != null)
+                {
+                    Int32 lastCoReturned = lastCoUsed.ColumnNumber();
+                    for (Int32 co = 1; co <= lastCoReturned; co++)
+                    {
+                        var styleToUse = Worksheet.Internals.ColumnsCollection.ContainsKey(co)
+                                             ? Worksheet.Internals.ColumnsCollection[co].Style
+                                             : Worksheet.Style;
+                        rangeToReturn.Column(co).Style = styleToUse;
+                    }
+                }
+            }
+
+            return rangeToReturn.Rows();
         }
 
         private void ClearMerged()

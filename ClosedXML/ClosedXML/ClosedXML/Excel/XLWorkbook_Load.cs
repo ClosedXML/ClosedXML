@@ -347,7 +347,7 @@ namespace ClosedXML.Excel
                                XLWorksheet ws, Dictionary<Int32, IXLStyle> styleList, Cell cell)
         {
             Int32 styleIndex = cell.StyleIndex != null ? Int32.Parse(cell.StyleIndex.InnerText) : 0;
-            var xlCell = ws.Cell(cell.CellReference);
+            var xlCell = ws.CellFast(cell.CellReference);
 
             if (styleList.ContainsKey(styleIndex))
                 xlCell.Style = styleList[styleIndex];
@@ -578,21 +578,9 @@ namespace ClosedXML.Excel
                     ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
                 else
                 {
-                    //((XLRow)xlRow).style = ws.Style;
-                    //((XLRow)xlRow).SetStyleNoColumns(ws.Style);
                     xlRow.Style = DefaultStyle;
-                    //xlRow.Style = ws.Style;
                 }
             }
-
-            //OpenXmlReader reader = OpenXmlReader.Create(row);
-            //while (reader.Read())
-            //{
-            //    if (reader.ElementType == typeof(Cell))
-            //    {
-            //        LoadCells(sharedStrings, s, numberingFormats, fills, borders, fonts, sharedFormulasR1C1, ws, styleList, (Cell)reader.LoadCurrentElement());
-            //    }
-            //}
 
             foreach (Cell cell in row.Elements<Cell>())
                 LoadCells(sharedStrings, s, numberingFormats, fills, borders, fonts, sharedFormulasR1C1, ws, styleList,
@@ -999,7 +987,7 @@ namespace ClosedXML.Excel
             {
                 if (alignment.Horizontal != null)
                     xlStylized.InnerStyle.Alignment.Horizontal = alignment.Horizontal.Value.ToClosedXml();
-                if (alignment.Indent != null)
+                if (alignment.Indent != null && alignment.Indent != 0)
                     xlStylized.InnerStyle.Alignment.Indent = Int32.Parse(alignment.Indent.ToString());
                 if (alignment.JustifyLastLine != null)
                     xlStylized.InnerStyle.Alignment.JustifyLastLine = alignment.JustifyLastLine;

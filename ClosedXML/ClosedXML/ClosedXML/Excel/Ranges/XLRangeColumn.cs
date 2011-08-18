@@ -14,7 +14,7 @@
 
             Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
             Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
-            DefaultStyle = new XLStyle(this, rangeParameters.DefaultStyle);
+            SetStyle(rangeParameters.DefaultStyle);
         }
 
         #endregion
@@ -350,6 +350,12 @@
         public IXLTable CreateTable(string name)
         {
             return AsRange().CreateTable(name);
+        }
+
+        public new IXLRangeColumn Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        {
+            base.Clear(clearOptions);
+            return this;
         }
     }
 }

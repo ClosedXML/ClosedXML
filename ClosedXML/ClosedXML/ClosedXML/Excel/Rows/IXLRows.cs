@@ -113,5 +113,11 @@ namespace ClosedXML.Excel
         IXLRows AddHorizontalPageBreaks();
 
         IXLRows SetDataType(XLCellValues dataType);
+
+        /// <summary>
+        /// Clears the contents of these rows.
+        /// </summary>
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        IXLRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
     }
 }

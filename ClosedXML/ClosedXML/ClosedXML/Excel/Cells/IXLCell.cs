@@ -5,6 +5,13 @@ namespace ClosedXML.Excel
 {
     public enum XLCellValues { Text, Number, Boolean, DateTime, TimeSpan }
 
+    public enum XLClearOptions
+    {
+        ContentsAndFormats,
+        Contents,
+        Formats
+    }
+
     public interface IXLCell
     {
         /// <summary>
@@ -103,14 +110,10 @@ namespace ClosedXML.Excel
         TimeSpan GetTimeSpan();
 
         /// <summary>
-        /// Clears the contents of this cell (including styles).
+        /// Clears the contents of this cell.
         /// </summary>
-        IXLCell Clear();
-
-        /// <summary>
-        /// Clears the styles of this cell (preserving number formats).
-        /// </summary>
-        IXLCell ClearStyles();
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        IXLCell Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
 
         /// <summary>
         /// Deletes the current cell and shifts the surrounding cells according to the shiftDeleteCells parameter.

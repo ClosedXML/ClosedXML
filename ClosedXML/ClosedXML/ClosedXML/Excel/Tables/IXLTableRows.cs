@@ -12,11 +12,6 @@ namespace ClosedXML.Excel
         void Add(IXLTableRow tableRow);
 
         /// <summary>
-        /// Clears the contents of the rows (including styles).
-        /// </summary>
-        void Clear();
-
-        /// <summary>
         /// Returns the collection of cells.
         /// </summary>
         IXLCells Cells();
@@ -34,6 +29,10 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        
+        /// <summary>
+        /// Clears the contents of these rows.
+        /// </summary>
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        IXLTableRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
     }
 }

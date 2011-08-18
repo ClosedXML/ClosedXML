@@ -11,8 +11,8 @@ namespace ClosedXML.Excel
 
         internal XLHyperlink(XLHyperlink hyperlink)
         {
-            externalAddress = hyperlink.externalAddress;
-            internalAddress = hyperlink.internalAddress;
+            _externalAddress = hyperlink._externalAddress;
+            _internalAddress = hyperlink._internalAddress;
             Tooltip = hyperlink.Tooltip;
             IsExternal = hyperlink.IsExternal;
         }
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
             Tooltip = tooltip;
             if (address[0] == '.')
             {
-                externalAddress = new Uri(address, UriKind.Relative);
+                _externalAddress = new Uri(address, UriKind.Relative);
                 IsExternal = true;
             }
             else
@@ -30,12 +30,12 @@ namespace ClosedXML.Excel
                 Uri uri;
                 if(Uri.TryCreate(address, UriKind.Absolute, out uri))
                 {
-                    externalAddress = new Uri(uri.AbsoluteUri, UriKind.Absolute);
+                    _externalAddress = new Uri(uri.AbsoluteUri, UriKind.Absolute);
                     IsExternal = true;
                 }
                 else
                 {
-                    internalAddress = address;
+                    _internalAddress = address;
                     IsExternal = false;    
                 }
             }
@@ -44,21 +44,21 @@ namespace ClosedXML.Excel
         internal void SetValues(Uri uri, String tooltip)
         {
             Tooltip = tooltip;
-            externalAddress = uri;
+            _externalAddress = uri;
             IsExternal = true;
         }
 
         internal void SetValues(IXLCell cell, String tooltip)
         {
             Tooltip = tooltip;
-            internalAddress = cell.Address.ToString();
+            _internalAddress = cell.Address.ToString();
             IsExternal = false;
         }
 
         internal void SetValues(IXLRangeBase range, String tooltip)
         {
             Tooltip = tooltip;
-            internalAddress = range.RangeAddress.ToString();
+            _internalAddress = range.RangeAddress.ToString();
             IsExternal = false;
         }
 

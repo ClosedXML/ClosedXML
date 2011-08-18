@@ -2,14 +2,17 @@
 
 namespace ClosedXML.Excel
 {
+    using System;
+
     internal class XLStylizedContainer: IXLStylized
     {
-        IXLStylized container;
+        public Boolean StyleChanged { get; set; }
+        readonly IXLStylized _container;
         public XLStylizedContainer(IXLStyle style, IXLStylized container)
         {
-            this.Style = style;
-            this.container = container;
-            this.RangesUsed = container.RangesUsed;
+            Style = style;
+            _container = container;
+            RangesUsed = container.RangesUsed;
         }
 
         public IXLStyle Style { get; set; }
@@ -18,9 +21,9 @@ namespace ClosedXML.Excel
         {
             get 
             {
-                container.UpdatingStyle = true;
+                _container.UpdatingStyle = true;
                 yield return Style;
-                container.UpdatingStyle = false;
+                _container.UpdatingStyle = false;
             }
         }
 

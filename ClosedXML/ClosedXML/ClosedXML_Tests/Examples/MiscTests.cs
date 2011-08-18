@@ -147,5 +147,10 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<CopyingRowsAndColumns>(@"Misc\CopyingRowsAndColumns.xlsx");
         }
+        [TestMethod]
+        public void BasicTable()
+        {
+            TestHelper.RunTestExample<BasicTable>(@"Misc\BasicTable.xlsx");
+        }
     }
 }

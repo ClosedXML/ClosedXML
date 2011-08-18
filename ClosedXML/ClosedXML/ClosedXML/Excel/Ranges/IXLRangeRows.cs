@@ -10,10 +10,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rowRange">The row range to add.</param>
         void Add(IXLRangeRow rowRange);
-        /// <summary>
-        /// Clears the contents of the rows (including styles).
-        /// </summary>
-        void Clear();
 
         /// <summary>
         /// Returns the collection of cells.
@@ -39,5 +35,11 @@ namespace ClosedXML.Excel
         IXLStyle Style { get; set; }
 
         IXLRangeRows SetDataType(XLCellValues dataType);
+
+        /// <summary>
+        /// Clears the contents of these rows.
+        /// </summary>
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
     }
 }

@@ -166,6 +166,27 @@ namespace ClosedXML.Excel
         private readonly Dictionary<Int32, UnsupportedSheet> _unsupportedSheets =
             new Dictionary<int, UnsupportedSheet>();
 
+        private readonly Dictionary<Int32, IXLStyle> _stylesById = new Dictionary<int, IXLStyle>();
+        private readonly Dictionary<IXLStyle, Int32> _stylesByStyle = new Dictionary<IXLStyle, Int32>();
+       
+        internal Int32 GetStyleId(IXLStyle style)
+        {
+            Int32 cached;
+            if (_stylesByStyle.TryGetValue(style, out cached))
+                return cached;
+
+            var count = _stylesByStyle.Count;
+            var styleToUse = new XLStyle(null, style);
+            _stylesByStyle.Add(styleToUse, count);
+            _stylesById.Add(count, styleToUse);
+            return count;
+        }
+
+        internal IXLStyle GetStyleById(Int32 id)
+        {
+            return _stylesById[id];
+        }
+
         #region  Nested Type: XLLoadSource
 
         private enum XLLoadSource

@@ -27,18 +27,17 @@ namespace ClosedXML.Excel
         public XLAlignment(IXLStylized container, IXLAlignment d = null)
         {
             _container = container;
-            if (d != null)
-            {
-                _horizontal = d.Horizontal;
-                _vertical = d.Vertical;
-                _indent = d.Indent;
-                _justifyLastLine = d.JustifyLastLine;
-                _readingOrder = d.ReadingOrder;
-                _relativeIndent = d.RelativeIndent;
-                _shrinkToFit = d.ShrinkToFit;
-                _textRotation = d.TextRotation;
-                _wrapText = d.WrapText;
-            }
+            if (d == null) return;
+
+            _horizontal = d.Horizontal;
+            _vertical = d.Vertical;
+            _indent = d.Indent;
+            _justifyLastLine = d.JustifyLastLine;
+            _readingOrder = d.ReadingOrder;
+            _relativeIndent = d.RelativeIndent;
+            _shrinkToFit = d.ShrinkToFit;
+            _textRotation = d.TextRotation;
+            _wrapText = d.WrapText;
         }
 
         #region IXLAlignment Members
@@ -48,6 +47,7 @@ namespace ClosedXML.Excel
             get { return _horizontal; }
             set
             {
+                SetStyleChanged();
                 Boolean updateIndent = !(
                                             value == XLAlignmentHorizontalValues.Left
                                             || value == XLAlignmentHorizontalValues.Right
@@ -59,8 +59,7 @@ namespace ClosedXML.Excel
                     _container.Styles.ForEach(s =>
                                                   {
                                                       s.Alignment.Horizontal = value;
-                                                      if (updateIndent)
-                                                          s.Alignment.Indent = 0;
+                                                      if (updateIndent) s.Alignment.Indent = 0;
                                                   });
                 }
                 else
@@ -77,6 +76,7 @@ namespace ClosedXML.Excel
             get { return _vertical; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Alignment.Vertical = value);
                 else
@@ -89,24 +89,28 @@ namespace ClosedXML.Excel
             get { return _indent; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
-                {
                     _container.Styles.ForEach(s => s.Alignment.Indent = value);
-                }
                 else
                 {
-                    if (_horizontal == XLAlignmentHorizontalValues.General)
-                        _horizontal = XLAlignmentHorizontalValues.Left;
+                    if (_indent != value)
+                    {
+                        if (_horizontal == XLAlignmentHorizontalValues.General)
+                            _horizontal = XLAlignmentHorizontalValues.Left;
 
-                    if (value > 0 && !(
-                      _horizontal == XLAlignmentHorizontalValues.Left
-                      || _horizontal == XLAlignmentHorizontalValues.Right
-                      || _horizontal == XLAlignmentHorizontalValues.Distributed
-                  ))
-                        throw new ArgumentException(
-                            "For indents, only left, right, and distributed horizontal alignments are supported.");
+                        if (value > 0 && !(
+                                              _horizontal == XLAlignmentHorizontalValues.Left
+                                              || _horizontal == XLAlignmentHorizontalValues.Right
+                                              || _horizontal == XLAlignmentHorizontalValues.Distributed
+                                          ))
+                        {
+                            throw new ArgumentException(
+                                "For indents, only left, right, and distributed horizontal alignments are supported.");
+                        }
 
-                    _indent = value;
+                        _indent = value;
+                    }
                 }
             }
         }
@@ -116,6 +120,7 @@ namespace ClosedXML.Excel
             get { return _justifyLastLine; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Alignment.JustifyLastLine = value);
                 else
@@ -128,6 +133,7 @@ namespace ClosedXML.Excel
             get { return _readingOrder; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Alignment.ReadingOrder = value);
                 else
@@ -140,6 +146,7 @@ namespace ClosedXML.Excel
             get { return _relativeIndent; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Alignment.RelativeIndent = value);
                 else
@@ -152,6 +159,7 @@ namespace ClosedXML.Excel
             get { return _shrinkToFit; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Alignment.ShrinkToFit = value);
                 else
@@ -164,13 +172,14 @@ namespace ClosedXML.Excel
             get { return _textRotation; }
             set
             {
+                SetStyleChanged();
                 Int32 rotation = value;
 
                 if (rotation != 255 && (rotation < -90 || rotation > 180))
                     throw new ArgumentException("TextRotation must be between -90 and 180 degrees, or 255.");
 
                 if (rotation < 0)
-                    rotation = 90 + (rotation*-1);
+                    rotation = 90 + (rotation * -1);
 
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Alignment.TextRotation = rotation);
@@ -184,6 +193,7 @@ namespace ClosedXML.Excel
             get { return _wrapText; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Alignment.WrapText = value);
                 else
@@ -196,6 +206,7 @@ namespace ClosedXML.Excel
             get { return _textRotation == 255; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Alignment.TextRotation = value ? 255 : 0);
                 else
@@ -312,6 +323,11 @@ namespace ClosedXML.Excel
 
         #endregion
 
+        private void SetStyleChanged()
+        {
+            if (_container != null) _container.StyleChanged = true;
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -338,16 +354,16 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            return Equals((XLAlignment) obj);
+            return Equals((XLAlignment)obj);
         }
 
         public override int GetHashCode()
         {
-            return (Int32) Horizontal
-                   ^ (Int32) Vertical
+            return (Int32)Horizontal
+                   ^ (Int32)Vertical
                    ^ Indent
                    ^ JustifyLastLine.GetHashCode()
-                   ^ (Int32) ReadingOrder
+                   ^ (Int32)ReadingOrder
                    ^ RelativeIndent
                    ^ ShrinkToFit.GetHashCode()
                    ^ TextRotation

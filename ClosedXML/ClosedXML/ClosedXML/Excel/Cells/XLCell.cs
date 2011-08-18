@@ -12,6 +12,7 @@
 
     internal partial class XLCell : IXLCell, IXLStylized
     {
+        public Boolean StyleChanged { get; set; }
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
         private static Dictionary<int, string> _formatCodes;
 
@@ -68,14 +69,34 @@
 
         #region Constructor
 
+        private Int32 _styleCacheId;
         public XLCell(XLWorksheet worksheet, XLAddress address, IXLStyle defaultStyle)
         {
             Address = address;
             ShareString = true;
-
-            _style = defaultStyle == null ? new XLStyle(this, worksheet.Style) : new XLStyle(this, defaultStyle);
-
+            
             _worksheet = worksheet;
+
+            SetStyle(defaultStyle ?? worksheet.Style);
+
+        }
+
+        private IXLStyle GetStyleForRead()
+        {
+            return Worksheet.Workbook.GetStyleById(GetStyleId());
+        }
+        public Int32 GetStyleId()
+        {
+            if (StyleChanged)
+                SetStyle(Style);
+
+            return _styleCacheId;
+        }
+        private void SetStyle(IXLStyle styleToUse)
+        {
+            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
+            _style = null;
+            StyleChanged = false;
         }
 
         #endregion
@@ -134,7 +155,7 @@
             {
                 _cellValue = value.ToString();
                 _dataType = XLCellValues.Text;
-                if (_cellValue.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                if (_cellValue.Contains(Environment.NewLine) && !GetStyleForRead().Alignment.WrapText)
                     Style.Alignment.WrapText = true;
             }
             else if (value is TimeSpan)
@@ -541,15 +562,22 @@
             return null;
         }
 
+        private IXLStyle GetStyle()
+        {
+            //return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
+            if (_style != null)
+                return _style;
+
+            return _style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId));
+        }
         public IXLStyle Style
         {
-            get
-            {
-                _style = new XLStyle(this, _style);
-                return _style;
-            }
+            get { return GetStyle(); }
 
-            set { _style = new XLStyle(this, value); }
+            set
+            {
+                SetStyle(value);
+            }
         }
 
         public IXLCell SetDataType(XLCellValues dataType)
@@ -597,8 +625,8 @@
                                     "Cannot set data type to DateTime because '{0}' is not recognized as a date.",
                                     _cellValue));
                         }
-
-                        if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                        var style = GetStyleForRead();
+                        if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         {
                             Style.NumberFormat.NumberFormatId = _cellValue.Contains('.') ? 22 : 14;
                         }
@@ -609,7 +637,8 @@
                         if (TimeSpan.TryParse(_cellValue, out tsTest))
                         {
                             _cellValue = tsTest.ToString();
-                            if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                            var style = GetStyleForRead();
+                            if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                                 Style.NumberFormat.NumberFormatId = 46;
                         }
                         else
@@ -653,17 +682,25 @@
             }
         }
 
-        public IXLCell Clear()
+        public IXLCell Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
         {
-            AsRange().Clear();
+            if (clearOptions == XLClearOptions.Contents || clearOptions == XLClearOptions.ContentsAndFormats)
+            {
+                Hyperlink = null;
+                _richText = null;
+                _cellValue = String.Empty;
+                FormulaA1 = String.Empty;
+            }
+
+            if (clearOptions == XLClearOptions.Formats || clearOptions == XLClearOptions.ContentsAndFormats)
+            {
+                DataValidation.Clear();
+                SetStyle(Worksheet.Style);
+            }
+            
             return this;
         }
 
-        public IXLCell ClearStyles()
-        {
-            Style = _worksheet.Style;
-            return this;
-        }
 
         public void Delete(XLShiftDeletedCells shiftDeleteCells)
         {
@@ -733,20 +770,24 @@
 
             set
             {
-                _hyperlink = value;
-                _hyperlink.Worksheet = _worksheet;
-                _hyperlink.Cell = this;
                 if (_worksheet.Hyperlinks.Any(hl => Address.Equals(hl.Cell.Address)))
                     _worksheet.Hyperlinks.Delete(Address);
+
+                _hyperlink = value;
+
+                if (_hyperlink == null) return;
+
+                _hyperlink.Worksheet = _worksheet;
+                _hyperlink.Cell = this;
 
                 _worksheet.Hyperlinks.Add(_hyperlink);
 
                 if (SettingHyperlink) return;
 
-                if (Style.Font.FontColor.Equals(_worksheet.Style.Font.FontColor))
+                if (GetStyleForRead().Font.FontColor.Equals(_worksheet.Style.Font.FontColor))
                     Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
 
-                if (Style.Font.Underline == _worksheet.Style.Font.Underline)
+                if (GetStyleForRead().Font.Underline == _worksheet.Style.Font.Underline)
                     Style.Font.Underline = XLFontUnderlineValues.Single;
             }
         }
@@ -812,7 +853,8 @@
             {
                 if (_richText == null)
                 {
-                    _richText = _cellValue.Length == 0 ? new XLRichText(_style.Font) : new XLRichText(GetFormattedString(), _style.Font);
+                    var style = GetStyleForRead();
+                    _richText = _cellValue.Length == 0 ? new XLRichText(style.Font) : new XLRichText(GetFormattedString(), style.Font);
 
                     _dataType = XLCellValues.Text;
                 }
@@ -882,24 +924,26 @@
 
         private bool IsDateFormat()
         {
+            var style = GetStyleForRead();
             return _dataType == XLCellValues.Number
-                   && StringExtensions.IsNullOrWhiteSpace(Style.NumberFormat.Format)
-                   && ((Style.NumberFormat.NumberFormatId >= 14
-                        && Style.NumberFormat.NumberFormatId <= 22)
-                       || (Style.NumberFormat.NumberFormatId >= 45
-                           && Style.NumberFormat.NumberFormatId <= 47));
+                   && StringExtensions.IsNullOrWhiteSpace(style.NumberFormat.Format)
+                   && ((style.NumberFormat.NumberFormatId >= 14
+                        && style.NumberFormat.NumberFormatId <= 22)
+                       || (style.NumberFormat.NumberFormatId >= 45
+                           && style.NumberFormat.NumberFormatId <= 47));
         }
 
         private string GetFormat()
         {
             string format;
-            if (StringExtensions.IsNullOrWhiteSpace(Style.NumberFormat.Format))
+            var style = GetStyleForRead();
+            if (StringExtensions.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
                 var formatCodes = GetFormatCodes();
-                format = formatCodes[Style.NumberFormat.NumberFormatId];
+                format = formatCodes[style.NumberFormat.NumberFormatId];
             }
             else
-                format = Style.NumberFormat.Format;
+                format = style.NumberFormat.Format;
             return format;
         }
 
@@ -993,23 +1037,24 @@
                 DateTime dtTest;
                 bool bTest;
                 TimeSpan tsTest;
-                if (_style.NumberFormat.Format == "@")
+                var style = GetStyleForRead();
+                if (style.NumberFormat.Format == "@")
                 {
                     _dataType = XLCellValues.Text;
-                    if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                    if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                         Style.Alignment.WrapText = true;
                 }
                 else if (val[0] == '\'')
                 {
                     val = val.Substring(1, val.Length - 1);
                     _dataType = XLCellValues.Text;
-                    if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                    if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                         Style.Alignment.WrapText = true;
                 }
                 else if (value is TimeSpan || (TimeSpan.TryParse(val, out tsTest) && !Double.TryParse(val, out dTest)))
                 {
                     _dataType = XLCellValues.TimeSpan;
-                    if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                    if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         Style.NumberFormat.NumberFormatId = 46;
                 }
                 else if (Double.TryParse(val, out dTest))
@@ -1018,7 +1063,7 @@
                 {
                     _dataType = XLCellValues.DateTime;
 
-                    if (Style.NumberFormat.Format == String.Empty && Style.NumberFormat.NumberFormatId == 0)
+                    if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                     {
                         Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
                     }
@@ -1033,7 +1078,7 @@
                 else
                 {
                     _dataType = XLCellValues.Text;
-                    if (val.Contains(Environment.NewLine) && !Style.Alignment.WrapText)
+                    if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                         Style.Alignment.WrapText = true;
                 }
             }
@@ -1297,7 +1342,7 @@
 
             _dataType = source._dataType;
             FormulaR1C1 = source.FormulaR1C1;
-            _style = new XLStyle(this, source._style);
+            SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 
             if (source._hyperlink != null)
             {

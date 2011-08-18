@@ -25,19 +25,18 @@ namespace ClosedXML.Excel
         public XLFont(IXLStylized container, IXLFontBase defaultFont)
         {
             _container = container;
-            if (defaultFont != null)
-            {
-                _bold = defaultFont.Bold;
-                _italic = defaultFont.Italic;
-                _underline = defaultFont.Underline;
-                _strikethrough = defaultFont.Strikethrough;
-                _verticalAlignment = defaultFont.VerticalAlignment;
-                _shadow = defaultFont.Shadow;
-                _fontSize = defaultFont.FontSize;
-                _fontColor = new XLColor(defaultFont.FontColor);
-                _fontName = defaultFont.FontName;
-                _fontFamilyNumbering = defaultFont.FontFamilyNumbering;
-            }
+            if (defaultFont == null) return;
+
+            _bold = defaultFont.Bold;
+            _italic = defaultFont.Italic;
+            _underline = defaultFont.Underline;
+            _strikethrough = defaultFont.Strikethrough;
+            _verticalAlignment = defaultFont.VerticalAlignment;
+            _shadow = defaultFont.Shadow;
+            _fontSize = defaultFont.FontSize;
+            _fontColor = new XLColor(defaultFont.FontColor);
+            _fontName = defaultFont.FontName;
+            _fontFamilyNumbering = defaultFont.FontFamilyNumbering;
         }
 
         #region IXLFont Members
@@ -47,6 +46,7 @@ namespace ClosedXML.Excel
             get { return _bold; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Bold = value);
                 else
@@ -59,6 +59,7 @@ namespace ClosedXML.Excel
             get { return _italic; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Italic = value);
                 else
@@ -71,6 +72,7 @@ namespace ClosedXML.Excel
             get { return _underline; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Underline = value);
                 else
@@ -83,6 +85,7 @@ namespace ClosedXML.Excel
             get { return _strikethrough; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Strikethrough = value);
                 else
@@ -95,6 +98,7 @@ namespace ClosedXML.Excel
             get { return _verticalAlignment; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.VerticalAlignment = value);
                 else
@@ -107,6 +111,7 @@ namespace ClosedXML.Excel
             get { return _shadow; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Shadow = value);
                 else
@@ -119,6 +124,7 @@ namespace ClosedXML.Excel
             get { return _fontSize; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.FontSize = value);
                 else
@@ -131,6 +137,7 @@ namespace ClosedXML.Excel
             get { return _fontColor; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.FontColor = value);
                 else
@@ -143,6 +150,7 @@ namespace ClosedXML.Excel
             get { return _fontName; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.FontName = value);
                 else
@@ -155,6 +163,7 @@ namespace ClosedXML.Excel
             get { return _fontFamilyNumbering; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.FontFamilyNumbering = value);
                 else
@@ -273,6 +282,11 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        private void SetStyleChanged()
+        {
+            if (_container != null) _container.StyleChanged = true;
+        }
 
         public override string ToString()
         {

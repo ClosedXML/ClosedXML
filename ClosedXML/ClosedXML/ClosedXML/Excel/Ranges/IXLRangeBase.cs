@@ -197,14 +197,10 @@ namespace ClosedXML.Excel
         IXLRange AddToNamed(String rangeName, XLScope scope, String comment);
 
         /// <summary>
-        ///   Clears the contents of this range (including styles).
+        /// Clears the contents of this range.
         /// </summary>
-        void Clear();
-
-        /// <summary>
-        ///   Clears the styles of this range (preserving number formats).
-        /// </summary>
-        void ClearStyles();
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
 
         IXLRangeBase SetValue<T>(T value);
 

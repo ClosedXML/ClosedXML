@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
 
     internal class XLCells : IXLCells, IXLStylized, IEnumerable<XLCell>
     {
+        public Boolean StyleChanged { get; set; }
         #region Fields
 
         private readonly bool _includeFormats;
@@ -174,14 +175,11 @@ namespace ClosedXML.Excel
             set { this.ForEach<XLCell>(c => c.DataType = value); }
         }
 
-        public void Clear()
-        {
-            this.ForEach<XLCell>(c => c.Clear());
-        }
 
-        public void ClearStyles()
+        public IXLCells Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
         {
-            this.ForEach<XLCell>(c => c.ClearStyles());
+            this.ForEach<XLCell>(c => c.Clear(clearOptions));
+            return this;
         }
 
         public String FormulaA1

@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
 
     internal class XLColumns : IXLColumns, IXLStylized
     {
+        public Boolean StyleChanged { get; set; }
         private readonly List<XLColumn> _columns = new List<XLColumn>();
         private readonly XLWorksheet _worksheet;
         internal IXLStyle style;
@@ -265,6 +266,12 @@ namespace ClosedXML.Excel
         public void CollapseOnly()
         {
             _columns.ForEach(c => c.Collapsed = true);
+        }
+
+        public IXLColumns Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        {
+            _columns.ForEach(c=>c.Clear(clearOptions));
+            return this;
         }
     }
 }

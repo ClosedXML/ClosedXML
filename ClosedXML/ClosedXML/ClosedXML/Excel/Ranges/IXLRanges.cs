@@ -6,10 +6,6 @@ namespace ClosedXML.Excel
     public interface IXLRanges: IEnumerable<IXLRange>
     {
         /// <summary>
-        /// Clears the contents of the ranges (including styles).
-        /// </summary>
-        void Clear();
-        /// <summary>
         /// Adds the specified range to this group.
         /// </summary>
         /// <param name="range">The range to add to this group.</param>
@@ -44,6 +40,7 @@ namespace ClosedXML.Excel
         /// <para>If the named range exists, it will add these ranges to that named range.</para>
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
+        /// </summary>
         IXLRanges AddToNamed(String rangeName, XLScope scope);
 
         /// <summary>
@@ -52,6 +49,7 @@ namespace ClosedXML.Excel
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
         /// <param name="comment">The comments for the named range.</param>
+        /// </summary>
         IXLRanges AddToNamed(String rangeName, XLScope scope, String comment);
 
         /// <summary>
@@ -85,5 +83,11 @@ namespace ClosedXML.Excel
         IXLCells CellsUsed(Boolean includeStyles);
 
         IXLRanges SetDataType(XLCellValues dataType);
+
+        /// <summary>
+        /// Clears the contents of these ranges.
+        /// </summary>
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
     }
 }

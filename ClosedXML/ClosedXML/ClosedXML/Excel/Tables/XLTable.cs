@@ -490,5 +490,11 @@ namespace ClosedXML.Excel
 
             throw new ArgumentOutOfRangeException("The header row doesn't contain field name '" + name + "'.");
         }
+
+        public new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        {
+            base.Clear(clearOptions);
+            return this;
+        }
     }
 }

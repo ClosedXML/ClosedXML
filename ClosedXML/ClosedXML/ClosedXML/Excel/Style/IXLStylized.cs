@@ -10,6 +10,7 @@ namespace ClosedXML.Excel
         Boolean UpdatingStyle { get; set; }
         IXLStyle InnerStyle { get; set; }
         IXLRanges RangesUsed { get; }
+        Boolean StyleChanged { get; set; }
         //Boolean IsDefault { get; set; }
     }
 }

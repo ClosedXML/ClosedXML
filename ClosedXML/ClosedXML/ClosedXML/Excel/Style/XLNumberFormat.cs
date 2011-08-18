@@ -4,20 +4,51 @@ namespace ClosedXML.Excel
 {
     internal class XLNumberFormat : IXLNumberFormat
     {
+        #region IXLNumberFormat Members
+
+        public bool Equals(IXLNumberFormat other)
+        {
+            var otherNf = other as XLNumberFormat;
+
+            return
+                _numberFormatId == otherNf._numberFormatId
+                && _format == otherNf._format
+                ;
+        }
+
+        #endregion
+
+        private void SetStyleChanged()
+        {
+            if (_container != null) _container.StyleChanged = true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals((XLNumberFormat)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return NumberFormatId
+                   ^ Format.GetHashCode();
+        }
+
         #region Properties
 
-        readonly IXLStylized _container;
+        private readonly IXLStylized _container;
+        private String _format = String.Empty;
 
         private Int32 _numberFormatId;
+
         public Int32 NumberFormatId
         {
             get { return _numberFormatId; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
-                {
                     _container.Styles.ForEach(s => s.NumberFormat.NumberFormatId = value);
-                }
                 else
                 {
                     _numberFormatId = value;
@@ -26,16 +57,14 @@ namespace ClosedXML.Excel
             }
         }
 
-        private String _format = String.Empty;
         public String Format
         {
             get { return _format; }
             set
             {
+                SetStyleChanged();
                 if (_container != null && !_container.UpdatingStyle)
-                {
                     _container.Styles.ForEach(s => s.NumberFormat.Format = value);
-                }
                 else
                 {
                     _format = value;
@@ -44,8 +73,17 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLStyle SetNumberFormatId(Int32 value) { NumberFormatId = value; return _container.Style; }
-        public IXLStyle SetFormat(String value) { Format = value; return _container.Style; }
+        public IXLStyle SetNumberFormatId(Int32 value)
+        {
+            NumberFormatId = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetFormat(String value)
+        {
+            Format = value;
+            return _container.Style;
+        }
 
         #endregion
 
@@ -75,26 +113,5 @@ namespace ClosedXML.Excel
         }
 
         #endregion
-
-        public bool Equals(IXLNumberFormat other)
-        {
-            var otherNf = other as XLNumberFormat;
-            
-            return
-            _numberFormatId == otherNf._numberFormatId
-            && _format == otherNf._format
-            ;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals((XLNumberFormat)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return NumberFormatId
-                ^ Format.GetHashCode();
-        }
     }
 }

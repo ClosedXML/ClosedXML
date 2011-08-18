@@ -5,10 +5,6 @@ namespace ClosedXML.Excel
 {
     public interface IXLRangeColumns: IEnumerable<IXLRangeColumn>
     {
-        /// <summary>
-        /// Clears the contents of the columns (including styles).
-        /// </summary>
-        void Clear();
 
         /// <summary>
         /// Adds a column range to this group.
@@ -41,5 +37,10 @@ namespace ClosedXML.Excel
 
         IXLRangeColumns SetDataType(XLCellValues dataType);
 
+        /// <summary>
+        /// Clears the contents of these columns.
+        /// </summary>
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
     }
 }

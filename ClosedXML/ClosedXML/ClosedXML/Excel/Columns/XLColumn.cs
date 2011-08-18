@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
         private bool _collapsed;
         private bool _isHidden;
         private int _outlineLevel;
-        private IXLStyle _style;
+        
         private Double _width;
 
         #endregion
@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
                 Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
             else
             {
-                _style = new XLStyle(this, xlColumnParameters.DefaultStyle);
+                SetStyle(xlColumnParameters.DefaultStyle ?? Worksheet.Style);
                 _width = xlColumnParameters.Worksheet.ColumnWidth;
             }
         }
@@ -47,10 +47,11 @@ namespace ClosedXML.Excel
             _collapsed = column._collapsed;
             _isHidden = column._isHidden;
             _outlineLevel = column._outlineLevel;
-            _style = new XLStyle(this, column.Style);
+            SetStyle(column.Style ?? Worksheet.Style);
         }
 
         #endregion
+
 
         public Boolean IsReference { get; private set; }
 
@@ -77,14 +78,16 @@ namespace ClosedXML.Excel
         {
             get
             {
-                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].InnerStyle : new XLStyle(new XLStylizedContainer(_style, this), _style);
+                return IsReference ? 
+                    Worksheet.Internals.ColumnsCollection[ColumnNumber()].InnerStyle : 
+                    GetStyle();
             }
             set
             {
                 if (IsReference)
                     Worksheet.Internals.ColumnsCollection[ColumnNumber()].InnerStyle = value;
                 else
-                    _style = new XLStyle(this, value);
+                    SetStyle(value);
             }
         }
 
@@ -132,11 +135,10 @@ namespace ClosedXML.Excel
             }
         }
 
-        public new void Clear()
+        public new IXLColumn Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
         {
-            var range = AsRange();
-            range.Clear();
-            Style = Worksheet.Style;
+            base.Clear(clearOptions);
+            return this;
         }
 
         public IXLCell Cell(Int32 rowNumber)
@@ -162,7 +164,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Style : _style;
+                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Style : GetStyle();
             }
             set
             {
@@ -170,7 +172,7 @@ namespace ClosedXML.Excel
                     Worksheet.Internals.ColumnsCollection[ColumnNumber()].Style = value;
                 else
                 {
-                    _style = new XLStyle(this, value);
+                    SetStyle(value);
 
                     Int32 minRow = 1;
                     Int32 maxRow = 0;
@@ -558,7 +560,7 @@ namespace ClosedXML.Excel
 
             var newColumn = (XLColumn)column;
             newColumn._width = _width;
-            newColumn._style = new XLStyle(newColumn, Style);
+            newColumn.Style = GetStyle();
             return newColumn;
         }
 

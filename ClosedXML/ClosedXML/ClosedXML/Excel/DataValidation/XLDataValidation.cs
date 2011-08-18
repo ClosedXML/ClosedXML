@@ -7,12 +7,34 @@ namespace ClosedXML.Excel
         public XLDataValidation(IXLRanges ranges)
         {
             Ranges = ranges;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             AllowedValues = XLAllowedValues.AnyValue;
             IgnoreBlanks = true;
             ShowErrorMessage = true;
             ShowInputMessage = true;
             InCellDropdown = true;
+            InputTitle = String.Empty;
+            InputMessage = String.Empty;
+            ErrorTitle = String.Empty;
+            ErrorMessage = String.Empty;
+            ErrorStyle = XLErrorStyle.Stop;
             Operator = XLOperator.Between;
+
+        }
+
+        public Boolean IsDirty()
+        {
+            return
+                AllowedValues != XLAllowedValues.AnyValue
+                || (ShowInputMessage &&
+                  (!StringExtensions.IsNullOrWhiteSpace(InputTitle) || !StringExtensions.IsNullOrWhiteSpace(InputMessage)))
+                ||(ShowErrorMessage &&
+                  (!StringExtensions.IsNullOrWhiteSpace(ErrorTitle) || !StringExtensions.IsNullOrWhiteSpace(ErrorMessage)));
+
         }
 
         public XLDataValidation(IXLDataValidation dataValidation)
@@ -142,6 +164,11 @@ namespace ClosedXML.Excel
             Operator = dataValidation.Operator;
             MinValue = dataValidation.MinValue;
             MaxValue = dataValidation.MaxValue;
+        }
+
+        public void Clear()
+        {
+            Initialize();
         }
     }
 }

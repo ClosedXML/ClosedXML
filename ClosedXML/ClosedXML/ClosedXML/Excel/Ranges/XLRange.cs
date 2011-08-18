@@ -26,7 +26,7 @@ namespace ClosedXML.Excel
                 Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
                 xlRangeParameters.IgnoreEvents = true;
             }
-            DefaultStyle = new XLStyle(this, xlRangeParameters.DefaultStyle);
+            SetStyle(xlRangeParameters.DefaultStyle);
         }
 
         #endregion
@@ -937,9 +937,9 @@ namespace ClosedXML.Excel
             if (transposeOption == XLTransposeOptions.MoveCells)
             {
                 if (rowCount > columnCount)
-                    InsertColumnsAfter(rowCount - columnCount, false);
+                    InsertColumnsAfter(false, rowCount - columnCount, false);
                 else if (columnCount > rowCount)
-                    InsertRowsBelow(columnCount - rowCount, false);
+                    InsertRowsBelow(false, columnCount - rowCount, false);
             }
             else
             {
@@ -979,6 +979,10 @@ namespace ClosedXML.Excel
                    ^ Worksheet.GetHashCode();
         }
 
-
+        public new IXLRange Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        {
+            base.Clear(clearOptions);
+            return this;
+        }
     }
 }

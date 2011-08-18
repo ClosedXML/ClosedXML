@@ -181,5 +181,11 @@ namespace ClosedXML.Excel
         IXLRow RowAbove(Int32 step);
         IXLRow RowBelow();
         IXLRow RowBelow(Int32 step);
+
+        /// <summary>
+        /// Clears the contents of this row.
+        /// </summary>
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        new IXLRow Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
     }
 }

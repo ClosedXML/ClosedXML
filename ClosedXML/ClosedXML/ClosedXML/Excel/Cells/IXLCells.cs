@@ -31,14 +31,10 @@ namespace ClosedXML.Excel
         IXLCells SetDataType(XLCellValues dataType);
 
         /// <summary>
-        /// Clears the contents of these cells (including styles).
+        /// Clears the contents of these cells.
         /// </summary>
-        void Clear();
-
-        /// <summary>
-        /// Clears the styles of this range (preserving number formats).
-        /// </summary>
-        void ClearStyles();
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        IXLCells Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
 
         /// <summary>
         /// Sets the cells' formula with A1 references.

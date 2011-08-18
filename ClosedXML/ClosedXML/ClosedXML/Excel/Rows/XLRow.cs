@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         private Double _height;
         private Boolean _isHidden;
         private Int32 _outlineLevel;
-        private IXLStyle _style;
+
 
         #endregion
 
@@ -33,7 +33,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                _style = new XLStyle(this, xlRowParameters.DefaultStyle);
+                //_style = new XLStyle(this, xlRowParameters.DefaultStyle);
+                SetStyle(xlRowParameters.DefaultStyle ?? Worksheet.Style);
                 _height = xlRowParameters.Worksheet.RowHeight;
             }
         }
@@ -48,7 +49,7 @@ namespace ClosedXML.Excel
             _collapsed = row._collapsed;
             _isHidden = row._isHidden;
             _outlineLevel = row._outlineLevel;
-            _style = new XLStyle(this, row.Style);
+            SetStyle(row.Style ?? Worksheet.Style);
         }
 
         #endregion
@@ -80,14 +81,14 @@ namespace ClosedXML.Excel
             {
                 return IsReference
                            ? Worksheet.Internals.RowsCollection[RowNumber()].InnerStyle
-                           : new XLStyle(new XLStylizedContainer(_style, this), _style);
+                           : GetStyle();
             }
             set
             {
                 if (IsReference)
                     Worksheet.Internals.RowsCollection[RowNumber()].InnerStyle = value;
                 else
-                    _style = new XLStyle(this, value);
+                    SetStyle(value);
             }
         }
 
@@ -151,11 +152,10 @@ namespace ClosedXML.Excel
             return Worksheet.Rows(rowNum, rowNum + numberOfRows - 1);
         }
 
-        public new void Clear()
+        public new IXLRow Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
         {
-            var range = AsRange();
-            range.Clear();
-            Style = Worksheet.Style;
+            base.Clear(clearOptions);
+            return this;
         }
 
         public IXLCell Cell(Int32 columnNumber)
@@ -312,14 +312,14 @@ namespace ClosedXML.Excel
 
         public override IXLStyle Style
         {
-            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Style : _style; }
+            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Style : GetStyle(); }
             set
             {
                 if (IsReference)
                     Worksheet.Internals.RowsCollection[RowNumber()].Style = value;
                 else
                 {
-                    _style = new XLStyle(this, value);
+                    SetStyle(value);
 
                     Int32 minColumn = 1;
                     Int32 maxColumn = 0;
@@ -470,7 +470,9 @@ namespace ClosedXML.Excel
 
             var newRow = (XLRow)row;
             newRow._height = _height;
-            newRow._style = new XLStyle(newRow, Style);
+            //newRow._style = new XLStyle(newRow, Style);
+            newRow.Style = GetStyle();
+
             return newRow;
         }
 
@@ -560,7 +562,7 @@ namespace ClosedXML.Excel
                 Worksheet.Internals.RowsCollection[RowNumber()].SetStyleNoColumns(value);
             else
             {
-                _style = new XLStyle(this, value);
+                SetStyle(value);
 
                 int row = RowNumber();
                 foreach (XLCell c in Worksheet.Internals.CellsCollection.GetCellsInRow(row))

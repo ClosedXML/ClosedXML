@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
 
     internal class XLRows : IXLRows, IXLStylized
     {
+        public Boolean StyleChanged { get; set; }
         private readonly List<XLRow> _rows = new List<XLRow>();
         private readonly XLWorksheet _worksheet;
         internal IXLStyle style;
@@ -256,6 +257,12 @@ namespace ClosedXML.Excel
         public void Add(XLRow row)
         {
             _rows.Add(row);
+        }
+
+        public IXLRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        {
+            _rows.ForEach(c => c.Clear(clearOptions));
+            return this;
         }
     }
 }

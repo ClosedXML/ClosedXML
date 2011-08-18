@@ -55,7 +55,7 @@ namespace ClosedXML.Excel
             PivotTables = new XLPivotTables();
             Protection = new XLSheetProtection();
             Workbook = workbook;
-            _style = new XLStyle(this, workbook.Style);
+            SetStyle(workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
                                                  new XLRowsCollection(), new XLRanges());
             PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
@@ -88,19 +88,29 @@ namespace ClosedXML.Excel
             get
             {
                 UpdatingStyle = true;
-                yield return _style;
+                yield return GetStyle();
                 foreach (XLCell c in Internals.CellsCollection.GetCells())
                     yield return c.Style;
                 UpdatingStyle = false;
             }
         }
 
+        public HashSet<Int32> GetStyleIds()
+        {
+            var retVal = new HashSet<Int32> {GetStyleId()};
+            foreach (int id in Internals.CellsCollection.GetCells().Select(c => c.GetStyleId()).Where(id => !retVal.Contains(id)))
+            {
+                retVal.Add(id);
+            }
+            return retVal;
+        }
+
         public override Boolean UpdatingStyle { get; set; }
 
         public override IXLStyle InnerStyle
         {
-            get { return new XLStyle(new XLStylizedContainer(_style, this), _style); }
-            set { _style = new XLStyle(this, value); }
+            get { return GetStyle(); }
+            set { SetStyle(value); }
         }
 
         internal Boolean RowHeightChanged { get; set; }
@@ -115,14 +125,33 @@ namespace ClosedXML.Excel
 
         public XLWorkbook Workbook { get; private set; }
 
+        private Int32 _styleCacheId;
+        public new Int32 GetStyleId()
+        {
+            if (StyleChanged)
+                SetStyle(Style);
+
+            return _styleCacheId;
+        }
+        private new void SetStyle(IXLStyle styleToUse)
+        {
+            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
+            _style = null;
+            StyleChanged = false;
+        }
+        private new IXLStyle GetStyle()
+        {
+            return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
+        }
+
         public override IXLStyle Style
         {
-            get { return _style; }
+            get { return GetStyle(); }
             set
             {
-                _style = new XLStyle(this, value);
+                SetStyle(value);
                 foreach (XLCell cell in Internals.CellsCollection.GetCells())
-                    cell.Style = _style;
+                    cell.Style = value;
             }
         }
 
@@ -590,7 +619,7 @@ namespace ClosedXML.Excel
             Workbook.WorksheetsInternal.Delete(Name);
         }
 
-        public new void Clear()
+        public void Clear()
         {
             Internals.CellsCollection.Clear();
             Internals.ColumnsCollection.Clear();
@@ -644,7 +673,7 @@ namespace ClosedXML.Excel
             targetSheet.Visibility = Visibility;
             targetSheet.ColumnWidth = ColumnWidth;
             targetSheet.RowHeight = RowHeight;
-            targetSheet._style = new XLStyle(targetSheet, _style);
+            targetSheet.SetStyle(Style);
             targetSheet.PageSetup = new XLPageSetup((XLPageSetup)PageSetup, targetSheet);
             targetSheet.Outline = new XLOutline(Outline);
             targetSheet.SheetView = new XLSheetView(SheetView);
@@ -1152,6 +1181,11 @@ namespace ClosedXML.Excel
                                                     && n.Ranges.First().Worksheet == this
                                                     && n.Ranges.Count == 1)
                                                .Ranges.First().FirstCell();
+        }
+
+        public XLCell CellFast(String cellAddressInRange)
+        {
+            return Cell(XLAddress.Create(this, cellAddressInRange));
         }
 
         public override XLRange Range(String rangeAddressStr)

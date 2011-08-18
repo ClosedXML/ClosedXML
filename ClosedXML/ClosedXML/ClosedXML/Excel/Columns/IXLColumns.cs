@@ -113,5 +113,11 @@ namespace ClosedXML.Excel
         IXLColumns AddVerticalPageBreaks();
 
         IXLColumns SetDataType(XLCellValues dataType);
+
+        /// <summary>
+        /// Clears the contents of these columns.
+        /// </summary>
+        /// <param name="clearOptions">Specify what you want to clear.</param>
+        IXLColumns Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
     }
 }
