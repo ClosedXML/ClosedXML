@@ -3309,25 +3309,29 @@ namespace ClosedXML.Excel
         {
             UInt32 lastMin = 1;
             Int32 count = sheetColumns.Count;
-            //var minMaxList = new List<MinMax>();
-            //var columnsToAdd = new List<Column>();
-            foreach (KeyValuePair<uint, Column> kp in sheetColumns
-                .Where(kp => !(kp.Key < count && ColumnsAreEqual(kp.Value, sheetColumns[kp.Key + 1])))
-                .OrderBy(kp => kp.Key))
+            var arr = sheetColumns.OrderBy(kp => kp.Key).ToArray();
+            // sheetColumns[kp.Key + 1]
+            //Int32 i = 0;
+            //foreach (KeyValuePair<uint, Column> kp in arr
+            //    //.Where(kp => !(kp.Key < count && ColumnsAreEqual(kp.Value, )))
+            //    )
+            for (int i = 0; i < count; i++)
             {
-                var newColumn = (Column)kp.Value.CloneNode(true);
-                newColumn.Min = lastMin;
-                uint newColumnMax = newColumn.Max.Value;
-                //minMaxList.Add(new MinMax(lastMin, newColumnMax));
-                //columnsToAdd.Add(newColumn);
-                var columnsToRemove =
-                    columns.Elements<Column>().Where(co => co.Min >= lastMin && co.Max <= newColumnMax).
-                        Select(co => co).ToList();
-                columnsToRemove.ForEach(c => columns.RemoveChild(c));
+                var kp = arr[i];
+                if (i+1 ==count ||  !ColumnsAreEqual(kp.Value, arr[i + 1].Value))
+                {
+                    var newColumn = (Column)kp.Value.CloneNode(true);
+                    newColumn.Min = lastMin;
+                    uint newColumnMax = newColumn.Max.Value;
+                    var columnsToRemove =
+                        columns.Elements<Column>().Where(co => co.Min >= lastMin && co.Max <= newColumnMax).
+                            Select(co => co).ToList();
+                    columnsToRemove.ForEach(c => columns.RemoveChild(c));
 
-                columns.AppendChild(newColumn);
-
-                lastMin = kp.Key + 1;
+                    columns.AppendChild(newColumn);
+                    lastMin = kp.Key + 1;
+                }
+                //i++;
             }
 
         }
