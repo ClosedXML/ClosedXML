@@ -80,7 +80,7 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        private IXLStyle _style;
+        //private IXLStyle _style;
         public XLWorksheetInternals Internals { get; private set; }
 
         public override IEnumerable<IXLStyle> Styles
@@ -125,24 +125,24 @@ namespace ClosedXML.Excel
 
         public XLWorkbook Workbook { get; private set; }
 
-        private Int32 _styleCacheId;
-        public new Int32 GetStyleId()
-        {
-            if (StyleChanged)
-                SetStyle(Style);
+        //private Int32 _styleCacheId;
+        //public new Int32 GetStyleId()
+        //{
+        //    if (StyleChanged)
+        //        SetStyle(Style);
 
-            return _styleCacheId;
-        }
-        private new void SetStyle(IXLStyle styleToUse)
-        {
-            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
-            _style = null;
-            StyleChanged = false;
-        }
-        private new IXLStyle GetStyle()
-        {
-            return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
-        }
+        //    return _styleCacheId;
+        //}
+        //private new void SetStyle(IXLStyle styleToUse)
+        //{
+        //    _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
+        //    _style = null;
+        //    StyleChanged = false;
+        //}
+        //private new IXLStyle GetStyle()
+        //{
+        //    return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
+        //}
 
         public override IXLStyle Style
         {
@@ -474,15 +474,16 @@ namespace ClosedXML.Excel
             if (column <= 0 || column > ExcelHelper.MaxColumnNumber)
                 throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}", ExcelHelper.MaxColumnNumber));
 
+            Int32 thisStyleId = GetStyleId();
             if (!Internals.ColumnsCollection.ContainsKey(column))
             {
                 // This is a new row so we're going to reference all 
                 // cells in this row to preserve their formatting
                 Internals.RowsCollection.Keys.ForEach(r => Cell(r, column));
-                Internals.ColumnsCollection.Add(column, new XLColumn(column, new XLColumnParameters(this, Style, false)));
+                Internals.ColumnsCollection.Add(column, new XLColumn(column, new XLColumnParameters(this, thisStyleId, false)));
             }
 
-            return new XLColumn(column, new XLColumnParameters(this, Style, true));
+            return new XLColumn(column, new XLColumnParameters(this, thisStyleId, true));
         }
 
         IXLColumn IXLWorksheet.Column(Int32 column)
@@ -1110,9 +1111,10 @@ namespace ClosedXML.Excel
             if(row <= 0 || row > ExcelHelper.MaxRowNumber)
                 throw  new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}", ExcelHelper.MaxRowNumber));
 
-            IXLStyle styleToUse;
-            if (Internals.RowsCollection.ContainsKey(row))
-                styleToUse = Internals.RowsCollection[row].Style;
+            Int32 styleId;
+            XLRow rowToUse;
+            if (Internals.RowsCollection.TryGetValue(row, out rowToUse))
+                styleId = rowToUse.GetStyleId();
             else
             {
                 if (pingCells)
@@ -1128,11 +1130,11 @@ namespace ClosedXML.Excel
 
                     usedColumns.ForEach(c => Cell(row, c));
                 }
-                styleToUse = Style;
-                Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, styleToUse, false)));
+                styleId = GetStyleId();
+                Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, styleId, false)));
             }
 
-            return new XLRow(row, new XLRowParameters(this, styleToUse));
+            return new XLRow(row, new XLRowParameters(this, styleId));
         }
 
         private IXLRange GetRangeForSort()

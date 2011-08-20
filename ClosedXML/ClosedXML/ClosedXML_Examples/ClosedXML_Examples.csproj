@@ -197,6 +197,7 @@
     <Compile Include="Rows\InsertRows.cs" />
     <Compile Include="Rows\RowSettings.cs" />
     <Compile Include="StyleExamples.cs" />
+    <Compile Include="Styles\PurpleWorksheet.cs" />
     <Compile Include="Styles\UsingPhonetics.cs" />
     <Compile Include="Styles\UsingRichText.cs" />
     <Compile Include="Styles\UsingColors.cs" />

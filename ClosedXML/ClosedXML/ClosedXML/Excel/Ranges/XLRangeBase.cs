@@ -21,6 +21,12 @@ namespace ClosedXML.Excel
             _style = null;
             StyleChanged = false;
         }
+        protected void SetStyle(Int32 styleId)
+        {
+            _styleCacheId = styleId;
+            _style = null;
+            StyleChanged = false;
+        }
         public Int32 GetStyleId()
         {
             if (StyleChanged)
@@ -533,19 +539,29 @@ namespace ClosedXML.Excel
             if (cell != null)
                 return cell;
 
-            var style = Style;
-            if (Style != null && Style.Equals(Worksheet.Style))
+            //var style = Style;
+            Int32 styleId = GetStyleId();
+            Int32 worksheetStyleId = Worksheet.GetStyleId();
+            
+            if (styleId == worksheetStyleId)
             {
-                if (Worksheet.Internals.RowsCollection.ContainsKey(absoluteAddress.RowNumber)
-                    && !Worksheet.Internals.RowsCollection[absoluteAddress.RowNumber].Style.Equals(Worksheet.Style))
-                    style = Worksheet.Internals.RowsCollection[absoluteAddress.RowNumber].Style;
-                else if (Worksheet.Internals.ColumnsCollection.ContainsKey(absoluteAddress.ColumnNumber)
-                         &&
-                         !Worksheet.Internals.ColumnsCollection[absoluteAddress.ColumnNumber].Style.Equals(
-                             Worksheet.Style))
-                    style = Worksheet.Internals.ColumnsCollection[absoluteAddress.ColumnNumber].Style;
+                XLRow row;
+                XLColumn column;
+                if (Worksheet.Internals.RowsCollection.TryGetValue(absoluteAddress.RowNumber, out row)
+                    && row.GetStyleId() == worksheetStyleId)
+                    styleId = row.GetStyleId();
+                else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absoluteAddress.ColumnNumber, out column)
+                    && column.GetStyleId() == worksheetStyleId)
+                    styleId = column.GetStyleId();
+                //if (Worksheet.Internals.RowsCollection.ContainsKey(absoluteAddress.RowNumber)
+                //    && !Worksheet.Internals.RowsCollection[absoluteAddress.RowNumber].GetStyleId().Equals(worksheetStyleId))
+                //    style = Worksheet.Internals.RowsCollection[absoluteAddress.RowNumber].Style;
+                //else if (Worksheet.Internals.ColumnsCollection.ContainsKey(absoluteAddress.ColumnNumber)
+                //         &&
+                //         !Worksheet.Internals.ColumnsCollection[absoluteAddress.ColumnNumber].GetStyleId().Equals(worksheetStyleId))
+                //    style = Worksheet.Internals.ColumnsCollection[absoluteAddress.ColumnNumber].Style;
             }
-            var newCell = new XLCell(Worksheet, absoluteAddress, style);
+            var newCell = new XLCell(Worksheet, absoluteAddress, styleId);
             Worksheet.Internals.CellsCollection.Add(absoluteAddress.RowNumber, absoluteAddress.ColumnNumber, newCell);
             return newCell;
         }
@@ -780,7 +796,7 @@ namespace ClosedXML.Excel
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co) ??
                                           Worksheet.Cell(oldKey);
 
-                            var newCell = new XLCell(Worksheet, newKey, oldCell.Style);
+                            var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
                             newCell.CopyValues(oldCell);
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
@@ -800,7 +816,7 @@ namespace ClosedXML.Excel
                 {
                     int newColumn = c.Address.ColumnNumber + numberOfColumns;
                     var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
-                    var newCell = new XLCell(Worksheet, newKey, c.Style);
+                    var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                     newCell.CopyValues(c);
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
@@ -963,7 +979,7 @@ namespace ClosedXML.Excel
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co) ??
                                           Worksheet.Cell(oldKey);
 
-                            var newCell = new XLCell(Worksheet, newKey, oldCell.Style);
+                            var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
                             newCell.CopyFrom(oldCell);
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
@@ -984,7 +1000,7 @@ namespace ClosedXML.Excel
                 {
                     int newRow = c.Address.RowNumber + numberOfRows;
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
-                    var newCell = new XLCell(Worksheet, newKey, c.Style);
+                    var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                     newCell.CopyFrom(c);
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
@@ -1116,7 +1132,7 @@ namespace ClosedXML.Excel
                 var newKey = new XLAddress(Worksheet, c.Address.RowNumber - rowModifier,
                                            c.Address.ColumnNumber - columnModifier,
                                            false, false);
-                var newCell = new XLCell(Worksheet, newKey, c.Style);
+                var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                 newCell.CopyValues(c);
                 newCell.FormulaA1 = c.FormulaA1;
                 cellsToDelete.Add(c.Address);

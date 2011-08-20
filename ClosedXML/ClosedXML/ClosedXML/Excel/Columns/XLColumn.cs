@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
                 Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
             else
             {
-                SetStyle(xlColumnParameters.DefaultStyle ?? Worksheet.Style);
+                SetStyle(xlColumnParameters.DefaultStyleId);
                 _width = xlColumnParameters.Worksheet.ColumnWidth;
             }
         }
@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
             _collapsed = column._collapsed;
             _isHidden = column._isHidden;
             _outlineLevel = column._outlineLevel;
-            SetStyle(column.Style ?? Worksheet.Style);
+            SetStyle(column.GetStyleId());
         }
 
         #endregion

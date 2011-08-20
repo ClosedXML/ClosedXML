@@ -2510,7 +2510,8 @@ namespace ClosedXML.Excel
             #region Columns
 
             if (xlWorksheet.Internals.CellsCollection.Count == 0 &&
-                xlWorksheet.Internals.ColumnsCollection.Count == 0)
+                xlWorksheet.Internals.ColumnsCollection.Count == 0
+                && xlWorksheet.Style.Equals(DefaultStyle))
                 worksheetPart.Worksheet.RemoveAllChildren<Columns>();
             else
             {

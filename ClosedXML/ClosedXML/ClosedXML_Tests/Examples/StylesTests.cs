@@ -53,5 +53,10 @@ namespace ClosedXML_Tests.Examples
             TestHelper.RunTestExample<UsingRichText>(@"Styles\UsingRichText.xlsx");
         }
 
+         [TestMethod]
+         public void PurpleWorksheet()
+         {
+             TestHelper.RunTestExample<PurpleWorksheet>(@"Styles\PurpleWorksheet.xlsx");
+         }
     }
 }

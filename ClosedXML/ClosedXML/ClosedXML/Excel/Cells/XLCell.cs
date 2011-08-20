@@ -70,15 +70,15 @@
         #region Constructor
 
         private Int32 _styleCacheId;
-        public XLCell(XLWorksheet worksheet, XLAddress address, IXLStyle defaultStyle)
+        public XLCell(XLWorksheet worksheet, XLAddress address, Int32 styleId)
         {
             Address = address;
             ShareString = true;
             
             _worksheet = worksheet;
 
-            SetStyle(defaultStyle ?? worksheet.Style);
-
+            //SetStyle(defaultStyle ?? worksheet.Style);
+            SetStyle(styleId);
         }
 
         private IXLStyle GetStyleForRead()
@@ -95,6 +95,12 @@
         private void SetStyle(IXLStyle styleToUse)
         {
             _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
+            _style = null;
+            StyleChanged = false;
+        }
+        private void SetStyle(Int32 styleId)
+        {
+            _styleCacheId = styleId;
             _style = null;
             StyleChanged = false;
         }
@@ -733,8 +739,9 @@
 
             set
             {
-                _formulaA1 = value;
-                _formulaR1C1 = String.Empty;
+                _formulaA1 = StringExtensions.IsNullOrWhiteSpace(value) ? null : value;
+
+                _formulaR1C1 = null;
             }
         }
 
@@ -750,7 +757,7 @@
 
             set
             {
-                _formulaR1C1 = value;
+                _formulaR1C1 = StringExtensions.IsNullOrWhiteSpace(value) ? null : value;
 
 // FormulaA1 = GetFormulaA1(value);
             }
