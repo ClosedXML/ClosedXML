@@ -35,9 +35,17 @@ namespace ClosedXML.Excel
             _pivotTables.Clear();
         }
 
-        public void Add(String name, XLPivotTable pivotTable)
+        public void Add(String name, IXLPivotTable pivotTable)
         {
-            _pivotTables.Add(name, pivotTable);
+            _pivotTables.Add(name, (XLPivotTable)pivotTable);
         }
+
+        public IXLPivotTable AddNew(string name, IXLCell target, IXLRange source)
+        {
+            var pivotTable = new XLPivotTable { Name = name, TargetCell = target, SourceRange = source };
+            _pivotTables.Add(name, pivotTable);
+            return pivotTable;
+        }
+
     }
 }

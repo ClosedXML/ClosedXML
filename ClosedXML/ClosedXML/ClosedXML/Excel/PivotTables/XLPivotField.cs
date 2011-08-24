@@ -11,6 +11,7 @@ namespace ClosedXML.Excel
         public XLPivotField(string sourceName)
         {
             SourceName = sourceName;
+            SharedStrings = new List<string>();
         }
 
         public String SourceName { get; private set; }	
@@ -26,5 +27,6 @@ namespace ClosedXML.Excel
         public Boolean ShowBlankItems { get; set; }	public IXLPivotField SetShowBlankItems() { ShowBlankItems = true; return this; }	public IXLPivotField SetShowBlankItems(Boolean value) { ShowBlankItems = value; return this; }
         public Boolean InsertPageBreaks { get; set; }	public IXLPivotField SetInsertPageBreaks() { InsertPageBreaks = true; return this; }	public IXLPivotField SetInsertPageBreaks(Boolean value) { InsertPageBreaks = value; return this; }
 
+        public List<string> SharedStrings { get; set; }
     }
 }

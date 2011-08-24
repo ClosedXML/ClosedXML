@@ -17,6 +17,9 @@ namespace ClosedXML.Excel
             Theme = XLPivotTableTheme.PivotStyleLight16;
         }
 
+        public IXLCell TargetCell { get; set; }
+        public IXLRange SourceRange { get; set; }
+
         public IXLPivotFields Fields { get; private set; }
         public IXLPivotFields ReportFilters { get; private set; }
         public IXLPivotFields ColumnLabels { get; private set; }
@@ -84,6 +87,22 @@ namespace ClosedXML.Excel
         }
 
         public IXLPivotTable SetInsertBlankLines() { InsertBlankLines = true; return this; }	public IXLPivotTable SetInsertBlankLines(Boolean value) { InsertBlankLines = value; return this; }
+
+        public void SetExcelDefaults()
+        {
+            this.EmptyCellReplacement = String.Empty;
+            this.AutofitColumns = true;
+            this.PreserveCellFormatting = true;
+            this.ShowGrandTotalsColumns = true;
+            this.ShowGrandTotalsRows = true;
+            this.UseCustomListsForSorting = true;
+            this.ShowExpandCollapseButtons = true;
+            this.ShowContextualTooltips = true;
+            this.DisplayCaptionsAndDropdowns = true;
+            this.RepeatRowLabels = true;
+            this.SaveSourceData = true;
+            this.EnableShowDetails = true;
+        }
 
     }
 }

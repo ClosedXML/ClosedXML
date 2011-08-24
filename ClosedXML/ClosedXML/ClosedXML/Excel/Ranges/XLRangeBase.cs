@@ -1338,21 +1338,21 @@ namespace ClosedXML.Excel
         //    return chart;
         //}
 
-        //IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell)
-        //{
-        //    return CreatePivotTable(targetCell);
-        //}
+        IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell)
+        {
+            return CreatePivotTable(targetCell);
+        }
         public XLPivotTable CreatePivotTable(IXLCell targetCell)
         {
-            throw new NotImplementedException();
+            return CreatePivotTable(targetCell, Guid.NewGuid().ToString());
         }
-        //IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell, String name)
-        //{
-        //    return CreatePivotTable(targetCell, name);
-        //}
+        IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell, String name)
+        {
+            return CreatePivotTable(targetCell, name);
+        }
         public XLPivotTable CreatePivotTable(IXLCell targetCell, String name)
         {
-            throw new NotImplementedException();
+            return (XLPivotTable)this.Worksheet.PivotTables.AddNew(name, targetCell, this.AsRange());
         }
     }
 }

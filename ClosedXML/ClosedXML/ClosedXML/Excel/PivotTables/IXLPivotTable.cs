@@ -114,6 +114,9 @@ namespace ClosedXML.Excel
         String Title { get; set; }
         String Description { get; set; }
 
+        IXLCell TargetCell { get; set; }
+        IXLRange SourceRange { get; set; }
+
         Boolean MergeAndCenterWithLabels { get; set; } // MergeItem
         Int32 RowLabelIndent { get; set; } // Indent
         XLFilterAreaOrder FilterAreaOrder { get; set; } // PageOverThenDown 
@@ -206,6 +209,6 @@ namespace ClosedXML.Excel
         IXLPivotTable SetLayout(XLPivotLayout value);
         IXLPivotTable SetInsertBlankLines(); IXLPivotTable SetInsertBlankLines(Boolean value);
 
-
+        void SetExcelDefaults();
     }
 }

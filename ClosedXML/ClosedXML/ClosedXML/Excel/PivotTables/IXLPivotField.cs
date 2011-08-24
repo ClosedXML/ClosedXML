@@ -49,5 +49,6 @@ namespace ClosedXML.Excel
         IXLPivotField SetShowBlankItems(); IXLPivotField SetShowBlankItems(Boolean value);
         IXLPivotField SetInsertPageBreaks(); IXLPivotField SetInsertPageBreaks(Boolean value);
 
+        List<string> SharedStrings { get; set; }
     }
 }
