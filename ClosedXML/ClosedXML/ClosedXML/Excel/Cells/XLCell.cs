@@ -64,6 +64,7 @@
         internal XLCellValues _dataType;
         private XLHyperlink _hyperlink;
         private XLRichText _richText;
+        private XLComment _comment;
 
         #endregion
 
@@ -694,6 +695,7 @@
             {
                 Hyperlink = null;
                 _richText = null;
+                _comment = null;
                 _cellValue = String.Empty;
                 FormulaA1 = String.Empty;
             }
@@ -875,6 +877,25 @@
             get { return _richText != null; }
         }
 
+        public IXLComment Comment
+        {
+            get
+            {
+                if (_comment == null)
+                {
+                    var style = GetStyleForRead();
+                    _comment = new XLComment(style.Font);
+                }
+
+                return _comment;
+            }
+        }
+
+        public bool HasComment
+        {
+            get { return _comment != null; }
+        }
+
         public Boolean IsMerged()
         {
             return Worksheet.Internals.MergedRanges.Any(AsRange().Intersects);
@@ -963,6 +984,17 @@
 
             _richText = asRichString;
             _dataType = XLCellValues.Text;
+            return true;
+        }
+
+        private bool SetComment(object value)
+        {
+            var asComment = value as XLComment;
+
+            if (asComment == null)
+                return false;
+
+            _comment = asComment;
             return true;
         }
 
@@ -1339,6 +1371,7 @@
             _dataType = source._dataType;
             FormulaR1C1 = source.FormulaR1C1;
             _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
+            _comment = source._comment == null ? null : new XLComment(source._comment, source.Style.Font);
         }
 
         public IXLCell CopyFrom(XLCell otherCell)
@@ -1346,6 +1379,7 @@
             var source = otherCell;
             _cellValue = source._cellValue;
             _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
+            _comment = source._comment == null ? null : new XLComment(source._comment, source.Style.Font);
 
             _dataType = source._dataType;
             FormulaR1C1 = source.FormulaR1C1;

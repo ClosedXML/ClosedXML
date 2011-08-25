@@ -209,6 +209,5 @@ namespace ClosedXML.Excel
         IXLPivotTable SetLayout(XLPivotLayout value);
         IXLPivotTable SetInsertBlankLines(); IXLPivotTable SetInsertBlankLines(Boolean value);
 
-        void SetExcelDefaults();
     }
 }

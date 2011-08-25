@@ -142,7 +142,7 @@ namespace ClosedXML.Excel
 
                 GenerateWorksheetPartContent(worksheetPart, worksheet, context);
 
-                //GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
+                GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
 
                 //DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>("rId1");
                 //GenerateDrawingsPartContent(drawingsPart, worksheet);
@@ -3796,7 +3796,7 @@ namespace ClosedXML.Excel
                 var pivotTablePart = worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
                 GeneratePivotTablePartContent(pivotTablePart, pt);
 
-                pivotTablePart.AddPart(pivotTableCacheDefinitionPart, "rId1");
+                pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
             }
         }
 
@@ -3832,7 +3832,7 @@ namespace ClosedXML.Excel
                 CacheField cacheField = new CacheField() { Name = fieldName };
                 SharedItems sharedItems;
 
-                if (fieldName == "Number")
+                if (fieldName == "Number") // TODO: Don't hard code value
                 {
                     sharedItems = new SharedItems() { ContainsSemiMixedTypes = false, ContainsString = false, ContainsNumber = true };
                 }
@@ -3882,7 +3882,7 @@ namespace ClosedXML.Excel
             {
                 Name = pt.Name,
                 CacheId = (UInt32Value)0U,
-                DataCaption = "Values",
+                DataCaption = "Values", // TODO: Don't hard code value
                 MergeItem = pt.MergeAndCenterWithLabels,
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),
                 PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown ? true : false),
@@ -4023,7 +4023,7 @@ namespace ClosedXML.Excel
             }
             pivotTableDefinition.Append(dataFields);
 
-            pivotTableDefinition.Append(new PivotTableStyle() { Name = "PivotStyleLight16", ShowRowHeaders = true, ShowColumnHeaders = true, ShowRowStripes = false, ShowColumnStripes = false, ShowLastColumn = true });
+            pivotTableDefinition.Append(new PivotTableStyle() { Name = Enum.GetName(typeof(XLTableTheme), pt.Theme), ShowRowHeaders = pt.ShowRowHeaders, ShowColumnHeaders = pt.ShowColumnHeaders, ShowRowStripes = pt.ShowRowStripes, ShowColumnStripes = pt.ShowColumnStripes });
 
             #region Excel 2010 Features
             

@@ -15,6 +15,8 @@ namespace ClosedXML.Excel
             RowLabels = new XLPivotFields();
             Values = new XLPivotValues();
             Theme = XLPivotTableTheme.PivotStyleLight16;
+
+            SetExcelDefaults();
         }
 
         public IXLCell TargetCell { get; set; }
@@ -88,20 +90,20 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable SetInsertBlankLines() { InsertBlankLines = true; return this; }	public IXLPivotTable SetInsertBlankLines(Boolean value) { InsertBlankLines = value; return this; }
 
-        public void SetExcelDefaults()
+        private void SetExcelDefaults()
         {
-            this.EmptyCellReplacement = String.Empty;
-            this.AutofitColumns = true;
-            this.PreserveCellFormatting = true;
-            this.ShowGrandTotalsColumns = true;
-            this.ShowGrandTotalsRows = true;
-            this.UseCustomListsForSorting = true;
-            this.ShowExpandCollapseButtons = true;
-            this.ShowContextualTooltips = true;
-            this.DisplayCaptionsAndDropdowns = true;
-            this.RepeatRowLabels = true;
-            this.SaveSourceData = true;
-            this.EnableShowDetails = true;
+            EmptyCellReplacement = String.Empty;
+            AutofitColumns = true;
+            PreserveCellFormatting = true;
+            ShowGrandTotalsColumns = true;
+            ShowGrandTotalsRows = true;
+            UseCustomListsForSorting = true;
+            ShowExpandCollapseButtons = true;
+            ShowContextualTooltips = true;
+            DisplayCaptionsAndDropdowns = true;
+            RepeatRowLabels = true;
+            SaveSourceData = true;
+            EnableShowDetails = true;
         }
 
     }

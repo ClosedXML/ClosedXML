@@ -128,9 +128,11 @@
     <Compile Include="Excel\Cells\XLCells.cs" />
     <Compile Include="Excel\Cells\XLCellsCollection.cs" />
     <Compile Include="Excel\Cells\XLCell_DotNetSpecific.cs" />
-    <Compile Include="Excel\Charts\XLDrawing.cs" />
+    <Compile Include="Excel\Comments\IXLComment.cs" />
+    <Compile Include="Excel\Comments\XLComment.cs" />
+    <Compile Include="Excel\Drawings\XLDrawing.cs" />
     <Compile Include="Excel\Charts\IXLCharts.cs" />
-    <Compile Include="Excel\Charts\IXLDrawing.cs" />
+    <Compile Include="Excel\Drawings\IXLDrawing.cs" />
     <Compile Include="Excel\Charts\XLCharts.cs" />
     <Compile Include="Excel\Charts\XLChart.cs" />
     <Compile Include="Excel\Charts\IXLChart.cs" />

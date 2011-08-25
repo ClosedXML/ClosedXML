@@ -238,6 +238,8 @@ namespace ClosedXML.Excel
 
         IXLRichText RichText { get; }
         Boolean HasRichText { get; }
+        IXLComment Comment { get; }
+        Boolean HasComment { get; }
 
         Boolean IsMerged();
         Boolean IsEmpty();
