@@ -372,8 +372,8 @@ namespace ClosedXML.Excel
                     WorksheetsInternal.Cast<XLWorksheet>().Where(w => w.SheetId == 0).OrderBy(w => w.Position))
             {
                 String rId = context.RelIdGenerator.GetNext(RelType.Workbook);
-                Int32 rIdSub = Int32.Parse(rId.Substring(3));
-                while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == rIdSub))
+                //Int32 rIdSub = Int32.Parse(rId.Substring(3));
+                while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
                     rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
                 xlSheet.SheetId = Int32.Parse(rId.Substring(3));
