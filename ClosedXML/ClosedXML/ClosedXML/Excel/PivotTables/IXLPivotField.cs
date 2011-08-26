@@ -27,7 +27,7 @@ namespace ClosedXML.Excel
         String SourceName { get; }
         String CustomName { get; set; }
 
-        XLSubtotalFunction Subtotals { get; set; }
+        List<XLSubtotalFunction> Subtotals { get; }
         Boolean IncludeNewItemsInFilter { get; set; }
 
         XLPivotLayout Layout { get; set; }
@@ -39,7 +39,7 @@ namespace ClosedXML.Excel
 
         IXLPivotField SetCustomName(String value);
 
-        IXLPivotField SetSubtotals(XLSubtotalFunction value);
+        IXLPivotField AddSubtotal(XLSubtotalFunction value);
         IXLPivotField SetIncludeNewItemsInFilter(); IXLPivotField SetIncludeNewItemsInFilter(Boolean value);
 
         IXLPivotField SetLayout(XLPivotLayout value);

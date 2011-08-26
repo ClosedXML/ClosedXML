@@ -12,12 +12,13 @@ namespace ClosedXML.Excel
         {
             SourceName = sourceName;
             SharedStrings = new List<string>();
+            Subtotals = new List<XLSubtotalFunction>();
         }
 
         public String SourceName { get; private set; }	
         public String CustomName { get; set; }		public IXLPivotField SetCustomName(String value) { CustomName = value; return this; }
 
-        public XLSubtotalFunction Subtotals { get; set; }		public IXLPivotField SetSubtotals(XLSubtotalFunction value) { Subtotals = value; return this; }
+        public List<XLSubtotalFunction> Subtotals { get; private set; }		public IXLPivotField AddSubtotal(XLSubtotalFunction value) { Subtotals.Add(value); return this; }
         public Boolean IncludeNewItemsInFilter { get; set; }	public IXLPivotField SetIncludeNewItemsInFilter() { IncludeNewItemsInFilter = true; return this; }	public IXLPivotField SetIncludeNewItemsInFilter(Boolean value) { IncludeNewItemsInFilter = value; return this; }
 
         public XLPivotLayout Layout { get; set; }		public IXLPivotField SetLayout(XLPivotLayout value) { Layout = value; return this; }

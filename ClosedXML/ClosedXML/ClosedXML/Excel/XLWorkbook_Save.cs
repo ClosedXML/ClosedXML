@@ -3875,37 +3875,37 @@ namespace ClosedXML.Excel
         // Generates content of pivotTablePart
         private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart1, IXLPivotTable pt)
         {
-            var pivotTableDefinition = new PivotTableDefinition()
-            {
-                Name = pt.Name,
-                CacheId = 0U,
-                DataCaption = "Values", // TODO: Don't hard code value
-                MergeItem = pt.MergeAndCenterWithLabels,
-                Indent = Convert.ToUInt32(pt.RowLabelIndent),
-                PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown),
-                PageWrap = Convert.ToUInt32(pt.FilterFieldsPageWrap),
-                ShowError = String.IsNullOrEmpty(pt.ErrorValueReplacement),
-                UseAutoFormatting = pt.AutofitColumns,
-                PreserveFormatting = pt.PreserveCellFormatting,
-                RowGrandTotals = pt.ShowGrandTotalsRows,
-                ColumnGrandTotals = pt.ShowGrandTotalsColumns,
-                SubtotalHiddenItems = pt.FilteredItemsInSubtotals,
-                MultipleFieldFilters = pt.AllowMultipleFilters,
-                CustomListSort = pt.UseCustomListsForSorting,
-                ShowDrill = pt.ShowExpandCollapseButtons,
-                ShowDataTips = pt.ShowContextualTooltips,
-                ShowMemberPropertyTips = pt.ShowPropertiesInTooltips,
-                ShowHeaders = pt.DisplayCaptionsAndDropdowns,
-                GridDropZones = pt.ClassicPivotTableLayout,
-                ShowEmptyRow = pt.ShowEmptyItemsOnRows,
-                ShowEmptyColumn = pt.ShowEmptyItemsOnColumns,
-                ShowItems = pt.DisplayItemLabels,
-                FieldListSortAscending = pt.SortFieldsAtoZ,
-                PrintDrill = pt.PrintExpandCollapsedButtons,
-                ItemPrintTitles = pt.RepeatRowLabels,
-                FieldPrintTitles = pt.PrintTitles,
-                EnableDrill = pt.EnableShowDetails
-            };
+            var pivotTableDefinition = new PivotTableDefinition
+                {
+                    Name = pt.Name,
+                    CacheId = 0U,
+                    DataCaption = "Values",
+                    MergeItem = GetBooleanValue(pt.MergeAndCenterWithLabels, true),
+                    Indent = Convert.ToUInt32(pt.RowLabelIndent),
+                    PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown),
+                    PageWrap = Convert.ToUInt32(pt.FilterFieldsPageWrap),
+                    ShowError = String.IsNullOrEmpty(pt.ErrorValueReplacement),
+                    UseAutoFormatting = GetBooleanValue(pt.AutofitColumns, true),
+                    PreserveFormatting = GetBooleanValue(pt.PreserveCellFormatting, true),
+                    RowGrandTotals = GetBooleanValue(pt.ShowGrandTotalsRows, true),
+                    ColumnGrandTotals = GetBooleanValue(pt.ShowGrandTotalsColumns, true),
+                    SubtotalHiddenItems = GetBooleanValue(pt.FilteredItemsInSubtotals, true),
+                    MultipleFieldFilters = GetBooleanValue(pt.AllowMultipleFilters, true),
+                    CustomListSort = GetBooleanValue(pt.UseCustomListsForSorting, true),
+                    ShowDrill = GetBooleanValue(pt.ShowExpandCollapseButtons, true),
+                    ShowDataTips = GetBooleanValue(pt.ShowContextualTooltips, true),
+                    ShowMemberPropertyTips = GetBooleanValue(pt.ShowPropertiesInTooltips, true),
+                    ShowHeaders = GetBooleanValue(pt.DisplayCaptionsAndDropdowns, true),
+                    GridDropZones = GetBooleanValue(pt.ClassicPivotTableLayout, true),
+                    ShowEmptyRow = GetBooleanValue(pt.ShowEmptyItemsOnRows, true),
+                    ShowEmptyColumn = GetBooleanValue(pt.ShowEmptyItemsOnColumns, true),
+                    ShowItems = GetBooleanValue(pt.DisplayItemLabels, true),
+                    FieldListSortAscending = GetBooleanValue(pt.SortFieldsAtoZ, true),
+                    PrintDrill = GetBooleanValue(pt.PrintExpandCollapsedButtons, true),
+                    ItemPrintTitles = GetBooleanValue(pt.RepeatRowLabels, true),
+                    FieldPrintTitles = GetBooleanValue(pt.PrintTitles, true),
+                    EnableDrill = GetBooleanValue(pt.EnableShowDetails, true)
+                };
 
             if (pt.EmptyCellReplacement != null)
             {
@@ -4067,7 +4067,7 @@ namespace ClosedXML.Excel
             }
             pivotTableDefinition.AppendChild(dataFields);
 
-            pivotTableDefinition.AppendChild(new PivotTableStyle { Name = Enum.GetName(typeof(XLTableTheme), pt.Theme), ShowRowHeaders = pt.ShowRowHeaders, ShowColumnHeaders = pt.ShowColumnHeaders, ShowRowStripes = pt.ShowRowStripes, ShowColumnStripes = pt.ShowColumnStripes });
+            pivotTableDefinition.AppendChild(new PivotTableStyle { Name = Enum.GetName(typeof(XLPivotTableTheme), pt.Theme), ShowRowHeaders = pt.ShowRowHeaders, ShowColumnHeaders = pt.ShowColumnHeaders, ShowRowStripes = pt.ShowRowStripes, ShowColumnStripes = pt.ShowColumnStripes });
 
             #region Excel 2010 Features
             

@@ -104,6 +104,8 @@ namespace ClosedXML.Excel
             RepeatRowLabels = true;
             SaveSourceData = true;
             EnableShowDetails = true;
+            ShowColumnHeaders = true;
+            ShowRowHeaders = true;
         }
 
     }
