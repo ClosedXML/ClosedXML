@@ -26,7 +26,7 @@ namespace ClosedXML.Excel
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
         {
             Name = rangeName;
-            ranges.ForEach(r => _rangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1)));
+            ranges.ForEach(r => _rangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
             Comment = comment;
             _namedRanges = namedRanges;
         }
