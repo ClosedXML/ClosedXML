@@ -157,6 +157,8 @@
     <Compile Include="Excel\PivotTables\XLPivotTables.cs" />
     <Compile Include="Excel\PivotTables\XLPivotTable.cs" />
     <Compile Include="Excel\PivotTables\IXLPivotTable.cs" />
+    <Compile Include="Excel\RichText\XLFormattedText.cs" />
+    <Compile Include="Excel\RichText\IXLFormattedText.cs" />
     <Compile Include="Excel\RichText\XLPhonetics.cs" />
     <Compile Include="Excel\RichText\XLPhonetic.cs" />
     <Compile Include="Excel\RichText\IXLPhonetics.cs" />
