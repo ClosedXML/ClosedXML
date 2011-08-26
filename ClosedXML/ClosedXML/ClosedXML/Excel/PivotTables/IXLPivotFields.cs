@@ -11,5 +11,7 @@ namespace ClosedXML.Excel
         IXLPivotField Add(String sourceName, String customName);
         void Clear();
         void Remove(String sourceName);
+
+        int IndexOf(IXLPivotField pf);
     }
 }

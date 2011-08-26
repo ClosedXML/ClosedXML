@@ -3787,11 +3787,11 @@ namespace ClosedXML.Excel
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt);
 
                 var pivotCaches = new PivotCaches();
-                var pivotCache = new PivotCache() { CacheId = (UInt32Value)0U, Id = ptCdp };
+                var pivotCache = new PivotCache { CacheId = 0U, Id = ptCdp };
 
-                pivotCaches.Append(pivotCache);
+                pivotCaches.AppendChild(pivotCache);
 
-                workbookPart.Workbook.Append(pivotCaches);
+                workbookPart.Workbook.AppendChild(pivotCaches);
 
                 var pivotTablePart = worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
                 GeneratePivotTablePartContent(pivotTablePart, pt);
@@ -3800,12 +3800,12 @@ namespace ClosedXML.Excel
             }
         }
 
-        // Generates content of pivotTableCacheDefinitionPart1.
+        // Generates content of pivotTableCacheDefinitionPart
         private static void GeneratePivotTableCacheDefinitionPartContent(PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart, IXLPivotTable pt)
         {
             IXLRange source = pt.SourceRange;
 
-            PivotCacheDefinition pivotCacheDefinition = new PivotCacheDefinition
+            var pivotCacheDefinition = new PivotCacheDefinition
             {
                 Id = "rId1",
                 SaveData = pt.SaveSourceData,
@@ -3818,33 +3818,31 @@ namespace ClosedXML.Excel
 
             pivotCacheDefinition.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 
-            CacheSource cacheSource = new CacheSource() { Type = SourceValues.Worksheet };
-            cacheSource.Append(new WorksheetSource() { Name = source.ToString() });
+            var cacheSource = new CacheSource { Type = SourceValues.Worksheet };
+            cacheSource.AppendChild(new WorksheetSource { Name = source.ToString() });
 
-            CacheFields cacheFields = new CacheFields();
+            var cacheFields = new CacheFields();
 
             foreach (var c in source.Columns())
             {
-                var fieldName = c.FirstCell().Value.ToString();
+                var columnNumber = c.ColumnNumber();
+                var xlpf = pt.Fields.Add(c.FirstCell().Value.ToString());
 
-                var xlpf = pt.Fields.Add(fieldName);
+                var sharedItems = new SharedItems();
 
-                CacheField cacheField = new CacheField() { Name = fieldName };
-                SharedItems sharedItems;
-
-                if (fieldName == "Number") // TODO: Don't hard code value
+                var onlyNumbers = !source.Cells().Any(cell => cell.Address.ColumnNumber == columnNumber && cell.Address.RowNumber > source.FirstRow().RowNumber() && cell.DataType != XLCellValues.Number);
+                if (onlyNumbers)
                 {
-                    sharedItems = new SharedItems() { ContainsSemiMixedTypes = false, ContainsString = false, ContainsNumber = true };
+                    sharedItems = new SharedItems { ContainsSemiMixedTypes = false, ContainsString = false, ContainsNumber = true };
                 }
                 else
                 {
-                    sharedItems = new SharedItems();
-
-                    foreach (var r in source.Rows())
+                    foreach (var cell in source.Cells().Where(cell =>
+                                                              cell.Address.ColumnNumber == columnNumber &&
+                                                              cell.Address.RowNumber > source.FirstRow().RowNumber()))
                     {
-                        var cellValue = r.Cell(c.ColumnNumber()).Value.ToString();
-
-                        if (cellValue != fieldName && !xlpf.SharedStrings.Contains(cellValue))
+                        var cellValue = cell.Value.ToString();
+                        if (!xlpf.SharedStrings.Contains(cellValue))
                         {
                             xlpf.SharedStrings.Add(cellValue);
                         }
@@ -3852,40 +3850,39 @@ namespace ClosedXML.Excel
 
                     foreach (var li in xlpf.SharedStrings)
                     {
-                        sharedItems.Append(new StringItem() { Val = li });
+                        sharedItems.AppendChild(new StringItem { Val = li });
                     }
-
                 }
 
-                cacheField.Append(sharedItems);
-
-                cacheFields.Append(cacheField);
+                var cacheField = new CacheField { Name = xlpf.SourceName };
+                cacheField.AppendChild(sharedItems);
+                cacheFields.AppendChild(cacheField);
             }
 
-            pivotCacheDefinition.Append(cacheSource);
-            pivotCacheDefinition.Append(cacheFields);
+            pivotCacheDefinition.AppendChild(cacheSource);
+            pivotCacheDefinition.AppendChild(cacheFields);
 
             pivotTableCacheDefinitionPart.PivotCacheDefinition = pivotCacheDefinition;
 
-            PivotTableCacheRecordsPart pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
+            var pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
 
-            PivotCacheRecords pivotCacheRecords = new PivotCacheRecords();
+            var pivotCacheRecords = new PivotCacheRecords();
             pivotCacheRecords.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             pivotTableCacheRecordsPart.PivotCacheRecords = pivotCacheRecords;
 
         }
 
-        // Generates content of pivotTablePart1.
+        // Generates content of pivotTablePart
         private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart1, IXLPivotTable pt)
         {
             var pivotTableDefinition = new PivotTableDefinition()
             {
                 Name = pt.Name,
-                CacheId = (UInt32Value)0U,
+                CacheId = 0U,
                 DataCaption = "Values", // TODO: Don't hard code value
                 MergeItem = pt.MergeAndCenterWithLabels,
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),
-                PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown ? true : false),
+                PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown),
                 PageWrap = Convert.ToUInt32(pt.FilterFieldsPageWrap),
                 ShowError = String.IsNullOrEmpty(pt.ErrorValueReplacement),
                 UseAutoFormatting = pt.AutofitColumns,
@@ -3930,115 +3927,162 @@ namespace ClosedXML.Excel
                 pivotTableDefinition.ShowError = false;
             }
 
-            var location = new Location() { Reference = pt.TargetCell.Address.ToString(), FirstHeaderRow = (UInt32Value)1U, FirstDataRow = (UInt32Value)1U, FirstDataColumn = (UInt32Value)0U };
-            pivotTableDefinition.Append(location);
+            var location = new Location { Reference = pt.TargetCell.Address.ToString(), FirstHeaderRow = 1U, FirstDataRow = 1U, FirstDataColumn = 1U };
 
-            RowFields rowFields = new RowFields();
+
+            var rowFields = new RowFields();
+            var columnFields = new ColumnFields();
             var rowItems = new RowItems();
+            var columnItems = new ColumnItems();
+            var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count()};
 
-            PivotFields pivotFields = new PivotFields() { Count = Convert.ToUInt32(pt.SourceRange.ColumnCount()) };
+            var pivotFields = new PivotFields { Count = Convert.ToUInt32(pt.SourceRange.ColumnCount()) };
             foreach (var xlpf in pt.Fields)
             {
-                PivotField pf = new PivotField() { ShowAll = false };
+                var pf = new PivotField { ShowAll = false };
 
                 if (pt.RowLabels.Where(p => p.SourceName == xlpf.SourceName).FirstOrDefault() != null)
                 {
                     pf.Axis = PivotTableAxisValues.AxisRow;
 
+                    var f = new DocumentFormat.OpenXml.Spreadsheet.Field { Index = pt.Fields.IndexOf(xlpf) };
+                    rowFields.AppendChild(f);
 
-                    var f = new DocumentFormat.OpenXml.Spreadsheet.Field() { Index = 0 };
-                    rowFields.Append(f);
-
-                    int valIndex = 0;
-                    foreach (var v in xlpf.SharedStrings)
+                    for (int i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
                         var rowItem = new RowItem();
-                        rowItem.Append(new MemberPropertyIndex() { Val = valIndex });
-                        valIndex++;
-                        rowItems.Append(rowItem);
+                        rowItem.AppendChild(new MemberPropertyIndex { Val = i });
+                       rowItems.AppendChild(rowItem);
                     }
-                    var rowItemTotal = new RowItem() { ItemType = ItemValues.Grand };
-                    rowItemTotal.Append(new MemberPropertyIndex());
-                    rowItems.Append(rowItemTotal);
+
+                    var rowItemTotal = new RowItem { ItemType = ItemValues.Grand };
+                    rowItemTotal.AppendChild(new MemberPropertyIndex());
+                    rowItems.AppendChild(rowItemTotal);
 
 
                 }
+                else if (pt.ColumnLabels.Where(p => p.SourceName == xlpf.SourceName).FirstOrDefault() != null)
+                {
+                    pf.Axis = PivotTableAxisValues.AxisColumn;
 
-                if (pt.Values.Where(p => p.CustomName == xlpf.SourceName).FirstOrDefault() != null)
+                    var f = new DocumentFormat.OpenXml.Spreadsheet.Field { Index = pt.Fields.IndexOf(xlpf) };
+                    columnFields.AppendChild(f);
+
+                    for (int i = 0; i < xlpf.SharedStrings.Count; i++)
+                    {
+                        var rowItem = new RowItem();
+                        rowItem.AppendChild(new MemberPropertyIndex { Val = i });
+                        columnItems.AppendChild(rowItem);
+                }
+
+                    var rowItemTotal = new RowItem { ItemType = ItemValues.Grand };
+                    rowItemTotal.AppendChild(new MemberPropertyIndex());
+                    columnItems.AppendChild(rowItemTotal);
+
+
+                }
+                else if (pt.ReportFilters.Where(p => p.SourceName == xlpf.SourceName).FirstOrDefault() != null)
+                {
+                    location.ColumnsPerPage = 1;
+                    location.RowPageCount = 1;
+                    pf.Axis = PivotTableAxisValues.AxisPage;
+                    pageFields.AppendChild(new PageField {Hierarchy = -1, Field = pt.Fields.IndexOf(xlpf)});
+                } 
+                else if (pt.Values.Where(p => p.CustomName == xlpf.SourceName).FirstOrDefault() != null)
                 {
                     pf.DataField = true;
                 }
 
+
                 if (xlpf.SharedStrings.Count > 0)
                 {
-                    Items items = new Items();
+                    var items = new Items();
 
-                    uint i = 0;
-                    foreach (var v in xlpf.SharedStrings)
+                    for (uint i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
-                        items.Append(new Item() { Index = i });
-                        i++;
+                        items.AppendChild(new Item { Index = i });
                     }
-                    items.Append(new Item() { ItemType = ItemValues.Default });
+                    items.AppendChild(new Item { ItemType = ItemValues.Default });
 
-                    pf.Append(items);
+                    pf.AppendChild(items);
                 }
 
-                pivotFields.Append(pf);
+                pivotFields.AppendChild(pf);
             }
 
-            //PivotField pivotField3 = new PivotField() { ShowAll = false };
+            pivotTableDefinition.AppendChild(location);
+            pivotTableDefinition.AppendChild(pivotFields);
+            pivotTableDefinition.AppendChild(rowFields);
+            pivotTableDefinition.AppendChild(rowItems);
 
-            ColumnItems columnItems = new ColumnItems();
-            columnItems.Append(new RowItem());
+            if (pt.ColumnLabels.Count() == 0)
+            {
+                columnItems.AppendChild(new RowItem());
+                pivotTableDefinition.AppendChild(columnItems);
+            }
+            else
+            {
+                pivotTableDefinition.AppendChild(columnFields);
+                pivotTableDefinition.AppendChild(columnItems);
+            }
 
-            pivotTableDefinition.Append(pivotFields);
-            pivotTableDefinition.Append(rowFields);
-            pivotTableDefinition.Append(rowItems);
-            pivotTableDefinition.Append(columnItems);
+            if (pt.ReportFilters.Count() > 0)
+            {
+                pivotTableDefinition.AppendChild(pageFields);
+            }
+
 
             var dataFields = new DataFields();
             foreach (var value in pt.Values)
             {
-
-                var df = new DataField()
+                var sourceColumn = pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.SourceName).FirstOrDefault();
+                if (sourceColumn != null)
+                {
+                    var df = new DataField
                 {
                     Name = value.CustomName,
-                    Field = (UInt32)pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.SourceName).FirstOrDefault().ColumnNumber() - 1,
-                    BaseField = (Int32)pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.BaseField).FirstOrDefault().ColumnNumber() - 1,
+                                     Field = (UInt32)sourceColumn.ColumnNumber() - 1,                    
                     Subtotal = value.SummaryFormula.ToOpenXml(),
                     ShowDataAs = value.Calculation.ToOpenXml(),
                     NumberFormatId = (UInt32)value.NumberFormat.NumberFormatId
                 };
+
+                    if (value.BaseField != null)
+                    {
+                        var baseField = pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.BaseField).FirstOrDefault();
+                        if (baseField != null)
+                            df.BaseField = baseField.ColumnNumber() - 1;
+                    }
 
                 if (value.CalculationItem == XLPivotCalculationItem.Previous)
                     df.BaseItem = 1048828U;
                 else if (value.CalculationItem == XLPivotCalculationItem.Next)
                     df.BaseItem = 1048829U;
                 else
-                    df.BaseItem = (UInt32Value)0U;
+                        df.BaseItem = 0U;
 
 
-                dataFields.Append(df);
+                    dataFields.AppendChild(df);
             }
-            pivotTableDefinition.Append(dataFields);
+            }
+            pivotTableDefinition.AppendChild(dataFields);
 
-            pivotTableDefinition.Append(new PivotTableStyle() { Name = Enum.GetName(typeof(XLTableTheme), pt.Theme), ShowRowHeaders = pt.ShowRowHeaders, ShowColumnHeaders = pt.ShowColumnHeaders, ShowRowStripes = pt.ShowRowStripes, ShowColumnStripes = pt.ShowColumnStripes });
+            pivotTableDefinition.AppendChild(new PivotTableStyle { Name = Enum.GetName(typeof(XLTableTheme), pt.Theme), ShowRowHeaders = pt.ShowRowHeaders, ShowColumnHeaders = pt.ShowColumnHeaders, ShowRowStripes = pt.ShowRowStripes, ShowColumnStripes = pt.ShowColumnStripes });
 
             #region Excel 2010 Features
             
-            PivotTableDefinitionExtensionList pivotTableDefinitionExtensionList = new PivotTableDefinitionExtensionList();
+            var pivotTableDefinitionExtensionList = new PivotTableDefinitionExtensionList();
 
-            PivotTableDefinitionExtension pivotTableDefinitionExtension = new PivotTableDefinitionExtension() { Uri = "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}" };
+            var pivotTableDefinitionExtension = new PivotTableDefinitionExtension { Uri = "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}" };
             pivotTableDefinitionExtension.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
 
-            DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition pivotTableDefinition2 = new DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition() { EnableEdit = pt.EnableCellEditing, HideValuesRow = !pt.ShowValuesRow };
+            var pivotTableDefinition2 = new DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition { EnableEdit = pt.EnableCellEditing, HideValuesRow = !pt.ShowValuesRow };
             pivotTableDefinition2.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
 
-            pivotTableDefinitionExtension.Append(pivotTableDefinition2);
+            pivotTableDefinitionExtension.AppendChild(pivotTableDefinition2);
 
-            pivotTableDefinitionExtensionList.Append(pivotTableDefinitionExtension);
-            pivotTableDefinition.Append(pivotTableDefinitionExtensionList);
+            pivotTableDefinitionExtensionList.AppendChild(pivotTableDefinitionExtension);
+            pivotTableDefinition.AppendChild(pivotTableDefinitionExtensionList);
             
             #endregion
 

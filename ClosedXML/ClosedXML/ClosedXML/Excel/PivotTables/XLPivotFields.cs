@@ -37,5 +37,13 @@ namespace ClosedXML.Excel
         {
             _pivotFields.Remove(sourceName);
         }
+
+        public int IndexOf(IXLPivotField pf)
+        {
+            var selectedItem = _pivotFields.Select((item, index) => new {Item = item, Position = index}).FirstOrDefault(i => i.Item.Key == pf.SourceName);
+            if (selectedItem == null)
+                throw new IndexOutOfRangeException("Invalid field name.");
+            return selectedItem.Position;
+        }
     }
 }
