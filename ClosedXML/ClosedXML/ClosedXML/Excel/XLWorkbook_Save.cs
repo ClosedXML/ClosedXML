@@ -3826,7 +3826,15 @@ namespace ClosedXML.Excel
             foreach (var c in source.Columns())
             {
                 var columnNumber = c.ColumnNumber();
-                var xlpf = pt.Fields.Add(c.FirstCell().Value.ToString());
+                var columnName = c.FirstCell().Value.ToString();
+                var xlpf = pt.Fields.Add(columnName);
+
+                var field = pt.RowLabels.Union(pt.ColumnLabels).Union(pt.ReportFilters).Where(f => f.SourceName == columnName).FirstOrDefault();
+                if (field != null)
+                {
+                    xlpf.CustomName = field.CustomName;
+                    xlpf.Subtotals.AddRange(field.Subtotals);
+                }
 
                 var sharedItems = new SharedItems();
 
@@ -3939,7 +3947,9 @@ namespace ClosedXML.Excel
             var pivotFields = new PivotFields { Count = Convert.ToUInt32(pt.SourceRange.ColumnCount()) };
             foreach (var xlpf in pt.Fields)
             {
-                var pf = new PivotField { ShowAll = false };
+                var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
+
+                
 
                 if (pt.RowLabels.Where(p => p.SourceName == xlpf.SourceName).FirstOrDefault() != null)
                 {
@@ -3958,7 +3968,6 @@ namespace ClosedXML.Excel
                     var rowItemTotal = new RowItem { ItemType = ItemValues.Grand };
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     rowItems.AppendChild(rowItemTotal);
-
 
                 }
                 else if (pt.ColumnLabels.Where(p => p.SourceName == xlpf.SourceName).FirstOrDefault() != null)
@@ -3992,27 +4001,92 @@ namespace ClosedXML.Excel
                 {
                     pf.DataField = true;
                 }
-
+                
+                var fieldItems = new Items();
 
                 if (xlpf.SharedStrings.Count > 0)
                 {
-                    var items = new Items();
-
                     for (uint i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
-                        items.AppendChild(new Item { Index = i });
-                    }
-                    items.AppendChild(new Item { ItemType = ItemValues.Default });
-
-                    pf.AppendChild(items);
+                        fieldItems.AppendChild(new Item { Index = i });
+                    }  
                 }
 
+                if (xlpf.Subtotals.Count > 0)
+                {
+                    foreach (var subtotal in xlpf.Subtotals)
+                    {
+                        var itemSubtotal = new Item();
+                        switch (subtotal)
+                        {
+                            case XLSubtotalFunction.Average:
+                                pf.AverageSubTotal = true;
+                                itemSubtotal.ItemType = ItemValues.Average;
+                                break;
+                            case XLSubtotalFunction.Count:
+                                pf.CountASubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.CountA;
+                                break;
+                            case XLSubtotalFunction.CountNumbers:
+                                pf.CountSubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.Count;
+                                break;
+                            case XLSubtotalFunction.Maximum:
+                                pf.MaxSubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.Maximum;
+                                break;
+                            case XLSubtotalFunction.Minimum:
+                                pf.MinSubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.Minimum;
+                                break;
+                            case XLSubtotalFunction.PopulationStandardDeviation:
+                                pf.ApplyStandardDeviationPInSubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.StandardDeviationP;
+                                break;
+                            case XLSubtotalFunction.PopulationVariance:
+                                pf.ApplyVariancePInSubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.VarianceP;
+                                break;
+                            case XLSubtotalFunction.Product:
+                                pf.ApplyProductInSubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.Product;
+                                break;
+                            case XLSubtotalFunction.StandardDeviation:
+                                pf.ApplyStandardDeviationInSubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.StandardDeviation;
+                                break;
+                            case XLSubtotalFunction.Sum:
+                                pf.SumSubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.Sum;
+                                break;
+                            case XLSubtotalFunction.Variance:
+                                pf.ApplyVarianceInSubtotal = true;
+                                itemSubtotal.ItemType = ItemValues.Variance;
+                                break;
+                        }
+                        fieldItems.AppendChild(itemSubtotal);
+                    }
+                }
+                else
+                {
+                    fieldItems.AppendChild(new Item { ItemType = ItemValues.Default });
+                }
+
+                pf.AppendChild(fieldItems);
                 pivotFields.AppendChild(pf);
             }
 
             pivotTableDefinition.AppendChild(location);
             pivotTableDefinition.AppendChild(pivotFields);
-            pivotTableDefinition.AppendChild(rowFields);
+
+            if (pt.RowLabels.Count() > 0)
+            {
+                pivotTableDefinition.AppendChild(rowFields);
+            }
+            else
+            {
+                rowItems.AppendChild(new RowItem());
+            }
             pivotTableDefinition.AppendChild(rowItems);
 
             if (pt.ColumnLabels.Count() == 0)
@@ -4040,30 +4114,34 @@ namespace ClosedXML.Excel
                 {
                     var df = new DataField
                 {
-                    Name = value.CustomName,
-                                     Field = (UInt32)sourceColumn.ColumnNumber() - 1,                    
+                    Name = value.SourceName,
+                    Field = (UInt32)sourceColumn.ColumnNumber() - 1,
                     Subtotal = value.SummaryFormula.ToOpenXml(),
                     ShowDataAs = value.Calculation.ToOpenXml(),
                     NumberFormatId = (UInt32)value.NumberFormat.NumberFormatId
                 };
 
-                    if (value.BaseField != null)
+                    if (!String.IsNullOrEmpty(value.BaseField))
                     {
                         var baseField = pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.BaseField).FirstOrDefault();
                         if (baseField != null)
                             df.BaseField = baseField.ColumnNumber() - 1;
                     }
+                    else
+                    {
+                        df.BaseField = 0;
+                    }
 
-                if (value.CalculationItem == XLPivotCalculationItem.Previous)
-                    df.BaseItem = 1048828U;
-                else if (value.CalculationItem == XLPivotCalculationItem.Next)
-                    df.BaseItem = 1048829U;
-                else
+                    if (value.CalculationItem == XLPivotCalculationItem.Previous)
+                        df.BaseItem = 1048828U;
+                    else if (value.CalculationItem == XLPivotCalculationItem.Next)
+                        df.BaseItem = 1048829U;
+                    else
                         df.BaseItem = 0U;
 
 
                     dataFields.AppendChild(df);
-            }
+                }
             }
             pivotTableDefinition.AppendChild(dataFields);
 

@@ -11,6 +11,8 @@ namespace ClosedXML.Excel
         public XLPivotValueFormat(XLPivotValue pivotValue)
         {
             _pivotValue = pivotValue;
+            _format = "General";
+            _numberFormatId = 0;
         }
 
         private Int32 _numberFormatId = -1;
@@ -43,6 +45,36 @@ namespace ClosedXML.Excel
         public IXLPivotValue SetFormat(String value)
         {
             Format = value;
+
+            switch (value)
+            {
+                case "General":
+                    _numberFormatId = 0;
+                    break;
+                case "0":
+                    _numberFormatId = 1;
+                    break;
+                case "0.00":
+                    _numberFormatId = 2;
+                    break;
+                case "#,##0":
+                    _numberFormatId = 3;
+                    break;
+                case "#,##0.00":
+                    _numberFormatId = 4;
+                    break;
+                case "0%":
+                    _numberFormatId = 9;
+                    break;
+                case "0.00%":
+                    _numberFormatId = 10;
+                    break;
+                case "0.00E+00":
+                    _numberFormatId = 11;
+                    break;
+            }
+
+
             return _pivotValue;
         }
 
