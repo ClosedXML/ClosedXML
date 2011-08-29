@@ -235,6 +235,60 @@
     <Compile Include="..\ClosedXML\Excel\Drawings\IXLDrawing.cs">
       <Link>Excel\Drawings\IXLDrawing.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingAlignment.cs">
+      <Link>Excel\Drawings\Style\IXLDrawingAlignment.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingColorsAndLines.cs">
+      <Link>Excel\Drawings\Style\IXLDrawingColorsAndLines.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingFont.cs">
+      <Link>Excel\Drawings\Style\IXLDrawingFont.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingMargins.cs">
+      <Link>Excel\Drawings\Style\IXLDrawingMargins.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingProperties.cs">
+      <Link>Excel\Drawings\Style\IXLDrawingProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingProtection.cs">
+      <Link>Excel\Drawings\Style\IXLDrawingProtection.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingSize.cs">
+      <Link>Excel\Drawings\Style\IXLDrawingSize.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingStyle.cs">
+      <Link>Excel\Drawings\Style\IXLDrawingStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingWeb.cs">
+      <Link>Excel\Drawings\Style\IXLDrawingWeb.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\XLDrawingAlignment.cs">
+      <Link>Excel\Drawings\Style\XLDrawingAlignment.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\XLDrawingColorsAndLines.cs">
+      <Link>Excel\Drawings\Style\XLDrawingColorsAndLines.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\XLDrawingFont.cs">
+      <Link>Excel\Drawings\Style\XLDrawingFont.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\XLDrawingMargins.cs">
+      <Link>Excel\Drawings\Style\XLDrawingMargins.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\XLDrawingProperties.cs">
+      <Link>Excel\Drawings\Style\XLDrawingProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\XLDrawingProtection.cs">
+      <Link>Excel\Drawings\Style\XLDrawingProtection.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\XLDrawingSize.cs">
+      <Link>Excel\Drawings\Style\XLDrawingSize.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\XLDrawingStyle.cs">
+      <Link>Excel\Drawings\Style\XLDrawingStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\Style\XLDrawingWeb.cs">
+      <Link>Excel\Drawings\Style\XLDrawingWeb.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Drawings\XLDrawing.cs">
       <Link>Excel\Drawings\XLDrawing.cs</Link>
     </Compile>

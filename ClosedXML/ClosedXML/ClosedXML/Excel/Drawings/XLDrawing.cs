@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
         public XLDrawing()
         {
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
+            Style = new XLDrawingStyle();
         }
 
         public Int32 Id { get; internal set; }
@@ -155,5 +156,7 @@ namespace ClosedXML.Excel
             ExtentWidth = extentWidth;
             return Container;
         }
+
+        public IXLDrawingStyle Style { get; private set; }
     }
 }

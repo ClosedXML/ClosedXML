@@ -130,6 +130,8 @@
     <Compile Include="Excel\Cells\XLCell_DotNetSpecific.cs" />
     <Compile Include="Excel\Comments\IXLComment.cs" />
     <Compile Include="Excel\Comments\XLComment.cs" />
+    <Compile Include="Excel\Drawings\Style\XLDrawingFont.cs" />
+    <Compile Include="Excel\Drawings\Style\IXLDrawingFont.cs" />
     <Compile Include="Excel\Drawings\XLDrawing.cs" />
     <Compile Include="Excel\Charts\IXLCharts.cs" />
     <Compile Include="Excel\Drawings\IXLDrawing.cs" />
@@ -157,12 +159,28 @@
     <Compile Include="Excel\PivotTables\XLPivotTables.cs" />
     <Compile Include="Excel\PivotTables\XLPivotTable.cs" />
     <Compile Include="Excel\PivotTables\IXLPivotTable.cs" />
+    <Compile Include="Excel\Ranges\IXLBaseCollection.cs" />
     <Compile Include="Excel\RichText\XLFormattedText.cs" />
     <Compile Include="Excel\RichText\IXLFormattedText.cs" />
     <Compile Include="Excel\RichText\XLPhonetics.cs" />
     <Compile Include="Excel\RichText\XLPhonetic.cs" />
     <Compile Include="Excel\RichText\IXLPhonetics.cs" />
     <Compile Include="Excel\RichText\IXLPhonetic.cs" />
+    <Compile Include="Excel\Drawings\Style\IXLDrawingAlignment.cs" />
+    <Compile Include="Excel\Drawings\Style\IXLDrawingColorsAndLines.cs" />
+    <Compile Include="Excel\Drawings\Style\IXLDrawingMargins.cs" />
+    <Compile Include="Excel\Drawings\Style\IXLDrawingProperties.cs" />
+    <Compile Include="Excel\Drawings\Style\IXLDrawingProtection.cs" />
+    <Compile Include="Excel\Drawings\Style\IXLDrawingSize.cs" />
+    <Compile Include="Excel\Drawings\Style\IXLDrawingStyle.cs" />
+    <Compile Include="Excel\Drawings\Style\IXLDrawingWeb.cs" />
+    <Compile Include="Excel\Drawings\Style\XLDrawingAlignment.cs" />
+    <Compile Include="Excel\Drawings\Style\XLDrawingColorsAndLines.cs" />
+    <Compile Include="Excel\Drawings\Style\XLDrawingMargins.cs" />
+    <Compile Include="Excel\Drawings\Style\XLDrawingProtection.cs" />
+    <Compile Include="Excel\Drawings\Style\XLDrawingSize.cs" />
+    <Compile Include="Excel\Drawings\Style\XLDrawingStyle.cs" />
+    <Compile Include="Excel\Drawings\Style\XLDrawingWeb.cs" />
     <Compile Include="Excel\Style\IXLNumberFormatBase.cs" />
     <Compile Include="Excel\XLWorkbook_Save.NestedTypes.cs" />
     <Compile Include="Excel\CustomProperties\XLCustomProperties.cs" />
@@ -290,6 +308,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="PathHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Excel\Drawings\Style\XLDrawingProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClosedXML.snk" />

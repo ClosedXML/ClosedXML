@@ -65,7 +65,8 @@ namespace ClosedXML.Excel
         #region Nested type: RelType
         private enum RelType
         {
-            Workbook
+            Workbook,
+            Worksheet
         }
         #endregion
         #region Nested type: RelIdGenerator

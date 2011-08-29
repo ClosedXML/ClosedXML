@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.VariantTypes;
+using Vml = DocumentFormat.OpenXml.Vml;
 using BackgroundColor = DocumentFormat.OpenXml.Spreadsheet.BackgroundColor;
 using BottomBorder = DocumentFormat.OpenXml.Spreadsheet.BottomBorder;
 using Break = DocumentFormat.OpenXml.Spreadsheet.Break;
@@ -142,7 +143,14 @@ namespace ClosedXML.Excel
 
                 GenerateWorksheetPartContent(worksheetPart, worksheet, context);
 
-                GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
+                //GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
+
+                WorksheetCommentsPart worksheetCommentsPart = worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
+                GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
+
+                worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
+                VmlDrawingPart vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
+                GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
 
                 //DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>("rId1");
                 //GenerateDrawingsPartContent(drawingsPart, worksheet);
@@ -587,8 +595,7 @@ namespace ClosedXML.Excel
                 workbook.CalculationProperties.ReferenceMode = ReferenceStyle.ToOpenXml();
         }
 
-        private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart,
-                                                          SaveContext context)
+        private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart, SaveContext context)
         {
             sharedStringTablePart.SharedStringTable = new SharedStringTable {Count = 0, UniqueCount = 0};
 
@@ -609,45 +616,7 @@ namespace ClosedXML.Excel
                         var sharedStringItem = new SharedStringItem();
                         foreach (IXLRichString rt in c.RichText)
                         {
-                            var run = new DocumentFormat.OpenXml.Spreadsheet.Run();
-
-                            var runProperties = new DocumentFormat.OpenXml.Spreadsheet.RunProperties();
-
-                            var bold = rt.Bold ? new Bold() : null;
-                            var italic = rt.Italic ? new Italic() : null;
-                            var underline = rt.Underline != XLFontUnderlineValues.None
-                                                ? new Underline {Val = rt.Underline.ToOpenXml()}
-                                                : null;
-                            var strike = rt.Strikethrough ? new Strike() : null;
-                            var verticalAlignment = new VerticalTextAlignment
-                                                        {Val = rt.VerticalAlignment.ToOpenXml()};
-                            var shadow = rt.Shadow ? new Shadow() : null;
-                            var fontSize = new FontSize {Val = rt.FontSize};
-                            var color = GetNewColor(rt.FontColor);
-                            var fontName = new RunFont {Val = rt.FontName};
-                            var fontFamilyNumbering = new FontFamily {Val = (Int32)rt.FontFamilyNumbering};
-
-                            if (bold != null) runProperties.Append(bold);
-                            if (italic != null) runProperties.Append(italic);
-
-                            if (strike != null) runProperties.Append(strike);
-                            if (shadow != null) runProperties.Append(shadow);
-                            if (underline != null) runProperties.Append(underline);
-                            runProperties.Append(verticalAlignment);
-
-                            runProperties.Append(fontSize);
-                            runProperties.Append(color);
-                            runProperties.Append(fontName);
-                            runProperties.Append(fontFamilyNumbering);
-
-                            var text = new Text {Text = rt.Text};
-                            if (rt.Text.PreserveSpaces())
-                                text.Space = SpaceProcessingModeValues.Preserve;
-
-                            run.Append(runProperties);
-                            run.Append(text);
-
-                            sharedStringItem.Append(run);
+                            sharedStringItem.Append(GetRun(rt));
                         }
 
                         if (c.RichText.HasPhonetics)
@@ -719,6 +688,48 @@ namespace ClosedXML.Excel
                     }
                 }
             }
+        }
+
+        private static DocumentFormat.OpenXml.Spreadsheet.Run GetRun(IXLRichString rt)
+        {
+            var run = new DocumentFormat.OpenXml.Spreadsheet.Run();
+
+            var runProperties = new DocumentFormat.OpenXml.Spreadsheet.RunProperties();
+
+            var bold = rt.Bold ? new Bold() : null;
+            var italic = rt.Italic ? new Italic() : null;
+            var underline = rt.Underline != XLFontUnderlineValues.None
+                                ? new Underline {Val = rt.Underline.ToOpenXml()}
+                                : null;
+            var strike = rt.Strikethrough ? new Strike() : null;
+            var verticalAlignment = new VerticalTextAlignment
+                                        {Val = rt.VerticalAlignment.ToOpenXml()};
+            var shadow = rt.Shadow ? new Shadow() : null;
+            var fontSize = new FontSize {Val = rt.FontSize};
+            var color = GetNewColor(rt.FontColor);
+            var fontName = new RunFont {Val = rt.FontName};
+            var fontFamilyNumbering = new FontFamily {Val = (Int32)rt.FontFamilyNumbering};
+
+            if (bold != null) runProperties.Append(bold);
+            if (italic != null) runProperties.Append(italic);
+
+            if (strike != null) runProperties.Append(strike);
+            if (shadow != null) runProperties.Append(shadow);
+            if (underline != null) runProperties.Append(underline);
+            runProperties.Append(verticalAlignment);
+
+            runProperties.Append(fontSize);
+            runProperties.Append(color);
+            runProperties.Append(fontName);
+            runProperties.Append(fontFamilyNumbering);
+
+            var text = new Text {Text = rt.Text};
+            if (rt.Text.PreserveSpaces())
+                text.Space = SpaceProcessingModeValues.Preserve;
+
+            run.Append(runProperties);
+            run.Append(text);
+            return run;
         }
 
         private void GenerateCalculationChainPartContent(WorkbookPart workbookPart, SaveContext context)
@@ -1655,9 +1666,8 @@ namespace ClosedXML.Excel
                     xlStyles.Add(s);
             }
 
-            foreach (Int32 id in xlStyles)
+            foreach (var xlStyle in xlStyles.Select(GetStyleById))
             {
-                var xlStyle = GetStyleById(id);
                 if (!context.SharedFonts.ContainsKey(xlStyle.Font))
                     context.SharedFonts.Add(xlStyle.Font, new FontInfo {FontId = fontCount++, Font = xlStyle.Font});
 
@@ -1668,7 +1678,7 @@ namespace ClosedXML.Excel
                     sharedBorders.Add(xlStyle.Border, new BorderInfo {BorderId = borderCount++, Border = xlStyle.Border});
 
                 if (   xlStyle.NumberFormat.NumberFormatId != -1 
-                    || sharedNumberFormats.ContainsKey(xlStyle.NumberFormat))
+                       || sharedNumberFormats.ContainsKey(xlStyle.NumberFormat))
                     continue;
 
                 sharedNumberFormats.Add(xlStyle.NumberFormat,
@@ -2739,11 +2749,9 @@ namespace ClosedXML.Excel
                 foreach (XLSheetPoint c in xlWorksheet.Internals.CellsCollection.Deleted.ToList())
                 {
                     String key = ExcelHelper.GetColumnLetterFromNumber(c.Column) + c.Row.ToStringLookup();
-                    if (cellsByReference.ContainsKey(key))
-                    {
-                        row.RemoveChild(cellsByReference[key]);
-                        xlWorksheet.Internals.CellsCollection.Deleted.Remove(c);
-                    }
+                    if (!cellsByReference.ContainsKey(key)) continue;
+                    row.RemoveChild(cellsByReference[key]);
+                    xlWorksheet.Internals.CellsCollection.Deleted.Remove(c);
                 }
 
                 if (!cellsByRow.ContainsKey(distinctRow)) continue;
@@ -2859,13 +2867,10 @@ namespace ClosedXML.Excel
                 }
                 xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == distinctRow);
             }
-            foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Select(c=>c.Row).Distinct())
+            foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Select(c=>c.Row).Distinct().Where(sheetDataRows.ContainsKey))
             {
-                if (sheetDataRows.ContainsKey(r))
-                {
-                    sheetData.RemoveChild(sheetDataRows[r]);
-                    sheetDataRows.Remove(r);
-                }
+                sheetData.RemoveChild(sheetDataRows[r]);
+                sheetDataRows.Remove(r);
             }
 
             #endregion
@@ -3292,22 +3297,21 @@ namespace ClosedXML.Excel
                 tableParts.AppendChild(tablePart);
 
             #endregion
+
+            #region LegacyDrawing
+            worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
+                worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId }, previousElement);
+            }            
+            #endregion
         }
 
         private static BooleanValue GetBooleanValue(bool value, bool defaultValue)
         {
             return value == defaultValue ? null : new BooleanValue(value);
         }
-        private struct  MinMax
-        {
-            public MinMax (UInt32 min, UInt32 max)
-            {
-                Min = min;
-                Max = max;
-            }
-            public UInt32 Min;
-            public UInt32 Max;
-        }
+
         private static void CollapseColumns(Columns columns, Dictionary<uint, Column> sheetColumns)
         {
             UInt32 lastMin = 1;
@@ -3321,19 +3325,18 @@ namespace ClosedXML.Excel
             for (int i = 0; i < count; i++)
             {
                 var kp = arr[i];
-                if (i+1 ==count ||  !ColumnsAreEqual(kp.Value, arr[i + 1].Value))
-                {
-                    var newColumn = (Column)kp.Value.CloneNode(true);
-                    newColumn.Min = lastMin;
-                    uint newColumnMax = newColumn.Max.Value;
-                    var columnsToRemove =
-                        columns.Elements<Column>().Where(co => co.Min >= lastMin && co.Max <= newColumnMax).
-                            Select(co => co).ToList();
-                    columnsToRemove.ForEach(c => columns.RemoveChild(c));
+                if (i + 1 != count && ColumnsAreEqual(kp.Value, arr[i + 1].Value)) continue;
 
-                    columns.AppendChild(newColumn);
-                    lastMin = kp.Key + 1;
-                }
+                var newColumn = (Column)kp.Value.CloneNode(true);
+                newColumn.Min = lastMin;
+                uint newColumnMax = newColumn.Max.Value;
+                var columnsToRemove =
+                    columns.Elements<Column>().Where(co => co.Min >= lastMin && co.Max <= newColumnMax).
+                        Select(co => co).ToList();
+                columnsToRemove.ForEach(c => columns.RemoveChild(c));
+
+                columns.AppendChild(newColumn);
+                lastMin = kp.Key + 1;
                 //i++;
             }
 
@@ -3845,15 +3848,12 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    foreach (var cell in source.Cells().Where(cell =>
-                                                              cell.Address.ColumnNumber == columnNumber &&
-                                                              cell.Address.RowNumber > source.FirstRow().RowNumber()))
+                    foreach (var cellValue in source.Cells().Where(cell =>
+                                                                   cell.Address.ColumnNumber == columnNumber &&
+                                                                   cell.Address.RowNumber > source.FirstRow().RowNumber()).Select(cell => cell.Value.ToString())
+                                                                   .Where(cellValue => !xlpf.SharedStrings.Contains(cellValue)))
                     {
-                        var cellValue = cell.Value.ToString();
-                        if (!xlpf.SharedStrings.Contains(cellValue))
-                        {
-                            xlpf.SharedStrings.Add(cellValue);
-                        }
+                        xlpf.SharedStrings.Add(cellValue);
                     }
 
                     foreach (var li in xlpf.SharedStrings)
@@ -3968,6 +3968,7 @@ namespace ClosedXML.Excel
                     var rowItemTotal = new RowItem { ItemType = ItemValues.Grand };
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     rowItems.AppendChild(rowItemTotal);
+
 
                 }
                 else if (pt.ColumnLabels.Where(p => p.SourceName == xlpf.SourceName).FirstOrDefault() != null)
@@ -4110,38 +4111,37 @@ namespace ClosedXML.Excel
             foreach (var value in pt.Values)
             {
                 var sourceColumn = pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.SourceName).FirstOrDefault();
-                if (sourceColumn != null)
+                if (sourceColumn == null) continue;
+
+                var df = new DataField
+                             {
+                                 Name = value.SourceName,
+                                 Field = (UInt32)sourceColumn.ColumnNumber() - 1,
+                                 Subtotal = value.SummaryFormula.ToOpenXml(),
+                                 ShowDataAs = value.Calculation.ToOpenXml(),
+                                 NumberFormatId = (UInt32)value.NumberFormat.NumberFormatId
+                             };
+
+                if (!String.IsNullOrEmpty(value.BaseField))
                 {
-                    var df = new DataField
-                {
-                    Name = value.SourceName,
-                    Field = (UInt32)sourceColumn.ColumnNumber() - 1,
-                    Subtotal = value.SummaryFormula.ToOpenXml(),
-                    ShowDataAs = value.Calculation.ToOpenXml(),
-                    NumberFormatId = (UInt32)value.NumberFormat.NumberFormatId
-                };
-
-                    if (!String.IsNullOrEmpty(value.BaseField))
-                    {
-                        var baseField = pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.BaseField).FirstOrDefault();
-                        if (baseField != null)
-                            df.BaseField = baseField.ColumnNumber() - 1;
-                    }
-                    else
-                    {
-                        df.BaseField = 0;
-                    }
-
-                    if (value.CalculationItem == XLPivotCalculationItem.Previous)
-                        df.BaseItem = 1048828U;
-                    else if (value.CalculationItem == XLPivotCalculationItem.Next)
-                        df.BaseItem = 1048829U;
-                    else
-                        df.BaseItem = 0U;
-
-
-                    dataFields.AppendChild(df);
+                    var baseField = pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.BaseField).FirstOrDefault();
+                    if (baseField != null)
+                        df.BaseField = baseField.ColumnNumber() - 1;
                 }
+                else
+                {
+                    df.BaseField = 0;
+                }
+
+                if (value.CalculationItem == XLPivotCalculationItem.Previous)
+                    df.BaseItem = 1048828U;
+                else if (value.CalculationItem == XLPivotCalculationItem.Next)
+                    df.BaseItem = 1048829U;
+                else
+                    df.BaseItem = 0U;
+
+
+                dataFields.AppendChild(df);
             }
             pivotTableDefinition.AppendChild(dataFields);
 
@@ -4167,5 +4167,180 @@ namespace ClosedXML.Excel
             pivotTablePart1.PivotTableDefinition = pivotTableDefinition;
         }
 
+
+        private static void GenerateWorksheetCommentsPartContent(WorksheetCommentsPart worksheetCommentsPart, XLWorksheet xlWorksheet)
+        {
+            Comments comments = new Comments();
+            CommentList commentList = new CommentList();
+            var authorsDict = new Dictionary<String, Int32>();
+            foreach (var c in xlWorksheet.Internals.CellsCollection.GetCells(c=>c.HasComment))
+            {
+                Comment comment = new Comment() { Reference = c.Address.ToStringRelative() };
+                String authorName = StringExtensions.IsNullOrWhiteSpace(c.Comment.Author)
+                                        ? Environment.UserName
+                                        : c.Comment.Author;
+
+                    Int32 authorId;
+                    if (!authorsDict.TryGetValue(authorName, out authorId))
+                    {
+                        authorId = authorsDict.Count;
+                        authorsDict.Add(authorName, authorId);
+                    }
+                    comment.AuthorId = (UInt32)authorId;
+
+                CommentText commentText = new CommentText();
+                foreach (var rt in c.Comment)
+                {
+                    commentText.Append(GetRun(rt));
+                }
+
+                comment.Append(commentText);
+                commentList.Append(comment);
+            }
+
+            Authors authors = new Authors();
+            foreach (Author author in authorsDict.Select(a => new Author() {Text = a.Key}))
+            {
+                authors.Append(author);
+            }
+            comments.Append(authors);
+            comments.Append(commentList);
+
+            worksheetCommentsPart.Comments = comments;
+        }
+
+        // Generates content of vmlDrawingPart1.
+        private static void GenerateVmlDrawingPartContent(VmlDrawingPart vmlDrawingPart, XLWorksheet xlWorksheet, SaveContext context)
+        {
+
+            #region Office VML
+            // <xml xmlns:v='urn:schemas-microsoft-com:vml' 
+            //     xmlns:o='urn:schemas-microsoft-com:office:office' 
+            //     xmlns:x='urn:schemas-microsoft-com:office:excel'>
+
+            //     <o:shapelayout v:ext='edit'>
+            //     <o:idmap v:ext='edit' data='1'/>
+            //     </o:shapelayout>
+
+            //     <!-- SINGLE SHAPE TYPE -->
+            //     <v:shapetype id='_x0000_t202' coordsize='21600,21600' o:spt='202'  path='m,l,21600r21600,l21600,xe'>
+            //     <v:stroke joinstyle='miter'/>
+            //     <v:path gradientshapeok='t' o:connecttype='rect'/>
+            //     </v:shapetype>
+            //     <!-- /// end -->
+
+            //     <!-- ONE SHAPE PER EACH CELL REFERS to SINGLE SHAPE TYPE above -->
+            //     <v:shape id='_x0000_s1026' type='#{0}' style='visibility:hidden' fillcolor='#ffffe1' o:insetmode='auto'>
+            //         <v:fill color2='#ffffe1'/>
+            //         <v:shadow on='t' color='black' obscured='t'/>
+            //         <v:path o:connecttype='none'/>
+            //         <v:textbox style='mso-direction-alt:auto'>
+            //             <div style='text-align:left'></div>
+            //         </v:textbox>
+            //         <x:ClientData ObjectType='Note'>
+            //             <x:Anchor> {leftCol}, 15, {topRow}, 4, {rightCol}, 10, {bottomRow}, 1</x:Anchor>
+            //             <x:Row>{rowIndex}</x:Row>
+            //             <x:Column>{colIndex}</x:Column>
+            //         </x:ClientData>
+            //     </v:shape>  
+            //</xml>
+            #endregion
+
+            System.Xml.XmlTextWriter writer = new System.Xml.XmlTextWriter(vmlDrawingPart.GetStream(System.IO.FileMode.Create), System.Text.Encoding.UTF8);
+            writer.WriteStartElement("xml");
+
+            // o:shapelayout
+            new Vml.Office.ShapeLayout(
+                new Vml.Office.ShapeIdMap()
+                {
+                    Extension = Vml.ExtensionHandlingBehaviorValues.Edit,
+                    Data = "1"
+                }
+                ) { Extension = Vml.ExtensionHandlingBehaviorValues.Edit }
+                    .WriteTo(writer);
+
+            const string shapeTypeId = "_x0000_t202"; // arbitrary, assigned by office
+
+            // v:shapetype
+            new Vml.Shapetype(
+                new Vml.Stroke() { JoinStyle = Vml.StrokeJoinStyleValues.Miter },
+                new Vml.Path() { AllowGradientShape = true, ConnectionPointType = Vml.Office.ConnectValues.Rectangle }
+                )
+            {
+                Id = shapeTypeId,
+                CoordinateSize = "21600,21600",
+                OptionalNumber = 202,
+                EdgePath = "m,l,21600r21600,l21600,xe",
+            }
+                    .WriteTo(writer);
+
+            // v:shape
+            var cellWithComments = xlWorksheet.Internals.CellsCollection.GetCells().Where(c => c.HasComment);
+
+            foreach (XLCell c in cellWithComments)
+            {
+                GenerateShape(c, shapeTypeId).WriteTo(writer);
+            }
+
+            writer.Flush();
+            writer.Close();
+
+        }
+
+        // VML Shape for Comment
+        private static Vml.Shape GenerateShape(XLCell c, string shapeTypeId)
+        {
+
+            #region Office VML
+            //<v:shape id='_x0000_s1026' type='#{0}' style='visibility:hidden' fillcolor='#ffffe1' o:insetmode='auto'>
+            //    <v:fill color2='#ffffe1'/>
+            //    <v:shadow on='t' color='black' obscured='t'/>
+            //    <v:path o:connecttype='none'/>
+            //    <v:textbox style='mso-direction-alt:auto'>
+            //        <div style='text-align:left'></div>
+            //    </v:textbox>
+            //    <x:ClientData ObjectType='Note'>
+            //        <x:Anchor> {leftCol}, 15, {topRow}, 4, {rightCol}, 10, {bottomRow}, 1</x:Anchor>
+            //        <x:Row>{rowIndex}</x:Row>
+            //        <x:Column>{colIndex}</x:Column>
+            //    </x:ClientData>
+            //</v:shape>
+            #endregion
+
+            // Limitaion: Most of the shape properties hard coded.
+
+           
+            var rowNumber = c.Address.RowNumber;
+            var columnNumber = c.Address.ColumnNumber;
+            var leftCol = columnNumber;
+            var topRow = rowNumber == 1 ? rowNumber - 1 : rowNumber - 2;    // -1 : zero based index, -2 : moved up
+            var topOffset = rowNumber == 1 ? 2 : 15;                        // on first row, comment is 2px down, on any other is 15 px up
+            var rightCol = leftCol + c.Comment.Style.Size.Width;
+            var bottomRow = topRow + c.Comment.Style.Size.Height;
+
+            var shapeId = string.Format("_x0000_s{0}", c.GetHashCode().ToString()); // Unique per cell, e.g.: "_x0000_s1026"
+
+            return new Vml.Shape(
+                new Vml.Fill { Color2 = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2) },
+                new Vml.Shadow() { On = true, Color = "black", Obscured = true },
+                new Vml.Path() { ConnectionPointType = Vml.Office.ConnectValues.None },
+                new Vml.TextBox( /* <div style='text-align:left'></div> */ ) { Style = "mso-direction-alt:auto" },
+                new Vml.Spreadsheet.ClientData(
+                    new Vml.Spreadsheet.MoveWithCells() { },
+                    new Vml.Spreadsheet.ResizeWithCells() { },
+                    new Vml.Spreadsheet.Anchor() { Text = string.Format(" {0}, 15, {1}, {2}, {3}, 10, {4}, 1", leftCol, topRow, topOffset, rightCol, bottomRow) },
+                    new Vml.Spreadsheet.AutoFill("False") { },
+                    new Vml.Spreadsheet.CommentRowTarget() { Text = (rowNumber - 1).ToString() },
+                    new Vml.Spreadsheet.CommentColumnTarget() { Text = (columnNumber - 1).ToString() }
+                    ) { ObjectType = Vml.Spreadsheet.ObjectValues.Note }
+                )
+                {
+                    Id = shapeId,
+                    Type = "#" + shapeTypeId,
+                    Style = "visibility:hidden",
+                    FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2),
+                    InsetMode = Vml.Office.InsetMarginValues.Auto
+                };
+        }
     }
 }

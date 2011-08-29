@@ -30,8 +30,6 @@ namespace ClosedXML.Excel
 
     public interface IXLFont : IXLFontBase, IEquatable<IXLFont>
     {
-
-
         IXLStyle SetBold(); IXLStyle SetBold(Boolean value);
         IXLStyle SetItalic(); IXLStyle SetItalic(Boolean value);
         IXLStyle SetUnderline(); IXLStyle SetUnderline(XLFontUnderlineValues value);
