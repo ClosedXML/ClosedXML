@@ -141,16 +141,25 @@ namespace ClosedXML.Excel
                 else
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(wsRelId);
 
+                if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
+                {
+                    WorksheetCommentsPart worksheetCommentsPart =
+                        worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
+                    GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
+
+                    worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
+                    VmlDrawingPart vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
+                    GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
+                }
+
                 GenerateWorksheetPartContent(worksheetPart, worksheet, context);
 
-                //GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
+                if (worksheet.PivotTables.Any())
+                {
+                    GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
+                }
 
-                WorksheetCommentsPart worksheetCommentsPart = worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
-                GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
 
-                worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
-                VmlDrawingPart vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
-                GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
 
                 //DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>("rId1");
                 //GenerateDrawingsPartContent(drawingsPart, worksheet);
@@ -3301,8 +3310,12 @@ namespace ClosedXML.Excel
             #region LegacyDrawing
             worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
             {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
-                worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId }, previousElement);
+                if(!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
+                    worksheetPart.Worksheet.InsertAfter(new LegacyDrawing {Id = xlWorksheet.LegacyDrawingId},
+                                                        previousElement);
+                }
             }            
             #endregion
         }
