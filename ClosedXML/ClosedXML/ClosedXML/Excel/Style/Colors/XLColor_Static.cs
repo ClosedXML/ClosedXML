@@ -125,6 +125,8 @@ namespace ClosedXML.Excel
             }
         }
 
+        public static IXLColor NoColor { get { return new XLColor(); } }
+
         public static IXLColor AliceBlue { get { return FromColor(Color.AliceBlue); } }
         public static IXLColor AntiqueWhite { get { return FromColor(Color.AntiqueWhite); } }
         public static IXLColor Aqua { get { return FromColor(Color.Aqua); } }

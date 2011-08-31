@@ -182,6 +182,10 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public void DeleteComments() {
+            this.ForEach<XLCell>(c => c.DeleteComment());
+        }
+
         public String FormulaA1
         {
             set { this.ForEach<XLCell>(c => c.FormulaA1 = value); }

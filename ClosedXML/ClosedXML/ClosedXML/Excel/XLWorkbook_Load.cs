@@ -10,6 +10,8 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
+using Vml = DocumentFormat.OpenXml.Vml;
+using Ss = DocumentFormat.OpenXml.Vml.Spreadsheet;
 
 #endregion
 
@@ -244,6 +246,55 @@ namespace ClosedXML.Excel
                                 xlTable.Field(tableColumn.Name.Value).TotalsRowLabel = tableColumn.TotalsRowLabel.Value;
                         }
                     }
+                }
+
+                #endregion
+
+                #region LoadComments
+
+                if (wsPart.WorksheetCommentsPart != null) {
+                    var root = wsPart.WorksheetCommentsPart.Comments;
+                    var authors = root.GetFirstChild<Authors>().ChildElements;
+                    var comments = root.GetFirstChild<CommentList>().ChildElements;
+
+                    // **** MAYBE FUTURE SHAPE SIZE SUPPORT
+                    // var shapes = wsPart.VmlDrawingParts.SelectMany(p => new System.Xml.XmlTextReader(p.GetStream()).Read()
+
+                    foreach (Comment c in comments) {
+                        // find cell by reference
+                        var cell = ws.Cell(c.Reference);
+                        cell.Comment.Author = authors[(int)c.AuthorId.Value].InnerText;
+                        var runs = c.GetFirstChild<CommentText>().Elements<Run>();
+                        foreach (Run run in runs) {
+                            var runProperties = run.RunProperties;
+                            String text = run.Text.InnerText.FixNewLines();
+                            var rt = cell.Comment.AddText(text);
+                            LoadFont(runProperties, rt);
+                        }
+
+                        // **** MAYBE FUTURE SHAPE SIZE SUPPORT
+                        //var shape = shapes.FirstOrDefault(sh => { 
+                        //                        var cd = sh.GetFirstChild<Ss.ClientData>(); 
+                        //                        return cd.GetFirstChild<Ss.CommentRowTarget>().InnerText == cell.Address.RowNumber.ToString()
+                        //                            && cd.GetFirstChild<Ss.CommentColumnTarget>().InnerText == cell.Address.ColumnNumber.ToString();
+                        //                        });
+
+                        //var location = shape.GetFirstChild<Ss.Anchor>().InnerText.Split(',');
+
+                        //var leftCol = int.Parse(location[0]);
+                        //var leftOffsetPx = int.Parse(location[1]);
+                        //var topRow = int.Parse(location[2]);
+                        //var topOffsetPx = int.Parse(location[3]);
+                        //var rightCol = int.Parse(location[4]);
+                        //var riightOffsetPx = int.Parse(location[5]);
+                        //var bottomRow = int.Parse(location[6]);
+                        //var bottomOffsetPx = int.Parse(location[7]);
+
+                        //cmt.Style.Size.Height = bottomRow - topRow;
+                        //cmt.Style.Size.Width = rightCol = leftCol;
+
+                    }
+
                 }
 
                 #endregion

@@ -201,6 +201,11 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
         IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        
+        /// <summary>
+        ///   Deletes the cell comments from this range.
+        /// </summary>
+        void DeleteComments();
 
         IXLRangeBase SetValue<T>(T value);
 

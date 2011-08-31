@@ -31,6 +31,8 @@ namespace ClosedXML.Excel
             Container = this;
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
             Style = new XLDrawingStyle();
+            Style.Size.Height = 4;  // I think this is misused for legacy drawing
+            Style.Size.Width = 2;
         }
 
         public String Author { get; set; }
@@ -38,6 +40,22 @@ namespace ClosedXML.Excel
         {
             Author = value;
             return this;
+        }
+
+        public void AddSignature() 
+        {
+            // existing Author might be someone else hence using current user name here
+            this.AddSignature(Environment.UserName);
+        }
+
+        public void AddSignature(string username) 
+        {
+            this.AddText(string.Format("{0}:{1}", username, Environment.NewLine)).SetBold();
+        }
+
+        public void AddNewLine() 
+        {
+            this.AddText(Environment.NewLine);
         }
 
         public Boolean Visible { get; set; }	public IXLComment SetVisible() { Visible = true; return this; }	public IXLComment SetVisible(Boolean value) { Visible = value; return this; }

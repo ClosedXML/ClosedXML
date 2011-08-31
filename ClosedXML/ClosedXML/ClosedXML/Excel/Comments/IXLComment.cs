@@ -11,6 +11,9 @@ namespace ClosedXML.Excel
         Boolean Visible { get; set; }
         IXLComment SetVisible(); IXLComment SetVisible(Boolean value);
 
+        void AddSignature();
+        void AddSignature(string username);
+        void AddNewLine();
     }
 
 }

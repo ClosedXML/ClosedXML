@@ -37,6 +37,11 @@ namespace ClosedXML.Excel
         IXLCells Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
 
         /// <summary>
+        /// Delete the comments of these cells.
+        /// </summary>
+        void DeleteComments();
+
+        /// <summary>
         /// Sets the cells' formula with A1 references.
         /// </summary>
         /// <value>The formula with A1 references.</value>

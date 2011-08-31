@@ -317,6 +317,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public void DeleteComments() {
+            Cells().DeleteComments();
+        }
 
         public bool Contains(String rangeAddress)
         {

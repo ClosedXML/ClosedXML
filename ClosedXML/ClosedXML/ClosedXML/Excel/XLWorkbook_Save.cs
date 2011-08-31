@@ -141,6 +141,12 @@ namespace ClosedXML.Excel
                 else
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(wsRelId);
 
+                context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Worksheet);
+
+                // delete comment related parts (todo: review)
+                worksheetPart.DeletePart(worksheetPart.WorksheetCommentsPart);
+                worksheetPart.DeleteParts<VmlDrawingPart>(worksheetPart.GetPartsOfType<VmlDrawingPart>());
+
                 if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
                 {
                     WorksheetCommentsPart worksheetCommentsPart =
@@ -4332,11 +4338,15 @@ namespace ClosedXML.Excel
            
             var rowNumber = c.Address.RowNumber;
             var columnNumber = c.Address.ColumnNumber;
-            var leftCol = columnNumber;
+            
+            var leftCol = columnNumber; // always right next to column
+            var leftOffset = 15;
             var topRow = rowNumber == 1 ? rowNumber - 1 : rowNumber - 2;    // -1 : zero based index, -2 : moved up
-            var topOffset = rowNumber == 1 ? 2 : 15;                        // on first row, comment is 2px down, on any other is 15 px up
-            var rightCol = leftCol + c.Comment.Style.Size.Width;
+            var topOffset = rowNumber == 1 ? 2 : 9;    // on first row, comment is 2px down, on any other is 15 px up
+            var rightCol = leftCol + c.Comment.Style.Size.Width;            
+            var rightOffset = 15;
             var bottomRow = topRow + c.Comment.Style.Size.Height;
+            var bottomOffset = rowNumber == 1 ? 2 : 9;
 
             var shapeId = string.Format("_x0000_s{0}", c.GetHashCode().ToString()); // Unique per cell, e.g.: "_x0000_s1026"
 
@@ -4346,10 +4356,10 @@ namespace ClosedXML.Excel
                 new Vml.Path() { ConnectionPointType = Vml.Office.ConnectValues.None },
                 new Vml.TextBox( /* <div style='text-align:left'></div> */ ) { Style = "mso-direction-alt:auto" },
                 new Vml.Spreadsheet.ClientData(
-                    new Vml.Spreadsheet.MoveWithCells() { },
-                    new Vml.Spreadsheet.ResizeWithCells() { },
-                    new Vml.Spreadsheet.Anchor() { Text = string.Format(" {0}, 15, {1}, {2}, {3}, 10, {4}, 1", leftCol, topRow, topOffset, rightCol, bottomRow) },
-                    new Vml.Spreadsheet.AutoFill("False") { },
+                    new Vml.Spreadsheet.MoveWithCells("False"),  // counterintuitive
+                    new Vml.Spreadsheet.ResizeWithCells("False"), // counterintuitive
+                    new Vml.Spreadsheet.Anchor() { Text = string.Format(" {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}", leftCol, leftOffset, topRow, topOffset, rightCol, rightOffset, bottomRow, bottomOffset) },
+                    new Vml.Spreadsheet.AutoFill("False"),
                     new Vml.Spreadsheet.CommentRowTarget() { Text = (rowNumber - 1).ToString() },
                     new Vml.Spreadsheet.CommentColumnTarget() { Text = (columnNumber - 1).ToString() }
                     ) { ObjectType = Vml.Spreadsheet.ObjectValues.Note }

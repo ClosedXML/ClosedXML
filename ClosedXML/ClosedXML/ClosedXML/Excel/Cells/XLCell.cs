@@ -695,7 +695,7 @@
             {
                 Hyperlink = null;
                 _richText = null;
-                _comment = null;
+                //_comment = null;
                 _cellValue = String.Empty;
                 FormulaA1 = String.Empty;
             }
@@ -883,8 +883,10 @@
             {
                 if (_comment == null)
                 {
-                    var style = GetStyleForRead();
-                    _comment = new XLComment(style.Font);
+                    // MS Excel uses Tahoma 8 Swiss no matter what current style font
+                    // var style = GetStyleForRead();
+                    var defaultFont = new XLFont() { FontName = "Tahoma", FontSize = 8, FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss };
+                    _comment = new XLComment(defaultFont);
                 }
 
                 return _comment;
@@ -894,6 +896,10 @@
         public bool HasComment
         {
             get { return _comment != null; }
+        }
+
+        public void DeleteComment() {
+            _comment = null;
         }
 
         public Boolean IsMerged()
