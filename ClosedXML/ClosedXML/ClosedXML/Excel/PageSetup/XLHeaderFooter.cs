@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
+    using System.Linq;
+
     internal class XLHeaderFooter: IXLHeaderFooter
     {
         public XLHeaderFooter()
@@ -10,6 +12,7 @@ namespace ClosedXML.Excel
             Left = new XLHFItem();
             Right = new XLHFItem();
             Center = new XLHFItem();
+            SetAsInitial();
         }
 
         public XLHeaderFooter(XLHeaderFooter defaultHF)
@@ -18,6 +21,7 @@ namespace ClosedXML.Excel
             Left = new XLHFItem(defaultHF.Left as XLHFItem);
             Center = new XLHFItem(defaultHF.Center as XLHFItem);
             Right = new XLHFItem(defaultHF.Right as XLHFItem);
+            SetAsInitial();
         }
 
         public IXLHFItem Left { get; private set; }
@@ -49,6 +53,25 @@ namespace ClosedXML.Excel
                 innerTexts.Add(occurrence, text);
 
             return innerTexts[occurrence];
+        }
+
+        private Dictionary<XLHFOccurrence, String> _initialTexts;
+
+        internal Boolean Changed
+        {
+            get
+            {
+                return _initialTexts.Any(it => GetText(it.Key) != it.Value);
+            }
+        }
+
+        internal void SetAsInitial()
+        {
+            _initialTexts = new Dictionary<XLHFOccurrence, string>();
+            foreach (var o in Enum.GetValues(typeof(XLHFOccurrence)).Cast<XLHFOccurrence>())
+            {
+                _initialTexts.Add(o, GetText(o));
+            }
         }
     }
 }

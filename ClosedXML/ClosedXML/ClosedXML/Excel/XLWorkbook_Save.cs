@@ -2379,7 +2379,7 @@ namespace ClosedXML.Excel
 
             if (worksheetPart.Worksheet.SheetProperties.PageSetupProperties == null
                 && (xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0))
-                worksheetPart.Worksheet.SheetProperties.PageSetupProperties = new PageSetupProperties {FitToPage = true};
+                worksheetPart.Worksheet.SheetProperties.PageSetupProperties = new PageSetupProperties { FitToPage = true };
 
             #endregion
 
@@ -2404,7 +2404,7 @@ namespace ClosedXML.Excel
             #region SheetViews
 
             if (worksheetPart.Worksheet.SheetDimension == null)
-                worksheetPart.Worksheet.SheetDimension = new SheetDimension {Reference = sheetDimensionReference};
+                worksheetPart.Worksheet.SheetDimension = new SheetDimension { Reference = sheetDimensionReference };
 
             cm.SetElement(XLWSContentManager.XLWSContents.SheetDimension, worksheetPart.Worksheet.SheetDimension);
 
@@ -2416,7 +2416,7 @@ namespace ClosedXML.Excel
             var sheetView = (SheetView)worksheetPart.Worksheet.SheetViews.FirstOrDefault();
             if (sheetView == null)
             {
-                sheetView = new SheetView {WorkbookViewId = 0U};
+                sheetView = new SheetView { WorkbookViewId = 0U };
                 worksheetPart.Worksheet.SheetViews.AppendChild(sheetView);
             }
 
@@ -2701,7 +2701,7 @@ namespace ClosedXML.Excel
                     row = sheetDataRows[distinctRow];
                 else
                 {
-                    row = new Row {RowIndex = (UInt32)distinctRow};
+                    row = new Row { RowIndex = (UInt32)distinctRow };
                     if (noRows)
                     {
                         sheetData.AppendChild(row);
@@ -2721,7 +2721,7 @@ namespace ClosedXML.Excel
                 }
 
                 if (maxColumn > 0)
-                    row.Spans = new ListValue<StringValue> {InnerText = "1:" + maxColumn.ToStringLookup()};
+                    row.Spans = new ListValue<StringValue> { InnerText = "1:" + maxColumn.ToStringLookup() };
 
                 row.Height = null;
                 row.CustomHeight = null;
@@ -2739,7 +2739,7 @@ namespace ClosedXML.Excel
                     }
 
                     //if (!thisRow.Style.Equals(xlWorksheet.Style))
-                    if(thisRow.GetStyleId() != xlWorksheet.GetStyleId())
+                    if (thisRow.GetStyleId() != xlWorksheet.GetStyleId())
                     {
                         row.StyleIndex = context.SharedStyles[thisRow.GetStyleId()].StyleId;
                         row.CustomFormat = true;
@@ -2764,7 +2764,7 @@ namespace ClosedXML.Excel
                 }
 
                 if (!cellsByRow.ContainsKey(distinctRow)) continue;
-                
+
                 Boolean isNewRow = !row.Elements<Cell>().Any();
                 foreach (XLCell opCell in cellsByRow[distinctRow]
                     .OrderBy(c => c.Address.ColumnNumber)
@@ -2780,7 +2780,7 @@ namespace ClosedXML.Excel
                         cell = cellsByReference[cellReference];
                     else
                     {
-                        cell = new Cell {CellReference = new StringValue(cellReference)};
+                        cell = new Cell { CellReference = new StringValue(cellReference) };
                         if (isNewRow)
                             row.AppendChild(cell);
                         else
@@ -2851,7 +2851,7 @@ namespace ClosedXML.Excel
                                     if (text.PreserveSpaces())
                                         t.Space = SpaceProcessingModeValues.Preserve;
 
-                                    cell.InlineString = new InlineString {Text = t};
+                                    cell.InlineString = new InlineString { Text = t };
                                 }
                             }
                         }
@@ -2876,7 +2876,7 @@ namespace ClosedXML.Excel
                 }
                 xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == distinctRow);
             }
-            foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Select(c=>c.Row).Distinct().Where(sheetDataRows.ContainsKey))
+            foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Select(c => c.Row).Distinct().Where(sheetDataRows.ContainsKey))
             {
                 sheetData.RemoveChild(sheetDataRows[r]);
                 sheetDataRows.Remove(r);
@@ -2962,7 +2962,7 @@ namespace ClosedXML.Excel
 
                 foreach (MergeCell mergeCell in (xlWorksheet).Internals.MergedRanges.Select(
                     m => m.RangeAddress.FirstAddress.ToString() + ":" + m.RangeAddress.LastAddress.ToString()).Select(
-                        merged => new MergeCell {Reference = merged}))
+                        merged => new MergeCell { Reference = merged }))
                     mergeCells.AppendChild(mergeCell);
 
                 mergeCells.Count = (UInt32)mergeCells.Count();
@@ -2977,7 +2977,7 @@ namespace ClosedXML.Excel
 
             #region DataValidations
 
-            if (!xlWorksheet.DataValidations.Any(d=> d.IsDirty() ))
+            if (!xlWorksheet.DataValidations.Any(d => d.IsDirty()))
             {
                 worksheetPart.Worksheet.RemoveAllChildren<DataValidations>();
                 cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, null);
@@ -3016,7 +3016,7 @@ namespace ClosedXML.Excel
                                                  ErrorStyle = dv.ErrorStyle.ToOpenXml(),
                                                  Operator = dv.Operator.ToOpenXml(),
                                                  SequenceOfReferences =
-                                                     new ListValue<StringValue> {InnerText = sequence}
+                                                     new ListValue<StringValue> { InnerText = sequence }
                                              };
 
                     dataValidations.AppendChild(dataValidation);
@@ -3052,7 +3052,7 @@ namespace ClosedXML.Excel
                     if (hl.IsExternal)
                     {
                         String rId = context.RelIdGenerator.GetNext(RelType.Workbook);
-                        hyperlink = new Hyperlink {Reference = hl.Cell.Address.ToString(), Id = rId};
+                        hyperlink = new Hyperlink { Reference = hl.Cell.Address.ToString(), Id = rId };
                         worksheetPart.AddHyperlinkRelationship(hl.ExternalAddress, true, rId);
                     }
                     else
@@ -3174,38 +3174,45 @@ namespace ClosedXML.Excel
 
             #region HeaderFooter
 
-            if (!worksheetPart.Worksheet.Elements<HeaderFooter>().Any())
+            HeaderFooter headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().FirstOrDefault();
+            if (headerFooter == null) 
+                headerFooter = new HeaderFooter();
+            else
+                worksheetPart.Worksheet.RemoveAllChildren<HeaderFooter>();
+
             {
                 var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.HeaderFooter);
-                worksheetPart.Worksheet.InsertAfter(new HeaderFooter(), previousElement);
+                worksheetPart.Worksheet.InsertAfter(headerFooter, previousElement);
+                cm.SetElement(XLWSContentManager.XLWSContents.HeaderFooter, headerFooter);
             }
+            if (((XLHeaderFooter)xlWorksheet.PageSetup.Header).Changed
+                || ((XLHeaderFooter)xlWorksheet.PageSetup.Footer).Changed)
+            {
+                //var headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().First();
+                
+                headerFooter.RemoveAllChildren();
 
-            var headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.HeaderFooter, headerFooter);
-            headerFooter.RemoveAllChildren();
+                headerFooter.ScaleWithDoc = xlWorksheet.PageSetup.ScaleHFWithDocument;
+                headerFooter.AlignWithMargins = xlWorksheet.PageSetup.AlignHFWithMargins;
+                headerFooter.DifferentFirst = true;
+                headerFooter.DifferentOddEven = true;
 
-            headerFooter.ScaleWithDoc = xlWorksheet.PageSetup.ScaleHFWithDocument;
-            headerFooter.AlignWithMargins = xlWorksheet.PageSetup.AlignHFWithMargins;
-            headerFooter.DifferentFirst = true;
-            headerFooter.DifferentOddEven = true;
+                var oddHeader = new OddHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.OddPages));
+                headerFooter.AppendChild(oddHeader);
+                var oddFooter = new OddFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.OddPages));
+                headerFooter.AppendChild(oddFooter);
 
-            var oddHeader = new OddHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.OddPages));
-            headerFooter.AppendChild(oddHeader);
-            var oddFooter = new OddFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.OddPages));
-            headerFooter.AppendChild(oddFooter);
+                var evenHeader = new EvenHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.EvenPages));
+                headerFooter.AppendChild(evenHeader);
+                var evenFooter = new EvenFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.EvenPages));
+                headerFooter.AppendChild(evenFooter);
 
-            var evenHeader = new EvenHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.EvenPages));
-            headerFooter.AppendChild(evenHeader);
-            var evenFooter = new EvenFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.EvenPages));
-            headerFooter.AppendChild(evenFooter);
+                var firstHeader = new FirstHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.FirstPage));
+                headerFooter.AppendChild(firstHeader);
+                var firstFooter = new FirstFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.FirstPage));
+                headerFooter.AppendChild(firstFooter);
 
-            var firstHeader = new FirstHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.FirstPage));
-            headerFooter.AppendChild(firstHeader);
-            var firstFooter = new FirstFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.FirstPage));
-            headerFooter.AppendChild(firstFooter);
-
-            //if (!headerFooter.Any(hf => hf.InnerText.Length > 0))
-            //    worksheetPart.Worksheet.RemoveAllChildren<HeaderFooter>();
+            }
 
             #endregion
 
@@ -3302,7 +3309,7 @@ namespace ClosedXML.Excel
             tableParts.Count = (UInt32)xlWorksheet.Tables.Count();
             foreach (
                 TablePart tablePart in
-                    from XLTable xlTable in xlWorksheet.Tables select new TablePart {Id = xlTable.RelId})
+                    from XLTable xlTable in xlWorksheet.Tables select new TablePart { Id = xlTable.RelId })
                 tableParts.AppendChild(tablePart);
 
             #endregion
@@ -3310,13 +3317,13 @@ namespace ClosedXML.Excel
             #region LegacyDrawing
             worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
             {
-                if(!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
                 {
                     var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
-                    worksheetPart.Worksheet.InsertAfter(new LegacyDrawing {Id = xlWorksheet.LegacyDrawingId},
+                    worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
                                                         previousElement);
                 }
-            }            
+            }
             #endregion
         }
 

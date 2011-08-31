@@ -803,6 +803,9 @@ namespace ClosedXML.Excel
             var firstHeader = headerFooter.FirstHeader;
             if (firstHeader != null)
                 xlHeader.SetInnerText(XLHFOccurrence.FirstPage, firstHeader.Text);
+
+            ((XLHeaderFooter)ws.PageSetup.Header).SetAsInitial();
+            ((XLHeaderFooter)ws.PageSetup.Footer).SetAsInitial();
         }
 
         private static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws)
