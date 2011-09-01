@@ -73,6 +73,20 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("$A$3:$A$3", wsRanges.Last().RangeAddress.ToStringFixed());
         }
 
-        
+        [TestMethod]
+        public void WbNamedRangesOneString()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            wb.NamedRanges.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
+
+            var wbRanges = ws.Ranges("TestRange");
+            Assert.AreEqual("$A$1:$A$1", wbRanges.First().RangeAddress.ToStringFixed());
+            Assert.AreEqual("$A$3:$A$3", wbRanges.Last().RangeAddress.ToStringFixed());
+
+            var wsRanges = ws.Ranges("TestRange");
+            Assert.AreEqual("$A$1:$A$1", wsRanges.First().RangeAddress.ToStringFixed());
+            Assert.AreEqual("$A$3:$A$3", wsRanges.Last().RangeAddress.ToStringFixed());
+        }
     }
 }

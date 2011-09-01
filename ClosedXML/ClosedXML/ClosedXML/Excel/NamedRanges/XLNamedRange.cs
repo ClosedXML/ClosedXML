@@ -37,14 +37,14 @@ namespace ClosedXML.Excel
             get
             {
                 var ranges = new XLRanges();
-                                foreach (var rangeToAdd in 
-                   from rangeAddress in _rangeList 
+                foreach (var rangeToAdd in 
+                   from rangeAddress in _rangeList.SelectMany(c=>c.Split(','))
                    let match = _namedRangeReferenceRegex.Match(rangeAddress)
                    select
                        match.Groups["Sheet"].Success
                        ?  _namedRanges.Workbook.WorksheetsInternal.Worksheet(match.Groups["Sheet"].Value).Range(match.Groups["Range"].Value) as IXLRangeBase
                        : _namedRanges.Workbook.Worksheets.SelectMany(sheet => sheet.Tables).Where(table => table.Name == match.Groups["Table"].Value).Single().Column(match.Groups["Column"].Value) )
-                 {
+                {
                     ranges.Add(rangeToAdd);
                 }
                 return ranges;

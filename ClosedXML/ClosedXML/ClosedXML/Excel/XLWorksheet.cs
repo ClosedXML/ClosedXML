@@ -1211,5 +1211,23 @@ namespace ClosedXML.Excel
                                                     && n.Ranges.Count == 1)
                                                .Ranges.First();
         }
+
+        public new IXLRanges Ranges(String ranges)
+        {
+            var retVal = new XLRanges();
+            foreach (var rangeAddressStr in ranges.Split(',').Select(s=>s.Trim()))
+            {
+                if (ExcelHelper.IsValidRangeAddress(rangeAddressStr))
+                    retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
+                else if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))
+                    NamedRange(rangeAddressStr).Ranges.ForEach(retVal.Add);
+                else
+                    Workbook.NamedRanges.First(n =>
+                                                    String.Compare(n.Name, rangeAddressStr, true) == 0
+                                                    && n.Ranges.First().Worksheet == this)
+                                               .Ranges.ForEach(retVal.Add);
+            }
+            return retVal;
+        }
     }
 }

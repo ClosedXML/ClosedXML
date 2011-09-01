@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System;
+using System.IO;
 
 namespace ClosedXML_Tests
 {
@@ -156,5 +157,34 @@ namespace ClosedXML_Tests
             Assert.AreEqual(original.RangeAddress.ToStringFixed(), namedRanges.First().RangeAddress.ToString());
             Assert.AreEqual("$A$3:$A$3", namedRanges.Last().RangeAddress.ToStringFixed());
         }
+
+        [TestMethod]
+        public void WsNamedRangesOneString()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.NamedRanges.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
+            var namedRanges = ws.Ranges("TestRange");
+
+            Assert.AreEqual("$A$1:$A$1", namedRanges.First().RangeAddress.ToStringFixed());
+            Assert.AreEqual("$A$3:$A$3", namedRanges.Last().RangeAddress.ToStringFixed());
+        }
+
+        //[TestMethod]
+        //public void WsNamedRangeLiteral()
+        //{
+        //    var wb = new XLWorkbook();
+        //    var ws = wb.Worksheets.Add("Sheet1");
+        //    ws.NamedRanges.Add("TestRange", "\"Hello\"");
+        //    using (MemoryStream memoryStream = new MemoryStream())
+        //    {
+        //        wb.SaveAs(memoryStream);
+        //        var wb2 = new XLWorkbook(memoryStream);
+        //        var text = wb2.Worksheet("Sheet1").NamedRanges.First()
+        //        memoryStream.Close();
+        //    }
+            
+            
+        //}
     }
 }
