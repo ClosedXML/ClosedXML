@@ -301,8 +301,8 @@ namespace ClosedXML.Excel
             {
                 ClearMerged();
 
-                var hyperlinksToRemove = Worksheet.Hyperlinks.Where(hl => Contains(hl.Cell.AsRange())).ToList();
-                hyperlinksToRemove.ForEach(hl => Worksheet.Hyperlinks.Delete(hl));
+                //var hyperlinksToRemove = Worksheet.Hyperlinks.Where(hl => Contains(hl.Cell.AsRange())).ToList();
+                //hyperlinksToRemove.ForEach(hl => Worksheet.Hyperlinks.Delete(hl));
             }
 
             if (clearOptions == XLClearOptions.ContentsAndFormats)
@@ -551,10 +551,10 @@ namespace ClosedXML.Excel
                 XLRow row;
                 XLColumn column;
                 if (Worksheet.Internals.RowsCollection.TryGetValue(absoluteAddress.RowNumber, out row)
-                    && row.GetStyleId() == worksheetStyleId)
+                    && row.GetStyleId() != worksheetStyleId)
                     styleId = row.GetStyleId();
                 else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absoluteAddress.ColumnNumber, out column)
-                    && column.GetStyleId() == worksheetStyleId)
+                    && column.GetStyleId() != worksheetStyleId)
                     styleId = column.GetStyleId();
                 //if (Worksheet.Internals.RowsCollection.ContainsKey(absoluteAddress.RowNumber)
                 //    && !Worksheet.Internals.RowsCollection[absoluteAddress.RowNumber].GetStyleId().Equals(worksheetStyleId))
