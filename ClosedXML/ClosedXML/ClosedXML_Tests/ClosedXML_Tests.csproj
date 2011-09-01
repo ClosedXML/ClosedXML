@@ -70,12 +70,14 @@
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
     <Compile Include="Excel\Cells\XLCellTest.cs" />
+    <Compile Include="Excel\Columns\ColumnsTests.cs" />
     <Compile Include="Excel\Coordinates\XLAddressTest.cs" />
     <Compile Include="Excel\Misc\XLWorkbookTests.cs" />
     <Compile Include="Excel\Misc\Extensions.cs" />
     <Compile Include="Excel\PivotTables\XLPivotTableTest.cs" />
     <Compile Include="Excel\Ranges\XLRangeAddressTest.cs" />
     <Compile Include="Excel\Ranges\XLRangeBaseTest.cs" />
+    <Compile Include="Excel\Rows\RowsTests.cs" />
     <Compile Include="Utils\ExcelDocsComparer.cs" />
     <Compile Include="Examples\DeleteTests.cs" />
     <Compile Include="Examples\LoadingTests.cs" />

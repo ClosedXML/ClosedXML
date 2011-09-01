@@ -594,7 +594,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRanges();
             var rangePairs = namedRanges.Split(',');
-            foreach (var r in rangePairs.SelectMany(Ranges))
+            foreach (var r in rangePairs.Select(s=>Range(s.Trim())))
                 retVal.Add(r);
             return retVal;
         }

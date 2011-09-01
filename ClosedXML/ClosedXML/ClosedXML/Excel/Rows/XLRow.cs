@@ -627,5 +627,10 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public IXLRangeRow RowUsed(Boolean includeFormats = false)
+        {
+            return Row(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
+        }
     }
 }

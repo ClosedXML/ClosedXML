@@ -342,5 +342,10 @@
             base.Clear(clearOptions);
             return this;
         }
+
+        public IXLRangeRow RowUsed(Boolean includeFormats = false)
+        {
+            return Row(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
+        }
     }
 }
