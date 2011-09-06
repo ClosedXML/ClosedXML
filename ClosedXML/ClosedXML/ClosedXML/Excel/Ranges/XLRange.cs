@@ -766,8 +766,14 @@ namespace ClosedXML.Excel
 
         public XLRangeColumn FirstColumnUsed(bool includeFormats)
         {
-            var firstCellUsed = FirstCellUsed(includeFormats);
-            return firstCellUsed == null ? null : Column(firstCellUsed.Address.ColumnNumber);
+            Int32 firstColumnUsed = Worksheet.Internals.CellsCollection.FirstColumnUsed(
+                RangeAddress.FirstAddress.RowNumber,
+                RangeAddress.FirstAddress.ColumnNumber,
+                RangeAddress.LastAddress.RowNumber,
+                RangeAddress.LastAddress.ColumnNumber,
+                includeFormats);
+
+            return firstColumnUsed == 0 ? null : Column(firstColumnUsed);
         }
 
         public XLRangeColumn LastColumnUsed()
@@ -777,8 +783,14 @@ namespace ClosedXML.Excel
 
         public XLRangeColumn LastColumnUsed(bool includeFormats)
         {
-            var lastCellUsed = LastCellUsed(includeFormats);
-            return lastCellUsed == null ? null : Column(lastCellUsed.Address.ColumnNumber);
+            Int32 lastColumnUsed = Worksheet.Internals.CellsCollection.LastColumnUsed(
+                RangeAddress.FirstAddress.RowNumber,
+                RangeAddress.FirstAddress.ColumnNumber,
+                RangeAddress.LastAddress.RowNumber,
+                RangeAddress.LastAddress.ColumnNumber,
+                includeFormats);
+
+            return lastColumnUsed == 0 ? null : Column(lastColumnUsed);
         }
 
         public XLRangeRow FirstRow()
@@ -798,8 +810,14 @@ namespace ClosedXML.Excel
 
         public XLRangeRow LastRowUsed(bool includeFormats)
         {
-            var lastCellUsed = LastCellUsed(includeFormats);
-            return lastCellUsed == null ? null : Row(lastCellUsed.Address.RowNumber);
+            Int32 lastRowUsed = Worksheet.Internals.CellsCollection.LastRowUsed(
+                RangeAddress.FirstAddress.RowNumber,
+                RangeAddress.FirstAddress.ColumnNumber,
+                RangeAddress.LastAddress.RowNumber,
+                RangeAddress.LastAddress.ColumnNumber,
+                includeFormats);
+
+            return lastRowUsed == 0 ? null : Row(lastRowUsed);
         }
 
         public XLRangeRow FirstRowUsed()
@@ -809,8 +827,14 @@ namespace ClosedXML.Excel
 
         public XLRangeRow FirstRowUsed(bool includeFormats)
         {
-            var firstCellUsed = FirstCellUsed(includeFormats);
-            return firstCellUsed == null ? null : Row(firstCellUsed.Address.RowNumber);
+            Int32 firstRowUsed = Worksheet.Internals.CellsCollection.FirstRowUsed(
+                RangeAddress.FirstAddress.RowNumber,
+                RangeAddress.FirstAddress.ColumnNumber,
+                RangeAddress.LastAddress.RowNumber,
+                RangeAddress.LastAddress.ColumnNumber,
+                includeFormats);
+
+            return firstRowUsed == 0 ? null : Row(firstRowUsed);
         }
 
         public XLRangeRow Row(Int32 row)

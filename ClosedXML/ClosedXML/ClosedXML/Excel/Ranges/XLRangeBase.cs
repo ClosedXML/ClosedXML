@@ -471,13 +471,14 @@ namespace ClosedXML.Excel
 
         public XLCell FirstCellUsed(Boolean includeFormats)
         {
-            var cellsUsed = CellsUsed(includeFormats);
+            var sp = Worksheet.Internals.CellsCollection.FirstPointUsed(
+                RangeAddress.FirstAddress.RowNumber,
+                RangeAddress.FirstAddress.ColumnNumber,
+                RangeAddress.LastAddress.RowNumber,
+                RangeAddress.LastAddress.ColumnNumber,
+                includeFormats);
 
-            if (!cellsUsed.Any<XLCell>())
-                return null;
-            int firstRow = cellsUsed.Min<XLCell>(c => c.Address.RowNumber);
-            int firstColumn = cellsUsed.Min<XLCell>(c => c.Address.ColumnNumber);
-            return Worksheet.Cell(firstRow, firstColumn);
+            return sp.Row == 0 ? null : Worksheet.Cell(sp.Row, sp.Column);
         }
 
         public XLCell LastCellUsed()
@@ -487,13 +488,14 @@ namespace ClosedXML.Excel
 
         public XLCell LastCellUsed(Boolean includeFormats)
         {
-            var cellsUsed = CellsUsed(includeFormats);
-            if (!cellsUsed.Any<XLCell>())
-                return null;
+            var sp = Worksheet.Internals.CellsCollection.LastPointUsed(
+                RangeAddress.FirstAddress.RowNumber,
+                RangeAddress.FirstAddress.ColumnNumber,
+                RangeAddress.LastAddress.RowNumber,
+                RangeAddress.LastAddress.ColumnNumber,
+                includeFormats);
 
-            int lastRow = cellsUsed.Max<XLCell>(c => c.Address.RowNumber);
-            int lastColumn = cellsUsed.Max<XLCell>(c => c.Address.ColumnNumber);
-            return Worksheet.Cell(lastRow, lastColumn);
+            return sp.Row == 0 ? null : Worksheet.Cell(sp.Row, sp.Column);
         }
 
         public XLCell Cell(Int32 row, Int32 column)

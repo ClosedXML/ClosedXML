@@ -104,6 +104,105 @@ namespace ClosedXML.Excel
             }
         }
 
+        public XLSheetPoint FirstPointUsed(Int32 rowStart, Int32 columnStart,
+                                    Int32 rowEnd, Int32 columnEnd, Boolean includeFormats)
+        {
+            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
+            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
+
+            var firstRow = FirstRowUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats);
+            if (firstRow == 0) return new XLSheetPoint(0,0);
+
+            var firstColumn = FirstColumnUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats);
+            if (firstColumn == 0) return new XLSheetPoint(0, 0);
+
+            return new XLSheetPoint(firstRow, firstColumn);
+        }
+
+        public XLSheetPoint LastPointUsed(Int32 rowStart, Int32 columnStart,
+                            Int32 rowEnd, Int32 columnEnd, Boolean includeFormats)
+        {
+            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
+            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
+
+            var firstRow = LastRowUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats);
+            if (firstRow == 0) return new XLSheetPoint(0, 0);
+
+            var firstColumn = LastColumnUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats);
+            if (firstColumn == 0) return new XLSheetPoint(0, 0);
+
+            return new XLSheetPoint(firstRow, firstColumn);
+        }
+
+        public int FirstRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats)
+        {
+            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
+            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
+            for (int ro = rowStart; ro <= finalRow; ro++)
+            {
+                for (int co = columnStart; co <= finalColumn; co++)
+                {
+                    XLCell cell;
+                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
+                        && !cell.IsEmpty(includeFormats))
+                        return ro;
+                }
+            }
+            return 0;
+        }
+
+        public int FirstColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats)
+        {
+            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
+            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
+            for (int co = columnStart; co <= columnEnd; co++)
+            {
+                for (int ro = rowStart; ro <= rowEnd; ro++)
+                {
+                    XLCell cell;
+                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
+                        && !cell.IsEmpty(includeFormats))
+                        return co;
+                }
+            }
+            return 0;
+        }
+
+
+        public int LastRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats)
+        {
+            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
+            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
+            for (int ro = finalRow; ro >= rowStart; ro--)
+            {
+                for (int co = finalColumn; co >= columnStart; co--)
+                {
+                    XLCell cell;
+                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
+                        && !cell.IsEmpty(includeFormats))
+                        return ro;
+                }
+            }
+            return 0;
+        }
+
+        public int LastColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats)
+        {
+            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
+            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
+            for (int co = finalColumn; co >= columnStart; co--)
+            {
+                for (int ro = finalRow; ro >= rowStart; ro--)
+                {
+                    XLCell cell;
+                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
+                        && !cell.IsEmpty(includeFormats))
+                        return co;
+                }
+            }
+            return 0;
+        }
+
         public void RemoveAll(Int32 rowStart, Int32 columnStart,
                               Int32 rowEnd, Int32 columnEnd)
         {
