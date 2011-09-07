@@ -158,7 +158,7 @@
         {
             FormulaA1 = String.Empty;
             _richText = null;
-            if (value is String)
+            if (value is String || value is char)
             {
                 _cellValue = value.ToString();
                 _dataType = XLCellValues.Text;
@@ -182,7 +182,6 @@
             else if (
                 value is sbyte
                 || value is byte
-                || value is char
                 || value is short
                 || value is ushort
                 || value is int

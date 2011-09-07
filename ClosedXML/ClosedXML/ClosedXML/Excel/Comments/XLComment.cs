@@ -42,20 +42,21 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public void AddSignature() 
+        public IXLRichString AddSignature() 
         {
             // existing Author might be someone else hence using current user name here
-            this.AddSignature(Environment.UserName);
+            return AddSignature(Environment.UserName);
+
         }
 
-        public void AddSignature(string username) 
+        public IXLRichString AddSignature(string username) 
         {
-            this.AddText(string.Format("{0}:{1}", username, Environment.NewLine)).SetBold();
+            return AddText(string.Format("{0}:{1}", username, Environment.NewLine)).SetBold();
         }
 
-        public void AddNewLine() 
+        public IXLRichString AddNewLine() 
         {
-            this.AddText(Environment.NewLine);
+            return AddText(Environment.NewLine);
         }
 
         public Boolean Visible { get; set; }	public IXLComment SetVisible() { Visible = true; return this; }	public IXLComment SetVisible(Boolean value) { Visible = value; return this; }
