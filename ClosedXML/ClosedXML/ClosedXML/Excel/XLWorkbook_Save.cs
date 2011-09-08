@@ -144,26 +144,26 @@ namespace ClosedXML.Excel
                 context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Worksheet);
 
                 // delete comment related parts (todo: review)
-                //worksheetPart.DeletePart(worksheetPart.WorksheetCommentsPart);
-                //worksheetPart.DeleteParts<VmlDrawingPart>(worksheetPart.GetPartsOfType<VmlDrawingPart>());
+                worksheetPart.DeletePart(worksheetPart.WorksheetCommentsPart);
+                worksheetPart.DeleteParts<VmlDrawingPart>(worksheetPart.GetPartsOfType<VmlDrawingPart>());
 
-                //if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
-                //{
-                //    WorksheetCommentsPart worksheetCommentsPart =
-                //        worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
-                //    GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
+                if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
+                {
+                    WorksheetCommentsPart worksheetCommentsPart =
+                        worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
+                    GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
 
-                //    worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
-                //    VmlDrawingPart vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
-                //    GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
-                //}
+                    worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
+                    VmlDrawingPart vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
+                    GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
+                }
 
                 GenerateWorksheetPartContent(worksheetPart, worksheet, context);
 
-                //if (worksheet.PivotTables.Any())
-                //{
-                //    GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
-                //}
+                if (worksheet.PivotTables.Any())
+                {
+                    GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
+                }
 
 
 
@@ -3321,15 +3321,15 @@ namespace ClosedXML.Excel
             #endregion
 
             #region LegacyDrawing
-            //worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
-            //{
-            //    if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
-            //    {
-            //        var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
-            //        worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
-            //                                            previousElement);
-            //    }
-            //}
+            worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
+            {
+                if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
+                    worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
+                                                        previousElement);
+                }
+            }
             #endregion
         }
 
