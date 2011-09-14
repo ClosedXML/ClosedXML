@@ -328,7 +328,7 @@ namespace ClosedXML.Excel
                     {
                         string sheetName, sheetArea;
                         ParseReference(area, out sheetName, out sheetArea);
-                        if (!sheetArea.Equals("#REF"))
+                        if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!")))
                             WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                     }
                 }
@@ -340,7 +340,7 @@ namespace ClosedXML.Excel
                 {
                     string text = definedName.Text;
 
-                    if (!text.Equals("#REF"))
+                    if (!(text.Equals("#REF") || text.EndsWith("#REF!")))
                     {
                         var localSheetId = definedName.LocalSheetId;
                         var comment = definedName.Comment;
@@ -382,12 +382,14 @@ namespace ClosedXML.Excel
         // either $A:$X => true or $1:$99 => false
         private static bool IsColReference(string sheetArea)
         {
-            return char.IsLetter(sheetArea[1]);
+            char c = sheetArea[0] == '$' ? sheetArea[1] : sheetArea[0];
+            return char.IsLetter(c);
         }
 
         private static bool IsRowReference(string sheetArea)
         {
-            return char.IsNumber(sheetArea[1]);
+            char c = sheetArea[0] == '$' ? sheetArea[1] : sheetArea[0];
+            return char.IsNumber(c);
         }
 
         private static void ParseReference(string item, out string sheetName, out string sheetArea)

@@ -504,6 +504,15 @@ namespace ClosedXML.Excel
                     definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
                     definedNames.AppendChild(definedName);
                 }
+                
+                if (worksheet.AutoFilterRange != null)
+                {
+                    var definedName = new DefinedName { Name = "_xlnm._FilterDatabase", LocalSheetId = sheetId };
+                    definedName.Text = "'" + worksheet.Name + "'!" + worksheet.AutoFilterRange.RangeAddress.FirstAddress.ToStringFixed() +
+                                                               ":" + worksheet.AutoFilterRange.RangeAddress.LastAddress.ToStringFixed();
+                    definedName.Hidden = BooleanValue.FromBoolean(true);
+                    definedNames.AppendChild(definedName);
+                }
 
                 foreach (IXLNamedRange nr in worksheet.NamedRanges)
                 {
@@ -569,32 +578,33 @@ namespace ClosedXML.Excel
                 definedNames.AppendChild(definedName);
             }
 
-            if (workbook.DefinedNames == null)
-                workbook.DefinedNames = new DefinedNames();
+            workbook.DefinedNames = definedNames;
+            //if (workbook.DefinedNames == null)
+            //    workbook.DefinedNames = new DefinedNames();
 
-            foreach (DefinedName dn in definedNames)
-            {
-                String dnName = dn.Name.Value;
-                var dnLocalSheetId = dn.LocalSheetId;
-                var existingDefinedName = workbook.DefinedNames
-                    .Elements<DefinedName>()
-                    .FirstOrDefault(d =>
-                                    String.Compare(d.Name.Value, dnName, true) == 0
-                                    && (
-                                           (d.LocalSheetId != null && dnLocalSheetId != null &&
-                                            d.LocalSheetId.InnerText == dnLocalSheetId.InnerText)
-                                           || d.LocalSheetId == null
-                                           || dnLocalSheetId == null)
-                    );
-                if (existingDefinedName != null)
-                {
-                    existingDefinedName.Text = dn.Text;
-                    existingDefinedName.LocalSheetId = dn.LocalSheetId;
-                    existingDefinedName.Comment = dn.Comment;
-                }
-                else
-                    workbook.DefinedNames.AppendChild(dn.CloneNode(true));
-            }
+            //foreach (DefinedName dn in definedNames)
+            //{
+            //    String dnName = dn.Name.Value;
+            //    var dnLocalSheetId = dn.LocalSheetId;
+            //    var existingDefinedName = workbook.DefinedNames
+            //        .Elements<DefinedName>()
+            //        .FirstOrDefault(d =>
+            //                        String.Compare(d.Name.Value, dnName, true) == 0
+            //                        && (
+            //                               (d.LocalSheetId != null && dnLocalSheetId != null &&
+            //                                d.LocalSheetId.InnerText == dnLocalSheetId.InnerText)
+            //                               || d.LocalSheetId == null
+            //                               || dnLocalSheetId == null)
+            //        );
+            //    if (existingDefinedName != null)
+            //    {
+            //        existingDefinedName.Text = dn.Text;
+            //        existingDefinedName.LocalSheetId = dn.LocalSheetId;
+            //        existingDefinedName.Comment = dn.Comment;
+            //    }
+            //    else
+            //        workbook.DefinedNames.AppendChild(dn.CloneNode(true));
+            //}
 
             if (workbook.CalculationProperties == null)
                 workbook.CalculationProperties = new CalculationProperties {CalculationId = 125725U};
