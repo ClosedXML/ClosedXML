@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
                 @"^('?(?<Sheet>[^'!]+)'?!(?<Range>.+))|((?<Table>[^\[]+)\[(?<Column>[^\]]+)\])$",
                 RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture
             );
-        private readonly List<String> _rangeList = new List<String>();
+        private List<String> _rangeList = new List<String>();
         private readonly XLNamedRanges _namedRanges;
         public XLNamedRange(XLNamedRanges namedRanges , String rangeName, String range,  String comment = null)
         {
@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
             {
                 var ranges = new XLRanges();
                 foreach (var rangeToAdd in 
-                   from rangeAddress in _rangeList.SelectMany(c=>c.Split(','))
+                   from rangeAddress in _rangeList.SelectMany(c=>c.Split(',')).Where(s=>s[0] != '"')
                    let match = _namedRangeReferenceRegex.Match(rangeAddress)
                    select
                        match.Groups["Sheet"].Success
@@ -105,5 +105,11 @@ namespace ClosedXML.Excel
         }
 
         public String RefersTo { get { return ToString(); } }
+
+        internal List<String> RangeList
+        {
+            get { return _rangeList; }
+            set { _rangeList = value; }
+        }
     }
 }

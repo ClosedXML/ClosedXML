@@ -18,37 +18,37 @@
 
         private static readonly Regex A1Regex = new Regex(
             @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
-            + @"|(?<=\W)(\d{1,7}:\d{1,7})(?=\W)" // 1:1
-            + @"|(?<=\W)([a-zA-Z]{1,3}:[a-zA-Z]{1,3})(?=\W)"); // A:A
+            + @"|(?<=\W)(\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
+            + @"|(?<=\W)(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)"); // A:A
 
-        private static readonly Regex A1SimpleRegex = new Regex(
-            @"(?<=\W)" // Start with non word
-            + @"(" // Start Group to pick
-            + @"(" // Start Sheet Name, optional
+        public static readonly Regex A1SimpleRegex = new Regex(
+            //  @"(?<=\W)" // Start with non word
+             @"(?<Reference>" // Start Group to pick
+            + @"(?<Sheet>" // Start Sheet Name, optional
             + @"("
-            + @"\'[^\[\]\*/\\\?:]+\'" // Sheet name with special characters, surrounding apostrophes are required
+            + @"\'([^\[\]\*/\\\?:\']+|\'\')\'" // Sheet name with special characters, surrounding apostrophes are required
             + @"|"
             + @"\'?\w+\'?" // Sheet name with letters and numbers, surrounding apostrophes are optional
             + @")"
             + @"!)?" // End Sheet Name, optional
-            + @"(" // Start range
+            + @"(?<Range>" // Start range
             + @"\$?[a-zA-Z]{1,3}\$?\d{1,7}" // A1 Address 1
-            + @"(:\$?[a-zA-Z]{1,3}\$?\d{1,7})?" // A1 Address 2, optional
+            + @"(?<RangeEnd>:\$?[a-zA-Z]{1,3}\$?\d{1,7})?" // A1 Address 2, optional
             + @"|"
-            + @"(\d{1,7}:\d{1,7})" // 1:1
+            + @"(?<ColumnNumbers>\$?\d{1,7}:\$?\d{1,7})" // 1:1
             + @"|"
-            + @"([a-zA-Z]{1,3}:[a-zA-Z]{1,3})" // A:A
+            + @"(?<ColumnLetters>\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})" // A:A
             + @")" // End Range
             + @")" // End Group to pick
-            + @"(?=\W)" // End with non word
+            //+ @"(?=\W)" // End with non word
             );
 
         private static readonly Regex A1RowRegex = new Regex(
-            @"(\d{1,7}:\d{1,7})" // 1:1
+            @"(\$?\d{1,7}:\$?\d{1,7})" // 1:1
             );
 
         private static readonly Regex A1ColumnRegex = new Regex(
-            @"([a-zA-Z]{1,3}:[a-zA-Z]{1,3})" // A:A
+            @"(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})" // A:A
             );
 
         private static readonly Regex R1C1Regex = new Regex(
@@ -1404,12 +1404,16 @@
             return this;
         }
 
-
         internal void ShiftFormulaRows(XLRange shiftedRange, int rowsShifted)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(FormulaA1)) return;
+            _formulaA1 = ShiftFormulaRows(FormulaA1, Worksheet, shiftedRange, rowsShifted);
+        }
 
-            string value = ">" + _formulaA1 + "<";
+        internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange, int rowsShifted)
+        {
+            if (StringExtensions.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+
+            string value = formulaA1;// ">" + formulaA1 + "<";
 
             var regex = A1SimpleRegex;
 
@@ -1423,7 +1427,7 @@
                 int matchIndex = match.Index;
                 if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
                 {
-// Check that the match is not between quotes
+                    // Check that the match is not between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     string sheetName;
                     bool useSheetName = false;
@@ -1435,14 +1439,14 @@
                         useSheetName = true;
                     }
                     else
-                        sheetName = _worksheet.Name;
+                        sheetName = worksheetInAction.Name;
 
-                    if (String.Compare(sheetName, shiftedWsName, true)==0)
+                    if (String.Compare(sheetName, shiftedWsName, true) == 0)
                     {
                         string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1ColumnRegex.IsMatch(rangeAddress))
                         {
-                            var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
+                            var matchRange = worksheetInAction.Workbook.Worksheet(sheetName).Range(rangeAddress);
                             if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
                                 matchRange.RangeAddress.LastAddress.RowNumber
                                 &&
@@ -1488,7 +1492,7 @@
                                         {
                                             sb.Append(String.Format("'{0}'!{1}:{2}",
                                                                     sheetName,
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber +
                                                                                   rowsShifted,
@@ -1498,7 +1502,7 @@
                                                                                       FirstAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedColumn),
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber +
                                                                                   rowsShifted,
@@ -1512,7 +1516,7 @@
                                         else
                                         {
                                             sb.Append(String.Format("{0}:{1}",
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber +
                                                                                   rowsShifted,
@@ -1522,7 +1526,7 @@
                                                                                       FirstAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedColumn),
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber +
                                                                                   rowsShifted,
@@ -1540,7 +1544,7 @@
                                         {
                                             sb.Append(String.Format("'{0}'!{1}",
                                                                     sheetName,
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber +
                                                                                   rowsShifted,
@@ -1554,7 +1558,7 @@
                                         else
                                         {
                                             sb.Append(String.Format("{0}",
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber +
                                                                                   rowsShifted,
@@ -1574,7 +1578,7 @@
                                         sb.Append(String.Format("'{0}'!{1}:{2}",
                                                                 sheetName,
                                                                 matchRange.RangeAddress.FirstAddress,
-                                                                new XLAddress(_worksheet,
+                                                                new XLAddress(worksheetInAction,
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.RowNumber +
                                                                               rowsShifted,
@@ -1589,7 +1593,7 @@
                                     {
                                         sb.Append(String.Format("{0}:{1}",
                                                                 matchRange.RangeAddress.FirstAddress,
-                                                                new XLAddress(_worksheet,
+                                                                new XLAddress(worksheetInAction,
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.RowNumber +
                                                                               rowsShifted,
@@ -1619,15 +1623,22 @@
             if (lastIndex < value.Length)
                 sb.Append(value.Substring(lastIndex));
 
-            string retVal = sb.ToString();
-            _formulaA1 = retVal.Substring(1, retVal.Length - 2);
+            return sb.ToString();
+
+            //string retVal = sb.ToString();
+            //return retVal.Substring(1, retVal.Length - 2);
         }
 
         internal void ShiftFormulaColumns(XLRange shiftedRange, int columnsShifted)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(FormulaA1)) return;
+            _formulaA1 = ShiftFormulaColumns(FormulaA1, Worksheet, shiftedRange, columnsShifted);
+        }
 
-            string value = ">" + _formulaA1 + "<";
+        internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange, int columnsShifted)
+        {
+            if (StringExtensions.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+
+            string value = formulaA1; // ">" + formulaA1 + "<";
 
             var regex = A1SimpleRegex;
 
@@ -1652,14 +1663,14 @@
                         useSheetName = true;
                     }
                     else
-                        sheetName = _worksheet.Name;
+                        sheetName = worksheetInAction.Name;
 
                     if (String.Compare(sheetName, shiftedRange.Worksheet.Name, true) == 0)
                     {
                         string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1RowRegex.IsMatch(rangeAddress))
                         {
-                            var matchRange = _worksheet.Workbook.Worksheet(sheetName).Range(rangeAddress);
+                            var matchRange = worksheetInAction.Workbook.Worksheet(sheetName).Range(rangeAddress);
                             if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
                                 matchRange.RangeAddress.LastAddress.ColumnNumber
                                 &&
@@ -1719,7 +1730,7 @@
                                         {
                                             sb.Append(String.Format("'{0}'!{1}:{2}",
                                                                     sheetName,
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber,
                                                                                   matchRange.RangeAddress.
@@ -1729,7 +1740,7 @@
                                                                                       FirstAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedColumn),
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber,
                                                                                   matchRange.RangeAddress.
@@ -1743,7 +1754,7 @@
                                         else
                                         {
                                             sb.Append(String.Format("{0}:{1}",
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber,
                                                                                   matchRange.RangeAddress.
@@ -1753,7 +1764,7 @@
                                                                                       FirstAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedColumn),
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber,
                                                                                   matchRange.RangeAddress.
@@ -1771,7 +1782,7 @@
                                         {
                                             sb.Append(String.Format("'{0}'!{1}",
                                                                     sheetName,
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber,
                                                                                   matchRange.RangeAddress.
@@ -1785,7 +1796,7 @@
                                         else
                                         {
                                             sb.Append(String.Format("{0}",
-                                                                    new XLAddress(_worksheet,
+                                                                    new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber,
                                                                                   matchRange.RangeAddress.
@@ -1805,7 +1816,7 @@
                                         sb.Append(String.Format("'{0}'!{1}:{2}",
                                                                 sheetName,
                                                                 matchRange.RangeAddress.FirstAddress,
-                                                                new XLAddress(_worksheet,
+                                                                new XLAddress(worksheetInAction,
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.RowNumber,
                                                                               matchRange.RangeAddress.
@@ -1820,7 +1831,7 @@
                                     {
                                         sb.Append(String.Format("{0}:{1}",
                                                                 matchRange.RangeAddress.FirstAddress,
-                                                                new XLAddress(_worksheet,
+                                                                new XLAddress(worksheetInAction,
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.RowNumber,
                                                                               matchRange.RangeAddress.
@@ -1850,9 +1861,10 @@
             if (lastIndex < value.Length)
                 sb.Append(value.Substring(lastIndex));
 
-            string retVal = sb.ToString();
+            return sb.ToString();
 
-            _formulaA1 = retVal.Substring(1, retVal.Length - 2);
+            //string retVal = sb.ToString();
+            //return retVal.Substring(1, retVal.Length - 2);
         }
 
         // --

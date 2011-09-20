@@ -6,6 +6,7 @@ using System.Text;
 namespace ClosedXML.Excel
 {
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     ///   Common methods
@@ -16,6 +17,7 @@ namespace ClosedXML.Excel
         public const int MinColumnNumber = 1;
         public const int MaxRowNumber = 1048576;
         public const int MaxColumnNumber = 16384;
+        public const String MaxColumnLetter = "XFD";
 
         private const Int32 TwoT26 = 26 * 26;
         internal static readonly NumberFormatInfo NumberFormatForParse = CultureInfo.InvariantCulture.NumberFormat;
@@ -111,24 +113,47 @@ namespace ClosedXML.Excel
                 && IsValidColumn(address.Substring(0, rowPos));
         }
 
+        public static readonly Regex A1SimpleRegex = new Regex(
+              @"\A"
+            + @"(?<Reference>" // Start Group to pick
+            + @"(?<Sheet>" // Start Sheet Name, optional
+            + @"("
+            + @"\'([^\[\]\*/\\\?:\']+|\'\')\'" // Sheet name with special characters, surrounding apostrophes are required
+            + @"|"
+            + @"\'?\w+\'?" // Sheet name with letters and numbers, surrounding apostrophes are optional
+            + @")"
+            + @"!)?" // End Sheet Name, optional
+            + @"(?<Range>" // Start range
+            + @"\$?[a-zA-Z]{1,3}\$?\d{1,7}" // A1 Address 1
+            + @"(?<RangeEnd>:\$?[a-zA-Z]{1,3}\$?\d{1,7})?" // A1 Address 2, optional
+            + @"|"
+            + @"(?<ColumnNumbers>\$?\d{1,7}:\$?\d{1,7})" // 1:1
+            + @"|"
+            + @"(?<ColumnLetters>\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})" // A:A
+            + @")" // End Range
+            + @")" // End Group to pick
+            + @"\Z"
+            );
+
         public static Boolean IsValidRangeAddress(String rangeAddress)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(rangeAddress))
-                return false;
-        
-            string addressToUse = rangeAddress.Contains("!")
-                                      ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
-                                      : rangeAddress;
+            return A1SimpleRegex.IsMatch(rangeAddress);
+            //if (StringExtensions.IsNullOrWhiteSpace(rangeAddress))
+            //    return false;
 
-            if (addressToUse.Contains(':'))
-            {
-                var arrRange = addressToUse.Split(':');
-                string firstPart = arrRange[0];
-                string secondPart = arrRange[1];
-                return IsValidA1Address(firstPart) && IsValidA1Address(secondPart);
-            }
+            //string addressToUse = rangeAddress.Contains("!")
+            //                          ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
+            //                          : rangeAddress;
 
-            return IsValidA1Address(addressToUse);
+            //if (addressToUse.Contains(':'))
+            //{
+            //    var arrRange = addressToUse.Split(':');
+            //    string firstPart = arrRange[0];
+            //    string secondPart = arrRange[1];
+            //    return IsValidA1Address(firstPart) && IsValidA1Address(secondPart);
+            //}
+
+            //return IsValidA1Address(addressToUse);
         }
 
         public static int GetRowFromAddress1(string cellAddressString)

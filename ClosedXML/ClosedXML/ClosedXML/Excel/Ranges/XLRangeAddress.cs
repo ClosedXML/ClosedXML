@@ -31,23 +31,41 @@ namespace ClosedXML.Excel
                                       ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
                                       : rangeAddress;
 
-            XLAddress firstAddress;
-            XLAddress lastAddress;
+            string firstPart;
+            string secondPart;
             if (addressToUse.Contains(':'))
             {
                 var arrRange = addressToUse.Split(':');
-                string firstPart = arrRange[0];
-                string secondPart = arrRange[1];
-                firstAddress = XLAddress.Create(worksheet, firstPart);
-                lastAddress = XLAddress.Create(worksheet, secondPart);
+                firstPart = arrRange[0];
+                secondPart = arrRange[1];
             }
             else
             {
-                firstAddress = XLAddress.Create(worksheet, addressToUse);
-                lastAddress = XLAddress.Create(worksheet, addressToUse);
+                firstPart = addressToUse;
+                secondPart = addressToUse;
             }
-            FirstAddress = firstAddress;
-            LastAddress = lastAddress;
+
+            if (ExcelHelper.IsValidA1Address(firstPart))
+            {
+                FirstAddress = XLAddress.Create(worksheet, firstPart);
+                LastAddress = XLAddress.Create(worksheet, secondPart);
+            }
+            else
+            {
+                firstPart = firstPart.Replace("$", String.Empty);
+                secondPart = secondPart.Replace("$", String.Empty);
+                if (char.IsDigit(firstPart[0]))
+                {
+                    FirstAddress = XLAddress.Create(worksheet, "A" + firstPart);
+                    LastAddress = XLAddress.Create(worksheet, ExcelHelper.MaxColumnLetter + secondPart);
+                }
+                else
+                {
+                    FirstAddress = XLAddress.Create(worksheet, firstPart + "1");
+                    LastAddress = XLAddress.Create(worksheet, secondPart + ExcelHelper.MaxRowNumber.ToStringLookup());    
+                }
+            }
+
             Worksheet = worksheet;
         }
 

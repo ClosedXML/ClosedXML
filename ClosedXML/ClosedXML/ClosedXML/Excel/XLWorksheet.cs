@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
+    using System.Text.RegularExpressions;
+
     internal delegate void RangeShiftedRowsDelegate(XLRange range, Int32 rowsShifted);
 
     internal delegate void RangeShiftedColumnsDelegate(XLRange range, Int32 columnsShifted);
@@ -1069,6 +1071,9 @@ namespace ClosedXML.Excel
                     newMerge.Add(rngMerged);
             }
             Internals.MergedRanges = newMerge;
+
+            Workbook.Worksheets.ForEach(ws => MoveNamedRangesColumns(range, columnsShifted, ws.NamedRanges));
+            MoveNamedRangesColumns(range, columnsShifted, Workbook.NamedRanges);
         }
 
         private void XLWorksheetRangeShiftedRows(XLRange range, int rowsShifted)
@@ -1094,6 +1099,32 @@ namespace ClosedXML.Excel
                     newMerge.Add(rngMerged);
             }
             Internals.MergedRanges = newMerge;
+
+            Workbook.Worksheets.ForEach(ws=> MoveNamedRangesRows(range, rowsShifted, ws.NamedRanges));
+            MoveNamedRangesRows(range, rowsShifted, Workbook.NamedRanges);
+            
+        }
+
+        private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)
+        {
+            foreach (XLNamedRange nr in namedRanges)
+            {
+                var newRangeList =
+                    nr.RangeList.Select(r => XLCell.ShiftFormulaRows(r, this, range, rowsShifted)).Where(
+                        newReference => newReference.Length > 0).ToList();
+                nr.RangeList = newRangeList;
+            }
+        }
+
+        private void MoveNamedRangesColumns(XLRange range, int columnsShifted, IXLNamedRanges namedRanges)
+        {
+            foreach (XLNamedRange nr in namedRanges)
+            {
+                var newRangeList =
+                    nr.RangeList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
+                        newReference => newReference.Length > 0).ToList();
+                nr.RangeList = newRangeList;
+            }
         }
 
         public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
