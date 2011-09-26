@@ -254,7 +254,9 @@
 
         public string GetFormattedString()
         {
-            string cValue = FormulaA1.Length > 0 ? String.Empty : _cellValue;
+            if (FormulaA1.Length > 0) return String.Empty;
+            
+            string cValue = _cellValue;
 
             if (_dataType == XLCellValues.Boolean)
                 return (cValue != "0").ToString();
@@ -992,17 +994,6 @@
             return true;
         }
 
-        private bool SetComment(object value)
-        {
-            var asComment = value as XLComment;
-
-            if (asComment == null)
-                return false;
-
-            _comment = asComment;
-            return true;
-        }
-
         private Boolean SetRange(Object rangeObject)
         {
             var asRange = rangeObject as XLRangeBase;
@@ -1146,15 +1137,15 @@
                                      {11, "0.00E+00"},
                                      {12, "# ?/?"},
                                      {13, "# ??/??"},
-                                     {14, "MM-dd-yy"},
+                                     {14, "M/d/yyyy"},
                                      {15, "d-MMM-yy"},
                                      {16, "d-MMM"},
                                      {17, "MMM-yy"},
-                                     {18, "h:mm AM/PM"},
-                                     {19, "h:mm:ss AM/PM"},
-                                     {20, "h:mm"},
-                                     {21, "h:mm:ss"},
-                                     {22, "M/d/yy h:mm"},
+                                     {18, "h:mm tt"},
+                                     {19, "h:mm:ss tt"},
+                                     {20, "H:mm"},
+                                     {21, "H:mm:ss"},
+                                     {22, "M/d/yyyy H:mm"},
                                      {37, "#,##0 ;(#,##0)"},
                                      {38, "#,##0 ;[Red](#,##0)"},
                                      {39, "#,##0.00;(#,##0.00)"},
