@@ -378,6 +378,7 @@
                 bool hasTitles = false;
                 int maxCo = 0;
                 bool isDataTable = false;
+                bool isDataReader = false;
                 foreach (object m in data)
                 {
                     int co = Address.ColumnNumber;
@@ -406,10 +407,11 @@
                             co++;
                         }
                     }
-                    else if (isDataTable || (m as DataRow) != null)
+                    else if (isDataTable || m is DataRow)
                     {
                         if (!isDataTable)
                             isDataTable = true;
+                       
                         if (!hasTitles)
                         {
                             foreach (string fieldName in from DataColumn column in ((DataRow)m).Table.Columns select StringExtensions.IsNullOrWhiteSpace(column.Caption)
@@ -427,6 +429,32 @@
                         foreach (object item in ((DataRow)m).ItemArray)
                         {
                             SetValue(item, ro, co);
+                            co++;
+                        }
+                    }
+                    else if (isDataReader || m is IDataRecord)
+                    {
+                        if (!isDataReader)
+                            isDataReader = true;
+
+                        var record = m as IDataRecord;
+
+                        Int32 fieldCount = record.FieldCount;
+                        if (!hasTitles)
+                        {
+                            for (int i = 0; i < fieldCount; i++)
+                            {
+                                SetValue(record.GetName(i), fRo, co);
+                                co++;
+                            }
+
+                            co = Address.ColumnNumber;
+                            hasTitles = true;
+                        }
+
+                        for (int i = 0; i < fieldCount; i++)
+                        {
+                            SetValue(record[i] , ro, co);
                             co++;
                         }
                     }
@@ -509,6 +537,8 @@
             {
                 int ro = Address.RowNumber;
                 int maxCo = 0;
+                Boolean isDataTable = false;
+                Boolean isDataReader = false;
                 foreach (object m in data)
                 {
                     int co = Address.ColumnNumber;
@@ -527,11 +557,28 @@
                             co++;
                         }
                     }
-                    else if ((m as DataRow) != null)
+                    else if (isDataTable || m is DataRow)
                     {
+                        if (!isDataTable)
+                            isDataTable = true;
+
                         foreach (object item in (m as DataRow).ItemArray)
                         {
                             SetValue(item, ro, co);
+                            co++;
+                        }
+                    }
+                    else if (isDataReader || m is IDataRecord)
+                    {
+                        if (!isDataReader)
+                            isDataReader = true;
+
+                        var record = m as IDataRecord;
+
+                        Int32 fieldCount = record.FieldCount;
+                        for (int i = 0; i < fieldCount; i++)
+                        {
+                            SetValue(record[i], ro, co);
                             co++;
                         }
                     }
