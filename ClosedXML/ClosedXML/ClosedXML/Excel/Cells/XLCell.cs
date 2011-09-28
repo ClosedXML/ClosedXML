@@ -1101,7 +1101,12 @@
             if (value == null)
                 _worksheet.Cell(ro, co).SetValue(String.Empty);
             else
-                _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
+            {
+                if (value is IConvertible)
+                    _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
+                else
+                    _worksheet.Cell(ro, co).SetValue(value);
+            }
         }
 
         private void SetValue(object value)
