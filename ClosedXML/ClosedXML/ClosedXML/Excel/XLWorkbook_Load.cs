@@ -668,7 +668,11 @@ namespace ClosedXML.Excel
 
                 var xlColumns = (XLColumns) ws.Columns(col.Min, col.Max);
                 if (col.Width != null)
-                    xlColumns.Width = col.Width - ColumnWidthOffset;
+                {
+                    Double width = col.Width - ColumnWidthOffset;
+                    //if (width < 0) width = 0;
+                    xlColumns.Width = width;
+                }
                 else
                     xlColumns.Width = ws.ColumnWidth;
 
