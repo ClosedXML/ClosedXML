@@ -1024,7 +1024,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            if (cellFormat.FillId != null)
+            if (UInt32HasValue(cellFormat.FillId))
             {
                 var fill = (Fill)fills.ElementAt((Int32)cellFormat.FillId.Value);
                 if (fill.PatternFill != null)
@@ -1041,11 +1041,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            //var alignmentDictionary = GetAlignmentDictionary(s);
 
-            //if (alignmentDictionary.ContainsKey(styleIndex))
-            //{
-            //    var alignment = alignmentDictionary[styleIndex];
             var alignment = cellFormat.Alignment;
             if (alignment != null)
             {
@@ -1073,112 +1069,119 @@ namespace ClosedXML.Excel
             }
 
 
-            //if (borders.ContainsKey(styleIndex))
-            //{
-            //    var border = borders[styleIndex];
-            uint borderId = cellFormat.BorderId.Value;
-            var border = (Border) borders.ElementAt((Int32) borderId);
-            if (border != null)
+            if (UInt32HasValue(cellFormat.BorderId))
             {
-                var bottomBorder = border.BottomBorder;
-                if (bottomBorder != null)
+                uint borderId = cellFormat.BorderId.Value;
+                var border = (Border)borders.ElementAt((Int32)borderId);
+                if (border != null)
                 {
-                    if (bottomBorder.Style != null)
-                        xlStylized.InnerStyle.Border.BottomBorder = bottomBorder.Style.Value.ToClosedXml();
+                    var bottomBorder = border.BottomBorder;
+                    if (bottomBorder != null)
+                    {
+                        if (bottomBorder.Style != null)
+                            xlStylized.InnerStyle.Border.BottomBorder = bottomBorder.Style.Value.ToClosedXml();
 
-                    var bottomBorderColor = GetColor(bottomBorder.Color);
-                    if (bottomBorderColor.HasValue)
-                        xlStylized.InnerStyle.Border.BottomBorderColor = bottomBorderColor;
-                }
-                var topBorder = border.TopBorder;
-                if (topBorder != null)
-                {
-                    if (topBorder.Style != null)
-                        xlStylized.InnerStyle.Border.TopBorder = topBorder.Style.Value.ToClosedXml();
-                    var topBorderColor = GetColor(topBorder.Color);
-                    if (topBorderColor.HasValue)
-                        xlStylized.InnerStyle.Border.TopBorderColor = topBorderColor;
-                }
-                var leftBorder = border.LeftBorder;
-                if (leftBorder != null)
-                {
-                    if (leftBorder.Style != null)
-                        xlStylized.InnerStyle.Border.LeftBorder = leftBorder.Style.Value.ToClosedXml();
-                    var leftBorderColor = GetColor(leftBorder.Color);
-                    if (leftBorderColor.HasValue)
-                        xlStylized.InnerStyle.Border.LeftBorderColor = leftBorderColor;
-                }
-                var rightBorder = border.RightBorder;
-                if (rightBorder != null)
-                {
-                    if (rightBorder.Style != null)
-                        xlStylized.InnerStyle.Border.RightBorder = rightBorder.Style.Value.ToClosedXml();
-                    var rightBorderColor = GetColor(rightBorder.Color);
-                    if (rightBorderColor.HasValue)
-                        xlStylized.InnerStyle.Border.RightBorderColor = rightBorderColor;
-                }
-                var diagonalBorder = border.DiagonalBorder;
-                if (diagonalBorder != null)
-                {
-                    if (diagonalBorder.Style != null)
-                        xlStylized.InnerStyle.Border.DiagonalBorder = diagonalBorder.Style.Value.ToClosedXml();
-                    var diagonalBorderColor = GetColor(diagonalBorder.Color);
-                    if (diagonalBorderColor.HasValue)
-                        xlStylized.InnerStyle.Border.DiagonalBorderColor = diagonalBorderColor;
-                    if (border.DiagonalDown != null)
-                        xlStylized.InnerStyle.Border.DiagonalDown = border.DiagonalDown;
-                    if (border.DiagonalUp != null)
-                        xlStylized.InnerStyle.Border.DiagonalUp = border.DiagonalUp;
+                        var bottomBorderColor = GetColor(bottomBorder.Color);
+                        if (bottomBorderColor.HasValue)
+                            xlStylized.InnerStyle.Border.BottomBorderColor = bottomBorderColor;
+                    }
+                    var topBorder = border.TopBorder;
+                    if (topBorder != null)
+                    {
+                        if (topBorder.Style != null)
+                            xlStylized.InnerStyle.Border.TopBorder = topBorder.Style.Value.ToClosedXml();
+                        var topBorderColor = GetColor(topBorder.Color);
+                        if (topBorderColor.HasValue)
+                            xlStylized.InnerStyle.Border.TopBorderColor = topBorderColor;
+                    }
+                    var leftBorder = border.LeftBorder;
+                    if (leftBorder != null)
+                    {
+                        if (leftBorder.Style != null)
+                            xlStylized.InnerStyle.Border.LeftBorder = leftBorder.Style.Value.ToClosedXml();
+                        var leftBorderColor = GetColor(leftBorder.Color);
+                        if (leftBorderColor.HasValue)
+                            xlStylized.InnerStyle.Border.LeftBorderColor = leftBorderColor;
+                    }
+                    var rightBorder = border.RightBorder;
+                    if (rightBorder != null)
+                    {
+                        if (rightBorder.Style != null)
+                            xlStylized.InnerStyle.Border.RightBorder = rightBorder.Style.Value.ToClosedXml();
+                        var rightBorderColor = GetColor(rightBorder.Color);
+                        if (rightBorderColor.HasValue)
+                            xlStylized.InnerStyle.Border.RightBorderColor = rightBorderColor;
+                    }
+                    var diagonalBorder = border.DiagonalBorder;
+                    if (diagonalBorder != null)
+                    {
+                        if (diagonalBorder.Style != null)
+                            xlStylized.InnerStyle.Border.DiagonalBorder = diagonalBorder.Style.Value.ToClosedXml();
+                        var diagonalBorderColor = GetColor(diagonalBorder.Color);
+                        if (diagonalBorderColor.HasValue)
+                            xlStylized.InnerStyle.Border.DiagonalBorderColor = diagonalBorderColor;
+                        if (border.DiagonalDown != null)
+                            xlStylized.InnerStyle.Border.DiagonalDown = border.DiagonalDown;
+                        if (border.DiagonalUp != null)
+                            xlStylized.InnerStyle.Border.DiagonalUp = border.DiagonalUp;
+                    }
                 }
             }
 
-            //if (fonts.ContainsKey(styleIndex))
-            //{
-            //    var font = fonts[styleIndex];
-            var fontId = cellFormat.FontId;
-            var font = (DocumentFormat.OpenXml.Spreadsheet.Font) fonts.ElementAt((Int32) fontId.Value);
-            if (font != null)
+            if (UInt32HasValue(cellFormat.FontId))
             {
-                xlStylized.InnerStyle.Font.Bold = GetBoolean(font.Bold);
-
-                var fontColor = GetColor(font.Color);
-                if (fontColor.HasValue)
-                    xlStylized.InnerStyle.Font.FontColor = fontColor;
-
-                if (font.FontFamilyNumbering != null && (font.FontFamilyNumbering).Val != null)
+                var fontId = cellFormat.FontId;
+                var font = (DocumentFormat.OpenXml.Spreadsheet.Font)fonts.ElementAt((Int32)fontId.Value);
+                if (font != null)
                 {
-                    xlStylized.InnerStyle.Font.FontFamilyNumbering =
-                        (XLFontFamilyNumberingValues) Int32.Parse((font.FontFamilyNumbering).Val.ToString());
-                }
-                if (font.FontName != null)
-                {
-                    if ((font.FontName).Val != null)
-                        xlStylized.InnerStyle.Font.FontName = (font.FontName).Val;
-                }
-                if (font.FontSize != null)
-                {
-                    if ((font.FontSize).Val != null)
-                        xlStylized.InnerStyle.Font.FontSize = (font.FontSize).Val;
-                }
+                    xlStylized.InnerStyle.Font.Bold = GetBoolean(font.Bold);
 
-                xlStylized.InnerStyle.Font.Italic = GetBoolean(font.Italic);
-                xlStylized.InnerStyle.Font.Shadow = GetBoolean(font.Shadow);
-                xlStylized.InnerStyle.Font.Strikethrough = GetBoolean(font.Strike);
+                    var fontColor = GetColor(font.Color);
+                    if (fontColor.HasValue)
+                        xlStylized.InnerStyle.Font.FontColor = fontColor;
 
-                if (font.Underline != null)
-                {
-                    xlStylized.InnerStyle.Font.Underline = font.Underline.Val != null ? (font.Underline).Val.Value.ToClosedXml() : XLFontUnderlineValues.Single;
-                }
+                    if (font.FontFamilyNumbering != null && (font.FontFamilyNumbering).Val != null)
+                    {
+                        xlStylized.InnerStyle.Font.FontFamilyNumbering =
+                            (XLFontFamilyNumberingValues)Int32.Parse((font.FontFamilyNumbering).Val.ToString());
+                    }
+                    if (font.FontName != null)
+                    {
+                        if ((font.FontName).Val != null)
+                            xlStylized.InnerStyle.Font.FontName = (font.FontName).Val;
+                    }
+                    if (font.FontSize != null)
+                    {
+                        if ((font.FontSize).Val != null)
+                            xlStylized.InnerStyle.Font.FontSize = (font.FontSize).Val;
+                    }
 
-                if (font.VerticalTextAlignment != null)
-                {
-                    xlStylized.InnerStyle.Font.VerticalAlignment = font.VerticalTextAlignment.Val != null ? (font.VerticalTextAlignment).Val.Value.ToClosedXml() : XLFontVerticalTextAlignmentValues.Baseline;
+                    xlStylized.InnerStyle.Font.Italic = GetBoolean(font.Italic);
+                    xlStylized.InnerStyle.Font.Shadow = GetBoolean(font.Shadow);
+                    xlStylized.InnerStyle.Font.Strikethrough = GetBoolean(font.Strike);
+
+                    if (font.Underline != null)
+                    {
+                        xlStylized.InnerStyle.Font.Underline = font.Underline.Val != null
+                                                                   ? (font.Underline).Val.Value.ToClosedXml()
+                                                                   : XLFontUnderlineValues.Single;
+                    }
+
+                    if (font.VerticalTextAlignment != null)
+                    {
+                        xlStylized.InnerStyle.Font.VerticalAlignment = font.VerticalTextAlignment.Val != null
+                                                                           ? (font.VerticalTextAlignment).Val.Value.
+                                                                                 ToClosedXml()
+                                                                           : XLFontVerticalTextAlignmentValues.Baseline;
+                    }
                 }
             }
 
+            
+
+            if (!UInt32HasValue(cellFormat.NumberFormatId)) return;
+            
             var numberFormatId = cellFormat.NumberFormatId;
-
-            if (numberFormatId == null) return;
 
             string formatCode = String.Empty;
             if (numberingFormats != null)
@@ -1196,6 +1199,11 @@ namespace ClosedXML.Excel
                 xlStylized.InnerStyle.NumberFormat.Format = formatCode;
             else
                 xlStylized.InnerStyle.NumberFormat.NumberFormatId = (Int32) numberFormatId.Value;
+        }
+
+        private static Boolean UInt32HasValue(UInt32Value value)
+        {
+            return value != null && value.HasValue;
         }
 
         private static Boolean GetBoolean(BooleanPropertyType property)

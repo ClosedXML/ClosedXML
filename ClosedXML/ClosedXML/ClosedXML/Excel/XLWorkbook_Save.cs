@@ -1888,10 +1888,10 @@ namespace ClosedXML.Excel
         private static bool CellFormatsAreEqual(CellFormat f, StyleInfo styleInfo)
         {
             return
-                styleInfo.BorderId == f.BorderId
-                && styleInfo.FillId == f.FillId
-                && styleInfo.FontId == f.FontId
-                && styleInfo.NumberFormatId == f.NumberFormatId
+                   f.BorderId != null && styleInfo.BorderId == f.BorderId
+                && f.FillId != null && styleInfo.FillId == f.FillId
+                && f.FontId != null && styleInfo.FontId == f.FontId
+                && f.NumberFormatId != null && styleInfo.NumberFormatId == f.NumberFormatId
                 && f.ApplyNumberFormat != null && f.ApplyNumberFormat == false
                 && f.ApplyAlignment != null && f.ApplyAlignment == false
                 && f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo)
