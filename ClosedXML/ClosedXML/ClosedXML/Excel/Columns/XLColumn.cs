@@ -521,27 +521,9 @@ namespace ClosedXML.Excel
             return RangeAddress.LastAddress.ColumnNumber - RangeAddress.FirstAddress.ColumnNumber + 1;
         }
 
-        public IXLColumn Sort()
+        public IXLColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
-            RangeUsed().Sort();
-            return this;
-        }
-
-        public IXLColumn Sort(XLSortOrder sortOrder)
-        {
-            RangeUsed().Sort(sortOrder);
-            return this;
-        }
-
-        public IXLColumn Sort(Boolean matchCase)
-        {
-            AsRange().Sort(matchCase);
-            return this;
-        }
-
-        public IXLColumn Sort(XLSortOrder sortOrder, Boolean matchCase)
-        {
-            AsRange().Sort(sortOrder, matchCase);
+            base.Sort(1, sortOrder, matchCase, ignoreBlanks);
             return this;
         }
 

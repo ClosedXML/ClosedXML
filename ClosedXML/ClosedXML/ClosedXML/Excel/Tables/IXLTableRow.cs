@@ -8,9 +8,7 @@ namespace ClosedXML.Excel
         IXLCell Field(String name);
 
         new IXLTableRow Sort();
-        new IXLTableRow Sort(Boolean matchCase);
-        new IXLTableRow Sort(XLSortOrder sortOrder);
-        new IXLTableRow Sort(XLSortOrder sortOrder, Boolean matchCase);
+        new IXLTableRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
 
         new IXLTableRow RowAbove();
         new IXLTableRow RowAbove(Int32 step);

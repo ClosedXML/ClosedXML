@@ -24,8 +24,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Returns the collection of cells that have a value.
         /// </summary>
-        /// <param name="includeStyles">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
-        IXLCells CellsUsed(Boolean includeStyles);
+        /// <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
+        IXLCells CellsUsed(Boolean includeFormats);
 
         /// <summary>
         /// Deletes all rows and shifts the rows below them accordingly.

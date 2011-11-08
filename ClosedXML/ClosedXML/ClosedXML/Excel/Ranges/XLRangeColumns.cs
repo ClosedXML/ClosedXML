@@ -74,9 +74,9 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        public IXLCells CellsUsed(Boolean includeStyles)
+        public IXLCells CellsUsed(Boolean includeFormats)
         {
-            var cells = new XLCells(true, includeStyles);
+            var cells = new XLCells(true, includeFormats);
             foreach (XLRangeColumn container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;

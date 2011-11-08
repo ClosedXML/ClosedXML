@@ -11,6 +11,8 @@ namespace ClosedXML.Excel
         #region Fields
 
         private IXLStyle _style;
+        private XLSortElements _sortRows;
+        private XLSortElements _sortColumns;
 
         #endregion
 
@@ -1303,12 +1305,12 @@ namespace ClosedXML.Excel
             return RangeUsed(false);
         }
 
-        public IXLRange RangeUsed(bool includeStyles)
+        public IXLRange RangeUsed(bool includeFormats)
         {
-            var firstCell = FirstCellUsed(includeStyles);
+            var firstCell = FirstCellUsed(includeFormats);
             if (firstCell == null)
                 return null;
-            var lastCell = LastCellUsed(includeStyles);
+            var lastCell = LastCellUsed(includeFormats);
             return Worksheet.Range(firstCell, lastCell);
         }
 
@@ -1320,16 +1322,6 @@ namespace ClosedXML.Excel
         public virtual void CopyTo(IXLCell target)
         {
             target.Value = this;
-        }
-
-        public void SetAutoFilter()
-        {
-            SetAutoFilter(true);
-        }
-
-        public void SetAutoFilter(Boolean autoFilter)
-        {
-            Worksheet.AutoFilterRange = autoFilter ? this : null;
         }
 
         //public IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn)
@@ -1358,6 +1350,294 @@ namespace ClosedXML.Excel
         public XLPivotTable CreatePivotTable(IXLCell targetCell, String name)
         {
             return (XLPivotTable)this.Worksheet.PivotTables.AddNew(name, targetCell, this.AsRange());
+        }
+
+        public IXLAutoFilter SetAutoFilter() {
+              return Worksheet.AutoFilter.Set(AsRange());
+        }
+
+        public IXLRangeRows RowsUsed(Boolean includeFormats = false)
+        {
+            var rows = new XLRangeRows();
+            foreach(var row in RangeUsed(includeFormats).Rows().Where(r=>!r.IsEmpty(includeFormats)))
+            {
+                rows.Add(row);
+            }
+            return rows;
+        }
+
+        public IXLRangeColumns ColumnsUsed(Boolean includeFormats = false)
+        {
+            var columns = new XLRangeColumns();
+            foreach(var column in RangeUsed(includeFormats).Columns().Where(r=>!r.IsEmpty(includeFormats)))
+            {
+                columns.Add(column);
+            }
+            return columns;
+        }
+
+        #region Sort
+
+        public IXLSortElements SortRows
+        {
+            get { return _sortRows ?? (_sortRows = new XLSortElements()); }
+        }
+
+        public IXLSortElements SortColumns
+        {
+            get { return _sortColumns ?? (_sortColumns = new XLSortElements()); }
+        }
+
+        public IXLRangeBase Sort()
+        {
+            if (SortColumns.Count() == 0)
+            {
+                String columnsToSortBy = String.Empty;
+                Int32 maxColumn = ColumnCount();
+                if (maxColumn == ExcelHelper.MaxColumnNumber)
+                    maxColumn = LastCellUsed(true).Address.ColumnNumber;
+                for (int i = 1; i <= maxColumn; i++)
+                {
+                    columnsToSortBy += i.ToString() + ",";
+                }
+                columnsToSortBy = columnsToSortBy.Substring(0, columnsToSortBy.Length - 1);
+                return Sort(columnsToSortBy);
+            }
+
+            SortRangeRows();
+            return this;
+        }
+
+        public IXLRangeBase Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        {
+            SortColumns.Clear();
+            if (StringExtensions.IsNullOrWhiteSpace(columnsToSortBy))
+            {
+                columnsToSortBy = String.Empty;
+                Int32 maxColumn = ColumnCount();
+                if (maxColumn == ExcelHelper.MaxColumnNumber)
+                    maxColumn = LastCellUsed(true).Address.ColumnNumber;
+                for (int i = 1; i <= maxColumn; i++)
+                {
+                    columnsToSortBy += i.ToString() + ",";
+                }
+                columnsToSortBy = columnsToSortBy.Substring(0, columnsToSortBy.Length - 1);
+            }
+
+            foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
+            {
+                String coString;
+                String order;
+                if (coPairTrimmed.Contains(' '))
+                {
+                    var pair = coPairTrimmed.Split(' ');
+                    coString = pair[0];
+                    order = pair[1];
+                }
+                else
+                {
+                    coString = coPairTrimmed;
+                    if (sortOrder == XLSortOrder.Ascending)
+                        order = "ASC";
+                    else
+                        order = "DESC";
+                }
+
+                Int32 co;
+                if (!Int32.TryParse(coString, out co))
+                    co = ExcelHelper.GetColumnNumberFromLetter(coString);
+
+                SortColumns.Add(co, String.Compare(order, "ASC", true) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending, ignoreBlanks, matchCase);
+            }
+
+            SortRangeRows();
+            return this;
+        }
+
+        public IXLRangeBase Sort(Int32 columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        {
+            return Sort(columnToSortBy.ToString(), sortOrder, matchCase, ignoreBlanks);
+        }
+
+        public IXLRangeBase SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        {
+            SortRows.Clear();
+            Int32 maxColumn = ColumnCount();
+            if (maxColumn == ExcelHelper.MaxColumnNumber)
+                maxColumn = LastCellUsed(true).Address.ColumnNumber;
+
+            for (int i = 1; i <= maxColumn; i++)
+            {
+                SortRows.Add(i, sortOrder, ignoreBlanks, matchCase);
+            }
+
+            SortRangeColumns();
+            return this;
+        }
+
+
+        #region Sort Rows
+
+        private void SortRangeRows()
+        {
+            Int32 maxRow = RowCount();
+            if (maxRow == ExcelHelper.MaxRowNumber)
+                maxRow = LastCellUsed(true).Address.RowNumber;
+            SortingRangeRows(1, maxRow);
+        }
+
+        private void SwapRows(Int32 row1, Int32 row2)
+        {
+            int row1InWs = RangeAddress.FirstAddress.RowNumber + row1 - 1;
+            int row2InWs = RangeAddress.FirstAddress.RowNumber + row2 - 1;
+
+            Int32 firstColumn = RangeAddress.FirstAddress.ColumnNumber;
+            Int32 lastColumn = RangeAddress.LastAddress.ColumnNumber;
+
+            var range1Sp1 = new XLSheetPoint(row1InWs, firstColumn);
+            var range1Sp2 = new XLSheetPoint(row1InWs, lastColumn);
+            var range2Sp1 = new XLSheetPoint(row2InWs, firstColumn);
+            var range2Sp2 = new XLSheetPoint(row2InWs, lastColumn);
+
+            Worksheet.Internals.CellsCollection.SwapRanges(new XLSheetRange(range1Sp1, range1Sp2),
+                                                           new XLSheetRange(range2Sp1, range2Sp2));
+        }
+
+        private int SortRangeRows(int begPoint, int endPoint)
+        {
+            int pivot = begPoint;
+            int m = begPoint + 1;
+            int n = endPoint;
+            while ((m < endPoint) && RowQuick(pivot).CompareTo(RowQuick(m), SortColumns) >= 0)
+                m++;
+
+            while (n > begPoint && RowQuick(pivot).CompareTo(RowQuick(n), SortColumns) <= 0)
+                n--;
+            while (m < n)
+            {
+                SwapRows(m, n);
+
+                while (m < endPoint && RowQuick(pivot).CompareTo(RowQuick(m), SortColumns) >= 0)
+                    m++;
+
+                while (n > begPoint && RowQuick(pivot).CompareTo(RowQuick(n), SortColumns) <= 0)
+                    n--;
+            }
+            if (pivot != n)
+                SwapRows(n, pivot);
+            return n;
+        }
+
+        private void SortingRangeRows(int beg, int end)
+        {
+            if (end == beg)
+                return;
+            int pivot = SortRangeRows(beg, end);
+            if (pivot > beg)
+                SortingRangeRows(beg, pivot - 1);
+            if (pivot < end)
+                SortingRangeRows(pivot + 1, end);
+        }
+
+        #endregion
+
+        #region Sort Columns
+
+        private void SortRangeColumns()
+        {
+            Int32 maxColumn = ColumnCount();
+            if (maxColumn == ExcelHelper.MaxColumnNumber)
+                maxColumn = LastCellUsed(true).Address.ColumnNumber;
+            SortingRangeColumns(1, maxColumn);
+        }
+
+        private void SwapColumns(Int32 column1, Int32 column2)
+        {
+            int col1InWs = RangeAddress.FirstAddress.ColumnNumber + column1 - 1;
+            int col2InWs = RangeAddress.FirstAddress.ColumnNumber + column2 - 1;
+
+            Int32 firstRow = RangeAddress.FirstAddress.RowNumber;
+            Int32 lastRow = RangeAddress.LastAddress.RowNumber;
+
+            var range1Sp1 = new XLSheetPoint(firstRow, col1InWs);
+            var range1Sp2 = new XLSheetPoint(lastRow, col1InWs);
+            var range2Sp1 = new XLSheetPoint(firstRow, col2InWs);
+            var range2Sp2 = new XLSheetPoint(lastRow, col2InWs);
+
+            Worksheet.Internals.CellsCollection.SwapRanges(new XLSheetRange(range1Sp1, range1Sp2),
+                                                           new XLSheetRange(range2Sp1, range2Sp2));
+        }
+
+        private int SortRangeColumns(int begPoint, int endPoint)
+        {
+            int pivot = begPoint;
+            int m = begPoint + 1;
+            int n = endPoint;
+            while ((m < endPoint) && ColumnQuick(pivot).CompareTo((ColumnQuick(m)), SortRows) >= 0)
+                m++;
+
+            while ((n > begPoint) && ((ColumnQuick(pivot)).CompareTo((ColumnQuick(n)), SortRows) <= 0))
+                n--;
+            while (m < n)
+            {
+                SwapColumns(m, n);
+
+                while ((m < endPoint) && (ColumnQuick(pivot)).CompareTo((ColumnQuick(m)), SortRows) >= 0)
+                    m++;
+
+                while ((n > begPoint) && (ColumnQuick(pivot)).CompareTo((ColumnQuick(n)), SortRows) <= 0)
+                    n--;
+            }
+            if (pivot != n)
+                SwapColumns(n, pivot);
+            return n;
+        }
+
+        private void SortingRangeColumns(int beg, int end)
+        {
+            if (end == beg)
+                return;
+            int pivot = SortRangeColumns(beg, end);
+            if (pivot > beg)
+                SortingRangeColumns(beg, pivot - 1);
+            if (pivot < end)
+                SortingRangeColumns(pivot + 1, end);
+        }
+
+        #endregion
+
+        #endregion
+
+        public XLRangeColumn ColumnQuick(Int32 column)
+        {
+            var firstCellAddress = new XLAddress(Worksheet,
+                                                 RangeAddress.FirstAddress.RowNumber,
+                                                 RangeAddress.FirstAddress.ColumnNumber + column - 1,
+                                                 false,
+                                                 false);
+            var lastCellAddress = new XLAddress(Worksheet,
+                                                RangeAddress.LastAddress.RowNumber,
+                                                RangeAddress.FirstAddress.ColumnNumber + column - 1,
+                                                false,
+                                                false);
+            return new XLRangeColumn(
+                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), true);
+        }
+
+        public XLRangeRow RowQuick(Int32 row)
+        {
+            var firstCellAddress = new XLAddress(Worksheet,
+                                                 RangeAddress.FirstAddress.RowNumber + row - 1,
+                                                 RangeAddress.FirstAddress.ColumnNumber,
+                                                 false,
+                                                 false);
+            var lastCellAddress = new XLAddress(Worksheet,
+                                                RangeAddress.FirstAddress.RowNumber + row - 1,
+                                                RangeAddress.LastAddress.ColumnNumber,
+                                                false,
+                                                false);
+            return new XLRangeRow(
+                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), true);
         }
     }
 }

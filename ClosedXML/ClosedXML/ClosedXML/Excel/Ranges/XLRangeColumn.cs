@@ -67,32 +67,15 @@
 
         public int CellCount()
         {
-            return RangeAddress.LastAddress.ColumnNumber - RangeAddress.FirstAddress.ColumnNumber + 1;
+            return RangeAddress.LastAddress.RowNumber - RangeAddress.FirstAddress.RowNumber + 1;
         }
 
-        public IXLRangeColumn Sort()
+        public IXLRangeColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
-            AsRange().Sort();
+            base.Sort(1, sortOrder, matchCase, ignoreBlanks);
             return this;
         }
 
-        public IXLRangeColumn Sort(XLSortOrder sortOrder)
-        {
-            AsRange().Sort(sortOrder);
-            return this;
-        }
-
-        public IXLRangeColumn Sort(bool matchCase)
-        {
-            AsRange().Sort(matchCase);
-            return this;
-        }
-
-        public IXLRangeColumn Sort(XLSortOrder sortOrder, bool matchCase)
-        {
-            AsRange().Sort(sortOrder, matchCase);
-            return this;
-        }
 
         public new IXLRangeColumn CopyTo(IXLCell target)
         {

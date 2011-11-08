@@ -27,25 +27,12 @@ namespace ClosedXML.Excel
 
         public new IXLTableRow Sort()
         {
-            AsRange().Sort(XLSortOrientation.LeftToRight);
-            return this;
+            return SortLeftToRight();
         }
 
-        public new IXLTableRow Sort(XLSortOrder sortOrder)
+        public new IXLTableRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
-            AsRange().Sort(XLSortOrientation.LeftToRight, sortOrder);
-            return this;
-        }
-
-        public new IXLTableRow Sort(Boolean matchCase)
-        {
-            AsRange().Sort(XLSortOrientation.LeftToRight, matchCase);
-            return this;
-        }
-
-        public new IXLTableRow Sort(XLSortOrder sortOrder, Boolean matchCase)
-        {
-            AsRange().Sort(XLSortOrientation.LeftToRight, sortOrder, matchCase);
+            base.SortLeftToRight(sortOrder, matchCase, ignoreBlanks);
             return this;
         }
 

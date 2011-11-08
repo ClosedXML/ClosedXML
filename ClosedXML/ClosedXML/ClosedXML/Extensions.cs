@@ -82,6 +82,12 @@ namespace ClosedXML.Excel
             }
             return false;
         }
+
+        public static T CastTo<T>(this Object o)
+        {
+            return (T)Convert.ChangeType(o, typeof(T));
+        }
+
     }
 
     public static class DictionaryExtensions

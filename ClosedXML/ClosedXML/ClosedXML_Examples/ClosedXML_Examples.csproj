@@ -124,6 +124,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoFilters\DynamicAutoFilter.cs" />
+    <Compile Include="AutoFilters\TopBottomAutoFilter.cs" />
+    <Compile Include="AutoFilters\CustomAutoFilter.cs" />
+    <Compile Include="AutoFilters\RegularAutoFilter.cs" />
     <Compile Include="BasicTable.cs" />
     <Compile Include="Columns\ColumnCollections.cs" />
     <Compile Include="Columns\ColumnSettings.cs" />

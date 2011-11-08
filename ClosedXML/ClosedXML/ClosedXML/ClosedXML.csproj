@@ -124,7 +124,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExcelHelper.cs" />
+    <Compile Include="Excel\AutoFilters\XLFilteredColumn.cs" />
+    <Compile Include="Excel\AutoFilters\XLCustomFilteredColumn.cs" />
+    <Compile Include="Excel\AutoFilters\XLFilterConnector.cs" />
+    <Compile Include="Excel\AutoFilters\XLFilter.cs" />
+    <Compile Include="Excel\AutoFilters\XLFilterColumn.cs" />
+    <Compile Include="Excel\AutoFilters\XLAutoFilter.cs" />
+    <Compile Include="Excel\AutoFilters\IXLBaseAutoFilter.cs" />
+    <Compile Include="Excel\AutoFilters\IXLFilteredColumn.cs" />
+    <Compile Include="Excel\AutoFilters\IXLCustomFilteredColumn.cs" />
     <Compile Include="Excel\AutoFilters\IXLAutoFilter.cs" />
+    <Compile Include="Excel\AutoFilters\IXLFilterColumn.cs" />
+    <Compile Include="Excel\AutoFilters\IXLFilterConnector.cs" />
     <Compile Include="Excel\Cells\IXLCells.cs" />
     <Compile Include="Excel\Cells\XLCells.cs" />
     <Compile Include="Excel\Cells\XLCellsCollection.cs" />

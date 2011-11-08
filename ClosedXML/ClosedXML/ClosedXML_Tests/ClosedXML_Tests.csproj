@@ -65,6 +65,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Examples\AutoFilterTests.cs" />
     <Compile Include="Examples\PageSetupTests.cs" />
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
@@ -196,6 +197,10 @@
     <EmbeddedResource Include="Resource\Examples\Misc\BasicTable.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Styles\PurpleWorksheet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Comments\EditingComments.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\TopBottomAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\DynamicAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\RegularAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\CustomAutoFilter.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

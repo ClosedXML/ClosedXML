@@ -145,7 +145,7 @@ namespace ClosedXML_Examples.Misc
 
             var wsSimpleDesc = wb.Worksheets.Add("Simple Desc");
             AddTestTable(wsSimpleDesc);
-            wsSimpleDesc.Sort(XLSortOrder.Descending);
+            wsSimpleDesc.Sort("", XLSortOrder.Descending);
 
             var wsSimpleColumns = wb.Worksheets.Add("Simple Columns");
             AddTestTable(wsSimpleColumns);
@@ -157,7 +157,7 @@ namespace ClosedXML_Examples.Misc
 
             var wsSimpleColumnDesc = wb.Worksheets.Add("Simple Column Desc");
             AddTestColumn(wsSimpleColumnDesc);
-            wsSimpleColumnDesc.Sort(XLSortOrder.Descending);
+            wsSimpleColumnDesc.Sort(1, XLSortOrder.Descending);
             #endregion
 
             wb.SaveAs(filePath);

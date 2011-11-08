@@ -221,25 +221,15 @@ namespace ClosedXML.Excel
         IXLRange CopyTo(IXLCell target);
         IXLRange CopyTo(IXLRangeBase target);
 
-        void SetAutoFilter();
-        void SetAutoFilter(Boolean autoFilter);
-
         IXLSortElements SortRows { get; }
         IXLSortElements SortColumns { get; }
 
         IXLRange Sort();
-        IXLRange Sort(Boolean matchCase);
-        IXLRange Sort(XLSortOrder sortOrder);
-        IXLRange Sort(XLSortOrder sortOrder, Boolean matchCase);
-        IXLRange Sort(String columnsToSortBy);
-        IXLRange Sort(String columnsToSortBy, Boolean matchCase);
 
-        IXLRange Sort(XLSortOrientation sortOrientation);
-        IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder);
-        IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy);
-        IXLRange Sort(XLSortOrientation sortOrientation, Boolean matchCase);
-        IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase);
-        IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase);
+        IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLRange Sort(Int32 columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        
 
         IXLRange SetDataType(XLCellValues dataType);
 
@@ -248,6 +238,9 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
         new IXLRange Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+
+        IXLRangeRows RowsUsed(Boolean includeFormats = false);
+        IXLRangeColumns ColumnsUsed(Boolean includeFormats = false);
     }
 }
 

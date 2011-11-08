@@ -71,11 +71,11 @@ namespace ClosedXML_Examples.Misc
             var rangeLeftToRight = wsLeftToRight.RangeUsed();
             var copyLeftToRight = rangeLeftToRight.CopyTo(wsLeftToRight.Row(wsLeftToRight.LastRowUsed().RowNumber() + 3));
 
-            copyLeftToRight.Sort(XLSortOrientation.LeftToRight);
+            copyLeftToRight.SortLeftToRight();
 
             wsLeftToRight.Row(1).InsertRowsAbove(2);
             wsLeftToRight.Cell(1, 1)
-                .SetValue(".Sort(XLSortOrientation.LeftToRight) = Sort Range Left to Right, Ascendingly, Ignore Blanks, Ignore Case")
+                .SetValue(".SortLeftToRight() = Sort Range Left to Right, Ascendingly, Ignore Blanks, Ignore Case")
                 .Style.Font.SetBold();
             #endregion
 
@@ -104,11 +104,11 @@ namespace ClosedXML_Examples.Misc
             var rangeComplex1 = wsComplex1.RangeUsed();
             var copyComplex1 = rangeComplex1.CopyTo(wsComplex1.Column(wsComplex1.LastColumnUsed().ColumnNumber() + 3));
 
-            copyComplex1.Sort("2, 1 DESC", true);
+            copyComplex1.Sort("2, 1 DESC", XLSortOrder.Ascending, true);
 
             wsComplex1.Row(1).InsertRowsAbove(2);
             wsComplex1.Cell(1, 1)
-                .SetValue(".Sort(\"2, 1 DESC\", true) = Sort Range Top to Bottom, Col 2 Asc, Col 1 Desc, Ignore Blanks, Match Case").Style.Font.SetBold();
+                .SetValue(".Sort(\"2, 1 DESC\", XLSortOrder.Ascending, true) = Sort Range Top to Bottom, Col 2 Asc, Col 1 Desc, Ignore Blanks, Match Case").Style.Font.SetBold();
             #endregion
 
             #region Sort a simple column
@@ -117,7 +117,7 @@ namespace ClosedXML_Examples.Misc
             var rangeSimpleColumn = wsSimpleColumn.RangeUsed();
             var copySimpleColumn = rangeSimpleColumn.CopyTo(wsSimpleColumn.Column(wsSimpleColumn.LastColumnUsed().ColumnNumber() + 3));
 
-            copySimpleColumn.Sort(XLSortOrder.Descending, true);
+            copySimpleColumn.FirstColumn().Sort(XLSortOrder.Descending, true);
 
             wsSimpleColumn.Row(1).InsertRowsAbove(2);
             wsSimpleColumn.Cell(1, 1)

@@ -31,8 +31,6 @@ namespace ClosedXML.Excel
         internal Int32 _position;
 
         private Double _rowHeight;
-        private IXLSortElements _sortColumns;
-        private IXLSortElements _sortRows;
         private Boolean _tabActive;
 
         #endregion
@@ -56,6 +54,7 @@ namespace ClosedXML.Excel
             DataValidations = new XLDataValidations();
             PivotTables = new XLPivotTables();
             Protection = new XLSheetProtection();
+            AutoFilter = new XLAutoFilter();
             Workbook = workbook;
             SetStyle(workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
@@ -158,7 +157,7 @@ namespace ClosedXML.Excel
         }
 
         private Double _columnWidth;
-        public string LegacyDrawingId;
+        //public string LegacyDrawingId;
 
         public Double ColumnWidth
         {
@@ -720,8 +719,8 @@ namespace ClosedXML.Excel
                 }
             }
 
-            if (AutoFilterRange != null)
-                targetSheet.Range(AutoFilterRange.RangeAddress).SetAutoFilter();
+            if (AutoFilter.Enabled)
+                targetSheet.Range(AutoFilter.Range.RangeAddress).SetAutoFilter();
 
             return targetSheet;
         }
@@ -771,88 +770,23 @@ namespace ClosedXML.Excel
             return Protection.Unprotect(password);
         }
 
-        public IXLRangeBase AutoFilterRange { get; set; }
 
-        public IXLSortElements SortRows
+        public new IXLRange Sort()
         {
-            get { return _sortRows ?? (_sortRows = new XLSortElements()); }
+            return GetRangeForSort().Sort();
         }
 
-        public IXLSortElements SortColumns
+        public new IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
-            get { return _sortColumns ?? (_sortColumns = new XLSortElements()); }
+            return GetRangeForSort().Sort(columnsToSortBy, sortOrder, matchCase, ignoreBlanks);
         }
-
-        public IXLRange Sort()
+        public new IXLRange Sort(Int32 columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
-            var range = GetRangeForSort();
-            return range.Sort();
+            return GetRangeForSort().Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
         }
-
-        public IXLRange Sort(Boolean matchCase)
+        public new IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
-            var range = GetRangeForSort();
-            return range.Sort(matchCase);
-        }
-
-        public IXLRange Sort(XLSortOrder sortOrder)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(sortOrder);
-        }
-
-        public IXLRange Sort(XLSortOrder sortOrder, Boolean matchCase)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(sortOrder, matchCase);
-        }
-
-        public IXLRange Sort(String columnsToSortBy)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(columnsToSortBy);
-        }
-
-        public IXLRange Sort(String columnsToSortBy, Boolean matchCase)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(columnsToSortBy, matchCase);
-        }
-
-        public IXLRange Sort(XLSortOrientation sortOrientation)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(sortOrientation);
-        }
-
-        public IXLRange Sort(XLSortOrientation sortOrientation, Boolean matchCase)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(sortOrientation, matchCase);
-        }
-
-        public IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(sortOrientation, sortOrder);
-        }
-
-        public IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(sortOrientation, sortOrder, matchCase);
-        }
-
-        public IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(sortOrientation, elementsToSortBy);
-        }
-
-        public IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase)
-        {
-            var range = GetRangeForSort();
-            return range.Sort(sortOrientation, elementsToSortBy, matchCase);
+            return GetRangeForSort().SortLeftToRight(sortOrder, matchCase, ignoreBlanks);
         }
 
         public Boolean ShowFormulas { get; set; }
@@ -1259,6 +1193,32 @@ namespace ClosedXML.Excel
                                                .Ranges.ForEach(retVal.Add);
             }
             return retVal;
+        }
+
+        IXLBaseAutoFilter IXLWorksheet.AutoFilter 
+        {
+            get { return AutoFilter; }
+        }
+        public XLAutoFilter AutoFilter { get; private set; }
+
+        public new IXLRows RowsUsed(Boolean includeFormats = false)
+        {
+            var rows = new XLRows(Worksheet);
+            foreach (var row in RangeUsed(includeFormats).Rows().Where(r => !r.IsEmpty(includeFormats)))
+            {
+                rows.Add(Row(row.RowNumber()));
+            }
+            return rows;
+        }
+
+        public new IXLColumns ColumnsUsed(Boolean includeFormats = false)
+        {
+            var columns = new XLColumns(Worksheet);
+            foreach (var column in RangeUsed(includeFormats).Columns().Where(r => !r.IsEmpty(includeFormats)))
+            {
+                columns.Add(Column(column.ColumnNumber()));
+            }
+            return columns;
         }
     }
 }

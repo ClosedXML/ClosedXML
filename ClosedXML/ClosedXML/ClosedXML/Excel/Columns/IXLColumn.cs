@@ -155,13 +155,7 @@ namespace ClosedXML.Excel
         IXLRangeColumn CopyTo(IXLRangeBase range);
         IXLColumn CopyTo(IXLColumn column);
 
-        void SetAutoFilter();
-        void SetAutoFilter(Boolean autoFilter);
-
-        IXLColumn Sort();
-        IXLColumn Sort(Boolean matchCase);
-        IXLColumn Sort(XLSortOrder sortOrder);
-        IXLColumn Sort(XLSortOrder sortOrder, Boolean matchCase);
+        IXLColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
 
         IXLRangeColumn Column(Int32 start, Int32 end);
         IXLRangeColumn Column(IXLCell start, IXLCell end);

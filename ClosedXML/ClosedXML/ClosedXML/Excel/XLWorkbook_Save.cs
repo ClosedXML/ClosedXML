@@ -408,9 +408,6 @@ namespace ClosedXML.Excel
                                        SheetId = (UInt32)xlSheet.SheetId
                                    };
 
-                if (xlSheet.Visibility != XLWorksheetVisibility.Visible)
-                    newSheet.State = xlSheet.Visibility.ToOpenXml();
-
                 workbook.Sheets.AppendChild(newSheet);
             }
 
@@ -436,6 +433,11 @@ namespace ClosedXML.Excel
                 }
                 
                     workbook.Sheets.RemoveChild(sheet);
+
+                    var xlSheet = Worksheet(sheet.Name);
+                    if (xlSheet.Visibility != XLWorksheetVisibility.Visible)
+                        sheet.State = xlSheet.Visibility.ToOpenXml();
+
                     workbook.Sheets.AppendChild(sheet);
 
                     if (foundVisible) continue;
@@ -505,16 +507,16 @@ namespace ClosedXML.Excel
                     definedNames.AppendChild(definedName);
                 }
                 
-                if (worksheet.AutoFilterRange != null)
+                if (worksheet.AutoFilter.Enabled)
                 {
                     var definedName = new DefinedName { Name = "_xlnm._FilterDatabase", LocalSheetId = sheetId };
-                    definedName.Text = "'" + worksheet.Name + "'!" + worksheet.AutoFilterRange.RangeAddress.FirstAddress.ToStringFixed() +
-                                                               ":" + worksheet.AutoFilterRange.RangeAddress.LastAddress.ToStringFixed();
+                    definedName.Text = "'" + worksheet.Name + "'!" + worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed() +
+                                                               ":" + worksheet.AutoFilter.Range.RangeAddress.LastAddress.ToStringFixed();
                     definedName.Hidden = BooleanValue.FromBoolean(true);
                     definedNames.AppendChild(definedName);
                 }
 
-                foreach (IXLNamedRange nr in worksheet.NamedRanges)
+                foreach (IXLNamedRange nr in worksheet.NamedRanges.Where(n=>n.Name != "_xlnm._FilterDatabase"))
                 {
                     var definedName = new DefinedName
                                           {
@@ -699,7 +701,7 @@ namespace ClosedXML.Excel
                         String s = c.Value.ToString();
                         var sharedStringItem = new SharedStringItem();
                         var text = new Text {Text = s};
-                        if (s.StartsWith(" ") || s.EndsWith(" "))
+                        if (!s.Trim().Equals(s))
                             text.Space = SpaceProcessingModeValues.Preserve;
                         sharedStringItem.Append(text);
                         sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
@@ -1584,16 +1586,16 @@ namespace ClosedXML.Excel
             if (xlTable.ShowAutoFilter)
             {
                 var autoFilter1 = new AutoFilter();
-
                 if (xlTable.ShowTotalsRow)
                 {
-                    autoFilter1.Reference = xlTable.RangeAddress.FirstAddress + ":" +
-                                            ExcelHelper.GetColumnLetterFromNumber(
-                                                xlTable.RangeAddress.LastAddress.ColumnNumber) +
-                                            (xlTable.RangeAddress.LastAddress.RowNumber - 1).ToStringLookup();
+                    xlTable.AutoFilter.Range = xlTable.Worksheet.Range(
+                                                xlTable.RangeAddress.FirstAddress.RowNumber, xlTable.RangeAddress.FirstAddress.ColumnNumber,
+                                                xlTable.RangeAddress.LastAddress.RowNumber - 1, xlTable.RangeAddress.LastAddress.ColumnNumber);
                 }
                 else
-                    autoFilter1.Reference = reference;
+                    xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
+
+                PopulateAutoFilter(xlTable.AutoFilter, autoFilter1);
 
                 table.AppendChild(autoFilter1);
             }
@@ -2940,23 +2942,20 @@ namespace ClosedXML.Excel
             #endregion
 
             #region AutoFilter
-
-            if (xlWorksheet.AutoFilterRange != null)
+            worksheetPart.Worksheet.RemoveAllChildren<AutoFilter>();
+            if (xlWorksheet.AutoFilter.Enabled)
             {
-                if (!worksheetPart.Worksheet.Elements<AutoFilter>().Any())
-                {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.AutoFilter);
-                    worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
-                }
+               var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.AutoFilter);
+               worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
+                
 
                 var autoFilter = worksheetPart.Worksheet.Elements<AutoFilter>().First();
                 cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, autoFilter);
 
-                autoFilter.Reference = xlWorksheet.AutoFilterRange.RangeAddress.ToString();
+                PopulateAutoFilter(xlWorksheet.AutoFilter, autoFilter);
             }
             else
             {
-                worksheetPart.Worksheet.RemoveAllChildren<AutoFilter>();
                 cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, null);
             }
 
@@ -3341,6 +3340,74 @@ namespace ClosedXML.Excel
             //    }
             //}
             #endregion
+        }
+
+        private static void PopulateAutoFilter(XLAutoFilter xlAutoFilter, AutoFilter autoFilter)
+        {
+            var filterRange = xlAutoFilter.Range;
+            autoFilter.Reference = filterRange.RangeAddress.ToString();
+
+            foreach (var kp in xlAutoFilter.Filters)
+            {
+                FilterColumn filterColumn = new FilterColumn() { ColumnId = (UInt32)kp.Key - 1 };
+                var xlFilterColumn = xlAutoFilter.Column(kp.Key);
+                var filterType = xlFilterColumn.FilterType;
+                if (filterType == XLFilterType.Custom)
+                {
+                    CustomFilters customFilters = new CustomFilters();
+                    foreach (var filter in kp.Value)
+                    {
+                        CustomFilter customFilter = new CustomFilter() { Val = filter.Value.ToString() };
+
+                        if (filter.Operator != XLFilterOperator.Equal)
+                            customFilter.Operator = filter.Operator.ToOpenXml();
+
+                        if (filter.Connector == XLConnector.And)
+                            customFilters.And = true;
+
+                        customFilters.Append(customFilter);
+                    }
+                    filterColumn.Append(customFilters);
+                }
+                else if (filterType == XLFilterType.TopBottom)
+                {
+                    Top10 top101 = new Top10() { Val = (double)xlFilterColumn.TopBottomValue };
+                    if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
+                        top101.Percent = true;
+                    if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
+                        top101.Top = false;
+
+                    filterColumn.Append(top101);
+                }
+                else if (filterType == XLFilterType.Dynamic)
+                {
+                    DynamicFilter dynamicFilter = new DynamicFilter() { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
+                    filterColumn.Append(dynamicFilter);
+                }
+                else
+                {
+                    Filters filters = new Filters();
+                    foreach (var filter in kp.Value)
+                    {
+                        filters.Append(new Filter() { Val = filter.Value.ToString() });
+                    }
+
+                    filterColumn.Append(filters);
+                }
+                autoFilter.Append(filterColumn);
+            }
+
+
+            if (xlAutoFilter.Sorted)
+            {
+                SortState sortState = new SortState() { Reference = filterRange.Range(filterRange.FirstCell().CellBelow(), filterRange.LastCell()).RangeAddress.ToString() };
+                SortCondition sortCondition = new SortCondition() { Reference = filterRange.Range(1, xlAutoFilter.SortColumn, filterRange.RowCount(), xlAutoFilter.SortColumn).RangeAddress.ToString() };
+                if (xlAutoFilter.SortOrder == XLSortOrder.Descending)
+                    sortCondition.Descending = true;
+
+                sortState.Append(sortCondition);
+                autoFilter.Append(sortState);
+            }
         }
 
         private static BooleanValue GetBooleanValue(bool value, bool defaultValue)

@@ -41,7 +41,16 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Worksheet(String sheetName)
         {
-            return m_worksheets[sheetName];
+            XLWorksheet w;
+            if (m_worksheets.TryGetValue(sheetName, out w))
+                return w;
+
+            var wss = m_worksheets.Where(ws=> ws.Key.ToLower().Equals(sheetName.ToLower()));
+
+            if (wss.Any())
+                return wss.First().Value;
+
+            throw new Exception("There isn't a worksheet named '" + sheetName + "'.");
         }
 
         public IXLWorksheet Worksheet(Int32 position)

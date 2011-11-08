@@ -434,27 +434,14 @@ namespace ClosedXML.Excel
             return RangeAddress.LastAddress.ColumnNumber - RangeAddress.FirstAddress.ColumnNumber + 1;
         }
 
-        public IXLRow Sort()
+        public new IXLRow Sort()
         {
-            RangeUsed().Sort(XLSortOrientation.LeftToRight);
-            return this;
+            return SortLeftToRight();
         }
 
-        public IXLRow Sort(XLSortOrder sortOrder)
+        public new IXLRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
-            RangeUsed().Sort(XLSortOrientation.LeftToRight, sortOrder);
-            return this;
-        }
-
-        public IXLRow Sort(Boolean matchCase)
-        {
-            AsRange().Sort(XLSortOrientation.LeftToRight, matchCase);
-            return this;
-        }
-
-        public IXLRow Sort(XLSortOrder sortOrder, bool matchCase)
-        {
-            AsRange().Sort(XLSortOrientation.LeftToRight, sortOrder, matchCase);
+            base.SortLeftToRight(sortOrder, matchCase, ignoreBlanks);
             return this;
         }
 

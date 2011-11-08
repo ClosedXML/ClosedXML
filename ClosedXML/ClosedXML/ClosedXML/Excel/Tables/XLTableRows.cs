@@ -110,9 +110,9 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        public IXLCells CellsUsed(Boolean includeStyles)
+        public IXLCells CellsUsed(Boolean includeFormats)
         {
-            var cells = new XLCells(false, includeStyles);
+            var cells = new XLCells(false, includeFormats);
             foreach (XLTableRow container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;

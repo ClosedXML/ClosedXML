@@ -131,11 +131,10 @@ namespace ClosedXML.Excel
         IXLTableRows Rows(string rows);
 
         IXLRange Sort();
-        IXLRange Sort(bool matchCase);
-        IXLRange Sort(XLSortOrder sortOrder);
-        IXLRange Sort(XLSortOrder sortOrder, bool matchCase);
-        IXLRange Sort(string columnsToSortBy);
-        IXLRange Sort(string columnsToSortBy, bool matchCase);
+
+        IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLRange Sort(Int32 columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
 
         /// <summary>
         ///   Gets the cell at the specified row and column.
@@ -356,5 +355,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
         new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+
+        IXLBaseAutoFilter AutoFilter { get; }
     }
 }

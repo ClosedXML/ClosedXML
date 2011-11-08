@@ -476,6 +476,36 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
+        public static FilterOperatorValues ToOpenXml(this XLFilterOperator value)
+        {
+            switch(value)
+            {
+                case XLFilterOperator.Equal: return FilterOperatorValues.Equal;
+                case XLFilterOperator.NotEqual: return FilterOperatorValues.NotEqual;
+                case XLFilterOperator.GreaterThan: return FilterOperatorValues.GreaterThan;
+                case XLFilterOperator.EqualOrGreaterThan: return FilterOperatorValues.GreaterThanOrEqual;
+                case XLFilterOperator.LessThan: return FilterOperatorValues.LessThan;
+                case XLFilterOperator.EqualOrLessThan: return FilterOperatorValues.LessThanOrEqual;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+
+        public static DynamicFilterValues ToOpenXml(this XLFilterDynamicType value)
+        {
+            switch (value)
+            {
+                case XLFilterDynamicType.AboveAverage: return DynamicFilterValues.AboveAverage;
+                case XLFilterDynamicType.BelowAverage: return DynamicFilterValues.BelowAverage;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+
         #endregion
         #region To ClosedXml
         public static XLFontUnderlineValues ToClosedXml(this UnderlineValues value)
@@ -946,6 +976,37 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
+        public static XLFilterOperator ToClosedXml(this FilterOperatorValues value)
+        {
+            switch (value)
+            {
+                case FilterOperatorValues.Equal: return XLFilterOperator.Equal;
+                case FilterOperatorValues.NotEqual: return XLFilterOperator.NotEqual;
+                case FilterOperatorValues.GreaterThan: return XLFilterOperator.GreaterThan;
+                case FilterOperatorValues.LessThan: return XLFilterOperator.LessThan;
+                case FilterOperatorValues.GreaterThanOrEqual: return XLFilterOperator.EqualOrGreaterThan;
+                case FilterOperatorValues.LessThanOrEqual: return XLFilterOperator.EqualOrLessThan;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+        public static XLFilterDynamicType ToClosedXml(this DynamicFilterValues value)
+        {
+            switch (value)
+            {
+                case DynamicFilterValues.AboveAverage: return XLFilterDynamicType.AboveAverage;
+                case DynamicFilterValues.BelowAverage: return XLFilterDynamicType.BelowAverage;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+
         #endregion
     }
 }

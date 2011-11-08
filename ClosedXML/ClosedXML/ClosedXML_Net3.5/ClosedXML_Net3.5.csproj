@@ -124,6 +124,42 @@
     <Compile Include="..\ClosedXML\ExcelHelper.cs">
       <Link>ExcelHelper.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\IXLAutoFilter.cs">
+      <Link>Excel\AutoFilters\IXLAutoFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\IXLBaseAutoFilter.cs">
+      <Link>Excel\AutoFilters\IXLBaseAutoFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\IXLCustomFilteredColumn.cs">
+      <Link>Excel\AutoFilters\IXLCustomFilteredColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\IXLFilterColumn.cs">
+      <Link>Excel\AutoFilters\IXLFilterColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\IXLFilterConnector.cs">
+      <Link>Excel\AutoFilters\IXLFilterConnector.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\IXLFilteredColumn.cs">
+      <Link>Excel\AutoFilters\IXLFilteredColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\XLAutoFilter.cs">
+      <Link>Excel\AutoFilters\XLAutoFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\XLCustomFilteredColumn.cs">
+      <Link>Excel\AutoFilters\XLCustomFilteredColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\XLFilter.cs">
+      <Link>Excel\AutoFilters\XLFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\XLFilterColumn.cs">
+      <Link>Excel\AutoFilters\XLFilterColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\XLFilterConnector.cs">
+      <Link>Excel\AutoFilters\XLFilterConnector.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\AutoFilters\XLFilteredColumn.cs">
+      <Link>Excel\AutoFilters\XLFilteredColumn.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Cells\IXLCell.cs">
       <Link>Excel\Cells\IXLCell.cs</Link>
     </Compile>

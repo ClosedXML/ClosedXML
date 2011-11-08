@@ -295,7 +295,7 @@ namespace ClosedXML.Excel
         IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position);
 
         IXLRange RangeUsed();
-        IXLRange RangeUsed(bool includeStyles);
+        IXLRange RangeUsed(bool includeFormats);
 
         IXLDataValidations DataValidations { get; }
 
@@ -309,24 +309,14 @@ namespace ClosedXML.Excel
         IXLSheetProtection Unprotect();
         IXLSheetProtection Unprotect(String password);
 
-        IXLRangeBase AutoFilterRange { get; set; }
-
         IXLSortElements SortRows { get; }
         IXLSortElements SortColumns { get; }
 
         IXLRange Sort();
-        IXLRange Sort(Boolean matchCase);
-        IXLRange Sort(XLSortOrder sortOrder);
-        IXLRange Sort(XLSortOrder sortOrder, Boolean matchCase);
-        IXLRange Sort(String columnsToSortBy);
-        IXLRange Sort(String columnsToSortBy, Boolean matchCase);
 
-        IXLRange Sort(XLSortOrientation sortOrientation);
-        IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder);
-        IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy);
-        IXLRange Sort(XLSortOrientation sortOrientation, Boolean matchCase);
-        IXLRange Sort(XLSortOrientation sortOrientation, XLSortOrder sortOrder, Boolean matchCase);
-        IXLRange Sort(XLSortOrientation sortOrientation, String elementsToSortBy, Boolean matchCase);
+        IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLRange Sort(Int32 columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
 
         //IXLCharts Charts { get; }
 
@@ -362,6 +352,9 @@ namespace ClosedXML.Excel
         Boolean RightToLeft { get; set; }
         IXLWorksheet SetRightToLeft(); IXLWorksheet SetRightToLeft(Boolean value);
 
-        
+        IXLBaseAutoFilter AutoFilter { get; }
+
+        IXLRows RowsUsed(Boolean includeFormats = false);
+        IXLColumns ColumnsUsed(Boolean includeFormats = false);
     }
 }

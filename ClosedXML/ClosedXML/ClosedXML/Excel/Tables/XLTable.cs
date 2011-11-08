@@ -294,37 +294,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public new IXLRange Sort(String elementsToSortBy)
-        {
-            var toSortBy = new StringBuilder();
-            foreach (string coPairTrimmed in elementsToSortBy.Split(',').Select(coPair => coPair.Trim()))
-            {
-                String coString;
-                String order;
-                if (coPairTrimmed.Contains(' '))
-                {
-                    var pair = coPairTrimmed.Split(' ');
-                    coString = pair[0];
-                    order = pair[1];
-                }
-                else
-                {
-                    coString = coPairTrimmed;
-                    order = "ASC";
-                }
-
-                Int32 co;
-                if (!Int32.TryParse(coString, out co))
-                    co = Field(coString).Index + 1;
-
-                toSortBy.Append(co);
-                toSortBy.Append(" ");
-                toSortBy.Append(order);
-                toSortBy.Append(",");
-            }
-            return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1));
-        }
-
         public IXLTable SetEmphasizeFirstColumn()
         {
             EmphasizeFirstColumn = true;
@@ -413,6 +382,37 @@ namespace ClosedXML.Excel
             return LastColumnUsed();
         }
 
+        public new IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        {
+            var toSortBy = new StringBuilder();
+            foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
+            {
+                String coString;
+                String order;
+                if (coPairTrimmed.Contains(' '))
+                {
+                    var pair = coPairTrimmed.Split(' ');
+                    coString = pair[0];
+                    order = pair[1];
+                }
+                else
+                {
+                    coString = coPairTrimmed;
+                    order = "ASC";
+                }
+
+                Int32 co;
+                if (!Int32.TryParse(coString, out co))
+                    co = Field(coString).Index + 1;
+
+                toSortBy.Append(co);
+                toSortBy.Append(" ");
+                toSortBy.Append(order);
+                toSortBy.Append(",");
+            }
+            return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1), sortOrder, matchCase, ignoreBlanks);
+        }
+
         #endregion
 
         public new XLTableRow Row(int row)
@@ -431,6 +431,7 @@ namespace ClosedXML.Excel
             ShowRowStripes = true;
             ShowAutoFilter = true;
             Theme = XLTableTheme.TableStyleLight9;
+            AutoFilter = new XLAutoFilter();
         }
 
         private void AddToTables(XLRange range, Boolean addToTables)
@@ -496,5 +497,11 @@ namespace ClosedXML.Excel
             base.Clear(clearOptions);
             return this;
         }
+
+        IXLBaseAutoFilter IXLTable.AutoFilter
+        {
+            get { return AutoFilter; }
+        }
+        public XLAutoFilter AutoFilter { get; private set; }
     }
 }

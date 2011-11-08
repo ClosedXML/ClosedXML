@@ -78,13 +78,7 @@ namespace ClosedXML.Excel
         IXLRangeColumn CopyTo(IXLCell target);
         IXLRangeColumn CopyTo(IXLRangeBase target);
 
-        void SetAutoFilter();
-        void SetAutoFilter(Boolean autoFilter);
-
-        IXLRangeColumn Sort();
-        IXLRangeColumn Sort(Boolean matchCase);
-        IXLRangeColumn Sort(XLSortOrder sortOrder);
-        IXLRangeColumn Sort(XLSortOrder sortOrder, Boolean matchCase);
+        IXLRangeColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
         
         IXLRangeColumn Column(Int32 start, Int32 end);
         IXLRangeColumn Column(IXLCell start, IXLCell end);

@@ -62,12 +62,9 @@ namespace ClosedXML.Excel
                 sharedStrings = shareStringPart.SharedStringTable.Elements<SharedStringItem>().ToArray();
             }
 
-            if (dSpreadsheet.WorkbookPart.GetPartsOfType<CustomFilePropertiesPart>().Count() > 0)
+            if (dSpreadsheet.CustomFilePropertiesPart != null)
             {
-                var customFilePropertiesPart =
-                    dSpreadsheet.WorkbookPart.GetPartsOfType<CustomFilePropertiesPart>().First();
-                foreach (
-                    CustomDocumentProperty m in customFilePropertiesPart.Properties.Elements<CustomDocumentProperty>())
+                foreach (var m in dSpreadsheet.CustomFilePropertiesPart.Properties.Elements<CustomDocumentProperty>())
                 {
                     String name = m.Name.Value;
                     if (m.VTLPWSTR != null)
@@ -228,7 +225,16 @@ namespace ClosedXML.Excel
                                 (XLTableTheme) Enum.Parse(typeof (XLTableTheme), dTable.TableStyleInfo.Name.Value);
                     }
 
-                    xlTable.ShowAutoFilter = dTable.AutoFilter != null;
+
+                    if (dTable.AutoFilter != null)
+                    {
+                        xlTable.ShowAutoFilter = true;
+                        LoadAutoFilterColumns( dTable.AutoFilter, (xlTable as XLTable).AutoFilter);
+                    }
+                    else
+                        xlTable.ShowAutoFilter = false;
+
+                    
 
                     if (xlTable.ShowTotalsRow)
                     {
@@ -716,7 +722,161 @@ namespace ClosedXML.Excel
         private static void LoadAutoFilter(AutoFilter af, XLWorksheet ws)
         {
             if (af != null)
+            {
                 ws.Range(af.Reference.Value).SetAutoFilter();
+                var autoFilter = ws.AutoFilter;
+                LoadAutoFilterSort(af, ws, autoFilter);
+                LoadAutoFilterColumns(af, autoFilter);
+            }
+        }
+
+        private static void LoadAutoFilterColumns(AutoFilter af, XLAutoFilter autoFilter)
+        {
+            foreach (var filterColumn in af.Elements<FilterColumn>())
+            {
+                Int32 column = (int)filterColumn.ColumnId.Value + 1;
+                if (filterColumn.CustomFilters != null)
+                {
+                    var filterList = new List<XLFilter>();
+                    autoFilter.Column(column).FilterType = XLFilterType.Custom;
+                    autoFilter.Filters.Add(column, filterList);
+                    XLConnector connector = filterColumn.CustomFilters.And != null && filterColumn.CustomFilters.And.Value ? XLConnector.And : XLConnector.Or;
+
+                    Boolean isText = false;
+                    foreach (CustomFilter filter in filterColumn.CustomFilters)
+                    {
+                        Double dTest;
+                        String val = filter.Val.Value;
+                        if (!Double.TryParse(val, out dTest))
+                        {
+                            isText = true;
+                            break;
+                        }
+                    }
+
+                    foreach (CustomFilter filter in filterColumn.CustomFilters)
+                    {
+                        var xlFilter = new XLFilter { Value = filter.Val.Value, Connector = connector };
+                        if (isText)
+                            xlFilter.Value = filter.Val.Value;
+                        else
+                            xlFilter.Value = Double.Parse(filter.Val.Value);
+
+                        if (filter.Operator != null)
+                            xlFilter.Operator = filter.Operator.Value.ToClosedXml();
+                        else
+                            xlFilter.Operator = XLFilterOperator.Equal;
+
+                        Func<Object, Boolean> condition = null;
+                        switch (xlFilter.Operator)
+                        {
+                            case XLFilterOperator.Equal:
+                                if (isText)
+                                    condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                                else
+                                    condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
+                                break;
+                            case XLFilterOperator.EqualOrGreaterThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) >= 0; break;
+                            case XLFilterOperator.EqualOrLessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) <= 0; break;
+                            case XLFilterOperator.GreaterThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) > 0; break;
+                            case XLFilterOperator.LessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) < 0; break;
+                            case XLFilterOperator.NotEqual:
+                                if (isText)
+                                    condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                                else
+                                    condition = o => (o as IComparable).CompareTo(xlFilter.Value) != 0;
+                                break;
+                        }
+
+                        xlFilter.Condition = condition;
+                        filterList.Add(xlFilter);
+                    }
+                }
+                else if (filterColumn.Filters != null)
+                {
+                    var filterList = new List<XLFilter>();
+                    autoFilter.Column(column).FilterType = XLFilterType.Regular;
+                    autoFilter.Filters.Add((int)filterColumn.ColumnId.Value + 1, filterList);
+
+                    Boolean isText = false;
+                    foreach (Filter filter in filterColumn.Filters)
+                    {
+                        Double dTest;
+                        String val = filter.Val.Value;
+                        if (!Double.TryParse(val, out dTest))
+                        {
+                            isText = true;
+                            break;
+                        }
+                    }
+
+                    foreach (Filter filter in filterColumn.Filters)
+                    {
+                        var xlFilter = new XLFilter { Connector = XLConnector.Or, Operator = XLFilterOperator.Equal };
+
+                        Func<Object, Boolean> condition;
+                        if (isText)
+                        {
+                            xlFilter.Value = filter.Val.Value;
+                            condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                        }
+                        else
+                        {
+                            xlFilter.Value = Double.Parse(filter.Val.Value);
+                            condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
+                        }
+
+                        xlFilter.Condition = condition;
+                        filterList.Add(xlFilter);
+                    }
+
+                }
+                else if (filterColumn.Top10 != null)
+                {
+                    var xlFilterColumn = autoFilter.Column(column);
+                    autoFilter.Filters.Add(column, null);
+                    xlFilterColumn.FilterType = XLFilterType.TopBottom;
+                    if (filterColumn.Top10.Percent != null && filterColumn.Top10.Percent.Value)
+                        xlFilterColumn.TopBottomType = XLTopBottomType.Percent;
+                    else
+                        xlFilterColumn.TopBottomType = XLTopBottomType.Items;
+
+                    if (filterColumn.Top10.Top != null && !filterColumn.Top10.Top.Value)
+                        xlFilterColumn.TopBottomPart = XLTopBottomPart.Bottom;
+                    else
+                        xlFilterColumn.TopBottomPart = XLTopBottomPart.Top;
+
+                    xlFilterColumn.TopBottomValue = (int)filterColumn.Top10.Val.Value;
+                }
+                else if (filterColumn.DynamicFilter != null)
+                {
+                    autoFilter.Filters.Add(column, null);
+                    var xlFilterColumn = autoFilter.Column(column);
+                    xlFilterColumn.FilterType = XLFilterType.Dynamic;
+                    if (filterColumn.DynamicFilter.Type != null)
+                        xlFilterColumn.DynamicType = filterColumn.DynamicFilter.Type.Value.ToClosedXml();
+                    else
+                        xlFilterColumn.DynamicType = XLFilterDynamicType.AboveAverage;
+
+                    xlFilterColumn.DynamicValue = filterColumn.DynamicFilter.Val.Value;
+                }
+            }
+        }
+
+        private static void LoadAutoFilterSort(AutoFilter af, XLWorksheet ws, IXLBaseAutoFilter autoFilter)
+        {
+            var sort = af.Elements<SortState>().FirstOrDefault();
+            if (sort != null)
+            {
+                var condition = sort.Elements<SortCondition>().FirstOrDefault();
+                if (condition != null)
+                {
+                    Int32 column = ws.Range(condition.Reference.Value).FirstCell().Address.ColumnNumber - autoFilter.Range.FirstCell().Address.ColumnNumber + 1 ;
+                    autoFilter.SortColumn = column;
+                    autoFilter.Sorted = true;
+                    autoFilter.SortOrder = condition.Descending != null && condition.Descending.Value ? XLSortOrder.Descending : XLSortOrder.Ascending;
+                }
+            }
         }
 
         private static void LoadSheetProtection(SheetProtection sp, XLWorksheet ws)

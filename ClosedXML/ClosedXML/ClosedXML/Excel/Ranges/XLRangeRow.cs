@@ -83,27 +83,14 @@
             return RangeAddress.LastAddress.ColumnNumber - RangeAddress.FirstAddress.ColumnNumber + 1;
         }
 
-        public IXLRangeRow Sort()
+        public new IXLRangeRow Sort()
         {
-            AsRange().Sort(XLSortOrientation.LeftToRight);
-            return this;
+            return SortLeftToRight();
         }
 
-        public IXLRangeRow Sort(XLSortOrder sortOrder)
+        public new IXLRangeRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
-            AsRange().Sort(XLSortOrientation.LeftToRight, sortOrder);
-            return this;
-        }
-
-        public IXLRangeRow Sort(bool matchCase)
-        {
-            AsRange().Sort(XLSortOrientation.LeftToRight, matchCase);
-            return this;
-        }
-
-        public IXLRangeRow Sort(XLSortOrder sortOrder, bool matchCase)
-        {
-            AsRange().Sort(XLSortOrientation.LeftToRight, sortOrder, matchCase);
+            base.SortLeftToRight(sortOrder, matchCase, ignoreBlanks);
             return this;
         }
 
