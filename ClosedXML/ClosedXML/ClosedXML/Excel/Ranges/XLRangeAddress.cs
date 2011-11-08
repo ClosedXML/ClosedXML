@@ -17,9 +17,6 @@ namespace ClosedXML.Excel
 
         public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress)
         {
-            if (firstAddress.Worksheet != lastAddress.Worksheet)
-                throw new ArgumentException("First and last addresses must be in the same worksheet");
-
             Worksheet = firstAddress.Worksheet;
             FirstAddress = firstAddress;
             LastAddress = lastAddress;
