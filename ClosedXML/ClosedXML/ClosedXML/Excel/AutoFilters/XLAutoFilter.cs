@@ -90,7 +90,6 @@ namespace ClosedXML.Excel
                     }
                     
                 }
-                Enabled = true;
             }
 
             return this;

@@ -110,6 +110,28 @@ namespace ClosedXML_Examples
             ws.AutoFilter.Sort(3);
             #endregion
 
+            #region Table
+            String tableSheetName = "Table";
+            ws = wb.Worksheets.Add(tableSheetName);
+
+            // Add a bunch of numbers to filter
+            ws.Cell("A1").SetValue("Numbers")
+                         .CellBelow().SetValue(2)
+                         .CellBelow().SetValue(3)
+                         .CellBelow().SetValue(3)
+                         .CellBelow().SetValue(5)
+                         .CellBelow().SetValue(1)
+                         .CellBelow().SetValue(4);
+
+            // Add filters
+            var table = ws.RangeUsed().CreateTable();
+            table.ShowTotalsRow = true;
+            table.Field(0).TotalsRowFunction = XLTotalsRowFunction.Sum;
+            table.AutoFilter.Column(1).AddFilter(3).AddFilter(4);
+
+            table.AutoFilter.Sort(1);
+            #endregion
+
             using (var ms = new MemoryStream())
             {
                 wb.SaveAs(ms);
@@ -135,6 +157,11 @@ namespace ClosedXML_Examples
                 #region Multi Column 
                 workbook.Worksheet(multiColumn).AutoFilter.Column(3).AddFilter("C");
                 workbook.Worksheet(multiColumn).AutoFilter.Sort(3, XLSortOrder.Descending);
+                #endregion
+
+                #region Table
+                workbook.Worksheet(tableSheetName).Table(0).AutoFilter.Column(1).AddFilter(5);
+                workbook.Worksheet(tableSheetName).Table(0).AutoFilter.Sort(1, XLSortOrder.Descending);
                 #endregion
 
                 workbook.SaveAs(filePath);

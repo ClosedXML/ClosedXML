@@ -251,7 +251,13 @@ namespace ClosedXML.Excel
                             if (tableColumn.TotalsRowLabel != null)
                                 xlTable.Field(tableColumn.Name.Value).TotalsRowLabel = tableColumn.TotalsRowLabel.Value;
                         }
+
+                        xlTable.AutoFilter.Range = xlTable.Worksheet.Range(
+                                                    xlTable.RangeAddress.FirstAddress.RowNumber, xlTable.RangeAddress.FirstAddress.ColumnNumber,
+                                                    xlTable.RangeAddress.LastAddress.RowNumber - 1, xlTable.RangeAddress.LastAddress.ColumnNumber);
                     }
+                    else
+                        xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
                 }
 
                 #endregion

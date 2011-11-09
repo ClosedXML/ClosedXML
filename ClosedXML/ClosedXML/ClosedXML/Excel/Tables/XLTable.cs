@@ -94,6 +94,15 @@ namespace ClosedXML.Excel
                     TotalsRow().Delete();
 
                 _showTotalsRow = value;
+
+                if (_showTotalsRow)
+                {
+                    AutoFilter.Range = Worksheet.Range(
+                                                RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber,
+                                                RangeAddress.LastAddress.RowNumber - 1, RangeAddress.LastAddress.ColumnNumber);
+                }
+                else
+                    AutoFilter.Range = Worksheet.Range(RangeAddress);
             }
         }
 
@@ -431,7 +440,7 @@ namespace ClosedXML.Excel
             ShowRowStripes = true;
             ShowAutoFilter = true;
             Theme = XLTableTheme.TableStyleLight9;
-            AutoFilter = new XLAutoFilter();
+            AutoFilter = new XLAutoFilter() { Range = AsRange() };
         }
 
         private void AddToTables(XLRange range, Boolean addToTables)

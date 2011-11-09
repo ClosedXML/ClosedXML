@@ -44,6 +44,7 @@ namespace ClosedXML.Excel
 
         private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop = true)
         {
+            _autoFilter.Enabled = true;
             _autoFilter.Column(_column).FilterType = XLFilterType.TopBottom;
             _autoFilter.Column(_column).TopBottomValue = value;
             _autoFilter.Column(_column).TopBottomType = type;
@@ -112,6 +113,7 @@ namespace ClosedXML.Excel
 
         private void ShowAverage(Boolean aboveAverage)
         {
+            _autoFilter.Enabled = true;
             _autoFilter.Column(_column).FilterType = XLFilterType.Dynamic;
             _autoFilter.Column(_column).DynamicType = aboveAverage ? XLFilterDynamicType.AboveAverage : XLFilterDynamicType.BelowAverage;
             var column = _autoFilter.Range.Column(_column);
@@ -230,6 +232,7 @@ namespace ClosedXML.Excel
 
         private IXLFilterConnector ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition, XLFilterType filterType = XLFilterType.Custom) where T : IComparable<T>
         {
+            _autoFilter.Enabled = true;
             if (filterType == XLFilterType.Custom)
             {
                 Clear();
