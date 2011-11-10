@@ -44,5 +44,14 @@ namespace ClosedXML.Excel
             _tables.Values.ForEach(t => t.Clear(clearOptions));
             return this;
         }
+
+        public void Remove(Int32 index)
+        {
+            _tables.Remove(_tables.ElementAt(index).Key);
+        }
+        public void Remove(String name)
+        {
+            _tables.Remove(name);
+        }
     }
 }
