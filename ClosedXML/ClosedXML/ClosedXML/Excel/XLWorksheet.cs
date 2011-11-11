@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
             get { return _position; }
             set
             {
-                if (value > Workbook.WorksheetsInternal.Count + 1)
+                if (value > Workbook.WorksheetsInternal.Count + Workbook.UnsupportedSheets.Count + 1)
                     throw new IndexOutOfRangeException("Index must be equal or less than the number of worksheets + 1.");
 
                 if (value < _position)

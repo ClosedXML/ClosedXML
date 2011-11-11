@@ -117,13 +117,13 @@ namespace ClosedXML.Excel
 
                 if (wsPart == null)
                 {
-                    _unsupportedSheets.Add(position, new UnsupportedSheet {SheetId = dSheet.SheetId.Value});
+                    UnsupportedSheets.Add(position, new UnsupportedSheet {SheetId = dSheet.SheetId.Value});
                     continue;
                 }
 
                 var sheetName = dSheet.Name;
 
-                var ws = (XLWorksheet) WorksheetsInternal.Add(sheetName);
+                var ws = (XLWorksheet) WorksheetsInternal.Add(sheetName, position);
                 ws.RelId = dSheet.Id;
                 ws.SheetId = (Int32) dSheet.SheetId.Value;
 
@@ -318,10 +318,14 @@ namespace ClosedXML.Excel
             if (workbookView != null && workbookView.ActiveTab != null)
             {
                 UnsupportedSheet unsupportedSheet;
-                if (_unsupportedSheets.TryGetValue((Int32)(workbookView.ActiveTab.Value + 1), out unsupportedSheet))
+                if (UnsupportedSheets.TryGetValue((Int32)(workbookView.ActiveTab.Value + 1), out unsupportedSheet))
                     unsupportedSheet.IsActive = true;
                 else
-                    Worksheet((Int32)(workbookView.ActiveTab.Value + 1)).SetTabActive();
+                {
+                    Int32 sId = (Int32)(workbookView.ActiveTab.Value + 1);
+                    Worksheet(sId).SetTabActive();
+                    //- _unsupportedSheets.Keys.Where(n=>n <= sId ).Count()
+                }
             }
 
             LoadDefinedNames(workbook);

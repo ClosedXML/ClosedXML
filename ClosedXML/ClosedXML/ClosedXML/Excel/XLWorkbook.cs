@@ -163,7 +163,7 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        private readonly Dictionary<Int32, UnsupportedSheet> _unsupportedSheets =
+        internal readonly Dictionary<Int32, UnsupportedSheet> UnsupportedSheets =
             new Dictionary<int, UnsupportedSheet>();
 
         private readonly Dictionary<Int32, IXLStyle> _stylesById = new Dictionary<int, IXLStyle>();
@@ -567,7 +567,7 @@ namespace ClosedXML.Excel
 
         #region Nested type: UnsupportedSheet
 
-        private sealed class UnsupportedSheet
+        internal sealed class UnsupportedSheet
         {
             public Boolean IsActive;
             public UInt32 SheetId;

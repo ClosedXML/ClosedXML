@@ -417,28 +417,18 @@ namespace ClosedXML.Excel
                                 select sheet;
 
             UInt32 firstSheetVisible = 0;
-            UInt32 activeTab = (from us in _unsupportedSheets where us.Value.IsActive select (UInt32)us.Key - 1).FirstOrDefault();
+            UInt32 activeTab = (from us in UnsupportedSheets where us.Value.IsActive select (UInt32)us.Key - 1).FirstOrDefault();
             Boolean foundVisible = false;
-            Int32 position = 0;
-            foreach (Sheet sheet in sheetElements)
+            //Int32 position = 0;
+            Int32 totalSheets = sheetElements.Count() + UnsupportedSheets.Count;
+            for (Int32 p = 1; p <= totalSheets; p++)
             {
-                position++;
-                if (_unsupportedSheets.ContainsKey(position))
+                if (!UnsupportedSheets.ContainsKey(p))
                 {
-                    Sheet unsupportedSheet =
-                        workbook.Sheets.Elements<Sheet>().Where(s => s.SheetId == _unsupportedSheets[position].SheetId).First();
-                    workbook.Sheets.RemoveChild(unsupportedSheet);
-                    workbook.Sheets.AppendChild(unsupportedSheet);
-                    _unsupportedSheets.Remove(position);
-                }
-                
-                    workbook.Sheets.RemoveChild(sheet);
-
+                    var sheet = sheetElements.ElementAt(p - UnsupportedSheets.Keys.Count(n => n <= p) - 1);
                     var xlSheet = Worksheet(sheet.Name);
                     if (xlSheet.Visibility != XLWorksheetVisibility.Visible)
                         sheet.State = xlSheet.Visibility.ToOpenXml();
-
-                    workbook.Sheets.AppendChild(sheet);
 
                     if (foundVisible) continue;
 
@@ -446,12 +436,7 @@ namespace ClosedXML.Excel
                         foundVisible = true;
                     else
                         firstSheetVisible++;
-                
-            }
-            foreach (Sheet unsupportedSheet in _unsupportedSheets.Values.Select(us => workbook.Sheets.Elements<Sheet>().Where(s => s.SheetId == us.SheetId).First()))
-            {
-                workbook.Sheets.RemoveChild(unsupportedSheet);
-                workbook.Sheets.AppendChild(unsupportedSheet);
+                }
             }
 
             var workbookView = workbook.BookViews.Elements<WorkbookView>().FirstOrDefault();
