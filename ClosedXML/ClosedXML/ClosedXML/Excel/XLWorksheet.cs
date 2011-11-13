@@ -676,7 +676,9 @@ namespace ClosedXML.Excel
             Internals.RowsCollection.ForEach(kp => targetSheet.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
             targetSheet.Visibility = Visibility;
             targetSheet.ColumnWidth = ColumnWidth;
+            targetSheet.ColumnWidthChanged = ColumnWidthChanged;
             targetSheet.RowHeight = RowHeight;
+            targetSheet.RowHeightChanged = RowHeightChanged;
             targetSheet.SetStyle(Style);
             targetSheet.PageSetup = new XLPageSetup((XLPageSetup)PageSetup, targetSheet);
             targetSheet.Outline = new XLOutline(Outline);
