@@ -210,6 +210,7 @@
             return this;
         }
 
+        private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_");
         public T GetValue<T>()
         {
             if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
@@ -224,7 +225,34 @@
 
             if (Value is IXLRichText)
                 return (T)RichText;
-            return (T)Convert.ChangeType(Value, typeof(T));
+
+            if (typeof(T) == typeof(String))
+            {
+                var valToUse = Value.ToString();
+                if (!utfPattern.Match(valToUse).Success)
+                    return (T)Convert.ChangeType(Value, typeof(T));
+                else
+                {
+                    StringBuilder sb = new StringBuilder();
+                    Int32 lastIndex = 0;
+                    foreach (Match match in utfPattern.Matches(valToUse))
+                    {
+                        string matchString = match.Value;
+                        int matchIndex = match.Index;
+                        sb.Append(valToUse.Substring(lastIndex, matchIndex - lastIndex));
+
+                        sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
+
+                        lastIndex = matchIndex + matchString.Length;
+                    }
+                    if (lastIndex < valToUse.Length)
+                        sb.Append(valToUse.Substring(lastIndex));
+
+                    return (T)Convert.ChangeType(sb.ToString(), typeof(T));
+                }
+            }
+            else
+                return (T)Convert.ChangeType(Value, typeof(T));
         }
 
         public string GetString()
