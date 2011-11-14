@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -25,5 +26,20 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("A2:A3", fromRange.RangeAddress.ToStringRelative());
         }
 
+        [TestMethod]
+        public void NoColumnsUsed()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            Int32 count = 0;
+
+            foreach (var row in ws.ColumnsUsed())
+                count++;
+
+            foreach (var row in ws.Range("A1:C3").ColumnsUsed())
+                count++;
+
+            Assert.AreEqual(0, count);
+        }
     }
 }

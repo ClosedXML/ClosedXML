@@ -1206,7 +1206,7 @@ namespace ClosedXML.Excel
         public new IXLRows RowsUsed(Boolean includeFormats = false)
         {
             var rows = new XLRows(Worksheet);
-            foreach (var row in RangeUsed(includeFormats).Rows().Where(r => !r.IsEmpty(includeFormats)))
+            foreach (var row in base.RowsUsed(includeFormats))
             {
                 rows.Add(Row(row.RowNumber()));
             }
@@ -1216,7 +1216,7 @@ namespace ClosedXML.Excel
         public new IXLColumns ColumnsUsed(Boolean includeFormats = false)
         {
             var columns = new XLColumns(Worksheet);
-            foreach (var column in RangeUsed(includeFormats).Columns().Where(r => !r.IsEmpty(includeFormats)))
+            foreach (var column in base.ColumnsUsed(includeFormats))
             {
                 columns.Add(Column(column.ColumnNumber()));
             }

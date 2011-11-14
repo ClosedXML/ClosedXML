@@ -1359,9 +1359,13 @@ namespace ClosedXML.Excel
         public IXLRangeRows RowsUsed(Boolean includeFormats = false)
         {
             var rows = new XLRangeRows();
-            foreach(var row in RangeUsed(includeFormats).Rows().Where(r=>!r.IsEmpty(includeFormats)))
+            var rangeUsed = RangeUsed(includeFormats);
+            if (rangeUsed != null)
             {
-                rows.Add(row);
+                foreach (var row in rangeUsed.Rows().Where(r => !r.IsEmpty(includeFormats)))
+                {
+                    rows.Add(row);
+                }
             }
             return rows;
         }
@@ -1369,9 +1373,13 @@ namespace ClosedXML.Excel
         public IXLRangeColumns ColumnsUsed(Boolean includeFormats = false)
         {
             var columns = new XLRangeColumns();
-            foreach(var column in RangeUsed(includeFormats).Columns().Where(r=>!r.IsEmpty(includeFormats)))
+            var rangeUsed = RangeUsed(includeFormats);
+            if (rangeUsed != null)
             {
-                columns.Add(column);
+                foreach (var column in rangeUsed.Columns().Where(r => !r.IsEmpty(includeFormats)))
+                {
+                    columns.Add(column);
+                }
             }
             return columns;
         }
