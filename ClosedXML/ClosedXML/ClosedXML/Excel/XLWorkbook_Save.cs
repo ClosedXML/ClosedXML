@@ -363,9 +363,6 @@ namespace ClosedXML.Excel
             if (workbook.WorkbookProperties.CodeName == null)
                 workbook.WorkbookProperties.CodeName = "ThisWorkbook";
 
-            if (workbook.WorkbookProperties.DefaultThemeVersion == null)
-                workbook.WorkbookProperties.DefaultThemeVersion = 124226U;
-
             #endregion
 
             if (workbook.BookViews == null)

@@ -58,5 +58,11 @@ namespace ClosedXML_Tests.Examples
          {
              TestHelper.RunTestExample<PurpleWorksheet>(@"Styles\PurpleWorksheet.xlsx");
          }
+
+         [TestMethod]
+         public void UsingColors()
+         {
+             TestHelper.RunTestExample<UsingColors>(@"Styles\UsingColors.xlsx");
+         }
     }
 }
