@@ -157,7 +157,7 @@ namespace ClosedXML.Excel
         }
 
         private Double _columnWidth;
-        //public string LegacyDrawingId;
+        public string LegacyDrawingId;
 
         public Double ColumnWidth
         {

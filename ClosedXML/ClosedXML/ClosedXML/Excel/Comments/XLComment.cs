@@ -33,6 +33,7 @@ namespace ClosedXML.Excel
             Style = new XLDrawingStyle();
             Style.Size.Height = 4;  // I think this is misused for legacy drawing
             Style.Size.Width = 2;
+            SetVisible();
         }
 
         public String Author { get; set; }

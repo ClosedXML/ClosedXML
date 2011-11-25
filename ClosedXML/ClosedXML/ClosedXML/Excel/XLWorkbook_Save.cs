@@ -144,19 +144,19 @@ namespace ClosedXML.Excel
                 context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Worksheet);
 
                 // delete comment related parts (todo: review)
-                //worksheetPart.DeletePart(worksheetPart.WorksheetCommentsPart);
-                //worksheetPart.DeleteParts<VmlDrawingPart>(worksheetPart.GetPartsOfType<VmlDrawingPart>());
+                worksheetPart.DeletePart(worksheetPart.WorksheetCommentsPart);
+                worksheetPart.DeleteParts<VmlDrawingPart>(worksheetPart.GetPartsOfType<VmlDrawingPart>());
 
-                //if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
-                //{
-                //    WorksheetCommentsPart worksheetCommentsPart =
-                //        worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
-                //    GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
+                if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
+                {
+                    WorksheetCommentsPart worksheetCommentsPart =
+                        worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
+                    GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
 
-                //    worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
-                //    VmlDrawingPart vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
-                //    GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
-                //}
+                    worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
+                    VmlDrawingPart vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
+                    GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
+                }
 
                 GenerateWorksheetPartContent(worksheetPart, worksheet, context);
 
@@ -3312,15 +3312,15 @@ namespace ClosedXML.Excel
             #endregion
 
             #region LegacyDrawing
-            //worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
-            //{
-            //    if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
-            //    {
-            //        var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
-            //        worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
-            //                                            previousElement);
-            //    }
-            //}
+            worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
+            {
+                if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
+                    worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
+                                                        previousElement);
+                }
+            }
             #endregion
         }
 
@@ -4391,7 +4391,7 @@ namespace ClosedXML.Excel
             //</v:shape>
             #endregion
 
-            // Limitaion: Most of the shape properties hard coded.
+            // Limitation: Most of the shape properties hard coded.
 
            
             var rowNumber = c.Address.RowNumber;
@@ -4425,10 +4425,17 @@ namespace ClosedXML.Excel
                 {
                     Id = shapeId,
                     Type = "#" + shapeTypeId,
-                    Style = "visibility:hidden",
+                    Style = GetCommentStyle(c),
                     FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2),
                     InsetMode = Vml.Office.InsetMarginValues.Auto
                 };
+        }
+
+        private static StringValue GetCommentStyle(XLCell c)
+        {
+            String visibility = c.Comment.Visible ? "visible" : "hidden";
+            return "position:absolute; margin-left:59.25pt;margin-top:1.5pt;width:96pt;height:60pt;z-index:1; visibility:" + visibility;
+
         }
     }
 }

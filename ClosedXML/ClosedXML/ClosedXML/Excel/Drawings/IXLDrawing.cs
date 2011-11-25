@@ -64,5 +64,8 @@ namespace ClosedXML.Excel
         T SetExtentWidth(Int32 extentWidth);
 
         IXLDrawingStyle Style { get; }
+
+        //"position:absolute; margin-left:59.25pt;margin-top:1.5pt;width:96pt;height:60pt;z-index:1; visibility:visible";
+
     }
 }
