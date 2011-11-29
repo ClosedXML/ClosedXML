@@ -361,9 +361,15 @@ namespace ClosedXML.Excel
                         var localSheetId = definedName.LocalSheetId;
                         var comment = definedName.Comment;
                         if (localSheetId == null)
-                            NamedRanges.Add(name, text, comment);
+                        {
+                            if (!NamedRanges.Any(nr => nr.Name == name))
+                                NamedRanges.Add(name, text, comment);
+                        }
                         else
-                            Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment);
+                        {
+                            if (!Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Any(nr => nr.Name == name))
+                                Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment);
+                        }
                     }
                 }
             }
