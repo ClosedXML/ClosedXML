@@ -155,6 +155,7 @@
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
     <Compile Include="Excel\Coordinates\XLSheetRange.cs" />
     <Compile Include="Excel\Coordinates\XLSheetPoint.cs" />
+    <Compile Include="Excel\Misc\XLIdManager.cs" />
     <Compile Include="Excel\PivotTables\PivotValues\XLPivotValueCombination.cs" />
     <Compile Include="Excel\PivotTables\PivotValues\IXLPivotValueCombination.cs" />
     <Compile Include="Excel\PivotTables\PivotValues\XLPivotValueFormat.cs" />

@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
             Style = new XLDrawingStyle();
         }
 
-        public Int32 Id { get; internal set; }
+        public Int32 ShapeId { get; internal set; }
 
         public Boolean Hidden { get; set; }
         public T SetHidden()
@@ -158,5 +158,6 @@ namespace ClosedXML.Excel
         }
 
         public IXLDrawingStyle Style { get; private set; }
+
     }
 }

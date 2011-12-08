@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
             else
                 zOrder = 1;
             ZOrder = zOrder;
-            Id = zOrder;
+            ShapeId = worksheet.Workbook.ShapeIdManager.GetNext();
             RightAngleAxes = true;
         }
 

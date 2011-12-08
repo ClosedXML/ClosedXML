@@ -53,6 +53,7 @@ namespace ClosedXML.Excel
 
         private void LoadSpreadsheetDocument(SpreadsheetDocument dSpreadsheet)
         {
+            ShapeIdManager = new XLIdManager();
             SetProperties(dSpreadsheet);
             //var sharedStrings = dSpreadsheet.WorkbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>();
             SharedStringItem[] sharedStrings = null;
@@ -195,6 +196,8 @@ namespace ClosedXML.Excel
                             LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ColumnBreaks))
                             LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(LegacyDrawing))
+                            ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
 
                     }
                     reader.Close();
@@ -275,7 +278,11 @@ namespace ClosedXML.Excel
                     foreach (Comment c in comments) {
                         // find cell by reference
                         var cell = ws.Cell(c.Reference);
-                        cell.Comment.Author = authors[(int)c.AuthorId.Value].InnerText;
+                        XLComment xlComment = cell.Comment as XLComment;
+                        xlComment.Author = authors[(int)c.AuthorId.Value].InnerText;
+                        //xlComment.ShapeId = (Int32)c.ShapeId.Value;
+                        //ShapeIdManager.Add(xlComment.ShapeId);
+
                         var runs = c.GetFirstChild<CommentText>().Elements<Run>();
                         foreach (Run run in runs) {
                             var runProperties = run.RunProperties;

@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
     public enum XLDrawingAnchor { MoveAndSizeWithCells, MoveWithCells, Absolute}
     public interface IXLDrawing<T>
     {
-        Int32 Id { get; }
+        Int32 ShapeId { get; }
 
         Boolean Hidden { get; set; }
         T SetHidden();

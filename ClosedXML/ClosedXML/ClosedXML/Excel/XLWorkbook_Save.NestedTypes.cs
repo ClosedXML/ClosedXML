@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -141,5 +142,9 @@ namespace ClosedXML.Excel
             public IXLStyle Style;
         }
         #endregion
+
+        
+        
+       
     }
 }

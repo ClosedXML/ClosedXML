@@ -441,7 +441,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal void CopyStream(Stream input, Stream output)
+        internal static void CopyStream(Stream input, Stream output)
         {
             var buffer = new byte[8 * 1024];
             int len;
@@ -537,6 +537,7 @@ namespace ClosedXML.Excel
             WorksheetsInternal = new XLWorksheets(this);
             NamedRanges = new XLNamedRanges(this);
             CustomProperties = new XLCustomProperties(this);
+            ShapeIdManager = new XLIdManager();
         }
 
         /// <summary>
@@ -598,5 +599,7 @@ namespace ClosedXML.Excel
                 retVal.Add(r);
             return retVal;
         }
+
+        internal XLIdManager ShapeIdManager { get; private set; }
     }
 }

@@ -373,5 +373,6 @@ namespace ClosedXML.Excel
             return address;
         }
 
+        public String UniqueId { get { return RowNumber.ToString("0000000") + ColumnNumber.ToString("00000"); } }
     }
 }

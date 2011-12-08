@@ -7,26 +7,26 @@ namespace ClosedXML.Excel
 {
     internal class XLComment : XLFormattedText<IXLComment>, IXLComment
     {
-
-        public XLComment(IXLFontBase defaultFont)
+        XLWorksheet _worksheet;
+        public XLComment(XLWorksheet worksheet, IXLFontBase defaultFont)
             : base(defaultFont)
         {
-            Initialize();
+            Initialize(worksheet);
         }
 
-        public XLComment(XLFormattedText<IXLComment> defaultComment, IXLFontBase defaultFont)
+        public XLComment(XLWorksheet worksheet, XLFormattedText<IXLComment> defaultComment, IXLFontBase defaultFont)
             : base(defaultComment, defaultFont) 
         {
-            Initialize();
+            Initialize(worksheet);
         }
 
-        public XLComment(String text, IXLFontBase defaultFont)
+        public XLComment(XLWorksheet worksheet, String text, IXLFontBase defaultFont)
             : base(text, defaultFont)
         {
-            Initialize();
+            Initialize(worksheet);
         }
 
-        private void Initialize()
+        private void Initialize(XLWorksheet worksheet)
         {
             Container = this;
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
@@ -34,6 +34,8 @@ namespace ClosedXML.Excel
             Style.Size.Height = 4;  // I think this is misused for legacy drawing
             Style.Size.Width = 2;
             SetVisible();
+            _worksheet = worksheet;
+            ShapeId = worksheet.Workbook.ShapeIdManager.GetNext();
         }
 
         public String Author { get; set; }
@@ -64,7 +66,7 @@ namespace ClosedXML.Excel
 
         #region IXLDrawing
 
-        public Int32 Id { get; internal set; }
+        public Int32 ShapeId { get; internal set; }
 
         public Boolean Hidden { get; set; }
         public IXLComment SetHidden()

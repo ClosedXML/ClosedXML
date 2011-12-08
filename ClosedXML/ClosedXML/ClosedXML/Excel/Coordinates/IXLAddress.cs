@@ -17,5 +17,6 @@ namespace ClosedXML.Excel
         String ToStringFixed(XLReferenceStyle referenceStyle);
         String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet);
         String ToString(XLReferenceStyle referenceStyle);
+        String UniqueId { get; }
     }
 }

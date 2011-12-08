@@ -962,7 +962,7 @@
                     // MS Excel uses Tahoma 8 Swiss no matter what current style font
                     // var style = GetStyleForRead();
                     var defaultFont = new XLFont() { FontName = "Tahoma", FontSize = 8, FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss };
-                    _comment = new XLComment(defaultFont);
+                    _comment = new XLComment(Worksheet, defaultFont);
                 }
 
                 return _comment;
@@ -1447,7 +1447,7 @@
             _dataType = source._dataType;
             FormulaR1C1 = source.FormulaR1C1;
             _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
-            _comment = source._comment == null ? null : new XLComment(source._comment, source.Style.Font);
+            _comment = source._comment == null ? null : new XLComment(source.Worksheet, source._comment, source.Style.Font);
         }
 
         public IXLCell CopyFrom(XLCell otherCell)
@@ -1455,7 +1455,7 @@
             var source = otherCell;
             _cellValue = source._cellValue;
             _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
-            _comment = source._comment == null ? null : new XLComment(source._comment, source.Style.Font);
+            _comment = source._comment == null ? null : new XLComment(source.Worksheet, source._comment, source.Style.Font);
 
             _dataType = source._dataType;
             FormulaR1C1 = source.FormulaR1C1;
