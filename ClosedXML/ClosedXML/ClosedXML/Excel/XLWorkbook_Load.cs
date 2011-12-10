@@ -22,6 +22,7 @@ namespace ClosedXML.Excel
     using System.Drawing;
     using Ap;
     using Op;
+    using System.Xml.Linq;
 
     #endregion
 
@@ -274,10 +275,12 @@ namespace ClosedXML.Excel
 
                     // **** MAYBE FUTURE SHAPE SIZE SUPPORT
                     // var shapes = wsPart.VmlDrawingParts.SelectMany(p => new System.Xml.XmlTextReader(p.GetStream()).Read()
-
+                    XDocument xdoc = XDocument.Load(wsPart.VmlDrawingParts.First().GetStream(FileMode.Open));
+                    
                     foreach (Comment c in comments) {
                         // find cell by reference
                         var cell = ws.Cell(c.Reference);
+                        
                         XLComment xlComment = cell.Comment as XLComment;
                         xlComment.Author = authors[(int)c.AuthorId.Value].InnerText;
                         //xlComment.ShapeId = (Int32)c.ShapeId.Value;
@@ -291,6 +294,10 @@ namespace ClosedXML.Excel
                             LoadFont(runProperties, rt);
                         }
 
+                        var shape = xdoc.Root.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
+                        LoadShapeProperties<IXLComment>(xlComment, shape);
+                        
+                        shape.Remove();
                         // **** MAYBE FUTURE SHAPE SIZE SUPPORT
                         //var shape = shapes.FirstOrDefault(sh => { 
                         //                        var cd = sh.GetFirstChild<Ss.ClientData>(); 
@@ -337,6 +344,32 @@ namespace ClosedXML.Excel
 
             LoadDefinedNames(workbook);
         }
+
+        private void LoadShapeProperties<T>(IXLDrawing<T> xlDrawing, XElement shape)
+        {
+            var style = (string)shape.Attribute("style");
+            var attributes = style.Split(';');
+            foreach (String pair in attributes)
+            {
+                var split = pair.Split(':');
+                var attribute = split[0].Trim().ToLower();
+                var value = split[1].Trim();
+
+                switch (attribute)
+                {
+                    case "visibility": xlDrawing.Visible = value.ToLower().Equals("visible"); break;
+                    case "margin-left": xlDrawing.Style.Margins.Left = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    case "margin-right": xlDrawing.Style.Margins.Right = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    case "margin-top": xlDrawing.Style.Margins.Top = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    case "margin-bottom": xlDrawing.Style.Margins.Bottom = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    case "width": xlDrawing.Style.Size.Width = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    case "height": xlDrawing.Style.Size.Height = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    case "z-index": xlDrawing.ZOrder = Int32.Parse(value); break;
+                }
+            }
+
+        }
+        
 
         private void LoadDefinedNames(Workbook workbook)
         {

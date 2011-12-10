@@ -506,6 +506,20 @@ namespace ClosedXML.Excel
             }
         }
 
+        public static SheetViewValues ToOpenXml(this XLSheetViewOptions value)
+        {
+            switch (value)
+            {
+                case XLSheetViewOptions.Normal: return SheetViewValues.Normal;
+                case XLSheetViewOptions.PageBreakPreview: return SheetViewValues.PageBreakPreview;
+                case XLSheetViewOptions.PageLayout: return SheetViewValues.PageLayout;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+
         #endregion
         #region To ClosedXml
         public static XLFontUnderlineValues ToClosedXml(this UnderlineValues value)
@@ -1007,6 +1021,20 @@ namespace ClosedXML.Excel
             }
         }
 
+        public static XLSheetViewOptions ToClosedXml(this SheetViewValues value)
+        {
+            switch (value)
+            {
+                case SheetViewValues.Normal: return XLSheetViewOptions.Normal;
+                case SheetViewValues.PageBreakPreview: return XLSheetViewOptions.PageBreakPreview;
+                case SheetViewValues.PageLayout: return XLSheetViewOptions.PageLayout;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
         #endregion
     }
 }

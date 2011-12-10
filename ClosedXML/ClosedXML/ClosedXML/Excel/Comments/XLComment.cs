@@ -31,8 +31,15 @@ namespace ClosedXML.Excel
             Container = this;
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
             Style = new XLDrawingStyle();
-            Style.Size.Height = 4;  // I think this is misused for legacy drawing
-            Style.Size.Width = 2;
+            Style.Size.Height = 60;
+            Style.Size.Width = 60;
+            ZOrder = 1;
+            
+            Style.Margins.Left = 1.5;
+            Style.Margins.Right = 1.5;
+            Style.Margins.Top = 1.5;
+            Style.Margins.Bottom = 1.5;
+
             SetVisible();
             _worksheet = worksheet;
             ShapeId = worksheet.Workbook.ShapeIdManager.GetNext();
@@ -62,21 +69,21 @@ namespace ClosedXML.Excel
             return AddText(Environment.NewLine);
         }
 
-        public Boolean Visible { get; set; }	public IXLComment SetVisible() { Visible = true; return this; }	public IXLComment SetVisible(Boolean value) { Visible = value; return this; }
+        //public Boolean Visible { get; set; }	public IXLComment SetVisible() { Visible = true; return this; }	public IXLComment SetVisible(Boolean value) { Visible = value; return this; }
 
         #region IXLDrawing
 
         public Int32 ShapeId { get; internal set; }
 
-        public Boolean Hidden { get; set; }
-        public IXLComment SetHidden()
+        public Boolean Visible { get; set; }
+        public IXLComment SetVisible()
         {
-            Hidden = true;
+            Visible = true;
             return Container;
         }
-        public IXLComment SetHidden(Boolean hidden)
+        public IXLComment SetVisible(Boolean hidden)
         {
-            Hidden = hidden;
+            Visible = hidden;
             return Container;
         }
 

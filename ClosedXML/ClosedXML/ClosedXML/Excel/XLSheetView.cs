@@ -4,8 +4,10 @@ namespace ClosedXML.Excel
 {
     internal class XLSheetView: IXLSheetView
     {
-        public XLSheetView() { }
-        public XLSheetView(IXLSheetView sheetView)
+        public XLSheetView() {
+            View = XLSheetViewOptions.Normal;
+        }
+        public XLSheetView(IXLSheetView sheetView):this()
         {
             this.SplitRow = sheetView.SplitRow;
             this.SplitColumn = sheetView.SplitColumn;
@@ -30,6 +32,15 @@ namespace ClosedXML.Excel
             SplitRow = rows;
             SplitColumn = columns;
             FreezePanes = true;
+        }
+
+
+        public XLSheetViewOptions View { get; set; }
+
+        public IXLSheetView SetView(XLSheetViewOptions value)
+        {
+            View = value;
+            return this;
         }
     }
 }

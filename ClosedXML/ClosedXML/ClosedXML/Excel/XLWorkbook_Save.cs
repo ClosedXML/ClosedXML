@@ -2507,12 +2507,19 @@ namespace ClosedXML.Excel
             else
                 sheetView.RightToLeft = null;
 
+            if (xlWorksheet.SheetView.View == XLSheetViewOptions.Normal)
+                sheetView.View = null;
+            else
+                sheetView.View = xlWorksheet.SheetView.View.ToOpenXml();
+
             var pane = sheetView.Elements<Pane>().FirstOrDefault();
             if (pane == null)
             {
                 pane = new Pane();
                 sheetView.AppendChild(pane);
             }
+
+            
 
             pane.State = PaneStateValues.FrozenSplit;
             Double hSplit = xlWorksheet.SheetView.SplitColumn;
@@ -4414,13 +4421,13 @@ namespace ClosedXML.Excel
             ms.Position = 0;
             XmlTextReader reader = new XmlTextReader(ms);
             XmlTextWriter writer = new XmlTextWriter(vmlDrawingPart.GetStream(FileMode.Create), Encoding.UTF8);
-            //if (ms.Length == 0)
-            //    writer.WriteStartElement("xml");
-            //else
-            //{
-            //    //ms.Position = 0;
-            //    CopyXml(reader, writer);
-            //}
+            if (ms.Length == 0)
+                writer.WriteStartElement("xml");
+            else
+            {
+                //ms.Position = 0;
+                CopyXml(reader, writer);
+            }
 
             writer.WriteStartElement("xml");
 
@@ -4457,17 +4464,17 @@ namespace ClosedXML.Excel
                 GenerateShape(c, shapeTypeId).WriteTo(writer);
             }
 
-            if (ms.Length > 0)
-            {
-                //ms.Position = 0;
-                //var sb = new StringBuilder();
-                //while (reader.Read())
-                //    sb.Append(reader.ReadString());
-                //var t = sb.ToString();
-                CopyXml(reader, writer);
-            }
+            //if (ms.Length > 0)
+            //{
+            //    //ms.Position = 0;
+            //    //var sb = new StringBuilder();
+            //    //while (reader.Read())
+            //    //    sb.Append(reader.ReadString());
+            //    //var t = sb.ToString();
+            //    CopyXml(reader, writer);
+            //}
 
-            //writer.WriteEndElement();
+            writer.WriteEndElement();
             writer.Flush();
             writer.Close();
 
@@ -4508,7 +4515,7 @@ namespace ClosedXML.Excel
                         }
                         break;
                     case XmlNodeType.EndElement:
-                        if (docElemName == xtr.Name)
+                        if (docElemName == xtr.Name || xtr.Name == "xml")
                             b = false;
                         else
                             xtw.WriteEndElement();
@@ -4565,16 +4572,6 @@ namespace ClosedXML.Excel
             var rowNumber = c.Address.RowNumber;
             var columnNumber = c.Address.ColumnNumber;
             
-            var leftCol = columnNumber; // always right next to column
-            var leftOffset = 15;
-            var topRow = rowNumber == 1 ? rowNumber - 1 : rowNumber - 2;    // -1 : zero based index, -2 : moved up
-            var topOffset = rowNumber == 1 ? 2 : 9;    // on first row, comment is 2px down, on any other is 15 px up
-            var rightCol = leftCol + c.Comment.Style.Size.Width;            
-            var rightOffset = 15;
-            var bottomRow = topRow + c.Comment.Style.Size.Height;
-            var bottomOffset = rowNumber == 1 ? 2 : 9;
-
-
             String shapeId = String.Format("_x0000_s{0}", c.Comment.ShapeId); // Unique per cell (workbook?), e.g.: "_x0000_s1026"
 
             return new Vml.Shape(
@@ -4583,9 +4580,9 @@ namespace ClosedXML.Excel
                 new Vml.Path() { ConnectionPointType = Vml.Office.ConnectValues.None },
                 new Vml.TextBox( /* <div style='text-align:left'></div> */ ) { Style = "mso-direction-alt:auto" },
                 new Vml.Spreadsheet.ClientData(
-                    new Vml.Spreadsheet.MoveWithCells("False"),  // counterintuitive
-                    new Vml.Spreadsheet.ResizeWithCells("False"), // counterintuitive
-                    new Vml.Spreadsheet.Anchor() { Text = string.Format(" {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}", leftCol, leftOffset, topRow, topOffset, rightCol, rightOffset, bottomRow, bottomOffset) },
+                    new Vml.Spreadsheet.MoveWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.Absolute ? "True": "False"),  // counterintuitive
+                    new Vml.Spreadsheet.ResizeWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.MoveAndSizeWithCells ? "False": "True"), // counterintuitive
+                    new Vml.Spreadsheet.Anchor() { Text = string.Format("{0}, 15, {1}, 2, {2}, 31, {3}, 1", columnNumber, rowNumber - 1, columnNumber + 2, rowNumber + 3) },
                     new Vml.Spreadsheet.AutoFill("False"),
                     new Vml.Spreadsheet.CommentRowTarget() { Text = (rowNumber - 1).ToString() },
                     new Vml.Spreadsheet.CommentColumnTarget() { Text = (columnNumber - 1).ToString() }
@@ -4600,10 +4597,41 @@ namespace ClosedXML.Excel
                 };
         }
 
-        private static StringValue GetCommentStyle(XLCell c)
+        private static StringValue GetCommentStyle(XLCell cell)
         {
-            String visibility = c.Comment.Visible ? "visible" : "hidden";
-            return "position:absolute; margin-left:59.25pt;margin-top:1.5pt;width:96pt;height:60pt;z-index:1; visibility:" + visibility;
+            var c = cell.Comment;
+            var sb = new StringBuilder();
+            
+            sb.Append("visibility:");
+            sb.Append(c.Visible ? "visible" : "hidden");
+            sb.Append(";");
+
+            var margins = c.Style.Margins;
+            sb.Append("margin-left:");
+            sb.Append(margins.Left.ToString());
+            sb.Append("pt;");
+            sb.Append("margin-right:");
+            sb.Append(margins.Right.ToString());
+            sb.Append("pt;");
+            sb.Append("margin-top:");
+            sb.Append(margins.Top.ToString());
+            sb.Append("pt;");
+            sb.Append("margin-bottom:");
+            sb.Append(margins.Bottom.ToString());
+            sb.Append("pt;");
+
+            sb.Append("width:");
+            sb.Append(c.Style.Size.Width.ToString());
+            sb.Append("pt;");
+            sb.Append("height:");
+            sb.Append(c.Style.Size.Height.ToString());
+            sb.Append("pt;");
+
+            sb.Append("z-index:");
+            sb.Append(c.ZOrder.ToString());
+            
+
+            return "position:absolute; " + sb.ToString();
 
         }
     }

@@ -2,6 +2,7 @@
 
 namespace ClosedXML.Excel
 {
+    public enum XLSheetViewOptions { Normal, PageBreakPreview, PageLayout }
     public interface IXLSheetView
     {
         /// <summary>
@@ -29,5 +30,9 @@ namespace ClosedXML.Excel
         /// <param name="rows">The rows to freeze.</param>
         /// <param name="columns">The columns to freeze.</param>
         void Freeze(Int32 rows, Int32 columns);
+
+        XLSheetViewOptions View { get; set; }
+
+        IXLSheetView SetView(XLSheetViewOptions value);
     }
 }

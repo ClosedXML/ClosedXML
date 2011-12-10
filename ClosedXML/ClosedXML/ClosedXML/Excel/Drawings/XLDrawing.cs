@@ -7,21 +7,20 @@ namespace ClosedXML.Excel
         internal T Container;
         public XLDrawing()
         {
-            Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
             Style = new XLDrawingStyle();
         }
 
         public Int32 ShapeId { get; internal set; }
 
-        public Boolean Hidden { get; set; }
-        public T SetHidden()
+        public Boolean Visible { get; set; }
+        public T SetVisible()
         {
-            Hidden = true;
+            Visible = true;
             return Container;
         }
-        public T SetHidden(Boolean hidden)
+        public T SetVisible(Boolean hidden)
         {
-            Hidden = hidden;
+            Visible = hidden;
             return Container;
         }
 
@@ -38,9 +37,7 @@ namespace ClosedXML.Excel
             Description = description;
             return Container;
         }
-
-        public XLDrawingAnchor Anchor { get; set; }
-
+        
         public Int32 FirstColumn { get; set; }
         public T SetFirstColumn(Int32 firstColumn)
         {

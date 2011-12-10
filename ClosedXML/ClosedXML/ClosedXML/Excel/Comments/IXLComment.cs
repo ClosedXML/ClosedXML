@@ -8,9 +8,6 @@ namespace ClosedXML.Excel
         String Author { get; set; }
         IXLComment SetAuthor(String value);
 
-        Boolean Visible { get; set; }
-        IXLComment SetVisible(); IXLComment SetVisible(Boolean value);
-
         IXLRichString AddSignature();
         IXLRichString AddSignature(string username);
         IXLRichString AddNewLine();

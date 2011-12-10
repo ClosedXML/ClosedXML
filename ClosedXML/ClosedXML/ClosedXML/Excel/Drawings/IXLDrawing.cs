@@ -7,9 +7,9 @@ namespace ClosedXML.Excel
     {
         Int32 ShapeId { get; }
 
-        Boolean Hidden { get; set; }
-        T SetHidden();
-        T SetHidden(Boolean hidden);
+        Boolean Visible { get; set; }
+        T SetVisible();
+        T SetVisible(Boolean hidden);
                 
         String Name { get; set; }
         T SetName(String name);
@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
         String Description { get; set; }
         T SetDescription(String description);
         
-        XLDrawingAnchor Anchor { get; set; }
+        
 
         Int32 FirstColumn { get; set; }
         T SetFirstColumn(Int32 firstColumn);
