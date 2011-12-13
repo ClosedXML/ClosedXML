@@ -214,7 +214,7 @@ namespace ClosedXML.Excel
             //foreach (VmlDrawingPart vmlDrawingPart in vmlDrawingParts)
             if (vmlDrawingPart != null)
             {
-                XDocument xdoc = XDocument.Load(vmlDrawingPart.GetStream(FileMode.Open));
+                XDocument xdoc = XDocumentExtensions.Load(vmlDrawingPart.GetStream(FileMode.Open));
                 xdoc.Root.Elements().Where(e => e.Name.LocalName == "shapelayout").Remove();
                 xdoc.Root.Elements().Where(e=>e.Name.LocalName == "shapetype" && (string)e.Attribute("id") == @"_x0000_t202").Remove();
                 xdoc.Root.Elements().Where(e => e.Name.LocalName == "shape" && (string)e.Attribute("type") == @"#_x0000_t202").Remove();
@@ -229,9 +229,9 @@ namespace ClosedXML.Excel
                     if (StringExtensions.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
                         worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
                     VmlDrawingPart vmlDrawingPartNew = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
-                    
+
                     if (hasShapes)
-                        xdoc.Save(vmlDrawingPartNew.GetStream(System.IO.FileMode.Create));
+                        xdoc.WriteTo(XmlWriter.Create(vmlDrawingPartNew.GetStream(System.IO.FileMode.Create)));
 
                     imageParts.ForEach(p => vmlDrawingPartNew.AddPart(p, vmlDrawingPart.GetIdOfPart(p)));
                     legacyParts.ForEach(p => vmlDrawingPartNew.AddPart(p, vmlDrawingPart.GetIdOfPart(p)));
@@ -4592,8 +4592,8 @@ namespace ClosedXML.Excel
                     Id = shapeId,
                     Type = "#" + shapeTypeId,
                     Style = GetCommentStyle(c),
-                    FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2),
-                    InsetMode = Vml.Office.InsetMarginValues.Auto
+                    FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2)//,
+                    //InsetMode = c.Comment.Style.Margins.Automatic ? Vml.Office.InsetMarginValues.Auto : Vml.Office.InsetMarginValues.Custom
                 };
         }
 
@@ -4620,12 +4620,12 @@ namespace ClosedXML.Excel
             sb.Append(margins.Bottom.ToString());
             sb.Append("pt;");
 
-            sb.Append("width:");
-            sb.Append(c.Style.Size.Width.ToString());
-            sb.Append("pt;");
-            sb.Append("height:");
-            sb.Append(c.Style.Size.Height.ToString());
-            sb.Append("pt;");
+            //sb.Append("width:");
+            //sb.Append(c.Style.Size.Width.ToString());
+            //sb.Append("pt;");
+            //sb.Append("height:");
+            //sb.Append(c.Style.Size.Height.ToString());
+            //sb.Append("pt;");
 
             sb.Append("z-index:");
             sb.Append(c.ZOrder.ToString());

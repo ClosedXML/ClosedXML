@@ -275,7 +275,7 @@ namespace ClosedXML.Excel
 
                     // **** MAYBE FUTURE SHAPE SIZE SUPPORT
                     // var shapes = wsPart.VmlDrawingParts.SelectMany(p => new System.Xml.XmlTextReader(p.GetStream()).Read()
-                    XDocument xdoc = XDocument.Load(wsPart.VmlDrawingParts.First().GetStream(FileMode.Open));
+                    XDocument xdoc = XDocumentExtensions.Load(wsPart.VmlDrawingParts.First().GetStream(FileMode.Open));
                     
                     foreach (Comment c in comments) {
                         // find cell by reference
@@ -296,7 +296,12 @@ namespace ClosedXML.Excel
 
                         var shape = xdoc.Root.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
                         LoadShapeProperties<IXLComment>(xlComment, shape);
-                        
+                        var insetmode = (string)shape.Attribute("insetmode");
+                        xlComment.Style.Margins.Automatic = insetmode.Equals("auto");
+
+                        var clientData = shape.Element("ClientData");
+                        var moveWithCells = clientData.Element("MoveWithCells");
+
                         shape.Remove();
                         // **** MAYBE FUTURE SHAPE SIZE SUPPORT
                         //var shape = shapes.FirstOrDefault(sh => { 

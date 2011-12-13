@@ -361,6 +361,9 @@
     <Compile Include="..\ClosedXML\Excel\IXLWorksheets.cs">
       <Link>Excel\IXLWorksheets.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Misc\XLIdManager.cs">
+      <Link>Excel\Misc\XLIdManager.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\NamedRanges\IXLNamedRange.cs">
       <Link>Excel\NamedRanges\IXLNamedRange.cs</Link>
     </Compile>

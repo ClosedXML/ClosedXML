@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using System.IO;
+using System.Xml;
 
 [assembly: CLSCompliantAttribute(true)]
 namespace ClosedXML.Excel
@@ -222,6 +225,25 @@ namespace ClosedXML.Excel
             font.FontName = sourceFont.FontName;
             font.FontFamilyNumbering = sourceFont.FontFamilyNumbering;
         }
+    }
+
+    public static class XDocumentExtensions
+    {
+        public static XDocument Load(Stream stream)
+        {
+            using (XmlReader reader = XmlReader.Create(stream))
+            {
+                return XDocument.Load(reader);
+            }
+        }
+
+        //public static void SaveToStream(this XDocument document, Stream stream)
+        //{
+        //    using (XmlReader reader = XmlReader.Open(stream))
+        //    {
+        //        return XDocument.Load(reader);
+        //    }
+        //}
     }
 }
 
