@@ -240,7 +240,6 @@ namespace ClosedXML.Excel
         Boolean HasRichText { get; }
         IXLComment Comment { get; }
         Boolean HasComment { get; }
-		void DeleteComment();
 
         Boolean IsMerged();
         Boolean IsEmpty();

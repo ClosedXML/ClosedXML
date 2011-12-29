@@ -251,6 +251,12 @@ namespace ClosedXML.Excel
             return Ranges(cells).Cells();
         }
 
+        public IXLCells Cells(Func<IXLCell, Boolean> predicate)
+        {
+            var cells = new XLCells(false, false, predicate) { RangeAddress };
+            return cells;
+        }
+
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(true, false) {RangeAddress};
@@ -696,6 +702,18 @@ namespace ClosedXML.Excel
         public XLCells CellsUsed(bool includeFormats)
         {
             var cells = new XLCells(true, includeFormats) {RangeAddress};
+            return cells;
+        }
+
+        public IXLCells CellsUsed(Func<IXLCell, Boolean> predicate)
+        {
+            var cells = new XLCells(true, false, predicate) { RangeAddress };
+            return cells;
+        }
+
+        public IXLCells CellsUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate)
+        {
+            var cells = new XLCells(true, includeFormats, predicate) { RangeAddress };
             return cells;
         }
 

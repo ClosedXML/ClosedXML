@@ -7,8 +7,8 @@ namespace ClosedXML.Excel
 {
     public interface IXLDrawingWeb
     {
-        String AlternativeText { get; set; }
-        IXLDrawingStyle SetAlternativeText(String value);
+        String AlternateText { get; set; }
+        IXLDrawingStyle SetAlternateText(String value);
 
     }
 }

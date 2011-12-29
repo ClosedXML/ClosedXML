@@ -271,6 +271,9 @@
     <Compile Include="..\ClosedXML\Excel\Drawings\IXLDrawing.cs">
       <Link>Excel\Drawings\IXLDrawing.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\IXLDrawingPosition.cs">
+      <Link>Excel\Drawings\IXLDrawingPosition.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingAlignment.cs">
       <Link>Excel\Drawings\Style\IXLDrawingAlignment.cs</Link>
     </Compile>
@@ -327,6 +330,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Drawings\XLDrawing.cs">
       <Link>Excel\Drawings\XLDrawing.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Drawings\XLDrawingPosition.cs">
+      <Link>Excel\Drawings\XLDrawingPosition.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\EnumConverter.cs">
       <Link>Excel\EnumConverter.cs</Link>

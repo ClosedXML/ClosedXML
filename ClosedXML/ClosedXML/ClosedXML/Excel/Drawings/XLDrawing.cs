@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
         public XLDrawing()
         {
             Style = new XLDrawingStyle();
+            Position = new XLDrawingPosition();
         }
 
         public Int32 ShapeId { get; internal set; }
@@ -37,56 +38,8 @@ namespace ClosedXML.Excel
             Description = description;
             return Container;
         }
-        
-        public Int32 FirstColumn { get; set; }
-        public T SetFirstColumn(Int32 firstColumn)
-        {
-            FirstColumn = firstColumn;
-            return Container;
-        }
-        public Int32 FirstColumnOffset { get; set; }
-        public T SetFirstColumnOffset(Int32 firstColumnOffset)
-        {
-            FirstColumnOffset = firstColumnOffset;
-            return Container;
-        }
-        public Int32 FirstRow { get; set; }
-        public T SetFirstRow(Int32 firstRow)
-        {
-            FirstRow = firstRow;
-            return Container;
-        }
-        public Int32 FirstRowOffset { get; set; }
-        public T SetFirstRowOffset(Int32 firstRowOffset)
-        {
-            FirstRowOffset = firstRowOffset;
-            return Container;
-        }
 
-        public Int32 LastColumn { get; set; }
-        public T SetLastColumn(Int32 firstColumn)
-        {
-            LastColumn = firstColumn;
-            return Container;
-        }
-        public Int32 LastColumnOffset { get; set; }
-        public T SetLastColumnOffset(Int32 firstColumnOffset)
-        {
-            LastColumnOffset = firstColumnOffset;
-            return Container;
-        }
-        public Int32 LastRow { get; set; }
-        public T SetLastRow(Int32 firstRow)
-        {
-            LastRow = firstRow;
-            return Container;
-        }
-        public Int32 LastRowOffset { get; set; }
-        public T SetLastRowOffset(Int32 firstRowOffset)
-        {
-            LastRowOffset = firstRowOffset;
-            return Container;
-        }
+        public IXLDrawingPosition Position { get; private set; }
 
         public Int32 ZOrder { get; set; }
         public T SetZOrder(Int32 zOrder)
@@ -155,6 +108,7 @@ namespace ClosedXML.Excel
         }
 
         public IXLDrawingStyle Style { get; private set; }
+
 
     }
 }

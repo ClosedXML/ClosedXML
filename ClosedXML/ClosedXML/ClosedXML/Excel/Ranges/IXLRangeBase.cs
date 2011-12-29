@@ -73,6 +73,8 @@ namespace ClosedXML.Excel
 
         IXLCells Cells(String cells);
 
+        IXLCells Cells(Func<IXLCell, Boolean> predicate);
+
         /// <summary>
         ///   Returns the collection of cells that have a value. Formats are ignored.
         /// </summary>
@@ -83,6 +85,10 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name = "includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         IXLCells CellsUsed(Boolean includeFormats);
+
+        IXLCells CellsUsed(Func<IXLCell, Boolean> predicate);
+
+        IXLCells CellsUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate);
 
         /// <summary>
         ///   Returns the first cell of this range.

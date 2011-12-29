@@ -4312,17 +4312,15 @@ namespace ClosedXML.Excel
             foreach (var c in xlWorksheet.Internals.CellsCollection.GetCells(c=>c.HasComment))
             {
                 Comment comment = new Comment() { Reference = c.Address.ToStringRelative() };
-                String authorName = StringExtensions.IsNullOrWhiteSpace(c.Comment.Author)
-                                        ? Environment.UserName
-                                        : c.Comment.Author;
+                String authorName = c.Comment.Author;
 
-                    Int32 authorId;
-                    if (!authorsDict.TryGetValue(authorName, out authorId))
-                    {
-                        authorId = authorsDict.Count;
-                        authorsDict.Add(authorName, authorId);
-                    }
-                    comment.AuthorId = (UInt32)authorId;
+                Int32 authorId;
+                if (!authorsDict.TryGetValue(authorName, out authorId))
+                {
+                    authorId = authorsDict.Count;
+                    authorsDict.Add(authorName, authorId);
+                }
+                comment.AuthorId = (UInt32)authorId;
 
                 CommentText commentText = new CommentText();
                 foreach (var rt in c.Comment)
@@ -4573,28 +4571,128 @@ namespace ClosedXML.Excel
             var columnNumber = c.Address.ColumnNumber;
             
             String shapeId = String.Format("_x0000_s{0}", c.Comment.ShapeId); // Unique per cell (workbook?), e.g.: "_x0000_s1026"
-
-            return new Vml.Shape(
-                new Vml.Fill { Color2 = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2) },
+            Vml.Spreadsheet.Anchor anchor = GetAnchor(c);
+            Vml.TextBox textBox = GetTextBox(c.Comment.Style);
+            var fill = new Vml.Fill { Color2 = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2) };
+            if (c.Comment.Style.ColorsAndLines.FillTransparency < 1)
+                fill.Opacity = Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.FillTransparency), 2).ToString();
+            Vml.Stroke stroke = GetStroke(c);
+            var shape = new Vml.Shape(
+                fill,
+                stroke,
                 new Vml.Shadow() { On = true, Color = "black", Obscured = true },
                 new Vml.Path() { ConnectionPointType = Vml.Office.ConnectValues.None },
-                new Vml.TextBox( /* <div style='text-align:left'></div> */ ) { Style = "mso-direction-alt:auto" },
+                textBox,
                 new Vml.Spreadsheet.ClientData(
                     new Vml.Spreadsheet.MoveWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.Absolute ? "True": "False"),  // counterintuitive
                     new Vml.Spreadsheet.ResizeWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.MoveAndSizeWithCells ? "False": "True"), // counterintuitive
-                    new Vml.Spreadsheet.Anchor() { Text = string.Format("{0}, 15, {1}, 2, {2}, 31, {3}, 1", columnNumber, rowNumber - 1, columnNumber + 2, rowNumber + 3) },
+                    anchor,
+                    new Vml.Spreadsheet.HorizontalTextAlignment(c.Comment.Style.Alignment.Horizontal.ToString()),
+                    new Vml.Spreadsheet.VerticalTextAlignment(c.Comment.Style.Alignment.Vertical.ToString()),
                     new Vml.Spreadsheet.AutoFill("False"),
                     new Vml.Spreadsheet.CommentRowTarget() { Text = (rowNumber - 1).ToString() },
-                    new Vml.Spreadsheet.CommentColumnTarget() { Text = (columnNumber - 1).ToString() }
+                    new Vml.Spreadsheet.CommentColumnTarget() { Text = (columnNumber - 1).ToString() },
+                    new Vml.Spreadsheet.Locked(c.Comment.Style.Protection.Locked ? "True" : "False"),
+                    new Vml.Spreadsheet.LockText(c.Comment.Style.Protection.LockText ? "True" : "False"),
+                    new Vml.Spreadsheet.Visible(c.Comment.Visible ? "True" : "False")
                     ) { ObjectType = Vml.Spreadsheet.ObjectValues.Note }
                 )
                 {
                     Id = shapeId,
                     Type = "#" + shapeTypeId,
                     Style = GetCommentStyle(c),
-                    FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2)//,
-                    //InsetMode = c.Comment.Style.Margins.Automatic ? Vml.Office.InsetMarginValues.Auto : Vml.Office.InsetMarginValues.Custom
+                    FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2),
+                    StrokeColor = "#" + c.Comment.Style.ColorsAndLines.LineColor.Color.ToHex().Substring(2),
+                    StrokeWeight = String.Format("{0}pt",c.Comment.Style.ColorsAndLines.LineWeight),
+                    InsetMode = c.Comment.Style.Margins.Automatic ? Vml.Office.InsetMarginValues.Auto : Vml.Office.InsetMarginValues.Custom
                 };
+            if (!StringExtensions.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
+                shape.Alternate = c.Comment.Style.Web.AlternateText;
+            
+                
+            return shape;
+        }
+
+        private static Vml.Stroke GetStroke(XLCell c)
+        {
+            var lineDash = c.Comment.Style.ColorsAndLines.LineDash;
+            var stroke = new Vml.Stroke() { LineStyle = c.Comment.Style.ColorsAndLines.LineStyle.ToOpenXml(),
+                DashStyle= lineDash == XLDashStyle.RoundDot || lineDash == XLDashStyle.SquareDot ? "shortdot" : lineDash.ToString().ToLower()
+            };
+            if (lineDash == XLDashStyle.RoundDot)
+                stroke.EndCap = Vml.StrokeEndCapValues.Round;
+            if (c.Comment.Style.ColorsAndLines.LineTransparency < 1)
+                stroke.Opacity = Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.LineTransparency), 2).ToString();
+            return stroke;
+        }
+
+        private static Vml.TextBox GetTextBox(IXLDrawingStyle ds)
+        {
+            //  <v:textbox style="layout-flow:vertical;mso-layout-flow-alt:bottom-to-top; mso-direction-alt:auto">
+            //  <v:textbox style="mso-direction-alt:auto;mso-fit-shape-to-text:t">
+
+            var sb = new StringBuilder();
+            var a = ds.Alignment;
+
+            if (a.Direction == XLDrawingTextDirection.Context)
+                sb.Append("mso-direction-alt:auto;");
+            else if (a.Direction == XLDrawingTextDirection.RightToLeft)
+                sb.Append("direction:RTL;");
+
+            if (a.Orientation != XLDrawingTextOrientation.LeftToRight)
+            {
+                sb.Append("layout-flow:vertical;");
+                if (a.Orientation == XLDrawingTextOrientation.BottomToTop)
+                    sb.Append("mso-layout-flow-alt:bottom-to-top;");
+                else if (a.Orientation == XLDrawingTextOrientation.Vertical)
+                    sb.Append("mso-layout-flow-alt:top-to-bottom;");
+            }
+            if (a.AutomaticSize)
+                sb.Append("mso-fit-shape-to-text:t;");
+            var retVal = new Vml.TextBox() { Style = sb.ToString() };
+            var dm = ds.Margins;
+            if (!dm.Automatic)
+                retVal.Inset = String.Format("{0}in,{1}in,{2}in,{3}in", dm.Left, dm.Top, dm.Right, dm.Bottom);
+            
+            return retVal;
+        }
+
+        private static Vml.Spreadsheet.Anchor GetAnchor(XLCell cell)
+        {
+            var c = cell.Comment;
+            Double cWidth = c.Style.Size.Width; //(c.Style.Size.Width * 72.0 / 5.625);
+            Int32 fcNumber = c.Position.Column - 1;
+            Int32 fcOffset = Convert.ToInt32(c.Position.ColumnOffset * 7.5);
+            Double widthFromColumns = cell.Worksheet.Column(c.Position.Column).Width - c.Position.ColumnOffset;
+            XLCell lastCell = cell.CellRight(c.Position.Column - cell.Address.ColumnNumber);
+            while (widthFromColumns <= cWidth)
+            {
+                lastCell = lastCell.CellRight();
+                widthFromColumns += lastCell.WorksheetColumn().Width;
+            }
+
+            Int32 lcNumber = lastCell.WorksheetColumn().ColumnNumber() - 1;
+            Int32 lcOffset = Convert.ToInt32((lastCell.WorksheetColumn().Width - (widthFromColumns - cWidth)) * 7.5);
+
+            Double cHeight = c.Style.Size.Height; //c.Style.Size.Height * 72.0;
+            Int32 frNumber = c.Position.Row - 1;
+            Int32 frOffset = Convert.ToInt32(c.Position.RowOffset);
+            Double heightFromRows = cell.Worksheet.Row(c.Position.Row).Height - c.Position.RowOffset;
+            lastCell = cell.CellBelow(c.Position.Row - cell.Address.RowNumber);
+            while (heightFromRows <= cHeight)
+            {
+                lastCell = lastCell.CellBelow();
+                heightFromRows += lastCell.WorksheetRow().Height;
+            }
+
+            Int32 lrNumber = lastCell.WorksheetRow().RowNumber() - 1;
+            Int32 lrOffset = Convert.ToInt32(lastCell.WorksheetRow().Height - (heightFromRows - cHeight));
+            return new Vml.Spreadsheet.Anchor() { Text = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}", 
+                fcNumber, fcOffset,
+                frNumber, frOffset,
+                lcNumber, lcOffset,
+                lrNumber, lrOffset
+                ) };
         }
 
         private static StringValue GetCommentStyle(XLCell cell)
@@ -4606,26 +4704,26 @@ namespace ClosedXML.Excel
             sb.Append(c.Visible ? "visible" : "hidden");
             sb.Append(";");
 
-            var margins = c.Style.Margins;
-            sb.Append("margin-left:");
-            sb.Append(margins.Left.ToString());
-            sb.Append("pt;");
-            sb.Append("margin-right:");
-            sb.Append(margins.Right.ToString());
-            sb.Append("pt;");
-            sb.Append("margin-top:");
-            sb.Append(margins.Top.ToString());
-            sb.Append("pt;");
-            sb.Append("margin-bottom:");
-            sb.Append(margins.Bottom.ToString());
-            sb.Append("pt;");
+            //var margins = c.Style.Margins;
+            //sb.Append("margin-left:");
+            //sb.Append(margins.Left.ToString());
+            //sb.Append("pt;");
+            //sb.Append("margin-right:");
+            //sb.Append(margins.Right.ToString());
+            //sb.Append("pt;");
+            //sb.Append("margin-top:");
+            //sb.Append(margins.Top.ToString());
+            //sb.Append("pt;");
+            //sb.Append("margin-bottom:");
+            //sb.Append(margins.Bottom.ToString());
+            //sb.Append("pt;");
 
-            //sb.Append("width:");
-            //sb.Append(c.Style.Size.Width.ToString());
-            //sb.Append("pt;");
-            //sb.Append("height:");
-            //sb.Append(c.Style.Size.Height.ToString());
-            //sb.Append("pt;");
+            sb.Append("width:");
+            sb.Append(Math.Round(c.Style.Size.Width * 7.5 , 2).ToString());
+            sb.Append("pt;");
+            sb.Append("height:");
+            sb.Append(Math.Round(c.Style.Size.Height, 2).ToString());
+            sb.Append("pt;");
 
             sb.Append("z-index:");
             sb.Append(c.ZOrder.ToString());

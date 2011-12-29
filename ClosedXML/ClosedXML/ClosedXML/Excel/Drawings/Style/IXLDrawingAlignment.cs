@@ -18,16 +18,18 @@ namespace ClosedXML.Excel
         BottomToTop,
         TopToBottom
     }
+    public enum XLDrawingHorizontalAlignment { Left, Justify, Center, Right, Distributed }
+    public enum XLDrawingVerticalAlignment { Top, Justify, Center, Bottom, Distributed }
     public interface IXLDrawingAlignment
     {
-        XLAlignmentHorizontalValues Horizontal { get; set; }
-        XLAlignmentVerticalValues Vertical { get; set; }
+        XLDrawingHorizontalAlignment Horizontal { get; set; }
+        XLDrawingVerticalAlignment Vertical { get; set; }
         Boolean AutomaticSize { get; set; }
         XLDrawingTextDirection Direction { get; set; }
         XLDrawingTextOrientation Orientation { get; set; }
 
-        IXLDrawingStyle SetHorizontal(XLAlignmentHorizontalValues value);
-        IXLDrawingStyle SetVertical(XLAlignmentVerticalValues value);
+        IXLDrawingStyle SetHorizontal(XLDrawingHorizontalAlignment value);
+        IXLDrawingStyle SetVertical(XLDrawingVerticalAlignment value);
         IXLDrawingStyle SetAutomaticSize(); IXLDrawingStyle SetAutomaticSize(Boolean value);
         IXLDrawingStyle SetDirection(XLDrawingTextDirection value);
         IXLDrawingStyle SetOrientation(XLDrawingTextOrientation value);

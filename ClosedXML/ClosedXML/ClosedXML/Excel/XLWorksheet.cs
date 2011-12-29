@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
 
         private Double _rowHeight;
         private Boolean _tabActive;
-
+        internal Int32 ZOrder = 1;
         #endregion
 
         #region Constructor

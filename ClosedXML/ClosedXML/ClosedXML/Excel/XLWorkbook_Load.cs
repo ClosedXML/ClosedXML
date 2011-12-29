@@ -294,38 +294,25 @@ namespace ClosedXML.Excel
                             LoadFont(runProperties, rt);
                         }
 
-                        var shape = xdoc.Root.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
+                        var shape = xdoc.Root.Element("xml").Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
                         LoadShapeProperties<IXLComment>(xlComment, shape);
-                        var insetmode = (string)shape.Attribute("insetmode");
-                        xlComment.Style.Margins.Automatic = insetmode.Equals("auto");
 
-                        var clientData = shape.Element("ClientData");
-                        var moveWithCells = clientData.Element("MoveWithCells");
+                        var clientData = shape.Elements().First(e => e.Name.LocalName == "ClientData");
+                        LoadClientData<IXLComment>(xlComment, clientData);
 
+                        var textBox = shape.Elements().First(e=>e.Name.LocalName == "textbox");
+                        LoadTextBox<IXLComment>(xlComment, textBox);
+
+                        var alt = shape.Attribute("alt");
+                        if (alt != null) xlComment.Style.Web.SetAlternateText(alt.Value);
+
+                        LoadColorsAndLines<IXLComment>(xlComment, shape);
+
+                        //var insetmode = (string)shape.Attributes().First(a=> a.Name.LocalName == "insetmode");
+                        //xlComment.Style.Margins.Automatic = insetmode != null && insetmode.Equals("auto");
+                        
                         shape.Remove();
-                        // **** MAYBE FUTURE SHAPE SIZE SUPPORT
-                        //var shape = shapes.FirstOrDefault(sh => { 
-                        //                        var cd = sh.GetFirstChild<Ss.ClientData>(); 
-                        //                        return cd.GetFirstChild<Ss.CommentRowTarget>().InnerText == cell.Address.RowNumber.ToString()
-                        //                            && cd.GetFirstChild<Ss.CommentColumnTarget>().InnerText == cell.Address.ColumnNumber.ToString();
-                        //                        });
-
-                        //var location = shape.GetFirstChild<Ss.Anchor>().InnerText.Split(',');
-
-                        //var leftCol = int.Parse(location[0]);
-                        //var leftOffsetPx = int.Parse(location[1]);
-                        //var topRow = int.Parse(location[2]);
-                        //var topOffsetPx = int.Parse(location[3]);
-                        //var rightCol = int.Parse(location[4]);
-                        //var riightOffsetPx = int.Parse(location[5]);
-                        //var bottomRow = int.Parse(location[6]);
-                        //var bottomOffsetPx = int.Parse(location[7]);
-
-                        //cmt.Style.Size.Height = bottomRow - topRow;
-                        //cmt.Style.Size.Width = rightCol = leftCol;
-
                     }
-
                 }
 
                 #endregion
@@ -350,25 +337,196 @@ namespace ClosedXML.Excel
             LoadDefinedNames(workbook);
         }
 
-        private void LoadShapeProperties<T>(IXLDrawing<T> xlDrawing, XElement shape)
+        private void LoadColorsAndLines<T>(IXLDrawing<T> drawing, XElement shape)
         {
-            var style = (string)shape.Attribute("style");
+            var strokeColor = shape.Attribute("strokecolor");
+            if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = XLColor.FromHtml(strokeColor.Value);
+
+            var strokeWeight = shape.Attribute("strokeweight");
+            if (strokeWeight != null) drawing.Style.ColorsAndLines.LineWeight = Double.Parse(strokeWeight.Value.Substring(0, strokeWeight.Value.Length - 2));
+
+            var fillColor = shape.Attribute("fillcolor");
+            if (fillColor != null) drawing.Style.ColorsAndLines.FillColor = XLColor.FromHtml(fillColor.Value);
+
+            var fill = shape.Elements().First(e => e.Name.LocalName == "fill");
+            if (fill != null)
+            {
+                var opacity = fill.Attribute("opacity");
+                if (opacity != null)
+                {
+                    String opacityVal = opacity.Value;
+                    if (opacityVal.EndsWith("f"))
+                        drawing.Style.ColorsAndLines.FillTransparency = Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1)) / 65536.0;
+                    else
+                        drawing.Style.ColorsAndLines.FillTransparency = Double.Parse(opacityVal);
+                }
+            }
+
+            var stroke = shape.Elements().First(e=>e.Name.LocalName == "stroke");
+            if (stroke != null)
+            {
+                var opacity = stroke.Attribute("opacity");
+                if (opacity != null)
+                {
+                    String opacityVal = opacity.Value;
+                    if (opacityVal.EndsWith("f"))
+                        drawing.Style.ColorsAndLines.LineTransparency = Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1)) / 65536.0;
+                    else
+                        drawing.Style.ColorsAndLines.LineTransparency = Double.Parse(opacityVal);
+                }
+                var dashStyle = stroke.Attribute("dashstyle");
+                if (dashStyle != null)
+                {
+                    String dashStyleVal = dashStyle.Value;
+                    if (dashStyleVal == "1 1" || dashStyleVal == "shortdot")
+                    {
+                        var endCap = stroke.Attribute("endcap");
+                        if (endCap != null && endCap.Value == "round")
+                            drawing.Style.ColorsAndLines.LineDash = XLDashStyle.RoundDot;
+                        else
+                            drawing.Style.ColorsAndLines.LineDash = XLDashStyle.SquareDot;
+                    }
+                    else 
+                    {
+                        switch (dashStyleVal)
+                        {
+                            case "dash": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.Dash; break;
+                            case "dashDot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.DashDot; break;
+                            case "longDash": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDash; break;
+                            case "longDashDot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDashDot; break;
+                            case "longDashDotDot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDashDotDot; break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void LoadTextBox<T>(IXLDrawing<T> xlDrawing, XElement textBox)
+        {
+            var attStyle = textBox.Attribute("style");
+            if (attStyle != null) LoadTextBoxStyle<T>(xlDrawing, attStyle);
+
+            var attInset = textBox.Attribute("inset");
+            if (attInset != null) LoadTextBoxInset<T>(xlDrawing, attInset);
+        }
+
+        private void LoadTextBoxInset<T>(IXLDrawing<T> xlDrawing, XAttribute attInset)
+        {
+            var split = attInset.Value.Split(',');
+            xlDrawing.Style.Margins.Left = GetInsetValue(split[0]);
+            xlDrawing.Style.Margins.Top = GetInsetValue(split[1]);
+            xlDrawing.Style.Margins.Right = GetInsetValue(split[2]);
+            xlDrawing.Style.Margins.Bottom = GetInsetValue(split[3]);
+        }
+
+        private double GetInsetValue(string value)
+        {
+            String v = value.Trim();
+            if (v.EndsWith("pt"))
+                return Double.Parse(v.Substring(0, v.Length - 2)) / 72.0;
+            else
+                return Double.Parse(v.Substring(0, v.Length - 2));
+        }
+
+        private static void LoadTextBoxStyle<T>(IXLDrawing<T> xlDrawing, XAttribute attStyle)
+        {
+            var style = attStyle.Value;
             var attributes = style.Split(';');
             foreach (String pair in attributes)
             {
                 var split = pair.Split(':');
+                if (split.Length != 2) continue;
+
+                var attribute = split[0].Trim().ToLower();
+                var value = split[1].Trim();
+                Boolean isVertical = false;
+                switch (attribute)
+                {
+                    case "mso-fit-shape-to-text": xlDrawing.Style.Size.SetAutomaticSize(value.Equals("t")); break;
+                    case "mso-layout-flow-alt":
+                        if (value.Equals("bottom-to-top")) xlDrawing.Style.Alignment.SetOrientation(XLDrawingTextOrientation.BottomToTop);
+                        else if (value.Equals("top-to-bottom")) xlDrawing.Style.Alignment.SetOrientation(XLDrawingTextOrientation.Vertical);
+                        break;
+                    case "layout-flow": isVertical = value.Equals("vertical"); break;
+                    case "mso-direction-alt": if (value == "auto") xlDrawing.Style.Alignment.Direction = XLDrawingTextDirection.Context; break;
+                    case "direction": if (value == "RTL") xlDrawing.Style.Alignment.Direction = XLDrawingTextDirection.RightToLeft; break;
+                    //case "margin-bottom": xlDrawing.Style.Margins.Bottom = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    //case "width": xlDrawing.Style.Size.Width = Double.Parse(value.Replace("pt", String.Empty)) / 7.5; break;
+                    //case "height": xlDrawing.Style.Size.Height = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    //case "z-index": xlDrawing.ZOrder = Int32.Parse(value); break;
+                }
+                if (isVertical && xlDrawing.Style.Alignment.Orientation == XLDrawingTextOrientation.LeftToRight)
+                    xlDrawing.Style.Alignment.Orientation = XLDrawingTextOrientation.TopToBottom;
+            }
+        }
+
+        private void LoadClientData<T>(IXLDrawing<T> drawing, XElement clientData)
+        {
+            var anchor = clientData.Elements().First(e=>e.Name.LocalName == "Anchor");
+            if (anchor != null) LoadClientDataAnchor<T>(drawing, anchor);
+
+            LoadDrawingPositioning<T>(drawing, clientData);
+            LoadDrawingProtection<T>(drawing, clientData);
+        }
+
+        private void LoadDrawingProtection<T>(IXLDrawing<T> drawing, XElement clientData)
+        {
+            var lockedElement = clientData.Elements().First(e => e.Name.LocalName == "Locked");
+            var lockTextElement = clientData.Elements().First(e => e.Name.LocalName == "LockText");
+            Boolean locked = lockedElement != null && lockedElement.Value.ToLower() == "true";
+            Boolean lockText = lockTextElement != null && lockTextElement.Value.ToLower() == "true";
+            drawing.Style.Protection.Locked = locked;
+            drawing.Style.Protection.LockText = lockText;
+
+        }
+
+        private static void LoadDrawingPositioning<T>(IXLDrawing<T> drawing, XElement clientData)
+        {
+            var moveWithCellsElement = clientData.Elements().First(e => e.Name.LocalName == "MoveWithCells");
+            var sizeWithCellsElement = clientData.Elements().First(e => e.Name.LocalName == "SizeWithCells");
+            Boolean moveWithCells = moveWithCellsElement != null && moveWithCellsElement.Value.ToLower() == "true";
+            Boolean sizeWithCells = sizeWithCellsElement != null && sizeWithCellsElement.Value.ToLower() == "true";
+            if (moveWithCells && !sizeWithCells)
+                drawing.Style.Properties.Positioning = XLDrawingAnchor.MoveWithCells;
+            else if (moveWithCells && sizeWithCells)
+                drawing.Style.Properties.Positioning = XLDrawingAnchor.MoveAndSizeWithCells;
+            else
+                drawing.Style.Properties.Positioning = XLDrawingAnchor.MoveWithCells;
+        }
+
+        private static void LoadClientDataAnchor<T>(IXLDrawing<T> drawing, XElement anchor)
+        {
+            var location = anchor.Value.Split(',');
+            drawing.Position.Column = int.Parse(location[0]) + 1;
+            drawing.Position.ColumnOffset = Double.Parse(location[1]) / 7.2;
+            drawing.Position.Row = int.Parse(location[2]) + 1;
+            drawing.Position.RowOffset = Double.Parse(location[3]);
+        }
+
+        private void LoadShapeProperties<T>(IXLDrawing<T> xlDrawing, XElement shape)
+        {
+            var attStyle = shape.Attribute("style");
+            if (attStyle == null) return;
+
+            var style = attStyle.Value;
+            var attributes = style.Split(';');
+            foreach (String pair in attributes)
+            {
+                var split = pair.Split(':');
+                if (split.Length != 2) continue;
+
                 var attribute = split[0].Trim().ToLower();
                 var value = split[1].Trim();
 
                 switch (attribute)
                 {
                     case "visibility": xlDrawing.Visible = value.ToLower().Equals("visible"); break;
-                    case "margin-left": xlDrawing.Style.Margins.Left = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    case "margin-right": xlDrawing.Style.Margins.Right = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    case "margin-top": xlDrawing.Style.Margins.Top = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    case "margin-bottom": xlDrawing.Style.Margins.Bottom = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    case "width": xlDrawing.Style.Size.Width = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    case "height": xlDrawing.Style.Size.Height = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    //case "margin-left": xlDrawing.Style.Margins.Left = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    //case "margin-right": xlDrawing.Style.Margins.Right = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    //case "margin-top": xlDrawing.Style.Margins.Top = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    //case "margin-bottom": xlDrawing.Style.Margins.Bottom = Double.Parse(value.Replace("pt", String.Empty)); break;
+                    case "width": xlDrawing.Style.Size.Width = Double.Parse(value.Replace("pt", String.Empty)) / 7.5; break;
+                    case "height": xlDrawing.Style.Size.Height = Double.Parse(value.Replace("pt", String.Empty)) ; break;
                     case "z-index": xlDrawing.ZOrder = Int32.Parse(value); break;
                 }
             }

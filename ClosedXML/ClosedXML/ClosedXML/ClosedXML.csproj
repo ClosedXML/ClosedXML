@@ -142,6 +142,7 @@
     <Compile Include="Excel\Cells\XLCell_DotNetSpecific.cs" />
     <Compile Include="Excel\Comments\IXLComment.cs" />
     <Compile Include="Excel\Comments\XLComment.cs" />
+    <Compile Include="Excel\Drawings\IXLDrawingPosition.cs" />
     <Compile Include="Excel\Drawings\Style\XLDrawingFont.cs" />
     <Compile Include="Excel\Drawings\Style\IXLDrawingFont.cs" />
     <Compile Include="Excel\Drawings\XLDrawing.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Excel\Columns\XLColumnCollection.cs" />
     <Compile Include="Excel\Coordinates\XLSheetRange.cs" />
     <Compile Include="Excel\Coordinates\XLSheetPoint.cs" />
+    <Compile Include="Excel\Drawings\XLDrawingPosition.cs" />
     <Compile Include="Excel\Misc\XLIdManager.cs" />
     <Compile Include="Excel\PivotTables\PivotValues\XLPivotValueCombination.cs" />
     <Compile Include="Excel\PivotTables\PivotValues\IXLPivotValueCombination.cs" />

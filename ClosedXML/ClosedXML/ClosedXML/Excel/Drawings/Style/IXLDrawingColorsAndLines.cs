@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public enum XLDashTypes
+    public enum XLDashStyle
     {
         Solid,
         RoundDot,
@@ -16,37 +16,27 @@ namespace ClosedXML.Excel
         LongDashDot,
         LongDashDotDot
     }
-    public enum XLLineStyles
+    public enum XLLineStyle
     {
-        OneQuarter,
-        OneHalf,
-        ThreeQuarters,
-        One,
-        OneAndOneHalf,
-        TwoAndOneQuarter,
-        Three,
-        FourAndOneHalf,
-        Six,
-        ThreeSplit,
-        FourAndOneHalfSplit1,
-        FourAndOneHalfSplit2,
-        SixSplit
+        Single, ThinThin, ThinThick, ThickThin, ThickBetweenThin
     }
     public interface IXLDrawingColorsAndLines
     {
         IXLColor FillColor { get; set; }
-        Int32 FillTransparency { get; set; }
+        Double FillTransparency { get; set; }
         IXLColor LineColor { get; set; }
+        Double LineTransparency { get; set; }
         Double LineWeight { get; set; }
-        XLDashTypes LineDash { get; set; }
-        XLLineStyles LineStyle { get; set; }
+        XLDashStyle LineDash { get; set; }
+        XLLineStyle LineStyle { get; set; }
 
-        IXLDrawingStyle SetFillColor(XLColor value);
-        IXLDrawingStyle SetFillTransparency(Int32 value);
-        IXLDrawingStyle SetLineColor(XLColor value);
+        IXLDrawingStyle SetFillColor(IXLColor value);
+        IXLDrawingStyle SetFillTransparency(Double value);
+        IXLDrawingStyle SetLineColor(IXLColor value);
+        IXLDrawingStyle SetLineTransparency(Double value);
         IXLDrawingStyle SetLineWeight(Double value);
-        IXLDrawingStyle SetLineDash(XLDashTypes value);
-        IXLDrawingStyle SetLineStyle(XLLineStyles value);
+        IXLDrawingStyle SetLineDash(XLDashStyle value);
+        IXLDrawingStyle SetLineStyle(XLLineStyle value);
 
     }
 }

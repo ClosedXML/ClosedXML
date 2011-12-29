@@ -1,5 +1,6 @@
 ﻿using System;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml;
 
 namespace ClosedXML.Excel
 {
@@ -492,7 +493,6 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
-
         public static DynamicFilterValues ToOpenXml(this XLFilterDynamicType value)
         {
             switch (value)
@@ -505,7 +505,6 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
-
         public static SheetViewValues ToOpenXml(this XLSheetViewOptions value)
         {
             switch (value)
@@ -519,7 +518,21 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
-
+        public static StrokeLineStyleValues ToOpenXml(this XLLineStyle value)
+        {
+            switch (value)
+            {
+                case XLLineStyle.Single : return StrokeLineStyleValues.Single ;
+                case XLLineStyle.ThickBetweenThin: return StrokeLineStyleValues.ThickBetweenThin;
+                case XLLineStyle.ThickThin: return StrokeLineStyleValues.ThickThin;
+                case XLLineStyle.ThinThick: return StrokeLineStyleValues.ThinThick;
+                case XLLineStyle.ThinThin: return StrokeLineStyleValues.ThinThin;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
         #endregion
         #region To ClosedXml
         public static XLFontUnderlineValues ToClosedXml(this UnderlineValues value)
@@ -1020,7 +1033,6 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
-
         public static XLSheetViewOptions ToClosedXml(this SheetViewValues value)
         {
             switch (value)
@@ -1035,6 +1047,22 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
+        public static XLLineStyle ToClosedXml(this StrokeLineStyleValues value)
+        {
+            switch (value)
+            {
+                case StrokeLineStyleValues.Single: return XLLineStyle.Single;
+                case StrokeLineStyleValues.ThickBetweenThin: return XLLineStyle.ThickBetweenThin;
+                case StrokeLineStyleValues.ThickThin: return XLLineStyle.ThickThin;
+                case StrokeLineStyleValues.ThinThick: return XLLineStyle.ThinThick;
+                case StrokeLineStyleValues.ThinThin: return XLLineStyle.ThinThin;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+
         #endregion
     }
 }

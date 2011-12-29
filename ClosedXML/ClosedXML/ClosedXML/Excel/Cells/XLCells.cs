@@ -15,16 +15,17 @@ namespace ClosedXML.Excel
         private readonly List<XLRangeAddress> _rangeAddresses = new List<XLRangeAddress>();
         private readonly bool _usedCellsOnly;
         private IXLStyle _style;
-
+        private readonly Func<IXLCell, Boolean> _predicate;
         #endregion
 
         #region Constructor
 
-        public XLCells(bool usedCellsOnly, bool includeFormats)
+        public XLCells(bool usedCellsOnly, bool includeFormats, Func<IXLCell, Boolean> predicate = null)
         {
             _style = new XLStyle(this, XLWorkbook.DefaultStyle);
             _usedCellsOnly = usedCellsOnly;
             _includeFormats = includeFormats;
+            _predicate = predicate;
         }
 
         #endregion
@@ -50,13 +51,17 @@ namespace ClosedXML.Excel
                 {
                     if (oneRange)
                     {
-                        foreach(var cell in range.Worksheet.Internals.CellsCollection
+                        var cellRange = range.Worksheet.Internals.CellsCollection
                                                 .GetCells(
                                                 range.FirstAddress.RowNumber,
                                                 range.FirstAddress.ColumnNumber,
                                                 range.LastAddress.RowNumber,
                                                 range.LastAddress.ColumnNumber)
-                                                .Where(c => !c.IsEmpty(_includeFormats)))
+                                                .Where(c => !c.IsEmpty(_includeFormats) || (_includeFormats && c.HasComment));
+                        if (_predicate != null)
+                            cellRange = cellRange.Where(c=>_predicate(c));
+
+                        foreach(var cell in cellRange)
                         {
                             yield return cell;
                         }
@@ -113,12 +118,15 @@ namespace ClosedXML.Excel
             {
                 if (_usedCellsOnly)
                 {
-                    foreach (
-                        var cell in
-                            cellsInRanges.SelectMany(
+                    var cellRange = cellsInRanges.SelectMany(
                                 cir =>
                                 cir.Value.Select(a => cir.Key.Internals.CellsCollection.GetCell(a)).Where(
-                                    cell => cell != null && !cell.IsEmpty(_includeFormats))))
+                                    cell => cell != null && (!cell.IsEmpty(_includeFormats) || (_includeFormats && cell.HasComment))));
+
+                    if (_predicate != null)
+                        cellRange = cellRange.Where(c => _predicate(c));
+
+                    foreach (var cell in cellRange)
                     {
                         yield return cell;
                     }
@@ -128,7 +136,16 @@ namespace ClosedXML.Excel
                     foreach (var cir in cellsInRanges)
                     {
                         foreach (XLSheetPoint a in cir.Value)
-                            yield return cir.Key.Cell(a.Row, a.Column);
+                            if (_predicate == null)
+                            {
+                                yield return cir.Key.Cell(a.Row, a.Column);
+                            }
+                            else
+                            {
+                                var cell = cir.Key.Cell(a.Row, a.Column);
+                                if (_predicate(cell))
+                                    yield return cell;
+                            }
                     }
                 }
             }

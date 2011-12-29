@@ -8,41 +8,80 @@ namespace ClosedXML.Excel
     internal class XLComment : XLFormattedText<IXLComment>, IXLComment
     {
         XLWorksheet _worksheet;
-        public XLComment(XLWorksheet worksheet, IXLFontBase defaultFont)
+        XLCell _cell;
+        public XLComment(XLCell cell, IXLFontBase defaultFont)
             : base(defaultFont)
         {
-            Initialize(worksheet);
+            Initialize(cell);
         }
 
-        public XLComment(XLWorksheet worksheet, XLFormattedText<IXLComment> defaultComment, IXLFontBase defaultFont)
+        public XLComment(XLCell cell, XLFormattedText<IXLComment> defaultComment, IXLFontBase defaultFont)
             : base(defaultComment, defaultFont) 
         {
-            Initialize(worksheet);
+            Initialize(cell);
         }
 
-        public XLComment(XLWorksheet worksheet, String text, IXLFontBase defaultFont)
+        public XLComment(XLCell cell, String text, IXLFontBase defaultFont)
             : base(text, defaultFont)
         {
-            Initialize(worksheet);
+            Initialize(cell);
         }
 
-        private void Initialize(XLWorksheet worksheet)
+        private void Initialize(XLCell cell)
         {
+            Author = Environment.UserName;
             Container = this;
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
             Style = new XLDrawingStyle();
-            Style.Size.Height = 60;
-            Style.Size.Width = 60;
-            ZOrder = 1;
-            
-            Style.Margins.Left = 1.5;
-            Style.Margins.Right = 1.5;
-            Style.Margins.Top = 1.5;
-            Style.Margins.Bottom = 1.5;
+            Int32 pRow = cell.Address.RowNumber;
+            Double pRowOffset = 0;
+            if (pRow > 1)
+            {
+                pRow--;
+                var prevHeight = cell.CellAbove().WorksheetRow().Height;
+                if (prevHeight > 7)
+                    pRowOffset = prevHeight - 7;
+            }
+            Position = new XLDrawingPosition
+            {
+                Column = cell.Address.ColumnNumber + 1,
+                ColumnOffset = 2,
+                Row = pRow,
+                RowOffset = pRowOffset
+            };
 
-            SetVisible();
-            _worksheet = worksheet;
-            ShapeId = worksheet.Workbook.ShapeIdManager.GetNext();
+            ZOrder = cell.Worksheet.ZOrder++;
+            Style
+                 .Margins.SetLeft(0.1)
+                 .Margins.SetRight(0.1)
+                 .Margins.SetTop(0.05)
+                 .Margins.SetBottom(0.05)
+                 .Margins.SetAutomatic()
+                 
+                 .Size.SetHeight(59.25)
+                 .Size.SetWidth(19.2)
+
+                 .ColorsAndLines.SetLineColor(XLColor.Black)
+                 .ColorsAndLines.SetFillColor(XLColor.FromArgb(255,255,225))
+                 .ColorsAndLines.SetLineDash(XLDashStyle.Solid)
+                 .ColorsAndLines.SetLineStyle(XLLineStyle.Single)
+                 .ColorsAndLines.SetLineWeight(0.75)
+                 .ColorsAndLines.SetFillTransparency(1)
+                 .ColorsAndLines.SetLineTransparency(1)
+
+                 .Alignment.SetHorizontal(XLDrawingHorizontalAlignment.Left)
+                 .Alignment.SetVertical(XLDrawingVerticalAlignment.Top)
+                 .Alignment.SetDirection(XLDrawingTextDirection.Context)
+                 .Alignment.SetOrientation(XLDrawingTextOrientation.LeftToRight)
+
+                 .Properties.SetPositioning(XLDrawingAnchor.Absolute)
+
+                 .Protection.SetLocked()
+                 .Protection.SetLockText();
+
+            _cell = cell;
+            _worksheet = cell.Worksheet;
+            ShapeId = cell.Worksheet.Workbook.ShapeIdManager.GetNext();
         }
 
         public String Author { get; set; }
@@ -54,23 +93,15 @@ namespace ClosedXML.Excel
 
         public IXLRichString AddSignature() 
         {
-            // existing Author might be someone else hence using current user name here
-            return AddSignature(Environment.UserName);
-
-        }
-
-        public IXLRichString AddSignature(string username) 
-        {
-            return AddText(string.Format("{0}:{1}", username, Environment.NewLine)).SetBold();
+            AddText(Author + ":").SetBold();
+            return AddText(Environment.NewLine);
         }
 
         public IXLRichString AddNewLine() 
         {
             return AddText(Environment.NewLine);
         }
-
-        //public Boolean Visible { get; set; }	public IXLComment SetVisible() { Visible = true; return this; }	public IXLComment SetVisible(Boolean value) { Visible = value; return this; }
-
+        
         #region IXLDrawing
 
         public Int32 ShapeId { get; internal set; }
@@ -103,55 +134,7 @@ namespace ClosedXML.Excel
 
         public XLDrawingAnchor Anchor { get; set; }
 
-        public Int32 FirstColumn { get; set; }
-        public IXLComment SetFirstColumn(Int32 firstColumn)
-        {
-            FirstColumn = firstColumn;
-            return Container;
-        }
-        public Int32 FirstColumnOffset { get; set; }
-        public IXLComment SetFirstColumnOffset(Int32 firstColumnOffset)
-        {
-            FirstColumnOffset = firstColumnOffset;
-            return Container;
-        }
-        public Int32 FirstRow { get; set; }
-        public IXLComment SetFirstRow(Int32 firstRow)
-        {
-            FirstRow = firstRow;
-            return Container;
-        }
-        public Int32 FirstRowOffset { get; set; }
-        public IXLComment SetFirstRowOffset(Int32 firstRowOffset)
-        {
-            FirstRowOffset = firstRowOffset;
-            return Container;
-        }
-
-        public Int32 LastColumn { get; set; }
-        public IXLComment SetLastColumn(Int32 firstColumn)
-        {
-            LastColumn = firstColumn;
-            return Container;
-        }
-        public Int32 LastColumnOffset { get; set; }
-        public IXLComment SetLastColumnOffset(Int32 firstColumnOffset)
-        {
-            LastColumnOffset = firstColumnOffset;
-            return Container;
-        }
-        public Int32 LastRow { get; set; }
-        public IXLComment SetLastRow(Int32 firstRow)
-        {
-            LastRow = firstRow;
-            return Container;
-        }
-        public Int32 LastRowOffset { get; set; }
-        public IXLComment SetLastRowOffset(Int32 firstRowOffset)
-        {
-            LastRowOffset = firstRowOffset;
-            return Container;
-        }
+        public IXLDrawingPosition Position { get; private set; }
 
         public Int32 ZOrder { get; set; }
         public IXLComment SetZOrder(Int32 zOrder)
@@ -191,20 +174,6 @@ namespace ClosedXML.Excel
             return Container;
         }
 
-        public Int32 OffsetX { get; set; }
-        public IXLComment SetOffsetX(Int32 offsetX)
-        {
-            OffsetX = offsetX;
-            return Container;
-        }
-
-        public Int32 OffsetY { get; set; }
-        public IXLComment SetOffsetY(Int32 offsetY)
-        {
-            OffsetY = offsetY;
-            return Container;
-        }
-
         public Int32 ExtentLength { get; set; }
         public IXLComment SetExtentLength(Int32 extentLength)
         {
@@ -220,7 +189,10 @@ namespace ClosedXML.Excel
         }
 
         public IXLDrawingStyle Style { get; private set; }
+
         #endregion
+
+        public void Delete() { _cell.DeleteComment(); }
 
     }
 

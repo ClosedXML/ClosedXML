@@ -12,8 +12,6 @@ namespace ClosedXML.Excel
         public XLDrawingProtection(IXLDrawingStyle style)
         {
             _style = style;
-            Locked = true;
-            LockText = true;
         }
         public Boolean Locked { get; set; }	public IXLDrawingStyle SetLocked() { Locked = true; return _style; }	public IXLDrawingStyle SetLocked(Boolean value) { Locked = value; return _style; }
         public Boolean LockText { get; set; }	public IXLDrawingStyle SetLockText() { LockText = true; return _style; }	public IXLDrawingStyle SetLockText(Boolean value) { LockText = value; return _style; }

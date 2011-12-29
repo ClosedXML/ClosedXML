@@ -133,6 +133,7 @@
     <Compile Include="Columns\ColumnSettings.cs" />
     <Compile Include="Columns\ColumnCells.cs" />
     <Compile Include="Columns\DeletingColumns.cs" />
+    <Compile Include="Comments\AddingComments.cs" />
     <Compile Include="Comments\EditingComments.cs" />
     <Compile Include="Delete\DeleteFewWorksheets.cs" />
     <Compile Include="IXLExample.cs" />

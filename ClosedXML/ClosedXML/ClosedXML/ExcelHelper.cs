@@ -7,6 +7,7 @@ namespace ClosedXML.Excel
 {
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Drawing;
 
     /// <summary>
     ///   Common methods
@@ -21,6 +22,8 @@ namespace ClosedXML.Excel
 
         private const Int32 TwoT26 = 26 * 26;
         internal static readonly NumberFormatInfo NumberFormatForParse = CultureInfo.InvariantCulture.NumberFormat;
+        public static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(32, 32));
+        public static readonly Double DpiX = Graphic.DpiX;
 
         /// <summary>
         ///   Gets the column number of a given column letter.
@@ -206,6 +209,13 @@ namespace ClosedXML.Excel
             return range.Contains('-') ? range.Replace('-', ':').Split(':') : range.Split(':');
         }
 
-
+        public static Int32 GetPtFromPx(Double px)
+        {
+            return Convert.ToInt32(px * 72.0 / DpiX);
+        }
+        public static Double GetPxFromPt(Int32 pt)
+        {
+            return Convert.ToDouble(pt) * DpiX / 72.0;
+        }
     }
 }

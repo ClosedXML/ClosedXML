@@ -12,7 +12,6 @@ namespace ClosedXML.Excel
         public XLDrawingProperties(IXLDrawingStyle style)
         {
             _style = style;
-            Positioning = XLDrawingAnchor.Absolute;
         }
         public XLDrawingAnchor Positioning { get; set; }		public IXLDrawingStyle SetPositioning(XLDrawingAnchor value) { Positioning = value; return _style; }
 

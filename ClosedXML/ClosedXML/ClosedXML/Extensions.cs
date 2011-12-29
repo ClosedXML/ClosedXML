@@ -170,28 +170,8 @@ namespace ClosedXML.Excel
 
             var stringFont = new Font(font.FontName, (float)font.FontSize, GetFontStyle(font));
 
-            //var textSize = TextRenderer.MeasureText(text, stringFont);
-            //double width = (double)(((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
-            ////width = (double)decimal.Round((decimal)width + 0.2M, 2);
-
-            //return width + 0;
-
-            double fMaxDigitWidth = 0.0f;
-
-            // I just need a Graphics object. Any reasonable bitmap size will do.
-            Graphics g = Graphics.FromImage(new Bitmap(200, 200));
-
-            for (int i = 0; i < 10; ++i)
-            {
-                double fDigitWidth = (double)g.MeasureString(i.ToString(), stringFont).Width;
-                if (fDigitWidth > fMaxDigitWidth)
-                {
-                    fMaxDigitWidth = fDigitWidth;
-                }
-            }
-            g.Dispose();
-
-            // Truncate([{Number of Characters} * {Maximum Digit Width} + {5 pixel padding}] / {Maximum Digit Width} * 256) / 256
+            double fMaxDigitWidth  = (double)ExcelHelper.Graphic.MeasureString("X", stringFont).Width;
+               
             return Math.Truncate((text.ToCharArray().Count() * fMaxDigitWidth + 5.0) / fMaxDigitWidth * 256.0) / 256.0;
         }
 

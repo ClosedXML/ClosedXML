@@ -33,7 +33,7 @@ namespace ClosedXML_Examples
             sheet.Cell("B3").Comment.AddText("more comment");
 
             // delete
-            sheet.Cell("C1").DeleteComment();
+            //sheet.Cell("C1").DeleteComment();
 
             // clear contents
             sheet.Cell("D3").Clear(XLClearOptions.Contents);
