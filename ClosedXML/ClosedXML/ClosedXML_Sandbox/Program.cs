@@ -12,9 +12,10 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            //Use this space to play with ClosedXML
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
 
-
+            wb.SaveAs(@"Sandbox.xlsx");
         }
     }
 }

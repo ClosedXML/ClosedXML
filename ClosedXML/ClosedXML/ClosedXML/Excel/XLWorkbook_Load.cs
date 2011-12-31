@@ -294,7 +294,13 @@ namespace ClosedXML.Excel
                             LoadFont(runProperties, rt);
                         }
 
-                        var shape = xdoc.Root.Element("xml").Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
+                        var xml = xdoc.Root.Element("xml");
+                        XElement shape;
+                        if (xml != null)
+                            shape = xml.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
+                        else
+                            shape = xdoc.Root.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
+
                         LoadShapeProperties<IXLComment>(xlComment, shape);
 
                         var clientData = shape.Elements().First(e => e.Name.LocalName == "ClientData");
@@ -362,7 +368,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var stroke = shape.Elements().First(e=>e.Name.LocalName == "stroke");
+            var stroke = shape.Elements().FirstOrDefault(e=>e.Name.LocalName == "stroke");
             if (stroke != null)
             {
                 var opacity = stroke.Attribute("opacity");
@@ -462,7 +468,7 @@ namespace ClosedXML.Excel
 
         private void LoadClientData<T>(IXLDrawing<T> drawing, XElement clientData)
         {
-            var anchor = clientData.Elements().First(e=>e.Name.LocalName == "Anchor");
+            var anchor = clientData.Elements().FirstOrDefault(e=>e.Name.LocalName == "Anchor");
             if (anchor != null) LoadClientDataAnchor<T>(drawing, anchor);
 
             LoadDrawingPositioning<T>(drawing, clientData);
@@ -471,8 +477,8 @@ namespace ClosedXML.Excel
 
         private void LoadDrawingProtection<T>(IXLDrawing<T> drawing, XElement clientData)
         {
-            var lockedElement = clientData.Elements().First(e => e.Name.LocalName == "Locked");
-            var lockTextElement = clientData.Elements().First(e => e.Name.LocalName == "LockText");
+            var lockedElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "Locked");
+            var lockTextElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "LockText");
             Boolean locked = lockedElement != null && lockedElement.Value.ToLower() == "true";
             Boolean lockText = lockTextElement != null && lockTextElement.Value.ToLower() == "true";
             drawing.Style.Protection.Locked = locked;
@@ -482,8 +488,8 @@ namespace ClosedXML.Excel
 
         private static void LoadDrawingPositioning<T>(IXLDrawing<T> drawing, XElement clientData)
         {
-            var moveWithCellsElement = clientData.Elements().First(e => e.Name.LocalName == "MoveWithCells");
-            var sizeWithCellsElement = clientData.Elements().First(e => e.Name.LocalName == "SizeWithCells");
+            var moveWithCellsElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "MoveWithCells");
+            var sizeWithCellsElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "SizeWithCells");
             Boolean moveWithCells = moveWithCellsElement != null && moveWithCellsElement.Value.ToLower() == "true";
             Boolean sizeWithCells = sizeWithCellsElement != null && sizeWithCellsElement.Value.ToLower() == "true";
             if (moveWithCells && !sizeWithCells)

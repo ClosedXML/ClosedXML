@@ -9,8 +9,11 @@
     using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
+#if NET4
+    using System.ComponentModel.DataAnnotations;
+#endif
 
-    internal partial class XLCell : IXLCell, IXLStylized
+    internal class XLCell : IXLCell, IXLStylized
     {
         public Boolean StyleChanged { get; set; }
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
@@ -2039,6 +2042,19 @@
         public IXLRow WorksheetRow()
         {
             return Worksheet.Row(Address.RowNumber);
+        }
+
+        private String GetFieldName(Object[] customAttributes)
+        {
+#if NET4
+            var displayAttributes = customAttributes.Where(a => a is DisplayAttribute).Select(a => (a as DisplayAttribute).Name);
+            if (displayAttributes.Any())
+                return displayAttributes.Single();
+            else
+                return null;
+#else
+            return null;
+#endif
         }
     }
 }

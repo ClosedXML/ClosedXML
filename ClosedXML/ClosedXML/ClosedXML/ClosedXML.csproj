@@ -24,6 +24,7 @@
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">NET4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -139,7 +140,6 @@
     <Compile Include="Excel\Cells\IXLCells.cs" />
     <Compile Include="Excel\Cells\XLCells.cs" />
     <Compile Include="Excel\Cells\XLCellsCollection.cs" />
-    <Compile Include="Excel\Cells\XLCell_DotNetSpecific.cs" />
     <Compile Include="Excel\Comments\IXLComment.cs" />
     <Compile Include="Excel\Comments\XLComment.cs" />
     <Compile Include="Excel\Drawings\IXLDrawingPosition.cs" />

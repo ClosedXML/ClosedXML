@@ -7,8 +7,6 @@ namespace ClosedXML_Examples
         {
             CreateFiles.CreateAllFiles();
             LoadFiles.LoadAllFiles();
-
-            ModifyFiles.Run();
         }
     }
 }

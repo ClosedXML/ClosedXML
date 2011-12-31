@@ -13,6 +13,27 @@ namespace ClosedXML_Examples
         public void Create(string filePath) 
         {
             var wb = new XLWorkbook();
+            AddMiscComments(wb);
+            AddVisibilityComments(wb);
+            AddStyleAlignment(wb);
+            wb.SaveAs(filePath);
+        }
+
+        private void AddStyleAlignment(XLWorkbook wb)
+        {
+            var ws = wb.Worksheets.Add("Style Alignment");
+
+            // Automagically adjust the size of the comment to fit the contents
+            ws.Cell("A1").Comment.Style.Alignment.SetAutomaticSize();
+            ws.Cell("A1").Comment.AddText("Things are pretty tight around here");
+
+
+            // Set all comments to visible
+            ws.CellsUsed(c => c.HasComment).ForEach(c => c.Comment.SetVisible());
+        }
+
+        private static void AddMiscComments(XLWorkbook wb)
+        {
             var ws = wb.Worksheets.Add("Comments");
 
             ws.Cell("A1").SetValue("Hidden").Comment.AddText("Hidden");
@@ -75,9 +96,33 @@ namespace ClosedXML_Examples
                 .Protection.SetLockText(false)
                 .Web.SetAlternateText("This won't be released to the web");
 
+
+            ws.CellsUsed(c => !c.Address.ToStringRelative().Equals("A1") && c.HasComment).ForEach(c => c.Comment.SetVisible());
+        }
+
+        private static void AddVisibilityComments(XLWorkbook wb)
+        {
+            var ws = wb.Worksheets.Add("Visibility");
+
+            // By default comments are hidden
+            ws.Cell("A1").SetValue("I have a comment").Comment.AddText("Hidden");
             
-            ws.CellsUsed(true, c => !c.Address.ToStringRelative().Equals("A1") && c.HasComment).ForEach(c => c.Comment.SetVisible());
-            wb.SaveAs(filePath);
+            // Set the comment as visible
+            ws.Cell("A2").Comment.SetVisible().AddText("Visible");
+
+            // The ZOrder on previous comments were 1 and 2 respectively
+            // here we're explicit about the ZOrder
+            ws.Cell("A3").Comment.SetZOrder(5).SetVisible().AddText("On Top");
+
+            // We want this comment to appear underneath the one for A3
+            // so we set the ZOrder to something lower
+            ws.Cell("A4").Comment.SetZOrder(4).SetVisible().AddText("Underneath");
+            ws.Cell("A4").Comment.Style.Alignment.SetVertical(XLDrawingVerticalAlignment.Bottom);
+            
+            // Alternatively you could set all comments to visible with the following line:
+            // ws.CellsUsed(c => c.HasComment).ForEach(c => c.Comment.SetVisible());
+
+            ws.Columns().AdjustToContents();
         }
     }
 }
