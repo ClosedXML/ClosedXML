@@ -473,6 +473,9 @@ namespace ClosedXML.Excel
 
             LoadDrawingPositioning<T>(drawing, clientData);
             LoadDrawingProtection<T>(drawing, clientData);
+
+            var visible = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "Visible");
+            drawing.Visible = !(visible != null && visible.Value.ToLower() == "false");
         }
 
         private void LoadDrawingProtection<T>(IXLDrawing<T> drawing, XElement clientData)

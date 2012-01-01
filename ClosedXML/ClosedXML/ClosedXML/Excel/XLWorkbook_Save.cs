@@ -133,6 +133,7 @@ namespace ClosedXML.Excel
 
             foreach (XLWorksheet worksheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
+                context.RelIdGenerator.Reset(RelType.Worksheet);
                 WorksheetPart worksheetPart;
                 string wsRelId = worksheet.RelId;
                 if (workbookPart.Parts.Any(p => p.RelationshipId == wsRelId))
@@ -144,15 +145,18 @@ namespace ClosedXML.Excel
                 else
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(wsRelId);
 
+                
                 context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Worksheet);
+                if (worksheetPart.DrawingsPart != null)
+                    context.RelIdGenerator.AddValues(worksheetPart.DrawingsPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Worksheet);
 
                 // delete comment related parts (todo: review)
                 DeleteComments(worksheetPart, worksheet, context);
                 
                 if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
                 {
-                    WorksheetCommentsPart worksheetCommentsPart =
-                        worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
+                    WorksheetCommentsPart worksheetCommentsPart = worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
+
                     GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
 
                     //VmlDrawingPart vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
@@ -211,7 +215,6 @@ namespace ClosedXML.Excel
             var vmlDrawingPart = worksheetPart.VmlDrawingParts.FirstOrDefault();
             
             // Only delete the VmlDrawingParts for comments.
-            //foreach (VmlDrawingPart vmlDrawingPart in vmlDrawingParts)
             if (vmlDrawingPart != null)
             {
                 XDocument xdoc = XDocumentExtensions.Load(vmlDrawingPart.GetStream(FileMode.Open));
@@ -231,7 +234,13 @@ namespace ClosedXML.Excel
                     VmlDrawingPart vmlDrawingPartNew = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
 
                     if (hasShapes)
-                        xdoc.WriteTo(XmlWriter.Create(vmlDrawingPartNew.GetStream(System.IO.FileMode.Create)));
+                    {
+                        using (XmlTextWriter writer = new XmlTextWriter(vmlDrawingPartNew.GetStream(FileMode.Create), Encoding.UTF8))
+                        {
+
+                            writer.WriteRaw(xdoc.ToString());
+                        }
+                    }
 
                     imageParts.ForEach(p => vmlDrawingPartNew.AddPart(p, vmlDrawingPart.GetIdOfPart(p)));
                     legacyParts.ForEach(p => vmlDrawingPartNew.AddPart(p, vmlDrawingPart.GetIdOfPart(p)));
@@ -4346,102 +4355,23 @@ namespace ClosedXML.Excel
         // Generates content of vmlDrawingPart1.
         private static void GenerateVmlDrawingPartContent(VmlDrawingPart vmlDrawingPart, XLWorksheet xlWorksheet, SaveContext context)
         {
-
-            #region Office VML
-            // <xml xmlns:v='urn:schemas-microsoft-com:vml' 
-            //     xmlns:o='urn:schemas-microsoft-com:office:office' 
-            //     xmlns:x='urn:schemas-microsoft-com:office:excel'>
-
-            //     <o:shapelayout v:ext='edit'>
-            //     <o:idmap v:ext='edit' data='1'/>
-            //     </o:shapelayout>
-
-            //     <!-- SINGLE SHAPE TYPE -->
-            //     <v:shapetype id='_x0000_t202' coordsize='21600,21600' o:spt='202'  path='m,l,21600r21600,l21600,xe'>
-            //     <v:stroke joinstyle='miter'/>
-            //     <v:path gradientshapeok='t' o:connecttype='rect'/>
-            //     </v:shapetype>
-            //     <!-- /// end -->
-
-            //     <!-- ONE SHAPE PER EACH CELL REFERS to SINGLE SHAPE TYPE above -->
-            //     <v:shape id='_x0000_s1026' type='#{0}' style='visibility:hidden' fillcolor='#ffffe1' o:insetmode='auto'>
-            //         <v:fill color2='#ffffe1'/>
-            //         <v:shadow on='t' color='black' obscured='t'/>
-            //         <v:path o:connecttype='none'/>
-            //         <v:textbox style='mso-direction-alt:auto'>
-            //             <div style='text-align:left'></div>
-            //         </v:textbox>
-            //         <x:ClientData ObjectType='Note'>
-            //             <x:Anchor> {leftCol}, 15, {topRow}, 4, {rightCol}, 10, {bottomRow}, 1</x:Anchor>
-            //             <x:Row>{rowIndex}</x:Row>
-            //             <x:Column>{colIndex}</x:Column>
-            //         </x:ClientData>
-            //     </v:shape>  
-            //</xml>
-            #endregion
-
-            //XDocument xdoc;
-            //if (vmlDrawingPart.GetStream(FileMode.Open).Length > 0)
-            //    xdoc = XDocument.Load(vmlDrawingPart.GetStream(FileMode.Open));
-            //else
-            //    xdoc = new XDocument(new XElement("xml"));
-
-            ////xdoc.AddFirst(new XElement("xml"));
-            //const string shapeTypeId = "_x0000_t202"; // arbitrary, assigned by office
-            //xdoc.Root.Add(
-            //    // v:shapetype
-            //    new Vml.Shapetype(
-            //        new Vml.Stroke() { JoinStyle = Vml.StrokeJoinStyleValues.Miter },
-            //        new Vml.Path() { AllowGradientShape = true, ConnectionPointType = Vml.Office.ConnectValues.Rectangle }
-            //        )
-            //            {
-            //                Id = shapeTypeId,
-            //                CoordinateSize = "21600,21600",
-            //                OptionalNumber = 202,
-            //                EdgePath = "m,l,21600r21600,l21600,xe",
-            //            }
-            //        ) ;
-             
-            //// v:shape
-            //var cellWithComments = xlWorksheet.Internals.CellsCollection.GetCells().Where(c => c.HasComment);
-
-            //foreach (XLCell c in cellWithComments)
-            //{
-            //    xdoc.Root.Add(
-            //        GenerateShape(c, shapeTypeId)
-            //    );
-            //}
-
-            //xdoc.Save(vmlDrawingPart.GetStream(System.IO.FileMode.Create), );
-            ////////////////////////////////
             var ms = new MemoryStream();
             CopyStream(vmlDrawingPart.GetStream(FileMode.OpenOrCreate), ms);
             ms.Position = 0;
             XmlTextReader reader = new XmlTextReader(ms);
             XmlTextWriter writer = new XmlTextWriter(vmlDrawingPart.GetStream(FileMode.Create), Encoding.UTF8);
-            if (ms.Length == 0)
-                writer.WriteStartElement("xml");
-            else
-            {
-                //ms.Position = 0;
-                CopyXml(reader, writer);
-            }
+            //if (ms.Length == 0)
+            //    writer.WriteStartElement("xml");
+            //else
+            //{
+            //    //ms.Position = 0;
+            //    CopyXml(reader, writer);
+            //}
 
             writer.WriteStartElement("xml");
 
-            //// o:shapelayout
-            //new Vml.Office.ShapeLayout(
-            //    new Vml.Office.ShapeIdMap()
-            //    {
-            //        Extension = Vml.ExtensionHandlingBehaviorValues.Edit,
-            //        Data = "1"
-            //    }
-            //    ) { Extension = Vml.ExtensionHandlingBehaviorValues.Edit }
-            //        .WriteTo(writer);
-
             const string shapeTypeId = "_x0000_t202"; // arbitrary, assigned by office
 
-            // v:shapetype
             new Vml.Shapetype(
                 new Vml.Stroke() { JoinStyle = Vml.StrokeJoinStyleValues.Miter },
                 new Vml.Path() { AllowGradientShape = true, ConnectionPointType = Vml.Office.ConnectValues.Rectangle }
@@ -4454,7 +4384,6 @@ namespace ClosedXML.Excel
             }
                     .WriteTo(writer);
 
-            // v:shape
             var cellWithComments = xlWorksheet.Internals.CellsCollection.GetCells().Where(c => c.HasComment);
 
             foreach (XLCell c in cellWithComments)
@@ -4462,86 +4391,22 @@ namespace ClosedXML.Excel
                 GenerateShape(c, shapeTypeId).WriteTo(writer);
             }
 
-            //if (ms.Length > 0)
-            //{
-            //    //ms.Position = 0;
-            //    //var sb = new StringBuilder();
-            //    //while (reader.Read())
-            //    //    sb.Append(reader.ReadString());
-            //    //var t = sb.ToString();
-            //    CopyXml(reader, writer);
-            //}
+            if (ms.Length > 0)
+            {
+                ms.Position = 0;
+                //var sb = new StringBuilder();
+                //while (reader.Read())
+                //    sb.Append(reader.ReadString());
+                //var t = sb.ToString();
+                XDocument xdoc = XDocumentExtensions.Load(ms);
+                xdoc.Root.Elements().ForEach(e=> writer.WriteRaw(e.ToString()));
+                //CopyXml(reader, writer);
+            }
 
+            
             writer.WriteEndElement();
             writer.Flush();
             writer.Close();
-
-        }
-
-        static void CopyXml(XmlTextReader xtr, XmlTextWriter xtw)
-        {
-            string docElemName = null;
-            bool b = true;
-            while (b)
-            {
-                xtr.Read();
-                switch (xtr.NodeType)
-                {
-                    case XmlNodeType.Attribute:
-                        xtw.WriteAttributeString(xtr.Prefix,
-                            xtr.LocalName, xtr.NamespaceURI, xtr.Value);
-                        break;
-                    case XmlNodeType.CDATA:
-                        xtw.WriteCData(xtr.Value);
-                        break;
-                    case XmlNodeType.Comment:
-                        xtw.WriteComment(xtr.Value);
-                        break;
-                    case XmlNodeType.DocumentType:
-                        xtw.WriteDocType(xtr.Name, null, null, null);
-                        break;
-                    case XmlNodeType.Element:
-                        if (xtr.LocalName != "xml")
-                        {
-                            xtw.WriteNode(xtr, true);
-                            //xtw.WriteStartElement(xtr.Prefix,
-                            //    xtr.LocalName, xtr.NamespaceURI);
-                            //if (xtr.IsEmptyElement)
-                            //    xtw.WriteEndElement();
-                            if (docElemName == null)
-                                docElemName = xtr.Name;
-                        }
-                        break;
-                    case XmlNodeType.EndElement:
-                        if (docElemName == xtr.Name || xtr.Name == "xml")
-                            b = false;
-                        else
-                            xtw.WriteEndElement();
-                        break;
-                    case XmlNodeType.EntityReference:
-                        xtw.WriteEntityRef(xtr.Name);
-                        break;
-                    case XmlNodeType.ProcessingInstruction:
-                        xtw.WriteProcessingInstruction(xtr.Name, xtr.Value);
-                        break;
-                    case XmlNodeType.SignificantWhitespace:
-                        xtw.WriteWhitespace(xtr.Value);
-                        break;
-                    case XmlNodeType.Text:
-                        xtw.WriteString(xtr.Value);
-                        break;
-                    case XmlNodeType.Whitespace:
-                        xtw.WriteWhitespace(xtr.Value);
-                        break;
-                    case XmlNodeType.XmlDeclaration:
-                        //xtw.WriteStartDocument();
-                        break;
-                    default:
-                        if (docElemName == xtr.Name)
-                            b = false;
-                        break;
-                }
-            }
         }
 
         // VML Shape for Comment
