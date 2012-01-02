@@ -185,14 +185,26 @@ namespace ClosedXML.Excel
 
     public static class FontBaseExtensions
     {
-        public static Double GetWidth(this IXLFontBase font, String text)
+        private static readonly Dictionary<IXLFontBase, Font> FontCache = new Dictionary<IXLFontBase, Font>();
+
+        private static Font GetCachedFont(IXLFontBase fontBase)
+        {
+            Font font;
+            if (!FontCache.TryGetValue(fontBase, out font))
+            {
+                font = new Font(fontBase.FontName, (float)fontBase.FontSize, GetFontStyle(fontBase));
+                FontCache.Add(fontBase, font);
+            }
+            return font;
+        }
+        public static Double GetWidth(this IXLFontBase fontBase, String text)
         {
             if (StringExtensions.IsNullOrWhiteSpace(text))
                 return 0;
 
-            var stringFont = new Font(font.FontName, (float)font.FontSize, GetFontStyle(font));
-
-            double fMaxDigitWidth  = (double)ExcelHelper.Graphic.MeasureString("X", stringFont).Width;
+            var font = GetCachedFont(fontBase);
+            
+            double fMaxDigitWidth  = (double)ExcelHelper.Graphic.MeasureString("X", font).Width;
                
             return Math.Truncate((text.ToCharArray().Count() * fMaxDigitWidth + 5.0) / fMaxDigitWidth * 256.0) / 256.0;
         }
@@ -207,10 +219,10 @@ namespace ClosedXML.Excel
             return fontStyle;
         }
 
-        public static Double GetHeight(this IXLFontBase font)
+        public static Double GetHeight(this IXLFontBase fontBase)
         {
-            var stringFont = new Font(font.FontName, (float)font.FontSize, GetFontStyle(font));
-            var textSize = TextRenderer.MeasureText("X", stringFont);
+            var font = GetCachedFont(fontBase);
+            var textSize = TextRenderer.MeasureText("X", font);
             return (double)textSize.Height * 0.85;
         }
 
