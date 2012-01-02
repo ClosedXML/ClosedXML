@@ -2,9 +2,15 @@
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRichString: IXLFontBase, IEquatable<IXLRichString>
+    public interface IXLWithRichString
+    {
+        IXLRichString AddText(String text);
+        IXLRichString AddNewLine();
+    }
+    public interface IXLRichString: IXLFontBase, IEquatable<IXLRichString>, IXLWithRichString
     {
         String Text { get; }
+        
 
         IXLRichString SetBold(); IXLRichString SetBold(Boolean value);
         IXLRichString SetItalic(); IXLRichString SetItalic(Boolean value);

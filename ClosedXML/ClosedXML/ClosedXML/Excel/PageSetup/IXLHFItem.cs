@@ -11,19 +11,13 @@ namespace ClosedXML.Excel
         AllPages, OddPages, EvenPages, FirstPage
     }
 
-    public interface IXLHFItem
+    public interface IXLHFItem: IXLWithRichString
     {
         /// <summary>
         /// Gets the text of the specified header/footer occurrence.
         /// </summary>
         /// <param name="occurrence">The occurrence.</param>
         String GetText(XLHFOccurrence occurrence);
-
-        /// <summary>
-        /// Adds the given text to this header/footer item.
-        /// </summary>
-        /// <param name="text">The text to add to this header/footer item.</param>
-        IXLRichString AddText(String text);
 
         /// <summary>
         /// Adds the given predefined text to this header/footer item.

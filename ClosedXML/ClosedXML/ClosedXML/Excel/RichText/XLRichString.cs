@@ -4,15 +4,24 @@ namespace ClosedXML.Excel
 {
     internal class XLRichString: IXLRichString
     {
-
-        public XLRichString(String text, IXLFontBase font)
+        IXLWithRichString _withRichString;
+        public XLRichString(String text, IXLFontBase font, IXLWithRichString withRichString)
         {
             Text = text;
             this.CopyFont(font);
+            _withRichString = withRichString;
         }
 
         public String Text { get; private set; }
+        public IXLRichString AddText(String text)
+        {
+            return _withRichString.AddText(text);
+        }
 
+        public IXLRichString AddNewLine()
+        {
+            return AddText(Environment.NewLine);
+        }
 
         public Boolean Bold { get; set; }
         public Boolean Italic { get; set; }

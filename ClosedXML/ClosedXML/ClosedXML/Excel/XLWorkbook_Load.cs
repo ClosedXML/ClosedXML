@@ -383,7 +383,7 @@ namespace ClosedXML.Excel
                 var dashStyle = stroke.Attribute("dashstyle");
                 if (dashStyle != null)
                 {
-                    String dashStyleVal = dashStyle.Value;
+                    String dashStyleVal = dashStyle.Value.ToLower();
                     if (dashStyleVal == "1 1" || dashStyleVal == "shortdot")
                     {
                         var endCap = stroke.Attribute("endcap");
@@ -397,10 +397,10 @@ namespace ClosedXML.Excel
                         switch (dashStyleVal)
                         {
                             case "dash": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.Dash; break;
-                            case "dashDot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.DashDot; break;
-                            case "longDash": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDash; break;
-                            case "longDashDot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDashDot; break;
-                            case "longDashDotDot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDashDotDot; break;
+                            case "dashdot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.DashDot; break;
+                            case "longdash": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDash; break;
+                            case "longdashdot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDashDot; break;
+                            case "longdashdotdot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDashDotDot; break;
                         }
                     }
                 }
@@ -476,6 +476,23 @@ namespace ClosedXML.Excel
 
             var visible = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "Visible");
             drawing.Visible = !(visible != null && visible.Value.ToLower() == "false");
+
+            LoadDrawingHAlignment<T>(drawing, clientData);
+            LoadDrawingVAlignment<T>(drawing, clientData);
+        }
+
+        private void LoadDrawingHAlignment<T>(IXLDrawing<T> drawing, XElement clientData)
+        {
+            var textHAlign = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "TextHAlign");
+            if (textHAlign != null)
+                drawing.Style.Alignment.Horizontal = (XLDrawingHorizontalAlignment)Enum.Parse(typeof(XLDrawingHorizontalAlignment), textHAlign.Value.ToProper());
+        }
+
+        private void LoadDrawingVAlignment<T>(IXLDrawing<T> drawing, XElement clientData)
+        {
+            var textVAlign = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "TextVAlign");
+            if (textVAlign != null)
+                drawing.Style.Alignment.Vertical = (XLDrawingVerticalAlignment)Enum.Parse(typeof(XLDrawingVerticalAlignment), textVAlign.Value.ToProper());
         }
 
         private void LoadDrawingProtection<T>(IXLDrawing<T> drawing, XElement clientData)
@@ -493,14 +510,14 @@ namespace ClosedXML.Excel
         {
             var moveWithCellsElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "MoveWithCells");
             var sizeWithCellsElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "SizeWithCells");
-            Boolean moveWithCells = moveWithCellsElement != null && moveWithCellsElement.Value.ToLower() == "true";
-            Boolean sizeWithCells = sizeWithCellsElement != null && sizeWithCellsElement.Value.ToLower() == "true";
+            Boolean moveWithCells = !(moveWithCellsElement != null && moveWithCellsElement.Value.ToLower() == "true");
+            Boolean sizeWithCells = !(sizeWithCellsElement != null && sizeWithCellsElement.Value.ToLower() == "true");
             if (moveWithCells && !sizeWithCells)
                 drawing.Style.Properties.Positioning = XLDrawingAnchor.MoveWithCells;
             else if (moveWithCells && sizeWithCells)
                 drawing.Style.Properties.Positioning = XLDrawingAnchor.MoveAndSizeWithCells;
             else
-                drawing.Style.Properties.Positioning = XLDrawingAnchor.MoveWithCells;
+                drawing.Style.Properties.Positioning = XLDrawingAnchor.Absolute;
         }
 
         private static void LoadClientDataAnchor<T>(IXLDrawing<T> drawing, XElement anchor)

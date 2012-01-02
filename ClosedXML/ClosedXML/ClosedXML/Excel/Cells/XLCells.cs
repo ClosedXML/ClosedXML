@@ -58,9 +58,9 @@ namespace ClosedXML.Excel
                                                 range.LastAddress.RowNumber,
                                                 range.LastAddress.ColumnNumber)
                                                 .Where(c => 
-                                                            !c.IsEmpty(_includeFormats) 
-                                                            || (_includeFormats && c.HasComment) 
-                                                            || (_predicate != null && _predicate(c))
+                                                            (!c.IsEmpty(_includeFormats) 
+                                                            || (_includeFormats && c.HasComment) )
+                                                            && (_predicate == null || _predicate(c))
                                                             );
 
                         foreach(var cell in cellRange)
@@ -124,9 +124,9 @@ namespace ClosedXML.Excel
                                 cir =>
                                 cir.Value.Select(a => cir.Key.Internals.CellsCollection.GetCell(a)).Where(
                                     cell => cell != null && (
-                                                                !cell.IsEmpty(_includeFormats) 
-                                                                || (_includeFormats && cell.HasComment)
-                                                                || (_predicate != null && _predicate(cell))
+                                                                (!cell.IsEmpty(_includeFormats) 
+                                                                || (_includeFormats && cell.HasComment))
+                                                                && (_predicate == null || _predicate(cell))
                                                                 )));
 
                     foreach (var cell in cellRange)

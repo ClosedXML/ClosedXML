@@ -19,10 +19,6 @@ namespace ClosedXML.Excel
         /// Adds a bolded line with the author's name
         /// </summary>
         IXLRichString AddSignature();
-        /// <summary>
-        /// Adds a carriage return to the comment
-        /// </summary>
-        IXLRichString AddNewLine();
 
         void Delete();
     }

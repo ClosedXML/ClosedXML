@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLFormattedText<T> : IEnumerable<IXLRichString>, IEquatable<IXLFormattedText<T>>
+    public interface IXLFormattedText<T> : IEnumerable<IXLRichString>, IEquatable<IXLFormattedText<T>>, IXLWithRichString
     {
         Boolean Bold { set; }
         Boolean Italic { set; }
@@ -27,7 +27,6 @@ namespace ClosedXML.Excel
         IXLFormattedText<T> SetFontName(String value);
         IXLFormattedText<T> SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
 
-        IXLRichString AddText(String text);
         IXLRichString AddText(String text, IXLFontBase font);
         IXLFormattedText<T> ClearText();
         IXLFormattedText<T> ClearFont();

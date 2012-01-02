@@ -43,7 +43,7 @@ namespace ClosedXML.Excel
         }
         public IXLRichString AddText(String text, IXLFontBase font)
         {
-            var richText = new XLRichString(text, font);
+            var richText = new XLRichString(text, font, this);
             return AddText(richText);
         }
 
@@ -53,6 +53,12 @@ namespace ClosedXML.Excel
             Length += richText.Text.Length;
             return richText;
         }
+
+        public IXLRichString AddNewLine()
+        {
+            return AddText(Environment.NewLine);
+        }
+
         public IXLFormattedText<T> ClearText()
         {
             _richTexts.Clear();
@@ -98,20 +104,20 @@ namespace ClosedXML.Excel
                     Int32 startIndex = index - lastPosition;
 
                     if (startIndex > 0)
-                        newRichTexts.Add(new XLRichString(rt.Text.Substring(0, startIndex), rt));
+                        newRichTexts.Add(new XLRichString(rt.Text.Substring(0, startIndex), rt, this));
                     else if (startIndex < 0)
                         startIndex = 0;
 
                     Int32 leftToTake = length - retVal.Length;
                     if (leftToTake > rt.Text.Length - startIndex)
                         leftToTake = rt.Text.Length - startIndex;
-                    
-                    XLRichString newRt = new XLRichString(rt.Text.Substring(startIndex, leftToTake), rt);
+
+                    XLRichString newRt = new XLRichString(rt.Text.Substring(startIndex, leftToTake), rt, this);
                     newRichTexts.Add(newRt);
                     retVal.AddText(newRt);
 
                     if (startIndex + leftToTake < rt.Text.Length)
-                        newRichTexts.Add(new XLRichString(rt.Text.Substring(startIndex + leftToTake), rt));
+                        newRichTexts.Add(new XLRichString(rt.Text.Substring(startIndex + leftToTake), rt, this));
                 }
                 else // We haven't reached the desired position yet
                 {

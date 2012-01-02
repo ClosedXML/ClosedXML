@@ -164,7 +164,11 @@ namespace ClosedXML.Excel
                     if (vmlDrawingPart == null)
                     {
                         if (StringExtensions.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
+                        {
                             worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
+                            worksheet.LegacyDrawingIsNew = true;
+                        }
+
                         vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
                     }
                     GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
@@ -218,28 +222,31 @@ namespace ClosedXML.Excel
             if (vmlDrawingPart != null)
             {
                 XDocument xdoc = XDocumentExtensions.Load(vmlDrawingPart.GetStream(FileMode.Open));
-                xdoc.Root.Elements().Where(e => e.Name.LocalName == "shapelayout").Remove();
+                //xdoc.Root.Elements().Where(e => e.Name.LocalName == "shapelayout").Remove();
                 xdoc.Root.Elements().Where(e=>e.Name.LocalName == "shapetype" && (string)e.Attribute("id") == @"_x0000_t202").Remove();
                 xdoc.Root.Elements().Where(e => e.Name.LocalName == "shape" && (string)e.Attribute("type") == @"#_x0000_t202").Remove();
                 var imageParts = vmlDrawingPart.ImageParts.ToList();
                 var legacyParts = vmlDrawingPart.LegacyDiagramTextParts.ToList();
+                var rId = worksheetPart.GetIdOfPart(vmlDrawingPart);
+                worksheet.LegacyDrawingId = rId;
                 worksheetPart.ChangeIdOfPart(vmlDrawingPart, "xxRRxx"); // Anything will do for the new relationship id
-                                                                                       // we just want it alive enough to create the copy
-                
-                Boolean hasShapes = xdoc.Root.Elements().Where(e => e.Name.LocalName == "shape").Any();
-                if (imageParts.Count > 0 || legacyParts.Count > 0 || hasShapes)
+                                                                        // we just want it alive enough to create the copy
+
+                Boolean hasShapes = xdoc.Root.Elements().Where(e =>
+                    e.Name.LocalName == "shape"
+                    || e.Name.LocalName == "group"
+                    ).Any();
+
+                VmlDrawingPart vmlDrawingPartNew = null;
+                Boolean hasNewPart = (imageParts.Count > 0 || legacyParts.Count > 0 || hasShapes);
+                if (hasNewPart)
                 {
-                    if (StringExtensions.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
-                        worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
-                    VmlDrawingPart vmlDrawingPartNew = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
+                    vmlDrawingPartNew = worksheetPart.AddNewPart<VmlDrawingPart>(rId);
 
-                    if (hasShapes)
+                    using (XmlTextWriter writer = new XmlTextWriter(vmlDrawingPartNew.GetStream(FileMode.Create), Encoding.UTF8))
                     {
-                        using (XmlTextWriter writer = new XmlTextWriter(vmlDrawingPartNew.GetStream(FileMode.Create), Encoding.UTF8))
-                        {
 
-                            writer.WriteRaw(xdoc.ToString());
-                        }
+                        writer.WriteRaw(xdoc.ToString());
                     }
 
                     imageParts.ForEach(p => vmlDrawingPartNew.AddPart(p, vmlDrawingPart.GetIdOfPart(p)));
@@ -247,6 +254,9 @@ namespace ClosedXML.Excel
                 }
 
                 worksheetPart.DeletePart(vmlDrawingPart);
+
+                if (hasNewPart && rId != worksheetPart.GetIdOfPart(vmlDrawingPartNew))
+                    worksheetPart.ChangeIdOfPart(vmlDrawingPartNew, rId);
             }
         }
 
@@ -534,10 +544,10 @@ namespace ClosedXML.Excel
                                                                                       current +
                                                                                       ("'" + worksheetName + "'!" +
                                                                                        printArea.RangeAddress.
-                                                                                           FirstAddress.ToStringFixed() +
+                                                                                           FirstAddress.ToStringFixed(XLReferenceStyle.A1) +
                                                                                        ":" +
                                                                                        printArea.RangeAddress.
-                                                                                           LastAddress.ToStringFixed() +
+                                                                                           LastAddress.ToStringFixed(XLReferenceStyle.A1) +
                                                                                        ","));
                     definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
                     definedNames.AppendChild(definedName);
@@ -546,8 +556,8 @@ namespace ClosedXML.Excel
                 if (worksheet.AutoFilter.Enabled)
                 {
                     var definedName = new DefinedName { Name = "_xlnm._FilterDatabase", LocalSheetId = sheetId };
-                    definedName.Text = "'" + worksheet.Name + "'!" + worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed() +
-                                                               ":" + worksheet.AutoFilter.Range.RangeAddress.LastAddress.ToStringFixed();
+                    definedName.Text = "'" + worksheet.Name + "'!" + worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(XLReferenceStyle.A1) +
+                                                               ":" + worksheet.AutoFilter.Range.RangeAddress.LastAddress.ToStringFixed(XLReferenceStyle.A1);
                     definedName.Hidden = BooleanValue.FromBoolean(true);
                     definedNames.AppendChild(definedName);
                 }
@@ -3373,15 +3383,32 @@ namespace ClosedXML.Excel
             #endregion
 
             #region LegacyDrawing
-            worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
+            if (xlWorksheet.LegacyDrawingIsNew)
             {
-                if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
-                    worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
-                                                        previousElement);
+                    if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                    {
+                        var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
+                        worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
+                                                            previousElement);
+                    }
                 }
             }
+            #endregion
+            
+
+            #region LegacyDrawingHeaderFooter
+            //LegacyDrawingHeaderFooter legacyHeaderFooter = worksheetPart.Worksheet.Elements<LegacyDrawingHeaderFooter>().FirstOrDefault();
+            //if (legacyHeaderFooter != null)
+            //{
+            //    worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawingHeaderFooter>();
+            //    {
+            //            var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawingHeaderFooter);
+            //            worksheetPart.Worksheet.InsertAfter(new LegacyDrawingHeaderFooter { Id = xlWorksheet.LegacyDrawingId },
+            //                                                previousElement);
+            //    }
+            //}
             #endregion
         }
 
@@ -4449,11 +4476,11 @@ namespace ClosedXML.Excel
                 new Vml.Path() { ConnectionPointType = Vml.Office.ConnectValues.None },
                 textBox,
                 new Vml.Spreadsheet.ClientData(
-                    new Vml.Spreadsheet.MoveWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.Absolute ? "True": "False"),  // counterintuitive
-                    new Vml.Spreadsheet.ResizeWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.MoveAndSizeWithCells ? "False": "True"), // counterintuitive
+                    new Vml.Spreadsheet.MoveWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.Absolute ? "True": "False"), // Counterintuitive
+                    new Vml.Spreadsheet.ResizeWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.MoveAndSizeWithCells ? "False" : "True"), // Counterintuitive
                     anchor,
-                    new Vml.Spreadsheet.HorizontalTextAlignment(c.Comment.Style.Alignment.Horizontal.ToString()),
-                    new Vml.Spreadsheet.VerticalTextAlignment(c.Comment.Style.Alignment.Vertical.ToString()),
+                    new Vml.Spreadsheet.HorizontalTextAlignment(c.Comment.Style.Alignment.Horizontal.ToString().ToCamel()),
+                    new Vml.Spreadsheet.VerticalTextAlignment(c.Comment.Style.Alignment.Vertical.ToString().ToCamel()),
                     new Vml.Spreadsheet.AutoFill("False"),
                     new Vml.Spreadsheet.CommentRowTarget() { Text = (rowNumber - 1).ToString() },
                     new Vml.Spreadsheet.CommentColumnTarget() { Text = (columnNumber - 1).ToString() },
@@ -4482,7 +4509,7 @@ namespace ClosedXML.Excel
         {
             var lineDash = c.Comment.Style.ColorsAndLines.LineDash;
             var stroke = new Vml.Stroke() { LineStyle = c.Comment.Style.ColorsAndLines.LineStyle.ToOpenXml(),
-                DashStyle= lineDash == XLDashStyle.RoundDot || lineDash == XLDashStyle.SquareDot ? "shortdot" : lineDash.ToString().ToLower()
+                DashStyle = lineDash == XLDashStyle.RoundDot || lineDash == XLDashStyle.SquareDot ? "shortDot" : lineDash.ToString().ToCamel()
             };
             if (lineDash == XLDashStyle.RoundDot)
                 stroke.EndCap = Vml.StrokeEndCapValues.Round;

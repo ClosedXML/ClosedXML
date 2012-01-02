@@ -97,11 +97,7 @@ namespace ClosedXML.Excel
             return AddText(Environment.NewLine);
         }
 
-        public IXLRichString AddNewLine() 
-        {
-            return AddText(Environment.NewLine);
-        }
-        
+       
         #region IXLDrawing
 
         public Int32 ShapeId { get; internal set; }

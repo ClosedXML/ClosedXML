@@ -36,7 +36,7 @@ namespace ClosedXML.Excel
 
         public IXLRichString AddText(String text, XLHFOccurrence occurrence)
         {
-            IXLRichString richText = new XLRichString(text, XLWorkbook.DefaultStyle.Font);
+            IXLRichString richText = new XLRichString(text, XLWorkbook.DefaultStyle.Font, this);
 
             var hfText = new XLHFText(richText);
             if (occurrence == XLHFOccurrence.AllPages)
@@ -51,6 +51,11 @@ namespace ClosedXML.Excel
             }
 
             return richText;
+        }
+
+        public IXLRichString AddNewLine()
+        {
+            return AddText(Environment.NewLine);
         }
 
         private void AddTextToOccurrence(XLHFText hfText, XLHFOccurrence occurrence)

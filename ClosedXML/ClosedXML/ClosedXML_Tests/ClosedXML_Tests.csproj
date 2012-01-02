@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Examples\AutoFilterTests.cs" />
+    <Compile Include="Examples\CommentsTests.cs" />
     <Compile Include="Examples\PageSetupTests.cs" />
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
@@ -201,6 +202,7 @@
     <EmbeddedResource Include="Resource\Examples\AutoFilter\DynamicAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\AutoFilter\RegularAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\AutoFilter\CustomAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Comments\AddingComments.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
