@@ -19,6 +19,7 @@ namespace ClosedXML.Excel
         public const int MaxRowNumber = 1048576;
         public const int MaxColumnNumber = 16384;
         public const String MaxColumnLetter = "XFD";
+        public const Double Epsilon = 1e-10;
 
         private const Int32 TwoT26 = 26 * 26;
         internal static readonly NumberFormatInfo NumberFormatForParse = CultureInfo.InvariantCulture.NumberFormat;

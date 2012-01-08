@@ -6,9 +6,9 @@ namespace ClosedXML.Excel
     {
         Workbook,
         Worksheet
-    } ;
+    } 
 
-    public interface IXLRangeBase
+    public interface IXLRangeBase: IDisposable
     {
         IXLWorksheet Worksheet { get; }
 
@@ -108,6 +108,10 @@ namespace ClosedXML.Excel
         /// <param name = "includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         IXLCell FirstCellUsed(Boolean includeFormats);
 
+        IXLCell FirstCellUsed(Func<IXLCell, Boolean> predicate);
+
+        IXLCell FirstCellUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate);
+
         /// <summary>
         ///   Returns the last cell of this range.
         /// </summary>
@@ -125,6 +129,10 @@ namespace ClosedXML.Excel
         /// <para>The cell's address is going to be ([Last Row with a value], [Last Column with a value])</para>
         /// <param name = "includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         IXLCell LastCellUsed(Boolean includeFormats);
+
+        IXLCell LastCellUsed(Func<IXLCell, Boolean> predicate);
+
+        IXLCell LastCellUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate);
 
         /// <summary>
         ///   Determines whether this range contains the specified range (completely).
@@ -230,5 +238,6 @@ namespace ClosedXML.Excel
         //IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
 
         IXLAutoFilter SetAutoFilter();
+        
     }
 }

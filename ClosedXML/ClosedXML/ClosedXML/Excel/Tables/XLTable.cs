@@ -55,9 +55,13 @@ namespace ClosedXML.Excel
         {
             get
             {
-                return _showTotalsRow ? Range(2, 1, RowCount() - 1, ColumnCount()) : Range(2, 1, RowCount(), ColumnCount());
+                return _showTotalsRow
+                           ? Range(2, 1, RowCount() - 1, ColumnCount())
+                           : Range(2, 1, RowCount(), ColumnCount());
             }
         }
+
+        public XLAutoFilter AutoFilter { get; private set; }
 
         #region IXLTable Members
 
@@ -98,8 +102,8 @@ namespace ClosedXML.Excel
                 if (_showTotalsRow)
                 {
                     AutoFilter.Range = Worksheet.Range(
-                                                RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber,
-                                                RangeAddress.LastAddress.RowNumber - 1, RangeAddress.LastAddress.ColumnNumber);
+                        RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber,
+                        RangeAddress.LastAddress.RowNumber - 1, RangeAddress.LastAddress.ColumnNumber);
                 }
                 else
                     AutoFilter.Range = Worksheet.Range(RangeAddress);
@@ -131,7 +135,9 @@ namespace ClosedXML.Excel
 
         public new IXLTableRow LastRow()
         {
-            return ShowTotalsRow ? new XLTableRow(this, base.Row(RowCount() - 1)) : new XLTableRow(this, base.Row(RowCount()));
+            return ShowTotalsRow
+                       ? new XLTableRow(this, base.Row(RowCount() - 1))
+                       : new XLTableRow(this, base.Row(RowCount()));
         }
 
         public new IXLTableRow LastRowUsed()
@@ -171,7 +177,7 @@ namespace ClosedXML.Excel
                 String lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    string[] rowRange = ExcelHelper.SplitRange(tPair);
+                    var rowRange = ExcelHelper.SplitRange(tPair);
 
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
@@ -391,7 +397,8 @@ namespace ClosedXML.Excel
             return LastColumnUsed();
         }
 
-        public new IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        public new IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending,
+                                 Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
             var toSortBy = new StringBuilder();
             foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
@@ -422,6 +429,25 @@ namespace ClosedXML.Excel
             return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1), sortOrder, matchCase, ignoreBlanks);
         }
 
+        public new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        {
+            base.Clear(clearOptions);
+            return this;
+        }
+
+        IXLBaseAutoFilter IXLTable.AutoFilter
+        {
+            get { return AutoFilter; }
+        }
+
+        public new void Dispose()
+        {
+            if (AutoFilter != null)
+                AutoFilter.Dispose();
+
+            base.Dispose();
+        }
+
         #endregion
 
         public new XLTableRow Row(int row)
@@ -440,7 +466,7 @@ namespace ClosedXML.Excel
             ShowRowStripes = true;
             ShowAutoFilter = true;
             Theme = XLTableTheme.TableStyleLight9;
-            AutoFilter = new XLAutoFilter() { Range = AsRange() };
+            AutoFilter = new XLAutoFilter {Range = AsRange()};
         }
 
         private void AddToTables(XLRange range, Boolean addToTables)
@@ -500,17 +526,5 @@ namespace ClosedXML.Excel
 
             throw new ArgumentOutOfRangeException("The header row doesn't contain field name '" + name + "'.");
         }
-
-        public new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
-        {
-            base.Clear(clearOptions);
-            return this;
-        }
-
-        IXLBaseAutoFilter IXLTable.AutoFilter
-        {
-            get { return AutoFilter; }
-        }
-        public XLAutoFilter AutoFilter { get; private set; }
     }
 }

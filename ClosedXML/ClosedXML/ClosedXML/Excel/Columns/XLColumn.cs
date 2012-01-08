@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
         private bool _collapsed;
         private bool _isHidden;
         private int _outlineLevel;
-        
+
         private Double _width;
 
         #endregion
@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
 
             IsReference = xlColumnParameters.IsReference;
             if (IsReference)
-                Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
+                SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
             else
             {
                 SetStyle(xlColumnParameters.DefaultStyleId);
@@ -44,6 +44,8 @@ namespace ClosedXML.Excel
         {
             _width = column._width;
             IsReference = column.IsReference;
+            if (IsReference)
+                SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
             _collapsed = column._collapsed;
             _isHidden = column._isHidden;
             _outlineLevel = column._outlineLevel;
@@ -51,7 +53,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion
-
 
         public Boolean IsReference { get; private set; }
 
@@ -65,7 +66,7 @@ namespace ClosedXML.Excel
 
                 int column = ColumnNumber();
 
-                foreach (var cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
+                foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
                     yield return cell.Style;
 
                 UpdatingStyle = false;
@@ -78,9 +79,9 @@ namespace ClosedXML.Excel
         {
             get
             {
-                return IsReference ? 
-                    Worksheet.Internals.ColumnsCollection[ColumnNumber()].InnerStyle : 
-                    GetStyle();
+                return IsReference
+                           ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].InnerStyle
+                           : GetStyle();
             }
             set
             {
@@ -107,10 +108,7 @@ namespace ClosedXML.Excel
 
         public Double Width
         {
-            get
-            {
-                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Width : _width;
-            }
+            get { return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Width : _width; }
             set
             {
                 if (IsReference)
@@ -123,7 +121,11 @@ namespace ClosedXML.Excel
         public void Delete()
         {
             int columnNumber = ColumnNumber();
-            AsRange().Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            using (var asRange = AsRange())
+            {
+                asRange.Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            }
+            
             Worksheet.Internals.ColumnsCollection.Remove(columnNumber);
             var columnsToMove = new List<Int32>();
             columnsToMove.AddRange(
@@ -159,6 +161,7 @@ namespace ClosedXML.Excel
         {
             return CellsUsed(true);
         }
+
         public IXLCells Cells(Int32 firstRow, Int32 lastRow)
         {
             return Cells(firstRow + ":" + lastRow);
@@ -166,10 +169,7 @@ namespace ClosedXML.Excel
 
         public override IXLStyle Style
         {
-            get
-            {
-                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Style : GetStyle();
-            }
+            get { return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Style : GetStyle(); }
             set
             {
                 if (IsReference)
@@ -210,8 +210,14 @@ namespace ClosedXML.Excel
         {
             int columnNum = ColumnNumber();
             Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum + 1, numberOfColumns);
-            var range = (XLRange)Worksheet.Column(columnNum).AsRange();
-            range.InsertColumnsAfter(true, numberOfColumns);
+            using (var column = Worksheet.Column(columnNum))
+            {
+                using (var asRange = column.AsRange())
+                {
+                    asRange.InsertColumnsAfter(true, numberOfColumns).Dispose();
+                }
+            }
+
             return Worksheet.Columns(columnNum + 1, columnNum + numberOfColumns);
         }
 
@@ -219,16 +225,16 @@ namespace ClosedXML.Excel
         {
             int columnNum = ColumnNumber();
             Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum, numberOfColumns);
-            // We can't use this.AsRange() because we've shifted the columns
-            // and we want to use the old columnNum.
-            var range = (XLRange)Worksheet.Column(columnNum).AsRange();
-            range.InsertColumnsBefore(true, numberOfColumns);
-            return Worksheet.Columns(columnNum, columnNum + numberOfColumns - 1);
-        }
 
-        public override IXLRange AsRange()
-        {
-            return Range(1, 1, ExcelHelper.MaxRowNumber, 1);
+            using (var column = Worksheet.Column(columnNum))
+            {
+                using (var asRange = column.AsRange())
+                {
+                    asRange.InsertColumnsBefore(true, numberOfColumns).Dispose();
+                }
+            }
+
+            return Worksheet.Columns(columnNum, columnNum + numberOfColumns - 1);
         }
 
         public IXLColumn AdjustToContents()
@@ -420,22 +426,21 @@ namespace ClosedXML.Excel
         }
 
 
-        public void Hide()
+        public IXLColumn Hide()
         {
             IsHidden = true;
+            return this;
         }
 
-        public void Unhide()
+        public IXLColumn Unhide()
         {
             IsHidden = false;
+            return this;
         }
 
         public Boolean IsHidden
         {
-            get
-            {
-                return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].IsHidden : _isHidden;
-            }
+            get { return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].IsHidden : _isHidden; }
             set
             {
                 if (IsReference)
@@ -464,36 +469,38 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void Group()
+        public IXLColumn Group()
         {
-            Group(false);
+            return Group(false);
         }
 
-        public void Group(Boolean collapse)
+        public IXLColumn Group(Boolean collapse)
         {
             if (OutlineLevel < 8)
                 OutlineLevel += 1;
 
             Collapsed = collapse;
+            return this;
         }
 
-        public void Group(Int32 outlineLevel)
+        public IXLColumn Group(Int32 outlineLevel)
         {
-            Group(outlineLevel, false);
+            return Group(outlineLevel, false);
         }
 
-        public void Group(Int32 outlineLevel, Boolean collapse)
+        public IXLColumn Group(Int32 outlineLevel, Boolean collapse)
         {
             OutlineLevel = outlineLevel;
             Collapsed = collapse;
+            return this;
         }
 
-        public void Ungroup()
+        public IXLColumn Ungroup()
         {
-            Ungroup(false);
+            return Ungroup(false);
         }
 
-        public void Ungroup(Boolean ungroupFromAll)
+        public IXLColumn Ungroup(Boolean ungroupFromAll)
         {
             if (ungroupFromAll)
                 OutlineLevel = 0;
@@ -502,18 +509,19 @@ namespace ClosedXML.Excel
                 if (OutlineLevel > 0)
                     OutlineLevel -= 1;
             }
+            return this;
         }
 
-        public void Collapse()
+        public IXLColumn Collapse()
         {
             Collapsed = true;
-            Hide();
+            return Hide();
         }
 
-        public void Expand()
+        public IXLColumn Expand()
         {
             Collapsed = false;
-            Unhide();
+            return Unhide();
         }
 
         public Int32 CellCount()
@@ -521,27 +529,34 @@ namespace ClosedXML.Excel
             return RangeAddress.LastAddress.ColumnNumber - RangeAddress.FirstAddress.ColumnNumber + 1;
         }
 
-        public IXLColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        public IXLColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false,
+                              Boolean ignoreBlanks = true)
         {
-            base.Sort(1, sortOrder, matchCase, ignoreBlanks);
+            Sort(1, sortOrder, matchCase, ignoreBlanks);
             return this;
         }
 
 
         IXLRangeColumn IXLColumn.CopyTo(IXLCell target)
         {
-            return AsRange().CopyTo(target).Column(1);
+            using (var asRange = AsRange())
+                using (var copy = asRange.CopyTo(target))
+                    return copy.Column(1);
         }
 
         IXLRangeColumn IXLColumn.CopyTo(IXLRangeBase target)
         {
-            return AsRange().CopyTo(target).Column(1);
+            using (var asRange = AsRange())
+                using (var copy = asRange.CopyTo(target))
+                    return copy.Column(1);
         }
 
         public IXLColumn CopyTo(IXLColumn column)
         {
             column.Clear();
-            AsRange().CopyTo(column).Column(1);
+            using (var asRange = AsRange())
+                using (var copy = asRange.CopyTo(column))
+                    copy.Column(1);
 
 
             var newColumn = (XLColumn)column;
@@ -565,7 +580,8 @@ namespace ClosedXML.Excel
             var retVal = new XLRangeColumns();
             var columnPairs = columns.Split(',');
             foreach (string pair in columnPairs)
-                AsRange().Columns(pair.Trim()).ForEach(retVal.Add);
+                using (var asRange = AsRange())
+                    asRange.Columns(pair.Trim()).ForEach(retVal.Add);
             return retVal;
         }
 
@@ -584,7 +600,17 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLRangeColumn ColumnUsed(Boolean includeFormats = false)
+        {
+            return Column(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
+        }
+
         #endregion
+
+        public override XLRange AsRange()
+        {
+            return Range(1, 1, ExcelHelper.MaxRowNumber, 1);
+        }
 
         private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
@@ -694,10 +720,5 @@ namespace ClosedXML.Excel
         }
 
         #endregion
-
-        public IXLRangeColumn ColumnUsed(Boolean includeFormats = false)
-        {
-            return Column(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
-        }
     }
 }

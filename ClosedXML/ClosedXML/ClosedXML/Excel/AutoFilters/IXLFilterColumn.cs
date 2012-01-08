@@ -1,8 +1,6 @@
 ﻿using System;
 namespace ClosedXML.Excel
 {
-    using System.Collections.Generic;
-
     public enum XLTopBottomType { Items, Percent }
     public interface IXLFilterColumn
     {
@@ -31,12 +29,18 @@ namespace ClosedXML.Excel
         IXLFilterConnector NotContains(String value);
 
         XLFilterType FilterType { get; set; }
-
         Int32 TopBottomValue { get; set; }
         XLTopBottomType TopBottomType { get; set; }
         XLTopBottomPart TopBottomPart { get; set; }
-
         XLFilterDynamicType DynamicType { get; set; }
         Double DynamicValue { get; set; }
+
+        IXLFilterColumn SetFilterType(XLFilterType value);
+        IXLFilterColumn SetTopBottomValue(Int32 value);
+        IXLFilterColumn SetTopBottomType(XLTopBottomType value);
+        IXLFilterColumn SetTopBottomPart(XLTopBottomPart value);
+        IXLFilterColumn SetDynamicType(XLFilterDynamicType value);
+        IXLFilterColumn SetDynamicValue(Double value);
+
     }
 }

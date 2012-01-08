@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
         Simple = 1,
     }
 
-    public partial class XLWorkbook
+    public partial class XLWorkbook: IDisposable
     {
         #region Static
 
@@ -601,5 +601,11 @@ namespace ClosedXML.Excel
         }
 
         internal XLIdManager ShapeIdManager { get; private set; }
+
+
+        public void Dispose()
+        {
+            Worksheets.ForEach(w => w.Dispose());
+        }
     }
 }

@@ -117,6 +117,8 @@ namespace ClosedXML_Examples.Misc
             rng7Validation.Decimal.EqualTo(5);
             rng7Validation.IgnoreBlanks = true;
 
+            ws.CopyTo(ws.Name + " - Copy");
+            ws2.CopyTo(ws2.Name + " - Copy");
             wb.SaveAs(filePath);
         }
 

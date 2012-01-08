@@ -273,5 +273,11 @@ namespace ClosedXML.Excel
             _columns.ForEach(c=>c.Clear(clearOptions));
             return this;
         }
+
+        public void Dispose()
+        {
+            if (_columns != null)
+                _columns.ForEach(c => c.Dispose());
+        }
     }
 }

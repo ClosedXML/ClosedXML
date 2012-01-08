@@ -56,10 +56,10 @@ namespace ClosedXML.Excel
         IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight);
 
         /// <summary>Hides this row.</summary>
-        void Hide();
+        IXLRow Hide();
 
         /// <summary>Unhides this row.</summary>
-        void Unhide();
+        IXLRow Unhide();
 
         /// <summary>
         /// Gets a value indicating whether this row is hidden or not.
@@ -80,43 +80,43 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Adds this row to the next outline level (Increments the outline level for this row by 1).
         /// </summary>
-        void Group();
+        IXLRow Group();
 
         /// <summary>
         /// Adds this row to the next outline level (Increments the outline level for this row by 1).
         /// </summary>
         /// <param name="collapse">If set to <c>true</c> the row will be shown collapsed.</param>
-        void Group(Boolean collapse);
+        IXLRow Group(Boolean collapse);
 
         /// <summary>
         /// Sets outline level for this row.
         /// </summary>
         /// <param name="outlineLevel">The outline level.</param>
-        void Group(Int32 outlineLevel);
+        IXLRow Group(Int32 outlineLevel);
 
         /// <summary>
         /// Sets outline level for this row.
         /// </summary>
         /// <param name="outlineLevel">The outline level.</param>
         /// <param name="collapse">If set to <c>true</c> the row will be shown collapsed.</param>
-        void Group(Int32 outlineLevel, Boolean collapse);
+        IXLRow Group(Int32 outlineLevel, Boolean collapse);
 
         /// <summary>
         /// Adds this row to the previous outline level (decrements the outline level for this row by 1).
         /// </summary>
-        void Ungroup();
+        IXLRow Ungroup();
 
 
         /// <summary>
         /// Adds this row to the previous outline level (decrements the outline level for this row by 1).
         /// </summary>
         /// <param name="fromAll">If set to <c>true</c> it will remove this row from all outline levels.</param>
-        void Ungroup(Boolean fromAll);
+        IXLRow Ungroup(Boolean fromAll);
 
         /// <summary>
         /// Show this row as collapsed.
         /// </summary>
-        void Collapse();
+        IXLRow Collapse();
 
         /// <summary>
         /// Gets the cell in the specified column.
@@ -150,7 +150,7 @@ namespace ClosedXML.Excel
         IXLCells Cells(String firstColumn, String lastColumn);
 
         /// <summary>Expands this row (if it's collapsed).</summary>
-        void Expand();
+        IXLRow Expand();
 
         Int32 CellCount();
 

@@ -1151,7 +1151,9 @@ namespace ClosedXML.Excel
 
             foreach (DataValidation dvs in dataValidations.Elements<DataValidation>())
             {
-                foreach (var dvt in dvs.SequenceOfReferences.InnerText.Split(' ').Select(rangeAddress => ws.Range(rangeAddress).DataValidation))
+                String txt = dvs.SequenceOfReferences.InnerText;
+                if (StringExtensions.IsNullOrWhiteSpace(txt)) continue;
+                foreach (var dvt in txt.Split(' ').Select(rangeAddress => ws.Range(rangeAddress).DataValidation))
                 {
                     if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
                     if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;

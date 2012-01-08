@@ -15,8 +15,8 @@ namespace ClosedXML.Excel
 
             if (!xlRangeParameters.IgnoreEvents)
             {
-                Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
-                Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
+                SubscribeToShiftedRows((range, rowsShifted) => WorksheetRangeShiftedRows(range, rowsShifted));
+                SubscribeToShiftedColumns((range, columnsShifted) => WorksheetRangeShiftedColumns(range, columnsShifted));
                 xlRangeParameters.IgnoreEvents = true;
             }
             SetStyle(xlRangeParameters.DefaultStyle);
@@ -109,6 +109,21 @@ namespace ClosedXML.Excel
             Int32 columnCount = ColumnCount();
             for (Int32 c = 1; c <= columnCount; c++ )
                 retVal.Add(Column(c));
+            return retVal;
+        }
+
+        public IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate)
+        {
+            var retVal = new XLRangeColumns();
+            Int32 columnCount = ColumnCount();
+            for (Int32 c = 1; c <= columnCount; c++)
+            {
+                var column = Column(c);
+                if (predicate(column))
+                    retVal.Add(column);
+                else
+                    column.Dispose();
+            }
             return retVal;
         }
 
@@ -219,6 +234,21 @@ namespace ClosedXML.Excel
             Int32 rowCount = RowCount();
             for (Int32 r = 1; r <= rowCount; r++ )
                 retVal.Add(Row(r));
+            return retVal;
+        }
+
+        public IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate)
+        {
+            var retVal = new XLRangeRows();
+            Int32 rowCount = RowCount();
+            for (Int32 r = 1; r <= rowCount; r++)
+            {
+                var row = Row(r);
+                if (predicate(row))
+                    retVal.Add(Row(r));
+                else
+                    row.Dispose();
+            }
             return retVal;
         }
 

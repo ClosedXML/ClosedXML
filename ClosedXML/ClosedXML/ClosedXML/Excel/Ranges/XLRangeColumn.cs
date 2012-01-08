@@ -12,8 +12,8 @@
         {
             if (quickLoad) return;
 
-            Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
-            Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
+            SubscribeToShiftedRows((range, rowsShifted) => WorksheetRangeShiftedRows(range, rowsShifted));
+            SubscribeToShiftedColumns((range, columnsShifted) => WorksheetRangeShiftedColumns(range, columnsShifted));
             SetStyle(rangeParameters.DefaultStyle);
         }
 
@@ -317,22 +317,26 @@
 
         public IXLTable AsTable()
         {
-            return AsRange().AsTable();
+            using (var asRange = AsRange())
+               return asRange.AsTable(); 
         }
 
         public IXLTable AsTable(string name)
         {
-            return AsRange().AsTable(name);
+            using (var asRange = AsRange())
+                return asRange.AsTable(name);
         }
 
         public IXLTable CreateTable()
         {
-            return AsRange().CreateTable();
+            using (var asRange = AsRange())
+                return asRange.CreateTable();
         }
 
         public IXLTable CreateTable(string name)
         {
-            return AsRange().CreateTable(name);
+            using (var asRange = AsRange())
+                return asRange.CreateTable(name);
         }
 
         public new IXLRangeColumn Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
@@ -345,5 +349,6 @@
         {
             return Column(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
         }
+
     }
 }

@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLRowsCollection : IDictionary<Int32, XLRow>
+    internal class XLRowsCollection : IDictionary<Int32, XLRow>, IDisposable
     {
         private readonly Dictionary<Int32, XLRow> _deleted = new Dictionary<Int32, XLRow>();
         private readonly Dictionary<Int32, XLRow> _dictionary = new Dictionary<Int32, XLRow>();
@@ -138,6 +138,11 @@ namespace ClosedXML.Excel
             }
 
             _dictionary.RemoveAll(predicate);
+        }
+
+        public void Dispose()
+        {
+            _dictionary.Values.ForEach(r=>r.Dispose());
         }
     }
 }

@@ -147,9 +147,15 @@ namespace ClosedXML.Excel
 
         public void CopyFrom(IXLDataValidation dataValidation)
         {
-            if (Ranges == null)
-                Ranges = new XLRanges();
-            //dataValidation.Ranges.ForEach(r => Ranges.Add(r));
+            if (dataValidation == this) return;
+
+            if (Ranges != null)
+                Ranges.Dispose();
+            
+            Ranges = new XLRanges();
+            
+            if (dataValidation.Ranges != null)
+                dataValidation.Ranges.ForEach(r => Ranges.Add(r));
 
             IgnoreBlanks = dataValidation.IgnoreBlanks;
             InCellDropdown = dataValidation.InCellDropdown;

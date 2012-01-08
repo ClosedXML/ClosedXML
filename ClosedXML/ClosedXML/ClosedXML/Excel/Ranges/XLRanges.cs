@@ -8,9 +8,7 @@ namespace ClosedXML.Excel
 
     internal class XLRanges : IXLRanges, IXLStylized
     {
-        public Boolean StyleChanged { get; set; }
         private readonly List<XLRange> _ranges = new List<XLRange>();
-        private Int32 _count;
         private IXLStyle _style;
 
         public XLRanges()
@@ -28,7 +26,7 @@ namespace ClosedXML.Excel
 
         public void Add(IXLRangeBase range)
         {
-            _count++;
+            Count++;
             _ranges.Add(range.AsRange() as XLRange);
         }
 
@@ -37,25 +35,13 @@ namespace ClosedXML.Excel
             Add(cell.AsRange());
         }
 
-        //public void Add(String rangeAddress)
-        //{
-        //    count++;
-        //    var byExclamation = rangeAddress.Split('!');
-        //    var wsName = byExclamation[0].Replace("'", "");
-        //    var rng = byExclamation[1];
-        //    var rangeToAdd = workbook.Worksheets.Worksheet(wsName).Range(rng);
-        //    ranges.Add((XLRange)rangeToAdd);
-        //}
         public void Remove(IXLRange range)
         {
-            _count--;
+            Count--;
             _ranges.RemoveAll(r => r.ToString() == range.ToString());
         }
 
-        public Int32 Count
-        {
-            get { return _count; }
-        }
+        public int Count { get; private set; }
 
         public IEnumerator<IXLRange> GetEnumerator()
         {
@@ -97,9 +83,7 @@ namespace ClosedXML.Excel
                         {
                             dv.Ranges.Remove(dvRange);
                             foreach (IXLCell c in dvRange.Cells().Where(c => !range.Contains(c.Address.ToString())))
-                            {
                                 dv.Ranges.Add(c.AsRange());
-                            }
                         }
                     }
                 }
@@ -167,9 +151,16 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public void Dispose()
+        {
+            _ranges.ForEach(r => r.Dispose());
+        }
+
         #endregion
 
         #region IXLStylized Members
+
+        public Boolean StyleChanged { get; set; }
 
         public IEnumerable<IXLStyle> Styles
         {
@@ -217,7 +208,8 @@ namespace ClosedXML.Excel
         {
             var other = (XLRanges)obj;
 
-            return _ranges.Count == other._ranges.Count && _ranges.Select(thisRange => Enumerable.Contains(other._ranges, thisRange)).All(foundOne => foundOne);
+            return _ranges.Count == other._ranges.Count &&
+                   _ranges.Select(thisRange => Enumerable.Contains(other._ranges, thisRange)).All(foundOne => foundOne);
         }
 
         public override int GetHashCode()

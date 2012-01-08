@@ -12,13 +12,14 @@
         {
             RangeParameters = rangeParameters;
             if (quickLoad) return;
-            Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
-            Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
+            SubscribeToShiftedRows((range, rowsShifted) => WorksheetRangeShiftedRows(range, rowsShifted));
+            SubscribeToShiftedColumns((range, columnsShifted) => WorksheetRangeShiftedColumns(range, columnsShifted));
             SetStyle(rangeParameters.DefaultStyle);
         }
 
         #endregion
 
+        
         public XLRangeParameters RangeParameters { get; private set; }
 
         #region IXLRangeRow Members
@@ -334,5 +335,6 @@
         {
             return Row(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
         }
+
     }
 }

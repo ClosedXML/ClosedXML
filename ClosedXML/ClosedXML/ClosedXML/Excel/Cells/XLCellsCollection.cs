@@ -88,8 +88,9 @@ namespace ClosedXML.Excel
             //_cells[row, column] = null;
         }
 
-        public IEnumerable<XLCell> GetCells(Int32 rowStart, Int32 columnStart,
-                                            Int32 rowEnd, Int32 columnEnd)
+        internal IEnumerable<XLCell> GetCells(Int32 rowStart, Int32 columnStart,
+                                            Int32 rowEnd, Int32 columnEnd, 
+                                            Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -98,43 +99,65 @@ namespace ClosedXML.Excel
                 for (int co = columnStart; co <= finalColumn; co++)
                 {
                     XLCell cell;
-                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell))
+                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell) 
+                        && (predicate == null || predicate(cell)))
+                        yield return cell;
+                }
+            }
+        }
+
+
+        internal IEnumerable<XLCell> GetCellsUsed(Int32 rowStart, Int32 columnStart,
+                                    Int32 rowEnd, Int32 columnEnd,
+                                    Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
+        {
+            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
+            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
+            for (int ro = rowStart; ro <= finalRow; ro++)
+            {
+                for (int co = columnStart; co <= finalColumn; co++)
+                {
+                    XLCell cell;
+                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell) 
+                        && !cell.IsEmpty(includeFormats)
+                        && (predicate == null || predicate(cell)))
                         yield return cell;
                 }
             }
         }
 
         public XLSheetPoint FirstPointUsed(Int32 rowStart, Int32 columnStart,
-                                    Int32 rowEnd, Int32 columnEnd, Boolean includeFormats)
+                                    Int32 rowEnd, Int32 columnEnd, Boolean includeFormats = false, Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
 
-            var firstRow = FirstRowUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats);
+            var firstRow = FirstRowUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
             if (firstRow == 0) return new XLSheetPoint(0,0);
 
-            var firstColumn = FirstColumnUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats);
+            var firstColumn = FirstColumnUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
             if (firstColumn == 0) return new XLSheetPoint(0, 0);
 
             return new XLSheetPoint(firstRow, firstColumn);
         }
 
         public XLSheetPoint LastPointUsed(Int32 rowStart, Int32 columnStart,
-                            Int32 rowEnd, Int32 columnEnd, Boolean includeFormats)
+                            Int32 rowEnd, Int32 columnEnd, Boolean includeFormats = false, Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
 
-            var firstRow = LastRowUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats);
+            var firstRow = LastRowUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
             if (firstRow == 0) return new XLSheetPoint(0, 0);
 
-            var firstColumn = LastColumnUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats);
+            var firstColumn = LastColumnUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
             if (firstColumn == 0) return new XLSheetPoint(0, 0);
 
             return new XLSheetPoint(firstRow, firstColumn);
         }
 
-        public int FirstRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats)
+        public int FirstRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, 
+            Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -144,14 +167,15 @@ namespace ClosedXML.Excel
                 {
                     XLCell cell;
                     if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
-                        && !cell.IsEmpty(includeFormats))
+                        && !cell.IsEmpty(includeFormats)
+                        && (predicate == null || predicate(cell)))
                         return ro;
                 }
             }
             return 0;
         }
 
-        public int FirstColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats)
+        public int FirstColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -161,7 +185,8 @@ namespace ClosedXML.Excel
                 {
                     XLCell cell;
                     if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
-                        && !cell.IsEmpty(includeFormats))
+                        && !cell.IsEmpty(includeFormats)
+                        && (predicate == null || predicate(cell)))
                         return co;
                 }
             }
@@ -169,7 +194,7 @@ namespace ClosedXML.Excel
         }
 
 
-        public int LastRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats)
+        public int LastRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -179,14 +204,15 @@ namespace ClosedXML.Excel
                 {
                     XLCell cell;
                     if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
-                        && !cell.IsEmpty(includeFormats))
+                        && !cell.IsEmpty(includeFormats)
+                        && (predicate == null || predicate(cell)))
                         return ro;
                 }
             }
             return 0;
         }
 
-        public int LastColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats)
+        public int LastColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -196,7 +222,8 @@ namespace ClosedXML.Excel
                 {
                     XLCell cell;
                     if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
-                        && !cell.IsEmpty(includeFormats))
+                        && !cell.IsEmpty(includeFormats)
+                        && (predicate == null || predicate(cell)))
                         return co;
                 }
             }
@@ -289,14 +316,14 @@ namespace ClosedXML.Excel
             return GetCells(1, 1, MaxRowUsed, MaxColumnUsed);
         }
 
-        internal IEnumerable<XLCell> GetCells(Func<XLCell, Boolean> predicate)
+        internal IEnumerable<XLCell> GetCells(Func<IXLCell, Boolean> predicate)
         {
             for (int ro = 1; ro <= MaxRowUsed; ro++)
             {
                 for (int co = 1; co <= MaxColumnUsed; co++)
                 {
-                    var cell = GetCell(ro, co);
-                    if (cell != null && predicate(cell))
+                    XLCell cell;
+                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell) && predicate(cell))
                         yield return cell;
                 }
             }
@@ -309,9 +336,10 @@ namespace ClosedXML.Excel
 
         public Int32 MinRowInColumn(Int32 column)
         {
+            XLCell cell;
             for (int row = 1; row <= MaxRowUsed; row++)
             {
-                if (GetCell(row, column) != null)
+                if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
                     return row;
             }
 
@@ -320,9 +348,10 @@ namespace ClosedXML.Excel
 
         public Int32 MaxRowInColumn(Int32 column)
         {
+            XLCell cell;
             for (int row = MaxRowUsed; row >= 1; row--)
             {
-                if (GetCell(row, column) != null)
+                if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
                     return row;
             }
 
@@ -331,9 +360,10 @@ namespace ClosedXML.Excel
 
         public Int32 MinColumnInRow(Int32 row)
         {
+            XLCell cell;
             for (int column = 1; column <= MaxColumnUsed; column++)
             {
-                if (GetCell(row, column) != null)
+                if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
                     return column;
             }
 
@@ -342,9 +372,10 @@ namespace ClosedXML.Excel
 
         public Int32 MaxColumnInRow(Int32 row)
         {
+            XLCell cell;
             for (int column = MaxColumnUsed; column >= 1; column--)
             {
-                if (GetCell(row, column) != null)
+                if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
                     return column;
             }
 

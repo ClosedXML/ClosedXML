@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRanges: IEnumerable<IXLRange>
+    public interface IXLRanges: IEnumerable<IXLRange>, IDisposable
     {
         /// <summary>
         /// Adds the specified range to this group.

@@ -1,8 +1,6 @@
 ﻿using System;
 namespace ClosedXML.Excel
 {
-    using System.Collections.Generic;
-
     public interface IXLCustomFilteredColumn
     {
         void EqualTo<T>(T value) where T : IComparable<T>;

@@ -241,6 +241,9 @@ namespace ClosedXML.Excel
 
         IXLRangeRows RowsUsed(Boolean includeFormats = false);
         IXLRangeColumns ColumnsUsed(Boolean includeFormats = false);
+
+        IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate);
+        IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate);
     }
 }
 

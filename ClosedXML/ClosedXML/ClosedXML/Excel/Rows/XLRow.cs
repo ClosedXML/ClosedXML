@@ -13,7 +13,6 @@ namespace ClosedXML.Excel
         private Boolean _isHidden;
         private Int32 _outlineLevel;
 
-
         #endregion
 
         #region Constructor
@@ -27,13 +26,9 @@ namespace ClosedXML.Excel
 
             IsReference = xlRowParameters.IsReference;
             if (IsReference)
-            {
-                //SMELL: Leak may occur
-                Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
-            }
+                SubscribeToShiftedRows(WorksheetRangeShiftedRows);
             else
             {
-                //_style = new XLStyle(this, xlRowParameters.DefaultStyle);
                 SetStyle(xlRowParameters.DefaultStyleId);
                 _height = xlRowParameters.Worksheet.RowHeight;
             }
@@ -46,6 +41,9 @@ namespace ClosedXML.Excel
         {
             _height = row._height;
             IsReference = row.IsReference;
+            if (IsReference)
+                SubscribeToShiftedRows(WorksheetRangeShiftedRows);
+
             _collapsed = row._collapsed;
             _isHidden = row._isHidden;
             _outlineLevel = row._outlineLevel;
@@ -66,7 +64,7 @@ namespace ClosedXML.Excel
 
                 int row = RowNumber();
 
-                foreach (var cell in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
+                foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
                     yield return cell.Style;
 
                 UpdatingStyle = false;
@@ -121,7 +119,9 @@ namespace ClosedXML.Excel
         public void Delete()
         {
             int rowNumber = RowNumber();
-            AsRange().Delete(XLShiftDeletedCells.ShiftCellsUp);
+            using (var asRange = AsRange())
+                asRange.Delete(XLShiftDeletedCells.ShiftCellsUp);
+
             Worksheet.Internals.RowsCollection.Remove(rowNumber);
             var rowsToMove = new List<Int32>();
             rowsToMove.AddRange(Worksheet.Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key));
@@ -136,8 +136,13 @@ namespace ClosedXML.Excel
         {
             int rowNum = RowNumber();
             Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum + 1, numberOfRows);
-            var range = (XLRange)Worksheet.Row(rowNum).AsRange();
-            range.InsertRowsBelow(true, numberOfRows);
+            using (var row = Worksheet.Row(rowNum))
+            {
+                using (var asRange = row.AsRange())
+                {
+                    asRange.InsertRowsBelow(true, numberOfRows).Dispose();
+                }
+            }
             return Worksheet.Rows(rowNum + 1, rowNum + numberOfRows);
         }
 
@@ -145,10 +150,14 @@ namespace ClosedXML.Excel
         {
             int rowNum = RowNumber();
             Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum, numberOfRows);
-            // We can't use this.AsRange() because we've shifted the rows
-            // and we want to use the old rowNum.
-            var range = (XLRange)Worksheet.Row(rowNum).AsRange();
-            range.InsertRowsAbove(true, numberOfRows);
+            using (var row = Worksheet.Row(rowNum))
+            {
+                using (var asRange = row.AsRange())
+                {
+                    asRange.InsertRowsAbove(true, numberOfRows).Dispose();
+                }
+            }
+
             return Worksheet.Rows(rowNum, rowNum + numberOfRows - 1);
         }
 
@@ -293,14 +302,16 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public void Hide()
+        public IXLRow Hide()
         {
             IsHidden = true;
+            return this;
         }
 
-        public void Unhide()
+        public IXLRow Unhide()
         {
             IsHidden = false;
+            return this;
         }
 
         public Boolean IsHidden
@@ -353,11 +364,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IXLRange AsRange()
-        {
-            return Range(1, 1, 1, ExcelHelper.MaxColumnNumber);
-        }
-
         public Int32 OutlineLevel
         {
             get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].OutlineLevel : _outlineLevel; }
@@ -377,36 +383,38 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void Group()
+        public IXLRow Group()
         {
-            Group(false);
+            return Group(false);
         }
 
-        public void Group(Int32 outlineLevel)
+        public IXLRow Group(Int32 outlineLevel)
         {
-            Group(outlineLevel, false);
+            return Group(outlineLevel, false);
         }
 
-        public void Ungroup()
+        public IXLRow Ungroup()
         {
-            Ungroup(false);
+            return Ungroup(false);
         }
 
-        public void Group(Boolean collapse)
+        public IXLRow Group(Boolean collapse)
         {
             if (OutlineLevel < 8)
                 OutlineLevel += 1;
 
             Collapsed = collapse;
+            return this;
         }
 
-        public void Group(Int32 outlineLevel, Boolean collapse)
+        public IXLRow Group(Int32 outlineLevel, Boolean collapse)
         {
             OutlineLevel = outlineLevel;
             Collapsed = collapse;
+            return this;
         }
 
-        public void Ungroup(Boolean ungroupFromAll)
+        public IXLRow Ungroup(Boolean ungroupFromAll)
         {
             if (ungroupFromAll)
                 OutlineLevel = 0;
@@ -415,18 +423,19 @@ namespace ClosedXML.Excel
                 if (OutlineLevel > 0)
                     OutlineLevel -= 1;
             }
+            return this;
         }
 
-        public void Collapse()
+        public IXLRow Collapse()
         {
             Collapsed = true;
-            Hide();
+            return Hide();
         }
 
-        public void Expand()
+        public IXLRow Expand()
         {
             Collapsed = false;
-            Unhide();
+            return Unhide();
         }
 
         public Int32 CellCount()
@@ -439,7 +448,8 @@ namespace ClosedXML.Excel
             return SortLeftToRight();
         }
 
-        public new IXLRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        public new IXLRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false,
+                                          Boolean ignoreBlanks = true)
         {
             base.SortLeftToRight(sortOrder, matchCase, ignoreBlanks);
             return this;
@@ -447,18 +457,23 @@ namespace ClosedXML.Excel
 
         IXLRangeRow IXLRow.CopyTo(IXLCell target)
         {
-            return AsRange().CopyTo(target).Row(1);
+            using (var asRange = AsRange())
+                using (var copy = asRange.CopyTo(target))
+                    return copy.Row(1);
         }
 
         IXLRangeRow IXLRow.CopyTo(IXLRangeBase target)
         {
-            return AsRange().CopyTo(target).Row(1);
+            using (var asRange = AsRange())
+                using (var copy = asRange.CopyTo(target))
+                    return copy.Row(1);
         }
 
         public IXLRow CopyTo(IXLRow row)
         {
             row.Clear();
-            AsRange().CopyTo(row);
+            using (var asRange = AsRange())
+                asRange.CopyTo(row).Dispose();
 
             var newRow = (XLRow)row;
             newRow._height = _height;
@@ -483,7 +498,8 @@ namespace ClosedXML.Excel
             var retVal = new XLRangeRows();
             var rowPairs = rows.Split(',');
             foreach (string pair in rowPairs)
-                AsRange().Rows(pair.Trim()).ForEach(retVal.Add);
+                using (var asRange = AsRange())
+                    asRange.Rows(pair.Trim()).ForEach(retVal.Add);
             return retVal;
         }
 
@@ -499,7 +515,17 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLRangeRow RowUsed(Boolean includeFormats = false)
+        {
+            return Row(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
+        }
+
         #endregion
+
+        public override XLRange AsRange()
+        {
+            return Range(1, 1, 1, ExcelHelper.MaxColumnNumber);
+        }
 
         private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
@@ -614,10 +640,5 @@ namespace ClosedXML.Excel
         }
 
         #endregion
-
-        public IXLRangeRow RowUsed(Boolean includeFormats = false)
-        {
-            return Row(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
-        }
     }
 }

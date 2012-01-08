@@ -5,16 +5,29 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLFilterConnector: IXLFilterConnector
+    internal class XLFilterConnector : IXLFilterConnector
     {
-        XLAutoFilter _autoFilter;
-        Int32 _column;
+        private readonly XLAutoFilter _autoFilter;
+        private readonly Int32 _column;
+
         public XLFilterConnector(XLAutoFilter autoFilter, Int32 column)
         {
             _autoFilter = autoFilter;
             _column = column;
         }
-        public IXLCustomFilteredColumn And { get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.And); } }
-        public IXLCustomFilteredColumn Or { get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.Or); } }
+
+        #region IXLFilterConnector Members
+
+        public IXLCustomFilteredColumn And
+        {
+            get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.And); }
+        }
+
+        public IXLCustomFilteredColumn Or
+        {
+            get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.Or); }
+        }
+
+        #endregion
     }
 }

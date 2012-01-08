@@ -1,6 +1,7 @@
-﻿namespace ClosedXML.Excel
+﻿using System;
+namespace ClosedXML.Excel
 {
-    internal class XLWorksheetInternals
+    internal class XLWorksheetInternals: IDisposable
     {
         public XLWorksheetInternals(
             XLCellsCollection cellsCollection, 
@@ -19,5 +20,12 @@
         public XLColumnsCollection ColumnsCollection { get; private set; }
         public XLRowsCollection RowsCollection { get; private set; }
         public XLRanges MergedRanges { get; internal set; }
+
+        public void Dispose()
+        {
+            ColumnsCollection.Dispose();
+            RowsCollection.Dispose();
+            MergedRanges.Dispose();
+        }
     }
 }

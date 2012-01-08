@@ -11,11 +11,11 @@
     using System.Text.RegularExpressions;
 #if NET4
     using System.ComponentModel.DataAnnotations;
+
 #endif
 
     internal class XLCell : IXLCell, IXLStylized
     {
-        public Boolean StyleChanged { get; set; }
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
         private static Dictionary<int, string> _formatCodes;
 
@@ -26,10 +26,11 @@
 
         public static readonly Regex A1SimpleRegex = new Regex(
             //  @"(?<=\W)" // Start with non word
-             @"(?<Reference>" // Start Group to pick
+            @"(?<Reference>" // Start Group to pick
             + @"(?<Sheet>" // Start Sheet Name, optional
             + @"("
-            + @"\'([^\[\]\*/\\\?:\']+|\'\')\'" // Sheet name with special characters, surrounding apostrophes are required
+            + @"\'([^\[\]\*/\\\?:\']+|\'\')\'"
+            // Sheet name with special characters, surrounding apostrophes are required
             + @"|"
             + @"\'?\w+\'?" // Sheet name with letters and numbers, surrounding apostrophes are optional
             + @")"
@@ -59,29 +60,29 @@
             + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
             + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)"); // C:C
 
+        private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_");
+
         #region Fields
 
         private readonly XLWorksheet _worksheet;
 
         internal string _cellValue = String.Empty;
+        private XLComment _comment;
         internal XLCellValues _dataType;
         private XLHyperlink _hyperlink;
         private XLRichText _richText;
-        private XLComment _comment;
 
         #endregion
 
         #region Constructor
 
         private Int32 _styleCacheId;
+
         public XLCell(XLWorksheet worksheet, XLAddress address, Int32 styleId)
         {
             Address = address;
             ShareString = true;
-            
             _worksheet = worksheet;
-
-            //SetStyle(defaultStyle ?? worksheet.Style);
             SetStyle(styleId);
         }
 
@@ -89,6 +90,7 @@
         {
             return Worksheet.Workbook.GetStyleById(GetStyleId());
         }
+
         public Int32 GetStyleId()
         {
             if (StyleChanged)
@@ -96,12 +98,14 @@
 
             return _styleCacheId;
         }
+
         private void SetStyle(IXLStyle styleToUse)
         {
             _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
             _style = null;
             StyleChanged = false;
         }
+
         private void SetStyle(Int32 styleId)
         {
             _styleCacheId = styleId;
@@ -135,6 +139,39 @@
             }
         }
 
+        public XLDataValidation DataValidation
+        {
+            get
+            {
+                using (var asRange = AsRange())
+                {
+                    
+                }
+                return AsRange().DataValidation;
+            }
+        }
+
+        internal XLComment Comment
+        {
+            get
+            {
+                if (_comment == null)
+                {
+                    // MS Excel uses Tahoma 8 Swiss no matter what current style font
+                    // var style = GetStyleForRead();
+                    var defaultFont = new XLFont
+                                          {
+                                              FontName = "Tahoma",
+                                              FontSize = 8,
+                                              FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
+                                          };
+                    _comment = new XLComment(this, defaultFont);
+                }
+
+                return _comment;
+            }
+        }
+
         #region IXLCell Members
 
         IXLWorksheet IXLCell.Worksheet
@@ -145,11 +182,6 @@
         IXLAddress IXLCell.Address
         {
             get { return Address; }
-        }
-
-        public XLRange AsRange()
-        {
-            return _worksheet.Range(Address, Address);
         }
 
         IXLRange IXLCell.AsRange()
@@ -213,7 +245,6 @@
             return this;
         }
 
-        private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_");
         public T GetValue<T>()
         {
             if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
@@ -231,12 +262,12 @@
 
             if (typeof(T) == typeof(String))
             {
-                var valToUse = Value.ToString();
+                string valToUse = Value.ToString();
                 if (!utfPattern.Match(valToUse).Success)
                     return (T)Convert.ChangeType(Value, typeof(T));
                 else
                 {
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
                     Int32 lastIndex = 0;
                     foreach (Match match in utfPattern.Matches(valToUse))
                     {
@@ -286,7 +317,7 @@
         public string GetFormattedString()
         {
             if (FormulaA1.Length > 0) return String.Empty;
-            
+
             string cValue = _cellValue;
 
             if (_dataType == XLCellValues.Boolean)
@@ -348,7 +379,7 @@
                     }
 
                     if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
-                        w => String.Compare(w.Name, sName, true)==0)
+                        w => String.Compare(w.Name, sName, true) == 0)
                         && ExcelHelper.IsValidA1Address(cAddress)
                         )
                         return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
@@ -442,12 +473,13 @@
                     {
                         if (!isDataTable)
                             isDataTable = true;
-                       
+
                         if (!hasTitles)
                         {
-                            foreach (string fieldName in from DataColumn column in ((DataRow)m).Table.Columns select StringExtensions.IsNullOrWhiteSpace(column.Caption)
-                                                                                                                         ? column.ColumnName
-                                                                                                                         : column.Caption)
+                            foreach (string fieldName in from DataColumn column in ((DataRow)m).Table.Columns
+                                                         select StringExtensions.IsNullOrWhiteSpace(column.Caption)
+                                                                    ? column.ColumnName
+                                                                    : column.Caption)
                             {
                                 SetValue(fieldName, fRo, co);
                                 co++;
@@ -485,7 +517,7 @@
 
                         for (int i = 0; i < fieldCount; i++)
                         {
-                            SetValue(record[i] , ro, co);
+                            SetValue(record[i], ro, co);
                             co++;
                         }
                     }
@@ -648,22 +680,11 @@
             return null;
         }
 
-        private IXLStyle GetStyle()
-        {
-            //return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
-            if (_style != null)
-                return _style;
-
-            return _style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId));
-        }
         public IXLStyle Style
         {
             get { return GetStyle(); }
 
-            set
-            {
-                SetStyle(value);
-            }
+            set { SetStyle(value); }
         }
 
         public IXLCell SetDataType(XLCellValues dataType)
@@ -713,9 +734,7 @@
                         }
                         var style = GetStyleForRead();
                         if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                        {
                             Style.NumberFormat.NumberFormatId = _cellValue.Contains('.') ? 22 : 14;
-                        }
                     }
                     else if (value == XLCellValues.TimeSpan)
                     {
@@ -784,7 +803,7 @@
                 DataValidation.Clear();
                 SetStyle(Worksheet.Style);
             }
-            
+
             return this;
         }
 
@@ -805,8 +824,8 @@
                         _formulaA1 = GetFormulaA1(_formulaR1C1);
                         return FormulaA1;
                     }
-                    
-                        return String.Empty;
+
+                    return String.Empty;
                 }
 
                 if (_formulaA1.Trim()[0] == '=')
@@ -880,10 +899,6 @@
             }
         }
 
-        public XLDataValidation DataValidation
-        {
-            get { return AsRange().DataValidation; }
-        }
         IXLDataValidation IXLCell.DataValidation
         {
             get { return DataValidation; }
@@ -942,7 +957,9 @@
                 if (_richText == null)
                 {
                     var style = GetStyleForRead();
-                    _richText = _cellValue.Length == 0 ? new XLRichText(style.Font) : new XLRichText(GetFormattedString(), style.Font);
+                    _richText = _cellValue.Length == 0
+                                    ? new XLRichText(style.Font)
+                                    : new XLRichText(GetFormattedString(), style.Font);
 
                     _dataType = XLCellValues.Text;
                 }
@@ -956,30 +973,14 @@
             get { return _richText != null; }
         }
 
-        IXLComment IXLCell.Comment { get { return Comment; } }
-        internal XLComment Comment
+        IXLComment IXLCell.Comment
         {
-            get
-            {
-                if (_comment == null)
-                {
-                    // MS Excel uses Tahoma 8 Swiss no matter what current style font
-                    // var style = GetStyleForRead();
-                    var defaultFont = new XLFont() { FontName = "Tahoma", FontSize = 8, FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss };
-                    _comment = new XLComment(this, defaultFont);
-                }
-
-                return _comment;
-            }
+            get { return Comment; }
         }
 
         public bool HasComment
         {
             get { return _comment != null; }
-        }
-
-        public void DeleteComment() {
-            _comment = null;
         }
 
         public Boolean IsMerged()
@@ -1003,9 +1004,21 @@
             return true;
         }
 
+        public IXLColumn WorksheetColumn()
+        {
+            return Worksheet.Column(Address.ColumnNumber);
+        }
+
+        public IXLRow WorksheetRow()
+        {
+            return Worksheet.Row(Address.RowNumber);
+        }
+
         #endregion
 
         #region IXLStylized Members
+
+        public Boolean StyleChanged { get; set; }
 
         public IEnumerable<IXLStyle> Styles
         {
@@ -1035,6 +1048,25 @@
         }
 
         #endregion
+
+        public XLRange AsRange()
+        {
+            return _worksheet.Range(Address, Address);
+        }
+
+        private IXLStyle GetStyle()
+        {
+            //return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
+            if (_style != null)
+                return _style;
+
+            return _style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId));
+        }
+
+        public void DeleteComment()
+        {
+            _comment = null;
+        }
 
         private bool IsDateFormat()
         {
@@ -1085,7 +1117,6 @@
 
             if (asRange != null)
             {
-                
                 if (!(asRange is XLRow || asRange is XLColumn))
                 {
                     Int32 maxRows = asRange.RowCount();
@@ -1105,15 +1136,24 @@
 
                 var rangesToMerge = (from mergedRange in (asRange.Worksheet).Internals.MergedRanges
                                      where asRange.Contains(mergedRange)
-                                     let initialRo = Address.RowNumber + (mergedRange.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber)
-                                     let initialCo = Address.ColumnNumber + (mergedRange.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber)
-                                     select Worksheet.Range(initialRo, initialCo, initialRo + mergedRange.RowCount() - 1, initialCo + mergedRange.ColumnCount() - 1)).Cast<IXLRange>().ToList();
+                                     let initialRo =
+                                         Address.RowNumber +
+                                         (mergedRange.RangeAddress.FirstAddress.RowNumber -
+                                          asRange.RangeAddress.FirstAddress.RowNumber)
+                                     let initialCo =
+                                         Address.ColumnNumber +
+                                         (mergedRange.RangeAddress.FirstAddress.ColumnNumber -
+                                          asRange.RangeAddress.FirstAddress.ColumnNumber)
+                                     select
+                                         Worksheet.Range(initialRo, initialCo, initialRo + mergedRange.RowCount() - 1,
+                                                         initialCo + mergedRange.ColumnCount() - 1)).Cast<IXLRange>().
+                    ToList();
                 rangesToMerge.ForEach(r => r.Merge());
 
                 return true;
             }
-            
-                return false;
+
+            return false;
         }
 
         private bool SetEnumerable(object collectionObject)
@@ -1147,9 +1187,7 @@
             string val = value == null ? String.Empty : value.ToString();
             _richText = null;
             if (val.Length == 0)
-            {
                 _dataType = XLCellValues.Text;
-            }
             else
             {
                 double dTest;
@@ -1183,9 +1221,7 @@
                     _dataType = XLCellValues.DateTime;
 
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                    {
                         Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
-                    }
 
                     val = dtTest.ToOADate().ToString();
                 }
@@ -1421,9 +1457,7 @@
             rowNumber += rowsToShift;
             int rowDiff = rowNumber - Address.RowNumber;
             if (rowDiff != 0 || fixedRow)
-            {
                 rowPart = fixedRow ? String.Format("R{0}", rowNumber) : String.Format("R[{0}]", rowDiff);
-            }
             else
                 rowPart = "R";
 
@@ -1436,9 +1470,7 @@
             columnNumber += columnsToShift;
             int columnDiff = columnNumber - Address.ColumnNumber;
             if (columnDiff != 0 || fixedColumn)
-            {
                 columnPart = fixedColumn ? String.Format("C{0}", columnNumber) : String.Format("C[{0}]", columnDiff);
-            }
             else
                 columnPart = "C";
 
@@ -1472,10 +1504,12 @@
                 SettingHyperlink = false;
             }
 
-            var asRange = source.AsRange();
-            if (source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
-                DataValidation.CopyFrom(source.DataValidation);
-
+            using (var asRange = source.AsRange())
+            {
+                //if (DataValidation != source.DataValidation && source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
+                if (source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
+                    DataValidation.CopyFrom(source.DataValidation);
+            }
             return this;
         }
 
@@ -1484,11 +1518,12 @@
             _formulaA1 = ShiftFormulaRows(FormulaA1, Worksheet, shiftedRange, rowsShifted);
         }
 
-        internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange, int rowsShifted)
+        internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
+                                                int rowsShifted)
         {
             if (StringExtensions.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
-            string value = formulaA1;// ">" + formulaA1 + "<";
+            string value = formulaA1; // ">" + formulaA1 + "<";
 
             var regex = A1SimpleRegex;
 
@@ -1709,7 +1744,8 @@
             _formulaA1 = ShiftFormulaColumns(FormulaA1, Worksheet, shiftedRange, columnsShifted);
         }
 
-        internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange, int columnsShifted)
+        internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
+                                                   int columnsShifted)
         {
             if (StringExtensions.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
@@ -1944,117 +1980,125 @@
 
         // --
 
+        private XLCell CellShift(Int32 rowsToShift, Int32 columnsToShift)
+        {
+            return Worksheet.Cell(Address.RowNumber + rowsToShift, Address.ColumnNumber + columnsToShift);
+        }
+
+        private static String GetFieldName(Object[] customAttributes)
+        {
+#if NET4
+            var attribute = customAttributes.FirstOrDefault(a => a is DisplayAttribute);
+            return attribute != null ? (attribute as DisplayAttribute).Name : null;
+#else
+            return null;
+#endif
+        }
+
         #region Nested type: FormulaConversionType
 
         private enum FormulaConversionType
         {
             A1ToR1C1,
             R1C1ToA1
-        } ;
+        };
 
         #endregion
 
         #region XLCell Above
-        public XLCell CellAbove()
-        {
-            return CellAbove(1);
-        }
+
         IXLCell IXLCell.CellAbove()
         {
             return CellAbove();
         }
-        public XLCell CellAbove(Int32 step)
-        {
-            return CellShift(step * -1, 0);
-        }
+
         IXLCell IXLCell.CellAbove(Int32 step)
         {
             return CellAbove(step);
         }
+
+        public XLCell CellAbove()
+        {
+            return CellAbove(1);
+        }
+
+        public XLCell CellAbove(Int32 step)
+        {
+            return CellShift(step * -1, 0);
+        }
+
         #endregion
 
         #region XLCell Below
-        public XLCell CellBelow()
-        {
-            return CellBelow(1);
-        }
+
         IXLCell IXLCell.CellBelow()
         {
             return CellBelow();
         }
-        public XLCell CellBelow(Int32 step)
-        {
-            return CellShift(step, 0);
-        }
+
         IXLCell IXLCell.CellBelow(Int32 step)
         {
             return CellBelow(step);
         }
+
+        public XLCell CellBelow()
+        {
+            return CellBelow(1);
+        }
+
+        public XLCell CellBelow(Int32 step)
+        {
+            return CellShift(step, 0);
+        }
+
         #endregion
 
         #region XLCell Left
-        public XLCell CellLeft()
-        {
-            return CellLeft(1);
-        }
+
         IXLCell IXLCell.CellLeft()
         {
             return CellLeft();
         }
-        public XLCell CellLeft(Int32 step)
-        {
-            return CellShift(0, step * -1);
-        }
+
         IXLCell IXLCell.CellLeft(Int32 step)
         {
             return CellLeft(step);
         }
+
+        public XLCell CellLeft()
+        {
+            return CellLeft(1);
+        }
+
+        public XLCell CellLeft(Int32 step)
+        {
+            return CellShift(0, step * -1);
+        }
+
         #endregion
 
         #region XLCell Right
-        public XLCell CellRight()
-        {
-            return CellRight(1);
-        }
+
         IXLCell IXLCell.CellRight()
         {
             return CellRight();
         }
-        public XLCell CellRight(Int32 step)
-        {
-            return CellShift(0, step);
-        }
+
         IXLCell IXLCell.CellRight(Int32 step)
         {
             return CellRight(step);
         }
+
+        public XLCell CellRight()
+        {
+            return CellRight(1);
+        }
+
+        public XLCell CellRight(Int32 step)
+        {
+            return CellShift(0, step);
+        }
+
         #endregion
-
-        private XLCell CellShift(Int32 rowsToShift, Int32 columnsToShift)
-        {
-            return Worksheet.Cell(Address.RowNumber + rowsToShift, Address.ColumnNumber + columnsToShift);
-        }
-
-        public IXLColumn WorksheetColumn()
-        {
-            return Worksheet.Column(Address.ColumnNumber);
-        }
-        public IXLRow WorksheetRow()
-        {
-            return Worksheet.Row(Address.RowNumber);
-        }
-
-        private String GetFieldName(Object[] customAttributes)
-        {
-#if NET4
-            var displayAttributes = customAttributes.Where(a => a is DisplayAttribute).Select(a => (a as DisplayAttribute).Name);
-            if (displayAttributes.Any())
-                return displayAttributes.Single();
-            else
-                return null;
-#else
-            return null;
-#endif
-        }
     }
 }

@@ -85,10 +85,10 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Hides this column.
         /// </summary>
-        void Hide();
+        IXLColumn Hide();
 
         /// <summary>Unhides this column.</summary>
-        void Unhide();
+        IXLColumn Unhide();
 
         /// <summary>
         /// Gets a value indicating whether this column is hidden or not.
@@ -109,45 +109,45 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Adds this column to the next outline level (Increments the outline level for this column by 1).
         /// </summary>
-        void Group();
+        IXLColumn Group();
 
         /// <summary>
         /// Adds this column to the next outline level (Increments the outline level for this column by 1).
         /// </summary>
         /// <param name="collapse">If set to <c>true</c> the column will be shown collapsed.</param>
-        void Group(Boolean collapse);
+        IXLColumn Group(Boolean collapse);
 
         /// <summary>
         /// Sets outline level for this column.
         /// </summary>
         /// <param name="outlineLevel">The outline level.</param>
-        void Group(Int32 outlineLevel);
+        IXLColumn Group(Int32 outlineLevel);
 
         /// <summary>
         /// Sets outline level for this column.
         /// </summary>
         /// <param name="outlineLevel">The outline level.</param>
         /// <param name="collapse">If set to <c>true</c> the column will be shown collapsed.</param>
-        void Group(Int32 outlineLevel, Boolean collapse);
+        IXLColumn Group(Int32 outlineLevel, Boolean collapse);
 
         /// <summary>
         /// Adds this column to the previous outline level (decrements the outline level for this column by 1).
         /// </summary>
-        void Ungroup();
+        IXLColumn Ungroup();
 
         /// <summary>
         /// Adds this column to the previous outline level (decrements the outline level for this column by 1).
         /// </summary>
         /// <param name="fromAll">If set to <c>true</c> it will remove this column from all outline levels.</param>
-        void Ungroup(Boolean fromAll);
+        IXLColumn Ungroup(Boolean fromAll);
 
         /// <summary>
         /// Show this column as collapsed.
         /// </summary>
-        void Collapse();
+        IXLColumn Collapse();
 
         /// <summary>Expands this column (if it's collapsed).</summary>
-        void Expand();
+        IXLColumn Expand();
 
         Int32 CellCount();
 
