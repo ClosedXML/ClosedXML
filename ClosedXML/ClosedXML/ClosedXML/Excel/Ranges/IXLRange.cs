@@ -46,25 +46,25 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the first column of the range.
         /// </summary>
-        IXLRangeColumn FirstColumn();
+        IXLRangeColumn FirstColumn(Func<IXLRangeColumn, Boolean> predicate = null);
         /// <summary>
         /// Gets the first column of the range that contains a cell with a value.
         /// </summary>
-        IXLRangeColumn FirstColumnUsed();
-        IXLRangeColumn FirstColumnUsed(Boolean includeFormats);
+        IXLRangeColumn FirstColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn FirstColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null);
         /// <summary>
         /// Gets the last column of the range.
         /// </summary>
-        IXLRangeColumn LastColumn();
+        IXLRangeColumn LastColumn(Func<IXLRangeColumn, Boolean> predicate = null);
         /// <summary>
         /// Gets the last column of the range that contains a cell with a value.
         /// </summary>
-        IXLRangeColumn LastColumnUsed();
-        IXLRangeColumn LastColumnUsed(Boolean includeFormats);
+        IXLRangeColumn LastColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn LastColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null);
         /// <summary>
         /// Gets a collection of all columns in this range.
         /// </summary>
-        IXLRangeColumns Columns();
+        IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate = null);
         /// <summary>
         /// Gets a collection of the specified columns in this range.
         /// </summary>
@@ -87,30 +87,29 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the first row of the range.
         /// </summary>
-        IXLRangeRow FirstRow();
+        IXLRangeRow FirstRow(Func<IXLRangeRow, Boolean> predicate = null);
         /// <summary>
         /// Gets the first row of the range that contains a cell with a value.
         /// </summary>
-        IXLRangeRow FirstRowUsed();
-        IXLRangeRow FirstRowUsed(Boolean includeFormats);
+        IXLRangeRow FirstRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow FirstRowUsed(Func<IXLRangeRow, Boolean> predicate = null);
         /// <summary>
         /// Gets the last row of the range.
         /// </summary>
-        IXLRangeRow LastRow();
+        IXLRangeRow LastRow(Func<IXLRangeRow, Boolean> predicate = null);
         /// <summary>
         /// Gets the last row of the range that contains a cell with a value.
         /// </summary>
-        IXLRangeRow LastRowUsed();
-        IXLRangeRow LastRowUsed(Boolean includeFormats);
+        IXLRangeRow LastRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow LastRowUsed(Func<IXLRangeRow, Boolean> predicate = null);
         /// <summary>
         /// Gets the specified row of the range.
         /// </summary>
         /// <param name="row">The range row.</param>
         IXLRangeRow Row(int row);
-        /// <summary>
-        /// Gets a collection of all rows in this range.
-        /// </summary>
-        IXLRangeRows Rows();
+
+        IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate = null);
+
         /// <summary>
         /// Gets a collection of the specified rows in this range.
         /// </summary>
@@ -239,11 +238,10 @@ namespace ClosedXML.Excel
         /// <param name="clearOptions">Specify what you want to clear.</param>
         new IXLRange Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
 
-        IXLRangeRows RowsUsed(Boolean includeFormats = false);
-        IXLRangeColumns ColumnsUsed(Boolean includeFormats = false);
-
-        IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate);
-        IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate);
+        IXLRangeRows RowsUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRows RowsUsed(Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeColumns ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumns ColumnsUsed(Func<IXLRangeColumn, Boolean> predicate = null);
     }
 }
 

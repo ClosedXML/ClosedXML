@@ -354,7 +354,9 @@ namespace ClosedXML.Excel
 
         IXLBaseAutoFilter AutoFilter { get; }
 
-        IXLRows RowsUsed(Boolean includeFormats = false);
-        IXLColumns ColumnsUsed(Boolean includeFormats = false);
+        IXLRows RowsUsed(Boolean includeFormats = false, Func<IXLRow, Boolean> predicate = null);
+        IXLRows RowsUsed(Func<IXLRow, Boolean> predicate);
+        IXLColumns ColumnsUsed(Boolean includeFormats = false, Func<IXLColumn, Boolean> predicate = null);
+        IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate);
     }
 }

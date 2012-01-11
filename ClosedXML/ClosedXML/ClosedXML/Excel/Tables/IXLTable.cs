@@ -84,25 +84,12 @@ namespace ClosedXML.Excel
         IXLTableField Field(int fieldIndex);
         IEnumerable<IXLTableField> Fields { get; }
 
-        /// <summary>
-        ///   Gets the first data row of the table.
-        /// </summary>
-        IXLTableRow FirstRow();
-
-        /// <summary>
-        ///   Gets the first data row of the table that contains a cell with a value.
-        /// </summary>
-        IXLTableRow FirstRowUsed();
-
-        /// <summary>
-        ///   Gets the last data row of the table.
-        /// </summary>
-        IXLTableRow LastRow();
-
-        /// <summary>
-        ///   Gets the last data row of the table that contains a cell with a value.
-        /// </summary>
-        IXLTableRow LastRowUsed();
+        IXLTableRow FirstRow(Func<IXLTableRow, Boolean> predicate = null);
+        IXLTableRow FirstRowUsed(Boolean includeFormats, Func<IXLTableRow, Boolean> predicate = null);
+        IXLTableRow FirstRowUsed(Func<IXLTableRow, Boolean> predicate = null);
+        IXLTableRow LastRow(Func<IXLTableRow, Boolean> predicate = null);
+        IXLTableRow LastRowUsed(Boolean includeFormats, Func<IXLTableRow, Boolean> predicate = null);
+        IXLTableRow LastRowUsed(Func<IXLTableRow, Boolean> predicate = null);
 
         /// <summary>
         ///   Gets the specified row of the table data.
@@ -110,10 +97,7 @@ namespace ClosedXML.Excel
         /// <param name = "row">The table row.</param>
         IXLTableRow Row(int row);
 
-        /// <summary>
-        ///   Gets a collection of all data rows in this table.
-        /// </summary>
-        IXLTableRows Rows();
+        IXLTableRows Rows(Func<IXLRangeRow, Boolean> predicate = null);
 
         /// <summary>
         ///   Gets a collection of the specified data rows in this table.
@@ -178,30 +162,14 @@ namespace ClosedXML.Excel
         /// <param name = "column">The range column.</param>
         IXLRangeColumn Column(string column);
 
-        /// <summary>
-        ///   Gets the first column of the range.
-        /// </summary>
-        IXLRangeColumn FirstColumn();
-
-        /// <summary>
-        ///   Gets the first column of the range that contains a cell with a value.
-        /// </summary>
-        IXLRangeColumn FirstColumnUsed();
-
-        /// <summary>
-        ///   Gets the last column of the range.
-        /// </summary>
-        IXLRangeColumn LastColumn();
-
-        /// <summary>
-        ///   Gets the last column of the range that contains a cell with a value.
-        /// </summary>
-        IXLRangeColumn LastColumnUsed();
-
-        /// <summary>
-        ///   Gets a collection of all columns in this range.
-        /// </summary>
-        IXLRangeColumns Columns();
+        IXLRangeColumn FirstColumn(Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn FirstColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn FirstColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn LastColumn(Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn LastColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn LastColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null);
+        
+        IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate = null);
 
         /// <summary>
         ///   Gets a collection of the specified columns in this range.
@@ -357,5 +325,10 @@ namespace ClosedXML.Excel
         new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
 
         IXLBaseAutoFilter AutoFilter { get; }
+
+        IXLTableRows RowsUsed(Boolean includeFormats, Func<IXLTableRow, Boolean> predicate = null);
+        IXLTableRows RowsUsed(Func<IXLTableRow, Boolean> predicate = null);
+        IXLRangeColumns ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumns ColumnsUsed(Func<IXLRangeColumn, Boolean> predicate = null);
     }
 }

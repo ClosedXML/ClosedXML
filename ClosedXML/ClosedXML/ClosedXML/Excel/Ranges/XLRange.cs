@@ -15,8 +15,8 @@ namespace ClosedXML.Excel
 
             if (!xlRangeParameters.IgnoreEvents)
             {
-                SubscribeToShiftedRows((range, rowsShifted) => WorksheetRangeShiftedRows(range, rowsShifted));
-                SubscribeToShiftedColumns((range, columnsShifted) => WorksheetRangeShiftedColumns(range, columnsShifted));
+                SubscribeToShiftedRows(WorksheetRangeShiftedRows);
+                SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
                 xlRangeParameters.IgnoreEvents = true;
             }
             SetStyle(xlRangeParameters.DefaultStyle);
@@ -28,65 +28,6 @@ namespace ClosedXML.Excel
 
         #region IXLRange Members
 
-        IXLRangeColumn IXLRange.FirstColumn()
-        {
-            return FirstColumn();
-        }
-
-        IXLRangeColumn IXLRange.LastColumn()
-        {
-            return LastColumn();
-        }
-
-        IXLRangeColumn IXLRange.FirstColumnUsed()
-        {
-            return FirstColumnUsed();
-        }
-
-        IXLRangeColumn IXLRange.FirstColumnUsed(bool includeFormats)
-        {
-            return FirstColumnUsed(includeFormats);
-        }
-
-        IXLRangeColumn IXLRange.LastColumnUsed()
-        {
-            return LastColumnUsed();
-        }
-
-        IXLRangeColumn IXLRange.LastColumnUsed(bool includeFormats)
-        {
-            return LastColumnUsed(includeFormats);
-        }
-
-        IXLRangeRow IXLRange.FirstRow()
-        {
-            return FirstRow();
-        }
-
-        IXLRangeRow IXLRange.LastRow()
-        {
-            return LastRow();
-        }
-
-        IXLRangeRow IXLRange.LastRowUsed()
-        {
-            return LastRowUsed();
-        }
-
-        IXLRangeRow IXLRange.LastRowUsed(bool includeFormats)
-        {
-            return LastRowUsed(includeFormats);
-        }
-
-        IXLRangeRow IXLRange.FirstRowUsed()
-        {
-            return FirstRowUsed();
-        }
-
-        IXLRangeRow IXLRange.FirstRowUsed(bool includeFormats)
-        {
-            return FirstRowUsed(includeFormats);
-        }
 
         IXLRangeRow IXLRange.Row(Int32 row)
         {
@@ -103,23 +44,14 @@ namespace ClosedXML.Excel
             return Column(column);
         }
 
-        public IXLRangeColumns Columns()
-        {
-            var retVal = new XLRangeColumns();
-            Int32 columnCount = ColumnCount();
-            for (Int32 c = 1; c <= columnCount; c++ )
-                retVal.Add(Column(c));
-            return retVal;
-        }
-
-        public IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate)
+        public IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate = null)
         {
             var retVal = new XLRangeColumns();
             Int32 columnCount = ColumnCount();
             for (Int32 c = 1; c <= columnCount; c++)
             {
                 var column = Column(c);
-                if (predicate(column))
+                if (predicate == null || predicate(column))
                     retVal.Add(column);
                 else
                     column.Dispose();
@@ -228,23 +160,14 @@ namespace ClosedXML.Excel
             return Range(firstCellRow, firstCellColumn, lastCellRow, lastCellColumn);
         }
 
-        public IXLRangeRows Rows()
-        {
-            var retVal = new XLRangeRows();
-            Int32 rowCount = RowCount();
-            for (Int32 r = 1; r <= rowCount; r++ )
-                retVal.Add(Row(r));
-            return retVal;
-        }
-
-        public IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate)
+        public IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate = null)
         {
             var retVal = new XLRangeRows();
             Int32 rowCount = RowCount();
             for (Int32 r = 1; r <= rowCount; r++)
             {
                 var row = Row(r);
-                if (predicate(row))
+                if (predicate == null || predicate(row))
                     retVal.Add(Row(r));
                 else
                     row.Dispose();
@@ -428,92 +351,276 @@ namespace ClosedXML.Excel
             ShiftRows(RangeAddress, range, rowsShifted);
         }
 
-        public XLRangeColumn FirstColumn()
+        IXLRangeColumn IXLRange.FirstColumn(Func<IXLRangeColumn, Boolean> predicate)
         {
-            return Column(1);
+            return FirstColumn(predicate);
+        }
+        public XLRangeColumn FirstColumn(Func<IXLRangeColumn, Boolean> predicate = null)
+        {
+            if (predicate == null)
+                return Column(1);
+
+            Int32 columnCount = ColumnCount();
+            for (Int32 c = 1; c <= columnCount; c++)
+            {
+                var column = Column(c);
+                if (predicate(column)) return column;
+
+                column.Dispose();
+            }
+
+            return null;
         }
 
-        public IXLRangeColumn LastColumn()
+        IXLRangeColumn IXLRange.LastColumn(Func<IXLRangeColumn, Boolean> predicate)
         {
-            return Column(ColumnCount());
+            return LastColumn(predicate);
+        }
+        public XLRangeColumn LastColumn(Func<IXLRangeColumn, Boolean> predicate = null)
+        {
+            Int32 columnCount = ColumnCount();
+            if (predicate == null)
+                return Column(columnCount);
+
+            for (Int32 c = columnCount; c >= 1; c--)
+            {
+                var column = Column(c);
+                if (predicate(column)) return column;
+
+                column.Dispose();
+            }
+
+            return null;
         }
 
-        public XLRangeColumn FirstColumnUsed()
+        IXLRangeColumn IXLRange.FirstColumnUsed(Func<IXLRangeColumn, Boolean> predicate )
         {
-            return FirstColumnUsed(false);
+            return FirstColumnUsed(false, predicate);
+        }
+        public XLRangeColumn FirstColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null)
+        {
+            return FirstColumnUsed(false, predicate);
         }
 
-        public XLRangeColumn FirstColumnUsed(bool includeFormats)
+        IXLRangeColumn IXLRange.FirstColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate)
         {
-            Int32 firstColumnUsed = Worksheet.Internals.CellsCollection.FirstColumnUsed(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.LastAddress.RowNumber,
-                RangeAddress.LastAddress.ColumnNumber,
-                includeFormats);
+            return FirstColumnUsed(includeFormats, predicate);
+        }
+        public XLRangeColumn FirstColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null)
+        {
+            Int32 columnCount = ColumnCount();
+            for (Int32 co = 1; co <= columnCount; co++)
+            {
+                var column = Column(co);
 
-            return firstColumnUsed == 0 ? null : Column(firstColumnUsed);
+                if (!column.IsEmpty(includeFormats) && (predicate == null || predicate(column)))
+                    return column;
+                column.Dispose();
+            }
+            return null;
         }
 
-        public XLRangeColumn LastColumnUsed()
+        IXLRangeColumn IXLRange.LastColumnUsed(Func<IXLRangeColumn, Boolean> predicate)
         {
-            return LastColumnUsed(false);
+            return LastColumnUsed(false, predicate);
+        }
+        public XLRangeColumn LastColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null)
+        {
+            return LastColumnUsed(false, predicate);
         }
 
-        public XLRangeColumn LastColumnUsed(bool includeFormats)
+        IXLRangeColumn IXLRange.LastColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate)
         {
-            Int32 lastColumnUsed = Worksheet.Internals.CellsCollection.LastColumnUsed(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.LastAddress.RowNumber,
-                RangeAddress.LastAddress.ColumnNumber,
-                includeFormats);
+            return LastColumnUsed(includeFormats, predicate);
+        }
+        public XLRangeColumn LastColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null)
+        {
+            if (predicate == null)
+            {
+                Int32 lastColumnUsed = Worksheet.Internals.CellsCollection.LastColumnUsed(
+                    RangeAddress.FirstAddress.RowNumber,
+                    RangeAddress.FirstAddress.ColumnNumber,
+                    RangeAddress.LastAddress.RowNumber,
+                    RangeAddress.LastAddress.ColumnNumber,
+                    includeFormats);
 
-            return lastColumnUsed == 0 ? null : Column(lastColumnUsed);
+                return lastColumnUsed == 0 ? null : Column(lastColumnUsed);
+            }
+
+            Int32 columnCount = ColumnCount();
+            for (Int32 co = columnCount; co >= 1; co--)
+            {
+                var column = Column(co);
+
+                if (!column.IsEmpty(includeFormats) && predicate(column))
+                    return column;
+                column.Dispose();
+            }
+            return null;
         }
 
-        public XLRangeRow FirstRow()
+        IXLRangeRow IXLRange.FirstRow(Func<IXLRangeRow, Boolean> predicate)
         {
-            return Row(1);
+            return FirstRow(predicate);
+        }
+        public XLRangeRow FirstRow(Func<IXLRangeRow, Boolean> predicate = null)
+        {
+            if (predicate == null)
+                return Row(1);
+
+            Int32 rowCount = RowCount();
+            for (Int32 ro = 1; ro <= rowCount; ro++)
+            {
+                var row = Row(ro);
+                if (predicate(row)) return row;
+
+                row.Dispose();
+            }
+
+            return null;
         }
 
-        public IXLRangeRow LastRow()
+        IXLRangeRow IXLRange.LastRow(Func<IXLRangeRow, Boolean> predicate)
         {
-            return Row(RowCount());
+            return LastRow(predicate);
+        }
+        public XLRangeRow LastRow(Func<IXLRangeRow, Boolean> predicate = null)
+        {
+            Int32 rowCount = RowCount();
+            if (predicate == null)
+                return Row(rowCount);
+
+            for (Int32 ro = rowCount; ro >= 1; ro--)
+            {
+                var row = Row(ro);
+                if (predicate(row)) return row;
+
+                row.Dispose();
+            }
+
+            return null;
         }
 
-        public XLRangeRow LastRowUsed()
+        IXLRangeRow IXLRange.FirstRowUsed(Func<IXLRangeRow, Boolean> predicate)
         {
-            return LastRowUsed(false);
+            return FirstRowUsed(false, predicate);
+        }
+        public XLRangeRow FirstRowUsed(Func<IXLRangeRow, Boolean> predicate = null)
+        {
+            return FirstRowUsed(false, predicate);
         }
 
-        public XLRangeRow LastRowUsed(bool includeFormats)
+        IXLRangeRow IXLRange.FirstRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate)
         {
-            Int32 lastRowUsed = Worksheet.Internals.CellsCollection.LastRowUsed(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.LastAddress.RowNumber,
-                RangeAddress.LastAddress.ColumnNumber,
-                includeFormats);
+            return FirstRowUsed(includeFormats, predicate);
+        }
+        public XLRangeRow FirstRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null)
+        {
+            Int32 rowCount = RowCount();
+            for (Int32 ro = 1; ro <= rowCount; ro++)
+            {
+                var row = Row(ro);
 
-            return lastRowUsed == 0 ? null : Row(lastRowUsed);
+                if (!row.IsEmpty(includeFormats) && (predicate == null || predicate(row)))
+                    return row;
+                row.Dispose();
+            }
+            return null;
         }
 
-        public XLRangeRow FirstRowUsed()
+        IXLRangeRow IXLRange.LastRowUsed(Func<IXLRangeRow, Boolean> predicate)
         {
-            return FirstRowUsed(false);
+            return LastRowUsed(false, predicate);
+        }
+        public XLRangeRow LastRowUsed(Func<IXLRangeRow, Boolean> predicate = null)
+        {
+            return LastRowUsed(false, predicate);
         }
 
-        public XLRangeRow FirstRowUsed(bool includeFormats)
+        IXLRangeRow IXLRange.LastRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate)
         {
-            Int32 firstRowUsed = Worksheet.Internals.CellsCollection.FirstRowUsed(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.LastAddress.RowNumber,
-                RangeAddress.LastAddress.ColumnNumber,
-                includeFormats);
+            return LastRowUsed(includeFormats, predicate);
+        }
+        public XLRangeRow LastRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null)
+        {
+            if (predicate == null)
+            {
+                Int32 lastRowUsed = Worksheet.Internals.CellsCollection.LastRowUsed(
+                    RangeAddress.FirstAddress.RowNumber,
+                    RangeAddress.FirstAddress.ColumnNumber,
+                    RangeAddress.LastAddress.RowNumber,
+                    RangeAddress.LastAddress.ColumnNumber,
+                    includeFormats);
 
-            return firstRowUsed == 0 ? null : Row(firstRowUsed);
+                return lastRowUsed == 0 ? null : Row(lastRowUsed);
+            }
+
+            Int32 rowCount = RowCount();
+            for (Int32 ro = rowCount; ro >= 1; ro--)
+            {
+                var row = Row(ro);
+
+                if (!row.IsEmpty(includeFormats) && predicate(row))
+                    return row;
+                row.Dispose();
+            }
+            return null;
+        }
+
+
+        IXLRangeRows IXLRange.RowsUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate)
+        {
+            return RowsUsed(includeFormats, predicate);
+        }
+        public XLRangeRows RowsUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null)
+        {
+            XLRangeRows rows = new XLRangeRows();
+            Int32 rowCount = RowCount();
+            for (Int32 ro = 1; ro <= rowCount; ro++)
+            {
+                var row = Row(ro);
+
+                if (!row.IsEmpty(includeFormats) && (predicate == null || predicate(row)))
+                    rows.Add(row);
+                else
+                    row.Dispose();
+            }
+            return rows;
+        }
+        IXLRangeRows IXLRange.RowsUsed(Func<IXLRangeRow, Boolean> predicate)
+        {
+            return RowsUsed(predicate);
+        }
+        public XLRangeRows RowsUsed(Func<IXLRangeRow, Boolean> predicate = null)
+        {
+            return RowsUsed(false, predicate);
+        }
+        IXLRangeColumns IXLRange.ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate)
+        {
+            return ColumnsUsed(includeFormats, predicate);
+        }
+        public XLRangeColumns ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null)
+        {
+            XLRangeColumns columns = new XLRangeColumns();
+            Int32 columnCount = ColumnCount();
+            for (Int32 co = 1; co <= columnCount; co++)
+            {
+                var column = Column(co);
+
+                if (!column.IsEmpty(includeFormats) && (predicate == null || predicate(column)))
+                    columns.Add(column);
+                else
+                    column.Dispose();
+            }
+            return columns;
+        }
+        IXLRangeColumns IXLRange.ColumnsUsed(Func<IXLRangeColumn, Boolean> predicate)
+        {
+            return ColumnsUsed(predicate);
+        }
+        public XLRangeColumns ColumnsUsed(Func<IXLRangeColumn, Boolean> predicate = null)
+        {
+            return ColumnsUsed(false, predicate);
         }
 
         public XLRangeRow Row(Int32 row)

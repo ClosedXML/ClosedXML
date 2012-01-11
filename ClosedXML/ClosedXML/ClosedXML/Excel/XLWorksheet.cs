@@ -863,20 +863,48 @@ namespace ClosedXML.Excel
             get { return AutoFilter; }
         }
 
-        public new IXLRows RowsUsed(Boolean includeFormats = false)
+        public IXLRows RowsUsed(Boolean includeFormats = false, Func<IXLRow, Boolean> predicate = null)
         {
             var rows = new XLRows(Worksheet);
-            foreach (IXLRangeRow row in base.RowsUsed(includeFormats))
-                rows.Add(Row(row.RowNumber()));
+            using (var asRange = AsRange())
+            {
+                var rowsUsed = asRange.RowsUsed(includeFormats);
+                foreach (IXLRangeRow row in rowsUsed)
+                {
+                    var retRow = Row(row.RowNumber());
+                    if (predicate == null || predicate(retRow))
+                        rows.Add(retRow);
+                    else 
+                        retRow.Dispose();
+                }
+            }
             return rows;
         }
+        public IXLRows RowsUsed(Func<IXLRow, Boolean> predicate = null)
+        {
+            return RowsUsed(false, predicate);
+        }
 
-        public new IXLColumns ColumnsUsed(Boolean includeFormats = false)
+        public IXLColumns ColumnsUsed(Boolean includeFormats = false, Func<IXLColumn, Boolean> predicate = null)
         {
             var columns = new XLColumns(Worksheet);
-            foreach (IXLRangeColumn column in base.ColumnsUsed(includeFormats))
-                columns.Add(Column(column.ColumnNumber()));
+            using (var asRange = AsRange())
+            {
+                var columnsUsed = asRange.ColumnsUsed(includeFormats);
+                foreach (IXLRangeColumn column in columnsUsed)
+                {
+                    var retColumn = Column(column.ColumnNumber());
+                    if (predicate == null || predicate(retColumn))
+                        columns.Add(retColumn);
+                    else
+                        retColumn.Dispose();
+                }
+            }
             return columns;
+        }
+        public IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate = null)
+        {
+            return ColumnsUsed(false, predicate);
         }
 
         public new void Dispose()
@@ -885,8 +913,6 @@ namespace ClosedXML.Excel
                 AutoFilter.Dispose();
 
             Internals.Dispose();
-
-
 
             base.Dispose();
         }

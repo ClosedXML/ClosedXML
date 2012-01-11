@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRows: IEnumerable<IXLRow>
+    public interface IXLRows: IEnumerable<IXLRow>, IDisposable
     {
         /// <summary>
         /// Sets the height of all rows.

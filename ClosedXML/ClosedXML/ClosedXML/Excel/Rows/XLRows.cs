@@ -264,5 +264,11 @@ namespace ClosedXML.Excel
             _rows.ForEach(c => c.Clear(clearOptions));
             return this;
         }
+
+        public void Dispose()
+        {
+            if (_rows != null)
+                _rows.ForEach(r => r.Dispose());
+        }
     }
 }

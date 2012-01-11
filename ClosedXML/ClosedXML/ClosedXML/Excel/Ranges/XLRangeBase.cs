@@ -1415,44 +1415,6 @@ namespace ClosedXML.Excel
               return Worksheet.AutoFilter.Set(asRange);
         }
 
-        public IXLRangeRows RowsUsed(Boolean includeFormats = false)
-        {
-            var rows = new XLRangeRows();
-            using (var rangeUsed = RangeUsed(includeFormats))
-            {
-                if (rangeUsed != null)
-                {
-                    using (var usedRows = rangeUsed.Rows(r => !r.IsEmpty(includeFormats)))
-                    {
-                        foreach (var row in usedRows)
-                        {
-                            rows.Add(row);
-                        }
-                    }
-                }
-            }
-            return rows;
-        }
-
-        public IXLRangeColumns ColumnsUsed(Boolean includeFormats = false)
-        {
-            var columns = new XLRangeColumns();
-            using (var rangeUsed = RangeUsed(includeFormats))
-            {
-                if (rangeUsed != null)
-                {
-                    using (var usedColumns = rangeUsed.Columns(c => !c.IsEmpty(includeFormats)))
-                    {
-                        foreach (var column in usedColumns)
-                        {
-                            columns.Add(column);
-                        }
-                    }
-                }
-            }
-            return columns;
-        }
-
         #region Sort
 
         public IXLSortElements SortRows
