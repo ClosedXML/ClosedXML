@@ -49,10 +49,12 @@ namespace ClosedXML.Excel
         }
 
         #endregion
-
+        
         private Boolean _subscribedToShiftedRows;
         protected void SubscribeToShiftedRows(RangeShiftedRowsDelegate worksheetRangeShiftedRows)
         {
+            if (!Worksheet.EventTrackingEnabled) return;
+
             WorksheetRangeShiftedRows = worksheetRangeShiftedRows;
             RangeAddress.Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
             _subscribedToShiftedRows = true;
@@ -61,6 +63,8 @@ namespace ClosedXML.Excel
         private Boolean _subscribedToShiftedColumns;
         protected void SubscribeToShiftedColumns(RangeShiftedColumnsDelegate worksheetRangeShiftedColumns)
         {
+            if (!Worksheet.EventTrackingEnabled) return;
+
             WorksheetRangeShiftedColumns = worksheetRangeShiftedColumns;
             RangeAddress.Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
             _subscribedToShiftedColumns = true;

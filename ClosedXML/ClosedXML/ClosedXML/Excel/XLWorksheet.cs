@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
 
         private Double _rowHeight;
         private Boolean _tabActive;
-
+        internal readonly Boolean EventTrackingEnabled;
         #endregion
 
         #region Constructor
@@ -42,6 +42,7 @@ namespace ClosedXML.Excel
                     new XLAddress(null, ExcelHelper.MinRowNumber, ExcelHelper.MinColumnNumber, false, false),
                     new XLAddress(null, ExcelHelper.MaxRowNumber, ExcelHelper.MaxColumnNumber, false, false)))
         {
+            EventTrackingEnabled = workbook.EventTracking == XLEventTracking.Enabled;
             RangeAddress.Worksheet = this;
             RangeAddress.FirstAddress.Worksheet = this;
             RangeAddress.LastAddress.Worksheet = this;

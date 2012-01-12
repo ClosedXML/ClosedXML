@@ -6,6 +6,7 @@ namespace ClosedXML.Excel
 {
     using System.Linq;
 
+    public enum XLEventTracking { Enabled, Disabled }
     public enum XLCalculateMode
     {
         Auto,
@@ -168,6 +169,11 @@ namespace ClosedXML.Excel
 
         private readonly Dictionary<Int32, IXLStyle> _stylesById = new Dictionary<int, IXLStyle>();
         private readonly Dictionary<IXLStyle, Int32> _stylesByStyle = new Dictionary<IXLStyle, Int32>();
+
+        private readonly XLEventTracking _eventTracking;
+
+        public XLEventTracking EventTracking { get { return _eventTracking; } }
+        
        
         internal Int32 GetStyleId(IXLStyle style)
         {
@@ -513,8 +519,9 @@ namespace ClosedXML.Excel
         /// <summary>
         ///   Creates a new Excel workbook.
         /// </summary>
-        public XLWorkbook()
+        public XLWorkbook(XLEventTracking eventTracking = XLEventTracking.Enabled)
         {
+            _eventTracking = eventTracking;
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;
             Style = new XLStyle(null, DefaultStyle);
@@ -538,13 +545,14 @@ namespace ClosedXML.Excel
             NamedRanges = new XLNamedRanges(this);
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
+
         }
 
         /// <summary>
         ///   Opens an existing workbook from a file.
         /// </summary>
         /// <param name = "file">The file to open.</param>
-        public XLWorkbook(String file)
+        public XLWorkbook(String file, XLEventTracking eventTracking = XLEventTracking.Enabled)
             : this()
         {
             _loadSource = XLLoadSource.File;
@@ -556,7 +564,7 @@ namespace ClosedXML.Excel
         ///   Opens an existing workbook from a stream.
         /// </summary>
         /// <param name = "stream">The stream to open.</param>
-        public XLWorkbook(Stream stream)
+        public XLWorkbook(Stream stream, XLEventTracking eventTracking = XLEventTracking.Enabled)
             : this()
         {
             _loadSource = XLLoadSource.Stream;
