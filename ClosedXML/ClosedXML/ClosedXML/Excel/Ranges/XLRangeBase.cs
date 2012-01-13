@@ -285,13 +285,15 @@ namespace ClosedXML.Excel
         public IXLRange Merge()
         {
             string tAddress = RangeAddress.ToString();
-            Boolean foundOne =
-                Worksheet.Internals.MergedRanges.Select(m => m.RangeAddress.ToString()).Any(
-                    mAddress => mAddress == tAddress);
+            var mergedRanges = Worksheet.Internals.MergedRanges.ToList();
+            foreach (var mergedRange in mergedRanges)
+            {
+                if (mergedRange.Intersects(tAddress))
+                    Worksheet.Internals.MergedRanges.Remove(mergedRange);
+            }
 
             var asRange = AsRange();
-            if (!foundOne)
-                Worksheet.Internals.MergedRanges.Add(asRange);
+            Worksheet.Internals.MergedRanges.Add(asRange);
 
             // Call every cell in the merge to make sure they exist
             asRange.Cells().ForEach(c => { });
@@ -368,7 +370,8 @@ namespace ClosedXML.Excel
 
         public bool Intersects(string rangeAddress)
         {
-            return Intersects(Range(rangeAddress));
+            using (var range  = Worksheet.Range(rangeAddress))
+                return Intersects(range);
         }
 
         public bool Intersects(IXLRangeBase range)

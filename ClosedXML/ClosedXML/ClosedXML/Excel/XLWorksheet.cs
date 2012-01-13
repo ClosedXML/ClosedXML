@@ -1265,5 +1265,7 @@ namespace ClosedXML.Excel
                                                        && n.Ranges.Count == 1)
                                 .Ranges.First();
         }
+
+        public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }
     }
 }

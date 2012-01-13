@@ -358,5 +358,7 @@ namespace ClosedXML.Excel
         IXLRows RowsUsed(Func<IXLRow, Boolean> predicate);
         IXLColumns ColumnsUsed(Boolean includeFormats = false, Func<IXLColumn, Boolean> predicate = null);
         IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate);
+
+        IXLRanges MergedRanges { get; }
     }
 }
