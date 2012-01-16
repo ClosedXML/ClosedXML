@@ -9,56 +9,56 @@ namespace ClosedXML.Excel
         internal XLColor(IXLColor defaultColor)
         {
             XLColor dColor = (XLColor)defaultColor;
-            if (dColor.colorType == XLColorType.Color)
+            if (dColor._colorType == XLColorType.Color)
                 color = dColor.color;
-            else if (dColor.colorType == XLColorType.Theme)
+            else if (dColor._colorType == XLColorType.Theme)
             {
-                themeColor = dColor.themeColor;
-                themeTint = dColor.themeTint;
+                _themeColor = dColor._themeColor;
+                _themeTint = dColor._themeTint;
             }
             else 
             {
-                indexed = dColor.indexed;
+                _indexed = dColor._indexed;
             } 
 
             HasValue = true;
-            hashCode = dColor.hashCode;
-            colorType = dColor.colorType;
+            _hashCode = dColor._hashCode;
+            _colorType = dColor._colorType;
         }
         internal XLColor()
         {
             HasValue = false;
-            hashCode = 0;
+            _hashCode = 0;
         }
         internal XLColor(Color color)
         {
             this.color = color;
-            hashCode = 13 ^ color.ToArgb();
+            _hashCode = 13 ^ color.ToArgb();
             HasValue = true;
-            colorType = XLColorType.Color;
+            _colorType = XLColorType.Color;
         }
         internal XLColor(Int32 index)
         {
-            this.indexed = index;
-            hashCode = 11 ^ indexed;
+            this._indexed = index;
+            _hashCode = 11 ^ _indexed;
             HasValue = true;
-            colorType = XLColorType.Indexed;
+            _colorType = XLColorType.Indexed;
         }
         internal XLColor(XLThemeColor themeColor)
         {
-            this.themeColor = themeColor;
-            this.themeTint = 1;
-            hashCode = 7 ^ this.themeColor.GetHashCode() ^ themeTint.GetHashCode();
+            this._themeColor = themeColor;
+            this._themeTint = 1;
+            _hashCode = 7 ^ this._themeColor.GetHashCode() ^ _themeTint.GetHashCode();
             HasValue = true;
-            colorType = XLColorType.Theme;
+            _colorType = XLColorType.Theme;
         }
         internal XLColor(XLThemeColor themeColor, Double themeTint)
         {
-            this.themeColor = themeColor;
-            this.themeTint = themeTint;
-            hashCode = 7 ^ this.themeColor.GetHashCode() ^ this.themeTint.GetHashCode();
+            this._themeColor = themeColor;
+            this._themeTint = themeTint;
+            _hashCode = 7 ^ this._themeColor.GetHashCode() ^ this._themeTint.GetHashCode();
             HasValue = true;
-            colorType = XLColorType.Theme;
+            _colorType = XLColorType.Theme;
         }
     }
 }

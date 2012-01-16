@@ -6,13 +6,17 @@ namespace ClosedXML.Excel
 {
     internal class XLHFItem : IXLHFItem
     {
-        public XLHFItem()
-        { }
-        public XLHFItem(XLHFItem defaultHFItem)
+        private readonly XLWorksheet _worksheet;
+        public XLHFItem(XLWorksheet worksheet)
+        {
+            _worksheet = worksheet;
+        }
+        public XLHFItem(XLHFItem defaultHFItem, XLWorksheet worksheet)
+            :this(worksheet)
         {
             defaultHFItem.texts.ForEach(kp => texts.Add(kp.Key, kp.Value));
         }
-        private Dictionary<XLHFOccurrence, List<XLHFText>> texts = new Dictionary<XLHFOccurrence, List<XLHFText>>();
+        private readonly Dictionary<XLHFOccurrence, List<XLHFText>> texts = new Dictionary<XLHFOccurrence, List<XLHFText>>();
         public String GetText(XLHFOccurrence occurrence)
         {
             var sb = new StringBuilder();
@@ -36,9 +40,9 @@ namespace ClosedXML.Excel
 
         public IXLRichString AddText(String text, XLHFOccurrence occurrence)
         {
-            IXLRichString richText = new XLRichString(text, XLWorkbook.DefaultStyle.Font, this);
+            XLRichString richText = new XLRichString(text, XLWorkbook.DefaultStyle.Font, this);
 
-            var hfText = new XLHFText(richText);
+            var hfText = new XLHFText(richText, _worksheet);
             if (occurrence == XLHFOccurrence.AllPages)
             {
                 AddTextToOccurrence(hfText, XLHFOccurrence.EvenPages);
@@ -58,12 +62,17 @@ namespace ClosedXML.Excel
             return AddText(Environment.NewLine);
         }
 
+        public IXLRichString AddImage(String imagePath, XLHFOccurrence occurrence = XLHFOccurrence.AllPages)
+        {
+            throw new NotImplementedException();
+        }
+
         private void AddTextToOccurrence(XLHFText hfText, XLHFOccurrence occurrence)
         {
             if (texts.ContainsKey(occurrence))
                 texts[occurrence].Add(hfText);
             else
-                texts.Add(occurrence, new List<XLHFText>() { hfText });
+                texts.Add(occurrence, new List<XLHFText> { hfText });
         }
 
         public IXLRichString AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)
@@ -102,54 +111,6 @@ namespace ClosedXML.Excel
         {
             if (texts.ContainsKey(occurrence))
                 texts.Remove(occurrence);
-        }
-
-        private String GetHFFont(String text, IXLFont xlFont)
-        {
-            String retVal = String.Empty;
-
-            retVal += xlFont.FontName != null ? "&\"" + xlFont.FontName : "\"-";
-            retVal += GetHFFontBoldItalic(xlFont);
-            retVal += xlFont.FontSize > 0 ? "&" + xlFont.FontSize.ToString() : "";
-            retVal += xlFont.Strikethrough ? "&S" : "";
-            retVal += xlFont.VerticalAlignment == XLFontVerticalTextAlignmentValues.Subscript ? "&Y" : "";
-            retVal += xlFont.VerticalAlignment == XLFontVerticalTextAlignmentValues.Superscript ? "&X" : "";
-            retVal += xlFont.Underline== XLFontUnderlineValues.Single ? "&U" : "";
-            retVal += xlFont.Underline == XLFontUnderlineValues.Double ? "&E" : "";
-            retVal += "&K" + xlFont.FontColor.Color.ToHex().Substring(2);
-
-            retVal += text;
-
-            retVal += xlFont.Underline == XLFontUnderlineValues.Double ? "&E" : "";
-            retVal += xlFont.Underline == XLFontUnderlineValues.Single ? "&U" : "";
-            retVal += xlFont.VerticalAlignment == XLFontVerticalTextAlignmentValues.Superscript ? "&X" : "";
-            retVal += xlFont.VerticalAlignment == XLFontVerticalTextAlignmentValues.Subscript ? "&Y" : "";
-            retVal += xlFont.Strikethrough ? "&S" : "";
-            
-            return retVal;
-        }
-
-        private String GetHFFontBoldItalic(IXLFont xlFont)
-        {
-            String retVal = String.Empty;
-            if (xlFont.Bold && xlFont.Italic)
-            {
-                retVal += ",Bold Italic\"";
-            }
-            else if (xlFont.Bold)
-            {
-                retVal += ",Bold\"";
-            }
-            else if (xlFont.Italic)
-            {
-                retVal += ",Italic\"";
-            }
-            else
-            {
-                retVal += ",Regular\"";
-            }
-
-            return retVal;
         }
     }
 }

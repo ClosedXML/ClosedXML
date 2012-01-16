@@ -1,64 +1,88 @@
 ﻿using System;
+using System.Text;
 
 namespace ClosedXML.Excel
 {
     internal class XLHFText
     {
-        public XLHFText(IXLRichString richText)
+        private readonly XLWorksheet _worksheet;
+        public XLHFText(XLRichString richText, XLWorksheet worksheet)
         {
             RichText = richText;
+            _worksheet = worksheet;
         }
-        public IXLRichString RichText { get; private set; }
+        public XLRichString RichText { get; private set; }
 
         public String HFText
         {
             get
             {
-                String retVal = String.Empty;
+                StringBuilder sb = new StringBuilder();
+                var wsFont = _worksheet.Style.Font;
+                
+                if (RichText.FontName != null && RichText.FontName != wsFont.FontName)
+                    sb.Append("&\"" + RichText.FontName);
+                else
+                    sb.Append("&\"-");
 
-                retVal += RichText.FontName != null ? "&\"" + RichText.FontName : "\"-";
-                retVal += GetHFFontBoldItalic(RichText);
-                retVal += RichText.FontSize > 0 ? "&" + RichText.FontSize.ToString() : "";
-                retVal += RichText.Strikethrough ? "&S" : "";
-                retVal += RichText.VerticalAlignment == XLFontVerticalTextAlignmentValues.Subscript ? "&Y" : "";
-                retVal += RichText.VerticalAlignment == XLFontVerticalTextAlignmentValues.Superscript ? "&X" : "";
-                retVal += RichText.Underline == XLFontUnderlineValues.Single ? "&U" : "";
-                retVal += RichText.Underline == XLFontUnderlineValues.Double ? "&E" : "";
-                retVal += "&K" + RichText.FontColor.Color.ToHex().Substring(2);
+                if (RichText.Bold && RichText.Italic)
+                    sb.Append(",Bold Italic\"");
+                else if (RichText.Bold)
+                    sb.Append(",Bold\"");
+                else if (RichText.Italic)
+                    sb.Append(",Italic\"");
+                else
+                    sb.Append(",Regular\"");
+                
+                if (RichText.FontSize > 0 && Math.Abs(RichText.FontSize - wsFont.FontSize) > ExcelHelper.Epsilon)
+                    sb.Append("&" + RichText.FontSize);
 
-                retVal += RichText.Text;
+                if (RichText.Strikethrough && !wsFont.Strikethrough)
+                    sb.Append("&S");
 
-                retVal += RichText.Underline == XLFontUnderlineValues.Double ? "&E" : "";
-                retVal += RichText.Underline == XLFontUnderlineValues.Single ? "&U" : "";
-                retVal += RichText.VerticalAlignment == XLFontVerticalTextAlignmentValues.Superscript ? "&X" : "";
-                retVal += RichText.VerticalAlignment == XLFontVerticalTextAlignmentValues.Subscript ? "&Y" : "";
-                retVal += RichText.Strikethrough ? "&S" : "";
+                if (RichText.VerticalAlignment != wsFont.VerticalAlignment)
+                {
+                    if (RichText.VerticalAlignment == XLFontVerticalTextAlignmentValues.Subscript)
+                        sb.Append("&Y");
+                    else if (RichText.VerticalAlignment == XLFontVerticalTextAlignmentValues.Superscript)
+                        sb.Append("&X");
+                }
 
-                return retVal;
+                if(RichText.Underline != wsFont.Underline)
+                {
+                    if (RichText.Underline == XLFontUnderlineValues.Single)
+                        sb.Append("&U");
+                    else if (RichText.Underline == XLFontUnderlineValues.Double)
+                        sb.Append("&E");    
+                }
+
+                if(!RichText.FontColor.Equals(wsFont.FontColor))
+                    sb.Append("&K" + RichText.FontColor.Color.ToHex().Substring(2));
+
+                sb.Append(RichText.Text);
+                
+                if(RichText.Underline != wsFont.Underline)
+                {
+                    if (RichText.Underline == XLFontUnderlineValues.Single)
+                        sb.Append("&U");
+                    else if (RichText.Underline == XLFontUnderlineValues.Double)
+                        sb.Append("&E");    
+                }
+
+                if (RichText.VerticalAlignment != wsFont.VerticalAlignment)
+                {
+                    if (RichText.VerticalAlignment == XLFontVerticalTextAlignmentValues.Subscript)
+                        sb.Append("&Y");
+                    else if (RichText.VerticalAlignment == XLFontVerticalTextAlignmentValues.Superscript)
+                        sb.Append("&X");
+                }
+
+                if (RichText.Strikethrough && !wsFont.Strikethrough)
+                    sb.Append("&S");
+
+                return sb.ToString();
             }
         }
-
-        private String GetHFFontBoldItalic(IXLRichString xlFont)
-        {
-            String retVal = String.Empty;
-            if (xlFont.Bold && xlFont.Italic)
-            {
-                retVal += ",Bold Italic\"";
-            }
-            else if (xlFont.Bold)
-            {
-                retVal += ",Bold\"";
-            }
-            else if (xlFont.Italic)
-            {
-                retVal += ",Italic\"";
-            }
-            else
-            {
-                retVal += ",Regular\"";
-            }
-
-            return retVal;
-        }
+       
     }
 }

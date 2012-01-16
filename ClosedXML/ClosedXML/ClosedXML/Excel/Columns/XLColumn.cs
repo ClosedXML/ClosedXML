@@ -218,12 +218,22 @@ namespace ClosedXML.Excel
                 }
             }
 
-            return Worksheet.Columns(columnNum + 1, columnNum + numberOfColumns);
+            var newColumns = Worksheet.Columns(columnNum + 1, columnNum + numberOfColumns);
+            CopyColumns(newColumns);
+            return newColumns;
         }
 
         public new IXLColumns InsertColumnsBefore(Int32 numberOfColumns)
         {
             int columnNum = ColumnNumber();
+            if (columnNum > 1)
+            {
+                using (var column = Worksheet.Column(columnNum - 1))
+                {
+                    return column.InsertColumnsAfter(numberOfColumns);
+                }
+            }
+
             Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum, numberOfColumns);
 
             using (var column = Worksheet.Column(columnNum))
@@ -235,6 +245,19 @@ namespace ClosedXML.Excel
             }
 
             return Worksheet.Columns(columnNum, columnNum + numberOfColumns - 1);
+        }
+
+        private void CopyColumns(IXLColumns newColumns)
+        {
+            foreach (var newColumn in newColumns)
+            {
+                var internalColumn = Worksheet.Internals.ColumnsCollection[newColumn.ColumnNumber()];
+                internalColumn._width = Width;
+                internalColumn.SetStyle(Style);
+                internalColumn._collapsed = Collapsed;
+                internalColumn._isHidden = IsHidden;
+                internalColumn._outlineLevel = OutlineLevel;
+            }
         }
 
         public IXLColumn AdjustToContents()

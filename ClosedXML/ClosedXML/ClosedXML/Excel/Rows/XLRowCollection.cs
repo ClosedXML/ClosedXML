@@ -123,9 +123,20 @@ namespace ClosedXML.Excel
             foreach (int ro in _dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
             {
                 var rowToMove = _dictionary[ro];
-                Int32 newRow = ro + rowsToShift;
-                if (newRow <= ExcelHelper.MaxRowNumber)
-                    _dictionary.Add(newRow, new XLRow(rowToMove));
+                Int32 newRowNum = ro + rowsToShift;
+                if (newRowNum <= ExcelHelper.MaxRowNumber)
+                {
+                    var newRow = new XLRow(rowToMove)
+                                     {
+                                         RangeAddress =
+                                             {
+                                                 FirstAddress = new XLAddress(newRowNum, 1, false, false),
+                                                 LastAddress =
+                                                     new XLAddress(newRowNum, ExcelHelper.MaxColumnNumber, false, false)
+                                             }
+                                     };
+                    _dictionary.Add(newRowNum, newRow);
+                }
                 _dictionary.Remove(ro);
             }
         }

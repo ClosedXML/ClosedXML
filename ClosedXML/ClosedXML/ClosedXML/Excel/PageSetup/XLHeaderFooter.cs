@@ -7,20 +7,20 @@ namespace ClosedXML.Excel
 
     internal class XLHeaderFooter: IXLHeaderFooter
     {
-        public XLHeaderFooter()
+        public XLHeaderFooter(XLWorksheet worksheet)
         {
-            Left = new XLHFItem();
-            Right = new XLHFItem();
-            Center = new XLHFItem();
+            Left = new XLHFItem(worksheet);
+            Right = new XLHFItem(worksheet);
+            Center = new XLHFItem(worksheet);
             SetAsInitial();
         }
 
-        public XLHeaderFooter(XLHeaderFooter defaultHF)
+        public XLHeaderFooter(XLHeaderFooter defaultHF, XLWorksheet worksheet)
         {
             defaultHF.innerTexts.ForEach(kp => innerTexts.Add(kp.Key, kp.Value));
-            Left = new XLHFItem(defaultHF.Left as XLHFItem);
-            Center = new XLHFItem(defaultHF.Center as XLHFItem);
-            Right = new XLHFItem(defaultHF.Right as XLHFItem);
+            Left = new XLHFItem(defaultHF.Left as XLHFItem, worksheet);
+            Center = new XLHFItem(defaultHF.Center as XLHFItem, worksheet);
+            Right = new XLHFItem(defaultHF.Right as XLHFItem, worksheet);
             SetAsInitial();
         }
 

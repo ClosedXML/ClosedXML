@@ -522,7 +522,23 @@ namespace ClosedXML.Excel
                 RangeAddress.LastAddress.ColumnNumber,
                 includeFormats, predicate);
 
-            return sp.Row == 0 ? null : Worksheet.Cell(sp.Row, sp.Column);
+            if(sp.Row > 0) 
+                return Worksheet.Cell(sp.Row, sp.Column);
+
+            //if (includeFormats)
+            //{
+            //    using (var rowsUsed = Worksheet.Rows(1, 1))
+            //    {
+            //        foreach (var row in rowsUsed)
+            //        {
+            //            if(!row.IsEmpty(true))
+            //                return Worksheet.Cell()
+            //        }
+            //    }
+            //}
+
+
+            return null;
         }
 
         public XLCell LastCellUsed()
@@ -1101,18 +1117,23 @@ namespace ClosedXML.Excel
 
             if (formatFromAbove && rangeToReturn.RangeAddress.FirstAddress.RowNumber > 1)
             {
-                var model = rangeToReturn.FirstRow().RowAbove();
-                var modelFirstColumn = model.FirstCellUsed(true);
-                var modelLastColumn = model.LastCellUsed(true);
-                if (modelLastColumn != null)
+                using (var fr = rangeToReturn.FirstRow())
                 {
-                    Int32 firstCoReturned = modelFirstColumn.Address.ColumnNumber
-                                            - model.RangeAddress.FirstAddress.ColumnNumber + 1;
-                    Int32 lastCoReturned = modelLastColumn.Address.ColumnNumber
-                                            - model.RangeAddress.FirstAddress.ColumnNumber + 1;
-                    for (Int32 co = firstCoReturned; co <= lastCoReturned; co++)
+                    using (var model = fr.RowAbove())
                     {
-                        rangeToReturn.Column(co).Style = model.Cell(co).Style;
+                        var modelFirstColumn = model.FirstCellUsed(true);
+                        var modelLastColumn = model.LastCellUsed(true);
+                        if (modelLastColumn != null)
+                        {
+                            Int32 firstCoReturned = modelFirstColumn.Address.ColumnNumber
+                                                    - model.RangeAddress.FirstAddress.ColumnNumber + 1;
+                            Int32 lastCoReturned = modelLastColumn.Address.ColumnNumber
+                                                   - model.RangeAddress.FirstAddress.ColumnNumber + 1;
+                            for (Int32 co = firstCoReturned; co <= lastCoReturned; co++)
+                            {
+                                rangeToReturn.Column(co).Style = model.Cell(co).Style;
+                            }
+                        }
                     }
                 }
             }

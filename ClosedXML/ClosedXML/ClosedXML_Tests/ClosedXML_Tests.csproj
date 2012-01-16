@@ -81,6 +81,7 @@
     <Compile Include="Excel\PivotTables\XLPivotTableTest.cs" />
     <Compile Include="Excel\Ranges\XLRangeAddressTest.cs" />
     <Compile Include="Excel\Ranges\XLRangeBaseTest.cs" />
+    <Compile Include="Excel\Ranges\InsertingRangesTests.cs" />
     <Compile Include="Excel\Rows\RowsTests.cs" />
     <Compile Include="Excel\Worksheets\XLWorksheetTests.cs" />
     <Compile Include="Utils\ExcelDocsComparer.cs" />

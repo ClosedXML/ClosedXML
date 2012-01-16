@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Adds the given predefined text to this header/footer item.
         /// </summary>
-        /// <param name="text">The predefined text to add to this header/footer item.</param>
+        /// <param name="predefinedText">The predefined text to add to this header/footer item.</param>
         IXLRichString AddText(XLHFPredefinedText predefinedText);
 
         /// <summary>
@@ -35,12 +35,14 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Adds the given predefined text to this header/footer item.
         /// </summary>
-        /// <param name="text">The predefined text to add to this header/footer item.</param>
+        /// <param name="predefinedText">The predefined text to add to this header/footer item.</param>
         /// <param name="occurrence">The occurrence for the predefined text.</param>
         IXLRichString AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence);
 
         /// <summary>Clears the text/formats of this header/footer item.</summary>
         /// <param name="occurrence">The occurrence to clear.</param>
         void Clear(XLHFOccurrence occurrence = XLHFOccurrence.AllPages);
+
+        IXLRichString AddImage(String imagePath, XLHFOccurrence occurrence = XLHFOccurrence.AllPages);
     }
 }

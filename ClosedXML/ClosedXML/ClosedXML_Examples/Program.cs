@@ -6,7 +6,7 @@ namespace ClosedXML_Examples
         static void Main(string[] args)
         {
             CreateFiles.CreateAllFiles();
-            LoadFiles.LoadAllFiles();
+            //LoadFiles.LoadAllFiles();
         }
     }
 }

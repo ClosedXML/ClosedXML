@@ -11,10 +11,20 @@ namespace ClosedXML.Excel
             foreach (var ro in _dictionary.Keys.Where(k => k >= startingColumn).OrderByDescending(k => k))
             {
                 var columnToMove = _dictionary[ro];
-                Int32 newColumn = ro + columnsToShift;
-                if (newColumn <= ExcelHelper.MaxColumnNumber)
+                Int32 newColumnNum = ro + columnsToShift;
+                if (newColumnNum <= ExcelHelper.MaxColumnNumber)
                 {
-                    _dictionary.Add(newColumn, new XLColumn(columnToMove));
+                    var newColumn = new XLColumn(columnToMove)
+                                        {
+                                            RangeAddress =
+                                            {
+                                                FirstAddress = new XLAddress(1, newColumnNum, false, false),
+                                                LastAddress =
+                                                    new XLAddress(ExcelHelper.MaxRowNumber, newColumnNum, false, false)
+                                            }
+                                        };
+                                        
+                    _dictionary.Add(newColumnNum, newColumn);
                 }
                 _dictionary.Remove(ro);
             }

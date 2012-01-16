@@ -7,15 +7,11 @@ namespace ClosedXML.Excel
     {
         public Boolean HasValue { get; private set; }
 
-        XLColorType colorType;
+        private readonly XLColorType _colorType;
         public XLColorType ColorType {
             get
             {
-                return colorType;
-            }
-            private set
-            {
-                colorType = value;
+                return _colorType;
             }
         }
         private Color color;
@@ -23,139 +19,90 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (colorType == XLColorType.Theme)
-                {
-                    //if (workbook == null)
-                        throw new Exception("Cannot convert theme color to Color.");
-                    //else
-                    //    return workbook.GetXLColor(themeColor).Color;
-                }
-                else if (colorType == XLColorType.Indexed)
-                {
-                    return IndexedColors[indexed].Color;
-                }
-                else
-                {
-                    return color;
-                }
-            }
-            private set
-            {
-                color = value;
-                colorType = XLColorType.Color;
+                if (_colorType == XLColorType.Theme)
+                    throw new Exception("Cannot convert theme color to Color.");
+
+                if (_colorType == XLColorType.Indexed)
+                    return IndexedColors[_indexed].Color;
+
+                return color;
             }
         }
 
-        private Int32 indexed;
+        private readonly Int32 _indexed;
         public Int32 Indexed
         {
             get
             {
                 if (ColorType == XLColorType.Theme)
-                {
                     throw new Exception("Cannot convert theme color to indexed color.");
-                }
-                else if (ColorType == XLColorType.Indexed)
-                {
-                    return indexed;
-                }
-                else // ColorType == Color
-                {
-                    throw new Exception("Cannot convert Color to indexed color.");
-                }
-            }
-            private set
-            {
-                indexed = value;
-                colorType = XLColorType.Indexed;
+
+                if (ColorType == XLColorType.Indexed)
+                    return _indexed;
+
+                throw new Exception("Cannot convert Color to indexed color.");
             }
         }
 
-        private XLThemeColor themeColor;
+        private readonly XLThemeColor _themeColor;
         public XLThemeColor ThemeColor
         {
             get
             {
                 if (ColorType == XLColorType.Theme)
-                {
-                    return themeColor;
-                }
-                else if (ColorType == XLColorType.Indexed)
-                {
+                    return _themeColor;
+
+                if (ColorType == XLColorType.Indexed)
                     throw new Exception("Cannot convert indexed color to theme color.");
-                }
-                else // ColorType == Color
-                {
-                    throw new Exception("Cannot convert Color to theme color.");
-                }
+                
+                throw new Exception("Cannot convert Color to theme color.");
             }
-            private set
-            {
-                themeColor = value;
-                if (themeTint == 0)
-                    themeTint = 1;
-                colorType = XLColorType.Theme;
-            }
+
         }
 
-        private Double themeTint;
+        private readonly Double _themeTint;
         public Double ThemeTint
         {
             get
             {
                 if (ColorType == XLColorType.Theme)
-                {
-                    return themeTint;
-                }
-                else if (ColorType == XLColorType.Indexed)
-                {
+                   return _themeTint;
+
+                if (ColorType == XLColorType.Indexed)
                     throw new Exception("Cannot extract theme tint from an indexed color.");
-                }
-                else // ColorType == Color
-                {
-                    return (Double)color.A / 255.0;
-                }
-            }
-            private set
-            {
-                themeTint = value;
-                colorType = XLColorType.Theme;
+
+                return color.A / 255.0;
             }
         }
 
         public bool Equals(IXLColor other)
         {
             var otherC = other as XLColor;
-            if (colorType == otherC.colorType)
+            if (_colorType == otherC._colorType)
             {
-                if (colorType == XLColorType.Color)
+                if (_colorType == XLColorType.Color)
                 {
                     return color.ToArgb() == otherC.color.ToArgb();
                 }
-                if (colorType == XLColorType.Theme)
+                if (_colorType == XLColorType.Theme)
                 {
-                    return themeColor == otherC.themeColor
-                        && themeTint == otherC.themeTint;
+                    return _themeColor == otherC._themeColor
+                        && Math.Abs(_themeTint - otherC._themeTint) < ExcelHelper.Epsilon;
                 }
-                else
-                {
-                    return indexed == otherC.indexed;
-                }
+                return _indexed == otherC._indexed;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
         public override bool Equals(object obj)
         {
-            return this.Equals((XLColor)obj);
+            return Equals((XLColor)obj);
         }
 
-        int hashCode;
+        private readonly int _hashCode;
         public override int GetHashCode()
         {
-            return hashCode;
+            return _hashCode;
         }
     }
 }

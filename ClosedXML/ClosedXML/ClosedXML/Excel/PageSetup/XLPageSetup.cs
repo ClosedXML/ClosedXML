@@ -46,15 +46,15 @@ namespace ClosedXML.Excel
 
                 ColumnBreaks = defaultPageOptions.ColumnBreaks.ToList();
                 RowBreaks = defaultPageOptions.RowBreaks.ToList();
-                Header = new XLHeaderFooter(defaultPageOptions.Header as XLHeaderFooter);
-                Footer = new XLHeaderFooter(defaultPageOptions.Footer as XLHeaderFooter);
+                Header = new XLHeaderFooter(defaultPageOptions.Header as XLHeaderFooter, worksheet);
+                Footer = new XLHeaderFooter(defaultPageOptions.Footer as XLHeaderFooter, worksheet);
                 PrintErrorValue = defaultPageOptions.PrintErrorValue;
             }
             else
             {
                 PrintAreas = new XLPrintAreas(worksheet);
-                Header = new XLHeaderFooter();
-                Footer = new XLHeaderFooter();
+                Header = new XLHeaderFooter(worksheet);
+                Footer = new XLHeaderFooter(worksheet);
                 ColumnBreaks = new List<Int32>();
                 RowBreaks = new List<Int32>();
             }

@@ -143,12 +143,37 @@ namespace ClosedXML.Excel
                     asRange.InsertRowsBelow(true, numberOfRows).Dispose();
                 }
             }
-            return Worksheet.Rows(rowNum + 1, rowNum + numberOfRows);
+            var newRows = Worksheet.Rows(rowNum + 1, rowNum + numberOfRows);
+
+            CopyRows(newRows);
+
+            return newRows;
+        }
+
+        private void CopyRows(IXLRows newRows)
+        {
+            foreach (var newRow in newRows)
+            {
+                var internalRow = Worksheet.Internals.RowsCollection[newRow.RowNumber()];
+                internalRow._height = Height;
+                internalRow.SetStyle(Style);
+                internalRow._collapsed = Collapsed;
+                internalRow._isHidden = IsHidden;
+                internalRow._outlineLevel = OutlineLevel;
+            }
         }
 
         public new IXLRows InsertRowsAbove(Int32 numberOfRows)
         {
             int rowNum = RowNumber();
+            if (rowNum > 1)
+            {
+                using (var row = Worksheet.Row(rowNum - 1))
+                {
+                    return row.InsertRowsBelow(numberOfRows);
+                }
+            }
+
             Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum, numberOfRows);
             using (var row = Worksheet.Row(rowNum))
             {
@@ -328,7 +353,10 @@ namespace ClosedXML.Excel
 
         public override IXLStyle Style
         {
-            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Style : GetStyle(); }
+            get
+            {
+                return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Style : GetStyle();
+            }
             set
             {
                 if (IsReference)
@@ -477,7 +505,6 @@ namespace ClosedXML.Excel
 
             var newRow = (XLRow)row;
             newRow._height = _height;
-            //newRow._style = new XLStyle(newRow, Style);
             newRow.Style = GetStyle();
 
             return newRow;
