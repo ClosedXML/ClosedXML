@@ -4385,23 +4385,15 @@ namespace ClosedXML.Excel
             var ms = new MemoryStream();
             CopyStream(vmlDrawingPart.GetStream(FileMode.OpenOrCreate), ms);
             ms.Position = 0;
-            XmlTextReader reader = new XmlTextReader(ms);
             XmlTextWriter writer = new XmlTextWriter(vmlDrawingPart.GetStream(FileMode.Create), Encoding.UTF8);
-            //if (ms.Length == 0)
-            //    writer.WriteStartElement("xml");
-            //else
-            //{
-            //    //ms.Position = 0;
-            //    CopyXml(reader, writer);
-            //}
 
             writer.WriteStartElement("xml");
 
             const string shapeTypeId = "_x0000_t202"; // arbitrary, assigned by office
 
             new Vml.Shapetype(
-                new Vml.Stroke() { JoinStyle = Vml.StrokeJoinStyleValues.Miter },
-                new Vml.Path() { AllowGradientShape = true, ConnectionPointType = Vml.Office.ConnectValues.Rectangle }
+                new Vml.Stroke { JoinStyle = Vml.StrokeJoinStyleValues.Miter },
+                new Vml.Path { AllowGradientShape = true, ConnectionPointType = Vml.Office.ConnectValues.Rectangle }
                 )
             {
                 Id = shapeTypeId,
@@ -4421,13 +4413,8 @@ namespace ClosedXML.Excel
             if (ms.Length > 0)
             {
                 ms.Position = 0;
-                //var sb = new StringBuilder();
-                //while (reader.Read())
-                //    sb.Append(reader.ReadString());
-                //var t = sb.ToString();
                 XDocument xdoc = XDocumentExtensions.Load(ms);
                 xdoc.Root.Elements().ForEach(e=> writer.WriteRaw(e.ToString()));
-                //CopyXml(reader, writer);
             }
 
             
@@ -4439,26 +4426,6 @@ namespace ClosedXML.Excel
         // VML Shape for Comment
         private static Vml.Shape GenerateShape(XLCell c, string shapeTypeId)
         {
-
-            #region Office VML
-            //<v:shape id='_x0000_s1026' type='#{0}' style='visibility:hidden' fillcolor='#ffffe1' o:insetmode='auto'>
-            //    <v:fill color2='#ffffe1'/>
-            //    <v:shadow on='t' color='black' obscured='t'/>
-            //    <v:path o:connecttype='none'/>
-            //    <v:textbox style='mso-direction-alt:auto'>
-            //        <div style='text-align:left'></div>
-            //    </v:textbox>
-            //    <x:ClientData ObjectType='Note'>
-            //        <x:Anchor> {leftCol}, 15, {topRow}, 4, {rightCol}, 10, {bottomRow}, 1</x:Anchor>
-            //        <x:Row>{rowIndex}</x:Row>
-            //        <x:Column>{colIndex}</x:Column>
-            //    </x:ClientData>
-            //</v:shape>
-            #endregion
-
-            // Limitation: Most of the shape properties hard coded.
-
-           
             var rowNumber = c.Address.RowNumber;
             var columnNumber = c.Address.ColumnNumber;
             
@@ -4467,13 +4434,13 @@ namespace ClosedXML.Excel
             Vml.TextBox textBox = GetTextBox(c.Comment.Style);
             var fill = new Vml.Fill { Color2 = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2) };
             if (c.Comment.Style.ColorsAndLines.FillTransparency < 1)
-                fill.Opacity = Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.FillTransparency), 2).ToString();
+                fill.Opacity = Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.FillTransparency), 2).ToString(CultureInfo.InvariantCulture);
             Vml.Stroke stroke = GetStroke(c);
             var shape = new Vml.Shape(
                 fill,
                 stroke,
-                new Vml.Shadow() { On = true, Color = "black", Obscured = true },
-                new Vml.Path() { ConnectionPointType = Vml.Office.ConnectValues.None },
+                new Vml.Shadow { On = true, Color = "black", Obscured = true },
+                new Vml.Path { ConnectionPointType = Vml.Office.ConnectValues.None },
                 textBox,
                 new Vml.Spreadsheet.ClientData(
                     new Vml.Spreadsheet.MoveWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.Absolute ? "True": "False"), // Counterintuitive
@@ -4482,8 +4449,8 @@ namespace ClosedXML.Excel
                     new Vml.Spreadsheet.HorizontalTextAlignment(c.Comment.Style.Alignment.Horizontal.ToString().ToCamel()),
                     new Vml.Spreadsheet.VerticalTextAlignment(c.Comment.Style.Alignment.Vertical.ToString().ToCamel()),
                     new Vml.Spreadsheet.AutoFill("False"),
-                    new Vml.Spreadsheet.CommentRowTarget() { Text = (rowNumber - 1).ToString() },
-                    new Vml.Spreadsheet.CommentColumnTarget() { Text = (columnNumber - 1).ToString() },
+                    new Vml.Spreadsheet.CommentRowTarget { Text = (rowNumber - 1).ToString() },
+                    new Vml.Spreadsheet.CommentColumnTarget { Text = (columnNumber - 1).ToString() },
                     new Vml.Spreadsheet.Locked(c.Comment.Style.Protection.Locked ? "True" : "False"),
                     new Vml.Spreadsheet.LockText(c.Comment.Style.Protection.LockText ? "True" : "False"),
                     new Vml.Spreadsheet.Visible(c.Comment.Visible ? "True" : "False")
@@ -4508,21 +4475,18 @@ namespace ClosedXML.Excel
         private static Vml.Stroke GetStroke(XLCell c)
         {
             var lineDash = c.Comment.Style.ColorsAndLines.LineDash;
-            var stroke = new Vml.Stroke() { LineStyle = c.Comment.Style.ColorsAndLines.LineStyle.ToOpenXml(),
+            var stroke = new Vml.Stroke { LineStyle = c.Comment.Style.ColorsAndLines.LineStyle.ToOpenXml(),
                 DashStyle = lineDash == XLDashStyle.RoundDot || lineDash == XLDashStyle.SquareDot ? "shortDot" : lineDash.ToString().ToCamel()
             };
             if (lineDash == XLDashStyle.RoundDot)
                 stroke.EndCap = Vml.StrokeEndCapValues.Round;
             if (c.Comment.Style.ColorsAndLines.LineTransparency < 1)
-                stroke.Opacity = Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.LineTransparency), 2).ToString();
+                stroke.Opacity = Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.LineTransparency), 2).ToString(CultureInfo.InvariantCulture);
             return stroke;
         }
 
         private static Vml.TextBox GetTextBox(IXLDrawingStyle ds)
         {
-            //  <v:textbox style="layout-flow:vertical;mso-layout-flow-alt:bottom-to-top; mso-direction-alt:auto">
-            //  <v:textbox style="mso-direction-alt:auto;mso-fit-shape-to-text:t">
-
             var sb = new StringBuilder();
             var a = ds.Alignment;
 
@@ -4541,10 +4505,14 @@ namespace ClosedXML.Excel
             }
             if (a.AutomaticSize)
                 sb.Append("mso-fit-shape-to-text:t;");
-            var retVal = new Vml.TextBox() { Style = sb.ToString() };
+            var retVal = new Vml.TextBox { Style = sb.ToString() };
             var dm = ds.Margins;
             if (!dm.Automatic)
-                retVal.Inset = String.Format("{0}in,{1}in,{2}in,{3}in", dm.Left, dm.Top, dm.Right, dm.Bottom);
+                retVal.Inset = String.Format("{0}in,{1}in,{2}in,{3}in", 
+                    dm.Left.ToString(CultureInfo.InvariantCulture),
+                    dm.Top.ToString(CultureInfo.InvariantCulture),
+                    dm.Right.ToString(CultureInfo.InvariantCulture),
+                    dm.Bottom.ToString(CultureInfo.InvariantCulture));
             
             return retVal;
         }
@@ -4552,7 +4520,7 @@ namespace ClosedXML.Excel
         private static Vml.Spreadsheet.Anchor GetAnchor(XLCell cell)
         {
             var c = cell.Comment;
-            Double cWidth = c.Style.Size.Width; //(c.Style.Size.Width * 72.0 / 5.625);
+            Double cWidth = c.Style.Size.Width; 
             Int32 fcNumber = c.Position.Column - 1;
             Int32 fcOffset = Convert.ToInt32(c.Position.ColumnOffset * 7.5);
             Double widthFromColumns = cell.Worksheet.Column(c.Position.Column).Width - c.Position.ColumnOffset;
@@ -4590,38 +4558,24 @@ namespace ClosedXML.Excel
         private static StringValue GetCommentStyle(XLCell cell)
         {
             var c = cell.Comment;
-            var sb = new StringBuilder();
+            var sb = new StringBuilder("position:absolute; ");
             
             sb.Append("visibility:");
             sb.Append(c.Visible ? "visible" : "hidden");
             sb.Append(";");
 
-            //var margins = c.Style.Margins;
-            //sb.Append("margin-left:");
-            //sb.Append(margins.Left.ToString());
-            //sb.Append("pt;");
-            //sb.Append("margin-right:");
-            //sb.Append(margins.Right.ToString());
-            //sb.Append("pt;");
-            //sb.Append("margin-top:");
-            //sb.Append(margins.Top.ToString());
-            //sb.Append("pt;");
-            //sb.Append("margin-bottom:");
-            //sb.Append(margins.Bottom.ToString());
-            //sb.Append("pt;");
-
             sb.Append("width:");
-            sb.Append(Math.Round(c.Style.Size.Width * 7.5 , 2).ToString());
+            sb.Append(Math.Round(c.Style.Size.Width * 7.5, 2).ToString(CultureInfo.InvariantCulture));
             sb.Append("pt;");
             sb.Append("height:");
-            sb.Append(Math.Round(c.Style.Size.Height, 2).ToString());
+            sb.Append(Math.Round(c.Style.Size.Height, 2).ToString(CultureInfo.InvariantCulture));
             sb.Append("pt;");
 
             sb.Append("z-index:");
             sb.Append(c.ZOrder.ToString());
             
 
-            return "position:absolute; " + sb.ToString();
+            return sb.ToString();
 
         }
     }

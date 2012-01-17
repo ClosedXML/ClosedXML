@@ -66,9 +66,9 @@ namespace ClosedXML_Examples.Rows
 
             ws.Columns(3, 4).Style.Fill.BackgroundColor = XLColor.Orange;
             ws.Range("A2:A4").InsertRowsBelow(2);
-            //ws.Range("B2:B4").InsertRowsAbove(2);
-            //ws.Range("C2:C4").InsertRowsBelow(2);
-            //ws.Range("D2:D4").InsertRowsAbove(2);
+            ws.Range("B2:B4").InsertRowsAbove(2);
+            ws.Range("C2:C4").InsertRowsBelow(2);
+            ws.Range("D2:D4").InsertRowsAbove(2);
 
             workbook.SaveAs(filePath);
         }

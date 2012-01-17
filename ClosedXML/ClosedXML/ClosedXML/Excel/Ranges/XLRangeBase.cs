@@ -525,17 +525,32 @@ namespace ClosedXML.Excel
             if(sp.Row > 0) 
                 return Worksheet.Cell(sp.Row, sp.Column);
 
-            //if (includeFormats)
-            //{
-            //    using (var rowsUsed = Worksheet.Rows(1, 1))
-            //    {
-            //        foreach (var row in rowsUsed)
-            //        {
-            //            if(!row.IsEmpty(true))
-            //                return Worksheet.Cell()
-            //        }
-            //    }
-            //}
+            if (includeFormats)
+            {
+                Int32 ro = 0;
+                var rowsUsed = Worksheet.Internals.RowsCollection.Where(r =>
+                                            r.Key >= RangeAddress.FirstAddress.RowNumber
+                                            && r.Key <= RangeAddress.LastAddress.RowNumber);
+
+                if (rowsUsed.Any())
+                    ro = rowsUsed.First().Key;
+                
+
+                if (ro > 0)
+                {
+                    Int32 co = 0;
+                    var columnsUsed = Worksheet.Internals.ColumnsCollection.Where(r =>
+                                            r.Key >= RangeAddress.FirstAddress.ColumnNumber
+                                            && r.Key <= RangeAddress.LastAddress.ColumnNumber);
+
+                    if (columnsUsed.Any())
+                        ro = columnsUsed.First().Key;
+
+                    if (co > 0)
+                        return Worksheet.Cell(ro, co);
+                }
+
+            }
 
 
             return null;
@@ -932,23 +947,28 @@ namespace ClosedXML.Excel
                 RangeAddress.FirstAddress.RowNumber,
                 RangeAddress.FirstAddress.ColumnNumber - numberOfColumns,
                 RangeAddress.LastAddress.RowNumber,
-                RangeAddress.LastAddress.ColumnNumber - numberOfColumns
+                RangeAddress.FirstAddress.ColumnNumber - 1
                 );
 
             if (formatFromLeft && rangeToReturn.RangeAddress.FirstAddress.ColumnNumber > 1)
             {
-                var model = rangeToReturn.FirstColumn().ColumnLeft();
-                var modelFirstRow = model.FirstCellUsed(true);
-                var modelLastRow = model.LastCellUsed(true);
-                if (modelLastRow != null)
+                using (var firstColumnUsed = rangeToReturn.FirstColumn())
                 {
-                    Int32 firstRoReturned = modelFirstRow.Address.RowNumber
-                                            - model.RangeAddress.FirstAddress.RowNumber + 1;
-                    Int32 lastRoReturned = modelLastRow.Address.RowNumber
-                                            - model.RangeAddress.FirstAddress.RowNumber + 1;
-                    for (Int32 ro = firstRoReturned; ro <= lastRoReturned; ro++)
+                    using (var model = firstColumnUsed.ColumnLeft())
                     {
-                        rangeToReturn.Row(ro).Style = model.Cell(ro).Style;
+                        var modelFirstRow = model.FirstCellUsed(true);
+                        var modelLastRow = model.LastCellUsed(true);
+                        if (modelLastRow != null)
+                        {
+                            Int32 firstRoReturned = modelFirstRow.Address.RowNumber
+                                                    - model.RangeAddress.FirstAddress.RowNumber + 1;
+                            Int32 lastRoReturned = modelLastRow.Address.RowNumber
+                                                   - model.RangeAddress.FirstAddress.RowNumber + 1;
+                            for (Int32 ro = firstRoReturned; ro <= lastRoReturned; ro++)
+                            {
+                                rangeToReturn.Row(ro).Style = model.Cell(ro).Style;
+                            }
+                        }
                     }
                 }
             }
@@ -1111,7 +1131,7 @@ namespace ClosedXML.Excel
             var rangeToReturn = Worksheet.Range(
                 RangeAddress.FirstAddress.RowNumber - numberOfRows,
                 RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.LastAddress.RowNumber - numberOfRows,
+                RangeAddress.FirstAddress.RowNumber - 1,
                 RangeAddress.LastAddress.ColumnNumber
                 );
 

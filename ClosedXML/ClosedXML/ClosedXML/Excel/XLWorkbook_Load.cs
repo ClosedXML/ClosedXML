@@ -349,7 +349,7 @@ namespace ClosedXML.Excel
             if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = XLColor.FromHtml(strokeColor.Value);
 
             var strokeWeight = shape.Attribute("strokeweight");
-            if (strokeWeight != null) drawing.Style.ColorsAndLines.LineWeight = Double.Parse(strokeWeight.Value.Substring(0, strokeWeight.Value.Length - 2));
+            if (strokeWeight != null) drawing.Style.ColorsAndLines.LineWeight = Double.Parse(strokeWeight.Value.Substring(0, strokeWeight.Value.Length - 2), CultureInfo.InvariantCulture);
 
             var fillColor = shape.Attribute("fillcolor");
             if (fillColor != null) drawing.Style.ColorsAndLines.FillColor = XLColor.FromHtml(fillColor.Value);
@@ -362,9 +362,9 @@ namespace ClosedXML.Excel
                 {
                     String opacityVal = opacity.Value;
                     if (opacityVal.EndsWith("f"))
-                        drawing.Style.ColorsAndLines.FillTransparency = Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1)) / 65536.0;
+                        drawing.Style.ColorsAndLines.FillTransparency = Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1), CultureInfo.InvariantCulture) / 65536.0;
                     else
-                        drawing.Style.ColorsAndLines.FillTransparency = Double.Parse(opacityVal);
+                        drawing.Style.ColorsAndLines.FillTransparency = Double.Parse(opacityVal, CultureInfo.InvariantCulture);
                 }
             }
 
@@ -376,10 +376,11 @@ namespace ClosedXML.Excel
                 {
                     String opacityVal = opacity.Value;
                     if (opacityVal.EndsWith("f"))
-                        drawing.Style.ColorsAndLines.LineTransparency = Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1)) / 65536.0;
+                        drawing.Style.ColorsAndLines.LineTransparency = Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1), CultureInfo.InvariantCulture) / 65536.0;
                     else
-                        drawing.Style.ColorsAndLines.LineTransparency = Double.Parse(opacityVal);
+                        drawing.Style.ColorsAndLines.LineTransparency = Double.Parse(opacityVal, CultureInfo.InvariantCulture);
                 }
+
                 var dashStyle = stroke.Attribute("dashstyle");
                 if (dashStyle != null)
                 {
@@ -402,6 +403,20 @@ namespace ClosedXML.Excel
                             case "longdashdot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDashDot; break;
                             case "longdashdotdot": drawing.Style.ColorsAndLines.LineDash = XLDashStyle.LongDashDotDot; break;
                         }
+                    }
+                }
+
+                var lineStyle = stroke.Attribute("linestyle");
+                if (lineStyle != null)
+                {
+                    String lineStyleVal = lineStyle.Value.ToLower();
+                    switch (lineStyleVal)
+                    {
+                        case "single": drawing.Style.ColorsAndLines.LineStyle = XLLineStyle.Single ; break;
+                        case "thickbetweenthin": drawing.Style.ColorsAndLines.LineStyle = XLLineStyle.ThickBetweenThin; break;
+                        case "thickthin": drawing.Style.ColorsAndLines.LineStyle = XLLineStyle.ThickThin; break;
+                        case "thinthick": drawing.Style.ColorsAndLines.LineStyle = XLLineStyle.ThinThick; break;
+                        case "thinthin": drawing.Style.ColorsAndLines.LineStyle = XLLineStyle.ThinThin; break;
                     }
                 }
             }
@@ -429,9 +444,9 @@ namespace ClosedXML.Excel
         {
             String v = value.Trim();
             if (v.EndsWith("pt"))
-                return Double.Parse(v.Substring(0, v.Length - 2)) / 72.0;
+                return Double.Parse(v.Substring(0, v.Length - 2), CultureInfo.InvariantCulture) / 72.0;
             else
-                return Double.Parse(v.Substring(0, v.Length - 2));
+                return Double.Parse(v.Substring(0, v.Length - 2), CultureInfo.InvariantCulture);
         }
 
         private static void LoadTextBoxStyle<T>(IXLDrawing<T> xlDrawing, XAttribute attStyle)
@@ -456,10 +471,6 @@ namespace ClosedXML.Excel
                     case "layout-flow": isVertical = value.Equals("vertical"); break;
                     case "mso-direction-alt": if (value == "auto") xlDrawing.Style.Alignment.Direction = XLDrawingTextDirection.Context; break;
                     case "direction": if (value == "RTL") xlDrawing.Style.Alignment.Direction = XLDrawingTextDirection.RightToLeft; break;
-                    //case "margin-bottom": xlDrawing.Style.Margins.Bottom = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    //case "width": xlDrawing.Style.Size.Width = Double.Parse(value.Replace("pt", String.Empty)) / 7.5; break;
-                    //case "height": xlDrawing.Style.Size.Height = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    //case "z-index": xlDrawing.ZOrder = Int32.Parse(value); break;
                 }
                 if (isVertical && xlDrawing.Style.Alignment.Orientation == XLDrawingTextOrientation.LeftToRight)
                     xlDrawing.Style.Alignment.Orientation = XLDrawingTextOrientation.TopToBottom;
@@ -524,9 +535,9 @@ namespace ClosedXML.Excel
         {
             var location = anchor.Value.Split(',');
             drawing.Position.Column = int.Parse(location[0]) + 1;
-            drawing.Position.ColumnOffset = Double.Parse(location[1]) / 7.2;
+            drawing.Position.ColumnOffset = Double.Parse(location[1], CultureInfo.InvariantCulture) / 7.2;
             drawing.Position.Row = int.Parse(location[2]) + 1;
-            drawing.Position.RowOffset = Double.Parse(location[3]);
+            drawing.Position.RowOffset = Double.Parse(location[3], CultureInfo.InvariantCulture);
         }
 
         private void LoadShapeProperties<T>(IXLDrawing<T> xlDrawing, XElement shape)
@@ -547,12 +558,8 @@ namespace ClosedXML.Excel
                 switch (attribute)
                 {
                     case "visibility": xlDrawing.Visible = value.ToLower().Equals("visible"); break;
-                    //case "margin-left": xlDrawing.Style.Margins.Left = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    //case "margin-right": xlDrawing.Style.Margins.Right = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    //case "margin-top": xlDrawing.Style.Margins.Top = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    //case "margin-bottom": xlDrawing.Style.Margins.Bottom = Double.Parse(value.Replace("pt", String.Empty)); break;
-                    case "width": xlDrawing.Style.Size.Width = Double.Parse(value.Replace("pt", String.Empty)) / 7.5; break;
-                    case "height": xlDrawing.Style.Size.Height = Double.Parse(value.Replace("pt", String.Empty)) ; break;
+                    case "width": xlDrawing.Style.Size.Width = Double.Parse(value.Replace("pt", String.Empty), CultureInfo.InvariantCulture) / 7.5; break;
+                    case "height": xlDrawing.Style.Size.Height = Double.Parse(value.Replace("pt", String.Empty), CultureInfo.InvariantCulture); break;
                     case "z-index": xlDrawing.ZOrder = Int32.Parse(value); break;
                 }
             }
@@ -771,7 +778,6 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
-                    //xlCell.cellValue = DateTime.FromOADate(Double.Parse(dCell.CellValue.Text, CultureInfo.InvariantCulture));
                     xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
                     xlCell._dataType = XLCellValues.DateTime;
                 }
@@ -1005,7 +1011,7 @@ namespace ClosedXML.Excel
                         if (isText)
                             xlFilter.Value = filter.Val.Value;
                         else
-                            xlFilter.Value = Double.Parse(filter.Val.Value);
+                            xlFilter.Value = Double.Parse(filter.Val.Value, CultureInfo.InvariantCulture);
 
                         if (filter.Operator != null)
                             xlFilter.Operator = filter.Operator.Value.ToClosedXml();
@@ -1067,7 +1073,7 @@ namespace ClosedXML.Excel
                         }
                         else
                         {
-                            xlFilter.Value = Double.Parse(filter.Val.Value);
+                            xlFilter.Value = Double.Parse(filter.Val.Value, CultureInfo.InvariantCulture);
                             condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
                         }
 

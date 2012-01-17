@@ -217,16 +217,15 @@
     <Compile Include="Styles\StyleNumberFormat.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ClosedXML.snk" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj">
       <Project>{BD5E6BFE-E837-4A35-BCA9-39667D873A20}</Project>
       <Name>ClosedXML</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="ClosedXML.snk" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
