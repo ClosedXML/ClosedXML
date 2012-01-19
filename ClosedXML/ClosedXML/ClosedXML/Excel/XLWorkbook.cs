@@ -516,10 +516,16 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
+        
         /// <summary>
         ///   Creates a new Excel workbook.
         /// </summary>
-        public XLWorkbook(XLEventTracking eventTracking = XLEventTracking.Enabled)
+        public XLWorkbook()
+            :this(XLEventTracking.Enabled)
+        {
+            
+        }
+        public XLWorkbook(XLEventTracking eventTracking)
         {
             _eventTracking = eventTracking;
             DefaultRowHeight = 15;
@@ -552,20 +558,33 @@ namespace ClosedXML.Excel
         ///   Opens an existing workbook from a file.
         /// </summary>
         /// <param name = "file">The file to open.</param>
-        public XLWorkbook(String file, XLEventTracking eventTracking = XLEventTracking.Enabled)
-            : this()
+        public XLWorkbook(String file)
+            : this(file, XLEventTracking.Enabled)
+        {
+
+        }
+
+        public XLWorkbook(String file, XLEventTracking eventTracking)
+            : this(eventTracking)
         {
             _loadSource = XLLoadSource.File;
             _originalFile = file;
             Load(file);
         }
 
+
+
         /// <summary>
         ///   Opens an existing workbook from a stream.
         /// </summary>
         /// <param name = "stream">The stream to open.</param>
-        public XLWorkbook(Stream stream, XLEventTracking eventTracking = XLEventTracking.Enabled)
-            : this()
+        public XLWorkbook(Stream stream):this(stream, XLEventTracking.Enabled)
+        {
+            
+        }
+
+        public XLWorkbook(Stream stream, XLEventTracking eventTracking)
+            : this(eventTracking)
         {
             _loadSource = XLLoadSource.Stream;
             _originalStream = stream;
