@@ -38,6 +38,8 @@ namespace ClosedXML.Excel
         /// <param name="numberOfRows">The number of rows to insert.</param>
         IXLRows InsertRowsAbove(Int32 numberOfRows);
 
+        IXLRow AdjustToContents();
+
         /// <summary>
         /// Adjusts the height of the row based on its contents, starting from the startColumn.
         /// </summary>

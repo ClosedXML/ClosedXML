@@ -289,7 +289,7 @@ namespace ClosedXML.Excel
 
                     Double maxLongCol = kpList.Max(kp => kp.Value.Length);
                     Double maxHeightCol = kpList.Max(kp => kp.Key.GetHeight());
-                    Int32 lineCount = kpList.Count(kp => kp.Value.Contains(Environment.NewLine));
+                    Int32 lineCount = kpList.Count(kp => kp.Value.Contains(Environment.NewLine)) + 1;
                     if (textRotation == 0)
                         thisHeight = maxHeightCol * lineCount;
                     else
