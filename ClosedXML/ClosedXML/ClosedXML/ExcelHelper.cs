@@ -84,12 +84,33 @@ namespace ClosedXML.Excel
 
         public static bool IsValidColumn(string column)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(column) || column.Length > 3)
+            Int32 length = column.Length;
+            if (StringExtensions.IsNullOrWhiteSpace(column) || length > 3)
                 return false;
 
             String theColumn = column.ToUpper();
-            return
-                !column.Where((t, i) => theColumn[i] < 'A' || theColumn[i] > 'Z' || (i == 2 && theColumn[i] > 'D')).Any();
+
+            
+            Boolean isValid = theColumn[0] >= 'A' && theColumn[0] <= 'Z';
+            if (length == 1)
+                return isValid;
+
+            if (length == 2)
+                return isValid && theColumn[1] >= 'A' && theColumn[1] <= 'Z';
+
+            if (theColumn[0] < 'X')
+                return theColumn[1] >= 'A' && theColumn[1] <= 'Z'
+                    && theColumn[2] >= 'A' && theColumn[2] <= 'Z';
+            
+            if (theColumn[0] != 'X') return false;
+
+            if (theColumn[1] < 'F')
+                return theColumn[2] >= 'A' && theColumn[2] <= 'Z';
+
+            if (theColumn[1] != 'F') return false;
+
+            return theColumn[2] >= 'A' && theColumn[2] <= 'D';
+
         }
 
         public static bool IsValidRow(string rowString)

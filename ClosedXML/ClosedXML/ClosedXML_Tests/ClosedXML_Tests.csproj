@@ -71,6 +71,7 @@
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
+    <Compile Include="ExcelHelperTest.cs" />
     <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
     <Compile Include="Excel\Cells\XLCellTest.cs" />
     <Compile Include="Excel\Columns\ColumnsTests.cs" />
