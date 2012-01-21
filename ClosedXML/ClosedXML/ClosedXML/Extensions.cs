@@ -203,10 +203,12 @@ namespace ClosedXML.Excel
                 return 0;
 
             var font = GetCachedFont(fontBase);
-            
-            double fMaxDigitWidth  = (double)ExcelHelper.Graphic.MeasureString("X", font).Width;
-               
-            return Math.Truncate((text.ToCharArray().Count() * fMaxDigitWidth + 5.0) / fMaxDigitWidth * 256.0) / 256.0;
+
+            var textSize = TextRenderer.MeasureText(text, font);
+            double width = (((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
+            width = (double)decimal.Round((decimal)width + 0.2M, 2);
+
+            return width;
         }
 
         private static FontStyle GetFontStyle(IXLFontBase font)

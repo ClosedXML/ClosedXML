@@ -8,11 +8,6 @@ namespace ClosedXML_Tests.Examples
     public class RowsTests
     {
         [TestMethod]
-        public void InsertRows()
-        {
-            TestHelper.RunTestExample<InsertRows>(@"Rows\InsertRows.xlsx");
-        }
-        [TestMethod]
         public void RowCells()
         {
             TestHelper.RunTestExample<RowCells>(@"Rows\RowCells.xlsx");

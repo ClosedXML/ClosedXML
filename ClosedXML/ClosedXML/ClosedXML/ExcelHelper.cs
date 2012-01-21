@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
 
         private const Int32 TwoT26 = 26 * 26;
         internal static readonly NumberFormatInfo NumberFormatForParse = CultureInfo.InvariantCulture.NumberFormat;
-        public static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(32, 32));
+        public static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(200, 200));
         public static readonly Double DpiX = Graphic.DpiX;
 
         /// <summary>

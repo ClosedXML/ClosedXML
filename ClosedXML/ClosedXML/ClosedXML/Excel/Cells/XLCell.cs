@@ -407,6 +407,13 @@
             set
             {
                 FormulaA1 = String.Empty;
+
+                if (value as XLCells != null) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
+
+                if (SetRangeRows(value)) return;
+
+                if (SetRangeColumns(value)) return;
+
                 if (SetEnumerable(value)) return;
 
                 if (SetRange(value)) return;
@@ -414,6 +421,66 @@
                 if (!SetRichText(value))
                     SetValue(value);
             }
+        }
+
+        private bool SetRangeColumns(object value)
+        {
+            XLRangeColumns columns = value as XLRangeColumns;
+            if (columns == null)
+                return SetColumns(value);
+
+            XLCell cell = this;
+            foreach (var column in columns)
+            {
+                cell.SetRange(column);
+                cell = cell.CellRight();
+            }
+            return true;
+        }
+
+        private bool SetColumns(object value)
+        {
+            XLColumns columns = value as XLColumns;
+            if (columns == null)
+                return false;
+
+            XLCell cell = this;
+            foreach (var column in columns)
+            {
+                cell.SetRange(column);
+                cell = cell.CellRight();
+            }
+            return true;
+        }
+
+        private bool SetRangeRows(object value)
+        {
+            XLRangeRows rows = value as XLRangeRows;
+            if (rows == null)
+                return SetRows(value);
+
+            XLCell cell = this;
+            foreach (var row in rows)
+            {
+                cell.SetRange(row);
+                cell = cell.CellBelow();
+            }
+            return true;
+        }
+
+        private bool SetRows(object value)
+        {
+            XLRows rows = value as XLRows;
+            if (rows == null)
+                return false;
+
+            XLCell cell = this;
+            foreach (var row in rows)
+            {
+                cell.SetRange(row);
+                cell = cell.CellBelow();
+            }
+            return true;
         }
 
         public IXLTable InsertTable(IEnumerable data)

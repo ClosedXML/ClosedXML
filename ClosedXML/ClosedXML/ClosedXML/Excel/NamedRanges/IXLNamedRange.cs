@@ -81,6 +81,11 @@ namespace ClosedXML.Excel
         /// <param name="rangeAddress">The ranges to remove.</param>
         void Remove(IXLRanges ranges);
 
-        String RefersTo { get; }
+
+        IXLNamedRange SetRefersTo(String range);
+        IXLNamedRange SetRefersTo(IXLRangeBase range);
+        IXLNamedRange SetRefersTo(IXLRanges ranges);
+
+        String RefersTo { get; set; }
     }
 }

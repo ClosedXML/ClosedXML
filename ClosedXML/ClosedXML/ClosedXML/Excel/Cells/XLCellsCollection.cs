@@ -179,9 +179,9 @@ namespace ClosedXML.Excel
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int co = columnStart; co <= columnEnd; co++)
+            for (int co = columnStart; co <= finalColumn; co++)
             {
-                for (int ro = rowStart; ro <= rowEnd; ro++)
+                for (int ro = rowStart; ro <= finalRow; ro++)
                 {
                     XLCell cell;
                     if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
@@ -336,9 +336,9 @@ namespace ClosedXML.Excel
 
         public Int32 MinRowInColumn(Int32 column)
         {
-            XLCell cell;
             for (int row = 1; row <= MaxRowUsed; row++)
             {
+                XLCell cell;
                 if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
                     return row;
             }
@@ -348,9 +348,9 @@ namespace ClosedXML.Excel
 
         public Int32 MaxRowInColumn(Int32 column)
         {
-            XLCell cell;
             for (int row = MaxRowUsed; row >= 1; row--)
             {
+                XLCell cell;
                 if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
                     return row;
             }
@@ -360,9 +360,9 @@ namespace ClosedXML.Excel
 
         public Int32 MinColumnInRow(Int32 row)
         {
-            XLCell cell;
             for (int column = 1; column <= MaxColumnUsed; column++)
             {
+                XLCell cell;
                 if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
                     return column;
             }
@@ -372,9 +372,9 @@ namespace ClosedXML.Excel
 
         public Int32 MaxColumnInRow(Int32 row)
         {
-            XLCell cell;
             for (int column = MaxColumnUsed; column >= 1; column--)
             {
+                XLCell cell;
                 if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
                     return column;
             }

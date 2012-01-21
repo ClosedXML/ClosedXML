@@ -104,12 +104,38 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public String RefersTo { get { return ToString(); } }
+        public String RefersTo
+        {
+            get { return ToString(); }
+            set
+            {
+                _rangeList.Clear();
+                _rangeList.Add(value);
+            }
+        }
 
         internal List<String> RangeList
         {
             get { return _rangeList; }
             set { _rangeList = value; }
+        }
+
+        public IXLNamedRange SetRefersTo(String range)
+        {
+            RefersTo = range;
+            return this;
+        }
+        public IXLNamedRange SetRefersTo(IXLRangeBase range)
+        {
+            _rangeList.Clear();
+            _rangeList.Add(range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true))
+            return this;
+        }
+        public IXLNamedRange SetRefersTo(IXLRanges ranges)
+        {
+            _rangeList.Clear();
+            ranges.ForEach(r => _rangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
+            return this;
         }
     }
 }

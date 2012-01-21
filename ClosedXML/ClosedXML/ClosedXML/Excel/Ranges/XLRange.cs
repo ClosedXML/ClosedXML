@@ -408,12 +408,24 @@ namespace ClosedXML.Excel
         }
         public XLRangeColumn FirstColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null)
         {
+            if (predicate == null)
+            {
+                Int32 firstColumnUsed = Worksheet.Internals.CellsCollection.FirstColumnUsed(
+                    RangeAddress.FirstAddress.RowNumber,
+                    RangeAddress.FirstAddress.ColumnNumber,
+                    RangeAddress.LastAddress.RowNumber,
+                    RangeAddress.LastAddress.ColumnNumber,
+                    includeFormats);
+
+                return firstColumnUsed == 0 ? null : Column(firstColumnUsed);
+            }
+
             Int32 columnCount = ColumnCount();
             for (Int32 co = 1; co <= columnCount; co++)
             {
                 var column = Column(co);
 
-                if (!column.IsEmpty(includeFormats) && (predicate == null || predicate(column)))
+                if (!column.IsEmpty(includeFormats) && predicate(column))
                     return column;
                 column.Dispose();
             }
@@ -516,12 +528,26 @@ namespace ClosedXML.Excel
         }
         public XLRangeRow FirstRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null)
         {
+            if (predicate == null)
+            {
+                Int32 rowFromCells = Worksheet.Internals.CellsCollection.FirstRowUsed(
+                    RangeAddress.FirstAddress.RowNumber,
+                    RangeAddress.FirstAddress.ColumnNumber,
+                    RangeAddress.LastAddress.RowNumber,
+                    RangeAddress.LastAddress.ColumnNumber,
+                    includeFormats);
+
+                //Int32 rowFromRows = Worksheet.Internals.RowsCollection.FirstRowUsed(includeFormats);
+
+                return rowFromCells == 0 ? null : Row(rowFromCells);
+            }
+
             Int32 rowCount = RowCount();
             for (Int32 ro = 1; ro <= rowCount; ro++)
             {
                 var row = Row(ro);
 
-                if (!row.IsEmpty(includeFormats) && (predicate == null || predicate(row)))
+                if (!row.IsEmpty(includeFormats) && predicate(row))
                     return row;
                 row.Dispose();
             }

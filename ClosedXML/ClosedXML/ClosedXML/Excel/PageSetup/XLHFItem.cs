@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
             if(texts.ContainsKey(occurrence))
             {
                 foreach (var hfText in texts[occurrence])
-                    sb.Append(hfText.HFText);
+                    sb.Append(hfText.GetHFText(sb.ToString()));
             }
 
             return sb.ToString();

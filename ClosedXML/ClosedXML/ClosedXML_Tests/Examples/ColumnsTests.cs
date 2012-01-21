@@ -27,11 +27,6 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<DeletingColumns>(@"Columns\DeletingColumns.xlsx");
         }
-        [TestMethod]
-        public void InsertColumns()
-        {
-            TestHelper.RunTestExample<InsertColumns>(@"Columns\InsertColumns.xlsx");
-        }
 
     }
 }

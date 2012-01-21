@@ -16,10 +16,14 @@ namespace ClosedXML.Excel
             get { return _deleted; }
         }
 
+        public Int32 MaxRowUsed;
+
         #region IDictionary<int,XLRow> Members
 
         public void Add(int key, XLRow value)
         {
+            if (key > MaxRowUsed) MaxRowUsed = key;
+
             if (_deleted.ContainsKey(key))
                 _deleted.Remove(key);
 
@@ -62,6 +66,8 @@ namespace ClosedXML.Excel
 
         public void Add(KeyValuePair<int, XLRow> item)
         {
+            if (item.Key > MaxRowUsed) MaxRowUsed = item.Key;
+
             if (_deleted.ContainsKey(item.Key))
                 _deleted.Remove(item.Key);
 
