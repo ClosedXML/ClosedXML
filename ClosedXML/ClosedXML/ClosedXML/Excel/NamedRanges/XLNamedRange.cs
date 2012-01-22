@@ -128,7 +128,7 @@ namespace ClosedXML.Excel
         public IXLNamedRange SetRefersTo(IXLRangeBase range)
         {
             _rangeList.Clear();
-            _rangeList.Add(range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true))
+            _rangeList.Add(range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
             return this;
         }
         public IXLNamedRange SetRefersTo(IXLRanges ranges)
