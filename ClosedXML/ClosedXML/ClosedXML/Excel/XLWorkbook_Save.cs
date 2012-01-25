@@ -133,7 +133,7 @@ namespace ClosedXML.Excel
 
             foreach (XLWorksheet worksheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
-                context.RelIdGenerator.Reset(RelType.Worksheet);
+                //context.RelIdGenerator.Reset(RelType.Worksheet);
                 WorksheetPart worksheetPart;
                 string wsRelId = worksheet.RelId;
                 if (workbookPart.Parts.Any(p => p.RelationshipId == wsRelId))
@@ -145,17 +145,18 @@ namespace ClosedXML.Excel
                 else
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(wsRelId);
 
-                
-                context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Worksheet);
+
+                context.RelIdGenerator.AddValues(worksheetPart.HyperlinkRelationships.Select(hr => hr.Id).ToList(), RelType.Workbook);
+                context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Workbook);
                 if (worksheetPart.DrawingsPart != null)
-                    context.RelIdGenerator.AddValues(worksheetPart.DrawingsPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Worksheet);
+                    context.RelIdGenerator.AddValues(worksheetPart.DrawingsPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Workbook);
 
                 // delete comment related parts (todo: review)
                 DeleteComments(worksheetPart, worksheet, context);
                 
                 if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
                 {
-                    WorksheetCommentsPart worksheetCommentsPart = worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Worksheet));
+                    WorksheetCommentsPart worksheetCommentsPart = worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
 
                     GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
 
@@ -165,7 +166,7 @@ namespace ClosedXML.Excel
                     {
                         if (StringExtensions.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
                         {
-                            worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Worksheet);
+                            worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Workbook);
                             worksheet.LegacyDrawingIsNew = true;
                         }
 
@@ -263,14 +264,16 @@ namespace ClosedXML.Excel
         private static void GenerateTables(XLWorksheet worksheet, WorksheetPart worksheetPart, SaveContext context)
         {
             worksheetPart.Worksheet.RemoveAllChildren<TablePart>();
-
+            
             if (!worksheet.Tables.Any()) return;
 
             foreach (IXLTable table in worksheet.Tables)
             {
-                string tableRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                String tableRelId = context.RelIdGenerator.GetNext(RelType.Workbook); 
+                
                 var xlTable = (XLTable)table;
                 xlTable.RelId = tableRelId;
+                
                 var tableDefinitionPart = worksheetPart.AddNewPart<TableDefinitionPart>(tableRelId);
                 GenerateTableDefinitionPartContent(tableDefinitionPart, xlTable, context);
             }

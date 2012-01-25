@@ -334,9 +334,7 @@ namespace ClosedXML.Excel
                     unsupportedSheet.IsActive = true;
                 else
                 {
-                    Int32 sId = (Int32)(workbookView.ActiveTab.Value + 1);
-                    Worksheet(sId).SetTabActive();
-                    //- _unsupportedSheets.Keys.Where(n=>n <= sId ).Count()
+                    Worksheet((Int32)(workbookView.ActiveTab.Value + 1)).SetTabActive();
                 }
             }
 

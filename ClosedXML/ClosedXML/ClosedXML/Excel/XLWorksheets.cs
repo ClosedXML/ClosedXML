@@ -95,9 +95,10 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Add(String sheetName, Int32 position)
         {
-            var ws = Add(sheetName);
-            ws.Position = position;
-            return ws;
+            var sheet = new XLWorksheet(sheetName, m_workbook);
+            m_worksheets.Add(sheetName, sheet);
+            sheet._position = position;
+            return sheet;
         }
 
         public void Delete(String sheetName)
