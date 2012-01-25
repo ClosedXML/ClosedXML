@@ -430,6 +430,9 @@ namespace ClosedXML.Excel
             if (workbook.WorkbookProperties.CodeName == null)
                 workbook.WorkbookProperties.CodeName = "ThisWorkbook";
 
+            if (Use1904DateSystem)
+                workbook.WorkbookProperties.Date1904 = true;
+
             #endregion
 
             if (workbook.BookViews == null)

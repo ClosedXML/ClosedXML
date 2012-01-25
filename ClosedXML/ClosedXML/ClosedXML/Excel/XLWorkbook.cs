@@ -634,5 +634,17 @@ namespace ClosedXML.Excel
         {
             Worksheets.ForEach(w => w.Dispose());
         }
+
+        public Boolean Use1904DateSystem { get; set; }
+        public XLWorkbook SetUse1904DateSystem()
+        {
+            return SetUse1904DateSystem(true);
+        }
+
+        public XLWorkbook SetUse1904DateSystem(Boolean value)
+        {
+            Use1904DateSystem = value;
+            return this;
+        }
     }
 }

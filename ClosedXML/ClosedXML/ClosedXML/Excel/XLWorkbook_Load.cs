@@ -83,6 +83,8 @@ namespace ClosedXML.Excel
                         CustomProperties.Add(name, m.VTBool.Text == "true");
                 }
             }
+            var date1904 = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties.Date1904;
+            Use1904DateSystem = date1904 != null && date1904.Value;
 
             var referenceMode = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties.ReferenceMode;
             if (referenceMode != null)
