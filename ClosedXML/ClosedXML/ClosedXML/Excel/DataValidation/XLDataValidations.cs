@@ -29,7 +29,14 @@ namespace ClosedXML.Excel
 
         public Boolean ContainsSingle(IXLRange range)
         {
-            return _dataValidations.Any(dv => dv.Ranges.Count == 1 && dv.Ranges.Contains(range));
+            Int32 count = 0;
+            foreach (var xlDataValidation in _dataValidations.Where(dv => dv.Ranges.Contains(range)))
+            {
+                count++;
+                if (count > 1) return false;
+            }
+
+            return count == 1;
         }
 
         #endregion
