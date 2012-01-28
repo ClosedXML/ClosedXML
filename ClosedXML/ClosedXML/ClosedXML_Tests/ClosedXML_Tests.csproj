@@ -76,6 +76,7 @@
     <Compile Include="Excel\Cells\XLCellTest.cs" />
     <Compile Include="Excel\Columns\ColumnsTests.cs" />
     <Compile Include="Excel\Coordinates\XLAddressTest.cs" />
+    <Compile Include="Excel\Misc\StylesTest.cs" />
     <Compile Include="Excel\Misc\XLWorkbookTests.cs" />
     <Compile Include="Excel\Misc\Extensions.cs" />
     <Compile Include="Excel\NamedRanges\NamedRangesTests.cs" />

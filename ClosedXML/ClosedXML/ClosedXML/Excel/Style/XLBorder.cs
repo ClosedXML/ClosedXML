@@ -3,6 +3,8 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
+    using System.Collections.Generic;
+
     internal class XLBorder : IXLBorder
     {
         private readonly IXLStylized _container;
@@ -72,6 +74,66 @@ namespace ClosedXML.Excel
                     r.LastColumn().Style.Border.RightBorderColor = value;
                     r.FirstRow().Style.Border.TopBorderColor = value;
                     r.LastRow().Style.Border.BottomBorderColor = value;
+                }
+            }
+        }
+
+        public XLBorderStyleValues InsideBorder
+        {
+            set
+            {
+                if (_container == null || _container.UpdatingStyle) return;
+
+                foreach (IXLRange r in _container.RangesUsed)
+                {
+                    Dictionary<Int32, XLBorderStyleValues> topBorders = new Dictionary<int, XLBorderStyleValues>();
+                    r.FirstRow().Cells().ForEach(c=>topBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1, c.Style.Border.TopBorder));
+
+                    Dictionary<Int32, XLBorderStyleValues> bottomBorders = new Dictionary<int, XLBorderStyleValues>();
+                    r.LastRow().Cells().ForEach(c => bottomBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1, c.Style.Border.BottomBorder));
+
+                    Dictionary<Int32, XLBorderStyleValues> leftBorders = new Dictionary<int, XLBorderStyleValues>();
+                    r.FirstColumn().Cells().ForEach(c => leftBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1, c.Style.Border.LeftBorder));
+                    
+                    Dictionary<Int32, XLBorderStyleValues> rightBorders = new Dictionary<int, XLBorderStyleValues>();
+                    r.LastColumn().Cells().ForEach(c => rightBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1, c.Style.Border.RightBorder));
+
+                    r.Cells().Style.Border.OutsideBorder = value;
+
+                    topBorders.ForEach(kp => r.FirstRow().Cell(kp.Key).Style.Border.TopBorder = kp.Value);
+                    bottomBorders.ForEach(kp => r.LastRow().Cell(kp.Key).Style.Border.BottomBorder = kp.Value);
+                    leftBorders.ForEach(kp => r.FirstColumn().Cell(kp.Key).Style.Border.LeftBorder = kp.Value);
+                    rightBorders.ForEach(kp => r.LastColumn().Cell(kp.Key).Style.Border.RightBorder = kp.Value);
+                }
+            }
+        }
+
+        public IXLColor InsideBorderColor
+        {
+            set
+            {
+                if (_container == null || _container.UpdatingStyle) return;
+
+                foreach (IXLRange r in _container.RangesUsed)
+                {
+                    Dictionary<Int32, IXLColor> topBorders = new Dictionary<int, IXLColor>();
+                    r.FirstRow().Cells().ForEach(c => topBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1, c.Style.Border.TopBorderColor));
+
+                    Dictionary<Int32, IXLColor> bottomBorders = new Dictionary<int, IXLColor>();
+                    r.LastRow().Cells().ForEach(c => bottomBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1, c.Style.Border.BottomBorderColor));
+
+                    Dictionary<Int32, IXLColor> leftBorders = new Dictionary<int, IXLColor>();
+                    r.FirstColumn().Cells().ForEach(c => leftBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1, c.Style.Border.LeftBorderColor));
+
+                    Dictionary<Int32, IXLColor> rightBorders = new Dictionary<int, IXLColor>();
+                    r.LastColumn().Cells().ForEach(c => rightBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1, c.Style.Border.RightBorderColor));
+
+                    r.Cells().Style.Border.OutsideBorderColor = value;
+
+                    topBorders.ForEach(kp => r.FirstRow().Cell(kp.Key).Style.Border.TopBorderColor = kp.Value);
+                    bottomBorders.ForEach(kp => r.LastRow().Cell(kp.Key).Style.Border.BottomBorderColor = kp.Value);
+                    leftBorders.ForEach(kp => r.FirstColumn().Cell(kp.Key).Style.Border.LeftBorderColor = kp.Value);
+                    rightBorders.ForEach(kp => r.LastColumn().Cell(kp.Key).Style.Border.RightBorderColor = kp.Value);
                 }
             }
         }
@@ -260,6 +322,18 @@ namespace ClosedXML.Excel
         public IXLStyle SetOutsideBorderColor(IXLColor value)
         {
             OutsideBorderColor = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetInsideBorder(XLBorderStyleValues value)
+        {
+            InsideBorder = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetInsideBorderColor(IXLColor value)
+        {
+            InsideBorderColor = value;
             return _container.Style;
         }
 
