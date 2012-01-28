@@ -5,6 +5,7 @@ using System.IO;
 namespace ClosedXML.Excel
 {
     using System.Linq;
+    using System.Data;
 
     public enum XLEventTracking { Enabled, Disabled }
     public enum XLCalculateMode
@@ -645,6 +646,24 @@ namespace ClosedXML.Excel
         {
             Use1904DateSystem = value;
             return this;
+        }
+
+        public IXLWorksheet AddWorksheet(String sheetName)
+        {
+            return Worksheets.Add(sheetName);
+        }
+
+        public IXLWorksheet AddWorksheet(String sheetName, Int32 position)
+        {
+            return Worksheets.Add(sheetName, position);
+        }
+        public IXLWorksheet AddWorksheet(DataTable dataTable)
+        {
+            return Worksheets.Add(dataTable);
+        }
+        public void AddWorksheet(DataSet dataSet)
+        {
+            Worksheets.Add(dataSet);
         }
     }
 }

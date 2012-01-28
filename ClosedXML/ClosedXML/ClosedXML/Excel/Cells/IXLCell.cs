@@ -127,11 +127,15 @@ namespace ClosedXML.Excel
         /// <value>The formula with A1 references.</value>
         String FormulaA1 { get; set; }
 
+        IXLCell SetFormulaA1(String formula);
+
         /// <summary>
         /// Gets or sets the cell's formula with R1C1 references.
         /// </summary>
         /// <value>The formula with R1C1 references.</value>
         String FormulaR1C1 { get; set; }
+
+        IXLCell SetFormulaR1C1(String formula);
 
         /// <summary>
         /// Returns this cell as an IXLRange.

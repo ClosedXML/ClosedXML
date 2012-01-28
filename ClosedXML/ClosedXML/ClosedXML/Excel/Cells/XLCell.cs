@@ -1052,7 +1052,8 @@
 
         public Boolean IsMerged()
         {
-            return Worksheet.Internals.MergedRanges.Any(AsRange().Intersects);
+            using (var asRange = AsRange())
+                return Worksheet.Internals.MergedRanges.Any(asRange.Intersects);
         }
 
         public Boolean IsEmpty()
@@ -1231,7 +1232,10 @@
 
         private void ClearMerged()
         {
-            var mergeToDelete = Worksheet.Internals.MergedRanges.Where(merge => merge.Intersects(AsRange())).ToList();
+            List<IXLRange> mergeToDelete;
+            using (var asRange = AsRange())
+                mergeToDelete = Worksheet.Internals.MergedRanges.Where(merge => merge.Intersects(asRange)).ToList();
+
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
@@ -2167,5 +2171,17 @@
         }
 
         #endregion
+
+        public IXLCell SetFormulaA1(String formula)
+        {
+            FormulaA1 = formula;
+            return this;
+        }
+
+        public IXLCell SetFormulaR1C1(String formula)
+        {
+            FormulaR1C1 = formula;
+            return this;
+        }
     }
 }

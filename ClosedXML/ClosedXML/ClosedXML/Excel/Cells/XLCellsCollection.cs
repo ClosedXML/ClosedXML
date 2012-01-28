@@ -198,6 +198,7 @@ namespace ClosedXML.Excel
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
+            
             for (int ro = finalRow; ro >= rowStart; ro--)
             {
                 for (int co = finalColumn; co >= columnStart; co--)

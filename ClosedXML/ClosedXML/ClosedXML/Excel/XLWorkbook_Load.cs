@@ -352,7 +352,7 @@ namespace ClosedXML.Excel
             if (strokeWeight != null) drawing.Style.ColorsAndLines.LineWeight = Double.Parse(strokeWeight.Value.Substring(0, strokeWeight.Value.Length - 2), CultureInfo.InvariantCulture);
 
             var fillColor = shape.Attribute("fillcolor");
-            if (fillColor != null) drawing.Style.ColorsAndLines.FillColor = XLColor.FromHtml(fillColor.Value);
+            if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = XLColor.FromHtml(fillColor.Value);
 
             var fill = shape.Elements().First(e => e.Name.LocalName == "fill");
             if (fill != null)
@@ -486,7 +486,7 @@ namespace ClosedXML.Excel
             LoadDrawingProtection<T>(drawing, clientData);
 
             var visible = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "Visible");
-            drawing.Visible = !(visible != null && visible.Value.ToLower() == "false");
+            drawing.Visible = visible != null && visible.Value.ToLower().StartsWith("t");
 
             LoadDrawingHAlignment<T>(drawing, clientData);
             LoadDrawingVAlignment<T>(drawing, clientData);
