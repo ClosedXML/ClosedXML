@@ -571,7 +571,7 @@ namespace ClosedXML.Excel
             if (value.Contains("pt"))
                 return Double.Parse(value.Replace("pt", String.Empty), CultureInfo.InvariantCulture);
 
-            return Double.Parse(value.Replace("in", String.Empty), CultureInfo.InvariantCulture) / 72;
+            return Double.Parse(value.Replace("in", String.Empty), CultureInfo.InvariantCulture) * 72;
         }
         
 
