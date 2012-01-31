@@ -558,12 +558,20 @@ namespace ClosedXML.Excel
                 switch (attribute)
                 {
                     case "visibility": xlDrawing.Visible = value.ToLower().Equals("visible"); break;
-                    case "width": xlDrawing.Style.Size.Width = Double.Parse(value.Replace("pt", String.Empty), CultureInfo.InvariantCulture) / 7.5; break;
-                    case "height": xlDrawing.Style.Size.Height = Double.Parse(value.Replace("pt", String.Empty), CultureInfo.InvariantCulture); break;
+                    case "width": xlDrawing.Style.Size.Width = GetPtValue(value) / 7.5; break;
+                    case "height": xlDrawing.Style.Size.Height = GetPtValue(value); break;
                     case "z-index": xlDrawing.ZOrder = Int32.Parse(value); break;
                 }
             }
 
+        }
+
+        private double GetPtValue(string value)
+        {
+            if (value.Contains("pt"))
+                return Double.Parse(value.Replace("pt", String.Empty), CultureInfo.InvariantCulture);
+
+            return Double.Parse(value.Replace("in", String.Empty), CultureInfo.InvariantCulture) / 72;
         }
         
 
