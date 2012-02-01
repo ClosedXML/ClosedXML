@@ -716,7 +716,7 @@ namespace ClosedXML.Excel
                     var newKey = rngToTranspose.Cell(co, ro).Address;
                         // new XLAddress(Worksheet, c.Address.ColumnNumber, c.Address.RowNumber);
                     var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
-                    newCell.CopyFrom(oldCell);
+                    newCell.CopyFrom(oldCell, true);
                     cellsToInsert.Add(new XLSheetPoint(newKey.RowNumber, newKey.ColumnNumber), newCell);
                     cellsToDelete.Add(new XLSheetPoint(oldCell.Address.RowNumber, oldCell.Address.ColumnNumber));
                 }

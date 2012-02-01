@@ -92,7 +92,7 @@ namespace ClosedXML_Examples.Misc
             var rng3Validation = rng3.DataValidation;
             rng3Validation.Decimal.EqualTo(3);
             rng3Validation.IgnoreBlanks = true;
-
+            
             var rng4 = ws2.Range("D5:D6");
             //rng4.Style.Fill.SetBackgroundColor(XLColor.YellowGreen);
             var rng4Validation = rng4.DataValidation;
@@ -119,6 +119,10 @@ namespace ClosedXML_Examples.Misc
 
             ws.CopyTo(ws.Name + " - Copy");
             ws2.CopyTo(ws2.Name + " - Copy");
+
+            var ws3 = wb.AddWorksheet("Copy From Range");
+            ws3.FirstCell().Value = ws2.RangeUsed(true);
+
             wb.SaveAs(filePath);
         }
 

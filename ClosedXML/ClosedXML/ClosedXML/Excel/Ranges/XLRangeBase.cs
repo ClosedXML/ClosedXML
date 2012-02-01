@@ -83,11 +83,6 @@ namespace ClosedXML.Excel
         {
             get
             {
-                using (var thisRange = AsRange())
-                {
-                    if (Worksheet.DataValidations.ContainsSingle(thisRange))
-                        return Worksheet.DataValidations.Single(dv => dv.Ranges.Contains(thisRange)) as XLDataValidation;
-                }
                 var dvEmpty = new List<IXLDataValidation>();
                 foreach (IXLDataValidation dv in Worksheet.DataValidations)
                 {
@@ -1096,7 +1091,7 @@ namespace ClosedXML.Excel
                                           Worksheet.Cell(oldKey);
 
                             var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
-                            newCell.CopyFrom(oldCell);
+                            newCell.CopyFrom(oldCell, true);
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
                             cellsToDelete.Add(oldKey);
@@ -1115,7 +1110,7 @@ namespace ClosedXML.Excel
                     int newRow = c.Address.RowNumber + numberOfRows;
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
                     var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
-                    newCell.CopyFrom(c);
+                    newCell.CopyFrom(c, true);
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);

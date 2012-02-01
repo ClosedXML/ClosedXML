@@ -144,10 +144,7 @@
             get
             {
                 using (var asRange = AsRange())
-                {
-                    
-                }
-                return AsRange().DataValidation;
+                    return asRange.DataValidation;
             }
         }
 
@@ -1199,7 +1196,7 @@
                     Worksheet.Cell(
                         Address.RowNumber + sourceCell.Address.RowNumber - minRow,
                         Address.ColumnNumber + sourceCell.Address.ColumnNumber - minColumn
-                        ).CopyFrom(sourceCell);
+                        ).CopyFrom(sourceCell, true);
                 }
 
                 var rangesToMerge = (from mergedRange in (asRange.Worksheet).Internals.MergedRanges
@@ -1557,7 +1554,7 @@
             _comment = source._comment == null ? null : new XLComment(this, source._comment, source.Style.Font);
         }
 
-        public IXLCell CopyFrom(XLCell otherCell)
+        public IXLCell CopyFrom(XLCell otherCell, Boolean copyDataValidations)
         {
             var source = otherCell;
             _cellValue = source._cellValue;
@@ -1575,12 +1572,15 @@
                 SettingHyperlink = false;
             }
 
-            using (var asRange = source.AsRange())
+            if (copyDataValidations)
             {
-                //if (DataValidation != source.DataValidation && source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
-                if (source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
-                    DataValidation.CopyFrom(source.DataValidation);
+                using (var asRange = AsRange())
+                {
+                    if (source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
+                        DataValidation.CopyFrom(source.Worksheet.DataValidations.First(dv => dv.Ranges.Contains(asRange)));
+                }
             }
+
             return this;
         }
 

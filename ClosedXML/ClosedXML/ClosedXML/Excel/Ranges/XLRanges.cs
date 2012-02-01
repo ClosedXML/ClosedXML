@@ -68,7 +68,7 @@ namespace ClosedXML.Excel
 
         public Boolean Contains(IXLRange range)
         {
-            return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Equals(range));
+            return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Contains(range));
         }
 
         public IXLDataValidation DataValidation

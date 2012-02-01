@@ -149,13 +149,17 @@ namespace ClosedXML.Excel
         {
             if (dataValidation == this) return;
 
-            if (Ranges != null)
-                Ranges.Dispose();
+            //if (Ranges != null)
+            //    Ranges.Dispose();
             
-            Ranges = new XLRanges();
-            
-            if (dataValidation.Ranges != null)
+            //Ranges = new XLRanges();
+
+            if (Ranges == null && dataValidation.Ranges != null)
+            {
+                Ranges = new XLRanges();
                 dataValidation.Ranges.ForEach(r => Ranges.Add(r));
+            }
+
 
             IgnoreBlanks = dataValidation.IgnoreBlanks;
             InCellDropdown = dataValidation.InCellDropdown;
@@ -170,6 +174,7 @@ namespace ClosedXML.Excel
             Operator = dataValidation.Operator;
             MinValue = dataValidation.MinValue;
             MaxValue = dataValidation.MaxValue;
+
         }
 
         public void Clear()

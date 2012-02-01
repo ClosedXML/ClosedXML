@@ -550,7 +550,7 @@ namespace ClosedXML.Excel
         {
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
 
-            Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c));
+            Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, false));
             DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv)));
             Internals.ColumnsCollection.ForEach(
                 kp => targetSheet.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
