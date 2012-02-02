@@ -260,5 +260,7 @@ namespace ClosedXML.Excel
 
         IXLColumn WorksheetColumn();
         IXLRow WorksheetRow();
+
+        Boolean HasDataValidation { get; }
     }
 }

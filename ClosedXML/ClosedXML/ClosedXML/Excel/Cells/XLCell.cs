@@ -1064,7 +1064,7 @@
                 return false;
 
             if (includeFormats)
-                return Style.Equals(Worksheet.Style) && !IsMerged();
+                return Style.Equals(Worksheet.Style) && !IsMerged() && !HasComment && !HasDataValidation;
 
             return true;
         }
@@ -2182,6 +2182,15 @@
         {
             FormulaR1C1 = formula;
             return this;
+        }
+
+        public Boolean HasDataValidation
+        {
+            get
+            {
+                using(var asRange = AsRange())
+                    return Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange));
+            }
         }
     }
 }

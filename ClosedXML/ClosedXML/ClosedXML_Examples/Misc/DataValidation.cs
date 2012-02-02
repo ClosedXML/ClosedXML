@@ -68,6 +68,9 @@ namespace ClosedXML_Examples.Misc
             ws.Cell("C2").Value = "No";
             ws.Cell("A5").DataValidation.List(ws.Range("C1:C2"));
 
+            ws.Range("C1:C2").AddToNamed("YesNo");
+            ws.Cell("A6").DataValidation.List("=YesNo");
+
             // Intersecting dataValidations
             ws.Range("B1:B4").DataValidation.WholeNumber.EqualTo(1);
             ws.Range("B3:B4").DataValidation.WholeNumber.EqualTo(2);
@@ -120,8 +123,8 @@ namespace ClosedXML_Examples.Misc
             ws.CopyTo(ws.Name + " - Copy");
             ws2.CopyTo(ws2.Name + " - Copy");
 
-            var ws3 = wb.AddWorksheet("Copy From Range");
-            ws3.FirstCell().Value = ws2.RangeUsed(true);
+            wb.AddWorksheet("Copy From Range 1").FirstCell().Value = ws.RangeUsed(true);
+            wb.AddWorksheet("Copy From Range 2").FirstCell().Value = ws2.RangeUsed(true);
 
             wb.SaveAs(filePath);
         }

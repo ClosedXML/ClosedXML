@@ -212,7 +212,16 @@ namespace ClosedXML.Excel
                 {
                     var dTable = tablePart.Table;
                     string reference = dTable.Reference.Value;
-                    var xlTable = ws.Range(reference).CreateTable(dTable.Name);
+                    IXLTable xlTable;
+                    //if (dTable.HeaderRowCount != null && dTable.HeaderRowCount == 0)
+                    //{
+                        
+                    //}
+                    //else
+                    //{
+                        xlTable = ws.Range(reference).CreateTable(dTable.Name);
+                    //}
+
                     if (dTable.TotalsRowCount != null && dTable.TotalsRowCount.Value > 0)
                         ((XLTable) xlTable)._showTotalsRow = true;
 
@@ -239,7 +248,6 @@ namespace ClosedXML.Excel
                     }
                     else
                         xlTable.ShowAutoFilter = false;
-
                     
 
                     if (xlTable.ShowTotalsRow)
