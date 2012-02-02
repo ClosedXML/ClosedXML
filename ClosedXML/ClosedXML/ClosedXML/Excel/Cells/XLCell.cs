@@ -509,7 +509,7 @@
                 {
                     int co = Address.ColumnNumber;
 
-                    if (m.GetType().IsPrimitive || m is string || m is DateTime)
+                    if (m.GetType().IsPrimitive || m is string || m is DateTime || m is Decimal)
                     {
                         if (!hasTitles)
                         {
@@ -670,7 +670,7 @@
                 {
                     int co = Address.ColumnNumber;
 
-                    if (m.GetType().IsPrimitive || m is string || m is DateTime)
+                    if (m.GetType().IsPrimitive || m is string || m is DateTime || m is Decimal)
                     {
                         SetValue(m, ro, co);
                         co++;
