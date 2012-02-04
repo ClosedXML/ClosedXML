@@ -1067,8 +1067,21 @@
                 return false;
 
             if (includeFormats)
-                return Style.Equals(Worksheet.Style) && !IsMerged() && !HasComment && !HasDataValidation;
+            {
+                if (!Style.Equals(Worksheet.Style) || IsMerged() || HasComment || HasDataValidation)
+                    return false;
 
+                if (_style == null)
+                {
+                    XLRow row;
+                    if (Worksheet.Internals.RowsCollection.TryGetValue(Address.RowNumber, out row) && !row.Style.Equals(Worksheet.Style))
+                        return false;
+
+                    XLColumn column;
+                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(Address.ColumnNumber, out column) && !column.Style.Equals(Worksheet.Style))
+                        return false;
+                }
+            }
             return true;
         }
 

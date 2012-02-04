@@ -290,9 +290,6 @@ namespace ClosedXML.Excel
             var asRange = AsRange();
             Worksheet.Internals.MergedRanges.Add(asRange);
 
-            // Call every cell in the merge to make sure they exist
-            asRange.Cells().ForEach(c => { });
-
             return asRange;
         }
 
@@ -510,43 +507,66 @@ namespace ClosedXML.Excel
 
         public XLCell FirstCellUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate)
         {
-            var sp = Worksheet.Internals.CellsCollection.FirstPointUsed(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.LastAddress.RowNumber,
-                RangeAddress.LastAddress.ColumnNumber,
-                includeFormats, predicate);
-
-            if(sp.Row > 0) 
-                return Worksheet.Cell(sp.Row, sp.Column);
+            Int32 fRow = RangeAddress.FirstAddress.RowNumber;
+            Int32 lRow = RangeAddress.LastAddress.RowNumber;
+            Int32 fColumn = RangeAddress.FirstAddress.ColumnNumber;
+            Int32 lColumn = RangeAddress.LastAddress.ColumnNumber;
 
             if (includeFormats)
             {
-                Int32 ro = 0;
-                var rowsUsed = Worksheet.Internals.RowsCollection.Where(r =>
-                                            r.Key >= RangeAddress.FirstAddress.RowNumber
-                                            && r.Key <= RangeAddress.LastAddress.RowNumber);
+                var rowsUsed =
+                    Worksheet.Internals.RowsCollection.Where(r => r.Key >= fRow && r.Key <= lRow && !r.Value.IsEmpty(true));
 
+                var columnsUsed =
+                    Worksheet.Internals.ColumnsCollection.Where(c => c.Key >= fColumn && c.Key <= lColumn && !c.Value.IsEmpty(true));
+
+                // If there's a row or a column then check if the style is different
+                // and pick the first cell and check the style of it, if different
+                // than default then it's your cell.
+
+                Int32 ro = 0;
                 if (rowsUsed.Any())
                     ro = rowsUsed.First().Key;
-                
 
-                if (ro > 0)
+                Int32 co = 0;
+                if (columnsUsed.Any())
+                    co = columnsUsed.First().Key;
+
+                if (ro > 0 && co > 0)
+                    return Worksheet.Cell(ro, co);
+
+                if (ro > 0 && lColumn < ExcelHelper.MaxColumnNumber)
                 {
-                    Int32 co = 0;
-                    var columnsUsed = Worksheet.Internals.ColumnsCollection.Where(r =>
-                                            r.Key >= RangeAddress.FirstAddress.ColumnNumber
-                                            && r.Key <= RangeAddress.LastAddress.ColumnNumber);
-
-                    if (columnsUsed.Any())
-                        ro = columnsUsed.First().Key;
-
-                    if (co > 0)
-                        return Worksheet.Cell(ro, co);
+                    for (co = fColumn; co <= lColumn; co++)
+                    {
+                        var cell = Worksheet.Cell(ro, co);
+                        if (!cell.IsEmpty(true)) return cell;
+                    }
+                }
+                else if (co > 0 && lRow < ExcelHelper.MaxRowNumber)
+                {
+                    for (ro = fRow; ro <= lRow; ro++)
+                    {
+                        var cell = Worksheet.Cell(ro, co);
+                        if (!cell.IsEmpty(true)) return cell;
+                    }
                 }
 
+                if (Worksheet.MergedRanges.Any(r => r.Intersects(this)))
+                {
+                    Int32 minRo =
+                        Worksheet.MergedRanges.Where(r => r.Intersects(this)).Min(r => r.RangeAddress.FirstAddress.RowNumber);
+                    Int32 minCo =
+                        Worksheet.MergedRanges.Where(r => r.Intersects(this)).Min(r => r.RangeAddress.FirstAddress.ColumnNumber);
+
+                    return Worksheet.Cell(minRo, minCo);
+                }
             }
 
+            var sp = Worksheet.Internals.CellsCollection.FirstPointUsed(fRow, fColumn, lRow, lColumn, includeFormats, predicate);
+
+            if (sp.Row > 0) 
+                return Worksheet.Cell(sp.Row, sp.Column);
 
             return null;
         }
@@ -578,14 +598,68 @@ namespace ClosedXML.Excel
 
         public XLCell LastCellUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate)
         {
-            var sp = Worksheet.Internals.CellsCollection.LastPointUsed(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.LastAddress.RowNumber,
-                RangeAddress.LastAddress.ColumnNumber,
-                includeFormats, predicate);
+            Int32 fRow = RangeAddress.FirstAddress.RowNumber;
+            Int32 lRow = RangeAddress.LastAddress.RowNumber;
+            Int32 fColumn = RangeAddress.FirstAddress.ColumnNumber;
+            Int32 lColumn = RangeAddress.LastAddress.ColumnNumber;
 
-            return sp.Row == 0 ? null : Worksheet.Cell(sp.Row, sp.Column);
+            if (includeFormats)
+            {
+                var rowsUsed =
+                    Worksheet.Internals.RowsCollection.Where(r => r.Key >= fRow && r.Key <= lRow && !r.Value.IsEmpty(true));
+
+                var columnsUsed =
+                    Worksheet.Internals.ColumnsCollection.Where(c => c.Key >= fColumn && c.Key <= lColumn && !c.Value.IsEmpty(true));
+
+                // If there's a row or a column then check if the style is different
+                // and pick the first cell and check the style of it, if different
+                // than default then it's your cell.
+
+                Int32 ro = 0;
+                if (rowsUsed.Any())
+                    ro = rowsUsed.Last().Key;
+
+                Int32 co = 0;
+                if (columnsUsed.Any())
+                    co = columnsUsed.Last().Key;
+
+                if (ro > 0 && co > 0)
+                    return Worksheet.Cell(ro, co);
+
+                if (ro > 0 && lColumn < ExcelHelper.MaxColumnNumber)
+                {
+                    for (co = lColumn; co >= fColumn; co--)
+                    {
+                        var cell = Worksheet.Cell(ro, co);
+                        if (!cell.IsEmpty(true)) return cell;
+                    }
+                }
+                else if (co > 0 && lRow < ExcelHelper.MaxRowNumber)
+                {
+                    for (ro = lRow; ro >= fRow; ro--)
+                    {
+                        var cell = Worksheet.Cell(ro, co);
+                        if (!cell.IsEmpty(true)) return cell;
+                    }
+                }
+
+                if (Worksheet.MergedRanges.Any(r => r.Intersects(this)))
+                {
+                    Int32 minRo =
+                        Worksheet.MergedRanges.Where(r => r.Intersects(this)).Max(r => r.RangeAddress.LastAddress.RowNumber);
+                    Int32 minCo =
+                        Worksheet.MergedRanges.Where(r => r.Intersects(this)).Max(r => r.RangeAddress.LastAddress.ColumnNumber);
+
+                    return Worksheet.Cell(minRo, minCo);
+                }
+            }
+
+            var sp = Worksheet.Internals.CellsCollection.LastPointUsed(fRow, fColumn, lRow, lColumn, includeFormats, predicate);
+
+            if (sp.Row > 0)
+                return Worksheet.Cell(sp.Row, sp.Column);
+
+            return null;
         }
 
         public XLCell Cell(Int32 row, Int32 column)

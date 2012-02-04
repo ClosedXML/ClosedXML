@@ -444,5 +444,6 @@ namespace ClosedXML.Excel
                                                      RangeAddress.LastAddress.FixedRow,
                                                      RangeAddress.LastAddress.FixedColumn);
         }
+
     }
 }

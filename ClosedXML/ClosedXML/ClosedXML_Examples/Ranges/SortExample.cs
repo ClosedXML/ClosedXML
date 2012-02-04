@@ -57,7 +57,7 @@ namespace ClosedXML_Examples.Misc
             var table = rangeTable.CopyTo(wsTable.Column(wsTable.LastColumnUsed().ColumnNumber() + 3)).CreateTable();
 
             table.Sort("Column2, Column3 Desc, Column1 ASC");
-
+            
             wsTable.Row(1).InsertRowsAbove(2);
             wsTable.Cell(1, 1)
                 .SetValue(".Sort(\"Column2, Column3 Desc, Column1 ASC\") = Sort table Top to Bottom, Col 2 Asc, Col 3 Desc, Col 1 Asc, Ignore Blanks, Ignore Case")

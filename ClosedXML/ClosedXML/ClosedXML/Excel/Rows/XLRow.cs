@@ -667,5 +667,18 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public new Boolean IsEmpty()
+        {
+            return IsEmpty(false);
+        }
+
+        public new Boolean IsEmpty(Boolean includeFormats)
+        {
+            if (includeFormats && !Style.Equals(Worksheet.Style))
+                return false;
+
+            return base.IsEmpty(includeFormats);
+        }
     }
 }
