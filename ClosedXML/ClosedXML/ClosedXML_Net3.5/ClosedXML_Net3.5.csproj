@@ -646,6 +646,9 @@
     <Compile Include="..\ClosedXML\Excel\Tables\IXLTableField.cs">
       <Link>Excel\Tables\IXLTableField.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\IXLTableRange.cs">
+      <Link>Excel\Tables\IXLTableRange.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Tables\IXLTableRow.cs">
       <Link>Excel\Tables\IXLTableRow.cs</Link>
     </Compile>
@@ -660,6 +663,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Tables\XLTableField.cs">
       <Link>Excel\Tables\XLTableField.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\XLTableRange.cs">
+      <Link>Excel\Tables\XLTableRange.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Tables\XLTableRow.cs">
       <Link>Excel\Tables\XLTableRow.cs</Link>

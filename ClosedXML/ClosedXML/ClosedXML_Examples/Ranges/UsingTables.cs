@@ -66,7 +66,7 @@ namespace ClosedXML_Examples.Ranges
                 Int32 columnWithNames = columnWithHeaders + 2;
                 currentRow = table.RangeAddress.FirstAddress.RowNumber; // reset the currentRow
                 ws.Cell(currentRow, columnWithNames).Value = "Names";
-                foreach (var row in table.Rows())
+                foreach (var row in table.DataRange.Rows())
                 {
                     currentRow++;
                     var fName = row.Field("FName").GetString(); // Notice how we're calling the cell by field name

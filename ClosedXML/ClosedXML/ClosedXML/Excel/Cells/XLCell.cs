@@ -67,6 +67,7 @@
         private readonly XLWorksheet _worksheet;
 
         internal string _cellValue = String.Empty;
+
         private XLComment _comment;
         internal XLCellValues _dataType;
         private XLHyperlink _hyperlink;
@@ -864,7 +865,9 @@
 
             if (clearOptions == XLClearOptions.Formats || clearOptions == XLClearOptions.ContentsAndFormats)
             {
-                DataValidation.Clear();
+                if(HasDataValidation)
+                    DataValidation.Clear();
+
                 SetStyle(Worksheet.Style);
             }
 
@@ -2189,7 +2192,7 @@
             get
             {
                 using(var asRange = AsRange())
-                    return Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange));
+                    return Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange) && dv.IsDirty());
             }
         }
     }

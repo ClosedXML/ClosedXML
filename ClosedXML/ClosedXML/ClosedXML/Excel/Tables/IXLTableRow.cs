@@ -20,5 +20,8 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
         new IXLTableRow Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+
+        new IXLTableRows InsertRowsAbove(int numberOfRows);
+        new IXLTableRows InsertRowsBelow(int numberOfRows);
     }
 }

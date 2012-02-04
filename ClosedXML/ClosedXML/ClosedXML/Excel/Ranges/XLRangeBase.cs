@@ -53,7 +53,7 @@ namespace ClosedXML.Excel
         private Boolean _subscribedToShiftedRows;
         protected void SubscribeToShiftedRows(RangeShiftedRowsDelegate worksheetRangeShiftedRows)
         {
-            if (!Worksheet.EventTrackingEnabled) return;
+            if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
 
             WorksheetRangeShiftedRows = worksheetRangeShiftedRows;
             RangeAddress.Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
         private Boolean _subscribedToShiftedColumns;
         protected void SubscribeToShiftedColumns(RangeShiftedColumnsDelegate worksheetRangeShiftedColumns)
         {
-            if (!Worksheet.EventTrackingEnabled) return;
+            if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
 
             WorksheetRangeShiftedColumns = worksheetRangeShiftedColumns;
             RangeAddress.Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
@@ -1336,7 +1336,7 @@ namespace ClosedXML.Excel
                 }
             }
         }
-
+        public Int32 Marker;
         protected void ShiftRows(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int rowsShifted)
         {
             if (thisRangeAddress.IsInvalid || shiftedRange.RangeAddress.IsInvalid) return;

@@ -4,12 +4,13 @@ namespace ClosedXML.Excel
 {
     internal class XLTableRow : XLRangeRow, IXLTableRow
     {
-        private readonly XLTable _table;
+        private readonly XLTableRange _tableRange;
 
-        public XLTableRow(XLTable table, XLRangeRow rangeRow)
+        public XLTableRow(XLTableRange tableRange, XLRangeRow rangeRow)
             : base(rangeRow.RangeParameters, false)
         {
-            _table = table;
+            Dispose();
+            _tableRange = tableRange;
         }
 
         #region IXLTableRow Members
@@ -21,7 +22,7 @@ namespace ClosedXML.Excel
 
         public IXLCell Field(String name)
         {
-            Int32 fieldIndex = _table.GetFieldIndex(name);
+            Int32 fieldIndex = _tableRange.Table.GetFieldIndex(name);
             return Cell(fieldIndex + 1);
         }
 
@@ -40,7 +41,7 @@ namespace ClosedXML.Excel
 
         private XLTableRow RowShift(Int32 rowsToShift)
         {
-            return _table.Row(RowNumber() + rowsToShift);
+            return _tableRange.Row(RowNumber() + rowsToShift);
         }
 
         #region XLTableRow Above
@@ -95,6 +96,29 @@ namespace ClosedXML.Excel
         {
             base.Clear(clearOptions);
             return this;
+        }
+
+        public new IXLTableRows InsertRowsAbove(int numberOfRows)
+        {
+            var rows = new XLTableRows(Worksheet.Style);
+            var inserted = base.InsertRowsAbove(numberOfRows);
+            inserted.ForEach(r => rows.Add(new XLTableRow(_tableRange, r as XLRangeRow)));
+            _tableRange.Table.ExpandTableRows(numberOfRows);
+            return rows;
+        }
+        public new IXLTableRows InsertRowsBelow(int numberOfRows)
+        {
+            var rows = new XLTableRows(Worksheet.Style);
+            var inserted = base.InsertRowsBelow(numberOfRows);
+            inserted.ForEach(r => rows.Add(new XLTableRow(_tableRange, r as XLRangeRow)));
+            _tableRange.Table.ExpandTableRows(numberOfRows);
+            return rows;
+        }
+
+        public new void Delete()
+        {
+            Delete(XLShiftDeletedCells.ShiftCellsUp);
+            _tableRange.Table.ExpandTableRows(-1);
         }
     }
 }

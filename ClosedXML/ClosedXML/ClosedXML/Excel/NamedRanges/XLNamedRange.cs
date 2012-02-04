@@ -43,7 +43,7 @@ namespace ClosedXML.Excel
                    select
                        match.Groups["Sheet"].Success
                        ?  _namedRanges.Workbook.WorksheetsInternal.Worksheet(match.Groups["Sheet"].Value).Range(match.Groups["Range"].Value) as IXLRangeBase
-                       : _namedRanges.Workbook.Worksheets.SelectMany(sheet => sheet.Tables).Single(table => table.Name == match.Groups["Table"].Value).Column(match.Groups["Column"].Value) )
+                       : _namedRanges.Workbook.Worksheets.SelectMany(sheet => sheet.Tables).Single(table => table.Name == match.Groups["Table"].Value).DataRange.Column(match.Groups["Column"].Value) )
                 {
                     ranges.Add(rangeToAdd);
                 }

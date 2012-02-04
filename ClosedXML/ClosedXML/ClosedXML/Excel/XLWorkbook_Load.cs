@@ -212,15 +212,17 @@ namespace ClosedXML.Excel
                 {
                     var dTable = tablePart.Table;
                     string reference = dTable.Reference.Value;
-                    IXLTable xlTable;
-                    //if (dTable.HeaderRowCount != null && dTable.HeaderRowCount == 0)
-                    //{
-                        
-                    //}
-                    //else
-                    //{
-                        xlTable = ws.Range(reference).CreateTable(dTable.Name);
-                    //}
+                    XLTable xlTable = ws.Range(reference).CreateTable(dTable.Name, false) as XLTable;
+                    if (dTable.HeaderRowCount != null && dTable.HeaderRowCount == 0)
+                    {
+                        xlTable._showHeaderRow = false;
+                        foreach (var tableColumn in dTable.TableColumns.Cast<TableColumn>())
+                            xlTable.AddField(tableColumn.Name);
+                    }
+                    else
+                    {
+                        xlTable.InitializeAutoFilter();
+                    }
 
                     if (dTable.TotalsRowCount != null && dTable.TotalsRowCount.Value > 0)
                         ((XLTable) xlTable)._showTotalsRow = true;
@@ -265,13 +267,13 @@ namespace ClosedXML.Excel
                             if (tableColumn.TotalsRowLabel != null)
                                 xlTable.Field(tableColumn.Name.Value).TotalsRowLabel = tableColumn.TotalsRowLabel.Value;
                         }
-
-                        xlTable.AutoFilter.Range = xlTable.Worksheet.Range(
+                        if (xlTable.AutoFilter != null)
+                            xlTable.AutoFilter.Range = xlTable.Worksheet.Range(
                                                     xlTable.RangeAddress.FirstAddress.RowNumber, xlTable.RangeAddress.FirstAddress.ColumnNumber,
                                                     xlTable.RangeAddress.LastAddress.RowNumber - 1, xlTable.RangeAddress.LastAddress.ColumnNumber);
                     }
-                    else
-                        xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
+                    else if (xlTable.AutoFilter != null)
+                            xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
                 }
 
                 #endregion

@@ -684,7 +684,9 @@ namespace ClosedXML.Excel
             var newRichStrings = new Dictionary<IXLRichText, Int32>();
             foreach (XLCell c in Worksheets.Cast<XLWorksheet>().SelectMany(w => w.Internals.CellsCollection.GetCells().Where(c => c.DataType == XLCellValues.Text
                                                                                                                                   && c.ShareString
-                                                                                                                                  && c.InnerText.Length > 0)))
+                                                                                                                                  && c.InnerText.Length > 0
+                                                                                                                                  && StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)
+                                                                                                                                  )))
             {
                 if (c.HasRichText)
                 {
@@ -1593,17 +1595,25 @@ namespace ClosedXML.Excel
                                 Reference = reference
                             };
 
+            if (!xlTable.ShowHeaderRow)
+                table.HeaderRowCount = 0;
+
             if (xlTable.ShowTotalsRow)
                 table.TotalsRowCount = 1;
             else
                 table.TotalsRowShown = false;
 
             var tableColumns1 = new TableColumns {Count = (UInt32)xlTable.ColumnCount()};
+            IEnumerable<String> names;
+            if (xlTable.ShowHeaderRow)
+                names = xlTable.HeadersRow().Cells().Select(c => c.GetString());
+            else
+                names = xlTable.FieldNames.Keys;
+
             UInt32 columnId = 0;
-            foreach (IXLCell cell in xlTable.HeadersRow().Cells())
+            foreach (var fieldName in names)
             {
                 columnId++;
-                String fieldName = cell.GetString();
                 var xlField = xlTable.Field(fieldName);
                 var tableColumn1 = new TableColumn
                                        {

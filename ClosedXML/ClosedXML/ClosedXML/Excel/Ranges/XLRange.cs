@@ -269,14 +269,27 @@ namespace ClosedXML.Excel
             return new XLTable(this, name, false);
         }
 
-        public IXLTable CreateTable()
+        IXLTable IXLRange.CreateTable()
         {
-            return new XLTable(this, true);
+            return CreateTable();
+        }
+        public XLTable CreateTable()
+        {
+            return new XLTable(this, true, true);
         }
 
-        public IXLTable CreateTable(String name)
+        IXLTable IXLRange.CreateTable(String name)
         {
-            return new XLTable(this, name, true);
+            return CreateTable(name);
+        }
+        public XLTable CreateTable(String name)
+        {
+            return new XLTable(this, name, true, true);
+        }
+
+        public IXLTable CreateTable(String name, Boolean setAutofilter)
+        {
+            return new XLTable(this, name, true, setAutofilter);
         }
 
         public new IXLRange CopyTo(IXLCell target)
@@ -417,7 +430,7 @@ namespace ClosedXML.Excel
                     RangeAddress.LastAddress.ColumnNumber,
                     includeFormats);
 
-                return firstColumnUsed == 0 ? null : Column(firstColumnUsed);
+                return firstColumnUsed == 0 ? null : Column(firstColumnUsed - RangeAddress.FirstAddress.ColumnNumber + 1);
             }
 
             Int32 columnCount = ColumnCount();
@@ -456,7 +469,7 @@ namespace ClosedXML.Excel
                     RangeAddress.LastAddress.ColumnNumber,
                     includeFormats);
 
-                return lastColumnUsed == 0 ? null : Column(lastColumnUsed);
+                return lastColumnUsed == 0 ? null : Column(lastColumnUsed - RangeAddress.FirstAddress.ColumnNumber + 1);
             }
 
             Int32 columnCount = ColumnCount();
@@ -539,7 +552,7 @@ namespace ClosedXML.Excel
 
                 //Int32 rowFromRows = Worksheet.Internals.RowsCollection.FirstRowUsed(includeFormats);
 
-                return rowFromCells == 0 ? null : Row(rowFromCells);
+                return rowFromCells == 0 ? null : Row(rowFromCells - RangeAddress.FirstAddress.RowNumber + 1);
             }
 
             Int32 rowCount = RowCount();
@@ -578,7 +591,7 @@ namespace ClosedXML.Excel
                     RangeAddress.LastAddress.ColumnNumber,
                     includeFormats);
 
-                return lastRowUsed == 0 ? null : Row(lastRowUsed);
+                return lastRowUsed == 0 ? null : Row(lastRowUsed - RangeAddress.FirstAddress.RowNumber + 1);
             }
 
             Int32 rowCount = RowCount();
