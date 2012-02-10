@@ -104,11 +104,28 @@ namespace ClosedXML.Excel
 
         #region IXLRow Members
 
+        private Boolean _loading;
+        public Boolean Loading
+        {
+            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Loading : _loading; }
+            set
+            {
+                if (IsReference)
+                    Worksheet.Internals.RowsCollection[RowNumber()].Loading = value;
+                else
+                    _loading = value;
+            }
+        }
+
+        public Boolean HeightChanged { get; private set; }
         public Double Height
         {
             get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Height : _height; }
             set
             {
+                if (!Loading)
+                    HeightChanged = true;
+
                 if (IsReference)
                     Worksheet.Internals.RowsCollection[RowNumber()].Height = value;
                 else
@@ -680,5 +697,7 @@ namespace ClosedXML.Excel
 
             return base.IsEmpty(includeFormats);
         }
+
+        
     }
 }

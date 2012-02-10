@@ -889,10 +889,15 @@ namespace ClosedXML.Excel
                               Row row)
         {
             var xlRow = ws.Row((Int32) row.RowIndex.Value, false);
+            
             if (row.Height != null)
                 xlRow.Height = row.Height;
             else
+            {
+                xlRow.Loading = true;
                 xlRow.Height = ws.RowHeight;
+                xlRow.Loading = false;
+            }
 
             if (row.Hidden != null && row.Hidden)
                 xlRow.Hide();

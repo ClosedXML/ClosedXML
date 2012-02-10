@@ -867,17 +867,16 @@ namespace ClosedXML.Excel
         public IXLRows RowsUsed(Boolean includeFormats = false, Func<IXLRow, Boolean> predicate = null)
         {
             var rows = new XLRows(Worksheet);
-            using (var asRange = AsRange())
+            var rowsUsed = new HashSet<Int32>();
+            Internals.RowsCollection.Keys.ForEach(r => rowsUsed.Add(r));
+            Internals.CellsCollection.RowsUsed.Keys.ForEach(r => rowsUsed.Add(r));
+            foreach (var rowNum in rowsUsed)
             {
-                var rowsUsed = asRange.RowsUsed(includeFormats);
-                foreach (IXLRangeRow row in rowsUsed)
-                {
-                    var retRow = Row(row.RowNumber());
-                    if (predicate == null || predicate(retRow))
-                        rows.Add(retRow);
-                    else 
-                        retRow.Dispose();
-                }
+                var row = Row(rowNum);
+                if (!row.IsEmpty(includeFormats) && (predicate == null || predicate(row)))
+                    rows.Add(row);
+                else
+                    row.Dispose();
             }
             return rows;
         }
@@ -889,17 +888,16 @@ namespace ClosedXML.Excel
         public IXLColumns ColumnsUsed(Boolean includeFormats = false, Func<IXLColumn, Boolean> predicate = null)
         {
             var columns = new XLColumns(Worksheet);
-            using (var asRange = AsRange())
+            var columnsUsed = new HashSet<Int32>();
+            Internals.ColumnsCollection.Keys.ForEach(r => columnsUsed.Add(r));
+            Internals.CellsCollection.ColumnsUsed.Keys.ForEach(r => columnsUsed.Add(r));
+            foreach (var columnNum in columnsUsed)
             {
-                var columnsUsed = asRange.ColumnsUsed(includeFormats);
-                foreach (IXLRangeColumn column in columnsUsed)
-                {
-                    var retColumn = Column(column.ColumnNumber());
-                    if (predicate == null || predicate(retColumn))
-                        columns.Add(retColumn);
-                    else
-                        retColumn.Dispose();
-                }
+                var column = Column(columnNum);
+                if (!column.IsEmpty(includeFormats) && (predicate == null || predicate(column)))
+                    columns.Add(column);
+                else
+                    column.Dispose();
             }
             return columns;
         }

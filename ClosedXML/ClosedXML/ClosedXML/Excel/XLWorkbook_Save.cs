@@ -2819,18 +2819,19 @@ namespace ClosedXML.Excel
                 if (xlWorksheet.Internals.RowsCollection.ContainsKey(distinctRow))
                 {
                     var thisRow = xlWorksheet.Internals.RowsCollection[distinctRow];
-                    if (thisRow.Height != xlWorksheet.RowHeight)
+                    if (thisRow.HeightChanged)
                     {
                         row.Height = thisRow.Height;
                         row.CustomHeight = true;
+                        row.CustomFormat = true;
                     }
 
-                    //if (!thisRow.Style.Equals(xlWorksheet.Style))
                     if (thisRow.GetStyleId() != xlWorksheet.GetStyleId())
                     {
                         row.StyleIndex = context.SharedStyles[thisRow.GetStyleId()].StyleId;
                         row.CustomFormat = true;
                     }
+
                     if (thisRow.IsHidden)
                         row.Hidden = true;
                     if (thisRow.Collapsed)
