@@ -108,11 +108,6 @@ namespace ClosedXML_Tests.Examples
             TestHelper.RunTestExample<MergeMoves>(@"Misc\MergeMoves.xlsx");
         }
         [TestMethod]
-        public void MultipleSheets()
-        {
-            TestHelper.RunTestExample<MultipleSheets>(@"Misc\MultipleSheets.xlsx");
-        }
-        [TestMethod]
         public void Outline()
         {
             TestHelper.RunTestExample<Outline>(@"Misc\Outline.xlsx");

@@ -142,7 +142,6 @@
     <EmbeddedResource Include="Resource\Examples\Misc\LambdaExpressions.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\MergeCells.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\MergeMoves.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Misc\MultipleSheets.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Outline.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\SheetProtection.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\ShiftingFormulas.xlsx" />

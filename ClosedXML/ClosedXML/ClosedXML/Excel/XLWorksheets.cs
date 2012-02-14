@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         #region Constructor
 
         private readonly XLWorkbook m_workbook;
-        private readonly Dictionary<String, XLWorksheet> m_worksheets = new Dictionary<String, XLWorksheet>();
+        private readonly Dictionary<String, XLWorksheet> _worksheets = new Dictionary<String, XLWorksheet>();
 
         #endregion
 
@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
 
         public IEnumerator<XLWorksheet> GetEnumerator()
         {
-            return ((IEnumerable<XLWorksheet>)m_worksheets.Values).GetEnumerator();
+            return ((IEnumerable<XLWorksheet>)_worksheets.Values).GetEnumerator();
         }
 
         #endregion
@@ -41,13 +41,13 @@ namespace ClosedXML.Excel
         public int Count
         {
             [DebuggerStepThrough]
-            get { return m_worksheets.Count; }
+            get { return _worksheets.Count; }
         }
 
         public bool TryGetWorksheet(string sheetName, out IXLWorksheet worksheet)
         {
             XLWorksheet w;
-            if (m_worksheets.TryGetValue(sheetName, out w))
+            if (_worksheets.TryGetValue(sheetName, out w))
             {
                 worksheet = w;
                 return true;
@@ -59,10 +59,10 @@ namespace ClosedXML.Excel
         public IXLWorksheet Worksheet(String sheetName)
         {
             XLWorksheet w;
-            if (m_worksheets.TryGetValue(sheetName, out w))
+            if (_worksheets.TryGetValue(sheetName, out w))
                 return w;
 
-            var wss = m_worksheets.Where(ws => ws.Key.ToLower().Equals(sheetName.ToLower()));
+            var wss = _worksheets.Where(ws => ws.Key.ToLower().Equals(sheetName.ToLower()));
 
             if (wss.Any())
                 return wss.First().Value;
@@ -72,7 +72,7 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Worksheet(Int32 position)
         {
-            int wsCount = m_worksheets.Values.Count(w => w.Position == position);
+            int wsCount = _worksheets.Values.Count(w => w.Position == position);
             if (wsCount == 0)
                 throw new Exception("There isn't a worksheet associated with that position.");
 
@@ -82,33 +82,34 @@ namespace ClosedXML.Excel
                     "Can't retrieve a worksheet because there are multiple worksheets associated with that position.");
             }
 
-            return m_worksheets.Values.Single(w => w.Position == position);
+            return _worksheets.Values.Single(w => w.Position == position);
         }
 
         public IXLWorksheet Add(String sheetName)
         {
             var sheet = new XLWorksheet(sheetName, m_workbook);
-            m_worksheets.Add(sheetName, sheet);
-            sheet._position = m_worksheets.Count;
+            _worksheets.Add(sheetName, sheet);
+            sheet._position = _worksheets.Count;
             return sheet;
         }
 
         public IXLWorksheet Add(String sheetName, Int32 position)
         {
+            _worksheets.Values.Where(w => w._position >= position).ForEach(w => w._position += 1);
             var sheet = new XLWorksheet(sheetName, m_workbook);
-            m_worksheets.Add(sheetName, sheet);
+            _worksheets.Add(sheetName, sheet);
             sheet._position = position;
             return sheet;
         }
 
         public void Delete(String sheetName)
         {
-            Delete(m_worksheets[sheetName].Position);
+            Delete(_worksheets[sheetName].Position);
         }
 
         public void Delete(Int32 position)
         {
-            int wsCount = m_worksheets.Values.Count(w => w.Position == position);
+            int wsCount = _worksheets.Values.Count(w => w.Position == position);
             if (wsCount == 0)
                 throw new Exception("There isn't a worksheet associated with that index.");
 
@@ -116,17 +117,17 @@ namespace ClosedXML.Excel
                 throw new Exception(
                     "Can't delete the worksheet because there are multiple worksheets associated with that index.");
 
-            var ws = m_worksheets.Values.Single(w => w.Position == position);
+            var ws = _worksheets.Values.Single(w => w.Position == position);
             if (!StringExtensions.IsNullOrWhiteSpace(ws.RelId) && !Deleted.Contains(ws.RelId))
                 Deleted.Add(ws.RelId);
 
-            m_worksheets.RemoveAll(w => w.Position == position);
-            m_worksheets.Values.Where(w => w.Position > position).ForEach(w => (w)._position -= 1);
+            _worksheets.RemoveAll(w => w.Position == position);
+            _worksheets.Values.Where(w => w.Position > position).ForEach(w => (w)._position -= 1);
         }
 
         IEnumerator<IXLWorksheet> IEnumerable<IXLWorksheet>.GetEnumerator()
         {
-            return m_worksheets.Values.Cast<IXLWorksheet>().GetEnumerator();
+            return _worksheets.Values.Cast<IXLWorksheet>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -152,11 +153,11 @@ namespace ClosedXML.Excel
 
         public void Rename(String oldSheetName, String newSheetName)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(oldSheetName) || !m_worksheets.ContainsKey(oldSheetName)) return;
+            if (StringExtensions.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName)) return;
 
-            var ws = m_worksheets[oldSheetName];
-            m_worksheets.Remove(oldSheetName);
-            m_worksheets.Add(newSheetName, ws);
+            var ws = _worksheets[oldSheetName];
+            _worksheets.Remove(oldSheetName);
+            _worksheets.Add(newSheetName, ws);
         }
     }
 }
