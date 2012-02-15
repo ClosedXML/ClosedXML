@@ -64,6 +64,11 @@ namespace ClosedXML.Excel
 
         public XLAutoFilter AutoFilter { get; private set; }
 
+        public new IXLBaseAutoFilter SetAutoFilter()
+        {
+            return AutoFilter;
+        }
+
         #region IXLTable Members
 
         public Boolean EmphasizeFirstColumn { get; set; }

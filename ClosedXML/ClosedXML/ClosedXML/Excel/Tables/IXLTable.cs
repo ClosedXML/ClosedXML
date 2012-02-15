@@ -99,6 +99,7 @@ namespace ClosedXML.Excel
 
         IXLBaseAutoFilter AutoFilter { get; }
 
+        new IXLBaseAutoFilter SetAutoFilter();
 
         Boolean ShowHeaderRow { get; set; }
         IXLTable SetShowHeaderRow(); IXLTable SetShowHeaderRow(Boolean value);
