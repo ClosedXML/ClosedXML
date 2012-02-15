@@ -3279,8 +3279,8 @@ namespace ClosedXML.Excel
 
                 headerFooter.ScaleWithDoc = xlWorksheet.PageSetup.ScaleHFWithDocument;
                 headerFooter.AlignWithMargins = xlWorksheet.PageSetup.AlignHFWithMargins;
-                headerFooter.DifferentFirst = true;
-                headerFooter.DifferentOddEven = true;
+                headerFooter.DifferentFirst = xlWorksheet.PageSetup.DifferentFirstPageOnHF;
+                headerFooter.DifferentOddEven = xlWorksheet.PageSetup.DifferentOddEvenPagesOnHF;
 
                 var oddHeader = new OddHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.OddPages));
                 headerFooter.AppendChild(oddHeader);

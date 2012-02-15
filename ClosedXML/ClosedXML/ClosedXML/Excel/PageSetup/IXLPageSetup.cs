@@ -302,5 +302,10 @@ namespace ClosedXML.Excel
         IXLPageSetup SetShowComments(XLShowCommentsValues value);
         IXLPageSetup SetPrintErrorValue(XLPrintErrorValues value);
 
+
+        Boolean DifferentFirstPageOnHF { get; set; }
+        IXLPageSetup SetDifferentFirstPageOnHF(); IXLPageSetup SetDifferentFirstPageOnHF(Boolean value);
+        Boolean DifferentOddEvenPagesOnHF { get; set; }
+        IXLPageSetup SetDifferentOddEvenPagesOnHF(); IXLPageSetup SetDifferentOddEvenPagesOnHF(Boolean value);
     }
 }

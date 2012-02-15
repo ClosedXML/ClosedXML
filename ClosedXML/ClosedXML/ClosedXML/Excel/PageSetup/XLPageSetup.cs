@@ -230,5 +230,25 @@ namespace ClosedXML.Excel
         public IXLPageSetup SetShowComments(XLShowCommentsValues value) { ShowComments = value; return this; }
         public IXLPageSetup SetPrintErrorValue(XLPrintErrorValues value) { PrintErrorValue = value; return this; }
 
+        public Boolean DifferentFirstPageOnHF { get; set; }
+        public IXLPageSetup SetDifferentFirstPageOnHF()
+        {
+            return SetDifferentFirstPageOnHF(true);
+        }
+        public IXLPageSetup SetDifferentFirstPageOnHF(Boolean value)
+        {
+            DifferentFirstPageOnHF = value;
+            return this;
+        }
+        public Boolean DifferentOddEvenPagesOnHF { get; set; }
+        public IXLPageSetup SetDifferentOddEvenPagesOnHF()
+        {
+            return SetDifferentOddEvenPagesOnHF(true);
+        }
+        public IXLPageSetup SetDifferentOddEvenPagesOnHF(Boolean value)
+        {
+            DifferentOddEvenPagesOnHF = value;
+            return this;
+        }
     }
 }

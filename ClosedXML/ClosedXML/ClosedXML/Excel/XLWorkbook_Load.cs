@@ -1274,6 +1274,11 @@ namespace ClosedXML.Excel
             if (headerFooter.ScaleWithDoc != null)
                 ws.PageSetup.ScaleHFWithDocument = headerFooter.ScaleWithDoc;
 
+            if (headerFooter.DifferentFirst != null)
+                ws.PageSetup.DifferentFirstPageOnHF = headerFooter.DifferentFirst;
+            if (headerFooter.DifferentOddEven != null)
+                ws.PageSetup.DifferentOddEvenPagesOnHF = headerFooter.DifferentOddEven;
+
             // Footers
             var xlFooter = (XLHeaderFooter) ws.PageSetup.Footer;
             var evenFooter = headerFooter.EvenFooter;
