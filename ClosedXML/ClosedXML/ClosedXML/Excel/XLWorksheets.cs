@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
     {
         #region Constructor
 
-        private readonly XLWorkbook m_workbook;
+        private readonly XLWorkbook _workbook;
         private readonly Dictionary<String, XLWorksheet> _worksheets = new Dictionary<String, XLWorksheet>();
 
         #endregion
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
 
         public XLWorksheets(XLWorkbook workbook)
         {
-            m_workbook = workbook;
+            _workbook = workbook;
         }
 
         #endregion
@@ -87,16 +87,17 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Add(String sheetName)
         {
-            var sheet = new XLWorksheet(sheetName, m_workbook);
+            var sheet = new XLWorksheet(sheetName, _workbook);
             _worksheets.Add(sheetName, sheet);
-            sheet._position = _worksheets.Count;
+            sheet._position = _worksheets.Count + _workbook.UnsupportedSheets.Count;
             return sheet;
         }
 
         public IXLWorksheet Add(String sheetName, Int32 position)
         {
             _worksheets.Values.Where(w => w._position >= position).ForEach(w => w._position += 1);
-            var sheet = new XLWorksheet(sheetName, m_workbook);
+            _workbook.UnsupportedSheets.Where(w => w.Position >= position).ForEach(w => w.Position += 1);
+            var sheet = new XLWorksheet(sheetName, _workbook);
             _worksheets.Add(sheetName, sheet);
             sheet._position = position;
             return sheet;
@@ -122,7 +123,8 @@ namespace ClosedXML.Excel
                 Deleted.Add(ws.RelId);
 
             _worksheets.RemoveAll(w => w.Position == position);
-            _worksheets.Values.Where(w => w.Position > position).ForEach(w => (w)._position -= 1);
+            _worksheets.Values.Where(w => w.Position > position).ForEach(w => w._position -= 1);
+            _workbook.UnsupportedSheets.Where(w => w.Position > position).ForEach(w => w.Position -= 1);
         }
 
         IEnumerator<IXLWorksheet> IEnumerable<IXLWorksheet>.GetEnumerator()

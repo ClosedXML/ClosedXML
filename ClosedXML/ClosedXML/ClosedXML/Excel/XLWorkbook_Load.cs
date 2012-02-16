@@ -121,7 +121,7 @@ namespace ClosedXML.Excel
 
                 if (wsPart == null)
                 {
-                    UnsupportedSheets.Add(position, new UnsupportedSheet {SheetId = dSheet.SheetId.Value});
+                    UnsupportedSheets.Add(new UnsupportedSheet {SheetId = dSheet.SheetId.Value, Position = position});
                     continue;
                 }
 
@@ -341,8 +341,9 @@ namespace ClosedXML.Excel
             var workbookView = (WorkbookView) workbook.BookViews.FirstOrDefault();
             if (workbookView != null && workbookView.ActiveTab != null)
             {
-                UnsupportedSheet unsupportedSheet;
-                if (UnsupportedSheets.TryGetValue((Int32)(workbookView.ActiveTab.Value + 1), out unsupportedSheet))
+                UnsupportedSheet unsupportedSheet =
+                    UnsupportedSheets.FirstOrDefault(us => us.Position == (Int32)(workbookView.ActiveTab.Value + 1));
+                if (unsupportedSheet != null)
                     unsupportedSheet.IsActive = true;
                 else
                 {

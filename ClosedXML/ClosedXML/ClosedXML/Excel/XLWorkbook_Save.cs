@@ -451,18 +451,16 @@ namespace ClosedXML.Excel
 
                 if (!WorksheetsInternal.Any<XLWorksheet>(w => w.SheetId == sheetId)) continue;
 
-                var wks =
-                    WorksheetsInternal.Where<XLWorksheet>(w => w.SheetId == sheetId).Single();
+                var wks = WorksheetsInternal.Where<XLWorksheet>(w => w.SheetId == sheetId).Single();
                 wks.RelId = sheet.Id;
                 sheet.Name = wks.Name;
             }
 
-            foreach (
-                XLWorksheet xlSheet in
-                    WorksheetsInternal.Cast<XLWorksheet>().Where(w => w.SheetId == 0).OrderBy(w => w.Position))
+            foreach (XLWorksheet xlSheet in
+                    WorksheetsInternal.Cast<XLWorksheet>().Where(s => s.SheetId == 0).OrderBy(w => w.Position))
             {
                 String rId = context.RelIdGenerator.GetNext(RelType.Workbook);
-                //Int32 rIdSub = Int32.Parse(rId.Substring(3));
+
                 while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
                     rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
@@ -484,15 +482,17 @@ namespace ClosedXML.Excel
                                 select sheet;
 
             UInt32 firstSheetVisible = 0;
-            UInt32 activeTab = (from us in UnsupportedSheets where us.Value.IsActive select (UInt32)us.Key - 1).FirstOrDefault();
+            UInt32 activeTab = (from us in UnsupportedSheets where us.IsActive select (UInt32)us.Position - 1).FirstOrDefault();
             Boolean foundVisible = false;
-            //Int32 position = 0;
+            
             Int32 totalSheets = sheetElements.Count() + UnsupportedSheets.Count;
             for (Int32 p = 1; p <= totalSheets; p++)
             {
-                if (!UnsupportedSheets.ContainsKey(p))
+                if (!UnsupportedSheets.Any(us =>us.Position == p))
                 {
-                    var sheet = sheetElements.ElementAt(p - UnsupportedSheets.Keys.Count(n => n <= p) - 1);
+                    var sheet = sheetElements.ElementAt(p - UnsupportedSheets.Count(us => us.Position <= p) - 1);
+                    workbook.Sheets.RemoveChild(sheet);
+                    workbook.Sheets.AppendChild(sheet);
                     var xlSheet = Worksheet(sheet.Name);
                     if (xlSheet.Visibility != XLWorksheetVisibility.Visible)
                         sheet.State = xlSheet.Visibility.ToOpenXml();
@@ -503,6 +503,13 @@ namespace ClosedXML.Excel
                         foundVisible = true;
                     else
                         firstSheetVisible++;
+                }
+                else
+                {
+                    var sheetId = UnsupportedSheets.First(us=>us.Position == p).SheetId;
+                    var sheet = workbook.Sheets.Elements<Sheet>().First(s => s.SheetId == sheetId);
+                    workbook.Sheets.RemoveChild(sheet);
+                    workbook.Sheets.AppendChild(sheet);
                 }
             }
 
@@ -633,32 +640,6 @@ namespace ClosedXML.Excel
             }
 
             workbook.DefinedNames = definedNames;
-            //if (workbook.DefinedNames == null)
-            //    workbook.DefinedNames = new DefinedNames();
-
-            //foreach (DefinedName dn in definedNames)
-            //{
-            //    String dnName = dn.Name.Value;
-            //    var dnLocalSheetId = dn.LocalSheetId;
-            //    var existingDefinedName = workbook.DefinedNames
-            //        .Elements<DefinedName>()
-            //        .FirstOrDefault(d =>
-            //                        String.Compare(d.Name.Value, dnName, true) == 0
-            //                        && (
-            //                               (d.LocalSheetId != null && dnLocalSheetId != null &&
-            //                                d.LocalSheetId.InnerText == dnLocalSheetId.InnerText)
-            //                               || d.LocalSheetId == null
-            //                               || dnLocalSheetId == null)
-            //        );
-            //    if (existingDefinedName != null)
-            //    {
-            //        existingDefinedName.Text = dn.Text;
-            //        existingDefinedName.LocalSheetId = dn.LocalSheetId;
-            //        existingDefinedName.Comment = dn.Comment;
-            //    }
-            //    else
-            //        workbook.DefinedNames.AppendChild(dn.CloneNode(true));
-            //}
 
             if (workbook.CalculationProperties == null)
                 workbook.CalculationProperties = new CalculationProperties {CalculationId = 125725U};
