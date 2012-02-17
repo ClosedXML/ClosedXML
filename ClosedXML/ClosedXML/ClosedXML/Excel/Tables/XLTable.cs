@@ -62,7 +62,21 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLAutoFilter AutoFilter { get; private set; }
+        private XLAutoFilter _autoFilter;
+        public XLAutoFilter AutoFilter
+        {
+            get
+            {
+                using (var asRange = ShowTotalsRow ? Range(1, 1, RowCount() - 1, ColumnCount()) : AsRange())
+                {
+                    if (_autoFilter == null)
+                        _autoFilter = new XLAutoFilter();
+
+                    _autoFilter.Range = asRange;
+                }
+                return _autoFilter;
+            }
+        }
 
         public new IXLBaseAutoFilter SetAutoFilter()
         {
@@ -299,7 +313,6 @@ namespace ClosedXML.Excel
 
         public void InitializeAutoFilter()
         {
-            AutoFilter = new XLAutoFilter { Range = AsRange() };
             ShowAutoFilter = true;
         }
 
