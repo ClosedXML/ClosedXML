@@ -966,10 +966,6 @@
             }
         }
 
-        IXLDataValidation IXLCell.DataValidation
-        {
-            get { return DataValidation; }
-        }
 
         public IXLCells InsertCellsAbove(int numberOfRows)
         {
@@ -2207,6 +2203,11 @@
                 using(var asRange = AsRange())
                     return Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange) && dv.IsDirty());
             }
+        }
+
+        public IXLDataValidation SetDataValidation()
+        {
+            return DataValidation;
         }
     }
 }

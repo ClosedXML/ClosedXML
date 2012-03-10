@@ -64,7 +64,7 @@ namespace ClosedXML.Excel
 
         IXLHyperlinks Hyperlinks { get; }
 
-        IXLDataValidation DataValidation { get; }
+        IXLDataValidation SetDataValidation();
 
         /// <summary>
         ///   Returns the collection of cells.

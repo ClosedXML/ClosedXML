@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        IXLDataValidation DataValidation { get; }
+        IXLDataValidation SetDataValidation();
 
         /// <summary>
         /// Creates a named range out of these ranges. 

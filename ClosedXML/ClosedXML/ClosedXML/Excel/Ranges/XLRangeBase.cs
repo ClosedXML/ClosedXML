@@ -192,10 +192,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        IXLDataValidation IXLRangeBase.DataValidation
-        {
-            get { return DataValidation; }
-        }
+
 
         public Object Value
         {
@@ -1804,6 +1801,11 @@ namespace ClosedXML.Excel
 
             RangeAddress.Worksheet.RangeShiftedColumns -= WorksheetRangeShiftedColumns;
             _subscribedToShiftedColumns = false;
+        }
+
+        public IXLDataValidation SetDataValidation()
+        {
+            return DataValidation;
         }
     }
 }

@@ -216,5 +216,10 @@ namespace ClosedXML.Excel
         {
             return _ranges.Aggregate(0, (current, r) => current ^ r.GetHashCode());
         }
+
+        public IXLDataValidation SetDataValidation()
+        {
+            return DataValidation;
+        }
     }
 }
