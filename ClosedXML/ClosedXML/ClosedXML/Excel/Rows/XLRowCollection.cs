@@ -130,7 +130,7 @@ namespace ClosedXML.Excel
             {
                 var rowToMove = _dictionary[ro];
                 Int32 newRowNum = ro + rowsToShift;
-                if (newRowNum <= ExcelHelper.MaxRowNumber)
+                if (newRowNum <= XLHelper.MaxRowNumber)
                 {
                     var newRow = new XLRow(rowToMove)
                                      {
@@ -138,7 +138,7 @@ namespace ClosedXML.Excel
                                              {
                                                  FirstAddress = new XLAddress(newRowNum, 1, false, false),
                                                  LastAddress =
-                                                     new XLAddress(newRowNum, ExcelHelper.MaxColumnNumber, false, false)
+                                                     new XLAddress(newRowNum, XLHelper.MaxColumnNumber, false, false)
                                              }
                                      };
                     _dictionary.Add(newRowNum, newRow);

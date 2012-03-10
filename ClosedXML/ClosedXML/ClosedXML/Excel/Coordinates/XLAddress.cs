@@ -16,6 +16,11 @@ namespace ClosedXML.Excel
             return Create(null, cellAddressString);
         }
 
+        public static XLAddress Create(XLAddress cellAddress)
+        {
+            return new XLAddress(cellAddress.Worksheet, cellAddress.RowNumber, cellAddress.ColumnNumber, cellAddress.FixedRow, cellAddress.FixedColumn);
+        }
+
         public static XLAddress Create(XLWorksheet worksheet, string cellAddressString)
         {
             var fixedColumn = cellAddressString[0] == '$';
@@ -49,7 +54,7 @@ namespace ClosedXML.Excel
                     columnLetter = cellAddressString.Substring(startPos, rowPos);
                 }
 
-                rowNumber = int.Parse(cellAddressString.Substring(rowPos + 1), ExcelHelper.NumberFormatForParse);
+                rowNumber = int.Parse(cellAddressString.Substring(rowPos + 1), XLHelper.NumberFormatForParse);
             }
             else
             {
@@ -62,7 +67,7 @@ namespace ClosedXML.Excel
                     columnLetter = cellAddressString.Substring(startPos, rowPos);
                 }
 
-                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), ExcelHelper.NumberFormatForParse);
+                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), XLHelper.NumberFormatForParse);
             }
             return new XLAddress(worksheet, rowNumber, columnLetter, fixedRow, fixedColumn);
         }
@@ -102,7 +107,7 @@ namespace ClosedXML.Excel
         /// <param name = "fixedRow"></param>
         /// <param name = "fixedColumn"></param>
         public XLAddress(XLWorksheet worksheet, int rowNumber, string columnLetter, bool fixedRow, bool fixedColumn)
-                : this(worksheet, rowNumber, ExcelHelper.GetColumnNumberFromLetter(columnLetter), fixedRow, fixedColumn)
+                : this(worksheet, rowNumber, XLHelper.GetColumnNumberFromLetter(columnLetter), fixedRow, fixedColumn)
         {
             _columnLetter = columnLetter;
         }
@@ -187,7 +192,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public String ColumnLetter
         {
-            get { return _columnLetter ?? (_columnLetter = ExcelHelper.GetColumnLetterFromNumber(_columnNumber)); }
+            get { return _columnLetter ?? (_columnLetter = XLHelper.GetColumnLetterFromNumber(_columnNumber)); }
         }
         #endregion
         #region Overrides

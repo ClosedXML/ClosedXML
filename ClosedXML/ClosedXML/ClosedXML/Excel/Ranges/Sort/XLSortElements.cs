@@ -45,7 +45,7 @@ namespace ClosedXML.Excel
         {
             elements.Add(new XLSortElement()
             {
-                ElementNumber = ExcelHelper.GetColumnNumberFromLetter(elementNumber),
+                ElementNumber = XLHelper.GetColumnNumberFromLetter(elementNumber),
                 SortOrder = sortOrder,
                 IgnoreBlanks = ignoreBlanks,
                 MatchCase = matchCase

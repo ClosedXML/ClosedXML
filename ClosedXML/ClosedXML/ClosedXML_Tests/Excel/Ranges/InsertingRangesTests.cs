@@ -66,5 +66,22 @@ namespace ClosedXML_Tests
             Assert.AreEqual(XLColor.Fulvous, ws.Cell(2, 4).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.MacaroniAndCheese, ws.Cell(2, 5).Style.Fill.BackgroundColor);
         }
+
+        [TestMethod]
+        public void InsertingRowsAbove()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet");
+
+            ws.Cell("B3").SetValue("X")
+                .CellBelow().SetValue("B");
+
+            var r = ws.Range("B4").InsertRowsAbove(1).First();
+            r.Cell(1).SetValue("A");
+
+            Assert.AreEqual("X", ws.Cell("B3").GetString());
+            Assert.AreEqual("A", ws.Cell("B4").GetString());
+            Assert.AreEqual("B", ws.Cell("B5").GetString());
+        }
     }
 }

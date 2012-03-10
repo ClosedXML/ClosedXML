@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
             {
                 var columnToMove = _dictionary[ro];
                 Int32 newColumnNum = ro + columnsToShift;
-                if (newColumnNum <= ExcelHelper.MaxColumnNumber)
+                if (newColumnNum <= XLHelper.MaxColumnNumber)
                 {
                     var newColumn = new XLColumn(columnToMove)
                                         {
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
                                             {
                                                 FirstAddress = new XLAddress(1, newColumnNum, false, false),
                                                 LastAddress =
-                                                    new XLAddress(ExcelHelper.MaxRowNumber, newColumnNum, false, false)
+                                                    new XLAddress(XLHelper.MaxRowNumber, newColumnNum, false, false)
                                             }
                                         };
                                         

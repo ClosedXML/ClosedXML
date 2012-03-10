@@ -8,8 +8,8 @@ namespace ClosedXML_Examples
     {
         public static void LoadAllFiles()
         {
-            var forLoadingFolder = @"C:\Excel Files\Created";
-            var forSavingFolder = @"C:\Excel Files\Modified";
+            var forLoadingFolder = @"D:\Excel Files\Created";
+            var forSavingFolder = @"D:\Excel Files\Modified";
 
             foreach (var file in Directory.GetFiles(forLoadingFolder))
             {

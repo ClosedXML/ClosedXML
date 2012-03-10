@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
     /// <summary>
     ///   Common methods
     /// </summary>
-    internal static class ExcelHelper
+    internal static class XLHelper
     {
         public const int MinRowNumber = 1;
         public const int MinColumnNumber = 1;
@@ -238,6 +238,24 @@ namespace ClosedXML.Excel
         public static Double GetPxFromPt(Int32 pt)
         {
             return Convert.ToDouble(pt) * DpiX / 72.0;
+        }
+
+        public static IXLTableRows InsertRowsWithoutEvents(Func<Int32, Boolean, IXLRangeRows> insertFunc, XLTableRange tableRange,  Int32 numberOfRows, Boolean expandTable)
+        {
+            var ws = tableRange.Worksheet;
+            var tracking = ws.EventTrackingEnabled;
+            ws.EventTrackingEnabled = false;
+
+            var rows = new XLTableRows(ws.Style);
+            var inserted = insertFunc(numberOfRows, false);
+            inserted.ForEach(r => rows.Add(new XLTableRow(tableRange, r as XLRangeRow)));
+
+            if (expandTable)
+                tableRange.Table.ExpandTableRows(numberOfRows);
+
+            ws.EventTrackingEnabled = tracking;
+
+            return rows;
         }
     }
 }

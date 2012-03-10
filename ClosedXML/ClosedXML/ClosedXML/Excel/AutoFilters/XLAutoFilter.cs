@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
 
         public IXLFilterColumn Column(String column)
         {
-            return Column(ExcelHelper.GetColumnNumberFromLetter(column));
+            return Column(XLHelper.GetColumnNumberFromLetter(column));
         }
 
         public IXLFilterColumn Column(Int32 column)

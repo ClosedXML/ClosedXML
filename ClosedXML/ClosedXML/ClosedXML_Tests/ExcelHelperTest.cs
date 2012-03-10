@@ -7,11 +7,11 @@ namespace ClosedXML_Tests
     
     
     /// <summary>
-    ///This is a test class for ExcelHelperTest and is intended
-    ///to contain all ExcelHelperTest Unit Tests
+    ///This is a test class for XLHelperTest and is intended
+    ///to contain all XLHelperTest Unit Tests
     ///</summary>
     [TestClass()]
-    public class ExcelHelperTest
+    public class XLHelperTest
     {
 
 
@@ -70,19 +70,19 @@ namespace ClosedXML_Tests
         [TestMethod()]
         public void IsValidColumnTest()
         {
-            Assert.AreEqual(false, ExcelHelper.IsValidColumn(""));
-            Assert.AreEqual(false, ExcelHelper.IsValidColumn("1"));
-            Assert.AreEqual(false, ExcelHelper.IsValidColumn("A1"));
-            Assert.AreEqual(false, ExcelHelper.IsValidColumn("AA1"));
-            Assert.AreEqual(true, ExcelHelper.IsValidColumn("A"));
-            Assert.AreEqual(true, ExcelHelper.IsValidColumn("AA"));
-            Assert.AreEqual(true, ExcelHelper.IsValidColumn("AAA"));
-            Assert.AreEqual(true, ExcelHelper.IsValidColumn("Z"));
-            Assert.AreEqual(true, ExcelHelper.IsValidColumn("ZZ"));
-            Assert.AreEqual(true, ExcelHelper.IsValidColumn("XFD"));
-            Assert.AreEqual(false, ExcelHelper.IsValidColumn("ZAA"));
-            Assert.AreEqual(false, ExcelHelper.IsValidColumn("XZA"));
-            Assert.AreEqual(false, ExcelHelper.IsValidColumn("XFZ"));
+            Assert.AreEqual(false, XLHelper.IsValidColumn(""));
+            Assert.AreEqual(false, XLHelper.IsValidColumn("1"));
+            Assert.AreEqual(false, XLHelper.IsValidColumn("A1"));
+            Assert.AreEqual(false, XLHelper.IsValidColumn("AA1"));
+            Assert.AreEqual(true, XLHelper.IsValidColumn("A"));
+            Assert.AreEqual(true, XLHelper.IsValidColumn("AA"));
+            Assert.AreEqual(true, XLHelper.IsValidColumn("AAA"));
+            Assert.AreEqual(true, XLHelper.IsValidColumn("Z"));
+            Assert.AreEqual(true, XLHelper.IsValidColumn("ZZ"));
+            Assert.AreEqual(true, XLHelper.IsValidColumn("XFD"));
+            Assert.AreEqual(false, XLHelper.IsValidColumn("ZAA"));
+            Assert.AreEqual(false, XLHelper.IsValidColumn("XZA"));
+            Assert.AreEqual(false, XLHelper.IsValidColumn("XFZ"));
         }
     }
 }

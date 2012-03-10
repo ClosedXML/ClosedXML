@@ -15,11 +15,16 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
+        public XLRangeAddress(XLRangeAddress rangeAddress): this(rangeAddress.FirstAddress, rangeAddress.LastAddress)
+        {
+            
+        }
+
         public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress)
         {
             Worksheet = firstAddress.Worksheet;
-            FirstAddress = firstAddress;
-            LastAddress = lastAddress;
+            FirstAddress = XLAddress.Create(firstAddress);
+            LastAddress = XLAddress.Create(lastAddress); 
         }
 
         public XLRangeAddress(XLWorksheet worksheet, String rangeAddress)
@@ -42,7 +47,7 @@ namespace ClosedXML.Excel
                 secondPart = addressToUse;
             }
 
-            if (ExcelHelper.IsValidA1Address(firstPart))
+            if (XLHelper.IsValidA1Address(firstPart))
             {
                 FirstAddress = XLAddress.Create(worksheet, firstPart);
                 LastAddress = XLAddress.Create(worksheet, secondPart);
@@ -54,12 +59,12 @@ namespace ClosedXML.Excel
                 if (char.IsDigit(firstPart[0]))
                 {
                     FirstAddress = XLAddress.Create(worksheet, "A" + firstPart);
-                    LastAddress = XLAddress.Create(worksheet, ExcelHelper.MaxColumnLetter + secondPart);
+                    LastAddress = XLAddress.Create(worksheet, XLHelper.MaxColumnLetter + secondPart);
                 }
                 else
                 {
                     FirstAddress = XLAddress.Create(worksheet, firstPart + "1");
-                    LastAddress = XLAddress.Create(worksheet, secondPart + ExcelHelper.MaxRowNumber.ToStringLookup());    
+                    LastAddress = XLAddress.Create(worksheet, secondPart + XLHelper.MaxRowNumber.ToStringLookup());    
                 }
             }
 

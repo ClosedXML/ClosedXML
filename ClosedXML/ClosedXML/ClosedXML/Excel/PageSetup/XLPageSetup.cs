@@ -90,7 +90,7 @@ namespace ClosedXML.Excel
         }
         public void SetColumnsToRepeatAtLeft(String firstColumnToRepeatAtLeft, String lastColumnToRepeatAtLeft)
         {
-            SetColumnsToRepeatAtLeft(ExcelHelper.GetColumnNumberFromLetter(firstColumnToRepeatAtLeft), ExcelHelper.GetColumnNumberFromLetter(lastColumnToRepeatAtLeft));
+            SetColumnsToRepeatAtLeft(XLHelper.GetColumnNumberFromLetter(firstColumnToRepeatAtLeft), XLHelper.GetColumnNumberFromLetter(lastColumnToRepeatAtLeft));
         }
         public void SetColumnsToRepeatAtLeft(Int32 firstColumnToRepeatAtLeft, Int32 lastColumnToRepeatAtLeft)
         {

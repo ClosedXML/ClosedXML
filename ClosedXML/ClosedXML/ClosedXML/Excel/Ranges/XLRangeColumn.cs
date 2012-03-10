@@ -82,11 +82,11 @@
             base.CopyTo(target);
 
             int lastRowNumber = target.Address.RowNumber + RowCount() - 1;
-            if (lastRowNumber > ExcelHelper.MaxRowNumber)
-                lastRowNumber = ExcelHelper.MaxRowNumber;
+            if (lastRowNumber > XLHelper.MaxRowNumber)
+                lastRowNumber = XLHelper.MaxRowNumber;
             int lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
-            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
-                lastColumnNumber = ExcelHelper.MaxColumnNumber;
+            if (lastColumnNumber > XLHelper.MaxColumnNumber)
+                lastColumnNumber = XLHelper.MaxColumnNumber;
 
             return target.Worksheet.Range(
                 target.Address.RowNumber,
@@ -101,11 +101,11 @@
             base.CopyTo(target);
 
             int lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
-            if (lastRowNumber > ExcelHelper.MaxRowNumber)
-                lastRowNumber = ExcelHelper.MaxRowNumber;
+            if (lastRowNumber > XLHelper.MaxRowNumber)
+                lastRowNumber = XLHelper.MaxRowNumber;
             int lastColumnNumber = target.RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
-            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
-                lastColumnNumber = ExcelHelper.MaxColumnNumber;
+            if (lastColumnNumber > XLHelper.MaxColumnNumber)
+                lastColumnNumber = XLHelper.MaxColumnNumber;
 
             return target.Worksheet.Range(
                 target.RangeAddress.FirstAddress.RowNumber,

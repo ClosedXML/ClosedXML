@@ -11,13 +11,13 @@ namespace ClosedXML.Excel
         public XLRange(XLRangeParameters xlRangeParameters)
             : base(xlRangeParameters.RangeAddress)
         {
-            RangeParameters = xlRangeParameters;
+            RangeParameters = new XLRangeParameters(xlRangeParameters.RangeAddress, xlRangeParameters.DefaultStyle);
 
             if (!xlRangeParameters.IgnoreEvents)
             {
                 SubscribeToShiftedRows(WorksheetRangeShiftedRows);
                 SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
-                xlRangeParameters.IgnoreEvents = true;
+                //xlRangeParameters.IgnoreEvents = true;
             }
             SetStyle(xlRangeParameters.DefaultStyle);
         }
@@ -70,8 +70,8 @@ namespace ClosedXML.Excel
 
         public IXLRangeColumns Columns(String firstColumn, String lastColumn)
         {
-            return Columns(ExcelHelper.GetColumnNumberFromLetter(firstColumn),
-                           ExcelHelper.GetColumnNumberFromLetter(lastColumn));
+            return Columns(XLHelper.GetColumnNumberFromLetter(firstColumn),
+                           XLHelper.GetColumnNumberFromLetter(lastColumn));
         }
 
         public IXLRangeColumns Columns(String columns)
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
                 String lastColumn;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    string[] columnRange = ExcelHelper.SplitRange(tPair);
+                    string[] columnRange = XLHelper.SplitRange(tPair);
 
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
@@ -194,7 +194,7 @@ namespace ClosedXML.Excel
                 String lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    string[] rowRange = ExcelHelper.SplitRange(tPair);
+                    string[] rowRange = XLHelper.SplitRange(tPair);
 
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
@@ -297,11 +297,11 @@ namespace ClosedXML.Excel
             base.CopyTo(target);
 
             Int32 lastRowNumber = target.Address.RowNumber + RowCount() - 1;
-            if (lastRowNumber > ExcelHelper.MaxRowNumber)
-                lastRowNumber = ExcelHelper.MaxRowNumber;
+            if (lastRowNumber > XLHelper.MaxRowNumber)
+                lastRowNumber = XLHelper.MaxRowNumber;
             Int32 lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
-            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
-                lastColumnNumber = ExcelHelper.MaxColumnNumber;
+            if (lastColumnNumber > XLHelper.MaxColumnNumber)
+                lastColumnNumber = XLHelper.MaxColumnNumber;
 
             return target.Worksheet.Range(target.Address.RowNumber,
                                           target.Address.ColumnNumber,
@@ -314,11 +314,11 @@ namespace ClosedXML.Excel
             base.CopyTo(target);
 
             Int32 lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
-            if (lastRowNumber > ExcelHelper.MaxRowNumber)
-                lastRowNumber = ExcelHelper.MaxRowNumber;
+            if (lastRowNumber > XLHelper.MaxRowNumber)
+                lastRowNumber = XLHelper.MaxRowNumber;
             Int32 lastColumnNumber = target.RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
-            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
-                lastColumnNumber = ExcelHelper.MaxColumnNumber;
+            if (lastColumnNumber > XLHelper.MaxColumnNumber)
+                lastColumnNumber = XLHelper.MaxColumnNumber;
 
             return target.Worksheet.Range(target.RangeAddress.FirstAddress.RowNumber,
                                           target.RangeAddress.FirstAddress.ColumnNumber,
@@ -361,7 +361,7 @@ namespace ClosedXML.Excel
 
         private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-            ShiftRows(RangeAddress, range, rowsShifted);
+                ShiftRows(RangeAddress, range, rowsShifted);
         }
 
         IXLRangeColumn IXLRange.FirstColumn(Func<IXLRangeColumn, Boolean> predicate)
@@ -664,8 +664,8 @@ namespace ClosedXML.Excel
 
         public XLRangeRow Row(Int32 row)
         {
-            if (row <= 0 || row > ExcelHelper.MaxRowNumber)
-                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}", ExcelHelper.MaxRowNumber));
+            if (row <= 0 || row > XLHelper.MaxRowNumber)
+                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}", XLHelper.MaxRowNumber));
 
             var firstCellAddress = new XLAddress(Worksheet,
                                                  RangeAddress.FirstAddress.RowNumber + row - 1,
@@ -685,8 +685,8 @@ namespace ClosedXML.Excel
 
         public XLRangeColumn Column(Int32 column)
         {
-            if (column <= 0 || column > ExcelHelper.MaxColumnNumber)
-                throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}", ExcelHelper.MaxColumnNumber));
+            if (column <= 0 || column > XLHelper.MaxColumnNumber)
+                throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}", XLHelper.MaxColumnNumber));
 
             var firstCellAddress = new XLAddress(Worksheet,
                                                  RangeAddress.FirstAddress.RowNumber,
@@ -704,7 +704,7 @@ namespace ClosedXML.Excel
 
         public XLRangeColumn Column(String column)
         {
-            return Column(ExcelHelper.GetColumnNumberFromLetter(column));
+            return Column(XLHelper.GetColumnNumberFromLetter(column));
         }
 
         

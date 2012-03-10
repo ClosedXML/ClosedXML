@@ -128,10 +128,10 @@ namespace ClosedXML.Excel
         }
         public new XLTableRow Row(int row)
         {
-            if (row <= 0 || row > ExcelHelper.MaxRowNumber)
+            if (row <= 0 || row > XLHelper.MaxRowNumber)
             {
                 throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
-                                                                 ExcelHelper.MaxRowNumber));
+                                                                 XLHelper.MaxRowNumber));
             }
 
             return new XLTableRow(this, base.Row(row));
@@ -172,7 +172,7 @@ namespace ClosedXML.Excel
                 String lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    var rowRange = ExcelHelper.SplitRange(tPair);
+                    var rowRange = XLHelper.SplitRange(tPair);
 
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
@@ -223,26 +223,19 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows InsertRowsAbove(int numberOfRows)
         {
-            var rows = new XLTableRows(Worksheet.Style);
-            var inserted = base.InsertRowsAbove(numberOfRows);
-            inserted.ForEach(r => rows.Add(new XLTableRow(this, r as XLRangeRow)));
-            _table.ExpandTableRows(numberOfRows);
-            return rows;
+            return XLHelper.InsertRowsWithoutEvents(base.InsertRowsAbove, this, numberOfRows, !Table.ShowTotalsRow );
         }
         public new IXLTableRows InsertRowsBelow(int numberOfRows)
         {
-            var rows = new XLTableRows(Worksheet.Style);
-            var inserted = base.InsertRowsBelow(numberOfRows);
-            inserted.ForEach(r => rows.Add(new XLTableRow(this, r as XLRangeRow)));
-            _table.ExpandTableRows(numberOfRows);
-            return rows;
+            return XLHelper.InsertRowsWithoutEvents(base.InsertRowsBelow, this, numberOfRows, !Table.ShowTotalsRow);
         }
+
 
         public new IXLRangeColumn Column(String column)
         {
-            if (ExcelHelper.IsValidColumn(column))
+            if (XLHelper.IsValidColumn(column))
             {
-                Int32 coNum = ExcelHelper.GetColumnNumberFromLetter(column);
+                Int32 coNum = XLHelper.GetColumnNumberFromLetter(column);
                 return coNum > ColumnCount() ? Column(_table.GetFieldIndex(column) + 1) : Column(coNum);
             }
 

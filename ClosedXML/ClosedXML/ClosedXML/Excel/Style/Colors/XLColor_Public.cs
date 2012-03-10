@@ -87,7 +87,7 @@ namespace ClosedXML.Excel
                 if (_colorType == XLColorType.Theme)
                 {
                     return _themeColor == otherC._themeColor
-                        && Math.Abs(_themeTint - otherC._themeTint) < ExcelHelper.Epsilon;
+                        && Math.Abs(_themeTint - otherC._themeTint) < XLHelper.Epsilon;
                 }
                 return _indexed == otherC._indexed;
             }

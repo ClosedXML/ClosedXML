@@ -12,8 +12,11 @@
         {
             RangeParameters = rangeParameters;
             if (quickLoad) return;
-            SubscribeToShiftedRows((range, rowsShifted) => WorksheetRangeShiftedRows(range, rowsShifted));
-            SubscribeToShiftedColumns((range, columnsShifted) => WorksheetRangeShiftedColumns(range, columnsShifted));
+            if (!RangeParameters.IgnoreEvents)
+            {
+                SubscribeToShiftedRows((range, rowsShifted) => WorksheetRangeShiftedRows(range, rowsShifted));
+                SubscribeToShiftedColumns((range, columnsShifted) => WorksheetRangeShiftedColumns(range, columnsShifted));
+            }
             SetStyle(rangeParameters.DefaultStyle);
         }
 
@@ -75,8 +78,8 @@
 
         public IXLCells Cells(string firstColumn, string lastColumn)
         {
-            return Cells(ExcelHelper.GetColumnNumberFromLetter(firstColumn) + ":"
-                         + ExcelHelper.GetColumnNumberFromLetter(lastColumn));
+            return Cells(XLHelper.GetColumnNumberFromLetter(firstColumn) + ":"
+                         + XLHelper.GetColumnNumberFromLetter(lastColumn));
         }
 
         public int CellCount()
@@ -100,11 +103,11 @@
             base.CopyTo(target);
 
             int lastRowNumber = target.Address.RowNumber + RowCount() - 1;
-            if (lastRowNumber > ExcelHelper.MaxRowNumber)
-                lastRowNumber = ExcelHelper.MaxRowNumber;
+            if (lastRowNumber > XLHelper.MaxRowNumber)
+                lastRowNumber = XLHelper.MaxRowNumber;
             int lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
-            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
-                lastColumnNumber = ExcelHelper.MaxColumnNumber;
+            if (lastColumnNumber > XLHelper.MaxColumnNumber)
+                lastColumnNumber = XLHelper.MaxColumnNumber;
 
             return target.Worksheet.Range(
                 target.Address.RowNumber,
@@ -118,11 +121,11 @@
         {
             base.CopyTo(target);
             int lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
-            if (lastRowNumber > ExcelHelper.MaxRowNumber)
-                lastRowNumber = ExcelHelper.MaxRowNumber;
+            if (lastRowNumber > XLHelper.MaxRowNumber)
+                lastRowNumber = XLHelper.MaxRowNumber;
             int lastColumnNumber = target.RangeAddress.LastAddress.ColumnNumber + ColumnCount() - 1;
-            if (lastColumnNumber > ExcelHelper.MaxColumnNumber)
-                lastColumnNumber = ExcelHelper.MaxColumnNumber;
+            if (lastColumnNumber > XLHelper.MaxColumnNumber)
+                lastColumnNumber = XLHelper.MaxColumnNumber;
 
             return target.Worksheet.Range(
                 target.RangeAddress.FirstAddress.RowNumber,

@@ -171,10 +171,7 @@ namespace ClosedXML.Excel
         private readonly Dictionary<Int32, IXLStyle> _stylesById = new Dictionary<int, IXLStyle>();
         private readonly Dictionary<IXLStyle, Int32> _stylesByStyle = new Dictionary<IXLStyle, Int32>();
 
-        private readonly XLEventTracking _eventTracking;
-
-        public XLEventTracking EventTracking { get { return _eventTracking; } }
-        
+        public XLEventTracking EventTracking { get; set; }
        
         internal Int32 GetStyleId(IXLStyle style)
         {
@@ -528,7 +525,7 @@ namespace ClosedXML.Excel
         }
         public XLWorkbook(XLEventTracking eventTracking)
         {
-            _eventTracking = eventTracking;
+            EventTracking = eventTracking;
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;
             Style = new XLStyle(null, DefaultStyle);

@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
 
         private Double _rowHeight;
         private Boolean _tabActive;
-        internal readonly Boolean EventTrackingEnabled;
+        internal Boolean EventTrackingEnabled;
         #endregion
 
         #region Constructor
@@ -39,8 +39,8 @@ namespace ClosedXML.Excel
         public XLWorksheet(String sheetName, XLWorkbook workbook)
             : base(
                 new XLRangeAddress(
-                    new XLAddress(null, ExcelHelper.MinRowNumber, ExcelHelper.MinColumnNumber, false, false),
-                    new XLAddress(null, ExcelHelper.MaxRowNumber, ExcelHelper.MaxColumnNumber, false, false)))
+                    new XLAddress(null, XLHelper.MinRowNumber, XLHelper.MinColumnNumber, false, false),
+                    new XLAddress(null, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber, false, false)))
         {
             EventTrackingEnabled = workbook.EventTracking == XLEventTracking.Enabled;
             RangeAddress.Worksheet = this;
@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
             Outline = new XLOutline(workbook.Outline);
             _columnWidth = workbook.ColumnWidth;
             _rowHeight = workbook.RowHeight;
-            RowHeightChanged = Math.Abs(workbook.RowHeight - XLWorkbook.DefaultRowHeight) > ExcelHelper.Epsilon;
+            RowHeightChanged = Math.Abs(workbook.RowHeight - XLWorkbook.DefaultRowHeight) > XLHelper.Epsilon;
             Name = sheetName;
             SubscribeToShiftedRows(WorksheetRangeShiftedRows);
             SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
@@ -290,7 +290,7 @@ namespace ClosedXML.Excel
                 String lastColumn;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    var columnRange = ExcelHelper.SplitRange(tPair);
+                    var columnRange = XLHelper.SplitRange(tPair);
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
                 }
@@ -317,8 +317,8 @@ namespace ClosedXML.Excel
 
         public IXLColumns Columns(String firstColumn, String lastColumn)
         {
-            return Columns(ExcelHelper.GetColumnNumberFromLetter(firstColumn),
-                           ExcelHelper.GetColumnNumberFromLetter(lastColumn));
+            return Columns(XLHelper.GetColumnNumberFromLetter(firstColumn),
+                           XLHelper.GetColumnNumberFromLetter(lastColumn));
         }
 
         public IXLColumns Columns(Int32 firstColumn, Int32 lastColumn)
@@ -357,7 +357,7 @@ namespace ClosedXML.Excel
                 String lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    var rowRange = ExcelHelper.SplitRange(tPair);
+                    var rowRange = XLHelper.SplitRange(tPair);
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
                 }
@@ -844,7 +844,7 @@ namespace ClosedXML.Excel
             var retVal = new XLRanges();
             foreach (string rangeAddressStr in ranges.Split(',').Select(s => s.Trim()))
             {
-                if (ExcelHelper.IsValidRangeAddress(rangeAddressStr))
+                if (XLHelper.IsValidRangeAddress(rangeAddressStr))
                     retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
                 else if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))
                     NamedRange(rangeAddressStr).Ranges.ForEach(retVal.Add);
@@ -1006,7 +1006,7 @@ namespace ClosedXML.Excel
 
         public XLColumn LastColumn()
         {
-            return Column(ExcelHelper.MaxColumnNumber);
+            return Column(XLHelper.MaxColumnNumber);
         }
 
         public XLColumn FirstColumn()
@@ -1021,7 +1021,7 @@ namespace ClosedXML.Excel
 
         public XLRow LastRow()
         {
-            return Row(ExcelHelper.MaxRowNumber);
+            return Row(XLHelper.MaxRowNumber);
         }
 
         public XLColumn FirstColumnUsed()
@@ -1055,9 +1055,9 @@ namespace ClosedXML.Excel
 
         public XLColumn Column(Int32 column)
         {
-            if (column <= 0 || column > ExcelHelper.MaxColumnNumber)
+            if (column <= 0 || column > XLHelper.MaxColumnNumber)
                 throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}",
-                                                                 ExcelHelper.MaxColumnNumber));
+                                                                 XLHelper.MaxColumnNumber));
 
             Int32 thisStyleId = GetStyleId();
             if (!Internals.ColumnsCollection.ContainsKey(column))
@@ -1074,12 +1074,12 @@ namespace ClosedXML.Excel
 
         public IXLColumn Column(String column)
         {
-            return Column(ExcelHelper.GetColumnNumberFromLetter(column));
+            return Column(XLHelper.GetColumnNumberFromLetter(column));
         }
 
         public override XLRange AsRange()
         {
-            return Range(1, 1, ExcelHelper.MaxRowNumber, ExcelHelper.MaxColumnNumber);
+            return Range(1, 1, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber);
         }
 
         public void Clear()
@@ -1181,9 +1181,9 @@ namespace ClosedXML.Excel
 
         public XLRow Row(Int32 row, Boolean pingCells)
         {
-            if (row <= 0 || row > ExcelHelper.MaxRowNumber)
+            if (row <= 0 || row > XLHelper.MaxRowNumber)
                 throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
-                                                                 ExcelHelper.MaxRowNumber));
+                                                                 XLHelper.MaxRowNumber));
 
             Int32 styleId;
             XLRow rowToUse;
@@ -1231,7 +1231,7 @@ namespace ClosedXML.Excel
 
         public new XLCell Cell(String cellAddressInRange)
         {
-            if (ExcelHelper.IsValidA1Address(cellAddressInRange))
+            if (XLHelper.IsValidA1Address(cellAddressInRange))
                 return Cell(XLAddress.Create(this, cellAddressInRange));
 
             if (NamedRanges.Any(n => String.Compare(n.Name, cellAddressInRange, true) == 0))
@@ -1251,7 +1251,7 @@ namespace ClosedXML.Excel
 
         public override XLRange Range(String rangeAddressStr)
         {
-            if (ExcelHelper.IsValidRangeAddress(rangeAddressStr))
+            if (XLHelper.IsValidRangeAddress(rangeAddressStr))
                 return Range(new XLRangeAddress(Worksheet, rangeAddressStr));
 
             if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))

@@ -8,7 +8,7 @@ namespace ClosedXML_Tests
     internal static class TestHelper
     {
         //Note: Run example tests parameters
-        public const string TestsOutputDirectory = @"C:\Excel Files\Tests\";
+        public const string TestsOutputDirectory = @"D:\Excel Files\Tests\";
         public const string ActualTestResultPostFix = "";
         public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
         

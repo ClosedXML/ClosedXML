@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
 
         public XLRow(Int32 row, XLRowParameters xlRowParameters)
             : base(new XLRangeAddress(new XLAddress(xlRowParameters.Worksheet, row, 1, false, false),
-                                      new XLAddress(xlRowParameters.Worksheet, row, ExcelHelper.MaxColumnNumber, false,
+                                      new XLAddress(xlRowParameters.Worksheet, row, XLHelper.MaxColumnNumber, false,
                                                     false)))
         {
             SetRowNumber(row);
@@ -36,7 +36,7 @@ namespace ClosedXML.Excel
 
         public XLRow(XLRow row)
             : base(new XLRangeAddress(new XLAddress(row.Worksheet, row.RowNumber(), 1, false, false),
-                                      new XLAddress(row.Worksheet, row.RowNumber(), ExcelHelper.MaxColumnNumber, false,
+                                      new XLAddress(row.Worksheet, row.RowNumber(), XLHelper.MaxColumnNumber, false,
                                                     false)))
         {
             _height = row._height;
@@ -240,13 +240,13 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(String firstColumn, String lastColumn)
         {
-            return Cells(ExcelHelper.GetColumnNumberFromLetter(firstColumn) + ":"
-                         + ExcelHelper.GetColumnNumberFromLetter(lastColumn));
+            return Cells(XLHelper.GetColumnNumberFromLetter(firstColumn) + ":"
+                         + XLHelper.GetColumnNumberFromLetter(lastColumn));
         }
 
         public IXLRow AdjustToContents(Int32 startColumn)
         {
-            return AdjustToContents(startColumn, ExcelHelper.MaxColumnNumber);
+            return AdjustToContents(startColumn, XLHelper.MaxColumnNumber);
         }
 
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn)
@@ -256,12 +256,12 @@ namespace ClosedXML.Excel
 
         public IXLRow AdjustToContents(Double minHeight, Double maxHeight)
         {
-            return AdjustToContents(1, ExcelHelper.MaxColumnNumber, minHeight, maxHeight);
+            return AdjustToContents(1, XLHelper.MaxColumnNumber, minHeight, maxHeight);
         }
 
         public IXLRow AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight)
         {
-            return AdjustToContents(startColumn, ExcelHelper.MaxColumnNumber, minHeight, maxHeight);
+            return AdjustToContents(startColumn, XLHelper.MaxColumnNumber, minHeight, maxHeight);
         }
 
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
@@ -568,7 +568,7 @@ namespace ClosedXML.Excel
 
         public override XLRange AsRange()
         {
-            return Range(1, 1, 1, ExcelHelper.MaxColumnNumber);
+            return Range(1, 1, 1, XLHelper.MaxColumnNumber);
         }
 
         private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
@@ -587,7 +587,7 @@ namespace ClosedXML.Excel
                                                           RangeAddress.FirstAddress.FixedColumn);
                 RangeAddress.LastAddress = new XLAddress(Worksheet,
                                                          row,
-                                                         ExcelHelper.MaxColumnNumber,
+                                                         XLHelper.MaxColumnNumber,
                                                          RangeAddress.LastAddress.FixedRow,
                                                          RangeAddress.LastAddress.FixedColumn);
             }

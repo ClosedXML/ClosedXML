@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
             else
                 sb.Append(",Regular\"");
 
-            if (RichText.FontSize > 0 && Math.Abs(RichText.FontSize - wsFont.FontSize) > ExcelHelper.Epsilon)
+            if (RichText.FontSize > 0 && Math.Abs(RichText.FontSize - wsFont.FontSize) > XLHelper.Epsilon)
                 sb.Append("&" + RichText.FontSize);
 
             if (RichText.Strikethrough && !wsFont.Strikethrough)

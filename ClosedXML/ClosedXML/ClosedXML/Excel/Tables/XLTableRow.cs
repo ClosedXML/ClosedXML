@@ -9,7 +9,6 @@ namespace ClosedXML.Excel
         public XLTableRow(XLTableRange tableRange, XLRangeRow rangeRow)
             : base(rangeRow.RangeParameters, false)
         {
-            Dispose();
             _tableRange = tableRange;
         }
 
@@ -100,19 +99,11 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows InsertRowsAbove(int numberOfRows)
         {
-            var rows = new XLTableRows(Worksheet.Style);
-            var inserted = base.InsertRowsAbove(numberOfRows);
-            inserted.ForEach(r => rows.Add(new XLTableRow(_tableRange, r as XLRangeRow)));
-            _tableRange.Table.ExpandTableRows(numberOfRows);
-            return rows;
+            return XLHelper.InsertRowsWithoutEvents(base.InsertRowsAbove, _tableRange, numberOfRows, !_tableRange.Table.ShowTotalsRow);
         }
         public new IXLTableRows InsertRowsBelow(int numberOfRows)
         {
-            var rows = new XLTableRows(Worksheet.Style);
-            var inserted = base.InsertRowsBelow(numberOfRows);
-            inserted.ForEach(r => rows.Add(new XLTableRow(_tableRange, r as XLRangeRow)));
-            _tableRange.Table.ExpandTableRows(numberOfRows);
-            return rows;
+            return XLHelper.InsertRowsWithoutEvents(base.InsertRowsBelow, _tableRange, numberOfRows, !_tableRange.Table.ShowTotalsRow);
         }
 
         public new void Delete()

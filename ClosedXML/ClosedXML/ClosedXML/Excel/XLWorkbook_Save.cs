@@ -601,8 +601,8 @@ namespace ClosedXML.Excel
                     int minColumn = worksheet.PageSetup.FirstColumnToRepeatAtLeft;
                     int maxColumn = worksheet.PageSetup.LastColumnToRepeatAtLeft;
                     definedNameTextColumn = "'" + worksheet.Name + "'!" +
-                                            ExcelHelper.GetColumnLetterFromNumber(minColumn)
-                                            + ":" + ExcelHelper.GetColumnLetterFromNumber(maxColumn);
+                                            XLHelper.GetColumnLetterFromNumber(minColumn)
+                                            + ":" + XLHelper.GetColumnLetterFromNumber(maxColumn);
                 }
 
                 string titles;
@@ -2451,7 +2451,7 @@ namespace ClosedXML.Excel
             {
                 maxColumn = xlWorksheet.Internals.CellsCollection.MaxColumnUsed;
                 Int32 maxRow = xlWorksheet.Internals.CellsCollection.MaxRowUsed;
-                sheetDimensionReference = "A1:" + ExcelHelper.GetColumnLetterFromNumber(maxColumn) +
+                sheetDimensionReference = "A1:" + XLHelper.GetColumnLetterFromNumber(maxColumn) +
                                           maxRow.ToStringLookup();
             }
 
@@ -2545,7 +2545,7 @@ namespace ClosedXML.Excel
             pane.HorizontalSplit = hSplit;
             pane.VerticalSplit = ySplit;
 
-            pane.TopLeftCell = ExcelHelper.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
+            pane.TopLeftCell = XLHelper.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
                                + (xlWorksheet.SheetView.SplitRow + 1);
 
             if (hSplit == 0 && ySplit == 0)
@@ -2705,12 +2705,12 @@ namespace ClosedXML.Excel
                         maxInColumnsCollection = (Int32)col.Max.Value;
                 }
 
-                if (maxInColumnsCollection < ExcelHelper.MaxColumnNumber && !xlWorksheet.Style.Equals(DefaultStyle))
+                if (maxInColumnsCollection < XLHelper.MaxColumnNumber && !xlWorksheet.Style.Equals(DefaultStyle))
                 {
                     var column = new Column
                                      {
                                          Min = (UInt32)(maxInColumnsCollection + 1),
-                                         Max = (UInt32)(ExcelHelper.MaxColumnNumber),
+                                         Max = (UInt32)(XLHelper.MaxColumnNumber),
                                          Style = worksheetStyleId,
                                          Width = worksheetColumnWidth,
                                          CustomWidth = true
@@ -2826,7 +2826,7 @@ namespace ClosedXML.Excel
 
                 foreach (XLSheetPoint c in xlWorksheet.Internals.CellsCollection.Deleted.ToList())
                 {
-                    String key = ExcelHelper.GetColumnLetterFromNumber(c.Column) + c.Row.ToStringLookup();
+                    String key = XLHelper.GetColumnLetterFromNumber(c.Column) + c.Row.ToStringLookup();
                     if (!cellsByReference.ContainsKey(key)) continue;
                     row.RemoveChild(cellsByReference[key]);
                     xlWorksheet.Internals.CellsCollection.Deleted.Remove(c);
@@ -2854,7 +2854,7 @@ namespace ClosedXML.Excel
                             row.AppendChild(cell);
                         else
                         {
-                            Int32 newColumn = ExcelHelper.GetColumnNumberFromAddress1(cellReference);
+                            Int32 newColumn = XLHelper.GetColumnNumberFromAddress1(cellReference);
 
                             Cell cellBeforeInsert = null;
                             Int32 lastCo = Int32.MaxValue;
@@ -2862,9 +2862,9 @@ namespace ClosedXML.Excel
                                 Cell c in
                                     row.Elements<Cell>().Where(
                                         c =>
-                                        ExcelHelper.GetColumnNumberFromAddress1(c.CellReference.Value) > newColumn))
+                                        XLHelper.GetColumnNumberFromAddress1(c.CellReference.Value) > newColumn))
                             {
-                                int thidCo = ExcelHelper.GetColumnNumberFromAddress1(c.CellReference.Value);
+                                int thidCo = XLHelper.GetColumnNumberFromAddress1(c.CellReference.Value);
 
                                 if (lastCo <= thidCo) continue;
 
@@ -3987,7 +3987,7 @@ namespace ClosedXML.Excel
             if (pt.ItemsToRetainPerField == XLItemsToRetain.None)
                 pivotCacheDefinition.MissingItemsLimit = 0U;
             else if (pt.ItemsToRetainPerField == XLItemsToRetain.Max)
-                pivotCacheDefinition.MissingItemsLimit = ExcelHelper.MaxRowNumber;
+                pivotCacheDefinition.MissingItemsLimit = XLHelper.MaxRowNumber;
 
             pivotCacheDefinition.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 

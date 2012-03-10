@@ -378,7 +378,7 @@
 
                     if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
                         w => String.Compare(w.Name, sName, true) == 0)
-                        && ExcelHelper.IsValidA1Address(cAddress)
+                        && XLHelper.IsValidA1Address(cAddress)
                         )
                         return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
                     return fA1;
@@ -1452,28 +1452,28 @@
         {
             string columnToReturn;
             if (columnPart == "C")
-                columnToReturn = ExcelHelper.GetColumnLetterFromNumber(Address.ColumnNumber + columnsToShift);
+                columnToReturn = XLHelper.GetColumnLetterFromNumber(Address.ColumnNumber + columnsToShift);
             else
             {
                 int bIndex = columnPart.IndexOf("[");
                 int mIndex = columnPart.IndexOf("-");
                 if (bIndex >= 0)
                 {
-                    columnToReturn = ExcelHelper.GetColumnLetterFromNumber(
+                    columnToReturn = XLHelper.GetColumnLetterFromNumber(
                         Address.ColumnNumber +
                         Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
                         );
                 }
                 else if (mIndex >= 0)
                 {
-                    columnToReturn = ExcelHelper.GetColumnLetterFromNumber(
+                    columnToReturn = XLHelper.GetColumnLetterFromNumber(
                         Address.ColumnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
                         );
                 }
                 else
                 {
                     columnToReturn = "$" +
-                                     ExcelHelper.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)) +
+                                     XLHelper.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)) +
                                                                            columnsToShift);
                 }
             }
@@ -1519,8 +1519,8 @@
                 }
                 else
                 {
-                    int column1 = ExcelHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
-                    int column2 = ExcelHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
+                    int column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
+                    int column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
                     string leftPart = GetR1C1Column(column1, p1.Contains('$'), columnsToShift);
                     string rightPart = GetR1C1Column(column2, p2.Contains('$'), columnsToShift);
                     return leftPart + ":" + rightPart;
@@ -1887,15 +1887,15 @@
                                     if (column1String[0] == '$')
                                     {
                                         column1 = "$" +
-                                                  ExcelHelper.GetColumnLetterFromNumber(
-                                                      ExcelHelper.GetColumnNumberFromLetter(
+                                                  XLHelper.GetColumnLetterFromNumber(
+                                                      XLHelper.GetColumnNumberFromLetter(
                                                           column1String.Substring(1)) + columnsShifted);
                                     }
                                     else
                                     {
                                         column1 =
-                                            ExcelHelper.GetColumnLetterFromNumber(
-                                                ExcelHelper.GetColumnNumberFromLetter(column1String) +
+                                            XLHelper.GetColumnLetterFromNumber(
+                                                XLHelper.GetColumnNumberFromLetter(column1String) +
                                                 columnsShifted);
                                     }
 
@@ -1903,15 +1903,15 @@
                                     if (column2String[0] == '$')
                                     {
                                         column2 = "$" +
-                                                  ExcelHelper.GetColumnLetterFromNumber(
-                                                      ExcelHelper.GetColumnNumberFromLetter(
+                                                  XLHelper.GetColumnLetterFromNumber(
+                                                      XLHelper.GetColumnNumberFromLetter(
                                                           column2String.Substring(1)) + columnsShifted);
                                     }
                                     else
                                     {
                                         column2 =
-                                            ExcelHelper.GetColumnLetterFromNumber(
-                                                ExcelHelper.GetColumnNumberFromLetter(column2String) +
+                                            XLHelper.GetColumnLetterFromNumber(
+                                                XLHelper.GetColumnNumberFromLetter(column2String) +
                                                 columnsShifted);
                                     }
 

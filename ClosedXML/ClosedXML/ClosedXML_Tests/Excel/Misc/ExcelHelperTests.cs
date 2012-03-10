@@ -11,7 +11,7 @@ namespace ClosedXML_Tests.Excel
     /// Summary description for UnitTest1
     /// </summary>
     [TestClass]
-    public class ExcelHelperTests
+    public class XLHelperTests
     {
 
         [TestMethod]
@@ -26,7 +26,7 @@ namespace ClosedXML_Tests.Excel
         }
         private static void CheckColumnNumber(int column)
         {
-            Assert.AreEqual(column, ExcelHelper.GetColumnNumberFromLetter(ExcelHelper.GetColumnLetterFromNumber(column)));
+            Assert.AreEqual(column, XLHelper.GetColumnNumberFromLetter(XLHelper.GetColumnLetterFromNumber(column)));
         }
         
     }
