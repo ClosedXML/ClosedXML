@@ -90,11 +90,15 @@ namespace ClosedXML.Excel
         {
             get
             {
+                IXLDataValidation dataValidationToCopy = null;
                 var dvEmpty = new List<IXLDataValidation>();
                 foreach (IXLDataValidation dv in Worksheet.DataValidations)
                 {
                     foreach (IXLRange dvRange in dv.Ranges.Where(dvRange => dvRange.Intersects(this)))
                     {
+                        if (dataValidationToCopy == null)
+                            dataValidationToCopy = dv;
+
                         dv.Ranges.Remove(dvRange);
                         foreach (var column in dvRange.Columns())
                         {
@@ -146,6 +150,8 @@ namespace ClosedXML.Excel
 
                 var newRanges = new XLRanges {AsRange()};
                 var dataValidation = new XLDataValidation(newRanges);
+                if (dataValidationToCopy != null)
+                    dataValidation.CopyFrom(dataValidationToCopy);
 
                 Worksheet.DataValidations.Add(dataValidation);
                 return dataValidation;

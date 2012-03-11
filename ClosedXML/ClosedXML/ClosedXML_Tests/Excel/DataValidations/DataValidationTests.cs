@@ -21,10 +21,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var ws = wb.Worksheets.Add("People");
 
             ws.FirstCell().SetValue("Categories")
-            .CellBelow().SetValue("A")
-            .CellBelow().SetValue("B")
-            .CellBelow().SetValue("")
-            .CellBelow().SetValue("D");
+            .CellBelow().SetValue("A");
 
             var table = ws.RangeUsed().CreateTable();
 
@@ -34,5 +31,22 @@ namespace ClosedXML_Tests.Excel.DataValidations
             Assert.AreEqual("Error", ws.DataValidations.Single().ErrorTitle);
         }
 
+        [TestMethod]
+        public void Validation_persists_on_Cell_DataValidation()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("People");
+
+            ws.FirstCell().SetValue("Categories")
+            .CellBelow().SetValue("A")
+            .CellBelow().SetValue("B");
+
+            var table = ws.RangeUsed().CreateTable();
+
+            var dv = table.DataRange.SetDataValidation();
+            dv.ErrorTitle = "Error";
+
+            Assert.AreEqual("Error", table.DataRange.FirstCell().DataValidation.ErrorTitle);
+        }
     }
 }

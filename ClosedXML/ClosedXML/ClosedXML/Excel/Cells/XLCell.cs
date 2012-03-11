@@ -140,12 +140,34 @@
             }
         }
 
+        IXLDataValidation IXLCell.DataValidation
+        {
+            get { return DataValidation; }
+        }
         public XLDataValidation DataValidation
         {
             get
             {
                 using (var asRange = AsRange())
-                    return asRange.DataValidation;
+                {
+                    var dv = asRange.DataValidation; // Call the data validation to break it into pieces
+                    foreach(var d in Worksheet.DataValidations)
+                    {
+                        var rs = d.Ranges;
+                        if(rs.Count == 1)
+                        {
+                            var r = rs.Single();
+                            var ra1 = r.RangeAddress.ToStringRelative();
+                            var ra2 = asRange.RangeAddress.ToStringRelative();
+                            if (ra1.Equals(ra2))
+                                return d as XLDataValidation;
+                        }
+                    }
+                    //return
+                    //    Worksheet.DataValidations.First(
+                    //        d => d.Ranges.Count == 1 && d.Ranges.Single().RangeAddress.ToStringRelative().Equals(asRange.RangeAddress.ToStringRelative())) as XLDataValidation;
+                }
+                return null;
             }
         }
 

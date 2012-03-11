@@ -201,6 +201,7 @@ namespace ClosedXML.Excel
         XLHyperlink Hyperlink { get; set; }
         IXLWorksheet Worksheet { get; }
 
+        IXLDataValidation DataValidation { get; }
         IXLDataValidation SetDataValidation();
 
 
