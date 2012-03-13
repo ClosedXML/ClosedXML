@@ -1254,6 +1254,9 @@ namespace ClosedXML.Excel
             if (XLHelper.IsValidRangeAddress(rangeAddressStr))
                 return Range(new XLRangeAddress(Worksheet, rangeAddressStr));
 
+            if (rangeAddressStr.Contains("["))
+                return Table(rangeAddressStr.Substring(0, rangeAddressStr.IndexOf("["))) as XLRange;
+
             if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))
                 return (XLRange)NamedRange(rangeAddressStr).Ranges.First();
 

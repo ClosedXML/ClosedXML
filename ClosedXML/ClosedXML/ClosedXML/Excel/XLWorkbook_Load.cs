@@ -597,10 +597,19 @@ namespace ClosedXML.Excel
                 {
                     foreach (string area in definedName.Text.Split(','))
                     {
-                        string sheetName, sheetArea;
-                        ParseReference(area, out sheetName, out sheetArea);
-                        if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!")))
-                            WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
+                        if (area.Contains("["))
+                        {
+                            String tableName = area.Substring(0, area.IndexOf("["));
+                            var ws = Worksheets.First(w => (w as XLWorksheet).SheetId == definedName.LocalSheetId + 1);
+                            ws.PageSetup.PrintAreas.Add(area);
+                        }
+                        else
+                        {
+                            string sheetName, sheetArea;
+                            ParseReference(area, out sheetName, out sheetArea);
+                            if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!")))
+                                WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
+                        }
                     }
                 }
                 else if (name == "_xlnm.Print_Titles")
