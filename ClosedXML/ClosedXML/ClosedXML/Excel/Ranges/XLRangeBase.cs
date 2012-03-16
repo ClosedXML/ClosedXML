@@ -1420,7 +1420,7 @@ namespace ClosedXML.Excel
                 }
             }
         }
-        public Int32 Marker;
+
         protected void ShiftRows(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int rowsShifted)
         {
             if (thisRangeAddress.IsInvalid || shiftedRange.RangeAddress.IsInvalid) return;

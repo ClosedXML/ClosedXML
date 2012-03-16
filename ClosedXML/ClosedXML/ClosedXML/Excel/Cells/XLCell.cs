@@ -1027,12 +1027,6 @@
             return this;
         }
 
-        public IXLCell CopyTo(IXLCell target)
-        {
-            target.Value = this;
-            return target;
-        }
-
         public string ValueCached { get; internal set; }
 
         public IXLRichText RichText
@@ -1588,6 +1582,39 @@
             _comment = source._comment == null ? null : new XLComment(this, source._comment, source.Style.Font);
         }
 
+        private IXLCell GetTargetCell(String target, XLWorksheet defaultWorksheet)
+        {
+            var pair = target.Split('!');
+            if (pair.Length == 1)
+                return defaultWorksheet.Cell(target);
+
+            String wsName = pair[0];
+            if (wsName.StartsWith("'"))
+                wsName = wsName.Substring(1, wsName.Length - 2);
+            return defaultWorksheet.Workbook.Worksheet(wsName).Cell(pair[1]);
+        }
+
+        public IXLCell CopyTo(IXLCell target)
+        {
+            (target as XLCell).CopyFrom(this, true);
+            return target;
+        }
+        public IXLCell CopyTo(String target)
+        {
+            return CopyTo(GetTargetCell(target, Worksheet));
+        }
+
+
+        public IXLCell CopyFrom(IXLCell otherCell)
+        {
+            return CopyFrom(otherCell as XLCell, true);
+        }
+        public IXLCell CopyFrom(String otherCell)
+        {
+            return CopyFrom(GetTargetCell(otherCell, Worksheet));
+        }
+        
+
         public IXLCell CopyFrom(XLCell otherCell, Boolean copyDataValidations)
         {
             var source = otherCell;
@@ -1608,11 +1635,8 @@
 
             if (copyDataValidations)
             {
-                using (var asRange = AsRange())
-                {
-                    if (source.Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange)))
-                        DataValidation.CopyFrom(source.Worksheet.DataValidations.First(dv => dv.Ranges.Contains(asRange)));
-                }
+                using (var asRange = otherCell.AsRange())
+                    DataValidation.CopyFrom(asRange.DataValidation);
             }
 
             return this;

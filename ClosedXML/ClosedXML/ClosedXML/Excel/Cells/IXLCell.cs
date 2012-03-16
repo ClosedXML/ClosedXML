@@ -235,9 +235,10 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLCell AddToNamed(String rangeName, XLScope scope, String comment);
 
-        //IXLCell CopyFrom(IXLCell otherCell);
-
+        IXLCell CopyFrom(IXLCell otherCell);
+        IXLCell CopyFrom(String otherCell);
         IXLCell CopyTo(IXLCell target);
+        IXLCell CopyTo(String target);
 
         String ValueCached { get; }
 
