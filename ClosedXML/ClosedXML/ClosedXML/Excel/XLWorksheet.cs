@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -551,7 +552,14 @@ namespace ClosedXML.Excel
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
 
             Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, false));
-            DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv)));
+            DataValidations.ForEach(dv =>
+                                        {
+                                            var newDv = new XLDataValidation(dv);
+                                            newDv.Value = ReplaceRelativeSheet(newSheetName, dv.Value);
+                                            newDv.MinValue = ReplaceRelativeSheet(newSheetName, dv.MinValue);
+                                            newDv.MaxValue = ReplaceRelativeSheet(newSheetName, dv.MaxValue);
+                                            targetSheet.DataValidations.Add(newDv);
+                                        });
             Internals.ColumnsCollection.ForEach(
                 kp => targetSheet.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
             Internals.RowsCollection.ForEach(kp => targetSheet.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
@@ -606,6 +614,34 @@ namespace ClosedXML.Excel
                 targetSheet.Range(AutoFilter.Range.RangeAddress).SetAutoFilter();
 
             return targetSheet;
+        }
+
+        private String ReplaceRelativeSheet(string newSheetName, String value)
+        {
+            if (StringExtensions.IsNullOrWhiteSpace(value)) return value;
+
+            var newValue = new StringBuilder();
+            var addresses = value.Split(',');
+            foreach (var address in addresses)
+            {
+                var pair = address.Split('!');
+                if (pair.Length == 2)
+                {
+                    String sheetName = pair[0];
+                    if (sheetName.StartsWith("'"))
+                        sheetName = sheetName.Substring(1, sheetName.Length - 2);
+
+                    String name = sheetName.ToLower().Equals(Name.ToLower())
+                                      ? newSheetName
+                                      : sheetName;
+                    newValue.Append(String.Format("'{0}'!{1}", name, pair[1]));
+                }
+                else
+                {
+                    newValue.Append(address);
+                }
+            }
+            return newValue.ToString();
         }
 
         public new IXLHyperlinks Hyperlinks { get; private set; }

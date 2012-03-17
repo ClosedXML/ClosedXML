@@ -160,25 +160,14 @@ namespace ClosedXML.Excel
             + @"\Z"
             );
 
+        public static readonly Regex NamedRangeReferenceRegex =
+            new Regex( @"^('?(?<Sheet>[^'!]+)'?!(?<Range>.+))|((?<Table>[^\[]+)\[(?<Column>[^\]]+)\])$",
+                RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture
+            );
+
         public static Boolean IsValidRangeAddress(String rangeAddress)
         {
             return A1SimpleRegex.IsMatch(rangeAddress);
-            //if (StringExtensions.IsNullOrWhiteSpace(rangeAddress))
-            //    return false;
-
-            //string addressToUse = rangeAddress.Contains("!")
-            //                          ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
-            //                          : rangeAddress;
-
-            //if (addressToUse.Contains(':'))
-            //{
-            //    var arrRange = addressToUse.Split(':');
-            //    string firstPart = arrRange[0];
-            //    string secondPart = arrRange[1];
-            //    return IsValidA1Address(firstPart) && IsValidA1Address(secondPart);
-            //}
-
-            //return IsValidA1Address(addressToUse);
         }
 
         public static int GetRowFromAddress1(string cellAddressString)

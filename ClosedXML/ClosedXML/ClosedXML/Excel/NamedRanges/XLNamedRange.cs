@@ -8,11 +8,7 @@ namespace ClosedXML.Excel
 
     internal class XLNamedRange: IXLNamedRange
     {
-        private static readonly Regex _namedRangeReferenceRegex =
-            new Regex(
-                @"^('?(?<Sheet>[^'!]+)'?!(?<Range>.+))|((?<Table>[^\[]+)\[(?<Column>[^\]]+)\])$",
-                RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture
-            );
+
         private List<String> _rangeList = new List<String>();
         private readonly XLNamedRanges _namedRanges;
         public XLNamedRange(XLNamedRanges namedRanges , String rangeName, String range,  String comment = null)
@@ -39,7 +35,7 @@ namespace ClosedXML.Excel
                 var ranges = new XLRanges();
                 foreach (var rangeToAdd in 
                    from rangeAddress in _rangeList.SelectMany(c=>c.Split(',')).Where(s=>s[0] != '"')
-                   let match = _namedRangeReferenceRegex.Match(rangeAddress)
+                   let match = XLHelper.NamedRangeReferenceRegex.Match(rangeAddress)
                    select
                        match.Groups["Sheet"].Success
                        ?  _namedRanges.Workbook.WorksheetsInternal.Worksheet(match.Groups["Sheet"].Value).Range(match.Groups["Range"].Value) as IXLRangeBase
