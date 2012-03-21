@@ -98,5 +98,66 @@ namespace ClosedXML_Tests.Excel.DataValidations
             Assert.AreEqual(cell.DataValidation.InputTitle, "Title for D2");
             Assert.AreEqual(cell.DataValidation.InputMessage, "Message for D2");
         }
+
+        [TestMethod]
+        public void Validation_2()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Cell("A1").SetValue("A");
+            ws.Cell("B1").SetDataValidation().Value = "Sheet1!A1";
+
+            var ws2 = wb.AddWorksheet("Sheet2");
+            ws2.Cell("A1").SetValue("B");
+            ws.Cell("B1").CopyTo(ws2.Cell("B1"));
+
+            Assert.AreEqual("Sheet1!A1", ws2.Cell("B1").DataValidation.Value);
+        }
+
+        [TestMethod]
+        public void Validation_3()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Cell("A1").SetValue("A");
+            ws.Cell("B1").SetDataValidation().Value = "A1";
+            ws.FirstRow().InsertRowsAbove(1);
+
+            Assert.AreEqual("A2", ws.Cell("B2").DataValidation.Value);
+        }
+
+        [TestMethod]
+        public void Validation_4()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Cell("A1").SetValue("A");
+            ws.Cell("B1").SetDataValidation().Value = "A1";
+            ws.Cell("B1").CopyTo(ws.Cell("B2"));
+            Assert.AreEqual("A2", ws.Cell("B2").DataValidation.Value);
+        }
+
+        [TestMethod]
+        public void Validation_5()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Cell("A1").SetValue("A");
+            ws.Cell("B1").SetDataValidation().Value = "A1";
+            ws.FirstColumn().InsertColumnsBefore(1);
+
+            Assert.AreEqual("B1", ws.Cell("C1").DataValidation.Value);
+        }
+
+        [TestMethod]
+        public void Validation_6()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Cell("A1").SetValue("A");
+            ws.Cell("B1").SetDataValidation().Value = "A1";
+            ws.Cell("B1").CopyTo(ws.Cell("C1"));
+            Assert.AreEqual("B1", ws.Cell("C1").DataValidation.Value);
+        }
     }
 }

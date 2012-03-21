@@ -1636,7 +1636,14 @@
             if (copyDataValidations)
             {
                 using (var asRange = otherCell.AsRange())
-                    DataValidation.CopyFrom(asRange.DataValidation);
+                {
+                    var thisDv = DataValidation;
+                    var otherDv = asRange.DataValidation;
+                    thisDv.CopyFrom(otherDv);
+                    thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
+                    thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));
+                    thisDv.MaxValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MaxValue));
+                }
             }
 
             return this;
