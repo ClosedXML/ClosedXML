@@ -74,7 +74,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             cell.DataValidation.InputTitle = "Title for B2";
 
             Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
-            Assert.AreEqual(cell.DataValidation.Value, "'Data Validation Issue'!$E$1:$E$4");
+            Assert.AreEqual(cell.DataValidation.Value, "$E$1:$E$4");
             Assert.AreEqual(cell.DataValidation.InputTitle, "Title for B2");
 
 
@@ -84,7 +84,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             cell.DataValidation.InputMessage = "Message for C2";
 
             Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
-            Assert.AreEqual(cell.DataValidation.Value, "'Data Validation Issue'!$E$1:$E$4");
+            Assert.AreEqual(cell.DataValidation.Value, "$E$1:$E$4");
             Assert.AreEqual(cell.DataValidation.InputMessage, "Message for C2");
 
             ws.Cell("D1").SetValue("Cell below has Validation with title and message.");
@@ -94,7 +94,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             cell.DataValidation.InputMessage = "Message for D2";
 
             Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
-            Assert.AreEqual(cell.DataValidation.Value, "'Data Validation Issue'!$E$1:$E$4");
+            Assert.AreEqual(cell.DataValidation.Value, "$E$1:$E$4");
             Assert.AreEqual(cell.DataValidation.InputTitle, "Title for D2");
             Assert.AreEqual(cell.DataValidation.InputMessage, "Message for D2");
         }
@@ -120,7 +120,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Value = "A1";
+            ws.Cell("B1").SetDataValidation().Custom("A1");
             ws.FirstRow().InsertRowsAbove(1);
 
             Assert.AreEqual("A2", ws.Cell("B2").DataValidation.Value);
@@ -143,7 +143,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Value = "A1";
+            ws.Cell("B1").SetDataValidation().Custom("A1");
             ws.FirstColumn().InsertColumnsBefore(1);
 
             Assert.AreEqual("B1", ws.Cell("C1").DataValidation.Value);

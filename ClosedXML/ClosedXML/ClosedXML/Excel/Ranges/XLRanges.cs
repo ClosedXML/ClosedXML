@@ -24,6 +24,12 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public void Add(XLRange range)
+        {
+            Count++;
+            _ranges.Add(range);
+        }
+
         public void Add(IXLRangeBase range)
         {
             Count++;
@@ -83,7 +89,11 @@ namespace ClosedXML.Excel
                         {
                             dv.Ranges.Remove(dvRange);
                             foreach (IXLCell c in dvRange.Cells().Where(c => !range.Contains(c.Address.ToString())))
-                                dv.Ranges.Add(c.AsRange());
+                            {
+                                var r = c.AsRange();
+                                r.Dispose();
+                                dv.Ranges.Add(r);
+                            }
                         }
                     }
                 }

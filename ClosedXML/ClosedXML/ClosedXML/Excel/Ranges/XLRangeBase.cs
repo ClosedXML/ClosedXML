@@ -43,8 +43,14 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
+        static Int32 IdCounter = 0;
+        readonly Int32 Id;
+
         protected XLRangeBase(XLRangeAddress rangeAddress)
         {
+
+            Id = ++IdCounter;
+
             RangeAddress = new XLRangeAddress(rangeAddress);
         }
 
@@ -111,8 +117,12 @@ namespace ClosedXML.Excel
 
                                 if (thisStart > dvStart && thisEnd < dvEnd)
                                 {
-                                    dv.Ranges.Add(Worksheet.Column(column.ColumnNumber()).Column(dvStart, thisStart - 1));
-                                    dv.Ranges.Add(Worksheet.Column(column.ColumnNumber()).Column(thisEnd + 1, dvEnd));
+                                    var r1 = Worksheet.Column(column.ColumnNumber()).Column(dvStart, thisStart - 1);
+                                    r1.Dispose();
+                                    dv.Ranges.Add(r1);
+                                    var r2 = Worksheet.Column(column.ColumnNumber()).Column(thisEnd + 1, dvEnd);
+                                    r2.Dispose();
+                                    dv.Ranges.Add(r2);
                                 }
                                 else
                                 {
@@ -131,12 +141,17 @@ namespace ClosedXML.Excel
                                             coEnd = thisStart - 1;
 
                                         if (coEnd >= dvStart)
-                                            dv.Ranges.Add(Worksheet.Column(column.ColumnNumber()).Column(coStart, coEnd));
+                                        {
+                                            var r = Worksheet.Column(column.ColumnNumber()).Column(coStart, coEnd);
+                                            r.Dispose();
+                                            dv.Ranges.Add(r);
+                                        }
                                     }
                                 }
                             }
                             else
                             {
+                                column.Dispose();
                                 dv.Ranges.Add(column);
                             }
                         }
@@ -964,9 +979,10 @@ namespace ClosedXML.Excel
                         cell.ShiftFormulaColumns(asRange, numberOfColumns);
             }
 
+
+            var cellsDataValidations = new Dictionary<XLAddress, DataValidationToCopy>();
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             var cellsToDelete = new List<IXLAddress>();
-            //var cellsToBlank = new List<IXLAddress>();
             int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
             int firstRow = RangeAddress.FirstAddress.RowNumber;
             int lastRow = RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
@@ -991,8 +1007,6 @@ namespace ClosedXML.Excel
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
                             cellsToDelete.Add(oldKey);
-                            //if (oldKey.ColumnNumber < firstColumn + numberOfColumns)
-                            //    cellsToBlank.Add(oldKey);
                         }
                     }
                 }
@@ -1008,16 +1022,28 @@ namespace ClosedXML.Excel
                     var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
                     var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                     newCell.CopyValues(c);
+                    cellsDataValidations.Add(newCell.Address,
+                                             new DataValidationToCopy { DataValidation = c.DataValidation, SourceAddress = c.Address });
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
-                    //if (c.Address.ColumnNumber < firstColumn + numberOfColumns)
-                    //    cellsToBlank.Add(c.Address);
+                    c.DataValidation.Clear();
                 }
             }
+
+            cellsDataValidations.ForEach(kp =>
+            {
+                XLCell targetCell;
+                if (!cellsToInsert.TryGetValue(kp.Key, out targetCell))
+                    targetCell = Worksheet.Cell(kp.Key);
+
+                targetCell.CopyDataValidation(Worksheet.Cell(kp.Value.SourceAddress), kp.Value.DataValidation);
+            });
+
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(
                 c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
+            //cellsDataValidations.ForEach(kp => Worksheet.Cell(kp.Key).CopyDataValidation(Worksheet.Cell(kp.Value.SourceAddress), kp.Value.DataValidation));
 
             Int32 firstRowReturn = RangeAddress.FirstAddress.RowNumber;
             Int32 lastRowReturn = RangeAddress.LastAddress.RowNumber ;
@@ -1143,6 +1169,11 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
+        struct DataValidationToCopy
+        {
+            public XLAddress SourceAddress;
+            public XLDataValidation DataValidation;
+        }
         public IXLRangeRows InsertRowsAbove(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
         {
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
@@ -1154,7 +1185,7 @@ namespace ClosedXML.Excel
 
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             var cellsToDelete = new List<IXLAddress>();
-            //var cellsToBlank = new List<IXLAddress>();
+            var cellsDataValidations = new Dictionary<XLAddress, DataValidationToCopy>();
             int firstRow = RangeAddress.FirstAddress.RowNumber;
             int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
             int lastColumn = RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
@@ -1175,7 +1206,7 @@ namespace ClosedXML.Excel
                                           Worksheet.Cell(oldKey);
 
                             var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
-                            newCell.CopyFrom(oldCell, true);
+                            newCell.CopyValues(oldCell);
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
                             cellsToDelete.Add(oldKey);
@@ -1194,15 +1225,30 @@ namespace ClosedXML.Excel
                     int newRow = c.Address.RowNumber + numberOfRows;
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
                     var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
-                    newCell.CopyFrom(c, true);
+                    newCell.CopyValues(c);
+                    cellsDataValidations.Add(newCell.Address,
+                                             new DataValidationToCopy {DataValidation = c.DataValidation, SourceAddress = c.Address});
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
+                    c.DataValidation.Clear();
                 }
             }
+
+            cellsDataValidations.ForEach(kp =>
+                                             {
+                                                 XLCell targetCell;
+                                                 if(!cellsToInsert.TryGetValue(kp.Key, out targetCell))
+                                                     targetCell = Worksheet.Cell(kp.Key);
+
+                                                 targetCell.CopyDataValidation(
+                                                     Worksheet.Cell(kp.Value.SourceAddress), kp.Value.DataValidation);
+                                             });
+
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(
                 c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
+            
 
             Int32 firstRowReturn = RangeAddress.FirstAddress.RowNumber;
             Int32 lastRowReturn = RangeAddress.FirstAddress.RowNumber + numberOfRows - 1;
@@ -1299,6 +1345,7 @@ namespace ClosedXML.Excel
 
             // Range to shift...
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
+            //var cellsDataValidations = new Dictionary<XLAddress, DataValidationToCopy>();
             var cellsToDelete = new List<IXLAddress>();
             var shiftLeftQuery = Worksheet.Internals.CellsCollection.GetCells(
                 RangeAddress.FirstAddress.RowNumber,
@@ -1323,6 +1370,7 @@ namespace ClosedXML.Excel
                                            false, false);
                 var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                 newCell.CopyValues(c);
+                //cellsDataValidations.Add(newCell.Address,new DataValidationToCopy { DataValidation = c.DataValidation, SourceAddress = c.Address });
                 newCell.FormulaA1 = c.FormulaA1;
                 cellsToDelete.Add(c.Address);
 
@@ -1333,6 +1381,15 @@ namespace ClosedXML.Excel
                 if (canInsert)
                     cellsToInsert.Add(newKey, newCell);
             }
+            //cellsDataValidations.ForEach(kp =>
+            //{
+            //    XLCell targetCell;
+            //    if (!cellsToInsert.TryGetValue(kp.Key, out targetCell))
+            //        targetCell = Worksheet.Cell(kp.Key);
+            //
+            //    targetCell.CopyDataValidation(Worksheet.Cell(kp.Value.SourceAddress), kp.Value.DataValidation);
+            //});
+
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(
                 c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));

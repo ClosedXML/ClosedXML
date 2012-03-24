@@ -552,14 +552,7 @@ namespace ClosedXML.Excel
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
 
             Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, false));
-            DataValidations.ForEach(dv =>
-                                        {
-                                            var newDv = new XLDataValidation(dv);
-                                            newDv.Value = ReplaceRelativeSheet(newSheetName, dv.Value);
-                                            newDv.MinValue = ReplaceRelativeSheet(newSheetName, dv.MinValue);
-                                            newDv.MaxValue = ReplaceRelativeSheet(newSheetName, dv.MaxValue);
-                                            targetSheet.DataValidations.Add(newDv);
-                                        });
+            DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv)));
             Internals.ColumnsCollection.ForEach(
                 kp => targetSheet.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
             Internals.RowsCollection.ForEach(kp => targetSheet.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));

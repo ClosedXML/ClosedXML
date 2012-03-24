@@ -106,7 +106,7 @@ namespace ClosedXML_Tests.Excel
             row = table.DataRange.InsertRowsBelow(1).First();
             row.Field("Value").Value = 3;
 
-            wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
+            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
 
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());

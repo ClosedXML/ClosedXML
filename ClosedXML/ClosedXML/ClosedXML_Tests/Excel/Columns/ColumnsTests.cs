@@ -113,6 +113,7 @@ namespace ClosedXML_Tests.Excel
             var column3 = ws.Column(3);
 
             var columnIns = ws.Column(2).InsertColumnsBefore(1).First();
+            wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
 
             Assert.AreEqual(XLColor.Red, ws.Column(1).Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, ws.Column(1).Cell(2).Style.Fill.BackgroundColor);

@@ -66,105 +66,101 @@ namespace ClosedXML.Excel
 
         public void EqualTo(IXLRange range)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", ((XLRange)range).Worksheet.Name, range.RangeAddress);
+            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualTo;
         }
 
         public void NotEqualTo(IXLRange range)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", ((XLRange)range).Worksheet.Name, range.RangeAddress);
+            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.NotEqualTo;
         }
 
         public void GreaterThan(IXLRange range)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", ((XLRange)range).Worksheet.Name, range.RangeAddress);
+            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.GreaterThan;
         }
 
         public void LessThan(IXLRange range)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", ((XLRange)range).Worksheet.Name, range.RangeAddress);
+            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.LessThan;
         }
 
         public void EqualOrGreaterThan(IXLRange range)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", ((XLRange)range).Worksheet.Name, range.RangeAddress);
+            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualOrGreaterThan;
         }
 
         public void EqualOrLessThan(IXLRange range)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", ((XLRange)range).Worksheet.Name, range.RangeAddress);
+            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualOrLessThan;
         }
 
         public void Between(IXLRange minValue, IXLRange maxValue)
         {
-            dataValidation.MinValue = String.Format("'{0}'!{1}", ((XLRange)minValue).Worksheet.Name,
-                                                    minValue.RangeAddress);
-            dataValidation.MaxValue = String.Format("'{0}'!{1}", ((XLRange)maxValue).Worksheet.Name,
-                                                    maxValue.RangeAddress);
+            dataValidation.MinValue =  minValue.RangeAddress.ToStringFixed();
+            dataValidation.MaxValue =  maxValue.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.Between;
         }
 
         public void NotBetween(IXLRange minValue, IXLRange maxValue)
         {
-            dataValidation.MinValue = String.Format("'{0}'!{1}", ((XLRange)minValue).Worksheet.Name,
-                                                    minValue.RangeAddress);
-            dataValidation.MaxValue = String.Format("'{0}'!{1}", ((XLRange)maxValue).Worksheet.Name,
-                                                    maxValue.RangeAddress);
+            dataValidation.MinValue = minValue.RangeAddress.ToStringFixed();
+            dataValidation.MaxValue = maxValue.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.NotBetween;
         }
 
         public void EqualTo(IXLCell cell)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", cell.Worksheet.Name, cell.Address);
+            dataValidation.Value = cell.Address.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualTo;
         }
 
         public void NotEqualTo(IXLCell cell)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", cell.Worksheet.Name, cell.Address);
+            dataValidation.Value = cell.Address.ToStringFixed();
             dataValidation.Operator = XLOperator.NotEqualTo;
         }
 
         public void GreaterThan(IXLCell cell)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", cell.Worksheet.Name, cell.Address);
+            dataValidation.Value = cell.Address.ToStringFixed();
             dataValidation.Operator = XLOperator.GreaterThan;
         }
 
         public void LessThan(IXLCell cell)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", cell.Worksheet.Name, cell.Address);
+            dataValidation.Value = cell.Address.ToStringFixed();
             dataValidation.Operator = XLOperator.LessThan;
         }
 
         public void EqualOrGreaterThan(IXLCell cell)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", cell.Worksheet.Name, cell.Address);
+            dataValidation.Value = cell.Address.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualOrGreaterThan;
         }
 
         public void EqualOrLessThan(IXLCell cell)
         {
-            dataValidation.Value = String.Format("'{0}'!{1}", cell.Worksheet.Name, cell.Address);
+            dataValidation.Value = cell.Address.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualOrLessThan;
         }
 
         public void Between(IXLCell minValue, IXLCell maxValue)
         {
-            dataValidation.MinValue = String.Format("'{0}'!{1}", minValue.Worksheet.Name, minValue.Address);
-            dataValidation.MaxValue = String.Format("'{0}'!{1}", maxValue.Worksheet.Name, maxValue.Address);
+            dataValidation.MinValue = minValue.Address.ToStringFixed();
+            dataValidation.MaxValue = maxValue.Address.ToStringFixed();
             dataValidation.Operator = XLOperator.Between;
         }
 
         public void NotBetween(IXLCell minValue, IXLCell maxValue)
         {
-            dataValidation.MinValue = String.Format("'{0}'!{1}", minValue.Worksheet.Name, minValue.Address);
-            dataValidation.MaxValue = String.Format("'{0}'!{1}", maxValue.Worksheet.Name, maxValue.Address);
+            dataValidation.MinValue = minValue.Address.ToStringFixed();
+            dataValidation.MaxValue = maxValue.Address.ToStringFixed();
             dataValidation.Operator = XLOperator.NotBetween;
         }
 

@@ -6,7 +6,15 @@ namespace ClosedXML.Excel
     {
         public XLDataValidation(IXLRanges ranges)
         {
-            Ranges = ranges;
+            
+            Ranges = new XLRanges();
+            ranges.ForEach(r=>
+                               {
+                                   var newR =
+                                       new XLRange(new XLRangeParameters(r.RangeAddress as XLRangeAddress,
+                                                                         r.Worksheet.Style) {IgnoreEvents = true});
+                                   (Ranges as XLRanges).Add(newR);
+                               } );
             Initialize();
         }
 
@@ -23,7 +31,9 @@ namespace ClosedXML.Excel
             ErrorMessage = String.Empty;
             ErrorStyle = XLErrorStyle.Stop;
             Operator = XLOperator.Between;
-
+            Value = String.Empty;
+            MinValue = String.Empty;
+            MaxValue = String.Empty;
         }
 
         public Boolean IsDirty()
@@ -56,7 +66,13 @@ namespace ClosedXML.Excel
         public String ErrorTitle { get; set; }
         public String ErrorMessage { get; set; }
         public XLErrorStyle ErrorStyle { get; set; }
-        public XLAllowedValues AllowedValues { get; set; }
+        private XLAllowedValues _allowedValues;
+        public XLAllowedValues AllowedValues
+        {
+            get { return _allowedValues; }
+            set { _allowedValues = value; }
+        }
+        
         public XLOperator Operator { get; set; }
 
         public String Value
@@ -134,7 +150,7 @@ namespace ClosedXML.Excel
         {
             AllowedValues = XLAllowedValues.List;
             InCellDropdown = inCellDropdown;
-            Value = String.Format("'{0}'!{1}", ((XLRange)range).Worksheet.Name, range.RangeAddress.ToStringFixed());
+            Value = range.RangeAddress.ToStringFixed();
         }
 
         public void Custom(String customValidation)
@@ -148,11 +164,6 @@ namespace ClosedXML.Excel
         public void CopyFrom(IXLDataValidation dataValidation)
         {
             if (dataValidation == this) return;
-
-            //if (Ranges != null)
-            //    Ranges.Dispose();
-            
-            //Ranges = new XLRanges();
 
             if (Ranges == null && dataValidation.Ranges != null)
             {

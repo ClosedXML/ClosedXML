@@ -1580,6 +1580,13 @@
             FormulaR1C1 = source.FormulaR1C1;
             _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
             _comment = source._comment == null ? null : new XLComment(this, source._comment, source.Style.Font);
+
+            if (source._hyperlink != null)
+            {
+                SettingHyperlink = true;
+                Hyperlink = new XLHyperlink(source.Hyperlink);
+                SettingHyperlink = false;
+            }
         }
 
         private IXLCell GetTargetCell(String target, XLWorksheet defaultWorksheet)
@@ -1618,35 +1625,27 @@
         public IXLCell CopyFrom(XLCell otherCell, Boolean copyDataValidations)
         {
             var source = otherCell;
-            _cellValue = source._cellValue;
-            _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
-            _comment = source._comment == null ? null : new XLComment(this, source._comment, source.Style.Font);
+            CopyValues(otherCell);
 
-            _dataType = source._dataType;
-            FormulaR1C1 = source.FormulaR1C1;
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 
-            if (source._hyperlink != null)
-            {
-                SettingHyperlink = true;
-                Hyperlink = new XLHyperlink(source.Hyperlink);
-                SettingHyperlink = false;
-            }
+            
 
             if (copyDataValidations)
             {
-                using (var asRange = otherCell.AsRange())
-                {
-                    var thisDv = DataValidation;
-                    var otherDv = asRange.DataValidation;
-                    thisDv.CopyFrom(otherDv);
-                    thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
-                    thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));
-                    thisDv.MaxValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MaxValue));
-                }
+                CopyDataValidation(otherCell, otherCell.DataValidation);
             }
 
             return this;
+        }
+
+        internal void CopyDataValidation(XLCell otherCell, XLDataValidation otherDv)
+        {
+                var thisDv = DataValidation;
+                thisDv.CopyFrom(otherDv);
+                thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
+                thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));
+                thisDv.MaxValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MaxValue));
         }
 
         internal void ShiftFormulaRows(XLRange shiftedRange, int rowsShifted)
