@@ -6,7 +6,7 @@ using System.Text;
 namespace ClosedXML.Excel
 {
     public enum XLConnector { And, Or }
-    internal enum XLFilterOperator { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan }
+    public enum XLFilterOperator { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan }
     internal class XLFilter
     {
         public XLFilter(XLFilterOperator op = XLFilterOperator.Equal)

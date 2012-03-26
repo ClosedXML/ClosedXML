@@ -533,6 +533,75 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
+        public static ConditionalFormatValues ToOpenXml(this XLConditionalFormatType value)
+        {
+            switch (value)
+            {
+                case XLConditionalFormatType.Expression: return ConditionalFormatValues.Expression;
+                case XLConditionalFormatType.CellIs: return ConditionalFormatValues.CellIs;
+                case XLConditionalFormatType.ColorScale: return ConditionalFormatValues.ColorScale;
+                case XLConditionalFormatType.DataBar: return ConditionalFormatValues.DataBar;
+                case XLConditionalFormatType.IconSet: return ConditionalFormatValues.IconSet;
+                case XLConditionalFormatType.Top10: return ConditionalFormatValues.Top10;
+                case XLConditionalFormatType.UniqueValues: return ConditionalFormatValues.UniqueValues;
+                case XLConditionalFormatType.DuplicateValues: return ConditionalFormatValues.DuplicateValues;
+                case XLConditionalFormatType.ContainsText: return ConditionalFormatValues.ContainsText;
+                case XLConditionalFormatType.NotContainsText: return ConditionalFormatValues.NotContainsText;
+                case XLConditionalFormatType.BeginsWith: return ConditionalFormatValues.BeginsWith;
+                case XLConditionalFormatType.EndsWith: return ConditionalFormatValues.EndsWith;
+                case XLConditionalFormatType.ContainsBlanks: return ConditionalFormatValues.ContainsBlanks;
+                case XLConditionalFormatType.NotContainsBlanks: return ConditionalFormatValues.NotContainsBlanks;
+                case XLConditionalFormatType.ContainsErrors: return ConditionalFormatValues.ContainsErrors;
+                case XLConditionalFormatType.NotContainsErrors: return ConditionalFormatValues.NotContainsErrors;
+                case XLConditionalFormatType.TimePeriod: return ConditionalFormatValues.TimePeriod;
+                case XLConditionalFormatType.AboveAverage: return ConditionalFormatValues.AboveAverage;
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+
+        public static ConditionalFormatValueObjectValues ToOpenXml(this XLCFContentType value)
+        {
+            switch (value)
+            {
+                case XLCFContentType.Number: return ConditionalFormatValueObjectValues.Number;
+                case XLCFContentType.Percent: return ConditionalFormatValueObjectValues.Percent;
+                case XLCFContentType.Maximum: return ConditionalFormatValueObjectValues.Max;
+                case XLCFContentType.Minimum: return ConditionalFormatValueObjectValues.Min;
+                case XLCFContentType.Formula: return ConditionalFormatValueObjectValues.Formula;
+                case XLCFContentType.Percentile: return ConditionalFormatValueObjectValues.Percentile;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+        public static ConditionalFormattingOperatorValues ToOpenXml(this XLCFOperator value)
+        {
+            switch (value)
+            {
+                case XLCFOperator.LessThan: return ConditionalFormattingOperatorValues.LessThan;
+                case XLCFOperator.EqualOrLessThan: return ConditionalFormattingOperatorValues.LessThanOrEqual;
+                case XLCFOperator.Equal: return ConditionalFormattingOperatorValues.Equal;
+                case XLCFOperator.NotEqual: return ConditionalFormattingOperatorValues.NotEqual;
+                case XLCFOperator.EqualOrGreaterThan: return ConditionalFormattingOperatorValues.GreaterThanOrEqual;
+                case XLCFOperator.GreaterThan: return ConditionalFormattingOperatorValues.GreaterThan;
+                case XLCFOperator.Between: return ConditionalFormattingOperatorValues.Between;
+                case XLCFOperator.NotBetween: return ConditionalFormattingOperatorValues.NotBetween;
+                case XLCFOperator.Contains : return ConditionalFormattingOperatorValues.ContainsText;
+                case XLCFOperator.NotContains: return ConditionalFormattingOperatorValues.NotContains;
+                case XLCFOperator.StartsWith: return ConditionalFormattingOperatorValues.BeginsWith;
+                case XLCFOperator.EndsWith: return ConditionalFormattingOperatorValues.EndsWith;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
         #endregion
         #region To ClosedXml
         public static XLFontUnderlineValues ToClosedXml(this UnderlineValues value)
@@ -1062,7 +1131,76 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
+        public static XLConditionalFormatType ToClosedXml(this ConditionalFormatValues value)
+        {
+            switch (value)
+            {
+                case ConditionalFormatValues.Expression: return XLConditionalFormatType.Expression;
+                case ConditionalFormatValues.CellIs: return XLConditionalFormatType.CellIs;
+                case ConditionalFormatValues.ColorScale: return XLConditionalFormatType.ColorScale;
+                case ConditionalFormatValues.DataBar: return XLConditionalFormatType.DataBar;
+                case ConditionalFormatValues.IconSet: return XLConditionalFormatType.IconSet;
+                case ConditionalFormatValues.Top10: return XLConditionalFormatType.Top10;
+                case ConditionalFormatValues.UniqueValues: return XLConditionalFormatType.UniqueValues;
+                case ConditionalFormatValues.DuplicateValues: return XLConditionalFormatType.DuplicateValues;
+                case ConditionalFormatValues.ContainsText: return XLConditionalFormatType.ContainsText;
+                case ConditionalFormatValues.NotContainsText: return XLConditionalFormatType.NotContainsText;
+                case ConditionalFormatValues.BeginsWith: return XLConditionalFormatType.BeginsWith;
+                case ConditionalFormatValues.EndsWith: return XLConditionalFormatType.EndsWith;
+                case ConditionalFormatValues.ContainsBlanks: return XLConditionalFormatType.ContainsBlanks;
+                case ConditionalFormatValues.NotContainsBlanks: return XLConditionalFormatType.NotContainsBlanks;
+                case ConditionalFormatValues.ContainsErrors: return XLConditionalFormatType.ContainsErrors;
+                case ConditionalFormatValues.NotContainsErrors: return XLConditionalFormatType.NotContainsErrors;
+                case ConditionalFormatValues.TimePeriod: return XLConditionalFormatType.TimePeriod;
+                case ConditionalFormatValues.AboveAverage: return XLConditionalFormatType.AboveAverage;
 
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+
+        public static XLCFContentType ToClosedXml(this ConditionalFormatValueObjectValues value)
+        {
+            switch (value)
+            {
+                case ConditionalFormatValueObjectValues.Number: return XLCFContentType.Number;
+                case ConditionalFormatValueObjectValues.Percent: return XLCFContentType.Percent;
+                case ConditionalFormatValueObjectValues.Max: return XLCFContentType.Maximum;
+                case ConditionalFormatValueObjectValues.Min: return XLCFContentType.Minimum;
+                case ConditionalFormatValueObjectValues.Formula: return XLCFContentType.Formula;
+                case ConditionalFormatValueObjectValues.Percentile: return XLCFContentType.Percentile;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+        public static XLCFOperator ToClosedXml(this ConditionalFormattingOperatorValues value)
+        {
+            switch (value)
+            {
+                case ConditionalFormattingOperatorValues.LessThan: return XLCFOperator.LessThan;
+                case ConditionalFormattingOperatorValues.LessThanOrEqual: return XLCFOperator.EqualOrLessThan;
+                case ConditionalFormattingOperatorValues.Equal: return XLCFOperator.Equal;
+                case ConditionalFormattingOperatorValues.NotEqual: return XLCFOperator.NotEqual;
+                case ConditionalFormattingOperatorValues.GreaterThanOrEqual: return XLCFOperator.EqualOrGreaterThan;
+                case ConditionalFormattingOperatorValues.GreaterThan: return XLCFOperator.GreaterThan;
+                case ConditionalFormattingOperatorValues.Between: return XLCFOperator.Between;
+                case ConditionalFormattingOperatorValues.NotBetween: return XLCFOperator.NotBetween;
+                case ConditionalFormattingOperatorValues.ContainsText: return XLCFOperator.Contains;
+                case ConditionalFormattingOperatorValues.NotContains: return XLCFOperator.NotContains;
+                case ConditionalFormattingOperatorValues.BeginsWith: return XLCFOperator.StartsWith;
+                case ConditionalFormattingOperatorValues.EndsWith: return XLCFOperator.EndsWith;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
         #endregion
     }
 }

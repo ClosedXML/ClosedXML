@@ -56,6 +56,7 @@ namespace ClosedXML.Excel
             PivotTables = new XLPivotTables();
             Protection = new XLSheetProtection();
             AutoFilter = new XLAutoFilter();
+            ConditionalFormats = new XLConditionalFormats();
             Workbook = workbook;
             SetStyle(workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
@@ -1297,5 +1298,7 @@ namespace ClosedXML.Excel
         }
 
         public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }
+
+        public IXLConditionalFormats ConditionalFormats { get; private set; }
     }
 }

@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     public partial class XLWorkbook
     {
         #region Nested type: SaveContext
-        private sealed class SaveContext
+        internal sealed class SaveContext
         {
             #region Private fields
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -60,17 +60,18 @@ namespace ClosedXML.Excel
                 [DebuggerStepThrough]
                 set { _tableId = value; }
             }
+            public Dictionary<IXLStyle, Int32> DifferentialFormats = new Dictionary<IXLStyle, int>();
             #endregion
         }
         #endregion
         #region Nested type: RelType
-        private enum RelType
+        internal enum RelType
         {
             Workbook//, Worksheet
         }
         #endregion
         #region Nested type: RelIdGenerator
-        private sealed class RelIdGenerator
+        internal sealed class RelIdGenerator
         {
             private readonly Dictionary<RelType, List<String>> _relIds = new Dictionary<RelType, List<String>>();
             public String GetNext(RelType relType)
@@ -108,35 +109,35 @@ namespace ClosedXML.Excel
         }
         #endregion
         #region Nested type: FontInfo
-        private struct FontInfo
+        internal struct FontInfo
         {
             public UInt32 FontId;
             public IXLFont Font;
         };
         #endregion
         #region Nested type: FillInfo
-        private struct FillInfo
+        internal struct FillInfo
         {
             public UInt32 FillId;
             public IXLFill Fill;
         }
         #endregion
         #region Nested type: BorderInfo
-        private struct BorderInfo
+        internal struct BorderInfo
         {
             public UInt32 BorderId;
             public IXLBorder Border;
         }
         #endregion
         #region Nested type: NumberFormatInfo
-        private struct NumberFormatInfo
+        internal struct NumberFormatInfo
         {
             public Int32 NumberFormatId;
             public IXLNumberFormat NumberFormat;
         }
         #endregion
         #region Nested type: StyleInfo
-        private struct StyleInfo
+        internal struct StyleInfo
         {
             public UInt32 StyleId;
             public UInt32 FontId;

@@ -1817,9 +1817,47 @@ namespace ClosedXML.Excel
             context.SharedStyles.Clear();
             newSharedStyles.ForEach(kp => context.SharedStyles.Add(kp.Key, kp.Value));
 
-            //TableStyles tableStyles1 = new TableStyles() { Count = (UInt32Value)0U, DefaultTableStyle = "TableStyleMedium9", DefaultPivotStyle = "PivotStyleLight16" };
-            //workbookStylesPart.Stylesheet.AppendChild(tableStyles1);
+            AddDifferentialFormats(workbookStylesPart, context);
         }
+
+        private void AddDifferentialFormats(WorkbookStylesPart workbookStylesPart, SaveContext context)
+        {
+            if (workbookStylesPart.Stylesheet.DifferentialFormats == null)
+                workbookStylesPart.Stylesheet.DifferentialFormats = new DifferentialFormats();
+
+            var differentialFormats = workbookStylesPart.Stylesheet.DifferentialFormats;
+
+            foreach(var ws in Worksheets)
+            {
+                foreach(var cf in ws.ConditionalFormats)
+                {
+                    if(!context.DifferentialFormats.ContainsKey(cf.Style))
+                        AddDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, cf, context);
+                }
+            }
+
+            differentialFormats.Count = (UInt32) differentialFormats.Count();
+        }
+
+        private void AddDifferentialFormat(DifferentialFormats differentialFormats, IXLConditionalFormat cf, SaveContext context)
+        {
+            var differentialFormat = new DifferentialFormat();
+            differentialFormat.Append(GetNewFont(new FontInfo {Font = cf.Style.Font}));
+            differentialFormat.Append(new NumberingFormat
+                                          {
+                                              NumberFormatId = (UInt32)(differentialFormats.Count() + 164),
+                                              FormatCode = cf.Style.NumberFormat.Format
+                                          });
+        
+            differentialFormat.Append(GetNewFill(new FillInfo {Fill = cf.Style.Fill}));
+            differentialFormat.Append(GetNewBorder(new BorderInfo { Border = cf.Style.Border }));
+
+            differentialFormats.Append(differentialFormat);
+
+            context.DifferentialFormats.Add(cf.Style, differentialFormats.Count() - 1);
+        }
+
+
 
         private static void ResolveRest(WorkbookStylesPart workbookStylesPart, SaveContext context)
         {
@@ -3037,6 +3075,41 @@ namespace ClosedXML.Excel
             {
                 worksheetPart.Worksheet.RemoveAllChildren<MergeCells>();
                 cm.SetElement(XLWSContentManager.XLWSContents.MergeCells, null);
+            }
+
+            #endregion
+
+            #region Conditional Formatting
+            if (!xlWorksheet.ConditionalFormats.Any())
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
+                cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, null);
+            }
+            else
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
+
+
+                //if (!worksheetPart.Worksheet.Elements<ConditionalFormatting>().Any())
+                //{
+                //    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
+                //    worksheetPart.Worksheet.InsertAfter(new ConditionalFormatting(), previousElement);
+                //}
+
+                //var conditionalFormats = worksheetPart.Worksheet.Elements<ConditionalFormatting>().First();
+                //cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormats);
+                ////conditionalFormats.RemoveAllChildren<ConditionalFormat>();
+                Int32 priority = 0;
+                foreach (var cf in xlWorksheet.ConditionalFormats)
+                {
+                    priority++;
+                    var conditionalFormatting = new ConditionalFormatting { SequenceOfReferences = new ListValue<StringValue> { InnerText = cf.Range.RangeAddress.ToStringRelative(false) } };
+                    conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
+                    
+                    worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
+                    previousElement = conditionalFormatting;
+                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
+                }
             }
 
             #endregion

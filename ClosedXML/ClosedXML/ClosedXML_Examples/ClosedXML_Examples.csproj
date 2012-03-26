@@ -135,6 +135,7 @@
     <Compile Include="Columns\DeletingColumns.cs" />
     <Compile Include="Comments\AddingComments.cs" />
     <Compile Include="Comments\EditingComments.cs" />
+    <Compile Include="ConditionalFormatting\ConditionalFormatting.cs" />
     <Compile Include="Delete\DeleteFewWorksheets.cs" />
     <Compile Include="IXLExample.cs" />
     <Compile Include="Misc\CopyingRowsAndColumns.cs" />

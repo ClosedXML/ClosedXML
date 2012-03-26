@@ -145,6 +145,26 @@
     <Compile Include="Excel\Cells\XLCellsCollection.cs" />
     <Compile Include="Excel\Comments\IXLComment.cs" />
     <Compile Include="Excel\Comments\XLComment.cs" />
+    <Compile Include="Excel\ConditionalFormats\Save\IXLCFConverter.cs" />
+    <Compile Include="Excel\ConditionalFormats\Save\XLCFBeginsWithConverter.cs" />
+    <Compile Include="Excel\ConditionalFormats\Save\XLCFColorScaleConverter.cs" />
+    <Compile Include="Excel\ConditionalFormats\Save\XLCFConverters.cs" />
+    <Compile Include="Excel\ConditionalFormats\XLConditionalFormats.cs" />
+    <Compile Include="Excel\ConditionalFormats\XLCFDataBarMax.cs" />
+    <Compile Include="Excel\ConditionalFormats\XLCFDataBarMin.cs" />
+    <Compile Include="Excel\ConditionalFormats\XLCFColorScaleMax.cs" />
+    <Compile Include="Excel\ConditionalFormats\IXLCFColorScaleMax.cs" />
+    <Compile Include="Excel\ConditionalFormats\IXLCFColorScaleMid.cs" />
+    <Compile Include="Excel\ConditionalFormats\IXLCFColorScaleMin.cs" />
+    <Compile Include="Excel\ConditionalFormats\IXLCFDataBarMax.cs" />
+    <Compile Include="Excel\ConditionalFormats\IXLCFDataBarMin.cs" />
+    <Compile Include="Excel\ConditionalFormats\IXLCFIconSet.cs" />
+    <Compile Include="Excel\ConditionalFormats\IXLConditionalFormat.cs" />
+    <Compile Include="Excel\ConditionalFormats\IXLConditionalFormats.cs" />
+    <Compile Include="Excel\ConditionalFormats\XLCFColorScaleMid.cs" />
+    <Compile Include="Excel\ConditionalFormats\XLCFColorScaleMin.cs" />
+    <Compile Include="Excel\ConditionalFormats\XLCFIconSet.cs" />
+    <Compile Include="Excel\ConditionalFormats\XLConditionalFormat.cs" />
     <Compile Include="Excel\Drawings\IXLDrawingPosition.cs" />
     <Compile Include="Excel\Drawings\Style\XLDrawingFont.cs" />
     <Compile Include="Excel\Drawings\Style\IXLDrawingFont.cs" />
@@ -160,6 +180,7 @@
     <Compile Include="Excel\Coordinates\XLSheetRange.cs" />
     <Compile Include="Excel\Coordinates\XLSheetPoint.cs" />
     <Compile Include="Excel\Drawings\XLDrawingPosition.cs" />
+    <Compile Include="Excel\Misc\XLDictionary.cs" />
     <Compile Include="Excel\Misc\XLIdManager.cs" />
     <Compile Include="Excel\PivotTables\PivotValues\XLPivotValueCombination.cs" />
     <Compile Include="Excel\PivotTables\PivotValues\IXLPivotValueCombination.cs" />
@@ -199,7 +220,6 @@
     <Compile Include="Excel\Drawings\Style\XLDrawingSize.cs" />
     <Compile Include="Excel\Drawings\Style\XLDrawingStyle.cs" />
     <Compile Include="Excel\Drawings\Style\XLDrawingWeb.cs" />
-    <Compile Include="Excel\Style\Dictionary.cs" />
     <Compile Include="Excel\Style\IXLNumberFormatBase.cs" />
     <Compile Include="Excel\Tables\XLTableRange.cs" />
     <Compile Include="Excel\Tables\IXLTableRange.cs" />
@@ -334,6 +354,7 @@
   <ItemGroup>
     <None Include="ClosedXML.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

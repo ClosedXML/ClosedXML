@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
                 Border = new XLBorder(container, null);
                 Fill = new XLFill(container);
                 NumberFormat = new XLNumberFormat(container, null);
-                Protection = new XLProtection(container, null);
+                Protection = new XLProtection(container);
             }
 
             DateFormat = NumberFormat;
@@ -58,42 +58,35 @@ namespace ClosedXML.Excel
         {
             var sb = new StringBuilder();
             sb.Append("Font:");
-            sb.Append(Font.ToString());
+            sb.Append(Font);
             sb.Append(" Fill:");
-            sb.Append(Fill.ToString());
+            sb.Append(Fill);
             sb.Append(" Border:");
-            sb.Append(Border.ToString());
+            sb.Append(Border);
             sb.Append(" NumberFormat: ");
-            sb.Append(NumberFormat.ToString());
+            sb.Append(NumberFormat);
             sb.Append(" Alignment: ");
-            sb.Append(Alignment.ToString());
+            sb.Append(Alignment);
             sb.Append(" Protection: ");
-            sb.Append(Protection.ToString());
+            sb.Append(Protection);
             return sb.ToString();
         }
 
         public bool Equals(IXLStyle other)
         {
             return
-            //    this.Font.GetHashCode().Equals(other.Font.GetHashCode()) 
-            //&&  this.Fill.GetHashCode().Equals(other.Fill.GetHashCode())
-            //&& this.Border.GetHashCode().Equals(other.Border.GetHashCode())
-            //&& this.NumberFormat.GetHashCode().Equals(other.NumberFormat.GetHashCode())
-            //&& this.Alignment.GetHashCode().Equals(other.Alignment.GetHashCode())
-            //&& this.Protection.GetHashCode().Equals(other.Protection.GetHashCode()) 
-
-                this.Font.Equals(other.Font)
-            &&  this.Fill.Equals(other.Fill)
-            &&  this.Border.Equals(other.Border)
-            &&  this.NumberFormat.Equals(other.NumberFormat)
-            &&  this.Alignment.Equals(other.Alignment)
-            &&  this.Protection.Equals(other.Protection)
+                Font.Equals(other.Font)
+            &&  Fill.Equals(other.Fill)
+            &&  Border.Equals(other.Border)
+            &&  NumberFormat.Equals(other.NumberFormat)
+            &&  Alignment.Equals(other.Alignment)
+            &&  Protection.Equals(other.Protection)
             ;
         }
 
         public override bool Equals(object obj)
         {
-            return this.Equals((XLStyle)obj);
+            return Equals((XLStyle)obj);
         }
 
         public override int GetHashCode()

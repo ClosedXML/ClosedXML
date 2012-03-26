@@ -213,6 +213,66 @@
     <Compile Include="..\ClosedXML\Excel\Comments\XLComment.cs">
       <Link>Excel\Comments\XLComment.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\IXLCFColorScaleMax.cs">
+      <Link>Excel\ConditionalFormats\IXLCFColorScaleMax.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\IXLCFColorScaleMid.cs">
+      <Link>Excel\ConditionalFormats\IXLCFColorScaleMid.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\IXLCFColorScaleMin.cs">
+      <Link>Excel\ConditionalFormats\IXLCFColorScaleMin.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\IXLCFDataBarMax.cs">
+      <Link>Excel\ConditionalFormats\IXLCFDataBarMax.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\IXLCFDataBarMin.cs">
+      <Link>Excel\ConditionalFormats\IXLCFDataBarMin.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\IXLCFIconSet.cs">
+      <Link>Excel\ConditionalFormats\IXLCFIconSet.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\IXLConditionalFormat.cs">
+      <Link>Excel\ConditionalFormats\IXLConditionalFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\IXLConditionalFormats.cs">
+      <Link>Excel\ConditionalFormats\IXLConditionalFormats.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\IXLCFConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\IXLCFConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFBeginsWithConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFBeginsWithConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFColorScaleConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFColorScaleConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFConverters.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFConverters.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\XLCFColorScaleMax.cs">
+      <Link>Excel\ConditionalFormats\XLCFColorScaleMax.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\XLCFColorScaleMid.cs">
+      <Link>Excel\ConditionalFormats\XLCFColorScaleMid.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\XLCFColorScaleMin.cs">
+      <Link>Excel\ConditionalFormats\XLCFColorScaleMin.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\XLCFDataBarMax.cs">
+      <Link>Excel\ConditionalFormats\XLCFDataBarMax.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\XLCFDataBarMin.cs">
+      <Link>Excel\ConditionalFormats\XLCFDataBarMin.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\XLCFIconSet.cs">
+      <Link>Excel\ConditionalFormats\XLCFIconSet.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\XLConditionalFormat.cs">
+      <Link>Excel\ConditionalFormats\XLConditionalFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\XLConditionalFormats.cs">
+      <Link>Excel\ConditionalFormats\XLConditionalFormats.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Coordinates\IXLAddress.cs">
       <Link>Excel\Coordinate\IXLAddress.cs</Link>
     </Compile>
@@ -368,6 +428,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\IXLWorksheets.cs">
       <Link>Excel\IXLWorksheets.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\Misc\XLDictionary.cs">
+      <Link>Excel\Misc\XLDictionary.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Misc\XLIdManager.cs">
       <Link>Excel\Misc\XLIdManager.cs</Link>

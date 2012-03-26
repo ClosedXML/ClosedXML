@@ -1870,5 +1870,15 @@ namespace ClosedXML.Excel
         {
             return DataValidation;
         }
+
+        public IXLConditionalFormat AddConditionalFormat()
+        {
+            using (var asRange = AsRange())
+            {
+                var cf = new XLConditionalFormat(asRange);
+                Worksheet.ConditionalFormats.Add(cf);
+                return cf;
+            }
+        }
     }
 }

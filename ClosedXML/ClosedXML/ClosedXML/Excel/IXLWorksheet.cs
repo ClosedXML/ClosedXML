@@ -360,5 +360,6 @@ namespace ClosedXML.Excel
         IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate);
 
         IXLRanges MergedRanges { get; }
+        IXLConditionalFormats ConditionalFormats { get; }
     }
 }

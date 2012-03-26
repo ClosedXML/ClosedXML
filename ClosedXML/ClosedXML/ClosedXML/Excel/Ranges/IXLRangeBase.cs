@@ -64,7 +64,6 @@ namespace ClosedXML.Excel
 
         IXLHyperlinks Hyperlinks { get; }
 
-        IXLDataValidation SetDataValidation();
 
         /// <summary>
         ///   Returns the collection of cells.
@@ -238,6 +237,9 @@ namespace ClosedXML.Excel
         //IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
 
         IXLAutoFilter SetAutoFilter();
-        
+
+        IXLDataValidation SetDataValidation();
+
+        IXLConditionalFormat AddConditionalFormat();
     }
 }
