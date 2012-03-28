@@ -1843,12 +1843,15 @@ namespace ClosedXML.Excel
         {
             var differentialFormat = new DifferentialFormat();
             differentialFormat.Append(GetNewFont(new FontInfo {Font = cf.Style.Font}));
-            differentialFormat.Append(new NumberingFormat
-                                          {
-                                              NumberFormatId = (UInt32)(differentialFormats.Count() + 164),
-                                              FormatCode = cf.Style.NumberFormat.Format
-                                          });
-        
+            if (!StringExtensions.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
+            {
+                var numberFormat = new NumberingFormat
+                                       {
+                                           NumberFormatId = (UInt32) (differentialFormats.Count() + 164),
+                                           FormatCode = cf.Style.NumberFormat.Format
+                                       };
+                differentialFormat.Append(numberFormat);
+            }
             differentialFormat.Append(GetNewFill(new FillInfo {Fill = cf.Style.Fill}));
             differentialFormat.Append(GetNewBorder(new BorderInfo { Border = cf.Style.Border }));
 

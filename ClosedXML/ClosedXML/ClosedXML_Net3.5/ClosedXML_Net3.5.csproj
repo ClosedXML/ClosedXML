@@ -240,14 +240,50 @@
     <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\IXLCFConverter.cs">
       <Link>Excel\ConditionalFormats\Save\IXLCFConverter.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFBeginsWithConverter.cs">
-      <Link>Excel\ConditionalFormats\Save\XLCFBeginsWithConverter.cs</Link>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFCellIsConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFCellIsConverter.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFColorScaleConverter.cs">
       <Link>Excel\ConditionalFormats\Save\XLCFColorScaleConverter.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFContainsConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFContainsConverter.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFConverters.cs">
       <Link>Excel\ConditionalFormats\Save\XLCFConverters.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFDataBarConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFDataBarConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFEndsWithConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFEndsWithConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFIconSetConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFIconSetConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFIsBlankConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFIsBlankConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFIsErrorConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFIsErrorConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFNotBlankConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFNotBlankConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFNotContainsConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFNotContainsConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFNotErrorConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFNotErrorConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFStartsWithConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFStartsWithConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFTopConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFTopConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFUniqueConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFUniqueConverter.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\ConditionalFormats\XLCFColorScaleMax.cs">
       <Link>Excel\ConditionalFormats\XLCFColorScaleMax.cs</Link>

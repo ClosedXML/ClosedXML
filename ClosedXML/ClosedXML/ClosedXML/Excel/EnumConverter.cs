@@ -543,16 +543,16 @@ namespace ClosedXML.Excel
                 case XLConditionalFormatType.DataBar: return ConditionalFormatValues.DataBar;
                 case XLConditionalFormatType.IconSet: return ConditionalFormatValues.IconSet;
                 case XLConditionalFormatType.Top10: return ConditionalFormatValues.Top10;
-                case XLConditionalFormatType.UniqueValues: return ConditionalFormatValues.UniqueValues;
-                case XLConditionalFormatType.DuplicateValues: return ConditionalFormatValues.DuplicateValues;
+                case XLConditionalFormatType.IsUnique: return ConditionalFormatValues.UniqueValues;
+                case XLConditionalFormatType.IsDuplicate: return ConditionalFormatValues.DuplicateValues;
                 case XLConditionalFormatType.ContainsText: return ConditionalFormatValues.ContainsText;
                 case XLConditionalFormatType.NotContainsText: return ConditionalFormatValues.NotContainsText;
-                case XLConditionalFormatType.BeginsWith: return ConditionalFormatValues.BeginsWith;
+                case XLConditionalFormatType.StartsWith: return ConditionalFormatValues.BeginsWith;
                 case XLConditionalFormatType.EndsWith: return ConditionalFormatValues.EndsWith;
-                case XLConditionalFormatType.ContainsBlanks: return ConditionalFormatValues.ContainsBlanks;
-                case XLConditionalFormatType.NotContainsBlanks: return ConditionalFormatValues.NotContainsBlanks;
-                case XLConditionalFormatType.ContainsErrors: return ConditionalFormatValues.ContainsErrors;
-                case XLConditionalFormatType.NotContainsErrors: return ConditionalFormatValues.NotContainsErrors;
+                case XLConditionalFormatType.IsBlank: return ConditionalFormatValues.ContainsBlanks;
+                case XLConditionalFormatType.NotBlank: return ConditionalFormatValues.NotContainsBlanks;
+                case XLConditionalFormatType.IsError: return ConditionalFormatValues.ContainsErrors;
+                case XLConditionalFormatType.NotError: return ConditionalFormatValues.NotContainsErrors;
                 case XLConditionalFormatType.TimePeriod: return ConditionalFormatValues.TimePeriod;
                 case XLConditionalFormatType.AboveAverage: return ConditionalFormatValues.AboveAverage;
                 #region default
@@ -561,7 +561,6 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
-
         public static ConditionalFormatValueObjectValues ToOpenXml(this XLCFContentType value)
         {
             switch (value)
@@ -595,6 +594,34 @@ namespace ClosedXML.Excel
                 case XLCFOperator.NotContains: return ConditionalFormattingOperatorValues.NotContains;
                 case XLCFOperator.StartsWith: return ConditionalFormattingOperatorValues.BeginsWith;
                 case XLCFOperator.EndsWith: return ConditionalFormattingOperatorValues.EndsWith;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+        public static IconSetValues ToOpenXml(this XLIconSetStyle value)
+        {
+            switch (value)
+            {
+                case XLIconSetStyle.ThreeArrows: return IconSetValues.ThreeArrows;
+                case XLIconSetStyle.ThreeArrowsGray: return IconSetValues.ThreeArrowsGray;
+                case XLIconSetStyle.ThreeFlags: return IconSetValues.ThreeFlags;
+                case XLIconSetStyle.ThreeTrafficLights1: return IconSetValues.ThreeTrafficLights1;
+                case XLIconSetStyle.ThreeTrafficLights2: return IconSetValues.ThreeTrafficLights2;
+                case XLIconSetStyle.ThreeSigns: return IconSetValues.ThreeSigns;
+                case XLIconSetStyle.ThreeSymbols: return IconSetValues.ThreeSymbols;
+                case XLIconSetStyle.ThreeSymbols2: return IconSetValues.ThreeSymbols2;
+                case XLIconSetStyle.FourArrows: return IconSetValues.FourArrows;
+                case XLIconSetStyle.FourArrowsGray: return IconSetValues.FourArrowsGray;
+                case XLIconSetStyle.FourRedToBlack: return IconSetValues.FourRedToBlack;
+                case XLIconSetStyle.FourRating: return IconSetValues.FourRating;
+                case XLIconSetStyle.FourTrafficLights: return IconSetValues.FourTrafficLights;
+                case XLIconSetStyle.FiveArrows: return IconSetValues.FiveArrows;
+                case XLIconSetStyle.FiveArrowsGray: return IconSetValues.FiveArrowsGray;
+                case XLIconSetStyle.FiveRating: return IconSetValues.FiveRating;
+                case XLIconSetStyle.FiveQuarters: return IconSetValues.FiveQuarters;
 
                 #region default
                 default:
@@ -1141,16 +1168,16 @@ namespace ClosedXML.Excel
                 case ConditionalFormatValues.DataBar: return XLConditionalFormatType.DataBar;
                 case ConditionalFormatValues.IconSet: return XLConditionalFormatType.IconSet;
                 case ConditionalFormatValues.Top10: return XLConditionalFormatType.Top10;
-                case ConditionalFormatValues.UniqueValues: return XLConditionalFormatType.UniqueValues;
-                case ConditionalFormatValues.DuplicateValues: return XLConditionalFormatType.DuplicateValues;
+                case ConditionalFormatValues.UniqueValues: return XLConditionalFormatType.IsUnique;
+                case ConditionalFormatValues.DuplicateValues: return XLConditionalFormatType.IsDuplicate;
                 case ConditionalFormatValues.ContainsText: return XLConditionalFormatType.ContainsText;
                 case ConditionalFormatValues.NotContainsText: return XLConditionalFormatType.NotContainsText;
-                case ConditionalFormatValues.BeginsWith: return XLConditionalFormatType.BeginsWith;
+                case ConditionalFormatValues.BeginsWith: return XLConditionalFormatType.StartsWith;
                 case ConditionalFormatValues.EndsWith: return XLConditionalFormatType.EndsWith;
-                case ConditionalFormatValues.ContainsBlanks: return XLConditionalFormatType.ContainsBlanks;
-                case ConditionalFormatValues.NotContainsBlanks: return XLConditionalFormatType.NotContainsBlanks;
-                case ConditionalFormatValues.ContainsErrors: return XLConditionalFormatType.ContainsErrors;
-                case ConditionalFormatValues.NotContainsErrors: return XLConditionalFormatType.NotContainsErrors;
+                case ConditionalFormatValues.ContainsBlanks: return XLConditionalFormatType.IsBlank;
+                case ConditionalFormatValues.NotContainsBlanks: return XLConditionalFormatType.NotBlank;
+                case ConditionalFormatValues.ContainsErrors: return XLConditionalFormatType.IsError;
+                case ConditionalFormatValues.NotContainsErrors: return XLConditionalFormatType.NotError;
                 case ConditionalFormatValues.TimePeriod: return XLConditionalFormatType.TimePeriod;
                 case ConditionalFormatValues.AboveAverage: return XLConditionalFormatType.AboveAverage;
 
@@ -1160,7 +1187,6 @@ namespace ClosedXML.Excel
                 #endregion
             }
         }
-
         public static XLCFContentType ToClosedXml(this ConditionalFormatValueObjectValues value)
         {
             switch (value)
@@ -1194,6 +1220,36 @@ namespace ClosedXML.Excel
                 case ConditionalFormattingOperatorValues.NotContains: return XLCFOperator.NotContains;
                 case ConditionalFormattingOperatorValues.BeginsWith: return XLCFOperator.StartsWith;
                 case ConditionalFormattingOperatorValues.EndsWith: return XLCFOperator.EndsWith;
+
+                #region default
+                default:
+                    throw new ApplicationException("Not implemented value!");
+                #endregion
+            }
+        }
+
+        public static XLIconSetStyle ToClosedXml(this IconSetValues value)
+        {
+            switch (value)
+            {
+                case IconSetValues.ThreeArrows: return XLIconSetStyle.ThreeArrows;
+                case IconSetValues.ThreeArrowsGray: return XLIconSetStyle.ThreeArrowsGray;
+                case IconSetValues.ThreeFlags: return XLIconSetStyle.ThreeFlags;
+                case IconSetValues.ThreeTrafficLights1: return XLIconSetStyle.ThreeTrafficLights1;
+                case IconSetValues.ThreeTrafficLights2: return XLIconSetStyle.ThreeTrafficLights2;
+                case IconSetValues.ThreeSigns: return XLIconSetStyle.ThreeSigns;
+                case IconSetValues.ThreeSymbols: return XLIconSetStyle.ThreeSymbols;
+                case IconSetValues.ThreeSymbols2: return XLIconSetStyle.ThreeSymbols2;
+                case IconSetValues.FourArrows: return XLIconSetStyle.FourArrows;
+                case IconSetValues.FourArrowsGray: return XLIconSetStyle.FourArrowsGray;
+                case IconSetValues.FourRedToBlack: return XLIconSetStyle.FourRedToBlack;
+                case IconSetValues.FourRating: return XLIconSetStyle.FourRating;
+                case IconSetValues.FourTrafficLights: return XLIconSetStyle.FourTrafficLights;
+                case IconSetValues.FiveArrows: return XLIconSetStyle.FiveArrows;
+                case IconSetValues.FiveArrowsGray: return XLIconSetStyle.FiveArrowsGray;
+                case IconSetValues.FiveRating: return XLIconSetStyle.FiveRating;
+                case IconSetValues.FiveQuarters: return XLIconSetStyle.FiveQuarters;
+
 
                 #region default
                 default:

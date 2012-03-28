@@ -69,25 +69,26 @@ namespace ClosedXML.Excel
         public Boolean Percent { get; private set; }
         public Boolean ReverseIconOrder { get; private set; }
         public Boolean ShowIconOnly { get; private set; }
+        public Boolean ShowBarOnly { get; private set; }
 
         public IXLStyle WhenIsBlank()
         {
-            ConditionalFormatType = XLConditionalFormatType.ContainsBlanks;
+            ConditionalFormatType = XLConditionalFormatType.IsBlank;
             return Style;
         }
         public IXLStyle WhenNotBlank()
         {
-            ConditionalFormatType = XLConditionalFormatType.NotContainsBlanks;
+            ConditionalFormatType = XLConditionalFormatType.NotBlank;
             return Style;
         }
         public IXLStyle WhenIsError()
         {
-            ConditionalFormatType = XLConditionalFormatType.ContainsErrors;
+            ConditionalFormatType = XLConditionalFormatType.IsError;
             return Style;
         }
         public IXLStyle WhenNotError()
         {
-            ConditionalFormatType = XLConditionalFormatType.NotContainsErrors;
+            ConditionalFormatType = XLConditionalFormatType.NotError;
             return Style;
         }
         public IXLStyle WhenDateIs(XLTimePeriod timePeriod)
@@ -100,18 +101,20 @@ namespace ClosedXML.Excel
         {
             Values.Initialize(value);
             ConditionalFormatType = XLConditionalFormatType.ContainsText;
+            Operator = XLCFOperator.Contains;
             return Style;
         }
         public IXLStyle WhenNotContains(String value)
         {
             Values.Initialize(value);
             ConditionalFormatType = XLConditionalFormatType.NotContainsText;
+            Operator = XLCFOperator.NotContains;
             return Style;
         }
         public IXLStyle WhenStartsWith(String value)
         {
             Values.Initialize(value);
-            ConditionalFormatType = XLConditionalFormatType.BeginsWith;
+            ConditionalFormatType = XLConditionalFormatType.StartsWith;
             Operator = XLCFOperator.StartsWith;
             return Style;
         }
@@ -119,6 +122,7 @@ namespace ClosedXML.Excel
         {
             Values.Initialize(value);
             ConditionalFormatType = XLConditionalFormatType.EndsWith;
+            Operator = XLCFOperator.EndsWith;
             return Style;
         }
         public IXLStyle WhenEqualTo(String value)
@@ -181,12 +185,12 @@ namespace ClosedXML.Excel
         }
         public IXLStyle WhenIsDuplicate()
         {
-            ConditionalFormatType = XLConditionalFormatType.DuplicateValues;
+            ConditionalFormatType = XLConditionalFormatType.IsDuplicate;
             return Style;
         }
-        public IXLStyle WhenNotDuplicate()
+        public IXLStyle WhenIsUnique()
         {
-            ConditionalFormatType = XLConditionalFormatType.UniqueValues;
+            ConditionalFormatType = XLConditionalFormatType.IsUnique;
             return Style;
         }
         public IXLStyle WhenIsTrue(String formula)
@@ -217,9 +221,10 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.ColorScale;
             return new XLCFColorScaleMin(this);
         }
-        public IXLCFDataBarMin DataBar(IXLColor color)
+        public IXLCFDataBarMin DataBar(IXLColor color, Boolean showBarOnly = false)
         {
             Colors.Initialize(color);
+            ShowBarOnly = showBarOnly;
             ConditionalFormatType = XLConditionalFormatType.DataBar;
             return new XLCFDataBarMin(this);
         }

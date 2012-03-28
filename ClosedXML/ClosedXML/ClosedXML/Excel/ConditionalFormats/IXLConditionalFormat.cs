@@ -46,16 +46,16 @@ namespace ClosedXML.Excel
         DataBar,
         IconSet,
         Top10,
-        UniqueValues,
-        DuplicateValues,
+        IsUnique,
+        IsDuplicate,
         ContainsText,
         NotContainsText,
-        BeginsWith,
+        StartsWith,
         EndsWith,
-        ContainsBlanks,
-        NotContainsBlanks,
-        ContainsErrors,
-        NotContainsErrors,
+        IsBlank,
+        NotBlank,
+        IsError,
+        NotError,
         TimePeriod,
         AboveAverage
     }
@@ -82,13 +82,13 @@ namespace ClosedXML.Excel
         IXLStyle WhenBetween(String minValue, String maxValue);
         IXLStyle WhenNotBetween(String minValue, String maxValue);
         IXLStyle WhenIsDuplicate();
-        IXLStyle WhenNotDuplicate();
+        IXLStyle WhenIsUnique();
         IXLStyle WhenIsTrue(String formula);
         IXLStyle WhenIsTop(Int32 value, XLTopBottomType topBottomType = XLTopBottomType.Items);
         IXLStyle WhenIsBottom(Int32 value, XLTopBottomType topBottomType);
 
         IXLCFColorScaleMin ColorScale();
-        IXLCFDataBarMin DataBar(IXLColor color);
+        IXLCFDataBarMin DataBar(IXLColor color, Boolean showBarOnly = false);
         IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
 
         XLConditionalFormatType ConditionalFormatType { get; }
@@ -96,6 +96,7 @@ namespace ClosedXML.Excel
         XLTimePeriod TimePeriod { get; }
         Boolean ReverseIconOrder { get; }
         Boolean ShowIconOnly { get; }
+        Boolean ShowBarOnly { get; }
         IXLRange Range { get; set; }
 
         XLDictionary<String> Values { get; }
@@ -106,6 +107,7 @@ namespace ClosedXML.Excel
         XLCFOperator Operator { get; }
         Boolean Bottom { get;  }
         Boolean Percent { get; }
+        
         
     }
 }
