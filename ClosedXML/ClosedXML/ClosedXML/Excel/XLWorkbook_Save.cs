@@ -1824,6 +1824,8 @@ namespace ClosedXML.Excel
         {
             if (workbookStylesPart.Stylesheet.DifferentialFormats == null)
                 workbookStylesPart.Stylesheet.DifferentialFormats = new DifferentialFormats();
+            else
+                workbookStylesPart.Stylesheet.DifferentialFormats.RemoveAllChildren<DifferentialFormat>();
 
             var differentialFormats = workbookStylesPart.Stylesheet.DifferentialFormats;
 
@@ -3090,6 +3092,7 @@ namespace ClosedXML.Excel
             }
             else
             {
+                worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
                 var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
 
 

@@ -489,4 +489,50 @@ namespace ClosedXML_Examples
             workbook.SaveAs(filePath);
         }
     }
+
+    public class CFTwoConditions : IXLExample
+    {
+        public void Create(String filePath)
+        {
+            var workbook = new XLWorkbook();
+            var ws = workbook.AddWorksheet("Sheet1");
+
+            ws.FirstCell().SetValue(1)
+                .CellBelow().SetValue(1)
+                .CellBelow().SetValue(2)
+                .CellBelow().SetValue(3);
+
+            ws.RangeUsed().AddConditionalFormat().IconSet(XLIconSetStyle.ThreeTrafficLights2, true, true)
+                .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "0", XLCFContentType.Number)
+                .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "2", XLCFContentType.Number)
+                .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "3", XLCFContentType.Number);
+
+            ws.RangeUsed().AddConditionalFormat().WhenContains("1")
+                .Fill.SetBackgroundColor(XLColor.Red);
+
+            workbook.SaveAs(filePath);
+        }
+    }
+
+    public class CFTest : IXLExample
+    {
+        public void Create(String filePath)
+        {
+            var workbook = new XLWorkbook();
+            var ws = workbook.AddWorksheet("Sheet1");
+
+            ws.FirstCell().SetValue(1)
+                .CellBelow().SetValue(1)
+                .CellBelow().SetValue(2)
+                .CellBelow().SetValue(3);
+
+            ws.RangeUsed().AddConditionalFormat().ColorScale()
+                .LowestValue(XLColor.Red)
+                .Midpoint(XLCFContentType.Percent, "50", XLColor.Yellow)
+                .HighestValue(XLColor.Green);
+                
+
+            workbook.SaveAs(filePath);
+        }
+    }
 }

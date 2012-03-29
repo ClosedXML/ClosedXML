@@ -109,7 +109,8 @@ namespace ClosedXML.Excel
             var fills = s.Fills;
             var borders = s.Borders;
             var fonts = s.Fonts;
-
+            Int32 dfCount = 0;
+            var differentialFormats = s.DifferentialFormats.Elements<DifferentialFormat>().ToDictionary(k => dfCount++);
             var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
             Int32 position = 0;
             foreach (Sheet dSheet in sheets.OfType<Sheet>())
@@ -183,6 +184,8 @@ namespace ClosedXML.Excel
                             LoadSheetProtection((SheetProtection)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(DataValidations))
                             LoadDataValidations((DataValidations)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(ConditionalFormatting))
+                            LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats);
                         else if (reader.ElementType == typeof(Hyperlinks))
                             LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), wsPart, ws);
                         else if (reader.ElementType == typeof(PrintOptions))
@@ -851,8 +854,66 @@ namespace ClosedXML.Excel
             }
         }
 
+        private void LoadNumberFormat(NumberingFormat nfSource, IXLNumberFormat nf)
+        {
+            if (nfSource == null) return;
+
+            if (nfSource.FormatCode != null)
+                nf.Format = nfSource.FormatCode.Value;
+            //if (nfSource.NumberFormatId != null)
+            //    nf.NumberFormatId = (Int32)nfSource.NumberFormatId.Value;
+        }
+
+        private void LoadBorder(Border borderSource, IXLBorder border)
+        {
+            if (borderSource == null) return;
+
+            LoadBorderValues(borderSource.DiagonalBorder, border.SetDiagonalBorder, border.SetDiagonalBorderColor);
+
+            if (borderSource.DiagonalUp != null )
+                border.DiagonalUp = borderSource.DiagonalUp.Value;
+            if (borderSource.DiagonalDown != null)
+                border.DiagonalDown = borderSource.DiagonalDown.Value;
+
+            LoadBorderValues(borderSource.LeftBorder, border.SetLeftBorder, border.SetLeftBorderColor);
+            LoadBorderValues(borderSource.RightBorder, border.SetRightBorder, border.SetRightBorderColor);
+            LoadBorderValues(borderSource.TopBorder, border.SetTopBorder, border.SetTopBorderColor);
+            LoadBorderValues(borderSource.BottomBorder, border.SetBottomBorder, border.SetBottomBorderColor);
+            
+        }
+
+        private void LoadBorderValues(BorderPropertiesType source, Func<XLBorderStyleValues, IXLStyle> setBorder, Func<IXLColor, IXLStyle> setColor )
+        {
+            if (source != null)
+            {
+                if (source.Style != null)
+                    setBorder(source.Style.Value.ToClosedXml());
+                if (source.Color != null)
+                    setColor(GetColor(source.Color));
+            }
+        }
+
+        
+
+        private void LoadFill(Fill fillSource, IXLFill fill)
+        {
+            if (fillSource == null) return;
+
+            if(fillSource.PatternFill != null)
+            {
+                if (fillSource.PatternFill.PatternType != null)
+                    fill.PatternType = fillSource.PatternFill.PatternType.Value.ToClosedXml();
+                if (fillSource.PatternFill.ForegroundColor != null)
+                    fill.PatternColor = GetColor(fillSource.PatternFill.ForegroundColor);
+                if (fillSource.PatternFill.BackgroundColor != null)
+                    fill.PatternBackgroundColor = GetColor(fillSource.PatternFill.BackgroundColor);
+            }
+        }
+
         private void LoadFont(OpenXmlElement fontSource, IXLFontBase fontBase)
         {
+            if (fontSource == null) return;
+
             fontBase.Bold = GetBoolean(fontSource.Elements<Bold>().FirstOrDefault());
             var fontColor = GetColor(fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>().FirstOrDefault());
             if (fontColor.HasValue)
@@ -1209,6 +1270,63 @@ namespace ClosedXML.Excel
                     if (dvs.Formula2 != null) dvt.MaxValue = dvs.Formula2.Text;
                 }
             }
+        }
+
+        private void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws, Dictionary<Int32, DifferentialFormat> differentialFormats)
+        {
+            if (conditionalFormatting == null) return;
+
+            foreach (var sor in conditionalFormatting.SequenceOfReferences.Items)
+            {
+                var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
+                foreach (var fr in conditionalFormatting.Elements<ConditionalFormattingRule>())
+                {
+                    if (fr.FormatId != null)
+                    {
+                        LoadFont(differentialFormats[(Int32) fr.FormatId.Value].Font, conditionalFormat.Style.Font);
+                        LoadFill(differentialFormats[(Int32) fr.FormatId.Value].Fill, conditionalFormat.Style.Fill);
+                        LoadBorder(differentialFormats[(Int32) fr.FormatId.Value].Border, conditionalFormat.Style.Border);
+                        LoadNumberFormat(differentialFormats[(Int32) fr.FormatId.Value].NumberingFormat, conditionalFormat.Style.NumberFormat);
+                    }
+                    if (fr.Operator != null)
+                        conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
+                    if (fr.Type != null)
+                        conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
+                    if (fr.Text != null)
+                        conditionalFormat.Values.Add(fr.Text.Value);
+
+
+                    if (fr.Elements<ColorScale>().Any())
+                    {
+                        var colorScale = fr.Elements<ColorScale>().First();
+                        foreach (var c in colorScale.Elements<ConditionalFormatValueObject>())
+                        {
+                            conditionalFormat.ContentTypes.Add(c.Type.Value.ToClosedXml() );
+                            conditionalFormat.Values.Add(c.Val.Value);
+                        }
+                        foreach (var c in colorScale.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>())
+                        {
+                            conditionalFormat.Colors.Add(GetColor(c));
+                        }
+                    }
+                    else
+                    {
+                        foreach (var formula in fr.Elements<Formula>())
+                        {
+                            if (formula.Text != null)
+                            {
+                                String val = formula.Text;
+                                if (val.StartsWith("\"")) val = val.Substring(1, val.Length - 2);
+                                conditionalFormat.Values.Add(val);
+                            }
+                        }
+                    }
+
+                }
+                
+                ws.ConditionalFormats.Add(conditionalFormat);
+            }
+            
         }
 
         private static void LoadHyperlinks(Hyperlinks hyperlinks, WorksheetPart worksheetPart, XLWorksheet ws)

@@ -64,12 +64,12 @@ namespace ClosedXML.Excel
         public XLDictionary<XLCFContentType> ContentTypes { get; private set; }
         public XLDictionary<XLCFIconSetOperator> IconSetOperators { get; private set; }
 
-        public XLCFOperator Operator { get; private set; }
-        public Boolean Bottom { get; private set; }
-        public Boolean Percent { get; private set; }
-        public Boolean ReverseIconOrder { get; private set; }
-        public Boolean ShowIconOnly { get; private set; }
-        public Boolean ShowBarOnly { get; private set; }
+        public XLCFOperator Operator { get;  set; }
+        public Boolean Bottom { get;  set; }
+        public Boolean Percent { get;  set; }
+        public Boolean ReverseIconOrder { get;  set; }
+        public Boolean ShowIconOnly { get;  set; }
+        public Boolean ShowBarOnly { get;  set; }
 
         public IXLStyle WhenIsBlank()
         {
