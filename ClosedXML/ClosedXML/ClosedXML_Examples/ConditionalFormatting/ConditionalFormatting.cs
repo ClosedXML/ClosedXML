@@ -526,12 +526,11 @@ namespace ClosedXML_Examples
                 .CellBelow().SetValue(2)
                 .CellBelow().SetValue(3);
 
-            ws.RangeUsed().AddConditionalFormat().ColorScale()
-                .LowestValue(XLColor.Red)
-                .Midpoint(XLCFContentType.Percent, "50", XLColor.Yellow)
-                .HighestValue(XLColor.Green);
+            ws.RangeUsed().AddConditionalFormat().IconSet(XLIconSetStyle.ThreeTrafficLights2, true, true)
+                .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "0", XLCFContentType.Number)
+                .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "2", XLCFContentType.Number)
+                .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "3", XLCFContentType.Number);
                 
-
             workbook.SaveAs(filePath);
         }
     }

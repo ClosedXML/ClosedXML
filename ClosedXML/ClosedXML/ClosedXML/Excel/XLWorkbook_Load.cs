@@ -23,6 +23,7 @@ namespace ClosedXML.Excel
     using Ap;
     using Op;
     using System.Xml.Linq;
+    using System.Text.RegularExpressions;
 
     #endregion
 
@@ -1294,30 +1295,45 @@ namespace ClosedXML.Excel
                         conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
                     if (fr.Text != null)
                         conditionalFormat.Values.Add(fr.Text.Value);
-
+                    if (fr.Percent != null)
+                        conditionalFormat.Percent = fr.Percent.Value;
+                    if (fr.Bottom != null)
+                        conditionalFormat.Bottom = fr.Bottom.Value;
+                    if(fr.Rank != null)
+                        conditionalFormat.Values.Add(fr.Rank.Value.ToString());
 
                     if (fr.Elements<ColorScale>().Any())
                     {
                         var colorScale = fr.Elements<ColorScale>().First();
-                        foreach (var c in colorScale.Elements<ConditionalFormatValueObject>())
-                        {
-                            conditionalFormat.ContentTypes.Add(c.Type.Value.ToClosedXml() );
-                            conditionalFormat.Values.Add(c.Val.Value);
-                        }
-                        foreach (var c in colorScale.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>())
-                        {
-                            conditionalFormat.Colors.Add(GetColor(c));
-                        }
+                        ExtractConditionalFormatValueObjects(conditionalFormat, colorScale);
+                    }
+                    else if (fr.Elements<DataBar>().Any())
+                    {
+                        var dataBar = fr.Elements<DataBar>().First();
+                        if (dataBar.ShowValue != null)
+                            conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
+                        ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
+                    }
+                    else if (fr.Elements<IconSet>().Any())
+                    {
+                        var iconSet = fr.Elements<IconSet>().First();
+                        if (iconSet.ShowValue != null)
+                            conditionalFormat.ShowIconOnly = !iconSet.ShowValue.Value;
+                        if (iconSet.Reverse != null)
+                            conditionalFormat.ReverseIconOrder = iconSet.Reverse.Value;
+                        if (iconSet.IconSetValue != null)
+                            conditionalFormat.IconSetStyle = iconSet.IconSetValue.Value.ToClosedXml();
+                        ExtractConditionalFormatValueObjects(conditionalFormat, iconSet);
                     }
                     else
                     {
                         foreach (var formula in fr.Elements<Formula>())
                         {
-                            if (formula.Text != null)
+                            if (formula.Text != null && conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs)
                             {
                                 String val = formula.Text;
-                                if (val.StartsWith("\"")) val = val.Substring(1, val.Length - 2);
-                                conditionalFormat.Values.Add(val);
+                                    if (val.StartsWith("\"")) val = val.Substring(1, val.Length - 2);
+                                    conditionalFormat.Values.Add(val);
                             }
                         }
                     }
@@ -1327,6 +1343,23 @@ namespace ClosedXML.Excel
                 ws.ConditionalFormats.Add(conditionalFormat);
             }
             
+        }
+
+        private void ExtractConditionalFormatValueObjects(XLConditionalFormat conditionalFormat, OpenXmlElement element)
+        {
+            foreach (var c in element.Elements<ConditionalFormatValueObject>())
+            {
+                if (c.Type != null)
+                    conditionalFormat.ContentTypes.Add(c.Type.Value.ToClosedXml());
+                if (c.Val != null)
+                    conditionalFormat.Values.Add(c.Val.Value);
+                if(c.GreaterThanOrEqual != null)
+                    conditionalFormat.IconSetOperators.Add(c.GreaterThanOrEqual.Value ? XLCFIconSetOperator.EqualOrGreaterThan : XLCFIconSetOperator.GreaterThan);
+            }
+            foreach (var c in element.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>())
+            {
+                conditionalFormat.Colors.Add(GetColor(c));
+            }
         }
 
         private static void LoadHyperlinks(Hyperlinks hyperlinks, WorksheetPart worksheetPart, XLWorksheet ws)

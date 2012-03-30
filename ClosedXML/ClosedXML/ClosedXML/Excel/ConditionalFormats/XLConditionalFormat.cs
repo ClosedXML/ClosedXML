@@ -57,8 +57,8 @@ namespace ClosedXML.Excel
         public bool StyleChanged { get; set; }
         public IXLRange Range { get; set; }
         public XLConditionalFormatType ConditionalFormatType { get; set; }
-        public XLTimePeriod TimePeriod { get; private set; }
-        public XLIconSetStyle IconSetStyle { get; private set; }
+        public XLTimePeriod TimePeriod { get; set; }
+        public XLIconSetStyle IconSetStyle { get;  set; }
         public XLDictionary<String> Values { get; private set; }
         public XLDictionary<IXLColor> Colors { get; private set; }
         public XLDictionary<XLCFContentType> ContentTypes { get; private set; }
