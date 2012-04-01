@@ -1824,10 +1824,12 @@ namespace ClosedXML.Excel
         {
             if (workbookStylesPart.Stylesheet.DifferentialFormats == null)
                 workbookStylesPart.Stylesheet.DifferentialFormats = new DifferentialFormats();
-            else
-                workbookStylesPart.Stylesheet.DifferentialFormats.RemoveAllChildren<DifferentialFormat>();
+            
 
             var differentialFormats = workbookStylesPart.Stylesheet.DifferentialFormats;
+
+            FillDifferentialFormatsCollection(differentialFormats, context.DifferentialFormats);
+
 
             foreach(var ws in Worksheets)
             {
@@ -1839,6 +1841,25 @@ namespace ClosedXML.Excel
             }
 
             differentialFormats.Count = (UInt32) differentialFormats.Count();
+            if (differentialFormats.Count == 0)
+                workbookStylesPart.Stylesheet.DifferentialFormats = null;
+
+        }
+
+        private void FillDifferentialFormatsCollection(DifferentialFormats differentialFormats, Dictionary<IXLStyle, int> dictionary)
+        {
+            dictionary.Clear();
+            Int32 id = 0;
+            foreach(var df in differentialFormats.Elements<DifferentialFormat>())
+            {
+                var style = new XLStyle(new XLStylizedEmpty(DefaultStyle), DefaultStyle);
+                LoadFont(df.Font, style.Font);
+                LoadBorder(df.Border, style.Border);
+                LoadNumberFormat(df.NumberingFormat, style.NumberFormat);
+                LoadFill(df.Fill, style.Fill);
+                if (!dictionary.ContainsKey(style))
+                    dictionary.Add(style, ++id);
+            }
         }
 
         private void AddDifferentialFormat(DifferentialFormats differentialFormats, IXLConditionalFormat cf, SaveContext context)

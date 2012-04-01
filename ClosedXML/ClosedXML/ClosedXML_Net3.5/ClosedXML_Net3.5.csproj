@@ -822,6 +822,7 @@
     <Compile Include="..\ClosedXML\PathHelper.cs">
       <Link>PathHelper.cs</Link>
     </Compile>
+    <Compile Include="Excel\Style\XLStylizedEmpty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

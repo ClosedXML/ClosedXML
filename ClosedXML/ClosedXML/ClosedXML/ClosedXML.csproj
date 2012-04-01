@@ -233,6 +233,7 @@
     <Compile Include="Excel\Drawings\Style\XLDrawingStyle.cs" />
     <Compile Include="Excel\Drawings\Style\XLDrawingWeb.cs" />
     <Compile Include="Excel\Style\IXLNumberFormatBase.cs" />
+    <Compile Include="Excel\Style\XLStylizedEmpty.cs" />
     <Compile Include="Excel\Tables\XLTableRange.cs" />
     <Compile Include="Excel\Tables\IXLTableRange.cs" />
     <Compile Include="Excel\XLWorkbook_Save.NestedTypes.cs" />

@@ -111,7 +111,12 @@ namespace ClosedXML.Excel
             var borders = s.Borders;
             var fonts = s.Fonts;
             Int32 dfCount = 0;
-            var differentialFormats = s.DifferentialFormats.Elements<DifferentialFormat>().ToDictionary(k => dfCount++);
+            Dictionary<Int32, DifferentialFormat> differentialFormats;
+            if (s.DifferentialFormats != null)
+                differentialFormats = s.DifferentialFormats.Elements<DifferentialFormat>().ToDictionary(k => dfCount++);
+            else
+                differentialFormats = new Dictionary<Int32, DifferentialFormat>();
+                
             var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
             Int32 position = 0;
             foreach (Sheet dSheet in sheets.OfType<Sheet>())

@@ -1383,14 +1383,7 @@ namespace ClosedXML.Excel
                 if (canInsert)
                     cellsToInsert.Add(newKey, newCell);
             }
-            //cellsDataValidations.ForEach(kp =>
-            //{
-            //    XLCell targetCell;
-            //    if (!cellsToInsert.TryGetValue(kp.Key, out targetCell))
-            //        targetCell = Worksheet.Cell(kp.Key);
-            //
-            //    targetCell.CopyDataValidation(Worksheet.Cell(kp.Value.SourceAddress), kp.Value.DataValidation);
-            //});
+
 
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(
