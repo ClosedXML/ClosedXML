@@ -1050,6 +1050,7 @@ namespace ClosedXML.Excel
             Int32 firstColumnReturn = RangeAddress.FirstAddress.ColumnNumber ;
             Int32 lastColumnReturn = RangeAddress.FirstAddress.ColumnNumber + numberOfColumns - 1;
 
+            Worksheet.BreakConditionalFormatsIntoCells();
             using (var asRange = AsRange())
                 Worksheet.NotifyRangeShiftedColumns(asRange, numberOfColumns);
 
@@ -1255,6 +1256,7 @@ namespace ClosedXML.Excel
             Int32 firstColumnReturn = RangeAddress.FirstAddress.ColumnNumber;
             Int32 lastColumnReturn = RangeAddress.LastAddress.ColumnNumber;
 
+            Worksheet.BreakConditionalFormatsIntoCells();
             using (var asRange = AsRange())
                 Worksheet.NotifyRangeShiftedRows(asRange, numberOfRows);
 
@@ -1400,6 +1402,7 @@ namespace ClosedXML.Excel
             var hyperlinksToRemove = Worksheet.Hyperlinks.Where(hl => Contains(hl.Cell.AsRange())).ToList();
             hyperlinksToRemove.ForEach(hl => Worksheet.Hyperlinks.Delete(hl));
 
+            Worksheet.BreakConditionalFormatsIntoCells();
             using (var shiftedRange = AsRange())
             {
                 if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)

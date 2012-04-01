@@ -1164,15 +1164,30 @@ namespace ClosedXML.Excel
                     newMerge.Add(newRng);
                 }
                 else if (!(range.RangeAddress.FirstAddress.RowNumber <= rngMerged.RangeAddress.FirstAddress.RowNumber
-                           &&
-                           range.RangeAddress.FirstAddress.ColumnNumber <=
-                           rngMerged.RangeAddress.LastAddress.ColumnNumber))
+                           && range.RangeAddress.FirstAddress.ColumnNumber <= rngMerged.RangeAddress.LastAddress.ColumnNumber))
                     newMerge.Add(rngMerged);
             }
             Internals.MergedRanges = newMerge;
 
             Workbook.Worksheets.ForEach(ws => MoveNamedRangesRows(range, rowsShifted, ws.NamedRanges));
             MoveNamedRangesRows(range, rowsShifted, Workbook.NamedRanges);
+
+        }
+
+        internal void BreakConditionalFormatsIntoCells()
+        {
+            var newConditionalFormats = new XLConditionalFormats();
+            foreach (var conditionalFormat in ConditionalFormats)
+            {
+                foreach (XLCell cell in conditionalFormat.Range.Cells())
+                {
+                    var newConditionalFormat = new XLConditionalFormat(cell.AsRange());
+                    newConditionalFormat.CopyFrom(conditionalFormat);
+                    newConditionalFormats.Add(newConditionalFormat);
+                }
+                conditionalFormat.Range.Dispose();
+            }
+            ConditionalFormats = newConditionalFormats;
         }
 
         private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)

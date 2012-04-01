@@ -55,21 +55,46 @@ namespace ClosedXML.Excel
         }
 
         public bool StyleChanged { get; set; }
-        public IXLRange Range { get; set; }
-        public XLConditionalFormatType ConditionalFormatType { get; set; }
-        public XLTimePeriod TimePeriod { get; set; }
-        public XLIconSetStyle IconSetStyle { get;  set; }
         public XLDictionary<String> Values { get; private set; }
         public XLDictionary<IXLColor> Colors { get; private set; }
         public XLDictionary<XLCFContentType> ContentTypes { get; private set; }
         public XLDictionary<XLCFIconSetOperator> IconSetOperators { get; private set; }
 
+        public IXLRange Range { get; set; }
+        public XLConditionalFormatType ConditionalFormatType { get; set; }
+        public XLTimePeriod TimePeriod { get; set; }
+        public XLIconSetStyle IconSetStyle { get; set; }
         public XLCFOperator Operator { get;  set; }
         public Boolean Bottom { get;  set; }
         public Boolean Percent { get;  set; }
         public Boolean ReverseIconOrder { get;  set; }
         public Boolean ShowIconOnly { get;  set; }
         public Boolean ShowBarOnly { get;  set; }
+
+        public void CopyFrom(IXLConditionalFormat other)
+        {
+            Style = other.Style;
+            ConditionalFormatType = other.ConditionalFormatType;
+            TimePeriod = other.TimePeriod;
+            IconSetStyle = other.IconSetStyle;
+            Operator = other.Operator;
+            Bottom = other.Bottom;
+            Percent = other.Percent;
+            ReverseIconOrder = other.ReverseIconOrder;
+            ShowIconOnly = other.ShowIconOnly;
+            ShowBarOnly = other.ShowBarOnly;
+            
+            CopyDictionary(Values, other.Values);
+            CopyDictionary(Colors, other.Colors);
+            CopyDictionary(ContentTypes, other.ContentTypes);
+            CopyDictionary(IconSetOperators, other.IconSetOperators);
+        }
+
+        private void CopyDictionary<T>(XLDictionary<T> target, XLDictionary<T> source)
+        {
+            target.Clear();
+            source.ForEach(kp => target.Add(kp.Key, kp.Value));
+        }
 
         public IXLStyle WhenIsBlank()
         {
