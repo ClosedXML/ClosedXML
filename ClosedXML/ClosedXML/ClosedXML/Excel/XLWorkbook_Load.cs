@@ -1336,9 +1336,10 @@ namespace ClosedXML.Excel
                         {
                             if (formula.Text != null && conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs)
                             {
-                                String val = formula.Text;
-                                    if (val.StartsWith("\"")) val = val.Substring(1, val.Length - 2);
-                                    conditionalFormat.Values.Add(val);
+                                String val = formula.Text.Replace("\"\"", "\"");
+                                //if (val.StartsWith("\"")) val = val.Substring(1, val.Length - 2);
+
+                                conditionalFormat.Values.Add(val);
                             }
                         }
                     }

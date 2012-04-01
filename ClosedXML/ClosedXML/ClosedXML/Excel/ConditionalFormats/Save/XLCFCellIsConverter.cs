@@ -10,19 +10,19 @@ namespace ClosedXML.Excel
     {
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
-            String val = cf.Values[1].Replace("\"", "\"\"");
+            String val = cf.Values[1];//.Replace("\"", "\"\"");
             var conditionalFormattingRule = new ConditionalFormattingRule { FormatId = (UInt32)context.DifferentialFormats[cf.Style], Operator = cf.Operator.ToOpenXml(), Type = cf.ConditionalFormatType.ToOpenXml(), Priority = priority };
 
             var formula = new Formula();
             if (cf.Operator == XLCFOperator.Equal || cf.Operator == XLCFOperator.NotEqual)
-                formula.Text = "\"" + val + "\"";
+                formula.Text = val;
             else
                 formula.Text = val;
             conditionalFormattingRule.Append(formula);
 
             if(cf.Operator == XLCFOperator.Between || cf.Operator == XLCFOperator.NotBetween)
             {
-                var formula2 = new Formula {Text = cf.Values[2].Replace("\"", "\"\"")};
+                var formula2 = new Formula { Text = cf.Values[2] };//.Replace("\"", "\"\"")};
                 conditionalFormattingRule.Append(formula2);    
             }
 

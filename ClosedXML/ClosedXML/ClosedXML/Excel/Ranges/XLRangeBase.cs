@@ -1876,5 +1876,17 @@ namespace ClosedXML.Excel
                 return cf;
             }
         }
+
+
+        internal IXLConditionalFormat AddConditionalFormat(IXLConditionalFormat source)
+        {
+            using (var asRange = AsRange())
+            {
+                var cf = new XLConditionalFormat(asRange);
+                cf.CopyFrom(source);
+                Worksheet.ConditionalFormats.Add(cf);
+                return cf;
+            }
+        }
     }
 }

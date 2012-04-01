@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Examples\AutoFilterTests.cs" />
     <Compile Include="Examples\CommentsTests.cs" />
+    <Compile Include="Examples\ConditionalFormattingTests.cs" />
     <Compile Include="Examples\PageSetupTests.cs" />
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
@@ -215,6 +216,20 @@
     <EmbeddedResource Include="Resource\Examples\AutoFilter\RegularAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\AutoFilter\CustomAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Comments\AddingComments.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowHigh.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowMidHigh.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFContains.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEndsWith.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEqualsNumber.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEqualsString.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIsBlank.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIsError.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotBlank.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotContains.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotEqualsNumber.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotEqualsString.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotError.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStartsWith.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

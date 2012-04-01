@@ -202,7 +202,7 @@ namespace ClosedXML_Examples
     }
 
 
-    public class CFEquals : IXLExample
+    public class CFEqualsString : IXLExample
     {
         public void Create(String filePath)
         {
@@ -214,14 +214,33 @@ namespace ClosedXML_Examples
                 .CellBelow().SetValue("Hell")
                 .CellBelow().SetValue("Holl");
 
-            ws.RangeUsed().AddConditionalFormat().WhenEqualTo("Hell")
+            ws.RangeUsed().AddConditionalFormat().WhenEquals("Hell")
                 .Fill.SetBackgroundColor(XLColor.Red);
 
             workbook.SaveAs(filePath);
         }
     }
 
-    public class CFNotEquals : IXLExample
+    public class CFEqualsNumber : IXLExample
+    {
+        public void Create(String filePath)
+        {
+            var workbook = new XLWorkbook();
+            var ws = workbook.AddWorksheet("Sheet1");
+
+            ws.FirstCell().SetValue(1)
+                .CellBelow().SetValue(1)
+                .CellBelow().SetValue(2)
+                .CellBelow().SetValue(3);
+
+            ws.RangeUsed().AddConditionalFormat().WhenEquals(2)
+                .Fill.SetBackgroundColor(XLColor.Red);
+
+            workbook.SaveAs(filePath);
+        }
+    }
+
+    public class CFNotEqualsString : IXLExample
     {
         public void Create(String filePath)
         {
@@ -233,7 +252,26 @@ namespace ClosedXML_Examples
                 .CellBelow().SetValue("Hell")
                 .CellBelow().SetValue("Holl");
 
-            ws.RangeUsed().AddConditionalFormat().WhenNotEqualTo("Hell")
+            ws.RangeUsed().AddConditionalFormat().WhenNotEquals("Hell")
+                .Fill.SetBackgroundColor(XLColor.Red);
+
+            workbook.SaveAs(filePath);
+        }
+    }
+
+    public class CFNotEqualsNumber : IXLExample
+    {
+        public void Create(String filePath)
+        {
+            var workbook = new XLWorkbook();
+            var ws = workbook.AddWorksheet("Sheet1");
+
+            ws.FirstCell().SetValue(1)
+                .CellBelow().SetValue(1)
+                .CellBelow().SetValue(2)
+                .CellBelow().SetValue(3);
+
+            ws.RangeUsed().AddConditionalFormat().WhenNotEquals(2)
                 .Fill.SetBackgroundColor(XLColor.Red);
 
             workbook.SaveAs(filePath);
@@ -527,7 +565,7 @@ namespace ClosedXML_Examples
                 .CellRight().SetValue(3);
 
             var range = ws.RangeUsed();
-            range.AddConditionalFormat().WhenEqualTo("1").Font.SetBold();
+            range.AddConditionalFormat().WhenEquals("1").Font.SetBold();
             range.InsertRowsAbove(1);
             
 
@@ -547,8 +585,8 @@ namespace ClosedXML_Examples
                 .CellRight().SetValue("2")
                 .CellRight().SetValue("3");
 
-            ws.RangeUsed().AddConditionalFormat().WhenEqualTo("1").Fill.SetBackgroundColor(XLColor.Red);
-            ws.Range("B2:C2").InsertRowsAbove(1);
+            ws.RangeUsed().AddConditionalFormat().WhenEquals("1").Fill.SetBackgroundColor(XLColor.Red);
+            ws.Range("B2:C2").InsertRowsBelow(1);
                 
             workbook.SaveAs(filePath);
         }

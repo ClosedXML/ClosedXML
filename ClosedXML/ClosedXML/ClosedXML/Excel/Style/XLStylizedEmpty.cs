@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
     {
         public XLStylizedEmpty(IXLStyle defaultStyle)
         {
-            Style = defaultStyle;
+            Style = new XLStyle(this, defaultStyle);
         }
         public IXLStyle Style { get; set; }
         

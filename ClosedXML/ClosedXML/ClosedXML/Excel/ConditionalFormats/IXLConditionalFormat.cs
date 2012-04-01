@@ -73,14 +73,24 @@ namespace ClosedXML.Excel
         IXLStyle WhenNotContains(String value);
         IXLStyle WhenStartsWith(String value);
         IXLStyle WhenEndsWith(String value);
-        IXLStyle WhenEqualTo(String value);
-        IXLStyle WhenNotEqualTo(String value);
+        IXLStyle WhenEquals(String value);
+        IXLStyle WhenNotEquals(String value);
         IXLStyle WhenGreaterThan(String value);
         IXLStyle WhenLessThan(String value);
         IXLStyle WhenEqualOrGreaterThan(String value);
         IXLStyle WhenEqualOrLessThan(String value);
         IXLStyle WhenBetween(String minValue, String maxValue);
         IXLStyle WhenNotBetween(String minValue, String maxValue);
+
+        IXLStyle WhenEquals(Double value);
+        IXLStyle WhenNotEquals(Double value);
+        IXLStyle WhenGreaterThan(Double value);
+        IXLStyle WhenLessThan(Double value);
+        IXLStyle WhenEqualOrGreaterThan(Double value);
+        IXLStyle WhenEqualOrLessThan(Double value);
+        IXLStyle WhenBetween(Double minValue, Double maxValue);
+        IXLStyle WhenNotBetween(Double minValue, Double maxValue);
+
         IXLStyle WhenIsDuplicate();
         IXLStyle WhenIsUnique();
         IXLStyle WhenIsTrue(String formula);

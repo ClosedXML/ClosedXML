@@ -150,64 +150,130 @@ namespace ClosedXML.Excel
             Operator = XLCFOperator.EndsWith;
             return Style;
         }
-        public IXLStyle WhenEqualTo(String value)
+
+        private String GetProperValue(String value)
         {
-            Values.Initialize(value);
+            return String.Format("\"{0}\"", value.Replace("\"", "\"\""));
+        }
+
+        public IXLStyle WhenEquals(String value)
+        {
+            Values.Initialize(GetProperValue(value));
             Operator = XLCFOperator.Equal;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
-        public IXLStyle WhenNotEqualTo(String value)
+        public IXLStyle WhenNotEquals(String value)
         {
-            Values.Initialize(value);
+            Values.Initialize(GetProperValue(value));
             Operator = XLCFOperator.NotEqual;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenGreaterThan(String value)
         {
-            Values.Initialize(value);
+            Values.Initialize(GetProperValue(value));
             Operator = XLCFOperator.GreaterThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenLessThan(String value)
         {
-            Values.Initialize(value);
+            Values.Initialize(GetProperValue(value));
             Operator = XLCFOperator.LessThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenEqualOrGreaterThan(String value)
         {
-            Values.Initialize(value);
+            Values.Initialize(GetProperValue(value));
             Operator = XLCFOperator.EqualOrGreaterThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenEqualOrLessThan(String value)
         {
-            Values.Initialize(value);
+            Values.Initialize(GetProperValue(value));
             Operator = XLCFOperator.EqualOrLessThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenBetween(String minValue, String maxValue)
         {
-            Values.Initialize(minValue);
-            Values.Add(maxValue);
+            Values.Initialize(GetProperValue(minValue));
+            Values.Add(GetProperValue(maxValue));
             Operator = XLCFOperator.Between;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenNotBetween(String minValue, String maxValue)
         {
-            Values.Initialize(minValue);
-            Values.Add(maxValue);
+            Values.Initialize(GetProperValue(minValue));
+            Values.Add(GetProperValue(maxValue));
             Operator = XLCFOperator.NotBetween;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
+        public IXLStyle WhenEquals(Double value)
+        {
+            Values.Initialize(value.ToString());
+            Operator = XLCFOperator.Equal;
+            ConditionalFormatType = XLConditionalFormatType.CellIs;
+            return Style;
+        }
+        public IXLStyle WhenNotEquals(Double value)
+        {
+            Values.Initialize(value.ToString());
+            Operator = XLCFOperator.NotEqual;
+            ConditionalFormatType = XLConditionalFormatType.CellIs;
+            return Style;
+        }
+        public IXLStyle WhenGreaterThan(Double value)
+        {
+            Values.Initialize(value.ToString());
+            Operator = XLCFOperator.GreaterThan;
+            ConditionalFormatType = XLConditionalFormatType.CellIs;
+            return Style;
+        }
+        public IXLStyle WhenLessThan(Double value)
+        {
+            Values.Initialize(value.ToString());
+            Operator = XLCFOperator.LessThan;
+            ConditionalFormatType = XLConditionalFormatType.CellIs;
+            return Style;
+        }
+        public IXLStyle WhenEqualOrGreaterThan(Double value)
+        {
+            Values.Initialize(value.ToString());
+            Operator = XLCFOperator.EqualOrGreaterThan;
+            ConditionalFormatType = XLConditionalFormatType.CellIs;
+            return Style;
+        }
+        public IXLStyle WhenEqualOrLessThan(Double value)
+        {
+            Values.Initialize(value.ToString());
+            Operator = XLCFOperator.EqualOrLessThan;
+            ConditionalFormatType = XLConditionalFormatType.CellIs;
+            return Style;
+        }
+        public IXLStyle WhenBetween(Double minValue, Double maxValue)
+        {
+            Values.Initialize(minValue.ToString());
+            Values.Add(maxValue.ToString());
+            Operator = XLCFOperator.Between;
+            ConditionalFormatType = XLConditionalFormatType.CellIs;
+            return Style;
+        }
+        public IXLStyle WhenNotBetween(Double minValue, Double maxValue)
+        {
+            Values.Initialize(minValue.ToString());
+            Values.Add(maxValue.ToString());
+            Operator = XLCFOperator.NotBetween;
+            ConditionalFormatType = XLConditionalFormatType.CellIs;
+            return Style;
+        }
+
         public IXLStyle WhenIsDuplicate()
         {
             ConditionalFormatType = XLConditionalFormatType.IsDuplicate;
