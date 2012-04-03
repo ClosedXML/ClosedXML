@@ -230,6 +230,8 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotEqualsString.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotError.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStartsWith.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBar.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

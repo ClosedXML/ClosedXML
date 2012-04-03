@@ -19,6 +19,10 @@ namespace ClosedXML.Excel
             _conditionalFormat.Values.Initialize(value);
             return new XLCFDataBarMax(_conditionalFormat);
         }
+        public IXLCFDataBarMax Minimum(XLCFContentType type, Double value)
+        {
+            return Minimum(type, value.ToString());
+        }
 
         public IXLCFDataBarMax LowestValue()
         {

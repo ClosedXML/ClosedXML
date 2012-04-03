@@ -91,17 +91,17 @@ namespace ClosedXML_Tests.Examples
             TestHelper.RunTestExample<CFNotEqualsNumber>(@"ConditionalFormatting\CFNotEqualsNumber.xlsx");
         }
 
-        //[TestMethod]
-        //public void XXX()
-        //{
-        //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");
-        //}
-        //
-        //[TestMethod]
-        //public void XXX()
-        //{
-        //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");
-        //}
+        [TestMethod]
+        public void CFDataBar()
+        {
+            TestHelper.RunTestExample<CFDataBar>(@"ConditionalFormatting\CFDataBar.xlsx");
+        }
+
+        [TestMethod]
+        public void CFIconSet()
+        {
+            TestHelper.RunTestExample<CFIconSet>(@"ConditionalFormatting\CFIconSet.xlsx");
+        }
         //
         //[TestMethod]
         //public void XXX()

@@ -9,6 +9,7 @@ namespace ClosedXML.Excel
     public interface IXLCFColorScaleMin
     {
         IXLCFColorScaleMid Minimum(XLCFContentType type, String value, IXLColor color);
+        IXLCFColorScaleMid Minimum(XLCFContentType type, Double value, IXLColor color);
         IXLCFColorScaleMid LowestValue(IXLColor color);
     }
 }

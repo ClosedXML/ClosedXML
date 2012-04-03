@@ -18,6 +18,10 @@ namespace ClosedXML.Excel
             _conditionalFormat.ContentTypes.Add(type);
             _conditionalFormat.Values.Add(value);
         }
+        public void Maximum(XLCFContentType type, Double value)
+        {
+            Maximum(type, value.ToString());
+        }
 
         public void HighestValue()
         {

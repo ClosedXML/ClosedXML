@@ -580,13 +580,15 @@ namespace ClosedXML_Examples
             var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
-            ws.Cell(2, 1).SetValue("1")
-                .CellRight().SetValue("1")
-                .CellRight().SetValue("2")
-                .CellRight().SetValue("3");
+            ws.FirstCell().SetValue(1)
+              .CellBelow().SetValue(1)
+              .CellBelow().SetValue(2)
+              .CellBelow().SetValue(3)
+              .CellBelow().SetValue(4);
 
-            ws.RangeUsed().AddConditionalFormat().WhenEquals("1").Fill.SetBackgroundColor(XLColor.Red);
-            ws.Range("B2:C2").InsertRowsBelow(1);
+            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red)
+                .LowestValue()
+                .HighestValue();
                 
             workbook.SaveAs(filePath);
         }

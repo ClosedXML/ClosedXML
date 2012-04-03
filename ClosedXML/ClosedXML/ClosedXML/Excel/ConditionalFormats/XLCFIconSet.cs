@@ -19,5 +19,9 @@ namespace ClosedXML.Excel
             _conditionalFormat.ContentTypes.Add(type);
             return new XLCFIconSet(_conditionalFormat);
         }
+        public IXLCFIconSet AddValue(XLCFIconSetOperator setOperator, Double value, XLCFContentType type)
+        {
+            return AddValue(setOperator, value.ToString(), type);
+        }
     }
 }

@@ -19,6 +19,10 @@ namespace ClosedXML.Excel
             _conditionalFormat.Colors.Add(color);
             _conditionalFormat.ContentTypes.Add(type);
         }
+        public void Maximum(XLCFContentType type, Double value, IXLColor color)
+        {
+            Maximum(type, value.ToString(), color);
+        }
         public void HighestValue(IXLColor color)
         {
             Maximum(XLCFContentType.Maximum, "0", color);
