@@ -1149,10 +1149,10 @@ namespace ClosedXML.Excel
         }
         private void ShiftConditionalFormattingColumns(XLRange range, int columnsShifted)
         {
-            Int32 firstColumn = range.RangeAddress.FirstAddress.ColumnNumber - columnsShifted + 1;
-            if (firstColumn <= 1) return;
+            Int32 firstColumn = range.RangeAddress.FirstAddress.ColumnNumber;
+            if (firstColumn == 1) return;
 
-            Int32 lastColumn = range.RangeAddress.LastAddress.ColumnNumber - columnsShifted + 1;
+            Int32 lastColumn = range.RangeAddress.FirstAddress.ColumnNumber + columnsShifted - 1;
             Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
             Int32 lastRow = range.RangeAddress.LastAddress.RowNumber;
             var insertedRange = Range(firstRow, firstColumn, lastRow, lastColumn);
@@ -1203,10 +1203,10 @@ namespace ClosedXML.Excel
         }
         private void ShiftConditionalFormattingRows(XLRange range, int rowsShifted)
         {
-            Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber - rowsShifted + 1;
-            if (firstRow <= 1) return;
+            Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
+            if (firstRow == 1) return;
 
-            Int32 lastRow = range.RangeAddress.LastAddress.RowNumber - rowsShifted + 1;
+            Int32 lastRow = range.RangeAddress.FirstAddress.RowNumber + rowsShifted - 1;
             Int32 firstColumn = range.RangeAddress.FirstAddress.ColumnNumber;
             Int32 lastColumn = range.RangeAddress.LastAddress.ColumnNumber;
             var insertedRange = Range(firstRow, firstColumn, lastRow, lastColumn);

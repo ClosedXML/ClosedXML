@@ -1326,8 +1326,12 @@ namespace ClosedXML.Excel
                             conditionalFormat.ShowIconOnly = !iconSet.ShowValue.Value;
                         if (iconSet.Reverse != null)
                             conditionalFormat.ReverseIconOrder = iconSet.Reverse.Value;
+                        
                         if (iconSet.IconSetValue != null)
                             conditionalFormat.IconSetStyle = iconSet.IconSetValue.Value.ToClosedXml();
+                        else
+                            conditionalFormat.IconSetStyle = XLIconSetStyle.ThreeTrafficLights1;
+
                         ExtractConditionalFormatValueObjects(conditionalFormat, iconSet);
                     }
                     else
@@ -1359,8 +1363,11 @@ namespace ClosedXML.Excel
                     conditionalFormat.ContentTypes.Add(c.Type.Value.ToClosedXml());
                 if (c.Val != null)
                     conditionalFormat.Values.Add(c.Val.Value);
-                if(c.GreaterThanOrEqual != null)
+
+                if (c.GreaterThanOrEqual != null)
                     conditionalFormat.IconSetOperators.Add(c.GreaterThanOrEqual.Value ? XLCFIconSetOperator.EqualOrGreaterThan : XLCFIconSetOperator.GreaterThan);
+                else
+                    conditionalFormat.IconSetOperators.Add(XLCFIconSetOperator.EqualOrGreaterThan);
             }
             foreach (var c in element.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>())
             {
