@@ -1633,7 +1633,17 @@
 
             if (copyDataValidations)
             {
-                CopyDataValidation(otherCell, otherCell.DataValidation);
+
+                Boolean eventTracking = Worksheet.EventTrackingEnabled;
+                Worksheet.EventTrackingEnabled = false;
+                if(otherCell.HasDataValidation)
+                    CopyDataValidation(otherCell, otherCell.DataValidation);
+                else if (HasDataValidation)
+                {
+                    using(var asRange = AsRange())
+                        Worksheet.DataValidations.Delete(asRange);
+                }
+                Worksheet.EventTrackingEnabled = eventTracking;
             }
 
             return this;

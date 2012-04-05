@@ -105,7 +105,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Value = "Sheet1!A1";
+            ws.Cell("B1").SetDataValidation().Custom("Sheet1!A1");
 
             var ws2 = wb.AddWorksheet("Sheet2");
             ws2.Cell("A1").SetValue("B");
@@ -132,7 +132,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Value = "A1";
+            ws.Cell("B1").SetDataValidation().Custom("A1");
             ws.Cell("B1").CopyTo(ws.Cell("B2"));
             Assert.AreEqual("A2", ws.Cell("B2").DataValidation.Value);
         }
@@ -155,7 +155,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Value = "A1";
+            ws.Cell("B1").SetDataValidation().Custom("A1");
             ws.Cell("B1").CopyTo(ws.Cell("C1"));
             Assert.AreEqual("B1", ws.Cell("C1").DataValidation.Value);
         }

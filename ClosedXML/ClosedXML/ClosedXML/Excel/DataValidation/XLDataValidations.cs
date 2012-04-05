@@ -45,5 +45,10 @@ namespace ClosedXML.Excel
         {
             _dataValidations.RemoveAll(dv => dv.Ranges.Equals(dataValidation.Ranges));
         }
+
+        public void Delete(IXLRange range)
+        {
+            _dataValidations.RemoveAll(dv => dv.Ranges.Contains(range));
+        }
     }
 }

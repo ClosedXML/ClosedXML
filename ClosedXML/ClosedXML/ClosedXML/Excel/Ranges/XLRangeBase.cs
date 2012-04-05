@@ -1177,12 +1177,12 @@ namespace ClosedXML.Excel
         }
         public IXLRangeRows InsertRowsAbove(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
         {
-            foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
-            {
-                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)))
-                    using (var asRange = AsRange())
-                        cell.ShiftFormulaRows(asRange, numberOfRows);
-            }
+            using (var asRange = AsRange())
+                foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
+                {
+                    foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)))
+                            cell.ShiftFormulaRows(asRange, numberOfRows);
+                }
 
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             var cellsToDelete = new List<IXLAddress>();
