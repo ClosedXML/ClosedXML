@@ -909,6 +909,9 @@ namespace ClosedXML.Excel
             {
                 if (fillSource.PatternFill.PatternType != null)
                     fill.PatternType = fillSource.PatternFill.PatternType.Value.ToClosedXml();
+                else
+                    fill.PatternType = XLFillPatternValues.Solid;
+
                 if (fillSource.PatternFill.ForegroundColor != null)
                     fill.PatternColor = GetColor(fillSource.PatternFill.ForegroundColor);
                 if (fillSource.PatternFill.BackgroundColor != null)
@@ -1284,9 +1287,9 @@ namespace ClosedXML.Excel
 
             foreach (var sor in conditionalFormatting.SequenceOfReferences.Items)
             {
-                var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
                 foreach (var fr in conditionalFormatting.Elements<ConditionalFormattingRule>())
                 {
+                    var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
                     if (fr.FormatId != null)
                     {
                         LoadFont(differentialFormats[(Int32) fr.FormatId.Value].Font, conditionalFormat.Style.Font);
@@ -1347,10 +1350,8 @@ namespace ClosedXML.Excel
                             }
                         }
                     }
-
+                    ws.ConditionalFormats.Add(conditionalFormat);
                 }
-                
-                ws.ConditionalFormats.Add(conditionalFormat);
             }
             
         }
