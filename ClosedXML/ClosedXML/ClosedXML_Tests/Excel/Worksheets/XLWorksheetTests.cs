@@ -76,6 +76,27 @@ namespace ClosedXML_Tests
             Assert.AreEqual("Sheet2", wb.Worksheet(2).Name);
             Assert.AreEqual(2, wb.Worksheets.Count);
         }
-        
+
+        [TestMethod]
+        public void RowCountTime()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var start = DateTime.Now;
+            ws.RowCount();
+            var end = DateTime.Now;
+            Assert.IsTrue((end - start).TotalMilliseconds < 500);
+        }
+
+        [TestMethod]
+        public void ColumnCountTime()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var start = DateTime.Now;
+            ws.ColumnCount();
+            var end = DateTime.Now;
+            Assert.IsTrue((end - start).TotalMilliseconds < 500);
+        }
     }
 }

@@ -1370,5 +1370,25 @@ namespace ClosedXML.Excel
         public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }
 
         public IXLConditionalFormats ConditionalFormats { get; private set; }
+
+        private Boolean _eventTracking;
+        public void SuspendEvents()
+        {
+            _eventTracking = EventTrackingEnabled;
+            EventTrackingEnabled = false;
+        }
+        public void ResumeEvents()
+        {
+            EventTrackingEnabled = _eventTracking;
+        }
+        //public new Int32 RowCount()
+        //{
+        //    return XLHelper.MaxRowNumber;
+        //}
+
+        //public new Int32 ColumnCount()
+        //{
+        //    return XLHelper.MaxColumnNumber;
+        //}
     }
 }

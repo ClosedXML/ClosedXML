@@ -185,8 +185,9 @@ namespace ClosedXML.Excel
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
             Boolean addToList = true;
-            using (var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount()))
-            {
+            var ws = _autoFilter.Range.Worksheet as XLWorksheet;
+            ws.SuspendEvents();
+            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
                 foreach (IXLRangeRow row in rows)
                 {
                     Boolean foundOne = false;
@@ -206,15 +207,15 @@ namespace ClosedXML.Excel
 
                         var cell = row.Cell(_column);
                         if (cell.DataType != XLCellValues.Number || !condition(cell.GetDouble())) continue;
-                        row.WorksheetRow().Unhide().Dispose();
+                        row.WorksheetRow().Unhide();
                         foundOne = true;
                     }
                     if (!foundOne)
-                        row.WorksheetRow().Hide().Dispose();
+                        row.WorksheetRow().Hide();
 
                     addToList = false;
                 }
-            }
+            ws.ResumeEvents();
         }
 
         private IEnumerable<double> GetValues(int value, XLTopBottomType type, bool takeTop)
@@ -261,8 +262,10 @@ namespace ClosedXML.Excel
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
             Boolean addToList = true;
-            using (var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount()))
-            {
+            var ws = _autoFilter.Range.Worksheet as XLWorksheet;
+            ws.SuspendEvents();
+            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
+            
                 foreach (IXLRangeRow row in rows)
                 {
                     Boolean foundOne = false;
@@ -282,16 +285,17 @@ namespace ClosedXML.Excel
 
                         var cell = row.Cell(_column);
                         if (cell.DataType != XLCellValues.Number || !condition(cell.GetDouble())) continue;
-                        row.WorksheetRow().Unhide().Dispose();
+                        row.WorksheetRow().Unhide();
                         foundOne = true;
                     }
 
                     if (!foundOne)
-                        row.WorksheetRow().Hide().Dispose();
+                        row.WorksheetRow().Hide();
 
                     addToList = false;
                 }
-            }
+            
+            ws.ResumeEvents();
         }
 
         private IEnumerable<double> GetAverageValues(bool aboveAverage)
@@ -360,20 +364,21 @@ namespace ClosedXML.Excel
             }
             _autoFilter.Column(_column).FilterType = filterType;
             Boolean isText = typeof(T) == typeof(String);
-            using (var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount()))
+            var ws = _autoFilter.Range.Worksheet as XLWorksheet;
+            ws.SuspendEvents();
+            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
+            foreach (IXLRangeRow row in rows)
             {
-                foreach (IXLRangeRow row in rows)
-                {
-                    Boolean match = isText
-                                        ? condition(row.Cell(_column).GetString())
-                                        : row.Cell(_column).DataType == XLCellValues.Number &&
-                                          condition(row.Cell(_column).GetDouble());
-                    if (match)
-                        row.WorksheetRow().Unhide().Dispose();
-                    else
-                        row.WorksheetRow().Hide().Dispose();
-                }
+                Boolean match = isText
+                                    ? condition(row.Cell(_column).GetString())
+                                    : row.Cell(_column).DataType == XLCellValues.Number &&
+                                        condition(row.Cell(_column).GetDouble());
+                if (match)
+                    row.WorksheetRow().Unhide();
+                else
+                    row.WorksheetRow().Hide();
             }
+            ws.ResumeEvents();
             return new XLFilterConnector(_autoFilter, _column);
         }
 

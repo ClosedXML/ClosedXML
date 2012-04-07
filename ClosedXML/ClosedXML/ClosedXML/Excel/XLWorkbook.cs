@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.AccessControl;
 
 namespace ClosedXML.Excel
 {
@@ -428,7 +429,7 @@ namespace ClosedXML.Excel
                 CreatePackage(stream, true);
             else if (_loadSource == XLLoadSource.File)
             {
-                using (var fileStream = new FileStream(_originalFile, FileMode.Open))
+                using (var fileStream = new FileStream(_originalFile, FileMode.Open, FileAccess.Read))
                 {
                     CopyStream(fileStream, stream);
                     fileStream.Close();
