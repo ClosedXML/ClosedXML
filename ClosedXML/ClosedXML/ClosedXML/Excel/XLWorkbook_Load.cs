@@ -87,13 +87,17 @@ namespace ClosedXML.Excel
             var date1904 = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties.Date1904;
             Use1904DateSystem = date1904 != null && date1904.Value;
 
-            var referenceMode = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties.ReferenceMode;
-            if (referenceMode != null)
-                ReferenceStyle = referenceMode.Value.ToClosedXml();
+            var calculationProperties = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties;
+            if (calculationProperties != null)
+            {
+                var referenceMode = calculationProperties.ReferenceMode;
+                if (referenceMode != null)
+                    ReferenceStyle = referenceMode.Value.ToClosedXml();
 
-            var calculateMode = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties.CalculationMode;
-            if (calculateMode != null)
-                CalculateMode = calculateMode.Value.ToClosedXml();
+                var calculateMode = calculationProperties.CalculationMode;
+                if (calculateMode != null)
+                    CalculateMode = calculateMode.Value.ToClosedXml();
+            }
 
             if (dSpreadsheet.ExtendedFilePropertiesPart.Properties.Elements<Company>().Count() > 0)
                 Properties.Company = dSpreadsheet.ExtendedFilePropertiesPart.Properties.GetFirstChild<Company>().Text;
