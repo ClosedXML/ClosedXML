@@ -590,12 +590,17 @@ namespace ClosedXML.Excel
 
         }
 
+        private readonly Dictionary<string, double> knownUnits = new Dictionary<string, double>
+        {
+            {"pt", 1.0},
+            {"in", 72.0},
+            {"mm", 72.0/25.4}
+        };
+
         private double GetPtValue(string value)
         {
-            if (value.Contains("pt"))
-                return Double.Parse(value.Replace("pt", String.Empty), CultureInfo.InvariantCulture);
-
-            return Double.Parse(value.Replace("in", String.Empty), CultureInfo.InvariantCulture) * 72;
+            var knownUnit = knownUnits.FirstOrDefault(ku => value.Contains(ku.Key));
+            return Double.Parse(value.Replace(knownUnit.Key, String.Empty), CultureInfo.InvariantCulture) * knownUnit.Value;
         }
         
 
