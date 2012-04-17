@@ -81,7 +81,7 @@ namespace ClosedXML.Excel
                     _relIds.Add(relType, new List<String>());
                 }
 
-                Int32 id = 1;
+                Int32 id = _relIds[relType].Count + 1;
                 while (true)
                 {
                     String relId = String.Format("rId{0}", id);

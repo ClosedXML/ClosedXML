@@ -133,7 +133,7 @@ namespace ClosedXML.Excel
 
             foreach (XLWorksheet worksheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
-                //context.RelIdGenerator.Reset(RelType.Worksheet);
+                //context.RelIdGenerator.Reset(RelType.);
                 WorksheetPart worksheetPart;
                 string wsRelId = worksheet.RelId;
                 if (workbookPart.Parts.Any(p => p.RelationshipId == wsRelId))
