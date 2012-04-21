@@ -351,19 +351,22 @@ namespace ClosedXML.Excel
 
             var workbook = dSpreadsheet.WorkbookPart.Workbook;
 
-            var workbookView = (WorkbookView) workbook.BookViews.FirstOrDefault();
-            if (workbookView != null && workbookView.ActiveTab != null)
+            var bookViews = workbook.BookViews;
+            if (bookViews != null && bookViews.Any())
             {
-                UnsupportedSheet unsupportedSheet =
-                    UnsupportedSheets.FirstOrDefault(us => us.Position == (Int32)(workbookView.ActiveTab.Value + 1));
-                if (unsupportedSheet != null)
-                    unsupportedSheet.IsActive = true;
-                else
+                var workbookView = bookViews.First() as WorkbookView;
+                if (workbookView != null && workbookView.ActiveTab != null)
                 {
-                    Worksheet((Int32)(workbookView.ActiveTab.Value + 1)).SetTabActive();
+                    UnsupportedSheet unsupportedSheet =
+                        UnsupportedSheets.FirstOrDefault(us => us.Position == (Int32) (workbookView.ActiveTab.Value + 1));
+                    if (unsupportedSheet != null)
+                        unsupportedSheet.IsActive = true;
+                    else
+                    {
+                        Worksheet((Int32) (workbookView.ActiveTab.Value + 1)).SetTabActive();
+                    }
                 }
             }
-
             LoadDefinedNames(workbook);
         }
 
