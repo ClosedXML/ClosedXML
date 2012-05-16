@@ -146,11 +146,11 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(BackgroundColor.ToString());
+            sb.Append(BackgroundColor);
             sb.Append("-");
             sb.Append(PatternType.ToString());
             sb.Append("-");
-            sb.Append(PatternColor.ToString());
+            sb.Append(PatternColor);
             return sb.ToString();
         }
 

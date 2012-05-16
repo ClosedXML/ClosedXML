@@ -104,5 +104,16 @@ namespace ClosedXML.Excel
         {
             return _hashCode;
         }
+
+        public override string ToString()
+        {
+            if (_colorType == XLColorType.Color)
+                return Color.ToHex();
+
+            if (_colorType == XLColorType.Theme)
+                return String.Format("Color Theme: {0}, Tint: {1}", _themeColor.ToString(), _themeTint.ToString());
+
+            return "Color Index: " + _indexed;
+        }
     }
 }

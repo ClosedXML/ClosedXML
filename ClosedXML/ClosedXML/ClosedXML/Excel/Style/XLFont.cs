@@ -305,7 +305,7 @@ namespace ClosedXML.Excel
             sb.Append("-");
             sb.Append(FontSize.ToString());
             sb.Append("-");
-            sb.Append(FontColor.Color.ToHex());
+            sb.Append(FontColor);
             sb.Append("-");
             sb.Append(FontName);
             sb.Append("-");
