@@ -664,5 +664,10 @@ namespace ClosedXML.Excel
         {
             Worksheets.Add(dataSet);
         }
+
+        public void AddWorksheet(IXLWorksheet worksheet)
+        {
+            worksheet.CopyTo(this, worksheet.Name);
+        }
     }
 }

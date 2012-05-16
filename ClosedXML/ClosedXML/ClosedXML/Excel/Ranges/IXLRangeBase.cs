@@ -231,8 +231,8 @@ namespace ClosedXML.Excel
         Boolean IsEmpty();
         Boolean IsEmpty(Boolean includeFormats);
 
-        IXLPivotTable CreatePivotTable(IXLCell targetCell);
-        IXLPivotTable CreatePivotTable(IXLCell targetCell, String name);
+        //IXLPivotTable CreatePivotTable(IXLCell targetCell);
+        //IXLPivotTable CreatePivotTable(IXLCell targetCell, String name);
 
         //IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
 
