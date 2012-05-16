@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -245,6 +246,22 @@ namespace ClosedXML.Excel
             ws.EventTrackingEnabled = tracking;
 
             return rows;
+        }
+
+        public static void AddSelection<T>(IEnumerable<T> items) where T: IXLRangeBase
+        {
+            var worksheets = new HashSet<XLWorksheet>();
+            foreach (var range in items)
+            {
+                var worksheet = range.Worksheet as XLWorksheet;
+                if (!worksheets.Contains(worksheet))
+                {
+                    worksheet.SelectedRanges = new XLRanges();
+                    worksheets.Add(worksheet);
+                }
+
+                worksheet.SelectedRanges.Add(range);
+            }
         }
     }
 }

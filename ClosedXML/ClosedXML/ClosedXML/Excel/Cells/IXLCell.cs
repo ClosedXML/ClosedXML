@@ -264,5 +264,7 @@ namespace ClosedXML.Excel
         IXLRow WorksheetRow();
 
         Boolean HasDataValidation { get; }
+
+        void Select();
     }
 }

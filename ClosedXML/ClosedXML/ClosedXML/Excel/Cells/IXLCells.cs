@@ -55,6 +55,6 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
-        
+        void Select();
     }
 }

@@ -119,5 +119,10 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public void Select()
+        {
+            XLHelper.AddSelection(this);
+        }
     }
 }

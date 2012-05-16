@@ -89,5 +89,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
         IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+
+        void Select();
     }
 }

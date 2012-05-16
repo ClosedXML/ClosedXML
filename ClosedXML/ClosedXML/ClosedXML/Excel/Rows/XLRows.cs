@@ -270,5 +270,10 @@ namespace ClosedXML.Excel
             if (_rows != null)
                 _rows.ForEach(r => r.Dispose());
         }
+
+        public void Select()
+        {
+            XLHelper.AddSelection(this);
+        }
     }
 }

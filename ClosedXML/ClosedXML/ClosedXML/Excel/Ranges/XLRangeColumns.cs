@@ -137,5 +137,10 @@ namespace ClosedXML.Excel
             if (_ranges != null)
                 _ranges.ForEach(r => r.Dispose());
         }
+
+        public void Select()
+        {
+            XLHelper.AddSelection(this);
+        }
     }
 }

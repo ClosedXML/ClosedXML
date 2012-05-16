@@ -2271,5 +2271,10 @@
         {
             return DataValidation;
         }
+
+        public void Select()
+        {
+            AsRange().Select();
+        }
     }
 }

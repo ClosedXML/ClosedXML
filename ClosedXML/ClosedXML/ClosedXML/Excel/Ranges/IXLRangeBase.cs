@@ -241,5 +241,7 @@ namespace ClosedXML.Excel
         IXLDataValidation SetDataValidation();
 
         IXLConditionalFormat AddConditionalFormat();
+
+        void Select();
     }
 }

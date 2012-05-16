@@ -1381,14 +1381,9 @@ namespace ClosedXML.Excel
         {
             EventTrackingEnabled = _eventTracking;
         }
-        //public new Int32 RowCount()
-        //{
-        //    return XLHelper.MaxRowNumber;
-        //}
 
-        //public new Int32 ColumnCount()
-        //{
-        //    return XLHelper.MaxColumnNumber;
-        //}
+
+        
+        public IXLRanges SelectedRanges { get; internal set; }
     }
 }

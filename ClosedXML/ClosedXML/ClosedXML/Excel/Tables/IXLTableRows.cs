@@ -34,5 +34,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
         IXLTableRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+
+        void Select();
     }
 }

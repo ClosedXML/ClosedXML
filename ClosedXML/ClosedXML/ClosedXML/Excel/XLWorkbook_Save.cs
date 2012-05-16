@@ -2547,6 +2547,19 @@ namespace ClosedXML.Excel
 
             sheetView.TabSelected = xlWorksheet.TabSelected;
 
+            if (xlWorksheet.SelectedRanges != null && xlWorksheet.SelectedRanges.Any())
+            {
+                sheetView.RemoveAllChildren<Selection>();
+                var sb = new StringBuilder();
+                foreach (var range in xlWorksheet.SelectedRanges)
+                {
+                    sb.Append(range.RangeAddress.ToStringRelative(false));
+                    sb.Append(" ");
+                }
+                var selection = new Selection { ActiveCell = xlWorksheet.SelectedRanges.First().FirstCell().Address.ToStringRelative(false) ,SequenceOfReferences = new ListValue<StringValue> { InnerText = sb.ToString().TrimEnd() } };
+                sheetView.Append(selection);
+            }
+
             if (xlWorksheet.ShowFormulas)
                 sheetView.ShowFormulas = true;
             else

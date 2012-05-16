@@ -1576,6 +1576,15 @@ namespace ClosedXML.Excel
             if (sheetView.ShowZeros != null) ws.ShowZeros = sheetView.ShowZeros.Value;
             if (sheetView.TabSelected != null) ws.TabSelected = sheetView.TabSelected.Value;
 
+            var selection = sheetView.Elements<Selection>().FirstOrDefault();
+            if (selection != null)
+            {
+                if (selection.SequenceOfReferences != null)
+                    ws.Ranges(selection.SequenceOfReferences.InnerText.Replace(" ", ",")).Select();
+                else if (selection.ActiveCell != null)
+                    ws.Cell(selection.ActiveCell).Select();
+            }
+
             var pane = sheetView.Elements<Pane>().FirstOrDefault();
 
             if (pane == null) return;
@@ -1587,6 +1596,7 @@ namespace ClosedXML.Excel
                 ws.SheetView.SplitColumn = (Int32) pane.HorizontalSplit.Value;
             if (pane.VerticalSplit != null)
                 ws.SheetView.SplitRow = (Int32) pane.VerticalSplit.Value;
+
         }
 
         private void SetProperties(SpreadsheetDocument dSpreadsheet)

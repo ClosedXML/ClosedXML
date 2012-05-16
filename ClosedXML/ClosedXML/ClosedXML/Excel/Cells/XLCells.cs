@@ -273,5 +273,21 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        public void Select()
+        {
+            var worksheets = new HashSet<XLWorksheet>();
+            foreach (var range in this)
+            {
+                var worksheet = range.Worksheet as XLWorksheet;
+                if (!worksheets.Contains(worksheet))
+                {
+                    worksheet.SelectedRanges = new XLRanges();
+                    worksheets.Add(worksheet);
+                }
+
+                worksheet.SelectedRanges.Add(range);
+            }
+        }
     }
 }

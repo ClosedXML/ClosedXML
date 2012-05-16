@@ -361,5 +361,7 @@ namespace ClosedXML.Excel
 
         IXLRanges MergedRanges { get; }
         IXLConditionalFormats ConditionalFormats { get; }
+
+        IXLRanges SelectedRanges { get; }
     }
 }

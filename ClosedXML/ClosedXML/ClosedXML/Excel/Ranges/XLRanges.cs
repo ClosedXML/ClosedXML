@@ -231,5 +231,10 @@ namespace ClosedXML.Excel
         {
             return DataValidation;
         }
+
+        public void Select()
+        {
+            XLHelper.AddSelection(this);
+        }
     }
 }

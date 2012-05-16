@@ -1888,5 +1888,10 @@ namespace ClosedXML.Excel
                 return cf;
             }
         }
+
+        public void Select()
+        {
+            Worksheet.SelectedRanges = new XLRanges {this};
+        }
     }
 }
