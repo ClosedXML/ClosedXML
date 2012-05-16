@@ -381,7 +381,7 @@ namespace ClosedXML.Excel
             var fillColor = shape.Attribute("fillcolor");
             if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = XLColor.FromHtml(fillColor.Value);
 
-            var fill = shape.Elements().First(e => e.Name.LocalName == "fill");
+            var fill = shape.Elements().FirstOrDefault(e => e.Name.LocalName == "fill");
             if (fill != null)
             {
                 var opacity = fill.Attribute("opacity");
