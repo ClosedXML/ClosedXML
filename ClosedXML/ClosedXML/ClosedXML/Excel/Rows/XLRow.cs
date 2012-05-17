@@ -47,6 +47,7 @@ namespace ClosedXML.Excel
             _collapsed = row._collapsed;
             _isHidden = row._isHidden;
             _outlineLevel = row._outlineLevel;
+            HeightChanged = row.HeightChanged;
             SetStyle(row.GetStyleId());
         }
 
