@@ -99,12 +99,15 @@ namespace ClosedXML.Excel
                     CalculateMode = calculateMode.Value.ToClosedXml();
             }
 
-            if (dSpreadsheet.ExtendedFilePropertiesPart.Properties.Elements<Company>().Count() > 0)
-                Properties.Company = dSpreadsheet.ExtendedFilePropertiesPart.Properties.GetFirstChild<Company>().Text;
+            var efp = dSpreadsheet.ExtendedFilePropertiesPart;
+            if (efp != null && efp.Properties != null)
+            {
+                if (efp.Properties.Elements<Company>().Any())
+                    Properties.Company = efp.Properties.GetFirstChild<Company>().Text;
 
-            if (dSpreadsheet.ExtendedFilePropertiesPart.Properties.Elements<Manager>().Count() > 0)
-                Properties.Manager = dSpreadsheet.ExtendedFilePropertiesPart.Properties.GetFirstChild<Manager>().Text;
-
+                if (efp.Properties.Elements<Manager>().Any())
+                    Properties.Manager = efp.Properties.GetFirstChild<Manager>().Text;
+            }
 
             var workbookStylesPart = dSpreadsheet.WorkbookPart.WorkbookStylesPart;
             var s = workbookStylesPart.Stylesheet;
