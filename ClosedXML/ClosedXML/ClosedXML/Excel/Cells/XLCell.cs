@@ -1174,12 +1174,13 @@
 
         private string GetFormat()
         {
-            string format;
+            string format = String.Empty;
             var style = GetStyleForRead();
             if (StringExtensions.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
                 var formatCodes = GetFormatCodes();
-                format = formatCodes[style.NumberFormat.NumberFormatId];
+                if (formatCodes.ContainsKey(style.NumberFormat.NumberFormatId))
+                    format = formatCodes[style.NumberFormat.NumberFormatId];
             }
             else
                 format = style.NumberFormat.Format;
@@ -1348,6 +1349,7 @@
                                      {2, "0.00"},
                                      {3, "#,##0"},
                                      {4, "#,##0.00"},
+                                     {7, "$#,##0.00_);($#,##0.00)"},
                                      {9, "0%"},
                                      {10, "0.00%"},
                                      {11, "0.00E+00"},
