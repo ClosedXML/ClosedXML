@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 
 namespace ClosedXML.Excel
 {
@@ -287,6 +288,7 @@ namespace ClosedXML.Excel
 
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
+            var fontCache = new Dictionary<IXLFontBase, Font>();
             Double colMaxWidth = minWidth;
             foreach (XLCell c in Column(startRow, endRow).CellsUsed())
             {
@@ -351,17 +353,17 @@ namespace ClosedXML.Excel
                             if (newLinePosition >= 0)
                             {
                                 if (newLinePosition > 0)
-                                    runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition));
+                                    runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition), fontCache);
 
                                 if (runningWidth > thisWidthMax)
                                     thisWidthMax = runningWidth;
 
                                 runningWidth = newLinePosition < formattedString.Length - 2
-                                                   ? f.GetWidth(formattedString.Substring(newLinePosition + 2))
+                                                   ? f.GetWidth(formattedString.Substring(newLinePosition + 2), fontCache)
                                                    : 0;
                             }
                             else
-                                runningWidth += f.GetWidth(formattedString);
+                                runningWidth += f.GetWidth(formattedString, fontCache);
 
                             #endregion
                         }
@@ -372,15 +374,15 @@ namespace ClosedXML.Excel
                             if (textRotation == 255)
                             {
                                 if (runningWidth <= 0)
-                                    runningWidth = f.GetWidth("X");
+                                    runningWidth = f.GetWidth("X", fontCache);
 
                                 if (newLinePosition >= 0)
-                                    runningWidth += f.GetWidth("X");
+                                    runningWidth += f.GetWidth("X", fontCache);
                             }
                             else
                             {
                                 rotated = true;
-                                Double vWidth = f.GetWidth("X");
+                                Double vWidth = f.GetWidth("X", fontCache);
                                 if (vWidth > maxLineWidth)
                                     maxLineWidth = vWidth;
 
@@ -389,17 +391,17 @@ namespace ClosedXML.Excel
                                     lineCount++;
 
                                     if (newLinePosition > 0)
-                                        runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition));
+                                        runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition), fontCache);
 
                                     if (runningWidth > thisWidthMax)
                                         thisWidthMax = runningWidth;
 
                                     runningWidth = newLinePosition < formattedString.Length - 2
-                                                       ? f.GetWidth(formattedString.Substring(newLinePosition + 2))
+                                                       ? f.GetWidth(formattedString.Substring(newLinePosition + 2), fontCache)
                                                        : 0;
                                 }
                                 else
-                                    runningWidth += f.GetWidth(formattedString);
+                                    runningWidth += f.GetWidth(formattedString, fontCache);
                             }
 
                             #endregion
@@ -429,7 +431,7 @@ namespace ClosedXML.Excel
                     #endregion
                 }
                 else
-                    thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString());
+                    thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString(), fontCache);
                 if (thisWidthMax >= maxWidth)
                 {
                     colMaxWidth = maxWidth;

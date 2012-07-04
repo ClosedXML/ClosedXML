@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 
 namespace ClosedXML.Excel
 {
@@ -267,6 +268,7 @@ namespace ClosedXML.Excel
 
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
+            var fontCache = new Dictionary<IXLFontBase, Font>();
             Double rowMaxHeight = minHeight;
             foreach (XLCell c in from XLCell c in Row(startColumn, endColumn).CellsUsed() where !c.IsMerged() select c)
             {
@@ -306,7 +308,7 @@ namespace ClosedXML.Excel
                     }
 
                     Double maxLongCol = kpList.Max(kp => kp.Value.Length);
-                    Double maxHeightCol = kpList.Max(kp => kp.Key.GetHeight());
+                    Double maxHeightCol = kpList.Max(kp => kp.Key.GetHeight(fontCache));
                     Int32 lineCount = kpList.Count(kp => kp.Value.Contains(Environment.NewLine)) + 1;
                     if (textRotation == 0)
                         thisHeight = maxHeightCol * lineCount;
@@ -327,7 +329,7 @@ namespace ClosedXML.Excel
                     }
                 }
                 else
-                    thisHeight = c.Style.Font.GetHeight();
+                    thisHeight = c.Style.Font.GetHeight( fontCache);
 
                 if (thisHeight >= maxHeight)
                 {

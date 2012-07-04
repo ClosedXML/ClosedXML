@@ -110,7 +110,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocumentFormat.OpenXml">
-      <HintPath>D:\Downloads\DocumentFormat.OpenXml.dll</HintPath>
+      <HintPath>..\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
