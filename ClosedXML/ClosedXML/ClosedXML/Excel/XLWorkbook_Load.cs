@@ -379,7 +379,8 @@ namespace ClosedXML.Excel
             if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = XLColor.FromHtml(strokeColor.Value);
 
             var strokeWeight = shape.Attribute("strokeweight");
-            if (strokeWeight != null) drawing.Style.ColorsAndLines.LineWeight = Double.Parse(strokeWeight.Value.Substring(0, strokeWeight.Value.Length - 2), CultureInfo.InvariantCulture);
+            if (strokeWeight != null)
+                drawing.Style.ColorsAndLines.LineWeight = GetPtValue(strokeWeight.Value);
 
             var fillColor = shape.Attribute("fillcolor");
             if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = XLColor.FromHtml(fillColor.Value);
@@ -392,7 +393,8 @@ namespace ClosedXML.Excel
                 {
                     String opacityVal = opacity.Value;
                     if (opacityVal.EndsWith("f"))
-                        drawing.Style.ColorsAndLines.FillTransparency = Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1), CultureInfo.InvariantCulture) / 65536.0;
+                        drawing.Style.ColorsAndLines.FillTransparency = 
+                            Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1), CultureInfo.InvariantCulture) / 65536.0;
                     else
                         drawing.Style.ColorsAndLines.FillTransparency = Double.Parse(opacityVal, CultureInfo.InvariantCulture);
                 }
@@ -406,7 +408,8 @@ namespace ClosedXML.Excel
                 {
                     String opacityVal = opacity.Value;
                     if (opacityVal.EndsWith("f"))
-                        drawing.Style.ColorsAndLines.LineTransparency = Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1), CultureInfo.InvariantCulture) / 65536.0;
+                        drawing.Style.ColorsAndLines.LineTransparency = 
+                            Double.Parse(opacityVal.Substring(0, opacityVal.Length - 1), CultureInfo.InvariantCulture) / 65536.0;
                     else
                         drawing.Style.ColorsAndLines.LineTransparency = Double.Parse(opacityVal, CultureInfo.InvariantCulture);
                 }
@@ -606,6 +609,10 @@ namespace ClosedXML.Excel
         private double GetPtValue(string value)
         {
             var knownUnit = knownUnits.FirstOrDefault(ku => value.Contains(ku.Key));
+
+            if (knownUnit.Key == null)
+                return Double.Parse(value);
+
             return Double.Parse(value.Replace(knownUnit.Key, String.Empty), CultureInfo.InvariantCulture) * knownUnit.Value;
         }
         
