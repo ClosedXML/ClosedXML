@@ -177,10 +177,10 @@ namespace ClosedXML.Excel
 
                 GenerateWorksheetPartContent(worksheetPart, worksheet, context);
 
-                //if (worksheet.PivotTables.Any())
-                //{
-                //    GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
-                //}
+                if (worksheet.PivotTables.Any())
+                {
+                    GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
+                }
 
 
 

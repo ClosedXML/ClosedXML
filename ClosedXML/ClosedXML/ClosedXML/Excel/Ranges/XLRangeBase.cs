@@ -1559,18 +1559,18 @@ namespace ClosedXML.Excel
         //    return chart;
         //}
 
-        //IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell)
-        //{
-        //    return CreatePivotTable(targetCell);
-        //}
+        IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell)
+        {
+            return CreatePivotTable(targetCell);
+        }
         public XLPivotTable CreatePivotTable(IXLCell targetCell)
         {
             return CreatePivotTable(targetCell, Guid.NewGuid().ToString());
         }
-        //IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell, String name)
-        //{
-        //    return CreatePivotTable(targetCell, name);
-        //}
+        IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell, String name)
+        {
+            return CreatePivotTable(targetCell, name);
+        }
         public XLPivotTable CreatePivotTable(IXLCell targetCell, String name)
         {
             return (XLPivotTable)Worksheet.PivotTables.AddNew(name, targetCell, AsRange());
