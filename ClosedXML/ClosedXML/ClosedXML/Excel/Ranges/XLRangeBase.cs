@@ -1559,7 +1559,7 @@ namespace ClosedXML.Excel
         //    return chart;
         //}
 
-#if DEBUG
+
         IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell)
         {
             return CreatePivotTable(targetCell);
@@ -1568,7 +1568,7 @@ namespace ClosedXML.Excel
         {
             return CreatePivotTable(targetCell, name);
         }
-#endif
+
 
         public XLPivotTable CreatePivotTable(IXLCell targetCell)
         {

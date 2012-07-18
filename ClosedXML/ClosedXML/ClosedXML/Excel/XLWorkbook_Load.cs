@@ -1363,7 +1363,9 @@ namespace ClosedXML.Excel
                     {
                         foreach (var formula in fr.Elements<Formula>())
                         {
-                            if (formula.Text != null && conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs)
+                            if (formula.Text != null 
+                                && (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs
+                                || conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Expression))
                             {
                                 String val = formula.Text.Replace("\"\"", "\"");
                                 //if (val.StartsWith("\"")) val = val.Substring(1, val.Length - 2);

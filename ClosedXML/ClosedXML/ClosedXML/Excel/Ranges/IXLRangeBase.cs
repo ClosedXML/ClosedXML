@@ -231,10 +231,10 @@ namespace ClosedXML.Excel
         Boolean IsEmpty();
         Boolean IsEmpty(Boolean includeFormats);
 
-#if DEBUG
+
         IXLPivotTable CreatePivotTable(IXLCell targetCell);
         IXLPivotTable CreatePivotTable(IXLCell targetCell, String name);
-#endif
+
 
 
         //IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);

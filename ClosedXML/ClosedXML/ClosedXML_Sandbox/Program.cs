@@ -12,10 +12,7 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
 
-            wb.SaveAs(@"Sandbox.xlsx");
         }
     }
 
@@ -24,7 +21,7 @@ namespace ClosedXML_Sandbox
         public void RunAll(XLWorkbook wb)
         {
             Add_Row_Labels_and_Sum(wb);
-            //Add_category_on_row_and_SubCategory_on_column(wb); //not working
+            Add_category_on_row_and_SubCategory_on_column(wb); //not working
         }
 
         private void Add_Row_Labels_and_Sum(XLWorkbook wb)
@@ -46,10 +43,10 @@ namespace ClosedXML_Sandbox
             ws.Cell("C3").Value = 150;
             ws.Cell("C4").Value = 75;
 
-            //var pivotTable = ws.Range("A1:C4").CreatePivotTable(ws.Cell("E1"));
-            //pivotTable.RowLabels.Add("Category");
-            //pivotTable.RowLabels.Add("SubCategory");
-            //pivotTable.Values.Add("Number").SetSummaryFormula(XLPivotSummary.Sum);
+            var pivotTable = ws.Range("A1:C4").CreatePivotTable(ws.Cell("E1"));
+            pivotTable.RowLabels.Add("Category");
+            pivotTable.RowLabels.Add("SubCategory");
+            pivotTable.Values.Add("Number").SetSummaryFormula(XLPivotSummary.Sum);
 
 
         }
@@ -73,10 +70,10 @@ namespace ClosedXML_Sandbox
             ws.Cell("C3").Value = 150;
             ws.Cell("C4").Value = 75;
 
-            //var pivotTable = ws.Range("A1:C4").CreatePivotTable(ws.Cell("E1"));
-            //pivotTable.RowLabels.Add("Category");
-            //pivotTable.ColumnLabels.Add("SubCategory");
-            //pivotTable.Values.Add("Number").SetSummaryFormula(XLPivotSummary.Sum);
+            var pivotTable = ws.Range("A1:C4").CreatePivotTable(ws.Cell("E1"));
+            pivotTable.RowLabels.Add("Category");
+            pivotTable.ColumnLabels.Add("SubCategory");
+            pivotTable.Values.Add("Number").SetSummaryFormula(XLPivotSummary.Sum);
         }
     }
 }
