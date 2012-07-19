@@ -324,6 +324,8 @@ namespace ClosedXML.Excel
             Theme = XLTableTheme.TableStyleLight9;
             if (setAutofilter)
                 InitializeAutoFilter();
+
+            HeadersRow().DataType = XLCellValues.Text;
         }
 
         public void InitializeAutoFilter()
@@ -416,6 +418,8 @@ namespace ClosedXML.Excel
                                           RangeAddress.FirstAddress.ColumnNumber,
                                           RangeAddress.FirstAddress.FixedRow,
                                           RangeAddress.FirstAddress.FixedColumn);
+
+                    HeadersRow().DataType = XLCellValues.Text;
                 }
                 else
                 {

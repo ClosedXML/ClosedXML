@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
             set 
             {
                 totalsRowFunction = XLTotalsRowFunction.None;
-                table.TotalsRow().Cell(Index + 1).Value = value;
+                table.TotalsRow().Cell(Index + 1).SetValue(value);
                 totalsRowLabel = value; 
             }
         }
