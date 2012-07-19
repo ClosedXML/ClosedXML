@@ -232,8 +232,8 @@ namespace ClosedXML.Excel
                     if (dTable.HeaderRowCount != null && dTable.HeaderRowCount == 0)
                     {
                         xlTable._showHeaderRow = false;
-                        foreach (var tableColumn in dTable.TableColumns.Cast<TableColumn>())
-                            xlTable.AddField(tableColumn.Name);
+                        //foreach (var tableColumn in dTable.TableColumns.Cast<TableColumn>())
+                        xlTable.AddFields(dTable.TableColumns.Cast<TableColumn>().Select(t=>t.Name.Value));
                     }
                     else
                     {

@@ -11,6 +11,20 @@ namespace ClosedXML_Tests.Excel
     [TestClass]
     public class TablesTests
     {
+        [TestMethod]
+        public void Inserting_Column_Sets_Header()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue("Categories")
+                .CellBelow().SetValue("A")
+                .CellBelow().SetValue("B")
+                .CellBelow().SetValue("C");
+
+            var table = ws.RangeUsed().CreateTable();
+            table.InsertColumnsAfter(1);
+            Assert.AreEqual("Column2", table.HeadersRow().LastCell().GetString());
+        }
 
         [TestMethod]
         public void TableShowHeader()

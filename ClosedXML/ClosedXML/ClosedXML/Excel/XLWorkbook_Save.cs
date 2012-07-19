@@ -657,6 +657,10 @@ namespace ClosedXML.Excel
 
         private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart, SaveContext context)
         {
+            // Call all table headers to make sure their names are filled
+            Int32 x = 0;
+            Worksheets.ForEach(w => w.Tables.ForEach(t => x = (t as XLTable).FieldNames.Count));
+
             sharedStringTablePart.SharedStringTable = new SharedStringTable {Count = 0, UniqueCount = 0};
 
             Int32 stringId = 0;
@@ -1585,14 +1589,9 @@ namespace ClosedXML.Excel
                 table.TotalsRowShown = false;
 
             var tableColumns1 = new TableColumns {Count = (UInt32)xlTable.ColumnCount()};
-            IEnumerable<String> names;
-            if (xlTable.ShowHeaderRow)
-                names = xlTable.HeadersRow().Cells().Select(c => c.GetString());
-            else
-                names = xlTable.FieldNames.Keys;
 
             UInt32 columnId = 0;
-            foreach (var fieldName in names)
+            foreach (var fieldName in xlTable.FieldNames.Keys)
             {
                 columnId++;
                 var xlField = xlTable.Field(fieldName);

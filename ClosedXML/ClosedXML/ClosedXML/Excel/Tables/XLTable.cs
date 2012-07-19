@@ -9,8 +9,6 @@ namespace ClosedXML.Excel
     {
         #region Private fields
 
-        public readonly Dictionary<String, IXLTableField> FieldNames = new Dictionary<String, IXLTableField>();
-        private readonly Dictionary<Int32, IXLTableField> _fields = new Dictionary<Int32, IXLTableField>();
         private string _name;
         internal bool _showTotalsRow;
         internal HashSet<String> _uniqueNames;
@@ -48,6 +46,66 @@ namespace ClosedXML.Excel
         }
 
         #endregion
+
+        private IXLRangeAddress _lastRangeAddress;
+        private Dictionary<String, IXLTableField> _fieldNames = null;
+        public Dictionary<String, IXLTableField> FieldNames
+        {
+            get
+            {
+                if (_fieldNames != null && _lastRangeAddress != null && _lastRangeAddress.Equals(RangeAddress)) return _fieldNames;
+
+                _fieldNames = new Dictionary<String, IXLTableField>();
+                _lastRangeAddress = RangeAddress;
+
+                if (ShowHeaderRow)
+                {
+                    var headersRow = HeadersRow();
+                    Int32 cellPos = 0;
+                    foreach (var cell in headersRow.Cells())
+                    {
+                        var name = cell.GetString();
+                        if (StringExtensions.IsNullOrWhiteSpace(name)) 
+                        {
+                            name = "Column" + (cellPos + 1);
+                            cell.SetValue(name);
+                        }
+                        if (_fieldNames.ContainsKey(name))
+                            throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
+
+                        _fieldNames.Add(name, new XLTableField(this) {Index = cellPos++, Name = name});
+                    }
+                }
+                else
+                {
+                    if (_fieldNames == null) _fieldNames = new Dictionary<String, IXLTableField>();
+
+                    Int32 colCount = ColumnCount();
+                    for (Int32 i = 1; i <= colCount; i++)
+                    {
+                        if (!_fieldNames.Values.Any(f => f.Index == i - 1))
+                        {
+                            var name = "Column" + i;
+
+                            _fieldNames.Add(name, new XLTableField(this) {Index = i - 1, Name = name});
+                        }
+                    }
+                }
+                return _fieldNames;
+            }
+        }
+
+        internal void AddFields(IEnumerable<String> fieldNames)
+        {
+            _fieldNames = new Dictionary<String, IXLTableField>();
+
+            Int32 cellPos = 0;
+            foreach(var name in fieldNames)
+            {
+                _fieldNames.Add(name, new XLTableField(this) { Index = cellPos++, Name = name });
+            }
+        }
+
 
         public String RelId { get; set; }
 
@@ -152,7 +210,10 @@ namespace ClosedXML.Excel
 
         public IXLRangeRow HeadersRow()
         {
-            return ShowHeaderRow ? FirstRow() : null;
+            if (!ShowHeaderRow) return null;
+
+            var m = FieldNames;
+            return FirstRow();
         }
 
         public IXLRangeRow TotalsRow()
@@ -167,17 +228,7 @@ namespace ClosedXML.Excel
 
         public IXLTableField Field(Int32 fieldIndex)
         {
-            if (!_fields.ContainsKey(fieldIndex))
-            {
-                if (fieldIndex >= HeadersRow().CellCount())
-                    throw new ArgumentOutOfRangeException();
-
-                var newField = new XLTableField(this)
-                                   {Index = fieldIndex, Name = HeadersRow().Cell(fieldIndex + 1).GetString()};
-                _fields.Add(fieldIndex, newField);
-            }
-
-            return _fields[fieldIndex];
+            return FieldNames.Values.First(f => f.Index == fieldIndex);
         }
 
         public IEnumerable<IXLTableField> Fields
@@ -373,22 +424,6 @@ namespace ClosedXML.Excel
             if (FieldNames.ContainsKey(name))
                 return FieldNames[name].Index;
 
-            var headersRow = HeadersRow();
-            Int32 cellCount = headersRow.CellCount();
-            for (Int32 cellPos = 1; cellPos <= cellCount; cellPos++)
-            {
-                if (!headersRow.Cell(cellPos).GetString().Equals(name)) continue;
-
-                if (FieldNames.ContainsKey(name))
-                {
-                    throw new ArgumentException("The header row contains more than one field name '" + name +
-                                                "'.");
-                }
-                FieldNames.Add(name, Field(cellPos - 1));
-            }
-            if (FieldNames.ContainsKey(name))
-                return FieldNames[name].Index;
-
             throw new ArgumentOutOfRangeException("The header row doesn't contain field name '" + name + "'.");
         }
 
@@ -412,7 +447,7 @@ namespace ClosedXML.Excel
                         _uniqueNames.Add(c.GetString());
                         co++;
                     }
-                    _uniqueNames.ForEach(n=>AddField(n));
+                    
                     headersRow.Clear();
                     RangeAddress.FirstAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + 1,
                                           RangeAddress.FirstAddress.ColumnNumber,
@@ -479,18 +514,6 @@ namespace ClosedXML.Excel
         public IXLTable SetShowHeaderRow(Boolean value)
         {
             ShowHeaderRow = value;
-            return this;
-        }
-
-        public XLTable AddField(String name)
-        {
-            var field = new XLTableField(this) {Index = _fields.Count, Name = name};
-            if (!_fields.ContainsKey(_fields.Count))
-                _fields.Add(_fields.Count, field);
-
-            if (!FieldNames.ContainsKey(name))
-                FieldNames.Add(name, field);
-
             return this;
         }
 
