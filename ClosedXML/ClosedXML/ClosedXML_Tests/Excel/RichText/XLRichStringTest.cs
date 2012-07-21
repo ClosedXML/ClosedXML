@@ -164,9 +164,7 @@ namespace ClosedXML_Tests
 
             Assert.AreEqual("1234", cell.GetString());
 
-            Assert.AreEqual(XLCellValues.Text, cell.DataType);
-
-            cell.DataType = XLCellValues.Number;
+            Assert.AreEqual(XLCellValues.Number, cell.DataType);
 
             Assert.AreEqual(1234.0, cell.GetDouble());
 

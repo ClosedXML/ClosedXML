@@ -267,24 +267,25 @@
 
         public T GetValue<T>()
         {
+            var val = Value;
             if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
                 return (T)Convert.ChangeType(String.Empty, typeof(T));
-            if (Value is TimeSpan)
+            if (val is TimeSpan)
             {
                 if (typeof(T) == typeof(String))
-                    return (T)Convert.ChangeType(Value.ToString(), typeof(T));
+                    return (T)Convert.ChangeType(val.ToString(), typeof(T));
 
-                return (T)Value;
+                return (T)val;
             }
 
-            if (Value is IXLRichText)
+            if (val is IXLRichText)
                 return (T)RichText;
 
             if (typeof(T) == typeof(String))
             {
-                string valToUse = Value.ToString();
+                string valToUse = val.ToString();
                 if (!utfPattern.Match(valToUse).Success)
-                    return (T)Convert.ChangeType(Value, typeof(T));
+                    return (T)Convert.ChangeType(val, typeof(T));
                 else
                 {
                     var sb = new StringBuilder();
@@ -306,7 +307,7 @@
                 }
             }
             else
-                return (T)Convert.ChangeType(Value, typeof(T));
+                return (T)Convert.ChangeType(val, typeof(T));
         }
 
         public string GetString()
@@ -406,22 +407,25 @@
                     return fA1;
                 }
 
+                String cellValue = HasRichText ? _richText.ToString() : _cellValue;
+                    
+
                 if (_dataType == XLCellValues.Boolean)
-                    return _cellValue != "0";
+                    return cellValue != "0";
 
                 if (_dataType == XLCellValues.DateTime)
-                    return DateTime.FromOADate(Double.Parse(_cellValue));
+                    return DateTime.FromOADate(Double.Parse(cellValue));
 
                 if (_dataType == XLCellValues.Number)
-                    return Double.Parse(_cellValue);
+                    return Double.Parse(cellValue);
 
                 if (_dataType == XLCellValues.TimeSpan)
                 {
                     // return (DateTime.FromOADate(Double.Parse(cellValue)) - baseDate);
-                    return TimeSpan.Parse(_cellValue);
+                    return TimeSpan.Parse(cellValue);
                 }
 
-                return _richText == null ? _cellValue : _richText.ToString();
+                return  cellValue;
             }
 
             set
@@ -1039,8 +1043,6 @@
                     _richText = _cellValue.Length == 0
                                     ? new XLRichText(style.Font)
                                     : new XLRichText(GetFormattedString(), style.Font);
-
-                    _dataType = XLCellValues.Text;
                 }
 
                 return _richText;

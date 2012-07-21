@@ -667,12 +667,13 @@ namespace ClosedXML.Excel
 
             var newStrings = new Dictionary<String, Int32>();
             var newRichStrings = new Dictionary<IXLRichText, Int32>();
-            foreach (XLCell c in Worksheets.Cast<XLWorksheet>().SelectMany(w => w.Internals.CellsCollection.GetCells().Where(c => c.DataType == XLCellValues.Text
-                                                                                                                                  && c.ShareString
+            foreach (XLCell c in Worksheets.Cast<XLWorksheet>().SelectMany(w => w.Internals.CellsCollection.GetCells().Where(c => ((c.DataType == XLCellValues.Text && c.ShareString) || c.HasRichText)
+                                                                                                                                  
                                                                                                                                   && c.InnerText.Length > 0
                                                                                                                                   && StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)
                                                                                                                                   )))
             {
+                c.DataType = XLCellValues.Text;
                 if (c.HasRichText)
                 {
                     if (newRichStrings.ContainsKey(c.RichText))
