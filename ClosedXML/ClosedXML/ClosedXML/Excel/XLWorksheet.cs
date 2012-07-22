@@ -126,7 +126,10 @@ namespace ClosedXML.Excel
 
         public override IXLStyle Style
         {
-            get { return GetStyle(); }
+            get
+            {
+                return GetStyle();
+            }
             set
             {
                 SetStyle(value);

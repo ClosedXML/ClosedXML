@@ -52,15 +52,24 @@ namespace ClosedXML.Excel
             {
                 if (_container == null || _container.UpdatingStyle) return;
 
-                foreach (IXLRange r in _container.RangesUsed)
+                var wsContainer = _container as XLWorksheet;
+                if (wsContainer != null)
                 {
-                    r.FirstColumn().Style.Border.LeftBorder = value;
-                    r.LastColumn().Style.Border.RightBorder = value;
-                    r.FirstRow().Style.Border.TopBorder = value;
-                    r.LastRow().Style.Border.BottomBorder = value;
+                    wsContainer.CellsUsed().Style.Border.SetOutsideBorder(value);
+                }
+                else
+                {
+                    foreach (IXLRange r in _container.RangesUsed)
+                    {
+                        r.FirstColumn().Style.Border.LeftBorder = value;
+                        r.LastColumn().Style.Border.RightBorder = value;
+                        r.FirstRow().Style.Border.TopBorder = value;
+                        r.LastRow().Style.Border.BottomBorder = value;
+                    }
                 }
             }
         }
+
 
         public IXLColor OutsideBorderColor
         {
@@ -68,12 +77,20 @@ namespace ClosedXML.Excel
             {
                 if (_container == null || _container.UpdatingStyle) return;
 
-                foreach (IXLRange r in _container.RangesUsed)
+                var wsContainer = _container as XLWorksheet;
+                if (wsContainer != null)
                 {
-                    r.FirstColumn().Style.Border.LeftBorderColor = value;
-                    r.LastColumn().Style.Border.RightBorderColor = value;
-                    r.FirstRow().Style.Border.TopBorderColor = value;
-                    r.LastRow().Style.Border.BottomBorderColor = value;
+                    wsContainer.CellsUsed().Style.Border.SetOutsideBorderColor(value);
+                }
+                else
+                {
+                    foreach (IXLRange r in _container.RangesUsed)
+                    {
+                        r.FirstColumn().Style.Border.LeftBorderColor = value;
+                        r.LastColumn().Style.Border.RightBorderColor = value;
+                        r.FirstRow().Style.Border.TopBorderColor = value;
+                        r.LastRow().Style.Border.BottomBorderColor = value;
+                    }
                 }
             }
         }
@@ -84,26 +101,53 @@ namespace ClosedXML.Excel
             {
                 if (_container == null || _container.UpdatingStyle) return;
 
-                foreach (IXLRange r in _container.RangesUsed)
+                var wsContainer = _container as XLWorksheet;
+                if (wsContainer != null)
                 {
-                    Dictionary<Int32, XLBorderStyleValues> topBorders = new Dictionary<int, XLBorderStyleValues>();
-                    r.FirstRow().Cells().ForEach(c=>topBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1, c.Style.Border.TopBorder));
+                    wsContainer.CellsUsed().Style.Border.SetOutsideBorder(value);
+                    wsContainer.UpdatingStyle = true;
+                    wsContainer.Style.Border.SetTopBorder(value);
+                    wsContainer.Style.Border.SetBottomBorder(value);
+                    wsContainer.Style.Border.SetLeftBorder(value);
+                    wsContainer.Style.Border.SetRightBorder(value);
+                    wsContainer.UpdatingStyle = false;
+                }
+                else
+                {
+                    foreach (IXLRange r in _container.RangesUsed)
+                    {
+                        Dictionary<Int32, XLBorderStyleValues> topBorders = new Dictionary<int, XLBorderStyleValues>();
+                        r.FirstRow().Cells().ForEach(
+                            c =>
+                            topBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1,
+                                           c.Style.Border.TopBorder));
 
-                    Dictionary<Int32, XLBorderStyleValues> bottomBorders = new Dictionary<int, XLBorderStyleValues>();
-                    r.LastRow().Cells().ForEach(c => bottomBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1, c.Style.Border.BottomBorder));
+                        Dictionary<Int32, XLBorderStyleValues> bottomBorders =
+                            new Dictionary<int, XLBorderStyleValues>();
+                        r.LastRow().Cells().ForEach(
+                            c =>
+                            bottomBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1,
+                                              c.Style.Border.BottomBorder));
 
-                    Dictionary<Int32, XLBorderStyleValues> leftBorders = new Dictionary<int, XLBorderStyleValues>();
-                    r.FirstColumn().Cells().ForEach(c => leftBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1, c.Style.Border.LeftBorder));
-                    
-                    Dictionary<Int32, XLBorderStyleValues> rightBorders = new Dictionary<int, XLBorderStyleValues>();
-                    r.LastColumn().Cells().ForEach(c => rightBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1, c.Style.Border.RightBorder));
+                        Dictionary<Int32, XLBorderStyleValues> leftBorders = new Dictionary<int, XLBorderStyleValues>();
+                        r.FirstColumn().Cells().ForEach(
+                            c =>
+                            leftBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1,
+                                            c.Style.Border.LeftBorder));
 
-                    r.Cells().Style.Border.OutsideBorder = value;
+                        Dictionary<Int32, XLBorderStyleValues> rightBorders = new Dictionary<int, XLBorderStyleValues>();
+                        r.LastColumn().Cells().ForEach(
+                            c =>
+                            rightBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1,
+                                             c.Style.Border.RightBorder));
 
-                    topBorders.ForEach(kp => r.FirstRow().Cell(kp.Key).Style.Border.TopBorder = kp.Value);
-                    bottomBorders.ForEach(kp => r.LastRow().Cell(kp.Key).Style.Border.BottomBorder = kp.Value);
-                    leftBorders.ForEach(kp => r.FirstColumn().Cell(kp.Key).Style.Border.LeftBorder = kp.Value);
-                    rightBorders.ForEach(kp => r.LastColumn().Cell(kp.Key).Style.Border.RightBorder = kp.Value);
+                        r.Cells().Style.Border.OutsideBorder = value;
+
+                        topBorders.ForEach(kp => r.FirstRow().Cell(kp.Key).Style.Border.TopBorder = kp.Value);
+                        bottomBorders.ForEach(kp => r.LastRow().Cell(kp.Key).Style.Border.BottomBorder = kp.Value);
+                        leftBorders.ForEach(kp => r.FirstColumn().Cell(kp.Key).Style.Border.LeftBorder = kp.Value);
+                        rightBorders.ForEach(kp => r.LastColumn().Cell(kp.Key).Style.Border.RightBorder = kp.Value);
+                    }
                 }
             }
         }
@@ -114,26 +158,60 @@ namespace ClosedXML.Excel
             {
                 if (_container == null || _container.UpdatingStyle) return;
 
-                foreach (IXLRange r in _container.RangesUsed)
+                var wsContainer = _container as XLWorksheet;
+                if (wsContainer != null)
                 {
-                    Dictionary<Int32, IXLColor> topBorders = new Dictionary<int, IXLColor>();
-                    r.FirstRow().Cells().ForEach(c => topBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1, c.Style.Border.TopBorderColor));
+                    wsContainer.CellsUsed().Style.Border.SetOutsideBorderColor(value);
+                    wsContainer.UpdatingStyle = true;
+                    wsContainer.Style.Border.SetTopBorderColor(value);
+                    wsContainer.Style.Border.SetBottomBorderColor(value);
+                    wsContainer.Style.Border.SetLeftBorderColor(value);
+                    wsContainer.Style.Border.SetRightBorderColor(value);
+                    wsContainer.UpdatingStyle = false;
+                }
+                else
+                {
+                    foreach (IXLRange r in _container.RangesUsed)
+                    {
+                        Dictionary<Int32, IXLColor> topBorders = new Dictionary<int, IXLColor>();
+                        r.FirstRow().Cells().ForEach(
+                            c =>
+                            topBorders.Add(
+                                c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1,
+                                c.Style.Border.TopBorderColor));
 
-                    Dictionary<Int32, IXLColor> bottomBorders = new Dictionary<int, IXLColor>();
-                    r.LastRow().Cells().ForEach(c => bottomBorders.Add(c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1, c.Style.Border.BottomBorderColor));
+                        Dictionary<Int32, IXLColor> bottomBorders = new Dictionary<int, IXLColor>();
+                        r.LastRow().Cells().ForEach(
+                            c =>
+                            bottomBorders.Add(
+                                c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1,
+                                c.Style.Border.BottomBorderColor));
 
-                    Dictionary<Int32, IXLColor> leftBorders = new Dictionary<int, IXLColor>();
-                    r.FirstColumn().Cells().ForEach(c => leftBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1, c.Style.Border.LeftBorderColor));
+                        Dictionary<Int32, IXLColor> leftBorders = new Dictionary<int, IXLColor>();
+                        r.FirstColumn().Cells().ForEach(
+                            c =>
+                            leftBorders.Add(
+                                c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1,
+                                c.Style.Border.LeftBorderColor));
 
-                    Dictionary<Int32, IXLColor> rightBorders = new Dictionary<int, IXLColor>();
-                    r.LastColumn().Cells().ForEach(c => rightBorders.Add(c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1, c.Style.Border.RightBorderColor));
+                        Dictionary<Int32, IXLColor> rightBorders = new Dictionary<int, IXLColor>();
+                        r.LastColumn().Cells().ForEach(
+                            c =>
+                            rightBorders.Add(
+                                c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1,
+                                c.Style.Border.RightBorderColor));
 
-                    r.Cells().Style.Border.OutsideBorderColor = value;
+                        r.Cells().Style.Border.OutsideBorderColor = value;
 
-                    topBorders.ForEach(kp => r.FirstRow().Cell(kp.Key).Style.Border.TopBorderColor = kp.Value);
-                    bottomBorders.ForEach(kp => r.LastRow().Cell(kp.Key).Style.Border.BottomBorderColor = kp.Value);
-                    leftBorders.ForEach(kp => r.FirstColumn().Cell(kp.Key).Style.Border.LeftBorderColor = kp.Value);
-                    rightBorders.ForEach(kp => r.LastColumn().Cell(kp.Key).Style.Border.RightBorderColor = kp.Value);
+                        topBorders.ForEach(
+                            kp => r.FirstRow().Cell(kp.Key).Style.Border.TopBorderColor = kp.Value);
+                        bottomBorders.ForEach(
+                            kp => r.LastRow().Cell(kp.Key).Style.Border.BottomBorderColor = kp.Value);
+                        leftBorders.ForEach(
+                            kp => r.FirstColumn().Cell(kp.Key).Style.Border.LeftBorderColor = kp.Value);
+                        rightBorders.ForEach(
+                            kp => r.LastColumn().Cell(kp.Key).Style.Border.RightBorderColor = kp.Value);
+                    }
                 }
             }
         }
