@@ -863,9 +863,9 @@ namespace ClosedXML.Excel
                     s.NumberingFormats.Any(nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId))
                 {
                     xlCell.Style.NumberFormat.Format =
-                        ((NumberingFormat)
-                         s.NumberingFormats.Where(nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId).
-                             Single()).FormatCode.Value;
+                        (   (NumberingFormat)s.NumberingFormats
+                            .First(nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId)
+                            ).FormatCode.Value;
                 }
                 else
                     xlCell.Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
