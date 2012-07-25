@@ -719,15 +719,21 @@
 
             if (data.Rows.Count > 0) return InsertTable(data.AsEnumerable(), tableName, createTable);
 
-            int ro = Address.RowNumber + 1;
-            int maxCo = Address.ColumnNumber + data.Columns.Count;
+            int ro = Address.RowNumber;
+            int co = Address.ColumnNumber;
+
+            foreach (DataColumn col in data.Columns)
+            {
+                SetValue(col.ColumnName, ro, co);
+                co++;
+            }
             
             ClearMerged();
             var range = _worksheet.Range(
                 Address.RowNumber,
                 Address.ColumnNumber,
-                ro - 1,
-                maxCo - 1);
+                ro,
+                co - 1);
 
             if (createTable) return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
 
