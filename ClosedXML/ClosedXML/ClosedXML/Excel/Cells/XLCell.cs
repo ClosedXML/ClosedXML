@@ -507,22 +507,22 @@
             return true;
         }
 
-        public IXLTable InsertTable(IEnumerable data)
+        public IXLTable InsertTable<T>(IEnumerable<T> data)
         {
             return InsertTable(data, null, true);
         }
 
-        public IXLTable InsertTable(IEnumerable data, bool createTable)
+        public IXLTable InsertTable<T>(IEnumerable<T> data, bool createTable)
         {
             return InsertTable(data, null, createTable);
         }
 
-        public IXLTable InsertTable(IEnumerable data, string tableName)
+        public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName)
         {
             return InsertTable(data, tableName, true);
         }
 
-        public IXLTable InsertTable(IEnumerable data, string tableName, bool createTable)
+        public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable)
         {
             if (data != null && data.GetType() != typeof(String))
             {
@@ -532,142 +532,153 @@
                 int maxCo = 0;
                 bool isDataTable = false;
                 bool isDataReader = false;
-                foreach (object m in data)
+                if (!data.Any())
                 {
-                    int co = Address.ColumnNumber;
-
-                    if (m.GetType().IsPrimitive || m is string || m is DateTime || m is Decimal)
-                    {
-                        if (!hasTitles)
-                        {
-                            string fieldName = GetFieldName(m.GetType().GetCustomAttributes(true));
-                            if (StringExtensions.IsNullOrWhiteSpace(fieldName))
-                                fieldName = m.GetType().Name;
-
-                            SetValue(fieldName, fRo, co);
-                            hasTitles = true;
-                            co = Address.ColumnNumber;
-                        }
-
-                        SetValue(m, ro, co);
-                        co++;
-                    }
-                    else if (m.GetType().IsArray)
-                    {
-                        foreach (object item in (Array)m)
-                        {
-                            SetValue(item, ro, co);
-                            co++;
-                        }
-                    }
-                    else if (isDataTable || m is DataRow)
-                    {
-                        if (!isDataTable)
-                            isDataTable = true;
-
-                        if (!hasTitles)
-                        {
-                            foreach (string fieldName in from DataColumn column in ((DataRow)m).Table.Columns
-                                                         select StringExtensions.IsNullOrWhiteSpace(column.Caption)
-                                                                    ? column.ColumnName
-                                                                    : column.Caption)
-                            {
-                                SetValue(fieldName, fRo, co);
-                                co++;
-                            }
-
-                            co = Address.ColumnNumber;
-                            hasTitles = true;
-                        }
-
-                        foreach (object item in ((DataRow)m).ItemArray)
-                        {
-                            SetValue(item, ro, co);
-                            co++;
-                        }
-                    }
-                    else if (isDataReader || m is IDataRecord)
-                    {
-                        if (!isDataReader)
-                            isDataReader = true;
-
-                        var record = m as IDataRecord;
-
-                        Int32 fieldCount = record.FieldCount;
-                        if (!hasTitles)
-                        {
-                            for (int i = 0; i < fieldCount; i++)
-                            {
-                                SetValue(record.GetName(i), fRo, co);
-                                co++;
-                            }
-
-                            co = Address.ColumnNumber;
-                            hasTitles = true;
-                        }
-
-                        for (int i = 0; i < fieldCount; i++)
-                        {
-                            SetValue(record[i], ro, co);
-                            co++;
-                        }
-                    }
+                    var t = data.GetItemType();
+                    if (t.IsPrimitive || t == typeof(string) || t == typeof(DateTime) || t == typeof(Decimal))
+                        maxCo = Address.ColumnNumber + 1;
                     else
+                        maxCo = Address.ColumnNumber + t.GetFields().Length + t.GetProperties().Length;
+                }
+                else
+                {
+                    foreach (object m in data)
                     {
-                        var fieldInfo = m.GetType().GetFields();
-                        var propertyInfo = m.GetType().GetProperties();
-                        if (!hasTitles)
-                        {
-                            foreach (FieldInfo info in fieldInfo)
-                            {
-                                if ((info as IEnumerable) == null)
-                                {
-                                    string fieldName = GetFieldName(info.GetCustomAttributes(true));
-                                    if (StringExtensions.IsNullOrWhiteSpace(fieldName))
-                                        fieldName = info.Name;
+                        int co = Address.ColumnNumber;
 
+                        if (m.GetType().IsPrimitive || m is string || m is DateTime || m is Decimal)
+                        {
+                            if (!hasTitles)
+                            {
+                                string fieldName = GetFieldName(m.GetType().GetCustomAttributes(true));
+                                if (StringExtensions.IsNullOrWhiteSpace(fieldName))
+                                    fieldName = m.GetType().Name;
+
+                                SetValue(fieldName, fRo, co);
+                                hasTitles = true;
+                                co = Address.ColumnNumber;
+                            }
+
+                            SetValue(m, ro, co);
+                            co++;
+                        }
+                        else if (m.GetType().IsArray)
+                        {
+                            foreach (object item in (Array) m)
+                            {
+                                SetValue(item, ro, co);
+                                co++;
+                            }
+                        }
+                        else if (isDataTable || m is DataRow)
+                        {
+                            if (!isDataTable)
+                                isDataTable = true;
+
+                            if (!hasTitles)
+                            {
+                                foreach (string fieldName in from DataColumn column in ((DataRow) m).Table.Columns
+                                                             select StringExtensions.IsNullOrWhiteSpace(column.Caption)
+                                                                        ? column.ColumnName
+                                                                        : column.Caption)
+                                {
                                     SetValue(fieldName, fRo, co);
+                                    co++;
                                 }
 
+                                co = Address.ColumnNumber;
+                                hasTitles = true;
+                            }
+
+                            foreach (object item in ((DataRow) m).ItemArray)
+                            {
+                                SetValue(item, ro, co);
+                                co++;
+                            }
+                        }
+                        else if (isDataReader || m is IDataRecord)
+                        {
+                            if (!isDataReader)
+                                isDataReader = true;
+
+                            var record = m as IDataRecord;
+
+                            Int32 fieldCount = record.FieldCount;
+                            if (!hasTitles)
+                            {
+                                for (int i = 0; i < fieldCount; i++)
+                                {
+                                    SetValue(record.GetName(i), fRo, co);
+                                    co++;
+                                }
+
+                                co = Address.ColumnNumber;
+                                hasTitles = true;
+                            }
+
+                            for (int i = 0; i < fieldCount; i++)
+                            {
+                                SetValue(record[i], ro, co);
+                                co++;
+                            }
+                        }
+                        else
+                        {
+                            var fieldInfo = m.GetType().GetFields();
+                            var propertyInfo = m.GetType().GetProperties();
+                            if (!hasTitles)
+                            {
+                                foreach (FieldInfo info in fieldInfo)
+                                {
+                                    if ((info as IEnumerable) == null)
+                                    {
+                                        string fieldName = GetFieldName(info.GetCustomAttributes(true));
+                                        if (StringExtensions.IsNullOrWhiteSpace(fieldName))
+                                            fieldName = info.Name;
+
+                                        SetValue(fieldName, fRo, co);
+                                    }
+
+                                    co++;
+                                }
+
+                                foreach (PropertyInfo info in propertyInfo)
+                                {
+                                    if ((info as IEnumerable) == null)
+                                    {
+                                        string fieldName = GetFieldName(info.GetCustomAttributes(true));
+                                        if (StringExtensions.IsNullOrWhiteSpace(fieldName))
+                                            fieldName = info.Name;
+
+                                        SetValue(fieldName, fRo, co);
+                                    }
+
+                                    co++;
+                                }
+
+                                co = Address.ColumnNumber;
+                                hasTitles = true;
+                            }
+
+                            foreach (FieldInfo info in fieldInfo)
+                            {
+                                SetValue(info.GetValue(m), ro, co);
                                 co++;
                             }
 
                             foreach (PropertyInfo info in propertyInfo)
                             {
                                 if ((info as IEnumerable) == null)
-                                {
-                                    string fieldName = GetFieldName(info.GetCustomAttributes(true));
-                                    if (StringExtensions.IsNullOrWhiteSpace(fieldName))
-                                        fieldName = info.Name;
-
-                                    SetValue(fieldName, fRo, co);
-                                }
-
+                                    SetValue(info.GetValue(m, null), ro, co);
                                 co++;
                             }
-
-                            co = Address.ColumnNumber;
-                            hasTitles = true;
                         }
 
-                        foreach (FieldInfo info in fieldInfo)
-                        {
-                            SetValue(info.GetValue(m), ro, co);
-                            co++;
-                        }
+                        if (co > maxCo)
+                            maxCo = co;
 
-                        foreach (PropertyInfo info in propertyInfo)
-                        {
-                            if ((info as IEnumerable) == null)
-                                SetValue(info.GetValue(m, null), ro, co);
-                            co++;
-                        }
+                        ro++;
                     }
-
-                    if (co > maxCo)
-                        maxCo = co;
-
-                    ro++;
                 }
 
                 ClearMerged();
@@ -683,6 +694,45 @@
             }
 
             return null;
+        }
+
+
+
+        public IXLTable InsertTable(DataTable data)
+        {
+            return InsertTable(data, null, true);
+        }
+
+        public IXLTable InsertTable(DataTable data, bool createTable)
+        {
+            return InsertTable(data, null, createTable);
+        }
+
+        public IXLTable InsertTable(DataTable data, string tableName)
+        {
+            return InsertTable(data, tableName, true);
+        }
+
+        public IXLTable InsertTable(DataTable data, string tableName, bool createTable)
+        {
+            if (data == null) return null;
+
+            if (data.Rows.Count > 0) return InsertTable(data.AsEnumerable(), tableName, createTable);
+
+            int ro = Address.RowNumber + 1;
+            int maxCo = Address.ColumnNumber + data.Columns.Count;
+            
+            ClearMerged();
+            var range = _worksheet.Range(
+                Address.RowNumber,
+                Address.ColumnNumber,
+                ro - 1,
+                maxCo - 1);
+
+            if (createTable) return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
+
+            return tableName == null ? range.AsTable() : range.AsTable(tableName);
+
         }
 
         public IXLRange InsertData(IEnumerable data)

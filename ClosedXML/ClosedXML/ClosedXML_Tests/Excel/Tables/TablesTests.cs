@@ -1,4 +1,7 @@
-﻿using ClosedXML.Excel;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using ClosedXML.Excel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
@@ -181,6 +184,90 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
 
             //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
+
+        }
+
+        [TestMethod]
+        public void CreatingATableFromHeadersPushCellsBelow()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue("Title")
+                .CellBelow().SetValue("X");
+            ws.Range("A1").CreateTable();
+
+            Assert.AreEqual(ws.Cell("A2").GetString(), String.Empty);
+            Assert.AreEqual(ws.Cell("A3").GetString(), "X");
+        }
+
+
+        [TestMethod]
+        public void CanSaveTableCreatedFromSingleRow()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue("Title");
+            ws.Range("A1").CreateTable();
+
+            using (var ms = new MemoryStream())
+                wb.SaveAs(ms);
+
+        }
+
+        [TestMethod]
+        public void CanSaveTableCreatedFromEmptyDataTable()
+        {
+            var dt = new DataTable("sheet1");
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
+
+            var wb = new XLWorkbook();
+            wb.AddWorksheet(dt);
+
+            using (var ms = new MemoryStream())
+                wb.SaveAs(ms);
+
+        }
+
+        [TestMethod]
+        public void TableCreatedFromEmptyDataTable()
+        {
+            var dt = new DataTable("sheet1");
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
+
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().InsertTable(dt);
+            Assert.AreEqual(2, ws.Tables.First().ColumnCount());
+        }
+
+        [TestMethod]
+        public void TableCreatedFromEmptyListOfInt()
+        {
+            var l = new List<Int32>();
+
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().InsertTable(l);
+            Assert.AreEqual(1, ws.Tables.First().ColumnCount());
+
+        }
+
+        public class TestObject
+        {
+            public String Column1 { get; set; }
+            public String Column2 { get; set; }
+        }
+        [TestMethod]
+        public void TableCreatedFromEmptyListOfObject()
+        {
+            var l = new List<TestObject>();
+
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().InsertTable(l);
+            Assert.AreEqual(2, ws.Tables.First().ColumnCount());
 
         }
     }

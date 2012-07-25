@@ -377,6 +377,9 @@ namespace ClosedXML.Excel
                 InitializeAutoFilter();
 
             HeadersRow().DataType = XLCellValues.Text;
+
+            if (RowCount() == 1)
+                InsertRowsBelow(1);
         }
 
         public void InitializeAutoFilter()

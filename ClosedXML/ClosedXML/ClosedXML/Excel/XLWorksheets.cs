@@ -140,7 +140,7 @@ namespace ClosedXML.Excel
         public IXLWorksheet Add(DataTable dataTable)
         {
             var ws = Add(dataTable.TableName);
-            ws.Cell(1, 1).InsertTable(dataTable.AsEnumerable());
+            ws.Cell(1, 1).InsertTable(dataTable);
             ws.Columns().AdjustToContents(1, 75);
             return ws;
         }

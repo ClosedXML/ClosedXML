@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -16,11 +17,7 @@ namespace ClosedXML.Excel
     public static class Extensions
     {
         // Adds the .ForEach method to all IEnumerables
-        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
-        {
-            foreach (T item in source)
-                action(item);
-        }
+
 
         private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
@@ -258,6 +255,20 @@ namespace ClosedXML.Excel
         //        return XDocument.Load(reader);
         //    }
         //}
+    }
+
+    public static class EnumerableExtensions
+    {
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            foreach (T item in source)
+                action(item);
+        }
+
+        public static Type GetItemType<T>(this IEnumerable<T> source)
+        {
+            return typeof(T);
+        }
     }
 }
 

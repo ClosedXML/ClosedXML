@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 
 namespace ClosedXML.Excel
 {
@@ -167,7 +169,7 @@ namespace ClosedXML.Excel
         /// <para>The new table will receive a generic name: Table#</para>
         /// </summary>
         /// <param name="data">The table data.</param>
-        IXLTable InsertTable(IEnumerable data);
+        IXLTable InsertTable<T>(IEnumerable<T> data);
 
         /// <summary>
         /// Inserts the IEnumerable data elements as a table and returns it.
@@ -178,14 +180,14 @@ namespace ClosedXML.Excel
         /// if set to <c>true</c> it will create an Excel table.
         /// <para>if set to <c>false</c> the table will be created in memory.</para>
         /// </param>
-        IXLTable InsertTable(IEnumerable data, Boolean createTable);
+        IXLTable InsertTable<T>(IEnumerable<T> data, Boolean createTable);
 
         /// <summary>
         /// Creates an Excel table from the given IEnumerable data elements.
         /// </summary>
         /// <param name="data">The table data.</param>
         /// <param name="tableName">Name of the table.</param>
-        IXLTable InsertTable(IEnumerable data, String tableName);
+        IXLTable InsertTable<T>(IEnumerable<T> data, String tableName);
 
         /// <summary>
         /// Inserts the IEnumerable data elements as a table and returns it.
@@ -196,7 +198,45 @@ namespace ClosedXML.Excel
         /// if set to <c>true</c> it will create an Excel table.
         /// <para>if set to <c>false</c> the table will be created in memory.</para>
         /// </param>
-        IXLTable InsertTable(IEnumerable data, String tableName, Boolean createTable);
+        IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable);
+
+
+        /// <summary>
+        /// Inserts the DataTable data elements as a table and returns it.
+        /// <para>The new table will receive a generic name: Table#</para>
+        /// </summary>
+        /// <param name="data">The table data.</param>
+        IXLTable InsertTable(DataTable data);
+
+        /// <summary>
+        /// Inserts the DataTable data elements as a table and returns it.
+        /// <para>The new table will receive a generic name: Table#</para>
+        /// </summary>
+        /// <param name="data">The table data.</param>
+        /// <param name="createTable">
+        /// if set to <c>true</c> it will create an Excel table.
+        /// <para>if set to <c>false</c> the table will be created in memory.</para>
+        /// </param>
+        IXLTable InsertTable(DataTable data, Boolean createTable);
+
+        /// <summary>
+        /// Creates an Excel table from the given DataTable data elements.
+        /// </summary>
+        /// <param name="data">The table data.</param>
+        /// <param name="tableName">Name of the table.</param>
+        IXLTable InsertTable(DataTable data, String tableName);
+
+        /// <summary>
+        /// Inserts the DataTable data elements as a table and returns it.
+        /// </summary>
+        /// <param name="data">The table data.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="createTable">
+        /// if set to <c>true</c> it will create an Excel table.
+        /// <para>if set to <c>false</c> the table will be created in memory.</para>
+        /// </param>
+        IXLTable InsertTable(DataTable data, String tableName, Boolean createTable);
+
 
         XLHyperlink Hyperlink { get; set; }
         IXLWorksheet Worksheet { get; }
