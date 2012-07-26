@@ -23,6 +23,7 @@ namespace ClosedXML.Excel
                 _pagesTall = defaultPageOptions.PagesTall;
                 _pagesWide = defaultPageOptions.PagesWide;
                 _scale = defaultPageOptions.Scale;
+                
 
                 if (defaultPageOptions.Margins != null)
                 {

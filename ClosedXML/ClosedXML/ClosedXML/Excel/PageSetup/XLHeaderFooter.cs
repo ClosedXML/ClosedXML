@@ -57,12 +57,14 @@ namespace ClosedXML.Excel
 
         private Dictionary<XLHFOccurrence, String> _initialTexts;
 
+        private Boolean _changed;
         internal Boolean Changed
         {
             get
             {
-                return _initialTexts.Any(it => GetText(it.Key) != it.Value);
+                return _changed || _initialTexts.Any(it => GetText(it.Key) != it.Value);
             }
+            set { _changed = value; }
         }
 
         internal void SetAsInitial()

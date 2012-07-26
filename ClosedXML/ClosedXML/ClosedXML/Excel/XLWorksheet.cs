@@ -567,6 +567,8 @@ namespace ClosedXML.Excel
             targetSheet.RowHeightChanged = RowHeightChanged;
             targetSheet.SetStyle(Style);
             targetSheet.PageSetup = new XLPageSetup((XLPageSetup)PageSetup, targetSheet);
+            (targetSheet.PageSetup.Header as XLHeaderFooter).Changed = true;
+            (targetSheet.PageSetup.Footer as XLHeaderFooter).Changed = true;
             targetSheet.Outline = new XLOutline(Outline);
             targetSheet.SheetView = new XLSheetView(SheetView);
             Internals.MergedRanges.ForEach(
