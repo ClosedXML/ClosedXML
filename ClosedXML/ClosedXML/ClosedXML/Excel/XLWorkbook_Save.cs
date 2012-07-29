@@ -4032,7 +4032,7 @@ namespace ClosedXML.Excel
                             row.AppendChild(cell);
                         else
                         {
-                            var newColumn = XLHelper.GetColumnNumberFromAddress1(cellReference);
+                            var newColumn = XLHelper.GetColumnNumberFromAddress(cellReference);
 
                             Cell cellBeforeInsert = null;
                             var lastCo = Int32.MaxValue;
@@ -4040,9 +4040,9 @@ namespace ClosedXML.Excel
                                 var c in
                                     row.Elements<Cell>().Where(
                                         c =>
-                                        XLHelper.GetColumnNumberFromAddress1(c.CellReference.Value) > newColumn))
+                                        XLHelper.GetColumnNumberFromAddress(c.CellReference.Value) > newColumn))
                             {
-                                var thidCo = XLHelper.GetColumnNumberFromAddress1(c.CellReference.Value);
+                                var thidCo = XLHelper.GetColumnNumberFromAddress(c.CellReference.Value);
 
                                 if (lastCo <= thidCo) continue;
 
