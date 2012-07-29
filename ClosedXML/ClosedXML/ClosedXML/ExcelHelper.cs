@@ -126,7 +126,7 @@ namespace ClosedXML.Excel
             if (length == 2)
                 return isValid && theColumn[1] >= 'A' && theColumn[1] <= 'Z';
 
-            if (theColumn[0] < 'X')
+            if (theColumn[0] >= 'A' && theColumn[0] < 'X')
                 return theColumn[1] >= 'A' && theColumn[1] <= 'Z'
                        && theColumn[2] >= 'A' && theColumn[2] <= 'Z';
 
