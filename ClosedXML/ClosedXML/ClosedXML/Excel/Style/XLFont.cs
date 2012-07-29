@@ -41,6 +41,7 @@ namespace ClosedXML.Excel
 
         #region IXLFont Members
 
+        public Boolean BoldModified { get; set; }
         public Boolean Bold
         {
             get { return _bold; }
@@ -50,10 +51,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Bold = value);
                 else
+                {
                     _bold = value;
+                    BoldModified = true;
+                }
             }
         }
 
+        public Boolean ItalicModified { get; set; }
         public Boolean Italic
         {
             get { return _italic; }
@@ -63,10 +68,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Italic = value);
                 else
+                {
                     _italic = value;
+                    ItalicModified = true;
+                }
             }
         }
 
+        public Boolean UnderlineModified { get; set; }
         public XLFontUnderlineValues Underline
         {
             get { return _underline; }
@@ -76,10 +85,15 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Underline = value);
                 else
+                {
                     _underline = value;
+                    UnderlineModified = true;
+                }
+                    
             }
         }
 
+        public Boolean StrikethroughModified { get; set; }
         public Boolean Strikethrough
         {
             get { return _strikethrough; }
@@ -89,10 +103,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Strikethrough = value);
                 else
+                {
                     _strikethrough = value;
+                    StrikethroughModified = true;
+                }
             }
         }
 
+        public Boolean VerticalAlignmentModified { get; set; }
         public XLFontVerticalTextAlignmentValues VerticalAlignment
         {
             get { return _verticalAlignment; }
@@ -102,10 +120,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.VerticalAlignment = value);
                 else
+                {
                     _verticalAlignment = value;
+                    VerticalAlignmentModified = true;
+                }
             }
         }
 
+        public Boolean ShadowModified { get; set; }
         public Boolean Shadow
         {
             get { return _shadow; }
@@ -115,10 +137,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.Shadow = value);
                 else
+                {
                     _shadow = value;
+                    ShadowModified = true;
+                }
             }
         }
 
+        public Boolean FontSizeModified { get; set; }
         public Double FontSize
         {
             get { return _fontSize; }
@@ -128,10 +154,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.FontSize = value);
                 else
+                {
                     _fontSize = value;
+                    FontSizeModified = true;
+                }
             }
         }
 
+        public Boolean FontColorModified { get; set; }
         public IXLColor FontColor
         {
             get { return _fontColor; }
@@ -141,10 +171,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.FontColor = value);
                 else
+                {
                     _fontColor = value;
+                    FontColorModified = true;
+                }
             }
         }
 
+        public Boolean FontNameModified { get; set; }
         public String FontName
         {
             get { return _fontName; }
@@ -154,10 +188,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.FontName = value);
                 else
+                {
                     _fontName = value;
+                    FontNameModified = true;
+                }
             }
         }
 
+        public Boolean FontFamilyNumberingModified { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering
         {
             get { return _fontFamilyNumbering; }
@@ -167,7 +205,10 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Font.FontFamilyNumbering = value);
                 else
+                {
                     _fontFamilyNumbering = value;
+                    FontFamilyNumberingModified = true;
+                }
             }
         }
 

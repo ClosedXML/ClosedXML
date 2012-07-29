@@ -216,6 +216,7 @@ namespace ClosedXML.Excel
             }
         }
 
+        public Boolean LeftBorderModified;
         public XLBorderStyleValues LeftBorder
         {
             get { return _leftBorder; }
@@ -225,10 +226,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.LeftBorder = value);
                 else
+                {
                     _leftBorder = value;
+                    LeftBorderModified = true;
+                }
             }
         }
 
+        public Boolean LeftBorderColorModified;
         public IXLColor LeftBorderColor
         {
             get { return _leftBorderColor; }
@@ -238,10 +243,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.LeftBorderColor = value);
                 else
+                {
                     _leftBorderColor = value;
+                    LeftBorderColorModified = true;
+                }
             }
         }
 
+        public Boolean RightBorderModified;
         public XLBorderStyleValues RightBorder
         {
             get { return _rightBorder; }
@@ -251,10 +260,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.RightBorder = value);
                 else
+                {
                     _rightBorder = value;
+                    RightBorderModified = true;
+                }
             }
         }
 
+        public Boolean RightBorderColorModified;
         public IXLColor RightBorderColor
         {
             get { return _rightBorderColor; }
@@ -264,10 +277,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.RightBorderColor = value);
                 else
+                {
                     _rightBorderColor = value;
+                    RightBorderColorModified = true;
+                }
             }
         }
 
+        public Boolean TopBorderModified;
         public XLBorderStyleValues TopBorder
         {
             get { return _topBorder; }
@@ -277,10 +294,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.TopBorder = value);
                 else
+                {
                     _topBorder = value;
+                    TopBorderModified = true;
+                }
             }
         }
 
+        public Boolean TopBorderColorModified;
         public IXLColor TopBorderColor
         {
             get { return _topBorderColor; }
@@ -290,10 +311,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.TopBorderColor = value);
                 else
+                {
                     _topBorderColor = value;
+                    TopBorderColorModified = true;
+                }
             }
         }
 
+        public Boolean BottomBorderModified;
         public XLBorderStyleValues BottomBorder
         {
             get { return _bottomBorder; }
@@ -303,10 +328,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.BottomBorder = value);
                 else
+                {
                     _bottomBorder = value;
+                    BottomBorderModified = true;
+                }
             }
         }
 
+        public Boolean BottomBorderColorModified;
         public IXLColor BottomBorderColor
         {
             get { return _bottomBorderColor; }
@@ -316,10 +345,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.BottomBorderColor = value);
                 else
+                {
                     _bottomBorderColor = value;
+                    BottomBorderColorModified = true;
+                }
             }
         }
 
+        public Boolean DiagonalBorderModified;
         public XLBorderStyleValues DiagonalBorder
         {
             get { return _diagonalBorder; }
@@ -329,10 +362,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.DiagonalBorder = value);
                 else
+                {
                     _diagonalBorder = value;
+                    DiagonalBorderModified = true;
+                }
             }
         }
 
+        public Boolean DiagonalBorderColorModified;
         public IXLColor DiagonalBorderColor
         {
             get { return _diagonalBorderColor; }
@@ -342,10 +379,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.DiagonalBorderColor = value);
                 else
+                {
                     _diagonalBorderColor = value;
+                    DiagonalBorderColorModified = true;
+                }
             }
         }
 
+        public Boolean DiagonalUpModified;
         public Boolean DiagonalUp
         {
             get { return _diagonalUp; }
@@ -355,10 +396,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.DiagonalUp = value);
                 else
+                {
                     _diagonalUp = value;
+                    DiagonalUpModified = true;
+                }
             }
         }
 
+        public Boolean DiagonalDownModified;
         public Boolean DiagonalDown
         {
             get { return _diagonalDown; }
@@ -368,7 +413,10 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Border.DiagonalDown = value);
                 else
+                {
                     _diagonalDown = value;
+                    DiagonalDownModified = true;
+                }
             }
         }
 

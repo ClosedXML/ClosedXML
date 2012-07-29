@@ -53,10 +53,15 @@ namespace ClosedXML.Excel
                     _patternType = XLFillPatternValues.Solid;
                     _patternColor = new XLColor(value);
                     _patternBackgroundColor = new XLColor(value);
+
+                    PatternTypeModified = true;
+                    PatternColorModified = true;
+                    PatternBackgroundColorModified = true;
                 }
             }
         }
 
+        public Boolean PatternColorModified;
         public IXLColor PatternColor
         {
             get { return _patternColor; }
@@ -66,10 +71,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Fill.PatternColor = value);
                 else
+                {
                     _patternColor = value;
+                    PatternColorModified = true;
+                }
             }
         }
 
+        public Boolean PatternBackgroundColorModified;
         public IXLColor PatternBackgroundColor
         {
             get { return _patternBackgroundColor; }
@@ -79,10 +88,14 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Fill.PatternBackgroundColor = value);
                 else
+                {
                     _patternBackgroundColor = value;
+                    PatternBackgroundColorModified = true;
+                }
             }
         }
 
+        public Boolean PatternTypeModified;
         public XLFillPatternValues PatternType
         {
             get { return _patternType; }
@@ -92,7 +105,10 @@ namespace ClosedXML.Excel
                 if (_container != null && !_container.UpdatingStyle)
                     _container.Styles.ForEach(s => s.Fill.PatternType = value);
                 else
+                {
                     _patternType = value;
+                    PatternTypeModified = true;
+                }
             }
         }
 

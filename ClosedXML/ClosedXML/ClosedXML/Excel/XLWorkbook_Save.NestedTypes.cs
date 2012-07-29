@@ -112,21 +112,21 @@ namespace ClosedXML.Excel
         internal struct FontInfo
         {
             public UInt32 FontId;
-            public IXLFont Font;
+            public XLFont Font;
         };
         #endregion
         #region Nested type: FillInfo
         internal struct FillInfo
         {
             public UInt32 FillId;
-            public IXLFill Fill;
+            public XLFill Fill;
         }
         #endregion
         #region Nested type: BorderInfo
         internal struct BorderInfo
         {
             public UInt32 BorderId;
-            public IXLBorder Border;
+            public XLBorder Border;
         }
         #endregion
         #region Nested type: NumberFormatInfo

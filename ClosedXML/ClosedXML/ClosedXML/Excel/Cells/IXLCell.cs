@@ -305,6 +305,8 @@ namespace ClosedXML.Excel
 
         Boolean HasDataValidation { get; }
 
+        IXLConditionalFormat AddConditionalFormat();
+
         void Select();
     }
 }

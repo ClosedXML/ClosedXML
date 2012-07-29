@@ -10,6 +10,8 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.VariantTypes;
+using DocumentFormat.OpenXml.Vml.Office;
+using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using Vml = DocumentFormat.OpenXml.Vml;
 using BackgroundColor = DocumentFormat.OpenXml.Spreadsheet.BackgroundColor;
 using BottomBorder = DocumentFormat.OpenXml.Spreadsheet.BottomBorder;
@@ -34,6 +36,11 @@ using Underline = DocumentFormat.OpenXml.Spreadsheet.Underline;
 using System.Xml;
 using System.Xml.Linq;
 using System.Text;
+using Anchor = DocumentFormat.OpenXml.Vml.Spreadsheet.Anchor;
+using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
+using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
+using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
+using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
 
 
 namespace ClosedXML.Excel
@@ -131,14 +138,14 @@ namespace ClosedXML.Excel
 
             GenerateWorkbookStylesPartContent(workbookStylesPart, context);
 
-            foreach (XLWorksheet worksheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
+            foreach (var worksheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
                 //context.RelIdGenerator.Reset(RelType.);
                 WorksheetPart worksheetPart;
-                string wsRelId = worksheet.RelId;
+                var wsRelId = worksheet.RelId;
                 if (workbookPart.Parts.Any(p => p.RelationshipId == wsRelId))
                 {
-                    worksheetPart = (WorksheetPart)workbookPart.GetPartById(wsRelId);
+                    worksheetPart = (WorksheetPart) workbookPart.GetPartById(wsRelId);
                     var wsPartsToRemove = worksheetPart.TableDefinitionParts.ToList();
                     wsPartsToRemove.ForEach(tdp => worksheetPart.DeletePart(tdp));
                 }
@@ -146,22 +153,26 @@ namespace ClosedXML.Excel
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(wsRelId);
 
 
-                context.RelIdGenerator.AddValues(worksheetPart.HyperlinkRelationships.Select(hr => hr.Id).ToList(), RelType.Workbook);
-                context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Workbook);
+                context.RelIdGenerator.AddValues(worksheetPart.HyperlinkRelationships.Select(hr => hr.Id).ToList(),
+                                                 RelType.Workbook);
+                context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId).ToList(),
+                                                 RelType.Workbook);
                 if (worksheetPart.DrawingsPart != null)
-                    context.RelIdGenerator.AddValues(worksheetPart.DrawingsPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Workbook);
+                    context.RelIdGenerator.AddValues(
+                        worksheetPart.DrawingsPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Workbook);
 
                 // delete comment related parts (todo: review)
                 DeleteComments(worksheetPart, worksheet, context);
-                
+
                 if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
                 {
-                    WorksheetCommentsPart worksheetCommentsPart = worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
+                    var worksheetCommentsPart =
+                        worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
 
                     GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
 
                     //VmlDrawingPart vmlDrawingPart = worksheetPart.AddNewPart<VmlDrawingPart>(worksheet.LegacyDrawingId);
-                    VmlDrawingPart vmlDrawingPart = worksheetPart.VmlDrawingParts.FirstOrDefault();
+                    var vmlDrawingPart = worksheetPart.VmlDrawingParts.FirstOrDefault();
                     if (vmlDrawingPart == null)
                     {
                         if (StringExtensions.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
@@ -181,7 +192,6 @@ namespace ClosedXML.Excel
                 {
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
                 }
-
 
 
                 //DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>("rId1");
@@ -218,35 +228,36 @@ namespace ClosedXML.Excel
             // We have the comments so we can delete the comments part
             worksheetPart.DeletePart(worksheetPart.WorksheetCommentsPart);
             var vmlDrawingPart = worksheetPart.VmlDrawingParts.FirstOrDefault();
-            
+
             // Only delete the VmlDrawingParts for comments.
             if (vmlDrawingPart != null)
             {
-                XDocument xdoc = XDocumentExtensions.Load(vmlDrawingPart.GetStream(FileMode.Open));
+                var xdoc = XDocumentExtensions.Load(vmlDrawingPart.GetStream(FileMode.Open));
                 //xdoc.Root.Elements().Where(e => e.Name.LocalName == "shapelayout").Remove();
-                xdoc.Root.Elements().Where(e=>e.Name.LocalName == "shapetype" && (string)e.Attribute("id") == @"_x0000_t202").Remove();
-                xdoc.Root.Elements().Where(e => e.Name.LocalName == "shape" && (string)e.Attribute("type") == @"#_x0000_t202").Remove();
+                xdoc.Root.Elements().Where(
+                    e => e.Name.LocalName == "shapetype" && (string) e.Attribute("id") == @"_x0000_t202").Remove();
+                xdoc.Root.Elements().Where(
+                    e => e.Name.LocalName == "shape" && (string) e.Attribute("type") == @"#_x0000_t202").Remove();
                 var imageParts = vmlDrawingPart.ImageParts.ToList();
                 var legacyParts = vmlDrawingPart.LegacyDiagramTextParts.ToList();
                 var rId = worksheetPart.GetIdOfPart(vmlDrawingPart);
                 worksheet.LegacyDrawingId = rId;
                 worksheetPart.ChangeIdOfPart(vmlDrawingPart, "xxRRxx"); // Anything will do for the new relationship id
-                                                                        // we just want it alive enough to create the copy
+                // we just want it alive enough to create the copy
 
-                Boolean hasShapes = xdoc.Root.Elements().Where(e =>
-                    e.Name.LocalName == "shape"
-                    || e.Name.LocalName == "group"
+                var hasShapes = xdoc.Root.Elements().Where(e =>
+                                                           e.Name.LocalName == "shape"
+                                                           || e.Name.LocalName == "group"
                     ).Any();
 
                 VmlDrawingPart vmlDrawingPartNew = null;
-                Boolean hasNewPart = (imageParts.Count > 0 || legacyParts.Count > 0 || hasShapes);
+                var hasNewPart = (imageParts.Count > 0 || legacyParts.Count > 0 || hasShapes);
                 if (hasNewPart)
                 {
                     vmlDrawingPartNew = worksheetPart.AddNewPart<VmlDrawingPart>(rId);
 
-                    using (XmlTextWriter writer = new XmlTextWriter(vmlDrawingPartNew.GetStream(FileMode.Create), Encoding.UTF8))
+                    using (var writer = new XmlTextWriter(vmlDrawingPartNew.GetStream(FileMode.Create), Encoding.UTF8))
                     {
-
                         writer.WriteRaw(xdoc.ToString());
                     }
 
@@ -264,16 +275,16 @@ namespace ClosedXML.Excel
         private static void GenerateTables(XLWorksheet worksheet, WorksheetPart worksheetPart, SaveContext context)
         {
             worksheetPart.Worksheet.RemoveAllChildren<TablePart>();
-            
+
             if (!worksheet.Tables.Any()) return;
 
-            foreach (IXLTable table in worksheet.Tables)
+            foreach (var table in worksheet.Tables)
             {
-                String tableRelId = context.RelIdGenerator.GetNext(RelType.Workbook); 
-                
-                var xlTable = (XLTable)table;
+                var tableRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+
+                var xlTable = (XLTable) table;
                 xlTable.RelId = tableRelId;
-                
+
                 var tableDefinitionPart = worksheetPart.AddNewPart<TableDefinitionPart>(tableRelId);
                 GenerateTableDefinitionPartContent(tableDefinitionPart, xlTable, context);
             }
@@ -317,21 +328,21 @@ namespace ClosedXML.Excel
             var vTVectorTwo = properties.TitlesOfParts.VTVector;
 
             var modifiedWorksheets =
-                ((IEnumerable<XLWorksheet>)WorksheetsInternal).Select(w => new {w.Name, Order = w.Position}).ToList();
+                ((IEnumerable<XLWorksheet>) WorksheetsInternal).Select(w => new {w.Name, Order = w.Position}).ToList();
             var modifiedNamedRanges = GetModifiedNamedRanges();
-            int modifiedWorksheetsCount = modifiedWorksheets.Count;
-            int modifiedNamedRangesCount = modifiedNamedRanges.Count;
+            var modifiedWorksheetsCount = modifiedWorksheets.Count;
+            var modifiedNamedRangesCount = modifiedNamedRanges.Count;
 
             InsertOnVtVector(vTVectorOne, "Worksheets", 0, modifiedWorksheetsCount.ToString());
             InsertOnVtVector(vTVectorOne, "Named Ranges", 2, modifiedNamedRangesCount.ToString());
 
-            vTVectorTwo.Size = (UInt32)(modifiedNamedRangesCount + modifiedWorksheetsCount);
+            vTVectorTwo.Size = (UInt32) (modifiedNamedRangesCount + modifiedWorksheetsCount);
 
             foreach (
-                VTLPSTR vTlpstr3 in modifiedWorksheets.OrderBy(w => w.Order).Select(w => new VTLPSTR {Text = w.Name}))
+                var vTlpstr3 in modifiedWorksheets.OrderBy(w => w.Order).Select(w => new VTLPSTR {Text = w.Name}))
                 vTVectorTwo.AppendChild(vTlpstr3);
 
-            foreach (VTLPSTR vTlpstr7 in modifiedNamedRanges.Select(nr => new VTLPSTR {Text = nr}))
+            foreach (var vTlpstr7 in modifiedNamedRanges.Select(nr => new VTLPSTR {Text = nr}))
                 vTVectorTwo.AppendChild(vTlpstr7);
 
             if (Properties.Manager != null)
@@ -382,8 +393,8 @@ namespace ClosedXML.Excel
                 vTVector.InsertAt(variant2, index + 1);
             }
 
-            Int32 targetIndex = 0;
-            foreach (Variant e in vTVector.Elements<Variant>())
+            var targetIndex = 0;
+            foreach (var e in vTVector.Elements<Variant>())
             {
                 if (e.Elements<VTLPSTR>().Any(e2 => e2.Text == property))
                 {
@@ -397,9 +408,9 @@ namespace ClosedXML.Excel
         private List<string> GetModifiedNamedRanges()
         {
             var namedRanges = new List<String>();
-            foreach (XLWorksheet w in WorksheetsInternal)
+            foreach (var w in WorksheetsInternal)
             {
-                String wName = w.Name;
+                var wName = w.Name;
                 namedRanges.AddRange(w.NamedRanges.Select(n => wName + "!" + n.Name));
                 namedRanges.Add(w.Name + "!Print_Area");
                 namedRanges.Add(w.Name + "!Print_Titles");
@@ -445,9 +456,9 @@ namespace ClosedXML.Excel
             workbook.Sheets.Elements<Sheet>().Where(s => worksheets.Deleted.Contains(s.Id)).ToList().ForEach(
                 s => s.Remove());
 
-            foreach (Sheet sheet in workbook.Sheets.Elements<Sheet>())
+            foreach (var sheet in workbook.Sheets.Elements<Sheet>())
             {
-                int sheetId = (Int32)sheet.SheetId.Value;
+                var sheetId = (Int32) sheet.SheetId.Value;
 
                 if (!WorksheetsInternal.Any<XLWorksheet>(w => w.SheetId == sheetId)) continue;
 
@@ -456,10 +467,10 @@ namespace ClosedXML.Excel
                 sheet.Name = wks.Name;
             }
 
-            foreach (XLWorksheet xlSheet in
-                    WorksheetsInternal.Cast<XLWorksheet>().Where(s => s.SheetId == 0).OrderBy(w => w.Position))
+            foreach (var xlSheet in
+                WorksheetsInternal.Cast<XLWorksheet>().Where(s => s.SheetId == 0).OrderBy(w => w.Position))
             {
-                String rId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                var rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
                 while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
                     rId = context.RelIdGenerator.GetNext(RelType.Workbook);
@@ -467,28 +478,30 @@ namespace ClosedXML.Excel
                 xlSheet.SheetId = Int32.Parse(rId.Substring(3));
                 xlSheet.RelId = rId;
                 var newSheet = new Sheet
-                                   {
-                                       Name = xlSheet.Name,
-                                       Id = rId,
-                                       SheetId = (UInt32)xlSheet.SheetId
-                                   };
+                    {
+                        Name = xlSheet.Name,
+                        Id = rId,
+                        SheetId = (UInt32) xlSheet.SheetId
+                    };
 
                 workbook.Sheets.AppendChild(newSheet);
             }
 
             var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
-                                join worksheet in ((IEnumerable<XLWorksheet>)WorksheetsInternal) on sheet.Id.Value equals worksheet.RelId
+                                join worksheet in ((IEnumerable<XLWorksheet>) WorksheetsInternal) on sheet.Id.Value
+                                    equals worksheet.RelId
                                 orderby worksheet.Position
                                 select sheet;
 
             UInt32 firstSheetVisible = 0;
-            UInt32 activeTab = (from us in UnsupportedSheets where us.IsActive select (UInt32)us.Position - 1).FirstOrDefault();
-            Boolean foundVisible = false;
-            
-            Int32 totalSheets = sheetElements.Count() + UnsupportedSheets.Count;
-            for (Int32 p = 1; p <= totalSheets; p++)
+            var activeTab =
+                (from us in UnsupportedSheets where us.IsActive select (UInt32) us.Position - 1).FirstOrDefault();
+            var foundVisible = false;
+
+            var totalSheets = sheetElements.Count() + UnsupportedSheets.Count;
+            for (var p = 1; p <= totalSheets; p++)
             {
-                if (!UnsupportedSheets.Any(us =>us.Position == p))
+                if (!UnsupportedSheets.Any(us => us.Position == p))
                 {
                     var sheet = sheetElements.ElementAt(p - UnsupportedSheets.Count(us => us.Position <= p) - 1);
                     workbook.Sheets.RemoveChild(sheet);
@@ -506,7 +519,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    var sheetId = UnsupportedSheets.First(us=>us.Position == p).SheetId;
+                    var sheetId = UnsupportedSheets.First(us => us.Position == p).SheetId;
                     var sheet = workbook.Sheets.Elements<Sheet>().First(s => s.SheetId == sheetId);
                     workbook.Sheets.RemoveChild(sheet);
                     workbook.Sheets.AppendChild(sheet);
@@ -518,11 +531,11 @@ namespace ClosedXML.Excel
             if (activeTab == 0)
             {
                 activeTab = firstSheetVisible;
-                foreach (XLWorksheet ws in worksheets)
+                foreach (var ws in worksheets)
                 {
                     if (!ws.TabActive) continue;
 
-                    activeTab = (UInt32)(ws.Position - 1);
+                    activeTab = (UInt32) (ws.Position - 1);
                     break;
                 }
             }
@@ -539,11 +552,11 @@ namespace ClosedXML.Excel
             }
 
             var definedNames = new DefinedNames();
-            foreach (XLWorksheet worksheet in WorksheetsInternal)
+            foreach (var worksheet in WorksheetsInternal)
             {
-                uint wsSheetId = (UInt32)worksheet.SheetId;
+                var wsSheetId = (UInt32) worksheet.SheetId;
                 UInt32 sheetId = 0;
-                foreach (Sheet s in workbook.Sheets.Elements<Sheet>().TakeWhile(s => s.SheetId != wsSheetId))
+                foreach (var s in workbook.Sheets.Elements<Sheet>().TakeWhile(s => s.SheetId != wsSheetId))
                 {
                     sheetId++;
                 }
@@ -551,46 +564,52 @@ namespace ClosedXML.Excel
                 if (worksheet.PageSetup.PrintAreas.Any())
                 {
                     var definedName = new DefinedName {Name = "_xlnm.Print_Area", LocalSheetId = sheetId};
-                    String worksheetName = worksheet.Name;
-                    string definedNameText = worksheet.PageSetup.PrintAreas.Aggregate(String.Empty,
-                                                                                      (current, printArea) =>
-                                                                                      current +
-                                                                                      ("'" + worksheetName + "'!" +
-                                                                                       printArea.RangeAddress.
-                                                                                           FirstAddress.ToStringFixed(XLReferenceStyle.A1) +
-                                                                                       ":" +
-                                                                                       printArea.RangeAddress.
-                                                                                           LastAddress.ToStringFixed(XLReferenceStyle.A1) +
-                                                                                       ","));
+                    var worksheetName = worksheet.Name;
+                    var definedNameText = worksheet.PageSetup.PrintAreas.Aggregate(String.Empty,
+                                                                                   (current, printArea) =>
+                                                                                   current +
+                                                                                   ("'" + worksheetName + "'!" +
+                                                                                    printArea.RangeAddress.
+                                                                                        FirstAddress.ToStringFixed(
+                                                                                            XLReferenceStyle.A1) +
+                                                                                    ":" +
+                                                                                    printArea.RangeAddress.
+                                                                                        LastAddress.ToStringFixed(
+                                                                                            XLReferenceStyle.A1) +
+                                                                                    ","));
                     definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
                     definedNames.AppendChild(definedName);
                 }
-                
+
                 if (worksheet.AutoFilter.Enabled)
                 {
-                    var definedName = new DefinedName { Name = "_xlnm._FilterDatabase", LocalSheetId = sheetId };
-                    definedName.Text = "'" + worksheet.Name + "'!" + worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(XLReferenceStyle.A1) +
-                                                               ":" + worksheet.AutoFilter.Range.RangeAddress.LastAddress.ToStringFixed(XLReferenceStyle.A1);
+                    var definedName = new DefinedName {Name = "_xlnm._FilterDatabase", LocalSheetId = sheetId};
+                    definedName.Text = "'" + worksheet.Name + "'!" +
+                                       worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(
+                                           XLReferenceStyle.A1) +
+                                       ":" +
+                                       worksheet.AutoFilter.Range.RangeAddress.LastAddress.ToStringFixed(
+                                           XLReferenceStyle.A1);
                     definedName.Hidden = BooleanValue.FromBoolean(true);
                     definedNames.AppendChild(definedName);
                 }
 
-                foreach (IXLNamedRange nr in worksheet.NamedRanges.Where(n=>n.Name != "_xlnm._FilterDatabase"))
+                foreach (var nr in worksheet.NamedRanges.Where(n => n.Name != "_xlnm._FilterDatabase"))
                 {
                     var definedName = new DefinedName
-                                          {
-                                              Name = nr.Name,
-                                              LocalSheetId = sheetId,
-                                              Text = nr.ToString()
-                                          };
+                        {
+                            Name = nr.Name,
+                            LocalSheetId = sheetId,
+                            Text = nr.ToString()
+                        };
                     if (!StringExtensions.IsNullOrWhiteSpace(nr.Comment))
                         definedName.Comment = nr.Comment;
                     definedNames.AppendChild(definedName);
                 }
 
 
-                string definedNameTextRow = String.Empty;
-                string definedNameTextColumn = String.Empty;
+                var definedNameTextRow = String.Empty;
+                var definedNameTextColumn = String.Empty;
                 if (worksheet.PageSetup.FirstRowToRepeatAtTop > 0)
                 {
                     definedNameTextRow = "'" + worksheet.Name + "'!" + worksheet.PageSetup.FirstRowToRepeatAtTop
@@ -598,8 +617,8 @@ namespace ClosedXML.Excel
                 }
                 if (worksheet.PageSetup.FirstColumnToRepeatAtLeft > 0)
                 {
-                    int minColumn = worksheet.PageSetup.FirstColumnToRepeatAtLeft;
-                    int maxColumn = worksheet.PageSetup.LastColumnToRepeatAtLeft;
+                    var minColumn = worksheet.PageSetup.FirstColumnToRepeatAtLeft;
+                    var maxColumn = worksheet.PageSetup.LastColumnToRepeatAtLeft;
                     definedNameTextColumn = "'" + worksheet.Name + "'!" +
                                             XLHelper.GetColumnLetterFromNumber(minColumn)
                                             + ":" + XLHelper.GetColumnLetterFromNumber(maxColumn);
@@ -618,22 +637,22 @@ namespace ClosedXML.Excel
                 if (titles.Length <= 0) continue;
 
                 var definedName2 = new DefinedName
-                                      {
-                                          Name = "_xlnm.Print_Titles",
-                                          LocalSheetId = sheetId,
-                                          Text = titles
-                                      };
+                    {
+                        Name = "_xlnm.Print_Titles",
+                        LocalSheetId = sheetId,
+                        Text = titles
+                    };
 
                 definedNames.AppendChild(definedName2);
             }
 
-            foreach (IXLNamedRange nr in NamedRanges)
+            foreach (var nr in NamedRanges)
             {
                 var definedName = new DefinedName
-                                      {
-                                          Name = nr.Name,
-                                          Text = nr.ToString()
-                                      };
+                    {
+                        Name = nr.Name,
+                        Text = nr.ToString()
+                    };
                 if (!StringExtensions.IsNullOrWhiteSpace(nr.Comment))
                     definedName.Comment = nr.Comment;
                 definedNames.AppendChild(definedName);
@@ -655,23 +674,28 @@ namespace ClosedXML.Excel
                 workbook.CalculationProperties.ReferenceMode = ReferenceStyle.ToOpenXml();
         }
 
-        private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart, SaveContext context)
+        private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart,
+                                                          SaveContext context)
         {
             // Call all table headers to make sure their names are filled
-            Int32 x = 0;
+            var x = 0;
             Worksheets.ForEach(w => w.Tables.ForEach(t => x = (t as XLTable).FieldNames.Count));
 
             sharedStringTablePart.SharedStringTable = new SharedStringTable {Count = 0, UniqueCount = 0};
 
-            Int32 stringId = 0;
+            var stringId = 0;
 
             var newStrings = new Dictionary<String, Int32>();
             var newRichStrings = new Dictionary<IXLRichText, Int32>();
-            foreach (XLCell c in Worksheets.Cast<XLWorksheet>().SelectMany(w => w.Internals.CellsCollection.GetCells(c => ((c.DataType == XLCellValues.Text && c.ShareString) || c.HasRichText)
-                                                                                                                                  
-                                                                                                                                  && (c as XLCell).InnerText.Length > 0
-                                                                                                                                  && StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)
-                                                                                                                                  )))
+            foreach (
+                var c in
+                    Worksheets.Cast<XLWorksheet>().SelectMany(
+                        w =>
+                        w.Internals.CellsCollection.GetCells(
+                            c => ((c.DataType == XLCellValues.Text && c.ShareString) || c.HasRichText)
+                                 && (c as XLCell).InnerText.Length > 0
+                                 && StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)
+                            )))
             {
                 c.DataType = XLCellValues.Text;
                 if (c.HasRichText)
@@ -681,20 +705,20 @@ namespace ClosedXML.Excel
                     else
                     {
                         var sharedStringItem = new SharedStringItem();
-                        foreach (IXLRichString rt in c.RichText)
+                        foreach (var rt in c.RichText)
                         {
                             sharedStringItem.Append(GetRun(rt));
                         }
 
                         if (c.RichText.HasPhonetics)
                         {
-                            foreach (IXLPhonetic p in c.RichText.Phonetics)
+                            foreach (var p in c.RichText.Phonetics)
                             {
                                 var phoneticRun = new PhoneticRun
-                                                      {
-                                                          BaseTextStartIndex = (UInt32)p.Start,
-                                                          EndingBaseIndex = (UInt32)p.End
-                                                      };
+                                    {
+                                        BaseTextStartIndex = (UInt32) p.Start,
+                                        EndingBaseIndex = (UInt32) p.End
+                                    };
 
                                 var text = new Text {Text = p.Text};
                                 if (p.Text.PreserveSpaces())
@@ -708,12 +732,12 @@ namespace ClosedXML.Excel
                                 context.SharedFonts.Add(f, new FontInfo {Font = f});
 
                             var phoneticProperties = new PhoneticProperties
-                                                         {
-                                                             FontId =
-                                                                 context.SharedFonts[
-                                                                     new XLFont(null, c.RichText.Phonetics)].
-                                                                 FontId
-                                                         };
+                                {
+                                    FontId =
+                                        context.SharedFonts[
+                                            new XLFont(null, c.RichText.Phonetics)].
+                                            FontId
+                                };
                             if (c.RichText.Phonetics.Alignment != XLPhoneticAlignment.Left)
                                 phoneticProperties.Alignment = c.RichText.Phonetics.Alignment.ToOpenXml();
                             if (c.RichText.Phonetics.Type != XLPhoneticType.FullWidthKatakana)
@@ -738,7 +762,7 @@ namespace ClosedXML.Excel
                         c.SharedStringId = newStrings[c.Value.ToString()];
                     else
                     {
-                        String s = c.Value.ToString();
+                        var s = c.Value.ToString();
                         var sharedStringItem = new SharedStringItem();
                         var text = new Text {Text = s};
                         if (!s.Trim().Equals(s))
@@ -757,11 +781,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static DocumentFormat.OpenXml.Spreadsheet.Run GetRun(IXLRichString rt)
+        private static Run GetRun(IXLRichString rt)
         {
-            var run = new DocumentFormat.OpenXml.Spreadsheet.Run();
+            var run = new Run();
 
-            var runProperties = new DocumentFormat.OpenXml.Spreadsheet.RunProperties();
+            var runProperties = new RunProperties();
 
             var bold = rt.Bold ? new Bold() : null;
             var italic = rt.Italic ? new Italic() : null;
@@ -770,12 +794,12 @@ namespace ClosedXML.Excel
                                 : null;
             var strike = rt.Strikethrough ? new Strike() : null;
             var verticalAlignment = new VerticalTextAlignment
-                                        {Val = rt.VerticalAlignment.ToOpenXml()};
+                {Val = rt.VerticalAlignment.ToOpenXml()};
             var shadow = rt.Shadow ? new Shadow() : null;
             var fontSize = new FontSize {Val = rt.FontSize};
             var color = GetNewColor(rt.FontColor);
             var fontName = new RunFont {Val = rt.FontName};
-            var fontFamilyNumbering = new FontFamily {Val = (Int32)rt.FontFamilyNumbering};
+            var fontFamilyNumbering = new FontFamily {Val = (Int32) rt.FontFamilyNumbering};
 
             if (bold != null) runProperties.Append(bold);
             if (italic != null) runProperties.Append(italic);
@@ -801,7 +825,7 @@ namespace ClosedXML.Excel
 
         private void GenerateCalculationChainPartContent(WorkbookPart workbookPart, SaveContext context)
         {
-            string thisRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+            var thisRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
             if (workbookPart.CalculationChainPart == null)
                 workbookPart.AddNewPart<CalculationChainPart>(thisRelId);
 
@@ -820,10 +844,10 @@ namespace ClosedXML.Excel
             //    calculationCells[cellReference].Add(calculationCell);
             //}
 
-            foreach (XLWorksheet worksheet in WorksheetsInternal)
+            foreach (var worksheet in WorksheetsInternal)
             {
                 var cellsWithoutFormulas = new HashSet<String>();
-                foreach (XLCell c in worksheet.Internals.CellsCollection.GetCells())
+                foreach (var c in worksheet.Internals.CellsCollection.GetCells())
                 {
                     if (StringExtensions.IsNullOrWhiteSpace(c.FormulaA1))
                         cellsWithoutFormulas.Add(c.Address.ToStringRelative());
@@ -837,21 +861,21 @@ namespace ClosedXML.Excel
                         if (c.FormulaA1.StartsWith("{"))
                         {
                             calculationChain.AppendChild(new CalculationCell
-                                                             {
-                                                                 CellReference = c.Address.ToString(),
-                                                                 SheetId = worksheet.SheetId,
-                                                                 Array = true
-                                                             });
+                                {
+                                    CellReference = c.Address.ToString(),
+                                    SheetId = worksheet.SheetId,
+                                    Array = true
+                                });
                             calculationChain.AppendChild(new CalculationCell
-                                                             {CellReference = c.Address.ToString(), InChildChain = true});
+                                {CellReference = c.Address.ToString(), InChildChain = true});
                         }
                         else
                         {
                             calculationChain.AppendChild(new CalculationCell
-                                                             {
-                                                                 CellReference = c.Address.ToString(),
-                                                                 SheetId = worksheet.SheetId
-                                                             });
+                                {
+                                    CellReference = c.Address.ToString(),
+                                    SheetId = worksheet.SheetId
+                                });
                         }
                     }
                 }
@@ -884,19 +908,19 @@ namespace ClosedXML.Excel
 
             var dark1Color1 = new Dark1Color();
             var systemColor1 = new SystemColor
-                                   {
-                                       Val = SystemColorValues.WindowText,
-                                       LastColor = Theme.Text1.Color.ToHex().Substring(2)
-                                   };
+                {
+                    Val = SystemColorValues.WindowText,
+                    LastColor = Theme.Text1.Color.ToHex().Substring(2)
+                };
 
             dark1Color1.AppendChild(systemColor1);
 
             var light1Color1 = new Light1Color();
             var systemColor2 = new SystemColor
-                                   {
-                                       Val = SystemColorValues.Window,
-                                       LastColor = Theme.Background1.Color.ToHex().Substring(2)
-                                   };
+                {
+                    Val = SystemColorValues.Window,
+                    LastColor = Theme.Background1.Color.ToHex().Substring(2)
+                };
 
             light1Color1.AppendChild(systemColor2);
 
@@ -1208,12 +1232,12 @@ namespace ClosedXML.Excel
             var lineStyleList1 = new LineStyleList();
 
             var outline1 = new Outline
-                               {
-                                   Width = 9525,
-                                   CapType = LineCapValues.Flat,
-                                   CompoundLineType = CompoundLineValues.Single,
-                                   Alignment = PenAlignmentValues.Center
-                               };
+                {
+                    Width = 9525,
+                    CapType = LineCapValues.Flat,
+                    CompoundLineType = CompoundLineValues.Single,
+                    Alignment = PenAlignmentValues.Center
+                };
 
             var solidFill2 = new SolidFill();
 
@@ -1231,12 +1255,12 @@ namespace ClosedXML.Excel
             outline1.AppendChild(presetDash1);
 
             var outline2 = new Outline
-                               {
-                                   Width = 25400,
-                                   CapType = LineCapValues.Flat,
-                                   CompoundLineType = CompoundLineValues.Single,
-                                   Alignment = PenAlignmentValues.Center
-                               };
+                {
+                    Width = 25400,
+                    CapType = LineCapValues.Flat,
+                    CompoundLineType = CompoundLineValues.Single,
+                    Alignment = PenAlignmentValues.Center
+                };
 
             var solidFill3 = new SolidFill();
             var schemeColor9 = new SchemeColor {Val = SchemeColorValues.PhColor};
@@ -1248,12 +1272,12 @@ namespace ClosedXML.Excel
             outline2.AppendChild(presetDash2);
 
             var outline3 = new Outline
-                               {
-                                   Width = 38100,
-                                   CapType = LineCapValues.Flat,
-                                   CompoundLineType = CompoundLineValues.Single,
-                                   Alignment = PenAlignmentValues.Center
-                               };
+                {
+                    Width = 38100,
+                    CapType = LineCapValues.Flat,
+                    CompoundLineType = CompoundLineValues.Single,
+                    Alignment = PenAlignmentValues.Center
+                };
 
             var solidFill4 = new SolidFill();
             var schemeColor10 = new SchemeColor {Val = SchemeColorValues.PhColor};
@@ -1275,12 +1299,12 @@ namespace ClosedXML.Excel
             var effectList1 = new EffectList();
 
             var outerShadow1 = new OuterShadow
-                                   {
-                                       BlurRadius = 40000L,
-                                       Distance = 20000L,
-                                       Direction = 5400000,
-                                       RotateWithShape = false
-                                   };
+                {
+                    BlurRadius = 40000L,
+                    Distance = 20000L,
+                    Direction = 5400000,
+                    RotateWithShape = false
+                };
 
             var rgbColorModelHex11 = new RgbColorModelHex {Val = "000000"};
             var alpha1 = new Alpha {Val = 38000};
@@ -1298,12 +1322,12 @@ namespace ClosedXML.Excel
             var effectList2 = new EffectList();
 
             var outerShadow2 = new OuterShadow
-                                   {
-                                       BlurRadius = 40000L,
-                                       Distance = 23000L,
-                                       Direction = 5400000,
-                                       RotateWithShape = false
-                                   };
+                {
+                    BlurRadius = 40000L,
+                    Distance = 23000L,
+                    Direction = 5400000,
+                    RotateWithShape = false
+                };
 
             var rgbColorModelHex12 = new RgbColorModelHex {Val = "000000"};
             var alpha2 = new Alpha {Val = 35000};
@@ -1321,12 +1345,12 @@ namespace ClosedXML.Excel
             var effectList3 = new EffectList();
 
             var outerShadow3 = new OuterShadow
-                                   {
-                                       BlurRadius = 40000L,
-                                       Distance = 23000L,
-                                       Direction = 5400000,
-                                       RotateWithShape = false
-                                   };
+                {
+                    BlurRadius = 40000L,
+                    Distance = 23000L,
+                    Direction = 5400000,
+                    RotateWithShape = false
+                };
 
             var rgbColorModelHex13 = new RgbColorModelHex {Val = "000000"};
             var alpha3 = new Alpha {Val = 35000};
@@ -1487,16 +1511,16 @@ namespace ClosedXML.Excel
             var properties2 = new DocumentFormat.OpenXml.CustomProperties.Properties();
             properties2.AddNamespaceDeclaration("vt",
                                                 "http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
-            Int32 propertyId = 1;
-            foreach (IXLCustomProperty p in CustomProperties)
+            var propertyId = 1;
+            foreach (var p in CustomProperties)
             {
                 propertyId++;
                 var customDocumentProperty = new CustomDocumentProperty
-                                                 {
-                                                     FormatId = "{D5CDD505-2E9C-101B-9397-08002B2CF9AE}",
-                                                     PropertyId = propertyId,
-                                                     Name = p.Name
-                                                 };
+                    {
+                        FormatId = "{D5CDD505-2E9C-101B-9397-08002B2CF9AE}",
+                        PropertyId = propertyId,
+                        Name = p.Name
+                    };
                 if (p.Type == XLCustomPropertyType.Text)
                 {
                     var vTlpwstr1 = new VTLPWSTR {Text = p.GetValue<string>()};
@@ -1505,19 +1529,19 @@ namespace ClosedXML.Excel
                 else if (p.Type == XLCustomPropertyType.Date)
                 {
                     var vTFileTime1 = new VTFileTime
-                                          {
-                                              Text =
-                                                  p.GetValue<DateTime>().ToUniversalTime().ToString(
-                                                      "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'")
-                                          };
+                        {
+                            Text =
+                                p.GetValue<DateTime>().ToUniversalTime().ToString(
+                                    "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'")
+                        };
                     customDocumentProperty.AppendChild(vTFileTime1);
                 }
                 else if (p.Type == XLCustomPropertyType.Number)
                 {
                     var vTDouble1 = new VTDouble
-                                        {
-                                            Text = p.GetValue<Double>().ToString(CultureInfo.InvariantCulture)
-                                        };
+                        {
+                            Text = p.GetValue<Double>().ToString(CultureInfo.InvariantCulture)
+                        };
                     customDocumentProperty.AppendChild(vTDouble1);
                 }
                 else
@@ -1550,11 +1574,11 @@ namespace ClosedXML.Excel
 
         private static string GetTableName(String originalTableName, SaveContext context)
         {
-            string tableName = originalTableName.RemoveSpecialCharacters();
-            string name = tableName;
+            var tableName = originalTableName.RemoveSpecialCharacters();
+            var name = tableName;
             if (context.TableNames.Contains(name))
             {
-                Int32 i = 1;
+                var i = 1;
                 name = tableName + i.ToStringLookup();
                 while (context.TableNames.Contains(name))
                 {
@@ -1571,15 +1595,15 @@ namespace ClosedXML.Excel
                                                                SaveContext context)
         {
             context.TableId++;
-            string reference = xlTable.RangeAddress.FirstAddress + ":" + xlTable.RangeAddress.LastAddress;
-            String tableName = GetTableName(xlTable.Name, context);
+            var reference = xlTable.RangeAddress.FirstAddress + ":" + xlTable.RangeAddress.LastAddress;
+            var tableName = GetTableName(xlTable.Name, context);
             var table = new Table
-                            {
-                                Id = context.TableId,
-                                Name = tableName,
-                                DisplayName = tableName,
-                                Reference = reference
-                            };
+                {
+                    Id = context.TableId,
+                    Name = tableName,
+                    DisplayName = tableName,
+                    Reference = reference
+                };
 
             if (!xlTable.ShowHeaderRow)
                 table.HeaderRowCount = 0;
@@ -1589,7 +1613,7 @@ namespace ClosedXML.Excel
             else
                 table.TotalsRowShown = false;
 
-            var tableColumns1 = new TableColumns {Count = (UInt32)xlTable.ColumnCount()};
+            var tableColumns1 = new TableColumns {Count = (UInt32) xlTable.ColumnCount()};
 
             UInt32 columnId = 0;
             foreach (var fieldName in xlTable.FieldNames.Keys)
@@ -1597,10 +1621,10 @@ namespace ClosedXML.Excel
                 columnId++;
                 var xlField = xlTable.Field(fieldName);
                 var tableColumn1 = new TableColumn
-                                       {
-                                           Id = columnId,
-                                           Name = fieldName
-                                       };
+                    {
+                        Id = columnId,
+                        Name = fieldName
+                    };
                 if (xlTable.ShowTotalsRow)
                 {
                     if (xlField.TotalsRowFunction != XLTotalsRowFunction.None)
@@ -1618,13 +1642,13 @@ namespace ClosedXML.Excel
             }
 
             var tableStyleInfo1 = new TableStyleInfo
-                                      {
-                                          Name = Enum.GetName(typeof(XLTableTheme), xlTable.Theme),
-                                          ShowFirstColumn = xlTable.EmphasizeFirstColumn,
-                                          ShowLastColumn = xlTable.EmphasizeLastColumn,
-                                          ShowRowStripes = xlTable.ShowRowStripes,
-                                          ShowColumnStripes = xlTable.ShowColumnStripes
-                                      };
+                {
+                    Name = Enum.GetName(typeof (XLTableTheme), xlTable.Theme),
+                    ShowFirstColumn = xlTable.EmphasizeFirstColumn,
+                    ShowLastColumn = xlTable.EmphasizeLastColumn,
+                    ShowRowStripes = xlTable.ShowRowStripes,
+                    ShowColumnStripes = xlTable.ShowColumnStripes
+                };
 
             if (xlTable.ShowAutoFilter)
             {
@@ -1632,8 +1656,8 @@ namespace ClosedXML.Excel
                 if (xlTable.ShowTotalsRow)
                 {
                     xlTable.AutoFilter.Range = xlTable.Worksheet.Range(
-                                                xlTable.RangeAddress.FirstAddress.RowNumber, xlTable.RangeAddress.FirstAddress.ColumnNumber,
-                                                xlTable.RangeAddress.LastAddress.RowNumber - 1, xlTable.RangeAddress.LastAddress.ColumnNumber);
+                        xlTable.RangeAddress.FirstAddress.RowNumber, xlTable.RangeAddress.FirstAddress.ColumnNumber,
+                        xlTable.RangeAddress.LastAddress.RowNumber - 1, xlTable.RangeAddress.LastAddress.ColumnNumber);
                 }
                 else
                     xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
@@ -1648,2065 +1672,6 @@ namespace ClosedXML.Excel
 
             tableDefinitionPart.Table = table;
         }
-
-        #region GenerateWorkbookStylesPartContent
-
-        private void GenerateWorkbookStylesPartContent(WorkbookStylesPart workbookStylesPart, SaveContext context)
-        {
-            var defaultStyle = new XLStyle(null, DefaultStyle);
-            Int32 defaultStyleId = GetStyleId(defaultStyle);
-            if (!context.SharedFonts.ContainsKey(defaultStyle.Font))
-                context.SharedFonts.Add(defaultStyle.Font, new FontInfo {FontId = 0, Font = defaultStyle.Font});
-
-            var sharedFills = new Dictionary<IXLFill, FillInfo>
-                                  {{defaultStyle.Fill, new FillInfo {FillId = 2, Fill = defaultStyle.Fill}}};
-
-            var sharedBorders = new Dictionary<IXLBorder, BorderInfo>
-                                    {{defaultStyle.Border, new BorderInfo {BorderId = 0, Border = defaultStyle.Border}}};
-
-            var sharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>
-                                          {
-                                              {
-                                                  defaultStyle.NumberFormat,
-                                                  new NumberFormatInfo
-                                                      {NumberFormatId = 0, NumberFormat = defaultStyle.NumberFormat}
-                                                  }
-                                          };
-
-            //Dictionary<String, AlignmentInfo> sharedAlignments = new Dictionary<String, AlignmentInfo>();
-            //sharedAlignments.Add(defaultStyle.Alignment.ToString(), new AlignmentInfo() { AlignmentId = 0, Alignment = defaultStyle.Alignment });
-
-            if (workbookStylesPart.Stylesheet == null)
-                workbookStylesPart.Stylesheet = new Stylesheet();
-
-            // Cell styles = Named styles
-            if (workbookStylesPart.Stylesheet.CellStyles == null)
-                workbookStylesPart.Stylesheet.CellStyles = new CellStyles();
-
-            UInt32 defaultFormatId;
-            if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.Name == "Normal"))
-            {
-                defaultFormatId =
-                    workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Where(c => c.Name == "Normal").Single
-                        ().FormatId.Value;
-            }
-            else if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any())
-            {
-                defaultFormatId =
-                    workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Max(c => c.FormatId.Value) + 1;
-            }
-            else
-                defaultFormatId = 0;
-
-            context.SharedStyles.Add(defaultStyleId,
-                                     new StyleInfo
-                                         {
-                                             StyleId = defaultFormatId,
-                                             Style = defaultStyle,
-                                             FontId = 0,
-                                             FillId = 0,
-                                             BorderId = 0,
-                                             NumberFormatId = 0
-                                             //AlignmentId = 0
-                                         });
-
-            UInt32 styleCount = 1;
-            UInt32 fontCount = 1;
-            UInt32 fillCount = 3;
-            UInt32 borderCount = 1;
-            Int32 numberFormatCount = 1;
-            var xlStyles = new HashSet<Int32>();
-
-            foreach (XLWorksheet worksheet in WorksheetsInternal)
-            {
-                
-                foreach (var s in worksheet.GetStyleIds().Where(s => !xlStyles.Contains(s)))
-                    xlStyles.Add(s);
-
-                foreach (
-                    Int32 s in
-                        worksheet.Internals.ColumnsCollection.Select(kp => kp.Value.GetStyleId()).Where(
-                            s => !xlStyles.Contains(s)))
-                    xlStyles.Add(s);
-
-                foreach (
-                    Int32 s in
-                        worksheet.Internals.RowsCollection.Select(kp => kp.Value.GetStyleId()).Where(s => !xlStyles.Contains(s))
-                    )
-                    xlStyles.Add(s);
-            }
-
-            foreach (var xlStyle in xlStyles.Select(GetStyleById))
-            {
-                if (!context.SharedFonts.ContainsKey(xlStyle.Font))
-                    context.SharedFonts.Add(xlStyle.Font, new FontInfo {FontId = fontCount++, Font = xlStyle.Font});
-
-                if (!sharedFills.ContainsKey(xlStyle.Fill))
-                    sharedFills.Add(xlStyle.Fill, new FillInfo {FillId = fillCount++, Fill = xlStyle.Fill});
-
-                if (!sharedBorders.ContainsKey(xlStyle.Border))
-                    sharedBorders.Add(xlStyle.Border, new BorderInfo {BorderId = borderCount++, Border = xlStyle.Border});
-
-                if (   xlStyle.NumberFormat.NumberFormatId != -1 
-                       || sharedNumberFormats.ContainsKey(xlStyle.NumberFormat))
-                    continue;
-
-                sharedNumberFormats.Add(xlStyle.NumberFormat,
-                                        new NumberFormatInfo
-                                            {
-                                                NumberFormatId = numberFormatCount + 164,
-                                                NumberFormat = xlStyle.NumberFormat
-                                            });
-                numberFormatCount++;
-            }
-
-            var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, sharedNumberFormats);
-            ResolveFonts(workbookStylesPart, context);
-            var allSharedFills = ResolveFills(workbookStylesPart, sharedFills);
-            var allSharedBorders = ResolveBorders(workbookStylesPart, sharedBorders);
-
-            foreach (Int32 id in xlStyles)
-            {
-                var xlStyle = GetStyleById(id);
-                if (context.SharedStyles.ContainsKey(id)) continue;
-
-                int numberFormatId = xlStyle.NumberFormat.NumberFormatId >= 0
-                                         ? xlStyle.NumberFormat.NumberFormatId
-                                         : allSharedNumberFormats[xlStyle.NumberFormat].NumberFormatId;
-
-                context.SharedStyles.Add(id,
-                                         new StyleInfo
-                                             {
-                                                 StyleId = styleCount++,
-                                                 Style = xlStyle,
-                                                 FontId = context.SharedFonts[xlStyle.Font].FontId,
-                                                 FillId = allSharedFills[xlStyle.Fill].FillId,
-                                                 BorderId = allSharedBorders[xlStyle.Border].BorderId,
-                                                 NumberFormatId = numberFormatId
-                                             });
-            }
-
-            ResolveCellStyleFormats(workbookStylesPart, context);
-            ResolveRest(workbookStylesPart, context);
-
-            if (!workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.Name == "Normal"))
-            {
-                //var defaultFormatId = context.SharedStyles.Values.Where(s => s.Style.Equals(DefaultStyle)).Single().StyleId;
-
-                var cellStyle1 = new CellStyle {Name = "Normal", FormatId = defaultFormatId, BuiltinId = 0U};
-                workbookStylesPart.Stylesheet.CellStyles.AppendChild(cellStyle1);
-            }
-            workbookStylesPart.Stylesheet.CellStyles.Count = (UInt32)workbookStylesPart.Stylesheet.CellStyles.Count();
-
-            var newSharedStyles = new Dictionary<Int32, StyleInfo>();
-            foreach (KeyValuePair<Int32, StyleInfo> ss in context.SharedStyles)
-            {
-                Int32 styleId = -1;
-                foreach (CellFormat f in workbookStylesPart.Stylesheet.CellFormats)
-                {
-                    styleId++;
-                    if (CellFormatsAreEqual(f, ss.Value))
-                        break;
-                }
-                if (styleId == -1)
-                    styleId = 0;
-                var si = ss.Value;
-                si.StyleId = (UInt32)styleId;
-                newSharedStyles.Add(ss.Key, si);
-            }
-            context.SharedStyles.Clear();
-            newSharedStyles.ForEach(kp => context.SharedStyles.Add(kp.Key, kp.Value));
-
-            AddDifferentialFormats(workbookStylesPart, context);
-        }
-
-        private void AddDifferentialFormats(WorkbookStylesPart workbookStylesPart, SaveContext context)
-        {
-            if (workbookStylesPart.Stylesheet.DifferentialFormats == null)
-                workbookStylesPart.Stylesheet.DifferentialFormats = new DifferentialFormats();
-            
-
-            var differentialFormats = workbookStylesPart.Stylesheet.DifferentialFormats;
-
-            FillDifferentialFormatsCollection(differentialFormats, context.DifferentialFormats);
-
-
-            foreach(var ws in Worksheets)
-            {
-                foreach(var cf in ws.ConditionalFormats)
-                {
-                    if(!context.DifferentialFormats.ContainsKey(cf.Style))
-                        AddDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, cf, context);
-                }
-            }
-
-            differentialFormats.Count = (UInt32) differentialFormats.Count();
-            if (differentialFormats.Count == 0)
-                workbookStylesPart.Stylesheet.DifferentialFormats = null;
-
-        }
-
-        private void FillDifferentialFormatsCollection(DifferentialFormats differentialFormats, Dictionary<IXLStyle, int> dictionary)
-        {
-            dictionary.Clear();
-            Int32 id = 0;
-            foreach(var df in differentialFormats.Elements<DifferentialFormat>())
-            {
-                var style = new XLStyle(new XLStylizedEmpty(DefaultStyle), DefaultStyle);
-                LoadFont(df.Font, style.Font);
-                LoadBorder(df.Border, style.Border);
-                LoadNumberFormat(df.NumberingFormat, style.NumberFormat);
-                LoadFill(df.Fill, style.Fill);
-                if (!dictionary.ContainsKey(style))
-                    dictionary.Add(style, ++id);
-            }
-        }
-
-        private void AddDifferentialFormat(DifferentialFormats differentialFormats, IXLConditionalFormat cf, SaveContext context)
-        {
-            var differentialFormat = new DifferentialFormat();
-            differentialFormat.Append(GetNewFont(new FontInfo {Font = cf.Style.Font}));
-            if (!StringExtensions.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
-            {
-                var numberFormat = new NumberingFormat
-                                       {
-                                           NumberFormatId = (UInt32) (differentialFormats.Count() + 164),
-                                           FormatCode = cf.Style.NumberFormat.Format
-                                       };
-                differentialFormat.Append(numberFormat);
-            }
-            differentialFormat.Append(GetNewFill(new FillInfo {Fill = cf.Style.Fill}));
-            differentialFormat.Append(GetNewBorder(new BorderInfo { Border = cf.Style.Border }));
-
-            differentialFormats.Append(differentialFormat);
-
-            context.DifferentialFormats.Add(cf.Style, differentialFormats.Count() - 1);
-        }
-
-
-
-        private static void ResolveRest(WorkbookStylesPart workbookStylesPart, SaveContext context)
-        {
-            if (workbookStylesPart.Stylesheet.CellFormats == null)
-                workbookStylesPart.Stylesheet.CellFormats = new CellFormats();
-
-            foreach (StyleInfo styleInfo in context.SharedStyles.Values)
-            {
-                var info = styleInfo;
-                Boolean foundOne =
-                    workbookStylesPart.Stylesheet.CellFormats.Cast<CellFormat>().Any(f => CellFormatsAreEqual(f, info));
-                
-                if (foundOne) continue;
-
-                var cellFormat = GetCellFormat(styleInfo);
-                cellFormat.FormatId = 0;
-                var alignment = new Alignment
-                                    {
-                                        Horizontal = styleInfo.Style.Alignment.Horizontal.ToOpenXml(),
-                                        Vertical = styleInfo.Style.Alignment.Vertical.ToOpenXml(),
-                                        Indent = (UInt32)styleInfo.Style.Alignment.Indent,
-                                        ReadingOrder = (UInt32)styleInfo.Style.Alignment.ReadingOrder,
-                                        WrapText = styleInfo.Style.Alignment.WrapText,
-                                        TextRotation = (UInt32)styleInfo.Style.Alignment.TextRotation,
-                                        ShrinkToFit = styleInfo.Style.Alignment.ShrinkToFit,
-                                        RelativeIndent = styleInfo.Style.Alignment.RelativeIndent,
-                                        JustifyLastLine = styleInfo.Style.Alignment.JustifyLastLine
-                                    };
-                cellFormat.AppendChild(alignment);
-
-                if (cellFormat.ApplyProtection.Value)
-                    cellFormat.AppendChild(GetProtection(styleInfo));
-
-                workbookStylesPart.Stylesheet.CellFormats.AppendChild(cellFormat);
-            }
-            workbookStylesPart.Stylesheet.CellFormats.Count = (UInt32)workbookStylesPart.Stylesheet.CellFormats.Count();
-        }
-
-        private static void ResolveCellStyleFormats(WorkbookStylesPart workbookStylesPart,
-                                                    SaveContext context)
-        {
-            if (workbookStylesPart.Stylesheet.CellStyleFormats == null)
-                workbookStylesPart.Stylesheet.CellStyleFormats = new CellStyleFormats();
-
-            foreach (StyleInfo styleInfo in context.SharedStyles.Values)
-            {
-                var info = styleInfo;
-                Boolean foundOne =
-                    workbookStylesPart.Stylesheet.CellStyleFormats.Cast<CellFormat>().Any(
-                        f => CellFormatsAreEqual(f, info));
-
-                if (foundOne) continue;
-
-                var cellStyleFormat = GetCellFormat(styleInfo);
-
-                if (cellStyleFormat.ApplyProtection.Value)
-                    cellStyleFormat.AppendChild(GetProtection(styleInfo));
-
-                workbookStylesPart.Stylesheet.CellStyleFormats.AppendChild(cellStyleFormat);
-            }
-            workbookStylesPart.Stylesheet.CellStyleFormats.Count =
-                (UInt32)workbookStylesPart.Stylesheet.CellStyleFormats.Count();
-        }
-
-        private static bool ApplyFill(StyleInfo styleInfo)
-        {
-            return styleInfo.Style.Fill.PatternType.ToOpenXml() == PatternValues.None;
-        }
-
-        private static bool ApplyBorder(StyleInfo styleInfo)
-        {
-            var opBorder = styleInfo.Style.Border;
-            return (opBorder.BottomBorder.ToOpenXml() != BorderStyleValues.None
-                    || opBorder.DiagonalBorder.ToOpenXml() != BorderStyleValues.None
-                    || opBorder.RightBorder.ToOpenXml() != BorderStyleValues.None
-                    || opBorder.LeftBorder.ToOpenXml() != BorderStyleValues.None
-                    || opBorder.TopBorder.ToOpenXml() != BorderStyleValues.None);
-        }
-
-        private static bool ApplyProtection(StyleInfo styleInfo)
-        {
-            return styleInfo.Style.Protection != null;
-        }
-
-        private static CellFormat GetCellFormat(StyleInfo styleInfo)
-        {
-            var cellFormat = new CellFormat
-                                 {
-                                     NumberFormatId = (UInt32)styleInfo.NumberFormatId,
-                                     FontId = styleInfo.FontId,
-                                     FillId = styleInfo.FillId,
-                                     BorderId = styleInfo.BorderId,
-                                     ApplyNumberFormat = false,
-                                     ApplyFill = ApplyFill(styleInfo),
-                                     ApplyBorder = ApplyBorder(styleInfo),
-                                     ApplyAlignment = false,
-                                     ApplyProtection = ApplyProtection(styleInfo)
-                                 };
-            return cellFormat;
-        }
-
-        private static Protection GetProtection(StyleInfo styleInfo)
-        {
-            return new Protection
-                       {
-                           Locked = styleInfo.Style.Protection.Locked,
-                           Hidden = styleInfo.Style.Protection.Hidden
-                       };
-        }
-
-        private static bool CellFormatsAreEqual(CellFormat f, StyleInfo styleInfo)
-        {
-            return
-                   f.BorderId != null && styleInfo.BorderId == f.BorderId
-                && f.FillId != null && styleInfo.FillId == f.FillId
-                && f.FontId != null && styleInfo.FontId == f.FontId
-                && f.NumberFormatId != null && styleInfo.NumberFormatId == f.NumberFormatId
-                && f.ApplyNumberFormat != null && f.ApplyNumberFormat == false
-                && f.ApplyAlignment != null && f.ApplyAlignment == false
-                && f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo)
-                && f.ApplyBorder != null && f.ApplyBorder == ApplyBorder(styleInfo)
-                && AlignmentsAreEqual(f.Alignment, styleInfo.Style.Alignment)
-                && ProtectionsAreEqual(f.Protection, styleInfo.Style.Protection)
-                ;
-        }
-
-        private static bool ProtectionsAreEqual(Protection protection, IXLProtection xlProtection)
-        {
-            var p = new XLProtection();
-            if (protection != null)
-            {
-                if (protection.Locked != null)
-                    p.Locked = protection.Locked.Value;
-                if (protection.Hidden != null)
-                    p.Hidden = protection.Hidden.Value;
-            }
-            return p.Equals(xlProtection);
-        }
-
-        private static bool AlignmentsAreEqual(Alignment alignment, IXLAlignment xlAlignment)
-        {
-            var a = new XLAlignment();
-            if (alignment != null)
-            {
-                if (alignment.Indent != null)
-                    a.Indent = (Int32)alignment.Indent.Value;
-
-                if (alignment.Horizontal != null)
-                    a.Horizontal = alignment.Horizontal.Value.ToClosedXml();
-                if (alignment.Vertical != null)
-                    a.Vertical = alignment.Vertical.Value.ToClosedXml();
-
-                if (alignment.ReadingOrder != null)
-                    a.ReadingOrder = alignment.ReadingOrder.Value.ToClosedXml();
-                if (alignment.WrapText != null)
-                    a.WrapText = alignment.WrapText.Value;
-                if (alignment.TextRotation != null)
-                    a.TextRotation = (Int32)alignment.TextRotation.Value;
-                if (alignment.ShrinkToFit != null)
-                    a.ShrinkToFit = alignment.ShrinkToFit.Value;
-                if (alignment.RelativeIndent != null)
-                    a.RelativeIndent = alignment.RelativeIndent.Value;
-                if (alignment.JustifyLastLine != null)
-                    a.JustifyLastLine = alignment.JustifyLastLine.Value;
-            }
-            return a.Equals(xlAlignment);
-        }
-
-        private Dictionary<IXLBorder, BorderInfo> ResolveBorders(WorkbookStylesPart workbookStylesPart,
-                                                                 Dictionary<IXLBorder, BorderInfo> sharedBorders)
-        {
-            if (workbookStylesPart.Stylesheet.Borders == null)
-                workbookStylesPart.Stylesheet.Borders = new Borders();
-
-            var allSharedBorders = new Dictionary<IXLBorder, BorderInfo>();
-            foreach (BorderInfo borderInfo in sharedBorders.Values)
-            {
-                Int32 borderId = 0;
-                Boolean foundOne = false;
-                foreach (Border f in workbookStylesPart.Stylesheet.Borders)
-                {
-                    if (BordersAreEqual(f, borderInfo.Border))
-                    {
-                        foundOne = true;
-                        break;
-                    }
-                    borderId++;
-                }
-                if (!foundOne)
-                {
-                    var border = GetNewBorder(borderInfo);
-                    workbookStylesPart.Stylesheet.Borders.AppendChild(border);
-                }
-                allSharedBorders.Add(borderInfo.Border,
-                                     new BorderInfo {Border = borderInfo.Border, BorderId = (UInt32)borderId});
-            }
-            workbookStylesPart.Stylesheet.Borders.Count = (UInt32)workbookStylesPart.Stylesheet.Borders.Count();
-            return allSharedBorders;
-        }
-
-        private static Border GetNewBorder(BorderInfo borderInfo)
-        {
-            var border = new Border
-                             {DiagonalUp = borderInfo.Border.DiagonalUp, DiagonalDown = borderInfo.Border.DiagonalDown};
-
-            var leftBorder = new LeftBorder {Style = borderInfo.Border.LeftBorder.ToOpenXml()};
-            var leftBorderColor = GetNewColor(borderInfo.Border.LeftBorderColor);
-            leftBorder.AppendChild(leftBorderColor);
-            border.AppendChild(leftBorder);
-
-            var rightBorder = new RightBorder {Style = borderInfo.Border.RightBorder.ToOpenXml()};
-            var rightBorderColor = GetNewColor(borderInfo.Border.RightBorderColor);
-            rightBorder.AppendChild(rightBorderColor);
-            border.AppendChild(rightBorder);
-
-            var topBorder = new TopBorder {Style = borderInfo.Border.TopBorder.ToOpenXml()};
-            var topBorderColor = GetNewColor(borderInfo.Border.TopBorderColor);
-            topBorder.AppendChild(topBorderColor);
-            border.AppendChild(topBorder);
-
-            var bottomBorder = new BottomBorder {Style = borderInfo.Border.BottomBorder.ToOpenXml()};
-            var bottomBorderColor = GetNewColor(borderInfo.Border.BottomBorderColor);
-            bottomBorder.AppendChild(bottomBorderColor);
-            border.AppendChild(bottomBorder);
-
-            var diagonalBorder = new DiagonalBorder {Style = borderInfo.Border.DiagonalBorder.ToOpenXml()};
-            var diagonalBorderColor = GetNewColor(borderInfo.Border.DiagonalBorderColor);
-            diagonalBorder.AppendChild(diagonalBorderColor);
-            border.AppendChild(diagonalBorder);
-
-            return border;
-        }
-
-        private bool BordersAreEqual(Border b, IXLBorder xlBorder)
-        {
-            var nb = new XLBorder();
-            if (b.DiagonalUp != null)
-                nb.DiagonalUp = b.DiagonalUp.Value;
-
-            if (b.DiagonalDown != null)
-                nb.DiagonalDown = b.DiagonalDown.Value;
-
-            if (b.LeftBorder != null)
-            {
-                if (b.LeftBorder.Style != null)
-                    nb.LeftBorder = b.LeftBorder.Style.Value.ToClosedXml();
-                var bColor = GetColor(b.LeftBorder.Color);
-                if (bColor.HasValue)
-                    nb.LeftBorderColor = bColor;
-            }
-
-            if (b.RightBorder != null)
-            {
-                if (b.RightBorder.Style != null)
-                    nb.RightBorder = b.RightBorder.Style.Value.ToClosedXml();
-                var bColor = GetColor(b.RightBorder.Color);
-                if (bColor.HasValue)
-                    nb.RightBorderColor = bColor;
-            }
-
-            if (b.TopBorder != null)
-            {
-                if (b.TopBorder.Style != null)
-                    nb.TopBorder = b.TopBorder.Style.Value.ToClosedXml();
-                var bColor = GetColor(b.TopBorder.Color);
-                if (bColor.HasValue)
-                    nb.TopBorderColor = bColor;
-            }
-
-            if (b.BottomBorder != null)
-            {
-                if (b.BottomBorder.Style != null)
-                    nb.BottomBorder = b.BottomBorder.Style.Value.ToClosedXml();
-                var bColor = GetColor(b.BottomBorder.Color);
-                if (bColor.HasValue)
-                    nb.BottomBorderColor = bColor;
-            }
-
-            return nb.Equals(xlBorder);
-        }
-
-        private Dictionary<IXLFill, FillInfo> ResolveFills(WorkbookStylesPart workbookStylesPart,
-                                                           Dictionary<IXLFill, FillInfo> sharedFills)
-        {
-            if (workbookStylesPart.Stylesheet.Fills == null)
-                workbookStylesPart.Stylesheet.Fills = new Fills();
-
-            ResolveFillWithPattern(workbookStylesPart.Stylesheet.Fills, PatternValues.None);
-            ResolveFillWithPattern(workbookStylesPart.Stylesheet.Fills, PatternValues.Gray125);
-
-            var allSharedFills = new Dictionary<IXLFill, FillInfo>();
-            foreach (FillInfo fillInfo in sharedFills.Values)
-            {
-                Int32 fillId = 0;
-                Boolean foundOne = false;
-                foreach (Fill f in workbookStylesPart.Stylesheet.Fills)
-                {
-                    if (FillsAreEqual(f, fillInfo.Fill))
-                    {
-                        foundOne = true;
-                        break;
-                    }
-                    fillId++;
-                }
-                if (!foundOne)
-                {
-                    var fill = GetNewFill(fillInfo);
-                    workbookStylesPart.Stylesheet.Fills.AppendChild(fill);
-                }
-                allSharedFills.Add(fillInfo.Fill, new FillInfo {Fill = fillInfo.Fill, FillId = (UInt32)fillId});
-            }
-
-            workbookStylesPart.Stylesheet.Fills.Count = (UInt32)workbookStylesPart.Stylesheet.Fills.Count();
-            return allSharedFills;
-        }
-
-        private static void ResolveFillWithPattern(Fills fills, PatternValues patternValues)
-        {
-            if (fills.Elements<Fill>().Any(f =>
-                                           f.PatternFill.PatternType == patternValues
-                                           && f.PatternFill.ForegroundColor == null
-                                           && f.PatternFill.BackgroundColor == null
-                )) return;
-
-            var fill1 = new Fill();
-            var patternFill1 = new PatternFill {PatternType = patternValues};
-            fill1.AppendChild(patternFill1);
-            fills.AppendChild(fill1);
-        }
-
-        private static Fill GetNewFill(FillInfo fillInfo)
-        {
-            var fill = new Fill();
-
-            var patternFill = new PatternFill {PatternType = fillInfo.Fill.PatternType.ToOpenXml()};
-            var foregroundColor = new ForegroundColor();
-            if (fillInfo.Fill.PatternColor.ColorType == XLColorType.Color)
-                foregroundColor.Rgb = fillInfo.Fill.PatternColor.Color.ToHex();
-            else if (fillInfo.Fill.PatternColor.ColorType == XLColorType.Indexed)
-                foregroundColor.Indexed = (UInt32)fillInfo.Fill.PatternColor.Indexed;
-            else
-            {
-                foregroundColor.Theme = (UInt32)fillInfo.Fill.PatternColor.ThemeColor;
-                if (fillInfo.Fill.PatternColor.ThemeTint != 1)
-                    foregroundColor.Tint = fillInfo.Fill.PatternColor.ThemeTint;
-            }
-            var backgroundColor = new BackgroundColor();
-            if (fillInfo.Fill.PatternBackgroundColor.ColorType == XLColorType.Color)
-                backgroundColor.Rgb = fillInfo.Fill.PatternBackgroundColor.Color.ToHex();
-            else if (fillInfo.Fill.PatternBackgroundColor.ColorType == XLColorType.Indexed)
-                backgroundColor.Indexed = (UInt32)fillInfo.Fill.PatternBackgroundColor.Indexed;
-            else
-            {
-                backgroundColor.Theme = (UInt32)fillInfo.Fill.PatternBackgroundColor.ThemeColor;
-                if (fillInfo.Fill.PatternBackgroundColor.ThemeTint != 1)
-                    backgroundColor.Tint = fillInfo.Fill.PatternBackgroundColor.ThemeTint;
-            }
-
-            patternFill.AppendChild(foregroundColor);
-            patternFill.AppendChild(backgroundColor);
-
-            fill.AppendChild(patternFill);
-
-            return fill;
-        }
-
-        private bool FillsAreEqual(Fill f, IXLFill xlFill)
-        {
-            var nF = new XLFill();
-            if (f.PatternFill != null)
-            {
-                if (f.PatternFill.PatternType != null)
-                    nF.PatternType = f.PatternFill.PatternType.Value.ToClosedXml();
-
-                var fColor = GetColor(f.PatternFill.ForegroundColor);
-                if (fColor.HasValue)
-                    nF.PatternColor = fColor;
-
-                var bColor = GetColor(f.PatternFill.BackgroundColor);
-                if (bColor.HasValue)
-                    nF.PatternBackgroundColor = bColor;
-            }
-            return nF.Equals(xlFill);
-        }
-
-        private void ResolveFonts(WorkbookStylesPart workbookStylesPart, SaveContext context)
-        {
-            if (workbookStylesPart.Stylesheet.Fonts == null)
-                workbookStylesPart.Stylesheet.Fonts = new Fonts();
-
-            var newFonts = new Dictionary<IXLFont, FontInfo>();
-            foreach (FontInfo fontInfo in context.SharedFonts.Values)
-            {
-                Int32 fontId = 0;
-                Boolean foundOne = false;
-                foreach (Font f in workbookStylesPart.Stylesheet.Fonts)
-                {
-                    if (FontsAreEqual(f, fontInfo.Font))
-                    {
-                        foundOne = true;
-                        break;
-                    }
-                    fontId++;
-                }
-                if (!foundOne)
-                {
-                    var font = GetNewFont(fontInfo);
-                    workbookStylesPart.Stylesheet.Fonts.AppendChild(font);
-                }
-                newFonts.Add(fontInfo.Font, new FontInfo {Font = fontInfo.Font, FontId = (UInt32)fontId});
-            }
-            context.SharedFonts.Clear();
-            foreach (KeyValuePair<IXLFont, FontInfo> kp in newFonts)
-                context.SharedFonts.Add(kp.Key, kp.Value);
-
-            workbookStylesPart.Stylesheet.Fonts.Count = (UInt32)workbookStylesPart.Stylesheet.Fonts.Count();
-        }
-
-        private static Font GetNewFont(FontInfo fontInfo)
-        {
-            var font = new Font();
-            var bold = fontInfo.Font.Bold ? new Bold() : null;
-            var italic = fontInfo.Font.Italic ? new Italic() : null;
-            var underline = fontInfo.Font.Underline != XLFontUnderlineValues.None
-                                ? new Underline {Val = fontInfo.Font.Underline.ToOpenXml()}
-                                : null;
-            var strike = fontInfo.Font.Strikethrough ? new Strike() : null;
-            var verticalAlignment = new VerticalTextAlignment {Val = fontInfo.Font.VerticalAlignment.ToOpenXml()};
-            var shadow = fontInfo.Font.Shadow ? new Shadow() : null;
-            var fontSize = new FontSize {Val = fontInfo.Font.FontSize};
-            var color = GetNewColor(fontInfo.Font.FontColor);
-
-            var fontName = new FontName {Val = fontInfo.Font.FontName};
-            var fontFamilyNumbering = new FontFamilyNumbering {Val = (Int32)fontInfo.Font.FontFamilyNumbering};
-
-            if (bold != null)
-                font.AppendChild(bold);
-            if (italic != null)
-                font.AppendChild(italic);
-            if (underline != null)
-                font.AppendChild(underline);
-            if (strike != null)
-                font.AppendChild(strike);
-            font.AppendChild(verticalAlignment);
-            if (shadow != null)
-                font.AppendChild(shadow);
-            font.AppendChild(fontSize);
-            font.AppendChild(color);
-            font.AppendChild(fontName);
-            font.AppendChild(fontFamilyNumbering);
-
-            return font;
-        }
-
-        private static Color GetNewColor(IXLColor xlColor)
-        {
-            var color = new Color();
-            if (xlColor.ColorType == XLColorType.Color)
-                color.Rgb = xlColor.Color.ToHex();
-            else if (xlColor.ColorType == XLColorType.Indexed)
-                color.Indexed = (UInt32)xlColor.Indexed;
-            else
-            {
-                color.Theme = (UInt32)xlColor.ThemeColor;
-                if (xlColor.ThemeTint != 1)
-                    color.Tint = xlColor.ThemeTint;
-            }
-            return color;
-        }
-
-        private static TabColor GetTabColor(IXLColor xlColor)
-        {
-            var color = new TabColor();
-            if (xlColor.ColorType == XLColorType.Color)
-                color.Rgb = xlColor.Color.ToHex();
-            else if (xlColor.ColorType == XLColorType.Indexed)
-                color.Indexed = (UInt32)xlColor.Indexed;
-            else
-            {
-                color.Theme = (UInt32)xlColor.ThemeColor;
-                if (xlColor.ThemeTint != 1)
-                    color.Tint = xlColor.ThemeTint;
-            }
-            return color;
-        }
-
-        private bool FontsAreEqual(Font f, IXLFont xlFont)
-        {
-            var nf = new XLFont {Bold = f.Bold != null, Italic = f.Italic != null};
-            if (f.Underline != null)
-            {
-                nf.Underline = f.Underline.Val != null
-                                   ? f.Underline.Val.Value.ToClosedXml()
-                                   : XLFontUnderlineValues.Single;
-            }
-            nf.Strikethrough = f.Strike != null;
-            if (f.VerticalTextAlignment != null)
-            {
-                nf.VerticalAlignment = f.VerticalTextAlignment.Val != null
-                                           ? f.VerticalTextAlignment.Val.Value.ToClosedXml()
-                                           : XLFontVerticalTextAlignmentValues.Baseline;
-            }
-            nf.Shadow = f.Shadow != null;
-            if (f.FontSize != null)
-                nf.FontSize = f.FontSize.Val;
-            var fColor = GetColor(f.Color);
-            if (fColor.HasValue)
-                nf.FontColor = fColor;
-            if (f.FontName != null)
-                nf.FontName = f.FontName.Val;
-            if (f.FontFamilyNumbering != null)
-                nf.FontFamilyNumbering = (XLFontFamilyNumberingValues)f.FontFamilyNumbering.Val.Value;
-
-            return nf.Equals(xlFont);
-        }
-
-        private static Dictionary<IXLNumberFormat, NumberFormatInfo> ResolveNumberFormats(
-            WorkbookStylesPart workbookStylesPart,
-            Dictionary<IXLNumberFormat, NumberFormatInfo> sharedNumberFormats)
-        {
-            if (workbookStylesPart.Stylesheet.NumberingFormats == null)
-                workbookStylesPart.Stylesheet.NumberingFormats = new NumberingFormats();
-
-            var allSharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>();
-            foreach (NumberFormatInfo numberFormatInfo in sharedNumberFormats.Values)
-            {
-                Int32 numberingFormatId = 0;
-                Boolean foundOne = false;
-                foreach (NumberingFormat nf in workbookStylesPart.Stylesheet.NumberingFormats)
-                {
-                    if (NumberFormatsAreEqual(nf, numberFormatInfo.NumberFormat))
-                    {
-                        foundOne = true;
-                        numberingFormatId = (Int32)nf.NumberFormatId.Value;
-                        break;
-                    }
-                    numberingFormatId++;
-                }
-                if (!foundOne)
-                {
-                    var numberingFormat = new NumberingFormat
-                                              {
-                                                  NumberFormatId = (UInt32)numberingFormatId,
-                                                  FormatCode = numberFormatInfo.NumberFormat.Format
-                                              };
-                    workbookStylesPart.Stylesheet.NumberingFormats.AppendChild(numberingFormat);
-                }
-                allSharedNumberFormats.Add(numberFormatInfo.NumberFormat,
-                                           new NumberFormatInfo
-                                               {
-                                                   NumberFormat = numberFormatInfo.NumberFormat,
-                                                   NumberFormatId = numberingFormatId
-                                               });
-            }
-            workbookStylesPart.Stylesheet.NumberingFormats.Count =
-                (UInt32)workbookStylesPart.Stylesheet.NumberingFormats.Count();
-            return allSharedNumberFormats;
-        }
-
-        private static bool NumberFormatsAreEqual(NumberingFormat nf, IXLNumberFormat xlNumberFormat)
-        {
-            var newXLNumberFormat = new XLNumberFormat();
-
-            if (nf.FormatCode != null && !StringExtensions.IsNullOrWhiteSpace(nf.FormatCode.Value))
-                newXLNumberFormat.Format = nf.FormatCode.Value;
-            else if (nf.NumberFormatId != null)
-                newXLNumberFormat.NumberFormatId = (Int32)nf.NumberFormatId.Value;
-
-            return newXLNumberFormat.Equals(xlNumberFormat);
-        }
-
-        #endregion
-
-        #region GenerateWorksheetPartContent
-
-        private static void GenerateWorksheetPartContent(WorksheetPart worksheetPart, XLWorksheet xlWorksheet,
-                                                         SaveContext context)
-        {
-            #region Worksheet
-
-            if (worksheetPart.Worksheet == null)
-                worksheetPart.Worksheet = new Worksheet();
-
-            GenerateTables(xlWorksheet, worksheetPart, context);
-
-            if (
-                !worksheetPart.Worksheet.NamespaceDeclarations.Contains(new KeyValuePair<String, String>("r",
-                                                                                                         "http://schemas.openxmlformats.org/officeDocument/2006/relationships")))
-            {
-                worksheetPart.Worksheet.AddNamespaceDeclaration("r",
-                                                                "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-            }
-
-            #endregion
-
-            var cm = new XLWSContentManager(worksheetPart.Worksheet);
-
-            #region SheetProperties
-
-            if (worksheetPart.Worksheet.SheetProperties == null)
-                worksheetPart.Worksheet.SheetProperties = new SheetProperties();
-
-            worksheetPart.Worksheet.SheetProperties.TabColor = xlWorksheet.TabColor.HasValue
-                                                                   ? GetTabColor(xlWorksheet.TabColor)
-                                                                   : null;
-
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetProperties, worksheetPart.Worksheet.SheetProperties);
-
-            if (worksheetPart.Worksheet.SheetProperties.OutlineProperties == null)
-                worksheetPart.Worksheet.SheetProperties.OutlineProperties = new OutlineProperties();
-
-            worksheetPart.Worksheet.SheetProperties.OutlineProperties.SummaryBelow =
-                (xlWorksheet.Outline.SummaryVLocation ==
-                 XLOutlineSummaryVLocation.Bottom);
-            worksheetPart.Worksheet.SheetProperties.OutlineProperties.SummaryRight =
-                (xlWorksheet.Outline.SummaryHLocation ==
-                 XLOutlineSummaryHLocation.Right);
-
-            if (worksheetPart.Worksheet.SheetProperties.PageSetupProperties == null
-                && (xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0))
-                worksheetPart.Worksheet.SheetProperties.PageSetupProperties = new PageSetupProperties { FitToPage = true };
-
-            #endregion
-
-            Int32 maxColumn = 0;
-
-            String sheetDimensionReference = "A1";
-            if (xlWorksheet.Internals.CellsCollection.Count > 0)
-            {
-                maxColumn = xlWorksheet.Internals.CellsCollection.MaxColumnUsed;
-                Int32 maxRow = xlWorksheet.Internals.CellsCollection.MaxRowUsed;
-                sheetDimensionReference = "A1:" + XLHelper.GetColumnLetterFromNumber(maxColumn) +
-                                          maxRow.ToStringLookup();
-            }
-
-            if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
-            {
-                Int32 maxColCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Max();
-                if (maxColCollection > maxColumn)
-                    maxColumn = maxColCollection;
-            }
-
-            #region SheetViews
-
-            if (worksheetPart.Worksheet.SheetDimension == null)
-                worksheetPart.Worksheet.SheetDimension = new SheetDimension { Reference = sheetDimensionReference };
-
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetDimension, worksheetPart.Worksheet.SheetDimension);
-
-            if (worksheetPart.Worksheet.SheetViews == null)
-                worksheetPart.Worksheet.SheetViews = new SheetViews();
-
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetViews, worksheetPart.Worksheet.SheetViews);
-
-            var sheetView = (SheetView)worksheetPart.Worksheet.SheetViews.FirstOrDefault();
-            if (sheetView == null)
-            {
-                sheetView = new SheetView { WorkbookViewId = 0U };
-                worksheetPart.Worksheet.SheetViews.AppendChild(sheetView);
-            }
-
-            sheetView.TabSelected = xlWorksheet.TabSelected;
-
-            if (xlWorksheet.SelectedRanges != null && xlWorksheet.SelectedRanges.Any())
-            {
-                sheetView.RemoveAllChildren<Selection>();
-                var sb = new StringBuilder();
-                foreach (var range in xlWorksheet.SelectedRanges)
-                {
-                    sb.Append(range.RangeAddress.ToStringRelative(false));
-                    sb.Append(" ");
-                }
-                var selection = new Selection { ActiveCell = xlWorksheet.SelectedRanges.First().FirstCell().Address.ToStringRelative(false) ,SequenceOfReferences = new ListValue<StringValue> { InnerText = sb.ToString().TrimEnd() } };
-                sheetView.Append(selection);
-            }
-
-            if (xlWorksheet.ShowFormulas)
-                sheetView.ShowFormulas = true;
-            else
-                sheetView.ShowFormulas = null;
-
-            if (xlWorksheet.ShowGridLines)
-                sheetView.ShowGridLines = null;
-            else
-                sheetView.ShowGridLines = false;
-
-            if (xlWorksheet.ShowOutlineSymbols)
-                sheetView.ShowOutlineSymbols = null;
-            else
-                sheetView.ShowOutlineSymbols = false;
-
-            if (xlWorksheet.ShowRowColHeaders)
-                sheetView.ShowRowColHeaders = null;
-            else
-                sheetView.ShowRowColHeaders = false;
-
-            if (xlWorksheet.ShowRuler)
-                sheetView.ShowRuler = null;
-            else
-                sheetView.ShowRuler = false;
-
-            if (xlWorksheet.ShowWhiteSpace)
-                sheetView.ShowWhiteSpace = null;
-            else
-                sheetView.ShowWhiteSpace = false;
-
-            if (xlWorksheet.ShowZeros)
-                sheetView.ShowZeros = null;
-            else
-                sheetView.ShowZeros = false;
-
-            if (xlWorksheet.RightToLeft)
-                sheetView.RightToLeft = true;
-            else
-                sheetView.RightToLeft = null;
-
-            if (xlWorksheet.SheetView.View == XLSheetViewOptions.Normal)
-                sheetView.View = null;
-            else
-                sheetView.View = xlWorksheet.SheetView.View.ToOpenXml();
-
-            var pane = sheetView.Elements<Pane>().FirstOrDefault();
-            if (pane == null)
-            {
-                pane = new Pane();
-                sheetView.AppendChild(pane);
-            }
-
-            
-
-            pane.State = PaneStateValues.FrozenSplit;
-            Double hSplit = xlWorksheet.SheetView.SplitColumn;
-            Double ySplit = xlWorksheet.SheetView.SplitRow;
-
-
-            pane.HorizontalSplit = hSplit;
-            pane.VerticalSplit = ySplit;
-
-            pane.TopLeftCell = XLHelper.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
-                               + (xlWorksheet.SheetView.SplitRow + 1);
-
-            if (hSplit == 0 && ySplit == 0)
-                sheetView.RemoveAllChildren<Pane>();
-
-            #endregion
-
-            int maxOutlineColumn = 0;
-            if (xlWorksheet.ColumnCount() > 0)
-                maxOutlineColumn = xlWorksheet.GetMaxColumnOutline();
-
-            int maxOutlineRow = 0;
-            if (xlWorksheet.RowCount() > 0)
-                maxOutlineRow = xlWorksheet.GetMaxRowOutline();
-
-            #region SheetFormatProperties
-
-            if (worksheetPart.Worksheet.SheetFormatProperties == null)
-                worksheetPart.Worksheet.SheetFormatProperties = new SheetFormatProperties();
-
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetFormatProperties,
-                          worksheetPart.Worksheet.SheetFormatProperties);
-
-            worksheetPart.Worksheet.SheetFormatProperties.DefaultRowHeight = xlWorksheet.RowHeight;
-
-            if (xlWorksheet.RowHeightChanged)
-                worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = true;
-            else
-                worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = null;
-
-
-            double worksheetColumnWidth = GetColumnWidth(xlWorksheet.ColumnWidth);
-            if (xlWorksheet.ColumnWidthChanged)
-                worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = worksheetColumnWidth;
-            else
-                worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = null;
-
-
-            if (maxOutlineColumn > 0)
-                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = (byte)maxOutlineColumn;
-            else
-                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = null;
-
-            if (maxOutlineRow > 0)
-                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelRow = (byte)maxOutlineRow;
-            else
-                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelRow = null;
-
-            #endregion
-
-            #region Columns
-
-            if (xlWorksheet.Internals.CellsCollection.Count == 0 &&
-                xlWorksheet.Internals.ColumnsCollection.Count == 0
-                && xlWorksheet.Style.Equals(DefaultStyle))
-                worksheetPart.Worksheet.RemoveAllChildren<Columns>();
-            else
-            {
-                if (!worksheetPart.Worksheet.Elements<Columns>().Any())
-                {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Columns);
-                    worksheetPart.Worksheet.InsertAfter(new Columns(), previousElement);
-                }
-
-                var columns = worksheetPart.Worksheet.Elements<Columns>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.Columns, columns);
-
-                var sheetColumnsByMin = columns.Elements<Column>().ToDictionary(c => c.Min.Value, c => c);
-                //Dictionary<UInt32, Column> sheetColumnsByMax = columns.Elements<Column>().ToDictionary(c => c.Max.Value, c => c);
-
-                Int32 minInColumnsCollection;
-                Int32 maxInColumnsCollection;
-                if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
-                {
-                    minInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Min();
-                    maxInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Max();
-                }
-                else
-                {
-                    minInColumnsCollection = 1;
-                    maxInColumnsCollection = 0;
-                }
-
-                uint worksheetStyleId = context.SharedStyles[xlWorksheet.GetStyleId()].StyleId;
-                if (minInColumnsCollection > 1)
-                {
-                    UInt32Value min = 1;
-                    UInt32Value max = (UInt32)(minInColumnsCollection - 1);
-
-
-                    for (var co = min; co <= max; co++)
-                    {
-                        var column = new Column
-                                         {
-                                             Min = co,
-                                             Max = co,
-                                             Style = worksheetStyleId,
-                                             Width = worksheetColumnWidth,
-                                             CustomWidth = true
-                                         };
-
-                        UpdateColumn(column, columns, sheetColumnsByMin); //, sheetColumnsByMax);
-                    }
-                }
-
-                for (int co = minInColumnsCollection; co <= maxInColumnsCollection; co++)
-                {
-                    UInt32 styleId;
-                    Double columnWidth;
-                    Boolean isHidden = false;
-                    Boolean collapsed = false;
-                    Int32 outlineLevel = 0;
-                    if (xlWorksheet.Internals.ColumnsCollection.ContainsKey(co))
-                    {
-                        styleId = context.SharedStyles[xlWorksheet.Internals.ColumnsCollection[co].GetStyleId()].StyleId;
-                        columnWidth = GetColumnWidth(xlWorksheet.Internals.ColumnsCollection[co].Width);
-                        isHidden = xlWorksheet.Internals.ColumnsCollection[co].IsHidden;
-                        collapsed = xlWorksheet.Internals.ColumnsCollection[co].Collapsed;
-                        outlineLevel = xlWorksheet.Internals.ColumnsCollection[co].OutlineLevel;
-                    }
-                    else
-                    {
-                        styleId = context.SharedStyles[xlWorksheet.GetStyleId()].StyleId;
-                        columnWidth = worksheetColumnWidth;
-                    }
-
-                    var column = new Column
-                                     {
-                                         Min = (UInt32)co,
-                                         Max = (UInt32)co,
-                                         Style = styleId,
-                                         Width = columnWidth,
-                                         CustomWidth = true
-                                     };
-
-                    if (isHidden)
-                        column.Hidden = true;
-                    if (collapsed)
-                        column.Collapsed = true;
-                    if (outlineLevel > 0)
-                        column.OutlineLevel = (byte)outlineLevel;
-
-                    UpdateColumn(column, columns, sheetColumnsByMin); //, sheetColumnsByMax);
-                }
-
-                int collection = maxInColumnsCollection;
-                foreach (
-                    Column col in
-                        columns.Elements<Column>().Where(c => c.Min > (UInt32)(collection)).OrderBy(
-                            c => c.Min.Value))
-                {
-                    col.Style = worksheetStyleId;
-                    col.Width = worksheetColumnWidth;
-                    col.CustomWidth = true;
-
-                    if ((Int32)col.Max.Value > maxInColumnsCollection)
-                        maxInColumnsCollection = (Int32)col.Max.Value;
-                }
-
-                if (maxInColumnsCollection < XLHelper.MaxColumnNumber && !xlWorksheet.Style.Equals(DefaultStyle))
-                {
-                    var column = new Column
-                                     {
-                                         Min = (UInt32)(maxInColumnsCollection + 1),
-                                         Max = (UInt32)(XLHelper.MaxColumnNumber),
-                                         Style = worksheetStyleId,
-                                         Width = worksheetColumnWidth,
-                                         CustomWidth = true
-                                     };
-                    columns.AppendChild(column);
-                }
-
-                CollapseColumns(columns, sheetColumnsByMin);
-
-                if (!columns.Any())
-                {
-                    worksheetPart.Worksheet.RemoveAllChildren<Columns>();
-                    cm.SetElement(XLWSContentManager.XLWSContents.Columns, null);
-                }
-            }
-
-            #endregion
-
-            #region SheetData
-
-            if (!worksheetPart.Worksheet.Elements<SheetData>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.SheetData);
-                worksheetPart.Worksheet.InsertAfter(new SheetData(), previousElement);
-            }
-
-            var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetData, sheetData);
-
-            var cellsByRow = new Dictionary<Int32, List<IXLCell>>();
-            foreach (XLCell c in xlWorksheet.Internals.CellsCollection.GetCells())
-            {
-                Int32 rowNum = c.Address.RowNumber;
-                if (!cellsByRow.ContainsKey(rowNum))
-                    cellsByRow.Add(rowNum, new List<IXLCell>());
-
-                cellsByRow[rowNum].Add(c);
-            }
-
-            var sheetDataRows = sheetData.Elements<Row>().ToDictionary(r => (Int32)r.RowIndex.Value, r => r);
-            foreach (
-                KeyValuePair<int, XLRow> r in
-                    xlWorksheet.Internals.RowsCollection.Deleted.Where(r => sheetDataRows.ContainsKey(r.Key)))
-            {
-                sheetData.RemoveChild(sheetDataRows[r.Key]);
-                sheetDataRows.Remove(r.Key);
-                xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == r.Key);
-            }
-
-            var distinctRows = cellsByRow.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
-            Boolean noRows = (sheetData.Elements<Row>().FirstOrDefault() == null);
-            foreach (int distinctRow in distinctRows.OrderBy(r => r))
-            {
-                Row row; // = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex.Value == (UInt32)distinctRow);
-                if (sheetDataRows.ContainsKey(distinctRow))
-                    row = sheetDataRows[distinctRow];
-                else
-                {
-                    row = new Row { RowIndex = (UInt32)distinctRow };
-                    if (noRows)
-                    {
-                        sheetData.AppendChild(row);
-                        noRows = false;
-                    }
-                    else
-                    {
-                        if (sheetDataRows.Any(r => r.Key > row.RowIndex.Value))
-                        {
-                            int minRow = sheetDataRows.Where(r => r.Key > (Int32)row.RowIndex.Value).Min(r => r.Key);
-                            var rowBeforeInsert = sheetDataRows[minRow];
-                            sheetData.InsertBefore(row, rowBeforeInsert);
-                        }
-                        else
-                            sheetData.AppendChild(row);
-                    }
-                }
-
-                if (maxColumn > 0)
-                    row.Spans = new ListValue<StringValue> { InnerText = "1:" + maxColumn.ToStringLookup() };
-
-                row.Height = null;
-                row.CustomHeight = null;
-                row.Hidden = null;
-                row.StyleIndex = null;
-                row.CustomFormat = null;
-                row.Collapsed = null;
-                if (xlWorksheet.Internals.RowsCollection.ContainsKey(distinctRow))
-                {
-                    var thisRow = xlWorksheet.Internals.RowsCollection[distinctRow];
-                    if (thisRow.HeightChanged)
-                    {
-                        row.Height = thisRow.Height;
-                        row.CustomHeight = true;
-                        row.CustomFormat = true;
-                    }
-
-                    if (thisRow.GetStyleId() != xlWorksheet.GetStyleId())
-                    {
-                        row.StyleIndex = context.SharedStyles[thisRow.GetStyleId()].StyleId;
-                        row.CustomFormat = true;
-                    }
-
-                    if (thisRow.IsHidden)
-                        row.Hidden = true;
-                    if (thisRow.Collapsed)
-                        row.Collapsed = true;
-                    if (thisRow.OutlineLevel > 0)
-                        row.OutlineLevel = (byte)thisRow.OutlineLevel;
-                }
-
-
-                var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference.Value, c => c);
-
-                foreach (XLSheetPoint c in xlWorksheet.Internals.CellsCollection.Deleted.ToList())
-                {
-                    String key = XLHelper.GetColumnLetterFromNumber(c.Column) + c.Row.ToStringLookup();
-                    if (!cellsByReference.ContainsKey(key)) continue;
-                    row.RemoveChild(cellsByReference[key]);
-                    xlWorksheet.Internals.CellsCollection.Deleted.Remove(c);
-                }
-
-                if (!cellsByRow.ContainsKey(distinctRow)) continue;
-
-                Boolean isNewRow = !row.Elements<Cell>().Any();
-                foreach (XLCell opCell in cellsByRow[distinctRow]
-                    .OrderBy(c => c.Address.ColumnNumber)
-                    .Select(c => (XLCell)c))
-                {
-                    uint styleId = context.SharedStyles[opCell.GetStyleId()].StyleId;
-
-                    var dataType = opCell.DataType;
-                    string cellReference = (opCell.Address).GetTrimmedAddress();
-
-                    Cell cell;
-                    if (cellsByReference.ContainsKey(cellReference))
-                        cell = cellsByReference[cellReference];
-                    else
-                    {
-                        cell = new Cell { CellReference = new StringValue(cellReference) };
-                        if (isNewRow)
-                            row.AppendChild(cell);
-                        else
-                        {
-                            Int32 newColumn = XLHelper.GetColumnNumberFromAddress1(cellReference);
-
-                            Cell cellBeforeInsert = null;
-                            Int32 lastCo = Int32.MaxValue;
-                            foreach (
-                                Cell c in
-                                    row.Elements<Cell>().Where(
-                                        c =>
-                                        XLHelper.GetColumnNumberFromAddress1(c.CellReference.Value) > newColumn))
-                            {
-                                int thidCo = XLHelper.GetColumnNumberFromAddress1(c.CellReference.Value);
-
-                                if (lastCo <= thidCo) continue;
-
-                                cellBeforeInsert = c;
-                                lastCo = thidCo;
-                            }
-                            if (cellBeforeInsert == null)
-                                row.AppendChild(cell);
-                            else
-                                row.InsertBefore(cell, cellBeforeInsert);
-                        }
-                    }
-
-                    cell.StyleIndex = styleId;
-                    if (!StringExtensions.IsNullOrWhiteSpace(opCell.FormulaA1))
-                    {
-                        String formula = opCell.FormulaA1;
-                        if (formula.StartsWith("{"))
-                        {
-                            formula = formula.Substring(1, formula.Length - 2);
-                            cell.CellFormula = new CellFormula(formula)
-                                                   {
-                                                       FormulaType = CellFormulaValues.Array,
-                                                       Reference = cellReference
-                                                   };
-                        }
-                        else
-                            cell.CellFormula = new CellFormula(formula);
-                        cell.CellValue = null;
-                    }
-                    else
-                    {
-                        cell.CellFormula = null;
-
-                        cell.DataType = opCell.DataType == XLCellValues.DateTime ? null : GetCellValue(opCell);
-
-                        var cellValue = new CellValue();
-                        if (dataType == XLCellValues.Text)
-                        {
-                            if (opCell.InnerText.Length == 0)
-                                cell.CellValue = null;
-                            else
-                            {
-                                if (opCell.ShareString)
-                                {
-                                    cellValue.Text = opCell.SharedStringId.ToString();
-                                    cell.CellValue = cellValue;
-                                }
-                                else
-                                {
-                                    String text = opCell.GetString();
-                                    var t = new Text(text);
-                                    if (text.PreserveSpaces())
-                                        t.Space = SpaceProcessingModeValues.Preserve;
-
-                                    cell.InlineString = new InlineString { Text = t };
-                                }
-                            }
-                        }
-                        else if (dataType == XLCellValues.TimeSpan)
-                        {
-                            var timeSpan = opCell.GetTimeSpan();
-                            cellValue.Text =
-                                XLCell.BaseDate.Add(timeSpan).ToOADate().ToString(CultureInfo.InvariantCulture);
-                            cell.CellValue = cellValue;
-                        }
-                        else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
-                        {
-                            cellValue.Text = Double.Parse(opCell.InnerText).ToString(CultureInfo.InvariantCulture);
-                            cell.CellValue = cellValue;
-                        }
-                        else
-                        {
-                            cellValue.Text = opCell.InnerText;
-                            cell.CellValue = cellValue;
-                        }
-                    }
-                }
-                xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == distinctRow);
-            }
-            foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Select(c => c.Row).Distinct().Where(sheetDataRows.ContainsKey))
-            {
-                sheetData.RemoveChild(sheetDataRows[r]);
-                sheetDataRows.Remove(r);
-            }
-
-            #endregion
-
-            #region SheetProtection
-
-            if (xlWorksheet.Protection.Protected)
-            {
-                if (!worksheetPart.Worksheet.Elements<SheetProtection>().Any())
-                {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.SheetProtection);
-                    worksheetPart.Worksheet.InsertAfter(new SheetProtection(), previousElement);
-                }
-
-                var sheetProtection = worksheetPart.Worksheet.Elements<SheetProtection>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, sheetProtection);
-
-                var protection = xlWorksheet.Protection;
-                sheetProtection.Sheet = protection.Protected;
-                if (!StringExtensions.IsNullOrWhiteSpace(protection.PasswordHash))
-                    sheetProtection.Password = protection.PasswordHash;
-                sheetProtection.FormatCells = GetBooleanValue(!protection.FormatCells, true);
-                sheetProtection.FormatColumns = GetBooleanValue(!protection.FormatColumns, true);
-                sheetProtection.FormatRows = GetBooleanValue(!protection.FormatRows, true);
-                sheetProtection.InsertColumns = GetBooleanValue(!protection.InsertColumns, true);
-                sheetProtection.InsertHyperlinks = GetBooleanValue(!protection.InsertHyperlinks, true);
-                sheetProtection.InsertRows = GetBooleanValue(!protection.InsertRows, true);
-                sheetProtection.DeleteColumns = GetBooleanValue(!protection.DeleteColumns, true);
-                sheetProtection.DeleteRows = GetBooleanValue(!protection.DeleteRows, true);
-                sheetProtection.AutoFilter = GetBooleanValue(!protection.AutoFilter, true);
-                sheetProtection.PivotTables = GetBooleanValue(!protection.PivotTables, true);
-                sheetProtection.Sort = GetBooleanValue(!protection.Sort, true);
-                sheetProtection.SelectLockedCells = GetBooleanValue(!protection.SelectLockedCells, false);
-                sheetProtection.SelectUnlockedCells = GetBooleanValue(!protection.SelectUnlockedCells, false);
-            }
-            else
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<SheetProtection>();
-                cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, null);
-            }
-
-            #endregion
-
-            #region AutoFilter
-            worksheetPart.Worksheet.RemoveAllChildren<AutoFilter>();
-            if (xlWorksheet.AutoFilter.Enabled)
-            {
-               var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.AutoFilter);
-               worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
-                
-
-                var autoFilter = worksheetPart.Worksheet.Elements<AutoFilter>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, autoFilter);
-
-                PopulateAutoFilter(xlWorksheet.AutoFilter, autoFilter);
-            }
-            else
-            {
-                cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, null);
-            }
-
-            #endregion
-
-            #region MergeCells
-
-            if ((xlWorksheet).Internals.MergedRanges.Any())
-            {
-                if (!worksheetPart.Worksheet.Elements<MergeCells>().Any())
-                {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.MergeCells);
-                    worksheetPart.Worksheet.InsertAfter(new MergeCells(), previousElement);
-                }
-
-                var mergeCells = worksheetPart.Worksheet.Elements<MergeCells>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.MergeCells, mergeCells);
-                mergeCells.RemoveAllChildren<MergeCell>();
-
-                foreach (MergeCell mergeCell in (xlWorksheet).Internals.MergedRanges.Select(
-                    m => m.RangeAddress.FirstAddress.ToString() + ":" + m.RangeAddress.LastAddress.ToString()).Select(
-                        merged => new MergeCell { Reference = merged }))
-                    mergeCells.AppendChild(mergeCell);
-
-                mergeCells.Count = (UInt32)mergeCells.Count();
-            }
-            else
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<MergeCells>();
-                cm.SetElement(XLWSContentManager.XLWSContents.MergeCells, null);
-            }
-
-            #endregion
-
-            #region Conditional Formatting
-            if (!xlWorksheet.ConditionalFormats.Any())
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
-                cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, null);
-            }
-            else
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
-
-
-                //if (!worksheetPart.Worksheet.Elements<ConditionalFormatting>().Any())
-                //{
-                //    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
-                //    worksheetPart.Worksheet.InsertAfter(new ConditionalFormatting(), previousElement);
-                //}
-
-                //var conditionalFormats = worksheetPart.Worksheet.Elements<ConditionalFormatting>().First();
-                //cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormats);
-                ////conditionalFormats.RemoveAllChildren<ConditionalFormat>();
-                Int32 priority = 0;
-                foreach (var cf in xlWorksheet.ConditionalFormats)
-                {
-                    priority++;
-                    var conditionalFormatting = new ConditionalFormatting { SequenceOfReferences = new ListValue<StringValue> { InnerText = cf.Range.RangeAddress.ToStringRelative(false) } };
-                    conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
-                    
-                    worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
-                    previousElement = conditionalFormatting;
-                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
-                }
-            }
-
-            #endregion
-
-            #region DataValidations
-
-            if (!xlWorksheet.DataValidations.Any(d => d.IsDirty()))
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<DataValidations>();
-                cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, null);
-            }
-            else
-            {
-                if (!worksheetPart.Worksheet.Elements<DataValidations>().Any())
-                {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.DataValidations);
-                    worksheetPart.Worksheet.InsertAfter(new DataValidations(), previousElement);
-                }
-
-                var dataValidations = worksheetPart.Worksheet.Elements<DataValidations>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, dataValidations);
-                dataValidations.RemoveAllChildren<DataValidation>();
-                foreach (IXLDataValidation dv in xlWorksheet.DataValidations)
-                {
-                    String sequence = dv.Ranges.Aggregate(String.Empty, (current, r) => current + (r.RangeAddress + " "));
-
-                    if (sequence.Length > 0)
-                        sequence = sequence.Substring(0, sequence.Length - 1);
-
-                    var dataValidation = new DataValidation
-                                             {
-                                                 AllowBlank = dv.IgnoreBlanks,
-                                                 Formula1 = new Formula1(dv.MinValue),
-                                                 Formula2 = new Formula2(dv.MaxValue),
-                                                 Type = dv.AllowedValues.ToOpenXml(),
-                                                 ShowErrorMessage = dv.ShowErrorMessage,
-                                                 Prompt = dv.InputMessage,
-                                                 PromptTitle = dv.InputTitle,
-                                                 ErrorTitle = dv.ErrorTitle,
-                                                 Error = dv.ErrorMessage,
-                                                 ShowDropDown = !dv.InCellDropdown,
-                                                 ShowInputMessage = dv.ShowInputMessage,
-                                                 ErrorStyle = dv.ErrorStyle.ToOpenXml(),
-                                                 Operator = dv.Operator.ToOpenXml(),
-                                                 SequenceOfReferences =
-                                                     new ListValue<StringValue> { InnerText = sequence }
-                                             };
-
-                    dataValidations.AppendChild(dataValidation);
-                }
-                dataValidations.Count = (UInt32)xlWorksheet.DataValidations.Count();
-            }
-
-            #endregion
-
-            #region Hyperlinks
-
-            var relToRemove = worksheetPart.HyperlinkRelationships.ToList();
-            relToRemove.ForEach(worksheetPart.DeleteReferenceRelationship);
-            if (!xlWorksheet.Hyperlinks.Any())
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<Hyperlinks>();
-                cm.SetElement(XLWSContentManager.XLWSContents.Hyperlinks, null);
-            }
-            else
-            {
-                if (!worksheetPart.Worksheet.Elements<Hyperlinks>().Any())
-                {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Hyperlinks);
-                    worksheetPart.Worksheet.InsertAfter(new Hyperlinks(), previousElement);
-                }
-
-                var hyperlinks = worksheetPart.Worksheet.Elements<Hyperlinks>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.Hyperlinks, hyperlinks);
-                hyperlinks.RemoveAllChildren<Hyperlink>();
-                foreach (XLHyperlink hl in xlWorksheet.Hyperlinks)
-                {
-                    Hyperlink hyperlink;
-                    if (hl.IsExternal)
-                    {
-                        String rId = context.RelIdGenerator.GetNext(RelType.Workbook);
-                        hyperlink = new Hyperlink { Reference = hl.Cell.Address.ToString(), Id = rId };
-                        worksheetPart.AddHyperlinkRelationship(hl.ExternalAddress, true, rId);
-                    }
-                    else
-                    {
-                        hyperlink = new Hyperlink
-                                        {
-                                            Reference = hl.Cell.Address.ToString(),
-                                            Location = hl.InternalAddress,
-                                            Display = hl.Cell.GetFormattedString()
-                                        };
-                    }
-                    if (!StringExtensions.IsNullOrWhiteSpace(hl.Tooltip))
-                        hyperlink.Tooltip = hl.Tooltip;
-                    hyperlinks.AppendChild(hyperlink);
-                }
-            }
-
-            #endregion
-
-            #region PrintOptions
-
-            if (!worksheetPart.Worksheet.Elements<PrintOptions>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.PrintOptions);
-                worksheetPart.Worksheet.InsertAfter(new PrintOptions(), previousElement);
-            }
-
-            var printOptions = worksheetPart.Worksheet.Elements<PrintOptions>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.PrintOptions, printOptions);
-
-            printOptions.HorizontalCentered = xlWorksheet.PageSetup.CenterHorizontally;
-            printOptions.VerticalCentered = xlWorksheet.PageSetup.CenterVertically;
-            printOptions.Headings = xlWorksheet.PageSetup.ShowRowAndColumnHeadings;
-            printOptions.GridLines = xlWorksheet.PageSetup.ShowGridlines;
-
-            #endregion
-
-            #region PageMargins
-
-            if (!worksheetPart.Worksheet.Elements<PageMargins>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.PageMargins);
-                worksheetPart.Worksheet.InsertAfter(new PageMargins(), previousElement);
-            }
-
-            var pageMargins = worksheetPart.Worksheet.Elements<PageMargins>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.PageMargins, pageMargins);
-            pageMargins.Left = xlWorksheet.PageSetup.Margins.Left;
-            pageMargins.Right = xlWorksheet.PageSetup.Margins.Right;
-            pageMargins.Top = xlWorksheet.PageSetup.Margins.Top;
-            pageMargins.Bottom = xlWorksheet.PageSetup.Margins.Bottom;
-            pageMargins.Header = xlWorksheet.PageSetup.Margins.Header;
-            pageMargins.Footer = xlWorksheet.PageSetup.Margins.Footer;
-
-            #endregion
-
-            #region PageSetup
-
-            if (!worksheetPart.Worksheet.Elements<PageSetup>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.PageSetup);
-                worksheetPart.Worksheet.InsertAfter(new PageSetup(), previousElement);
-            }
-
-            var pageSetup = worksheetPart.Worksheet.Elements<PageSetup>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.PageSetup, pageSetup);
-
-            pageSetup.Orientation = xlWorksheet.PageSetup.PageOrientation.ToOpenXml();
-            pageSetup.PaperSize = (UInt32)xlWorksheet.PageSetup.PaperSize;
-            pageSetup.BlackAndWhite = xlWorksheet.PageSetup.BlackAndWhite;
-            pageSetup.Draft = xlWorksheet.PageSetup.DraftQuality;
-            pageSetup.PageOrder = xlWorksheet.PageSetup.PageOrder.ToOpenXml();
-            pageSetup.CellComments = xlWorksheet.PageSetup.ShowComments.ToOpenXml();
-            pageSetup.Errors = xlWorksheet.PageSetup.PrintErrorValue.ToOpenXml();
-
-            if (xlWorksheet.PageSetup.FirstPageNumber > 0)
-            {
-                pageSetup.FirstPageNumber = (UInt32)xlWorksheet.PageSetup.FirstPageNumber;
-                pageSetup.UseFirstPageNumber = true;
-            }
-            else
-            {
-                pageSetup.FirstPageNumber = null;
-                pageSetup.UseFirstPageNumber = null;
-            }
-
-            if (xlWorksheet.PageSetup.HorizontalDpi > 0)
-                pageSetup.HorizontalDpi = (UInt32)xlWorksheet.PageSetup.HorizontalDpi;
-            else
-                pageSetup.HorizontalDpi = null;
-
-            if (xlWorksheet.PageSetup.VerticalDpi > 0)
-                pageSetup.VerticalDpi = (UInt32)xlWorksheet.PageSetup.VerticalDpi;
-            else
-                pageSetup.VerticalDpi = null;
-
-            if (xlWorksheet.PageSetup.Scale > 0)
-            {
-                pageSetup.Scale = (UInt32)xlWorksheet.PageSetup.Scale;
-                pageSetup.FitToWidth = null;
-                pageSetup.FitToHeight = null;
-            }
-            else
-            {
-                pageSetup.Scale = null;
-
-                if (xlWorksheet.PageSetup.PagesWide > 0)
-                    pageSetup.FitToWidth = (UInt32)xlWorksheet.PageSetup.PagesWide;
-                else
-                    pageSetup.FitToWidth = 0;
-
-                if (xlWorksheet.PageSetup.PagesTall > 0)
-                    pageSetup.FitToHeight = (UInt32)xlWorksheet.PageSetup.PagesTall;
-                else
-                    pageSetup.FitToHeight = 0;
-            }
-
-            #endregion
-
-            #region HeaderFooter
-
-            HeaderFooter headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().FirstOrDefault();
-            if (headerFooter == null) 
-                headerFooter = new HeaderFooter();
-            else
-                worksheetPart.Worksheet.RemoveAllChildren<HeaderFooter>();
-
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.HeaderFooter);
-                worksheetPart.Worksheet.InsertAfter(headerFooter, previousElement);
-                cm.SetElement(XLWSContentManager.XLWSContents.HeaderFooter, headerFooter);
-            }
-            if (((XLHeaderFooter)xlWorksheet.PageSetup.Header).Changed
-                || ((XLHeaderFooter)xlWorksheet.PageSetup.Footer).Changed)
-            {
-                //var headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().First();
-                
-                headerFooter.RemoveAllChildren();
-
-                headerFooter.ScaleWithDoc = xlWorksheet.PageSetup.ScaleHFWithDocument;
-                headerFooter.AlignWithMargins = xlWorksheet.PageSetup.AlignHFWithMargins;
-                headerFooter.DifferentFirst = xlWorksheet.PageSetup.DifferentFirstPageOnHF;
-                headerFooter.DifferentOddEven = xlWorksheet.PageSetup.DifferentOddEvenPagesOnHF;
-
-                var oddHeader = new OddHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.OddPages));
-                headerFooter.AppendChild(oddHeader);
-                var oddFooter = new OddFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.OddPages));
-                headerFooter.AppendChild(oddFooter);
-
-                var evenHeader = new EvenHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.EvenPages));
-                headerFooter.AppendChild(evenHeader);
-                var evenFooter = new EvenFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.EvenPages));
-                headerFooter.AppendChild(evenFooter);
-
-                var firstHeader = new FirstHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.FirstPage));
-                headerFooter.AppendChild(firstHeader);
-                var firstFooter = new FirstFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.FirstPage));
-                headerFooter.AppendChild(firstFooter);
-
-            }
-
-            #endregion
-
-            #region RowBreaks
-
-            if (!worksheetPart.Worksheet.Elements<RowBreaks>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.RowBreaks);
-                worksheetPart.Worksheet.InsertAfter(new RowBreaks(), previousElement);
-            }
-
-            var rowBreaks = worksheetPart.Worksheet.Elements<RowBreaks>().First();
-
-            int rowBreakCount = xlWorksheet.PageSetup.RowBreaks.Count;
-            if (rowBreakCount > 0)
-            {
-                rowBreaks.Count = (UInt32)rowBreakCount;
-                rowBreaks.ManualBreakCount = (UInt32)rowBreakCount;
-                uint lastRowNum = (UInt32)xlWorksheet.RangeAddress.LastAddress.RowNumber;
-                foreach (Break break1 in xlWorksheet.PageSetup.RowBreaks.Select(rb => new Break
-                                                                                          {
-                                                                                              Id = (UInt32)rb,
-                                                                                              Max = lastRowNum,
-                                                                                              ManualPageBreak = true
-                                                                                          }))
-                    rowBreaks.AppendChild(break1);
-                cm.SetElement(XLWSContentManager.XLWSContents.RowBreaks, rowBreaks);
-            }
-            else
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<RowBreaks>();
-                cm.SetElement(XLWSContentManager.XLWSContents.RowBreaks, null);
-            }
-
-            #endregion
-
-            #region ColumnBreaks
-
-            if (!worksheetPart.Worksheet.Elements<ColumnBreaks>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ColumnBreaks);
-                worksheetPart.Worksheet.InsertAfter(new ColumnBreaks(), previousElement);
-            }
-
-            var columnBreaks = worksheetPart.Worksheet.Elements<ColumnBreaks>().First();
-
-            int columnBreakCount = xlWorksheet.PageSetup.ColumnBreaks.Count;
-            if (columnBreakCount > 0)
-            {
-                columnBreaks.Count = (UInt32)columnBreakCount;
-                columnBreaks.ManualBreakCount = (UInt32)columnBreakCount;
-                uint maxColumnNumber = (UInt32)xlWorksheet.RangeAddress.LastAddress.ColumnNumber;
-                foreach (Break break1 in xlWorksheet.PageSetup.ColumnBreaks.Select(cb => new Break
-                                                                                             {
-                                                                                                 Id = (UInt32)cb,
-                                                                                                 Max = maxColumnNumber,
-                                                                                                 ManualPageBreak = true
-                                                                                             }))
-                    columnBreaks.AppendChild(break1);
-                cm.SetElement(XLWSContentManager.XLWSContents.ColumnBreaks, columnBreaks);
-            }
-            else
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<ColumnBreaks>();
-                cm.SetElement(XLWSContentManager.XLWSContents.ColumnBreaks, null);
-            }
-
-            #endregion
-
-            #region Drawings
-
-            //worksheetPart.Worksheet.RemoveAllChildren<Drawing>();
-            //{
-            //    OpenXmlElement previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Drawing);
-            //    worksheetPart.Worksheet.InsertAfter(new Drawing() { Id = String.Format("rId{0}", 1) }, previousElement);
-            //}
-
-            //Drawing drawing = worksheetPart.Worksheet.Elements<Drawing>().First();
-            //cm.SetElement(XLWSContentManager.XLWSContents.Drawing, drawing);
-
-            #endregion
-
-            #region Tables
-
-            worksheetPart.Worksheet.RemoveAllChildren<TableParts>();
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.TableParts);
-                worksheetPart.Worksheet.InsertAfter(new TableParts(), previousElement);
-            }
-
-            var tableParts = worksheetPart.Worksheet.Elements<TableParts>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.TableParts, tableParts);
-
-            tableParts.Count = (UInt32)xlWorksheet.Tables.Count();
-            foreach (
-                TablePart tablePart in
-                    from XLTable xlTable in xlWorksheet.Tables select new TablePart { Id = xlTable.RelId })
-                tableParts.AppendChild(tablePart);
-
-            #endregion
-
-            #region LegacyDrawing
-            if (xlWorksheet.LegacyDrawingIsNew)
-            {
-                worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
-                {
-                    if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
-                    {
-                        var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
-                        worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
-                                                            previousElement);
-                    }
-                }
-            }
-            #endregion
-            
-
-            #region LegacyDrawingHeaderFooter
-            //LegacyDrawingHeaderFooter legacyHeaderFooter = worksheetPart.Worksheet.Elements<LegacyDrawingHeaderFooter>().FirstOrDefault();
-            //if (legacyHeaderFooter != null)
-            //{
-            //    worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawingHeaderFooter>();
-            //    {
-            //            var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawingHeaderFooter);
-            //            worksheetPart.Worksheet.InsertAfter(new LegacyDrawingHeaderFooter { Id = xlWorksheet.LegacyDrawingId },
-            //                                                previousElement);
-            //    }
-            //}
-            #endregion
-        }
-
-        private static void PopulateAutoFilter(XLAutoFilter xlAutoFilter, AutoFilter autoFilter)
-        {
-            var filterRange = xlAutoFilter.Range;
-            autoFilter.Reference = filterRange.RangeAddress.ToString();
-
-            foreach (var kp in xlAutoFilter.Filters)
-            {
-                FilterColumn filterColumn = new FilterColumn() { ColumnId = (UInt32)kp.Key - 1 };
-                var xlFilterColumn = xlAutoFilter.Column(kp.Key);
-                var filterType = xlFilterColumn.FilterType;
-                if (filterType == XLFilterType.Custom)
-                {
-                    CustomFilters customFilters = new CustomFilters();
-                    foreach (var filter in kp.Value)
-                    {
-                        CustomFilter customFilter = new CustomFilter() { Val = filter.Value.ToString() };
-
-                        if (filter.Operator != XLFilterOperator.Equal)
-                            customFilter.Operator = filter.Operator.ToOpenXml();
-
-                        if (filter.Connector == XLConnector.And)
-                            customFilters.And = true;
-
-                        customFilters.Append(customFilter);
-                    }
-                    filterColumn.Append(customFilters);
-                }
-                else if (filterType == XLFilterType.TopBottom)
-                {
-                    Top10 top101 = new Top10() { Val = (double)xlFilterColumn.TopBottomValue };
-                    if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
-                        top101.Percent = true;
-                    if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
-                        top101.Top = false;
-
-                    filterColumn.Append(top101);
-                }
-                else if (filterType == XLFilterType.Dynamic)
-                {
-                    DynamicFilter dynamicFilter = new DynamicFilter() { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
-                    filterColumn.Append(dynamicFilter);
-                }
-                else
-                {
-                    Filters filters = new Filters();
-                    foreach (var filter in kp.Value)
-                    {
-                        filters.Append(new Filter() { Val = filter.Value.ToString() });
-                    }
-
-                    filterColumn.Append(filters);
-                }
-                autoFilter.Append(filterColumn);
-            }
-
-
-            if (xlAutoFilter.Sorted)
-            {
-                SortState sortState = new SortState() { Reference = filterRange.Range(filterRange.FirstCell().CellBelow(), filterRange.LastCell()).RangeAddress.ToString() };
-                SortCondition sortCondition = new SortCondition() { Reference = filterRange.Range(1, xlAutoFilter.SortColumn, filterRange.RowCount(), xlAutoFilter.SortColumn).RangeAddress.ToString() };
-                if (xlAutoFilter.SortOrder == XLSortOrder.Descending)
-                    sortCondition.Descending = true;
-
-                sortState.Append(sortCondition);
-                autoFilter.Append(sortState);
-            }
-        }
-
-        private static BooleanValue GetBooleanValue(bool value, bool defaultValue)
-        {
-            return value == defaultValue ? null : new BooleanValue(value);
-        }
-
-        private static void CollapseColumns(Columns columns, Dictionary<uint, Column> sheetColumns)
-        {
-            UInt32 lastMin = 1;
-            Int32 count = sheetColumns.Count;
-            var arr = sheetColumns.OrderBy(kp => kp.Key).ToArray();
-            // sheetColumns[kp.Key + 1]
-            //Int32 i = 0;
-            //foreach (KeyValuePair<uint, Column> kp in arr
-            //    //.Where(kp => !(kp.Key < count && ColumnsAreEqual(kp.Value, )))
-            //    )
-            for (int i = 0; i < count; i++)
-            {
-                var kp = arr[i];
-                if (i + 1 != count && ColumnsAreEqual(kp.Value, arr[i + 1].Value)) continue;
-
-                var newColumn = (Column)kp.Value.CloneNode(true);
-                newColumn.Min = lastMin;
-                uint newColumnMax = newColumn.Max.Value;
-                var columnsToRemove =
-                    columns.Elements<Column>().Where(co => co.Min >= lastMin && co.Max <= newColumnMax).
-                        Select(co => co).ToList();
-                columnsToRemove.ForEach(c => columns.RemoveChild(c));
-
-                columns.AppendChild(newColumn);
-                lastMin = kp.Key + 1;
-                //i++;
-            }
-
-        }
-
-        private static double GetColumnWidth(double columnWidth)
-        {
-            Double retVal = columnWidth + ColumnWidthOffset;
-                return retVal > 0 ? retVal : 0;
-        }
-
-        private static void UpdateColumn(Column column, Columns columns, Dictionary<uint, Column> sheetColumnsByMin)
-        {
-            UInt32 co = column.Min.Value;
-            Column newColumn;
-            if (!sheetColumnsByMin.ContainsKey(co))
-            {
-                newColumn = (Column)column.CloneNode(true);
-                columns.AppendChild(newColumn);
-                sheetColumnsByMin.Add(co, newColumn);
-            }
-            else
-            {
-                var existingColumn = sheetColumnsByMin[column.Min.Value];
-                newColumn = (Column)existingColumn.CloneNode(true);
-                newColumn.Min = column.Min;
-                newColumn.Max = column.Max;
-                newColumn.Style = column.Style;
-                newColumn.Width = column.Width;
-                newColumn.CustomWidth = column.CustomWidth;
-
-                if (column.Hidden != null)
-                    newColumn.Hidden = true;
-                else
-                    newColumn.Hidden = null;
-
-                if (column.Collapsed != null)
-                    newColumn.Collapsed = true;
-                else
-                    newColumn.Collapsed = null;
-
-                if (column.OutlineLevel != null && column.OutlineLevel > 0)
-                    newColumn.OutlineLevel = (byte)column.OutlineLevel;
-                else
-                    newColumn.OutlineLevel = null;
-
-                sheetColumnsByMin.Remove(column.Min.Value);
-                if (existingColumn.Min + 1 > existingColumn.Max)
-                {
-                    //existingColumn.Min = existingColumn.Min + 1;
-                    //columns.InsertBefore(existingColumn, newColumn);
-                    //existingColumn.Remove();
-                    columns.RemoveChild(existingColumn);
-                    columns.AppendChild(newColumn);
-                    sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
-                }
-                else
-                {
-                    //columns.InsertBefore(existingColumn, newColumn);
-                    columns.AppendChild(newColumn);
-                    sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
-                    existingColumn.Min = existingColumn.Min + 1;
-                    sheetColumnsByMin.Add(existingColumn.Min.Value, existingColumn);
-                }
-            }
-        }
-
-        private static bool ColumnsAreEqual(Column left, Column right)
-        {
-            return
-                ((left.Style == null && right.Style == null)
-                 || (left.Style != null && right.Style != null && left.Style.Value == right.Style.Value))
-                && ((left.Width == null && right.Width == null)
-                    || (left.Width != null && right.Width != null && left.Width.Value == right.Width.Value))
-                && ((left.Hidden == null && right.Hidden == null)
-                    || (left.Hidden != null && right.Hidden != null && left.Hidden.Value == right.Hidden.Value))
-                && ((left.Collapsed == null && right.Collapsed == null)
-                    ||
-                    (left.Collapsed != null && right.Collapsed != null && left.Collapsed.Value == right.Collapsed.Value))
-                && ((left.OutlineLevel == null && right.OutlineLevel == null)
-                    ||
-                    (left.OutlineLevel != null && right.OutlineLevel != null &&
-                     left.OutlineLevel.Value == right.OutlineLevel.Value));
-        }
-
-        #endregion
 
         //private void GenerateDrawingsPartContent(DrawingsPart drawingsPart, XLWorksheet worksheet)
         //{
@@ -4062,24 +2027,26 @@ namespace ClosedXML.Excel
         //}
         //--
 
-        private static void GeneratePivotTables(WorkbookPart workbookPart, WorksheetPart worksheetPart, XLWorksheet xlWorksheet,
-                                                         SaveContext context)
+        private static void GeneratePivotTables(WorkbookPart workbookPart, WorksheetPart worksheetPart,
+                                                XLWorksheet xlWorksheet,
+                                                SaveContext context)
         {
             foreach (var pt in xlWorksheet.PivotTables)
             {
-                string ptCdp = context.RelIdGenerator.GetNext(RelType.Workbook);
+                var ptCdp = context.RelIdGenerator.GetNext(RelType.Workbook);
 
                 var pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(ptCdp);
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt);
 
                 var pivotCaches = new PivotCaches();
-                var pivotCache = new PivotCache { CacheId = 0U, Id = ptCdp };
+                var pivotCache = new PivotCache {CacheId = 0U, Id = ptCdp};
 
                 pivotCaches.AppendChild(pivotCache);
 
                 workbookPart.Workbook.AppendChild(pivotCaches);
 
-                var pivotTablePart = worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
+                var pivotTablePart =
+                    worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
                 GeneratePivotTablePartContent(pivotTablePart, pt);
 
                 pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
@@ -4087,25 +2054,27 @@ namespace ClosedXML.Excel
         }
 
         // Generates content of pivotTableCacheDefinitionPart
-        private static void GeneratePivotTableCacheDefinitionPartContent(PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart, IXLPivotTable pt)
+        private static void GeneratePivotTableCacheDefinitionPartContent(
+            PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart, IXLPivotTable pt)
         {
-            IXLRange source = pt.SourceRange;
+            var source = pt.SourceRange;
 
             var pivotCacheDefinition = new PivotCacheDefinition
-            {
-                Id = "rId1",
-                SaveData = pt.SaveSourceData,
-                RefreshOnLoad = true //pt.RefreshDataOnOpen
-            };
+                {
+                    Id = "rId1",
+                    SaveData = pt.SaveSourceData,
+                    RefreshOnLoad = true //pt.RefreshDataOnOpen
+                };
             if (pt.ItemsToRetainPerField == XLItemsToRetain.None)
                 pivotCacheDefinition.MissingItemsLimit = 0U;
             else if (pt.ItemsToRetainPerField == XLItemsToRetain.Max)
                 pivotCacheDefinition.MissingItemsLimit = XLHelper.MaxRowNumber;
 
-            pivotCacheDefinition.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            pivotCacheDefinition.AddNamespaceDeclaration("r",
+                                                         "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 
-            var cacheSource = new CacheSource { Type = SourceValues.Worksheet };
-            cacheSource.AppendChild(new WorksheetSource { Name = source.ToString() });
+            var cacheSource = new CacheSource {Type = SourceValues.Worksheet};
+            cacheSource.AppendChild(new WorksheetSource {Name = source.ToString()});
 
             var cacheFields = new CacheFields();
 
@@ -4115,7 +2084,9 @@ namespace ClosedXML.Excel
                 var columnName = c.FirstCell().Value.ToString();
                 var xlpf = pt.Fields.Add(columnName);
 
-                var field = pt.RowLabels.Union(pt.ColumnLabels).Union(pt.ReportFilters).Where(f => f.SourceName == columnName).FirstOrDefault();
+                var field =
+                    pt.RowLabels.Union(pt.ColumnLabels).Union(pt.ReportFilters).Where(f => f.SourceName == columnName).
+                        FirstOrDefault();
                 if (field != null)
                 {
                     xlpf.CustomName = field.CustomName;
@@ -4124,28 +2095,35 @@ namespace ClosedXML.Excel
 
                 var sharedItems = new SharedItems();
 
-                var onlyNumbers = !source.Cells().Any(cell => cell.Address.ColumnNumber == columnNumber && cell.Address.RowNumber > source.FirstRow().RowNumber() && cell.DataType != XLCellValues.Number);
+                var onlyNumbers =
+                    !source.Cells().Any(
+                        cell =>
+                        cell.Address.ColumnNumber == columnNumber &&
+                        cell.Address.RowNumber > source.FirstRow().RowNumber() && cell.DataType != XLCellValues.Number);
                 if (onlyNumbers)
                 {
-                    sharedItems = new SharedItems { ContainsSemiMixedTypes = false, ContainsString = false, ContainsNumber = true };
+                    sharedItems = new SharedItems
+                        {ContainsSemiMixedTypes = false, ContainsString = false, ContainsNumber = true};
                 }
                 else
                 {
                     foreach (var cellValue in source.Cells().Where(cell =>
                                                                    cell.Address.ColumnNumber == columnNumber &&
-                                                                   cell.Address.RowNumber > source.FirstRow().RowNumber()).Select(cell => cell.Value.ToString())
-                                                                   .Where(cellValue => !xlpf.SharedStrings.Contains(cellValue)))
+                                                                   cell.Address.RowNumber >
+                                                                   source.FirstRow().RowNumber()).Select(
+                                                                       cell => cell.Value.ToString())
+                        .Where(cellValue => !xlpf.SharedStrings.Contains(cellValue)))
                     {
                         xlpf.SharedStrings.Add(cellValue);
                     }
 
                     foreach (var li in xlpf.SharedStrings)
                     {
-                        sharedItems.AppendChild(new StringItem { Val = li });
+                        sharedItems.AppendChild(new StringItem {Val = li});
                     }
                 }
 
-                var cacheField = new CacheField { Name = xlpf.SourceName };
+                var cacheField = new CacheField {Name = xlpf.SourceName};
                 cacheField.AppendChild(sharedItems);
                 cacheFields.AppendChild(cacheField);
             }
@@ -4158,9 +2136,9 @@ namespace ClosedXML.Excel
             var pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
 
             var pivotCacheRecords = new PivotCacheRecords();
-            pivotCacheRecords.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            pivotCacheRecords.AddNamespaceDeclaration("r",
+                                                      "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             pivotTableCacheRecordsPart.PivotCacheRecords = pivotCacheRecords;
-
         }
 
         // Generates content of pivotTablePart
@@ -4218,61 +2196,62 @@ namespace ClosedXML.Excel
                 pivotTableDefinition.ShowError = false;
             }
 
-            var location = new Location { Reference = pt.TargetCell.Address.ToString(), FirstHeaderRow = 1U, FirstDataRow = 1U, FirstDataColumn = 1U };
+            var location = new Location
+                {
+                    Reference = pt.TargetCell.Address.ToString(),
+                    FirstHeaderRow = 1U,
+                    FirstDataRow = 1U,
+                    FirstDataColumn = 1U
+                };
 
 
             var rowFields = new RowFields();
             var columnFields = new ColumnFields();
             var rowItems = new RowItems();
             var columnItems = new ColumnItems();
-            var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count()};
+            var pageFields = new PageFields {Count = (uint) pt.ReportFilters.Count()};
 
-            var pivotFields = new PivotFields { Count = Convert.ToUInt32(pt.SourceRange.ColumnCount()) };
+            var pivotFields = new PivotFields {Count = Convert.ToUInt32(pt.SourceRange.ColumnCount())};
             foreach (var xlpf in pt.Fields)
             {
-                var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
+                var pf = new PivotField {ShowAll = false, Name = xlpf.CustomName};
 
-                
 
                 if (pt.RowLabels.Where(p => p.SourceName == xlpf.SourceName).FirstOrDefault() != null)
                 {
                     pf.Axis = PivotTableAxisValues.AxisRow;
 
-                    var f = new DocumentFormat.OpenXml.Spreadsheet.Field { Index = pt.Fields.IndexOf(xlpf) };
+                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     rowFields.AppendChild(f);
 
-                    for (int i = 0; i < xlpf.SharedStrings.Count; i++)
+                    for (var i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
                         var rowItem = new RowItem();
-                        rowItem.AppendChild(new MemberPropertyIndex { Val = i });
-                       rowItems.AppendChild(rowItem);
+                        rowItem.AppendChild(new MemberPropertyIndex {Val = i});
+                        rowItems.AppendChild(rowItem);
                     }
 
-                    var rowItemTotal = new RowItem { ItemType = ItemValues.Grand };
+                    var rowItemTotal = new RowItem {ItemType = ItemValues.Grand};
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     rowItems.AppendChild(rowItemTotal);
-
-
                 }
                 else if (pt.ColumnLabels.Where(p => p.SourceName == xlpf.SourceName).FirstOrDefault() != null)
                 {
                     pf.Axis = PivotTableAxisValues.AxisColumn;
 
-                    var f = new DocumentFormat.OpenXml.Spreadsheet.Field { Index = pt.Fields.IndexOf(xlpf) };
+                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     columnFields.AppendChild(f);
 
-                    for (int i = 0; i < xlpf.SharedStrings.Count; i++)
+                    for (var i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
                         var rowItem = new RowItem();
-                        rowItem.AppendChild(new MemberPropertyIndex { Val = i });
+                        rowItem.AppendChild(new MemberPropertyIndex {Val = i});
                         columnItems.AppendChild(rowItem);
-                }
+                    }
 
-                    var rowItemTotal = new RowItem { ItemType = ItemValues.Grand };
+                    var rowItemTotal = new RowItem {ItemType = ItemValues.Grand};
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     columnItems.AppendChild(rowItemTotal);
-
-
                 }
                 else if (pt.ReportFilters.Where(p => p.SourceName == xlpf.SourceName).FirstOrDefault() != null)
                 {
@@ -4280,20 +2259,20 @@ namespace ClosedXML.Excel
                     location.RowPageCount = 1;
                     pf.Axis = PivotTableAxisValues.AxisPage;
                     pageFields.AppendChild(new PageField {Hierarchy = -1, Field = pt.Fields.IndexOf(xlpf)});
-                } 
+                }
                 else if (pt.Values.Where(p => p.CustomName == xlpf.SourceName).FirstOrDefault() != null)
                 {
                     pf.DataField = true;
                 }
-                
+
                 var fieldItems = new Items();
 
                 if (xlpf.SharedStrings.Count > 0)
                 {
                     for (uint i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
-                        fieldItems.AppendChild(new Item { Index = i });
-                    }  
+                        fieldItems.AppendChild(new Item {Index = i});
+                    }
                 }
 
                 if (xlpf.Subtotals.Count > 0)
@@ -4353,7 +2332,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    fieldItems.AppendChild(new Item { ItemType = ItemValues.Default });
+                    fieldItems.AppendChild(new Item {ItemType = ItemValues.Default});
                 }
 
                 pf.AppendChild(fieldItems);
@@ -4393,21 +2372,24 @@ namespace ClosedXML.Excel
             var dataFields = new DataFields();
             foreach (var value in pt.Values)
             {
-                var sourceColumn = pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.SourceName).FirstOrDefault();
+                var sourceColumn =
+                    pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.SourceName).FirstOrDefault();
                 if (sourceColumn == null) continue;
 
                 var df = new DataField
-                             {
-                                 Name = value.SourceName,
-                                 Field = (UInt32)sourceColumn.ColumnNumber() - 1,
-                                 Subtotal = value.SummaryFormula.ToOpenXml(),
-                                 ShowDataAs = value.Calculation.ToOpenXml(),
-                                 NumberFormatId = (UInt32)value.NumberFormat.NumberFormatId
-                             };
+                    {
+                        Name = value.SourceName,
+                        Field = (UInt32) sourceColumn.ColumnNumber() - 1,
+                        Subtotal = value.SummaryFormula.ToOpenXml(),
+                        ShowDataAs = value.Calculation.ToOpenXml(),
+                        NumberFormatId = (UInt32) value.NumberFormat.NumberFormatId
+                    };
 
                 if (!String.IsNullOrEmpty(value.BaseField))
                 {
-                    var baseField = pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.BaseField).FirstOrDefault();
+                    var baseField =
+                        pt.SourceRange.Columns().Where(c => c.Cell(1).Value.ToString() == value.BaseField).
+                            FirstOrDefault();
                     if (baseField != null)
                         df.BaseField = baseField.ColumnNumber() - 1;
                 }
@@ -4428,38 +2410,49 @@ namespace ClosedXML.Excel
             }
             pivotTableDefinition.AppendChild(dataFields);
 
-            pivotTableDefinition.AppendChild(new PivotTableStyle { Name = Enum.GetName(typeof(XLPivotTableTheme), pt.Theme), ShowRowHeaders = pt.ShowRowHeaders, ShowColumnHeaders = pt.ShowColumnHeaders, ShowRowStripes = pt.ShowRowStripes, ShowColumnStripes = pt.ShowColumnStripes });
+            pivotTableDefinition.AppendChild(new PivotTableStyle
+                {
+                    Name = Enum.GetName(typeof (XLPivotTableTheme), pt.Theme),
+                    ShowRowHeaders = pt.ShowRowHeaders,
+                    ShowColumnHeaders = pt.ShowColumnHeaders,
+                    ShowRowStripes = pt.ShowRowStripes,
+                    ShowColumnStripes = pt.ShowColumnStripes
+                });
 
             #region Excel 2010 Features
-            
+
             var pivotTableDefinitionExtensionList = new PivotTableDefinitionExtensionList();
 
-            var pivotTableDefinitionExtension = new PivotTableDefinitionExtension { Uri = "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}" };
-            pivotTableDefinitionExtension.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+            var pivotTableDefinitionExtension = new PivotTableDefinitionExtension
+                {Uri = "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}"};
+            pivotTableDefinitionExtension.AddNamespaceDeclaration("x14",
+                                                                  "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
 
-            var pivotTableDefinition2 = new DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition { EnableEdit = pt.EnableCellEditing, HideValuesRow = !pt.ShowValuesRow };
+            var pivotTableDefinition2 = new DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition
+                {EnableEdit = pt.EnableCellEditing, HideValuesRow = !pt.ShowValuesRow};
             pivotTableDefinition2.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
 
             pivotTableDefinitionExtension.AppendChild(pivotTableDefinition2);
 
             pivotTableDefinitionExtensionList.AppendChild(pivotTableDefinitionExtension);
             pivotTableDefinition.AppendChild(pivotTableDefinitionExtensionList);
-            
+
             #endregion
 
             pivotTablePart1.PivotTableDefinition = pivotTableDefinition;
         }
 
 
-        private static void GenerateWorksheetCommentsPartContent(WorksheetCommentsPart worksheetCommentsPart, XLWorksheet xlWorksheet)
+        private static void GenerateWorksheetCommentsPartContent(WorksheetCommentsPart worksheetCommentsPart,
+                                                                 XLWorksheet xlWorksheet)
         {
-            Comments comments = new Comments();
-            CommentList commentList = new CommentList();
+            var comments = new Comments();
+            var commentList = new CommentList();
             var authorsDict = new Dictionary<String, Int32>();
-            foreach (var c in xlWorksheet.Internals.CellsCollection.GetCells(c=>c.HasComment))
+            foreach (var c in xlWorksheet.Internals.CellsCollection.GetCells(c => c.HasComment))
             {
-                Comment comment = new Comment() { Reference = c.Address.ToStringRelative() };
-                String authorName = c.Comment.Author;
+                var comment = new Comment {Reference = c.Address.ToStringRelative()};
+                var authorName = c.Comment.Author;
 
                 Int32 authorId;
                 if (!authorsDict.TryGetValue(authorName, out authorId))
@@ -4467,9 +2460,9 @@ namespace ClosedXML.Excel
                     authorId = authorsDict.Count;
                     authorsDict.Add(authorName, authorId);
                 }
-                comment.AuthorId = (UInt32)authorId;
+                comment.AuthorId = (UInt32) authorId;
 
-                CommentText commentText = new CommentText();
+                var commentText = new CommentText();
                 foreach (var rt in c.Comment)
                 {
                     commentText.Append(GetRun(rt));
@@ -4479,8 +2472,8 @@ namespace ClosedXML.Excel
                 commentList.Append(comment);
             }
 
-            Authors authors = new Authors();
-            foreach (Author author in authorsDict.Select(a => new Author() {Text = a.Key}))
+            var authors = new Authors();
+            foreach (var author in authorsDict.Select(a => new Author {Text = a.Key}))
             {
                 authors.Append(author);
             }
@@ -4491,32 +2484,33 @@ namespace ClosedXML.Excel
         }
 
         // Generates content of vmlDrawingPart1.
-        private static void GenerateVmlDrawingPartContent(VmlDrawingPart vmlDrawingPart, XLWorksheet xlWorksheet, SaveContext context)
+        private static void GenerateVmlDrawingPartContent(VmlDrawingPart vmlDrawingPart, XLWorksheet xlWorksheet,
+                                                          SaveContext context)
         {
             var ms = new MemoryStream();
             CopyStream(vmlDrawingPart.GetStream(FileMode.OpenOrCreate), ms);
             ms.Position = 0;
-            XmlTextWriter writer = new XmlTextWriter(vmlDrawingPart.GetStream(FileMode.Create), Encoding.UTF8);
+            var writer = new XmlTextWriter(vmlDrawingPart.GetStream(FileMode.Create), Encoding.UTF8);
 
             writer.WriteStartElement("xml");
 
             const string shapeTypeId = "_x0000_t202"; // arbitrary, assigned by office
 
             new Vml.Shapetype(
-                new Vml.Stroke { JoinStyle = Vml.StrokeJoinStyleValues.Miter },
-                new Vml.Path { AllowGradientShape = true, ConnectionPointType = Vml.Office.ConnectValues.Rectangle }
+                new Vml.Stroke {JoinStyle = Vml.StrokeJoinStyleValues.Miter},
+                new Vml.Path {AllowGradientShape = true, ConnectionPointType = ConnectValues.Rectangle}
                 )
-            {
-                Id = shapeTypeId,
-                CoordinateSize = "21600,21600",
-                OptionalNumber = 202,
-                EdgePath = "m,l,21600r21600,l21600,xe",
-            }
-                    .WriteTo(writer);
+                {
+                    Id = shapeTypeId,
+                    CoordinateSize = "21600,21600",
+                    OptionalNumber = 202,
+                    EdgePath = "m,l,21600r21600,l21600,xe",
+                }
+                .WriteTo(writer);
 
             var cellWithComments = xlWorksheet.Internals.CellsCollection.GetCells().Where(c => c.HasComment);
 
-            foreach (XLCell c in cellWithComments)
+            foreach (var c in cellWithComments)
             {
                 GenerateShape(c, shapeTypeId).WriteTo(writer);
             }
@@ -4524,11 +2518,11 @@ namespace ClosedXML.Excel
             if (ms.Length > 0)
             {
                 ms.Position = 0;
-                XDocument xdoc = XDocumentExtensions.Load(ms);
-                xdoc.Root.Elements().ForEach(e=> writer.WriteRaw(e.ToString()));
+                var xdoc = XDocumentExtensions.Load(ms);
+                xdoc.Root.Elements().ForEach(e => writer.WriteRaw(e.ToString()));
             }
 
-            
+
             writer.WriteEndElement();
             writer.Flush();
             writer.Close();
@@ -4539,33 +2533,40 @@ namespace ClosedXML.Excel
         {
             var rowNumber = c.Address.RowNumber;
             var columnNumber = c.Address.ColumnNumber;
-            
-            String shapeId = String.Format("_x0000_s{0}", c.Comment.ShapeId); // Unique per cell (workbook?), e.g.: "_x0000_s1026"
-            Vml.Spreadsheet.Anchor anchor = GetAnchor(c);
-            Vml.TextBox textBox = GetTextBox(c.Comment.Style);
-            var fill = new Vml.Fill { Color2 = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2) };
+
+            var shapeId = String.Format("_x0000_s{0}", c.Comment.ShapeId);
+                // Unique per cell (workbook?), e.g.: "_x0000_s1026"
+            var anchor = GetAnchor(c);
+            var textBox = GetTextBox(c.Comment.Style);
+            var fill = new Vml.Fill {Color2 = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2)};
             if (c.Comment.Style.ColorsAndLines.FillTransparency < 1)
-                fill.Opacity = Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.FillTransparency), 2).ToString(CultureInfo.InvariantCulture);
-            Vml.Stroke stroke = GetStroke(c);
+                fill.Opacity =
+                    Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.FillTransparency), 2).ToString(
+                        CultureInfo.InvariantCulture);
+            var stroke = GetStroke(c);
             var shape = new Vml.Shape(
                 fill,
                 stroke,
-                new Vml.Shadow { On = true, Color = "black", Obscured = true },
-                new Vml.Path { ConnectionPointType = Vml.Office.ConnectValues.None },
+                new Vml.Shadow {On = true, Color = "black", Obscured = true},
+                new Vml.Path {ConnectionPointType = ConnectValues.None},
                 textBox,
-                new Vml.Spreadsheet.ClientData(
-                    new Vml.Spreadsheet.MoveWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.Absolute ? "True": "False"), // Counterintuitive
-                    new Vml.Spreadsheet.ResizeWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.MoveAndSizeWithCells ? "False" : "True"), // Counterintuitive
+                new ClientData(
+                    new MoveWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.Absolute
+                                          ? "True"
+                                          : "False"), // Counterintuitive
+                    new ResizeWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.MoveAndSizeWithCells
+                                            ? "False"
+                                            : "True"), // Counterintuitive
                     anchor,
-                    new Vml.Spreadsheet.HorizontalTextAlignment(c.Comment.Style.Alignment.Horizontal.ToString().ToCamel()),
+                    new HorizontalTextAlignment(c.Comment.Style.Alignment.Horizontal.ToString().ToCamel()),
                     new Vml.Spreadsheet.VerticalTextAlignment(c.Comment.Style.Alignment.Vertical.ToString().ToCamel()),
-                    new Vml.Spreadsheet.AutoFill("False"),
-                    new Vml.Spreadsheet.CommentRowTarget { Text = (rowNumber - 1).ToString() },
-                    new Vml.Spreadsheet.CommentColumnTarget { Text = (columnNumber - 1).ToString() },
-                    new Vml.Spreadsheet.Locked(c.Comment.Style.Protection.Locked ? "True" : "False"),
-                    new Vml.Spreadsheet.LockText(c.Comment.Style.Protection.LockText ? "True" : "False"),
-                    new Vml.Spreadsheet.Visible(c.Comment.Visible ? "True" : "False")
-                    ) { ObjectType = Vml.Spreadsheet.ObjectValues.Note }
+                    new AutoFill("False"),
+                    new CommentRowTarget {Text = (rowNumber - 1).ToString()},
+                    new CommentColumnTarget {Text = (columnNumber - 1).ToString()},
+                    new Locked(c.Comment.Style.Protection.Locked ? "True" : "False"),
+                    new LockText(c.Comment.Style.Protection.LockText ? "True" : "False"),
+                    new Visible(c.Comment.Visible ? "True" : "False")
+                    ) {ObjectType = ObjectValues.Note}
                 )
                 {
                     Id = shapeId,
@@ -4573,26 +2574,33 @@ namespace ClosedXML.Excel
                     Style = GetCommentStyle(c),
                     FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2),
                     StrokeColor = "#" + c.Comment.Style.ColorsAndLines.LineColor.Color.ToHex().Substring(2),
-                    StrokeWeight = String.Format("{0}pt",c.Comment.Style.ColorsAndLines.LineWeight),
-                    InsetMode = c.Comment.Style.Margins.Automatic ? Vml.Office.InsetMarginValues.Auto : Vml.Office.InsetMarginValues.Custom
+                    StrokeWeight = String.Format("{0}pt", c.Comment.Style.ColorsAndLines.LineWeight),
+                    InsetMode = c.Comment.Style.Margins.Automatic ? InsetMarginValues.Auto : InsetMarginValues.Custom
                 };
             if (!StringExtensions.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
                 shape.Alternate = c.Comment.Style.Web.AlternateText;
-            
-                
+
+
             return shape;
         }
 
         private static Vml.Stroke GetStroke(XLCell c)
         {
             var lineDash = c.Comment.Style.ColorsAndLines.LineDash;
-            var stroke = new Vml.Stroke { LineStyle = c.Comment.Style.ColorsAndLines.LineStyle.ToOpenXml(),
-                DashStyle = lineDash == XLDashStyle.RoundDot || lineDash == XLDashStyle.SquareDot ? "shortDot" : lineDash.ToString().ToCamel()
-            };
+            var stroke = new Vml.Stroke
+                {
+                    LineStyle = c.Comment.Style.ColorsAndLines.LineStyle.ToOpenXml(),
+                    DashStyle =
+                        lineDash == XLDashStyle.RoundDot || lineDash == XLDashStyle.SquareDot
+                            ? "shortDot"
+                            : lineDash.ToString().ToCamel()
+                };
             if (lineDash == XLDashStyle.RoundDot)
                 stroke.EndCap = Vml.StrokeEndCapValues.Round;
             if (c.Comment.Style.ColorsAndLines.LineTransparency < 1)
-                stroke.Opacity = Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.LineTransparency), 2).ToString(CultureInfo.InvariantCulture);
+                stroke.Opacity =
+                    Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.LineTransparency), 2).ToString(
+                        CultureInfo.InvariantCulture);
             return stroke;
         }
 
@@ -4616,39 +2624,39 @@ namespace ClosedXML.Excel
             }
             if (a.AutomaticSize)
                 sb.Append("mso-fit-shape-to-text:t;");
-            var retVal = new Vml.TextBox { Style = sb.ToString() };
+            var retVal = new Vml.TextBox {Style = sb.ToString()};
             var dm = ds.Margins;
             if (!dm.Automatic)
-                retVal.Inset = String.Format("{0}in,{1}in,{2}in,{3}in", 
-                    dm.Left.ToString(CultureInfo.InvariantCulture),
-                    dm.Top.ToString(CultureInfo.InvariantCulture),
-                    dm.Right.ToString(CultureInfo.InvariantCulture),
-                    dm.Bottom.ToString(CultureInfo.InvariantCulture));
-            
+                retVal.Inset = String.Format("{0}in,{1}in,{2}in,{3}in",
+                                             dm.Left.ToString(CultureInfo.InvariantCulture),
+                                             dm.Top.ToString(CultureInfo.InvariantCulture),
+                                             dm.Right.ToString(CultureInfo.InvariantCulture),
+                                             dm.Bottom.ToString(CultureInfo.InvariantCulture));
+
             return retVal;
         }
 
-        private static Vml.Spreadsheet.Anchor GetAnchor(XLCell cell)
+        private static Anchor GetAnchor(XLCell cell)
         {
             var c = cell.Comment;
-            Double cWidth = c.Style.Size.Width; 
-            Int32 fcNumber = c.Position.Column - 1;
-            Int32 fcOffset = Convert.ToInt32(c.Position.ColumnOffset * 7.5);
-            Double widthFromColumns = cell.Worksheet.Column(c.Position.Column).Width - c.Position.ColumnOffset;
-            XLCell lastCell = cell.CellRight(c.Position.Column - cell.Address.ColumnNumber);
+            var cWidth = c.Style.Size.Width;
+            var fcNumber = c.Position.Column - 1;
+            var fcOffset = Convert.ToInt32(c.Position.ColumnOffset*7.5);
+            var widthFromColumns = cell.Worksheet.Column(c.Position.Column).Width - c.Position.ColumnOffset;
+            var lastCell = cell.CellRight(c.Position.Column - cell.Address.ColumnNumber);
             while (widthFromColumns <= cWidth)
             {
                 lastCell = lastCell.CellRight();
                 widthFromColumns += lastCell.WorksheetColumn().Width;
             }
 
-            Int32 lcNumber = lastCell.WorksheetColumn().ColumnNumber() - 1;
-            Int32 lcOffset = Convert.ToInt32((lastCell.WorksheetColumn().Width - (widthFromColumns - cWidth)) * 7.5);
+            var lcNumber = lastCell.WorksheetColumn().ColumnNumber() - 1;
+            var lcOffset = Convert.ToInt32((lastCell.WorksheetColumn().Width - (widthFromColumns - cWidth))*7.5);
 
-            Double cHeight = c.Style.Size.Height; //c.Style.Size.Height * 72.0;
-            Int32 frNumber = c.Position.Row - 1;
-            Int32 frOffset = Convert.ToInt32(c.Position.RowOffset);
-            Double heightFromRows = cell.Worksheet.Row(c.Position.Row).Height - c.Position.RowOffset;
+            var cHeight = c.Style.Size.Height; //c.Style.Size.Height * 72.0;
+            var frNumber = c.Position.Row - 1;
+            var frOffset = Convert.ToInt32(c.Position.RowOffset);
+            var heightFromRows = cell.Worksheet.Row(c.Position.Row).Height - c.Position.RowOffset;
             lastCell = cell.CellBelow(c.Position.Row - cell.Address.RowNumber);
             while (heightFromRows <= cHeight)
             {
@@ -4656,27 +2664,30 @@ namespace ClosedXML.Excel
                 heightFromRows += lastCell.WorksheetRow().Height;
             }
 
-            Int32 lrNumber = lastCell.WorksheetRow().RowNumber() - 1;
-            Int32 lrOffset = Convert.ToInt32(lastCell.WorksheetRow().Height - (heightFromRows - cHeight));
-            return new Vml.Spreadsheet.Anchor() { Text = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}", 
-                fcNumber, fcOffset,
-                frNumber, frOffset,
-                lcNumber, lcOffset,
-                lrNumber, lrOffset
-                ) };
+            var lrNumber = lastCell.WorksheetRow().RowNumber() - 1;
+            var lrOffset = Convert.ToInt32(lastCell.WorksheetRow().Height - (heightFromRows - cHeight));
+            return new Anchor
+                {
+                    Text = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}",
+                                         fcNumber, fcOffset,
+                                         frNumber, frOffset,
+                                         lcNumber, lcOffset,
+                                         lrNumber, lrOffset
+                        )
+                };
         }
 
         private static StringValue GetCommentStyle(XLCell cell)
         {
             var c = cell.Comment;
             var sb = new StringBuilder("position:absolute; ");
-            
+
             sb.Append("visibility:");
             sb.Append(c.Visible ? "visible" : "hidden");
             sb.Append(";");
 
             sb.Append("width:");
-            sb.Append(Math.Round(c.Style.Size.Width * 7.5, 2).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(c.Style.Size.Width*7.5, 2).ToString(CultureInfo.InvariantCulture));
             sb.Append("pt;");
             sb.Append("height:");
             sb.Append(Math.Round(c.Style.Size.Height, 2).ToString(CultureInfo.InvariantCulture));
@@ -4684,10 +2695,2139 @@ namespace ClosedXML.Excel
 
             sb.Append("z-index:");
             sb.Append(c.ZOrder.ToString());
-            
+
 
             return sb.ToString();
-
         }
+
+        #region GenerateWorkbookStylesPartContent
+
+        private void GenerateWorkbookStylesPartContent(WorkbookStylesPart workbookStylesPart, SaveContext context)
+        {
+            var defaultStyle = new XLStyle(null, DefaultStyle);
+            var defaultStyleId = GetStyleId(defaultStyle);
+            if (!context.SharedFonts.ContainsKey(defaultStyle.Font))
+                context.SharedFonts.Add(defaultStyle.Font, new FontInfo {FontId = 0, Font = defaultStyle.Font as XLFont});
+
+            var sharedFills = new Dictionary<IXLFill, FillInfo>
+                {{defaultStyle.Fill, new FillInfo {FillId = 2, Fill = defaultStyle.Fill as XLFill}}};
+
+            var sharedBorders = new Dictionary<IXLBorder, BorderInfo>
+                {{defaultStyle.Border, new BorderInfo {BorderId = 0, Border = defaultStyle.Border as XLBorder}}};
+
+            var sharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>
+                {
+                    {
+                        defaultStyle.NumberFormat,
+                        new NumberFormatInfo
+                            {NumberFormatId = 0, NumberFormat = defaultStyle.NumberFormat}
+                        }
+                };
+
+            //Dictionary<String, AlignmentInfo> sharedAlignments = new Dictionary<String, AlignmentInfo>();
+            //sharedAlignments.Add(defaultStyle.Alignment.ToString(), new AlignmentInfo() { AlignmentId = 0, Alignment = defaultStyle.Alignment });
+
+            if (workbookStylesPart.Stylesheet == null)
+                workbookStylesPart.Stylesheet = new Stylesheet();
+
+            // Cell styles = Named styles
+            if (workbookStylesPart.Stylesheet.CellStyles == null)
+                workbookStylesPart.Stylesheet.CellStyles = new CellStyles();
+
+            UInt32 defaultFormatId;
+            if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.Name == "Normal"))
+            {
+                defaultFormatId =
+                    workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Where(c => c.Name == "Normal").Single
+                        ().FormatId.Value;
+            }
+            else if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any())
+            {
+                defaultFormatId =
+                    workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Max(c => c.FormatId.Value) + 1;
+            }
+            else
+                defaultFormatId = 0;
+
+            context.SharedStyles.Add(defaultStyleId,
+                                     new StyleInfo
+                                         {
+                                             StyleId = defaultFormatId,
+                                             Style = defaultStyle,
+                                             FontId = 0,
+                                             FillId = 0,
+                                             BorderId = 0,
+                                             NumberFormatId = 0
+                                             //AlignmentId = 0
+                                         });
+
+            UInt32 styleCount = 1;
+            UInt32 fontCount = 1;
+            UInt32 fillCount = 3;
+            UInt32 borderCount = 1;
+            var numberFormatCount = 1;
+            var xlStyles = new HashSet<Int32>();
+
+            foreach (var worksheet in WorksheetsInternal)
+            {
+                foreach (var s in worksheet.GetStyleIds().Where(s => !xlStyles.Contains(s)))
+                    xlStyles.Add(s);
+
+                foreach (
+                    var s in
+                        worksheet.Internals.ColumnsCollection.Select(kp => kp.Value.GetStyleId()).Where(
+                            s => !xlStyles.Contains(s)))
+                    xlStyles.Add(s);
+
+                foreach (
+                    var s in
+                        worksheet.Internals.RowsCollection.Select(kp => kp.Value.GetStyleId()).Where(
+                            s => !xlStyles.Contains(s))
+                    )
+                    xlStyles.Add(s);
+            }
+
+            foreach (var xlStyle in xlStyles.Select(GetStyleById))
+            {
+                if (!context.SharedFonts.ContainsKey(xlStyle.Font))
+                    context.SharedFonts.Add(xlStyle.Font, new FontInfo {FontId = fontCount++, Font = xlStyle.Font as XLFont});
+
+                if (!sharedFills.ContainsKey(xlStyle.Fill))
+                    sharedFills.Add(xlStyle.Fill, new FillInfo {FillId = fillCount++, Fill = xlStyle.Fill as XLFill});
+
+                if (!sharedBorders.ContainsKey(xlStyle.Border))
+                    sharedBorders.Add(xlStyle.Border, new BorderInfo {BorderId = borderCount++, Border = xlStyle.Border as XLBorder});
+
+                if (xlStyle.NumberFormat.NumberFormatId != -1
+                    || sharedNumberFormats.ContainsKey(xlStyle.NumberFormat))
+                    continue;
+
+                sharedNumberFormats.Add(xlStyle.NumberFormat,
+                                        new NumberFormatInfo
+                                            {
+                                                NumberFormatId = numberFormatCount + 164,
+                                                NumberFormat = xlStyle.NumberFormat
+                                            });
+                numberFormatCount++;
+            }
+
+            var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, sharedNumberFormats);
+            ResolveFonts(workbookStylesPart, context);
+            var allSharedFills = ResolveFills(workbookStylesPart, sharedFills);
+            var allSharedBorders = ResolveBorders(workbookStylesPart, sharedBorders);
+
+            foreach (var id in xlStyles)
+            {
+                var xlStyle = GetStyleById(id);
+                if (context.SharedStyles.ContainsKey(id)) continue;
+
+                var numberFormatId = xlStyle.NumberFormat.NumberFormatId >= 0
+                                         ? xlStyle.NumberFormat.NumberFormatId
+                                         : allSharedNumberFormats[xlStyle.NumberFormat].NumberFormatId;
+
+                context.SharedStyles.Add(id,
+                                         new StyleInfo
+                                             {
+                                                 StyleId = styleCount++,
+                                                 Style = xlStyle,
+                                                 FontId = context.SharedFonts[xlStyle.Font].FontId,
+                                                 FillId = allSharedFills[xlStyle.Fill].FillId,
+                                                 BorderId = allSharedBorders[xlStyle.Border].BorderId,
+                                                 NumberFormatId = numberFormatId
+                                             });
+            }
+
+            ResolveCellStyleFormats(workbookStylesPart, context);
+            ResolveRest(workbookStylesPart, context);
+
+            if (!workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.Name == "Normal"))
+            {
+                //var defaultFormatId = context.SharedStyles.Values.Where(s => s.Style.Equals(DefaultStyle)).Single().StyleId;
+
+                var cellStyle1 = new CellStyle {Name = "Normal", FormatId = defaultFormatId, BuiltinId = 0U};
+                workbookStylesPart.Stylesheet.CellStyles.AppendChild(cellStyle1);
+            }
+            workbookStylesPart.Stylesheet.CellStyles.Count = (UInt32) workbookStylesPart.Stylesheet.CellStyles.Count();
+
+            var newSharedStyles = new Dictionary<Int32, StyleInfo>();
+            foreach (var ss in context.SharedStyles)
+            {
+                var styleId = -1;
+                foreach (CellFormat f in workbookStylesPart.Stylesheet.CellFormats)
+                {
+                    styleId++;
+                    if (CellFormatsAreEqual(f, ss.Value))
+                        break;
+                }
+                if (styleId == -1)
+                    styleId = 0;
+                var si = ss.Value;
+                si.StyleId = (UInt32) styleId;
+                newSharedStyles.Add(ss.Key, si);
+            }
+            context.SharedStyles.Clear();
+            newSharedStyles.ForEach(kp => context.SharedStyles.Add(kp.Key, kp.Value));
+
+            AddDifferentialFormats(workbookStylesPart, context);
+        }
+
+        private void AddDifferentialFormats(WorkbookStylesPart workbookStylesPart, SaveContext context)
+        {
+            if (workbookStylesPart.Stylesheet.DifferentialFormats == null)
+                workbookStylesPart.Stylesheet.DifferentialFormats = new DifferentialFormats();
+
+
+            var differentialFormats = workbookStylesPart.Stylesheet.DifferentialFormats;
+
+            FillDifferentialFormatsCollection(differentialFormats, context.DifferentialFormats);
+
+
+            foreach (var ws in Worksheets)
+            {
+                foreach (var cf in ws.ConditionalFormats)
+                {
+                    if (!context.DifferentialFormats.ContainsKey(cf.Style))
+                        AddDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, cf, context);
+                }
+            }
+
+            differentialFormats.Count = (UInt32) differentialFormats.Count();
+            if (differentialFormats.Count == 0)
+                workbookStylesPart.Stylesheet.DifferentialFormats = null;
+        }
+
+        private void FillDifferentialFormatsCollection(DifferentialFormats differentialFormats,
+                                                       Dictionary<IXLStyle, int> dictionary)
+        {
+            dictionary.Clear();
+            var id = 0;
+            foreach (var df in differentialFormats.Elements<DifferentialFormat>())
+            {
+                var style = new XLStyle(new XLStylizedEmpty(DefaultStyle), DefaultStyle);
+                LoadFont(df.Font, style.Font);
+                LoadBorder(df.Border, style.Border);
+                LoadNumberFormat(df.NumberingFormat, style.NumberFormat);
+                LoadFill(df.Fill, style.Fill);
+                if (!dictionary.ContainsKey(style))
+                    dictionary.Add(style, ++id);
+            }
+        }
+
+        private static void AddDifferentialFormat(DifferentialFormats differentialFormats, IXLConditionalFormat cf,
+                                                  SaveContext context)
+        {
+            var differentialFormat = new DifferentialFormat();
+            differentialFormat.Append(GetNewFont(new FontInfo {Font = cf.Style.Font as XLFont}, false));
+            if (!StringExtensions.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
+            {
+                var numberFormat = new NumberingFormat
+                    {
+                        NumberFormatId = (UInt32) (differentialFormats.Count() + 164),
+                        FormatCode = cf.Style.NumberFormat.Format
+                    };
+                differentialFormat.Append(numberFormat);
+            }
+            differentialFormat.Append(GetNewFill(new FillInfo {Fill = cf.Style.Fill as XLFill}, false));
+            differentialFormat.Append(GetNewBorder(new BorderInfo {Border = cf.Style.Border as XLBorder}, false));
+
+            differentialFormats.Append(differentialFormat);
+
+            context.DifferentialFormats.Add(cf.Style, differentialFormats.Count() - 1);
+        }
+
+        private static void ResolveRest(WorkbookStylesPart workbookStylesPart, SaveContext context)
+        {
+            if (workbookStylesPart.Stylesheet.CellFormats == null)
+                workbookStylesPart.Stylesheet.CellFormats = new CellFormats();
+
+            foreach (var styleInfo in context.SharedStyles.Values)
+            {
+                var info = styleInfo;
+                var foundOne =
+                    workbookStylesPart.Stylesheet.CellFormats.Cast<CellFormat>().Any(f => CellFormatsAreEqual(f, info));
+
+                if (foundOne) continue;
+
+                var cellFormat = GetCellFormat(styleInfo);
+                cellFormat.FormatId = 0;
+                var alignment = new Alignment
+                    {
+                        Horizontal = styleInfo.Style.Alignment.Horizontal.ToOpenXml(),
+                        Vertical = styleInfo.Style.Alignment.Vertical.ToOpenXml(),
+                        Indent = (UInt32) styleInfo.Style.Alignment.Indent,
+                        ReadingOrder = (UInt32) styleInfo.Style.Alignment.ReadingOrder,
+                        WrapText = styleInfo.Style.Alignment.WrapText,
+                        TextRotation = (UInt32) styleInfo.Style.Alignment.TextRotation,
+                        ShrinkToFit = styleInfo.Style.Alignment.ShrinkToFit,
+                        RelativeIndent = styleInfo.Style.Alignment.RelativeIndent,
+                        JustifyLastLine = styleInfo.Style.Alignment.JustifyLastLine
+                    };
+                cellFormat.AppendChild(alignment);
+
+                if (cellFormat.ApplyProtection.Value)
+                    cellFormat.AppendChild(GetProtection(styleInfo));
+
+                workbookStylesPart.Stylesheet.CellFormats.AppendChild(cellFormat);
+            }
+            workbookStylesPart.Stylesheet.CellFormats.Count = (UInt32) workbookStylesPart.Stylesheet.CellFormats.Count();
+        }
+
+        private static void ResolveCellStyleFormats(WorkbookStylesPart workbookStylesPart,
+                                                    SaveContext context)
+        {
+            if (workbookStylesPart.Stylesheet.CellStyleFormats == null)
+                workbookStylesPart.Stylesheet.CellStyleFormats = new CellStyleFormats();
+
+            foreach (var styleInfo in context.SharedStyles.Values)
+            {
+                var info = styleInfo;
+                var foundOne =
+                    workbookStylesPart.Stylesheet.CellStyleFormats.Cast<CellFormat>().Any(
+                        f => CellFormatsAreEqual(f, info));
+
+                if (foundOne) continue;
+
+                var cellStyleFormat = GetCellFormat(styleInfo);
+
+                if (cellStyleFormat.ApplyProtection.Value)
+                    cellStyleFormat.AppendChild(GetProtection(styleInfo));
+
+                workbookStylesPart.Stylesheet.CellStyleFormats.AppendChild(cellStyleFormat);
+            }
+            workbookStylesPart.Stylesheet.CellStyleFormats.Count =
+                (UInt32) workbookStylesPart.Stylesheet.CellStyleFormats.Count();
+        }
+
+        private static bool ApplyFill(StyleInfo styleInfo)
+        {
+            return styleInfo.Style.Fill.PatternType.ToOpenXml() == PatternValues.None;
+        }
+
+        private static bool ApplyBorder(StyleInfo styleInfo)
+        {
+            var opBorder = styleInfo.Style.Border;
+            return (opBorder.BottomBorder.ToOpenXml() != BorderStyleValues.None
+                    || opBorder.DiagonalBorder.ToOpenXml() != BorderStyleValues.None
+                    || opBorder.RightBorder.ToOpenXml() != BorderStyleValues.None
+                    || opBorder.LeftBorder.ToOpenXml() != BorderStyleValues.None
+                    || opBorder.TopBorder.ToOpenXml() != BorderStyleValues.None);
+        }
+
+        private static bool ApplyProtection(StyleInfo styleInfo)
+        {
+            return styleInfo.Style.Protection != null;
+        }
+
+        private static CellFormat GetCellFormat(StyleInfo styleInfo)
+        {
+            var cellFormat = new CellFormat
+                {
+                    NumberFormatId = (UInt32) styleInfo.NumberFormatId,
+                    FontId = styleInfo.FontId,
+                    FillId = styleInfo.FillId,
+                    BorderId = styleInfo.BorderId,
+                    ApplyNumberFormat = false,
+                    ApplyFill = ApplyFill(styleInfo),
+                    ApplyBorder = ApplyBorder(styleInfo),
+                    ApplyAlignment = false,
+                    ApplyProtection = ApplyProtection(styleInfo)
+                };
+            return cellFormat;
+        }
+
+        private static Protection GetProtection(StyleInfo styleInfo)
+        {
+            return new Protection
+                {
+                    Locked = styleInfo.Style.Protection.Locked,
+                    Hidden = styleInfo.Style.Protection.Hidden
+                };
+        }
+
+        private static bool CellFormatsAreEqual(CellFormat f, StyleInfo styleInfo)
+        {
+            return
+                f.BorderId != null && styleInfo.BorderId == f.BorderId
+                && f.FillId != null && styleInfo.FillId == f.FillId
+                && f.FontId != null && styleInfo.FontId == f.FontId
+                && f.NumberFormatId != null && styleInfo.NumberFormatId == f.NumberFormatId
+                && f.ApplyNumberFormat != null && f.ApplyNumberFormat == false
+                && f.ApplyAlignment != null && f.ApplyAlignment == false
+                && f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo)
+                && f.ApplyBorder != null && f.ApplyBorder == ApplyBorder(styleInfo)
+                && AlignmentsAreEqual(f.Alignment, styleInfo.Style.Alignment)
+                && ProtectionsAreEqual(f.Protection, styleInfo.Style.Protection)
+                ;
+        }
+
+        private static bool ProtectionsAreEqual(Protection protection, IXLProtection xlProtection)
+        {
+            var p = new XLProtection();
+            if (protection != null)
+            {
+                if (protection.Locked != null)
+                    p.Locked = protection.Locked.Value;
+                if (protection.Hidden != null)
+                    p.Hidden = protection.Hidden.Value;
+            }
+            return p.Equals(xlProtection);
+        }
+
+        private static bool AlignmentsAreEqual(Alignment alignment, IXLAlignment xlAlignment)
+        {
+            var a = new XLAlignment();
+            if (alignment != null)
+            {
+                if (alignment.Indent != null)
+                    a.Indent = (Int32) alignment.Indent.Value;
+
+                if (alignment.Horizontal != null)
+                    a.Horizontal = alignment.Horizontal.Value.ToClosedXml();
+                if (alignment.Vertical != null)
+                    a.Vertical = alignment.Vertical.Value.ToClosedXml();
+
+                if (alignment.ReadingOrder != null)
+                    a.ReadingOrder = alignment.ReadingOrder.Value.ToClosedXml();
+                if (alignment.WrapText != null)
+                    a.WrapText = alignment.WrapText.Value;
+                if (alignment.TextRotation != null)
+                    a.TextRotation = (Int32) alignment.TextRotation.Value;
+                if (alignment.ShrinkToFit != null)
+                    a.ShrinkToFit = alignment.ShrinkToFit.Value;
+                if (alignment.RelativeIndent != null)
+                    a.RelativeIndent = alignment.RelativeIndent.Value;
+                if (alignment.JustifyLastLine != null)
+                    a.JustifyLastLine = alignment.JustifyLastLine.Value;
+            }
+            return a.Equals(xlAlignment);
+        }
+
+        private Dictionary<IXLBorder, BorderInfo> ResolveBorders(WorkbookStylesPart workbookStylesPart,
+                                                                 Dictionary<IXLBorder, BorderInfo> sharedBorders)
+        {
+            if (workbookStylesPart.Stylesheet.Borders == null)
+                workbookStylesPart.Stylesheet.Borders = new Borders();
+
+            var allSharedBorders = new Dictionary<IXLBorder, BorderInfo>();
+            foreach (var borderInfo in sharedBorders.Values)
+            {
+                var borderId = 0;
+                var foundOne = false;
+                foreach (Border f in workbookStylesPart.Stylesheet.Borders)
+                {
+                    if (BordersAreEqual(f, borderInfo.Border))
+                    {
+                        foundOne = true;
+                        break;
+                    }
+                    borderId++;
+                }
+                if (!foundOne)
+                {
+                    var border = GetNewBorder(borderInfo);
+                    workbookStylesPart.Stylesheet.Borders.AppendChild(border);
+                }
+                allSharedBorders.Add(borderInfo.Border,
+                                     new BorderInfo {Border = borderInfo.Border, BorderId = (UInt32) borderId});
+            }
+            workbookStylesPart.Stylesheet.Borders.Count = (UInt32) workbookStylesPart.Stylesheet.Borders.Count();
+            return allSharedBorders;
+        }
+
+        private static Border GetNewBorder(BorderInfo borderInfo, Boolean ignoreMod = true)
+        {
+            var border = new Border();
+            if (borderInfo.Border.DiagonalUpModified || ignoreMod)
+                border.DiagonalUp = borderInfo.Border.DiagonalUp;
+
+            if (borderInfo.Border.DiagonalDownModified || ignoreMod)
+                border.DiagonalDown = borderInfo.Border.DiagonalDown;
+
+            if (borderInfo.Border.LeftBorderModified || borderInfo.Border.LeftBorderColorModified || ignoreMod)
+            {
+                var leftBorder = new LeftBorder {Style = borderInfo.Border.LeftBorder.ToOpenXml()};
+                if (borderInfo.Border.LeftBorderColorModified || ignoreMod)
+                {
+                    var leftBorderColor = GetNewColor(borderInfo.Border.LeftBorderColor);
+                    leftBorder.AppendChild(leftBorderColor);
+                }
+                border.AppendChild(leftBorder);
+            }
+
+            if (borderInfo.Border.RightBorderModified || borderInfo.Border.RightBorderColorModified || ignoreMod)
+            {
+                var rightBorder = new RightBorder { Style = borderInfo.Border.RightBorder.ToOpenXml() };
+                if (borderInfo.Border.RightBorderColorModified || ignoreMod)
+                {
+                    var rightBorderColor = GetNewColor(borderInfo.Border.RightBorderColor);
+                    rightBorder.AppendChild(rightBorderColor);
+                }
+                border.AppendChild(rightBorder);
+            }
+
+            if (borderInfo.Border.TopBorderModified || borderInfo.Border.TopBorderColorModified || ignoreMod)
+            {
+                var topBorder = new TopBorder { Style = borderInfo.Border.TopBorder.ToOpenXml() };
+                if (borderInfo.Border.TopBorderColorModified || ignoreMod)
+                {
+                    var topBorderColor = GetNewColor(borderInfo.Border.TopBorderColor);
+                    topBorder.AppendChild(topBorderColor);
+                }
+                border.AppendChild(topBorder);
+            }
+
+            if (borderInfo.Border.BottomBorderModified || borderInfo.Border.BottomBorderColorModified || ignoreMod)
+            {
+                var bottomBorder = new BottomBorder { Style = borderInfo.Border.BottomBorder.ToOpenXml() };
+                if (borderInfo.Border.BottomBorderColorModified || ignoreMod)
+                {
+                    var bottomBorderColor = GetNewColor(borderInfo.Border.BottomBorderColor);
+                    bottomBorder.AppendChild(bottomBorderColor);
+                }
+                border.AppendChild(bottomBorder);
+            }
+
+            if (borderInfo.Border.DiagonalBorderModified || borderInfo.Border.DiagonalBorderColorModified || ignoreMod)
+            {
+                var DiagonalBorder = new DiagonalBorder { Style = borderInfo.Border.DiagonalBorder.ToOpenXml() };
+                if (borderInfo.Border.DiagonalBorderColorModified || ignoreMod)
+                {
+                    var DiagonalBorderColor = GetNewColor(borderInfo.Border.DiagonalBorderColor);
+                    DiagonalBorder.AppendChild(DiagonalBorderColor);
+                }
+                border.AppendChild(DiagonalBorder);
+            }
+
+            return border;
+        }
+
+        private bool BordersAreEqual(Border b, IXLBorder xlBorder)
+        {
+            var nb = new XLBorder();
+            if (b.DiagonalUp != null)
+                nb.DiagonalUp = b.DiagonalUp.Value;
+
+            if (b.DiagonalDown != null)
+                nb.DiagonalDown = b.DiagonalDown.Value;
+
+            if (b.LeftBorder != null)
+            {
+                if (b.LeftBorder.Style != null)
+                    nb.LeftBorder = b.LeftBorder.Style.Value.ToClosedXml();
+                var bColor = GetColor(b.LeftBorder.Color);
+                if (bColor.HasValue)
+                    nb.LeftBorderColor = bColor;
+            }
+
+            if (b.RightBorder != null)
+            {
+                if (b.RightBorder.Style != null)
+                    nb.RightBorder = b.RightBorder.Style.Value.ToClosedXml();
+                var bColor = GetColor(b.RightBorder.Color);
+                if (bColor.HasValue)
+                    nb.RightBorderColor = bColor;
+            }
+
+            if (b.TopBorder != null)
+            {
+                if (b.TopBorder.Style != null)
+                    nb.TopBorder = b.TopBorder.Style.Value.ToClosedXml();
+                var bColor = GetColor(b.TopBorder.Color);
+                if (bColor.HasValue)
+                    nb.TopBorderColor = bColor;
+            }
+
+            if (b.BottomBorder != null)
+            {
+                if (b.BottomBorder.Style != null)
+                    nb.BottomBorder = b.BottomBorder.Style.Value.ToClosedXml();
+                var bColor = GetColor(b.BottomBorder.Color);
+                if (bColor.HasValue)
+                    nb.BottomBorderColor = bColor;
+            }
+
+            return nb.Equals(xlBorder);
+        }
+
+        private Dictionary<IXLFill, FillInfo> ResolveFills(WorkbookStylesPart workbookStylesPart,
+                                                           Dictionary<IXLFill, FillInfo> sharedFills)
+        {
+            if (workbookStylesPart.Stylesheet.Fills == null)
+                workbookStylesPart.Stylesheet.Fills = new Fills();
+
+            ResolveFillWithPattern(workbookStylesPart.Stylesheet.Fills, PatternValues.None);
+            ResolveFillWithPattern(workbookStylesPart.Stylesheet.Fills, PatternValues.Gray125);
+
+            var allSharedFills = new Dictionary<IXLFill, FillInfo>();
+            foreach (var fillInfo in sharedFills.Values)
+            {
+                var fillId = 0;
+                var foundOne = false;
+                foreach (Fill f in workbookStylesPart.Stylesheet.Fills)
+                {
+                    if (FillsAreEqual(f, fillInfo.Fill))
+                    {
+                        foundOne = true;
+                        break;
+                    }
+                    fillId++;
+                }
+                if (!foundOne)
+                {
+                    var fill = GetNewFill(fillInfo);
+                    workbookStylesPart.Stylesheet.Fills.AppendChild(fill);
+                }
+                allSharedFills.Add(fillInfo.Fill, new FillInfo {Fill = fillInfo.Fill, FillId = (UInt32) fillId});
+            }
+
+            workbookStylesPart.Stylesheet.Fills.Count = (UInt32) workbookStylesPart.Stylesheet.Fills.Count();
+            return allSharedFills;
+        }
+
+        private static void ResolveFillWithPattern(Fills fills, PatternValues patternValues)
+        {
+            if (fills.Elements<Fill>().Any(f =>
+                                           f.PatternFill.PatternType == patternValues
+                                           && f.PatternFill.ForegroundColor == null
+                                           && f.PatternFill.BackgroundColor == null
+                )) return;
+
+            var fill1 = new Fill();
+            var patternFill1 = new PatternFill {PatternType = patternValues};
+            fill1.AppendChild(patternFill1);
+            fills.AppendChild(fill1);
+        }
+
+        private static Fill GetNewFill(FillInfo fillInfo, Boolean ignoreMod = true)
+        {
+            var fill = new Fill();
+
+            var patternFill = new PatternFill();
+            if (fillInfo.Fill.PatternTypeModified || ignoreMod)
+                patternFill.PatternType = fillInfo.Fill.PatternType.ToOpenXml();
+
+            if (fillInfo.Fill.PatternColorModified || ignoreMod)
+            {
+                var foregroundColor = new ForegroundColor();
+                if (fillInfo.Fill.PatternColor.ColorType == XLColorType.Color)
+                    foregroundColor.Rgb = fillInfo.Fill.PatternColor.Color.ToHex();
+                else if (fillInfo.Fill.PatternColor.ColorType == XLColorType.Indexed)
+                    foregroundColor.Indexed = (UInt32) fillInfo.Fill.PatternColor.Indexed;
+                else
+                {
+                    foregroundColor.Theme = (UInt32) fillInfo.Fill.PatternColor.ThemeColor;
+                    if (fillInfo.Fill.PatternColor.ThemeTint != 1)
+                        foregroundColor.Tint = fillInfo.Fill.PatternColor.ThemeTint;
+                }
+                patternFill.AppendChild(foregroundColor);
+            }
+
+            if (fillInfo.Fill.PatternBackgroundColorModified || ignoreMod)
+            {
+                var backgroundColor = new BackgroundColor();
+                if (fillInfo.Fill.PatternBackgroundColor.ColorType == XLColorType.Color)
+                    backgroundColor.Rgb = fillInfo.Fill.PatternBackgroundColor.Color.ToHex();
+                else if (fillInfo.Fill.PatternBackgroundColor.ColorType == XLColorType.Indexed)
+                    backgroundColor.Indexed = (UInt32) fillInfo.Fill.PatternBackgroundColor.Indexed;
+                else
+                {
+                    backgroundColor.Theme = (UInt32) fillInfo.Fill.PatternBackgroundColor.ThemeColor;
+                    if (fillInfo.Fill.PatternBackgroundColor.ThemeTint != 1)
+                        backgroundColor.Tint = fillInfo.Fill.PatternBackgroundColor.ThemeTint;
+                }
+                patternFill.AppendChild(backgroundColor);
+            }
+
+            fill.AppendChild(patternFill);
+
+            return fill;
+        }
+
+        private bool FillsAreEqual(Fill f, IXLFill xlFill)
+        {
+            var nF = new XLFill();
+            if (f.PatternFill != null)
+            {
+                if (f.PatternFill.PatternType != null)
+                    nF.PatternType = f.PatternFill.PatternType.Value.ToClosedXml();
+
+                var fColor = GetColor(f.PatternFill.ForegroundColor);
+                if (fColor.HasValue)
+                    nF.PatternColor = fColor;
+
+                var bColor = GetColor(f.PatternFill.BackgroundColor);
+                if (bColor.HasValue)
+                    nF.PatternBackgroundColor = bColor;
+            }
+            return nF.Equals(xlFill);
+        }
+
+        private void ResolveFonts(WorkbookStylesPart workbookStylesPart, SaveContext context)
+        {
+            if (workbookStylesPart.Stylesheet.Fonts == null)
+                workbookStylesPart.Stylesheet.Fonts = new Fonts();
+
+            var newFonts = new Dictionary<IXLFont, FontInfo>();
+            foreach (var fontInfo in context.SharedFonts.Values)
+            {
+                var fontId = 0;
+                var foundOne = false;
+                foreach (Font f in workbookStylesPart.Stylesheet.Fonts)
+                {
+                    if (FontsAreEqual(f, fontInfo.Font))
+                    {
+                        foundOne = true;
+                        break;
+                    }
+                    fontId++;
+                }
+                if (!foundOne)
+                {
+                    var font = GetNewFont(fontInfo);
+                    workbookStylesPart.Stylesheet.Fonts.AppendChild(font);
+                }
+                newFonts.Add(fontInfo.Font, new FontInfo {Font = fontInfo.Font, FontId = (UInt32) fontId});
+            }
+            context.SharedFonts.Clear();
+            foreach (var kp in newFonts)
+                context.SharedFonts.Add(kp.Key, kp.Value);
+
+            workbookStylesPart.Stylesheet.Fonts.Count = (UInt32) workbookStylesPart.Stylesheet.Fonts.Count();
+        }
+
+        private static Font GetNewFont(FontInfo fontInfo, Boolean ignoreMod = true)
+        {
+            var font = new Font();
+            var bold = (fontInfo.Font.BoldModified || ignoreMod) && fontInfo.Font.Bold ? new Bold() : null;
+            var italic = (fontInfo.Font.ItalicModified || ignoreMod) && fontInfo.Font.Italic ? new Italic() : null;
+            var underline = (fontInfo.Font.UnderlineModified || ignoreMod) && fontInfo.Font.Underline != XLFontUnderlineValues.None
+                                ? new Underline {Val = fontInfo.Font.Underline.ToOpenXml()}
+                                : null;
+            var strike = (fontInfo.Font.StrikethroughModified || ignoreMod) && fontInfo.Font.Strikethrough ? new Strike() : null;
+            var verticalAlignment = fontInfo.Font.VerticalAlignmentModified || ignoreMod ? new VerticalTextAlignment { Val = fontInfo.Font.VerticalAlignment.ToOpenXml() } : null;
+            var shadow = (fontInfo.Font.ShadowModified || ignoreMod) && fontInfo.Font.Shadow ? new Shadow() : null;
+            var fontSize = fontInfo.Font.FontSizeModified || ignoreMod ? new FontSize { Val = fontInfo.Font.FontSize } : null;
+            var color = fontInfo.Font.FontColorModified || ignoreMod ? GetNewColor(fontInfo.Font.FontColor) : null;
+
+            var fontName = fontInfo.Font.FontNameModified || ignoreMod ? new FontName { Val = fontInfo.Font.FontName } : null;
+            var fontFamilyNumbering = fontInfo.Font.FontFamilyNumberingModified || ignoreMod ? new FontFamilyNumbering { Val = (Int32)fontInfo.Font.FontFamilyNumbering } : null;
+
+            if (bold != null)
+                font.AppendChild(bold);
+            if (italic != null)
+                font.AppendChild(italic);
+            if (underline != null)
+                font.AppendChild(underline);
+            if (strike != null)
+                font.AppendChild(strike);
+            if (verticalAlignment != null)
+                font.AppendChild(verticalAlignment);
+            if (shadow != null)
+                font.AppendChild(shadow);
+            if (fontSize     != null)
+                font.AppendChild(fontSize);
+            if (color != null)
+                font.AppendChild(color);
+            if (fontName != null)
+                font.AppendChild(fontName);
+            if (fontFamilyNumbering != null)
+                font.AppendChild(fontFamilyNumbering);
+
+            return font;
+        }
+
+        private static Color GetNewColor(IXLColor xlColor)
+        {
+            var color = new Color();
+            if (xlColor.ColorType == XLColorType.Color)
+                color.Rgb = xlColor.Color.ToHex();
+            else if (xlColor.ColorType == XLColorType.Indexed)
+                color.Indexed = (UInt32) xlColor.Indexed;
+            else
+            {
+                color.Theme = (UInt32) xlColor.ThemeColor;
+                if (xlColor.ThemeTint != 1)
+                    color.Tint = xlColor.ThemeTint;
+            }
+            return color;
+        }
+
+        private static TabColor GetTabColor(IXLColor xlColor)
+        {
+            var color = new TabColor();
+            if (xlColor.ColorType == XLColorType.Color)
+                color.Rgb = xlColor.Color.ToHex();
+            else if (xlColor.ColorType == XLColorType.Indexed)
+                color.Indexed = (UInt32) xlColor.Indexed;
+            else
+            {
+                color.Theme = (UInt32) xlColor.ThemeColor;
+                if (xlColor.ThemeTint != 1)
+                    color.Tint = xlColor.ThemeTint;
+            }
+            return color;
+        }
+
+        private bool FontsAreEqual(Font f, IXLFont xlFont)
+        {
+            var nf = new XLFont {Bold = f.Bold != null, Italic = f.Italic != null};
+            if (f.Underline != null)
+            {
+                nf.Underline = f.Underline.Val != null
+                                   ? f.Underline.Val.Value.ToClosedXml()
+                                   : XLFontUnderlineValues.Single;
+            }
+            nf.Strikethrough = f.Strike != null;
+            if (f.VerticalTextAlignment != null)
+            {
+                nf.VerticalAlignment = f.VerticalTextAlignment.Val != null
+                                           ? f.VerticalTextAlignment.Val.Value.ToClosedXml()
+                                           : XLFontVerticalTextAlignmentValues.Baseline;
+            }
+            nf.Shadow = f.Shadow != null;
+            if (f.FontSize != null)
+                nf.FontSize = f.FontSize.Val;
+            var fColor = GetColor(f.Color);
+            if (fColor.HasValue)
+                nf.FontColor = fColor;
+            if (f.FontName != null)
+                nf.FontName = f.FontName.Val;
+            if (f.FontFamilyNumbering != null)
+                nf.FontFamilyNumbering = (XLFontFamilyNumberingValues) f.FontFamilyNumbering.Val.Value;
+
+            return nf.Equals(xlFont);
+        }
+
+        private static Dictionary<IXLNumberFormat, NumberFormatInfo> ResolveNumberFormats(
+            WorkbookStylesPart workbookStylesPart,
+            Dictionary<IXLNumberFormat, NumberFormatInfo> sharedNumberFormats)
+        {
+            if (workbookStylesPart.Stylesheet.NumberingFormats == null)
+                workbookStylesPart.Stylesheet.NumberingFormats = new NumberingFormats();
+
+            var allSharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>();
+            foreach (var numberFormatInfo in sharedNumberFormats.Values)
+            {
+                var numberingFormatId = 0;
+                var foundOne = false;
+                foreach (NumberingFormat nf in workbookStylesPart.Stylesheet.NumberingFormats)
+                {
+                    if (NumberFormatsAreEqual(nf, numberFormatInfo.NumberFormat))
+                    {
+                        foundOne = true;
+                        numberingFormatId = (Int32) nf.NumberFormatId.Value;
+                        break;
+                    }
+                    numberingFormatId++;
+                }
+                if (!foundOne)
+                {
+                    var numberingFormat = new NumberingFormat
+                        {
+                            NumberFormatId = (UInt32) numberingFormatId,
+                            FormatCode = numberFormatInfo.NumberFormat.Format
+                        };
+                    workbookStylesPart.Stylesheet.NumberingFormats.AppendChild(numberingFormat);
+                }
+                allSharedNumberFormats.Add(numberFormatInfo.NumberFormat,
+                                           new NumberFormatInfo
+                                               {
+                                                   NumberFormat = numberFormatInfo.NumberFormat,
+                                                   NumberFormatId = numberingFormatId
+                                               });
+            }
+            workbookStylesPart.Stylesheet.NumberingFormats.Count =
+                (UInt32) workbookStylesPart.Stylesheet.NumberingFormats.Count();
+            return allSharedNumberFormats;
+        }
+
+        private static bool NumberFormatsAreEqual(NumberingFormat nf, IXLNumberFormat xlNumberFormat)
+        {
+            var newXLNumberFormat = new XLNumberFormat();
+
+            if (nf.FormatCode != null && !StringExtensions.IsNullOrWhiteSpace(nf.FormatCode.Value))
+                newXLNumberFormat.Format = nf.FormatCode.Value;
+            else if (nf.NumberFormatId != null)
+                newXLNumberFormat.NumberFormatId = (Int32) nf.NumberFormatId.Value;
+
+            return newXLNumberFormat.Equals(xlNumberFormat);
+        }
+
+        #endregion
+
+        #region GenerateWorksheetPartContent
+
+        private static void GenerateWorksheetPartContent(WorksheetPart worksheetPart, XLWorksheet xlWorksheet,
+                                                         SaveContext context)
+        {
+            #region Worksheet
+
+            if (worksheetPart.Worksheet == null)
+                worksheetPart.Worksheet = new Worksheet();
+
+            GenerateTables(xlWorksheet, worksheetPart, context);
+
+            if (
+                !worksheetPart.Worksheet.NamespaceDeclarations.Contains(new KeyValuePair<String, String>("r",
+                                                                                                         "http://schemas.openxmlformats.org/officeDocument/2006/relationships")))
+            {
+                worksheetPart.Worksheet.AddNamespaceDeclaration("r",
+                                                                "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            }
+
+            #endregion
+
+            var cm = new XLWSContentManager(worksheetPart.Worksheet);
+
+            #region SheetProperties
+
+            if (worksheetPart.Worksheet.SheetProperties == null)
+                worksheetPart.Worksheet.SheetProperties = new SheetProperties();
+
+            worksheetPart.Worksheet.SheetProperties.TabColor = xlWorksheet.TabColor.HasValue
+                                                                   ? GetTabColor(xlWorksheet.TabColor)
+                                                                   : null;
+
+            cm.SetElement(XLWSContentManager.XLWSContents.SheetProperties, worksheetPart.Worksheet.SheetProperties);
+
+            if (worksheetPart.Worksheet.SheetProperties.OutlineProperties == null)
+                worksheetPart.Worksheet.SheetProperties.OutlineProperties = new OutlineProperties();
+
+            worksheetPart.Worksheet.SheetProperties.OutlineProperties.SummaryBelow =
+                (xlWorksheet.Outline.SummaryVLocation ==
+                 XLOutlineSummaryVLocation.Bottom);
+            worksheetPart.Worksheet.SheetProperties.OutlineProperties.SummaryRight =
+                (xlWorksheet.Outline.SummaryHLocation ==
+                 XLOutlineSummaryHLocation.Right);
+
+            if (worksheetPart.Worksheet.SheetProperties.PageSetupProperties == null
+                && (xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0))
+                worksheetPart.Worksheet.SheetProperties.PageSetupProperties = new PageSetupProperties {FitToPage = true};
+
+            #endregion
+
+            var maxColumn = 0;
+
+            var sheetDimensionReference = "A1";
+            if (xlWorksheet.Internals.CellsCollection.Count > 0)
+            {
+                maxColumn = xlWorksheet.Internals.CellsCollection.MaxColumnUsed;
+                var maxRow = xlWorksheet.Internals.CellsCollection.MaxRowUsed;
+                sheetDimensionReference = "A1:" + XLHelper.GetColumnLetterFromNumber(maxColumn) +
+                                          maxRow.ToStringLookup();
+            }
+
+            if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
+            {
+                var maxColCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Max();
+                if (maxColCollection > maxColumn)
+                    maxColumn = maxColCollection;
+            }
+
+            #region SheetViews
+
+            if (worksheetPart.Worksheet.SheetDimension == null)
+                worksheetPart.Worksheet.SheetDimension = new SheetDimension {Reference = sheetDimensionReference};
+
+            cm.SetElement(XLWSContentManager.XLWSContents.SheetDimension, worksheetPart.Worksheet.SheetDimension);
+
+            if (worksheetPart.Worksheet.SheetViews == null)
+                worksheetPart.Worksheet.SheetViews = new SheetViews();
+
+            cm.SetElement(XLWSContentManager.XLWSContents.SheetViews, worksheetPart.Worksheet.SheetViews);
+
+            var sheetView = (SheetView) worksheetPart.Worksheet.SheetViews.FirstOrDefault();
+            if (sheetView == null)
+            {
+                sheetView = new SheetView {WorkbookViewId = 0U};
+                worksheetPart.Worksheet.SheetViews.AppendChild(sheetView);
+            }
+
+            sheetView.TabSelected = xlWorksheet.TabSelected;
+
+            if (xlWorksheet.SelectedRanges != null && xlWorksheet.SelectedRanges.Any())
+            {
+                sheetView.RemoveAllChildren<Selection>();
+                var sb = new StringBuilder();
+                foreach (var range in xlWorksheet.SelectedRanges)
+                {
+                    sb.Append(range.RangeAddress.ToStringRelative(false));
+                    sb.Append(" ");
+                }
+                var selection = new Selection
+                    {
+                        ActiveCell = xlWorksheet.SelectedRanges.First().FirstCell().Address.ToStringRelative(false),
+                        SequenceOfReferences = new ListValue<StringValue> {InnerText = sb.ToString().TrimEnd()}
+                    };
+                sheetView.Append(selection);
+            }
+
+            if (xlWorksheet.ShowFormulas)
+                sheetView.ShowFormulas = true;
+            else
+                sheetView.ShowFormulas = null;
+
+            if (xlWorksheet.ShowGridLines)
+                sheetView.ShowGridLines = null;
+            else
+                sheetView.ShowGridLines = false;
+
+            if (xlWorksheet.ShowOutlineSymbols)
+                sheetView.ShowOutlineSymbols = null;
+            else
+                sheetView.ShowOutlineSymbols = false;
+
+            if (xlWorksheet.ShowRowColHeaders)
+                sheetView.ShowRowColHeaders = null;
+            else
+                sheetView.ShowRowColHeaders = false;
+
+            if (xlWorksheet.ShowRuler)
+                sheetView.ShowRuler = null;
+            else
+                sheetView.ShowRuler = false;
+
+            if (xlWorksheet.ShowWhiteSpace)
+                sheetView.ShowWhiteSpace = null;
+            else
+                sheetView.ShowWhiteSpace = false;
+
+            if (xlWorksheet.ShowZeros)
+                sheetView.ShowZeros = null;
+            else
+                sheetView.ShowZeros = false;
+
+            if (xlWorksheet.RightToLeft)
+                sheetView.RightToLeft = true;
+            else
+                sheetView.RightToLeft = null;
+
+            if (xlWorksheet.SheetView.View == XLSheetViewOptions.Normal)
+                sheetView.View = null;
+            else
+                sheetView.View = xlWorksheet.SheetView.View.ToOpenXml();
+
+            var pane = sheetView.Elements<Pane>().FirstOrDefault();
+            if (pane == null)
+            {
+                pane = new Pane();
+                sheetView.AppendChild(pane);
+            }
+
+
+            pane.State = PaneStateValues.FrozenSplit;
+            Double hSplit = xlWorksheet.SheetView.SplitColumn;
+            Double ySplit = xlWorksheet.SheetView.SplitRow;
+
+
+            pane.HorizontalSplit = hSplit;
+            pane.VerticalSplit = ySplit;
+
+            pane.TopLeftCell = XLHelper.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
+                               + (xlWorksheet.SheetView.SplitRow + 1);
+
+            if (hSplit == 0 && ySplit == 0)
+                sheetView.RemoveAllChildren<Pane>();
+
+            #endregion
+
+            var maxOutlineColumn = 0;
+            if (xlWorksheet.ColumnCount() > 0)
+                maxOutlineColumn = xlWorksheet.GetMaxColumnOutline();
+
+            var maxOutlineRow = 0;
+            if (xlWorksheet.RowCount() > 0)
+                maxOutlineRow = xlWorksheet.GetMaxRowOutline();
+
+            #region SheetFormatProperties
+
+            if (worksheetPart.Worksheet.SheetFormatProperties == null)
+                worksheetPart.Worksheet.SheetFormatProperties = new SheetFormatProperties();
+
+            cm.SetElement(XLWSContentManager.XLWSContents.SheetFormatProperties,
+                          worksheetPart.Worksheet.SheetFormatProperties);
+
+            worksheetPart.Worksheet.SheetFormatProperties.DefaultRowHeight = xlWorksheet.RowHeight;
+
+            if (xlWorksheet.RowHeightChanged)
+                worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = true;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = null;
+
+
+            var worksheetColumnWidth = GetColumnWidth(xlWorksheet.ColumnWidth);
+            if (xlWorksheet.ColumnWidthChanged)
+                worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = worksheetColumnWidth;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = null;
+
+
+            if (maxOutlineColumn > 0)
+                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = (byte) maxOutlineColumn;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = null;
+
+            if (maxOutlineRow > 0)
+                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelRow = (byte) maxOutlineRow;
+            else
+                worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelRow = null;
+
+            #endregion
+
+            #region Columns
+
+            if (xlWorksheet.Internals.CellsCollection.Count == 0 &&
+                xlWorksheet.Internals.ColumnsCollection.Count == 0
+                && xlWorksheet.Style.Equals(DefaultStyle))
+                worksheetPart.Worksheet.RemoveAllChildren<Columns>();
+            else
+            {
+                if (!worksheetPart.Worksheet.Elements<Columns>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Columns);
+                    worksheetPart.Worksheet.InsertAfter(new Columns(), previousElement);
+                }
+
+                var columns = worksheetPart.Worksheet.Elements<Columns>().First();
+                cm.SetElement(XLWSContentManager.XLWSContents.Columns, columns);
+
+                var sheetColumnsByMin = columns.Elements<Column>().ToDictionary(c => c.Min.Value, c => c);
+                //Dictionary<UInt32, Column> sheetColumnsByMax = columns.Elements<Column>().ToDictionary(c => c.Max.Value, c => c);
+
+                Int32 minInColumnsCollection;
+                Int32 maxInColumnsCollection;
+                if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
+                {
+                    minInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Min();
+                    maxInColumnsCollection = xlWorksheet.Internals.ColumnsCollection.Keys.Max();
+                }
+                else
+                {
+                    minInColumnsCollection = 1;
+                    maxInColumnsCollection = 0;
+                }
+
+                var worksheetStyleId = context.SharedStyles[xlWorksheet.GetStyleId()].StyleId;
+                if (minInColumnsCollection > 1)
+                {
+                    UInt32Value min = 1;
+                    UInt32Value max = (UInt32) (minInColumnsCollection - 1);
+
+
+                    for (var co = min; co <= max; co++)
+                    {
+                        var column = new Column
+                            {
+                                Min = co,
+                                Max = co,
+                                Style = worksheetStyleId,
+                                Width = worksheetColumnWidth,
+                                CustomWidth = true
+                            };
+
+                        UpdateColumn(column, columns, sheetColumnsByMin); //, sheetColumnsByMax);
+                    }
+                }
+
+                for (var co = minInColumnsCollection; co <= maxInColumnsCollection; co++)
+                {
+                    UInt32 styleId;
+                    Double columnWidth;
+                    var isHidden = false;
+                    var collapsed = false;
+                    var outlineLevel = 0;
+                    if (xlWorksheet.Internals.ColumnsCollection.ContainsKey(co))
+                    {
+                        styleId = context.SharedStyles[xlWorksheet.Internals.ColumnsCollection[co].GetStyleId()].StyleId;
+                        columnWidth = GetColumnWidth(xlWorksheet.Internals.ColumnsCollection[co].Width);
+                        isHidden = xlWorksheet.Internals.ColumnsCollection[co].IsHidden;
+                        collapsed = xlWorksheet.Internals.ColumnsCollection[co].Collapsed;
+                        outlineLevel = xlWorksheet.Internals.ColumnsCollection[co].OutlineLevel;
+                    }
+                    else
+                    {
+                        styleId = context.SharedStyles[xlWorksheet.GetStyleId()].StyleId;
+                        columnWidth = worksheetColumnWidth;
+                    }
+
+                    var column = new Column
+                        {
+                            Min = (UInt32) co,
+                            Max = (UInt32) co,
+                            Style = styleId,
+                            Width = columnWidth,
+                            CustomWidth = true
+                        };
+
+                    if (isHidden)
+                        column.Hidden = true;
+                    if (collapsed)
+                        column.Collapsed = true;
+                    if (outlineLevel > 0)
+                        column.OutlineLevel = (byte) outlineLevel;
+
+                    UpdateColumn(column, columns, sheetColumnsByMin); //, sheetColumnsByMax);
+                }
+
+                var collection = maxInColumnsCollection;
+                foreach (
+                    var col in
+                        columns.Elements<Column>().Where(c => c.Min > (UInt32) (collection)).OrderBy(
+                            c => c.Min.Value))
+                {
+                    col.Style = worksheetStyleId;
+                    col.Width = worksheetColumnWidth;
+                    col.CustomWidth = true;
+
+                    if ((Int32) col.Max.Value > maxInColumnsCollection)
+                        maxInColumnsCollection = (Int32) col.Max.Value;
+                }
+
+                if (maxInColumnsCollection < XLHelper.MaxColumnNumber && !xlWorksheet.Style.Equals(DefaultStyle))
+                {
+                    var column = new Column
+                        {
+                            Min = (UInt32) (maxInColumnsCollection + 1),
+                            Max = (UInt32) (XLHelper.MaxColumnNumber),
+                            Style = worksheetStyleId,
+                            Width = worksheetColumnWidth,
+                            CustomWidth = true
+                        };
+                    columns.AppendChild(column);
+                }
+
+                CollapseColumns(columns, sheetColumnsByMin);
+
+                if (!columns.Any())
+                {
+                    worksheetPart.Worksheet.RemoveAllChildren<Columns>();
+                    cm.SetElement(XLWSContentManager.XLWSContents.Columns, null);
+                }
+            }
+
+            #endregion
+
+            #region SheetData
+
+            if (!worksheetPart.Worksheet.Elements<SheetData>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.SheetData);
+                worksheetPart.Worksheet.InsertAfter(new SheetData(), previousElement);
+            }
+
+            var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+            cm.SetElement(XLWSContentManager.XLWSContents.SheetData, sheetData);
+
+            var cellsByRow = new Dictionary<Int32, List<IXLCell>>();
+            foreach (var c in xlWorksheet.Internals.CellsCollection.GetCells())
+            {
+                var rowNum = c.Address.RowNumber;
+                if (!cellsByRow.ContainsKey(rowNum))
+                    cellsByRow.Add(rowNum, new List<IXLCell>());
+
+                cellsByRow[rowNum].Add(c);
+            }
+
+            var sheetDataRows = sheetData.Elements<Row>().ToDictionary(r => (Int32) r.RowIndex.Value, r => r);
+            foreach (
+                var r in
+                    xlWorksheet.Internals.RowsCollection.Deleted.Where(r => sheetDataRows.ContainsKey(r.Key)))
+            {
+                sheetData.RemoveChild(sheetDataRows[r.Key]);
+                sheetDataRows.Remove(r.Key);
+                xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == r.Key);
+            }
+
+            var distinctRows = cellsByRow.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
+            var noRows = (sheetData.Elements<Row>().FirstOrDefault() == null);
+            foreach (var distinctRow in distinctRows.OrderBy(r => r))
+            {
+                Row row; // = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex.Value == (UInt32)distinctRow);
+                if (sheetDataRows.ContainsKey(distinctRow))
+                    row = sheetDataRows[distinctRow];
+                else
+                {
+                    row = new Row {RowIndex = (UInt32) distinctRow};
+                    if (noRows)
+                    {
+                        sheetData.AppendChild(row);
+                        noRows = false;
+                    }
+                    else
+                    {
+                        if (sheetDataRows.Any(r => r.Key > row.RowIndex.Value))
+                        {
+                            var minRow = sheetDataRows.Where(r => r.Key > (Int32) row.RowIndex.Value).Min(r => r.Key);
+                            var rowBeforeInsert = sheetDataRows[minRow];
+                            sheetData.InsertBefore(row, rowBeforeInsert);
+                        }
+                        else
+                            sheetData.AppendChild(row);
+                    }
+                }
+
+                if (maxColumn > 0)
+                    row.Spans = new ListValue<StringValue> {InnerText = "1:" + maxColumn.ToStringLookup()};
+
+                row.Height = null;
+                row.CustomHeight = null;
+                row.Hidden = null;
+                row.StyleIndex = null;
+                row.CustomFormat = null;
+                row.Collapsed = null;
+                if (xlWorksheet.Internals.RowsCollection.ContainsKey(distinctRow))
+                {
+                    var thisRow = xlWorksheet.Internals.RowsCollection[distinctRow];
+                    if (thisRow.HeightChanged)
+                    {
+                        row.Height = thisRow.Height;
+                        row.CustomHeight = true;
+                        row.CustomFormat = true;
+                    }
+
+                    if (thisRow.GetStyleId() != xlWorksheet.GetStyleId())
+                    {
+                        row.StyleIndex = context.SharedStyles[thisRow.GetStyleId()].StyleId;
+                        row.CustomFormat = true;
+                    }
+
+                    if (thisRow.IsHidden)
+                        row.Hidden = true;
+                    if (thisRow.Collapsed)
+                        row.Collapsed = true;
+                    if (thisRow.OutlineLevel > 0)
+                        row.OutlineLevel = (byte) thisRow.OutlineLevel;
+                }
+
+
+                var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference.Value, c => c);
+
+                foreach (var c in xlWorksheet.Internals.CellsCollection.Deleted.ToList())
+                {
+                    var key = XLHelper.GetColumnLetterFromNumber(c.Column) + c.Row.ToStringLookup();
+                    if (!cellsByReference.ContainsKey(key)) continue;
+                    row.RemoveChild(cellsByReference[key]);
+                    xlWorksheet.Internals.CellsCollection.Deleted.Remove(c);
+                }
+
+                if (!cellsByRow.ContainsKey(distinctRow)) continue;
+
+                var isNewRow = !row.Elements<Cell>().Any();
+                foreach (var opCell in cellsByRow[distinctRow]
+                    .OrderBy(c => c.Address.ColumnNumber)
+                    .Select(c => (XLCell) c))
+                {
+                    var styleId = context.SharedStyles[opCell.GetStyleId()].StyleId;
+
+                    var dataType = opCell.DataType;
+                    var cellReference = (opCell.Address).GetTrimmedAddress();
+
+                    Cell cell;
+                    if (cellsByReference.ContainsKey(cellReference))
+                        cell = cellsByReference[cellReference];
+                    else
+                    {
+                        cell = new Cell {CellReference = new StringValue(cellReference)};
+                        if (isNewRow)
+                            row.AppendChild(cell);
+                        else
+                        {
+                            var newColumn = XLHelper.GetColumnNumberFromAddress1(cellReference);
+
+                            Cell cellBeforeInsert = null;
+                            var lastCo = Int32.MaxValue;
+                            foreach (
+                                var c in
+                                    row.Elements<Cell>().Where(
+                                        c =>
+                                        XLHelper.GetColumnNumberFromAddress1(c.CellReference.Value) > newColumn))
+                            {
+                                var thidCo = XLHelper.GetColumnNumberFromAddress1(c.CellReference.Value);
+
+                                if (lastCo <= thidCo) continue;
+
+                                cellBeforeInsert = c;
+                                lastCo = thidCo;
+                            }
+                            if (cellBeforeInsert == null)
+                                row.AppendChild(cell);
+                            else
+                                row.InsertBefore(cell, cellBeforeInsert);
+                        }
+                    }
+
+                    cell.StyleIndex = styleId;
+                    if (!StringExtensions.IsNullOrWhiteSpace(opCell.FormulaA1))
+                    {
+                        var formula = opCell.FormulaA1;
+                        if (formula.StartsWith("{"))
+                        {
+                            formula = formula.Substring(1, formula.Length - 2);
+                            cell.CellFormula = new CellFormula(formula)
+                                {
+                                    FormulaType = CellFormulaValues.Array,
+                                    Reference = cellReference
+                                };
+                        }
+                        else
+                            cell.CellFormula = new CellFormula(formula);
+                        cell.CellValue = null;
+                    }
+                    else
+                    {
+                        cell.CellFormula = null;
+
+                        cell.DataType = opCell.DataType == XLCellValues.DateTime ? null : GetCellValue(opCell);
+
+                        var cellValue = new CellValue();
+                        if (dataType == XLCellValues.Text)
+                        {
+                            if (opCell.InnerText.Length == 0)
+                                cell.CellValue = null;
+                            else
+                            {
+                                if (opCell.ShareString)
+                                {
+                                    cellValue.Text = opCell.SharedStringId.ToString();
+                                    cell.CellValue = cellValue;
+                                }
+                                else
+                                {
+                                    var text = opCell.GetString();
+                                    var t = new Text(text);
+                                    if (text.PreserveSpaces())
+                                        t.Space = SpaceProcessingModeValues.Preserve;
+
+                                    cell.InlineString = new InlineString {Text = t};
+                                }
+                            }
+                        }
+                        else if (dataType == XLCellValues.TimeSpan)
+                        {
+                            var timeSpan = opCell.GetTimeSpan();
+                            cellValue.Text =
+                                XLCell.BaseDate.Add(timeSpan).ToOADate().ToString(CultureInfo.InvariantCulture);
+                            cell.CellValue = cellValue;
+                        }
+                        else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
+                        {
+                            cellValue.Text = Double.Parse(opCell.InnerText).ToString(CultureInfo.InvariantCulture);
+                            cell.CellValue = cellValue;
+                        }
+                        else
+                        {
+                            cellValue.Text = opCell.InnerText;
+                            cell.CellValue = cellValue;
+                        }
+                    }
+                }
+                xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == distinctRow);
+            }
+            foreach (
+                var r in
+                    xlWorksheet.Internals.CellsCollection.Deleted.Select(c => c.Row).Distinct().Where(
+                        sheetDataRows.ContainsKey))
+            {
+                sheetData.RemoveChild(sheetDataRows[r]);
+                sheetDataRows.Remove(r);
+            }
+
+            #endregion
+
+            #region SheetProtection
+
+            if (xlWorksheet.Protection.Protected)
+            {
+                if (!worksheetPart.Worksheet.Elements<SheetProtection>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.SheetProtection);
+                    worksheetPart.Worksheet.InsertAfter(new SheetProtection(), previousElement);
+                }
+
+                var sheetProtection = worksheetPart.Worksheet.Elements<SheetProtection>().First();
+                cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, sheetProtection);
+
+                var protection = xlWorksheet.Protection;
+                sheetProtection.Sheet = protection.Protected;
+                if (!StringExtensions.IsNullOrWhiteSpace(protection.PasswordHash))
+                    sheetProtection.Password = protection.PasswordHash;
+                sheetProtection.FormatCells = GetBooleanValue(!protection.FormatCells, true);
+                sheetProtection.FormatColumns = GetBooleanValue(!protection.FormatColumns, true);
+                sheetProtection.FormatRows = GetBooleanValue(!protection.FormatRows, true);
+                sheetProtection.InsertColumns = GetBooleanValue(!protection.InsertColumns, true);
+                sheetProtection.InsertHyperlinks = GetBooleanValue(!protection.InsertHyperlinks, true);
+                sheetProtection.InsertRows = GetBooleanValue(!protection.InsertRows, true);
+                sheetProtection.DeleteColumns = GetBooleanValue(!protection.DeleteColumns, true);
+                sheetProtection.DeleteRows = GetBooleanValue(!protection.DeleteRows, true);
+                sheetProtection.AutoFilter = GetBooleanValue(!protection.AutoFilter, true);
+                sheetProtection.PivotTables = GetBooleanValue(!protection.PivotTables, true);
+                sheetProtection.Sort = GetBooleanValue(!protection.Sort, true);
+                sheetProtection.SelectLockedCells = GetBooleanValue(!protection.SelectLockedCells, false);
+                sheetProtection.SelectUnlockedCells = GetBooleanValue(!protection.SelectUnlockedCells, false);
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<SheetProtection>();
+                cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, null);
+            }
+
+            #endregion
+
+            #region AutoFilter
+
+            worksheetPart.Worksheet.RemoveAllChildren<AutoFilter>();
+            if (xlWorksheet.AutoFilter.Enabled)
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.AutoFilter);
+                worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
+
+
+                var autoFilter = worksheetPart.Worksheet.Elements<AutoFilter>().First();
+                cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, autoFilter);
+
+                PopulateAutoFilter(xlWorksheet.AutoFilter, autoFilter);
+            }
+            else
+            {
+                cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, null);
+            }
+
+            #endregion
+
+            #region MergeCells
+
+            if ((xlWorksheet).Internals.MergedRanges.Any())
+            {
+                if (!worksheetPart.Worksheet.Elements<MergeCells>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.MergeCells);
+                    worksheetPart.Worksheet.InsertAfter(new MergeCells(), previousElement);
+                }
+
+                var mergeCells = worksheetPart.Worksheet.Elements<MergeCells>().First();
+                cm.SetElement(XLWSContentManager.XLWSContents.MergeCells, mergeCells);
+                mergeCells.RemoveAllChildren<MergeCell>();
+
+                foreach (var mergeCell in (xlWorksheet).Internals.MergedRanges.Select(
+                    m => m.RangeAddress.FirstAddress.ToString() + ":" + m.RangeAddress.LastAddress.ToString()).Select(
+                        merged => new MergeCell {Reference = merged}))
+                    mergeCells.AppendChild(mergeCell);
+
+                mergeCells.Count = (UInt32) mergeCells.Count();
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<MergeCells>();
+                cm.SetElement(XLWSContentManager.XLWSContents.MergeCells, null);
+            }
+
+            #endregion
+
+            #region Conditional Formatting
+
+            if (!xlWorksheet.ConditionalFormats.Any())
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
+                cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, null);
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
+
+
+                //if (!worksheetPart.Worksheet.Elements<ConditionalFormatting>().Any())
+                //{
+                //    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
+                //    worksheetPart.Worksheet.InsertAfter(new ConditionalFormatting(), previousElement);
+                //}
+
+                //var conditionalFormats = worksheetPart.Worksheet.Elements<ConditionalFormatting>().First();
+                //cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormats);
+                ////conditionalFormats.RemoveAllChildren<ConditionalFormat>();
+                var priority = 0;
+                foreach (var cf in xlWorksheet.ConditionalFormats)
+                {
+                    priority++;
+                    var conditionalFormatting = new ConditionalFormatting
+                        {
+                            SequenceOfReferences =
+                                new ListValue<StringValue> {InnerText = cf.Range.RangeAddress.ToStringRelative(false)}
+                        };
+                    conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
+
+                    worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
+                    previousElement = conditionalFormatting;
+                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
+                }
+            }
+
+            #endregion
+
+            #region DataValidations
+
+            if (!xlWorksheet.DataValidations.Any(d => d.IsDirty()))
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<DataValidations>();
+                cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, null);
+            }
+            else
+            {
+                if (!worksheetPart.Worksheet.Elements<DataValidations>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.DataValidations);
+                    worksheetPart.Worksheet.InsertAfter(new DataValidations(), previousElement);
+                }
+
+                var dataValidations = worksheetPart.Worksheet.Elements<DataValidations>().First();
+                cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, dataValidations);
+                dataValidations.RemoveAllChildren<DataValidation>();
+                foreach (var dv in xlWorksheet.DataValidations)
+                {
+                    var sequence = dv.Ranges.Aggregate(String.Empty, (current, r) => current + (r.RangeAddress + " "));
+
+                    if (sequence.Length > 0)
+                        sequence = sequence.Substring(0, sequence.Length - 1);
+
+                    var dataValidation = new DataValidation
+                        {
+                            AllowBlank = dv.IgnoreBlanks,
+                            Formula1 = new Formula1(dv.MinValue),
+                            Formula2 = new Formula2(dv.MaxValue),
+                            Type = dv.AllowedValues.ToOpenXml(),
+                            ShowErrorMessage = dv.ShowErrorMessage,
+                            Prompt = dv.InputMessage,
+                            PromptTitle = dv.InputTitle,
+                            ErrorTitle = dv.ErrorTitle,
+                            Error = dv.ErrorMessage,
+                            ShowDropDown = !dv.InCellDropdown,
+                            ShowInputMessage = dv.ShowInputMessage,
+                            ErrorStyle = dv.ErrorStyle.ToOpenXml(),
+                            Operator = dv.Operator.ToOpenXml(),
+                            SequenceOfReferences =
+                                new ListValue<StringValue> {InnerText = sequence}
+                        };
+
+                    dataValidations.AppendChild(dataValidation);
+                }
+                dataValidations.Count = (UInt32) xlWorksheet.DataValidations.Count();
+            }
+
+            #endregion
+
+            #region Hyperlinks
+
+            var relToRemove = worksheetPart.HyperlinkRelationships.ToList();
+            relToRemove.ForEach(worksheetPart.DeleteReferenceRelationship);
+            if (!xlWorksheet.Hyperlinks.Any())
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<Hyperlinks>();
+                cm.SetElement(XLWSContentManager.XLWSContents.Hyperlinks, null);
+            }
+            else
+            {
+                if (!worksheetPart.Worksheet.Elements<Hyperlinks>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Hyperlinks);
+                    worksheetPart.Worksheet.InsertAfter(new Hyperlinks(), previousElement);
+                }
+
+                var hyperlinks = worksheetPart.Worksheet.Elements<Hyperlinks>().First();
+                cm.SetElement(XLWSContentManager.XLWSContents.Hyperlinks, hyperlinks);
+                hyperlinks.RemoveAllChildren<Hyperlink>();
+                foreach (var hl in xlWorksheet.Hyperlinks)
+                {
+                    Hyperlink hyperlink;
+                    if (hl.IsExternal)
+                    {
+                        var rId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                        hyperlink = new Hyperlink {Reference = hl.Cell.Address.ToString(), Id = rId};
+                        worksheetPart.AddHyperlinkRelationship(hl.ExternalAddress, true, rId);
+                    }
+                    else
+                    {
+                        hyperlink = new Hyperlink
+                            {
+                                Reference = hl.Cell.Address.ToString(),
+                                Location = hl.InternalAddress,
+                                Display = hl.Cell.GetFormattedString()
+                            };
+                    }
+                    if (!StringExtensions.IsNullOrWhiteSpace(hl.Tooltip))
+                        hyperlink.Tooltip = hl.Tooltip;
+                    hyperlinks.AppendChild(hyperlink);
+                }
+            }
+
+            #endregion
+
+            #region PrintOptions
+
+            if (!worksheetPart.Worksheet.Elements<PrintOptions>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.PrintOptions);
+                worksheetPart.Worksheet.InsertAfter(new PrintOptions(), previousElement);
+            }
+
+            var printOptions = worksheetPart.Worksheet.Elements<PrintOptions>().First();
+            cm.SetElement(XLWSContentManager.XLWSContents.PrintOptions, printOptions);
+
+            printOptions.HorizontalCentered = xlWorksheet.PageSetup.CenterHorizontally;
+            printOptions.VerticalCentered = xlWorksheet.PageSetup.CenterVertically;
+            printOptions.Headings = xlWorksheet.PageSetup.ShowRowAndColumnHeadings;
+            printOptions.GridLines = xlWorksheet.PageSetup.ShowGridlines;
+
+            #endregion
+
+            #region PageMargins
+
+            if (!worksheetPart.Worksheet.Elements<PageMargins>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.PageMargins);
+                worksheetPart.Worksheet.InsertAfter(new PageMargins(), previousElement);
+            }
+
+            var pageMargins = worksheetPart.Worksheet.Elements<PageMargins>().First();
+            cm.SetElement(XLWSContentManager.XLWSContents.PageMargins, pageMargins);
+            pageMargins.Left = xlWorksheet.PageSetup.Margins.Left;
+            pageMargins.Right = xlWorksheet.PageSetup.Margins.Right;
+            pageMargins.Top = xlWorksheet.PageSetup.Margins.Top;
+            pageMargins.Bottom = xlWorksheet.PageSetup.Margins.Bottom;
+            pageMargins.Header = xlWorksheet.PageSetup.Margins.Header;
+            pageMargins.Footer = xlWorksheet.PageSetup.Margins.Footer;
+
+            #endregion
+
+            #region PageSetup
+
+            if (!worksheetPart.Worksheet.Elements<PageSetup>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.PageSetup);
+                worksheetPart.Worksheet.InsertAfter(new PageSetup(), previousElement);
+            }
+
+            var pageSetup = worksheetPart.Worksheet.Elements<PageSetup>().First();
+            cm.SetElement(XLWSContentManager.XLWSContents.PageSetup, pageSetup);
+
+            pageSetup.Orientation = xlWorksheet.PageSetup.PageOrientation.ToOpenXml();
+            pageSetup.PaperSize = (UInt32) xlWorksheet.PageSetup.PaperSize;
+            pageSetup.BlackAndWhite = xlWorksheet.PageSetup.BlackAndWhite;
+            pageSetup.Draft = xlWorksheet.PageSetup.DraftQuality;
+            pageSetup.PageOrder = xlWorksheet.PageSetup.PageOrder.ToOpenXml();
+            pageSetup.CellComments = xlWorksheet.PageSetup.ShowComments.ToOpenXml();
+            pageSetup.Errors = xlWorksheet.PageSetup.PrintErrorValue.ToOpenXml();
+
+            if (xlWorksheet.PageSetup.FirstPageNumber > 0)
+            {
+                pageSetup.FirstPageNumber = (UInt32) xlWorksheet.PageSetup.FirstPageNumber;
+                pageSetup.UseFirstPageNumber = true;
+            }
+            else
+            {
+                pageSetup.FirstPageNumber = null;
+                pageSetup.UseFirstPageNumber = null;
+            }
+
+            if (xlWorksheet.PageSetup.HorizontalDpi > 0)
+                pageSetup.HorizontalDpi = (UInt32) xlWorksheet.PageSetup.HorizontalDpi;
+            else
+                pageSetup.HorizontalDpi = null;
+
+            if (xlWorksheet.PageSetup.VerticalDpi > 0)
+                pageSetup.VerticalDpi = (UInt32) xlWorksheet.PageSetup.VerticalDpi;
+            else
+                pageSetup.VerticalDpi = null;
+
+            if (xlWorksheet.PageSetup.Scale > 0)
+            {
+                pageSetup.Scale = (UInt32) xlWorksheet.PageSetup.Scale;
+                pageSetup.FitToWidth = null;
+                pageSetup.FitToHeight = null;
+            }
+            else
+            {
+                pageSetup.Scale = null;
+
+                if (xlWorksheet.PageSetup.PagesWide > 0)
+                    pageSetup.FitToWidth = (UInt32) xlWorksheet.PageSetup.PagesWide;
+                else
+                    pageSetup.FitToWidth = 0;
+
+                if (xlWorksheet.PageSetup.PagesTall > 0)
+                    pageSetup.FitToHeight = (UInt32) xlWorksheet.PageSetup.PagesTall;
+                else
+                    pageSetup.FitToHeight = 0;
+            }
+
+            #endregion
+
+            #region HeaderFooter
+
+            var headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().FirstOrDefault();
+            if (headerFooter == null)
+                headerFooter = new HeaderFooter();
+            else
+                worksheetPart.Worksheet.RemoveAllChildren<HeaderFooter>();
+
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.HeaderFooter);
+                worksheetPart.Worksheet.InsertAfter(headerFooter, previousElement);
+                cm.SetElement(XLWSContentManager.XLWSContents.HeaderFooter, headerFooter);
+            }
+            if (((XLHeaderFooter) xlWorksheet.PageSetup.Header).Changed
+                || ((XLHeaderFooter) xlWorksheet.PageSetup.Footer).Changed)
+            {
+                //var headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().First();
+
+                headerFooter.RemoveAllChildren();
+
+                headerFooter.ScaleWithDoc = xlWorksheet.PageSetup.ScaleHFWithDocument;
+                headerFooter.AlignWithMargins = xlWorksheet.PageSetup.AlignHFWithMargins;
+                headerFooter.DifferentFirst = xlWorksheet.PageSetup.DifferentFirstPageOnHF;
+                headerFooter.DifferentOddEven = xlWorksheet.PageSetup.DifferentOddEvenPagesOnHF;
+
+                var oddHeader = new OddHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.OddPages));
+                headerFooter.AppendChild(oddHeader);
+                var oddFooter = new OddFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.OddPages));
+                headerFooter.AppendChild(oddFooter);
+
+                var evenHeader = new EvenHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.EvenPages));
+                headerFooter.AppendChild(evenHeader);
+                var evenFooter = new EvenFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.EvenPages));
+                headerFooter.AppendChild(evenFooter);
+
+                var firstHeader = new FirstHeader(xlWorksheet.PageSetup.Header.GetText(XLHFOccurrence.FirstPage));
+                headerFooter.AppendChild(firstHeader);
+                var firstFooter = new FirstFooter(xlWorksheet.PageSetup.Footer.GetText(XLHFOccurrence.FirstPage));
+                headerFooter.AppendChild(firstFooter);
+            }
+
+            #endregion
+
+            #region RowBreaks
+
+            if (!worksheetPart.Worksheet.Elements<RowBreaks>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.RowBreaks);
+                worksheetPart.Worksheet.InsertAfter(new RowBreaks(), previousElement);
+            }
+
+            var rowBreaks = worksheetPart.Worksheet.Elements<RowBreaks>().First();
+
+            var rowBreakCount = xlWorksheet.PageSetup.RowBreaks.Count;
+            if (rowBreakCount > 0)
+            {
+                rowBreaks.Count = (UInt32) rowBreakCount;
+                rowBreaks.ManualBreakCount = (UInt32) rowBreakCount;
+                var lastRowNum = (UInt32) xlWorksheet.RangeAddress.LastAddress.RowNumber;
+                foreach (var break1 in xlWorksheet.PageSetup.RowBreaks.Select(rb => new Break
+                    {
+                        Id = (UInt32) rb,
+                        Max = lastRowNum,
+                        ManualPageBreak = true
+                    }))
+                    rowBreaks.AppendChild(break1);
+                cm.SetElement(XLWSContentManager.XLWSContents.RowBreaks, rowBreaks);
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<RowBreaks>();
+                cm.SetElement(XLWSContentManager.XLWSContents.RowBreaks, null);
+            }
+
+            #endregion
+
+            #region ColumnBreaks
+
+            if (!worksheetPart.Worksheet.Elements<ColumnBreaks>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ColumnBreaks);
+                worksheetPart.Worksheet.InsertAfter(new ColumnBreaks(), previousElement);
+            }
+
+            var columnBreaks = worksheetPart.Worksheet.Elements<ColumnBreaks>().First();
+
+            var columnBreakCount = xlWorksheet.PageSetup.ColumnBreaks.Count;
+            if (columnBreakCount > 0)
+            {
+                columnBreaks.Count = (UInt32) columnBreakCount;
+                columnBreaks.ManualBreakCount = (UInt32) columnBreakCount;
+                var maxColumnNumber = (UInt32) xlWorksheet.RangeAddress.LastAddress.ColumnNumber;
+                foreach (var break1 in xlWorksheet.PageSetup.ColumnBreaks.Select(cb => new Break
+                    {
+                        Id = (UInt32) cb,
+                        Max = maxColumnNumber,
+                        ManualPageBreak = true
+                    }))
+                    columnBreaks.AppendChild(break1);
+                cm.SetElement(XLWSContentManager.XLWSContents.ColumnBreaks, columnBreaks);
+            }
+            else
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<ColumnBreaks>();
+                cm.SetElement(XLWSContentManager.XLWSContents.ColumnBreaks, null);
+            }
+
+            #endregion
+
+            #region Drawings
+
+            //worksheetPart.Worksheet.RemoveAllChildren<Drawing>();
+            //{
+            //    OpenXmlElement previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Drawing);
+            //    worksheetPart.Worksheet.InsertAfter(new Drawing() { Id = String.Format("rId{0}", 1) }, previousElement);
+            //}
+
+            //Drawing drawing = worksheetPart.Worksheet.Elements<Drawing>().First();
+            //cm.SetElement(XLWSContentManager.XLWSContents.Drawing, drawing);
+
+            #endregion
+
+            #region Tables
+
+            worksheetPart.Worksheet.RemoveAllChildren<TableParts>();
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.TableParts);
+                worksheetPart.Worksheet.InsertAfter(new TableParts(), previousElement);
+            }
+
+            var tableParts = worksheetPart.Worksheet.Elements<TableParts>().First();
+            cm.SetElement(XLWSContentManager.XLWSContents.TableParts, tableParts);
+
+            tableParts.Count = (UInt32) xlWorksheet.Tables.Count();
+            foreach (
+                var tablePart in
+                    from XLTable xlTable in xlWorksheet.Tables select new TablePart {Id = xlTable.RelId})
+                tableParts.AppendChild(tablePart);
+
+            #endregion
+
+            #region LegacyDrawing
+
+            if (xlWorksheet.LegacyDrawingIsNew)
+            {
+                worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
+                {
+                    if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                    {
+                        var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
+                        worksheetPart.Worksheet.InsertAfter(new LegacyDrawing {Id = xlWorksheet.LegacyDrawingId},
+                                                            previousElement);
+                    }
+                }
+            }
+
+            #endregion
+
+            #region LegacyDrawingHeaderFooter
+
+            //LegacyDrawingHeaderFooter legacyHeaderFooter = worksheetPart.Worksheet.Elements<LegacyDrawingHeaderFooter>().FirstOrDefault();
+            //if (legacyHeaderFooter != null)
+            //{
+            //    worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawingHeaderFooter>();
+            //    {
+            //            var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawingHeaderFooter);
+            //            worksheetPart.Worksheet.InsertAfter(new LegacyDrawingHeaderFooter { Id = xlWorksheet.LegacyDrawingId },
+            //                                                previousElement);
+            //    }
+            //}
+
+            #endregion
+        }
+
+        private static void PopulateAutoFilter(XLAutoFilter xlAutoFilter, AutoFilter autoFilter)
+        {
+            var filterRange = xlAutoFilter.Range;
+            autoFilter.Reference = filterRange.RangeAddress.ToString();
+
+            foreach (var kp in xlAutoFilter.Filters)
+            {
+                var filterColumn = new FilterColumn {ColumnId = (UInt32) kp.Key - 1};
+                var xlFilterColumn = xlAutoFilter.Column(kp.Key);
+                var filterType = xlFilterColumn.FilterType;
+                if (filterType == XLFilterType.Custom)
+                {
+                    var customFilters = new CustomFilters();
+                    foreach (var filter in kp.Value)
+                    {
+                        var customFilter = new CustomFilter {Val = filter.Value.ToString()};
+
+                        if (filter.Operator != XLFilterOperator.Equal)
+                            customFilter.Operator = filter.Operator.ToOpenXml();
+
+                        if (filter.Connector == XLConnector.And)
+                            customFilters.And = true;
+
+                        customFilters.Append(customFilter);
+                    }
+                    filterColumn.Append(customFilters);
+                }
+                else if (filterType == XLFilterType.TopBottom)
+                {
+                    var top101 = new Top10 {Val = (double) xlFilterColumn.TopBottomValue};
+                    if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
+                        top101.Percent = true;
+                    if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
+                        top101.Top = false;
+
+                    filterColumn.Append(top101);
+                }
+                else if (filterType == XLFilterType.Dynamic)
+                {
+                    var dynamicFilter = new DynamicFilter
+                        {Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue};
+                    filterColumn.Append(dynamicFilter);
+                }
+                else
+                {
+                    var filters = new Filters();
+                    foreach (var filter in kp.Value)
+                    {
+                        filters.Append(new Filter {Val = filter.Value.ToString()});
+                    }
+
+                    filterColumn.Append(filters);
+                }
+                autoFilter.Append(filterColumn);
+            }
+
+
+            if (xlAutoFilter.Sorted)
+            {
+                var sortState = new SortState
+                    {
+                        Reference =
+                            filterRange.Range(filterRange.FirstCell().CellBelow(), filterRange.LastCell()).RangeAddress.
+                                ToString()
+                    };
+                var sortCondition = new SortCondition
+                    {
+                        Reference =
+                            filterRange.Range(1, xlAutoFilter.SortColumn, filterRange.RowCount(),
+                                              xlAutoFilter.SortColumn).RangeAddress.ToString()
+                    };
+                if (xlAutoFilter.SortOrder == XLSortOrder.Descending)
+                    sortCondition.Descending = true;
+
+                sortState.Append(sortCondition);
+                autoFilter.Append(sortState);
+            }
+        }
+
+        private static BooleanValue GetBooleanValue(bool value, bool defaultValue)
+        {
+            return value == defaultValue ? null : new BooleanValue(value);
+        }
+
+        private static void CollapseColumns(Columns columns, Dictionary<uint, Column> sheetColumns)
+        {
+            UInt32 lastMin = 1;
+            var count = sheetColumns.Count;
+            var arr = sheetColumns.OrderBy(kp => kp.Key).ToArray();
+            // sheetColumns[kp.Key + 1]
+            //Int32 i = 0;
+            //foreach (KeyValuePair<uint, Column> kp in arr
+            //    //.Where(kp => !(kp.Key < count && ColumnsAreEqual(kp.Value, )))
+            //    )
+            for (var i = 0; i < count; i++)
+            {
+                var kp = arr[i];
+                if (i + 1 != count && ColumnsAreEqual(kp.Value, arr[i + 1].Value)) continue;
+
+                var newColumn = (Column) kp.Value.CloneNode(true);
+                newColumn.Min = lastMin;
+                var newColumnMax = newColumn.Max.Value;
+                var columnsToRemove =
+                    columns.Elements<Column>().Where(co => co.Min >= lastMin && co.Max <= newColumnMax).
+                        Select(co => co).ToList();
+                columnsToRemove.ForEach(c => columns.RemoveChild(c));
+
+                columns.AppendChild(newColumn);
+                lastMin = kp.Key + 1;
+                //i++;
+            }
+        }
+
+        private static double GetColumnWidth(double columnWidth)
+        {
+            var retVal = columnWidth + ColumnWidthOffset;
+            return retVal > 0 ? retVal : 0;
+        }
+
+        private static void UpdateColumn(Column column, Columns columns, Dictionary<uint, Column> sheetColumnsByMin)
+        {
+            var co = column.Min.Value;
+            Column newColumn;
+            if (!sheetColumnsByMin.ContainsKey(co))
+            {
+                newColumn = (Column) column.CloneNode(true);
+                columns.AppendChild(newColumn);
+                sheetColumnsByMin.Add(co, newColumn);
+            }
+            else
+            {
+                var existingColumn = sheetColumnsByMin[column.Min.Value];
+                newColumn = (Column) existingColumn.CloneNode(true);
+                newColumn.Min = column.Min;
+                newColumn.Max = column.Max;
+                newColumn.Style = column.Style;
+                newColumn.Width = column.Width;
+                newColumn.CustomWidth = column.CustomWidth;
+
+                if (column.Hidden != null)
+                    newColumn.Hidden = true;
+                else
+                    newColumn.Hidden = null;
+
+                if (column.Collapsed != null)
+                    newColumn.Collapsed = true;
+                else
+                    newColumn.Collapsed = null;
+
+                if (column.OutlineLevel != null && column.OutlineLevel > 0)
+                    newColumn.OutlineLevel = (byte) column.OutlineLevel;
+                else
+                    newColumn.OutlineLevel = null;
+
+                sheetColumnsByMin.Remove(column.Min.Value);
+                if (existingColumn.Min + 1 > existingColumn.Max)
+                {
+                    //existingColumn.Min = existingColumn.Min + 1;
+                    //columns.InsertBefore(existingColumn, newColumn);
+                    //existingColumn.Remove();
+                    columns.RemoveChild(existingColumn);
+                    columns.AppendChild(newColumn);
+                    sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
+                }
+                else
+                {
+                    //columns.InsertBefore(existingColumn, newColumn);
+                    columns.AppendChild(newColumn);
+                    sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
+                    existingColumn.Min = existingColumn.Min + 1;
+                    sheetColumnsByMin.Add(existingColumn.Min.Value, existingColumn);
+                }
+            }
+        }
+
+        private static bool ColumnsAreEqual(Column left, Column right)
+        {
+            return
+                ((left.Style == null && right.Style == null)
+                 || (left.Style != null && right.Style != null && left.Style.Value == right.Style.Value))
+                && ((left.Width == null && right.Width == null)
+                    || (left.Width != null && right.Width != null && left.Width.Value == right.Width.Value))
+                && ((left.Hidden == null && right.Hidden == null)
+                    || (left.Hidden != null && right.Hidden != null && left.Hidden.Value == right.Hidden.Value))
+                && ((left.Collapsed == null && right.Collapsed == null)
+                    ||
+                    (left.Collapsed != null && right.Collapsed != null && left.Collapsed.Value == right.Collapsed.Value))
+                && ((left.OutlineLevel == null && right.OutlineLevel == null)
+                    ||
+                    (left.OutlineLevel != null && right.OutlineLevel != null &&
+                     left.OutlineLevel.Value == right.OutlineLevel.Value));
+        }
+
+        #endregion
     }
 }

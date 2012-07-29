@@ -2336,5 +2336,11 @@
         {
             AsRange().Select();
         }
+
+        public IXLConditionalFormat AddConditionalFormat()
+        {
+            using (var r = AsRange())
+                return r.AddConditionalFormat();
+        }
     }
 }
