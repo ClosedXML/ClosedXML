@@ -113,7 +113,7 @@ namespace ClosedXML.Excel
         public static bool IsValidColumn(string column)
         {
             var length = column.Length;
-            if (StringExtensions.IsNullOrWhiteSpace(column) || length > 3)
+            if (IsNullOrWhiteSpace(column) || length > 3)
                 return false;
 
             var theColumn = column.ToUpper();
@@ -150,7 +150,7 @@ namespace ClosedXML.Excel
 
         public static bool IsValidA1Address(string address)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(address))
+            if (IsNullOrWhiteSpace(address))
                 return false;
 
             address = address.Replace("$", "");
@@ -194,7 +194,7 @@ namespace ClosedXML.Excel
             return Convert.ToDouble(pt)*DpiX/72.0;
         }
 
-        internal static IXLTableRows InsertRowsWithoutEvents(Func<Int32, Boolean, IXLRangeRows> insertFunc,
+        internal static IXLTableRows InsertRowsWithoutEvents(Func<int, bool, IXLRangeRows> insertFunc,
                                                              XLTableRange tableRange, Int32 numberOfRows,
                                                              Boolean expandTable)
         {
@@ -228,6 +228,27 @@ namespace ClosedXML.Excel
 
                 worksheet.SelectedRanges.Add(range);
             }
+        }
+
+        public static bool IsNullOrWhiteSpace(string value)
+        {
+#if NET4
+            return String.IsNullOrWhiteSpace(value);
+#else
+            if (value != null)
+            {
+                var length = value.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    if (!char.IsWhiteSpace(value[i]))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+#endif
+
         }
     }
 }

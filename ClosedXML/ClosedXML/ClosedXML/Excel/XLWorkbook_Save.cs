@@ -175,7 +175,7 @@ namespace ClosedXML.Excel
                     var vmlDrawingPart = worksheetPart.VmlDrawingParts.FirstOrDefault();
                     if (vmlDrawingPart == null)
                     {
-                        if (StringExtensions.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
+                        if (XLHelper.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
                         {
                             worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Workbook);
                             worksheet.LegacyDrawingIsNew = true;
@@ -347,7 +347,7 @@ namespace ClosedXML.Excel
 
             if (Properties.Manager != null)
             {
-                if (!StringExtensions.IsNullOrWhiteSpace(Properties.Manager))
+                if (!XLHelper.IsNullOrWhiteSpace(Properties.Manager))
                 {
                     if (properties.Manager == null)
                         properties.Manager = new Manager();
@@ -360,7 +360,7 @@ namespace ClosedXML.Excel
 
             if (Properties.Company == null) return;
 
-            if (!StringExtensions.IsNullOrWhiteSpace(Properties.Company))
+            if (!XLHelper.IsNullOrWhiteSpace(Properties.Company))
             {
                 if (properties.Company == null)
                     properties.Company = new Company();
@@ -602,7 +602,7 @@ namespace ClosedXML.Excel
                             LocalSheetId = sheetId,
                             Text = nr.ToString()
                         };
-                    if (!StringExtensions.IsNullOrWhiteSpace(nr.Comment))
+                    if (!XLHelper.IsNullOrWhiteSpace(nr.Comment))
                         definedName.Comment = nr.Comment;
                     definedNames.AppendChild(definedName);
                 }
@@ -653,7 +653,7 @@ namespace ClosedXML.Excel
                         Name = nr.Name,
                         Text = nr.ToString()
                     };
-                if (!StringExtensions.IsNullOrWhiteSpace(nr.Comment))
+                if (!XLHelper.IsNullOrWhiteSpace(nr.Comment))
                     definedName.Comment = nr.Comment;
                 definedNames.AppendChild(definedName);
             }
@@ -694,7 +694,7 @@ namespace ClosedXML.Excel
                         w.Internals.CellsCollection.GetCells(
                             c => ((c.DataType == XLCellValues.Text && c.ShareString) || c.HasRichText)
                                  && (c as XLCell).InnerText.Length > 0
-                                 && StringExtensions.IsNullOrWhiteSpace(c.FormulaA1)
+                                 && XLHelper.IsNullOrWhiteSpace(c.FormulaA1)
                             )))
             {
                 c.DataType = XLCellValues.Text;
@@ -849,7 +849,7 @@ namespace ClosedXML.Excel
                 var cellsWithoutFormulas = new HashSet<String>();
                 foreach (var c in worksheet.Internals.CellsCollection.GetCells())
                 {
-                    if (StringExtensions.IsNullOrWhiteSpace(c.FormulaA1))
+                    if (XLHelper.IsNullOrWhiteSpace(c.FormulaA1))
                         cellsWithoutFormulas.Add(c.Address.ToStringRelative());
                     else
                     {
@@ -1635,7 +1635,7 @@ namespace ClosedXML.Excel
                             tableColumn1.TotalsRowFormula = new TotalsRowFormula(xlField.TotalsRowFormulaA1);
                     }
 
-                    if (!StringExtensions.IsNullOrWhiteSpace(xlField.TotalsRowLabel))
+                    if (!XLHelper.IsNullOrWhiteSpace(xlField.TotalsRowLabel))
                         tableColumn1.TotalsRowLabel = xlField.TotalsRowLabel;
                 }
                 tableColumns1.AppendChild(tableColumn1);
@@ -2577,7 +2577,7 @@ namespace ClosedXML.Excel
                     StrokeWeight = String.Format("{0}pt", c.Comment.Style.ColorsAndLines.LineWeight),
                     InsetMode = c.Comment.Style.Margins.Automatic ? InsetMarginValues.Auto : InsetMarginValues.Custom
                 };
-            if (!StringExtensions.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
+            if (!XLHelper.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
                 shape.Alternate = c.Comment.Style.Web.AlternateText;
 
 
@@ -2918,7 +2918,7 @@ namespace ClosedXML.Excel
         {
             var differentialFormat = new DifferentialFormat();
             differentialFormat.Append(GetNewFont(new FontInfo {Font = cf.Style.Font as XLFont}, false));
-            if (!StringExtensions.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
+            if (!XLHelper.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
             {
                 var numberFormat = new NumberingFormat
                     {
@@ -3545,7 +3545,7 @@ namespace ClosedXML.Excel
         {
             var newXLNumberFormat = new XLNumberFormat();
 
-            if (nf.FormatCode != null && !StringExtensions.IsNullOrWhiteSpace(nf.FormatCode.Value))
+            if (nf.FormatCode != null && !XLHelper.IsNullOrWhiteSpace(nf.FormatCode.Value))
                 newXLNumberFormat.Format = nf.FormatCode.Value;
             else if (nf.NumberFormatId != null)
                 newXLNumberFormat.NumberFormatId = (Int32) nf.NumberFormatId.Value;
@@ -4057,7 +4057,7 @@ namespace ClosedXML.Excel
                     }
 
                     cell.StyleIndex = styleId;
-                    if (!StringExtensions.IsNullOrWhiteSpace(opCell.FormulaA1))
+                    if (!XLHelper.IsNullOrWhiteSpace(opCell.FormulaA1))
                     {
                         var formula = opCell.FormulaA1;
                         if (formula.StartsWith("{"))
@@ -4149,7 +4149,7 @@ namespace ClosedXML.Excel
 
                 var protection = xlWorksheet.Protection;
                 sheetProtection.Sheet = protection.Protected;
-                if (!StringExtensions.IsNullOrWhiteSpace(protection.PasswordHash))
+                if (!XLHelper.IsNullOrWhiteSpace(protection.PasswordHash))
                     sheetProtection.Password = protection.PasswordHash;
                 sheetProtection.FormatCells = GetBooleanValue(!protection.FormatCells, true);
                 sheetProtection.FormatColumns = GetBooleanValue(!protection.FormatColumns, true);
@@ -4353,7 +4353,7 @@ namespace ClosedXML.Excel
                                 Display = hl.Cell.GetFormattedString()
                             };
                     }
-                    if (!StringExtensions.IsNullOrWhiteSpace(hl.Tooltip))
+                    if (!XLHelper.IsNullOrWhiteSpace(hl.Tooltip))
                         hyperlink.Tooltip = hl.Tooltip;
                     hyperlinks.AppendChild(hyperlink);
                 }
@@ -4608,7 +4608,7 @@ namespace ClosedXML.Excel
             {
                 worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
                 {
-                    if (!StringExtensions.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                    if (!XLHelper.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
                     {
                         var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
                         worksheetPart.Worksheet.InsertAfter(new LegacyDrawing {Id = xlWorksheet.LegacyDrawingId},

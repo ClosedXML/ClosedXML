@@ -136,7 +136,7 @@
                 if (HasRichText)
                     return _richText.ToString();
 
-                return StringExtensions.IsNullOrWhiteSpace(_cellValue) ? FormulaA1 : _cellValue;
+                return XLHelper.IsNullOrWhiteSpace(_cellValue) ? FormulaA1 : _cellValue;
             }
         }
 
@@ -268,7 +268,7 @@
         public T GetValue<T>()
         {
             var val = Value;
-            if (!StringExtensions.IsNullOrWhiteSpace(FormulaA1))
+            if (!XLHelper.IsNullOrWhiteSpace(FormulaA1))
                 return (T)Convert.ChangeType(String.Empty, typeof(T));
             if (val is TimeSpan)
             {
@@ -378,7 +378,7 @@
             get
             {
                 string fA1 = FormulaA1;
-                if (!StringExtensions.IsNullOrWhiteSpace(fA1))
+                if (!XLHelper.IsNullOrWhiteSpace(fA1))
                 {
                     if (fA1[0] == '{')
                         fA1 = fA1.Substring(1, fA1.Length - 2);
@@ -551,7 +551,7 @@
                             if (!hasTitles)
                             {
                                 string fieldName = GetFieldName(m.GetType().GetCustomAttributes(true));
-                                if (StringExtensions.IsNullOrWhiteSpace(fieldName))
+                                if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                     fieldName = m.GetType().Name;
 
                                 SetValue(fieldName, fRo, co);
@@ -578,7 +578,7 @@
                             if (!hasTitles)
                             {
                                 foreach (string fieldName in from DataColumn column in ((DataRow) m).Table.Columns
-                                                             select StringExtensions.IsNullOrWhiteSpace(column.Caption)
+                                                             select XLHelper.IsNullOrWhiteSpace(column.Caption)
                                                                         ? column.ColumnName
                                                                         : column.Caption)
                                 {
@@ -633,7 +633,7 @@
                                     if ((info as IEnumerable) == null)
                                     {
                                         string fieldName = GetFieldName(info.GetCustomAttributes(true));
-                                        if (StringExtensions.IsNullOrWhiteSpace(fieldName))
+                                        if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                             fieldName = info.Name;
 
                                         SetValue(fieldName, fRo, co);
@@ -647,7 +647,7 @@
                                     if ((info as IEnumerable) == null)
                                     {
                                         string fieldName = GetFieldName(info.GetCustomAttributes(true));
-                                        if (StringExtensions.IsNullOrWhiteSpace(fieldName))
+                                        if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                             fieldName = info.Name;
 
                                         SetValue(fieldName, fRo, co);
@@ -966,9 +966,9 @@
         {
             get
             {
-                if (StringExtensions.IsNullOrWhiteSpace(_formulaA1))
+                if (XLHelper.IsNullOrWhiteSpace(_formulaA1))
                 {
-                    if (!StringExtensions.IsNullOrWhiteSpace(_formulaR1C1))
+                    if (!XLHelper.IsNullOrWhiteSpace(_formulaR1C1))
                     {
                         _formulaA1 = GetFormulaA1(_formulaR1C1);
                         return FormulaA1;
@@ -988,7 +988,7 @@
 
             set
             {
-                _formulaA1 = StringExtensions.IsNullOrWhiteSpace(value) ? null : value;
+                _formulaA1 = XLHelper.IsNullOrWhiteSpace(value) ? null : value;
 
                 _formulaR1C1 = null;
             }
@@ -998,7 +998,7 @@
         {
             get
             {
-                if (StringExtensions.IsNullOrWhiteSpace(_formulaR1C1))
+                if (XLHelper.IsNullOrWhiteSpace(_formulaR1C1))
                     _formulaR1C1 = GetFormulaR1C1(FormulaA1);
 
                 return _formulaR1C1;
@@ -1006,7 +1006,7 @@
 
             set
             {
-                _formulaR1C1 = StringExtensions.IsNullOrWhiteSpace(value) ? null : value;
+                _formulaR1C1 = XLHelper.IsNullOrWhiteSpace(value) ? null : value;
 
 // FormulaA1 = GetFormulaA1(value);
             }
@@ -1223,7 +1223,7 @@
         {
             var style = GetStyleForRead();
             return _dataType == XLCellValues.Number
-                   && StringExtensions.IsNullOrWhiteSpace(style.NumberFormat.Format)
+                   && XLHelper.IsNullOrWhiteSpace(style.NumberFormat.Format)
                    && ((style.NumberFormat.NumberFormatId >= 14
                         && style.NumberFormat.NumberFormatId <= 22)
                        || (style.NumberFormat.NumberFormatId >= 45
@@ -1234,7 +1234,7 @@
         {
             string format = String.Empty;
             var style = GetStyleForRead();
-            if (StringExtensions.IsNullOrWhiteSpace(style.NumberFormat.Format))
+            if (XLHelper.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
                 var formatCodes = GetFormatCodes();
                 if (formatCodes.ContainsKey(style.NumberFormat.NumberFormatId))
@@ -1451,7 +1451,7 @@
         private string GetFormula(string strValue, FormulaConversionType conversionType, int rowsToShift,
                                   int columnsToShift)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(strValue))
+            if (XLHelper.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
 
             string value = ">" + strValue + "<";
@@ -1726,7 +1726,7 @@
         internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                 int rowsShifted)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
             string value = formulaA1; // ">" + formulaA1 + "<";
 
@@ -1952,7 +1952,7 @@
         internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                    int columnsShifted)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
             string value = formulaA1; // ">" + formulaA1 + "<";
 

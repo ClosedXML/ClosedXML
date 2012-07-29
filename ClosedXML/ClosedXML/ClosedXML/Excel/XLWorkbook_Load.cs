@@ -776,7 +776,7 @@ namespace ClosedXML.Excel
                 {
                     if (cell.CellValue != null)
                     {
-                        if (!StringExtensions.IsNullOrWhiteSpace(cell.CellValue.Text))
+                        if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         {
                             var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text)];
 
@@ -871,7 +871,7 @@ namespace ClosedXML.Excel
                     xlCell.Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
 
 
-                if (!StringExtensions.IsNullOrWhiteSpace(xlCell.Style.NumberFormat.Format))
+                if (!XLHelper.IsNullOrWhiteSpace(xlCell.Style.NumberFormat.Format))
                     xlCell._dataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
                 else if ((numberFormatId >= 14 && numberFormatId <= 22) || (numberFormatId >= 45 && numberFormatId <= 47))
                     xlCell._dataType = XLCellValues.DateTime;
@@ -1283,7 +1283,7 @@ namespace ClosedXML.Excel
             foreach (DataValidation dvs in dataValidations.Elements<DataValidation>())
             {
                 String txt = dvs.SequenceOfReferences.InnerText;
-                if (StringExtensions.IsNullOrWhiteSpace(txt)) continue;
+                if (XLHelper.IsNullOrWhiteSpace(txt)) continue;
                 foreach (var dvt in txt.Split(' ').Select(rangeAddress => ws.Range(rangeAddress).DataValidation))
                 {
                     if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;

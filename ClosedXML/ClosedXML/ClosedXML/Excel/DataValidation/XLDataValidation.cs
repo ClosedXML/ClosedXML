@@ -41,9 +41,9 @@ namespace ClosedXML.Excel
             return
                 AllowedValues != XLAllowedValues.AnyValue
                 || (ShowInputMessage &&
-                  (!StringExtensions.IsNullOrWhiteSpace(InputTitle) || !StringExtensions.IsNullOrWhiteSpace(InputMessage)))
+                  (!XLHelper.IsNullOrWhiteSpace(InputTitle) || !XLHelper.IsNullOrWhiteSpace(InputMessage)))
                 ||(ShowErrorMessage &&
-                  (!StringExtensions.IsNullOrWhiteSpace(ErrorTitle) || !StringExtensions.IsNullOrWhiteSpace(ErrorMessage)));
+                  (!XLHelper.IsNullOrWhiteSpace(ErrorTitle) || !XLHelper.IsNullOrWhiteSpace(ErrorMessage)));
 
         }
 

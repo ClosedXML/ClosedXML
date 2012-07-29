@@ -104,22 +104,6 @@ namespace ClosedXML.Excel
 
     public static class StringExtensions
     {
-        public static bool IsNullOrWhiteSpace(string value)
-        {
-            if (value != null)
-            {
-                var length = value.Length;
-                for (int i = 0; i < length; i++)
-                {
-                    if (!char.IsWhiteSpace(value[i]))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
         private static readonly Regex RegexNewLine = new Regex(@"((?<!\r)\n|\r\n)");
         public static String FixNewLines(this String value)
         {
@@ -194,7 +178,7 @@ namespace ClosedXML.Excel
         }
         public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, Font> fontCache)
         {
-            if (StringExtensions.IsNullOrWhiteSpace(text))
+            if (XLHelper.IsNullOrWhiteSpace(text))
                 return 0;
 
             var font = GetCachedFont(fontBase, fontCache);
