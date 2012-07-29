@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
         IXLRichString SetVerticalAlignment(XLFontVerticalTextAlignmentValues value);
         IXLRichString SetShadow(); IXLRichString SetShadow(Boolean value);
         IXLRichString SetFontSize(Double value);
-        IXLRichString SetFontColor(IXLColor value);
+        IXLRichString SetFontColor(XLColor value);
         IXLRichString SetFontName(String value);
         IXLRichString SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
     }

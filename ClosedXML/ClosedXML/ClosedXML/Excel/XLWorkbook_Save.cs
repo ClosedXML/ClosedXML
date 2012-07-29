@@ -3436,7 +3436,7 @@ namespace ClosedXML.Excel
             return font;
         }
 
-        private static Color GetNewColor(IXLColor xlColor)
+        private static Color GetNewColor(XLColor xlColor)
         {
             var color = new Color();
             if (xlColor.ColorType == XLColorType.Color)
@@ -3452,7 +3452,7 @@ namespace ClosedXML.Excel
             return color;
         }
 
-        private static TabColor GetTabColor(IXLColor xlColor)
+        private static TabColor GetTabColor(XLColor xlColor)
         {
             var color = new TabColor();
             if (xlColor.ColorType == XLColorType.Color)

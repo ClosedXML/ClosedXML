@@ -910,7 +910,7 @@ namespace ClosedXML.Excel
             
         }
 
-        private void LoadBorderValues(BorderPropertiesType source, Func<XLBorderStyleValues, IXLStyle> setBorder, Func<IXLColor, IXLStyle> setColor )
+        private void LoadBorderValues(BorderPropertiesType source, Func<XLBorderStyleValues, IXLStyle> setBorder, Func<XLColor, IXLStyle> setColor )
         {
             if (source != null)
             {
@@ -1626,9 +1626,9 @@ namespace ClosedXML.Excel
             Properties.Title = p.Title;
         }
 
-        private IXLColor GetColor(ColorType color)
+        private XLColor GetColor(ColorType color)
         {
-            IXLColor retVal = null;
+            XLColor retVal = null;
             if (color != null)
             {
                 if (color.Rgb != null)

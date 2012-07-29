@@ -98,7 +98,7 @@ namespace ClosedXML.Excel
         IXLStyle WhenIsBottom(Int32 value, XLTopBottomType topBottomType);
 
         IXLCFColorScaleMin ColorScale();
-        IXLCFDataBarMin DataBar(IXLColor color, Boolean showBarOnly = false);
+        IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false);
         IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
 
         XLConditionalFormatType ConditionalFormatType { get; }
@@ -110,7 +110,7 @@ namespace ClosedXML.Excel
         IXLRange Range { get; set; }
 
         XLDictionary<String> Values { get; }
-        XLDictionary<IXLColor> Colors { get; }
+        XLDictionary<XLColor> Colors { get; }
         XLDictionary<XLCFContentType> ContentTypes { get; }
         XLDictionary<XLCFIconSetOperator> IconSetOperators { get; }
         

@@ -22,17 +22,17 @@ namespace ClosedXML.Excel
     }
     public interface IXLDrawingColorsAndLines
     {
-        IXLColor FillColor { get; set; }
+        XLColor FillColor { get; set; }
         Double FillTransparency { get; set; }
-        IXLColor LineColor { get; set; }
+        XLColor LineColor { get; set; }
         Double LineTransparency { get; set; }
         Double LineWeight { get; set; }
         XLDashStyle LineDash { get; set; }
         XLLineStyle LineStyle { get; set; }
 
-        IXLDrawingStyle SetFillColor(IXLColor value);
+        IXLDrawingStyle SetFillColor(XLColor value);
         IXLDrawingStyle SetFillTransparency(Double value);
-        IXLDrawingStyle SetLineColor(IXLColor value);
+        IXLDrawingStyle SetLineColor(XLColor value);
         IXLDrawingStyle SetLineTransparency(Double value);
         IXLDrawingStyle SetLineWeight(Double value);
         IXLDrawingStyle SetLineDash(XLDashStyle value);

@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
     {
         private readonly IXLStylized _container;
         private Boolean _bold;
-        private IXLColor _fontColor;
+        private XLColor _fontColor;
         private XLFontFamilyNumberingValues _fontFamilyNumbering;
         private String _fontName;
         private Double _fontSize;
@@ -162,7 +162,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean FontColorModified { get; set; }
-        public IXLColor FontColor
+        public XLColor FontColor
         {
             get { return _fontColor; }
             set
@@ -284,7 +284,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetFontColor(IXLColor value)
+        public IXLStyle SetFontColor(XLColor value)
         {
             FontColor = value;
             return _container.Style;

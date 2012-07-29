@@ -7,8 +7,8 @@ namespace ClosedXML.Excel
 {
     public interface IXLCFColorScaleMax
     {
-        void Maximum(XLCFContentType type, String value, IXLColor color);
-        void Maximum(XLCFContentType type, Double value, IXLColor color);
-        void HighestValue(IXLColor color);
+        void Maximum(XLCFContentType type, String value, XLColor color);
+        void Maximum(XLCFContentType type, Double value, XLColor color);
+        void HighestValue(XLColor color);
     }
 }

@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
         public XLFontVerticalTextAlignmentValues VerticalAlignment { get; set; }
         public Boolean Shadow { get; set; }
         public Double FontSize { get; set; }
-        public IXLColor FontColor { get; set; }
+        public XLColor FontColor { get; set; }
         public String FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
 
@@ -102,7 +102,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLDrawingStyle SetFontColor(IXLColor value)
+        public IXLDrawingStyle SetFontColor(XLColor value)
         {
             FontColor = value;
             return _style;

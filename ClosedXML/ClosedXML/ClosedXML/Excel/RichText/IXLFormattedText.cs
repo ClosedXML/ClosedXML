@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         XLFontVerticalTextAlignmentValues VerticalAlignment { set; }
         Boolean Shadow { set; }
         Double FontSize { set; }
-        IXLColor FontColor { set; }
+        XLColor FontColor { set; }
         String FontName { set; }
         XLFontFamilyNumberingValues FontFamilyNumbering { set; }
 
@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
         IXLFormattedText<T> SetVerticalAlignment(XLFontVerticalTextAlignmentValues value);
         IXLFormattedText<T> SetShadow(); IXLFormattedText<T> SetShadow(Boolean value);
         IXLFormattedText<T> SetFontSize(Double value);
-        IXLFormattedText<T> SetFontColor(IXLColor value);
+        IXLFormattedText<T> SetFontColor(XLColor value);
         IXLFormattedText<T> SetFontName(String value);
         IXLFormattedText<T> SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
 

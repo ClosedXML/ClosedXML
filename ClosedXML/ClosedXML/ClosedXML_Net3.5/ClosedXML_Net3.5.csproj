@@ -675,9 +675,6 @@
     <Compile Include="..\ClosedXML\Excel\Rows\XLRows.cs">
       <Link>Excel\Rows\XLRows.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\Style\Colors\IXLColor.cs">
-      <Link>Excel\Style\Colors\IXLColor.cs</Link>
-    </Compile>
     <Compile Include="..\ClosedXML\Excel\Style\Colors\XLColor_Internal.cs">
       <Link>Excel\Style\Colors\XLColor_Internal.cs</Link>
     </Compile>

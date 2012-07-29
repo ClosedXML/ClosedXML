@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
             Range = range;
             Style = new XLStyle(this, range.Worksheet.Style);
             Values = new XLDictionary<String>();
-            Colors = new XLDictionary<IXLColor>();
+            Colors = new XLDictionary<XLColor>();
             ContentTypes = new XLDictionary<XLCFContentType>();
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
         }
@@ -56,7 +56,7 @@ namespace ClosedXML.Excel
 
         public bool StyleChanged { get; set; }
         public XLDictionary<String> Values { get; private set; }
-        public XLDictionary<IXLColor> Colors { get; private set; }
+        public XLDictionary<XLColor> Colors { get; private set; }
         public XLDictionary<XLCFContentType> ContentTypes { get; private set; }
         public XLDictionary<XLCFIconSetOperator> IconSetOperators { get; private set; }
 
@@ -312,7 +312,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.ColorScale;
             return new XLCFColorScaleMin(this);
         }
-        public IXLCFDataBarMin DataBar(IXLColor color, Boolean showBarOnly = false)
+        public IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false)
         {
             Colors.Initialize(color);
             ShowBarOnly = showBarOnly;

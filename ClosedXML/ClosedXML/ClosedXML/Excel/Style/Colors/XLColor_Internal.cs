@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     public partial class XLColor
     {
 
-        internal XLColor(IXLColor defaultColor)
+        internal XLColor(XLColor defaultColor)
         {
             XLColor dColor = (XLColor)defaultColor;
             if (dColor._colorType == XLColorType.Color)

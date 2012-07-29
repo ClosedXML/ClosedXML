@@ -805,9 +805,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLColor TabColor { get; set; }
+        public XLColor TabColor { get; set; }
 
-        public IXLWorksheet SetTabColor(IXLColor color)
+        public IXLWorksheet SetTabColor(XLColor color)
         {
             TabColor = color;
             return this;

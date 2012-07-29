@@ -9,17 +9,17 @@ namespace ClosedXML.Excel
     {
         private readonly IXLStylized _container;
         private XLBorderStyleValues _bottomBorder;
-        private IXLColor _bottomBorderColor;
+        private XLColor _bottomBorderColor;
         private XLBorderStyleValues _diagonalBorder;
-        private IXLColor _diagonalBorderColor;
+        private XLColor _diagonalBorderColor;
         private Boolean _diagonalDown;
         private Boolean _diagonalUp;
         private XLBorderStyleValues _leftBorder;
-        private IXLColor _leftBorderColor;
+        private XLColor _leftBorderColor;
         private XLBorderStyleValues _rightBorder;
-        private IXLColor _rightBorderColor;
+        private XLColor _rightBorderColor;
         private XLBorderStyleValues _topBorder;
-        private IXLColor _topBorderColor;
+        private XLColor _topBorderColor;
 
         public XLBorder() : this(null, XLWorkbook.DefaultStyle.Border)
         {
@@ -71,7 +71,7 @@ namespace ClosedXML.Excel
         }
 
 
-        public IXLColor OutsideBorderColor
+        public XLColor OutsideBorderColor
         {
             set
             {
@@ -152,7 +152,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLColor InsideBorderColor
+        public XLColor InsideBorderColor
         {
             set
             {
@@ -173,28 +173,28 @@ namespace ClosedXML.Excel
                 {
                     foreach (IXLRange r in _container.RangesUsed)
                     {
-                        Dictionary<Int32, IXLColor> topBorders = new Dictionary<int, IXLColor>();
+                        Dictionary<Int32, XLColor> topBorders = new Dictionary<int, XLColor>();
                         r.FirstRow().Cells().ForEach(
                             c =>
                             topBorders.Add(
                                 c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1,
                                 c.Style.Border.TopBorderColor));
 
-                        Dictionary<Int32, IXLColor> bottomBorders = new Dictionary<int, IXLColor>();
+                        Dictionary<Int32, XLColor> bottomBorders = new Dictionary<int, XLColor>();
                         r.LastRow().Cells().ForEach(
                             c =>
                             bottomBorders.Add(
                                 c.Address.ColumnNumber - r.RangeAddress.FirstAddress.ColumnNumber + 1,
                                 c.Style.Border.BottomBorderColor));
 
-                        Dictionary<Int32, IXLColor> leftBorders = new Dictionary<int, IXLColor>();
+                        Dictionary<Int32, XLColor> leftBorders = new Dictionary<int, XLColor>();
                         r.FirstColumn().Cells().ForEach(
                             c =>
                             leftBorders.Add(
                                 c.Address.RowNumber - r.RangeAddress.FirstAddress.RowNumber + 1,
                                 c.Style.Border.LeftBorderColor));
 
-                        Dictionary<Int32, IXLColor> rightBorders = new Dictionary<int, IXLColor>();
+                        Dictionary<Int32, XLColor> rightBorders = new Dictionary<int, XLColor>();
                         r.LastColumn().Cells().ForEach(
                             c =>
                             rightBorders.Add(
@@ -234,7 +234,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean LeftBorderColorModified;
-        public IXLColor LeftBorderColor
+        public XLColor LeftBorderColor
         {
             get { return _leftBorderColor; }
             set
@@ -268,7 +268,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean RightBorderColorModified;
-        public IXLColor RightBorderColor
+        public XLColor RightBorderColor
         {
             get { return _rightBorderColor; }
             set
@@ -302,7 +302,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean TopBorderColorModified;
-        public IXLColor TopBorderColor
+        public XLColor TopBorderColor
         {
             get { return _topBorderColor; }
             set
@@ -336,7 +336,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean BottomBorderColorModified;
-        public IXLColor BottomBorderColor
+        public XLColor BottomBorderColor
         {
             get { return _bottomBorderColor; }
             set
@@ -370,7 +370,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean DiagonalBorderColorModified;
-        public IXLColor DiagonalBorderColor
+        public XLColor DiagonalBorderColor
         {
             get { return _diagonalBorderColor; }
             set
@@ -445,7 +445,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetOutsideBorderColor(IXLColor value)
+        public IXLStyle SetOutsideBorderColor(XLColor value)
         {
             OutsideBorderColor = value;
             return _container.Style;
@@ -457,7 +457,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetInsideBorderColor(IXLColor value)
+        public IXLStyle SetInsideBorderColor(XLColor value)
         {
             InsideBorderColor = value;
             return _container.Style;
@@ -469,7 +469,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetLeftBorderColor(IXLColor value)
+        public IXLStyle SetLeftBorderColor(XLColor value)
         {
             LeftBorderColor = value;
             return _container.Style;
@@ -481,7 +481,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetRightBorderColor(IXLColor value)
+        public IXLStyle SetRightBorderColor(XLColor value)
         {
             RightBorderColor = value;
             return _container.Style;
@@ -493,7 +493,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetTopBorderColor(IXLColor value)
+        public IXLStyle SetTopBorderColor(XLColor value)
         {
             TopBorderColor = value;
             return _container.Style;
@@ -505,7 +505,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetBottomBorderColor(IXLColor value)
+        public IXLStyle SetBottomBorderColor(XLColor value)
         {
             BottomBorderColor = value;
             return _container.Style;
@@ -541,7 +541,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetDiagonalBorderColor(IXLColor value)
+        public IXLStyle SetDiagonalBorderColor(XLColor value)
         {
             DiagonalBorderColor = value;
             return _container.Style;

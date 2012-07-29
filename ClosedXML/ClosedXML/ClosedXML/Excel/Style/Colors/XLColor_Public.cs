@@ -3,7 +3,23 @@ using System.Drawing;
 
 namespace ClosedXML.Excel
 {
-    public partial class XLColor: IXLColor
+    public enum XLColorType { Color, Theme, Indexed }
+    public enum XLThemeColor
+    {
+        Background1,
+        Text1,
+        Background2,
+        Text2,
+        Accent1,
+        Accent2,
+        Accent3,
+        Accent4,
+        Accent5,
+        Accent6,
+        Hyperlink,
+        FollowedHyperlink
+    }
+    public partial class XLColor : IEquatable<XLColor>
     {
         public Boolean HasValue { get; private set; }
 
@@ -75,7 +91,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public bool Equals(IXLColor other)
+        public bool Equals(XLColor other)
         {
             var otherC = other as XLColor;
             if (_colorType == otherC._colorType)
@@ -114,6 +130,22 @@ namespace ClosedXML.Excel
                 return String.Format("Color Theme: {0}, Tint: {1}", _themeColor.ToString(), _themeTint.ToString());
 
             return "Color Index: " + _indexed;
+        }
+
+        public static Boolean operator ==(XLColor left, XLColor right)
+        {
+            // If both are null, or both are same instance, return true.
+            if (ReferenceEquals(left, right)) return true;
+
+            // If one is null, but not both, return false.
+            if ((left as object) == null || (right as Object)== null) return false;
+
+            return left.Equals(right);
+        }
+
+        public static Boolean operator !=(XLColor left, XLColor right)
+        {
+            return !(left == right);
         }
     }
 }

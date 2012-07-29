@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         IXLDrawingStyle SetVerticalAlignment(XLFontVerticalTextAlignmentValues value);
         IXLDrawingStyle SetShadow(); IXLDrawingStyle SetShadow(Boolean value);
         IXLDrawingStyle SetFontSize(Double value);
-        IXLDrawingStyle SetFontColor(IXLColor value);
+        IXLDrawingStyle SetFontColor(XLColor value);
         IXLDrawingStyle SetFontName(String value);
         IXLDrawingStyle SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
 

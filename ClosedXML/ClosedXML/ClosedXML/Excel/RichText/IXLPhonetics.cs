@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         IXLPhonetics SetVerticalAlignment(XLFontVerticalTextAlignmentValues value);
         IXLPhonetics SetShadow(); IXLPhonetics SetShadow(Boolean value);
         IXLPhonetics SetFontSize(Double value);
-        IXLPhonetics SetFontColor(IXLColor value);
+        IXLPhonetics SetFontColor(XLColor value);
         IXLPhonetics SetFontName(String value);
         IXLPhonetics SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
 

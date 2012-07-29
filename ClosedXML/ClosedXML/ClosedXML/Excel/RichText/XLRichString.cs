@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
         public XLFontVerticalTextAlignmentValues VerticalAlignment { get; set; }
         public Boolean Shadow { get; set; }
         public Double FontSize { get; set; }
-        public IXLColor FontColor { get; set; }
+        public XLColor FontColor { get; set; }
         public String FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
 
@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
         public IXLRichString SetVerticalAlignment(XLFontVerticalTextAlignmentValues value) { VerticalAlignment = value; return this; }
         public IXLRichString SetShadow() { Shadow = true; return this; }	public IXLRichString SetShadow(Boolean value) { Shadow = value; return this; }
         public IXLRichString SetFontSize(Double value) { FontSize = value; return this; }
-        public IXLRichString SetFontColor(IXLColor value) { FontColor = value; return this; }
+        public IXLRichString SetFontColor(XLColor value) { FontColor = value; return this; }
         public IXLRichString SetFontName(String value) { FontName = value; return this; }
         public IXLRichString SetFontFamilyNumbering(XLFontFamilyNumberingValues value) { FontFamilyNumbering = value; return this; }
 

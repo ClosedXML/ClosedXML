@@ -338,7 +338,7 @@ namespace ClosedXML.Excel
                         };
         }
 
-        internal IXLColor GetXLColor(XLThemeColor themeColor)
+        internal XLColor GetXLColor(XLThemeColor themeColor)
         {
             switch (themeColor)
             {

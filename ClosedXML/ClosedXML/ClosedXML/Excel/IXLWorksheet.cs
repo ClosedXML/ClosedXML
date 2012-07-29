@@ -337,8 +337,8 @@ namespace ClosedXML.Excel
         IXLWorksheet SetShowZeros(); IXLWorksheet SetShowZeros(Boolean value);
 
 
-        IXLColor TabColor { get; set; }
-        IXLWorksheet SetTabColor(IXLColor color);
+        XLColor TabColor { get; set; }
+        IXLWorksheet SetTabColor(XLColor color);
 
         Boolean TabSelected { get; set; }
         Boolean TabActive { get; set; }

@@ -146,7 +146,7 @@ namespace ClosedXML.Excel
         public XLFontVerticalTextAlignmentValues VerticalAlignment { set { _richTexts.ForEach(rt => rt.VerticalAlignment = value); } }
         public Boolean Shadow { set { _richTexts.ForEach(rt => rt.Shadow = value); } }
         public Double FontSize { set { _richTexts.ForEach(rt => rt.FontSize = value); } }
-        public IXLColor FontColor { set { _richTexts.ForEach(rt => rt.FontColor = value); } }
+        public XLColor FontColor { set { _richTexts.ForEach(rt => rt.FontColor = value); } }
         public String FontName { set { _richTexts.ForEach(rt => rt.FontName = value); } }
         public XLFontFamilyNumberingValues FontFamilyNumbering { set { _richTexts.ForEach(rt => rt.FontFamilyNumbering = value); } }
 
@@ -157,7 +157,7 @@ namespace ClosedXML.Excel
         public IXLFormattedText<T> SetVerticalAlignment(XLFontVerticalTextAlignmentValues value) { VerticalAlignment = value; return this; }
         public IXLFormattedText<T> SetShadow() { Shadow = true; return this; }	public IXLFormattedText<T> SetShadow(Boolean value) { Shadow = value; return this; }
         public IXLFormattedText<T> SetFontSize(Double value) { FontSize = value; return this; }
-        public IXLFormattedText<T> SetFontColor(IXLColor value) { FontColor = value; return this; }
+        public IXLFormattedText<T> SetFontColor(XLColor value) { FontColor = value; return this; }
         public IXLFormattedText<T> SetFontName(String value) { FontName = value; return this; }
         public IXLFormattedText<T> SetFontFamilyNumbering(XLFontFamilyNumberingValues value) { FontFamilyNumbering = value; return this; }
 

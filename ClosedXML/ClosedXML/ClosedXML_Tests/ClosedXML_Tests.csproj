@@ -93,6 +93,7 @@
     <Compile Include="Excel\Ranges\XLRangeBaseTest.cs" />
     <Compile Include="Excel\Ranges\InsertingRangesTests.cs" />
     <Compile Include="Excel\Rows\RowsTests.cs" />
+    <Compile Include="Excel\Styles\ColorTests.cs" />
     <Compile Include="Excel\Tables\TablesTests.cs" />
     <Compile Include="Excel\Worksheets\XLWorksheetTests.cs" />
     <Compile Include="Utils\ExcelDocsComparer.cs" />

@@ -36,11 +36,11 @@ namespace ClosedXML.Excel
 
         #region Properties
 
-        private IXLColor _patternBackgroundColor;
-        private IXLColor _patternColor;
+        private XLColor _patternBackgroundColor;
+        private XLColor _patternColor;
         private XLFillPatternValues _patternType;
 
-        public IXLColor BackgroundColor
+        public XLColor BackgroundColor
         {
             get { return _patternColor; }
             set
@@ -62,7 +62,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean PatternColorModified;
-        public IXLColor PatternColor
+        public XLColor PatternColor
         {
             get { return _patternColor; }
             set
@@ -79,7 +79,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean PatternBackgroundColorModified;
-        public IXLColor PatternBackgroundColor
+        public XLColor PatternBackgroundColor
         {
             get { return _patternBackgroundColor; }
             set
@@ -112,19 +112,19 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLStyle SetBackgroundColor(IXLColor value)
+        public IXLStyle SetBackgroundColor(XLColor value)
         {
             BackgroundColor = value;
             return _container.Style;
         }
 
-        public IXLStyle SetPatternColor(IXLColor value)
+        public IXLStyle SetPatternColor(XLColor value)
         {
             PatternColor = value;
             return _container.Style;
         }
 
-        public IXLStyle SetPatternBackgroundColor(IXLColor value)
+        public IXLStyle SetPatternBackgroundColor(XLColor value)
         {
             PatternBackgroundColor = value;
             return _container.Style;

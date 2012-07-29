@@ -37,7 +37,7 @@ namespace ClosedXML.Excel
         IXLStyle SetVerticalAlignment(XLFontVerticalTextAlignmentValues value);
         IXLStyle SetShadow(); IXLStyle SetShadow(Boolean value);
         IXLStyle SetFontSize(Double value);
-        IXLStyle SetFontColor(IXLColor value);
+        IXLStyle SetFontColor(XLColor value);
         IXLStyle SetFontName(String value);
         IXLStyle SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
 
