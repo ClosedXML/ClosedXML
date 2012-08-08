@@ -180,7 +180,7 @@ namespace ClosedXML.Excel
                             if (mergedCells != null)
                             {
                                 foreach (MergeCell mergeCell in mergedCells.Elements<MergeCell>())
-                                    ws.Range(mergeCell.Reference).Merge();
+                                    ws.Range(mergeCell.Reference).Merge(false);
                             }
                         }
                         else if (reader.ElementType == typeof(Columns))

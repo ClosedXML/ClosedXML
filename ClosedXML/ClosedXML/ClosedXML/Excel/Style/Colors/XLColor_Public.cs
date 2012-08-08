@@ -3,7 +3,13 @@ using System.Drawing;
 
 namespace ClosedXML.Excel
 {
-    public enum XLColorType { Color, Theme, Indexed }
+    public enum XLColorType
+    {
+        Color,
+        Theme,
+        Indexed
+    }
+
     public enum XLThemeColor
     {
         Background1,
@@ -19,19 +25,24 @@ namespace ClosedXML.Excel
         Hyperlink,
         FollowedHyperlink
     }
+
     public partial class XLColor : IEquatable<XLColor>
     {
+        private readonly XLColorType _colorType;
+        private readonly int _hashCode;
+        private readonly Int32 _indexed;
+        private readonly XLThemeColor _themeColor;
+        private readonly Double _themeTint;
+
+        private Color _color;
         public Boolean HasValue { get; private set; }
 
-        private readonly XLColorType _colorType;
-        public XLColorType ColorType {
-            get
-            {
-                return _colorType;
-            }
+        public XLColorType ColorType
+        {
+            get { return _colorType; }
         }
-        private Color color;
-        public Color Color 
+
+        public Color Color
         {
             get
             {
@@ -41,11 +52,10 @@ namespace ClosedXML.Excel
                 if (_colorType == XLColorType.Indexed)
                     return IndexedColors[_indexed].Color;
 
-                return color;
+                return _color;
             }
         }
 
-        private readonly Int32 _indexed;
         public Int32 Indexed
         {
             get
@@ -60,7 +70,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        private readonly XLThemeColor _themeColor;
         public XLThemeColor ThemeColor
         {
             get
@@ -70,52 +79,53 @@ namespace ClosedXML.Excel
 
                 if (ColorType == XLColorType.Indexed)
                     throw new Exception("Cannot convert indexed color to theme color.");
-                
+
                 throw new Exception("Cannot convert Color to theme color.");
             }
-
         }
 
-        private readonly Double _themeTint;
         public Double ThemeTint
         {
             get
             {
                 if (ColorType == XLColorType.Theme)
-                   return _themeTint;
+                    return _themeTint;
 
                 if (ColorType == XLColorType.Indexed)
                     throw new Exception("Cannot extract theme tint from an indexed color.");
 
-                return color.A / 255.0;
+                return _color.A/255.0;
             }
         }
 
+        #region IEquatable<XLColor> Members
+
         public bool Equals(XLColor other)
         {
-            var otherC = other as XLColor;
-            if (_colorType == otherC._colorType)
+            if (_colorType == other._colorType)
             {
                 if (_colorType == XLColorType.Color)
                 {
-                    return color.ToArgb() == otherC.color.ToArgb();
+                    return _color.ToArgb() == other._color.ToArgb();
                 }
                 if (_colorType == XLColorType.Theme)
                 {
-                    return _themeColor == otherC._themeColor
-                        && Math.Abs(_themeTint - otherC._themeTint) < XLHelper.Epsilon;
+                    return _themeColor == other._themeColor
+                           && Math.Abs(_themeTint - other._themeTint) < XLHelper.Epsilon;
                 }
-                return _indexed == otherC._indexed;
+                return _indexed == other._indexed;
             }
 
             return false;
         }
+
+        #endregion
+
         public override bool Equals(object obj)
         {
-            return Equals((XLColor)obj);
+            return Equals((XLColor) obj);
         }
 
-        private readonly int _hashCode;
         public override int GetHashCode()
         {
             return _hashCode;
@@ -138,7 +148,7 @@ namespace ClosedXML.Excel
             if (ReferenceEquals(left, right)) return true;
 
             // If one is null, but not both, return false.
-            if ((left as object) == null || (right as Object)== null) return false;
+            if ((left as object) == null || (right as Object) == null) return false;
 
             return left.Equals(right);
         }

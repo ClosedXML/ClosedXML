@@ -524,6 +524,7 @@ namespace ClosedXML.Excel
         {
             
         }
+
         public XLWorkbook(XLEventTracking eventTracking)
         {
             EventTracking = eventTracking;

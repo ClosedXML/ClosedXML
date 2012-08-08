@@ -304,13 +304,20 @@ namespace ClosedXML.Excel
 
         public IXLRange Merge()
         {
+            return Merge(true);
+        }
+
+        internal IXLRange Merge(Boolean checkIntersect)
+        {
             string tAddress = RangeAddress.ToString();
             var mergedRanges = Worksheet.Internals.MergedRanges.ToList();
-            foreach (var mergedRange in mergedRanges)
-            {
-                if (mergedRange.Intersects(tAddress))
-                    Worksheet.Internals.MergedRanges.Remove(mergedRange);
-            }
+
+            if (checkIntersect)
+                foreach (var mergedRange in mergedRanges)
+                {
+                    if (mergedRange.Intersects(tAddress))
+                        Worksheet.Internals.MergedRanges.Remove(mergedRange);
+                }
 
             var asRange = AsRange();
             Worksheet.Internals.MergedRanges.Add(asRange);
