@@ -1151,6 +1151,9 @@
                     if (Worksheet.Internals.ColumnsCollection.TryGetValue(Address.ColumnNumber, out column) && !column.Style.Equals(Worksheet.Style))
                         return false;
                 }
+
+                if (Worksheet.ConditionalFormats.Any(cf => cf.Range.Contains(this)))
+                    return false;
             }
             return true;
         }
@@ -1689,7 +1692,9 @@
 
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 
-            
+            var conditionalFormats = otherCell.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(otherCell)).ToList();
+            foreach(var cf in conditionalFormats)
+                _worksheet.ConditionalFormats.Add(new XLConditionalFormat(cf as XLConditionalFormat) { Range = AsRange()});
 
             if (copyDataValidations)
             {

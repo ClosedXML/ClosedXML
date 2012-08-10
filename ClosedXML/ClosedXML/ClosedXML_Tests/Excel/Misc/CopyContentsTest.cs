@@ -56,5 +56,15 @@ namespace ClosedXML_Tests.Excel.Misc
                 originalRange.CopyTo(destRange);
             }
         }
+
+        [TestMethod]
+        public void CopyConditionalFormatsCount()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().AddConditionalFormat().WhenContains("1").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Cell("A2").Value = ws.FirstCell();
+            Assert.AreEqual(2, ws.ConditionalFormats.Count());
+        }
     }
 }

@@ -98,5 +98,15 @@ namespace ClosedXML_Tests
             var end = DateTime.Now;
             Assert.IsTrue((end - start).TotalMilliseconds < 500);
         }
+
+        [TestMethod]
+        public void CopyConditionalFormatsCount()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().AddConditionalFormat().WhenContains("1").Fill.SetBackgroundColor(XLColor.Blue);
+            var ws2 = ws.CopyTo("Sheet2");
+            Assert.AreEqual(1, ws2.ConditionalFormats.Count());
+        }
     }
 }

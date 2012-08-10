@@ -17,6 +17,27 @@ namespace ClosedXML.Excel
             ContentTypes = new XLDictionary<XLCFContentType>();
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
         }
+        public XLConditionalFormat(XLConditionalFormat other)
+        {
+            Range = other.Range;
+            Style = new XLStyle(this, other.Style);
+            Values = new XLDictionary<String>(other.Values);
+            Colors = new XLDictionary<XLColor>(other.Colors);
+            ContentTypes = new XLDictionary<XLCFContentType>(other.ContentTypes);
+            IconSetOperators = new XLDictionary<XLCFIconSetOperator>(other.IconSetOperators);
+
+
+            ConditionalFormatType = other.ConditionalFormatType;
+            TimePeriod = other.TimePeriod;
+            IconSetStyle = other.IconSetStyle;
+            Operator = other.Operator;
+            Bottom = other.Bottom;
+            Percent = other.Percent;
+            ReverseIconOrder = other.ReverseIconOrder;
+            ShowIconOnly = other.ShowIconOnly;
+            ShowBarOnly = other.ShowBarOnly;
+        }
+
         private IXLStyle _style;
         private Int32 _styleCacheId;
         public IXLStyle Style { get { return GetStyle(); } set { SetStyle(value); } }

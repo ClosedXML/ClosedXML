@@ -153,6 +153,8 @@ namespace ClosedXML.Excel
         /// </returns>
         Boolean Contains(IXLRangeBase range);
 
+        Boolean Contains(IXLCell cell);
+
         /// <summary>
         ///   Determines whether this range intersects the specified range.
         ///   <para>For whole matches use the range.Contains method.</para>

@@ -1316,6 +1316,11 @@ namespace ClosedXML.Excel
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
+        public Boolean Contains(IXLCell cell)
+        {
+            return Contains(cell.Address as XLAddress);
+        }
+
         public bool Contains(XLAddress first, XLAddress last)
         {
             return Contains(first) && Contains(last);
