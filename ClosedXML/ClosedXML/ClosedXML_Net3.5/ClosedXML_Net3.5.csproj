@@ -468,6 +468,9 @@
     <Compile Include="..\ClosedXML\Excel\Misc\XLDictionary.cs">
       <Link>Excel\Misc\XLDictionary.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Misc\XLFormula.cs">
+      <Link>Excel\Misc\XLFormula.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Misc\XLIdManager.cs">
       <Link>Excel\Misc\XLIdManager.cs</Link>
     </Compile>

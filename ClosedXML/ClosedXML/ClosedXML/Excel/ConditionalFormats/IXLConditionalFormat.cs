@@ -109,7 +109,7 @@ namespace ClosedXML.Excel
         Boolean ShowBarOnly { get; }
         IXLRange Range { get; set; }
 
-        XLDictionary<String> Values { get; }
+        XLDictionary<XLFormula> Values { get; }
         XLDictionary<XLColor> Colors { get; }
         XLDictionary<XLCFContentType> ContentTypes { get; }
         XLDictionary<XLCFIconSetOperator> IconSetOperators { get; }

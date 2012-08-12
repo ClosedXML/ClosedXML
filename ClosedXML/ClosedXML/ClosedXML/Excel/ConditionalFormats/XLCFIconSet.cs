@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
         public IXLCFIconSet AddValue(XLCFIconSetOperator setOperator, String value, XLCFContentType type)
         {
             _conditionalFormat.IconSetOperators.Add(setOperator);
-            _conditionalFormat.Values.Add(value);
+            _conditionalFormat.Values.Add(new XLFormula { Value = value });
             _conditionalFormat.ContentTypes.Add(type);
             return new XLCFIconSet(_conditionalFormat);
         }

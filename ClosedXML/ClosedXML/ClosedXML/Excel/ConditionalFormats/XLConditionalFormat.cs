@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         {
             Range = range;
             Style = new XLStyle(this, range.Worksheet.Style);
-            Values = new XLDictionary<String>();
+            Values = new XLDictionary<XLFormula>();
             Colors = new XLDictionary<XLColor>();
             ContentTypes = new XLDictionary<XLCFContentType>();
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
         {
             Range = other.Range;
             Style = new XLStyle(this, other.Style);
-            Values = new XLDictionary<String>(other.Values);
+            Values = new XLDictionary<XLFormula>(other.Values);
             Colors = new XLDictionary<XLColor>(other.Colors);
             ContentTypes = new XLDictionary<XLCFContentType>(other.ContentTypes);
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>(other.IconSetOperators);
@@ -76,7 +76,7 @@ namespace ClosedXML.Excel
         }
 
         public bool StyleChanged { get; set; }
-        public XLDictionary<String> Values { get; private set; }
+        public XLDictionary<XLFormula> Values { get; private set; }
         public XLDictionary<XLColor> Colors { get; private set; }
         public XLDictionary<XLCFContentType> ContentTypes { get; private set; }
         public XLDictionary<XLCFIconSetOperator> IconSetOperators { get; private set; }
@@ -145,92 +145,87 @@ namespace ClosedXML.Excel
         }
         public IXLStyle WhenContains(String value)
         {
-            Values.Initialize(value);
+            Values.Initialize(new XLFormula { Value = value });
             ConditionalFormatType = XLConditionalFormatType.ContainsText;
             Operator = XLCFOperator.Contains;
             return Style;
         }
         public IXLStyle WhenNotContains(String value)
         {
-            Values.Initialize(value);
+            Values.Initialize(new XLFormula { Value = value });
             ConditionalFormatType = XLConditionalFormatType.NotContainsText;
             Operator = XLCFOperator.NotContains;
             return Style;
         }
         public IXLStyle WhenStartsWith(String value)
         {
-            Values.Initialize(value);
+            Values.Initialize(new XLFormula { Value = value });
             ConditionalFormatType = XLConditionalFormatType.StartsWith;
             Operator = XLCFOperator.StartsWith;
             return Style;
         }
         public IXLStyle WhenEndsWith(String value)
         {
-            Values.Initialize(value);
+            Values.Initialize(new XLFormula { Value = value });
             ConditionalFormatType = XLConditionalFormatType.EndsWith;
             Operator = XLCFOperator.EndsWith;
             return Style;
         }
 
-        private String GetProperValue(String value)
-        {
-            return String.Format("\"{0}\"", value.Replace("\"", "\"\""));
-        }
-
         public IXLStyle WhenEquals(String value)
         {
-            Values.Initialize(GetProperValue(value));
+            Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.Equal;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenNotEquals(String value)
         {
-            Values.Initialize(GetProperValue(value));
+            Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.NotEqual;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenGreaterThan(String value)
         {
-            Values.Initialize(GetProperValue(value));
+            Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.GreaterThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenLessThan(String value)
         {
-            Values.Initialize(GetProperValue(value));
+            Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.LessThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenEqualOrGreaterThan(String value)
         {
-            Values.Initialize(GetProperValue(value));
+            Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.EqualOrGreaterThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenEqualOrLessThan(String value)
         {
-            Values.Initialize(GetProperValue(value));
+            Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.EqualOrLessThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenBetween(String minValue, String maxValue)
         {
-            Values.Initialize(GetProperValue(minValue));
-            Values.Add(GetProperValue(maxValue));
+            Values.Initialize(new XLFormula { Value = minValue });
+            Values.Add(new XLFormula { Value = maxValue });
             Operator = XLCFOperator.Between;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenNotBetween(String minValue, String maxValue)
         {
-            Values.Initialize(GetProperValue(minValue));
-            Values.Add(GetProperValue(maxValue));
+            Values.Initialize(new XLFormula { Value = minValue });
+            Values.Add(new XLFormula { Value = maxValue });
             Operator = XLCFOperator.NotBetween;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
@@ -238,58 +233,58 @@ namespace ClosedXML.Excel
 
         public IXLStyle WhenEquals(Double value)
         {
-            Values.Initialize(value.ToString());
+            Values.Initialize(new XLFormula { Value = value.ToString() });
             Operator = XLCFOperator.Equal;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenNotEquals(Double value)
         {
-            Values.Initialize(value.ToString());
+            Values.Initialize(new XLFormula { Value = value.ToString() });
             Operator = XLCFOperator.NotEqual;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenGreaterThan(Double value)
         {
-            Values.Initialize(value.ToString());
+            Values.Initialize(new XLFormula { Value = value.ToString() });
             Operator = XLCFOperator.GreaterThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenLessThan(Double value)
         {
-            Values.Initialize(value.ToString());
+            Values.Initialize(new XLFormula { Value = value.ToString() });
             Operator = XLCFOperator.LessThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenEqualOrGreaterThan(Double value)
         {
-            Values.Initialize(value.ToString());
+            Values.Initialize(new XLFormula { Value = value.ToString() });
             Operator = XLCFOperator.EqualOrGreaterThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenEqualOrLessThan(Double value)
         {
-            Values.Initialize(value.ToString());
+            Values.Initialize(new XLFormula { Value = value.ToString() });
             Operator = XLCFOperator.EqualOrLessThan;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenBetween(Double minValue, Double maxValue)
         {
-            Values.Initialize(minValue.ToString());
-            Values.Add(maxValue.ToString());
+            Values.Initialize(new XLFormula { Value = minValue.ToString() });
+            Values.Add(new XLFormula { Value = maxValue.ToString() });
             Operator = XLCFOperator.Between;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
         public IXLStyle WhenNotBetween(Double minValue, Double maxValue)
         {
-            Values.Initialize(minValue.ToString());
-            Values.Add(maxValue.ToString());
+            Values.Initialize(new XLFormula { Value = minValue.ToString() });
+            Values.Add(new XLFormula { Value = maxValue.ToString() });
             Operator = XLCFOperator.NotBetween;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
@@ -307,13 +302,14 @@ namespace ClosedXML.Excel
         }
         public IXLStyle WhenIsTrue(String formula)
         {
-            Values.Initialize(formula);
+            String f = formula.TrimStart()[0] == '=' ? formula : "=" + formula;
+            Values.Initialize(new XLFormula {Value = f});
             ConditionalFormatType = XLConditionalFormatType.Expression;
             return Style;
         }
         public IXLStyle WhenIsTop(Int32 value, XLTopBottomType topBottomType = XLTopBottomType.Items)
         {
-            Values.Initialize(value.ToString());
+            Values.Initialize(new XLFormula { Value = value.ToString() });
             Percent = topBottomType == XLTopBottomType.Percent;
             ConditionalFormatType = XLConditionalFormatType.Top10;
             Bottom = false;
@@ -321,7 +317,7 @@ namespace ClosedXML.Excel
         }
         public IXLStyle WhenIsBottom(Int32 value, XLTopBottomType topBottomType = XLTopBottomType.Items)
         {
-            Values.Initialize(value.ToString());
+            Values.Initialize(new XLFormula { Value = value.ToString() });
             Percent = topBottomType == XLTopBottomType.Percent;
             ConditionalFormatType = XLConditionalFormatType.Top10;
             Bottom = true;

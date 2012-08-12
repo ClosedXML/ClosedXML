@@ -10,7 +10,9 @@ namespace ClosedXML.Excel
     {
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
-            String val = cf.Values[1];//.Replace("\"", "\"\"");
+            String val = GetQuoted(cf.Values[1].Value);
+
+
             var conditionalFormattingRule = new ConditionalFormattingRule { FormatId = (UInt32)context.DifferentialFormats[cf.Style], Operator = cf.Operator.ToOpenXml(), Type = cf.ConditionalFormatType.ToOpenXml(), Priority = priority };
 
             var formula = new Formula();
@@ -22,11 +24,20 @@ namespace ClosedXML.Excel
 
             if(cf.Operator == XLCFOperator.Between || cf.Operator == XLCFOperator.NotBetween)
             {
-                var formula2 = new Formula { Text = cf.Values[2] };//.Replace("\"", "\"\"")};
+                var formula2 = new Formula { Text = GetQuoted(cf.Values[2].Value) };//.Replace("\"", "\"\"")};
                 conditionalFormattingRule.Append(formula2);    
             }
 
             return conditionalFormattingRule;
+        }
+
+        private String GetQuoted(String value)
+        {
+            Double num;
+            if (!Double.TryParse(value, out num) && value[0] != '\"' && !value.EndsWith("\""))
+                return String.Format("\"{0}\"", value.Replace("\"", "\"\""));
+
+            return value;
         }
 
 

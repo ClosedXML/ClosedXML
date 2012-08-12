@@ -193,6 +193,7 @@
     <Compile Include="Excel\Coordinates\XLSheetPoint.cs" />
     <Compile Include="Excel\Drawings\XLDrawingPosition.cs" />
     <Compile Include="Excel\Misc\XLDictionary.cs" />
+    <Compile Include="Excel\Misc\XLFormula.cs" />
     <Compile Include="Excel\Misc\XLIdManager.cs" />
     <Compile Include="Excel\PivotTables\PivotValues\XLPivotValueCombination.cs" />
     <Compile Include="Excel\PivotTables\PivotValues\IXLPivotValueCombination.cs" />

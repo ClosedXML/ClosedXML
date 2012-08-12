@@ -66,5 +66,18 @@ namespace ClosedXML_Tests.Excel.Misc
             ws.Cell("A2").Value = ws.FirstCell();
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
         }
+
+        [TestMethod]
+        public void CopyConditionalFormatsRelative()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell("A1").Value = "1";
+            ws.Cell("B1").Value = "1";
+            ws.Cell("A1").AddConditionalFormat().WhenEquals("=B1").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Cell("A2").Value = ws.Cell("A1");
+            Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "B1")));
+            Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "B2")));
+        }
     }
 }

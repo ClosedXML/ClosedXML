@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         }
         public IXLCFColorScaleMax Midpoint(XLCFContentType type, String value, XLColor color)
         {
-            _conditionalFormat.Values.Add(value);
+            _conditionalFormat.Values.Add(new XLFormula { Value = value });
             _conditionalFormat.Colors.Add(color);
             _conditionalFormat.ContentTypes.Add(type);
             return new XLCFColorScaleMax(_conditionalFormat);

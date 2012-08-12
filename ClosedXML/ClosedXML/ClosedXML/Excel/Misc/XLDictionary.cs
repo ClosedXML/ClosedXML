@@ -15,6 +15,7 @@ namespace ClosedXML.Excel
         {
             other.Values.ForEach(Add);
         }
+
         public void Initialize(T value)
         {
             if (Count > 0)

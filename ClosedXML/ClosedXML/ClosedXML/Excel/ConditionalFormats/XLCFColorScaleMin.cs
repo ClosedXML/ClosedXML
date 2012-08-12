@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
 
         public IXLCFColorScaleMid Minimum(XLCFContentType type, String value, XLColor color)
         {
-            _conditionalFormat.Values.Initialize(value);
+            _conditionalFormat.Values.Initialize(new XLFormula { Value = value });
             _conditionalFormat.Colors.Initialize(color);
             _conditionalFormat.ContentTypes.Initialize(type);
             return new XLCFColorScaleMid(_conditionalFormat);

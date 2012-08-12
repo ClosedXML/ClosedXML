@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
             var colorScale = new ColorScale();
             for(Int32 i = 1; i <= cf.Values.Count; i++)
             {
-                var conditionalFormatValueObject = new ConditionalFormatValueObject { Type = cf.ContentTypes[i].ToOpenXml(), Val = cf.Values[i] };
+                var conditionalFormatValueObject = new ConditionalFormatValueObject { Type = cf.ContentTypes[i].ToOpenXml(), Val = cf.Values[i].Value };
                 colorScale.Append(conditionalFormatValueObject);
             }
 

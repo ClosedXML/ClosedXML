@@ -1693,8 +1693,29 @@
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 
             var conditionalFormats = otherCell.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(otherCell)).ToList();
-            foreach(var cf in conditionalFormats)
-                _worksheet.ConditionalFormats.Add(new XLConditionalFormat(cf as XLConditionalFormat) { Range = AsRange()});
+            foreach (var cf in conditionalFormats)
+            {
+                var c = new XLConditionalFormat(cf as XLConditionalFormat) { Range = AsRange() };
+                var oldValues = c.Values.Values.ToList();
+                c.Values.Clear();
+                foreach(var v in oldValues)
+                {
+                    String f = v.Value;
+                    if (v.IsFormula)
+                    {
+                        using (var asRange = AsRange())
+                        {
+                            var r1c1 = otherCell.GetFormulaR1C1(f);
+                            f = GetFormulaA1(r1c1);
+                        }
+                    }
+                        
+
+                    c.Values.Add(new XLFormula { _value = f});
+                }
+                
+                _worksheet.ConditionalFormats.Add(c);
+            }
 
             if (copyDataValidations)
             {
@@ -1767,14 +1788,9 @@
                         if (!A1ColumnRegex.IsMatch(rangeAddress))
                         {
                             var matchRange = worksheetInAction.Workbook.Worksheet(sheetName).Range(rangeAddress);
-                            if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
-                                matchRange.RangeAddress.LastAddress.RowNumber
-                                &&
-                                shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
-                                matchRange.RangeAddress.FirstAddress.ColumnNumber
-                                &&
-                                shiftedRange.RangeAddress.LastAddress.ColumnNumber >=
-                                matchRange.RangeAddress.LastAddress.ColumnNumber)
+                            if (shiftedRange.RangeAddress.FirstAddress.RowNumber <= matchRange.RangeAddress.LastAddress.RowNumber
+                                && shiftedRange.RangeAddress.FirstAddress.ColumnNumber <= matchRange.RangeAddress.FirstAddress.ColumnNumber
+                                && shiftedRange.RangeAddress.LastAddress.ColumnNumber >= matchRange.RangeAddress.LastAddress.ColumnNumber)
                             {
                                 if (A1RowRegex.IsMatch(rangeAddress))
                                 {

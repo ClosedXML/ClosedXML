@@ -1324,13 +1324,13 @@ namespace ClosedXML.Excel
                     if (fr.Type != null)
                         conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
                     if (fr.Text != null)
-                        conditionalFormat.Values.Add(fr.Text.Value);
+                        conditionalFormat.Values.Add(new XLFormula { Value = fr.Text.Value });
                     if (fr.Percent != null)
                         conditionalFormat.Percent = fr.Percent.Value;
                     if (fr.Bottom != null)
                         conditionalFormat.Bottom = fr.Bottom.Value;
                     if(fr.Rank != null)
-                        conditionalFormat.Values.Add(fr.Rank.Value.ToString());
+                        conditionalFormat.Values.Add(new XLFormula { Value = fr.Rank.Value.ToString() });
 
                     if (fr.Elements<ColorScale>().Any())
                     {
@@ -1370,7 +1370,7 @@ namespace ClosedXML.Excel
                                 String val = formula.Text.Replace("\"\"", "\"");
                                 //if (val.StartsWith("\"")) val = val.Substring(1, val.Length - 2);
 
-                                conditionalFormat.Values.Add(val);
+                                conditionalFormat.Values.Add(new XLFormula { Value = val });
                             }
                         }
                     }
@@ -1387,7 +1387,7 @@ namespace ClosedXML.Excel
                 if (c.Type != null)
                     conditionalFormat.ContentTypes.Add(c.Type.Value.ToClosedXml());
                 if (c.Val != null)
-                    conditionalFormat.Values.Add(c.Val.Value);
+                    conditionalFormat.Values.Add(new XLFormula { Value = c.Val.Value });
 
                 if (c.GreaterThanOrEqual != null)
                     conditionalFormat.IconSetOperators.Add(c.GreaterThanOrEqual.Value ? XLCFIconSetOperator.EqualOrGreaterThan : XLCFIconSetOperator.GreaterThan);

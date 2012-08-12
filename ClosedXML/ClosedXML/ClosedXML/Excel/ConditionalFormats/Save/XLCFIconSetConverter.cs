@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
             Int32 count = cf.Values.Count;
             for(Int32 i=1;i<= count; i++ )
             {
-                var conditionalFormatValueObject = new ConditionalFormatValueObject { Type = cf.ContentTypes[i].ToOpenXml(), Val = cf.Values[i], GreaterThanOrEqual = cf.IconSetOperators[i] == XLCFIconSetOperator.EqualOrGreaterThan};    
+                var conditionalFormatValueObject = new ConditionalFormatValueObject { Type = cf.ContentTypes[i].ToOpenXml(), Val = cf.Values[i].Value, GreaterThanOrEqual = cf.IconSetOperators[i] == XLCFIconSetOperator.EqualOrGreaterThan};    
                 iconSet.Append(conditionalFormatValueObject);
                 
             }
