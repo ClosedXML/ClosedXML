@@ -32,6 +32,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean IsFormula { get; private set; }
+        public Boolean IsFormula { get; internal set; }
     }
 }

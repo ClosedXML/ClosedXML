@@ -1324,13 +1324,13 @@ namespace ClosedXML.Excel
                     if (fr.Type != null)
                         conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
                     if (fr.Text != null)
-                        conditionalFormat.Values.Add(new XLFormula { Value = fr.Text.Value });
+                        conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
                     if (fr.Percent != null)
                         conditionalFormat.Percent = fr.Percent.Value;
                     if (fr.Bottom != null)
                         conditionalFormat.Bottom = fr.Bottom.Value;
-                    if(fr.Rank != null)
-                        conditionalFormat.Values.Add(new XLFormula { Value = fr.Rank.Value.ToString() });
+                    if (fr.Rank != null)
+                        conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
 
                     if (fr.Elements<ColorScale>().Any())
                     {
@@ -1370,7 +1370,7 @@ namespace ClosedXML.Excel
                                 String val = formula.Text.Replace("\"\"", "\"");
                                 //if (val.StartsWith("\"")) val = val.Substring(1, val.Length - 2);
 
-                                conditionalFormat.Values.Add(new XLFormula { Value = val });
+                                conditionalFormat.Values.Add(GetFormula( val ));
                             }
                         }
                     }
@@ -1378,6 +1378,14 @@ namespace ClosedXML.Excel
                 }
             }
             
+        }
+
+        private static XLFormula GetFormula(String value)
+        {
+            var formula = new XLFormula();
+            formula._value = value;
+            formula.IsFormula = !(value[0] == '"' && value.EndsWith("\""));
+            return formula;    
         }
 
         private void ExtractConditionalFormatValueObjects(XLConditionalFormat conditionalFormat, OpenXmlElement element)
