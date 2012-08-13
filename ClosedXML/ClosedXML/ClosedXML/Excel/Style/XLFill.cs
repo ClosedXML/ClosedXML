@@ -12,6 +12,7 @@ namespace ClosedXML.Excel
             return
                 _patternType == other.PatternType
                 && _patternColor.Equals(other.PatternColor)
+                && _patternBackgroundColor.Equals(other.PatternBackgroundColor)
                 ;
         }
 
