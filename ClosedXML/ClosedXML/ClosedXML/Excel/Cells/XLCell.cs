@@ -1703,11 +1703,8 @@
                     String f = v.Value;
                     if (v.IsFormula)
                     {
-                        using (var asRange = AsRange())
-                        {
-                            var r1c1 = otherCell.GetFormulaR1C1(f);
-                            f = GetFormulaA1(r1c1);
-                        }
+                        var r1c1 = otherCell.GetFormulaR1C1(f);
+                        f = GetFormulaA1(r1c1);
                     }
                         
 
