@@ -1711,7 +1711,7 @@
                     }
                         
 
-                    c.Values.Add(new XLFormula { _value = f});
+                    c.Values.Add(new XLFormula { _value = f, IsFormula = v.IsFormula });
                 }
                 
                 _worksheet.ConditionalFormats.Add(c);
