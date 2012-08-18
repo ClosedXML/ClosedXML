@@ -670,5 +670,10 @@ namespace ClosedXML.Excel
         {
             worksheet.CopyTo(this, worksheet.Name);
         }
+
+        public IXLWorksheet AddWorksheet(DataTable dataTable, String sheetName)
+        {
+            return Worksheets.Add(dataTable, sheetName);
+        }
     }
 }

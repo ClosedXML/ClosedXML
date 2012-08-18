@@ -139,7 +139,12 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Add(DataTable dataTable)
         {
-            var ws = Add(dataTable.TableName);
+            return Add(dataTable, dataTable.TableName);
+        }
+
+        public IXLWorksheet Add(DataTable dataTable, String sheetName)
+        {
+            var ws = Add(sheetName);
             ws.Cell(1, 1).InsertTable(dataTable);
             ws.Columns().AdjustToContents(1, 75);
             return ws;
