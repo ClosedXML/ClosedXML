@@ -1424,7 +1424,14 @@ namespace ClosedXML.Excel
                 foreach (XLCell xlCell in xlRange.Cells())
                 {
                     xlCell.SettingHyperlink = true;
-                    xlCell.Hyperlink = hl.Id != null ? new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip) : new XLHyperlink(hl.Location.Value, tooltip);
+
+                    if (hl.Id != null)
+                        xlCell.Hyperlink = new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip);
+                    else if (hl.Location != null)
+                        xlCell.Hyperlink = new XLHyperlink(hl.Location.Value, tooltip);
+                    else
+                        xlCell.Hyperlink = new XLHyperlink(hl.Reference.Value, tooltip);
+
                     xlCell.SettingHyperlink = false;
                 }
             }
