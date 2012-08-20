@@ -363,5 +363,6 @@ namespace ClosedXML.Excel
         IXLConditionalFormats ConditionalFormats { get; }
 
         IXLRanges SelectedRanges { get; }
+        IXLCell ActiveCell { get; set; }
     }
 }

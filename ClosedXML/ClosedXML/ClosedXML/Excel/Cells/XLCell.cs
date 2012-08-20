@@ -2360,5 +2360,24 @@
             using (var r = AsRange())
                 return r.AddConditionalFormat();
         }
+
+        public Boolean Active
+        {
+            get { return Worksheet.ActiveCell == this; }
+            set
+            {
+                if (value)
+                    Worksheet.ActiveCell = this;
+                else if (Active)
+                    Worksheet.ActiveCell = null;
+
+            }
+        }
+
+        public IXLCell SetActive(Boolean value = true)
+        {
+            Active = value;
+            return this;
+        }
     }
 }

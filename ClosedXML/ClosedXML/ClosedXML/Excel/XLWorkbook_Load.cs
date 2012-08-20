@@ -1601,8 +1601,9 @@ namespace ClosedXML.Excel
             {
                 if (selection.SequenceOfReferences != null)
                     ws.Ranges(selection.SequenceOfReferences.InnerText.Replace(" ", ",")).Select();
-                else if (selection.ActiveCell != null)
-                    ws.Cell(selection.ActiveCell).Select();
+
+                if (selection.ActiveCell != null)
+                    ws.Cell(selection.ActiveCell).SetActive();
             }
 
             var pane = sheetView.Elements<Pane>().FirstOrDefault();

@@ -89,5 +89,10 @@ namespace ClosedXML_Tests.Examples
             TestHelper.RunTestExample<CurrentRowColumn>(@"Ranges\CurrentRowColumn.xlsx");
         }
 
+        [TestMethod]
+        public void SelectingRanges()
+        {
+            TestHelper.RunTestExample<SelectingRanges>(@"Ranges\SelectingRanges.xlsx");
+        }
     }
 }

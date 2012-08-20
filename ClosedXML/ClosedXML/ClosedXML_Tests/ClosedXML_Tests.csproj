@@ -234,6 +234,7 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStartsWith.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBar.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

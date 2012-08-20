@@ -1907,7 +1907,7 @@ namespace ClosedXML.Excel
 
         public void Select()
         {
-            Worksheet.SelectedRanges = new XLRanges {this};
+            Worksheet.SelectedRanges.Add(AsRange());
         }
     }
 }

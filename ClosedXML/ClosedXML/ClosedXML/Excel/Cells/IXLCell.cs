@@ -308,5 +308,8 @@ namespace ClosedXML.Excel
         IXLConditionalFormat AddConditionalFormat();
 
         void Select();
+
+        Boolean Active { get; set; }
+        IXLCell SetActive(Boolean value = true);
     }
 }

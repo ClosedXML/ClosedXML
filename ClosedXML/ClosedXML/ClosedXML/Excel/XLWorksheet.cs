@@ -79,6 +79,7 @@ namespace ClosedXML.Excel
             ShowZeros = workbook.ShowZeros;
             RightToLeft = workbook.RightToLeft;
             TabColor = new XLColor();
+            SelectedRanges = new XLRanges();
         }
 
         #endregion
@@ -1386,9 +1387,9 @@ namespace ClosedXML.Excel
         {
             EventTrackingEnabled = _eventTracking;
         }
-
-
         
         public IXLRanges SelectedRanges { get; internal set; }
+
+        public IXLCell ActiveCell { get; set; }
     }
 }

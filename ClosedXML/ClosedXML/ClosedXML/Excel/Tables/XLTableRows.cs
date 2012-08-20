@@ -122,7 +122,8 @@ namespace ClosedXML.Excel
 
         public void Select()
         {
-            XLHelper.AddSelection(this);
+            foreach (var range in this)
+                range.Select();
         }
     }
 }

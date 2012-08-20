@@ -214,21 +214,7 @@ namespace ClosedXML.Excel
             return rows;
         }
 
-        internal static void AddSelection<T>(IEnumerable<T> items) where T : IXLRangeBase
-        {
-            var worksheets = new HashSet<XLWorksheet>();
-            foreach (var range in items)
-            {
-                var worksheet = range.Worksheet as XLWorksheet;
-                if (!worksheets.Contains(worksheet))
-                {
-                    worksheet.SelectedRanges = new XLRanges();
-                    worksheets.Add(worksheet);
-                }
 
-                worksheet.SelectedRanges.Add(range);
-            }
-        }
 
         public static bool IsNullOrWhiteSpace(string value)
         {
