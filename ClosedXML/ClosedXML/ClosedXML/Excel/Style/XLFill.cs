@@ -51,7 +51,7 @@ namespace ClosedXML.Excel
                     _container.Styles.ForEach(s => s.Fill.BackgroundColor = value);
                 else
                 {
-                    _patternType = XLFillPatternValues.Solid;
+                    _patternType = value.HasValue ? XLFillPatternValues.Solid : XLFillPatternValues.None;
                     _patternColor = new XLColor(value);
                     _patternBackgroundColor = new XLColor(value);
 
