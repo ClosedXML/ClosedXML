@@ -309,15 +309,15 @@ namespace ClosedXML.Excel
 
         internal IXLRange Merge(Boolean checkIntersect)
         {
-            string tAddress = RangeAddress.ToString();
-            var mergedRanges = Worksheet.Internals.MergedRanges.ToList();
-
             if (checkIntersect)
-                foreach (var mergedRange in mergedRanges)
+            {
+                string tAddress = RangeAddress.ToString();
+                foreach (var mergedRange in Worksheet.Internals.MergedRanges)
                 {
                     if (mergedRange.Intersects(tAddress))
                         Worksheet.Internals.MergedRanges.Remove(mergedRange);
                 }
+            }
 
             var asRange = AsRange();
             Worksheet.Internals.MergedRanges.Add(asRange);
