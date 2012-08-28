@@ -47,81 +47,84 @@ namespace ClosedXML.Excel
             return new XLColor(themeColor, themeTint);
         }
 
-        private static Dictionary<Int32, XLColor> indexedColors;
+        private static Dictionary<Int32, XLColor> _indexedColors;
         public static Dictionary<Int32, XLColor> IndexedColors
         {
             get
             {
-                if (indexedColors == null)
+                if (_indexedColors == null)
                 {
-                    Dictionary<Int32, XLColor> retVal = new Dictionary<Int32, XLColor>();
-                    retVal.Add(0, FromHtml("#FF000000"));
-                    retVal.Add(1, FromHtml("#FFFFFFFF"));
-                    retVal.Add(2, FromHtml("#FFFF0000"));
-                    retVal.Add(3, FromHtml("#FF00FF00"));
-                    retVal.Add(4, FromHtml("#FF0000FF"));
-                    retVal.Add(5, FromHtml("#FFFFFF00"));
-                    retVal.Add(6, FromHtml("#FFFF00FF"));
-                    retVal.Add(7, FromHtml("#FF00FFFF"));
-                    retVal.Add(8, FromHtml("#FF000000"));
-                    retVal.Add(9, FromHtml("#FFFFFFFF"));
-                    retVal.Add(10, FromHtml("#FFFF0000"));
-                    retVal.Add(11, FromHtml("#FF00FF00"));
-                    retVal.Add(12, FromHtml("#FF0000FF"));
-                    retVal.Add(13, FromHtml("#FFFFFF00"));
-                    retVal.Add(14, FromHtml("#FFFF00FF"));
-                    retVal.Add(15, FromHtml("#FF00FFFF"));
-                    retVal.Add(16, FromHtml("#FF800000"));
-                    retVal.Add(17, FromHtml("#FF008000"));
-                    retVal.Add(18, FromHtml("#FF000080"));
-                    retVal.Add(19, FromHtml("#FF808000"));
-                    retVal.Add(20, FromHtml("#FF800080"));
-                    retVal.Add(21, FromHtml("#FF008080"));
-                    retVal.Add(22, FromHtml("#FFC0C0C0"));
-                    retVal.Add(23, FromHtml("#FF808080"));
-                    retVal.Add(24, FromHtml("#FF9999FF"));
-                    retVal.Add(25, FromHtml("#FF993366"));
-                    retVal.Add(26, FromHtml("#FFFFFFCC"));
-                    retVal.Add(27, FromHtml("#FFCCFFFF"));
-                    retVal.Add(28, FromHtml("#FF660066"));
-                    retVal.Add(29, FromHtml("#FFFF8080"));
-                    retVal.Add(30, FromHtml("#FF0066CC"));
-                    retVal.Add(31, FromHtml("#FFCCCCFF"));
-                    retVal.Add(32, FromHtml("#FF000080"));
-                    retVal.Add(33, FromHtml("#FFFF00FF"));
-                    retVal.Add(34, FromHtml("#FFFFFF00"));
-                    retVal.Add(35, FromHtml("#FF00FFFF"));
-                    retVal.Add(36, FromHtml("#FF800080"));
-                    retVal.Add(37, FromHtml("#FF800000"));
-                    retVal.Add(38, FromHtml("#FF008080"));
-                    retVal.Add(39, FromHtml("#FF0000FF"));
-                    retVal.Add(40, FromHtml("#FF00CCFF"));
-                    retVal.Add(41, FromHtml("#FFCCFFFF"));
-                    retVal.Add(42, FromHtml("#FFCCFFCC"));
-                    retVal.Add(43, FromHtml("#FFFFFF99"));
-                    retVal.Add(44, FromHtml("#FF99CCFF"));
-                    retVal.Add(45, FromHtml("#FFFF99CC"));
-                    retVal.Add(46, FromHtml("#FFCC99FF"));
-                    retVal.Add(47, FromHtml("#FFFFCC99"));
-                    retVal.Add(48, FromHtml("#FF3366FF"));
-                    retVal.Add(49, FromHtml("#FF33CCCC"));
-                    retVal.Add(50, FromHtml("#FF99CC00"));
-                    retVal.Add(51, FromHtml("#FFFFCC00"));
-                    retVal.Add(52, FromHtml("#FFFF9900"));
-                    retVal.Add(53, FromHtml("#FFFF6600"));
-                    retVal.Add(54, FromHtml("#FF666699"));
-                    retVal.Add(55, FromHtml("#FF969696"));
-                    retVal.Add(56, FromHtml("#FF003366"));
-                    retVal.Add(57, FromHtml("#FF339966"));
-                    retVal.Add(58, FromHtml("#FF003300"));
-                    retVal.Add(59, FromHtml("#FF333300"));
-                    retVal.Add(60, FromHtml("#FF993300"));
-                    retVal.Add(61, FromHtml("#FF993366"));
-                    retVal.Add(62, FromHtml("#FF333399"));
-                    retVal.Add(63, FromHtml("#FF333333"));
-                    indexedColors = retVal;
+                    var retVal = new Dictionary<Int32, XLColor>
+                        {
+                            {0, FromHtml("#FF000000")},
+                            {1, FromHtml("#FFFFFFFF")},
+                            {2, FromHtml("#FFFF0000")},
+                            {3, FromHtml("#FF00FF00")},
+                            {4, FromHtml("#FF0000FF")},
+                            {5, FromHtml("#FFFFFF00")},
+                            {6, FromHtml("#FFFF00FF")},
+                            {7, FromHtml("#FF00FFFF")},
+                            {8, FromHtml("#FF000000")},
+                            {9, FromHtml("#FFFFFFFF")},
+                            {10, FromHtml("#FFFF0000")},
+                            {11, FromHtml("#FF00FF00")},
+                            {12, FromHtml("#FF0000FF")},
+                            {13, FromHtml("#FFFFFF00")},
+                            {14, FromHtml("#FFFF00FF")},
+                            {15, FromHtml("#FF00FFFF")},
+                            {16, FromHtml("#FF800000")},
+                            {17, FromHtml("#FF008000")},
+                            {18, FromHtml("#FF000080")},
+                            {19, FromHtml("#FF808000")},
+                            {20, FromHtml("#FF800080")},
+                            {21, FromHtml("#FF008080")},
+                            {22, FromHtml("#FFC0C0C0")},
+                            {23, FromHtml("#FF808080")},
+                            {24, FromHtml("#FF9999FF")},
+                            {25, FromHtml("#FF993366")},
+                            {26, FromHtml("#FFFFFFCC")},
+                            {27, FromHtml("#FFCCFFFF")},
+                            {28, FromHtml("#FF660066")},
+                            {29, FromHtml("#FFFF8080")},
+                            {30, FromHtml("#FF0066CC")},
+                            {31, FromHtml("#FFCCCCFF")},
+                            {32, FromHtml("#FF000080")},
+                            {33, FromHtml("#FFFF00FF")},
+                            {34, FromHtml("#FFFFFF00")},
+                            {35, FromHtml("#FF00FFFF")},
+                            {36, FromHtml("#FF800080")},
+                            {37, FromHtml("#FF800000")},
+                            {38, FromHtml("#FF008080")},
+                            {39, FromHtml("#FF0000FF")},
+                            {40, FromHtml("#FF00CCFF")},
+                            {41, FromHtml("#FFCCFFFF")},
+                            {42, FromHtml("#FFCCFFCC")},
+                            {43, FromHtml("#FFFFFF99")},
+                            {44, FromHtml("#FF99CCFF")},
+                            {45, FromHtml("#FFFF99CC")},
+                            {46, FromHtml("#FFCC99FF")},
+                            {47, FromHtml("#FFFFCC99")},
+                            {48, FromHtml("#FF3366FF")},
+                            {49, FromHtml("#FF33CCCC")},
+                            {50, FromHtml("#FF99CC00")},
+                            {51, FromHtml("#FFFFCC00")},
+                            {52, FromHtml("#FFFF9900")},
+                            {53, FromHtml("#FFFF6600")},
+                            {54, FromHtml("#FF666699")},
+                            {55, FromHtml("#FF969696")},
+                            {56, FromHtml("#FF003366")},
+                            {57, FromHtml("#FF339966")},
+                            {58, FromHtml("#FF003300")},
+                            {59, FromHtml("#FF333300")},
+                            {60, FromHtml("#FF993300")},
+                            {61, FromHtml("#FF993366")},
+                            {62, FromHtml("#FF333399")},
+                            {63, FromHtml("#FF333333")},
+                            {64, FromColor(Color.Transparent)}
+                        };
+                    _indexedColors = retVal;
                 }
-                return indexedColors;
+                return _indexedColors;
             }
         }
 
@@ -860,6 +863,6 @@ namespace ClosedXML.Excel
         public static XLColor YellowRyb { get { return FromHtml("#FFFEFE33"); } }
         public static XLColor Zaffre { get { return FromHtml("#FF0014A8"); } }
         public static XLColor ZinnwalditeBrown { get { return FromHtml("#FF2C1608"); } }
-
+        public static XLColor Transparent { get { return FromColor(Color.Transparent); } }
     }
 }
