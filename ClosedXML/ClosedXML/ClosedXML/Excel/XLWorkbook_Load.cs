@@ -188,6 +188,7 @@ namespace ClosedXML.Excel
                                         (Columns)reader.LoadCurrentElement());
                         else if (reader.ElementType == typeof(Row))
                         {
+                            lastRow = 0;
                             LoadRows(s, numberingFormats, fills, borders, fonts, ws, sharedStrings, sharedFormulasR1C1,
                                      styleList, (Row)reader.LoadCurrentElement());
                         }
@@ -716,12 +717,17 @@ namespace ClosedXML.Excel
             sheetArea = sections[1];
         }
 
+        private Int32 lastCell;
         private void LoadCells(SharedStringItem[] sharedStrings, Stylesheet s, NumberingFormats numberingFormats,
                                Fills fills, Borders borders, Fonts fonts, Dictionary<uint, string> sharedFormulasR1C1,
-                               XLWorksheet ws, Dictionary<Int32, IXLStyle> styleList, Cell cell)
+                               XLWorksheet ws, Dictionary<Int32, IXLStyle> styleList, Cell cell, Int32 rowIndex)
         {
             Int32 styleIndex = cell.StyleIndex != null ? Int32.Parse(cell.StyleIndex.InnerText) : 0;
-            var xlCell = ws.CellFast(cell.CellReference);
+
+            String cellReference = cell.CellReference == null
+                                       ? XLHelper.GetColumnLetterFromNumber(++lastCell) + rowIndex
+                                       : cell.CellReference.Value;
+            var xlCell = ws.CellFast(cellReference);
 
             if (styleList.ContainsKey(styleIndex))
                 xlCell.Style = styleList[styleIndex];
@@ -985,12 +991,14 @@ namespace ClosedXML.Excel
             fontBase.VerticalAlignment = verticalTextAlignment.Val != null ? verticalTextAlignment.Val.Value.ToClosedXml() : XLFontVerticalTextAlignmentValues.Baseline;
         }
 
+        private Int32 lastRow;
         private void LoadRows(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders, Fonts fonts,
                               XLWorksheet ws, SharedStringItem[] sharedStrings,
                               Dictionary<uint, string> sharedFormulasR1C1, Dictionary<Int32, IXLStyle> styleList,
                               Row row)
         {
-            var xlRow = ws.Row((Int32) row.RowIndex.Value, false);
+            Int32 rowIndex = row.RowIndex == null ? ++lastRow : (Int32) row.RowIndex.Value;
+            var xlRow = ws.Row(rowIndex, false);
             
             if (row.Height != null)
                 xlRow.Height = row.Height;
@@ -1021,9 +1029,10 @@ namespace ClosedXML.Excel
                 }
             }
 
+            lastCell = 0;
             foreach (Cell cell in row.Elements<Cell>())
                 LoadCells(sharedStrings, s, numberingFormats, fills, borders, fonts, sharedFormulasR1C1, ws, styleList,
-                          cell);
+                          cell, rowIndex);
         }
 
         private void LoadColumns(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders,

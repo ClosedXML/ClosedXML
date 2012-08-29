@@ -3934,7 +3934,8 @@ namespace ClosedXML.Excel
                 cellsByRow[rowNum].Add(c);
             }
 
-            var sheetDataRows = sheetData.Elements<Row>().ToDictionary(r => (Int32) r.RowIndex.Value, r => r);
+            Int32 lastRow = 0;
+            var sheetDataRows = sheetData.Elements<Row>().ToDictionary(r => r.RowIndex == null ? ++lastRow : (Int32) r.RowIndex.Value, r => r);
             foreach (
                 var r in
                     xlWorksheet.Internals.RowsCollection.Deleted.Where(r => sheetDataRows.ContainsKey(r.Key)))
@@ -4005,8 +4006,10 @@ namespace ClosedXML.Excel
                         row.OutlineLevel = (byte) thisRow.OutlineLevel;
                 }
 
-
-                var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference.Value, c => c);
+                Int32 lastCell = 0;
+                var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference == null
+                                       ? XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow
+                                       : c.CellReference.Value, c => c);
 
                 foreach (var c in xlWorksheet.Internals.CellsCollection.Deleted.ToList())
                 {
