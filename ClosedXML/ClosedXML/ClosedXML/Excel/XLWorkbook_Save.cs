@@ -4022,6 +4022,7 @@ namespace ClosedXML.Excel
                 if (!cellsByRow.ContainsKey(distinctRow)) continue;
 
                 var isNewRow = !row.Elements<Cell>().Any();
+                var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference.Value),c => c);
                 foreach (var opCell in cellsByRow[distinctRow]
                     .OrderBy(c => c.Address.ColumnNumber)
                     .Select(c => (XLCell) c))
@@ -4044,19 +4045,11 @@ namespace ClosedXML.Excel
                             var newColumn = XLHelper.GetColumnNumberFromAddress(cellReference);
 
                             Cell cellBeforeInsert = null;
-                            var lastCo = Int32.MaxValue;
-                            foreach (
-                                var c in
-                                    row.Elements<Cell>().Where(
-                                        c =>
-                                        XLHelper.GetColumnNumberFromAddress(c.CellReference.Value) > newColumn))
+                            int[] lastCo = {Int32.MaxValue};
+                            foreach (var c in mRows.Where(kp => kp.Key > newColumn).Where(c => lastCo[0] > c.Key))
                             {
-                                var thidCo = XLHelper.GetColumnNumberFromAddress(c.CellReference.Value);
-
-                                if (lastCo <= thidCo) continue;
-
-                                cellBeforeInsert = c;
-                                lastCo = thidCo;
+                                cellBeforeInsert = c.Value;
+                                lastCo[0] = c.Key;
                             }
                             if (cellBeforeInsert == null)
                                 row.AppendChild(cell);
