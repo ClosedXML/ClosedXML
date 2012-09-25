@@ -29,7 +29,7 @@ namespace ClosedXML.Excel
     public partial class XLColor : IEquatable<XLColor>
     {
         private readonly XLColorType _colorType;
-        private readonly int _hashCode;
+        private int _hashCode;
         private readonly Int32 _indexed;
         private readonly XLThemeColor _themeColor;
         private readonly Double _themeTint;
@@ -106,7 +106,7 @@ namespace ClosedXML.Excel
             {
                 if (_colorType == XLColorType.Color)
                 {
-                    return _color.ToArgb() == other._color.ToArgb();
+                    return _color == other._color;
                 }
                 if (_colorType == XLColorType.Theme)
                 {
@@ -128,6 +128,16 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
+            if (_hashCode == 0)
+            {
+                if (_colorType == XLColorType.Color)
+                    _hashCode = _color.GetHashCode();
+                else if (_colorType == XLColorType.Theme)
+                    _hashCode = _themeColor.GetHashCode() ^ _themeTint.GetHashCode();
+                else
+                    _hashCode = _indexed;
+            }
+
             return _hashCode;
         }
 

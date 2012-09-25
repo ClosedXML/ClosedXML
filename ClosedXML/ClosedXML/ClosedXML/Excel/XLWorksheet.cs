@@ -1212,9 +1212,26 @@ namespace ClosedXML.Excel
             Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
             if (firstRow == 1) return;
 
+            SuspendEvents();
+            var rangeUsed = range.Worksheet.RangeUsed(true);
+            IXLRangeAddress usedAddress;
+            if (rangeUsed == null)
+                usedAddress = range.RangeAddress;
+            else
+                usedAddress = rangeUsed.RangeAddress;
+            ResumeEvents();
+
+            if (firstRow < usedAddress.FirstAddress.RowNumber) firstRow = usedAddress.FirstAddress.RowNumber;
+
             Int32 lastRow = range.RangeAddress.FirstAddress.RowNumber + rowsShifted - 1;
+            if (lastRow > usedAddress.LastAddress.RowNumber) lastRow = usedAddress.LastAddress.RowNumber;
+
             Int32 firstColumn = range.RangeAddress.FirstAddress.ColumnNumber;
+            if (firstColumn < usedAddress.FirstAddress.ColumnNumber) firstColumn = usedAddress.FirstAddress.ColumnNumber;
+
             Int32 lastColumn = range.RangeAddress.LastAddress.ColumnNumber;
+            if (lastColumn > usedAddress.LastAddress.ColumnNumber) lastColumn = usedAddress.LastAddress.ColumnNumber;
+
             var insertedRange = Range(firstRow, firstColumn, lastRow, lastColumn);
             var fr = insertedRange.FirstRow();
             var model = fr.RowAbove();
@@ -1238,6 +1255,7 @@ namespace ClosedXML.Excel
         internal void BreakConditionalFormatsIntoCells()
         {
             var newConditionalFormats = new XLConditionalFormats();
+            SuspendEvents();
             foreach (var conditionalFormat in ConditionalFormats)
             {
                 foreach (XLCell cell in conditionalFormat.Range.Cells())
@@ -1248,6 +1266,7 @@ namespace ClosedXML.Excel
                 }
                 conditionalFormat.Range.Dispose();
             }
+            ResumeEvents();
             ConditionalFormats = newConditionalFormats;
         }
 
