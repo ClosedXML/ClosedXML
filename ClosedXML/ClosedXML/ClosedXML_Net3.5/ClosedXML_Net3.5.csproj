@@ -162,6 +162,39 @@
     <Compile Include="..\ClosedXML\Excel\AutoFilters\XLFilteredColumn.cs">
       <Link>Excel\AutoFilters\XLFilteredColumn.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\CalcEngine.cs">
+      <Link>Excel\CalcEngine\CalcEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Expression.cs">
+      <Link>Excel\CalcEngine\Expression.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\ExpressionCache.cs">
+      <Link>Excel\CalcEngine\ExpressionCache.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\FunctionDefinition.cs">
+      <Link>Excel\CalcEngine\FunctionDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Logical.cs">
+      <Link>Excel\CalcEngine\Functions\Logical.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\MathTrig.cs">
+      <Link>Excel\CalcEngine\Functions\MathTrig.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Statistical.cs">
+      <Link>Excel\CalcEngine\Functions\Statistical.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Tally.cs">
+      <Link>Excel\CalcEngine\Functions\Tally.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Text.cs">
+      <Link>Excel\CalcEngine\Functions\Text.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Token.cs">
+      <Link>Excel\CalcEngine\Token.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\XLCalcEngine.cs">
+      <Link>Excel\CalcEngine\XLCalcEngine.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\Cells\IXLCell.cs">
       <Link>Excel\Cells\IXLCell.cs</Link>
     </Compile>

@@ -404,7 +404,8 @@
                         && XLHelper.IsValidA1Address(cAddress)
                         )
                         return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
-                    return fA1;
+
+                    return Worksheet.CalcEngine.Evaluate(fA1);
                 }
 
                 String cellValue = HasRichText ? _richText.ToString() : _cellValue;

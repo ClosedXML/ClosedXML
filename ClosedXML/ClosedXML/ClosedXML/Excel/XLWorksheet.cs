@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
 {
@@ -1410,5 +1411,11 @@ namespace ClosedXML.Excel
         public IXLRanges SelectedRanges { get; internal set; }
 
         public IXLCell ActiveCell { get; set; }
+
+        private XLCalcEngine _calcEngine;
+        public XLCalcEngine CalcEngine
+        {
+            get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
+        }
     }
 }

@@ -140,6 +140,17 @@
     <Compile Include="Excel\AutoFilters\IXLAutoFilter.cs" />
     <Compile Include="Excel\AutoFilters\IXLFilterColumn.cs" />
     <Compile Include="Excel\AutoFilters\IXLFilterConnector.cs" />
+    <Compile Include="Excel\CalcEngine\CalcEngine.cs" />
+    <Compile Include="Excel\CalcEngine\Expression.cs" />
+    <Compile Include="Excel\CalcEngine\ExpressionCache.cs" />
+    <Compile Include="Excel\CalcEngine\FunctionDefinition.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\Logical.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\MathTrig.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\Statistical.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\Tally.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\Text.cs" />
+    <Compile Include="Excel\CalcEngine\Token.cs" />
+    <Compile Include="Excel\CalcEngine\XLCalcEngine.cs" />
     <Compile Include="Excel\Cells\IXLCells.cs" />
     <Compile Include="Excel\Cells\XLCells.cs" />
     <Compile Include="Excel\Cells\XLCellsCollection.cs" />
