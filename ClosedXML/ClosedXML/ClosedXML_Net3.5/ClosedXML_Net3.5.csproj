@@ -189,6 +189,9 @@
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Text.cs">
       <Link>Excel\CalcEngine\Functions\Text.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\XLMath.cs">
+      <Link>Excel\CalcEngine\Functions\XLMath.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Token.cs">
       <Link>Excel\CalcEngine\Token.cs</Link>
     </Compile>

@@ -149,6 +149,7 @@
     <Compile Include="Excel\CalcEngine\Functions\Statistical.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Tally.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Text.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\XLMath.cs" />
     <Compile Include="Excel\CalcEngine\Token.cs" />
     <Compile Include="Excel\CalcEngine\XLCalcEngine.cs" />
     <Compile Include="Excel\Cells\IXLCells.cs" />

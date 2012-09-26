@@ -4,26 +4,29 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    static class MathTrig
+    internal static class MathTrig
     {
+        private static readonly Random _rnd = new Random();
+
         public static void Register(CalcEngine ce)
         {
             ce.RegisterFunction("ABS", 1, Abs);
             ce.RegisterFunction("ACOS", 1, Acos);
-            //ce.RegisterFunction("ACOSH", Acosh, 1);
+            ce.RegisterFunction("ACOSH", 1, Acosh);
             ce.RegisterFunction("ASIN", 1, Asin);
-            //ce.RegisterFunction("ASINH", Asinh, 1);
+            ce.RegisterFunction("ASINH", 1, Asinh);
             ce.RegisterFunction("ATAN", 1, Atan);
             ce.RegisterFunction("ATAN2", 2, Atan2);
-            //ce.RegisterFunction("ATANH", Atanh, 1);
+            ce.RegisterFunction("ATANH", 1, Atanh);
             ce.RegisterFunction("CEILING", 1, Ceiling);
-            //ce.RegisterFunction("COMBIN", Combin, 1);
+            ce.RegisterFunction("COMBIN", 2, Combin);
             ce.RegisterFunction("COS", 1, Cos);
             ce.RegisterFunction("COSH", 1, Cosh);
-            //ce.RegisterFunction("DEGREES", Degrees, 1);
+            ce.RegisterFunction("DEGREES", 1, Degrees);
             //ce.RegisterFunction("EVEN", Even, 1);
             ce.RegisterFunction("EXP", 1, Exp);
             //ce.RegisterFunction("FACT", Fact, 1);
@@ -71,110 +74,133 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("TANH", 1, Tanh);
             ce.RegisterFunction("TRUNC", 1, Trunc);
         }
-        static object Abs(List<Expression> p)
+
+        private static object Abs(List<Expression> p)
         {
-            return Math.Abs((double)p[0]);
+            return Math.Abs(p[0]);
         }
-        static object Acos(List<Expression> p)
+
+        private static object Acos(List<Expression> p)
         {
-            return Math.Acos((double)p[0]);
+            return Math.Acos(p[0]);
         }
-        static object Asin(List<Expression> p)
+
+        private static object Asin(List<Expression> p)
         {
-            return Math.Asin((double)p[0]);
+            return Math.Asin(p[0]);
         }
-        static object Atan(List<Expression> p)
+
+        private static object Atan(List<Expression> p)
         {
-            return Math.Atan((double)p[0]);
+            return Math.Atan(p[0]);
         }
-        static object Atan2(List<Expression> p)
+
+        private static object Atan2(List<Expression> p)
         {
-            return Math.Atan2((double)p[0], (double)p[1]);
+            return Math.Atan2(p[0], p[1]);
         }
-        static object Ceiling(List<Expression> p)
+
+        private static object Ceiling(List<Expression> p)
         {
-            return Math.Ceiling((double)p[0]);
+            return Math.Ceiling(p[0]);
         }
-        static object Cos(List<Expression> p)
+
+        private static object Cos(List<Expression> p)
         {
-            return Math.Cos((double)p[0]);
+            return Math.Cos(p[0]);
         }
-        static object Cosh(List<Expression> p)
+
+        private static object Cosh(List<Expression> p)
         {
-            return Math.Cosh((double)p[0]);
+            return Math.Cosh(p[0]);
         }
-        static object Exp(List<Expression> p)
+
+        private static object Exp(List<Expression> p)
         {
-            return Math.Exp((double)p[0]);
+            return Math.Exp(p[0]);
         }
-        static object Floor(List<Expression> p)
+
+        private static object Floor(List<Expression> p)
         {
-            return Math.Floor((double)p[0]);
+            return Math.Floor(p[0]);
         }
-        static object Int(List<Expression> p)
+
+        private static object Int(List<Expression> p)
         {
-            return (int)((double)p[0]);
+            return (int) ((double) p[0]);
         }
-        static object Ln(List<Expression> p)
+
+        private static object Ln(List<Expression> p)
         {
-            return Math.Log((double)p[0]);
+            return Math.Log(p[0]);
         }
-        static object Log(List<Expression> p)
+
+        private static object Log(List<Expression> p)
         {
-            var lbase = p.Count > 1 ? (double)p[1] : 10;
-            return Math.Log((double)p[0], lbase);
+            var lbase = p.Count > 1 ? (double) p[1] : 10;
+            return Math.Log(p[0], lbase);
         }
-        static object Log10(List<Expression> p)
+
+        private static object Log10(List<Expression> p)
         {
-            return Math.Log10((double)p[0]);
+            return Math.Log10(p[0]);
         }
-        static object Pi(List<Expression> p)
+
+        private static object Pi(List<Expression> p)
         {
             return Math.PI;
         }
-        static object Power(List<Expression> p)
+
+        private static object Power(List<Expression> p)
         {
-            return Math.Pow((double)p[0], (double)p[1]);
+            return Math.Pow(p[0], p[1]);
         }
-        static Random _rnd = new Random();
-        static object Rand(List<Expression> p)
+
+        private static object Rand(List<Expression> p)
         {
             return _rnd.NextDouble();
         }
-        static object RandBetween(List<Expression> p)
+
+        private static object RandBetween(List<Expression> p)
         {
-            return _rnd.Next((int)(double)p[0], (int)(double)p[1]);
+            return _rnd.Next((int) (double) p[0], (int) (double) p[1]);
         }
-        static object Sign(List<Expression> p)
+
+        private static object Sign(List<Expression> p)
         {
-            return Math.Sign((double)p[0]);
+            return Math.Sign(p[0]);
         }
-        static object Sin(List<Expression> p)
+
+        private static object Sin(List<Expression> p)
         {
-            return Math.Sin((double)p[0]);
+            return Math.Sin(p[0]);
         }
-        static object Sinh(List<Expression> p)
+
+        private static object Sinh(List<Expression> p)
         {
-            return Math.Sinh((double)p[0]);
+            return Math.Sinh(p[0]);
         }
-        static object Sqrt(List<Expression> p)
+
+        private static object Sqrt(List<Expression> p)
         {
-            return Math.Sqrt((double)p[0]);
+            return Math.Sqrt(p[0]);
         }
-        static object Sum(List<Expression> p)
+
+        private static object Sum(List<Expression> p)
         {
             var tally = new Tally();
-            foreach (Expression e in p)
+            foreach (var e in p)
             {
                 tally.Add(e);
             }
             return tally.Sum();
         }
-        static object SumIf(List<Expression> p)
+
+        private static object SumIf(List<Expression> p)
         {
             // get parameters
-            IEnumerable range = p[0] as IEnumerable;
-            IEnumerable sumRange = p.Count < 3 ? range : p[2] as IEnumerable;
+            var range = p[0] as IEnumerable;
+            var sumRange = p.Count < 3 ? range : p[2] as IEnumerable;
             var criteria = p[1].Evaluate();
 
             // build list of values in range and sumRange
@@ -192,7 +218,7 @@ namespace ClosedXML.Excel.CalcEngine
             // compute total
             var ce = new CalcEngine();
             var tally = new Tally();
-            for (int i = 0; i < Math.Min(rangeValues.Count, sumRangeValues.Count); i++)
+            for (var i = 0; i < Math.Min(rangeValues.Count, sumRangeValues.Count); i++)
             {
                 if (ValueSatisfiesCriteria(rangeValues[i], criteria, ce))
                 {
@@ -203,7 +229,8 @@ namespace ClosedXML.Excel.CalcEngine
             // done
             return tally.Sum();
         }
-        static bool ValueSatisfiesCriteria(object value, object criteria, CalcEngine ce)
+
+        private static bool ValueSatisfiesCriteria(object value, object criteria, CalcEngine ce)
         {
             // safety...
             if (value == null)
@@ -214,7 +241,7 @@ namespace ClosedXML.Excel.CalcEngine
             // if criteria is a number, straight comparison
             if (criteria is double)
             {
-                return (double)value == (double)criteria;
+                return (double) value == (double) criteria;
             }
 
             // convert criteria to string
@@ -237,14 +264,14 @@ namespace ClosedXML.Excel.CalcEngine
                             !double.TryParse(m.Groups[3].Value, out d))
                         {
                             expression = string.Format("\"{0}\"{1}\"{2}\"",
-                                m.Groups[1].Value,
-                                m.Groups[2].Value,
-                                m.Groups[3].Value);
+                                                       m.Groups[1].Value,
+                                                       m.Groups[2].Value,
+                                                       m.Groups[3].Value);
                         }
                     }
 
                     // evaluate
-                    return (bool)ce.Evaluate(expression);
+                    return (bool) ce.Evaluate(expression);
                 }
 
                 // if criteria is a regular expression, use regex
@@ -261,20 +288,85 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // should never get here?
-            System.Diagnostics.Debug.Assert(false, "failed to evaluate criteria in SumIf");
+            Debug.Assert(false, "failed to evaluate criteria in SumIf");
             return false;
         }
-        static object Tan(List<Expression> p)
+
+        private static object Tan(List<Expression> p)
         {
-            return Math.Tan((double)p[0]);
+            return Math.Tan(p[0]);
         }
-        static object Tanh(List<Expression> p)
+
+        private static object Tanh(List<Expression> p)
         {
-            return Math.Tanh((double)p[0]);
+            return Math.Tanh(p[0]);
         }
-        static object Trunc(List<Expression> p)
+
+        private static object Trunc(List<Expression> p)
         {
-            return (double)(int)((double)p[0]);
+            return (double) (int) ((double) p[0]);
+        }
+
+        public static double DegreesToRadians(double degrees)
+        {
+            return (Math.PI/180.0)*degrees;
+        }
+
+        public static double RadiansToDegrees(double radians)
+        {
+            return (180.0/Math.PI)*radians;
+        }
+
+        public static double GradsToRadians(double grads)
+        {
+            return (grads/200.0)*Math.PI;
+        }
+
+        public static double RadiansToGrads(double radians)
+        {
+            return (radians/Math.PI)*200.0;
+        }
+
+        public static double DegreesToGrads(double degrees)
+        {
+            return (degrees/9.0)*10.0;
+        }
+
+        public static double GradsToDegrees(double grads)
+        {
+            return (grads/10.0)*9.0;
+        }
+
+        public static double ASinh(double x)
+        {
+            return (Math.Log(x + Math.Sqrt(x*x + 1.0)));
+        }
+
+        private static object Acosh(List<Expression> p)
+        {
+            return XLMath.ACosh(p[0]);
+        }
+
+        private static object Asinh(List<Expression> p)
+        {
+            return XLMath.ASinh(p[0]);
+        }
+
+        private static object Atanh(List<Expression> p)
+        {
+            return XLMath.ATanh(p[0]);
+        }
+
+        private static object Combin(List<Expression> p)
+        {
+            Int32 n = (int) p[0];
+            Int32 k = (int) p[1];
+            return XLMath.Combin(n, k);
+        }
+
+        private static object Degrees(List<Expression> p)
+        {
+            return Math.PI * p[0] / 180.0;
         }
     }
 }
