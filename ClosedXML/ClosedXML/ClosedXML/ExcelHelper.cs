@@ -236,5 +236,43 @@ namespace ClosedXML.Excel
 #endif
 
         }
+
+        private static readonly Regex A1RegexRelative = new Regex(
+      @"(?<=\W)(?<one>\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
+    + @"|(?<=\W)(?<two>\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
+    + @"|(?<=\W)(?<three>\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)", RegexOptions.Compiled); // A:A
+
+        private static string Evaluator(Match match, Int32 row, String column)
+        {
+            if (match.Groups["one"].Success)
+            {
+                var split = match.Groups["one"].Value.Split('$');
+                if (split.Length == 1) return column + row; // A1
+                if (split.Length == 3) return match.Groups["one"].Value; // $A$1
+                var a = XLAddress.Create(match.Groups["one"].Value);
+                if (split[0] == String.Empty) return "$" + a.ColumnLetter + row; // $A1
+                return column + "$" + a.RowNumber;
+            }
+
+            if (match.Groups["two"].Success)
+                return ReplaceGroup(match.Groups["two"].Value, row.ToString());
+
+            return ReplaceGroup(match.Groups["three"].Value, column);
+        }
+
+        private static String ReplaceGroup(String value, String item)
+        {
+            var split = value.Split(':');
+            String ret1 = split[0].StartsWith("$") ? split[0] : item;
+            String ret2 = split[1].StartsWith("$") ? split[1] : item;
+            return ret1 + ":" + ret2;
+        }
+
+        internal static String ReplaceRelative(String value, Int32 row, String column)
+        {
+            var oldValue = ">" + value + "<";
+            var newVal = A1RegexRelative.Replace(oldValue, m => Evaluator(m, row, column));
+            return newVal.Substring(1, newVal.Length - 2);
+        }
     }
 }

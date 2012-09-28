@@ -76,6 +76,7 @@
     <Compile Include="ExcelDocsComparerTests.cs" />
     <Compile Include="ExcelHelperTest.cs" />
     <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
+    <Compile Include="Excel\CalcEngine\FunctionsTests.cs" />
     <Compile Include="Excel\Cells\XLCellTest.cs" />
     <Compile Include="Excel\Columns\ColumnsTests.cs" />
     <Compile Include="Excel\Coordinates\XLAddressTest.cs" />

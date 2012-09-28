@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
@@ -1253,16 +1254,21 @@ namespace ClosedXML.Excel
             fr.Dispose();
         }
 
-        internal void BreakConditionalFormatsIntoCells()
+
+        internal void BreakConditionalFormatsIntoCells(List<IXLAddress> addresses)
         {
             var newConditionalFormats = new XLConditionalFormats();
             SuspendEvents();
             foreach (var conditionalFormat in ConditionalFormats)
             {
-                foreach (XLCell cell in conditionalFormat.Range.Cells())
+                foreach (XLCell cell in conditionalFormat.Range.Cells(c=>!addresses.Contains(c.Address)))
                 {
+                    var row = cell.Address.RowNumber;
+                    var column = cell.Address.ColumnLetter;
                     var newConditionalFormat = new XLConditionalFormat(cell.AsRange());
                     newConditionalFormat.CopyFrom(conditionalFormat);
+                    newConditionalFormat.Values.Values.Where(f => f.IsFormula)
+                        .ForEach(f => f._value = XLHelper.ReplaceRelative(f.Value, row, column));
                     newConditionalFormats.Add(newConditionalFormat);
                 }
                 conditionalFormat.Range.Dispose();
@@ -1270,6 +1276,8 @@ namespace ClosedXML.Excel
             ResumeEvents();
             ConditionalFormats = newConditionalFormats;
         }
+
+
 
         private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)
         {
@@ -1413,9 +1421,14 @@ namespace ClosedXML.Excel
         public IXLCell ActiveCell { get; set; }
 
         private XLCalcEngine _calcEngine;
-        public XLCalcEngine CalcEngine
+        private XLCalcEngine CalcEngine
         {
             get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
+        }
+
+        public Object Evaluate(String expression)
+        {
+            return CalcEngine.Evaluate(expression);
         }
     }
 }

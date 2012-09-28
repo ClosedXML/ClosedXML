@@ -148,9 +148,7 @@ namespace ClosedXML.Excel
 
         public void List(IXLRange range, Boolean inCellDropdown)
         {
-            AllowedValues = XLAllowedValues.List;
-            InCellDropdown = inCellDropdown;
-            Value = range.RangeAddress.ToStringFixed();
+            List(range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
         }
 
         public void Custom(String customValidation)

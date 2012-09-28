@@ -364,5 +364,8 @@ namespace ClosedXML.Excel
 
         IXLRanges SelectedRanges { get; }
         IXLCell ActiveCell { get; set; }
+
+        Object Evaluate(String expression);
+
     }
 }

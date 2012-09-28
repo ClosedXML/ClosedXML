@@ -405,7 +405,7 @@
                         )
                         return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
 
-                    return Worksheet.CalcEngine.Evaluate(fA1);
+                    return Worksheet.Evaluate(fA1);
                 }
 
                 String cellValue = HasRichText ? _richText.ToString() : _cellValue;

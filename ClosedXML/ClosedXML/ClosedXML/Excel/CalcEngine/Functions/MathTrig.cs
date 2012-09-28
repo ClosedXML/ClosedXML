@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ClosedXML.Excel.CalcEngine.Functions;
 
@@ -27,22 +28,22 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COS", 1, Cos);
             ce.RegisterFunction("COSH", 1, Cosh);
             ce.RegisterFunction("DEGREES", 1, Degrees);
-            //ce.RegisterFunction("EVEN", Even, 1);
+            ce.RegisterFunction("EVEN", 1, Even);
             ce.RegisterFunction("EXP", 1, Exp);
-            //ce.RegisterFunction("FACT", Fact, 1);
-            //ce.RegisterFunction("FACTDOUBLE", FactDouble, 1);
+            ce.RegisterFunction("FACT", 1, Fact);
+            ce.RegisterFunction("FACTDOUBLE", 1, FactDouble);
             ce.RegisterFunction("FLOOR", 1, Floor);
-            //ce.RegisterFunction("GCD", Gcd, 1);
+            ce.RegisterFunction("GCD", 1, 255, Gcd);
             ce.RegisterFunction("INT", 1, Int);
-            //ce.RegisterFunction("LCM", Lcm, 1);
+            ce.RegisterFunction("LCM", 1, 255, Lcm);
             ce.RegisterFunction("LN", 1, Ln);
             ce.RegisterFunction("LOG", 1, 2, Log);
             ce.RegisterFunction("LOG10", 1, Log10);
-            //ce.RegisterFunction("MDETERM", MDeterm, 1);
-            //ce.RegisterFunction("MINVERSE", MInverse, 1);
+            //ce.RegisterFunction("MDETERM", 1, MDeterm);
+            //ce.RegisterFunction("MINVERSE", 1, MInverse);
             //ce.RegisterFunction("MMULT", MMult, 1);
-            //ce.RegisterFunction("MOD", Mod, 2);
-            //ce.RegisterFunction("MROUND", MRound, 1);
+            ce.RegisterFunction("MOD", 2, Mod);
+            ce.RegisterFunction("MROUND", 2, MRound);
             //ce.RegisterFunction("MULTINOMIAL", Multinomial, 1);
             //ce.RegisterFunction("ODD", Odd, 1);
             ce.RegisterFunction("PI", 0, Pi);
@@ -366,7 +367,88 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Degrees(List<Expression> p)
         {
-            return Math.PI * p[0] / 180.0;
+            return p[0] * (180.0 / Math.PI);
+        }
+
+        private static object Even(List<Expression> p)
+        {
+            var num = Math.Ceiling(p[0]);
+            return Math.Abs(num % 2) < XLHelper.Epsilon ? num : num + 1;
+        }
+
+        private static object Fact(List<Expression> p)
+        {
+            var num = Math.Floor(p[0]);
+            double fact = 1.0;
+            if (num > 1)
+                for (int i = 2; i <= num; i++)
+                    fact *= i;
+            return fact;
+        }
+
+        private static object FactDouble(List<Expression> p)
+        {
+            var num = Math.Floor(p[0]);
+            double fact = 1.0;
+            if (num > 1)
+            {
+                var start = Math.Abs(num % 2) < XLHelper.Epsilon ? 2 : 1;
+                for (int i = start; i <= num; i = i + 2)
+                    fact *= i;
+            }
+            return fact;
+        }
+
+        private static object Gcd(List<Expression> p)
+        {
+            return p.Select(v => (int)v).Aggregate(Gcd);
+        }
+
+        private static int Gcd(int a, int b)
+        {
+            return b == 0 ? a : Gcd(b, a % b);
+        }
+
+        private static object Lcm(List<Expression> p)
+        {
+            return p.Select(v => (int)v).Aggregate(Lcm);
+        }
+
+        private static int Lcm(int a, int b)
+        {
+            if (a == 0 || b == 0) return 0;
+            return a * ( b / Gcd(a, b));
+        }
+
+        private static object Mod(List<Expression> p)
+        {
+            Int32 n = (int)Math.Abs(p[0]);
+            Int32 d = (int)p[1];
+            var ret = n % d;
+            return d < 0 ? ret * -1 : ret;
+        }
+
+        private static object MRound(List<Expression> p)
+        {
+            Double number = p[0];
+            Double roundingInterval = p[1];
+            
+            if (roundingInterval == 0) { return 0; }
+
+            Double intv = Math.Abs(roundingInterval);
+            Double modulo = number % intv;
+            if ((intv - modulo) == modulo)
+            {
+                var temp = (number - modulo).ToString("#.##################");
+                if (temp.Length != 0 && temp[temp.Length - 1] % 2 == 0) modulo *= -1;
+            }
+            else if ((intv - modulo) < modulo)
+                modulo = (intv - modulo);
+            else
+                modulo *= -1;
+
+            return number + modulo;
+
         }
     }
 }

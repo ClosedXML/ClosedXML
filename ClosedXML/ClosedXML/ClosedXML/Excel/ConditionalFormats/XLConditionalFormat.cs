@@ -40,10 +40,10 @@ namespace ClosedXML.Excel
 
         private IXLStyle _style;
         private Int32 _styleCacheId;
-        public IXLStyle Style { get { return GetStyle(); } set { SetStyle(value); } }
+        public IXLStyle Style{ get { return GetStyle(); } set { SetStyle(value); } }
         private IXLStyle GetStyle()
         {
-            //return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
+            //return _style;
             if (_style != null)
                 return _style;
 
@@ -51,6 +51,7 @@ namespace ClosedXML.Excel
         }
         private void SetStyle(IXLStyle styleToUse)
         {
+            //_style = new XLStyle(this, styleToUse);
             _styleCacheId = Range.Worksheet.Workbook.GetStyleId(styleToUse);
             _style = null;
             StyleChanged = false;
@@ -104,8 +105,10 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
-            
-            CopyDictionary(Values, other.Values);
+
+            Values.Clear();
+            other.Values.ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));
+            //CopyDictionary(Values, other.Values);
             CopyDictionary(Colors, other.Colors);
             CopyDictionary(ContentTypes, other.ContentTypes);
             CopyDictionary(IconSetOperators, other.IconSetOperators);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
+using ClosedXML.Excel.CalcEngine;
 
 namespace ClosedXML.Excel
 {
@@ -674,6 +675,26 @@ namespace ClosedXML.Excel
         public IXLWorksheet AddWorksheet(DataTable dataTable, String sheetName)
         {
             return Worksheets.Add(dataTable, sheetName);
+        }
+
+        private XLCalcEngine _calcEngine;
+        private XLCalcEngine CalcEngine
+        {
+            get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
+        }
+        public Object Evaluate(String expression)
+        {
+            return CalcEngine.Evaluate(expression);
+        }
+
+        private static XLCalcEngine _calcEngineExpr;
+        private static XLCalcEngine CalcEngineExpr
+        {
+            get { return _calcEngineExpr ?? (_calcEngineExpr = new XLCalcEngine()); }
+        }
+        public static Object EvaluateExpr(String expression)
+        {
+            return CalcEngineExpr.Evaluate(expression);
         }
     }
 }

@@ -7,6 +7,15 @@ namespace ClosedXML.Excel
 {
     public class XLFormula
     {
+        public XLFormula()
+        {}
+
+        public XLFormula(XLFormula defaultFormula)
+        {
+            _value = defaultFormula._value;
+            IsFormula = defaultFormula.IsFormula;
+        }
+
         internal String _value;
         public String Value 
         { 

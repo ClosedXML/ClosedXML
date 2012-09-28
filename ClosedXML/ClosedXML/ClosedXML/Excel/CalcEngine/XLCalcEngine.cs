@@ -6,32 +6,40 @@ using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    public class XLCalcEngine : CalcEngine
+    internal class XLCalcEngine : CalcEngine
     {
-        private IXLWorksheet _ws;
-        public XLCalcEngine(IXLWorksheet ws)
+        private readonly IXLWorksheet _ws;
+        private readonly XLWorkbook _wb;
+        public XLCalcEngine()
+        {}
+        public XLCalcEngine(XLWorkbook wb)
+        {
+            _wb = wb;
+            IdentifierChars = "$:!";
+        }
+        public XLCalcEngine(IXLWorksheet ws): this(ws.Workbook)
         {
             _ws = ws;
-            // parse multi-cell range references ($A2:B$4)
-            IdentifierChars = "$:!";
         }
 
         public override object GetExternalObject(string identifier)
         {
-            //if (!XLHelper.IsValidA1Address(identifier)) return null;
-            //String wsName;
-            if (identifier.Contains("!"))
+            if (identifier.Contains("!") && _wb != null)
             {
                 var wsName = identifier.Substring(0, identifier.IndexOf("!"));
-                return new CellRangeReference(_ws.Workbook.Worksheet(wsName).Range(identifier.Substring(identifier.IndexOf("!") + 1)), this);
+                return new CellRangeReference(_wb.Worksheet(wsName).Range(identifier.Substring(identifier.IndexOf("!") + 1)), this);
             }
-            return new CellRangeReference(_ws.Range(identifier), this);
+
+            if (_ws != null)
+                return new CellRangeReference(_ws.Range(identifier), this);
+
+            return identifier;
         }
 
 
     }
 
-    public class CellRangeReference : IValueObject, IEnumerable
+    internal class CellRangeReference : IValueObject, IEnumerable
     {
         private IXLRange _range;
         private XLCalcEngine _ce;

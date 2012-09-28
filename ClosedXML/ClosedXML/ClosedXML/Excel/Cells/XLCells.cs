@@ -101,8 +101,9 @@ namespace ClosedXML.Excel
                             {
                                 if (oneRange)
                                 {
-                                    
-                                    yield return range.Worksheet.Cell(ro, co);
+                                    var c = range.Worksheet.Cell(ro, co);
+                                    if (_predicate == null || _predicate(c))
+                                        yield return c;
                                 }
                                 else
                                 {
@@ -138,16 +139,11 @@ namespace ClosedXML.Excel
                     foreach (var cir in cellsInRanges)
                     {
                         foreach (XLSheetPoint a in cir.Value)
-                            if (_predicate == null)
-                            {
-                                yield return cir.Key.Cell(a.Row, a.Column);
-                            }
-                            else
-                            {
-                                var cell = cir.Key.Cell(a.Row, a.Column);
-                                if (_predicate(cell))
-                                    yield return cell;
-                            }
+                        {
+                            var c = cir.Key.Cell(a.Row, a.Column);
+                            if (_predicate == null || _predicate(c))
+                                yield return c;
+                        }
                     }
                 }
             }

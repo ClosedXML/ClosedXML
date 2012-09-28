@@ -154,6 +154,7 @@ namespace ClosedXML.Excel
             _patternType = defaultFill.PatternType;
             _patternColor = new XLColor(defaultFill.PatternColor);
             _patternBackgroundColor = new XLColor(defaultFill.PatternBackgroundColor);
+            PatternBackgroundColorModified = (defaultFill as XLFill).PatternBackgroundColorModified;
         }
 
         #endregion

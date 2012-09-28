@@ -74,7 +74,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             cell.DataValidation.InputTitle = "Title for B2";
 
             Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
-            Assert.AreEqual(cell.DataValidation.Value, "$E$1:$E$4");
+            Assert.AreEqual(cell.DataValidation.Value, "'Data Validation Issue'!$E$1:$E$4");
             Assert.AreEqual(cell.DataValidation.InputTitle, "Title for B2");
 
 
@@ -84,7 +84,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             cell.DataValidation.InputMessage = "Message for C2";
 
             Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
-            Assert.AreEqual(cell.DataValidation.Value, "$E$1:$E$4");
+            Assert.AreEqual(cell.DataValidation.Value, "'Data Validation Issue'!$E$1:$E$4");
             Assert.AreEqual(cell.DataValidation.InputMessage, "Message for C2");
 
             ws.Cell("D1").SetValue("Cell below has Validation with title and message.");
@@ -94,7 +94,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             cell.DataValidation.InputMessage = "Message for D2";
 
             Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
-            Assert.AreEqual(cell.DataValidation.Value, "$E$1:$E$4");
+            Assert.AreEqual(cell.DataValidation.Value, "'Data Validation Issue'!$E$1:$E$4");
             Assert.AreEqual(cell.DataValidation.InputTitle, "Title for D2");
             Assert.AreEqual(cell.DataValidation.InputMessage, "Message for D2");
         }
