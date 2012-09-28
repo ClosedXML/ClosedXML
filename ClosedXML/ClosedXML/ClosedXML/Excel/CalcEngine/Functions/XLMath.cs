@@ -88,5 +88,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (k == 0) return 1;
             return n * Combin(n - 1, k - 1) / k;
         }
+
+        public static Boolean IsEven(Int32 value)
+        {
+            return Math.Abs(value % 2) < XLHelper.Epsilon;
+        }
+        public static Boolean IsOdd(Int32 value)
+        {
+            return Math.Abs(value % 2) > XLHelper.Epsilon;
+        }
     }
 }

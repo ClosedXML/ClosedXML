@@ -76,6 +76,7 @@
     <Compile Include="ExcelDocsComparerTests.cs" />
     <Compile Include="ExcelHelperTest.cs" />
     <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
+    <Compile Include="Excel\CalcEngine\XLMathTests.cs" />
     <Compile Include="Excel\CalcEngine\FunctionsTests.cs" />
     <Compile Include="Excel\Cells\XLCellTest.cs" />
     <Compile Include="Excel\Columns\ColumnsTests.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Excel\Misc\FormulaTests.cs" />
     <Compile Include="Excel\Misc\StylesTest.cs" />
     <Compile Include="Excel\Misc\XLWorkbookTests.cs" />
-    <Compile Include="Excel\Misc\Extensions.cs" />
+    <Compile Include="Excel\Misc\ExtensionsTests.cs" />
     <Compile Include="Excel\NamedRanges\NamedRangesTests.cs" />
     <Compile Include="Excel\PivotTables\XLPivotTableTest.cs" />
     <Compile Include="Excel\Ranges\RangeUsedTests.cs" />

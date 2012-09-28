@@ -161,6 +161,8 @@ namespace ClosedXML.Excel
             }
             return intToString[value];
         }
+
+
     }
 
     public static class FontBaseExtensions

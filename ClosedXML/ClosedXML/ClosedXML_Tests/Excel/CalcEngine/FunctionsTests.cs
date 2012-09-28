@@ -14,14 +14,6 @@ namespace ClosedXML_Tests.Excel.DataValidations
     [TestClass]
     public class FunctionsTests
     {
-        [TestMethod]
-        public void Even()
-        {
-            var actual1 = XLWorkbook.EvaluateExpr("Even(1.5)");
-            Assert.AreEqual(2.0, actual1);
-            var actual2 = XLWorkbook.EvaluateExpr("Even(2.01)");
-            Assert.AreEqual(4.0, actual2);
-        }
 
         [TestMethod]
         public void Combin()
@@ -107,14 +99,81 @@ namespace ClosedXML_Tests.Excel.DataValidations
         [TestMethod]
         public void MRound()
         {
-            //var actual = XLWorkbook.EvaluateExpr("MRound(10, 3)");
-            //Assert.AreEqual(9.0, actual);
+            var actual = XLWorkbook.EvaluateExpr("MRound(10, 3)");
+            Assert.AreEqual(9m, actual);
 
-            //var actual1 = XLWorkbook.EvaluateExpr("MRound(-10, -10)");
-            //Assert.AreEqual(-9.0, actual1);
+            var actual3 = XLWorkbook.EvaluateExpr("MRound(10.5, 3)");
+            Assert.AreEqual(12m, actual3);
 
-            //var actual2 = XLWorkbook.EvaluateExpr("MRound(1.3, 0.2)");
-            //Assert.AreEqual(1.4, actual2);
+            var actual4 = XLWorkbook.EvaluateExpr("MRound(10.4, 3)");
+            Assert.AreEqual(9m, actual4);
+
+            var actual1 = XLWorkbook.EvaluateExpr("MRound(-10, -3)");
+            Assert.AreEqual(-9m, actual1);
+
+            var actual2 = XLWorkbook.EvaluateExpr("MRound(1.3, 0.2)");
+            Assert.AreEqual(1.4m, actual2);
+        }
+
+        [TestMethod]
+        public void Multinomial()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Multinomial(2,3,4)");
+            Assert.AreEqual(1260.0, actual);
+        }
+
+        [TestMethod]
+        public void Odd()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Odd(1.5)");
+            Assert.AreEqual(3, actual);
+
+            var actual1 = XLWorkbook.EvaluateExpr("Odd(3)");
+            Assert.AreEqual(3, actual1);
+
+            var actual2 = XLWorkbook.EvaluateExpr("Odd(2)");
+            Assert.AreEqual(3, actual2);
+
+            var actual3 = XLWorkbook.EvaluateExpr("Odd(-1)");
+            Assert.AreEqual(-1, actual3);
+
+            var actual4 = XLWorkbook.EvaluateExpr("Odd(-2)");
+            Assert.AreEqual(-3, actual4);
+
+            actual = XLWorkbook.EvaluateExpr("Odd(0)");
+            Assert.AreEqual(1, actual);
+        }
+
+        [TestMethod]
+        public void Even()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Even(3)");
+            Assert.AreEqual(4, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Even(2)");
+            Assert.AreEqual(2, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Even(-1)");
+            Assert.AreEqual(-2, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Even(-2)");
+            Assert.AreEqual(-2, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Even(0)");
+            Assert.AreEqual(0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Even(1.5)");
+            Assert.AreEqual(2, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Even(2.01)");
+            Assert.AreEqual(4, actual);
+        }
+
+        [TestMethod]
+        public void Product()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Product(2,3,4)");
+            Assert.AreEqual(24.0, actual);
         }
     }
 }

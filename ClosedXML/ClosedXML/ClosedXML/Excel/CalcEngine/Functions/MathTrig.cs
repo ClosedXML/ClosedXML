@@ -44,11 +44,11 @@ namespace ClosedXML.Excel.CalcEngine
             //ce.RegisterFunction("MMULT", MMult, 1);
             ce.RegisterFunction("MOD", 2, Mod);
             ce.RegisterFunction("MROUND", 2, MRound);
-            //ce.RegisterFunction("MULTINOMIAL", Multinomial, 1);
-            //ce.RegisterFunction("ODD", Odd, 1);
+            ce.RegisterFunction("MULTINOMIAL", 1, 255, Multinomial);
+            ce.RegisterFunction("ODD", 1, Odd);
             ce.RegisterFunction("PI", 0, Pi);
             ce.RegisterFunction("POWER", 2, Power);
-            //ce.RegisterFunction("PRODUCT", Product, 1);
+            ce.RegisterFunction("PRODUCT", 1, 255, Product);
             //ce.RegisterFunction("QUOTIENT", Quotient, 1);
             //ce.RegisterFunction("RADIANS", Radians, 1);
             ce.RegisterFunction("RAND", 0, Rand);
@@ -370,11 +370,7 @@ namespace ClosedXML.Excel.CalcEngine
             return p[0] * (180.0 / Math.PI);
         }
 
-        private static object Even(List<Expression> p)
-        {
-            var num = Math.Ceiling(p[0]);
-            return Math.Abs(num % 2) < XLHelper.Epsilon ? num : num + 1;
-        }
+
 
         private static object Fact(List<Expression> p)
         {
@@ -430,25 +426,82 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MRound(List<Expression> p)
         {
-            Double number = p[0];
-            Double roundingInterval = p[1];
-            
-            if (roundingInterval == 0) { return 0; }
+            var n = (Decimal)(Double)p[0];
+            var k = (Decimal)(Double)p[1];
 
-            Double intv = Math.Abs(roundingInterval);
-            Double modulo = number % intv;
-            if ((intv - modulo) == modulo)
+            var mod = n % k;
+            var mult = Math.Floor(n / k);
+            var div = k / 2;
+
+            if (Math.Abs(mod - div) <= (Decimal)XLHelper.Epsilon) return (k * mult) + k;
+
+            return k * mult;
+        }
+
+        private static object Multinomial(List<Expression> p)
+        {
+            return Multinomial(p.Select(v => (double)v).ToList());
+        }
+
+        private static double Multinomial(List<double> numbers)
+        {
+            double numbersSum = 0;
+            foreach (var number in numbers)
+                numbersSum += number;
+
+            double maxNumber = numbers.Max();
+            var denomFactorPowers = new double[(uint)numbers.Max() + 1];
+            foreach (var number in numbers)
+                for (int i = 2; i <= number; i++)
+                    denomFactorPowers[i]++;
+            for (int i = 2; i < denomFactorPowers.Length; i++)
+                denomFactorPowers[i]--; // reduce with nominator;
+
+            int currentFactor = 2;
+            double currentPower = 1;
+            double result = 1;
+            for (double i = maxNumber + 1; i <= numbersSum; i++)
             {
-                var temp = (number - modulo).ToString("#.##################");
-                if (temp.Length != 0 && temp[temp.Length - 1] % 2 == 0) modulo *= -1;
+                double tempDenom = 1;
+                while (tempDenom < result && currentFactor < denomFactorPowers.Length)
+                {
+                    if (currentPower > denomFactorPowers[currentFactor])
+                    {
+                        currentFactor++;
+                        currentPower = 1;
+                    }
+                    else
+                    {
+                        tempDenom *= currentFactor;
+                        currentPower++;
+                    }
+                }
+                result = result / tempDenom * i;
             }
-            else if ((intv - modulo) < modulo)
-                modulo = (intv - modulo);
-            else
-                modulo *= -1;
 
-            return number + modulo;
+            return result;
+        }
 
+        private static object Odd(List<Expression> p)
+        {
+            var num = (int)Math.Ceiling(p[0]);
+            var addValue = num >= 0 ? 1 : -1;
+            return XLMath.IsOdd(num) ? num : num + addValue;
+        }
+
+        private static object Even(List<Expression> p)
+        {
+            var num = (int)Math.Ceiling(p[0]);
+            var addValue = num >= 0 ? 1 : -1;
+            return XLMath.IsEven(num) ? num : num + addValue;
+        }
+
+        private static object Product(List<Expression> p)
+        {
+            if (p.Count == 0) return 0;
+            Double total = 1;
+            p.ForEach(v => total *= v);
+            return total;
         }
     }
 }

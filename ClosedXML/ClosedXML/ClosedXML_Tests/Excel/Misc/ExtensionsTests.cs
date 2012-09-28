@@ -23,6 +23,6 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("\r\n\n".FixNewLines(), Environment.NewLine + Environment.NewLine);
         }
 
-        
+
     }
 }
