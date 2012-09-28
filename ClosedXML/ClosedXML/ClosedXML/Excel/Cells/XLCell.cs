@@ -445,6 +445,8 @@
 
                 if (!SetRichText(value))
                     SetValue(value);
+
+                if (_cellValue.Length > 32767) throw new ArgumentException("Cells can only hold 32,767 characters.");
             }
         }
 
@@ -1396,7 +1398,7 @@
                         Style.Alignment.WrapText = true;
                 }
             }
-
+            if (val.Length > 32767) throw new ArgumentException("Cells can only hold 32,767 characters.");
             _cellValue = val;
         }
 
