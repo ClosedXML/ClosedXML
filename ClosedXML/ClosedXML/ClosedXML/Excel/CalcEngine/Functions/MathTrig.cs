@@ -49,11 +49,11 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("PI", 0, Pi);
             ce.RegisterFunction("POWER", 2, Power);
             ce.RegisterFunction("PRODUCT", 1, 255, Product);
-            //ce.RegisterFunction("QUOTIENT", Quotient, 1);
-            //ce.RegisterFunction("RADIANS", Radians, 1);
+            ce.RegisterFunction("QUOTIENT", 2, Quotient);
+            ce.RegisterFunction("RADIANS", 1, Radians);
             ce.RegisterFunction("RAND", 0, Rand);
             ce.RegisterFunction("RANDBETWEEN", 2, RandBetween);
-            //ce.RegisterFunction("ROMAN", Roman, 1);
+            ce.RegisterFunction("ROMAN", 1, 2, Roman);
             //ce.RegisterFunction("ROUND", Round, 1);
             //ce.RegisterFunction("ROUNDDOWN", RoundDown, 1);
             //ce.RegisterFunction("ROUNDUP", RoundUp, 1);
@@ -502,6 +502,31 @@ namespace ClosedXML.Excel.CalcEngine
             Double total = 1;
             p.ForEach(v => total *= v);
             return total;
+        }
+
+        private static object Quotient(List<Expression> p)
+        {
+            Double n = p[0];
+            Double k = p[1];
+
+            return (int)(n / k);
+        }
+
+        private static object Radians(List<Expression> p)
+        {
+            return p[0] * Math.PI / 180.0;
+        }
+
+        private static object Roman(List<Expression> p)
+        {
+            Int32 intTemp;
+            Boolean boolTemp;
+            if (p.Count == 1
+                || (Boolean.TryParse(p[1].ToString(), out boolTemp) && boolTemp)
+                || (Int32.TryParse(p[1].ToString(), out intTemp) && intTemp == 1))
+                return XLMath.ToRoman((int)p[0]);
+
+            throw new ArgumentException("Can only support classic roman types.");
         }
     }
 }

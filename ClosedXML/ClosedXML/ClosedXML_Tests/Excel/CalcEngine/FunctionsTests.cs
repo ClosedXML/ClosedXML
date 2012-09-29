@@ -175,5 +175,38 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var actual = XLWorkbook.EvaluateExpr("Product(2,3,4)");
             Assert.AreEqual(24.0, actual);
         }
+
+        [TestMethod]
+        public void Quotient()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Quotient(5,2)");
+            Assert.AreEqual(2, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Quotient(4.5,3.1)");
+            Assert.AreEqual(1, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Quotient(-10,3)");
+            Assert.AreEqual(-3, actual);
+        }
+
+        [TestMethod]
+        public void Radians()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Radians(270)");
+            Assert.IsTrue(Math.Abs(4.71238898038469 - (double)actual) < XLHelper.Epsilon);
+        }
+
+        [TestMethod]
+        public void Roman()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Roman(3046)");
+            Assert.AreEqual("MMMXLVI", actual);
+
+            actual = XLWorkbook.EvaluateExpr("Roman(270)");
+            Assert.AreEqual("CCLXX", actual);
+
+            actual = XLWorkbook.EvaluateExpr("Roman(3999)");
+            Assert.AreEqual("MMMCMXCIX", actual);
+        }
     }
 }
