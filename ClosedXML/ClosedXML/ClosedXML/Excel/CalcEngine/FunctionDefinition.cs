@@ -7,7 +7,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Function definition class (keeps function name, parameter counts, and delegate).
     /// </summary>
-    public class FunctionDefinition
+    internal class FunctionDefinition
     {
         // ** fields
         public int ParmMin, ParmMax;

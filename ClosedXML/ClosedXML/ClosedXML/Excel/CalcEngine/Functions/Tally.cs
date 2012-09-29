@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    class Tally
+    internal class Tally
     {
         double _sum, _sum2, _cnt, _min, _max;
         bool _numbersOnly;

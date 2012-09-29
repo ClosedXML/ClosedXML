@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    static class Logical
+    internal static class Logical
     {
         public static void Register(CalcEngine ce)
         {

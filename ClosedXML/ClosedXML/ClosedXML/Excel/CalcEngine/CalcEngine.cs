@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <para>Use the <b>RegisterFunction</b> method to define custom functions.</para>
     /// <para>Override the <b>GetExternalObject</b> method to add arbitrary variables to the engine scope.</para>
     /// </remarks>
-	public partial class CalcEngine
+	internal class CalcEngine
 	{
 		//---------------------------------------------------------------------------
 		#region ** fields
@@ -776,5 +776,5 @@ namespace ClosedXML.Excel.CalcEngine
     /// <param name="parms">List of <see cref="Expression"/> objects that represent the
     /// parameters to be used in the function call.</param>
     /// <returns>The function result.</returns>
-    public delegate object CalcEngineFunction(List<Expression> parms);
+    internal delegate object CalcEngineFunction(List<Expression> parms);
 }

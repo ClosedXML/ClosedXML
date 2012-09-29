@@ -19,7 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// object val = expr.Evaluate();
     /// </code>
     /// </remarks>
-	public class Expression : IComparable<Expression>
+    internal class Expression : IComparable<Expression>
 	{
         //---------------------------------------------------------------------------
         #region ** fields

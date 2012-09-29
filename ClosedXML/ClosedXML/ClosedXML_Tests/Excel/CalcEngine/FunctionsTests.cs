@@ -199,14 +199,101 @@ namespace ClosedXML_Tests.Excel.DataValidations
         [TestMethod]
         public void Roman()
         {
-            var actual = XLWorkbook.EvaluateExpr("Roman(3046)");
+            var actual = XLWorkbook.EvaluateExpr("Roman(3046, 1)");
             Assert.AreEqual("MMMXLVI", actual);
 
             actual = XLWorkbook.EvaluateExpr("Roman(270)");
             Assert.AreEqual("CCLXX", actual);
 
-            actual = XLWorkbook.EvaluateExpr("Roman(3999)");
+            actual = XLWorkbook.EvaluateExpr("Roman(3999, true)");
             Assert.AreEqual("MMMCMXCIX", actual);
+        }
+
+        [TestMethod]
+        public void Round()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Round(2.15, 1)");
+            Assert.AreEqual(2.2, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Round(2.149, 1)");
+            Assert.AreEqual(2.1, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Round(-1.475, 2)");
+            Assert.AreEqual(-1.48, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Round(21.5, -1)");
+            Assert.AreEqual(20.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Round(626.3, -3)");
+            Assert.AreEqual(1000.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Round(1.98, -1)");
+            Assert.AreEqual(0.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Round(-50.55, -2)");
+            Assert.AreEqual(-100.0, actual);
+        }
+
+        [TestMethod]
+        public void RoundDown()
+        {
+            var actual = XLWorkbook.EvaluateExpr("RoundDown(3.2, 0)");
+            Assert.AreEqual(3.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundDown(76.9, 0)");
+            Assert.AreEqual(76.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundDown(3.14159, 3)");
+            Assert.AreEqual(3.141, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundDown(-3.14159, 1)");
+            Assert.AreEqual(-3.1, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundDown(31415.92654, -2)");
+            Assert.AreEqual(31400.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundDown(0, 3)");
+            Assert.AreEqual(0.0, actual);
+        }
+
+        [TestMethod]
+        public void RoundUp()
+        {
+            var actual = XLWorkbook.EvaluateExpr("RoundUp(3.2, 0)");
+            Assert.AreEqual(4.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundUp(76.9, 0)");
+            Assert.AreEqual(77.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundUp(3.14159, 3)");
+            Assert.AreEqual(3.142, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundUp(-3.14159, 1)");
+            Assert.AreEqual(-3.2, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundUp(31415.92654, -2)");
+            Assert.AreEqual(31500.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr("RoundUp(0, 3)");
+            Assert.AreEqual(0.0, actual);
+        }
+
+        [TestMethod]
+        public void SeriesSum()
+        {
+            var actual = XLWorkbook.EvaluateExpr("SERIESSUM(2,3,4,5)");
+            Assert.AreEqual(40.0, actual);
+
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell("A2").FormulaA1 = "PI()/4";
+            ws.Cell("A3").Value = 1;
+            ws.Cell("A4").FormulaA1 = "-1/FACT(2)";
+            ws.Cell("A5").FormulaA1 = "1/FACT(4)";
+            ws.Cell("A6").FormulaA1 = "-1/FACT(6)";
+
+            actual = ws.Evaluate("SERIESSUM(A2,0,2,A3:A6)");
+            Assert.IsTrue(Math.Abs(0.70710321482284566 - (double)actual) < XLHelper.Epsilon);
         }
     }
 }

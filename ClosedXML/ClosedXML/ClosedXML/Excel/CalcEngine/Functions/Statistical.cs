@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    static class Statistical
+    internal static class Statistical
     {
         public static void Register(CalcEngine ce)
         {

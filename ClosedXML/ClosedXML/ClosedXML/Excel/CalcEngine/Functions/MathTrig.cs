@@ -54,10 +54,10 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("RAND", 0, Rand);
             ce.RegisterFunction("RANDBETWEEN", 2, RandBetween);
             ce.RegisterFunction("ROMAN", 1, 2, Roman);
-            //ce.RegisterFunction("ROUND", Round, 1);
-            //ce.RegisterFunction("ROUNDDOWN", RoundDown, 1);
-            //ce.RegisterFunction("ROUNDUP", RoundUp, 1);
-            //ce.RegisterFunction("SERIESSUM", SeriesSum, 1);
+            ce.RegisterFunction("ROUND", 2, Round);
+            ce.RegisterFunction("ROUNDDOWN", 2, RoundDown);
+            ce.RegisterFunction("ROUNDUP", 1, 2, RoundUp);
+            ce.RegisterFunction("SERIESSUM", 4, SeriesSum);
             ce.RegisterFunction("SIGN", 1, Sign);
             ce.RegisterFunction("SIN", 1, Sin);
             ce.RegisterFunction("SINH", 1, Sinh);
@@ -522,11 +522,72 @@ namespace ClosedXML.Excel.CalcEngine
             Int32 intTemp;
             Boolean boolTemp;
             if (p.Count == 1
-                || (Boolean.TryParse(p[1].ToString(), out boolTemp) && boolTemp)
-                || (Int32.TryParse(p[1].ToString(), out intTemp) && intTemp == 1))
+                || (Boolean.TryParse(p[1]._token.Value.ToString(), out boolTemp) && boolTemp)
+                || (Int32.TryParse(p[1]._token.Value.ToString(), out intTemp) && intTemp == 1))
                 return XLMath.ToRoman((int)p[0]);
 
             throw new ArgumentException("Can only support classic roman types.");
+        }
+
+        private static object Round(List<Expression> p)
+        {
+            var value = (Double)p[0];
+            var digits = (Int32)(Double)p[1];
+            if (digits >= 0)
+            {
+                return Math.Round(value, digits);
+            }
+            else
+            {
+                digits = Math.Abs(digits);
+                double temp = value / Math.Pow(10, digits);
+                temp = Math.Round(temp, 0);
+                return temp * Math.Pow(10, digits);
+            }
+
+        }
+
+        private static object RoundDown(List<Expression> p)
+        {
+            var value = (Double)p[0];
+            var digits = (Int32)(Double)p[1];
+
+            if (value >= 0)
+                return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+
+            return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+        }
+
+        private static object RoundUp(List<Expression> p)
+        {
+            var value = (Double)p[0];
+            var digits = (Int32)(Double)p[1];
+
+            if (value >= 0)
+                return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+
+            return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+        }
+
+        private static object SeriesSum(List<Expression> p)
+        {
+            var x = (Double)p[0];
+            var n = (Double)p[1];
+            var m = (Double)p[2];
+            var obj = p[3] as XObjectExpression;
+
+            if (obj == null)
+                return p[3] * Math.Pow(x , n);
+
+            Double total = 0;
+            Int32 i = 0;
+            foreach (var e in obj)
+            {
+                total += (double)e * Math.Pow(x, n + i * m);
+                i++;
+            }
+
+            return total;
         }
     }
 }
