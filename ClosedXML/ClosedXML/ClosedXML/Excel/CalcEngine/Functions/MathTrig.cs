@@ -62,12 +62,12 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SIN", 1, Sin);
             ce.RegisterFunction("SINH", 1, Sinh);
             ce.RegisterFunction("SQRT", 1, Sqrt);
-            //ce.RegisterFunction("SQRTPI", SqrtPi, 1);
-            //ce.RegisterFunction("SUBTOTAL", Subtotal, 1);
+            ce.RegisterFunction("SQRTPI", 1, SqrtPi);
+            ce.RegisterFunction("SUBTOTAL", 2, 255, Subtotal);
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum);
             ce.RegisterFunction("SUMIF", 2, 3, SumIf);
-            //ce.RegisterFunction("SUMPRODUCT", SumProduct, 1);
-            //ce.RegisterFunction("SUMSQ", SumSq, 1);
+            //ce.RegisterFunction("SUMPRODUCT", 1, SumProduct);
+            ce.RegisterFunction("SUMSQ", 1, 255, SumSq);
             //ce.RegisterFunction("SUMX2MY2", SumX2MY2, 1);
             //ce.RegisterFunction("SUMX2PY2", SumX2PY2, 1);
             //ce.RegisterFunction("SUMXMY2", SumXMY2, 1);
@@ -588,6 +588,52 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             return total;
+        }
+
+        private static object SqrtPi(List<Expression> p)
+        {
+            var num = (Double)p[0];
+            return Math.Sqrt(Math.PI * num);
+        }
+
+        private static object Subtotal(List<Expression> p)
+        {
+            var fId = (int)(Double)p[0];
+            var tally = new Tally(p.Skip(1));
+
+            switch (fId)
+            {
+                case 1:
+                    return tally.Average();
+                case 2:
+                    return tally.Count();
+                case 3:
+                    return tally.CountA();
+                case 4:
+                    return tally.Max();
+                case 5:
+                    return tally.Min();
+                case 6:
+                    return tally.Product();
+                case 7:
+                    return tally.Std();
+                case 8:
+                    return tally.StdP();
+                case 9:
+                    return tally.Sum();
+                case 10:
+                    return tally.Var();
+                case 11:
+                    return tally.VarP();
+                default:
+                    throw new ArgumentException("Function not supported.");
+            }
+        }
+
+        private static object SumSq(List<Expression> p)
+        {
+            var t = new Tally(p);
+            return t.Numerics().Sum(v => Math.Pow(v, 2));
         }
     }
 }

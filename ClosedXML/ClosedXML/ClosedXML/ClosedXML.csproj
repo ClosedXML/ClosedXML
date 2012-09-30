@@ -147,6 +147,8 @@
     <Compile Include="Excel\CalcEngine\Functions\Logical.cs" />
     <Compile Include="Excel\CalcEngine\Functions\MathTrig.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Statistical.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\Subtotals\Average.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\Subtotals\Subtotal.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Tally.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Text.cs" />
     <Compile Include="Excel\CalcEngine\Functions\XLMath.cs" />

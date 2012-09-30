@@ -295,5 +295,128 @@ namespace ClosedXML_Tests.Excel.DataValidations
             actual = ws.Evaluate("SERIESSUM(A2,0,2,A3:A6)");
             Assert.IsTrue(Math.Abs(0.70710321482284566 - (double)actual) < XLHelper.Epsilon);
         }
+
+        [TestMethod]
+        public void SqrtPi()
+        {
+            var actual = XLWorkbook.EvaluateExpr("SqrtPi(1)");
+            Assert.IsTrue(Math.Abs(1.7724538509055159 - (double)actual) < XLHelper.Epsilon);
+
+            actual = XLWorkbook.EvaluateExpr("SqrtPi(2)");
+            Assert.IsTrue(Math.Abs(2.5066282746310002 - (double)actual) < XLHelper.Epsilon);
+        }
+
+        [TestMethod]
+        public void SubtotalAverage()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Subtotal(1,2,3)");
+            Assert.AreEqual(2.5, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(1,""A"",3, 2)");
+            Assert.AreEqual(2.5, actual);
+        }
+
+        [TestMethod]
+        public void SubtotalCount()
+        {
+            var actual = XLWorkbook.EvaluateExpr("Subtotal(2,2,3)");
+            Assert.AreEqual(2.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(2,""A"",3)");
+            Assert.AreEqual(2.0, actual);
+        }
+
+        [TestMethod]
+        public void SubtotalCountA()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr("Subtotal(3,2,3)");
+            Assert.AreEqual(2.0, actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(3,"""",3)");
+            Assert.AreEqual(1.0, actual);
+        }
+
+        [TestMethod]
+        public void SubtotalMax()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(4,2,3,""A"")");
+            Assert.AreEqual(3.0, actual);
+        }
+
+        [TestMethod]
+        public void SubtotalMin()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(5,2,3,""A"")");
+            Assert.AreEqual(2.0, actual);
+        }
+
+        [TestMethod]
+        public void SubtotalProduct()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(6,2,3,""A"")");
+            Assert.AreEqual(6.0, actual);
+        }
+
+        [TestMethod]
+        public void SubtotalStDev()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(7,2,3,""A"")");
+            Assert.IsTrue(Math.Abs(0.70710678118654757 - (double)actual) < XLHelper.Epsilon);
+        }
+
+        [TestMethod]
+        public void SubtotalStDevP()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(8,2,3,""A"")");
+            Assert.AreEqual(0.5, actual);
+        }
+
+        [TestMethod]
+        public void SubtotalSum()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(9,2,3,""A"")");
+            Assert.AreEqual(5.0, actual);
+        }
+
+        [TestMethod]
+        public void SubtotalVar()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(10,2,3,""A"")");
+            Assert.IsTrue(Math.Abs(0.5 - (double)actual) < XLHelper.Epsilon);
+        }
+
+        [TestMethod]
+        public void SubtotalVarP()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"Subtotal(11,2,3,""A"")");
+            Assert.AreEqual(0.25, actual);
+        }
+
+        [TestMethod]
+        public void SumSq()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"SumSq(3,4)");
+            Assert.AreEqual(25.0, actual);
+        }
     }
 }

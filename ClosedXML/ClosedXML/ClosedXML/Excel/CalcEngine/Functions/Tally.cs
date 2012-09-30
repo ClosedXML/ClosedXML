@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Collections;
 
@@ -6,15 +8,15 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal class Tally
     {
-        double _sum, _sum2, _cnt, _min, _max;
-        bool _numbersOnly;
+        private readonly List<object> _list = new List<object>();
 
-        public Tally(bool numbersOnly)
+        public Tally(){}
+        public Tally(IEnumerable<Expression> p)
         {
-            _numbersOnly = numbersOnly;
-        }
-        public Tally()
-        {
+            foreach (var e in p)
+            {
+                Add(e);
+            }
         }
 
         public void Add(Expression e)
@@ -25,85 +27,109 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 foreach (var value in ienum)
                 {
-                    AddValue(value);
+                    _list.Add(value);
                 }
                 return;
             }
 
             // handle expressions
-            AddValue(e.Evaluate());
+            _list.Add(e.Evaluate());
         }
-        public void AddValue(object value)
+
+        public void AddValue(Object v)
         {
-            // conversions
-            if (!_numbersOnly)
-            {
-                // arguments that contain text evaluate as 0 (zero). 
-                // empty text ("") evaluates as 0 (zero).
-                if (value == null || value is string)
-                {
-                    value = 0;
-                }
-                // arguments that contain TRUE evaluate as 1; 
-                // arguments that contain FALSE evaluate as 0 (zero).
-                if (value is bool)
-                {
-                    value = (bool)value ? 1 : 0;
-                }
-            }
-
-            // convert all numeric values to doubles
-            if (value != null)
-            {
-                var typeCode = Type.GetTypeCode(value.GetType());
-                if (typeCode >= TypeCode.Char && typeCode <= TypeCode.Decimal)
-                {
-                    value = Convert.ChangeType(value, typeof(double), System.Globalization.CultureInfo.CurrentCulture);
-                }
-            }
-
-            // tally
-            if (value is double)
-            {
-                var dbl = (double)value;
-                _sum += dbl;
-                _sum2 += dbl * dbl;
-                _cnt++;
-                if (_cnt == 1 || dbl < _min)
-                {
-                    _min = dbl;
-                }
-                if (_cnt == 1 || dbl > _max)
-                {
-                    _max = dbl;
-                }
-            }
+            _list.Add(v);
         }
-        public double Count() { return _cnt; }
-        public double Sum() { return _sum; }
-        public double Average() { return _sum / _cnt; }
-        public double Min() { return _min; }
-        public double Max() { return _max; }
-        public double Range() { return _max - _min; }
+
+        public double Count() { return _list.Count; }
+        public double CountA()
+        {
+            Double cntA = 0;
+            foreach (var value in _list)
+            {
+                var strVal = value as String;
+                if (value != null && (strVal == null || !XLHelper.IsNullOrWhiteSpace(strVal)))
+                    cntA++;
+            }
+            return cntA;
+        }
+        public List<Double> Numerics()
+        {
+            List<Double> retVal = new List<double>();
+            foreach (var value in _list)
+            {
+                Double tmp;
+                if (Double.TryParse(value.ToString(), out tmp))
+                {
+                    retVal.Add(tmp);
+                }
+            }
+            return retVal;
+        }
+        public double Product()
+        {
+            var nums = Numerics();
+            if (nums.Count == 0) return 0;
+
+            Double retVal = 1;
+            nums.ForEach(n => retVal *= n);
+
+            return retVal;
+        }
+        public double Sum() { return Numerics().Sum(); }
+        public double Average()
+        {
+            return Numerics().Average();
+        }
+        public double Min() { return Numerics().Min(); }
+        public double Max() { return Numerics().Max(); }
+        public double Range()
+        {
+            var nums = Numerics();
+            return nums.Max() - nums.Min();
+        }
+
+        private double Sum2(List<Double> nums)
+        {
+            return nums.Sum(d => d * d);
+        }
+
         public double VarP()
         {
-            var avg = Average();
-            return _cnt <= 1 ? 0 : _sum2 / _cnt - avg * avg;
+            var nums = Numerics();
+            var avg = nums.Average();
+            var sum2 = nums.Sum(d => d * d);
+            return nums.Count <= 1 ? 0 : sum2 / nums.Count - avg * avg;
         }
         public double StdP()
         {
-            var avg = Average();
-            return _cnt <= 1 ? 0 : Math.Sqrt(_sum2 / _cnt - avg * avg);
+            var nums = Numerics();
+            var avg = nums.Average();
+            var sum2 = nums.Sum(d => d * d);
+            return nums.Count <= 1 ? 0 : Math.Sqrt(sum2 / nums.Count - avg * avg);
         }
         public double Var()
         {
-            var avg = Average();
-            return _cnt <= 1 ? 0 : (_sum2 / _cnt - avg * avg) * _cnt / (_cnt - 1);
+            var nums = Numerics();
+            var avg = nums.Average();
+            var sum2 = nums.Sum(d => d * d);
+            return nums.Count <= 1 ? 0 : (sum2 / nums.Count - avg * avg) * nums.Count / (nums.Count - 1);
         }
         public double Std()
         {
-            var avg = Average();
-            return _cnt <= 1 ? 0 : Math.Sqrt((_sum2 / _cnt - avg * avg) * _cnt / (_cnt - 1));
+            var values = Numerics();
+            double ret = 0;
+            if (values.Count > 0)
+            {
+                //Compute the Average      
+                double avg = values.Average();
+                //Perform the Sum of (value-avg)_2_2      
+                double sum = values.Sum(d => Math.Pow(d - avg, 2));
+                //Put it all together      
+                ret = Math.Sqrt((sum) / (values.Count() - 1));
+            }
+            return ret;
+
         }
     }
 }

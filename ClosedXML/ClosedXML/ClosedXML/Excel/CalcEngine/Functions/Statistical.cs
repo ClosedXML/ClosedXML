@@ -209,12 +209,7 @@ namespace ClosedXML.Excel.CalcEngine
         // utility for tallying statistics
         static Tally GetTally(List<Expression> p, bool numbersOnly)
         {
-            var tally = new Tally(numbersOnly);
-            foreach (Expression e in p)
-            {
-                tally.Add(e);
-            }
-            return tally;
+            return new Tally(p);
         }
     }
 }
