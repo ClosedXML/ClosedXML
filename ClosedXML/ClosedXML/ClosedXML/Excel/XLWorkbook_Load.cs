@@ -843,7 +843,8 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
-                    xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
                     xlCell._dataType = XLCellValues.DateTime;
                 }
                 else if (cell.DataType == CellValues.Boolean)
@@ -853,7 +854,8 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
-                    xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
                     var numberFormatId = ((CellFormat) (s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                     if (numberFormatId == 46U)
                         xlCell.DataType = XLCellValues.TimeSpan;
