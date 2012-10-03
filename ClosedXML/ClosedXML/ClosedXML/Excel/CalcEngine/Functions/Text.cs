@@ -11,6 +11,8 @@ namespace ClosedXML.Excel.CalcEngine
         public static void Register(CalcEngine ce)
         {
             //ce.RegisterFunction("ASC	Changes full-width (double-byte) English letters or katakana within a character string to half-width (single-byte) characters
+            ce.RegisterFunction("ASC", 1, Asc);
+
             //ce.RegisterFunction("BAHTTEXT	Converts a number to text, using the ß (baht) currency format
             ce.RegisterFunction("CHAR", 1, _Char); // Returns the character specified by the code number
             //ce.RegisterFunction("CLEAN	Removes all nonprintable characters from text
@@ -187,6 +189,11 @@ namespace ClosedXML.Excel.CalcEngine
         static object Value(List<Expression> p)
         {
             return double.Parse((string)p[0], NumberStyles.Any, CultureInfo.InvariantCulture);
+        }
+
+        static object Asc(List<Expression> p)
+        {
+            return (string)p[0];
         }
     }
 }

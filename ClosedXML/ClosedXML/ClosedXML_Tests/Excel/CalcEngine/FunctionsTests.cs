@@ -418,5 +418,14 @@ namespace ClosedXML_Tests.Excel.DataValidations
             actual = XLWorkbook.EvaluateExpr(@"SumSq(3,4)");
             Assert.AreEqual(25.0, actual);
         }
+
+        [TestMethod]
+        public void Asc()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(@"Asc(""Text"")");
+            Assert.AreEqual("Text", actual);
+        }
     }
 }

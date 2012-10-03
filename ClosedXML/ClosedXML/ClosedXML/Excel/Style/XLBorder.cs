@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
         {
         }
 
-        public XLBorder(IXLStylized container, IXLBorder defaultBorder)
+        public XLBorder(IXLStylized container, IXLBorder defaultBorder, Boolean useDefaultModify = true)
         {
             _container = container;
             if (defaultBorder == null) return;
@@ -42,6 +42,23 @@ namespace ClosedXML.Excel
             _diagonalBorderColor = new XLColor(defaultBorder.DiagonalBorderColor);
             _diagonalUp = defaultBorder.DiagonalUp;
             _diagonalDown = defaultBorder.DiagonalDown;
+
+            if (useDefaultModify)
+            {
+                var d = defaultBorder as XLBorder;
+                BottomBorderColorModified = d.BottomBorderColorModified;
+                BottomBorderModified = d.BottomBorderModified;
+                DiagonalBorderColorModified = d.DiagonalBorderColorModified;
+                DiagonalBorderModified = d.DiagonalBorderModified;
+                DiagonalDownModified = d.DiagonalDownModified;
+                DiagonalUpModified = d.DiagonalUpModified;
+                LeftBorderColorModified = d.LeftBorderColorModified;
+                LeftBorderModified = d.LeftBorderModified;
+                RightBorderColorModified = d.RightBorderColorModified;
+                RightBorderModified = d.RightBorderModified;
+                TopBorderColorModified = d.TopBorderColorModified;
+                TopBorderModified = d.TopBorderModified;
+            }
         }
 
         #region IXLBorder Members

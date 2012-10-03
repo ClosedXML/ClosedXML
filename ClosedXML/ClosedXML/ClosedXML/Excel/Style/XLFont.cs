@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
         {
         }
 
-        public XLFont(IXLStylized container, IXLFontBase defaultFont)
+        public XLFont(IXLStylized container, IXLFontBase defaultFont, Boolean useDefaultModify = true)
         {
             _container = container;
             if (defaultFont == null) return;
@@ -37,6 +37,22 @@ namespace ClosedXML.Excel
             _fontColor = new XLColor(defaultFont.FontColor);
             _fontName = defaultFont.FontName;
             _fontFamilyNumbering = defaultFont.FontFamilyNumbering;
+
+            if (useDefaultModify)
+            {
+                var d = defaultFont as XLFont;
+                if (d == null) return;
+                BoldModified = d.BoldModified;
+                ItalicModified = d.ItalicModified;
+                UnderlineModified = d.UnderlineModified;
+                StrikethroughModified = d.StrikethroughModified;
+                VerticalAlignmentModified = d.VerticalAlignmentModified;
+                ShadowModified = d.ShadowModified;
+                FontSizeModified = d.FontSizeModified;
+                FontColorModified = d.FontColorModified;
+                FontNameModified = d.FontNameModified;
+                FontFamilyNumberingModified = d.FontFamilyNumberingModified;
+            }
         }
 
         #region IXLFont Members
@@ -161,7 +177,15 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean FontColorModified { get; set; }
+        private Boolean _fontColorModified;
+        public Boolean FontColorModified
+        {
+            get { return _fontColorModified; }
+            set
+            {
+                _fontColorModified = value;
+            }
+        }
         public XLColor FontColor
         {
             get { return _fontColor; }

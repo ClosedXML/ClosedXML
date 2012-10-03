@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
             if (_style != null)
                 return _style;
 
-            return _style = new XLStyle(this, Range.Worksheet.Workbook.GetStyleById(_styleCacheId));
+            return _style = new XLStyle(this, Range.Worksheet.Workbook.GetStyleById(_styleCacheId), false);
         }
         private void SetStyle(IXLStyle styleToUse)
         {

@@ -147,14 +147,21 @@ namespace ClosedXML.Excel
         {
         }
 
-        public XLFill(IXLStylized container, IXLFill defaultFill = null)
+        public XLFill(IXLStylized container, IXLFill defaultFill = null, Boolean useDefaultModify = true)
         {
             _container = container;
             if (defaultFill == null) return;
             _patternType = defaultFill.PatternType;
             _patternColor = new XLColor(defaultFill.PatternColor);
             _patternBackgroundColor = new XLColor(defaultFill.PatternBackgroundColor);
-            PatternBackgroundColorModified = (defaultFill as XLFill).PatternBackgroundColorModified;
+
+            if (useDefaultModify)
+            {
+                var d = defaultFill as XLFill;
+                PatternBackgroundColorModified = d.PatternBackgroundColorModified;
+                PatternColorModified = d.PatternColorModified;
+                PatternTypeModified = d.PatternTypeModified;
+            }
         }
 
         #endregion

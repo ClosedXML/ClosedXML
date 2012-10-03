@@ -1,17 +1,18 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace ClosedXML.Excel
 {
     internal class XLStyle : IXLStyle
     {
-        public XLStyle(IXLStylized container, IXLStyle initialStyle = null)
+        public XLStyle(IXLStylized container, IXLStyle initialStyle = null, Boolean useDefaultModify = true)
         {
             if (initialStyle != null)
             {
-                Font = new XLFont(container, initialStyle.Font);
+                Font = new XLFont(container, initialStyle.Font, useDefaultModify);
                 Alignment = new XLAlignment(container, initialStyle.Alignment);
-                Border = new XLBorder(container, initialStyle.Border);
-                Fill = new XLFill(container, initialStyle.Fill);
+                Border = new XLBorder(container, initialStyle.Border, useDefaultModify);
+                Fill = new XLFill(container, initialStyle.Fill, useDefaultModify);
                 NumberFormat = new XLNumberFormat(container, initialStyle.NumberFormat);
                 Protection = new XLProtection(container, initialStyle.Protection);
             }
