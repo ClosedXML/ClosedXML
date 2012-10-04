@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     internal class XLConditionalFormat: IXLConditionalFormat, IXLStylized
     {
         
-        public XLConditionalFormat(XLRange range)
+        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
         {
             Range = range;
             Style = new XLStyle(this, range.Worksheet.Style);
@@ -16,6 +16,7 @@ namespace ClosedXML.Excel
             Colors = new XLDictionary<XLColor>();
             ContentTypes = new XLDictionary<XLCFContentType>();
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
+            CopyDefaultModify = copyDefaultModify;
         }
         public XLConditionalFormat(XLConditionalFormat other)
         {
@@ -38,6 +39,7 @@ namespace ClosedXML.Excel
             ShowBarOnly = other.ShowBarOnly;
         }
 
+        public Boolean CopyDefaultModify { get; set; }
         private IXLStyle _style;
         private Int32 _styleCacheId;
         public IXLStyle Style{ get { return GetStyle(); } set { SetStyle(value); } }
@@ -47,7 +49,7 @@ namespace ClosedXML.Excel
             if (_style != null)
                 return _style;
 
-            return _style = new XLStyle(this, Range.Worksheet.Workbook.GetStyleById(_styleCacheId), false);
+            return _style = new XLStyle(this, Range.Worksheet.Workbook.GetStyleById(_styleCacheId), CopyDefaultModify);
         }
         private void SetStyle(IXLStyle styleToUse)
         {

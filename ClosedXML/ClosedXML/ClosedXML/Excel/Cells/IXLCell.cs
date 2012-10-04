@@ -111,6 +111,23 @@ namespace ClosedXML.Excel
         /// </summary>
         TimeSpan GetTimeSpan();
 
+        XLHyperlink GetHyperlink();
+
+        Boolean TryGetValue<T>(out T value);
+
+        //Boolean TryGetDouble(out Double value);
+
+        //Boolean TryGetBoolean(out Boolean value);
+
+        //Boolean TryGetDateTime(out DateTime value);
+
+        //Boolean TryGetTimeSpan(out TimeSpan value);
+
+        Boolean TryGetHyperlink(out XLHyperlink value);
+
+
+        Boolean HasHyperlink { get; }
+
         /// <summary>
         /// Clears the contents of this cell.
         /// </summary>

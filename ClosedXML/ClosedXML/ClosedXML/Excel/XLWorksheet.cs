@@ -1265,7 +1265,7 @@ namespace ClosedXML.Excel
                 {
                     var row = cell.Address.RowNumber;
                     var column = cell.Address.ColumnLetter;
-                    var newConditionalFormat = new XLConditionalFormat(cell.AsRange());
+                    var newConditionalFormat = new XLConditionalFormat(cell.AsRange(), true);
                     newConditionalFormat.CopyFrom(conditionalFormat);
                     newConditionalFormat.Values.Values.Where(f => f.IsFormula)
                         .ForEach(f => f._value = XLHelper.ReplaceRelative(f.Value, row, column));

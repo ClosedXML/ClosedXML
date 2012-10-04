@@ -140,10 +140,6 @@
             }
         }
 
-        IXLDataValidation IXLCell.DataValidation
-        {
-            get { return DataValidation; }
-        }
         public XLDataValidation DataValidation
         {
             get
@@ -151,10 +147,10 @@
                 using (var asRange = AsRange())
                 {
                     var dv = asRange.DataValidation; // Call the data validation to break it into pieces
-                    foreach(var d in Worksheet.DataValidations)
+                    foreach (var d in Worksheet.DataValidations)
                     {
                         var rs = d.Ranges;
-                        if(rs.Count == 1)
+                        if (rs.Count == 1)
                         {
                             var r = rs.Single();
                             var ra1 = r.RangeAddress.ToStringRelative();
@@ -180,11 +176,11 @@
                     // MS Excel uses Tahoma 8 Swiss no matter what current style font
                     // var style = GetStyleForRead();
                     var defaultFont = new XLFont
-                                          {
-                                              FontName = "Tahoma",
-                                              FontSize = 8,
-                                              FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
-                                          };
+                        {
+                            FontName = "Tahoma",
+                            FontSize = 8,
+                            FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
+                        };
                     _comment = new XLComment(this, defaultFont);
                 }
 
@@ -193,6 +189,11 @@
         }
 
         #region IXLCell Members
+
+        IXLDataValidation IXLCell.DataValidation
+        {
+            get { return DataValidation; }
+        }
 
         IXLWorksheet IXLCell.Worksheet
         {
@@ -229,7 +230,7 @@
             else if (value is DateTime)
             {
                 _dataType = XLCellValues.DateTime;
-                var dtTest = (DateTime)Convert.ChangeType(value, typeof(DateTime));
+                var dtTest = (DateTime)Convert.ChangeType(value, typeof (DateTime));
                 Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
                 _cellValue = dtTest.ToOADate().ToString();
@@ -254,7 +255,7 @@
             else if (value is Boolean)
             {
                 _dataType = XLCellValues.Boolean;
-                _cellValue = (Boolean)Convert.ChangeType(value, typeof(Boolean)) ? "1" : "0";
+                _cellValue = (Boolean)Convert.ChangeType(value, typeof (Boolean)) ? "1" : "0";
             }
             else
             {
@@ -268,12 +269,11 @@
         public T GetValue<T>()
         {
             var val = Value;
-            if (!XLHelper.IsNullOrWhiteSpace(FormulaA1))
-                return (T)Convert.ChangeType(String.Empty, typeof(T));
+
             if (val is TimeSpan)
             {
-                if (typeof(T) == typeof(String))
-                    return (T)Convert.ChangeType(val.ToString(), typeof(T));
+                if (typeof (T) == typeof (String))
+                    return (T)Convert.ChangeType(val.ToString(), typeof (T));
 
                 return (T)val;
             }
@@ -281,33 +281,31 @@
             if (val is IXLRichText)
                 return (T)RichText;
 
-            if (typeof(T) == typeof(String))
+            if (typeof (T) == typeof (String))
             {
-                string valToUse = val.ToString();
+                var valToUse = val.ToString();
                 if (!utfPattern.Match(valToUse).Success)
-                    return (T)Convert.ChangeType(val, typeof(T));
-                else
+                    return (T)Convert.ChangeType(val, typeof (T));
+
+                var sb = new StringBuilder();
+                var lastIndex = 0;
+                foreach (Match match in utfPattern.Matches(valToUse))
                 {
-                    var sb = new StringBuilder();
-                    Int32 lastIndex = 0;
-                    foreach (Match match in utfPattern.Matches(valToUse))
-                    {
-                        string matchString = match.Value;
-                        int matchIndex = match.Index;
-                        sb.Append(valToUse.Substring(lastIndex, matchIndex - lastIndex));
+                    var matchString = match.Value;
+                    var matchIndex = match.Index;
+                    sb.Append(valToUse.Substring(lastIndex, matchIndex - lastIndex));
 
-                        sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
+                    sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
 
-                        lastIndex = matchIndex + matchString.Length;
-                    }
-                    if (lastIndex < valToUse.Length)
-                        sb.Append(valToUse.Substring(lastIndex));
-
-                    return (T)Convert.ChangeType(sb.ToString(), typeof(T));
+                    lastIndex = matchIndex + matchString.Length;
                 }
+                if (lastIndex < valToUse.Length)
+                    sb.Append(valToUse.Substring(lastIndex));
+
+                return (T)Convert.ChangeType(sb.ToString(), typeof (T));
             }
-            else
-                return (T)Convert.ChangeType(val, typeof(T));
+
+            return (T)Convert.ChangeType(val, typeof (T));
         }
 
         public string GetString()
@@ -339,7 +337,7 @@
         {
             if (FormulaA1.Length > 0) return String.Empty;
 
-            string cValue = _cellValue;
+            var cValue = _cellValue;
 
             if (_dataType == XLCellValues.Boolean)
                 return (cValue != "0").ToString();
@@ -350,7 +348,7 @@
                 double dTest;
                 if (Double.TryParse(cValue, out dTest))
                 {
-                    string format = GetFormat();
+                    var format = GetFormat();
                     return DateTime.FromOADate(dTest).ToString(format);
                 }
 
@@ -362,7 +360,7 @@
                 double dTest;
                 if (Double.TryParse(cValue, out dTest))
                 {
-                    string format = GetFormat();
+                    var format = GetFormat();
                     return dTest.ToString(format);
                 }
 
@@ -377,7 +375,7 @@
         {
             get
             {
-                string fA1 = FormulaA1;
+                var fA1 = FormulaA1;
                 if (!XLHelper.IsNullOrWhiteSpace(fA1))
                 {
                     if (fA1[0] == '{')
@@ -408,8 +406,8 @@
                     return Worksheet.Evaluate(fA1);
                 }
 
-                String cellValue = HasRichText ? _richText.ToString() : _cellValue;
-                    
+                var cellValue = HasRichText ? _richText.ToString() : _cellValue;
+
 
                 if (_dataType == XLCellValues.Boolean)
                     return cellValue != "0";
@@ -426,7 +424,7 @@
                     return TimeSpan.Parse(cellValue);
                 }
 
-                return  cellValue;
+                return cellValue;
             }
 
             set
@@ -450,66 +448,6 @@
             }
         }
 
-        private bool SetRangeColumns(object value)
-        {
-            XLRangeColumns columns = value as XLRangeColumns;
-            if (columns == null)
-                return SetColumns(value);
-
-            XLCell cell = this;
-            foreach (var column in columns)
-            {
-                cell.SetRange(column);
-                cell = cell.CellRight();
-            }
-            return true;
-        }
-
-        private bool SetColumns(object value)
-        {
-            XLColumns columns = value as XLColumns;
-            if (columns == null)
-                return false;
-
-            XLCell cell = this;
-            foreach (var column in columns)
-            {
-                cell.SetRange(column);
-                cell = cell.CellRight();
-            }
-            return true;
-        }
-
-        private bool SetRangeRows(object value)
-        {
-            XLRangeRows rows = value as XLRangeRows;
-            if (rows == null)
-                return SetRows(value);
-
-            XLCell cell = this;
-            foreach (var row in rows)
-            {
-                cell.SetRange(row);
-                cell = cell.CellBelow();
-            }
-            return true;
-        }
-
-        private bool SetRows(object value)
-        {
-            XLRows rows = value as XLRows;
-            if (rows == null)
-                return false;
-
-            XLCell cell = this;
-            foreach (var row in rows)
-            {
-                cell.SetRange(row);
-                cell = cell.CellBelow();
-            }
-            return true;
-        }
-
         public IXLTable InsertTable<T>(IEnumerable<T> data)
         {
             return InsertTable(data, null, true);
@@ -527,18 +465,18 @@
 
         public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable)
         {
-            if (data != null && data.GetType() != typeof(String))
+            if (data != null && data.GetType() != typeof (String))
             {
-                int ro = Address.RowNumber + 1;
-                int fRo = Address.RowNumber;
-                bool hasTitles = false;
-                int maxCo = 0;
-                bool isDataTable = false;
-                bool isDataReader = false;
+                var ro = Address.RowNumber + 1;
+                var fRo = Address.RowNumber;
+                var hasTitles = false;
+                var maxCo = 0;
+                var isDataTable = false;
+                var isDataReader = false;
                 if (!data.Any())
                 {
                     var t = data.GetItemType();
-                    if (t.IsPrimitive || t == typeof(string) || t == typeof(DateTime) || t == typeof(Decimal))
+                    if (t.IsPrimitive || t == typeof (string) || t == typeof (DateTime) || t == typeof (Decimal))
                         maxCo = Address.ColumnNumber + 1;
                     else
                         maxCo = Address.ColumnNumber + t.GetFields().Length + t.GetProperties().Length;
@@ -547,13 +485,13 @@
                 {
                     foreach (object m in data)
                     {
-                        int co = Address.ColumnNumber;
+                        var co = Address.ColumnNumber;
 
                         if (m.GetType().IsPrimitive || m is string || m is DateTime || m is Decimal)
                         {
                             if (!hasTitles)
                             {
-                                string fieldName = GetFieldName(m.GetType().GetCustomAttributes(true));
+                                var fieldName = GetFieldName(m.GetType().GetCustomAttributes(true));
                                 if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                     fieldName = m.GetType().Name;
 
@@ -567,7 +505,7 @@
                         }
                         else if (m.GetType().IsArray)
                         {
-                            foreach (object item in (Array) m)
+                            foreach (var item in (Array)m)
                             {
                                 SetValue(item, ro, co);
                                 co++;
@@ -580,10 +518,10 @@
 
                             if (!hasTitles)
                             {
-                                foreach (string fieldName in from DataColumn column in ((DataRow) m).Table.Columns
-                                                             select XLHelper.IsNullOrWhiteSpace(column.Caption)
-                                                                        ? column.ColumnName
-                                                                        : column.Caption)
+                                foreach (var fieldName in from DataColumn column in ((DataRow)m).Table.Columns
+                                                          select XLHelper.IsNullOrWhiteSpace(column.Caption)
+                                                                     ? column.ColumnName
+                                                                     : column.Caption)
                                 {
                                     SetValue(fieldName, fRo, co);
                                     co++;
@@ -593,7 +531,7 @@
                                 hasTitles = true;
                             }
 
-                            foreach (object item in ((DataRow) m).ItemArray)
+                            foreach (var item in ((DataRow)m).ItemArray)
                             {
                                 SetValue(item, ro, co);
                                 co++;
@@ -606,10 +544,10 @@
 
                             var record = m as IDataRecord;
 
-                            Int32 fieldCount = record.FieldCount;
+                            var fieldCount = record.FieldCount;
                             if (!hasTitles)
                             {
-                                for (int i = 0; i < fieldCount; i++)
+                                for (var i = 0; i < fieldCount; i++)
                                 {
                                     SetValue(record.GetName(i), fRo, co);
                                     co++;
@@ -619,7 +557,7 @@
                                 hasTitles = true;
                             }
 
-                            for (int i = 0; i < fieldCount; i++)
+                            for (var i = 0; i < fieldCount; i++)
                             {
                                 SetValue(record[i], ro, co);
                                 co++;
@@ -631,11 +569,11 @@
                             var propertyInfo = m.GetType().GetProperties();
                             if (!hasTitles)
                             {
-                                foreach (FieldInfo info in fieldInfo)
+                                foreach (var info in fieldInfo)
                                 {
                                     if ((info as IEnumerable) == null)
                                     {
-                                        string fieldName = GetFieldName(info.GetCustomAttributes(true));
+                                        var fieldName = GetFieldName(info.GetCustomAttributes(true));
                                         if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                             fieldName = info.Name;
 
@@ -645,11 +583,11 @@
                                     co++;
                                 }
 
-                                foreach (PropertyInfo info in propertyInfo)
+                                foreach (var info in propertyInfo)
                                 {
                                     if ((info as IEnumerable) == null)
                                     {
-                                        string fieldName = GetFieldName(info.GetCustomAttributes(true));
+                                        var fieldName = GetFieldName(info.GetCustomAttributes(true));
                                         if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                             fieldName = info.Name;
 
@@ -663,13 +601,13 @@
                                 hasTitles = true;
                             }
 
-                            foreach (FieldInfo info in fieldInfo)
+                            foreach (var info in fieldInfo)
                             {
                                 SetValue(info.GetValue(m), ro, co);
                                 co++;
                             }
 
-                            foreach (PropertyInfo info in propertyInfo)
+                            foreach (var info in propertyInfo)
                             {
                                 if ((info as IEnumerable) == null)
                                     SetValue(info.GetValue(m, null), ro, co);
@@ -700,7 +638,6 @@
         }
 
 
-
         public IXLTable InsertTable(DataTable data)
         {
             return InsertTable(data, null, true);
@@ -722,15 +659,15 @@
 
             if (data.Rows.Count > 0) return InsertTable(data.AsEnumerable(), tableName, createTable);
 
-            int ro = Address.RowNumber;
-            int co = Address.ColumnNumber;
+            var ro = Address.RowNumber;
+            var co = Address.ColumnNumber;
 
             foreach (DataColumn col in data.Columns)
             {
                 SetValue(col.ColumnName, ro, co);
                 co++;
             }
-            
+
             ClearMerged();
             var range = _worksheet.Range(
                 Address.RowNumber,
@@ -741,20 +678,19 @@
             if (createTable) return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
 
             return tableName == null ? range.AsTable() : range.AsTable(tableName);
-
         }
 
         public IXLRange InsertData(IEnumerable data)
         {
-            if (data != null && data.GetType() != typeof(String))
+            if (data != null && data.GetType() != typeof (String))
             {
-                int ro = Address.RowNumber;
-                int maxCo = 0;
-                Boolean isDataTable = false;
-                Boolean isDataReader = false;
-                foreach (object m in data)
+                var ro = Address.RowNumber;
+                var maxCo = 0;
+                var isDataTable = false;
+                var isDataReader = false;
+                foreach (var m in data)
                 {
-                    int co = Address.ColumnNumber;
+                    var co = Address.ColumnNumber;
 
                     if (m.GetType().IsPrimitive || m is string || m is DateTime || m is Decimal)
                     {
@@ -764,7 +700,7 @@
                     else if (m.GetType().IsArray)
                     {
                         // dynamic arr = m;
-                        foreach (object item in (Array)m)
+                        foreach (var item in (Array)m)
                         {
                             SetValue(item, ro, co);
                             co++;
@@ -775,7 +711,7 @@
                         if (!isDataTable)
                             isDataTable = true;
 
-                        foreach (object item in (m as DataRow).ItemArray)
+                        foreach (var item in (m as DataRow).ItemArray)
                         {
                             SetValue(item, ro, co);
                             co++;
@@ -788,8 +724,8 @@
 
                         var record = m as IDataRecord;
 
-                        Int32 fieldCount = record.FieldCount;
-                        for (int i = 0; i < fieldCount; i++)
+                        var fieldCount = record.FieldCount;
+                        for (var i = 0; i < fieldCount; i++)
                         {
                             SetValue(record[i], ro, co);
                             co++;
@@ -798,14 +734,14 @@
                     else
                     {
                         var fieldInfo = m.GetType().GetFields();
-                        foreach (FieldInfo info in fieldInfo)
+                        foreach (var info in fieldInfo)
                         {
                             SetValue(info.GetValue(m), ro, co);
                             co++;
                         }
 
                         var propertyInfo = m.GetType().GetProperties();
-                        foreach (PropertyInfo info in propertyInfo)
+                        foreach (var info in propertyInfo)
                         {
                             if ((info as IEnumerable) == null)
                                 SetValue(info.GetValue(m, null), ro, co);
@@ -950,7 +886,7 @@
 
             if (clearOptions == XLClearOptions.Formats || clearOptions == XLClearOptions.ContentsAndFormats)
             {
-                if(HasDataValidation)
+                if (HasDataValidation)
                     DataValidation.Clear();
 
                 SetStyle(Worksheet.Style);
@@ -1171,6 +1107,172 @@
             return Worksheet.Row(Address.RowNumber);
         }
 
+        public IXLCell CopyTo(IXLCell target)
+        {
+            (target as XLCell).CopyFrom(this, true);
+            return target;
+        }
+
+        public IXLCell CopyTo(String target)
+        {
+            return CopyTo(GetTargetCell(target, Worksheet));
+        }
+
+
+        public IXLCell CopyFrom(IXLCell otherCell)
+        {
+            return CopyFrom(otherCell as XLCell, true);
+        }
+
+        public IXLCell CopyFrom(String otherCell)
+        {
+            return CopyFrom(GetTargetCell(otherCell, Worksheet));
+        }
+
+        public IXLCell SetFormulaA1(String formula)
+        {
+            FormulaA1 = formula;
+            return this;
+        }
+
+        public IXLCell SetFormulaR1C1(String formula)
+        {
+            FormulaR1C1 = formula;
+            return this;
+        }
+
+        public Boolean HasDataValidation
+        {
+            get
+            {
+                using (var asRange = AsRange())
+                    return Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange) && dv.IsDirty());
+            }
+        }
+
+        public IXLDataValidation SetDataValidation()
+        {
+            return DataValidation;
+        }
+
+        public void Select()
+        {
+            AsRange().Select();
+        }
+
+        public IXLConditionalFormat AddConditionalFormat()
+        {
+            using (var r = AsRange())
+                return r.AddConditionalFormat();
+        }
+
+        public Boolean Active
+        {
+            get { return Worksheet.ActiveCell == this; }
+            set
+            {
+                if (value)
+                    Worksheet.ActiveCell = this;
+                else if (Active)
+                    Worksheet.ActiveCell = null;
+            }
+        }
+
+        public IXLCell SetActive(Boolean value = true)
+        {
+            Active = value;
+            return this;
+        }
+
+        public Boolean HasHyperlink
+        {
+            get { return _hyperlink != null; }
+        }
+
+        public XLHyperlink GetHyperlink()
+        {
+            if (HasHyperlink)
+                return Hyperlink;
+
+            return Value as XLHyperlink;
+        }
+
+        public Boolean TryGetValue<T>(out T value)
+        {
+            var currValue = Value;
+
+            if (typeof(T) == typeof(TimeSpan))
+            {
+                TimeSpan tmp;
+                Boolean retVal = true;
+
+                if (currValue is TimeSpan)
+                {
+                    tmp = (TimeSpan)currValue;
+                }
+                else if (!TimeSpan.TryParse(currValue.ToString(), out tmp))
+                {
+                    retVal = false;
+                }
+
+                value = (T)Convert.ChangeType(tmp, typeof(T));
+                return retVal;
+            }
+
+            //if (currValue is TimeSpan)
+            //{
+                
+            //    if (typeof(T) == typeof(String))
+            //        return (T)Convert.ChangeType(currValue.ToString(), typeof(T));
+
+            //    return (T)currValue;
+            //}
+
+            //if (currValue is IXLRichText)
+            //    return (T)RichText;
+
+            //if (typeof(T) == typeof(String))
+            //{
+            //    var valToUse = currValue.ToString();
+            //    if (!utfPattern.Match(valToUse).Success)
+            //        return (T)Convert.ChangeType(currValue, typeof(T));
+
+            //    var sb = new StringBuilder();
+            //    var lastIndex = 0;
+            //    foreach (Match match in utfPattern.Matches(valToUse))
+            //    {
+            //        var matchString = match.Value;
+            //        var matchIndex = match.Index;
+            //        sb.Append(valToUse.Substring(lastIndex, matchIndex - lastIndex));
+
+            //        sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
+
+            //        lastIndex = matchIndex + matchString.Length;
+            //    }
+            //    if (lastIndex < valToUse.Length)
+            //        sb.Append(valToUse.Substring(lastIndex));
+
+            //    return (T)Convert.ChangeType(sb.ToString(), typeof(T));
+            //}
+
+            value = (T)Convert.ChangeType(currValue, typeof(T));
+            return true;
+        }
+
+        //public Boolean TryGetDouble(out Double value);
+
+        //public Boolean TryGetBoolean(out Boolean value);
+
+        //public Boolean TryGetDateTime(out DateTime value);
+
+        //public Boolean TryGetTimeSpan(out TimeSpan value);
+
+        public Boolean TryGetHyperlink(out XLHyperlink value)
+        {
+            value = GetHyperlink();
+            return value != null;
+        }
+
         #endregion
 
         #region IXLStylized Members
@@ -1206,6 +1308,66 @@
 
         #endregion
 
+        private bool SetRangeColumns(object value)
+        {
+            var columns = value as XLRangeColumns;
+            if (columns == null)
+                return SetColumns(value);
+
+            var cell = this;
+            foreach (var column in columns)
+            {
+                cell.SetRange(column);
+                cell = cell.CellRight();
+            }
+            return true;
+        }
+
+        private bool SetColumns(object value)
+        {
+            var columns = value as XLColumns;
+            if (columns == null)
+                return false;
+
+            var cell = this;
+            foreach (var column in columns)
+            {
+                cell.SetRange(column);
+                cell = cell.CellRight();
+            }
+            return true;
+        }
+
+        private bool SetRangeRows(object value)
+        {
+            var rows = value as XLRangeRows;
+            if (rows == null)
+                return SetRows(value);
+
+            var cell = this;
+            foreach (var row in rows)
+            {
+                cell.SetRange(row);
+                cell = cell.CellBelow();
+            }
+            return true;
+        }
+
+        private bool SetRows(object value)
+        {
+            var rows = value as XLRows;
+            if (rows == null)
+                return false;
+
+            var cell = this;
+            foreach (var row in rows)
+            {
+                cell.SetRange(row);
+                cell = cell.CellBelow();
+            }
+            return true;
+        }
+
         public XLRange AsRange()
         {
             return _worksheet.Range(Address, Address);
@@ -1238,7 +1400,7 @@
 
         private string GetFormat()
         {
-            string format = String.Empty;
+            var format = String.Empty;
             var style = GetStyleForRead();
             if (XLHelper.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
@@ -1277,14 +1439,14 @@
             {
                 if (!(asRange is XLRow || asRange is XLColumn))
                 {
-                    Int32 maxRows = asRange.RowCount();
-                    Int32 maxColumns = asRange.ColumnCount();
+                    var maxRows = asRange.RowCount();
+                    var maxColumns = asRange.ColumnCount();
                     Worksheet.Range(Address.RowNumber, Address.ColumnNumber, maxRows, maxColumns).Clear();
                 }
 
-                Int32 minRow = asRange.RangeAddress.FirstAddress.RowNumber;
-                Int32 minColumn = asRange.RangeAddress.FirstAddress.ColumnNumber;
-                foreach (XLCell sourceCell in asRange.CellsUsed(true))
+                var minRow = asRange.RangeAddress.FirstAddress.RowNumber;
+                var minColumn = asRange.RangeAddress.FirstAddress.ColumnNumber;
+                foreach (var sourceCell in asRange.CellsUsed(true))
                 {
                     Worksheet.Cell(
                         Address.RowNumber + sourceCell.Address.RowNumber - minRow,
@@ -1329,14 +1491,14 @@
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
-        private void SetValue<T>(T value, int ro, int co) where T: class
+        private void SetValue<T>(T value, int ro, int co) where T : class
         {
             if (value == null)
                 _worksheet.Cell(ro, co).SetValue(String.Empty);
             else
             {
                 if (value is IConvertible)
-                    _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
+                    _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof (T)));
                 else
                     _worksheet.Cell(ro, co).SetValue(value);
             }
@@ -1345,7 +1507,7 @@
         private void SetValue(object value)
         {
             FormulaA1 = String.Empty;
-            string val = value == null ? String.Empty : value.ToString();
+            var val = value == null ? String.Empty : value.ToString();
             _richText = null;
             if (val.Length == 0)
                 _dataType = XLCellValues.Text;
@@ -1407,37 +1569,37 @@
             if (_formatCodes == null)
             {
                 var fCodes = new Dictionary<int, string>
-                                 {
-                                     {0, string.Empty},
-                                     {1, "0"},
-                                     {2, "0.00"},
-                                     {3, "#,##0"},
-                                     {4, "#,##0.00"},
-                                     {7, "$#,##0.00_);($#,##0.00)"},
-                                     {9, "0%"},
-                                     {10, "0.00%"},
-                                     {11, "0.00E+00"},
-                                     {12, "# ?/?"},
-                                     {13, "# ??/??"},
-                                     {14, "M/d/yyyy"},
-                                     {15, "d-MMM-yy"},
-                                     {16, "d-MMM"},
-                                     {17, "MMM-yy"},
-                                     {18, "h:mm tt"},
-                                     {19, "h:mm:ss tt"},
-                                     {20, "H:mm"},
-                                     {21, "H:mm:ss"},
-                                     {22, "M/d/yyyy H:mm"},
-                                     {37, "#,##0 ;(#,##0)"},
-                                     {38, "#,##0 ;[Red](#,##0)"},
-                                     {39, "#,##0.00;(#,##0.00)"},
-                                     {40, "#,##0.00;[Red](#,##0.00)"},
-                                     {45, "mm:ss"},
-                                     {46, "[h]:mm:ss"},
-                                     {47, "mmss.0"},
-                                     {48, "##0.0E+0"},
-                                     {49, "@"}
-                                 };
+                    {
+                        {0, string.Empty},
+                        {1, "0"},
+                        {2, "0.00"},
+                        {3, "#,##0"},
+                        {4, "#,##0.00"},
+                        {7, "$#,##0.00_);($#,##0.00)"},
+                        {9, "0%"},
+                        {10, "0.00%"},
+                        {11, "0.00E+00"},
+                        {12, "# ?/?"},
+                        {13, "# ??/??"},
+                        {14, "M/d/yyyy"},
+                        {15, "d-MMM-yy"},
+                        {16, "d-MMM"},
+                        {17, "MMM-yy"},
+                        {18, "h:mm tt"},
+                        {19, "h:mm:ss tt"},
+                        {20, "H:mm"},
+                        {21, "H:mm:ss"},
+                        {22, "M/d/yyyy H:mm"},
+                        {37, "#,##0 ;(#,##0)"},
+                        {38, "#,##0 ;[Red](#,##0)"},
+                        {39, "#,##0.00;(#,##0.00)"},
+                        {40, "#,##0.00;[Red](#,##0.00)"},
+                        {45, "mm:ss"},
+                        {46, "[h]:mm:ss"},
+                        {47, "mmss.0"},
+                        {48, "##0.0E+0"},
+                        {49, "@"}
+                    };
                 _formatCodes = fCodes;
             }
 
@@ -1460,17 +1622,17 @@
             if (XLHelper.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
 
-            string value = ">" + strValue + "<";
+            var value = ">" + strValue + "<";
 
             var regex = conversionType == FormulaConversionType.A1ToR1C1 ? A1Regex : R1C1Regex;
 
             var sb = new StringBuilder();
-            int lastIndex = 0;
+            var lastIndex = 0;
 
-            foreach (Match match in regex.Matches(value).Cast<Match>())
+            foreach (var match in regex.Matches(value).Cast<Match>())
             {
-                string matchString = match.Value;
-                int matchIndex = match.Index;
+                var matchString = match.Value;
+                var matchIndex = match.Index;
                 if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
                 {
 // Check if the match is in between quotes
@@ -1487,19 +1649,19 @@
             if (lastIndex < value.Length)
                 sb.Append(value.Substring(lastIndex));
 
-            string retVal = sb.ToString();
+            var retVal = sb.ToString();
             return retVal.Substring(1, retVal.Length - 2);
         }
 
         private string GetA1Address(string r1C1Address, int rowsToShift, int columnsToShift)
         {
-            string addressToUse = r1C1Address.ToUpper();
+            var addressToUse = r1C1Address.ToUpper();
 
             if (addressToUse.Contains(':'))
             {
                 var parts = addressToUse.Split(':');
-                string p1 = parts[0];
-                string p2 = parts[1];
+                var p1 = parts[0];
+                var p2 = parts[1];
                 string leftPart;
                 string rightPart;
                 if (p1.StartsWith("R"))
@@ -1516,13 +1678,13 @@
                 return leftPart + ":" + rightPart;
             }
 
-            string rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
-            string rowToReturn = GetA1Row(rowPart, rowsToShift);
+            var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
+            var rowToReturn = GetA1Row(rowPart, rowsToShift);
 
-            string columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
-            string columnToReturn = GetA1Column(columnPart, columnsToShift);
+            var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
+            var columnToReturn = GetA1Column(columnPart, columnsToShift);
 
-            string retAddress = columnToReturn + rowToReturn;
+            var retAddress = columnToReturn + rowToReturn;
             return retAddress;
         }
 
@@ -1533,8 +1695,8 @@
                 columnToReturn = XLHelper.GetColumnLetterFromNumber(Address.ColumnNumber + columnsToShift);
             else
             {
-                int bIndex = columnPart.IndexOf("[");
-                int mIndex = columnPart.IndexOf("-");
+                var bIndex = columnPart.IndexOf("[");
+                var mIndex = columnPart.IndexOf("-");
                 if (bIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
@@ -1552,7 +1714,7 @@
                 {
                     columnToReturn = "$" +
                                      XLHelper.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)) +
-                                                                           columnsToShift);
+                                                                        columnsToShift);
                 }
             }
 
@@ -1566,7 +1728,7 @@
                 rowToReturn = (Address.RowNumber + rowsToShift).ToString();
             else
             {
-                int bIndex = rowPart.IndexOf("[");
+                var bIndex = rowPart.IndexOf("[");
                 if (bIndex >= 0)
                 {
                     rowToReturn =
@@ -1585,30 +1747,30 @@
             if (a1Address.Contains(':'))
             {
                 var parts = a1Address.Split(':');
-                string p1 = parts[0];
-                string p2 = parts[1];
+                var p1 = parts[0];
+                var p2 = parts[1];
                 int row1;
                 if (Int32.TryParse(p1.Replace("$", string.Empty), out row1))
                 {
-                    int row2 = Int32.Parse(p2.Replace("$", string.Empty));
-                    string leftPart = GetR1C1Row(row1, p1.Contains('$'), rowsToShift);
-                    string rightPart = GetR1C1Row(row2, p2.Contains('$'), rowsToShift);
+                    var row2 = Int32.Parse(p2.Replace("$", string.Empty));
+                    var leftPart = GetR1C1Row(row1, p1.Contains('$'), rowsToShift);
+                    var rightPart = GetR1C1Row(row2, p2.Contains('$'), rowsToShift);
                     return leftPart + ":" + rightPart;
                 }
                 else
                 {
-                    int column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
-                    int column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
-                    string leftPart = GetR1C1Column(column1, p1.Contains('$'), columnsToShift);
-                    string rightPart = GetR1C1Column(column2, p2.Contains('$'), columnsToShift);
+                    var column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
+                    var column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
+                    var leftPart = GetR1C1Column(column1, p1.Contains('$'), columnsToShift);
+                    var rightPart = GetR1C1Column(column2, p2.Contains('$'), columnsToShift);
                     return leftPart + ":" + rightPart;
                 }
             }
 
             var address = XLAddress.Create(_worksheet, a1Address);
 
-            string rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, rowsToShift);
-            string columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, columnsToShift);
+            var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, rowsToShift);
+            var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, columnsToShift);
 
             return rowPart + columnPart;
         }
@@ -1617,7 +1779,7 @@
         {
             string rowPart;
             rowNumber += rowsToShift;
-            int rowDiff = rowNumber - Address.RowNumber;
+            var rowDiff = rowNumber - Address.RowNumber;
             if (rowDiff != 0 || fixedRow)
                 rowPart = fixedRow ? String.Format("R{0}", rowNumber) : String.Format("R[{0}]", rowDiff);
             else
@@ -1630,7 +1792,7 @@
         {
             string columnPart;
             columnNumber += columnsToShift;
-            int columnDiff = columnNumber - Address.ColumnNumber;
+            var columnDiff = columnNumber - Address.ColumnNumber;
             if (columnDiff != 0 || fixedColumn)
                 columnPart = fixedColumn ? String.Format("C{0}", columnNumber) : String.Format("C[{0}]", columnDiff);
             else
@@ -1661,32 +1823,12 @@
             if (pair.Length == 1)
                 return defaultWorksheet.Cell(target);
 
-            String wsName = pair[0];
+            var wsName = pair[0];
             if (wsName.StartsWith("'"))
                 wsName = wsName.Substring(1, wsName.Length - 2);
             return defaultWorksheet.Workbook.Worksheet(wsName).Cell(pair[1]);
         }
 
-        public IXLCell CopyTo(IXLCell target)
-        {
-            (target as XLCell).CopyFrom(this, true);
-            return target;
-        }
-        public IXLCell CopyTo(String target)
-        {
-            return CopyTo(GetTargetCell(target, Worksheet));
-        }
-
-
-        public IXLCell CopyFrom(IXLCell otherCell)
-        {
-            return CopyFrom(otherCell as XLCell, true);
-        }
-        public IXLCell CopyFrom(String otherCell)
-        {
-            return CopyFrom(GetTargetCell(otherCell, Worksheet));
-        }
-        
 
         public IXLCell CopyFrom(XLCell otherCell, Boolean copyDataValidations)
         {
@@ -1698,35 +1840,34 @@
             var conditionalFormats = otherCell.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(otherCell)).ToList();
             foreach (var cf in conditionalFormats)
             {
-                var c = new XLConditionalFormat(cf as XLConditionalFormat) { Range = AsRange() };
+                var c = new XLConditionalFormat(cf as XLConditionalFormat) {Range = AsRange()};
                 var oldValues = c.Values.Values.ToList();
                 c.Values.Clear();
-                foreach(var v in oldValues)
+                foreach (var v in oldValues)
                 {
-                    String f = v.Value;
+                    var f = v.Value;
                     if (v.IsFormula)
                     {
                         var r1c1 = otherCell.GetFormulaR1C1(f);
                         f = GetFormulaA1(r1c1);
                     }
-                        
 
-                    c.Values.Add(new XLFormula { _value = f, IsFormula = v.IsFormula });
+
+                    c.Values.Add(new XLFormula {_value = f, IsFormula = v.IsFormula});
                 }
-                
+
                 _worksheet.ConditionalFormats.Add(c);
             }
 
             if (copyDataValidations)
             {
-
-                Boolean eventTracking = Worksheet.EventTrackingEnabled;
+                var eventTracking = Worksheet.EventTrackingEnabled;
                 Worksheet.EventTrackingEnabled = false;
-                if(otherCell.HasDataValidation)
+                if (otherCell.HasDataValidation)
                     CopyDataValidation(otherCell, otherCell.DataValidation);
                 else if (HasDataValidation)
                 {
-                    using(var asRange = AsRange())
+                    using (var asRange = AsRange())
                         Worksheet.DataValidations.Delete(asRange);
                 }
                 Worksheet.EventTrackingEnabled = eventTracking;
@@ -1737,11 +1878,11 @@
 
         internal void CopyDataValidation(XLCell otherCell, XLDataValidation otherDv)
         {
-                var thisDv = DataValidation;
-                thisDv.CopyFrom(otherDv);
-                thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
-                thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));
-                thisDv.MaxValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MaxValue));
+            var thisDv = DataValidation;
+            thisDv.CopyFrom(otherDv);
+            thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
+            thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));
+            thisDv.MaxValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MaxValue));
         }
 
         internal void ShiftFormulaRows(XLRange shiftedRange, int rowsShifted)
@@ -1754,24 +1895,24 @@
         {
             if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
-            string value = formulaA1; // ">" + formulaA1 + "<";
+            var value = formulaA1; // ">" + formulaA1 + "<";
 
             var regex = A1SimpleRegex;
 
             var sb = new StringBuilder();
-            int lastIndex = 0;
+            var lastIndex = 0;
 
-            String shiftedWsName = shiftedRange.Worksheet.Name;
-            foreach (Match match in regex.Matches(value).Cast<Match>())
+            var shiftedWsName = shiftedRange.Worksheet.Name;
+            foreach (var match in regex.Matches(value).Cast<Match>())
             {
-                string matchString = match.Value;
-                int matchIndex = match.Index;
+                var matchString = match.Value;
+                var matchIndex = match.Index;
                 if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
                 {
                     // Check that the match is not between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     string sheetName;
-                    bool useSheetName = false;
+                    var useSheetName = false;
                     if (matchString.Contains('!'))
                     {
                         sheetName = matchString.Substring(0, matchString.IndexOf('!'));
@@ -1784,7 +1925,7 @@
 
                     if (String.Compare(sheetName, shiftedWsName, true) == 0)
                     {
-                        string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
+                        var rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1ColumnRegex.IsMatch(rangeAddress))
                         {
                             var matchRange = worksheetInAction.Workbook.Worksheet(sheetName).Range(rangeAddress);
@@ -1795,8 +1936,8 @@
                                 if (A1RowRegex.IsMatch(rangeAddress))
                                 {
                                     var rows = rangeAddress.Split(':');
-                                    string row1String = rows[0];
-                                    string row2String = rows[1];
+                                    var row1String = rows[0];
+                                    var row2String = rows[1];
                                     string row1;
                                     if (row1String[0] == '$')
                                     {
@@ -1975,23 +2116,23 @@
         {
             if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
-            string value = formulaA1; // ">" + formulaA1 + "<";
+            var value = formulaA1; // ">" + formulaA1 + "<";
 
             var regex = A1SimpleRegex;
 
             var sb = new StringBuilder();
-            int lastIndex = 0;
+            var lastIndex = 0;
 
-            foreach (Match match in regex.Matches(value).Cast<Match>())
+            foreach (var match in regex.Matches(value).Cast<Match>())
             {
-                string matchString = match.Value;
-                int matchIndex = match.Index;
+                var matchString = match.Value;
+                var matchIndex = match.Index;
                 if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
                 {
 // Check that the match is not between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     string sheetName;
-                    bool useSheetName = false;
+                    var useSheetName = false;
                     if (matchString.Contains('!'))
                     {
                         sheetName = matchString.Substring(0, matchString.IndexOf('!'));
@@ -2004,7 +2145,7 @@
 
                     if (String.Compare(sheetName, shiftedRange.Worksheet.Name, true) == 0)
                     {
-                        string rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
+                        var rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1RowRegex.IsMatch(rangeAddress))
                         {
                             var matchRange = worksheetInAction.Workbook.Worksheet(sheetName).Range(rangeAddress);
@@ -2020,8 +2161,8 @@
                                 if (A1ColumnRegex.IsMatch(rangeAddress))
                                 {
                                     var columns = rangeAddress.Split(':');
-                                    string column1String = columns[0];
-                                    string column2String = columns[1];
+                                    var column1String = columns[0];
+                                    var column2String = columns[1];
                                     string column1;
                                     if (column1String[0] == '$')
                                     {
@@ -2326,61 +2467,5 @@
         }
 
         #endregion
-
-        public IXLCell SetFormulaA1(String formula)
-        {
-            FormulaA1 = formula;
-            return this;
-        }
-
-        public IXLCell SetFormulaR1C1(String formula)
-        {
-            FormulaR1C1 = formula;
-            return this;
-        }
-
-        public Boolean HasDataValidation
-        {
-            get
-            {
-                using(var asRange = AsRange())
-                    return Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange) && dv.IsDirty());
-            }
-        }
-
-        public IXLDataValidation SetDataValidation()
-        {
-            return DataValidation;
-        }
-
-        public void Select()
-        {
-            AsRange().Select();
-        }
-
-        public IXLConditionalFormat AddConditionalFormat()
-        {
-            using (var r = AsRange())
-                return r.AddConditionalFormat();
-        }
-
-        public Boolean Active
-        {
-            get { return Worksheet.ActiveCell == this; }
-            set
-            {
-                if (value)
-                    Worksheet.ActiveCell = this;
-                else if (Active)
-                    Worksheet.ActiveCell = null;
-
-            }
-        }
-
-        public IXLCell SetActive(Boolean value = true)
-        {
-            Active = value;
-            return this;
-        }
     }
 }
