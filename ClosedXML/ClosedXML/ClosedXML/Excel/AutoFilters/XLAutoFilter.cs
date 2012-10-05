@@ -94,8 +94,11 @@ namespace ClosedXML.Excel
 
         public XLAutoFilter Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase, Boolean ignoreBlanks)
         {
+            var ws = Range.Worksheet as XLWorksheet;
+            ws.SuspendEvents();
             Range.Range(Range.FirstCell().CellBelow(), Range.LastCell()).Sort(columnToSortBy, sortOrder, matchCase,
-                                                                              ignoreBlanks).Dispose();
+                                                                              ignoreBlanks);
+
             Sorted = true;
             SortOrder = sortOrder;
             SortColumn = columnToSortBy;
@@ -105,7 +108,7 @@ namespace ClosedXML.Excel
                 using (var rows = Range.Rows(2, Range.RowCount()))
                 {
                     foreach (IXLRangeRow row in rows)
-                        row.WorksheetRow().Unhide().Dispose();
+                        row.WorksheetRow().Unhide();
                 }
 
                 foreach (KeyValuePair<int, List<XLFilter>> kp in Filters)
@@ -125,9 +128,9 @@ namespace ClosedXML.Excel
                                 if (firstFilter)
                                 {
                                     if (match)
-                                        row.WorksheetRow().Unhide().Dispose();
+                                        row.WorksheetRow().Unhide();
                                     else
-                                        row.WorksheetRow().Hide().Dispose();
+                                        row.WorksheetRow().Hide();
                                 }
                                 else
                                 {
@@ -136,13 +139,13 @@ namespace ClosedXML.Excel
                                         if (!row.WorksheetRow().IsHidden)
                                         {
                                             if (match)
-                                                row.WorksheetRow().Unhide().Dispose();
+                                                row.WorksheetRow().Unhide();
                                             else
-                                                row.WorksheetRow().Hide().Dispose();
+                                                row.WorksheetRow().Hide();
                                         }
                                     }
                                     else if (match)
-                                        row.WorksheetRow().Unhide().Dispose();
+                                        row.WorksheetRow().Unhide();
                                 }
                             }
                             firstFilter = false;
@@ -150,7 +153,7 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-
+            ws.ResumeEvents();
             return this;
         }
     }
