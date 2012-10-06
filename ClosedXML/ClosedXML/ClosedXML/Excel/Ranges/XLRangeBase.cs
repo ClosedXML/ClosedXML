@@ -1702,6 +1702,9 @@ namespace ClosedXML.Excel
             Int32 maxRow = RowCount();
             if (maxRow == XLHelper.MaxRowNumber)
                 maxRow = LastCellUsed(true).Address.RowNumber;
+
+            // Call all cells to make sure they exist even if empty
+            Worksheet.Range(1, 1, maxRow, RangeAddress.LastAddress.ColumnNumber).Cells().ForEach(c=> { });
             SortingRangeRows(1, maxRow);
         }
 

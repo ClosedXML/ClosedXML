@@ -297,7 +297,7 @@ namespace ClosedXML.Excel
                     if (cell1 != null)
                     {
                         cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
-                        _cellsDictionary.Remove(sp1);
+                        Remove(sp1);
                         if (cell2 != null)
                             Add(sp1, cell2);
                     }
@@ -305,7 +305,7 @@ namespace ClosedXML.Excel
                     if (cell2 == null) continue;
 
                     cell2.Address = new XLAddress(cell2.Worksheet, sp1.Row, sp1.Column, false, false);
-                    _cellsDictionary.Remove(sp2);
+                    Remove(sp2);
                     if (cell1 != null)
                         Add(sp2, cell1);
                 }
