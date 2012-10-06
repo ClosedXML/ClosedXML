@@ -236,7 +236,7 @@
                 _cellValue = dtTest.ToOADate().ToString();
             }
             else if (
-                value is sbyte
+                value is    sbyte
                 || value is byte
                 || value is short
                 || value is ushort
@@ -268,44 +268,11 @@
 
         public T GetValue<T>()
         {
-            var val = Value;
+            T retVal;
+            if(TryGetValue(out retVal))
+                return retVal;
 
-            if (val is TimeSpan)
-            {
-                if (typeof (T) == typeof (String))
-                    return (T)Convert.ChangeType(val.ToString(), typeof (T));
-
-                return (T)val;
-            }
-
-            if (val is IXLRichText)
-                return (T)RichText;
-
-            if (typeof (T) == typeof (String))
-            {
-                var valToUse = val.ToString();
-                if (!utfPattern.Match(valToUse).Success)
-                    return (T)Convert.ChangeType(val, typeof (T));
-
-                var sb = new StringBuilder();
-                var lastIndex = 0;
-                foreach (Match match in utfPattern.Matches(valToUse))
-                {
-                    var matchString = match.Value;
-                    var matchIndex = match.Index;
-                    sb.Append(valToUse.Substring(lastIndex, matchIndex - lastIndex));
-
-                    sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
-
-                    lastIndex = matchIndex + matchString.Length;
-                }
-                if (lastIndex < valToUse.Length)
-                    sb.Append(valToUse.Substring(lastIndex));
-
-                return (T)Convert.ChangeType(sb.ToString(), typeof (T));
-            }
-
-            return (T)Convert.ChangeType(val, typeof (T));
+            throw new Exception("Cannot convert cell value to " + typeof(T));
         }
 
         public string GetString()
@@ -1201,71 +1168,160 @@
         {
             var currValue = Value;
 
-            if (typeof(T) == typeof(TimeSpan))
+            if (currValue == null)
+            {
+                value = default(T);
+                return true;
+            }
+
+            bool b;
+            if (TryGetTimeSpanValue(out value, currValue, out b)) return b;
+
+            if (TryGetRichStringValue(out value)) return true;
+
+            if (TryGetStringValue(out value, currValue)) return true;
+
+            var strValue = currValue.ToString();
+            if (typeof(T) == typeof(bool)) return TryGetBasicValue<T, bool>(out value, strValue, bool.TryParse);
+            if (typeof(T) == typeof(sbyte)) return TryGetBasicValue<T, sbyte>(out value, strValue, sbyte.TryParse);
+            if (typeof(T) == typeof(byte)) return TryGetBasicValue<T, byte>(out value, strValue, byte.TryParse);
+            if (typeof(T) == typeof(short)) return TryGetBasicValue<T, short>(out value, strValue, short.TryParse);
+            if (typeof(T) == typeof(ushort)) return TryGetBasicValue<T, ushort>(out value, strValue, ushort.TryParse);
+            if (typeof(T) == typeof(int)) return TryGetBasicValue<T, int>(out value, strValue, int.TryParse);
+            if (typeof(T) == typeof(uint)) return TryGetBasicValue<T, uint>(out value, strValue, uint.TryParse);
+            if (typeof(T) == typeof(long)) return TryGetBasicValue<T, long>(out value, strValue, long.TryParse);
+            if (typeof(T) == typeof(ulong)) return TryGetBasicValue<T, ulong>(out value, strValue, ulong.TryParse);
+            if (typeof(T) == typeof(float)) return TryGetBasicValue<T, float>(out value, strValue, float.TryParse);
+            if (typeof(T) == typeof(double)) return TryGetBasicValue<T, double>(out value, strValue, double.TryParse);
+            if (typeof(T) == typeof(decimal)) return TryGetBasicValue<T, decimal>(out value, strValue, decimal.TryParse);
+
+            if (typeof(T) == typeof(XLHyperlink))
+            {
+                XLHyperlink tmp = GetHyperlink();
+                if (tmp != null)
+                {
+                    value = (T)Convert.ChangeType(tmp, typeof(T));
+                    return true;
+                }
+
+                value = default(T);
+                return false;
+            }
+
+            try
+            {
+                value = (T)Convert.ChangeType(currValue, typeof(T));
+                return true;
+            }
+            catch
+            {
+                value = default(T);
+                return false;
+            }
+        }
+
+        private static bool TryGetTimeSpanValue<T>(out T value, object currValue, out bool b)
+        {
+            if (typeof (T) == typeof (TimeSpan))
             {
                 TimeSpan tmp;
                 Boolean retVal = true;
 
                 if (currValue is TimeSpan)
                 {
-                    tmp = (TimeSpan)currValue;
+                    tmp = (TimeSpan) currValue;
                 }
                 else if (!TimeSpan.TryParse(currValue.ToString(), out tmp))
                 {
                     retVal = false;
                 }
 
-                value = (T)Convert.ChangeType(tmp, typeof(T));
-                return retVal;
+                value = (T) Convert.ChangeType(tmp, typeof (T));
+                {
+                    b = retVal;
+                    return true;
+                }
             }
+            value = default(T);
+            b = false;
+            return false;
+        }
 
-
-            if (typeof(T) == typeof(IXLRichText))
+        private bool TryGetRichStringValue<T>(out T value)
+        {
+            if (typeof (T) == typeof (IXLRichText))
             {
                 value = (T) RichText;
                 return true;
             }
-
-            //if (typeof(T) == typeof(String))
-            //{
-            //    var valToUse = currValue.ToString();
-            //    if (!utfPattern.Match(valToUse).Success)
-            //        return (T)Convert.ChangeType(currValue, typeof(T));
-
-            //    var sb = new StringBuilder();
-            //    var lastIndex = 0;
-            //    foreach (Match match in utfPattern.Matches(valToUse))
-            //    {
-            //        var matchString = match.Value;
-            //        var matchIndex = match.Index;
-            //        sb.Append(valToUse.Substring(lastIndex, matchIndex - lastIndex));
-
-            //        sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
-
-            //        lastIndex = matchIndex + matchString.Length;
-            //    }
-            //    if (lastIndex < valToUse.Length)
-            //        sb.Append(valToUse.Substring(lastIndex));
-
-            //    return (T)Convert.ChangeType(sb.ToString(), typeof(T));
-            //}
-
-            value = (T)Convert.ChangeType(currValue, typeof(T));
-            return true;
+            value = default(T);
+            return false;
         }
 
-        //public Boolean TryGetDouble(out Double value);
-
-        //public Boolean TryGetBoolean(out Boolean value);
-
-        //public Boolean TryGetDateTime(out DateTime value);
-
-        //public Boolean TryGetTimeSpan(out TimeSpan value);
-
-        public Boolean TryGetHyperlink(out XLHyperlink value)
+        private static bool TryGetStringValue<T>(out T value, object currValue)
         {
-            value = GetHyperlink();
-            return value != null;
+            if (typeof (T) == typeof (String))
+            {
+                var valToUse = currValue.ToString();
+                if (!utfPattern.Match(valToUse).Success)
+                {
+                    value = (T) Convert.ChangeType(valToUse, typeof (T));
+                    return true;
+                }
+
+                var sb = new StringBuilder();
+                var lastIndex = 0;
+                foreach (Match match in utfPattern.Matches(valToUse))
+                {
+                    var matchString = match.Value;
+                    var matchIndex = match.Index;
+                    sb.Append(valToUse.Substring(lastIndex, matchIndex - lastIndex));
+
+                    sb.Append((char) int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
+
+                    lastIndex = matchIndex + matchString.Length;
+                }
+                if (lastIndex < valToUse.Length)
+                    sb.Append(valToUse.Substring(lastIndex));
+
+                value = (T) Convert.ChangeType(sb.ToString(), typeof (T));
+                return true;
+            }
+            value = default(T);
+            return false;
+        }
+
+        private static Boolean TryGetBooleanValue<T>(out T value, object currValue)
+        {
+            if (typeof (T) == typeof (Boolean))
+            {
+                Boolean tmp;
+                if (Boolean.TryParse(currValue.ToString(), out tmp))
+                {
+                    value = (T) Convert.ChangeType(tmp, typeof (T));
+                    {
+                        return true;
+                    }
+                }
+            }
+            value = default(T);
+            return false;
+        }
+
+        delegate Boolean Func<T>(String input, out T output);
+
+        private static Boolean TryGetBasicValue<T, U>(out T value, String currValue, Func<U> func )
+        {
+                U tmp;
+                if (func(currValue, out tmp))
+                {
+                    value = (T)Convert.ChangeType(tmp, typeof(T));
+                    {
+                        return true;
+                    }
+                }
+            value = default(T);
+            return false;
         }
 
         #endregion

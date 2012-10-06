@@ -169,5 +169,90 @@ namespace ClosedXML_Tests
             Assert.AreEqual(cell.RichText, outValue);
             Assert.AreEqual("Anything", outValue.ToString());
         }
+
+        [TestMethod]
+        public void TryGetValue_Boolean_True()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            Boolean outValue;
+            var cell = ws.Cell("A1").SetValue(true);
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.IsTrue(outValue);
+        }
+
+        [TestMethod]
+        public void TryGetValue_Boolean_False()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            Boolean outValue;
+            var cell = ws.Cell("A1").SetValue(false);
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.IsFalse(outValue);
+        }
+
+        [TestMethod]
+        public void TryGetValue_Boolean_Bad()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            Boolean outValue;
+            var cell = ws.Cell("A1").SetValue("ABC");
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
+
+        [TestMethod]
+        public void TryGetValue_Boolean_Good()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            Boolean outValue;
+            var cell = ws.Cell("A1").SetValue("True");
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.IsTrue(outValue);
+        }
+
+        [TestMethod]
+        public void TryGetValue_sbyte_Good()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            sbyte outValue;
+            var cell = ws.Cell("A1").SetValue(5);
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual((sbyte)5, outValue);
+        }
+
+        [TestMethod]
+        public void TryGetValue_sbyte_Bad()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            sbyte outValue;
+            var cell = ws.Cell("A1").SetValue(255);
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
+
+        [TestMethod]
+        public void TryGetValue_sbyte_Good2()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            sbyte outValue;
+            var cell = ws.Cell("A1").SetValue("5");
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual((sbyte)5, outValue);
+        }
+
+        [TestMethod]
+        public void TryGetValue_sbyte_Bad2()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            sbyte outValue;
+            var cell = ws.Cell("A1").SetValue("255");
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
     }
 }
