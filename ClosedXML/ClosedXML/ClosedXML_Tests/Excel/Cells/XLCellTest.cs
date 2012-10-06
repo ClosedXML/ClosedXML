@@ -145,5 +145,29 @@ namespace ClosedXML_Tests
             Assert.IsTrue(success);
             Assert.AreEqual(timeSpan, outValue);
         }
+
+        [TestMethod]
+        public void TryGetValue_RichText_Good()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRichText outValue;
+            var cell = ws.Cell("A1");
+            cell.RichText.AddText("Anything");
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(cell.RichText, outValue);
+        }
+
+        [TestMethod]
+        public void TryGetValue_RichText_Bad()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRichText outValue;
+            var cell = ws.Cell("A1").SetValue("Anything");
+            var success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(cell.RichText, outValue);
+            Assert.AreEqual("Anything", outValue.ToString());
+        }
     }
 }

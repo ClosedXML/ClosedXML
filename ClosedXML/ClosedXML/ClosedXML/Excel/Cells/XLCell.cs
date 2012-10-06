@@ -1219,17 +1219,12 @@
                 return retVal;
             }
 
-            //if (currValue is TimeSpan)
-            //{
-                
-            //    if (typeof(T) == typeof(String))
-            //        return (T)Convert.ChangeType(currValue.ToString(), typeof(T));
 
-            //    return (T)currValue;
-            //}
-
-            //if (currValue is IXLRichText)
-            //    return (T)RichText;
+            if (typeof(T) == typeof(IXLRichText))
+            {
+                value = (T) RichText;
+                return true;
+            }
 
             //if (typeof(T) == typeof(String))
             //{
