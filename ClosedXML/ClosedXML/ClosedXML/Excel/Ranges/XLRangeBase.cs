@@ -1703,8 +1703,6 @@ namespace ClosedXML.Excel
             if (maxRow == XLHelper.MaxRowNumber)
                 maxRow = LastCellUsed(true).Address.RowNumber;
 
-            // Call all cells to make sure they exist even if empty
-            Worksheet.Range(1, 1, maxRow, RangeAddress.LastAddress.ColumnNumber).Cells().ForEach(c=> { });
             SortingRangeRows(1, maxRow);
         }
 
@@ -1722,7 +1720,7 @@ namespace ClosedXML.Excel
             var range2Sp2 = new XLSheetPoint(row2InWs, lastColumn);
 
             Worksheet.Internals.CellsCollection.SwapRanges(new XLSheetRange(range1Sp1, range1Sp2),
-                                                           new XLSheetRange(range2Sp1, range2Sp2));
+                                                           new XLSheetRange(range2Sp1, range2Sp2), Worksheet);
         }
 
         private int SortRangeRows(int begPoint, int endPoint)
@@ -1787,7 +1785,7 @@ namespace ClosedXML.Excel
             var range2Sp2 = new XLSheetPoint(lastRow, col2InWs);
 
             Worksheet.Internals.CellsCollection.SwapRanges(new XLSheetRange(range1Sp1, range1Sp2),
-                                                           new XLSheetRange(range2Sp1, range2Sp2));
+                                                           new XLSheetRange(range2Sp1, range2Sp2), Worksheet);
         }
 
         private int SortRangeColumns(int begPoint, int endPoint)

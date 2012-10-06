@@ -279,7 +279,7 @@ namespace ClosedXML.Excel
             return _cellsDictionary.TryGetValue(sheetPoint, out cell) ? cell : null;
         }
 
-        internal void SwapRanges(XLSheetRange sheetRange1, XLSheetRange sheetRange2)
+        internal void SwapRanges(XLSheetRange sheetRange1, XLSheetRange sheetRange2, XLWorksheet worksheet)
         {
             Int32 rowCount = sheetRange1.LastPoint.Row - sheetRange1.FirstPoint.Row + 1;
             Int32 columnCount = sheetRange1.LastPoint.Column - sheetRange1.FirstPoint.Column + 1;
@@ -292,21 +292,22 @@ namespace ClosedXML.Excel
                     var cell1 = GetCell(sp1);
                     var cell2 = GetCell(sp2);
 
-                    if (cell1 == null && cell2 == null) continue;
+                    if (cell1 == null) cell1 = worksheet.Cell(sp1.Row, sp1.Column);
+                    if (cell2 == null) cell2 = worksheet.Cell(sp2.Row, sp2.Column);
 
-                    if (cell1 != null)
-                    {
+                    //if (cell1 != null)
+                    //{
                         cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
                         Remove(sp1);
-                        if (cell2 != null)
+                        //if (cell2 != null)
                             Add(sp1, cell2);
-                    }
+                    //}
 
-                    if (cell2 == null) continue;
+                    //if (cell2 == null) continue;
 
                     cell2.Address = new XLAddress(cell2.Worksheet, sp1.Row, sp1.Column, false, false);
                     Remove(sp2);
-                    if (cell1 != null)
+                    //if (cell1 != null)
                         Add(sp2, cell1);
                 }
             }
