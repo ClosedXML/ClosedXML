@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -10,18 +11,16 @@ namespace ClosedXML.Excel.CalcEngine
     {
         public static void Register(CalcEngine ce)
         {
-            //ce.RegisterFunction("ASC	Changes full-width (double-byte) English letters or katakana within a character string to half-width (single-byte) characters
-            ce.RegisterFunction("ASC", 1, Asc);
-
+            ce.RegisterFunction("ASC", 1, Asc); // Changes full-width (double-byte) English letters or katakana within a character string to half-width (single-byte) characters
             //ce.RegisterFunction("BAHTTEXT	Converts a number to text, using the ß (baht) currency format
             ce.RegisterFunction("CHAR", 1, _Char); // Returns the character specified by the code number
-            //ce.RegisterFunction("CLEAN	Removes all nonprintable characters from text
+            ce.RegisterFunction("CLEAN", 1, Clean); //	Removes all nonprintable characters from text
             ce.RegisterFunction("CODE", 1, Code); // Returns a numeric code for the first character in a text string
             ce.RegisterFunction("CONCATENATE", 1, int.MaxValue, Concat); //	Joins several text items into one text item
-            //ce.RegisterFunction("DOLLAR	Converts a number to text, using the $ (dollar) currency format
-            //ce.RegisterFunction("EXACT	Checks to see if two text values are identical
+            ce.RegisterFunction("DOLLAR", 1, 2, Dollar); // Converts a number to text, using the $ (dollar) currency format
+            ce.RegisterFunction("EXACT", 2, Exact); // Checks to see if two text values are identical
             ce.RegisterFunction("FIND", 2, 3, Find); //Finds one text value within another (case-sensitive)
-            //ce.RegisterFunction("FIXED	Formats a number as text with a fixed number of decimals
+            ce.RegisterFunction("FIXED", 1, 3, Fixed); // Formats a number as text with a fixed number of decimals
             //ce.RegisterFunction("JIS	Changes half-width (single-byte) English letters or katakana within a character string to full-width (double-byte) characters
             ce.RegisterFunction("LEFT", 1, 2, Left); // LEFTB	Returns the leftmost characters from a text value
             ce.RegisterFunction("LEN", 1, Len); //, Returns the number of characters in a text string
@@ -203,5 +202,45 @@ namespace ClosedXML.Excel.CalcEngine
             String toolTip = p.Count == 2 ? p[1] : String.Empty;
             return new XLHyperlink(address, toolTip);
         }
-    }
+
+        static object Clean(List<Expression> p)
+        {
+            var s = (string)p[0];
+
+            var result = new StringBuilder();
+            foreach (var c in from c in s let b = (byte)c where b >= 32 select c)
+            {
+                result.Append(c);
+            }
+            return result.ToString();
+        }
+        static object Dollar(List<Expression> p)
+        {
+            Double value = p[0];
+            int dec = p.Count == 2 ? (int)p[1] : 2;
+
+            return value.ToString("C" + dec);
+        }
+
+        static object Exact(List<Expression> p)
+        {
+            var t1 = (string)p[0];
+            var t2 = (string)p[1];
+
+            return t1 == t2;
+        }
+
+        static object Fixed(List<Expression> p)
+        {
+            Double value = p[0];
+            int dec = p.Count >= 2 ? (int)p[1] : 2;
+            Boolean com = p.Count != 3 || p[2];
+
+            var retVal = value.ToString("N" + dec);
+            if (com)
+                return retVal;
+
+            return retVal.Replace(",", String.Empty);
+        }
+    }    
 }

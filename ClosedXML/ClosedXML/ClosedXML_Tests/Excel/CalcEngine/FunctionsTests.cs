@@ -427,5 +427,53 @@ namespace ClosedXML_Tests.Excel.DataValidations
             actual = XLWorkbook.EvaluateExpr(@"Asc(""Text"")");
             Assert.AreEqual("Text", actual);
         }
+
+        [TestMethod]
+        public void Clean()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr(String.Format(@"Clean(""A{0}B"")", Environment.NewLine));
+            Assert.AreEqual("AB", actual);
+        }
+
+        [TestMethod]
+        public void Dollar()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr("Dollar(12345.123)");
+            Assert.AreEqual("$12,345.12", actual);
+
+            actual = XLWorkbook.EvaluateExpr("Dollar(12345.123, 1)");
+            Assert.AreEqual("$12,345.1", actual);
+        }
+
+        [TestMethod]
+        public void Exact()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr("Exact(\"A\", \"A\")");
+            Assert.AreEqual(true, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Exact(\"A\", \"a\")");
+            Assert.AreEqual(false, actual);
+        }
+
+        [TestMethod]
+        public void Fixed()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr("Fixed(12345.123)");
+            Assert.AreEqual("12,345.12", actual);
+
+            actual = XLWorkbook.EvaluateExpr("Fixed(12345.123, 1)");
+            Assert.AreEqual("12,345.1", actual);
+
+            actual = XLWorkbook.EvaluateExpr("Fixed(12345.123, 1, FALSE)");
+            Assert.AreEqual("12345.1", actual);
+        }
     }
 }
