@@ -475,5 +475,42 @@ namespace ClosedXML_Tests.Excel.DataValidations
             actual = XLWorkbook.EvaluateExpr("Fixed(12345.123, 1, FALSE)");
             Assert.AreEqual("12345.1", actual);
         }
+
+        [TestMethod]
+        public void Sum()
+        {
+            var cell = new XLWorkbook().AddWorksheet("Sheet1").FirstCell();
+            var fCell = cell.SetValue(1).CellBelow().SetValue(2).CellBelow();
+            fCell.FormulaA1 = "sum(A1:A2)";
+
+            Assert.AreEqual(3.0, fCell.Value);
+        }
+
+        [TestMethod]
+        public void MMult()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
+            ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
+            ws.Cell("A3").SetValue(2).CellRight().SetValue(4);
+            ws.Cell("A4").SetValue(3).CellRight().SetValue(5);
+            
+            Object actual;
+
+           // ws.Cell("A5").FormulaA1 = "MMult(A1:B2, A3:B4)";
+            //actual = ws.Cell("A5").Value;
+
+            //Assert.AreEqual(4.0, actual);
+
+            //ws.Cell("A6").FormulaA1 = "Sum(A5)";
+            //actual = ws.Cell("A6").Value;
+
+           //Assert.AreEqual(4.0, actual);
+
+            ws.Cell("A7").FormulaA1 = "Sum(MMult(A1:B2, A3:B4))";
+            actual = ws.Cell("A7").Value;
+
+            Assert.AreEqual(102.0, actual);
+        }
     }
 }

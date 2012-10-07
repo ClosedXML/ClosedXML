@@ -370,7 +370,15 @@
                         )
                         return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
 
-                    return Worksheet.Evaluate(fA1);
+                    var retVal = Worksheet.Evaluate(fA1);
+                    var retValEnumerable = retVal as IEnumerable;
+
+                    if (retValEnumerable != null)
+                        foreach (var v in retValEnumerable)
+                            return v;
+
+
+                    return retVal;
                 }
 
                 var cellValue = HasRichText ? _richText.ToString() : _cellValue;

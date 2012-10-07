@@ -33,7 +33,13 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // handle expressions
-            _list.Add(e.Evaluate());
+            var val = e.Evaluate();
+            var valEnumerable = val as IEnumerable;
+            if (valEnumerable == null)
+                _list.Add(val);
+            else
+                foreach (var v in valEnumerable)
+                    _list.Add(v);
         }
 
         public void AddValue(Object v)
@@ -58,14 +64,30 @@ namespace ClosedXML.Excel.CalcEngine
             List<Double> retVal = new List<double>();
             foreach (var value in _list)
             {
-                Double tmp;
-                if (Double.TryParse(value.ToString(), out tmp))
+                var vEnumerable = value as IEnumerable;
+                if (vEnumerable == null)
+                    AddNumericValue(value, retVal);
+                else
                 {
-                    retVal.Add(tmp);
+                    foreach (var v in vEnumerable)
+                    {
+                        AddNumericValue(v, retVal);
+                        break;
+                    }
                 }
             }
             return retVal;
         }
+
+        private static void AddNumericValue(object value, List<double> retVal)
+        {
+            Double tmp;
+            if (Double.TryParse(value.ToString(), out tmp))
+            {
+                retVal.Add(tmp);
+            }
+        }
+
         public double Product()
         {
             var nums = Numerics();

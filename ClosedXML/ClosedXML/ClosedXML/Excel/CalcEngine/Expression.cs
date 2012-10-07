@@ -473,6 +473,8 @@ namespace ClosedXML.Excel.CalcEngine
             _value = value;
         }
 
+        public object Value { get { return _value; } }
+
         // ** object model
         public override object Evaluate()
         {

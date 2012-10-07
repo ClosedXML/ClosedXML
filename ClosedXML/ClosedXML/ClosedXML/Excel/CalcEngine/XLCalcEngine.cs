@@ -49,6 +49,8 @@ namespace ClosedXML.Excel.CalcEngine
             _ce = ce;
         }
 
+        public IXLRange Range { get { return _range; } }
+
         // ** IValueObject
         public object GetValue()
         {

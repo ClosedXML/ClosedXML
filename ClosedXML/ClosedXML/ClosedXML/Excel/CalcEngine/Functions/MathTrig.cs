@@ -41,7 +41,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LOG10", 1, Log10);
             //ce.RegisterFunction("MDETERM", 1, MDeterm);
             //ce.RegisterFunction("MINVERSE", 1, MInverse);
-            //ce.RegisterFunction("MMULT", MMult, 1);
+            ce.RegisterFunction("MMULT", 2, MMult);
             ce.RegisterFunction("MOD", 2, Mod);
             ce.RegisterFunction("MROUND", 2, MRound);
             ce.RegisterFunction("MULTINOMIAL", 1, 255, Multinomial);
@@ -634,6 +634,18 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var t = new Tally(p);
             return t.Numerics().Sum(v => Math.Pow(v, 2));
+        }
+
+        private static object MMult(List<Expression> p)
+        {
+            var oExp1 = p[0] as XObjectExpression;
+            var oExp2 = p[1] as XObjectExpression;
+
+            Double value1 = oExp1 == null ? p[0] : (oExp1.Value as CellRangeReference).Range.FirstCell().GetDouble();
+            Double value2 = oExp2 == null ? p[1] : (oExp2.Value as CellRangeReference).Range.FirstCell().GetDouble();
+
+            //return value1*value2;
+            return new List<Double> {4, 5, 6, 7};
         }
     }
 }
