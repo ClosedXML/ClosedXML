@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ClosedXML_Net3.5")]
+[assembly: AssemblyTitle("ClosedXML_Package")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ClosedXML_Net3.5")]
-[assembly: AssemblyCopyright("Copyright © Manuel De Leon 2012")]
+[assembly: AssemblyCompany("eCollege")]
+[assembly: AssemblyProduct("ClosedXML_Package")]
+[assembly: AssemblyCopyright("Copyright © eCollege 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d627551d-470d-4a39-a5f1-5a71696b8200")]
+[assembly: Guid("0005e3ad-3c3f-4446-a3ab-89fc837fb20f")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -31,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.68.0.1")]
-[assembly: AssemblyFileVersion("0.68.0.1")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
