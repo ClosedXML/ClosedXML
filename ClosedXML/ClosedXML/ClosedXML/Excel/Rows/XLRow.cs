@@ -417,8 +417,8 @@ namespace ClosedXML.Excel
             get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].OutlineLevel : _outlineLevel; }
             set
             {
-                if (value < 1 || value > 8)
-                    throw new ArgumentOutOfRangeException("value", "Outline level must be between 1 and 8.");
+                if (value < 0 || value > 8)
+                    throw new ArgumentOutOfRangeException("value", "Outline level must be between 0 and 8.");
 
                 if (IsReference)
                     Worksheet.Internals.RowsCollection[RowNumber()].OutlineLevel = value;

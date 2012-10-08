@@ -979,7 +979,8 @@ namespace ClosedXML.Excel
 
         public Int32 GetMaxColumnOutline()
         {
-            return _columnOutlineCount.Count == 0 ? 0 : _columnOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
+            var list = _columnOutlineCount.Where(kp => kp.Value > 0).ToList();
+            return list.Count == 0 ? 0 : list.Max(kp => kp.Key);
         }
 
         public void IncrementRowOutline(Int32 level)

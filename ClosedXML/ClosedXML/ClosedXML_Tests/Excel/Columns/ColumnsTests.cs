@@ -207,5 +207,14 @@ namespace ClosedXML_Tests.Excel
 
             Assert.AreEqual("X", column2.Cell(2).GetString());
         }
+
+        [TestMethod]
+        public void UngroupFromAll()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            ws.Columns(1, 2).Group();
+            ws.Columns(1, 2).Ungroup(true);
+
+        }
     }
 }
