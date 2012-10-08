@@ -373,7 +373,7 @@
                     var retVal = Worksheet.Evaluate(fA1);
                     var retValEnumerable = retVal as IEnumerable;
 
-                    if (retValEnumerable != null)
+                    if (retValEnumerable != null && !(retVal is String))
                         foreach (var v in retValEnumerable)
                             return v;
 

@@ -39,8 +39,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LN", 1, Ln);
             ce.RegisterFunction("LOG", 1, 2, Log);
             ce.RegisterFunction("LOG10", 1, Log10);
-            //ce.RegisterFunction("MDETERM", 1, MDeterm);
-            //ce.RegisterFunction("MINVERSE", 1, MInverse);
+            ce.RegisterFunction("MDETERM", 1, MDeterm);
+            ce.RegisterFunction("MINVERSE", 1, MInverse);
             ce.RegisterFunction("MMULT", 2, MMult);
             ce.RegisterFunction("MOD", 2, Mod);
             ce.RegisterFunction("MROUND", 2, MRound);
@@ -638,14 +638,63 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MMult(List<Expression> p)
         {
-            var oExp1 = p[0] as XObjectExpression;
-            var oExp2 = p[1] as XObjectExpression;
+            Double[,] A = GetArray(p[0]);
+            Double[,] B = GetArray(p[1]);
 
-            Double value1 = oExp1 == null ? p[0] : (oExp1.Value as CellRangeReference).Range.FirstCell().GetDouble();
-            Double value2 = oExp2 == null ? p[1] : (oExp2.Value as CellRangeReference).Range.FirstCell().GetDouble();
+            if (A.GetLength(0) != B.GetLength(0) || A.GetLength(1) != B.GetLength(1))
+                throw new ArgumentException("Ranges must have the same number of rows and columns.");
 
-            //return value1*value2;
-            return new List<Double> {4, 5, 6, 7};
+            var C = new double[A.GetLength(0), A.GetLength(1)];
+            for (int i = 0; i < A.GetLength(0); i++)
+            {
+                for (int j = 0; j < B.GetLength(1); j++)
+                {
+                    for (int k = 0; k < A.GetLength(1); k++)
+                    {
+                        C[i, j] += A[i, k] * B[k, j];
+                    }
+                }
+            }
+
+
+            return C;
+        }
+
+        private static double[,] GetArray(Expression expression)
+        {
+            var oExp1 = expression as XObjectExpression;
+            if (oExp1 == null) return new [,]{{(Double)expression}};
+
+            var range = (oExp1.Value as CellRangeReference).Range;
+            var rowCount = range.RowCount();
+            var columnCount = range.ColumnCount();
+            var arr = new double[rowCount,columnCount];
+
+            for (int row = 0; row < rowCount; row++)
+            {
+                for (int column = 0; column < columnCount; column++)
+                {
+                    arr[row, column] = range.Cell(row + 1, column + 1).GetDouble();
+                }
+            }
+
+            return arr;
+        }
+
+        private static object MDeterm(List<Expression> p)
+        {
+            var arr = GetArray(p[0]);
+            var m = new XLMatrix(arr);
+
+            return m.Determinant();
+        }
+
+        private static object MInverse(List<Expression> p)
+        {
+            var arr = GetArray(p[0]);
+            var m = new XLMatrix(arr);
+
+            return m.Invert().mat;
         }
     }
 }

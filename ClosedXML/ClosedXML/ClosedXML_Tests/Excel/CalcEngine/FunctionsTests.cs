@@ -497,20 +497,89 @@ namespace ClosedXML_Tests.Excel.DataValidations
             
             Object actual;
 
-           // ws.Cell("A5").FormulaA1 = "MMult(A1:B2, A3:B4)";
-            //actual = ws.Cell("A5").Value;
+            ws.Cell("A5").FormulaA1 = "MMult(A1:B2, A3:B4)";
+            actual = ws.Cell("A5").Value;
 
-            //Assert.AreEqual(4.0, actual);
+            Assert.AreEqual(16.0, actual);
 
-            //ws.Cell("A6").FormulaA1 = "Sum(A5)";
-            //actual = ws.Cell("A6").Value;
+            ws.Cell("A6").FormulaA1 = "Sum(A5)";
+            actual = ws.Cell("A6").Value;
 
-           //Assert.AreEqual(4.0, actual);
+            Assert.AreEqual(16.0, actual);
 
             ws.Cell("A7").FormulaA1 = "Sum(MMult(A1:B2, A3:B4))";
             actual = ws.Cell("A7").Value;
 
             Assert.AreEqual(102.0, actual);
+        }
+
+        [TestMethod]
+        public void MDetem()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
+            ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
+
+
+            Object actual;
+
+            ws.Cell("A5").FormulaA1 = "MDeterm(A1:B2)";
+            actual = ws.Cell("A5").Value;
+
+            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double)actual));
+            
+            ws.Cell("A6").FormulaA1 = "Sum(A5)";
+            actual = ws.Cell("A6").Value;
+
+            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double)actual));
+
+            ws.Cell("A7").FormulaA1 = "Sum(MDeterm(A1:B2))";
+            actual = ws.Cell("A7").Value;
+
+            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double)actual));
+        }
+
+        [TestMethod]
+        public void MInverse()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            ws.Cell("A1").SetValue(1).CellRight().SetValue(2).CellRight().SetValue(1);
+            ws.Cell("A2").SetValue(3).CellRight().SetValue(4).CellRight().SetValue(-1);
+            ws.Cell("A3").SetValue(0).CellRight().SetValue(2).CellRight().SetValue(0);
+
+
+            Object actual;
+
+            ws.Cell("A5").FormulaA1 = "MInverse(A1:C3)";
+            actual = ws.Cell("A5").Value;
+
+            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
+
+            ws.Cell("A6").FormulaA1 = "Sum(A5)";
+            actual = ws.Cell("A6").Value;
+
+            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
+
+            ws.Cell("A7").FormulaA1 = "Sum(MInverse(A1:C3))";
+            actual = ws.Cell("A7").Value;
+
+            Assert.IsTrue(XLHelper.AreEqual(0.5, (double)actual));
+        }
+
+        [TestMethod]
+        public void TextConcat()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell("A1").Value = 1;
+            ws.Cell("A2").Value = 1;
+            ws.Cell("B1").Value = 1;
+            ws.Cell("B2").Value = 1;
+
+            ws.Cell("C1").FormulaA1 = "\"The total value is: \" & SUM(A1:B2)";
+
+            var r = ws.Cell("C1").Value;
+            Assert.AreEqual("The total value is: 4", r.ToString());
         }
     }
 }

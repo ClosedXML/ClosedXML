@@ -274,5 +274,10 @@ namespace ClosedXML.Excel
             var newVal = A1RegexRelative.Replace(oldValue, m => Evaluator(m, row, column));
             return newVal.Substring(1, newVal.Length - 2);
         }
+
+        public static Boolean AreEqual(Double d1, Double d2)
+        {
+            return Math.Abs(d1 - d2) < Epsilon;
+        }
     }
 }

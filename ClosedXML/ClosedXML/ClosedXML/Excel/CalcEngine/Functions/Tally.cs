@@ -53,12 +53,29 @@ namespace ClosedXML.Excel.CalcEngine
             Double cntA = 0;
             foreach (var value in _list)
             {
-                var strVal = value as String;
-                if (value != null && (strVal == null || !XLHelper.IsNullOrWhiteSpace(strVal)))
-                    cntA++;
+                var vEnumerable = value as IEnumerable;
+                if (vEnumerable == null)
+                    cntA += AddCount(value);
+                else
+                {
+                    foreach (var v in vEnumerable)
+                    {
+                        cntA += AddCount(v);
+                        break;
+                    }
+                }
             }
             return cntA;
         }
+
+        private static double AddCount(object value)
+        {
+            var strVal = value as String;
+            if (value != null && (strVal == null || !XLHelper.IsNullOrWhiteSpace(strVal)))
+                return 1;
+            return 0;
+        }
+
         public List<Double> Numerics()
         {
             List<Double> retVal = new List<double>();
