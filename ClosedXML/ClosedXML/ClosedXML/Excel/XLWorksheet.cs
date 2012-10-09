@@ -82,6 +82,8 @@ namespace ClosedXML.Excel
             RightToLeft = workbook.RightToLeft;
             TabColor = new XLColor();
             SelectedRanges = new XLRanges();
+
+            Author = workbook.Author;
         }
 
         #endregion
@@ -1431,5 +1433,7 @@ namespace ClosedXML.Excel
         {
             return CalcEngine.Evaluate(expression);
         }
+
+        public String Author { get; set; }
     }
 }

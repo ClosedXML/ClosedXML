@@ -155,7 +155,7 @@ namespace ClosedXML.Excel
 
         private void Initialize(XLCell cell)
         {
-            Author = Environment.UserName;
+            Author = cell.Worksheet.Author;
             Container = this;
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
             Style = new XLDrawingStyle();

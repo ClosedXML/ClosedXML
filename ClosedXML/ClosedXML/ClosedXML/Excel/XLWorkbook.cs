@@ -552,7 +552,7 @@ namespace ClosedXML.Excel
             NamedRanges = new XLNamedRanges(this);
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
-
+            Author = Environment.UserName;
         }
 
         /// <summary>
@@ -696,5 +696,7 @@ namespace ClosedXML.Excel
         {
             return CalcEngineExpr.Evaluate(expression);
         }
+
+        public String Author { get; set; }
     }
 }

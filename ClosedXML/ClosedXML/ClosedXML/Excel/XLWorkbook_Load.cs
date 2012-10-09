@@ -866,7 +866,8 @@ namespace ClosedXML.Excel
             else if (cell.CellValue != null)
             {
                 var numberFormatId = ((CellFormat) (s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
                 if (s.NumberingFormats != null &&
                     s.NumberingFormats.Any(nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId))
                 {

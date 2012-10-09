@@ -367,5 +367,6 @@ namespace ClosedXML.Excel
 
         Object Evaluate(String expression);
 
+        String Author { get; set; }
     }
 }

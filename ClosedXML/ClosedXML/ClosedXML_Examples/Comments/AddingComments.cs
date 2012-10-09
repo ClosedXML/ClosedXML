@@ -10,9 +10,9 @@ namespace ClosedXML_Examples
     public class AddingComments : IXLExample 
     {
 
-        public void Create(string filePath) 
+        public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
+            var wb = new XLWorkbook {Author = "Manuel"};
             AddMiscComments(wb);
             AddVisibilityComments(wb);
             AddPosition(wb);

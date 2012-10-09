@@ -4129,7 +4129,8 @@ namespace ClosedXML.Excel
                         }
                         else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
                         {
-                            cellValue.Text = Double.Parse(opCell.InnerText).ToString(CultureInfo.InvariantCulture);
+                            if (!XLHelper.IsNullOrWhiteSpace(opCell.InnerText))
+                                cellValue.Text = Double.Parse(opCell.InnerText).ToString(CultureInfo.InvariantCulture);
                             cell.CellValue = cellValue;
                         }
                         else
