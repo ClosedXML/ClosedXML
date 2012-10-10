@@ -14,13 +14,16 @@ namespace ClosedXML_Package
     {
         static void Main(string[] args)
         {
+#if DEBUG
+            return;
+#endif
             try
             {
-                var targetPath = args[0]; //@"E:\MyFiles\Projects\ClosedXML\ClosedXML\bin\Release";
-                if (!targetPath.EndsWith("Release")) return;
+                var targetPath = args[0]; 
+                //if (!targetPath.EndsWith("Release")) return;
 
-                var targetDll = String.Format(@"{0}\ClosedXML.dll", targetPath);
-                var targetXml = String.Format(@"{0}\ClosedXML.XML", targetPath);
+                var targetDll = String.Format(@"{0}ClosedXML.dll", targetPath);
+                var targetXml = String.Format(@"{0}ClosedXML.XML", targetPath);
 
                 if (!File.Exists(targetDll)) 
                 {
@@ -35,7 +38,7 @@ namespace ClosedXML_Package
 
                 Assembly assembly = Assembly.LoadFrom(targetDll);
                 Version ver = assembly.GetName().Version;
-                var targetZipPath = String.Format(@"{0}\ClosedXML_v{1}.zip", targetPath, ver);
+                var targetZipPath = String.Format(@"{0}ClosedXML_v{1}.zip", targetPath, ver);
                 var targetZipInfo = new FileInfo(targetZipPath);
                 if (targetZipInfo.Exists) targetZipInfo.Delete();
 
