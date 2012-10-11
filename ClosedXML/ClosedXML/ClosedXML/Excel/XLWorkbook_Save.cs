@@ -1624,7 +1624,7 @@ namespace ClosedXML.Excel
                 var tableColumn1 = new TableColumn
                     {
                         Id = columnId,
-                        Name = fieldName
+                        Name = fieldName.Replace("_x000a_", "_x005f_x000a_").Replace(Environment.NewLine, "_x000a_")
                     };
                 if (xlTable.ShowTotalsRow)
                 {

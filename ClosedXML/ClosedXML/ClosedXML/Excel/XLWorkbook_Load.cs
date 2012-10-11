@@ -234,7 +234,7 @@ namespace ClosedXML.Excel
                     {
                         xlTable._showHeaderRow = false;
                         //foreach (var tableColumn in dTable.TableColumns.Cast<TableColumn>())
-                        xlTable.AddFields(dTable.TableColumns.Cast<TableColumn>().Select(t=>t.Name.Value));
+                        xlTable.AddFields(dTable.TableColumns.Cast<TableColumn>().Select(t=>GetTableColumnName(t.Name.Value)));
                     }
                     else
                     {
@@ -273,16 +273,17 @@ namespace ClosedXML.Excel
                     {
                         foreach (var tableColumn in dTable.TableColumns.Cast<TableColumn>())
                         {
+                            var tableColumnName = GetTableColumnName(tableColumn.Name.Value);
                             if (tableColumn.TotalsRowFunction != null)
-                                xlTable.Field(tableColumn.Name.Value).TotalsRowFunction =
+                                xlTable.Field(tableColumnName).TotalsRowFunction =
                                     tableColumn.TotalsRowFunction.Value.ToClosedXml();
 
                             if (tableColumn.TotalsRowFormula != null)
-                                xlTable.Field(tableColumn.Name.Value).TotalsRowFormulaA1 =
+                                xlTable.Field(tableColumnName).TotalsRowFormulaA1 =
                                     tableColumn.TotalsRowFormula.Text;
 
                             if (tableColumn.TotalsRowLabel != null)
-                                xlTable.Field(tableColumn.Name.Value).TotalsRowLabel = tableColumn.TotalsRowLabel.Value;
+                                xlTable.Field(tableColumnName).TotalsRowLabel = tableColumn.TotalsRowLabel.Value;
                         }
                         if (xlTable.AutoFilter != null)
                             xlTable.AutoFilter.Range = xlTable.Worksheet.Range(
@@ -372,6 +373,11 @@ namespace ClosedXML.Excel
                 }
             }
             LoadDefinedNames(workbook);
+        }
+
+        private String GetTableColumnName(string name)
+        {
+            return name.Replace("_x000a_", Environment.NewLine).Replace("_x005f_x000a_", "_x000a_");
         }
 
         private void LoadColorsAndLines<T>(IXLDrawing<T> drawing, XElement shape)

@@ -270,5 +270,57 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(2, ws.Tables.First().ColumnCount());
 
         }
+
+        [TestMethod]
+        public void SavingLoadingTableWithNewLineInHeader()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var columnName = "Line1" + Environment.NewLine + "Line2";
+            ws.FirstCell().SetValue(columnName)
+                .CellBelow().SetValue("A");
+            ws.RangeUsed().CreateTable();
+            using (var ms = new MemoryStream())
+            {
+                wb.SaveAs(ms);
+                var wb2 = new XLWorkbook(ms);
+                var ws2 = wb2.Worksheet(1);
+                var table2 = ws2.Table(0);
+                var fieldName = table2.Field(0).Name;
+                Assert.AreEqual("Line1\nLine2", fieldName);
+            }
+
+        }
+
+        [TestMethod]
+        public void SavingLoadingTableWithNewLineInHeader2()
+        {
+            XLWorkbook wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Test");
+
+            DataTable dt = new DataTable();
+            var columnName = "Line1" + Environment.NewLine + "Line2";
+            dt.Columns.Add(columnName);
+
+            DataRow dr = dt.NewRow();
+            dr[columnName] = "some text";
+            dt.Rows.Add(dr);
+            ws.Cell(1, 1).InsertTable(dt.AsEnumerable());
+
+            var table1 = ws.Table(0);
+            var fieldName1 = table1.Field(0).Name;
+            Assert.AreEqual(columnName, fieldName1);
+
+            using (var ms = new MemoryStream())
+            {
+                wb.SaveAs(ms);
+                var wb2 = new XLWorkbook(ms);
+                var ws2 = wb2.Worksheet(1);
+                var table2 = ws2.Table(0);
+                var fieldName2 = table2.Field(0).Name;
+                Assert.AreEqual("Line1\nLine2", fieldName2);
+            }
+
+        }
     }
 }
