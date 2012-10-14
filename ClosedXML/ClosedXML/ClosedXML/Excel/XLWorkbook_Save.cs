@@ -3669,11 +3669,9 @@ namespace ClosedXML.Excel
 
 
                 var seqRef = new List<String> {selection.ActiveCell.Value};
-                if (xlWorksheet.SelectedRanges.Any())
-                {
-                    seqRef.AddRange(
-                        xlWorksheet.SelectedRanges.Select(range => range.RangeAddress.ToStringRelative(false)));
-                }
+                seqRef.AddRange(xlWorksheet.SelectedRanges
+                                    .Select(range => range.RangeAddress.ToStringRelative(false)));
+                
 
                 selection.SequenceOfReferences = new ListValue<StringValue>
                     {InnerText = String.Join(" ", seqRef.Distinct().ToArray())};

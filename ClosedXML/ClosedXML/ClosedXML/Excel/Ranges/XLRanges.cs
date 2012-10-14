@@ -52,7 +52,7 @@ namespace ClosedXML.Excel
         public IEnumerator<IXLRange> GetEnumerator()
         {
             var retList = new List<IXLRange>();
-            _ranges.ForEach(retList.Add);
+            retList.AddRange(_ranges.Where(r => XLHelper.IsValidRangeAddress(r.RangeAddress)).Cast<IXLRange>());
             return retList.GetEnumerator();
         }
 

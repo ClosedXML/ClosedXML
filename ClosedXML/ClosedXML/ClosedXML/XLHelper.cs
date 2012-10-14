@@ -170,6 +170,14 @@ namespace ClosedXML.Excel
             return A1SimpleRegex.IsMatch(rangeAddress);
         }
 
+        public static Boolean IsValidRangeAddress(IXLRangeAddress rangeAddress)
+        {
+            return rangeAddress.FirstAddress.RowNumber >= 1 && rangeAddress.LastAddress.RowNumber <= MaxRowNumber
+                   && rangeAddress.FirstAddress.ColumnNumber >= 1 && rangeAddress.LastAddress.ColumnNumber <= MaxColumnNumber
+                   && rangeAddress.FirstAddress.RowNumber <= rangeAddress.LastAddress.RowNumber
+                   && rangeAddress.FirstAddress.ColumnNumber <= rangeAddress.LastAddress.ColumnNumber;
+        }
+
         public static int GetColumnNumberFromAddress(string cellAddressString)
         {
             var rowPos = 0;

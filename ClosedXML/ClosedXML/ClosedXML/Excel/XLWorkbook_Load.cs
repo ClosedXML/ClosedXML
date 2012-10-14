@@ -1621,13 +1621,11 @@ namespace ClosedXML.Excel
             var selection = sheetView.Elements<Selection>().FirstOrDefault();
             if (selection != null)
             {
-                ws.SuspendEvents();
                 if (selection.SequenceOfReferences != null)
                     ws.Ranges(selection.SequenceOfReferences.InnerText.Replace(" ", ",")).Select();
 
                 if (selection.ActiveCell != null)
                     ws.Cell(selection.ActiveCell).SetActive();
-                ws.ResumeEvents();
             }
 
             var pane = sheetView.Elements<Pane>().FirstOrDefault();

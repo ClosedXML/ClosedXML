@@ -126,9 +126,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ClosedXML\ExcelHelper.cs">
-      <Link>ExcelHelper.cs</Link>
-    </Compile>
     <Compile Include="..\ClosedXML\Excel\AutoFilters\IXLAutoFilter.cs">
       <Link>Excel\AutoFilters\IXLAutoFilter.cs</Link>
     </Compile>
@@ -863,6 +860,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\PathHelper.cs">
       <Link>PathHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\XLHelper.cs">
+      <Link>XLHelper.cs</Link>
     </Compile>
     <Compile Include="Excel\Style\XLStylizedEmpty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -130,7 +130,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExcelHelper.cs" />
+    <Compile Include="XLHelper.cs" />
     <Compile Include="Excel\AutoFilters\XLFilteredColumn.cs" />
     <Compile Include="Excel\AutoFilters\XLCustomFilteredColumn.cs" />
     <Compile Include="Excel\AutoFilters\XLFilterConnector.cs" />
