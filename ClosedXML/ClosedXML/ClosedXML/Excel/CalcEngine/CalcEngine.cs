@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -288,6 +289,7 @@ namespace ClosedXML.Excel.CalcEngine
                 MathTrig.Register(this);
                 Text.Register(this);
                 Statistical.Register(this);
+                DateAndTime.Register(this);
             }
             return _fnTbl;
         }
