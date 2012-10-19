@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal class Tally
+    internal class Tally: IEnumerable<Object>
     {
         private readonly List<object> _list = new List<object>();
 
@@ -35,7 +35,7 @@ namespace ClosedXML.Excel.CalcEngine
             // handle expressions
             var val = e.Evaluate();
             var valEnumerable = val as IEnumerable;
-            if (valEnumerable == null)
+            if (valEnumerable == null || val is string)
                 _list.Add(val);
             else
                 foreach (var v in valEnumerable)
@@ -169,6 +169,16 @@ namespace ClosedXML.Excel.CalcEngine
             }
             return ret;
 
+        }
+
+        public IEnumerator<object> GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

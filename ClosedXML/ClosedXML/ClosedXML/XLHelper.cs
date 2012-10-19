@@ -287,5 +287,23 @@ namespace ClosedXML.Excel
         {
             return Math.Abs(d1 - d2) < Epsilon;
         }
+
+        public static DateTime GetDate(Object v)
+        {
+            // handle dates
+            if (v is DateTime)
+            {
+                return (DateTime)v;
+            }
+
+            // handle doubles
+            if (v is double)
+            {
+                return DateTime.FromOADate((double)v);
+            }
+
+            // handle everything else
+            return (DateTime)Convert.ChangeType(v, typeof(DateTime));
+        }
     }
 }

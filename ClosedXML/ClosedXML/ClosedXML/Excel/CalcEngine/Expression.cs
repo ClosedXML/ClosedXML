@@ -490,8 +490,7 @@ namespace ClosedXML.Excel.CalcEngine
 		}
 		public IEnumerator GetEnumerator()
 		{
-			var ie = _value as IEnumerable;
-			return ie != null ? ie.GetEnumerator() : null;
+		    return (_value as IEnumerable).GetEnumerator();
 		}
 	}
 	/// <summary>

@@ -147,6 +147,18 @@ namespace ClosedXML.Excel
                 return 2958465.99999999;
             }
         }
+
+        public static DateTime NextWorkday(this DateTime date, List<DateTime> bankHolidays)
+        {
+            var nextDate = date.AddDays(1);
+            while (nextDate.DayOfWeek == DayOfWeek.Saturday
+                || nextDate.DayOfWeek == DayOfWeek.Sunday
+                || bankHolidays.Contains(nextDate)
+                )
+                nextDate = nextDate.AddDays(1);
+
+            return nextDate;
+        }
     }
 
     public static class IntegerExtensions

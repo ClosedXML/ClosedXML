@@ -97,5 +97,287 @@ namespace ClosedXML_Tests.Excel.DataValidations
             Object actual = XLWorkbook.EvaluateExpr("Today()");
             Assert.AreEqual(DateTime.Now.Date, actual);
         }
+
+        [TestMethod]
+        public void Days360_Default()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Days360(\"1/30/2008\", \"2/1/2008\")");
+            Assert.AreEqual(1, actual);
+        }
+
+        [TestMethod]
+        public void Days360_US1()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("DAYS360(\"1/1/2008\", \"3/31/2008\",FALSE)");
+            Assert.AreEqual(90, actual);
+        }
+
+        [TestMethod]
+        public void Days360_US2()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("DAYS360(\"3/31/2008\", \"1/1/2008\",FALSE)");
+            Assert.AreEqual(-89, actual);
+        }
+
+        [TestMethod]
+        public void Days360_Europe1()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("DAYS360(\"1/1/2008\", \"3/31/2008\",TRUE)");
+            Assert.AreEqual(89, actual);
+        }
+
+        [TestMethod]
+        public void Days360_Europe2()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("DAYS360(\"3/31/2008\", \"1/1/2008\",TRUE)");
+            Assert.AreEqual(-89, actual);
+        }
+
+        [TestMethod]
+        public void EDate_Positive1()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("EDate(\"3/1/2008\", 1)");
+            Assert.AreEqual(new DateTime(2008, 4, 1), actual);
+        }
+
+        [TestMethod]
+        public void EDate_Positive2()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("EDate(\"3/31/2008\", 1)");
+            Assert.AreEqual(new DateTime(2008, 4, 30), actual);
+        }
+
+        [TestMethod]
+        public void EDate_Negative1()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("EDate(\"3/1/2008\", -1)");
+            Assert.AreEqual(new DateTime(2008, 2, 1), actual);
+        }
+
+        [TestMethod]
+        public void EDate_Negative2()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("EDate(\"3/31/2008\", -1)");
+            Assert.AreEqual(new DateTime(2008, 2, 29), actual);
+        }
+
+        [TestMethod]
+        public void EOMonth_Positive()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("EOMonth(\"3/31/2008\", 1)");
+            Assert.AreEqual(new DateTime(2008, 4, 30), actual);
+        }
+
+        [TestMethod]
+        public void EOMonth_Negative()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("EOMonth(\"3/1/2008\", -1)");
+            Assert.AreEqual(new DateTime(2008, 2, 29), actual);
+        }
+
+        [TestMethod]
+        public void Networkdays_NoHolidaysGiven()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Networkdays(\"10/01/2008\", \"3/01/2009\")");
+            Assert.AreEqual(108, actual);
+        }
+
+        [TestMethod]
+        public void Networkdays_OneHolidaysGiven()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Networkdays(\"10/01/2008\", \"3/01/2009\", \"11/26/2008\")");
+            Assert.AreEqual(107, actual);
+        }
+
+        [TestMethod]
+        public void Networkdays_MultipleHolidaysGiven()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue("Date")
+                .CellBelow().SetValue(new DateTime(2008, 10, 1))
+                .CellBelow().SetValue(new DateTime(2009, 3, 1))
+                .CellBelow().SetValue(new DateTime(2008, 11, 26))
+                .CellBelow().SetValue(new DateTime(2008, 12, 4))
+                .CellBelow().SetValue(new DateTime(2009, 1, 21));
+            Object actual = ws.Evaluate("Networkdays(A2,A3,A4:A6)");
+            Assert.AreEqual(105, actual);
+        }
+
+        [TestMethod]
+        public void Weekday_Omitted()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Weekday(\"2/14/2008\")");
+            Assert.AreEqual(5, actual);
+        }
+
+        [TestMethod]
+        public void Weekday_1()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Weekday(\"2/14/2008\", 1)");
+            Assert.AreEqual(5, actual);
+        }
+
+        [TestMethod]
+        public void Weekday_2()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Weekday(\"2/14/2008\", 2)");
+            Assert.AreEqual(4, actual);
+        }
+
+        [TestMethod]
+        public void Weekday_3()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Weekday(\"2/14/2008\", 3)");
+            Assert.AreEqual(3, actual);
+        }
+
+        [TestMethod]
+        public void Weeknum_Default()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2008\")");
+            Assert.AreEqual(11, actual);
+        }
+
+        [TestMethod]
+        public void Weeknum_1() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2000\", 1)")); }
+        [TestMethod]
+        public void Weeknum_2() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2000\", 2)")); }
+        [TestMethod]
+        public void Weeknum_3() { Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2001\", 1)")); }
+        [TestMethod]
+        public void Weeknum_4() { Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2001\", 2)")); }
+        [TestMethod]
+        public void Weeknum_5() { Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2002\", 1)")); }
+        [TestMethod]
+        public void Weeknum_6() { Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2002\", 2)")); }
+        [TestMethod]
+        public void Weeknum_7() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2003\", 1)")); }
+        [TestMethod]
+        public void Weeknum_8() { Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2003\", 2)")); }
+        [TestMethod]
+        public void Weeknum_9() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2004\", 1)")); }
+        [TestMethod]
+        public void Weeknum_10() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2004\", 2)")); }
+        [TestMethod]
+        public void Weeknum_11() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2005\", 1)")); }
+        [TestMethod]
+        public void Weeknum_12() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2005\", 2)")); }
+        [TestMethod]
+        public void Weeknum_13() { Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2006\", 1)")); }
+        [TestMethod]
+        public void Weeknum_14() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2006\", 2)")); }
+        [TestMethod]
+        public void Weeknum_15() { Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2007\", 1)")); }
+        [TestMethod]
+        public void Weeknum_16() { Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2007\", 2)")); }
+        [TestMethod]
+        public void Weeknum_17() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2008\", 1)")); }
+        [TestMethod]
+        public void Weeknum_18() { Assert.AreEqual(10, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2008\", 2)")); }
+        [TestMethod]
+        public void Weeknum_19() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2009\", 1)")); }
+        [TestMethod]
+        public void Weeknum_20() { Assert.AreEqual(11, XLWorkbook.EvaluateExpr("Weeknum(\"3/9/2009\", 2)")); }
+
+
+        [TestMethod]
+        public void Workdays_NoHolidaysGiven()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Workday(\"10/01/2008\", 151)");
+            Assert.AreEqual(new DateTime(2009, 4,30), actual);
+        }
+
+        [TestMethod]
+        public void Workdays_OneHolidaysGiven()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Workday(\"10/01/2008\", 152, \"11/26/2008\")");
+            Assert.AreEqual(new DateTime(2009, 5, 4), actual);
+        }
+
+        [TestMethod]
+        public void Workdays_MultipleHolidaysGiven()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue("Date")
+                .CellBelow().SetValue(new DateTime(2008, 10, 1))
+                .CellBelow().SetValue(151)
+                .CellBelow().SetValue(new DateTime(2008, 11, 26))
+                .CellBelow().SetValue(new DateTime(2008, 12, 4))
+                .CellBelow().SetValue(new DateTime(2009, 1, 21));
+            Object actual = ws.Evaluate("Workday(A2,A3,A4:A6)");
+            Assert.AreEqual(new DateTime(2009, 5, 5), actual);
+        }
+
+        [TestMethod]
+        public void Yearfrac_1_base0()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",0)");
+            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
+        }
+
+        [TestMethod]
+        public void Yearfrac_1_base1()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",1)");
+            Assert.IsTrue(XLHelper.AreEqual(0.24590163934426229, (double)actual));
+        }
+
+        [TestMethod]
+        public void Yearfrac_1_base2()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",2)");
+            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
+        }
+
+        [TestMethod]
+        public void Yearfrac_1_base3()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",3)");
+            Assert.IsTrue(XLHelper.AreEqual(0.24657534246575341, (double)actual));
+        }
+
+        [TestMethod]
+        public void Yearfrac_1_base4()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",4)");
+            Assert.IsTrue(XLHelper.AreEqual(0.24722222222222223, (double)actual));
+        }
+
+        [TestMethod]
+        public void Yearfrac_2_base0()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",0)");
+            Assert.IsTrue(XLHelper.AreEqual(5.25, (double)actual));
+        }
+
+        [TestMethod]
+        public void Yearfrac_2_base1()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",1)");
+            Assert.IsTrue(XLHelper.AreEqual(5.24452554744526, (double)actual));
+        }
+
+        [TestMethod]
+        public void Yearfrac_2_base2()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",2)");
+            Assert.IsTrue(XLHelper.AreEqual(5.32222222222222, (double)actual));
+        }
+
+        [TestMethod]
+        public void Yearfrac_2_base3()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",3)");
+            Assert.IsTrue(XLHelper.AreEqual(5.24931506849315, (double)actual));
+        }
+
+        [TestMethod]
+        public void Yearfrac_2_base4()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",4)");
+            Assert.IsTrue(XLHelper.AreEqual(5.24722222222222, (double)actual));
+        }
     }
 }
