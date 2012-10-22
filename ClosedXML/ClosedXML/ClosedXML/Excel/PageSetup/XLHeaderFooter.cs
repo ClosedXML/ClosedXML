@@ -75,5 +75,14 @@ namespace ClosedXML.Excel
                 _initialTexts.Add(o, GetText(o));
             }
         }
+
+
+        public IXLHeaderFooter Clear(XLHFOccurrence occurrence = XLHFOccurrence.AllPages)
+        {
+            Left.Clear(occurrence);
+            Right.Clear(occurrence);
+            Center.Clear(occurrence);
+            return this;
+        }
     }
 }

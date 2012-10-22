@@ -25,5 +25,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="occurrence">The occurrence.</param>
         String GetText(XLHFOccurrence occurrence);
+
+        IXLHeaderFooter Clear(XLHFOccurrence occurrence = XLHFOccurrence.AllPages);
     }
 }
