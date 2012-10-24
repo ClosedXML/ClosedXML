@@ -23,9 +23,7 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLColumn> GetEnumerator()
         {
-            var retList = new List<IXLColumn>();
-            _columns.ForEach(retList.Add);
-            return retList.GetEnumerator();
+            return _columns.Cast<IXLColumn>().OrderBy(r => r.ColumnNumber()).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

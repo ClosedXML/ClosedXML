@@ -23,9 +23,7 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLRow> GetEnumerator()
         {
-            var retList = new List<IXLRow>();
-            _rows.ForEach(retList.Add);
-            return retList.GetEnumerator();
+            return _rows.Cast<IXLRow>().OrderBy(r=>r.RowNumber()).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -38,9 +38,10 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLRangeColumn> GetEnumerator()
         {
-            var retList = new List<IXLRangeColumn>();
-            _ranges.ForEach(retList.Add);
-            return retList.GetEnumerator();
+            return _ranges.Cast<IXLRangeColumn>()
+              .OrderBy(r => r.Worksheet.Position)
+              .ThenBy(r => r.ColumnNumber())
+              .GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
