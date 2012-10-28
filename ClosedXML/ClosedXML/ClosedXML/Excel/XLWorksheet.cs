@@ -1374,11 +1374,13 @@ namespace ClosedXML.Excel
             if (NamedRanges.Any(n => String.Compare(n.Name, cellAddressInRange, true) == 0))
                 return (XLCell)NamedRange(cellAddressInRange).Ranges.First().FirstCell();
 
-            return (XLCell)Workbook.NamedRanges.First(n =>
+            var namedRanges = Workbook.NamedRanges.FirstOrDefault(n =>
                                                       String.Compare(n.Name, cellAddressInRange, true) == 0
                                                       && n.Ranges.First().Worksheet == this
-                                                      && n.Ranges.Count == 1)
-                               .Ranges.First().FirstCell();
+                                                      && n.Ranges.Count == 1);
+            if (namedRanges == null || !namedRanges.Ranges.Any()) return null;
+            
+            return (XLCell)namedRanges.Ranges.First().FirstCell();
         }
 
         public XLCell CellFast(String cellAddressInRange)
@@ -1397,11 +1399,12 @@ namespace ClosedXML.Excel
             if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))
                 return (XLRange)NamedRange(rangeAddressStr).Ranges.First();
 
-            return (XLRange)Workbook.NamedRanges.First(n =>
+            var namedRanges = Workbook.NamedRanges.FirstOrDefault(n =>
                                                        String.Compare(n.Name, rangeAddressStr, true) == 0
                                                        && n.Ranges.First().Worksheet == this
-                                                       && n.Ranges.Count == 1)
-                                .Ranges.First();
+                                                       && n.Ranges.Count == 1);
+            if (namedRanges == null || !namedRanges.Ranges.Any()) return null;
+            return (XLRange)namedRanges.Ranges.First();
         }
 
         public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }

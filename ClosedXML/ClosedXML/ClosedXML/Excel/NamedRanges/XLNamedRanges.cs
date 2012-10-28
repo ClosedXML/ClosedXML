@@ -18,7 +18,11 @@ namespace ClosedXML.Excel
 
         public IXLNamedRange NamedRange(String rangeName)
         {
-            return _namedRanges[rangeName];
+            IXLNamedRange range;
+            if (_namedRanges.TryGetValue(rangeName, out range))
+                return range;
+
+            return null;
         }
 
         public IXLNamedRange Add(String rangeName, String rangeAddress)

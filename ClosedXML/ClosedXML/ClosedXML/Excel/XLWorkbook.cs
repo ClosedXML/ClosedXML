@@ -370,7 +370,31 @@ namespace ClosedXML.Excel
 
         public IXLNamedRange NamedRange(String rangeName)
         {
+            if (rangeName.Contains("!"))
+            {
+                var split = rangeName.Split('!');
+                var first = split[0];
+                var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
+                var name = split[1];
+                IXLWorksheet ws;
+                if (TryGetWorksheet(wsName, out ws))
+                    return ws.NamedRange(name);
+
+                return null;
+            }
             return NamedRanges.NamedRange(rangeName);
+        }
+
+        public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
+        {
+            if (Worksheets.Any(w => w.Name.ToLower().Equals(name.ToLower())))
+            {
+                worksheet = Worksheet(name);
+                return true;
+            }
+
+            worksheet = null;
+            return false;
         }
 
         /// <summary>
@@ -607,7 +631,11 @@ namespace ClosedXML.Excel
 
         public IXLCell Cell(String namedCell)
         {
-            return NamedRange(namedCell).Ranges.First().FirstCell();
+            var namedRange = NamedRange(namedCell);
+            if (namedRange == null) return null;
+            var range = namedRange.Ranges.FirstOrDefault();
+            if (range == null) return null;
+            return range.FirstCell();
         }
 
         public IXLCells Cells(String namedCells)
@@ -617,15 +645,19 @@ namespace ClosedXML.Excel
 
         public IXLRange Range(String namedRange)
         {
-            return NamedRange(namedRange).Ranges.First();
+            var range = NamedRange(namedRange);
+            if (range == null) return null;
+            return range.Ranges.FirstOrDefault();
         }
 
         public IXLRanges Ranges(String namedRanges)
         {
             var retVal = new XLRanges();
             var rangePairs = namedRanges.Split(',');
-            foreach (var r in rangePairs.Select(s=>Range(s.Trim())))
-                retVal.Add(r);
+            foreach (var range in rangePairs.Select(r => Range(r.Trim())).Where(range => range != null))
+            {
+                retVal.Add(range);
+            }
             return retVal;
         }
 
