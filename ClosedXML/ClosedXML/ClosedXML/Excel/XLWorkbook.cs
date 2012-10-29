@@ -378,8 +378,10 @@ namespace ClosedXML.Excel
                 var name = split[1];
                 IXLWorksheet ws;
                 if (TryGetWorksheet(wsName, out ws))
-                    return ws.NamedRange(name);
-
+                {
+                    var range = ws.NamedRange(name);
+                    return range ?? NamedRange(name);
+                }
                 return null;
             }
             return NamedRanges.NamedRange(rangeName);

@@ -109,6 +109,17 @@ namespace ClosedXML_Tests.Excel
         }
 
         [TestMethod]
+        public void Cell3()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue(1).AddToNamed("Result");
+            var cell = wb.Cell("Sheet1!Result");
+            Assert.IsNotNull(cell);
+            Assert.AreEqual(1, cell.GetValue<Int32>());
+        }
+
+        [TestMethod]
         public void NamedRange1()
         {
             var wb = new XLWorkbook();
@@ -139,6 +150,19 @@ namespace ClosedXML_Tests.Excel
         }
 
         [TestMethod]
+        public void NamedRange4()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue(1).AddToNamed("Result");
+            var range = wb.NamedRange("Sheet1!Result");
+            Assert.IsNotNull(range);
+            Assert.AreEqual(1, range.Ranges.Count);
+            Assert.AreEqual(1, range.Ranges.Cells().Count());
+            Assert.AreEqual(1, range.Ranges.First().FirstCell().GetValue<Int32>());
+        }
+
+        [TestMethod]
         public void Range1()
         {
             var wb = new XLWorkbook();
@@ -152,6 +176,18 @@ namespace ClosedXML_Tests.Excel
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
+            var range = wb.Range("Sheet1!Result");
+            Assert.IsNotNull(range);
+            Assert.AreEqual(1, range.Cells().Count());
+            Assert.AreEqual(1, range.FirstCell().GetValue<Int32>());
+        }
+
+        [TestMethod]
+        public void Range3()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue(1).AddToNamed("Result");
             var range = wb.Range("Sheet1!Result");
             Assert.IsNotNull(range);
             Assert.AreEqual(1, range.Cells().Count());
@@ -180,6 +216,18 @@ namespace ClosedXML_Tests.Excel
         }
 
         [TestMethod]
+        public void Ranges3()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue(1).AddToNamed("Result");
+            var ranges = wb.Ranges("Sheet1!Result, ABC");
+            Assert.IsNotNull(ranges);
+            Assert.AreEqual(1, ranges.Cells().Count());
+            Assert.AreEqual(1, ranges.First().FirstCell().GetValue<Int32>());
+        }
+
+        [TestMethod]
         public void Cells1()
         {
             var wb = new XLWorkbook();
@@ -194,6 +242,18 @@ namespace ClosedXML_Tests.Excel
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
+            var cells = wb.Cells("Sheet1!Result, ABC");
+            Assert.IsNotNull(cells);
+            Assert.AreEqual(1, cells.Count());
+            Assert.AreEqual(1, cells.First().GetValue<Int32>());
+        }
+
+        [TestMethod]
+        public void Cells3()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue(1).AddToNamed("Result");
             var cells = wb.Cells("Sheet1!Result, ABC");
             Assert.IsNotNull(cells);
             Assert.AreEqual(1, cells.Count());
