@@ -1029,12 +1029,16 @@ namespace ClosedXML.Excel
                     var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
                     var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                     newCell.CopyValues(c);
-                    cellsDataValidations.Add(newCell.Address,
-                                             new DataValidationToCopy { DataValidation = c.DataValidation, SourceAddress = c.Address });
+                    if (c.HasDataValidation)
+                    {
+                        cellsDataValidations.Add(newCell.Address,
+                                                 new DataValidationToCopy
+                                                     {DataValidation = c.DataValidation, SourceAddress = c.Address});
+                        c.DataValidation.Clear();
+                    }
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
-                    c.DataValidation.Clear();
                 }
             }
 
@@ -1234,12 +1238,17 @@ namespace ClosedXML.Excel
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
                     var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                     newCell.CopyValues(c);
-                    cellsDataValidations.Add(newCell.Address,
-                                             new DataValidationToCopy {DataValidation = c.DataValidation, SourceAddress = c.Address});
+                    if (c.HasDataValidation)
+                    {
+                        cellsDataValidations.Add(newCell.Address,
+                                                 new DataValidationToCopy
+                                                     {DataValidation = c.DataValidation, SourceAddress = c.Address});
+                        c.DataValidation.Clear();
+                    }
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
-                    c.DataValidation.Clear();
+                    
                 }
             }
 
@@ -1384,7 +1393,6 @@ namespace ClosedXML.Excel
                                            false, false);
                 var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                 newCell.CopyValues(c);
-                //cellsDataValidations.Add(newCell.Address,new DataValidationToCopy { DataValidation = c.DataValidation, SourceAddress = c.Address });
                 newCell.FormulaA1 = c.FormulaA1;
                 cellsToDelete.Add(c.Address);
 
