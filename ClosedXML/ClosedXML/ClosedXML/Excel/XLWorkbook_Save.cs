@@ -3656,28 +3656,6 @@ namespace ClosedXML.Excel
 
             sheetView.TabSelected = xlWorksheet.TabSelected;
 
-            if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
-            {
-                sheetView.RemoveAllChildren<Selection>();
-
-                var firstSelection = xlWorksheet.SelectedRanges.FirstOrDefault();
-                var selection = new Selection();
-                if (xlWorksheet.ActiveCell != null)
-                    selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
-                else if (firstSelection != null)
-                    selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
-
-
-                var seqRef = new List<String> {selection.ActiveCell.Value};
-                seqRef.AddRange(xlWorksheet.SelectedRanges
-                                    .Select(range => range.RangeAddress.ToStringRelative(false)));
-                
-
-                selection.SequenceOfReferences = new ListValue<StringValue>
-                    {InnerText = String.Join(" ", seqRef.Distinct().ToArray())};
-
-                sheetView.Append(selection);
-            }
 
             if (xlWorksheet.ShowFormulas)
                 sheetView.ShowFormulas = true;
@@ -3745,6 +3723,28 @@ namespace ClosedXML.Excel
 
             if (hSplit == 0 && ySplit == 0)
                 sheetView.RemoveAllChildren<Pane>();
+
+            if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
+            {
+                sheetView.RemoveAllChildren<Selection>();
+
+                var firstSelection = xlWorksheet.SelectedRanges.FirstOrDefault();
+                var selection = new Selection();
+                if (xlWorksheet.ActiveCell != null)
+                    selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
+                else if (firstSelection != null)
+                    selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
+
+
+                var seqRef = new List<String> { selection.ActiveCell.Value };
+                seqRef.AddRange(xlWorksheet.SelectedRanges
+                                    .Select(range => range.RangeAddress.ToStringRelative(false)));
+
+
+                selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
+
+                sheetView.Append(selection);
+            }
 
             #endregion
 
