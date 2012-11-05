@@ -319,5 +319,7 @@ namespace ClosedXML.Excel
 
         Boolean Active { get; set; }
         IXLCell SetActive(Boolean value = true);
+
+        Boolean HasFormula { get; }
     }
 }

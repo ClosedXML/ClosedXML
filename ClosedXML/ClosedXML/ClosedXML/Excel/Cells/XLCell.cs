@@ -2526,5 +2526,7 @@
         }
 
         #endregion
+
+        public Boolean HasFormula { get { return !XLHelper.IsNullOrWhiteSpace(FormulaA1); } }
     }
 }

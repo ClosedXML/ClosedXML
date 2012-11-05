@@ -4073,7 +4073,7 @@ namespace ClosedXML.Excel
                     }
 
                     cell.StyleIndex = styleId;
-                    if (!XLHelper.IsNullOrWhiteSpace(opCell.FormulaA1))
+                    if (opCell.HasFormula)
                     {
                         var formula = opCell.FormulaA1;
                         if (formula.StartsWith("{"))
@@ -4087,7 +4087,11 @@ namespace ClosedXML.Excel
                         }
                         else
                             cell.CellFormula = new CellFormula(formula);
-                        cell.CellValue = null;
+
+                        if (XLHelper.IsNullOrWhiteSpace(opCell.ValueCached))
+                            cell.CellValue = null;
+                        else
+                            cell.CellValue = new CellValue {Text = opCell.ValueCached};
                     }
                     else
                     {
