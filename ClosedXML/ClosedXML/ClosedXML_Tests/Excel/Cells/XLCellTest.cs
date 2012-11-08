@@ -254,5 +254,25 @@ namespace ClosedXML_Tests
             var success = cell.TryGetValue(out outValue);
             Assert.IsFalse(success);
         }
+
+        [TestMethod]
+        public void NaN_is_not_a_number()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var cell = ws.Cell("A1");
+            cell.Value = "NaN";
+
+            Assert.AreNotEqual(XLCellValues.Number ,cell.DataType);
+        }
+
+        [TestMethod]
+        public void Nan_is_not_a_number()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var cell = ws.Cell("A1");
+            cell.Value = "Nan";
+
+            Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
+        }
     }
 }

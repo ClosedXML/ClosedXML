@@ -1596,7 +1596,7 @@
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         Style.NumberFormat.NumberFormatId = 46;
                 }
-                else if (Double.TryParse(val, out dTest))
+                else if (val.Trim() != "NaN" &&  Double.TryParse(val, out dTest))
                     _dataType = XLCellValues.Number;
                 else if (DateTime.TryParse(val, out dtTest) && dtTest >= BaseDate)
                 {
