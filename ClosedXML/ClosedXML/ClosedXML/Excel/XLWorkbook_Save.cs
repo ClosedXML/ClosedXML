@@ -4088,10 +4088,7 @@ namespace ClosedXML.Excel
                         else
                             cell.CellFormula = new CellFormula(formula);
 
-                        if (XLHelper.IsNullOrWhiteSpace(opCell.ValueCached))
-                            cell.CellValue = null;
-                        else
-                            cell.CellValue = new CellValue {Text = opCell.ValueCached};
+                        cell.CellValue = null;
                     }
                     else
                     {
