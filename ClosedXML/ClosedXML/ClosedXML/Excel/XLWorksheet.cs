@@ -655,7 +655,18 @@ namespace ClosedXML.Excel
             get { return DataValidations; }
         }
 
-        public XLWorksheetVisibility Visibility { get; set; }
+        private XLWorksheetVisibility _visibility;
+        public XLWorksheetVisibility Visibility
+        {
+            get { return _visibility; }
+            set
+            {
+                if (value != XLWorksheetVisibility.Visible)
+                    TabSelected = false;
+
+                _visibility = value;
+            }
+        }
 
         public IXLWorksheet Hide()
         {

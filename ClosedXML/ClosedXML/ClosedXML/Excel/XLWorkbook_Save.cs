@@ -3654,7 +3654,10 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.SheetViews.AppendChild(sheetView);
             }
 
-            sheetView.TabSelected = xlWorksheet.TabSelected;
+            if (xlWorksheet.TabSelected)
+                sheetView.TabSelected = true;
+            else
+                sheetView.TabSelected = null;
 
 
             if (xlWorksheet.ShowFormulas)
