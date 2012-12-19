@@ -645,7 +645,7 @@ namespace ClosedXML.Excel
                         {
                             string sheetName, sheetArea;
                             ParseReference(area, out sheetName, out sheetArea);
-                            if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!")))
+                            if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!") || sheetArea.Length == 0))
                                 WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                         }
                     }
