@@ -780,7 +780,7 @@ namespace ClosedXML.Excel
             {
                 if (cell.DataType == CellValues.InlineString)
                 {
-                    xlCell._cellValue = cell.InlineString.Text.Text.FixNewLines(); 
+                    xlCell._cellValue = cell.InlineString != null ? cell.InlineString.Text.Text.FixNewLines() : String.Empty;
                     xlCell._dataType = XLCellValues.Text;
                     xlCell.ShareString = false;
                 }
