@@ -520,12 +520,12 @@ namespace ClosedXML.Excel
         public IXLRow CopyTo(IXLRow row)
         {
             row.Clear();
-            using (var asRange = AsRange())
-                asRange.CopyTo(row).Dispose();
-
             var newRow = (XLRow)row;
             newRow._height = _height;
             newRow.Style = GetStyle();
+
+            using (var asRange = AsRange())
+                asRange.CopyTo(row).Dispose();
 
             return newRow;
         }

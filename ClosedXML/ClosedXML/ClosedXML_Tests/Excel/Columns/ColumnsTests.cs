@@ -216,5 +216,16 @@ namespace ClosedXML_Tests.Excel
             ws.Columns(1, 2).Ungroup(true);
 
         }
+
+        [TestMethod]
+        public void CopyColumn()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().SetValue("Test").Style.Font.SetBold();
+            ws.FirstColumn().CopyTo(ws.Column(2));
+
+            Assert.IsTrue(ws.Cell("B1").Style.Font.Bold);
+        }
     }
 }

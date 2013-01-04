@@ -579,14 +579,13 @@ namespace ClosedXML.Excel
         public IXLColumn CopyTo(IXLColumn column)
         {
             column.Clear();
-            using (var asRange = AsRange())
-                using (var copy = asRange.CopyTo(column))
-                    copy.Column(1);
-
-
             var newColumn = (XLColumn)column;
             newColumn._width = _width;
             newColumn.Style = GetStyle();
+
+            using (var asRange = AsRange())
+                asRange.CopyTo(column).Dispose();
+
             return newColumn;
         }
 
