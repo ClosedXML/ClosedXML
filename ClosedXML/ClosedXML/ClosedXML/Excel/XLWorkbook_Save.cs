@@ -861,14 +861,22 @@ namespace ClosedXML.Excel
 
                         if (c.FormulaA1.StartsWith("{"))
                         {
-                            calculationChain.AppendChild(new CalculationCell
-                                {
-                                    CellReference = c.Address.ToString(),
-                                    SheetId = worksheet.SheetId,
-                                    Array = true
-                                });
-                            calculationChain.AppendChild(new CalculationCell
-                                {CellReference = c.Address.ToString(), InChildChain = true});
+                            var cc = new CalculationCell
+                                         {
+                                             CellReference = c.Address.ToString(),
+                                             SheetId = worksheet.SheetId
+                                         };
+
+                            if (c.FormulaReference.FirstAddress.Equals(c.Address))
+                            {
+                                cc.Array = true;
+                                calculationChain.AppendChild(cc);
+                                calculationChain.AppendChild(new CalculationCell { CellReference = c.Address.ToString(), InChildChain = true });
+                            }
+                            else
+                            {
+                                calculationChain.AppendChild(cc);
+                            }
                         }
                         else
                         {
@@ -4082,11 +4090,16 @@ namespace ClosedXML.Excel
                         if (formula.StartsWith("{"))
                         {
                             formula = formula.Substring(1, formula.Length - 2);
-                            cell.CellFormula = new CellFormula(formula)
-                                {
-                                    FormulaType = CellFormulaValues.Array,
-                                    Reference = cellReference
-                                };
+                            String formulaReference = null;
+                            var f = new CellFormula {FormulaType = CellFormulaValues.Array};
+
+                            if (opCell.FormulaReference.FirstAddress.Equals(opCell.Address))
+                            {
+                                f.Text = formula;
+                                f.Reference = opCell.FormulaReference.ToStringRelative();
+                            }
+
+                            cell.CellFormula = f;
                         }
                         else
                             cell.CellFormula = new CellFormula(formula);

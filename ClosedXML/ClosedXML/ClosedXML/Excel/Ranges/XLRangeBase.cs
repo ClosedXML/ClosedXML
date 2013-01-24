@@ -187,12 +187,26 @@ namespace ClosedXML.Excel
 
         public String FormulaA1
         {
-            set { Cells().ForEach(c => c.FormulaA1 = value); }
+            set
+            {
+                Cells().ForEach(c =>
+                                    {
+                                        c.FormulaA1 = value;
+                                        c.FormulaReference = RangeAddress;
+                                    });
+            }
         }
 
         public String FormulaR1C1
         {
-            set { Cells().ForEach(c => c.FormulaR1C1 = value); }
+            set
+            {
+                Cells().ForEach(c =>
+                {
+                    c.FormulaR1C1 = value;
+                    c.FormulaReference = RangeAddress;
+                });
+            }
         }
 
         public Boolean ShareString

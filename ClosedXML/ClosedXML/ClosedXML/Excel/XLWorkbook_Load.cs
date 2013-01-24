@@ -752,6 +752,9 @@ namespace ClosedXML.Excel
                 else
                     formula = cell.CellFormula.Text;
 
+                if (cell.CellFormula.Reference != null)
+                    xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+
                 xlCell.FormulaA1 = formula;
                 sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
 

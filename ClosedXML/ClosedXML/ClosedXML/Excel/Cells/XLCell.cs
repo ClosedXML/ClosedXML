@@ -1602,7 +1602,7 @@
                 {
                     _dataType = XLCellValues.DateTime;
 
-                    if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+               if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
                     val = dtTest.ToOADate().ToString();
@@ -2528,5 +2528,7 @@
         #endregion
 
         public Boolean HasFormula { get { return !XLHelper.IsNullOrWhiteSpace(FormulaA1); } }
+
+        public IXLRangeAddress FormulaReference { get; set; }
     }
 }

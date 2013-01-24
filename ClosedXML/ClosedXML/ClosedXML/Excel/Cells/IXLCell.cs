@@ -321,5 +321,7 @@ namespace ClosedXML.Excel
         IXLCell SetActive(Boolean value = true);
 
         Boolean HasFormula { get; }
+
+        IXLRangeAddress FormulaReference { get; set; }
     }
 }
