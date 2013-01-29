@@ -581,5 +581,17 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var r = ws.Cell("C1").Value;
             Assert.AreEqual("The total value is: 4", r.ToString());
         }
+
+        [TestMethod]
+        public void Formula_from_another_sheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet("ws1");
+            ws1.FirstCell().SetValue(1).CellRight().SetFormulaA1("A1 + 1");
+            var ws2 = wb.AddWorksheet("ws2");
+            ws2.FirstCell().SetFormulaA1("ws1!B1 + 1");
+            var v = ws2.FirstCell().Value;
+            Assert.AreEqual(3.0, v);
+        }
     }
 }

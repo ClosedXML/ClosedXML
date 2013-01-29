@@ -79,7 +79,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (XLHelper.IsNullOrWhiteSpace(f))
                     return cell.Value;
                 else
-                    return _ce.Evaluate(f);
+                    return new XLCalcEngine(cell.Worksheet).Evaluate(f);
 
             }
             finally
