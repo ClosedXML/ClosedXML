@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Collections.Generic;
+using ClosedXML.Excel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System;
@@ -272,6 +273,27 @@ namespace ClosedXML_Tests
             var cell = ws.Cell("A1");
             cell.Value = "Nan";
 
+            Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
+        }
+
+        [TestMethod]
+        public void Double_NaN_is_a_string()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var cell = ws.Cell("A1");
+            var doubleList = new List<Double> {0.0/0.0};
+
+            cell.Value = doubleList.AsEnumerable();
+            Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
+        }
+        [TestMethod]
+        public void Double_Infinity_is_a_string()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var cell = ws.Cell("A1");
+            var doubleList = new List<Double> { 1.0 / 0.0 };
+
+            cell.Value = doubleList.AsEnumerable();
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
         }
     }

@@ -236,7 +236,7 @@
                 _cellValue = dtTest.ToOADate().ToString();
             }
             else if (
-                value is    sbyte
+                value is sbyte
                 || value is byte
                 || value is short
                 || value is ushort
@@ -249,13 +249,22 @@
                 || value is decimal
                 )
             {
-                _dataType = XLCellValues.Number;
-                _cellValue = value.ToString();
+                if (value is double && !Double.IsNaN((Double)Convert.ChangeType(value, typeof (Double)))
+                    && !Double.IsInfinity((Double)Convert.ChangeType(value, typeof (Double))))
+                {
+                    _dataType = XLCellValues.Number;
+                    _cellValue = value.ToString();
+                }
+                else
+                {
+                    _cellValue = value.ToString();
+                    _dataType = XLCellValues.Text;
+                }
             }
             else if (value is Boolean)
             {
                 _dataType = XLCellValues.Boolean;
-                _cellValue = (Boolean)Convert.ChangeType(value, typeof (Boolean)) ? "1" : "0";
+                _cellValue = (Boolean)Convert.ChangeType(value, typeof(Boolean)) ? "1" : "0";
             }
             else
             {
