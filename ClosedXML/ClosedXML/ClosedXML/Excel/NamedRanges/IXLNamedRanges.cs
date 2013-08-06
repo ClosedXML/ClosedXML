@@ -77,6 +77,8 @@ namespace ClosedXML.Excel
         /// </summary>
         void DeleteAll();
 
-        
+        Boolean TryGetValue(String name, out IXLNamedRange range);
+
+        Boolean Contains(String name);
     }
 }

@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System;
+using ClosedXML.Excel;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -36,5 +37,75 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("'Sheet1'!B2,Sheet2!A1", sheet2.NamedRanges.First().RefersTo);
         }
 
+        [TestMethod]
+        public void WorksheetContainsNamedRange()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            ws.FirstCell().AddToNamed("Name", XLScope.Worksheet);
+
+            Assert.IsTrue(ws.NamedRanges.Contains("Name"));
+            Assert.IsFalse(ws.NamedRanges.Contains("NameX"));
+
+            Assert.IsNotNull(ws.NamedRange("Name"));
+            Assert.IsNull(ws.NamedRange("NameX"));
+
+            IXLNamedRange range1;
+            Boolean result1 = ws.NamedRanges.TryGetValue("Name", out range1);
+            Assert.IsTrue(result1);
+            Assert.IsNotNull(range1);
+
+            IXLNamedRange range2;
+            Boolean result2 = ws.NamedRanges.TryGetValue("NameX", out range2);
+            Assert.IsFalse(result2);
+            Assert.IsNull(range2);
+        }
+
+        [TestMethod]
+        public void WorkbookContainsNamedRange()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().AddToNamed("Name");
+
+            Assert.IsTrue(wb.NamedRanges.Contains("Name"));
+            Assert.IsFalse(wb.NamedRanges.Contains("NameX"));
+
+            Assert.IsNotNull(wb.NamedRange("Name"));
+            Assert.IsNull(wb.NamedRange("NameX"));
+
+            IXLNamedRange range1;
+            Boolean result1 = wb.NamedRanges.TryGetValue("Name", out range1);
+            Assert.IsTrue(result1);
+            Assert.IsNotNull(range1);
+
+            IXLNamedRange range2;
+            Boolean result2 = wb.NamedRanges.TryGetValue("NameX", out range2);
+            Assert.IsFalse(result2);
+            Assert.IsNull(range2);
+        }
+
+        [TestMethod]
+        public void WbContainsWsNamedRange()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().AddToNamed("Name", XLScope.Worksheet);
+
+            Assert.IsTrue(wb.NamedRanges.Contains("Sheet1!Name"));
+            Assert.IsFalse(wb.NamedRanges.Contains("Sheet1!NameX"));
+
+            Assert.IsNotNull(wb.NamedRange("Sheet1!Name"));
+            Assert.IsNull(wb.NamedRange("Sheet1!NameX"));
+
+            IXLNamedRange range1;
+            Boolean result1 = wb.NamedRanges.TryGetValue("Sheet1!Name", out range1);
+            Assert.IsTrue(result1);
+            Assert.IsNotNull(range1);
+
+            IXLNamedRange range2;
+            Boolean result2 = wb.NamedRanges.TryGetValue("Sheet1!NameX", out range2);
+            Assert.IsFalse(result2);
+            Assert.IsNull(range2);
+        }
     }
 }

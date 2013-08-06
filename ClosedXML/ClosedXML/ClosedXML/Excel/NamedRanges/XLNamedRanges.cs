@@ -88,6 +88,19 @@ namespace ClosedXML.Excel
 
         #endregion
 
+        public Boolean TryGetValue(String name, out IXLNamedRange range)
+        {
+            if (_namedRanges.TryGetValue(name, out range)) return true;
+
+            range = Workbook.NamedRange(name);
+            return range != null;
+        }
+
+        public Boolean Contains(String name)
+        {
+            if (_namedRanges.ContainsKey(name)) return true;
+            return Workbook.NamedRange(name) != null;
+        }
 
     }
 }
