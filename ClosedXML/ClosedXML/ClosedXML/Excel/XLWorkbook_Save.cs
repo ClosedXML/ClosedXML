@@ -1638,12 +1638,14 @@ namespace ClosedXML.Excel
 
             var tableStyleInfo1 = new TableStyleInfo
             {
-                Name = Enum.GetName(typeof (XLTableTheme), xlTable.Theme),
                 ShowFirstColumn = xlTable.EmphasizeFirstColumn,
                 ShowLastColumn = xlTable.EmphasizeLastColumn,
                 ShowRowStripes = xlTable.ShowRowStripes,
                 ShowColumnStripes = xlTable.ShowColumnStripes
             };
+
+            if (xlTable.Theme != XLTableTheme.None)
+                tableStyleInfo1.Name = Enum.GetName(typeof(XLTableTheme), xlTable.Theme);
 
             if (xlTable.ShowAutoFilter)
             {

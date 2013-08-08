@@ -63,7 +63,8 @@ namespace ClosedXML.Excel
         TableStyleDark4, 
         TableStyleDark3, 
         TableStyleDark2, 
-        TableStyleDark1
+        TableStyleDark1,
+        None
     }
 
     public interface IXLTable : IXLRange
