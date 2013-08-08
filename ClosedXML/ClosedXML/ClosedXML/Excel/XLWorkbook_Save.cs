@@ -841,7 +841,7 @@ namespace ClosedXML.Excel
                 var cellsWithoutFormulas = new HashSet<String>();
                 foreach (var c in worksheet.Internals.CellsCollection.GetCells())
                 {
-                    if (XLHelper.IsNullOrWhiteSpace(c.FormulaA1) || c.FormulaReference == null)
+                    if (XLHelper.IsNullOrWhiteSpace(c.FormulaA1) || (c.FormulaReference == null && c.FormulaA1.StartsWith("{")))
                         cellsWithoutFormulas.Add(c.Address.ToStringRelative());
                     else
                     {
@@ -4072,9 +4072,9 @@ namespace ClosedXML.Excel
                     }
 
                     cell.StyleIndex = styleId;
-                    if (opCell.HasFormula && opCell.FormulaReference != null)
+                    var formula = opCell.FormulaA1;
+                    if (opCell.HasFormula && !(formula.StartsWith("{") && opCell.FormulaReference == null))
                     {
-                        var formula = opCell.FormulaA1;
                         if (formula.StartsWith("{"))
                         {
                             formula = formula.Substring(1, formula.Length - 2);

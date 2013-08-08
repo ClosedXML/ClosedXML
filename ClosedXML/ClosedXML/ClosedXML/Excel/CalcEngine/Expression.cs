@@ -97,7 +97,7 @@ namespace ClosedXML.Excel.CalcEngine
 			}
 
 			// handle nulls
-			if (v == null)
+			if (v == null || v is String)
 			{
 				return 0;
 			}
