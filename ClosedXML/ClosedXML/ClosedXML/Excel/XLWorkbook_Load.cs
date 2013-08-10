@@ -777,6 +777,9 @@ namespace ClosedXML.Excel
                     xlCell.FormulaA1 = formula;
                 }
 
+                if (cell.CellFormula.Reference != null)
+                    xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+
                 if (cell.CellValue != null)
                     xlCell.ValueCached = cell.CellValue.Text;
             }
