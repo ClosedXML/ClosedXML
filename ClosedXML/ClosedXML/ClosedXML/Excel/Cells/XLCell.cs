@@ -249,16 +249,16 @@
                 || value is decimal
                 )
             {
-                if (value is double && !Double.IsNaN((Double)Convert.ChangeType(value, typeof (Double)))
-                    && !Double.IsInfinity((Double)Convert.ChangeType(value, typeof (Double))))
-                {
-                    _dataType = XLCellValues.Number;
-                    _cellValue = value.ToString();
-                }
-                else
+                if (Double.IsNaN((Double)Convert.ChangeType(value, typeof (Double)))
+                    || Double.IsInfinity((Double)Convert.ChangeType(value, typeof (Double))))
                 {
                     _cellValue = value.ToString();
                     _dataType = XLCellValues.Text;
+                }
+                else
+                {
+                    _dataType = XLCellValues.Number;
+                    _cellValue = value.ToString();
                 }
             }
             else if (value is Boolean)
