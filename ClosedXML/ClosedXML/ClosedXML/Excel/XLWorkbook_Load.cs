@@ -84,8 +84,9 @@ namespace ClosedXML.Excel
                         CustomProperties.Add(name, m.VTBool.Text == "true");
                 }
             }
-            var date1904 = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties.Date1904;
-            Use1904DateSystem = date1904 != null && date1904.Value;
+
+            var wbProps = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties;
+            Use1904DateSystem = wbProps != null && wbProps.Date1904 != null && wbProps.Date1904.Value;
 
             var calculationProperties = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties;
             if (calculationProperties != null)
