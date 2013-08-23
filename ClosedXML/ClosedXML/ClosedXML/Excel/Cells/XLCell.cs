@@ -249,8 +249,8 @@
                 || value is decimal
                 )
             {
-                if (Double.IsNaN((Double)Convert.ChangeType(value, typeof (Double)))
-                    || Double.IsInfinity((Double)Convert.ChangeType(value, typeof (Double))))
+                if ((value is double || value is float) && (Double.IsNaN((Double)Convert.ChangeType(value, typeof (Double)))
+                    || Double.IsInfinity((Double)Convert.ChangeType(value, typeof (Double)))))
                 {
                     _cellValue = value.ToString();
                     _dataType = XLCellValues.Text;
@@ -268,7 +268,7 @@
             }
             else
             {
-                _cellValue = value.ToString();
+                _cellValue = Convert.ToString(value);
                 _dataType = XLCellValues.Text;
             }
 
