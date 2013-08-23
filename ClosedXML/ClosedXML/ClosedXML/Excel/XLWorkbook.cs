@@ -453,7 +453,28 @@ namespace ClosedXML.Excel
         public void SaveAs(Stream stream)
         {
             if (_loadSource == XLLoadSource.New)
-                CreatePackage(stream, true);
+            {
+                // dm 20130422, this method or better the method SpreadsheetDocument.Create which is called
+                // inside of 'CreatePackage' need a stream which CanSeek & CanRead
+                // and an ordinary Response stream of a webserver can't do this
+                // so we have to ask and provide a way around this
+                if (stream.CanRead && stream.CanSeek && stream.CanWrite)
+                {
+                    // all is fine the package can be created in a direct way
+                    CreatePackage(stream, true);
+                }
+                else
+                {
+                    // the harder way
+                    MemoryStream ms = new MemoryStream();
+                    CreatePackage(ms, true);
+                    // not really nessesary, because I changed CopyStream too.
+                    // but for better understanding and if somebody in the future
+                    // provide an changed version of CopyStream
+                    ms.Position = 0;
+                    CopyStream(ms, stream);
+                }
+            }
             else if (_loadSource == XLLoadSource.File)
             {
                 using (var fileStream = new FileStream(_originalFile, FileMode.Open, FileAccess.Read))
@@ -477,8 +498,14 @@ namespace ClosedXML.Excel
         {
             var buffer = new byte[8 * 1024];
             int len;
+            // dm 20130422, it is always a good idea to rewind the input stream, or not?
+            if (input.CanSeek)
+                input.Seek(0, SeekOrigin.Begin);
             while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
                 output.Write(buffer, 0, len);
+            // dm 20130422, and flushing the output after write
+            output.Flush();
+
         }
 
         public IXLWorksheet Worksheet(String name)
