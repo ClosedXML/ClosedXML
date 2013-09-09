@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
     }
     public interface IXLRichString: IXLFontBase, IEquatable<IXLRichString>, IXLWithRichString
     {
-        String Text { get; }
+        String Text { get; set; }
         
 
         IXLRichString SetBold(); IXLRichString SetBold(Boolean value);

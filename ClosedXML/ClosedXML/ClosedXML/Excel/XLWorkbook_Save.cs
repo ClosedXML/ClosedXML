@@ -706,7 +706,7 @@ namespace ClosedXML.Excel
                     else
                     {
                         var sharedStringItem = new SharedStringItem();
-                        foreach (var rt in c.RichText)
+                        foreach (var rt in c.RichText.Where(r => !String.IsNullOrEmpty(r.Text)))
                         {
                             sharedStringItem.Append(GetRun(rt));
                         }

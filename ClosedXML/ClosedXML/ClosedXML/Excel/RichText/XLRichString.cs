@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
             _withRichString = withRichString;
         }
 
-        public String Text { get; private set; }
+        public String Text { get; set; }
         public IXLRichString AddText(String text)
         {
             return _withRichString.AddText(text);
