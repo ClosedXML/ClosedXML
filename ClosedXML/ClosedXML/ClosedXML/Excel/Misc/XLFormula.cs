@@ -29,12 +29,9 @@ namespace ClosedXML.Excel
                 else
                 {
                     _value = value.Trim();
-                    Double num;
                     IsFormula = !XLHelper.IsNullOrWhiteSpace(_value) && _value.TrimStart()[0] == '=' ;
                     if (IsFormula)
                         _value = _value.Substring(1);
-                    //else if (!XLHelper.IsNullOrWhiteSpace(_value) && (!Double.TryParse(_value, out num) && _value[0] != '\"' && !_value.EndsWith("\"")))
-                    //    _value = String.Format("\"{0}\"", _value.Replace("\"", "\"\""));
                 }
                 
 

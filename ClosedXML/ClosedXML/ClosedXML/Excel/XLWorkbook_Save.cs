@@ -853,6 +853,8 @@ namespace ClosedXML.Excel
                                 SheetId = worksheet.SheetId
                             };
 
+                            if (c.FormulaReference == null)
+                                c.FormulaReference = c.AsRange().RangeAddress;
                             if (c.FormulaReference.FirstAddress.Equals(c.Address))
                             {
                                 cc.Array = true;
@@ -4079,8 +4081,10 @@ namespace ClosedXML.Excel
                         {
                             formula = formula.Substring(1, formula.Length - 2);
                             var f = new CellFormula {FormulaType = CellFormulaValues.Array};
-                            
-                            if (opCell.FormulaReference.FirstAddress.Equals(opCell.Address))
+
+                            if (opCell.FormulaReference == null)
+                                opCell.FormulaReference = opCell.AsRange().RangeAddress;
+                            if ( opCell.FormulaReference.FirstAddress.Equals(opCell.Address))
                             {
                                 f.Text = formula;
                                 f.Reference = opCell.FormulaReference.ToStringRelative();
