@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
 using ClosedXML.Excel.CalcEngine;
+using DocumentFormat.OpenXml;
 
 namespace ClosedXML.Excel
 {
@@ -408,9 +409,11 @@ namespace ClosedXML.Excel
                 throw new Exception("This is a new file, please use one of the SaveAs methods.");
 
             if (_loadSource == XLLoadSource.Stream)
-                CreatePackage(_originalStream, false);
+            {
+                CreatePackage(_originalStream, false, _spreadsheetDocumentType);
+            }
             else
-                CreatePackage(_originalFile);
+                CreatePackage(_originalFile, _spreadsheetDocumentType);
         }
 
         /// <summary>
@@ -424,14 +427,14 @@ namespace ClosedXML.Excel
                 if (File.Exists(file))
                     File.Delete(file);
 
-                CreatePackage(file);
+                CreatePackage(file, GetSpreadsheetDocumentType(file));
             }
             else if (_loadSource == XLLoadSource.File)
             {
                 if (String.Compare(_originalFile.Trim(), file.Trim(), true) != 0)
                     File.Copy(_originalFile, file, true);
 
-                CreatePackage(file);
+                CreatePackage(file, GetSpreadsheetDocumentType(file));
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -441,12 +444,24 @@ namespace ClosedXML.Excel
                 {
                     CopyStream(_originalStream, fileStream);
                     //fileStream.Position = 0;
-                    CreatePackage(fileStream, false);
+                    CreatePackage(fileStream, false, _spreadsheetDocumentType);
                     fileStream.Close();
                 }
             }
         }
 
+        private static SpreadsheetDocumentType GetSpreadsheetDocumentType(string filePath)
+        {
+            var extension = Path.GetExtension(filePath);
+
+            if (extension == null) throw new Exception("Empty extension is not supported.");
+
+            if (extension.ToLowerInvariant().Equals(".xlsm")) return SpreadsheetDocumentType.MacroEnabledWorkbook;
+
+            if (extension.ToLowerInvariant().Equals(".xlsx")) return SpreadsheetDocumentType.Workbook;
+
+            throw new Exception(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx' and '.xslm'.", extension));
+        }
         /// <summary>
         ///   Saves the current workbook to a stream.
         /// </summary>
@@ -461,13 +476,13 @@ namespace ClosedXML.Excel
                 if (stream.CanRead && stream.CanSeek && stream.CanWrite)
                 {
                     // all is fine the package can be created in a direct way
-                    CreatePackage(stream, true);
+                    CreatePackage(stream, true, _spreadsheetDocumentType);
                 }
                 else
                 {
                     // the harder way
                     MemoryStream ms = new MemoryStream();
-                    CreatePackage(ms, true);
+                    CreatePackage(ms, true, _spreadsheetDocumentType);
                     // not really nessesary, because I changed CopyStream too.
                     // but for better understanding and if somebody in the future
                     // provide an changed version of CopyStream
@@ -482,7 +497,7 @@ namespace ClosedXML.Excel
                     CopyStream(fileStream, stream);
                     fileStream.Close();
                 }
-                CreatePackage(stream, false);
+                CreatePackage(stream, false, _spreadsheetDocumentType);
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -490,7 +505,7 @@ namespace ClosedXML.Excel
                 if (_originalStream != stream)
                     CopyStream(_originalStream, stream);
 
-                CreatePackage(stream, false);
+                CreatePackage(stream, false, _spreadsheetDocumentType);
             }
         }
 
@@ -623,6 +638,7 @@ namespace ClosedXML.Excel
         {
             _loadSource = XLLoadSource.File;
             _originalFile = file;
+            _spreadsheetDocumentType = GetSpreadsheetDocumentType(_originalFile);
             Load(file);
         }
 
@@ -749,6 +765,8 @@ namespace ClosedXML.Excel
         }
 
         private static XLCalcEngine _calcEngineExpr;
+        private SpreadsheetDocumentType _spreadsheetDocumentType;
+
         private static XLCalcEngine CalcEngineExpr
         {
             get { return _calcEngineExpr ?? (_calcEngineExpr = new XLCalcEngine()); }

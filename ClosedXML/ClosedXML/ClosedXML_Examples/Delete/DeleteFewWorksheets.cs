@@ -7,7 +7,7 @@ namespace ClosedXML_Examples.Delete
     {
         public void Create(string filePath)
         {
-            string tempFile = ExampleHelper.GetTempFilePath();
+            string tempFile = ExampleHelper.GetTempFilePath(filePath);
             try
             {
                 //Note: Prepare

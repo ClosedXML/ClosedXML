@@ -8,7 +8,7 @@ namespace ClosedXML_Examples
     {
         public void Create(string filePath)
         {
-            string tempFile = ExampleHelper.GetTempFilePath();
+            string tempFile = ExampleHelper.GetTempFilePath(filePath);
             try
             {
                 new BasicTable().Create(tempFile);

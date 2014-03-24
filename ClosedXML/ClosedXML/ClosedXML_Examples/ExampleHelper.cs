@@ -8,5 +8,12 @@ namespace ClosedXML_Examples
         {
             return Path.GetTempFileName();
         }
+
+        public static string GetTempFilePath(string filePath)
+        {
+            var extension = Path.GetExtension(filePath);
+            var tempFilePath = GetTempFilePath();
+            return Path.ChangeExtension(tempFilePath, extension);
+        }
     }
 }

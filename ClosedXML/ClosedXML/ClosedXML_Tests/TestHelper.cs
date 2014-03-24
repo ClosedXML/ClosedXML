@@ -1,14 +1,28 @@
+using System;
 using System.IO;
+using System.Threading;
 using ClosedXML.Excel;
 using ClosedXML_Examples;
+using DocumentFormat.OpenXml.Drawing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Path = System.IO.Path;
 
 namespace ClosedXML_Tests
 {
     internal static class TestHelper
     {
+        public static string CurrencySymbol
+        {
+            get { return Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol; }
+        }
+
         //Note: Run example tests parameters
-        public const string TestsOutputDirectory = @"D:\Excel Files\Tests\";
+        public static string TestsOutputDirectory
+        {
+            get { return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location); }
+
+        }
+
         public const string ActualTestResultPostFix = "";
         public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
         
@@ -55,7 +69,12 @@ namespace ClosedXML_Tests
                     {
                         string message;
                         success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);
-                        Assert.IsTrue(success, message);
+                        var formattedMessage =
+                            String.Format(
+                                "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
+                                filePath2, resourcePath, message);
+
+                        Assert.IsTrue(success, formattedMessage);
                     }
                 }
             }

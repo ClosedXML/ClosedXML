@@ -10,8 +10,8 @@ namespace ClosedXML_Tests
         [TestMethod]
         public void CheckEqual()
         {
-             string left = ExampleHelper.GetTempFilePath();
-             string right = ExampleHelper.GetTempFilePath();
+             string left = ExampleHelper.GetTempFilePath("left.xlsx");
+             string right = ExampleHelper.GetTempFilePath("right.xlsx");
              try
              {
                  new BasicTable().Create(left);
@@ -35,8 +35,8 @@ namespace ClosedXML_Tests
         [TestMethod]
         public void CheckNonEqual()
         {
-            string left = ExampleHelper.GetTempFilePath();
-            string right = ExampleHelper.GetTempFilePath();
+            string left = ExampleHelper.GetTempFilePath("left.xlsx");
+            string right = ExampleHelper.GetTempFilePath("right.xlsx");
             try
             {
                 new BasicTable().Create(left);

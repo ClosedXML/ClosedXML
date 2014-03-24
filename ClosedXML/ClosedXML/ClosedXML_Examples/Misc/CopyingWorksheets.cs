@@ -8,8 +8,8 @@ namespace ClosedXML_Examples.Misc
     {
         public void Create(string filePath)
         {
-            string tempFile1 = ExampleHelper.GetTempFilePath();
-            string tempFile2 = ExampleHelper.GetTempFilePath();
+            string tempFile1 = ExampleHelper.GetTempFilePath(filePath);
+            string tempFile2 = ExampleHelper.GetTempFilePath(filePath);
             try
             {
                 new UsingTables().Create(tempFile1);

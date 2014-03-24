@@ -9,7 +9,7 @@ namespace ClosedXML_Examples.Misc
 
         public void Create(string filePath)
         {
-            string tempFile = ExampleHelper.GetTempFilePath();
+            string tempFile = ExampleHelper.GetTempFilePath(filePath);
             try
             {
                 new MergeCells().Create(tempFile);

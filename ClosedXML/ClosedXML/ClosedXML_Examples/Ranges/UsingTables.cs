@@ -13,7 +13,7 @@ namespace ClosedXML_Examples.Ranges
         // Public
         public void Create(String filePath)
         {
-            string tempFile = ExampleHelper.GetTempFilePath();
+            string tempFile = ExampleHelper.GetTempFilePath(filePath);
             try
             {
                 new BasicTable().Create(tempFile);

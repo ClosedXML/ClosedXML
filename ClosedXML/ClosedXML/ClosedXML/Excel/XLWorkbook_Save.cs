@@ -79,12 +79,12 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void CreatePackage(String filePath)
+        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType)
         {
             PathHelper.CreateDirectory(Path.GetDirectoryName(filePath));
             var package = File.Exists(filePath)
                 ? SpreadsheetDocument.Open(filePath, true)
-                : SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook);
+                : SpreadsheetDocument.Create(filePath, spreadsheetDocumentType);
 
             using (package)
             {
@@ -93,10 +93,10 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void CreatePackage(Stream stream, Boolean newStream)
+        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType)
         {
             var package = newStream
-                ? SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook)
+                ? SpreadsheetDocument.Create(stream, spreadsheetDocumentType)
                 : SpreadsheetDocument.Open(stream, true);
 
             using (package)

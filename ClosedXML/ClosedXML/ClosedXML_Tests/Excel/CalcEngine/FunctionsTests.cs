@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ClosedXML.Excel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -440,13 +441,11 @@ namespace ClosedXML_Tests.Excel.DataValidations
         [TestMethod]
         public void Dollar()
         {
-            Object actual;
-
-            actual = XLWorkbook.EvaluateExpr("Dollar(12345.123)");
-            Assert.AreEqual("$12,345.12", actual);
+            var actual = XLWorkbook.EvaluateExpr("Dollar(12345.123)");
+            Assert.AreEqual(TestHelper.CurrencySymbol + " 12,345.12", actual);
 
             actual = XLWorkbook.EvaluateExpr("Dollar(12345.123, 1)");
-            Assert.AreEqual("$12,345.1", actual);
+            Assert.AreEqual(TestHelper.CurrencySymbol  + " 12,345.1", actual);
         }
 
         [TestMethod]
