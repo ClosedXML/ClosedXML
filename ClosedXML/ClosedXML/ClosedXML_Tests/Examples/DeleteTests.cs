@@ -1,22 +1,21 @@
 using ClosedXML_Examples.Delete;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
 {
-    [TestClass]
+    [TestFixture]
     public class DeleteTests
     {
-        [TestMethod]
-        public void RemoveRows()
-        {
-            TestHelper.RunTestExample<DeleteRows>(@"Delete\RemoveRows.xlsx");
-        }
-
-        [TestMethod]
+        [Test]
         public void DeleteFewWorksheets()
         {
             TestHelper.RunTestExample<DeleteFewWorksheets>(@"Delete\DeleteFewWorksheets.xlsx");
         }
 
+        [Test]
+        public void RemoveRows()
+        {
+            TestHelper.RunTestExample<DeleteRows>(@"Delete\RemoveRows.xlsx");
+        }
     }
 }

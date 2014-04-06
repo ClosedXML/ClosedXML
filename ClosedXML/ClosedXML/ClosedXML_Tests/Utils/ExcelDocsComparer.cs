@@ -8,9 +8,9 @@ namespace ClosedXML_Tests
     {
         public static bool Compare(string left, string right, out string message)
         {
-            using (var leftStream = File.OpenRead(left))
+            using (FileStream leftStream = File.OpenRead(left))
             {
-                using (var rightStream = File.OpenRead(right))
+                using (FileStream rightStream = File.OpenRead(right))
                 {
                     return Compare(leftStream, rightStream, out message);
                 }
@@ -27,6 +27,7 @@ namespace ClosedXML_Tests
                 }
             }
         }
+
         private static bool ExcludeMethod(Uri uri)
         {
             //Exclude service data

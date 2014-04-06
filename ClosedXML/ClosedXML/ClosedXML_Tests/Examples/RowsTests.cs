@@ -1,27 +1,28 @@
 using ClosedXML_Examples;
 using ClosedXML_Examples.Rows;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
 {
-    [TestClass]
+    [TestFixture]
     public class RowsTests
     {
-        [TestMethod]
+        [Test]
         public void RowCells()
         {
             TestHelper.RunTestExample<RowCells>(@"Rows\RowCells.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void RowCollection()
         {
             TestHelper.RunTestExample<RowCollection>(@"Rows\RowCollection.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void RowSettings()
         {
             TestHelper.RunTestExample<RowSettings>(@"Rows\RowSettings.xlsx");
         }
-
     }
 }

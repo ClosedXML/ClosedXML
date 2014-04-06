@@ -1,17 +1,15 @@
 using ClosedXML_Examples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
 {
-    [TestClass]
+    [TestFixture]
     public class CommentsTests
     {
-    
-    [TestMethod]
-    public void AddingComments()
-    {
-        TestHelper.RunTestExample<AddingComments>(@"Comments\AddingComments.xlsx");
-    }
-    
+        [Test]
+        public void AddingComments()
+        {
+            TestHelper.RunTestExample<AddingComments>(@"Comments\AddingComments.xlsx");
+        }
     }
 }

@@ -18,12 +18,13 @@ namespace ClosedXML_Tests
             {
                 package.DeletePart(uri);
             }
-            var part = package.CreatePart(uri, MediaTypeNames.Text.Xml, CompressionOption.Fast);
+            PackagePart part = package.CreatePart(uri, MediaTypeNames.Text.Xml, CompressionOption.Fast);
             using (Stream stream = part.GetStream())
             {
                 serializer.Serialize(stream, content);
             }
         }
+
         public static object ReadXmlPart(Package package, Uri uri, XmlSerializer serializer)
         {
             if (!package.PartExists(uri))
@@ -49,11 +50,12 @@ namespace ClosedXML_Tests
                 StreamHelper.StreamToStreamAppend(content, stream);
             }
         }
+
         /// <summary>
-        ///   Returns part's stream
+        ///     Returns part's stream
         /// </summary>
-        /// <param name = "package"></param>
-        /// <param name = "uri"></param>
+        /// <param name="package"></param>
+        /// <param name="uri"></param>
         /// <returns></returns>
         public static Stream ReadBinaryPart(Package package, Uri uri)
         {
@@ -69,9 +71,11 @@ namespace ClosedXML_Tests
         {
             CopyPart(uri, source, dest, true);
         }
+
         public static void CopyPart(Uri uri, Package source, Package dest, bool overwrite)
         {
             #region Check
+
             if (ReferenceEquals(uri, null))
             {
                 throw new ArgumentNullException("uri");
@@ -84,7 +88,9 @@ namespace ClosedXML_Tests
             {
                 throw new ArgumentNullException("dest");
             }
+
             #endregion
+
             if (dest.PartExists(uri))
             {
                 if (!overwrite)
@@ -106,9 +112,11 @@ namespace ClosedXML_Tests
             }
         }
 
-        public static void WritePart<T>(Package package, PackagePartDescriptor descriptor, T content, Action<Stream, T> serializeAction)
+        public static void WritePart<T>(Package package, PackagePartDescriptor descriptor, T content,
+            Action<Stream, T> serializeAction)
         {
             #region Check
+
             if (ReferenceEquals(package, null))
             {
                 throw new ArgumentNullException("package");
@@ -121,7 +129,9 @@ namespace ClosedXML_Tests
             {
                 throw new ArgumentNullException("serializeAction");
             }
+
             #endregion
+
             if (package.PartExists(descriptor.Uri))
             {
                 package.DeletePart(descriptor.Uri);
@@ -132,9 +142,11 @@ namespace ClosedXML_Tests
                 serializeAction(stream, content);
             }
         }
+
         public static void WritePart(Package package, PackagePartDescriptor descriptor, Action<Stream> serializeAction)
         {
             #region Check
+
             if (ReferenceEquals(package, null))
             {
                 throw new ArgumentNullException("package");
@@ -147,7 +159,9 @@ namespace ClosedXML_Tests
             {
                 throw new ArgumentNullException("serializeAction");
             }
+
             #endregion
+
             if (package.PartExists(descriptor.Uri))
             {
                 package.DeletePart(descriptor.Uri);
@@ -158,9 +172,11 @@ namespace ClosedXML_Tests
                 serializeAction(stream);
             }
         }
+
         public static T ReadPart<T>(Package package, Uri uri, Func<Stream, T> deserializeFunc)
         {
             #region Check
+
             if (ReferenceEquals(package, null))
             {
                 throw new ArgumentNullException("package");
@@ -173,7 +189,9 @@ namespace ClosedXML_Tests
             {
                 throw new ArgumentNullException("deserializeFunc");
             }
+
             #endregion
+
             if (!package.PartExists(uri))
             {
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
@@ -184,9 +202,11 @@ namespace ClosedXML_Tests
                 return deserializeFunc(stream);
             }
         }
+
         public static void ReadPart(Package package, Uri uri, Action<Stream> deserializeAction)
         {
             #region Check
+
             if (ReferenceEquals(package, null))
             {
                 throw new ArgumentNullException("package");
@@ -199,7 +219,9 @@ namespace ClosedXML_Tests
             {
                 throw new ArgumentNullException("deserializeAction");
             }
+
             #endregion
+
             if (!package.PartExists(uri))
             {
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
@@ -210,9 +232,11 @@ namespace ClosedXML_Tests
                 deserializeAction(stream);
             }
         }
+
         public static bool TryReadPart(Package package, Uri uri, Action<Stream> deserializeAction)
         {
             #region Check
+
             if (ReferenceEquals(package, null))
             {
                 throw new ArgumentNullException("package");
@@ -225,7 +249,9 @@ namespace ClosedXML_Tests
             {
                 throw new ArgumentNullException("deserializeAction");
             }
+
             #endregion
+
             if (!package.PartExists(uri))
             {
                 return false;
@@ -239,10 +265,10 @@ namespace ClosedXML_Tests
         }
 
         /// <summary>
-        ///   Compare to packages by parts like streams
+        ///     Compare to packages by parts like streams
         /// </summary>
-        /// <param name = "left"></param>
-        /// <param name = "right"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
         /// <param name="compareToFirstDifference"></param>
         /// <param name="excludeMethod"></param>
         /// <param name="message"></param>
@@ -251,18 +277,21 @@ namespace ClosedXML_Tests
         {
             return Compare(left, right, compareToFirstDifference, null, out message);
         }
+
         /// <summary>
-        ///   Compare to packages by parts like streams
+        ///     Compare to packages by parts like streams
         /// </summary>
-        /// <param name = "left"></param>
-        /// <param name = "right"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
         /// <param name="compareToFirstDifference"></param>
         /// <param name="excludeMethod"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static bool Compare(Package left, Package right, bool compareToFirstDifference,Func<Uri,bool> excludeMethod, out string message)
+        public static bool Compare(Package left, Package right, bool compareToFirstDifference,
+            Func<Uri, bool> excludeMethod, out string message)
         {
             #region Check
+
             if (left == null)
             {
                 throw new ArgumentNullException("left");
@@ -271,13 +300,15 @@ namespace ClosedXML_Tests
             {
                 throw new ArgumentNullException("right");
             }
+
             #endregion
+
             excludeMethod = excludeMethod ?? (uri => false);
-            var leftParts = left.GetParts();
-            var rightParts = right.GetParts();
+            PackagePartCollection leftParts = left.GetParts();
+            PackagePartCollection rightParts = right.GetParts();
 
             var pairs = new Dictionary<Uri, PartPair>();
-            foreach (var part in leftParts)
+            foreach (PackagePart part in leftParts)
             {
                 if (excludeMethod(part.Uri))
                 {
@@ -285,7 +316,7 @@ namespace ClosedXML_Tests
                 }
                 pairs.Add(part.Uri, new PartPair(part.Uri, CompareStatus.OnlyOnLeft));
             }
-            foreach (var part in rightParts)
+            foreach (PackagePart part in rightParts)
             {
                 if (excludeMethod(part.Uri))
                 {
@@ -307,31 +338,31 @@ namespace ClosedXML_Tests
                 goto EXIT;
             }
 
-            foreach (var pair in pairs.Values)
+            foreach (PartPair pair in pairs.Values)
             {
                 if (pair.Status != CompareStatus.Equal)
                 {
                     continue;
                 }
-                using (var oneStream = left.GetPart(pair.Uri).GetStream(FileMode.Open, FileAccess.Read))
-                    using (var otherStream = right.GetPart(pair.Uri).GetStream(FileMode.Open, FileAccess.Read))
+                using (Stream oneStream = left.GetPart(pair.Uri).GetStream(FileMode.Open, FileAccess.Read))
+                using (Stream otherStream = right.GetPart(pair.Uri).GetStream(FileMode.Open, FileAccess.Read))
+                {
+                    if (!StreamHelper.Compare(oneStream, otherStream))
                     {
-                        if (!StreamHelper.Compare(oneStream, otherStream))
+                        pair.Status = CompareStatus.NonEqual;
+                        if (compareToFirstDifference)
                         {
-                            pair.Status = CompareStatus.NonEqual;
-                            if (compareToFirstDifference)
-                            {
-                                goto EXIT;
-                            }
+                            goto EXIT;
                         }
                     }
+                }
             }
 
             EXIT:
-            var sortedPairs = pairs.Values.ToList();
+            List<PartPair> sortedPairs = pairs.Values.ToList();
             sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
             var sbuilder = new StringBuilder();
-            foreach (var pair in sortedPairs)
+            foreach (PartPair pair in sortedPairs)
             {
                 if (pair.Status == CompareStatus.Equal)
                 {
@@ -343,28 +374,31 @@ namespace ClosedXML_Tests
             message = sbuilder.ToString();
             return message.Length == 0;
         }
-        //--
+
         #region Nested type: PackagePartDescriptor
+
         public sealed class PackagePartDescriptor
         {
             #region Private fields
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly Uri _uri;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly string _contentType;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly CompressionOption _compressOption;
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly CompressionOption _compressOption;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly string _contentType;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly Uri _uri;
+
             #endregion
+
             #region Constructor
+
             /// <summary>
-            ///   Instance constructor
+            ///     Instance constructor
             /// </summary>
-            /// <param name = "uri">Part uri</param>
-            /// <param name = "contentType">Content type from <see cref = "MediaTypeNames" /></param>
-            /// <param name = "compressOption"></param>
+            /// <param name="uri">Part uri</param>
+            /// <param name="contentType">Content type from <see cref="MediaTypeNames" /></param>
+            /// <param name="compressOption"></param>
             public PackagePartDescriptor(Uri uri, string contentType, CompressionOption compressOption)
             {
                 #region Check
+
                 if (ReferenceEquals(uri, null))
                 {
                     throw new ArgumentNullException("uri");
@@ -373,38 +407,49 @@ namespace ClosedXML_Tests
                 {
                     throw new ArgumentNullException("contentType");
                 }
+
                 #endregion
+
                 _uri = uri;
                 _contentType = contentType;
                 _compressOption = compressOption;
             }
+
             #endregion
+
             #region Public properties
+
             public Uri Uri
             {
-                [DebuggerStepThrough]
-                get { return _uri; }
+                [DebuggerStepThrough] get { return _uri; }
             }
+
             public string ContentType
             {
-                [DebuggerStepThrough]
-                get { return _contentType; }
+                [DebuggerStepThrough] get { return _contentType; }
             }
+
             public CompressionOption CompressOption
             {
-                [DebuggerStepThrough]
-                get { return _compressOption; }
+                [DebuggerStepThrough] get { return _compressOption; }
             }
+
             #endregion
+
             #region Public methods
+
             public override string ToString()
             {
                 return string.Format("Uri:{0} ContentType: {1}, Compression: {2}", _uri, _contentType, _compressOption);
             }
+
             #endregion
         }
+
         #endregion
+
         #region Nested type: CompareStatus
+
         private enum CompareStatus
         {
             OnlyOnLeft,
@@ -412,38 +457,48 @@ namespace ClosedXML_Tests
             Equal,
             NonEqual
         }
+
         #endregion
+
         #region Nested type: PartPair
+
         private sealed class PartPair
         {
             #region Private fields
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly Uri _uri;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private CompareStatus _status;
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly Uri _uri;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private CompareStatus _status;
+
             #endregion
+
             #region Constructor
+
             public PartPair(Uri uri, CompareStatus status)
             {
                 _uri = uri;
                 _status = status;
             }
+
             #endregion
+
             #region Public properties
+
             public Uri Uri
             {
-                [DebuggerStepThrough]
-                get { return _uri; }
+                [DebuggerStepThrough] get { return _uri; }
             }
+
             public CompareStatus Status
             {
-                [DebuggerStepThrough]
-                get { return _status; }
-                [DebuggerStepThrough]
-                set { _status = value; }
+                [DebuggerStepThrough] get { return _status; }
+                [DebuggerStepThrough] set { _status = value; }
             }
+
             #endregion
         }
+
         #endregion
+
+        //--
     }
 }

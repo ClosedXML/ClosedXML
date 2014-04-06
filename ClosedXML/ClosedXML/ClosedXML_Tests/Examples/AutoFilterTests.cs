@@ -1,33 +1,33 @@
 using ClosedXML_Examples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
 {
-    [TestClass]
+    [TestFixture]
     public class AutoFilterTests
     {
-    
-    [TestMethod]
-        public void RegularAutoFilter()
-        {
-            TestHelper.RunTestExample<RegularAutoFilter>(@"AutoFilter\RegularAutoFilter.xlsx");
-        }
-    [TestMethod]
+        [Test]
         public void CustomAutoFilter()
         {
             TestHelper.RunTestExample<CustomAutoFilter>(@"AutoFilter\CustomAutoFilter.xlsx");
         }
 
-    [TestMethod]
-    public void TopBottomAutoFilter()
-        {
-            TestHelper.RunTestExample<TopBottomAutoFilter>(@"AutoFilter\TopBottomAutoFilter.xlsx");
-        }
-
-    [TestMethod]
-    public void DynamicAutoFilter()
+        [Test]
+        public void DynamicAutoFilter()
         {
             TestHelper.RunTestExample<DynamicAutoFilter>(@"AutoFilter\DynamicAutoFilter.xlsx");
+        }
+
+        [Test]
+        public void RegularAutoFilter()
+        {
+            TestHelper.RunTestExample<RegularAutoFilter>(@"AutoFilter\RegularAutoFilter.xlsx");
+        }
+
+        [Test]
+        public void TopBottomAutoFilter()
+        {
+            TestHelper.RunTestExample<TopBottomAutoFilter>(@"AutoFilter\TopBottomAutoFilter.xlsx");
         }
     }
 }

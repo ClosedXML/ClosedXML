@@ -1,16 +1,15 @@
 using ClosedXML_Examples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
 {
-    [TestClass]
+    [TestFixture]
     public class LoadingTests
     {
-        [TestMethod]
+        [Test]
         public void ChangingBasicTable()
         {
             TestHelper.RunTestExample<ChangingBasicTable>(@"Loading\ChangingBasicTable.xlsx");
         }
-
     }
 }

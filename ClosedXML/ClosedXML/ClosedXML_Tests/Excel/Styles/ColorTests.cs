@@ -1,41 +1,36 @@
-﻿using System;
-using System.Drawing;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Drawing;
 using ClosedXML.Excel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel
 {
     /// <summary>
-    /// Summary description for UnitTest1
+    ///     Summary description for UnitTest1
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class ColorTests
     {
-
-        [TestMethod]
+        [Test]
         public void ColorEqualOperatorInPlace()
         {
             Assert.IsTrue(XLColor.Black == XLColor.Black);
         }
 
-        [TestMethod]
+        [Test]
         public void ColorNotEqualOperatorInPlace()
         {
             Assert.IsFalse(XLColor.Black != XLColor.Black);
         }
 
-        [TestMethod]
+        [Test]
         public void DefaultColorIndex64isTransparentWhite()
         {
             var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
-            var color = ws.FirstCell().Style.Fill.BackgroundColor;
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            XLColor color = ws.FirstCell().Style.Fill.BackgroundColor;
             Assert.AreEqual(XLColorType.Indexed, color.ColorType);
             Assert.AreEqual(64, color.Indexed);
-            Assert.AreEqual(Color.Transparent , color.Color);
+            Assert.AreEqual(Color.Transparent, color.Color);
         }
     }
 }

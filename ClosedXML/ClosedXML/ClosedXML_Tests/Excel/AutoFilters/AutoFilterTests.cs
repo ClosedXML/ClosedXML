@@ -1,46 +1,26 @@
-﻿using ClosedXML.Excel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System;
+using ClosedXML.Excel;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests
 {
-    using System.Collections.Generic;
-
-    [TestClass]
+    [TestFixture]
     public class AutoFilterTests
     {
-        [TestMethod]
-        public void AutoFilterSortWhenNotInFirstRow()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                using (var ws = wb.Worksheets.Add("Sheet1"))
-                {
-                    ws.Cell(3, 3).SetValue("Names")
-                        .CellBelow().SetValue("Manuel")
-                        .CellBelow().SetValue("Carlos")
-                        .CellBelow().SetValue("Dominic");
-                    ws.RangeUsed().SetAutoFilter().Sort();
-                    Assert.AreEqual(ws.Cell(4, 3).GetString(), "Carlos");
-                }
-                
-            }
-            
-        }
-
-        [TestMethod]
+        [Test]
         public void AutoFilterExpandsWithTable()
         {
             using (var wb = new XLWorkbook())
             {
-                using (var ws = wb.Worksheets.Add("Sheet1"))
+                using (IXLWorksheet ws = wb.Worksheets.Add("Sheet1"))
                 {
                     ws.FirstCell().SetValue("Categories")
-                    .CellBelow().SetValue("1")
-                    .CellBelow().SetValue("2");
+                        .CellBelow().SetValue("1")
+                        .CellBelow().SetValue("2");
 
-                    var table = ws.RangeUsed().CreateTable();
+                    IXLTable table = ws.RangeUsed().CreateTable();
 
                     var listOfArr = new List<Int32>();
                     listOfArr.Add(3);
@@ -53,9 +33,24 @@ namespace ClosedXML_Tests
 
                     Assert.AreEqual("A1:A5", table.AutoFilter.Range.RangeAddress.ToStringRelative());
                 }
-                
             }
-            
+        }
+
+        [Test]
+        public void AutoFilterSortWhenNotInFirstRow()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                using (IXLWorksheet ws = wb.Worksheets.Add("Sheet1"))
+                {
+                    ws.Cell(3, 3).SetValue("Names")
+                        .CellBelow().SetValue("Manuel")
+                        .CellBelow().SetValue("Carlos")
+                        .CellBelow().SetValue("Dominic");
+                    ws.RangeUsed().SetAutoFilter().Sort();
+                    Assert.AreEqual(ws.Cell(4, 3).GetString(), "Carlos");
+                }
+            }
         }
     }
 }

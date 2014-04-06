@@ -1,300 +1,301 @@
-﻿using System.Collections.Generic;
-using ClosedXML.Excel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System;
+using ClosedXML.Excel;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests
 {
-    [TestClass]
+    [TestFixture]
     public class XLCellTests
     {
-        [TestMethod]
-        public void IsEmpty1()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
-            var actual = cell.IsEmpty();
-            var expected = true;
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void IsEmpty2()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
-            var actual = cell.IsEmpty(true);
-            var expected = true;
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void IsEmpty3()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
-            cell.Style.Fill.BackgroundColor = XLColor.Red;
-            var actual = cell.IsEmpty();
-            var expected = true;
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void IsEmpty4()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
-            cell.Style.Fill.BackgroundColor = XLColor.Red;
-            var actual = cell.IsEmpty(false);
-            var expected = true;
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void IsEmpty5()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
-            cell.Style.Fill.BackgroundColor = XLColor.Red;
-            var actual = cell.IsEmpty(true);
-            var expected = false;
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void IsEmpty6()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
-            cell.Value = "X";
-            var actual = cell.IsEmpty();
-            var expected = false;
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void ValueSetToEmptyString()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
-            cell.Value = new DateTime(2000, 1, 2);
-            cell.Value = String.Empty;
-            var actual = cell.GetString();
-            var expected = String.Empty;
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void ValueSetToNull()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
-            cell.Value = new DateTime(2000, 1, 2);
-            cell.Value = null;
-            var actual = cell.GetString();
-            var expected = String.Empty;
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void InsertData1()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var range = ws.Cell(2, 2).InsertData(new[] {"a", "b", "c"});
-            Assert.AreEqual("'Sheet1'!B2:B4", range.ToString());
-        }
-
-        [TestMethod]
+        [Test]
         public void CellsUsed()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Cell(1, 1);
             ws.Cell(2, 2);
-            var count = ws.Range("A1:B2").CellsUsed().Count();
+            int count = ws.Range("A1:B2").CellsUsed().Count();
             Assert.AreEqual(0, count);
         }
 
-        [TestMethod]
-        public void TryGetValue_TimeSpan_Good()
+        [Test]
+        public void Double_Infinity_is_a_string()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            TimeSpan outValue;
-            var timeSpan = new TimeSpan(1, 1, 1);
-            var success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual(timeSpan, outValue);
-        }
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell("A1");
+            var doubleList = new List<Double> {1.0/0.0};
 
-        [TestMethod]
-        public void TryGetValue_TimeSpan_BadString()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            TimeSpan outValue;
-            var timeSpan = "ABC";
-            var success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out outValue);
-            Assert.IsFalse(success);
-        }
-
-        [TestMethod]
-        public void TryGetValue_TimeSpan_GoodString()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            TimeSpan outValue;
-            var timeSpan = new TimeSpan(1, 1, 1);
-            var success = ws.Cell("A1").SetValue(timeSpan.ToString()).TryGetValue(out outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual(timeSpan, outValue);
-        }
-
-        [TestMethod]
-        public void TryGetValue_RichText_Good()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText outValue;
-            var cell = ws.Cell("A1");
-            cell.RichText.AddText("Anything");
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual(cell.RichText, outValue);
-        }
-
-        [TestMethod]
-        public void TryGetValue_RichText_Bad()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText outValue;
-            var cell = ws.Cell("A1").SetValue("Anything");
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual(cell.RichText, outValue);
-            Assert.AreEqual("Anything", outValue.ToString());
-        }
-
-        [TestMethod]
-        public void TryGetValue_Boolean_True()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            Boolean outValue;
-            var cell = ws.Cell("A1").SetValue(true);
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsTrue(success);
-            Assert.IsTrue(outValue);
-        }
-
-        [TestMethod]
-        public void TryGetValue_Boolean_False()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            Boolean outValue;
-            var cell = ws.Cell("A1").SetValue(false);
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsTrue(success);
-            Assert.IsFalse(outValue);
-        }
-
-        [TestMethod]
-        public void TryGetValue_Boolean_Bad()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            Boolean outValue;
-            var cell = ws.Cell("A1").SetValue("ABC");
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsFalse(success);
-        }
-
-        [TestMethod]
-        public void TryGetValue_Boolean_Good()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            Boolean outValue;
-            var cell = ws.Cell("A1").SetValue("True");
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsTrue(success);
-            Assert.IsTrue(outValue);
-        }
-
-        [TestMethod]
-        public void TryGetValue_sbyte_Good()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            sbyte outValue;
-            var cell = ws.Cell("A1").SetValue(5);
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual((sbyte)5, outValue);
-        }
-
-        [TestMethod]
-        public void TryGetValue_sbyte_Bad()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            sbyte outValue;
-            var cell = ws.Cell("A1").SetValue(255);
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsFalse(success);
-        }
-
-        [TestMethod]
-        public void TryGetValue_sbyte_Good2()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            sbyte outValue;
-            var cell = ws.Cell("A1").SetValue("5");
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsTrue(success);
-            Assert.AreEqual((sbyte)5, outValue);
-        }
-
-        [TestMethod]
-        public void TryGetValue_sbyte_Bad2()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            sbyte outValue;
-            var cell = ws.Cell("A1").SetValue("255");
-            var success = cell.TryGetValue(out outValue);
-            Assert.IsFalse(success);
-        }
-
-        [TestMethod]
-        public void NaN_is_not_a_number()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell("A1");
-            cell.Value = "NaN";
-
-            Assert.AreNotEqual(XLCellValues.Number ,cell.DataType);
-        }
-
-        [TestMethod]
-        public void Nan_is_not_a_number()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell("A1");
-            cell.Value = "Nan";
-
+            cell.Value = doubleList.AsEnumerable();
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
         }
 
-        [TestMethod]
+        [Test]
         public void Double_NaN_is_a_string()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell("A1");
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell("A1");
             var doubleList = new List<Double> {0.0/0.0};
 
             cell.Value = doubleList.AsEnumerable();
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
         }
-        [TestMethod]
-        public void Double_Infinity_is_a_string()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell("A1");
-            var doubleList = new List<Double> { 1.0 / 0.0 };
 
-            cell.Value = doubleList.AsEnumerable();
+        [Test]
+        public void InsertData1()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRange range = ws.Cell(2, 2).InsertData(new[] {"a", "b", "c"});
+            Assert.AreEqual("'Sheet1'!B2:B4", range.ToString());
+        }
+
+        [Test]
+        public void IsEmpty1()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            bool actual = cell.IsEmpty();
+            bool expected = true;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void IsEmpty2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            bool actual = cell.IsEmpty(true);
+            bool expected = true;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void IsEmpty3()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.Style.Fill.BackgroundColor = XLColor.Red;
+            bool actual = cell.IsEmpty();
+            bool expected = true;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void IsEmpty4()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.Style.Fill.BackgroundColor = XLColor.Red;
+            bool actual = cell.IsEmpty(false);
+            bool expected = true;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void IsEmpty5()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.Style.Fill.BackgroundColor = XLColor.Red;
+            bool actual = cell.IsEmpty(true);
+            bool expected = false;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void IsEmpty6()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.Value = "X";
+            bool actual = cell.IsEmpty();
+            bool expected = false;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NaN_is_not_a_number()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell("A1");
+            cell.Value = "NaN";
+
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
+        }
+
+        [Test]
+        public void Nan_is_not_a_number()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell("A1");
+            cell.Value = "Nan";
+
+            Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
+        }
+
+        [Test]
+        public void TryGetValue_Boolean_Bad()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            Boolean outValue;
+            IXLCell cell = ws.Cell("A1").SetValue("ABC");
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
+
+        [Test]
+        public void TryGetValue_Boolean_False()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            Boolean outValue;
+            IXLCell cell = ws.Cell("A1").SetValue(false);
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.IsFalse(outValue);
+        }
+
+        [Test]
+        public void TryGetValue_Boolean_Good()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            Boolean outValue;
+            IXLCell cell = ws.Cell("A1").SetValue("True");
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.IsTrue(outValue);
+        }
+
+        [Test]
+        public void TryGetValue_Boolean_True()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            Boolean outValue;
+            IXLCell cell = ws.Cell("A1").SetValue(true);
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.IsTrue(outValue);
+        }
+
+        [Test]
+        public void TryGetValue_RichText_Bad()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRichText outValue;
+            IXLCell cell = ws.Cell("A1").SetValue("Anything");
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(cell.RichText, outValue);
+            Assert.AreEqual("Anything", outValue.ToString());
+        }
+
+        [Test]
+        public void TryGetValue_RichText_Good()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRichText outValue;
+            IXLCell cell = ws.Cell("A1");
+            cell.RichText.AddText("Anything");
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(cell.RichText, outValue);
+        }
+
+        [Test]
+        public void TryGetValue_TimeSpan_BadString()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            TimeSpan outValue;
+            string timeSpan = "ABC";
+            bool success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
+
+        [Test]
+        public void TryGetValue_TimeSpan_Good()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            TimeSpan outValue;
+            var timeSpan = new TimeSpan(1, 1, 1);
+            bool success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(timeSpan, outValue);
+        }
+
+        [Test]
+        public void TryGetValue_TimeSpan_GoodString()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            TimeSpan outValue;
+            var timeSpan = new TimeSpan(1, 1, 1);
+            bool success = ws.Cell("A1").SetValue(timeSpan.ToString()).TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(timeSpan, outValue);
+        }
+
+        [Test]
+        public void TryGetValue_sbyte_Bad()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            sbyte outValue;
+            IXLCell cell = ws.Cell("A1").SetValue(255);
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
+
+        [Test]
+        public void TryGetValue_sbyte_Bad2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            sbyte outValue;
+            IXLCell cell = ws.Cell("A1").SetValue("255");
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
+
+        [Test]
+        public void TryGetValue_sbyte_Good()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            sbyte outValue;
+            IXLCell cell = ws.Cell("A1").SetValue(5);
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(5, outValue);
+        }
+
+        [Test]
+        public void TryGetValue_sbyte_Good2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            sbyte outValue;
+            IXLCell cell = ws.Cell("A1").SetValue("5");
+            bool success = cell.TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(5, outValue);
+        }
+
+        [Test]
+        public void ValueSetToEmptyString()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.Value = new DateTime(2000, 1, 2);
+            cell.Value = String.Empty;
+            string actual = cell.GetString();
+            string expected = String.Empty;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ValueSetToNull()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.Value = new DateTime(2000, 1, 2);
+            cell.Value = null;
+            string actual = cell.GetString();
+            string expected = String.Empty;
+            Assert.AreEqual(expected, actual);
         }
     }
 }

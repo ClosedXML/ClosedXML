@@ -4,7 +4,7 @@ using System.Threading;
 using ClosedXML.Excel;
 using ClosedXML_Examples;
 using DocumentFormat.OpenXml.Drawing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Path = System.IO.Path;
 
 namespace ClosedXML_Tests

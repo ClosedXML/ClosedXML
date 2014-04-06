@@ -1,32 +1,34 @@
 ﻿using ClosedXML_Examples;
 using ClosedXML_Examples.Columns;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
 {
-    [TestClass]
+    [TestFixture]
     public class ColumnsTests
     {
-        [TestMethod]
+        [Test]
         public void ColumnCells()
         {
             TestHelper.RunTestExample<ColumnCells>(@"Columns\ColumnCells.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void ColumnCollections()
         {
             TestHelper.RunTestExample<ColumnCollection>(@"Columns\ColumnCollection.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void ColumnSettings()
         {
             TestHelper.RunTestExample<ColumnSettings>(@"Columns\ColumnSettings.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void DeletingColumns()
         {
             TestHelper.RunTestExample<DeletingColumns>(@"Columns\DeletingColumns.xlsx");
         }
-
     }
 }

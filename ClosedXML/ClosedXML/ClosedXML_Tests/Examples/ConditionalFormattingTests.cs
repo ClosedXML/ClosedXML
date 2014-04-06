@@ -1,127 +1,127 @@
 using ClosedXML_Examples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
 {
-    [TestClass]
+    [TestFixture]
     public class ConditionalFormattingTests
     {
-    
-        [TestMethod]
-        public void CFColorScaleLowMidHigh()
-        {
-            TestHelper.RunTestExample<CFColorScaleLowMidHigh>(@"ConditionalFormatting\CFColorScaleLowMidHigh.xlsx");
-        }
-
-        [TestMethod]
+        [Test]
         public void CFColorScaleLowHigh()
         {
             TestHelper.RunTestExample<CFColorScaleLowHigh>(@"ConditionalFormatting\CFColorScaleLowHigh.xlsx");
         }
 
-        [TestMethod]
-        public void CFStartsWith()
+        [Test]
+        public void CFColorScaleLowMidHigh()
         {
-            TestHelper.RunTestExample<CFStartsWith>(@"ConditionalFormatting\CFStartsWith.xlsx");
+            TestHelper.RunTestExample<CFColorScaleLowMidHigh>(@"ConditionalFormatting\CFColorScaleLowMidHigh.xlsx");
         }
 
-        [TestMethod]
-        public void CFEndsWith()
-        {
-            TestHelper.RunTestExample<CFEndsWith>(@"ConditionalFormatting\CFEndsWith.xlsx");
-        }
-
-        [TestMethod]
-        public void CFIsBlank()
-        {
-            TestHelper.RunTestExample<CFIsBlank>(@"ConditionalFormatting\CFIsBlank.xlsx");
-        }
-
-        [TestMethod]
-        public void CFNotBlank()
-        {
-            TestHelper.RunTestExample<CFNotBlank>(@"ConditionalFormatting\CFNotBlank.xlsx");
-        }
-
-        [TestMethod]
-        public void CFIsError()
-        {
-            TestHelper.RunTestExample<CFIsError>(@"ConditionalFormatting\CFIsError.xlsx");
-        }
-
-        [TestMethod]
-        public void CFNotError()
-        {
-            TestHelper.RunTestExample<CFNotError>(@"ConditionalFormatting\CFNotError.xlsx");
-        }
-
-        [TestMethod]
+        [Test]
         public void CFContains()
         {
             TestHelper.RunTestExample<CFContains>(@"ConditionalFormatting\CFContains.xlsx");
         }
 
-        [TestMethod]
-        public void CFNotContains()
-        {
-            TestHelper.RunTestExample<CFNotContains>(@"ConditionalFormatting\CFNotContains.xlsx");
-        }
-
-        [TestMethod]
-        public void CFEqualsString()
-        {
-            TestHelper.RunTestExample<CFEqualsString>(@"ConditionalFormatting\CFEqualsString.xlsx");
-        }
-
-        [TestMethod]
-        public void CFEqualsNumber()
-        {
-            TestHelper.RunTestExample<CFEqualsNumber>(@"ConditionalFormatting\CFEqualsNumber.xlsx");
-        }
-
-        [TestMethod]
-        public void CFNotEqualsString()
-        {
-            TestHelper.RunTestExample<CFNotEqualsString>(@"ConditionalFormatting\CFNotEqualsString.xlsx");
-        }
-
-        [TestMethod]
-        public void CFNotEqualsNumber()
-        {
-            TestHelper.RunTestExample<CFNotEqualsNumber>(@"ConditionalFormatting\CFNotEqualsNumber.xlsx");
-        }
-
-        [TestMethod]
+        [Test]
         public void CFDataBar()
         {
             TestHelper.RunTestExample<CFDataBar>(@"ConditionalFormatting\CFDataBar.xlsx");
         }
 
-        [TestMethod]
+        [Test]
+        public void CFEndsWith()
+        {
+            TestHelper.RunTestExample<CFEndsWith>(@"ConditionalFormatting\CFEndsWith.xlsx");
+        }
+
+        [Test]
+        public void CFEqualsNumber()
+        {
+            TestHelper.RunTestExample<CFEqualsNumber>(@"ConditionalFormatting\CFEqualsNumber.xlsx");
+        }
+
+        [Test]
+        public void CFEqualsString()
+        {
+            TestHelper.RunTestExample<CFEqualsString>(@"ConditionalFormatting\CFEqualsString.xlsx");
+        }
+
+        [Test]
         public void CFIconSet()
         {
             TestHelper.RunTestExample<CFIconSet>(@"ConditionalFormatting\CFIconSet.xlsx");
         }
+
+        [Test]
+        public void CFIsBlank()
+        {
+            TestHelper.RunTestExample<CFIsBlank>(@"ConditionalFormatting\CFIsBlank.xlsx");
+        }
+
+        [Test]
+        public void CFIsError()
+        {
+            TestHelper.RunTestExample<CFIsError>(@"ConditionalFormatting\CFIsError.xlsx");
+        }
+
+        [Test]
+        public void CFNotBlank()
+        {
+            TestHelper.RunTestExample<CFNotBlank>(@"ConditionalFormatting\CFNotBlank.xlsx");
+        }
+
+        [Test]
+        public void CFNotContains()
+        {
+            TestHelper.RunTestExample<CFNotContains>(@"ConditionalFormatting\CFNotContains.xlsx");
+        }
+
+        [Test]
+        public void CFNotEqualsNumber()
+        {
+            TestHelper.RunTestExample<CFNotEqualsNumber>(@"ConditionalFormatting\CFNotEqualsNumber.xlsx");
+        }
+
+        [Test]
+        public void CFNotEqualsString()
+        {
+            TestHelper.RunTestExample<CFNotEqualsString>(@"ConditionalFormatting\CFNotEqualsString.xlsx");
+        }
+
+        [Test]
+        public void CFNotError()
+        {
+            TestHelper.RunTestExample<CFNotError>(@"ConditionalFormatting\CFNotError.xlsx");
+        }
+
+        [Test]
+        public void CFStartsWith()
+        {
+            TestHelper.RunTestExample<CFStartsWith>(@"ConditionalFormatting\CFStartsWith.xlsx");
+        }
+
         //
-        //[TestMethod]
+        //[Test]
         //public void XXX()
         //{
         //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");
         //}
         //
-        //[TestMethod]
+        //[Test]
         //public void XXX()
         //{
         //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");
         //}
         //
-        //[TestMethod]
+        //[Test]
         //public void XXX()
         //{
         //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");
         //}
         //
-        //[TestMethod]
+        //[Test]
         //public void XXX()
         //{
         //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");

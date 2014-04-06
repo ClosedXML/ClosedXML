@@ -1,68 +1,75 @@
 using ClosedXML_Examples.Styles;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
 {
-    [TestClass]
+    [TestFixture]
     public class StylesTests
     {
-        [TestMethod]
+        [Test]
         public void DefaultStyles()
         {
             TestHelper.RunTestExample<DefaultStyles>(@"Styles\DefaultStyles.xlsx");
         }
-        [TestMethod]
+
+        [Test]
+        public void PurpleWorksheet()
+        {
+            TestHelper.RunTestExample<PurpleWorksheet>(@"Styles\PurpleWorksheet.xlsx");
+        }
+
+        [Test]
         public void StyleAlignment()
         {
             TestHelper.RunTestExample<StyleAlignment>(@"Styles\StyleAlignment.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void StyleBorder()
         {
             TestHelper.RunTestExample<StyleBorder>(@"Styles\StyleBorder.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void StyleFill()
         {
             TestHelper.RunTestExample<StyleFill>(@"Styles\StyleFill.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void StyleFont()
         {
             TestHelper.RunTestExample<StyleFont>(@"Styles\StyleFont.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void StyleNumberFormat()
         {
             TestHelper.RunTestExample<StyleNumberFormat>(@"Styles\StyleNumberFormat.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void StyleRowsColumns()
         {
             TestHelper.RunTestExample<StyleRowsColumns>(@"Styles\StyleRowsColumns.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void StyleWorksheet()
         {
             TestHelper.RunTestExample<StyleWorksheet>(@"Styles\StyleWorksheet.xlsx");
         }
-      
-         [TestMethod]
+
+        [Test]
+        public void UsingColors()
+        {
+            TestHelper.RunTestExample<UsingColors>(@"Styles\UsingColors.xlsx");
+        }
+
+        [Test]
         public void UsingRichText()
         {
             TestHelper.RunTestExample<UsingRichText>(@"Styles\UsingRichText.xlsx");
         }
-
-         [TestMethod]
-         public void PurpleWorksheet()
-         {
-             TestHelper.RunTestExample<PurpleWorksheet>(@"Styles\PurpleWorksheet.xlsx");
-         }
-
-         [TestMethod]
-         public void UsingColors()
-         {
-             TestHelper.RunTestExample<UsingColors>(@"Styles\UsingColors.xlsx");
-         }
     }
 }

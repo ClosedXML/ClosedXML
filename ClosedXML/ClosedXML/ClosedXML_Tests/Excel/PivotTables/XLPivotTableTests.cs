@@ -1,20 +1,16 @@
-﻿using ClosedXML.Excel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using System;
+﻿using NUnit.Framework;
 
 namespace ClosedXML_Tests
 {
-    [TestClass()]
+    [TestFixture]
     public class XLPivotTableTests
     {
-        //[TestMethod()]
+        //[Test]
         //public void CreateTable()
         //{
         //    var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            
-            
-        //}
 
+
+        //}
     }
 }

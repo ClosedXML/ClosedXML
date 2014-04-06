@@ -1,41 +1,45 @@
 using ClosedXML_Examples.PageSetup;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
 {
-    [TestClass]
+    [TestFixture]
     public class PageSetupTests
     {
-        [TestMethod]
+        [Test]
         public void HeaderFooters()
         {
             TestHelper.RunTestExample<HeaderFooters>(@"PageSetup\HeaderFooters.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void Margins()
         {
             TestHelper.RunTestExample<Margins>(@"PageSetup\Margins.xlsx");
         }
-        [TestMethod]
+
+        [Test]
         public void Page()
         {
             TestHelper.RunTestExample<Page>(@"PageSetup\Page.xlsx");
         }
-        [TestMethod]
-        public void Sheets()
-        {
-            TestHelper.RunTestExample<Sheets>(@"PageSetup\Sheets.xlsx");
-        }
-        [TestMethod]
+
+        [Test]
         public void SheetTab()
         {
             TestHelper.RunTestExample<SheetTab>(@"PageSetup\SheetTab.xlsx");
         }
-        [TestMethod]
+
+        [Test]
+        public void Sheets()
+        {
+            TestHelper.RunTestExample<Sheets>(@"PageSetup\Sheets.xlsx");
+        }
+
+        [Test]
         public void TwoPages()
         {
             TestHelper.RunTestExample<TwoPages>(@"PageSetup\TwoPages.xlsx");
         }
-
     }
 }

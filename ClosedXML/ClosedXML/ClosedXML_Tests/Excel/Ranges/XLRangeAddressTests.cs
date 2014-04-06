@@ -1,19 +1,17 @@
 ﻿using ClosedXML.Excel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using System;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests
 {
-    [TestClass()]
+    [TestFixture]
     public class XLRangeAddressTests
     {
-        [TestMethod()]
+        [Test]
         public void ToStringTest()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var address = ws.Cell(1, 1).AsRange().RangeAddress;
-            
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRangeAddress address = ws.Cell(1, 1).AsRange().RangeAddress;
+
             Assert.AreEqual("A1:A1", address.ToString());
 
             Assert.AreEqual("A1:A1", address.ToStringRelative());
@@ -27,7 +25,5 @@ namespace ClosedXML_Tests
             Assert.AreEqual("'Sheet1'!R1C1:R1C1", address.ToStringFixed(XLReferenceStyle.R1C1, true));
             Assert.AreEqual("'Sheet1'!$A$1:$A$1", address.ToStringFixed(XLReferenceStyle.Default, true));
         }
-
-       
     }
 }

@@ -1,23 +1,16 @@
-﻿using ClosedXML.Excel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using System;
-using System.IO;
-using System.Drawing;
+﻿using NUnit.Framework;
 
 namespace ClosedXML_Tests
 {
-    [TestClass]
+    [TestFixture]
     public class RangeUsedTests
     {
-        //[TestMethod]
+        //[Test]
         //public void FirstLastRows()
         //{
         //    var wb = new XLWorkbook();
         //    var ws = wb.Worksheets.Add("Sheet");
-            
+
         //}
-
-
     }
 }

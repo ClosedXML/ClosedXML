@@ -1,103 +1,59 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using ClosedXML.Excel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel.Misc
 {
     /// <summary>
-    /// Summary description for UnitTest1
+    ///     Summary description for UnitTest1
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CopyContentsTests
     {
-        [TestMethod]
-        public void TestRowCopyContents()
-        {
-            var workbook = new XLWorkbook();
-            var originalSheet = workbook.Worksheets.Add("original");
-            var copyRowSheet = workbook.Worksheets.Add("copy row");
-            var copyRowAsRangeSheet = workbook.Worksheets.Add("copy row as range");
-            var copyRangeSheet = workbook.Worksheets.Add("copy range");
-
-            originalSheet.Cell("A2").SetValue("test value");
-            originalSheet.Range("A2:E2").Merge();
-
-            {
-                var originalRange = originalSheet.Range("A2:E2");
-                var destinationRange = copyRangeSheet.Range("A2:E2");
-
-                originalRange.CopyTo(destinationRange);
-            }
-            CopyRowAsRange(originalSheet, 2, copyRowAsRangeSheet, 3);
-            {
-                var originalRow = originalSheet.Row(2);
-                var destinationRow = copyRowSheet.Row(2);
-                copyRowSheet.Cell("G2").Value = "must be removed after copy";
-                originalRow.CopyTo(destinationRow);
-            }
-            TestHelper.SaveWorkbook(workbook, @"Misc\CopyRowContents.xlsx");
-        }
-
-        private static void CopyRowAsRange(IXLWorksheet originalSheet,  int originalRowNumber, IXLWorksheet destSheet, int destRowNumber)
+        private static void CopyRowAsRange(IXLWorksheet originalSheet, int originalRowNumber, IXLWorksheet destSheet,
+            int destRowNumber)
         {
             {
-                var destinationRow = destSheet.Row(destRowNumber);
+                IXLRow destinationRow = destSheet.Row(destRowNumber);
                 destinationRow.Clear();
 
-                var originalRow = originalSheet.Row(originalRowNumber);
+                IXLRow originalRow = originalSheet.Row(originalRowNumber);
                 int columnNumber = originalRow.LastCellUsed(true).Address.ColumnNumber;
 
-                var originalRange = originalSheet.Range(originalRowNumber, 1, originalRowNumber, columnNumber);
-                var destRange = destSheet.Range(destRowNumber, 1, destRowNumber, columnNumber);
+                IXLRange originalRange = originalSheet.Range(originalRowNumber, 1, originalRowNumber, columnNumber);
+                IXLRange destRange = destSheet.Range(destRowNumber, 1, destRowNumber, columnNumber);
                 originalRange.CopyTo(destRange);
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CopyConditionalFormatsCount()
         {
             var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().AddConditionalFormat().WhenContains("1").Fill.SetBackgroundColor(XLColor.Blue);
             ws.Cell("A2").Value = ws.FirstCell();
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
         }
 
-        [TestMethod]
-        public void CopyConditionalFormatsRelative()
+        [Test]
+        public void CopyConditionalFormatsFixedNum()
         {
             var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = "1";
             ws.Cell("B1").Value = "1";
-            ws.Cell("A1").AddConditionalFormat().WhenEquals("=B1").Fill.SetBackgroundColor(XLColor.Blue);
-            ws.Cell("A2").Value = ws.Cell("A1");
-            Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "B1" && v.Value.IsFormula)));
-            Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "B2" && v.Value.IsFormula)));
-        }
-
-        [TestMethod]
-        public void CopyConditionalFormatsFixedStringNum()
-        {
-            var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
-            ws.Cell("A1").Value = "1";
-            ws.Cell("B1").Value = "1";
-            ws.Cell("A1").AddConditionalFormat().WhenEquals("1").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Cell("A1").AddConditionalFormat().WhenEquals(1).Fill.SetBackgroundColor(XLColor.Blue);
             ws.Cell("A2").Value = ws.Cell("A1");
             Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "1" && !v.Value.IsFormula)));
             Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "1" && !v.Value.IsFormula)));
         }
 
-        [TestMethod]
+        [Test]
         public void CopyConditionalFormatsFixedString()
         {
             var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = "A";
             ws.Cell("B1").Value = "B";
             ws.Cell("A1").AddConditionalFormat().WhenEquals("A").Fill.SetBackgroundColor(XLColor.Blue);
@@ -106,17 +62,58 @@ namespace ClosedXML_Tests.Excel.Misc
             Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "A" && !v.Value.IsFormula)));
         }
 
-        [TestMethod]
-        public void CopyConditionalFormatsFixedNum()
+        [Test]
+        public void CopyConditionalFormatsFixedStringNum()
         {
             var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = "1";
             ws.Cell("B1").Value = "1";
-            ws.Cell("A1").AddConditionalFormat().WhenEquals(1).Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Cell("A1").AddConditionalFormat().WhenEquals("1").Fill.SetBackgroundColor(XLColor.Blue);
             ws.Cell("A2").Value = ws.Cell("A1");
             Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "1" && !v.Value.IsFormula)));
             Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "1" && !v.Value.IsFormula)));
+        }
+
+        [Test]
+        public void CopyConditionalFormatsRelative()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            ws.Cell("A1").Value = "1";
+            ws.Cell("B1").Value = "1";
+            ws.Cell("A1").AddConditionalFormat().WhenEquals("=B1").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Cell("A2").Value = ws.Cell("A1");
+            Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "B1" && v.Value.IsFormula)));
+            Assert.IsTrue(ws.ConditionalFormats.Any(cf => cf.Values.Any(v => v.Value.Value == "B2" && v.Value.IsFormula)));
+        }
+
+        [Test]
+        public void TestRowCopyContents()
+        {
+            var workbook = new XLWorkbook();
+            IXLWorksheet originalSheet = workbook.Worksheets.Add("original");
+            IXLWorksheet copyRowSheet = workbook.Worksheets.Add("copy row");
+            IXLWorksheet copyRowAsRangeSheet = workbook.Worksheets.Add("copy row as range");
+            IXLWorksheet copyRangeSheet = workbook.Worksheets.Add("copy range");
+
+            originalSheet.Cell("A2").SetValue("test value");
+            originalSheet.Range("A2:E2").Merge();
+
+            {
+                IXLRange originalRange = originalSheet.Range("A2:E2");
+                IXLRange destinationRange = copyRangeSheet.Range("A2:E2");
+
+                originalRange.CopyTo(destinationRange);
+            }
+            CopyRowAsRange(originalSheet, 2, copyRowAsRangeSheet, 3);
+            {
+                IXLRow originalRow = originalSheet.Row(2);
+                IXLRow destinationRow = copyRowSheet.Row(2);
+                copyRowSheet.Cell("G2").Value = "must be removed after copy";
+                originalRow.CopyTo(destinationRow);
+            }
+            TestHelper.SaveWorkbook(workbook, @"Misc\CopyRowContents.xlsx");
         }
     }
 }
