@@ -5,11 +5,11 @@ using System;
 namespace ClosedXML_Tests
 {
     ///<summary>
-    ///	This is a test class for XLHelperTest and is intended
-    ///	to contain all XLHelperTest Unit Tests
+    ///	This is a test class for XLHelperTests and is intended
+    ///	to contain all XLHelperTests Unit Tests
     ///</summary>
     [TestClass]
-    public class XLHelperTest
+    public class XLHelperTests
     {
         ///<summary>
         ///	Gets or sets the test context which provides

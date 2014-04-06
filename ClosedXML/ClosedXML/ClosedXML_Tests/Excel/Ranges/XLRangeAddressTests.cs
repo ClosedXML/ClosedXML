@@ -6,7 +6,7 @@ using System;
 namespace ClosedXML_Tests
 {
     [TestClass()]
-    public class XLRangeAddressTest
+    public class XLRangeAddressTests
     {
         [TestMethod()]
         public void ToStringTest()

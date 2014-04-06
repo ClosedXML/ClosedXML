@@ -12,7 +12,7 @@ namespace ClosedXML_Tests.Excel.Misc
     /// Summary description for UnitTest1
     /// </summary>
     [TestClass]
-    public class CopyContentsTest
+    public class CopyContentsTests
     {
         [TestMethod]
         public void TestRowCopyContents()

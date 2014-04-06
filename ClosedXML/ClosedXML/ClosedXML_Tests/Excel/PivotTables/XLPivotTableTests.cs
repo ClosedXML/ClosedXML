@@ -6,7 +6,7 @@ using System;
 namespace ClosedXML_Tests
 {
     [TestClass()]
-    public class XLPivotTableTest
+    public class XLPivotTableTests
     {
         //[TestMethod()]
         //public void CreateTable()

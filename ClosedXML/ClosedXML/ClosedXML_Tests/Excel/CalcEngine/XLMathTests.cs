@@ -9,7 +9,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     /// Summary description for UnitTest1
     /// </summary>
     [TestClass]
-    public class Extensions
+    public class XLMathTests
     {
 
         [TestMethod]

@@ -11,7 +11,7 @@ namespace ClosedXML_Tests.Excel
     /// Summary description for UnitTest1
     /// </summary>
     [TestClass]
-    public class XLHelperTests
+    public class XlHelperTests
     {
 
         [TestMethod]

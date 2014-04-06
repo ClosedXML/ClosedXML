@@ -7,7 +7,7 @@ using System.IO;
 namespace ClosedXML_Tests
 {
     [TestClass()]
-    public class XLRangeBaseTest
+    public class XLRangeBaseTests
     {
         [TestMethod()]
         public void IsEmpty1()

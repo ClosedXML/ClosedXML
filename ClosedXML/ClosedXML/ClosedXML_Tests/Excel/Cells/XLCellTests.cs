@@ -7,7 +7,7 @@ using System;
 namespace ClosedXML_Tests
 {
     [TestClass]
-    public class XLCellTest
+    public class XLCellTests
     {
         [TestMethod]
         public void IsEmpty1()

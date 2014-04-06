@@ -12,7 +12,7 @@ namespace ClosedXML_Tests.Excel.Misc
     /// Summary description for UnitTest1
     /// </summary>
     [TestClass]
-    public class StylesTest
+    public class StylesTests
     {
         [TestMethod]
         public void InsideBorderTest()

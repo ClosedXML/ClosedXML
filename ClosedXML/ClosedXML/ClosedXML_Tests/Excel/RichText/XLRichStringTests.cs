@@ -8,11 +8,11 @@ namespace ClosedXML_Tests
     
     
     /// <summary>
-    ///This is a test class for XLRichStringTest and is intended
-    ///to contain all XLRichStringTest Unit Tests
+    ///This is a test class for XLRichStringTests and is intended
+    ///to contain all XLRichStringTests Unit Tests
     ///</summary>
     [TestClass()]
-    public class XLRichStringTest
+    public class XLRichStringTests
     {
 
         /// <summary>
