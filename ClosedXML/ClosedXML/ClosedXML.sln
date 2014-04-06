@@ -22,31 +22,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Tests", "ClosedXM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Package", "ClosedXML_Package\ClosedXML_Package.csproj", "{69B3BDDF-C359-447C-AEB7-EBD8867DE528}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8018E34C-28E4-4FAF-87DC-A71D6275C567}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs09
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = ClosedXML_Examples\\ClosedXML_Examples.csproj
-		SccProjectName1 = ClosedXML_Examples
-		SccLocalPath1 = ClosedXML_Examples
-		SccProjectUniqueName2 = ClosedXML_Sandbox\\ClosedXML_Sandbox.csproj
-		SccProjectName2 = ClosedXML_Sandbox
-		SccLocalPath2 = ClosedXML_Sandbox
-		SccProjectUniqueName3 = ClosedXML_Net3.5\\ClosedXML_Net3.5.csproj
-		SccProjectName3 = ClosedXML_Net3.5
-		SccLocalPath3 = ClosedXML_Net3.5
-		SccProjectUniqueName4 = ClosedXML\\ClosedXML.csproj
-		SccProjectName4 = ClosedXML
-		SccLocalPath4 = ClosedXML
-		SccProjectUniqueName5 = ClosedXML_Tests\\ClosedXML_Tests.csproj
-		SccProjectName5 = ClosedXML_Tests
-		SccLocalPath5 = ClosedXML_Tests
-		SccProjectUniqueName6 = ClosedXML_Package\\ClosedXML_Package.csproj
-		SccProjectName6 = ClosedXML_Package
-		SccLocalPath6 = ClosedXML_Package
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ClosedXML.vsmdi
 	EndGlobalSection
