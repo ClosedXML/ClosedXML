@@ -331,7 +331,7 @@ namespace ClosedXML.Excel
                         if (xml != null)
                             shape = xml.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
                         else
-                            shape = xdoc.Root.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
+                            shape = xdoc.Root.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202" || (string)e.Attribute("type") == "#_xssf_cell_comment");
 
                         LoadShapeProperties<IXLComment>(xlComment, shape);
 
