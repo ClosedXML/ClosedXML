@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+	
 
     internal class XLRangeRow : XLRangeBase, IXLRangeRow
     {
@@ -14,8 +15,8 @@
             if (quickLoad) return;
             if (!RangeParameters.IgnoreEvents)
             {
-                SubscribeToShiftedRows((range, rowsShifted) => WorksheetRangeShiftedRows(range, rowsShifted));
-                SubscribeToShiftedColumns((range, columnsShifted) => WorksheetRangeShiftedColumns(range, columnsShifted));
+                SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
+                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             }
             SetStyle(rangeParameters.DefaultStyle);
         }
@@ -273,11 +274,17 @@
         private XLRangeRow RowShift(Int32 rowsToShift)
         {
             Int32 rowNum = RowNumber() + rowsToShift;
-            return Worksheet.Range(
+
+            var range = Worksheet.Range(
                 rowNum,
                 RangeAddress.FirstAddress.ColumnNumber,
                 rowNum,
-                RangeAddress.LastAddress.ColumnNumber).FirstRow();
+                RangeAddress.LastAddress.ColumnNumber);
+                
+            var result = range.FirstRow();
+            range.Dispose();
+
+            return result;
         }
 
         #region XLRangeRow Above

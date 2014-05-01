@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.Misc;
+
 
 namespace ClosedXML.Excel
 {
-    internal delegate void RangeShiftedRowsDelegate(XLRange range, Int32 rowsShifted);
-
-    internal delegate void RangeShiftedColumnsDelegate(XLRange range, Int32 columnsShifted);
-
     internal class XLWorksheet : XLRangeBase, IXLWorksheet
     {
         #region Constants
@@ -19,8 +17,8 @@ namespace ClosedXML.Excel
 
         #region Events
 
-        public event RangeShiftedRowsDelegate RangeShiftedRows;
-        public event RangeShiftedColumnsDelegate RangeShiftedColumns;
+		public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedRows;
+		public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedColumns;
 
         #endregion
 
@@ -46,6 +44,10 @@ namespace ClosedXML.Excel
                     new XLAddress(null, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber, false, false)))
         {
             EventTrackingEnabled = workbook.EventTracking == XLEventTracking.Enabled;
+
+			RangeShiftedRows = new XLReentrantEnumerableSet<XLCallbackAction>();
+			RangeShiftedColumns = new XLReentrantEnumerableSet<XLCallbackAction>();
+
             RangeAddress.Worksheet = this;
             RangeAddress.FirstAddress.Worksheet = this;
             RangeAddress.LastAddress.Worksheet = this;
@@ -68,9 +70,9 @@ namespace ClosedXML.Excel
             _columnWidth = workbook.ColumnWidth;
             _rowHeight = workbook.RowHeight;
             RowHeightChanged = Math.Abs(workbook.RowHeight - XLWorkbook.DefaultRowHeight) > XLHelper.Epsilon;
-            Name = sheetName;
-            SubscribeToShiftedRows(WorksheetRangeShiftedRows);
-            SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
+			Name = sheetName;
+			SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
+			SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             Charts = new XLCharts();
             ShowFormulas = workbook.ShowFormulas;
             ShowGridLines = workbook.ShowGridLines;
@@ -1318,13 +1320,23 @@ namespace ClosedXML.Excel
         public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
         {
             if (RangeShiftedRows != null)
-                RangeShiftedRows(range, rowsShifted);
+            {
+                foreach(var item in RangeShiftedRows)
+                {
+                    item.Action(range, rowsShifted);
+                }
+            }
         }
 
         public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
         {
             if (RangeShiftedColumns != null)
-                RangeShiftedColumns(range, columnsShifted);
+            {
+                foreach(var item in RangeShiftedColumns)
+                {
+                    item.Action(range, columnsShifted);
+                }
+            }
         }
 
         public XLRow Row(Int32 row, Boolean pingCells)

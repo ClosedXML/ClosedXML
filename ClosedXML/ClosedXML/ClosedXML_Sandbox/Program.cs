@@ -12,7 +12,19 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
+            var wb = new XLWorkbook();
+            
+            foreach (var wsNum in Enumerable.Range(1, 5))
+            {
+                var ws = wb.AddWorksheet(wsNum.ToString());
+                var rowNum = Math.Pow(10, wsNum);
+                var start = DateTime.Now;
+                ws.FirstRow().InsertRowsBelow((int)rowNum);
+                var end = DateTime.Now;
 
+                Console.WriteLine(rowNum + " rows in " + (end - start).TotalSeconds + " seconds.");
+            }
+            Console.ReadKey();
         }
     }
 

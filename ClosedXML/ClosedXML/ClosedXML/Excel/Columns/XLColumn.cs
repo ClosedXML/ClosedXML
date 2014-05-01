@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 
+
 namespace ClosedXML.Excel
 {
     internal class XLColumn : XLRangeBase, IXLColumn
@@ -29,7 +30,7 @@ namespace ClosedXML.Excel
 
             IsReference = xlColumnParameters.IsReference;
             if (IsReference)
-                SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
+                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             else
             {
                 SetStyle(xlColumnParameters.DefaultStyleId);
@@ -46,8 +47,8 @@ namespace ClosedXML.Excel
             _width = column._width;
             IsReference = column.IsReference;
             if (IsReference)
-                SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
-            _collapsed = column._collapsed;
+				SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+			_collapsed = column._collapsed;
             _isHidden = column._isHidden;
             _outlineLevel = column._outlineLevel;
             SetStyle(column.GetStyleId());
@@ -215,7 +216,7 @@ namespace ClosedXML.Excel
             {
                 using (var asRange = column.AsRange())
                 {
-                    asRange.InsertColumnsAfter(true, numberOfColumns).Dispose();
+                    asRange.InsertColumnsAfterVoid(true, numberOfColumns);
                 }
             }
 
@@ -241,7 +242,7 @@ namespace ClosedXML.Excel
             {
                 using (var asRange = column.AsRange())
                 {
-                    asRange.InsertColumnsBefore(true, numberOfColumns).Dispose();
+                    asRange.InsertColumnsBeforeVoid(true, numberOfColumns);
                 }
             }
 

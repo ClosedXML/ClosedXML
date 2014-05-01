@@ -132,6 +132,8 @@
   <ItemGroup>
     <Compile Include="Excel\CalcEngine\Functions\DateAndTime.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Database.cs" />
+    <Compile Include="Excel\Misc\XLCallbackAction.cs" />
+    <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
     <Compile Include="XLHelper.cs" />
     <Compile Include="Excel\AutoFilters\XLFilteredColumn.cs" />
     <Compile Include="Excel\AutoFilters\XLCustomFilteredColumn.cs" />

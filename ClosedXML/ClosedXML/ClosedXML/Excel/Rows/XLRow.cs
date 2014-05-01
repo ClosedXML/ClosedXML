@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 
+
 namespace ClosedXML.Excel
 {
     internal class XLRow : XLRangeBase, IXLRow
@@ -27,7 +28,7 @@ namespace ClosedXML.Excel
 
             IsReference = xlRowParameters.IsReference;
             if (IsReference)
-                SubscribeToShiftedRows(WorksheetRangeShiftedRows);
+                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
             else
             {
                 SetStyle(xlRowParameters.DefaultStyleId);
@@ -43,7 +44,7 @@ namespace ClosedXML.Excel
             _height = row._height;
             IsReference = row.IsReference;
             if (IsReference)
-                SubscribeToShiftedRows(WorksheetRangeShiftedRows);
+				SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
 
             _collapsed = row._collapsed;
             _isHidden = row._isHidden;
@@ -159,7 +160,7 @@ namespace ClosedXML.Excel
             {
                 using (var asRange = row.AsRange())
                 {
-                    asRange.InsertRowsBelow(true, numberOfRows).Dispose();
+                    asRange.InsertRowsBelowVoid(true, numberOfRows);
                 }
             }
             var newRows = Worksheet.Rows(rowNum + 1, rowNum + numberOfRows);
@@ -198,7 +199,7 @@ namespace ClosedXML.Excel
             {
                 using (var asRange = row.AsRange())
                 {
-                    asRange.InsertRowsAbove(true, numberOfRows).Dispose();
+                    asRange.InsertRowsAboveVoid(true, numberOfRows);
                 }
             }
 

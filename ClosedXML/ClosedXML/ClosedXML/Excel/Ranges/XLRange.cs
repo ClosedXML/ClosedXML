@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace ClosedXML.Excel
 {
     internal class XLRange : XLRangeBase, IXLRange
@@ -15,8 +16,8 @@ namespace ClosedXML.Excel
 
             if (!xlRangeParameters.IgnoreEvents)
             {
-                SubscribeToShiftedRows(WorksheetRangeShiftedRows);
-                SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
+                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
+                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
                 //xlRangeParameters.IgnoreEvents = true;
             }
             SetStyle(xlRangeParameters.DefaultStyle);

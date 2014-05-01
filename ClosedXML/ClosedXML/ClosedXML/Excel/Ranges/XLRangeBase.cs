@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ClosedXML.Excel.Misc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+
 
 
 namespace ClosedXML.Excel
@@ -55,25 +57,26 @@ namespace ClosedXML.Excel
         }
 
         #endregion
-        
-        private Boolean _subscribedToShiftedRows;
-        protected void SubscribeToShiftedRows(RangeShiftedRowsDelegate worksheetRangeShiftedRows)
+
+		private XLCallbackAction _shiftedRowsAction;
+
+        protected void SubscribeToShiftedRows(Action<XLRange, Int32> action)
         {
             if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
 
-            WorksheetRangeShiftedRows = worksheetRangeShiftedRows;
-            RangeAddress.Worksheet.RangeShiftedRows += WorksheetRangeShiftedRows;
-            _subscribedToShiftedRows = true;
+			_shiftedRowsAction = new XLCallbackAction(action);
+
+			RangeAddress.Worksheet.RangeShiftedRows.Add(_shiftedRowsAction);
         }
 
-        private Boolean _subscribedToShiftedColumns;
-        protected void SubscribeToShiftedColumns(RangeShiftedColumnsDelegate worksheetRangeShiftedColumns)
+        private XLCallbackAction _shiftedColumnsAction;
+		protected void SubscribeToShiftedColumns(Action<XLRange, Int32> action)
         {
             if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
 
-            WorksheetRangeShiftedColumns = worksheetRangeShiftedColumns;
-            RangeAddress.Worksheet.RangeShiftedColumns += WorksheetRangeShiftedColumns;
-            _subscribedToShiftedColumns = true;
+            _shiftedColumnsAction = new XLCallbackAction(action);
+
+			RangeAddress.Worksheet.RangeShiftedColumns.Add(_shiftedColumnsAction);
         }
 
         #region Public properties
@@ -947,6 +950,16 @@ namespace ClosedXML.Excel
         }
 
         public IXLRangeColumns InsertColumnsAfter(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true)
+		{
+			return InsertColumnsAfterInternal(onlyUsedCells, numberOfColumns, formatFromLeft);
+		}
+
+		public void InsertColumnsAfterVoid(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true)
+		{
+			InsertColumnsAfterInternal(onlyUsedCells, numberOfColumns, formatFromLeft, nullReturn: true);
+		}
+
+        private IXLRangeColumns InsertColumnsAfterInternal(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true, Boolean nullReturn = false)
         {
             int columnCount = ColumnCount();
             int firstColumn = RangeAddress.FirstAddress.ColumnNumber + columnCount;
@@ -962,7 +975,7 @@ namespace ClosedXML.Excel
                 lastRow = XLHelper.MaxRowNumber;
 
             var newRange = Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
-            return newRange.InsertColumnsBefore(onlyUsedCells, numberOfColumns, formatFromLeft);
+            return newRange.InsertColumnsBeforeInternal(onlyUsedCells, numberOfColumns, formatFromLeft, nullReturn);
         }
 
         public IXLRangeColumns InsertColumnsBefore(Int32 numberOfColumns)
@@ -991,7 +1004,17 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRangeColumns InsertColumnsBefore(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true)
+		public IXLRangeColumns InsertColumnsBefore(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true)
+		{
+			return InsertColumnsBeforeInternal(onlyUsedCells, numberOfColumns, formatFromLeft);
+		}
+
+		public void InsertColumnsBeforeVoid(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true)
+		{
+			InsertColumnsBeforeInternal(onlyUsedCells, numberOfColumns, formatFromLeft, nullReturn: true);
+		}
+
+        private IXLRangeColumns InsertColumnsBeforeInternal(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true, Boolean nullReturn = false)
         {
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
@@ -1120,6 +1143,8 @@ namespace ClosedXML.Excel
                 }
             }
 
+			if(nullReturn)
+				return null;
             
             return rangeToReturn.Columns();
         }
@@ -1150,8 +1175,18 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRangeRows InsertRowsBelow(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
-        {
+		public IXLRangeRows InsertRowsBelow(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
+		{
+			return InsertRowsBelowInternal(onlyUsedCells, numberOfRows, formatFromAbove, nullReturn: false);
+		}
+
+		public void InsertRowsBelowVoid(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
+		{
+			InsertRowsBelowInternal(onlyUsedCells, numberOfRows, formatFromAbove, nullReturn: true);
+		}
+
+		private IXLRangeRows InsertRowsBelowInternal(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove, Boolean nullReturn)
+		{
             int rowCount = RowCount();
             int firstRow = RangeAddress.FirstAddress.RowNumber + rowCount;
             if (firstRow > XLHelper.MaxRowNumber)
@@ -1166,7 +1201,7 @@ namespace ClosedXML.Excel
                 lastColumn = XLHelper.MaxColumnNumber;
 
             var newRange = Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
-            return newRange.InsertRowsAbove(onlyUsedCells, numberOfRows, formatFromAbove);
+            return newRange.InsertRowsAboveInternal(onlyUsedCells, numberOfRows, formatFromAbove, nullReturn);
         }
 
         public IXLRangeRows InsertRowsAbove(Int32 numberOfRows)
@@ -1200,8 +1235,17 @@ namespace ClosedXML.Excel
             public XLAddress SourceAddress;
             public XLDataValidation DataValidation;
         }
-        public IXLRangeRows InsertRowsAbove(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
-        {
+		public void InsertRowsAboveVoid(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
+		{
+			InsertRowsAboveInternal(onlyUsedCells, numberOfRows, formatFromAbove, nullReturn: true);
+		}
+		public IXLRangeRows InsertRowsAbove(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
+		{
+			return InsertRowsAboveInternal(onlyUsedCells, numberOfRows, formatFromAbove, nullReturn: false);
+		}
+
+		private IXLRangeRows InsertRowsAboveInternal(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove, Boolean nullReturn)
+		{
             using (var asRange = AsRange())
                 foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
                 {
@@ -1329,6 +1373,10 @@ namespace ClosedXML.Excel
                     }
                 }
             }
+
+			// Skip calling .Rows() for performance reasons if required.
+			if(nullReturn)
+				return null;
 
             return rangeToReturn.Rows();
         }
@@ -1882,23 +1930,19 @@ namespace ClosedXML.Excel
                 new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), true);
         }
 
-        private RangeShiftedRowsDelegate WorksheetRangeShiftedRows;
-        
-        private RangeShiftedColumnsDelegate WorksheetRangeShiftedColumns;
-        
-
         public void Dispose()
         {
-            if (_subscribedToShiftedRows)
+			if(_shiftedRowsAction != null)
             {
-                RangeAddress.Worksheet.RangeShiftedRows -= WorksheetRangeShiftedRows;
-                _subscribedToShiftedRows = false;
+                RangeAddress.Worksheet.RangeShiftedRows.Remove(_shiftedRowsAction);
+				_shiftedRowsAction = null;
             }
 
-            if (!_subscribedToShiftedColumns) return;
-
-            RangeAddress.Worksheet.RangeShiftedColumns -= WorksheetRangeShiftedColumns;
-            _subscribedToShiftedColumns = false;
+			if(_shiftedColumnsAction != null)
+			{
+				RangeAddress.Worksheet.RangeShiftedColumns.Remove(_shiftedColumnsAction);
+				_shiftedColumnsAction = null;
+			}
         }
 
         public IXLDataValidation SetDataValidation()

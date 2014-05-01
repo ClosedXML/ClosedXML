@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+	
 
     internal class XLRangeColumn : XLRangeBase, IXLRangeColumn
     {
@@ -12,8 +13,8 @@
         {
             if (quickLoad) return;
 
-            SubscribeToShiftedRows((range, rowsShifted) => WorksheetRangeShiftedRows(range, rowsShifted));
-            SubscribeToShiftedColumns((range, columnsShifted) => WorksheetRangeShiftedColumns(range, columnsShifted));
+			SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
+			SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             SetStyle(rangeParameters.DefaultStyle);
         }
 
