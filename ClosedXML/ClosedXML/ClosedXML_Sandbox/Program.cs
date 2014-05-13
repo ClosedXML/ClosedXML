@@ -12,9 +12,11 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook(@"C:\Temp\tables1.xlsx");
-            wb.SaveAs(@"C:\Temp\tables_saved.xlsx");
-            
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+
+
+            Console.WriteLine("Done");
             Console.ReadKey();
         }
     }
