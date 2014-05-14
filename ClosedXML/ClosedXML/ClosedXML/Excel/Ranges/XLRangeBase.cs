@@ -480,7 +480,7 @@ namespace ClosedXML.Excel
 
         public Boolean IsMerged()
         {
-            return CellsUsed().Any(c => c.IsMerged());
+            return Cells().Any(c => c.IsMerged());
         }
 
         public Boolean IsEmpty()
