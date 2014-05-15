@@ -12,15 +12,8 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
-
-            ws.Range("A2:A3").Merge();
-            Console.WriteLine(ws.Range("A1:A2").IsMerged());
-            Console.WriteLine(ws.Range("A2:A3").IsMerged());
-            Console.WriteLine(ws.Range("A1:A4").IsMerged());
-            Console.WriteLine(ws.Range("A4:A5").IsMerged());
-
+            var wb = new XLWorkbook(@"c:\temp\issue.xlsx");
+            wb.SaveAs(@"c:\temp\issue_saved.xlsx");
             Console.WriteLine("Done");
             Console.ReadKey();
         }
