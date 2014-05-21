@@ -12,8 +12,30 @@ namespace ClosedXML_Sandbox
     {
         static void Main(string[] args)
         {
-            var wb = new XLWorkbook(@"c:\temp\issue.xlsx");
-            wb.SaveAs(@"c:\temp\issue_saved.xlsx");
+            var wb = new XLWorkbook();
+
+            Console.WriteLine("Creating");
+            var start = DateTime.Now;
+            foreach (var sheetId in Enumerable.Range(1, 4))
+            {
+                var ws = wb.AddWorksheet("Sheet" + sheetId);
+                foreach (var ro in Enumerable.Range(1, 40000))
+                {
+                    foreach (var co in Enumerable.Range(1, 30))
+                    {
+                        ws.Cell(ro, co).Value = String.Format("({0}, {1})", ro, co);
+                    }
+                }
+            }
+            var end = DateTime.Now;
+            Console.WriteLine((end - start).TotalMinutes);
+
+            Console.WriteLine("Saving");
+            start = DateTime.Now;
+            wb.SaveAs(@"c:\temp\saved.xlsx");
+            end = DateTime.Now;
+            Console.WriteLine((end - start).TotalMinutes);
+
             Console.WriteLine("Done");
             Console.ReadKey();
         }
