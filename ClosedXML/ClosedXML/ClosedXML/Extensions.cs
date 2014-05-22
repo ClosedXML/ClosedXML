@@ -103,7 +103,7 @@ namespace ClosedXML.Excel
 
     public static class StringExtensions
     {
-        private static readonly Regex RegexNewLine = new Regex(@"((?<!\r)\n|\r\n)");
+        private static readonly Regex RegexNewLine = new Regex(@"((?<!\r)\n|\r\n)", RegexOptions.Compiled);
         public static String FixNewLines(this String value)
         {
             return value.Contains("\n") ? RegexNewLine.Replace(value, Environment.NewLine) : value;

@@ -47,55 +47,78 @@ namespace ClosedXML.Excel
             + @")" // End Range
             + @")" // End Group to pick
             + @"\Z"
-            );
+            , RegexOptions.Compiled);
 
         internal static readonly Regex NamedRangeReferenceRegex =
             new Regex(@"^('?(?<Sheet>[^'!]+)'?!(?<Range>.+))|((?<Table>[^\[]+)\[(?<Column>[^\]]+)\])$",
                       RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture
                 );
 
+        private static Dictionary<string, int> columnNumbers = new Dictionary<string, int>();
         /// <summary>
         /// 	Gets the column number of a given column letter.
         /// </summary>
         /// <param name="columnLetter"> The column letter to translate into a column number. </param>
         public static int GetColumnNumberFromLetter(string columnLetter)
         {
-            if (columnLetter[0] <= '9')
-                return Int32.Parse(columnLetter, NumberFormatForParse);
-
+            int retVal;
             columnLetter = columnLetter.ToUpper();
+            if (columnNumbers.TryGetValue(columnLetter, out retVal))
+                return retVal;
+
+            if (columnLetter[0] <= '9')
+            {
+                retVal = Int32.Parse(columnLetter, NumberFormatForParse);
+                columnNumbers.Add(columnLetter, retVal);
+                return retVal;
+            }
+            
             var length = columnLetter.Length;
             if (length == 1)
-                return Convert.ToByte(columnLetter[0]) - 64;
+            {
+                retVal = Convert.ToByte(columnLetter[0]) - 64;
+                columnNumbers.Add(columnLetter, retVal);
+                return retVal;
+            }
             if (length == 2)
             {
-                return
+                retVal =
                     ((Convert.ToByte(columnLetter[0]) - 64)*26) +
                     (Convert.ToByte(columnLetter[1]) - 64);
+                columnNumbers.Add(columnLetter, retVal);
+                return retVal;
             }
             if (length == 3)
             {
-                return ((Convert.ToByte(columnLetter[0]) - 64)*TwoT26) +
+                retVal = ((Convert.ToByte(columnLetter[0]) - 64)*TwoT26) +
                        ((Convert.ToByte(columnLetter[1]) - 64)*26) +
                        (Convert.ToByte(columnLetter[2]) - 64);
+                columnNumbers.Add(columnLetter, retVal);
+                return retVal;
             }
             throw new ApplicationException("Column Length must be between 1 and 3.");
         }
 
+        private static Dictionary<int, string> columnLetters = new Dictionary<int, string>();
         /// <summary>
         /// 	Gets the column letter of a given column number.
         /// </summary>
         /// <param name="column"> The column number to translate into a column letter. </param>
-        public static string GetColumnLetterFromNumber(int column)
+        public static string GetColumnLetterFromNumber(int columnNumber)
         {
+            String retVal;
+            if (columnLetters.TryGetValue(columnNumber, out retVal))
+                return retVal;
+
             #region Check
 
-            if (column <= 0)
+            if (columnNumber <= 0)
                 throw new ArgumentOutOfRangeException("column", "Must be more than 0");
 
             #endregion
 
             var value = new StringBuilder(6);
+            int column = columnNumber;
             while (column > 0)
             {
                 var residue = column%26;
@@ -107,7 +130,9 @@ namespace ClosedXML.Excel
                 }
                 value.Insert(0, (char) (64 + residue));
             }
-            return value.ToString();
+            retVal = value.ToString();
+            columnLetters.Add(columnNumber, retVal);
+            return retVal;
         }
 
         public static bool IsValidColumn(string column)

@@ -6,10 +6,13 @@ using ClosedXML.Excel;
 using ClosedXML;
 using System.Drawing;
 using System.IO;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml;
 namespace ClosedXML_Sandbox
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             var wb = new XLWorkbook();
@@ -19,7 +22,7 @@ namespace ClosedXML_Sandbox
             foreach (var sheetId in Enumerable.Range(1, 4))
             {
                 var ws = wb.AddWorksheet("Sheet" + sheetId);
-                foreach (var ro in Enumerable.Range(1, 40000))
+                foreach (var ro in Enumerable.Range(1, 4000))
                 {
                     foreach (var co in Enumerable.Range(1, 30))
                     {
@@ -28,13 +31,13 @@ namespace ClosedXML_Sandbox
                 }
             }
             var end = DateTime.Now;
-            Console.WriteLine((end - start).TotalMinutes);
+            Console.WriteLine((end - start).TotalSeconds);
 
             Console.WriteLine("Saving");
             start = DateTime.Now;
             wb.SaveAs(@"c:\temp\saved.xlsx");
             end = DateTime.Now;
-            Console.WriteLine((end - start).TotalMinutes);
+            Console.WriteLine((end - start).TotalSeconds);
 
             Console.WriteLine("Done");
             Console.ReadKey();

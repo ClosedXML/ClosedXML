@@ -22,7 +22,7 @@
         private static readonly Regex A1Regex = new Regex(
             @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
             + @"|(?<=\W)(\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
-            + @"|(?<=\W)(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)"); // A:A
+            + @"|(?<=\W)(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)", RegexOptions.Compiled); // A:A
 
         public static readonly Regex A1SimpleRegex = new Regex(
             //  @"(?<=\W)" // Start with non word
@@ -45,22 +45,22 @@
             + @")" // End Range
             + @")" // End Group to pick
             //+ @"(?=\W)" // End with non word
-            );
+            , RegexOptions.Compiled);
 
         private static readonly Regex A1RowRegex = new Regex(
             @"(\$?\d{1,7}:\$?\d{1,7})" // 1:1
-            );
+            , RegexOptions.Compiled);
 
         private static readonly Regex A1ColumnRegex = new Regex(
             @"(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})" // A:A
-            );
+            , RegexOptions.Compiled);
 
         private static readonly Regex R1C1Regex = new Regex(
             @"(?<=\W)([Rr]\[?-?\d{0,7}\]?[Cc]\[?-?\d{0,7}\]?)(?=\W)" // R1C1
             + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
-            + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)"); // C:C
+            + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)", RegexOptions.Compiled); // C:C
 
-        private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_");
+        private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_", RegexOptions.Compiled);
 
         #region Fields
 

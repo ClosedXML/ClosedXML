@@ -13,6 +13,11 @@ namespace ClosedXML.Excel
         public readonly Int32 Row;
         public readonly Int32 Column;
 
+        public override bool Equals(object obj)
+        {
+            return Equals((XLSheetPoint)obj);
+        }
+
         public bool Equals(XLSheetPoint other)
         {
             return Row == other.Row && Column == other.Column;
@@ -21,6 +26,16 @@ namespace ClosedXML.Excel
         public override int GetHashCode()
         {
             return (Row * -1) ^ Column;
+        }
+
+        public static bool operator==(XLSheetPoint a, XLSheetPoint b)
+        {
+            return a.Row == b.Row && a.Column == b.Column;
+        }
+
+        public static bool operator !=(XLSheetPoint a, XLSheetPoint b)
+        {
+            return a.Row != b.Row || a.Column != b.Column;
         }
     }
 }

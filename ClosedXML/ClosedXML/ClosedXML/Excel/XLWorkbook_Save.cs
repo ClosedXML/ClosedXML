@@ -4052,7 +4052,9 @@ namespace ClosedXML.Excel
                         cell = cellsByReference[cellReference];
                     else
                     {
-                        cell = new Cell {CellReference = new StringValue(cellReference)};
+                        cell = new Cell();
+                        cell.CellReference = new StringValue(cellReference);
+                        
                         if (isNewRow)
                             row.AppendChild(cell);
                         else

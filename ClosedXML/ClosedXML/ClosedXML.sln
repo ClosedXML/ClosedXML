@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Sandbox", "ClosedXML_Sandbox\ClosedXML_Sandbox.csproj", "{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5C94E22C-85AA-48FD-B082-CF929FFC6C31}"
@@ -30,9 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8018E3
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = ClosedXML.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -54,8 +53,8 @@ Global
 		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Debug|x86.Build.0 = Debug|x86
 		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Release|Mixed Platforms.Build.0 = Release|x64
 		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Release|x64.ActiveCfg = Release|x64
 		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Release|x64.Build.0 = Release|x64
 		{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}.Release|x86.ActiveCfg = Release|Any CPU
@@ -102,8 +101,8 @@ Global
 		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Debug|x86.Build.0 = Debug|x86
 		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|Mixed Platforms.Build.0 = Release|x64
 		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|x64.ActiveCfg = Release|x64
 		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|x64.Build.0 = Release|x64
 		{BD5E6BFE-E837-4A35-BCA9-39667D873A20}.Release|x86.ActiveCfg = Release|Any CPU
@@ -135,5 +134,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = ClosedXML.vsmdi
 	EndGlobalSection
 EndGlobal
