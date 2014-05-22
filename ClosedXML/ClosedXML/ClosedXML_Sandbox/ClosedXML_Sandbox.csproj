@@ -126,7 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj">
-      <Project>{BD5E6BFE-E837-4A35-BCA9-39667D873A20}</Project>
+      <Project>{bd5e6bfe-e837-4a35-bca9-39667d873a20}</Project>
       <Name>ClosedXML</Name>
     </ProjectReference>
     <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj">

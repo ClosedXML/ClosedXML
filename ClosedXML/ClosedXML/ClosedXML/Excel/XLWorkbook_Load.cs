@@ -1201,7 +1201,7 @@ namespace ClosedXML.Excel
                     autoFilter.Filters.Add((int)filterColumn.ColumnId.Value + 1, filterList);
 
                     Boolean isText = false;
-                    foreach (Filter filter in filterColumn.Filters)
+                    foreach (Filter filter in filterColumn.Filters.OfType<Filter>())
                     {
                         Double dTest;
                         String val = filter.Val.Value;
@@ -1212,7 +1212,7 @@ namespace ClosedXML.Excel
                         }
                     }
 
-                    foreach (Filter filter in filterColumn.Filters)
+                    foreach (Filter filter in filterColumn.Filters.OfType<Filter>())
                     {
                         var xlFilter = new XLFilter { Connector = XLConnector.Or, Operator = XLFilterOperator.Equal };
 
