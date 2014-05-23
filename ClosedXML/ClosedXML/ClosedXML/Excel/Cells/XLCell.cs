@@ -1609,12 +1609,23 @@
                     _dataType = XLCellValues.Number;
                 else if (DateTime.TryParse(val, out dtTest) && dtTest >= BaseDate)
                 {
+
                     _dataType = XLCellValues.DateTime;
 
-               if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                    if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
-
-                    val = dtTest.ToOADate().ToString();
+                    {
+                        DateTime forMillis;
+                        if (value is DateTime && (forMillis = (DateTime)value).Millisecond > 0)
+                        {
+                            val = forMillis.ToOADate().ToString();
+                        }
+                        else
+                        {
+                            val = dtTest.ToOADate().ToString();
+                        }
+                    }
+                    
                 }
                 else if (Boolean.TryParse(val, out bTest))
                 {

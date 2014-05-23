@@ -15,22 +15,14 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            DateTime start, end;
-            var values = new List<Double>();
-            var wb = new XLWorkbook(@"c:\temp\issue.xlsx");
-            
-            Console.WriteLine("Saving");
-            start = DateTime.Now;
+            XLWorkbook wb = new XLWorkbook();
+            IXLWorksheet ws = wb.Worksheets.Add("test");
+            DateTime mydt = new DateTime(2014, 5, 22, 23, 32, 15, 164);
+            ws.Cell(1, 1).Value = mydt;
+            var d = ws.FirstCell().GetDateTime();
             wb.SaveAs(@"c:\temp\saved.xlsx");
-            end = DateTime.Now;
-            values.Add((end - start).TotalMinutes);
-
-            Console.WriteLine("Average: " + values.Average());
-            Console.WriteLine("Min: " + values.Min());
-            Console.WriteLine("Max: " + values.Max());
-
             Console.WriteLine("Done");
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 
