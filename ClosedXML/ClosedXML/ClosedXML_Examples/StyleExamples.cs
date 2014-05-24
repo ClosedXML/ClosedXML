@@ -54,11 +54,12 @@ namespace ClosedXML_Examples
         // Public
         public void Create()
         {
-            new StyleFont().Create(@"D:\Excel Files\Created\styleFont.xlsx");
-            new StyleFill().Create(@"D:\Excel Files\Created\styleFill.xlsx");
-            new StyleBorder().Create(@"D:\Excel Files\Created\styleBorder.xlsx");
-            new StyleAlignment().Create(@"D:\Excel Files\Created\styleAlignment.xlsx");
-            new StyleNumberFormat().Create(@"D:\Excel Files\Created\styleNumberFormat.xlsx");
+            var path = @"C:\ClosedXML_Tests\Created";
+            new StyleFont().Create(path + @"\styleFont.xlsx");
+            new StyleFill().Create(path + @"\styleFill.xlsx");
+            new StyleBorder().Create(path + @"\styleBorder.xlsx");
+            new StyleAlignment().Create(path + @"\styleAlignment.xlsx");
+            new StyleNumberFormat().Create(path + @"\styleNumberFormat.xlsx");
         }
 
         // Private

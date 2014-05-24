@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
     internal class XLCellsCollection
     {
-        private readonly Dictionary<XLSheetPoint, XLCell> _cellsDictionary = new Dictionary<XLSheetPoint, XLCell>();
+
+        private readonly Dictionary<int, Dictionary<int, XLCell>> rowsCollection = new Dictionary<int, Dictionary<int, XLCell>>();
         public Dictionary<Int32, Int32> ColumnsUsed = new Dictionary<int, int>();
         public HashSet<XLSheetPoint> Deleted = new HashSet<XLSheetPoint>();
 
@@ -34,7 +36,13 @@ namespace ClosedXML.Excel
             IncrementUsage(RowsUsed, row);
             IncrementUsage(ColumnsUsed, column);
 
-            _cellsDictionary.Add(new XLSheetPoint(row, column), cell);
+            Dictionary<int, XLCell> columnsCollection;
+            if (!rowsCollection.TryGetValue(row, out columnsCollection))
+            {
+                columnsCollection = new Dictionary<int, XLCell>();
+                rowsCollection.Add(row, columnsCollection);
+            }
+            columnsCollection.Add(column, cell);
             if (row > MaxRowUsed) MaxRowUsed = row;
             if (column > MaxColumnUsed) MaxColumnUsed = column;
             var sp = new XLSheetPoint(row, column);
@@ -67,7 +75,7 @@ namespace ClosedXML.Excel
             RowsUsed.Clear();
             ColumnsUsed.Clear();
 
-            _cellsDictionary.Clear();
+            rowsCollection.Clear();
             MaxRowUsed = 0;
             MaxColumnUsed = 0;
         }
@@ -84,24 +92,31 @@ namespace ClosedXML.Excel
             DecrementUsage(ColumnsUsed, row);
             var sp = new XLSheetPoint(row, column);
             Deleted.Add(sp);
-            _cellsDictionary.Remove(sp);
-            //_cells[row, column] = null;
+            Dictionary<int, XLCell> columnsCollection;
+            if (rowsCollection.TryGetValue(row, out columnsCollection))
+            {
+                columnsCollection.Remove(column);
+            }
         }
 
         internal IEnumerable<XLCell> GetCells(Int32 rowStart, Int32 columnStart,
-                                            Int32 rowEnd, Int32 columnEnd, 
+                                            Int32 rowEnd, Int32 columnEnd,
                                             Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                for (int co = columnStart; co <= finalColumn; co++)
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(ro, out columnsCollection))
                 {
-                    XLCell cell;
-                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell) 
-                        && (predicate == null || predicate(cell)))
-                        yield return cell;
+                    for (int co = columnStart; co <= finalColumn; co++)
+                    {
+                        XLCell cell;
+                        if (columnsCollection.TryGetValue(co, out cell)
+                            && (predicate == null || predicate(cell)))
+                            yield return cell;
+                    }
                 }
             }
         }
@@ -115,15 +130,20 @@ namespace ClosedXML.Excel
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                for (int co = columnStart; co <= finalColumn; co++)
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(ro, out columnsCollection))
                 {
-                    XLCell cell;
-                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell) 
+                    for (int co = columnStart; co <= finalColumn; co++)
+                    {
+                        XLCell cell;
+                        if (columnsCollection.TryGetValue(co, out cell)
                         && !cell.IsEmpty(includeFormats)
                         && (predicate == null || predicate(cell)))
-                        yield return cell;
+                            yield return cell;
+                    }
                 }
             }
+
         }
 
         public XLSheetPoint FirstPointUsed(Int32 rowStart, Int32 columnStart,
@@ -133,7 +153,7 @@ namespace ClosedXML.Excel
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
 
             var firstRow = FirstRowUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
-            if (firstRow == 0) return new XLSheetPoint(0,0);
+            if (firstRow == 0) return new XLSheetPoint(0, 0);
 
             var firstColumn = FirstColumnUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
             if (firstColumn == 0) return new XLSheetPoint(0, 0);
@@ -156,22 +176,27 @@ namespace ClosedXML.Excel
             return new XLSheetPoint(firstRow, firstColumn);
         }
 
-        public int FirstRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, 
+        public int FirstRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats,
             Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                for (int co = columnStart; co <= finalColumn; co++)
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(ro, out columnsCollection))
                 {
-                    XLCell cell;
-                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
+                    for (int co = columnStart; co <= finalColumn; co++)
+                    {
+                        XLCell cell;
+                        if (columnsCollection.TryGetValue(co, out cell)
                         && !cell.IsEmpty(includeFormats)
                         && (predicate == null || predicate(cell)))
-                        return ro;
+                            return ro;
+                    }
                 }
             }
+
             return 0;
         }
 
@@ -179,17 +204,22 @@ namespace ClosedXML.Excel
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int co = columnStart; co <= finalColumn; co++)
+            for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                for (int ro = rowStart; ro <= finalRow; ro++)
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(ro, out columnsCollection))
                 {
-                    XLCell cell;
-                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
+                    for (int co = columnStart; co <= finalColumn; co++)
+                    {
+                        XLCell cell;
+                        if (columnsCollection.TryGetValue(co, out cell)
                         && !cell.IsEmpty(includeFormats)
                         && (predicate == null || predicate(cell)))
-                        return co;
+                            return co;
+                    }
                 }
             }
+
             return 0;
         }
 
@@ -198,16 +228,19 @@ namespace ClosedXML.Excel
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            
             for (int ro = finalRow; ro >= rowStart; ro--)
             {
-                for (int co = finalColumn; co >= columnStart; co--)
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(ro, out columnsCollection))
                 {
-                    XLCell cell;
-                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
-                        && !cell.IsEmpty(includeFormats)
+                    for (int co = finalColumn; co >= columnStart; co--)
+                    {
+                        XLCell cell;
+                        if (columnsCollection.TryGetValue(co, out cell)
+                         && !cell.IsEmpty(includeFormats)
                         && (predicate == null || predicate(cell)))
-                        return ro;
+                            return ro;
+                    }
                 }
             }
             return 0;
@@ -215,20 +248,25 @@ namespace ClosedXML.Excel
 
         public int LastColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
         {
+            int maxCo = 0;
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int co = finalColumn; co >= columnStart; co--)
+            for (int ro = finalRow; ro >= rowStart; ro--)
             {
-                for (int ro = finalRow; ro >= rowStart; ro--)
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(ro, out columnsCollection))
                 {
-                    XLCell cell;
-                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell)
-                        && !cell.IsEmpty(includeFormats)
+                    for (int co = finalColumn; co >= columnStart && co > maxCo; co--)
+                    {
+                        XLCell cell;
+                        if (columnsCollection.TryGetValue(co, out cell)
+                         && !cell.IsEmpty(includeFormats)
                         && (predicate == null || predicate(cell)))
-                        return co;
+                            maxCo = co;
+                    }
                 }
             }
-            return 0;
+            return maxCo;
         }
 
         public void RemoveAll(Int32 rowStart, Int32 columnStart,
@@ -238,11 +276,14 @@ namespace ClosedXML.Excel
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                for (int co = columnStart; co <= finalColumn; co++)
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(ro, out columnsCollection))
                 {
-                    var sp = new XLSheetPoint(ro, co);
-                    if (_cellsDictionary.ContainsKey(sp))
-                        Remove(sp);
+                    for (int co = columnStart; co <= finalColumn; co++)
+                    {
+                        if (columnsCollection.ContainsKey(co))
+                            Remove(ro, co);
+                    }
                 }
             }
         }
@@ -252,14 +293,16 @@ namespace ClosedXML.Excel
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                for (int co = columnStart; co <= finalColumn; co++)
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(ro, out columnsCollection))
                 {
-                    var sp = new XLSheetPoint(ro, co);
-                    if (_cellsDictionary.ContainsKey(sp))
-                        yield return sp;
+                    for (int co = columnStart; co <= finalColumn; co++)
+                    {
+                        if (columnsCollection.ContainsKey(co))
+                            yield return new XLSheetPoint(ro, co);
+                    }
                 }
             }
         }
@@ -268,15 +311,18 @@ namespace ClosedXML.Excel
         {
             if (row > MaxRowUsed || column > MaxColumnUsed)
                 return null;
-            var sp = new XLSheetPoint(row, column);
-            XLCell cell;
-            return _cellsDictionary.TryGetValue(sp, out cell) ? cell : null;
+            Dictionary<int, XLCell> columnsCollection;
+            if (rowsCollection.TryGetValue(row, out columnsCollection))
+            {
+                XLCell cell;
+                return columnsCollection.TryGetValue(column, out cell) ? cell : null;
+            }
+            return null;
         }
 
-        public XLCell GetCell(XLSheetPoint sheetPoint)
+        public XLCell GetCell(XLSheetPoint sp)
         {
-            XLCell cell;
-            return _cellsDictionary.TryGetValue(sheetPoint, out cell) ? cell : null;
+            return GetCell(sp.Row, sp.Column);
         }
 
         internal void SwapRanges(XLSheetRange sheetRange1, XLSheetRange sheetRange2, XLWorksheet worksheet)
@@ -297,10 +343,10 @@ namespace ClosedXML.Excel
 
                     //if (cell1 != null)
                     //{
-                        cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
-                        Remove(sp1);
-                        //if (cell2 != null)
-                            Add(sp1, cell2);
+                    cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
+                    Remove(sp1);
+                    //if (cell2 != null)
+                    Add(sp1, cell2);
                     //}
 
                     //if (cell2 == null) continue;
@@ -308,7 +354,7 @@ namespace ClosedXML.Excel
                     cell2.Address = new XLAddress(cell2.Worksheet, sp1.Row, sp1.Column, false, false);
                     Remove(sp2);
                     //if (cell1 != null)
-                        Add(sp2, cell1);
+                    Add(sp2, cell1);
                 }
             }
         }
@@ -322,27 +368,37 @@ namespace ClosedXML.Excel
         {
             for (int ro = 1; ro <= MaxRowUsed; ro++)
             {
-                for (int co = 1; co <= MaxColumnUsed; co++)
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(ro, out columnsCollection))
                 {
-                    XLCell cell;
-                    if (_cellsDictionary.TryGetValue(new XLSheetPoint(ro, co), out cell) && predicate(cell))
-                        yield return cell;
+                    for (int co = 1; co <= MaxColumnUsed; co++)
+                    {
+                        XLCell cell;
+                        if (columnsCollection.TryGetValue(co, out cell)
+                            && (predicate == null || predicate(cell)))
+                            yield return cell;
+                    }
                 }
             }
+
         }
 
         public Boolean Contains(Int32 row, Int32 column)
         {
-            return _cellsDictionary.ContainsKey(new XLSheetPoint(row, column));
+            Dictionary<int, XLCell> columnsCollection;
+            return rowsCollection.TryGetValue(row, out columnsCollection) && columnsCollection.ContainsKey(column);
         }
 
         public Int32 MinRowInColumn(Int32 column)
         {
             for (int row = 1; row <= MaxRowUsed; row++)
             {
-                XLCell cell;
-                if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
-                    return row;
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(row, out columnsCollection))
+                {
+                    if (columnsCollection.ContainsKey(column))
+                        return row;
+                }
             }
 
             return 0;
@@ -352,9 +408,12 @@ namespace ClosedXML.Excel
         {
             for (int row = MaxRowUsed; row >= 1; row--)
             {
-                XLCell cell;
-                if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
-                    return row;
+                Dictionary<int, XLCell> columnsCollection;
+                if (rowsCollection.TryGetValue(row, out columnsCollection))
+                {
+                    if (columnsCollection.ContainsKey(column))
+                        return row;
+                }
             }
 
             return 0;
@@ -362,11 +421,11 @@ namespace ClosedXML.Excel
 
         public Int32 MinColumnInRow(Int32 row)
         {
-            for (int column = 1; column <= MaxColumnUsed; column++)
+            Dictionary<int, XLCell> columnsCollection;
+            if (rowsCollection.TryGetValue(row, out columnsCollection))
             {
-                XLCell cell;
-                if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
-                    return column;
+                if (columnsCollection.Count > 0)
+                    return columnsCollection.Keys.Min();
             }
 
             return 0;
@@ -374,11 +433,11 @@ namespace ClosedXML.Excel
 
         public Int32 MaxColumnInRow(Int32 row)
         {
-            for (int column = MaxColumnUsed; column >= 1; column--)
+            Dictionary<int, XLCell> columnsCollection;
+            if (rowsCollection.TryGetValue(row, out columnsCollection))
             {
-                XLCell cell;
-                if (_cellsDictionary.TryGetValue(new XLSheetPoint(row, column), out cell))
-                    return column;
+                if (columnsCollection.Count > 0)
+                    return columnsCollection.Keys.Max();
             }
 
             return 0;

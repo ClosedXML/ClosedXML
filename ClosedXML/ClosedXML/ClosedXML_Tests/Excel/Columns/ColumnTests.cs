@@ -225,5 +225,16 @@ namespace ClosedXML_Tests.Excel
             ws.Columns(1, 2).Group();
             ws.Columns(1, 2).Ungroup(true);
         }
+
+        [Test]
+        public void LastColumnUsed()
+        {
+            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            ws.Cell("A1").Value = "A1";
+            ws.Cell("B1").Value = "B1";
+            ws.Cell("A2").Value = "A2";
+            var lastCoUsed = ws.LastColumnUsed().ColumnNumber();
+            Assert.AreEqual(2, lastCoUsed);
+        }
     }
 }

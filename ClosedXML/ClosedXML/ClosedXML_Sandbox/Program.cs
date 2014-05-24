@@ -15,14 +15,13 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            XLWorkbook wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("test");
-            DateTime mydt = new DateTime(2014, 5, 22, 23, 32, 15, 164);
-            ws.Cell(1, 1).Value = mydt;
-            var d = ws.FirstCell().GetDateTime();
+            XLWorkbook wb = new XLWorkbook(@"c:\temp\test.xlsx");
+            var start = DateTime.Now;
             wb.SaveAs(@"c:\temp\saved.xlsx");
+            var end = DateTime.Now;
+            Console.WriteLine((end - start).TotalSeconds);
             Console.WriteLine("Done");
-            //Console.ReadKey();
+            Console.ReadKey();
         }
     }
 
