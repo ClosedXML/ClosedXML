@@ -3956,7 +3956,7 @@ namespace ClosedXML.Excel
             {
                 sheetData.RemoveChild(sheetDataRows[r.Key]);
                 sheetDataRows.Remove(r.Key);
-                xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == r.Key);
+                xlWorksheet.Internals.CellsCollection.deleted.Remove(r.Key);
             }
 
             var distinctRows = cellsByRow.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
@@ -4026,13 +4026,19 @@ namespace ClosedXML.Excel
                         ++lastCell) + distinctRow
                     : c.CellReference.Value, c => c);
 
-                foreach (var c in xlWorksheet.Internals.CellsCollection.Deleted.ToList())
+                foreach (var kpDel in xlWorksheet.Internals.CellsCollection.deleted.ToList())
                 {
-                    var key = XLHelper.GetColumnLetterFromNumber(c.Column) + c.Row.ToStringLookup();
-                    if (!cellsByReference.ContainsKey(key)) continue;
-                    row.RemoveChild(cellsByReference[key]);
-                    xlWorksheet.Internals.CellsCollection.Deleted.Remove(c);
+                    foreach (var delCo in kpDel.Value.ToList())
+                    {
+                        var key = XLHelper.GetColumnLetterFromNumber(delCo) + kpDel.Key.ToStringLookup();
+                        if (!cellsByReference.ContainsKey(key)) continue;
+                        row.RemoveChild(cellsByReference[key]);
+                        kpDel.Value.Remove(delCo);
+                    }
+                    if (kpDel.Value.Count == 0)
+                        xlWorksheet.Internals.CellsCollection.deleted.Remove(kpDel.Key);
                 }
+
 
                 if (!cellsByRow.ContainsKey(distinctRow)) continue;
 
@@ -4148,11 +4154,11 @@ namespace ClosedXML.Excel
                         }
                     }
                 }
-                xlWorksheet.Internals.CellsCollection.Deleted.RemoveWhere(d => d.Row == distinctRow);
+                xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
             }
             foreach (
                 var r in
-                    xlWorksheet.Internals.CellsCollection.Deleted.Select(c => c.Row).Distinct().Where(
+                    xlWorksheet.Internals.CellsCollection.deleted.Keys.Where(
                         sheetDataRows.ContainsKey))
             {
                 sheetData.RemoveChild(sheetDataRows[r]);

@@ -8,8 +8,8 @@ namespace ClosedXML.Excel
     {
 
         private readonly Dictionary<int, Dictionary<int, XLCell>> rowsCollection = new Dictionary<int, Dictionary<int, XLCell>>();
-        public Dictionary<Int32, Int32> ColumnsUsed = new Dictionary<int, int>();
-        public HashSet<XLSheetPoint> Deleted = new HashSet<XLSheetPoint>();
+        public readonly Dictionary<Int32, Int32> ColumnsUsed = new Dictionary<int, int>();
+        public readonly Dictionary<Int32, HashSet<Int32>> deleted = new Dictionary<int, HashSet<int>>();
 
 
         public Int32 MaxColumnUsed;
@@ -45,9 +45,10 @@ namespace ClosedXML.Excel
             columnsCollection.Add(column, cell);
             if (row > MaxRowUsed) MaxRowUsed = row;
             if (column > MaxColumnUsed) MaxColumnUsed = column;
-            var sp = new XLSheetPoint(row, column);
-            if (Deleted.Contains(sp))
-                Deleted.Remove(sp);
+
+            HashSet<Int32> delHash;
+            if (deleted.TryGetValue(row, out delHash))
+                delHash.Remove(column);
         }
 
         private static void IncrementUsage(Dictionary<int, int> dictionary, Int32 key)
@@ -90,8 +91,20 @@ namespace ClosedXML.Excel
             Count--;
             DecrementUsage(RowsUsed, row);
             DecrementUsage(ColumnsUsed, row);
-            var sp = new XLSheetPoint(row, column);
-            Deleted.Add(sp);
+            
+            HashSet<Int32> delHash;
+            if (deleted.TryGetValue(row, out delHash))
+            {
+                if (!delHash.Contains(column))
+                    delHash.Add(column);
+            }
+            else
+            {
+                delHash = new HashSet<int>();
+                delHash.Add(column);
+                deleted.Add(row, delHash);
+            }
+
             Dictionary<int, XLCell> columnsCollection;
             if (rowsCollection.TryGetValue(row, out columnsCollection))
             {
