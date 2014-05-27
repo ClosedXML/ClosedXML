@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
 
     public interface IXLTableField
     {
-        Int32 Index { get; set; }
+        Int32 Index { get; }
         String Name { get; set; }
         String TotalsRowLabel { get; set; }
         String TotalsRowFormulaA1 { get; set; }

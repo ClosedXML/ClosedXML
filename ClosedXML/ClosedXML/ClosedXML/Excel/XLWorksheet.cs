@@ -609,10 +609,12 @@ namespace ClosedXML.Excel
                 Int32 fieldCount = t.ColumnCount();
                 for (Int32 f = 0; f < fieldCount; f++)
                 {
-                    table.Field(f).Index = t.Field(f).Index;
-                    table.Field(f).Name = t.Field(f).Name;
-                    (table.Field(f) as XLTableField).totalsRowLabel = (t.Field(f) as XLTableField).totalsRowLabel;
-                    (table.Field(f) as XLTableField).totalsRowFunction = (t.Field(f) as XLTableField).totalsRowFunction;
+                    var tableField = table.Field(f) as XLTableField;
+                    var tField = t.Field(f) as XLTableField;
+                    tableField.Index = tField.Index;
+                    tableField.Name = tField.Name;
+                    tableField.totalsRowLabel = tField.totalsRowLabel;
+                    tableField.totalsRowFunction = tField.totalsRowFunction;
                 }
             }
 

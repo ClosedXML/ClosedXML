@@ -308,5 +308,29 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("A", table.DataRange.FirstCell().GetString());
             Assert.AreEqual("C", table.DataRange.LastCell().GetString());
         }
+
+        [Test]
+        public void ChangeFieldName()
+        {
+            XLWorkbook wb = new XLWorkbook(); //( @"c:\temp\test.xlsx");
+
+            var ws = wb.AddWorksheet("Sheet");
+            ws.Cell("A1").SetValue("FName")
+                .CellBelow().SetValue("John");
+
+            ws.Cell("B1").SetValue("LName")
+                .CellBelow().SetValue("Doe");
+
+            var tbl = ws.RangeUsed().CreateTable();
+            var nameBefore = tbl.Field(tbl.Fields.Last().Index).Name;
+            tbl.Field(tbl.Fields.Last().Index).Name = "LastName";
+            var nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
+
+            var cellValue = ws.Cell("B1").GetString();
+
+            Assert.AreEqual("LName", nameBefore);
+            Assert.AreEqual("LastName", nameAfter);
+            Assert.AreEqual("LastName", cellValue);
+        }
     }
 }

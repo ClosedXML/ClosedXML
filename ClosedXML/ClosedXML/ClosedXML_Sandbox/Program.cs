@@ -15,7 +15,20 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-            XLWorkbook wb = new XLWorkbook(@"c:\temp\test.xlsx");
+
+            XLWorkbook wb = new XLWorkbook(); //( @"c:\temp\test.xlsx");
+
+            var ws = wb.AddWorksheet("Sheet");
+            ws.Cell("A1").SetValue("FName")
+                .CellBelow().SetValue("John");
+
+            ws.Cell("B1").SetValue("LName")
+                .CellBelow().SetValue("Doe");
+
+            var tbl = ws.RangeUsed().CreateTable();
+            var nameBefore = tbl.Field(tbl.Fields.Last().Index).Name;
+            tbl.Field(tbl.Fields.Last().Index).Name = "LastName";
+            var nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
             var start = DateTime.Now;
             wb.SaveAs(@"c:\temp\saved.xlsx");
             var end = DateTime.Now;

@@ -10,8 +10,19 @@ namespace ClosedXML.Excel
             this.table = table;
         }
 
-        public Int32 Index { get; set; }
-        public String Name { get; set; }
+        public Int32 Index { get; internal set; }
+
+        public String Name 
+        {
+            get
+            {
+                return table.HeadersRow().Cell(Index + 1).GetString();
+            }
+            set
+            {
+                table.HeadersRow().Cell(Index + 1).SetValue(value);
+            }
+        }
 
         internal String totalsRowLabel;
         public String TotalsRowLabel
