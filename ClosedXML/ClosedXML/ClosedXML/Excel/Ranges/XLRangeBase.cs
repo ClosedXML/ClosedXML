@@ -737,7 +737,12 @@ namespace ClosedXML.Excel
 
         public XLCell Cell(XLAddress cellAddressInRange)
         {
-            var absoluteAddress = cellAddressInRange + RangeAddress.FirstAddress - 1;
+            //var absoluteAddress = cellAddressInRange + RangeAddress.FirstAddress - 1;
+            var absoluteAddress = new XLAddress(cellAddressInRange.Worksheet,
+                                 cellAddressInRange.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
+                                 cellAddressInRange.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
+                                 cellAddressInRange.FixedRow,
+                                 cellAddressInRange.FixedColumn);
 
             if (absoluteAddress.RowNumber <= 0 || absoluteAddress.RowNumber > XLHelper.MaxRowNumber)
             {
@@ -861,11 +866,22 @@ namespace ClosedXML.Excel
 
         public XLRange Range(IXLRangeAddress rangeAddress)
         {
-            var newFirstCellAddress = (XLAddress)rangeAddress.FirstAddress + RangeAddress.FirstAddress - 1;
+
+            var newFirstCellAddress = new XLAddress((XLWorksheet)rangeAddress.FirstAddress.Worksheet,
+                                 rangeAddress.FirstAddress.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
+                                 rangeAddress.FirstAddress.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
+                                 rangeAddress.FirstAddress.FixedRow,
+                                 rangeAddress.FirstAddress.FixedColumn);
+
             newFirstCellAddress.FixedRow = rangeAddress.FirstAddress.FixedRow;
             newFirstCellAddress.FixedColumn = rangeAddress.FirstAddress.FixedColumn;
 
-            var newLastCellAddress = (XLAddress)rangeAddress.LastAddress + RangeAddress.FirstAddress - 1;
+            var newLastCellAddress = new XLAddress((XLWorksheet)rangeAddress.LastAddress.Worksheet,
+                                rangeAddress.LastAddress.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
+                                rangeAddress.LastAddress.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
+                                rangeAddress.LastAddress.FixedRow,
+                                rangeAddress.LastAddress.FixedColumn);
+
             newLastCellAddress.FixedRow = rangeAddress.LastAddress.FixedRow;
             newLastCellAddress.FixedColumn = rangeAddress.LastAddress.FixedColumn;
 

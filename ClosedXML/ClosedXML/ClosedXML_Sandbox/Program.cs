@@ -21,7 +21,7 @@ namespace ClosedXML_Sandbox
             var end = DateTime.Now;
             Console.WriteLine((end - start).TotalSeconds);
             Console.WriteLine("Done");
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 
