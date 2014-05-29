@@ -52,8 +52,8 @@ namespace ClosedXML.Excel
                 else
                 {
                     _patternType = value.HasValue ? XLFillPatternValues.Solid : XLFillPatternValues.None;
-                    _patternColor = new XLColor(value);
-                    _patternBackgroundColor = new XLColor(value);
+                    _patternColor = value;
+                    _patternBackgroundColor = value;
 
                     PatternTypeModified = true;
                     PatternColorModified = true;
@@ -152,8 +152,8 @@ namespace ClosedXML.Excel
             _container = container;
             if (defaultFill == null) return;
             _patternType = defaultFill.PatternType;
-            _patternColor = new XLColor(defaultFill.PatternColor);
-            _patternBackgroundColor = new XLColor(defaultFill.PatternBackgroundColor);
+            _patternColor = defaultFill.PatternColor;
+            _patternBackgroundColor = defaultFill.PatternBackgroundColor;
 
             if (useDefaultModify)
             {

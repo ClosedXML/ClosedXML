@@ -232,7 +232,7 @@ namespace ClosedXML.Excel
             font.VerticalAlignment = sourceFont.VerticalAlignment;
             font.Shadow = sourceFont.Shadow;
             font.FontSize = sourceFont.FontSize;
-            font.FontColor = new XLColor(sourceFont.FontColor);
+            font.FontColor = sourceFont.FontColor;
             font.FontName = sourceFont.FontName;
             font.FontFamilyNumbering = sourceFont.FontFamilyNumbering;
         }

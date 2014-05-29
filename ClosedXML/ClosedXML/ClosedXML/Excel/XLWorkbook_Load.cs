@@ -1681,16 +1681,16 @@ namespace ClosedXML.Excel
                     }
                     else
                         thisColor = _colorList[htmlColor];
-                    retVal = new XLColor(thisColor);
+                    retVal = XLColor.FromColor(thisColor);
                 }
                 else if (color.Indexed != null && color.Indexed < 64)
-                    retVal = new XLColor((Int32) color.Indexed.Value);
+                    retVal = XLColor.FromIndex((Int32) color.Indexed.Value);
                 else if (color.Theme != null)
                 {
                     retVal = color.Tint != null ? XLColor.FromTheme((XLThemeColor) color.Theme.Value, color.Tint.Value) : XLColor.FromTheme((XLThemeColor) color.Theme.Value);
                 }
             }
-            return retVal ?? new XLColor();
+            return retVal ?? XLColor.NoColor;
         }
 
         private void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,

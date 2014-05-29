@@ -82,7 +82,7 @@ namespace ClosedXML.Excel
             ShowWhiteSpace = workbook.ShowWhiteSpace;
             ShowZeros = workbook.ShowZeros;
             RightToLeft = workbook.RightToLeft;
-            TabColor = new XLColor();
+            TabColor = XLColor.NoColor;
             SelectedRanges = new XLRanges();
 
             Author = workbook.Author;
@@ -1028,12 +1028,7 @@ namespace ClosedXML.Excel
 
         public HashSet<Int32> GetStyleIds()
         {
-            var retVal = new HashSet<Int32> {GetStyleId()};
-            foreach (
-                int id in
-                    Internals.CellsCollection.GetCells().Select(c => c.GetStyleId()).Where(id => !retVal.Contains(id)))
-                retVal.Add(id);
-            return retVal;
+            return Internals.CellsCollection.GetStyleIds(GetStyleId());
         }
 
         public XLRow FirstRowUsed()

@@ -34,7 +34,7 @@ namespace ClosedXML.Excel
             _verticalAlignment = defaultFont.VerticalAlignment;
             _shadow = defaultFont.Shadow;
             _fontSize = defaultFont.FontSize;
-            _fontColor = new XLColor(defaultFont.FontColor);
+            _fontColor = defaultFont.FontColor;
             _fontName = defaultFont.FontName;
             _fontFamilyNumbering = defaultFont.FontFamilyNumbering;
 

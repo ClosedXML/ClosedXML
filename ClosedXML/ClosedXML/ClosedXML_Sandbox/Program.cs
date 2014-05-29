@@ -15,26 +15,23 @@ namespace ClosedXML_Sandbox
 
         static void Main(string[] args)
         {
-
-            XLWorkbook wb = new XLWorkbook(); //( @"c:\temp\test.xlsx");
-
-            var ws = wb.AddWorksheet("Sheet");
-            ws.Cell("A1").SetValue("FName")
-                .CellBelow().SetValue("John");
-
-            ws.Cell("B1").SetValue("LName")
-                .CellBelow().SetValue("Doe");
-
-            var tbl = ws.RangeUsed().CreateTable();
-            var nameBefore = tbl.Field(tbl.Fields.Last().Index).Name;
-            tbl.Field(tbl.Fields.Last().Index).Name = "LastName";
-            var nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
-            var start = DateTime.Now;
-            wb.SaveAs(@"c:\temp\saved.xlsx");
-            var end = DateTime.Now;
-            Console.WriteLine((end - start).TotalSeconds);
+            DateTime start, end;
+            var times = new List<Double>();
+            foreach (var i in Enumerable.Range(1,10) )
+            {
+                using (var wb = new XLWorkbook(@"c:\temp\test.xlsx"))
+                {
+                    start = DateTime.Now;
+                    wb.SaveAs(@"c:\temp\saved.xlsx");
+                    end = DateTime.Now;
+                    var total = (end - start).TotalSeconds;
+                    Console.WriteLine(total);
+                    times.Add(total);
+                }
+            }
+            Console.WriteLine("Average: " + times.Average());
             Console.WriteLine("Done");
-            //Console.ReadKey();
+            Console.ReadKey();
         }
     }
 

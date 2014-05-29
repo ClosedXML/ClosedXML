@@ -1,50 +1,95 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace ClosedXML.Excel
 {
     public partial class XLColor
     {
+        private static Dictionary<Color, XLColor> byColor = new Dictionary<Color, XLColor>();
         public static XLColor FromColor(Color color)
         {
-            return new XLColor(color);
+            XLColor ret;
+            if (!byColor.TryGetValue(color, out ret))
+            {
+                ret = new XLColor(color);
+                byColor.Add(color, ret);
+            }
+            return ret;
         }
+
         public static XLColor FromArgb(Int32 argb)
         {
-            return new XLColor(Color.FromArgb(argb));
+            return FromColor(Color.FromArgb(argb));
         }
         public static XLColor FromArgb(Int32 r, Int32 g, Int32 b)
         {
-            return new XLColor(Color.FromArgb(r, g, b));
+            return FromColor(Color.FromArgb(r, g, b));
         }
         public static XLColor FromArgb(Int32 a, Int32 r, Int32 g, Int32 b)
         {
-            return new XLColor(Color.FromArgb(a, r, g, b));
+            return FromColor(Color.FromArgb(a, r, g, b));
         }
         public static XLColor FromKnownColor(KnownColor color)
         {
-            return new XLColor(Color.FromKnownColor(color));
+            return FromColor(Color.FromKnownColor(color));
         }
         public static XLColor FromName(String name)
         {
-            return new XLColor(Color.FromName(name));
+            return FromColor(Color.FromName(name));
         }
         public static XLColor FromHtml(String htmlColor)
         {
-            return new XLColor(ColorTranslator.FromHtml(htmlColor));
+            return FromColor(ColorTranslator.FromHtml(htmlColor));
         }
+
+        private static Dictionary<Int32, XLColor> byIndex = new Dictionary<Int32, XLColor>();
         public static XLColor FromIndex(Int32 index)
         {
-            return new XLColor(index);
+            XLColor ret;
+            if (!byIndex.TryGetValue(index, out ret))
+            {
+                ret = new XLColor(index);
+                byIndex.Add(index, ret);
+            }
+            return ret;
         }
+
+        private static Dictionary<XLThemeColor, XLColor> byTheme = new Dictionary<XLThemeColor, XLColor>();
         public static XLColor FromTheme(XLThemeColor themeColor)
         {
-            return new XLColor(themeColor);
+            XLColor ret;
+            if (!byTheme.TryGetValue(themeColor, out ret))
+            {
+                ret = new XLColor(themeColor);
+                byTheme.Add(themeColor, ret);
+            }
+            return ret;
         }
+
+        private static Dictionary<XLThemeColor, Dictionary<Double, XLColor>> byThemeTint = new Dictionary<XLThemeColor, Dictionary<double, XLColor>>();
         public static XLColor FromTheme(XLThemeColor themeColor, Double themeTint)
         {
-            return new XLColor(themeColor, themeTint);
+            XLColor ret;
+            Dictionary<Double, XLColor> themeTints;
+            if (byThemeTint.TryGetValue(themeColor, out themeTints))
+            {
+                if (!themeTints.TryGetValue(themeTint, out ret))
+                {
+                    ret = new XLColor(themeColor, themeTint);
+                    themeTints.Add(themeTint, ret);
+                }
+            }
+            else
+            {
+                themeTints = new Dictionary<double, XLColor>();
+                ret = new XLColor(themeColor, themeTint);
+                themeTints.Add(themeTint, ret);
+
+                byThemeTint.Add(themeColor, themeTints);
+            }
+            return ret;
         }
 
         private static Dictionary<Int32, XLColor> _indexedColors;
@@ -128,7 +173,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static XLColor NoColor { get { return new XLColor(); } }
+        private static XLColor noColor = new XLColor();
+        public static XLColor NoColor { get { return noColor; } }
 
         public static XLColor AliceBlue { get { return FromColor(Color.AliceBlue); } }
         public static XLColor AntiqueWhite { get { return FromColor(Color.AntiqueWhite); } }

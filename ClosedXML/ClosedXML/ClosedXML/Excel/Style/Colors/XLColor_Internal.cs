@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     public partial class XLColor
     {
-        internal XLColor(XLColor defaultColor)
+        private XLColor(XLColor defaultColor)
         {
             var dColor = defaultColor;
             if (dColor._colorType == XLColorType.Color)
@@ -25,13 +25,13 @@ namespace ClosedXML.Excel
             _colorType = dColor._colorType;
         }
 
-        internal XLColor()
+        private XLColor()
         {
             HasValue = false;
             _hashCode = 0;
         }
 
-        internal XLColor(Color color)
+        private XLColor(Color color)
         {
             _color = color;
             _hashCode = 13 ^ color.ToArgb();
@@ -39,7 +39,7 @@ namespace ClosedXML.Excel
             _colorType = XLColorType.Color;
         }
 
-        internal XLColor(Int32 index)
+        private XLColor(Int32 index)
         {
             _indexed = index;
             _hashCode = 11 ^ _indexed;
@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
             _colorType = XLColorType.Indexed;
         }
 
-        internal XLColor(XLThemeColor themeColor)
+        private XLColor(XLThemeColor themeColor)
         {
             _themeColor = themeColor;
             _themeTint = 1;
@@ -56,7 +56,7 @@ namespace ClosedXML.Excel
             _colorType = XLColorType.Theme;
         }
 
-        internal XLColor(XLThemeColor themeColor, Double themeTint)
+        private XLColor(XLThemeColor themeColor, Double themeTint)
         {
             _themeColor = themeColor;
             _themeTint = themeTint;

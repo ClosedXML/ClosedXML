@@ -31,15 +31,15 @@ namespace ClosedXML.Excel
             if (defaultBorder == null) return;
 
             _leftBorder = defaultBorder.LeftBorder;
-            _leftBorderColor = new XLColor(defaultBorder.LeftBorderColor);
+            _leftBorderColor = defaultBorder.LeftBorderColor;
             _rightBorder = defaultBorder.RightBorder;
-            _rightBorderColor = new XLColor(defaultBorder.RightBorderColor);
+            _rightBorderColor = defaultBorder.RightBorderColor;
             _topBorder = defaultBorder.TopBorder;
-            _topBorderColor = new XLColor(defaultBorder.TopBorderColor);
+            _topBorderColor = defaultBorder.TopBorderColor;
             _bottomBorder = defaultBorder.BottomBorder;
-            _bottomBorderColor = new XLColor(defaultBorder.BottomBorderColor);
+            _bottomBorderColor = defaultBorder.BottomBorderColor;
             _diagonalBorder = defaultBorder.DiagonalBorder;
-            _diagonalBorderColor = new XLColor(defaultBorder.DiagonalBorderColor);
+            _diagonalBorderColor = defaultBorder.DiagonalBorderColor;
             _diagonalUp = defaultBorder.DiagonalUp;
             _diagonalDown = defaultBorder.DiagonalDown;
 
