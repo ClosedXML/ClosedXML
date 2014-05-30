@@ -2219,7 +2219,7 @@ namespace ClosedXML.Excel
                 {
                     pf.Axis = PivotTableAxisValues.AxisRow;
 
-                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
+                    var f = new Field { Index = pt.RowLabels.IndexOf(xlpf) };
                     rowFields.AppendChild(f);
 
                     for (var i = 0; i < xlpf.SharedStrings.Count; i++)
@@ -2237,7 +2237,7 @@ namespace ClosedXML.Excel
                 {
                     pf.Axis = PivotTableAxisValues.AxisColumn;
 
-                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
+                    var f = new Field { Index = pt.ColumnLabels.IndexOf(xlpf) };
                     columnFields.AppendChild(f);
 
                     for (var i = 0; i < xlpf.SharedStrings.Count; i++)
