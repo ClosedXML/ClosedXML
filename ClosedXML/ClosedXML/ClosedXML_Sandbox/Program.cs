@@ -12,50 +12,7 @@ namespace ClosedXML_Sandbox
 {
     class Program
     {
-        private static void Main(string[] args)
-        {
-            var dt = new System.Data.DataTable();
-
-            dt.Columns.Add("col1", typeof(string));
-            dt.Columns.Add("col2", typeof(string));
-            dt.Columns.Add("col3", typeof(double));
-
-            var col1 = new string[] { "col1_val1", "col1_val2", "col1_val3" };
-            var col2 = new string[] { "col2_val1", "col2_val2", "col2_val3" };
-
-            var rnd = new Random();
-            for (int i = 0; i < 10; i++)
-            {
-                var row = dt.NewRow();
-                row["col1"] = col1[rnd.Next(0, 3)];
-                row["col2"] = col2[rnd.Next(0, 3)];
-                row["col3"] = rnd.NextDouble() * rnd.Next(10, 100);
-                dt.Rows.Add(row);
-            }
-
-            var workbook = new XLWorkbook();
-            var sheet = workbook.Worksheets.Add("Sheet1");
-
-            var table = sheet.Cell(1, 1).InsertTable(dt, "Table1", true);
-
-            var range = table.DataRange;
-            var header = sheet.Range(1, 1, 1, dt.Columns.Count);
-            var dataRange = sheet.Range(header.FirstCell(), range.LastCell());
-
-            var ptSheet = workbook.Worksheets.Add("Sheet2");
-
-            var pt = ptSheet.PivotTables.AddNew("TablePivot", ptSheet.Cell(1, 1), dataRange);
-
-            // COL2 then COL1
-            pt.RowLabels.Add("col2");
-            pt.RowLabels.Add("col1");
-
-            pt.Values.Add("col3");
-
-            workbook.SaveAs(@"c:\temp\saved.xlsx");
-        }
-
-        static void MainX(string[] args)
+        static void Main(string[] args)
         {
             DateTime start, end;
             var times = new List<Double>();
@@ -73,7 +30,7 @@ namespace ClosedXML_Sandbox
             //}
             Console.WriteLine("Average: " + times.Average());
             Console.WriteLine("Done");
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 

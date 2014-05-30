@@ -11,6 +11,10 @@ namespace ClosedXML.Excel
         public readonly Dictionary<Int32, Int32> ColumnsUsed = new Dictionary<int, int>();
         public readonly Dictionary<Int32, HashSet<Int32>> deleted = new Dictionary<int, HashSet<int>>();
 
+        internal Dictionary<int, Dictionary<int, XLCell>> RowsCollection
+        {
+            get { return rowsCollection; }
+        }
 
         public Int32 MaxColumnUsed;
         public Int32 MaxRowUsed;

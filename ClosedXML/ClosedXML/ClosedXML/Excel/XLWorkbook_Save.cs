@@ -3936,16 +3936,6 @@ namespace ClosedXML.Excel
             var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
             cm.SetElement(XLWSContentManager.XLWSContents.SheetData, sheetData);
 
-            var cellsByRow = new Dictionary<Int32, List<IXLCell>>();
-            foreach (var c in xlWorksheet.Internals.CellsCollection.GetCells())
-            {
-                var rowNum = c.Address.RowNumber;
-                if (!cellsByRow.ContainsKey(rowNum))
-                    cellsByRow.Add(rowNum, new List<IXLCell>());
-
-                cellsByRow[rowNum].Add(c);
-            }
-
             var lastRow = 0;
             var sheetDataRows =
                 sheetData.Elements<Row>().ToDictionary(r => r.RowIndex == null ? ++lastRow : (Int32)r.RowIndex.Value,
@@ -3959,7 +3949,7 @@ namespace ClosedXML.Excel
                 xlWorksheet.Internals.CellsCollection.deleted.Remove(r.Key);
             }
 
-            var distinctRows = cellsByRow.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
+            var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
             var noRows = (sheetData.Elements<Row>().FirstOrDefault() == null);
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
@@ -4040,13 +4030,13 @@ namespace ClosedXML.Excel
                 }
 
 
-                if (!cellsByRow.ContainsKey(distinctRow)) continue;
+                if (!xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow)) continue;
 
                 var isNewRow = !row.Elements<Cell>().Any();
                 var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference.Value), c => c);
-                foreach (var opCell in cellsByRow[distinctRow]
+                foreach (var opCell in xlWorksheet.Internals.CellsCollection.RowsCollection[distinctRow].Values
                     .OrderBy(c => c.Address.ColumnNumber)
-                    .Select(c => (XLCell)c))
+                    .Select(c => c))
                 {
                     var styleId = context.SharedStyles[opCell.GetStyleId()].StyleId;
 
