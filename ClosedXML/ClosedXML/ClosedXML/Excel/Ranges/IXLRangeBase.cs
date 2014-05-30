@@ -184,7 +184,7 @@ namespace ClosedXML.Excel
         ///   Merges this range.
         ///   <para>The contents and style of the merged cells will be equal to the first cell.</para>
         /// </summary>
-        IXLRange Merge();
+        IXLRange Merge(Boolean checkIntersect = true);
 
         /// <summary>
         ///   Creates a named range out of this range. 

@@ -319,12 +319,7 @@ namespace ClosedXML.Excel
             return CellsUsed(includeFormats);
         }
 
-        public IXLRange Merge()
-        {
-            return Merge(true);
-        }
-
-        internal IXLRange Merge(Boolean checkIntersect)
+        public IXLRange Merge(Boolean checkIntersect = true)
         {
             if (checkIntersect)
             {
