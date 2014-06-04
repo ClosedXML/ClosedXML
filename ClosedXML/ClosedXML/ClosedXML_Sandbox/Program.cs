@@ -14,33 +14,32 @@ namespace ClosedXML_Sandbox
     {
         private static void Main(string[] args)
         {
-            
-            using (XLWorkbook wb = new XLWorkbook(XLEventTracking.Disabled))
-            {
-                using (var ws = wb.AddWorksheet("MergeCellsWorksheet"))
-                {
-                    int total = 5000;
-                    var timer = System.Diagnostics.Stopwatch.StartNew();
-                    // Insert some values
-                    for (int i = 1; i <= total; i += 2)
-                    {
-                        ws.Cell(i, 1).Value = "Merge Cell 1";
-                        ws.Cell(i, 3).Value = "Merge Cell 2";
-                        ws.Cell(i, 4).Value = "Merge Cell 3";
-                        ws.Cell((i + 1), 4).Value = "Merge Cell 4";
+int total = 5000;
+var timer = System.Diagnostics.Stopwatch.StartNew();       
+using (XLWorkbook wb = new XLWorkbook(XLEventTracking.Disabled))
+{
+    using (var ws = wb.AddWorksheet("MergeCellsWorksheet"))
+    {
+        ws.RangeUsed().Style.Fill.BackgroundColor = XLColor.FromArgb(1);
+        // Insert some values
+        for (int i = 1; i <= total; i += 2)
+        {
+            ws.Cell(i, 1).Value = "Merge Cell 1";
+            ws.Cell(i, 3).Value = "Merge Cell 2";
+            ws.Cell(i, 4).Value = "Merge Cell 3";
+            ws.Cell((i + 1), 4).Value = "Merge Cell 4";
 
-                        ws.Range("A" + i + ":B" + (i + 1)).Merge(false);
-                        ws.Range("C" + i + ":C" + (i + 1)).Merge(false);
-                        ws.Range("D" + i + ":E" + i).Merge(false);
-                        ws.Range("D" + (i + 1) + ":E" + (i + 1)).Merge(false);
-                    }
-                    timer.Stop();
-                    Console.WriteLine("Took {0}s", timer.Elapsed.TotalSeconds);
-                }
-
-                wb.SaveAs(@"c:\temp\saved.xlsx");
-            }
-            Console.WriteLine("Done");
+            ws.Range("A" + i + ":B" + (i + 1)).Merge(false);
+            ws.Range("C" + i + ":C" + (i + 1)).Merge(false);
+            ws.Range("D" + i + ":E" + i).Merge(false);
+            ws.Range("D" + (i + 1) + ":E" + (i + 1)).Merge(false);
+        }
+    }
+    wb.SaveAs(@"c:\temp\saved.xlsx");
+}
+timer.Stop();
+Console.WriteLine("Took {0}s", timer.Elapsed.TotalSeconds);
+Console.WriteLine("Done");
             Console.ReadKey();
         }
 
