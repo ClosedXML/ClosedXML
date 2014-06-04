@@ -83,7 +83,7 @@ namespace ClosedXML.Excel
             contents.Add(XLWSContents.CustomProperties, opWorksheet.Elements<CustomProperties>().LastOrDefault());
             contents.Add(XLWSContents.CellWatches, opWorksheet.Elements<CellWatches>().LastOrDefault());
             contents.Add(XLWSContents.IgnoredErrors, opWorksheet.Elements<IgnoredErrors>().LastOrDefault());
-            contents.Add(XLWSContents.SmartTags, opWorksheet.Elements<SmartTags>().LastOrDefault());
+            //contents.Add(XLWSContents.SmartTags, opWorksheet.Elements<SmartTags>().LastOrDefault());
             contents.Add(XLWSContents.Drawing, opWorksheet.Elements<Drawing>().LastOrDefault());
             contents.Add(XLWSContents.LegacyDrawing, opWorksheet.Elements<LegacyDrawing>().LastOrDefault());
             contents.Add(XLWSContents.LegacyDrawingHeaderFooter, opWorksheet.Elements<LegacyDrawingHeaderFooter>().LastOrDefault());
