@@ -69,13 +69,12 @@ namespace ClosedXML.Excel
             {
                 if (_container == null || _container.UpdatingStyle) return;
 
-                var wsContainer = _container as XLWorksheet;
-                if (wsContainer != null)
+                if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
-                    wsContainer.Style.Border.SetTopBorder(value);
-                    wsContainer.Style.Border.SetBottomBorder(value);
-                    wsContainer.Style.Border.SetLeftBorder(value);
-                    wsContainer.Style.Border.SetRightBorder(value);
+                    _container.Style.Border.SetTopBorder(value);
+                    _container.Style.Border.SetBottomBorder(value);
+                    _container.Style.Border.SetLeftBorder(value);
+                    _container.Style.Border.SetRightBorder(value);
                 }
                 else
                 {
@@ -97,13 +96,12 @@ namespace ClosedXML.Excel
             {
                 if (_container == null || _container.UpdatingStyle) return;
 
-                var wsContainer = _container as XLWorksheet;
-                if (wsContainer != null)
+                if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
-                    wsContainer.Style.Border.SetTopBorderColor(value);
-                    wsContainer.Style.Border.SetBottomBorderColor(value);
-                    wsContainer.Style.Border.SetLeftBorderColor(value);
-                    wsContainer.Style.Border.SetRightBorderColor(value);
+                    _container.Style.Border.SetTopBorderColor(value);
+                    _container.Style.Border.SetBottomBorderColor(value);
+                    _container.Style.Border.SetLeftBorderColor(value);
+                    _container.Style.Border.SetRightBorderColor(value);
                 }
                 else
                 {

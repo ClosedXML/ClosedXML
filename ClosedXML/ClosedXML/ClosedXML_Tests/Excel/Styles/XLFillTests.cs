@@ -38,5 +38,28 @@ namespace ClosedXML_Tests.Excel
             var fill2 = new XLFill {PatternBackgroundColor = XLColor.Red};
             Assert.IsFalse(fill1.Equals(fill2));
         }
+
+        [Test]
+        public void BackgroundWithConditionalFormat()
+        {
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.AddWorksheet("Test");
+            worksheet.Cell(2, 2).SetValue("Text");
+            var cf = worksheet.Cell(2, 2).AddConditionalFormat();
+            var style = cf.WhenNotBlank();
+            style
+                    .Border.SetOutsideBorder(XLBorderStyleValues.Thick)
+                    .Border.SetOutsideBorderColor(XLColor.Blue);
+
+            Assert.AreEqual(style.Border.BottomBorder, XLBorderStyleValues.Thick);
+            Assert.AreEqual(style.Border.TopBorder, XLBorderStyleValues.Thick);
+            Assert.AreEqual(style.Border.LeftBorder, XLBorderStyleValues.Thick);
+            Assert.AreEqual(style.Border.RightBorder, XLBorderStyleValues.Thick);
+
+            Assert.AreEqual(style.Border.BottomBorderColor, XLColor.Blue);
+            Assert.AreEqual(style.Border.TopBorderColor, XLColor.Blue);
+            Assert.AreEqual(style.Border.LeftBorderColor, XLColor.Blue);
+            Assert.AreEqual(style.Border.RightBorderColor, XLColor.Blue);
+        }
     }
 }
