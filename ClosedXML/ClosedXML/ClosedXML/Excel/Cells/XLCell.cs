@@ -140,6 +140,17 @@
             }
         }
 
+        public IXLDataValidation NewDataValidation
+        {
+            get
+            {
+                using (var asRange = AsRange())
+                {
+                    return asRange.NewDataValidation; // Call the data validation without breaking it into pieces
+                }
+            }
+        }
+
         public XLDataValidation DataValidation
         {
             get
@@ -159,9 +170,6 @@
                                 return d as XLDataValidation;
                         }
                     }
-                    //return
-                    //    Worksheet.DataValidations.First(
-                    //        d => d.Ranges.Count == 1 && d.Ranges.Single().RangeAddress.ToStringRelative().Equals(asRange.RangeAddress.ToStringRelative())) as XLDataValidation;
                 }
                 return null;
             }

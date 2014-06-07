@@ -250,6 +250,7 @@ namespace ClosedXML.Excel
         IXLWorksheet Worksheet { get; }
 
         IXLDataValidation DataValidation { get; }
+        IXLDataValidation NewDataValidation { get; }
         IXLDataValidation SetDataValidation();
 
 

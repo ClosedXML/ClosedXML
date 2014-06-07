@@ -95,6 +95,18 @@ namespace ClosedXML.Excel
             get { return RangeAddress.Worksheet; }
         }
 
+        public XLDataValidation NewDataValidation
+        {
+            get
+            {
+                var newRanges = new XLRanges { AsRange() };
+                var dataValidation = new XLDataValidation(newRanges);
+                
+                Worksheet.DataValidations.Add(dataValidation);
+                return dataValidation;
+            }
+        }
+
         public XLDataValidation DataValidation
         {
             get

@@ -73,7 +73,7 @@ namespace ClosedXML.Excel
                         if (_fieldNames.ContainsKey(name))
                             throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
 
-                        _fieldNames.Add(name, new XLTableField(this) {Index = cellPos++, Name = name});
+                        _fieldNames.Add(name, new XLTableField(this) {Index = cellPos++ });
                     }
                 }
                 else
@@ -87,7 +87,7 @@ namespace ClosedXML.Excel
                         {
                             var name = "Column" + i;
 
-                            _fieldNames.Add(name, new XLTableField(this) {Index = i - 1, Name = name});
+                            _fieldNames.Add(name, new XLTableField(this) {Index = i - 1 });
                         }
                     }
                 }
