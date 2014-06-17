@@ -319,9 +319,22 @@
 
         public string GetFormattedString()
         {
-            if (FormulaA1.Length > 0) return String.Empty;
-
-            var cValue = _cellValue;
+            String cValue;
+            if (FormulaA1.Length > 0)
+            {
+                try
+                {
+                    cValue = GetString();
+                }
+                catch 
+                {
+                    cValue = String.Empty;
+                }
+            }
+            else
+            {
+                cValue = _cellValue;
+            }
 
             if (_dataType == XLCellValues.Boolean)
                 return (cValue != "0").ToString();
