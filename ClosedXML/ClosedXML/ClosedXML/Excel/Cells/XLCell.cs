@@ -1620,7 +1620,7 @@
                     if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                         Style.Alignment.WrapText = true;
                 }
-                else if (value is TimeSpan || (TimeSpan.TryParse(val, out tsTest) && !Double.TryParse(val, out dTest)))
+                else if (value is TimeSpan || (!Double.TryParse(val, out dTest) && TimeSpan.TryParse(val, out tsTest)))
                 {
                     _dataType = XLCellValues.TimeSpan;
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)

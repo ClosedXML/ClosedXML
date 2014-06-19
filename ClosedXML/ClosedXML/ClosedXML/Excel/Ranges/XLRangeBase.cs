@@ -749,27 +749,23 @@ namespace ClosedXML.Excel
 
         public XLCell Cell(XLAddress cellAddressInRange)
         {
-            //var absoluteAddress = cellAddressInRange + RangeAddress.FirstAddress - 1;
-            var absoluteAddress = new XLAddress(cellAddressInRange.Worksheet,
-                                 cellAddressInRange.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
-                                 cellAddressInRange.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
-                                 cellAddressInRange.FixedRow,
-                                 cellAddressInRange.FixedColumn);
+            Int32 absRow = cellAddressInRange.RowNumber + RangeAddress.FirstAddress.RowNumber - 1;
+            Int32 absColumn = cellAddressInRange.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1;
 
-            if (absoluteAddress.RowNumber <= 0 || absoluteAddress.RowNumber > XLHelper.MaxRowNumber)
+            if (absRow <= 0 || absRow > XLHelper.MaxRowNumber)
             {
                 throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
                                                                  XLHelper.MaxRowNumber));
             }
 
-            if (absoluteAddress.ColumnNumber <= 0 || absoluteAddress.ColumnNumber > XLHelper.MaxColumnNumber)
+            if (absColumn <= 0 || absColumn > XLHelper.MaxColumnNumber)
             {
                 throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}",
                                                                  XLHelper.MaxColumnNumber));
             }
 
-            var cell = Worksheet.Internals.CellsCollection.GetCell(absoluteAddress.RowNumber,
-                                                                   absoluteAddress.ColumnNumber);
+            var cell = Worksheet.Internals.CellsCollection.GetCell(absRow,
+                                                                   absColumn);
 
             if (cell != null)
                 return cell;
@@ -777,20 +773,25 @@ namespace ClosedXML.Excel
             //var style = Style;
             Int32 styleId = GetStyleId();
             Int32 worksheetStyleId = Worksheet.GetStyleId();
-            
+
             if (styleId == worksheetStyleId)
             {
                 XLRow row;
                 XLColumn column;
-                if (Worksheet.Internals.RowsCollection.TryGetValue(absoluteAddress.RowNumber, out row)
+                if (Worksheet.Internals.RowsCollection.TryGetValue(absRow, out row)
                     && row.GetStyleId() != worksheetStyleId)
                     styleId = row.GetStyleId();
-                else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absoluteAddress.ColumnNumber, out column)
+                else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absColumn, out column)
                     && column.GetStyleId() != worksheetStyleId)
                     styleId = column.GetStyleId();
             }
+            var absoluteAddress = new XLAddress(cellAddressInRange.Worksheet,
+                                 cellAddressInRange.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
+                                 cellAddressInRange.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
+                                 cellAddressInRange.FixedRow,
+                                 cellAddressInRange.FixedColumn);
             var newCell = new XLCell(Worksheet, absoluteAddress, styleId);
-            Worksheet.Internals.CellsCollection.Add(absoluteAddress.RowNumber, absoluteAddress.ColumnNumber, newCell);
+            Worksheet.Internals.CellsCollection.Add(absRow, absColumn, newCell);
             return newCell;
         }
 

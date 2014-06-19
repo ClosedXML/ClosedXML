@@ -15,42 +15,29 @@ namespace ClosedXML_Sandbox
     {
         private static void Main(string[] args)
         {
-            var timer = new Stopwatch();
-            var timerAll = new Stopwatch();
-            timerAll.Start();
-            using (XLWorkbook wb = new XLWorkbook(XLEventTracking.Disabled))
+            var wb = new XLWorkbook();
+            foreach (var sheetNum in Enumerable.Range(1, 1))
             {
-                using (var ws = wb.AddWorksheet("MergeCellsWorksheet"))
-                {
-                    int totalRows = 5000;
-
-                    // Create some ranges
-                    ws.Cell("AO1").Value = "A";
-                    ws.Cell("AP1").Value = "B";
-                    ws.Cell("AQ1").Value = "C";
-                    ws.Cell("AR1").Value = "D";
-                    ws.Cell("AS1").Value = "E";
-                    ws.Cell("AT1").Value = "1";
-                    ws.Cell("AU1").Value = "2";
-
-                    var listRange = ws.Range("AO1:AU1");
-
-                    timer.Start();
-                    for (int i = 1; i <= totalRows; i++)
-                    {
-                        ws.Cell(i, 1).NewDataValidation.List(listRange);
-                        Console.Clear();
-                    }
-                    timer.Stop();
-                }
-
-                wb.SaveAs(@"C:\temp\test.xlsx");
+                CreateSheet(wb, sheetNum);
+                Console.WriteLine("Sheet " + sheetNum);
             }
-            timerAll.Stop();
-            Console.WriteLine();
-            Console.WriteLine("Add validation Took {0}s", timer.Elapsed.TotalSeconds);
-            Console.WriteLine("Complete Took {0}s", timerAll.Elapsed.TotalSeconds);
-            Console.ReadKey();
+            wb.SaveAs(@"c:\temp\saved.xlsx");
+            Console.WriteLine("Done");
+        }
+
+        private static void CreateSheet(XLWorkbook wb, Int32 sheetNum)
+        {
+            using (var ws = wb.AddWorksheet("Sheet " + sheetNum))
+            {
+                foreach (var ro in Enumerable.Range(1, 1000))
+                {
+                    foreach (var co in Enumerable.Range(1, 100))
+                    {
+                        ws.Cell(ro, co).Value = ro + co;
+                    }
+                }
+                ws.Dispose();
+            }
         }
 
     }
