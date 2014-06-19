@@ -786,8 +786,8 @@ namespace ClosedXML.Excel
                     styleId = column.GetStyleId();
             }
             var absoluteAddress = new XLAddress(cellAddressInRange.Worksheet,
-                                 cellAddressInRange.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
-                                 cellAddressInRange.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
+                                 absRow,
+                                 absColumn,
                                  cellAddressInRange.FixedRow,
                                  cellAddressInRange.FixedColumn);
             var newCell = new XLCell(Worksheet, absoluteAddress, styleId);
