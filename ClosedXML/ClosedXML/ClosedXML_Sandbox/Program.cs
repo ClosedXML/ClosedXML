@@ -16,29 +16,13 @@ namespace ClosedXML_Sandbox
         private static void Main(string[] args)
         {
             var wb = new XLWorkbook();
-            foreach (var sheetNum in Enumerable.Range(1, 1))
-            {
-                CreateSheet(wb, sheetNum);
-                Console.WriteLine("Sheet " + sheetNum);
-            }
+            var ws = wb.AddWorksheet("Sheet");
+            ws.FirstCell().SetValue(1)
+                .CellBelow().SetFormulaA1("IF(A1>0,Yes,No)") // Invalid
+                .CellBelow().SetFormulaA1("IF(A1>0,\"Yes\",\"No\")") // OK
+                .CellBelow().SetFormulaA1("IF(A1>0,TRUE,FALSE)"); // OK
             wb.SaveAs(@"c:\temp\saved.xlsx");
             Console.WriteLine("Done");
         }
-
-        private static void CreateSheet(XLWorkbook wb, Int32 sheetNum)
-        {
-            using (var ws = wb.AddWorksheet("Sheet " + sheetNum))
-            {
-                foreach (var ro in Enumerable.Range(1, 1000))
-                {
-                    foreach (var co in Enumerable.Range(1, 100))
-                    {
-                        ws.Cell(ro, co).Value = ro + co;
-                    }
-                }
-                ws.Dispose();
-            }
-        }
-
     }
 }
