@@ -1856,16 +1856,11 @@ namespace ClosedXML.Excel
             var pageFields = new PageFields {Count = (uint)pt.ReportFilters.Count()};
 
             var pivotFields = new PivotFields {Count = Convert.ToUInt32(pt.SourceRange.ColumnCount())};
-            foreach (var xlpf in pt.Fields)
+            foreach (var xlpf in pt.Fields.OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName) ? pt.RowLabels.IndexOf(f) : Int32.MaxValue ))
             {
-                var pf = new PivotField {ShowAll = false, Name = xlpf.CustomName};
-
-
                 if (pt.RowLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
                 {
-                    pf.Axis = PivotTableAxisValues.AxisRow;
-
-                    var f = new Field { Index = pt.RowLabels.IndexOf(xlpf) };
+                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     rowFields.AppendChild(f);
 
                     for (var i = 0; i < xlpf.SharedStrings.Count; i++)
@@ -1881,9 +1876,7 @@ namespace ClosedXML.Excel
                 }
                 else if (pt.ColumnLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
                 {
-                    pf.Axis = PivotTableAxisValues.AxisColumn;
-
-                    var f = new Field { Index = pt.ColumnLabels.IndexOf(xlpf) };
+                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     columnFields.AppendChild(f);
 
                     for (var i = 0; i < xlpf.SharedStrings.Count; i++)
@@ -1896,6 +1889,20 @@ namespace ClosedXML.Excel
                     var rowItemTotal = new RowItem {ItemType = ItemValues.Grand};
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     columnItems.AppendChild(rowItemTotal);
+                }
+            }
+
+            foreach (var xlpf in pt.Fields)
+            {
+                var pf = new PivotField {ShowAll = false, Name = xlpf.CustomName};
+
+                if (pt.RowLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                {
+                    pf.Axis = PivotTableAxisValues.AxisRow;
+                }
+                else if (pt.ColumnLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                {
+                    pf.Axis = PivotTableAxisValues.AxisColumn;
                 }
                 else if (pt.ReportFilters.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
                 {
