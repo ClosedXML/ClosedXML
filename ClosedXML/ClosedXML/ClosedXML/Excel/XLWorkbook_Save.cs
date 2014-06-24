@@ -3599,7 +3599,7 @@ namespace ClosedXML.Excel
             var noRows = (sheetData.Elements<Row>().FirstOrDefault() == null);
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
-                Row row; // = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex.Value == (UInt32)distinctRow);
+                Row row;
                 if (sheetDataRows.ContainsKey(distinctRow))
                     row = sheetDataRows[distinctRow];
                 else

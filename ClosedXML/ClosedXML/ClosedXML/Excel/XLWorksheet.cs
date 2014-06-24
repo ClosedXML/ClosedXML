@@ -1396,7 +1396,6 @@ namespace ClosedXML.Excel
 
             var namedRanges = Workbook.NamedRanges.FirstOrDefault(n =>
                                                       String.Compare(n.Name, cellAddressInRange, true) == 0
-                                                      && n.Ranges.First().Worksheet == this
                                                       && n.Ranges.Count == 1);
             if (namedRanges == null || !namedRanges.Ranges.Any()) return null;
             
@@ -1421,8 +1420,8 @@ namespace ClosedXML.Excel
 
             var namedRanges = Workbook.NamedRanges.FirstOrDefault(n =>
                                                        String.Compare(n.Name, rangeAddressStr, true) == 0
-                                                       && n.Ranges.First().Worksheet == this
-                                                       && n.Ranges.Count == 1);
+                                                       && n.Ranges.Count == 1
+                                                       );
             if (namedRanges == null || !namedRanges.Ranges.Any()) return null;
             return (XLRange)namedRanges.Ranges.First();
         }
