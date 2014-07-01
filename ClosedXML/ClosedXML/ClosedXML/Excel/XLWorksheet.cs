@@ -561,12 +561,10 @@ namespace ClosedXML.Excel
         public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position)
         {
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
-
+            Internals.ColumnsCollection.ForEach(kp => targetSheet.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
+            Internals.RowsCollection.ForEach(kp => targetSheet.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
             Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, false));
             DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv)));
-            Internals.ColumnsCollection.ForEach(
-                kp => targetSheet.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
-            Internals.RowsCollection.ForEach(kp => targetSheet.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
             targetSheet.Visibility = Visibility;
             targetSheet.ColumnWidth = ColumnWidth;
             targetSheet.ColumnWidthChanged = ColumnWidthChanged;
