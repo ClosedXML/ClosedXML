@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
         private XLColor(XLThemeColor themeColor)
         {
             _themeColor = themeColor;
-            _themeTint = 1;
+            _themeTint = 0;
             _hashCode = 7 ^ _themeColor.GetHashCode() ^ _themeTint.GetHashCode();
             HasValue = true;
             _colorType = XLColorType.Theme;

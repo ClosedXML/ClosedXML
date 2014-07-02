@@ -15,20 +15,11 @@ namespace ClosedXML_Sandbox
     {
         private static void Main(string[] args)
         {
-            var wbSource = new XLWorkbook(@"c:\temp\original.xlsm");
+            
             var wbTarget = new XLWorkbook();
-
-            foreach (var ws in wbSource.Worksheets)
-            {
-                wbTarget.AddWorksheet(ws);
-            }
-
-            foreach (var r in wbSource.NamedRanges)
-            {
-                wbTarget.NamedRanges.Add(r.Name, r.Ranges);
-            }
-
-            wbTarget.SaveAs(@"c:\temp\saved.xlsm");
+            var ws = wbTarget.AddWorksheet("Sheet1");
+            ws.FirstCell().Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1);
+            wbTarget.SaveAs(@"c:\temp\saved.xlsx");
             Console.WriteLine("Done");
             //Console.ReadLine();
         }

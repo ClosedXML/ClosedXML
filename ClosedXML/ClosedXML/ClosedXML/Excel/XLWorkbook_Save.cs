@@ -2967,7 +2967,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     foregroundColor.Theme = (UInt32)fillInfo.Fill.PatternColor.ThemeColor;
-                    if (fillInfo.Fill.PatternColor.ThemeTint != 1)
+                    if (fillInfo.Fill.PatternColor.ThemeTint != 0)
                         foregroundColor.Tint = fillInfo.Fill.PatternColor.ThemeTint;
                 }
                 patternFill.AppendChild(foregroundColor);
@@ -2983,7 +2983,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     backgroundColor.Theme = (UInt32)fillInfo.Fill.PatternBackgroundColor.ThemeColor;
-                    if (fillInfo.Fill.PatternBackgroundColor.ThemeTint != 1)
+                    if (fillInfo.Fill.PatternBackgroundColor.ThemeTint != 0)
                         backgroundColor.Tint = fillInfo.Fill.PatternBackgroundColor.ThemeTint;
                 }
                 patternFill.AppendChild(backgroundColor);
@@ -3108,7 +3108,7 @@ namespace ClosedXML.Excel
             else
             {
                 color.Theme = (UInt32)xlColor.ThemeColor;
-                if (xlColor.ThemeTint != 1)
+                if (xlColor.ThemeTint != 0)
                     color.Tint = xlColor.ThemeTint;
             }
             return color;
@@ -3124,7 +3124,7 @@ namespace ClosedXML.Excel
             else
             {
                 color.Theme = (UInt32)xlColor.ThemeColor;
-                if (xlColor.ThemeTint != 1)
+                if (xlColor.ThemeTint != 0)
                     color.Tint = xlColor.ThemeTint;
             }
             return color;
