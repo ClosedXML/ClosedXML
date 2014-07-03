@@ -15,13 +15,14 @@ namespace ClosedXML_Sandbox
     {
         private static void Main(string[] args)
         {
-            
-            var wbTarget = new XLWorkbook();
-            var ws = wbTarget.AddWorksheet("Sheet1");
-            ws.FirstCell().Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1);
-            wbTarget.SaveAs(@"c:\temp\saved.xlsx");
+
+            var wb = new XLWorkbook(@"c:\temp\ColorBook.xlsx");
+            var ws = wb.Worksheet("Sheet1");
+            var fontColor = ws.Cell("C9").Style.Font.FontColor;
+            Console.WriteLine("The result for cell is " + fontColor.Color.ToString());
+            wb.SaveAs(@"c:\temp\saved.xlsx");
             Console.WriteLine("Done");
-            //Console.ReadLine();
+            Console.ReadLine();
         }
     }
 }

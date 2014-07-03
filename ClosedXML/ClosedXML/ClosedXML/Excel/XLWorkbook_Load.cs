@@ -186,7 +186,7 @@ namespace ClosedXML.Excel
                         }
                         else if (reader.ElementType == typeof(Columns))
                             LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
-                                        (Columns)reader.LoadCurrentElement());
+                                        (Columns)reader.LoadCurrentElement(), styleList);
                         else if (reader.ElementType == typeof(Row))
                         {
                             lastRow = 0;
@@ -738,7 +738,9 @@ namespace ClosedXML.Excel
             var xlCell = ws.CellFast(cellReference);
 
             if (styleList.ContainsKey(styleIndex))
+            {
                 xlCell.Style = styleList[styleIndex];
+            }
             else
             {
                 ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
@@ -1039,7 +1041,17 @@ namespace ClosedXML.Excel
             {
                 Int32 styleIndex = row.StyleIndex != null ? Int32.Parse(row.StyleIndex.InnerText) : -1;
                 if (styleIndex > 0)
-                    ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
+                {
+                    if (styleList.ContainsKey(styleIndex))
+                    {
+                        xlRow.Style = styleList[styleIndex];
+                    }
+                    else
+                    {
+                        ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
+                        styleList.Add(styleIndex, xlRow.Style);
+                    }
+                }
                 else
                 {
                     xlRow.Style = DefaultStyle;
@@ -1053,7 +1065,7 @@ namespace ClosedXML.Excel
         }
 
         private void LoadColumns(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders,
-                                 Fonts fonts, XLWorksheet ws, Columns columns)
+                                 Fonts fonts, XLWorksheet ws, Columns columns, Dictionary<Int32, IXLStyle> styleList)
         {
             if (columns == null) return;
 
@@ -1098,9 +1110,21 @@ namespace ClosedXML.Excel
 
                 Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
                 if (styleIndex > 0)
-                    ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
+                {
+                    if (styleList.ContainsKey(styleIndex))
+                    {
+                        xlColumns.Style = styleList[styleIndex];
+                    }
+                    else
+                    {
+                        ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
+                        styleList.Add(styleIndex, xlColumns.Style);
+                    }
+                }
                 else
+                {
                     xlColumns.Style = DefaultStyle;
+                }
             }
         }
 
