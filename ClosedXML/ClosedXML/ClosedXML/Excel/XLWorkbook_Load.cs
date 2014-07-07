@@ -186,7 +186,7 @@ namespace ClosedXML.Excel
                         }
                         else if (reader.ElementType == typeof(Columns))
                             LoadColumns(s, numberingFormats, fills, borders, fonts, ws,
-                                        (Columns)reader.LoadCurrentElement(), styleList);
+                                        (Columns)reader.LoadCurrentElement());
                         else if (reader.ElementType == typeof(Row))
                         {
                             lastRow = 0;
@@ -1042,15 +1042,7 @@ namespace ClosedXML.Excel
                 Int32 styleIndex = row.StyleIndex != null ? Int32.Parse(row.StyleIndex.InnerText) : -1;
                 if (styleIndex > 0)
                 {
-                    if (styleList.ContainsKey(styleIndex))
-                    {
-                        xlRow.Style = styleList[styleIndex];
-                    }
-                    else
-                    {
                         ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
-                        styleList.Add(styleIndex, xlRow.Style);
-                    }
                 }
                 else
                 {
@@ -1065,7 +1057,7 @@ namespace ClosedXML.Excel
         }
 
         private void LoadColumns(Stylesheet s, NumberingFormats numberingFormats, Fills fills, Borders borders,
-                                 Fonts fonts, XLWorksheet ws, Columns columns, Dictionary<Int32, IXLStyle> styleList)
+                                 Fonts fonts, XLWorksheet ws, Columns columns)
         {
             if (columns == null) return;
 
@@ -1111,15 +1103,7 @@ namespace ClosedXML.Excel
                 Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
                 if (styleIndex > 0)
                 {
-                    if (styleList.ContainsKey(styleIndex))
-                    {
-                        xlColumns.Style = styleList[styleIndex];
-                    }
-                    else
-                    {
-                        ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
-                        styleList.Add(styleIndex, xlColumns.Style);
-                    }
+                    ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
                 }
                 else
                 {
