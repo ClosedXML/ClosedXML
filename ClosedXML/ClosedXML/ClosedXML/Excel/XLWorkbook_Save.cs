@@ -192,16 +192,6 @@ namespace ClosedXML.Excel
                 {
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
                 }
-
-
-                //DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>("rId1");
-                //GenerateDrawingsPartContent(drawingsPart, worksheet);
-
-                //foreach (var chart in worksheet.Charts)
-                //{
-                //    ChartPart chartPart = drawingsPart.AddNewPart<ChartPart>("rId1");
-                //    GenerateChartPartContent(chartPart, (XLChart)chart);
-                //}
             }
 
             GenerateCalculationChainPartContent(workbookPart, context);
