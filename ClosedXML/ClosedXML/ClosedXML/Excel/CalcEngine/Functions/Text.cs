@@ -180,7 +180,9 @@ namespace ClosedXML.Excel.CalcEngine
         }
         static object Trim(List<Expression> p)
         {
-            return ((string)p[0]).Trim();
+            //Should not trim non breaking space
+            //See http://office.microsoft.com/en-us/excel-help/trim-function-HP010062581.aspx
+            return ((string)p[0]).Trim(' ');
         }
         static object Upper(List<Expression> p)
         {

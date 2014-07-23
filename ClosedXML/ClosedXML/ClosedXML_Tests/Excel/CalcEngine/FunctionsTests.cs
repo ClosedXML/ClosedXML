@@ -586,5 +586,15 @@ namespace ClosedXML_Tests.Excel.DataValidations
             object r = ws.Cell("C1").Value;
             Assert.AreEqual("The total value is: 4", r.ToString());
         }
+
+        [Test]
+        public void Trim()
+        {
+            Assert.AreEqual("Test", XLWorkbook.EvaluateExpr("Trim(\"Test    \")"));
+
+            //Should not trim non breaking space
+            //See http://office.microsoft.com/en-us/excel-help/trim-function-HP010062581.aspx
+            Assert.AreEqual("Test\u00A0", XLWorkbook.EvaluateExpr("Trim(\"Test\u00A0 \")"));
+        }
     }
 }
