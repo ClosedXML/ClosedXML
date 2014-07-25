@@ -370,7 +370,7 @@ namespace ClosedXML.Excel
                                  clearOptions == XLClearOptions.ContentsAndFormats;
             foreach (var cell in CellsUsed(includeFormats))
             {
-                cell.Clear(clearOptions);
+                cell.Clear(clearOptions, true);
             }
 
             if (includeFormats)
