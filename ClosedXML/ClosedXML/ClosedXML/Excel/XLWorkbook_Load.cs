@@ -306,8 +306,7 @@ namespace ClosedXML.Excel
                     var comments = root.GetFirstChild<CommentList>().ChildElements;
 
                     // **** MAYBE FUTURE SHAPE SIZE SUPPORT
-                    // var shapes = wsPart.VmlDrawingParts.SelectMany(p => new System.Xml.XmlTextReader(p.GetStream()).Read()
-                    XDocument xdoc = XDocumentExtensions.Load(wsPart.VmlDrawingParts.First().GetStream(FileMode.Open));
+                    XDocument xdoc = GetCommentVmlFile(wsPart);
                     
                     foreach (Comment c in comments) {
                         // find cell by reference
@@ -326,13 +325,9 @@ namespace ClosedXML.Excel
                             LoadFont(runProperties, rt);
                         }
 
-                        var xml = xdoc.Root.Element("xml");
-                        XElement shape;
-                        if (xml != null)
-                            shape = xml.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202");
-                        else
-                            shape = xdoc.Root.Elements().First(e => (string)e.Attribute("type") == "#_x0000_t202" || (string)e.Attribute("type") == "#_xssf_cell_comment");
-
+                      
+                        XElement shape = GetCommentShape(xdoc);
+                       
                         LoadShapeProperties<IXLComment>(xlComment, shape);
 
                         var clientData = shape.Elements().First(e => e.Name.LocalName == "ClientData");
@@ -376,6 +371,46 @@ namespace ClosedXML.Excel
             }
             LoadDefinedNames(workbook);
         }
+
+        #region Comment Helpers
+
+        private XDocument GetCommentVmlFile(WorksheetPart wsPart)
+        {
+            XDocument xdoc = null;
+
+            foreach (var vmlPart in wsPart.VmlDrawingParts)
+            {
+                xdoc = XDocumentExtensions.Load(vmlPart.GetStream(FileMode.Open));
+
+                //Probe for comments
+                if (xdoc.Root == null) continue;
+                var shape = GetCommentShape(xdoc);
+                if (shape != null) break;
+            }
+
+            if (xdoc == null) throw new Exception("Could not load comments file");
+            return xdoc;
+        }
+
+        private static XElement GetCommentShape(XDocument xdoc)
+        {
+            var xml = xdoc.Root.Element("xml");
+
+            XElement shape;
+            if (xml != null)
+                shape =
+                    xml.Elements().FirstOrDefault(e => (string) e.Attribute("type") == XLConstants.Comment.ShapeTypeId);
+            else
+                shape = xdoc.Root.Elements().FirstOrDefault(e =>
+                                                            (string) e.Attribute("type") ==
+                                                            XLConstants.Comment.ShapeTypeId ||
+                                                            (string) e.Attribute("type") ==
+                                                            XLConstants.Comment.AlternateShapeTypeId);
+            return shape;
+        }
+
+        #endregion
+
 
         private String GetTableColumnName(string name)
         {
