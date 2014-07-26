@@ -738,7 +738,9 @@ namespace ClosedXML.Excel
             var xlCell = ws.CellFast(cellReference);
 
             if (styleList.ContainsKey(styleIndex))
+            {
                 xlCell.Style = styleList[styleIndex];
+            }
             else
             {
                 ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
@@ -1039,7 +1041,9 @@ namespace ClosedXML.Excel
             {
                 Int32 styleIndex = row.StyleIndex != null ? Int32.Parse(row.StyleIndex.InnerText) : -1;
                 if (styleIndex > 0)
-                    ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
+                {
+                        ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
+                }
                 else
                 {
                     xlRow.Style = DefaultStyle;
@@ -1098,9 +1102,13 @@ namespace ClosedXML.Excel
 
                 Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
                 if (styleIndex > 0)
+                {
                     ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
+                }
                 else
+                {
                     xlColumns.Style = DefaultStyle;
+                }
             }
         }
 

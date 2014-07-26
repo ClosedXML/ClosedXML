@@ -192,16 +192,6 @@ namespace ClosedXML.Excel
                 {
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
                 }
-
-
-                //DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>("rId1");
-                //GenerateDrawingsPartContent(drawingsPart, worksheet);
-
-                //foreach (var chart in worksheet.Charts)
-                //{
-                //    ChartPart chartPart = drawingsPart.AddNewPart<ChartPart>("rId1");
-                //    GenerateChartPartContent(chartPart, (XLChart)chart);
-                //}
             }
 
             GenerateCalculationChainPartContent(workbookPart, context);
@@ -1856,16 +1846,11 @@ namespace ClosedXML.Excel
             var pageFields = new PageFields {Count = (uint)pt.ReportFilters.Count()};
 
             var pivotFields = new PivotFields {Count = Convert.ToUInt32(pt.SourceRange.ColumnCount())};
-            foreach (var xlpf in pt.Fields)
+            foreach (var xlpf in pt.Fields.OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName) ? pt.RowLabels.IndexOf(f) : Int32.MaxValue ))
             {
-                var pf = new PivotField {ShowAll = false, Name = xlpf.CustomName};
-
-
                 if (pt.RowLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
                 {
-                    pf.Axis = PivotTableAxisValues.AxisRow;
-
-                    var f = new Field { Index = pt.RowLabels.IndexOf(xlpf) };
+                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     rowFields.AppendChild(f);
 
                     for (var i = 0; i < xlpf.SharedStrings.Count; i++)
@@ -1881,9 +1866,7 @@ namespace ClosedXML.Excel
                 }
                 else if (pt.ColumnLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
                 {
-                    pf.Axis = PivotTableAxisValues.AxisColumn;
-
-                    var f = new Field { Index = pt.ColumnLabels.IndexOf(xlpf) };
+                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     columnFields.AppendChild(f);
 
                     for (var i = 0; i < xlpf.SharedStrings.Count; i++)
@@ -1896,6 +1879,20 @@ namespace ClosedXML.Excel
                     var rowItemTotal = new RowItem {ItemType = ItemValues.Grand};
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     columnItems.AppendChild(rowItemTotal);
+                }
+            }
+
+            foreach (var xlpf in pt.Fields)
+            {
+                var pf = new PivotField {ShowAll = false, Name = xlpf.CustomName};
+
+                if (pt.RowLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                {
+                    pf.Axis = PivotTableAxisValues.AxisRow;
+                }
+                else if (pt.ColumnLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                {
+                    pf.Axis = PivotTableAxisValues.AxisColumn;
                 }
                 else if (pt.ReportFilters.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
                 {
@@ -2960,7 +2957,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     foregroundColor.Theme = (UInt32)fillInfo.Fill.PatternColor.ThemeColor;
-                    if (fillInfo.Fill.PatternColor.ThemeTint != 1)
+                    if (fillInfo.Fill.PatternColor.ThemeTint != 0)
                         foregroundColor.Tint = fillInfo.Fill.PatternColor.ThemeTint;
                 }
                 patternFill.AppendChild(foregroundColor);
@@ -2976,7 +2973,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     backgroundColor.Theme = (UInt32)fillInfo.Fill.PatternBackgroundColor.ThemeColor;
-                    if (fillInfo.Fill.PatternBackgroundColor.ThemeTint != 1)
+                    if (fillInfo.Fill.PatternBackgroundColor.ThemeTint != 0)
                         backgroundColor.Tint = fillInfo.Fill.PatternBackgroundColor.ThemeTint;
                 }
                 patternFill.AppendChild(backgroundColor);
@@ -3101,7 +3098,7 @@ namespace ClosedXML.Excel
             else
             {
                 color.Theme = (UInt32)xlColor.ThemeColor;
-                if (xlColor.ThemeTint != 1)
+                if (xlColor.ThemeTint != 0)
                     color.Tint = xlColor.ThemeTint;
             }
             return color;
@@ -3117,7 +3114,7 @@ namespace ClosedXML.Excel
             else
             {
                 color.Theme = (UInt32)xlColor.ThemeColor;
-                if (xlColor.ThemeTint != 1)
+                if (xlColor.ThemeTint != 0)
                     color.Tint = xlColor.ThemeTint;
             }
             return color;
@@ -3599,7 +3596,7 @@ namespace ClosedXML.Excel
             var noRows = (sheetData.Elements<Row>().FirstOrDefault() == null);
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
-                Row row; // = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex.Value == (UInt32)distinctRow);
+                Row row;
                 if (sheetDataRows.ContainsKey(distinctRow))
                     row = sheetDataRows[distinctRow];
                 else

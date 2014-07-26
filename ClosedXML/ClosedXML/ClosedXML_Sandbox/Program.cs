@@ -15,12 +15,14 @@ namespace ClosedXML_Sandbox
     {
         private static void Main(string[] args)
         {
-            var wb = new XLWorkbook(@"c:\temp\sopos.xlsx");
-            var ws = wb.Worksheet("3");
-            Console.WriteLine(ws.Cell("E22").Value);
-            //wb.SaveAs(@"c:\temp\saved.xlsx");
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet");
+            ws.FirstCell().SetValue(1)
+                .CellBelow().SetFormulaA1("IF(A1>0,Yes,No)") // Invalid
+                .CellBelow().SetFormulaA1("IF(A1>0,\"Yes\",\"No\")") // OK
+                .CellBelow().SetFormulaA1("IF(A1>0,TRUE,FALSE)"); // OK
+            wb.SaveAs(@"c:\temp\saved.xlsx");
             Console.WriteLine("Done");
-            Console.ReadKey();
         }
     }
 }

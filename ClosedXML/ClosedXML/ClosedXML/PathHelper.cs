@@ -232,17 +232,6 @@ namespace ClosedXML
             return path;
         }
 
-        public static void OpenFileFolder(string filePath)
-        {
-            string cmdLine = string.Format("/select,\"{0}\"", filePath);
-            Process.Start(@"explorer.exe", cmdLine);
-        }
-
-        public static void OpenFile(string filePath)
-        {
-            Process.Start(filePath);
-        }
-
         [Flags]
         public enum PathTypes
         {

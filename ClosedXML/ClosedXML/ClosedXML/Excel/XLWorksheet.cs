@@ -561,12 +561,10 @@ namespace ClosedXML.Excel
         public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position)
         {
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
-
+            Internals.ColumnsCollection.ForEach(kp => targetSheet.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
+            Internals.RowsCollection.ForEach(kp => targetSheet.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
             Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, false));
             DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv)));
-            Internals.ColumnsCollection.ForEach(
-                kp => targetSheet.Internals.ColumnsCollection.Add(kp.Key, new XLColumn(kp.Value)));
-            Internals.RowsCollection.ForEach(kp => targetSheet.Internals.RowsCollection.Add(kp.Key, new XLRow(kp.Value)));
             targetSheet.Visibility = Visibility;
             targetSheet.ColumnWidth = ColumnWidth;
             targetSheet.ColumnWidthChanged = ColumnWidthChanged;
@@ -1396,7 +1394,6 @@ namespace ClosedXML.Excel
 
             var namedRanges = Workbook.NamedRanges.FirstOrDefault(n =>
                                                       String.Compare(n.Name, cellAddressInRange, true) == 0
-                                                      && n.Ranges.First().Worksheet == this
                                                       && n.Ranges.Count == 1);
             if (namedRanges == null || !namedRanges.Ranges.Any()) return null;
             
@@ -1421,8 +1418,8 @@ namespace ClosedXML.Excel
 
             var namedRanges = Workbook.NamedRanges.FirstOrDefault(n =>
                                                        String.Compare(n.Name, rangeAddressStr, true) == 0
-                                                       && n.Ranges.First().Worksheet == this
-                                                       && n.Ranges.Count == 1);
+                                                       && n.Ranges.Count == 1
+                                                       );
             if (namedRanges == null || !namedRanges.Ranges.Any()) return null;
             return (XLRange)namedRanges.Ranges.First();
         }

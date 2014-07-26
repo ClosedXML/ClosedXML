@@ -113,7 +113,13 @@ namespace ClosedXML.Excel
             if (rowsCollection.TryGetValue(row, out columnsCollection))
             {
                 columnsCollection.Remove(column);
+                if (columnsCollection.Count == 0)
+                {
+                    rowsCollection.Remove(row);
+                }
             }
+
+            
         }
 
         internal IEnumerable<XLCell> GetCells(Int32 rowStart, Int32 columnStart,
