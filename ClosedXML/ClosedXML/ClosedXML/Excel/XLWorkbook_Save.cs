@@ -2888,6 +2888,8 @@ namespace ClosedXML.Excel
             }
 
             return nb.Equals(xlBorder);
+
+
         }
 
         private Dictionary<IXLFill, FillInfo> ResolveFills(WorkbookStylesPart workbookStylesPart,
@@ -3676,7 +3678,9 @@ namespace ClosedXML.Excel
                 if (!xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow)) continue;
 
                 var isNewRow = !row.Elements<Cell>().Any();
-                var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference.Value), c => c);
+                lastCell = 0;
+                var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
+                    ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow) : c.CellReference.Value), c => c);
                 foreach (var opCell in xlWorksheet.Internals.CellsCollection.RowsCollection[distinctRow].Values
                     .OrderBy(c => c.Address.ColumnNumber)
                     .Select(c => c))

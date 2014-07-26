@@ -110,17 +110,20 @@ namespace ClosedXML.Excel
                     Properties.Manager = efp.Properties.GetFirstChild<Manager>().Text;
             }
 
-            var workbookStylesPart = dSpreadsheet.WorkbookPart.WorkbookStylesPart;
-            var s = workbookStylesPart.Stylesheet;
+            Stylesheet s = null;
+            if (dSpreadsheet.WorkbookPart.WorkbookStylesPart != null &&
+                dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet != null)
+            {
+                s = dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet;
+            }
 
-            var numberingFormats = s.NumberingFormats;
-            //Int32 fillCount = (Int32)s.Fills.Count.Value;
-            var fills = s.Fills;
-            var borders = s.Borders;
-            var fonts = s.Fonts;
+            NumberingFormats numberingFormats = s == null ? null : s.NumberingFormats;
+            Fills fills = s == null ? null : s.Fills;
+            Borders borders = s == null ? null : s.Borders;
+            Fonts fonts = s == null ? null : s.Fonts;
             Int32 dfCount = 0;
             Dictionary<Int32, DifferentialFormat> differentialFormats;
-            if (s.DifferentialFormats != null)
+            if (s != null &&s.DifferentialFormats != null)
                 differentialFormats = s.DifferentialFormats.Elements<DifferentialFormat>().ToDictionary(k => dfCount++);
             else
                 differentialFormats = new Dictionary<Int32, DifferentialFormat>();
@@ -872,38 +875,55 @@ namespace ClosedXML.Excel
                 {
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
-                    var numberFormatId = ((CellFormat) (s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                    if (numberFormatId == 46U)
-                        xlCell.DataType = XLCellValues.TimeSpan;
-                    else
+                    if (s == null)
+                    {
                         xlCell._dataType = XLCellValues.Number;
+                    }
+                    else
+                    {
+                        var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
+                        if (numberFormatId == 46U)
+                            xlCell.DataType = XLCellValues.TimeSpan;
+                        else
+                            xlCell._dataType = XLCellValues.Number;
+                    }
+                    
                 }
             }
             else if (cell.CellValue != null)
             {
-                var numberFormatId = ((CellFormat) (s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
-                    xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
-                if (s.NumberingFormats != null &&
-                    s.NumberingFormats.Any(nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId))
+                if (s == null)
                 {
-                    xlCell.Style.NumberFormat.Format =
-                        (   (NumberingFormat)s.NumberingFormats
-                            .First(nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId)
-                            ).FormatCode.Value;
+                    xlCell._dataType = XLCellValues.Number;
                 }
                 else
-                    xlCell.Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
+                {
+                    var numberFormatId = ((CellFormat) (s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
+                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                    if (s.NumberingFormats != null &&
+                        s.NumberingFormats.Any(nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId))
+                    {
+                        xlCell.Style.NumberFormat.Format =
+                            ((NumberingFormat) s.NumberingFormats
+                                                .First(
+                                                    nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId)
+                            ).FormatCode.Value;
+                    }
+                    else
+                        xlCell.Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
 
 
-                if (!XLHelper.IsNullOrWhiteSpace(xlCell.Style.NumberFormat.Format))
-                    xlCell._dataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
-                else if ((numberFormatId >= 14 && numberFormatId <= 22) || (numberFormatId >= 45 && numberFormatId <= 47))
-                    xlCell._dataType = XLCellValues.DateTime;
-                else if (numberFormatId == 49)
-                    xlCell._dataType = XLCellValues.Text;
-                else
-                    xlCell._dataType = XLCellValues.Number;
+                    if (!XLHelper.IsNullOrWhiteSpace(xlCell.Style.NumberFormat.Format))
+                        xlCell._dataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
+                    else if ((numberFormatId >= 14 && numberFormatId <= 22) ||
+                             (numberFormatId >= 45 && numberFormatId <= 47))
+                        xlCell._dataType = XLCellValues.DateTime;
+                    else if (numberFormatId == 49)
+                        xlCell._dataType = XLCellValues.Text;
+                    else
+                        xlCell._dataType = XLCellValues.Number;
+                }
             }
         }
 
@@ -1704,6 +1724,8 @@ namespace ClosedXML.Excel
         private void ApplyStyle(IXLStylized xlStylized, Int32 styleIndex, Stylesheet s, Fills fills, Borders borders,
                                 Fonts fonts, NumberingFormats numberingFormats)
         {
+            if (s == null) return; //No Stylesheet, no Styles
+
             var cellFormat = (CellFormat) s.CellFormats.ElementAt(styleIndex);
 
             if (cellFormat.ApplyProtection != null)
