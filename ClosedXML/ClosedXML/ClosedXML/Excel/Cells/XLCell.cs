@@ -880,21 +880,41 @@
 
         public IXLCell Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
         {
-            if (clearOptions == XLClearOptions.Contents || clearOptions == XLClearOptions.ContentsAndFormats)
+            return Clear(clearOptions, false);
+        }
+
+        internal IXLCell Clear(XLClearOptions clearOptions, bool calledFromRange)
+        {
+            //Note: We have to check if the cell is part of a merged range. If so we have to clear the whole range
+            //Checking if called from range to avoid stack overflow
+            if (IsMerged() && !calledFromRange)
             {
-                Hyperlink = null;
-                _richText = null;
-                //_comment = null;
-                _cellValue = String.Empty;
-                FormulaA1 = String.Empty;
+                using (var asRange = AsRange())
+                {
+                    var firstOrDefault = Worksheet.Internals.MergedRanges.FirstOrDefault(asRange.Intersects);
+                    if (firstOrDefault != null)
+                        firstOrDefault.Clear(clearOptions);
+                }
             }
-
-            if (clearOptions == XLClearOptions.Formats || clearOptions == XLClearOptions.ContentsAndFormats)
+            else
             {
-                if (HasDataValidation)
-                    DataValidation.Clear();
+                if (clearOptions == XLClearOptions.Contents || clearOptions == XLClearOptions.ContentsAndFormats)
+                {
+                    Hyperlink = null;
+                    _richText = null;
+                    //_comment = null;
+                    _cellValue = String.Empty;
+                    FormulaA1 = String.Empty;
+                }
 
-                SetStyle(Worksheet.Style);
+                if (clearOptions == XLClearOptions.Formats || clearOptions == XLClearOptions.ContentsAndFormats)
+                {
+                    if (HasDataValidation)
+                        DataValidation.Clear();
+
+
+                    SetStyle(Worksheet.Style);
+                }
             }
 
             return this;
