@@ -433,6 +433,20 @@ namespace ClosedXML.Excel
 
             #endregion
 
+            if (LockStructure || LockWindows)
+            {
+                if (workbook.WorkbookProtection == null)
+                    workbook.WorkbookProtection = new WorkbookProtection();
+
+                workbook.WorkbookProtection.LockStructure = LockStructure;
+                workbook.WorkbookProtection.LockWindows = LockWindows;
+            }
+            else
+            {
+                workbook.WorkbookProtection = null;
+            }
+            
+
             if (workbook.BookViews == null)
                 workbook.BookViews = new BookViews();
 

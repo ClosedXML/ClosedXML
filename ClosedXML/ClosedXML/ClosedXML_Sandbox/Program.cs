@@ -17,10 +17,7 @@ namespace ClosedXML_Sandbox
         {
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
-            ws.FirstCell().SetValue(1)
-                .CellBelow().SetFormulaA1("IF(A1>0,Yes,No)") // Invalid
-                .CellBelow().SetFormulaA1("IF(A1>0,\"Yes\",\"No\")") // OK
-                .CellBelow().SetFormulaA1("IF(A1>0,TRUE,FALSE)"); // OK
+            wb.Protect();
             wb.SaveAs(@"c:\temp\saved.xlsx");
             Console.WriteLine("Done");
         }

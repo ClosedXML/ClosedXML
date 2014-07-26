@@ -777,5 +777,26 @@ namespace ClosedXML.Excel
         }
 
         public String Author { get; set; }
+
+        public Boolean LockStructure { get; set; }
+        public XLWorkbook SetLockStructure(Boolean value) { LockStructure = value; return this; }
+        public Boolean LockWindows { get; set; }
+        public XLWorkbook SetLockWindows(Boolean value) { LockWindows = value; return this; }
+
+        public void Protect()
+        {
+            Protect(true);
+        }
+
+        public void Protect(Boolean lockStructure)
+        {
+            Protect(lockStructure, false);
+        }
+
+        public void Protect(Boolean lockStructure, Boolean lockWindows)
+        {
+            LockStructure = lockStructure;
+            LockWindows = LockWindows;
+        }
     }
 }

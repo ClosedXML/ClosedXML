@@ -88,6 +88,15 @@ namespace ClosedXML.Excel
             var wbProps = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties;
             Use1904DateSystem = wbProps != null && wbProps.Date1904 != null && wbProps.Date1904.Value;
 
+            var wbProtection = dSpreadsheet.WorkbookPart.Workbook.WorkbookProtection;
+            if (wbProtection != null)
+            {
+                if (wbProtection.LockStructure != null)
+                    LockStructure = wbProtection.LockStructure.Value;
+                if (wbProtection.LockWindows != null)
+                    LockWindows = wbProtection.LockWindows.Value;
+            }
+
             var calculationProperties = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties;
             if (calculationProperties != null)
             {
