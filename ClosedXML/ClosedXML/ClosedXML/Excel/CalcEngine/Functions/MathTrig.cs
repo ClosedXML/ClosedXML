@@ -242,7 +242,10 @@ namespace ClosedXML.Excel.CalcEngine
             // if criteria is a number, straight comparison
             if (criteria is double)
             {
-                return (double) value == (double) criteria;
+                if (value is Double)
+                    return (double) value == (double) criteria;
+                Double dValue;
+                return Double.TryParse(value.ToString(), out dValue) && dValue == (double) criteria;
             }
 
             // convert criteria to string
