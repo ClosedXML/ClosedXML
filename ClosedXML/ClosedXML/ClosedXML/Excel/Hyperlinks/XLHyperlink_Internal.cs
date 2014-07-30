@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
                 Uri uri;
                 if(Uri.TryCreate(address, UriKind.Absolute, out uri))
                 {
-                    _externalAddress = new Uri(uri.AbsoluteUri, UriKind.Absolute);
+                    _externalAddress = uri;
                     IsExternal = true;
                 }
                 else
