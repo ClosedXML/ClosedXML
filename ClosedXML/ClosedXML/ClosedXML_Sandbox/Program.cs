@@ -16,8 +16,6 @@ namespace ClosedXML_Sandbox
         private static void Main(string[] args)
         {
             var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet");
-            wb.Protect();
             wb.SaveAs(@"c:\temp\saved.xlsx");
             Console.WriteLine("Done");
         }

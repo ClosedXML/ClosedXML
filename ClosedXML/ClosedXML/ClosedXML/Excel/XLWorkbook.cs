@@ -405,6 +405,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public void Save()
         {
+            checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
                 throw new Exception("This is a new file, please use one of the SaveAs methods.");
 
@@ -421,6 +422,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public void SaveAs(String file)
         {
+            checkForWorksheetsPresent();
             PathHelper.CreateDirectory(Path.GetDirectoryName(file));
             if (_loadSource == XLLoadSource.New)
             {
@@ -462,11 +464,18 @@ namespace ClosedXML.Excel
 
             throw new Exception(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx' and '.xslm'.", extension));
         }
+        private void checkForWorksheetsPresent()
+        {
+            if (Worksheets.Count() == 0)
+                throw new Exception("Workbooks need at least one worksheet.");
+        }
+
         /// <summary>
         ///   Saves the current workbook to a stream.
         /// </summary>
         public void SaveAs(Stream stream)
         {
+            checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
             {
                 // dm 20130422, this method or better the method SpreadsheetDocument.Create which is called
