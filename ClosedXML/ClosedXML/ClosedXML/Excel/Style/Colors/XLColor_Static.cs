@@ -7,14 +7,19 @@ namespace ClosedXML.Excel
 {
     public partial class XLColor
     {
-        private static Dictionary<Color, XLColor> byColor = new Dictionary<Color, XLColor>();
+        private static readonly Dictionary<Color, XLColor> ByColor = new Dictionary<Color, XLColor>();
+        private static readonly Object ByColorLock = new Object();
+
         public static XLColor FromColor(Color color)
         {
             XLColor ret;
-            if (!byColor.TryGetValue(color, out ret))
+            lock (ByColorLock)
             {
-                ret = new XLColor(color);
-                byColor.Add(color, ret);
+                if (!ByColor.TryGetValue(color, out ret))
+                {
+                    ret = new XLColor(color);
+                    ByColor.Add(color, ret);
+                }
             }
             return ret;
         }
@@ -44,50 +49,65 @@ namespace ClosedXML.Excel
             return FromColor(ColorTranslator.FromHtml(htmlColor));
         }
 
-        private static Dictionary<Int32, XLColor> byIndex = new Dictionary<Int32, XLColor>();
+        private static readonly Dictionary<Int32, XLColor> ByIndex = new Dictionary<Int32, XLColor>();
+        private static readonly Object ByIndexLock = new Object();
+
         public static XLColor FromIndex(Int32 index)
         {
             XLColor ret;
-            if (!byIndex.TryGetValue(index, out ret))
+            lock (ByIndexLock)
             {
-                ret = new XLColor(index);
-                byIndex.Add(index, ret);
+                if (!ByIndex.TryGetValue(index, out ret))
+                {
+                    ret = new XLColor(index);
+                    ByIndex.Add(index, ret);
+                }
             }
             return ret;
         }
 
-        private static Dictionary<XLThemeColor, XLColor> byTheme = new Dictionary<XLThemeColor, XLColor>();
+        private static readonly Dictionary<XLThemeColor, XLColor> ByTheme = new Dictionary<XLThemeColor, XLColor>();
+        private static readonly Object ByThemeLock = new Object();
+
         public static XLColor FromTheme(XLThemeColor themeColor)
         {
             XLColor ret;
-            if (!byTheme.TryGetValue(themeColor, out ret))
+            lock (ByThemeLock)
             {
-                ret = new XLColor(themeColor);
-                byTheme.Add(themeColor, ret);
+                if (!ByTheme.TryGetValue(themeColor, out ret))
+                {
+                    ret = new XLColor(themeColor);
+                    ByTheme.Add(themeColor, ret);
+                }
             }
             return ret;
         }
 
-        private static Dictionary<XLThemeColor, Dictionary<Double, XLColor>> byThemeTint = new Dictionary<XLThemeColor, Dictionary<double, XLColor>>();
+        private static readonly Dictionary<XLThemeColor, Dictionary<Double, XLColor>> ByThemeTint = new Dictionary<XLThemeColor, Dictionary<double, XLColor>>();
+        private static readonly Object ByThemeTintLock = new Object();
+
         public static XLColor FromTheme(XLThemeColor themeColor, Double themeTint)
         {
             XLColor ret;
-            Dictionary<Double, XLColor> themeTints;
-            if (byThemeTint.TryGetValue(themeColor, out themeTints))
+            lock (ByThemeTintLock)
             {
-                if (!themeTints.TryGetValue(themeTint, out ret))
+                Dictionary<Double, XLColor> themeTints;
+                if (ByThemeTint.TryGetValue(themeColor, out themeTints))
                 {
+                    if (!themeTints.TryGetValue(themeTint, out ret))
+                    {
+                        ret = new XLColor(themeColor, themeTint);
+                        themeTints.Add(themeTint, ret);
+                    }
+                }
+                else
+                {
+                    themeTints = new Dictionary<double, XLColor>();
                     ret = new XLColor(themeColor, themeTint);
                     themeTints.Add(themeTint, ret);
-                }
-            }
-            else
-            {
-                themeTints = new Dictionary<double, XLColor>();
-                ret = new XLColor(themeColor, themeTint);
-                themeTints.Add(themeTint, ret);
 
-                byThemeTint.Add(themeColor, themeTints);
+                    ByThemeTint.Add(themeColor, themeTints);
+                }
             }
             return ret;
         }
