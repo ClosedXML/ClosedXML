@@ -162,17 +162,11 @@ namespace ClosedXML.Excel
 
     public static class IntegerExtensions
     {
-        private static readonly NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
-        private static readonly Dictionary<Int32, String> intToString = new Dictionary<int, string>();
-        public static String ToStringLookup(this Int32 value)
+       
+        public static String ToInvariantString(this Int32 value)
         {
-            if (!intToString.ContainsKey(value))
-            {
-                intToString.Add(value, value.ToString(nfi));
-            }
-            return intToString[value];
+            return value.ToString(CultureInfo.InvariantCulture);
         }
-
 
     }
 

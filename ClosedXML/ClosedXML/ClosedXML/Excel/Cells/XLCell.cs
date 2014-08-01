@@ -2062,19 +2062,19 @@
                                     if (row1String[0] == '$')
                                     {
                                         row1 = "$" +
-                                               (Int32.Parse(row1String.Substring(1)) + rowsShifted).ToStringLookup();
+                                               (Int32.Parse(row1String.Substring(1)) + rowsShifted).ToInvariantString();
                                     }
                                     else
-                                        row1 = (Int32.Parse(row1String) + rowsShifted).ToStringLookup();
+                                        row1 = (Int32.Parse(row1String) + rowsShifted).ToInvariantString();
 
                                     string row2;
                                     if (row2String[0] == '$')
                                     {
                                         row2 = "$" +
-                                               (Int32.Parse(row2String.Substring(1)) + rowsShifted).ToStringLookup();
+                                               (Int32.Parse(row2String.Substring(1)) + rowsShifted).ToInvariantString();
                                     }
                                     else
-                                        row2 = (Int32.Parse(row2String) + rowsShifted).ToStringLookup();
+                                        row2 = (Int32.Parse(row2String) + rowsShifted).ToInvariantString();
 
                                     sb.Append(useSheetName
                                                   ? String.Format("'{0}'!{1}:{2}", sheetName, row1, row2)

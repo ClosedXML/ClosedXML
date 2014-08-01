@@ -396,7 +396,7 @@ namespace ClosedXML.Excel
             foreach (IXLCell c in range.Row(1).Cells())
             {
                 if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
-                    c.Value = GetUniqueName("Column" + co.ToStringLookup());
+                    c.Value = GetUniqueName("Column" + co.ToInvariantString());
                 _uniqueNames.Add(c.GetString());
                 co++;
             }
@@ -410,11 +410,11 @@ namespace ClosedXML.Excel
             if (_uniqueNames.Contains(name))
             {
                 Int32 i = 1;
-                name = originalName + i.ToStringLookup();
+                name = originalName + i.ToInvariantString();
                 while (_uniqueNames.Contains(name))
                 {
                     i++;
-                    name = originalName + i.ToStringLookup();
+                    name = originalName + i.ToInvariantString();
                 }
             }
 
@@ -446,7 +446,7 @@ namespace ClosedXML.Excel
                     foreach (IXLCell c in headersRow.Cells())
                     {
                         if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
-                            c.Value = GetUniqueName("Column" + co.ToStringLookup());
+                            c.Value = GetUniqueName("Column" + co.ToInvariantString());
                         _uniqueNames.Add(c.GetString());
                         co++;
                     }
