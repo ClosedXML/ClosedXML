@@ -62,7 +62,15 @@ namespace ClosedXML.Excel
         {
             if (string.IsNullOrEmpty(columnLetter)) throw new ArgumentNullException("columnLetter");
 
-            columnLetter = columnLetter.ToUpperInvariant();
+            int retVal;
+            columnLetter = columnLetter.ToUpper();
+
+            //Extra check because we allow users to pass row col positions in as strings
+            if (columnLetter[0] <= '9')
+            {
+                retVal = Int32.Parse(columnLetter, NumberFormatForParse);
+                return retVal;
+            }
 
             int sum = 0;
 
