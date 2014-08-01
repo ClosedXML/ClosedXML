@@ -138,6 +138,7 @@
     <Compile Include="Excel\Misc\XLCallbackAction.cs" />
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
     <Compile Include="Excel\XLConstants.cs" />
+    <Compile Include="Utils\GraphicsUtils.cs" />
     <Compile Include="XLHelper.cs" />
     <Compile Include="Excel\AutoFilters\XLFilteredColumn.cs" />
     <Compile Include="Excel\AutoFilters\XLCustomFilteredColumn.cs" />
