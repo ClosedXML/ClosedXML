@@ -118,10 +118,19 @@ namespace ClosedXML.Excel.CalcEngine
         public double Sum() { return Numerics().Sum(); }
         public double Average()
         {
-            return Numerics().Average();
+            return Numerics().Count == 0 ? 0 : Numerics().Average();
         }
-        public double Min() { return Numerics().Min(); }
-        public double Max() { return Numerics().Max(); }
+
+        public double Min()
+        {
+            return Numerics().Count == 0 ? 0 : Numerics().Min();
+        }
+
+        public double Max()
+        {
+            return Numerics().Count == 0 ? 0 : Numerics().Max();
+        }
+
         public double Range()
         {
             var nums = Numerics();

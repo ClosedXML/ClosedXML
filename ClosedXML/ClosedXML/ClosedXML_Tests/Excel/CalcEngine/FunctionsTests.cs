@@ -2,7 +2,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 
-namespace ClosedXML_Tests.Excel.DataValidations
+namespace ClosedXML_Tests.Excel.CalcEngine
 {
     /// <summary>
     ///     Summary description for UnitTest1
@@ -595,6 +595,23 @@ namespace ClosedXML_Tests.Excel.DataValidations
             //Should not trim non breaking space
             //See http://office.microsoft.com/en-us/excel-help/trim-function-HP010062581.aspx
             Assert.AreEqual("Test\u00A0", XLWorkbook.EvaluateExpr("Trim(\"Test\u00A0 \")"));
+        }
+
+        [Test]
+        public void TestEmptyTallyOperations()
+        {
+            //In these test no values have been set
+            XLWorkbook wb = new XLWorkbook();
+            wb.Worksheets.Add("TallyTests");
+            var cell = wb.Worksheet(1).Cell(1, 1).SetFormulaA1("=MAX(D1,D2)");
+            Assert.AreEqual(0, cell.Value); 
+            cell = wb.Worksheet(1).Cell(2, 1).SetFormulaA1("=MIN(D1,D2)");
+            Assert.AreEqual(0, cell.Value);
+            cell = wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=SUM(D1,D2)");
+            Assert.AreEqual(0, cell.Value);
+            cell = wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=AVERAGE(D1,D2)");
+            Assert.AreEqual(0, cell.Value);
+
         }
     }
 }
