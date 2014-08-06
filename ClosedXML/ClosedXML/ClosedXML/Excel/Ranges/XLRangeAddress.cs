@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -64,7 +65,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     FirstAddress = XLAddress.Create(worksheet, firstPart + "1");
-                    LastAddress = XLAddress.Create(worksheet, secondPart + XLHelper.MaxRowNumber.ToStringLookup());    
+                    LastAddress = XLAddress.Create(worksheet, secondPart + XLHelper.MaxRowNumber.ToString(CultureInfo.InvariantCulture));    
                 }
             }
 

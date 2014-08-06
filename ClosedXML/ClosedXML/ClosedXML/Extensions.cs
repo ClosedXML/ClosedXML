@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.IO;
 using System.Xml;
+using ClosedXML.Utils;
 
 [assembly: CLSCompliantAttribute(true)]
 namespace ClosedXML.Excel
@@ -162,17 +163,11 @@ namespace ClosedXML.Excel
 
     public static class IntegerExtensions
     {
-        private static readonly NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
-        private static readonly Dictionary<Int32, String> intToString = new Dictionary<int, string>();
-        public static String ToStringLookup(this Int32 value)
+       
+        public static String ToInvariantString(this Int32 value)
         {
-            if (!intToString.ContainsKey(value))
-            {
-                intToString.Add(value, value.ToString(nfi));
-            }
-            return intToString[value];
+            return value.ToString(CultureInfo.InvariantCulture);
         }
-
 
     }
 
@@ -190,7 +185,6 @@ namespace ClosedXML.Excel
             return font;
         }
 
-        private static Graphics graphics = Graphics.FromImage(new Bitmap(1, 1));
         public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, Font> fontCache)
         {
             if (XLHelper.IsNullOrWhiteSpace(text))
@@ -198,7 +192,7 @@ namespace ClosedXML.Excel
 
             var font = GetCachedFont(fontBase, fontCache);
 
-            var textSize = graphics.MeasureString(text, font, Int32.MaxValue, StringFormat.GenericTypographic);
+            var textSize = GraphicsUtils.MeasureString(text, font);
 
             double width = (((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
             width = (double)decimal.Round((decimal)width + 0.2M, 2);
@@ -219,7 +213,7 @@ namespace ClosedXML.Excel
         public static Double GetHeight(this IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
         {
             var font = GetCachedFont(fontBase, fontCache);
-            var textSize = graphics.MeasureString("X", font, Int32.MaxValue, StringFormat.GenericTypographic);
+            var textSize = GraphicsUtils.MeasureString("X", font);
             return (double)textSize.Height * 0.85;
         }
 

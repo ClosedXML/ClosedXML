@@ -1580,11 +1580,11 @@ namespace ClosedXML.Excel
             if (context.TableNames.Contains(name))
             {
                 var i = 1;
-                name = tableName + i.ToStringLookup();
+                name = tableName + i.ToInvariantString();
                 while (context.TableNames.Contains(name))
                 {
                     i++;
-                    name = tableName + i.ToStringLookup();
+                    name = tableName + i.ToInvariantString();
                 }
             }
 
@@ -3282,7 +3282,7 @@ namespace ClosedXML.Excel
                 maxColumn = xlWorksheet.Internals.CellsCollection.MaxColumnUsed;
                 var maxRow = xlWorksheet.Internals.CellsCollection.MaxRowUsed;
                 sheetDimensionReference = "A1:" + XLHelper.GetColumnLetterFromNumber(maxColumn) +
-                                          maxRow.ToStringLookup();
+                                          maxRow.ToInvariantString();
             }
 
             if (xlWorksheet.Internals.ColumnsCollection.Count > 0)
@@ -3637,7 +3637,7 @@ namespace ClosedXML.Excel
                 }
 
                 if (maxColumn > 0)
-                    row.Spans = new ListValue<StringValue> {InnerText = "1:" + maxColumn.ToStringLookup()};
+                    row.Spans = new ListValue<StringValue> {InnerText = "1:" + maxColumn.ToInvariantString()};
 
                 row.Height = null;
                 row.CustomHeight = null;
@@ -3679,7 +3679,7 @@ namespace ClosedXML.Excel
                 {
                     foreach (var delCo in kpDel.Value.ToList())
                     {
-                        var key = XLHelper.GetColumnLetterFromNumber(delCo) + kpDel.Key.ToStringLookup();
+                        var key = XLHelper.GetColumnLetterFromNumber(delCo) + kpDel.Key.ToInvariantString();
                         if (!cellsByReference.ContainsKey(key)) continue;
                         row.RemoveChild(cellsByReference[key]);
                         kpDel.Value.Remove(delCo);

@@ -54,85 +54,52 @@ namespace ClosedXML.Excel
                       RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture
                 );
 
-        private static Dictionary<string, int> columnNumbers = new Dictionary<string, int>();
         /// <summary>
-        /// 	Gets the column number of a given column letter.
+        /// Gets the column number of a given column letter.
         /// </summary>
         /// <param name="columnLetter"> The column letter to translate into a column number. </param>
         public static int GetColumnNumberFromLetter(string columnLetter)
         {
+            if (string.IsNullOrEmpty(columnLetter)) throw new ArgumentNullException("columnLetter");
+
             int retVal;
             columnLetter = columnLetter.ToUpper();
-            if (columnNumbers.TryGetValue(columnLetter, out retVal))
-                return retVal;
 
+            //Extra check because we allow users to pass row col positions in as strings
             if (columnLetter[0] <= '9')
             {
                 retVal = Int32.Parse(columnLetter, NumberFormatForParse);
-                columnNumbers.Add(columnLetter, retVal);
                 return retVal;
             }
-            
-            var length = columnLetter.Length;
-            if (length == 1)
+
+            int sum = 0;
+
+            for (int i = 0; i < columnLetter.Length; i++)
             {
-                retVal = Convert.ToByte(columnLetter[0]) - 64;
-                columnNumbers.Add(columnLetter, retVal);
-                return retVal;
+                sum *= 26;
+                sum += (columnLetter[i] - 'A' + 1);
             }
-            if (length == 2)
-            {
-                retVal =
-                    ((Convert.ToByte(columnLetter[0]) - 64)*26) +
-                    (Convert.ToByte(columnLetter[1]) - 64);
-                columnNumbers.Add(columnLetter, retVal);
-                return retVal;
-            }
-            if (length == 3)
-            {
-                retVal = ((Convert.ToByte(columnLetter[0]) - 64)*TwoT26) +
-                       ((Convert.ToByte(columnLetter[1]) - 64)*26) +
-                       (Convert.ToByte(columnLetter[2]) - 64);
-                columnNumbers.Add(columnLetter, retVal);
-                return retVal;
-            }
-            throw new ApplicationException("Column Length must be between 1 and 3.");
+
+            return sum;
         }
 
-        private static Dictionary<int, string> columnLetters = new Dictionary<int, string>();
         /// <summary>
         /// 	Gets the column letter of a given column number.
         /// </summary>
-        /// <param name="column"> The column number to translate into a column letter. </param>
+        /// <param name="columnNumber"> The column number to translate into a column letter. </param>
         public static string GetColumnLetterFromNumber(int columnNumber)
         {
-            String retVal;
-            if (columnLetters.TryGetValue(columnNumber, out retVal))
-                return retVal;
+            var dividend = columnNumber;
+            var columnName = String.Empty;
 
-            #region Check
-
-            if (columnNumber <= 0)
-                throw new ArgumentOutOfRangeException("column", "Must be more than 0");
-
-            #endregion
-
-            var value = new StringBuilder(6);
-            int column = columnNumber;
-            while (column > 0)
+            while (dividend > 0)
             {
-                var residue = column%26;
-                column /= 26;
-                if (residue == 0)
-                {
-                    residue = 26;
-                    column--;
-                }
-                value.Insert(0, (char) (64 + residue));
+                var modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo) + columnName;
+                dividend = (dividend - modulo) / 26;
             }
-            retVal = value.ToString();
-            columnLetters.Add(columnNumber, retVal);
-            return retVal;
+
+            return columnName;
         }
 
         public static bool IsValidColumn(string column)

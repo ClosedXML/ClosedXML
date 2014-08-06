@@ -876,6 +876,9 @@
     <Compile Include="..\ClosedXML\PathHelper.cs">
       <Link>PathHelper.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Utils\GraphicsUtils.cs">
+      <Link>Utils\GraphicsUtils.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\XLHelper.cs">
       <Link>XLHelper.cs</Link>
     </Compile>

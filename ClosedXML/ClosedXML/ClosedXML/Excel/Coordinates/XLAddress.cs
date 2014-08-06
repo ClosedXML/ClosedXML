@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
             {
                 retVal += "$";
             }
-            retVal += _rowNumber.ToStringLookup();
+            retVal += _rowNumber.ToInvariantString();
             return retVal;
         }
 
@@ -215,23 +215,23 @@ namespace ClosedXML.Excel
         {
             if (referenceStyle == XLReferenceStyle.A1)
             {
-                return ColumnLetter + _rowNumber.ToStringLookup();
+                return ColumnLetter + _rowNumber.ToInvariantString();
             }
             if (referenceStyle == XLReferenceStyle.R1C1)
             {
-                return String.Format("R{0}C{1}", _rowNumber.ToStringLookup(), ColumnNumber);
+                return String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
             }
             if (HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
             {
-                return String.Format("R{0}C{1}", _rowNumber.ToStringLookup(), ColumnNumber);
+                return String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
             }
-            return ColumnLetter + _rowNumber.ToStringLookup();
+            return ColumnLetter + _rowNumber.ToInvariantString();
         }
         #endregion
         #region Methods
         public string GetTrimmedAddress()
         {
-            return _trimmedAddress ?? (_trimmedAddress = ColumnLetter + _rowNumber.ToStringLookup());
+            return _trimmedAddress ?? (_trimmedAddress = ColumnLetter + _rowNumber.ToInvariantString());
         }
 
 
@@ -362,13 +362,13 @@ namespace ClosedXML.Excel
         {
             String address;
             if (referenceStyle == XLReferenceStyle.A1)
-                address = String.Format("${0}${1}", ColumnLetter, _rowNumber.ToStringLookup());
+                address = String.Format("${0}${1}", ColumnLetter, _rowNumber.ToInvariantString());
             else if (referenceStyle == XLReferenceStyle.R1C1)
-                address = String.Format("R{0}C{1}", _rowNumber.ToStringLookup(), ColumnNumber);
+                address = String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
             else if (HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
-                address = String.Format("R{0}C{1}", _rowNumber.ToStringLookup(), ColumnNumber);
+                address = String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
             else
-                address = String.Format("${0}${1}", ColumnLetter, _rowNumber.ToStringLookup());
+                address = String.Format("${0}${1}", ColumnLetter, _rowNumber.ToInvariantString());
 
             if (includeSheet)
                 return String.Format("'{0}'!{1}",
