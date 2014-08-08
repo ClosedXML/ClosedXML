@@ -89,17 +89,14 @@ namespace ClosedXML.Excel
         /// <param name="columnNumber"> The column number to translate into a column letter. </param>
         public static string GetColumnLetterFromNumber(int columnNumber)
         {
-            var dividend = columnNumber;
-            var columnName = String.Empty;
-
-            while (dividend > 0)
+            var ret = String.Empty;
+            while (columnNumber > 0)
             {
-                var modulo = (dividend - 1) % 26;
-                columnName = Convert.ToChar(65 + modulo) + columnName;
-                dividend = (dividend - modulo) / 26;
+                --columnNumber;
+                ret = (char)('A' + columnNumber % 26) + ret;
+                columnNumber /= 26;
             }
-
-            return columnName;
+            return ret;
         }
 
         public static bool IsValidColumn(string column)
