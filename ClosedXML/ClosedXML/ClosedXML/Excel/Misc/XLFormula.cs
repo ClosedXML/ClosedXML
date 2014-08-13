@@ -16,6 +16,21 @@ namespace ClosedXML.Excel
             IsFormula = defaultFormula.IsFormula;
         }
 
+        public XLFormula(String value)
+        {
+            Value = value;
+        }
+
+        public XLFormula(double value)
+        {
+            Value = value.ToInvariantString();
+        }
+        
+        public XLFormula(int value)
+        {
+            Value = value.ToInvariantString();
+        }
+
         internal String _value;
         public String Value 
         { 

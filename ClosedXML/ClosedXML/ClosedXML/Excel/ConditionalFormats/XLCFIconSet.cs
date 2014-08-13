@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -21,7 +18,7 @@ namespace ClosedXML.Excel
         }
         public IXLCFIconSet AddValue(XLCFIconSetOperator setOperator, Double value, XLCFContentType type)
         {
-            return AddValue(setOperator, value.ToString(), type);
+            return AddValue(setOperator, value.ToInvariantString(), type);
         }
     }
 }

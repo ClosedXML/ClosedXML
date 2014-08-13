@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
         }
         public IXLCFDataBarMax Minimum(XLCFContentType type, Double value)
         {
-            return Minimum(type, value.ToString());
+            return Minimum(type, value.ToInvariantString());
         }
 
         public IXLCFDataBarMax LowestValue()

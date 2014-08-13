@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
         }
         public void Maximum(XLCFContentType type, Double value)
         {
-            Maximum(type, value.ToString());
+            Maximum(type, value.ToInvariantString());
         }
 
         public void HighestValue()

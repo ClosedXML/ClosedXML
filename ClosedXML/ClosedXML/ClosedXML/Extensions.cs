@@ -171,6 +171,16 @@ namespace ClosedXML.Excel
 
     }
 
+    public static class DoubleExtensions
+    {
+        //All numbers are stored in XL files as invarient culture this is just a easy helper
+        public static String ToInvariantString(this Double value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+
+    }
+
     public static class FontBaseExtensions
     {
 
@@ -241,14 +251,6 @@ namespace ClosedXML.Excel
                 return XDocument.Load(reader);
             }
         }
-
-        //public static void SaveToStream(this XDocument document, Stream stream)
-        //{
-        //    using (XmlReader reader = XmlReader.Open(stream))
-        //    {
-        //        return XDocument.Load(reader);
-        //    }
-        //}
     }
 
     public static class EnumerableExtensions
