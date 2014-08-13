@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -21,7 +18,7 @@ namespace ClosedXML.Excel
         }
         public IXLCFColorScaleMax Midpoint(XLCFContentType type, Double value, XLColor color)
         {
-            return Midpoint(type, value.ToString(), color);
+            return Midpoint(type, value.ToInvariantString(), color);
         }
         public void Maximum(XLCFContentType type, String value, XLColor color)
         {
@@ -29,7 +26,7 @@ namespace ClosedXML.Excel
         }
         public void Maximum(XLCFContentType type, Double value, XLColor color)
         {
-            Maximum(type, value.ToString(), color);
+            Maximum(type, value.ToInvariantString(), color);
         }
         public void HighestValue(XLColor color)
         {

@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
         }
         public IXLCFColorScaleMid Minimum(XLCFContentType type, Double value, XLColor color)
         {
-            return Minimum(type, value.ToString(), color);
+            return Minimum(type, value.ToInvariantString(), color);
         }
 
         public IXLCFColorScaleMid LowestValue(XLColor color)
