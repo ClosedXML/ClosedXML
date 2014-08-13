@@ -78,12 +78,15 @@ namespace ClosedXML.Excel.CalcEngine
         }
         static object Left(List<Expression> p)
         {
+            var str = (string)p[0];
             var n = 1;
             if (p.Count > 1)
             {
                 n = (int)p[1];
             }
-            return ((string)p[0]).Substring(0, n);
+            if (n >= str.Length) return str;
+
+            return str.Substring(0, n);
         }
         static object Len(List<Expression> p)
         {
@@ -95,7 +98,14 @@ namespace ClosedXML.Excel.CalcEngine
         }
         static object Mid(List<Expression> p)
         {
-            return ((string)p[0]).Substring((int)p[1] - 1, (int)p[2]);
+            var str = (string)p[0];
+            var start = (int)p[1] - 1;
+            var length = (int)p[2];
+            if (start > str.Length - 1)
+                return String.Empty;
+            if (start + length > str.Length - 1)
+                return str.Substring(start);
+            return str.Substring(start, length);
         }
         static object Proper(List<Expression> p)
         {
@@ -129,13 +139,16 @@ namespace ClosedXML.Excel.CalcEngine
         }
         static object Right(List<Expression> p)
         {
+            var str = (string)p[0];
             var n = 1;
             if (p.Count > 1)
             {
                 n = (int)p[1];
             }
-            var s = (string)p[0];
-            return s.Substring(s.Length - n);
+            
+            if (n >= str.Length) return str;
+
+            return str.Substring(str.Length - n);
         }
         static object Search(List<Expression> p)
         {
