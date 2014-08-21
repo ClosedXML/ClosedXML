@@ -429,17 +429,34 @@ namespace ClosedXML.Excel
             return name.Replace("_x000a_", Environment.NewLine).Replace("_x005f_x000a_", "_x000a_");
         }
 
+        // This may be part of XLHelper or XLColor
+        // Leaving it here for now. Can't decide what to call it and where to put it.
+        private XLColor ExtractColor(String color)
+        {
+            if (color.IndexOf("[") >= 0)
+            {
+                int start = color.IndexOf("[") + 1;
+                int end = color.IndexOf("]", start);
+                return XLColor.FromIndex(Int32.Parse(color.Substring(start, end - start)));
+            }
+            else
+            {
+                return XLColor.FromHtml(color);
+            }
+            
+        }
+
         private void LoadColorsAndLines<T>(IXLDrawing<T> drawing, XElement shape)
         {
             var strokeColor = shape.Attribute("strokecolor");
-            if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = XLColor.FromHtml(strokeColor.Value);
+            if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = ExtractColor(strokeColor.Value);
 
             var strokeWeight = shape.Attribute("strokeweight");
             if (strokeWeight != null)
                 drawing.Style.ColorsAndLines.LineWeight = GetPtValue(strokeWeight.Value);
 
             var fillColor = shape.Attribute("fillcolor");
-            if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = XLColor.FromHtml(fillColor.Value);
+            if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = ExtractColor(fillColor.Value);
 
             var fill = shape.Elements().FirstOrDefault(e => e.Name.LocalName == "fill");
             if (fill != null)
