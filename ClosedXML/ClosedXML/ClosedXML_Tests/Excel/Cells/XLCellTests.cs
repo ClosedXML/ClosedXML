@@ -20,6 +20,36 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CellsUsedIncludeStyles1()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Row(3).Style.Fill.BackgroundColor = XLColor.Red;
+            ws.Column(3).Style.Fill.BackgroundColor = XLColor.Red;
+            ws.Cell(2, 2).Value = "ASDF";
+            var range = ws.RangeUsed(true).RangeAddress.ToString();
+            Assert.AreEqual("B2:C3", range);
+        }
+
+        [Test]
+        public void CellsUsedIncludeStyles2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Row(2).Style.Fill.BackgroundColor = XLColor.Red;
+            ws.Column(2).Style.Fill.BackgroundColor = XLColor.Red;
+            ws.Cell(3, 3).Value = "ASDF";
+            var range = ws.RangeUsed(true).RangeAddress.ToString();
+            Assert.AreEqual("B2:C3", range);
+        }
+
+        [Test]
+        public void CellsUsedIncludeStyles3()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var range = ws.RangeUsed(true);
+            Assert.AreEqual(null, range);
+        }
+
+        [Test]
         public void Double_Infinity_is_a_string()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");

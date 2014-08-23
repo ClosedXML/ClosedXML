@@ -573,6 +573,8 @@ namespace ClosedXML.Excel
             Int32 fColumn = RangeAddress.FirstAddress.ColumnNumber;
             Int32 lColumn = RangeAddress.LastAddress.ColumnNumber;
 
+            var sp = Worksheet.Internals.CellsCollection.FirstPointUsed(fRow, fColumn, lRow, lColumn, includeFormats, predicate);
+
             if (includeFormats)
             {
                 var rowsUsed =
@@ -587,11 +589,17 @@ namespace ClosedXML.Excel
 
                 Int32 ro = 0;
                 if (rowsUsed.Any())
-                    ro = rowsUsed.First().Key;
+                    if (sp.Row > 0)
+                        ro = Math.Min(sp.Row, rowsUsed.First().Key);
+                    else
+                        ro = rowsUsed.First().Key;
 
                 Int32 co = 0;
                 if (columnsUsed.Any())
-                    co = columnsUsed.First().Key;
+                    if (sp.Column > 0)
+                        co = Math.Min(sp.Column, columnsUsed.First().Key);
+                    else
+                        co = columnsUsed.First().Key;
 
                 if (ro > 0 && co > 0)
                     return Worksheet.Cell(ro, co);
@@ -624,8 +632,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var sp = Worksheet.Internals.CellsCollection.FirstPointUsed(fRow, fColumn, lRow, lColumn, includeFormats, predicate);
-
+           
             if (sp.Row > 0) 
                 return Worksheet.Cell(sp.Row, sp.Column);
 
@@ -664,6 +671,8 @@ namespace ClosedXML.Excel
             Int32 fColumn = RangeAddress.FirstAddress.ColumnNumber;
             Int32 lColumn = RangeAddress.LastAddress.ColumnNumber;
 
+            var sp = Worksheet.Internals.CellsCollection.LastPointUsed(fRow, fColumn, lRow, lColumn, includeFormats, predicate);
+
             if (includeFormats)
             {
                 var rowsUsed =
@@ -678,11 +687,11 @@ namespace ClosedXML.Excel
 
                 Int32 ro = 0;
                 if (rowsUsed.Any())
-                    ro = rowsUsed.Last().Key;
+                    ro = Math.Max(sp.Row, rowsUsed.Last().Key);
 
                 Int32 co = 0;
                 if (columnsUsed.Any())
-                    co = columnsUsed.Last().Key;
+                    co = Math.Max(sp.Column, columnsUsed.Last().Key);
 
                 if (ro > 0 && co > 0)
                     return Worksheet.Cell(ro, co);
@@ -715,8 +724,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var sp = Worksheet.Internals.CellsCollection.LastPointUsed(fRow, fColumn, lRow, lColumn, includeFormats, predicate);
-
+            
             if (sp.Row > 0)
                 return Worksheet.Cell(sp.Row, sp.Column);
 
