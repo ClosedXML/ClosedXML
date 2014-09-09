@@ -4,9 +4,7 @@ using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
 {
-    /// <summary>
-    ///     Summary description for UnitTest1
-    /// </summary>
+
     [TestFixture]
     public class FunctionsTests
     {

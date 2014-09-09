@@ -1642,6 +1642,9 @@
                 }
                 else if (value is TimeSpan || (!Double.TryParse(val, out dTest) && TimeSpan.TryParse(val, out tsTest)))
                 {
+                    if (!(value is TimeSpan) && TimeSpan.TryParse(val, out tsTest))
+                        val = tsTest.ToString();
+
                     _dataType = XLCellValues.TimeSpan;
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         Style.NumberFormat.NumberFormatId = 46;
