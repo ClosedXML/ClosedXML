@@ -3922,30 +3922,29 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
                 var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
 
-
-                //if (!worksheetPart.Worksheet.Elements<ConditionalFormatting>().Any())
-                //{
-                //    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
-                //    worksheetPart.Worksheet.InsertAfter(new ConditionalFormatting(), previousElement);
-                //}
-
-                //var conditionalFormats = worksheetPart.Worksheet.Elements<ConditionalFormatting>().First();
-                //cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormats);
-                ////conditionalFormats.RemoveAllChildren<ConditionalFormat>();
                 var priority = 0;
-                foreach (var cf in xlWorksheet.ConditionalFormats)
+                foreach (var cfGroup in xlWorksheet.ConditionalFormats
+                    .GroupBy(
+                        c => c.Range.RangeAddress.ToStringRelative(false),
+                        c => c,
+                        (key, g) => new { RangeId = key, CfList = g.ToList() }
+                    )
+                    )
                 {
+                    
                     priority++;
                     var conditionalFormatting = new ConditionalFormatting
                     {
                         SequenceOfReferences =
-                            new ListValue<StringValue> {InnerText = cf.Range.RangeAddress.ToStringRelative(false)}
+                            new ListValue<StringValue> { InnerText = cfGroup.RangeId }
                     };
-                    conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
-
+                    foreach(var cf in cfGroup.CfList)
+                    {
+                        conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
+                    }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
-                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
+                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);                    
                 }
             }
 
