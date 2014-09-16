@@ -285,6 +285,7 @@ namespace ClosedXML.Excel.CalcEngine
                 _fnTbl = new Dictionary<string, FunctionDefinition>(StringComparer.InvariantCultureIgnoreCase);
 
                 // register built-in functions (and constants)
+                Is.Register(this);
                 Logical.Register(this);
                 MathTrig.Register(this);
                 Text.Register(this);

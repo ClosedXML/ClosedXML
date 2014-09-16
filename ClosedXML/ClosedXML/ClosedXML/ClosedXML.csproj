@@ -135,6 +135,7 @@
   <ItemGroup>
     <Compile Include="Excel\CalcEngine\Functions\DateAndTime.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Database.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\Is.cs" />
     <Compile Include="Excel\Misc\XLCallbackAction.cs" />
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
     <Compile Include="Excel\XLConstants.cs" />

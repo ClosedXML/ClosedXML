@@ -114,6 +114,7 @@
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
+    <Compile Include="Excel\CalcEngine\IsTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="XLHelperTests.cs" />
