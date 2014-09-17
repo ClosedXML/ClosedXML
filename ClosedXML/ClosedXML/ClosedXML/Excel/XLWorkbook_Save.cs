@@ -2228,7 +2228,7 @@ namespace ClosedXML.Excel
                 Style = GetCommentStyle(c),
                 FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2),
                 StrokeColor = "#" + c.Comment.Style.ColorsAndLines.LineColor.Color.ToHex().Substring(2),
-                StrokeWeight = String.Format("{0}pt", c.Comment.Style.ColorsAndLines.LineWeight),
+                StrokeWeight = String.Format(CultureInfo.InvariantCulture, "{0}pt", c.Comment.Style.ColorsAndLines.LineWeight),
                 InsetMode = c.Comment.Style.Margins.Automatic ? InsetMarginValues.Auto : InsetMarginValues.Custom
             };
             if (!XLHelper.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
