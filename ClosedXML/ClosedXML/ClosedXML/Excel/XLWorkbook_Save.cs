@@ -2681,10 +2681,10 @@ namespace ClosedXML.Excel
                 FontId = styleInfo.FontId,
                 FillId = styleInfo.FillId,
                 BorderId = styleInfo.BorderId,
-                ApplyNumberFormat = false,
+                ApplyNumberFormat = true,
+                ApplyAlignment = true,
                 ApplyFill = ApplyFill(styleInfo),
                 ApplyBorder = ApplyBorder(styleInfo),
-                ApplyAlignment = false,
                 ApplyProtection = ApplyProtection(styleInfo)
             };
             return cellFormat;
@@ -2706,8 +2706,6 @@ namespace ClosedXML.Excel
                 && f.FillId != null && styleInfo.FillId == f.FillId
                 && f.FontId != null && styleInfo.FontId == f.FontId
                 && f.NumberFormatId != null && styleInfo.NumberFormatId == f.NumberFormatId
-                && f.ApplyNumberFormat != null && f.ApplyNumberFormat == false
-                && f.ApplyAlignment != null && f.ApplyAlignment == false
                 && f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo)
                 && f.ApplyBorder != null && f.ApplyBorder == ApplyBorder(styleInfo)
                 && AlignmentsAreEqual(f.Alignment, styleInfo.Style.Alignment)
