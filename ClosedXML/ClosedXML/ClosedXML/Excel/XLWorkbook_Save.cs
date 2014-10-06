@@ -1617,10 +1617,10 @@ namespace ClosedXML.Excel
             var tableColumns1 = new TableColumns {Count = (UInt32)xlTable.ColumnCount()};
 
             UInt32 columnId = 0;
-            foreach (var fieldName in xlTable.FieldNames.Keys)
+            foreach (var xlField in xlTable.Fields)
             {
                 columnId++;
-                var xlField = xlTable.Field(fieldName);
+                var fieldName = xlField.Name;
                 var tableColumn1 = new TableColumn
                 {
                     Id = columnId,
