@@ -22,5 +22,15 @@ namespace ClosedXML.Excel
         {
             return GetEnumerator();
         }
+
+        public void Remove(Predicate<IXLConditionalFormat> predicate)
+        {
+            _conditionalFormats.RemoveAll(predicate);
+        }
+
+        public void RemoveAll()
+        {
+            _conditionalFormats.Clear();
+        }
     }
 }
