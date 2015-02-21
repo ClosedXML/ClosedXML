@@ -83,20 +83,22 @@ namespace ClosedXML.Excel
             return sum;
         }
 
+        private static readonly string[] letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+
         /// <summary>
         /// 	Gets the column letter of a given column number.
         /// </summary>
         /// <param name="columnNumber"> The column number to translate into a column letter. </param>
         public static string GetColumnLetterFromNumber(int columnNumber)
         {
-            var ret = String.Empty;
-            while (columnNumber > 0)
+            columnNumber--; // Adjust for start on column 1
+            if (columnNumber <= 25)
             {
-                --columnNumber;
-                ret = (char)('A' + columnNumber % 26) + ret;
-                columnNumber /= 26;
+                return letters[columnNumber];
             }
-            return ret;
+            var firstPart = (columnNumber) / 26;
+            var remainder = ((columnNumber) % 26) + 1;
+            return GetColumnLetterFromNumber(firstPart) + GetColumnLetterFromNumber(remainder);
         }
 
         public static bool IsValidColumn(string column)
