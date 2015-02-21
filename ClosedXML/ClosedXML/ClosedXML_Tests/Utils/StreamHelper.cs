@@ -105,7 +105,7 @@ namespace ClosedXML_Tests
         }
 
         /// <summary>
-        ///     Compare two streams by looping
+        ///     Compare two streams by converting them to strings and comparing the strings
         /// </summary>
         /// <param name="one"></param>
         /// <param name="other"></param>
@@ -133,18 +133,9 @@ namespace ClosedXML_Tests
 
             #endregion
 
-            if (one.Length != other.Length)
-            {
-                return false;
-            }
-            int _oneByte;
-            int _otherByte;
-            do
-            {
-                _oneByte = one.ReadByte();
-                _otherByte = other.ReadByte();
-            } while (_oneByte == _otherByte && !(_oneByte == -1 || _otherByte == -1));
-            return _oneByte == -1 && _otherByte == -1;
+            var stringOne = new StreamReader(one).ReadToEnd();
+            var stringOther = new StreamReader(other).ReadToEnd();
+            return stringOne == stringOther;
         }
     }
 }
