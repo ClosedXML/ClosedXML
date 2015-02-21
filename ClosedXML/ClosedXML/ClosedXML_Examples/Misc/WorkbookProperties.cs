@@ -58,7 +58,7 @@ namespace ClosedXML_Examples.Misc
 
             // Creating/Using custom properties
             wb.CustomProperties.Add("theText", "XXX");
-            wb.CustomProperties.Add("theDate", new DateTime(2011, 1, 1));
+            wb.CustomProperties.Add("theDate", new DateTime(2011, 1, 1, 17, 0, 0, DateTimeKind.Utc)); // Use UTC to make sure test can be run in any time zone
             wb.CustomProperties.Add("theNumber", 123.456);
             wb.CustomProperties.Add("theBoolean", true);
 
