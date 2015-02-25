@@ -3805,6 +3805,8 @@ namespace ClosedXML.Excel
                             cell.CellValue = cellValue;
                         }
                     }
+                    if (opCell.IsEmpty(true))
+                        cell.Remove();
                 }
                 xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
             }
