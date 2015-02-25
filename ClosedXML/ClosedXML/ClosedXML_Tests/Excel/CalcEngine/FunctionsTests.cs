@@ -8,6 +8,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     [TestFixture]
     public class FunctionsTests
     {
+        [TestFixtureSetUp]
+        public void Init()
+        {
+            // Make sure tests run on a deterministic culture
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+        }
+
         [Test]
         public void Asc()
         {

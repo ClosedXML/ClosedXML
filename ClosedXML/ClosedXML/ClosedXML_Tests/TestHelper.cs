@@ -44,6 +44,9 @@ namespace ClosedXML_Tests
         public static void RunTestExample<T>(string filePartName)
                 where T : IXLExample, new()
         {
+            // Make sure tests run on a deterministic culture
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
             var example = new T();
             string filePath1 = Path.Combine(TestsExampleOutputDirectory, filePartName);
 
