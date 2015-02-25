@@ -3422,7 +3422,7 @@ namespace ClosedXML.Excel
             cm.SetElement(XLWSContentManager.XLWSContents.SheetFormatProperties,
                 worksheetPart.Worksheet.SheetFormatProperties);
 
-            worksheetPart.Worksheet.SheetFormatProperties.DefaultRowHeight = xlWorksheet.RowHeight;
+            worksheetPart.Worksheet.SheetFormatProperties.DefaultRowHeight = xlWorksheet.RowHeight.SaveRound();
 
             if (xlWorksheet.RowHeightChanged)
                 worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = true;
@@ -3430,7 +3430,7 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = null;
 
 
-            var worksheetColumnWidth = GetColumnWidth(xlWorksheet.ColumnWidth);
+            var worksheetColumnWidth = GetColumnWidth(xlWorksheet.ColumnWidth).SaveRound();
             if (xlWorksheet.ColumnWidthChanged)
                 worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = worksheetColumnWidth;
             else
@@ -3514,7 +3514,7 @@ namespace ClosedXML.Excel
                     if (xlWorksheet.Internals.ColumnsCollection.ContainsKey(co))
                     {
                         styleId = context.SharedStyles[xlWorksheet.Internals.ColumnsCollection[co].GetStyleId()].StyleId;
-                        columnWidth = GetColumnWidth(xlWorksheet.Internals.ColumnsCollection[co].Width);
+                        columnWidth = GetColumnWidth(xlWorksheet.Internals.ColumnsCollection[co].Width).SaveRound();
                         isHidden = xlWorksheet.Internals.ColumnsCollection[co].IsHidden;
                         collapsed = xlWorksheet.Internals.ColumnsCollection[co].Collapsed;
                         outlineLevel = xlWorksheet.Internals.ColumnsCollection[co].OutlineLevel;
@@ -3648,7 +3648,7 @@ namespace ClosedXML.Excel
                     var thisRow = xlWorksheet.Internals.RowsCollection[distinctRow];
                     if (thisRow.HeightChanged)
                     {
-                        row.Height = thisRow.Height;
+                        row.Height = thisRow.Height.SaveRound();
                         row.CustomHeight = true;
                         row.CustomFormat = true;
                     }
@@ -4457,7 +4457,7 @@ namespace ClosedXML.Excel
                 newColumn.Min = column.Min;
                 newColumn.Max = column.Max;
                 newColumn.Style = column.Style;
-                newColumn.Width = column.Width;
+                newColumn.Width = column.Width.SaveRound();
                 newColumn.CustomWidth = column.CustomWidth;
 
                 if (column.Hidden != null)

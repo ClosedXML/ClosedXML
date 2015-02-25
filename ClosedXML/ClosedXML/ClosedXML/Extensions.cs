@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using System.IO;
 using System.Xml;
 using ClosedXML.Utils;
+using DocumentFormat.OpenXml;
 
 [assembly: CLSCompliantAttribute(true)]
 namespace ClosedXML.Excel
@@ -179,6 +180,10 @@ namespace ClosedXML.Excel
             return value.ToString(CultureInfo.InvariantCulture);
         }
 
+        public static Double SaveRound(this Double value)
+        {
+            return Math.Round(value, 6);
+        }
     }
 
     public static class FontBaseExtensions
@@ -264,6 +269,14 @@ namespace ClosedXML.Excel
         public static Type GetItemType<T>(this IEnumerable<T> source)
         {
             return typeof(T);
+        }
+    }
+
+    public static class DoubleValueExtensions
+    {
+        public static DoubleValue SaveRound(this DoubleValue value)
+        {
+            return value.HasValue ? new DoubleValue(Math.Round(value, 6)) : value;
         }
     }
 }
