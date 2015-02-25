@@ -20,10 +20,6 @@ namespace ClosedXML_Tests
         public static string TestsOutputDirectory
         {
             get { 
-                var preferredPath = "C:\\ClosedXML_Tests";
-                if (Directory.Exists(preferredPath))
-                    return preferredPath; 
-
                 return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location); 
             }
 
