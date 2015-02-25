@@ -345,6 +345,11 @@ namespace ClosedXML.Excel
                 rowMaxHeight = Worksheet.RowHeight;
 
             Height = rowMaxHeight;
+
+            foreach (IDisposable font in fontCache.Values)
+            {
+                font.Dispose();
+            }
             return this;
         }
 

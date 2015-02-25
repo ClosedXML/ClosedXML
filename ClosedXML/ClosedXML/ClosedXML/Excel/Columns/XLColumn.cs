@@ -448,6 +448,10 @@ namespace ClosedXML.Excel
 
             Width = colMaxWidth;
 
+            foreach (IDisposable font in fontCache.Values)
+            {
+                font.Dispose();
+            }
             return this;
         }
 
