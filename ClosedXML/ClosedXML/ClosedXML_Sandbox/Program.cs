@@ -15,9 +15,13 @@ namespace ClosedXML_Sandbox
     {
         private static void Main(string[] args)
         {
-            var wb = new XLWorkbook();
-            wb.SaveAs(@"c:\temp\saved.xlsx");
-            Console.WriteLine("Done");
+            //var wb = new XLWorkbook();
+            //wb.SaveAs(@"c:\temp\saved.xlsx");
+            //Console.WriteLine("Done");
+            PerformanceRunner.TimeAction(PerformanceRunner.RunInsertTable);
+
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
         }
     }
 }
