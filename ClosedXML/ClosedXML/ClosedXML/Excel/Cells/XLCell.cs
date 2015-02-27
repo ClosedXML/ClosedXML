@@ -1086,8 +1086,7 @@
 
         public Boolean IsMerged()
         {
-            using (var asRange = AsRange())
-                return Worksheet.Internals.MergedRanges.Any(asRange.Intersects);
+            return Worksheet.Internals.MergedRanges.Any(r => r.Contains(this));
         }
 
         public Boolean IsEmpty()
