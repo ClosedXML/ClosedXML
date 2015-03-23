@@ -3702,111 +3702,126 @@ namespace ClosedXML.Excel
                     var dataType = opCell.DataType;
                     var cellReference = (opCell.Address).GetTrimmedAddress();
 
-                    Cell cell;
-                    if (cellsByReference.ContainsKey(cellReference))
-                        cell = cellsByReference[cellReference];
-                    else
-                    {
-                        cell = new Cell();
-                        cell.CellReference = new StringValue(cellReference);
-                        
-                        if (isNewRow)
-                            row.AppendChild(cell);
-                        else
-                        {
-                            var newColumn = XLHelper.GetColumnNumberFromAddress(cellReference);
+                    var isEmpty = opCell.IsEmpty(true);
 
-                            Cell cellBeforeInsert = null;
-                            int[] lastCo = {Int32.MaxValue};
-                            foreach (var c in mRows.Where(kp => kp.Key > newColumn).Where(c => lastCo[0] > c.Key))
-                            {
-                                cellBeforeInsert = c.Value;
-                                lastCo[0] = c.Key;
-                            }
-                            if (cellBeforeInsert == null)
+                    Cell cell = null;
+                    if (cellsByReference.ContainsKey(cellReference))
+                    {
+                        cell = cellsByReference[cellReference];
+                        if (isEmpty)
+                        {
+                            cell.Remove();
+                        }
+                    }
+
+                    if (!isEmpty)
+                    {
+                        if (cell == null)
+                        {
+                            cell = new Cell();
+                            cell.CellReference = new StringValue(cellReference);
+
+                            if (isNewRow)
                                 row.AppendChild(cell);
                             else
-                                row.InsertBefore(cell, cellBeforeInsert);
-                        }
-                    }
-
-                    cell.StyleIndex = styleId;
-                    var formula = opCell.FormulaA1;
-                    if (opCell.HasFormula)
-                    {
-                        if (formula.StartsWith("{"))
-                        {
-                            formula = formula.Substring(1, formula.Length - 2);
-                            var f = new CellFormula {FormulaType = CellFormulaValues.Array};
-
-                            if (opCell.FormulaReference == null)
-                                opCell.FormulaReference = opCell.AsRange().RangeAddress;
-                            if (opCell.FormulaReference.FirstAddress.Equals(opCell.Address))
                             {
-                                f.Text = formula;
-                                f.Reference = opCell.FormulaReference.ToStringRelative();
+                                var newColumn = XLHelper.GetColumnNumberFromAddress(cellReference);
+
+                                Cell cellBeforeInsert = null;
+                                int[] lastCo = { Int32.MaxValue };
+                                foreach (var c in mRows.Where(kp => kp.Key > newColumn).Where(c => lastCo[0] > c.Key))
+                                {
+                                    cellBeforeInsert = c.Value;
+                                    lastCo[0] = c.Key;
+                                }
+                                if (cellBeforeInsert == null)
+                                    row.AppendChild(cell);
+                                else
+                                    row.InsertBefore(cell, cellBeforeInsert);
                             }
-
-                            cell.CellFormula = f;
-                        }
-                        else
-                        {
-                            cell.CellFormula = new CellFormula();
-                            cell.CellFormula.Text = formula;
                         }
 
-                        cell.CellValue = null;
-                    }
-                    else
-                    {
-                        cell.CellFormula = null;
-
-                        cell.DataType = opCell.DataType == XLCellValues.DateTime ? null : GetCellValue(opCell);
-
-                        var cellValue = new CellValue();
-                        if (dataType == XLCellValues.Text)
+                        cell.StyleIndex = styleId;
+                        var formula = opCell.FormulaA1;
+                        if (opCell.HasFormula)
                         {
-                            if (opCell.InnerText.Length == 0)
-                                cell.CellValue = null;
+                            if (formula.StartsWith("{"))
+                            {
+                                formula = formula.Substring(1, formula.Length - 2);
+                                var f = new CellFormula { FormulaType = CellFormulaValues.Array };
+
+                                if (opCell.FormulaReference == null)
+                                    opCell.FormulaReference = opCell.AsRange().RangeAddress;
+                                if (opCell.FormulaReference.FirstAddress.Equals(opCell.Address))
+                                {
+                                    f.Text = formula;
+                                    f.Reference = opCell.FormulaReference.ToStringRelative();
+                                }
+
+                                cell.CellFormula = f;
+                            }
                             else
                             {
-                                if (opCell.ShareString)
-                                {
-                                    cellValue.Text = opCell.SharedStringId.ToString();
-                                    cell.CellValue = cellValue;
-                                }
-                                else
-                                {
-                                    var text = opCell.GetString();
-                                    var t = new Text(text);
-                                    if (text.PreserveSpaces())
-                                        t.Space = SpaceProcessingModeValues.Preserve;
-
-                                    cell.InlineString = new InlineString {Text = t};
-                                }
+                                cell.CellFormula = new CellFormula();
+                                cell.CellFormula.Text = formula;
                             }
-                        }
-                        else if (dataType == XLCellValues.TimeSpan)
-                        {
-                            var timeSpan = opCell.GetTimeSpan();
-                            cellValue.Text =
-                                XLCell.BaseDate.Add(timeSpan).ToOADate().ToString(CultureInfo.InvariantCulture);
-                            cell.CellValue = cellValue;
-                        }
-                        else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
-                        {
-                            if (!XLHelper.IsNullOrWhiteSpace(opCell.InnerText))
-                                cellValue.Text = Double.Parse(opCell.InnerText).ToString(CultureInfo.InvariantCulture);
-                            cell.CellValue = cellValue;
+
+                            cell.CellValue = null;
                         }
                         else
                         {
-                            cellValue.Text = opCell.InnerText;
-                            cell.CellValue = cellValue;
+                            cell.CellFormula = null;
+
+                            cell.DataType = opCell.DataType == XLCellValues.DateTime ? null : GetCellValue(opCell);
+
+                            if (dataType == XLCellValues.Text)
+                            {
+                                if (opCell.InnerText.Length == 0)
+                                    cell.CellValue = null;
+                                else
+                                {
+                                    if (opCell.ShareString)
+                                    {
+                                        var cellValue = new CellValue();
+                                        cellValue.Text = opCell.SharedStringId.ToString();
+                                        cell.CellValue = cellValue;
+                                    }
+                                    else
+                                    {
+                                        var text = opCell.GetString();
+                                        var t = new Text(text);
+                                        if (text.PreserveSpaces())
+                                            t.Space = SpaceProcessingModeValues.Preserve;
+
+                                        cell.InlineString = new InlineString { Text = t };
+                                    }
+                                }
+                            }
+                            else if (dataType == XLCellValues.TimeSpan)
+                            {
+                                var timeSpan = opCell.GetTimeSpan();
+                                var cellValue = new CellValue();
+                                cellValue.Text =
+                                    XLCell.BaseDate.Add(timeSpan).ToOADate().ToString(CultureInfo.InvariantCulture);
+                                cell.CellValue = cellValue;
+                            }
+                            else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
+                            {
+                                if (!XLHelper.IsNullOrWhiteSpace(opCell.InnerText))
+                                {
+                                    var cellValue = new CellValue();
+                                    cellValue.Text = Double.Parse(opCell.InnerText).ToString(CultureInfo.InvariantCulture);
+                                    cell.CellValue = cellValue;
+                                }
+                            }
+                            else
+                            {
+                                var cellValue = new CellValue();
+                                cellValue.Text = opCell.InnerText;
+                                cell.CellValue = cellValue;
+                            }
                         }
                     }
-                    if (opCell.IsEmpty(true))
-                        cell.Remove();
                 }
                 xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
             }
