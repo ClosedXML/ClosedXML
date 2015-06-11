@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -10,6 +12,12 @@ namespace ClosedXML_Tests.Excel.DataValidations
     [TestFixture]
     public class DateAndTimeTests
     {
+        [SetUp]
+        public void SetCultureInfo()
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+        }
+
         [Test]
         public void Date()
         {
