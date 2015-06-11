@@ -40,6 +40,16 @@ namespace ClosedXML_Tests.Excel.DataValidations
         }
 
         [Test]
+        public void DayWithDifferentCulture()
+        {
+            CultureInfo ci = new CultureInfo(CultureInfo.InvariantCulture.LCID);
+            ci.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy";
+            Thread.CurrentThread.CurrentCulture = ci;
+            Object actual = XLWorkbook.EvaluateExpr("Day(\"1/6/2008\")");
+            Assert.AreEqual(1, actual);
+        }
+
+        [Test]
         public void Days360_Default()
         {
             Object actual = XLWorkbook.EvaluateExpr("Days360(\"1/30/2008\", \"2/1/2008\")");
