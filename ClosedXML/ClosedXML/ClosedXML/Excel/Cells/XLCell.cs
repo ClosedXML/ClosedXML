@@ -1615,7 +1615,13 @@
         private void SetValue(object value)
         {
             FormulaA1 = String.Empty;
-            var val = value == null ? String.Empty : value.ToString();
+            string val;
+            if (value == null)
+                val = string.Empty;
+            else if (value is DateTime)
+                val = ((DateTime)value).ToString("o");
+            else
+                val = value.ToString();
             _richText = null;
             if (val.Length == 0)
                 _dataType = XLCellValues.Text;
