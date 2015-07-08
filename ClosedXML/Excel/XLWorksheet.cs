@@ -96,6 +96,7 @@ namespace ClosedXML.Excel
         public Boolean LegacyDrawingIsNew;
         private Double _columnWidth;
         public XLWorksheetInternals Internals { get; private set; }
+        private List<Drawings.IXLPicture> pictures;
 
         public override IEnumerable<IXLStyle> Styles
         {
@@ -1491,5 +1492,19 @@ namespace ClosedXML.Excel
         }
 
         public String Author { get; set; }
+
+        public List<Drawings.IXLPicture> Pictures()
+        {
+            return pictures;
+        }
+
+        public void AddPicture(Drawings.XLPicture pic)
+        {
+            if (pictures == null)
+            {
+                pictures = new List<Drawings.IXLPicture>();
+            }
+            pictures.Add(pic);
+        } 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -285,7 +286,7 @@ namespace ClosedXML.Excel
         IXLTables Tables { get; }
 
         /// <summary>
-        /// Copies the 
+        /// Copies the
         /// </summary>
         /// <param name="newSheetName"></param>
         /// <returns></returns>
@@ -368,5 +369,9 @@ namespace ClosedXML.Excel
         Object Evaluate(String expression);
 
         String Author { get; set; }
+
+        List<Drawings.IXLPicture> Pictures();
+
+        void AddPicture(Drawings.XLPicture pic);
     }
 }
