@@ -3174,7 +3174,7 @@ namespace ClosedXML.Excel
             var allSharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>();
             foreach (var numberFormatInfo in sharedNumberFormats.Values)
             {
-                var numberingFormatId = 0;
+                var numberingFormatId = 164;
                 var foundOne = false;
                 foreach (NumberingFormat nf in workbookStylesPart.Stylesheet.NumberingFormats)
                 {
