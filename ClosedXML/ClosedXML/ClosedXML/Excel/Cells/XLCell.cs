@@ -421,7 +421,11 @@
                     return DateTime.FromOADate(Double.Parse(cellValue));
 
                 if (_dataType == XLCellValues.Number)
-                    return Double.Parse(cellValue);
+                {
+                  Double value;
+                  Double.TryParse(cellValue, out value);
+                  return value;
+                }
 
                 if (_dataType == XLCellValues.TimeSpan)
                 {
@@ -1225,7 +1229,7 @@
         {
             var currValue = Value;
 
-            if (currValue == null)
+            if (currValue == null || currValue.ToString() == "")
             {
                 value = default(T);
                 return true;

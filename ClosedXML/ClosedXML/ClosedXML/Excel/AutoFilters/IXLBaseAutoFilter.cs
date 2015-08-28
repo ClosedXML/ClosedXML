@@ -2,7 +2,7 @@
 namespace ClosedXML.Excel
 {
     using System.Collections.Generic;
-    public enum XLFilterType { Regular, Custom, TopBottom, Dynamic }
+    public enum XLFilterType { Regular, Custom, TopBottom, Dynamic, Blank }
     public enum XLFilterDynamicType { AboveAverage, BelowAverage }
     public enum XLTopBottomPart { Top, Bottom}
     public interface IXLBaseAutoFilter

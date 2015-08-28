@@ -584,23 +584,6 @@ namespace ClosedXML.Excel
                     definedNames.AppendChild(definedName);
                 }
 
-                if (worksheet.AutoFilter.Enabled)
-                {
-                    var definedName = new DefinedName
-                    {
-                        Name = "_xlnm._FilterDatabase",
-                        LocalSheetId = sheetId,
-                        Text = "'" + worksheet.Name + "'!" +
-                               worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(
-                                   XLReferenceStyle.A1) +
-                               ":" +
-                               worksheet.AutoFilter.Range.RangeAddress.LastAddress.ToStringFixed(
-                                   XLReferenceStyle.A1),
-                        Hidden = BooleanValue.FromBoolean(true)
-                    };
-                    definedNames.AppendChild(definedName);
-                }
-
                 foreach (var nr in worksheet.NamedRanges.Where(n => n.Name != "_xlnm._FilterDatabase"))
                 {
                     var definedName = new DefinedName
@@ -651,6 +634,23 @@ namespace ClosedXML.Excel
                 };
 
                 definedNames.AppendChild(definedName2);
+
+                if (worksheet.AutoFilter.Enabled)
+                {
+                  var definedName = new DefinedName
+                  {
+                    Name = "_xlnm._FilterDatabase",
+                    LocalSheetId = sheetId,
+                    Text = "'" + worksheet.Name + "'!" +
+                           worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(
+                               XLReferenceStyle.A1) +
+                           ":" +
+                           worksheet.AutoFilter.Range.RangeAddress.LastAddress.ToStringFixed(
+                               XLReferenceStyle.A1),
+                    Hidden = BooleanValue.FromBoolean(true)
+                  };
+                  definedNames.AppendChild(definedName);
+                }
             }
 
             foreach (var nr in NamedRanges)
@@ -1668,7 +1668,7 @@ namespace ClosedXML.Excel
                     xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
 
                 PopulateAutoFilter(xlTable.AutoFilter, autoFilter1);
-
+                xlTable.AutoFilter.ReapplyAllFilter();
                 table.AppendChild(autoFilter1);
             }
 
@@ -4484,6 +4484,10 @@ namespace ClosedXML.Excel
                     var dynamicFilter = new DynamicFilter
                     {Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue};
                     filterColumn.Append(dynamicFilter);
+                }
+                else if (filterType == XLFilterType.Blank)
+                {
+                  filterColumn.Append(new Filters() { Blank = true });
                 }
                 else
                 {

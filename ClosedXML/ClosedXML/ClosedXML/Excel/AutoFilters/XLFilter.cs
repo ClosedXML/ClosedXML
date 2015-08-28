@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     public enum XLConnector { And, Or }
     public enum XLFilterOperator { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan }
-    internal class XLFilter
+    public class XLFilter
     {
         public XLFilter(XLFilterOperator op = XLFilterOperator.Equal)
         {
