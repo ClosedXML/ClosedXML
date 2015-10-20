@@ -106,6 +106,86 @@ namespace ClosedXML.Excel
             }
         }
 
+        // http://blogs.msdn.com/b/vsod/archive/2010/02/05/how-to-delete-a-worksheet-from-excel-using-open-xml-sdk-2-0.aspx
+        private void DeleteSheetAndDependencies(WorkbookPart wbPart, string sheetId)
+        {
+            //Get the SheetToDelete from workbook.xml
+            Sheet worksheet = wbPart.Workbook.Descendants<Sheet>().Where(s => s.Id == sheetId).FirstOrDefault();
+            if (worksheet == null)
+            { }
+
+            string sheetName = worksheet.Name;
+            // Get the pivot Table Parts
+            IEnumerable<PivotTableCacheDefinitionPart> pvtTableCacheParts = wbPart.PivotTableCacheDefinitionParts;
+            Dictionary<PivotTableCacheDefinitionPart, string> pvtTableCacheDefinationPart = new Dictionary<PivotTableCacheDefinitionPart, string>();
+            foreach (PivotTableCacheDefinitionPart Item in pvtTableCacheParts)
+            {
+                PivotCacheDefinition pvtCacheDef = Item.PivotCacheDefinition;
+                //Check if this CacheSource is linked to SheetToDelete
+                var pvtCahce = pvtCacheDef.Descendants<CacheSource>().Where(s => s.WorksheetSource.Sheet == sheetName);
+                if (pvtCahce.Count() > 0)
+                {
+                    pvtTableCacheDefinationPart.Add(Item, Item.ToString());
+                }
+            }
+            foreach (var Item in pvtTableCacheDefinationPart)
+            {
+                wbPart.DeletePart(Item.Key);
+            }
+
+            // Remove the sheet reference from the workbook.
+            WorksheetPart worksheetPart = (WorksheetPart)(wbPart.GetPartById(sheetId));
+            worksheet.Remove();
+
+            // Delete the worksheet part.
+            wbPart.DeletePart(worksheetPart);
+
+            //Get the DefinedNames
+            var definedNames = wbPart.Workbook.Descendants<DefinedNames>().FirstOrDefault();
+            if (definedNames != null)
+            {
+                List<DefinedName> defNamesToDelete = new List<DefinedName>();
+
+                foreach (DefinedName Item in definedNames)
+                {
+                    // This condition checks to delete only those names which are part of Sheet in question
+                    if (Item.Text.Contains(worksheet.Name + "!"))
+                        defNamesToDelete.Add(Item);
+                }
+
+                foreach (DefinedName Item in defNamesToDelete)
+                {
+                    Item.Remove();
+                }
+
+            }
+            // Get the CalculationChainPart 
+            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the 
+            //workbook whose value is calculated from any formula
+
+            CalculationChainPart calChainPart;
+            calChainPart = wbPart.CalculationChainPart;
+            if (calChainPart != null)
+            {
+                var calChainEntries = calChainPart.CalculationChain.Descendants<CalculationCell>().Where(c => c.SheetId == sheetId);
+                List<CalculationCell> calcsToDelete = new List<CalculationCell>();
+                foreach (CalculationCell Item in calChainEntries)
+                {
+                    calcsToDelete.Add(Item);
+                }
+
+                foreach (CalculationCell Item in calcsToDelete)
+                {
+                    Item.Remove();
+                }
+
+                if (calChainPart.CalculationChain.Count() == 0)
+                {
+                    wbPart.DeletePart(calChainPart);
+                }
+            }
+        }
+
         // Adds child parts and generates content of the specified part.
         private void CreateParts(SpreadsheetDocument document)
         {
@@ -114,8 +194,16 @@ namespace ClosedXML.Excel
             var workbookPart = document.WorkbookPart ?? document.AddWorkbookPart();
 
             var worksheets = WorksheetsInternal;
+            
+
             var partsToRemove = workbookPart.Parts.Where(s => worksheets.Deleted.Contains(s.RelationshipId)).ToList();
-            partsToRemove.ForEach(s => workbookPart.DeletePart(s.OpenXmlPart));
+            var pivotCacheDefinitionsToRemove = partsToRemove.SelectMany(s => ((WorksheetPart)s.OpenXmlPart).PivotTableParts.Select(pt => pt.PivotTableCacheDefinitionPart)).Distinct().ToList();
+            var pivotCachesToRemove = workbookPart.Workbook.PivotCaches.Where(pc => pivotCacheDefinitionsToRemove.Select(pcd => workbookPart.GetIdOfPart(pcd)).ToList().Contains(((PivotCache)pc).Id)).Distinct().ToList();
+
+            pivotCacheDefinitionsToRemove.ForEach(c => workbookPart.DeletePart(c));
+            pivotCachesToRemove.ForEach(c => workbookPart.Workbook.PivotCaches.RemoveChild(c));
+            worksheets.Deleted.ToList().ForEach(ws => DeleteSheetAndDependencies(workbookPart, ws));
+
             context.RelIdGenerator.AddValues(workbookPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Workbook);
 
             var extendedFilePropertiesPart = document.ExtendedFilePropertiesPart ??
