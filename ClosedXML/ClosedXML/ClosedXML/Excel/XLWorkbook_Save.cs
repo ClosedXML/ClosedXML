@@ -2466,7 +2466,7 @@ namespace ClosedXML.Excel
                 numberFormatCount++;
             }
 
-            var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, sharedNumberFormats);
+            var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, sharedNumberFormats, defaultFormatId);
             ResolveFonts(workbookStylesPart, context);
             var allSharedFills = ResolveFills(workbookStylesPart, sharedFills);
             var allSharedBorders = ResolveBorders(workbookStylesPart, sharedBorders);
@@ -3166,13 +3166,21 @@ namespace ClosedXML.Excel
 
         private static Dictionary<IXLNumberFormat, NumberFormatInfo> ResolveNumberFormats(
             WorkbookStylesPart workbookStylesPart,
-            Dictionary<IXLNumberFormat, NumberFormatInfo> sharedNumberFormats)
+            Dictionary<IXLNumberFormat, NumberFormatInfo> sharedNumberFormats,
+            UInt32 defaultFormatId)
         {
             if (workbookStylesPart.Stylesheet.NumberingFormats == null)
+            {
                 workbookStylesPart.Stylesheet.NumberingFormats = new NumberingFormats();
+                workbookStylesPart.Stylesheet.NumberingFormats.AppendChild(new NumberingFormat()
+                {
+                    NumberFormatId = 0,
+                    FormatCode = ""
+                });
+            }
 
             var allSharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>();
-            foreach (var numberFormatInfo in sharedNumberFormats.Values)
+            foreach (var numberFormatInfo in sharedNumberFormats.Values.Where(nf => nf.NumberFormatId != defaultFormatId))
             {
                 var numberingFormatId = 164;
                 var foundOne = false;
