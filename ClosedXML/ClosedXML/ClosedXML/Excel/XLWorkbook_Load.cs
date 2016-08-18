@@ -268,9 +268,9 @@ namespace ClosedXML.Excel
                         if (dTable.TableStyleInfo.ShowColumnStripes != null)
                             xlTable.ShowColumnStripes = dTable.TableStyleInfo.ShowColumnStripes.Value;
                         if (dTable.TableStyleInfo.Name != null)
-                            xlTable.Theme = (XLTableTheme) Enum.Parse(typeof (XLTableTheme), dTable.TableStyleInfo.Name.Value);
+                            xlTable.Theme = dTable.TableStyleInfo.Name.Value;
                         else
-                            xlTable.Theme = XLTableTheme.None;
+                            xlTable.Theme = XLTableTheme.None.ToString();
                     }
 
 

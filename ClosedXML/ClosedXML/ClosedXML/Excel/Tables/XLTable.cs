@@ -168,7 +168,7 @@ namespace ClosedXML.Excel
             get { return _showHeaderRow && _showAutoFilter; } 
             set { _showAutoFilter = value; }
             }
-        public XLTableTheme Theme { get; set; }
+        public String Theme { get; set; }
 
         public String Name
         {
