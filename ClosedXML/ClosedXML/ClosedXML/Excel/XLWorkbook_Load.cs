@@ -100,13 +100,30 @@ namespace ClosedXML.Excel
             var calculationProperties = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties;
             if (calculationProperties != null)
             {
+                var calculateMode = calculationProperties.CalculationMode;
+                if (calculateMode != null)
+                    CalculateMode = calculateMode.Value.ToClosedXml();
+
+                var calculationOnSave = calculationProperties.CalculationOnSave;
+                if (calculationOnSave != null)
+                    CalculationOnSave = calculationOnSave.Value;
+
+                var forceFullCalculation = calculationProperties.ForceFullCalculation;
+                if (forceFullCalculation != null)
+                    ForceFullCalculation = forceFullCalculation.Value;
+
+                var fullCalculationOnLoad = calculationProperties.FullCalculationOnLoad;
+                if (fullCalculationOnLoad != null)
+                    FullCalculationOnLoad = fullCalculationOnLoad.Value;
+
+                var fullPrecision = calculationProperties.FullPrecision;
+                if (fullPrecision != null)
+                    FullPrecision = fullPrecision.Value;
+
                 var referenceMode = calculationProperties.ReferenceMode;
                 if (referenceMode != null)
                     ReferenceStyle = referenceMode.Value.ToClosedXml();
 
-                var calculateMode = calculationProperties.CalculationMode;
-                if (calculateMode != null)
-                    CalculateMode = calculateMode.Value.ToClosedXml();
             }
 
             var efp = dSpreadsheet.ExtendedFilePropertiesPart;

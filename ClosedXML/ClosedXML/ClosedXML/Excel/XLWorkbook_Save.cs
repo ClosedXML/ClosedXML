@@ -677,6 +677,11 @@ namespace ClosedXML.Excel
                 workbook.CalculationProperties.ReferenceMode = null;
             else
                 workbook.CalculationProperties.ReferenceMode = ReferenceStyle.ToOpenXml();
+
+            if (CalculationOnSave) workbook.CalculationProperties.CalculationOnSave = CalculationOnSave;
+            if (ForceFullCalculation) workbook.CalculationProperties.ForceFullCalculation = ForceFullCalculation;
+            if (FullCalculationOnLoad) workbook.CalculationProperties.FullCalculationOnLoad = FullCalculationOnLoad;
+            if (FullPrecision) workbook.CalculationProperties.FullPrecision = FullPrecision;
         }
 
         private void GenerateSharedStringTablePartContent(SharedStringTablePart sharedStringTablePart,
