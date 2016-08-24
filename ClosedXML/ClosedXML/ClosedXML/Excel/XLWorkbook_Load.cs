@@ -242,12 +242,13 @@ namespace ClosedXML.Excel
                 {
                     var dTable = tablePart.Table;
                     string reference = dTable.Reference.Value;
-                    XLTable xlTable = ws.Range(reference).CreateTable(dTable.Name, false) as XLTable;
+                    var columnNames = dTable.TableColumns.Cast<TableColumn>().Select(t => GetTableColumnName(t.Name.Value));
+                    XLTable xlTable = ws.Range(reference).CreateTable(dTable.Name, false, columnNames) as XLTable;
                     if (dTable.HeaderRowCount != null && dTable.HeaderRowCount == 0)
                     {
                         xlTable._showHeaderRow = false;
                         //foreach (var tableColumn in dTable.TableColumns.Cast<TableColumn>())
-                        xlTable.AddFields(dTable.TableColumns.Cast<TableColumn>().Select(t=>GetTableColumnName(t.Name.Value)));
+                        xlTable.AddFields(columnNames);
                     }
                     else
                     {
