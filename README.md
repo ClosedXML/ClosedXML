@@ -15,5 +15,3 @@ If you've ever used the Microsoft Open XML Format SDK you know just how much cod
             var worksheet = workbook.Worksheets.Add("Sample Sheet");
             worksheet.Cell("A1").Value = "Hello World!";
             workbook.SaveAs("HelloWorld.xlsx");
-
-Something more elaborate:
