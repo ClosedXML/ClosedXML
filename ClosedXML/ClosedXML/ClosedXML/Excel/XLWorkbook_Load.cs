@@ -704,8 +704,11 @@ namespace ClosedXML.Excel
                         if (area.Contains("["))
                         {
                             String tableName = area.Substring(0, area.IndexOf("["));
-                            var ws = Worksheets.First(w => (w as XLWorksheet).SheetId == definedName.LocalSheetId + 1);
-                            ws.PageSetup.PrintAreas.Add(area);
+                            var ws = Worksheets.FirstOrDefault(w => (w as XLWorksheet).SheetId == definedName.LocalSheetId + 1);
+                            if (ws != null)
+                            {
+                                ws.PageSetup.PrintAreas.Add(area);
+                            }
                         }
                         else
                         {
