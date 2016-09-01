@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
         public XLTable(XLRange range, Boolean addToTables, Boolean setAutofilter = true)
             : base(new XLRangeParameters(range.RangeAddress, range.Style ))
         {
-            InitializeValues(setAutofilter);
+            InitializeValues(setAutofilter, null);
 
             Int32 id = 1;
             while (true)
@@ -39,16 +39,25 @@ namespace ClosedXML.Excel
         public XLTable(XLRange range, String name, Boolean addToTables, Boolean setAutofilter = true)
             : base(new XLRangeParameters(range.RangeAddress, range.Style))
         {
-            InitializeValues(setAutofilter);
+            InitializeValues(setAutofilter, null);
 
             Name = name;
             AddToTables(range, addToTables);
         }
 
+        public XLTable(XLRange range, String name, Boolean addToTables, IEnumerable<String> columnNames, Boolean setAutofilter = true)
+            : base(new XLRangeParameters(range.RangeAddress, range.Style))
+        {
+            InitializeValues(setAutofilter, columnNames);
+
+            Name = name;
+            AddToTables(range, addToTables);
+        }
         #endregion
 
         private IXLRangeAddress _lastRangeAddress;
         private Dictionary<String, IXLTableField> _fieldNames = null;
+        private IList<String> _columnNames = null;
         public Dictionary<String, IXLTableField> FieldNames
         {
             get
@@ -67,7 +76,11 @@ namespace ClosedXML.Excel
                         var name = cell.GetString();
                         if (XLHelper.IsNullOrWhiteSpace(name)) 
                         {
-                            name = "Column" + (cellPos + 1);
+                            if (_columnNames != null && cellPos < _columnNames.Count)
+                                name = _columnNames[cellPos];
+                            else
+                                name = "Column" + (cellPos + 1);
+
                             cell.SetValue(name);
                         }
                         if (_fieldNames.ContainsKey(name))
@@ -368,13 +381,16 @@ namespace ClosedXML.Excel
 
 
 
-        private void InitializeValues(Boolean setAutofilter)
+        private void InitializeValues(Boolean setAutofilter, IEnumerable<String> columnNames)
         {
             ShowRowStripes = true;
             _showHeaderRow = true;
             Theme = XLTableTheme.TableStyleLight9;
             if (setAutofilter)
                 InitializeAutoFilter();
+
+            if (columnNames != null && columnNames.Any())
+                _columnNames = columnNames.ToList();
 
             HeadersRow().DataType = XLCellValues.Text;
 

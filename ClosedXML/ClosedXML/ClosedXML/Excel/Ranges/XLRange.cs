@@ -293,6 +293,11 @@ namespace ClosedXML.Excel
             return new XLTable(this, name, true, setAutofilter);
         }
 
+        public IXLTable CreateTable(String name, Boolean setAutofilter, IEnumerable<String> columnNames)
+        {
+            return new XLTable(this, name, true, columnNames, setAutofilter);
+        }
+
         public new IXLRange CopyTo(IXLCell target)
         {
             base.CopyTo(target);
