@@ -1743,8 +1743,8 @@ namespace ClosedXML.Excel
                 ShowColumnStripes = xlTable.ShowColumnStripes
             };
 
-            if (xlTable.Theme != XLTableTheme.None)
-                tableStyleInfo1.Name = Enum.GetName(typeof(XLTableTheme), xlTable.Theme);
+            if (xlTable.Theme != XLTableTheme.None.ToString())
+                tableStyleInfo1.Name = xlTable.Theme;
 
             if (xlTable.ShowAutoFilter)
             {
