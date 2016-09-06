@@ -69,13 +69,14 @@ namespace ClosedXML.Excel
         public static readonly XLTableTheme TableStyleDark1 = new XLTableTheme("TableStyleDark1");
 
         public string Name { get; private set; }
+
         public XLTableTheme(string name)
         {
             this.Name = name;
         }
 
-
         private static IEnumerable<XLTableTheme> allThemes;
+
         public static IEnumerable<XLTableTheme> GetAllThemes()
         {
             return (allThemes ?? (allThemes = typeof(XLTableTheme).GetFields(BindingFlags.Static | BindingFlags.Public)
@@ -90,6 +91,7 @@ namespace ClosedXML.Excel
         }
 
         #region Overrides
+
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -113,7 +115,7 @@ namespace ClosedXML.Excel
         {
             return this.Name;
         }
-        #endregion Overrides
 
+        #endregion Overrides
     }
 }
