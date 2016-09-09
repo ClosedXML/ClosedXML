@@ -597,7 +597,6 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
         public void Substring_IndexOutsideRange1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -605,11 +604,10 @@ namespace ClosedXML_Tests
 
             richString.AddText("Hello");
 
-            IXLFormattedText<IXLRichText> richText = richString.Substring(50);
+            Assert.That(() => richString.Substring(50), Throws.TypeOf<IndexOutOfRangeException>());
         }
 
         [Test]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
         public void Substring_IndexOutsideRange2()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -618,11 +616,10 @@ namespace ClosedXML_Tests
             richString.AddText("Hello");
             richString.AddText("World");
 
-            IXLFormattedText<IXLRichText> richText = richString.Substring(50);
+            Assert.That(() => richString.Substring(50), Throws.TypeOf<IndexOutOfRangeException>());
         }
 
         [Test]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
         public void Substring_IndexOutsideRange3()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -630,11 +627,10 @@ namespace ClosedXML_Tests
 
             richString.AddText("Hello");
 
-            IXLFormattedText<IXLRichText> richText = richString.Substring(1, 10);
+            Assert.That(() => richString.Substring(1, 10), Throws.TypeOf<IndexOutOfRangeException>());
         }
 
         [Test]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
         public void Substring_IndexOutsideRange4()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -643,7 +639,7 @@ namespace ClosedXML_Tests
             richString.AddText("Hello");
             richString.AddText("World");
 
-            IXLFormattedText<IXLRichText> richText = richString.Substring(5, 20);
+            Assert.That(() => richString.Substring(5, 20), Throws.TypeOf<IndexOutOfRangeException>());
         }
 
         /// <summary>
