@@ -321,6 +321,9 @@
     <Compile Include="Excel\Drawings\Style\XLDrawingProperties.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="ClosedXML.snk" />
     <None Include="packages.config" />
   </ItemGroup>

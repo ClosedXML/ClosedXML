@@ -215,6 +215,9 @@
     <EmbeddedResource Include="Resource\Examples\Ranges\CurrentRowColumn.xlsx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="ClosedXML.snk" />
     <EmbeddedResource Include="Resource\Examples\Misc\BasicTable.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Styles\PurpleWorksheet.xlsx" />
