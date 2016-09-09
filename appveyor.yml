@@ -27,7 +27,7 @@ platform: Any CPU
 
 build:
   parallel: true                                            # enable MSBuild parallel builds
-  project: ClosedXML/ClosedXML/ClosedXML/ClosedXML.sln       # path to Visual Studio solution or project
+  project: ClosedXML.sln       # path to Visual Studio solution or project
   verbosity: minimal
  
 configuration : Release
