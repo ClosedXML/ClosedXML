@@ -75,7 +75,7 @@ namespace ClosedXML.Excel
                     else if (m.VTFileTime != null)
                     {
                         CustomProperties.Add(name,
-                                             DateTime.ParseExact(m.VTFileTime.Text, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'",
+                                             DateTime.ParseExact(m.VTFileTime.Text, "yyyy'-'MM'-'dd'T'HH':'mm':'ssK",
                                                                  CultureInfo.InvariantCulture));
                     }
                     else if (m.VTDouble != null)
