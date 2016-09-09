@@ -14,7 +14,7 @@ image: Visual Studio 2015
 assembly_info:
   patch: true
   file: AssemblyInfo.*
-  assembly_version: "2.2.{build}"
+  assembly_version: "1.0.{build}"
   assembly_file_version: "{version}"
   assembly_informational_version: "{version}"
   
@@ -26,16 +26,13 @@ assembly_info:
 platform: Any CPU
 
 build:
-  parallel: true                  # enable MSBuild parallel builds
+  parallel: true                                            # enable MSBuild parallel builds
   project: ClosedXML/ClosedXML/ClosedXML/ClosedXML.sln       # path to Visual Studio solution or project
+  verbosity: minimal
  
-
-
 configuration : Release
 
 #Restore
 before_build:
   - nuget restore
   
-build:
-  verbosity: minimal
