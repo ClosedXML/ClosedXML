@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/wobbmnlbukxejjgb?svg=true)](https://ci.appveyor.com/project/Pyropace/closedxml)
+
 # ClosedXML
 
           we are in process of moving the project from codeplex to github
