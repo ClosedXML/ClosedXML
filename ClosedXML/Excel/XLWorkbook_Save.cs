@@ -4047,8 +4047,6 @@ namespace ClosedXML.Excel
                     )
                     )
                 {
-                    
-                    priority++;
                     var conditionalFormatting = new ConditionalFormatting
                     {
                         SequenceOfReferences =
@@ -4056,7 +4054,7 @@ namespace ClosedXML.Excel
                     };
                     foreach(var cf in cfGroup.CfList)
                     {
-                        conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
+                        conditionalFormatting.Append(XLCFConverters.Convert(cf, priority++, context));
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
