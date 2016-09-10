@@ -89,5 +89,17 @@ namespace ClosedXML_Tests
             }
 #pragma warning restore 162
         }
+
+        public static void LoadFile(string filePartName)
+        {
+            var extractor = new ResourceFileExtractor(null, ".Resource.");
+
+            string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');
+            using (var stream = extractor.ReadFileFromResToStream(resourcePath))
+            {
+                var wb = new XLWorkbook(stream);
+                wb.Dispose();
+            }
+        }
     }
 }

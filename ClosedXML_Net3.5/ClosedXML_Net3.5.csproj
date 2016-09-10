@@ -831,6 +831,9 @@
     <Compile Include="..\ClosedXML\Excel\Tables\XLTables.cs">
       <Link>Excel\Tables\XLTables.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\Tables\XLTableTheme.cs">
+      <Link>Excel\Tables\XLTableTheme.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\XLConstants.cs">
       <Link>Excel\XLConstants.cs</Link>
     </Compile>
