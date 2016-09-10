@@ -118,6 +118,7 @@
     <Compile Include="Excel\CalcEngine\IsTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
+    <Compile Include="Excel\Loading\LoadingTests.cs" />
     <Compile Include="XLHelperTests.cs" />
     <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
     <Compile Include="Excel\CalcEngine\DateAndTimeTests.cs" />
@@ -283,6 +284,7 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
     <None Include="Resource\Misc\WorkbookProperties.xlsx" />
   </ItemGroup>
   <ItemGroup />

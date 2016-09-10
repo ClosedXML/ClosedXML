@@ -268,7 +268,13 @@ namespace ClosedXML.Excel
                         if (dTable.TableStyleInfo.ShowColumnStripes != null)
                             xlTable.ShowColumnStripes = dTable.TableStyleInfo.ShowColumnStripes.Value;
                         if (dTable.TableStyleInfo.Name != null)
-                            xlTable.Theme = (XLTableTheme) Enum.Parse(typeof (XLTableTheme), dTable.TableStyleInfo.Name.Value);
+                        {
+                            var theme = XLTableTheme.FromName(dTable.TableStyleInfo.Name.Value);
+                            if (theme != null)
+                                xlTable.Theme = theme;
+                            else
+                                xlTable.Theme = new XLTableTheme(dTable.TableStyleInfo.Name.Value);
+                        }
                         else
                             xlTable.Theme = XLTableTheme.None;
                     }

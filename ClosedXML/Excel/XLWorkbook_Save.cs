@@ -1744,7 +1744,7 @@ namespace ClosedXML.Excel
             };
 
             if (xlTable.Theme != XLTableTheme.None)
-                tableStyleInfo1.Name = Enum.GetName(typeof(XLTableTheme), xlTable.Theme);
+                tableStyleInfo1.Name = xlTable.Theme.Name;
 
             if (xlTable.ShowAutoFilter)
             {
