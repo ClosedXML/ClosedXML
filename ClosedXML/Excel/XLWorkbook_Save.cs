@@ -4038,7 +4038,7 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
                 var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
 
-                var priority = 0;
+                var priority = 1; // priority is 1 origin in Microsoft Excel
                 foreach (var cfGroup in xlWorksheet.ConditionalFormats
                     .GroupBy(
                         c => c.Range.RangeAddress.ToStringRelative(false),
@@ -4047,8 +4047,6 @@ namespace ClosedXML.Excel
                     )
                     )
                 {
-                    
-                    priority++;
                     var conditionalFormatting = new ConditionalFormatting
                     {
                         SequenceOfReferences =
@@ -4057,6 +4055,7 @@ namespace ClosedXML.Excel
                     foreach(var cf in cfGroup.CfList)
                     {
                         conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
+                        priority++;
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
