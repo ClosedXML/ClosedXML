@@ -9,9 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		ClosedXML.vsmdi = ClosedXML.vsmdi
 		DocumentFormat.OpenXml.dll = DocumentFormat.OpenXml.dll
-		Ionic.Zip.dll = Ionic.Zip.dll
-		Local.testsettings = Local.testsettings
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Examples", "ClosedXML_Examples\ClosedXML_Examples.csproj", "{03A518D0-1CB7-488E-861C-C4E782B27A46}"
@@ -21,8 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML", "ClosedXML\ClosedXML.csproj", "{BD5E6BFE-E837-4A35-BCA9-39667D873A20}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Tests", "ClosedXML_Tests\ClosedXML_Tests.csproj", "{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Package", "ClosedXML_Package\ClosedXML_Package.csproj", "{69B3BDDF-C359-447C-AEB7-EBD8867DE528}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8018E34C-28E4-4FAF-87DC-A71D6275C567}"
 	ProjectSection(SolutionItems) = preProject
@@ -119,20 +114,6 @@ Global
 		{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}.Release|x64.ActiveCfg = Release|Any CPU
 		{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}.Release|x86.ActiveCfg = Release|Any CPU
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Debug|Any CPU.Build.0 = Debug|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Debug|x64.ActiveCfg = Debug|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Debug|x86.ActiveCfg = Debug|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Debug|x86.Build.0 = Debug|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Release|Any CPU.ActiveCfg = Release|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Release|Any CPU.Build.0 = Release|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Release|Mixed Platforms.Build.0 = Release|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Release|x64.ActiveCfg = Release|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Release|x86.ActiveCfg = Release|x86
-		{69B3BDDF-C359-447C-AEB7-EBD8867DE528}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
