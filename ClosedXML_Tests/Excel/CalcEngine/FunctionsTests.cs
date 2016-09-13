@@ -124,7 +124,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             actual = XLWorkbook.EvaluateExpr("Fixed(12345.123, 1)");
             Assert.AreEqual("12,345.1", actual);
 
-            actual = XLWorkbook.EvaluateExpr("Fixed(12345.123, 1, FALSE)");
+            actual = XLWorkbook.EvaluateExpr("Fixed(12345.123, 1, TRUE)");
             Assert.AreEqual("12345.1", actual);
         }
 
