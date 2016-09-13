@@ -157,7 +157,7 @@ namespace ClosedXML.Excel.CalcEngine
             var sb = new StringBuilder();
             var s = (string)p[0];
             var repeats = (int)p[1];
-            if (repeats < 0) throw new IndexOutOfRangeException(nameof(repeats));
+            if (repeats < 0) throw new IndexOutOfRangeException("repeats");
             for (int i = 0; i < repeats; i++)
             {
                 sb.Append(s);
