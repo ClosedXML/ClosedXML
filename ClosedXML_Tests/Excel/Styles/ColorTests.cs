@@ -23,6 +23,12 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void ColorNamedVsHTML()
+        {
+            Assert.IsTrue(XLColor.Black == XLColor.FromHtml("#000000"));
+        }
+
+        [Test]
         public void DefaultColorIndex64isTransparentWhite()
         {
             var wb = new XLWorkbook();
