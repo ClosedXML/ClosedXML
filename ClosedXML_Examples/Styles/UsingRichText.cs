@@ -62,8 +62,8 @@ namespace ClosedXML_Examples.Styles
             // (which we want in red and with Garamond Font)
             cell1.Style.Font.FontColor = XLColor.Blue; // Set the color for the entire cell
             cell1.RichText.Substring(4, 4)
-                .SetFontColor(XLColor.Red)
-                .SetFontName("Garamond"); // Set the color and font for the word "show"
+                .SetFontColor(XLColor.Red);
+                //.SetFontName("Garamond"); // Set the color and font for the word "show"
 
             // On the next example we'll start with an empty cell and add the rich text
             var cell = ws.Cell(3, 1);
