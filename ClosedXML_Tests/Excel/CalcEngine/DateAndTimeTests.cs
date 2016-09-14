@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -10,6 +12,12 @@ namespace ClosedXML_Tests.Excel.DataValidations
     [TestFixture]
     public class DateAndTimeTests
     {
+        [OneTimeSetUp]
+        public void SetCultureInfo()
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+        }
+
         [Test]
         public void Date()
         {
@@ -29,6 +37,16 @@ namespace ClosedXML_Tests.Excel.DataValidations
         {
             Object actual = XLWorkbook.EvaluateExpr("Day(\"8/22/2008\")");
             Assert.AreEqual(22, actual);
+        }
+
+        [Test]
+        public void DayWithDifferentCulture()
+        {
+            CultureInfo ci = new CultureInfo(CultureInfo.InvariantCulture.LCID);
+            ci.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy";
+            Thread.CurrentThread.CurrentCulture = ci;
+            Object actual = XLWorkbook.EvaluateExpr("Day(\"1/6/2008\")");
+            Assert.AreEqual(1, actual);
         }
 
         [Test]
