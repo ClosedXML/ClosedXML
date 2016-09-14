@@ -106,7 +106,9 @@ namespace ClosedXML.Excel
             {
                 if (_colorType == XLColorType.Color)
                 {
-                    return _color == other._color;
+                    // .NET Color.Equals() will return false for Color.FromArgb(255, 255, 255, 255) == Color.White
+                    // Therefore we compare the ToArgb() values
+                    return _color.ToArgb() == other._color.ToArgb();
                 }
                 if (_colorType == XLColorType.Theme)
                 {
