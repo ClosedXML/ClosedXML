@@ -59,11 +59,11 @@ namespace ClosedXML_Examples.Styles
             var cell1 = ws.Cell(1, 1).SetValue("The show must go on...");
 
             // We want everything in blue except the word show 
-            // (which we want in red and with Broadway Font)
+            // (which we want in red and with Garamond Font)
             cell1.Style.Font.FontColor = XLColor.Blue; // Set the color for the entire cell
             cell1.RichText.Substring(4, 4)
                 .SetFontColor(XLColor.Red)
-                .SetFontName("Broadway"); // Set the color and font for the word "show"
+                .SetFontName("Garamond"); // Set the color and font for the word "show"
 
             // On the next example we'll start with an empty cell and add the rich text
             var cell = ws.Cell(3, 1);
