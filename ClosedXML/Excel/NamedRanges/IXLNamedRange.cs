@@ -71,14 +71,14 @@ namespace ClosedXML.Excel
         /// Removes the specified range from this named range.
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
-        /// <param name="rangeAddress">The range to remove.</param>
+        /// <param name="range">The range to remove.</param>
         void Remove(IXLRange range);
 
         /// <summary>
         /// Removes the specified ranges from this named range.
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
-        /// <param name="rangeAddress">The ranges to remove.</param>
+        /// <param name="ranges">The ranges to remove.</param>
         void Remove(IXLRanges ranges);
 
 

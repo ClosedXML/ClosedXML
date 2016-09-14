@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,7 +26,6 @@ namespace ClosedXML.Excel.CalcEngine
 		#region ** fields
 
 		internal Token _token;
-		static CultureInfo _ci = CultureInfo.InvariantCulture;
 
 		#endregion
 
@@ -103,6 +103,7 @@ namespace ClosedXML.Excel.CalcEngine
 			}
 
 			// handle everything else
+			CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
 			return (double)Convert.ChangeType(v, typeof(double), _ci);
 		}
 		public static implicit operator bool(Expression x)
@@ -149,6 +150,7 @@ namespace ClosedXML.Excel.CalcEngine
 			}
 
 			// handle everything else
+			CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
 			return (DateTime)Convert.ChangeType(v, typeof(DateTime), _ci);
 		}
 
@@ -490,7 +492,7 @@ namespace ClosedXML.Excel.CalcEngine
 		}
 		public IEnumerator GetEnumerator()
 		{
-		    return (_value as IEnumerable).GetEnumerator();
+			return (_value as IEnumerable).GetEnumerator();
 		}
 	}
 	/// <summary>
