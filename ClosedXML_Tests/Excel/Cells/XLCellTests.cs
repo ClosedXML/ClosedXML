@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -325,6 +327,22 @@ namespace ClosedXML_Tests
             cell.Value = null;
             string actual = cell.GetString();
             string expected = String.Empty;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ValueSetDateWithShortUserDateFormat()
+        {
+            // For this test to make sense, user's local date format should be dd/MM/yy (note without the 2 century digits)
+            // What happened previously was that the century digits got lost in .ToString() conversion and wrong century was sometimes returned.
+            var ci = new CultureInfo(CultureInfo.InvariantCulture.LCID);
+            ci.DateTimeFormat.ShortDatePattern = "dd/MM/yy";
+            Thread.CurrentThread.CurrentCulture = ci;
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            var expected = DateTime.Today.AddYears(20);
+            cell.Value = expected;
+            var actual = (DateTime)cell.Value;
             Assert.AreEqual(expected, actual);
         }
     }
