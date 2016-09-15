@@ -12,8 +12,8 @@ namespace ClosedXML_Examples
     {
         public static void CreateAllFiles()
         {
-            var path = @"C:\ClosedXML_Tests\Created";
-          
+            var path = Program.BaseCreatedDirectory;
+
             new HelloWorld().Create(path + @"\HelloWorld.xlsx");
             new BasicTable().Create(path + @"\BasicTable.xlsx");
 

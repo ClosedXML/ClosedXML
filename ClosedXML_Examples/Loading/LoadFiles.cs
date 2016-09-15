@@ -8,17 +8,12 @@ namespace ClosedXML_Examples
     {
         public static void LoadAllFiles()
         {
-            var forLoadingFolder = @"C:\ClosedXML_Tests\Created";
-            var forSavingFolder = @"C:\ClosedXML_Tests\Modified";
-
-            foreach (var file in Directory.GetFiles(forLoadingFolder))
+            foreach (var file in Directory.GetFiles(Program.BaseCreatedDirectory))
             {
                 var fileInfo = new FileInfo(file);
                 var fileName = fileInfo.Name;
-                LoadAndSaveFile(forLoadingFolder + @"\" + fileName, forSavingFolder + @"\" + fileName);
+                LoadAndSaveFile(Path.Combine(Program.BaseCreatedDirectory, fileName), Path.Combine(Program.BaseModifiedDirectory, fileName));
             }
-
-            //LoadAndSaveFile(forLoadingFolder + @"\StyleRowsColumns.xlsx", forSavingFolder + @"\StyleRowsColumns.xlsx");
         }
 
         private static void LoadAndSaveFile(String input, String output)
