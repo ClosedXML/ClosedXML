@@ -1,0 +1,38 @@
+version: 0.7.{build}
+branches:
+  # whitelist
+  only:
+    - master
+
+  # blacklist
+  except:
+    - gh-pages
+# Build worker image (VM template)
+image: Visual Studio 2015
+
+# enable patching of AssemblyInfo.* files
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "{version}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+  
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+# build platform, i.e. x86, x64, Any CPU. This setting is optional.
+platform: Any CPU
+
+build:
+  parallel: true                                            # enable MSBuild parallel builds
+  project: ClosedXML.sln       # path to Visual Studio solution or project
+  verbosity: minimal
+ 
+configuration : Release
+
+#Restore
+before_build:
+  - nuget restore
+  
