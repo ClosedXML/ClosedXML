@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: 0.0.{build}
 branches:
   # whitelist
   only:
@@ -14,7 +14,7 @@ image: Visual Studio 2015
 assembly_info:
   patch: true
   file: AssemblyInfo.*
-  assembly_version: "1.0.{build}"
+  assembly_version: "{version}"
   assembly_file_version: "{version}"
   assembly_informational_version: "{version}"
   
