@@ -265,6 +265,12 @@ namespace ClosedXML.Excel
         /// </summary>
         public XLCalculateMode CalculateMode { get; set; }
 
+
+        public Boolean CalculationOnSave { get; set; }
+        public Boolean ForceFullCalculation { get; set; }
+        public Boolean FullCalculationOnLoad { get; set; }
+        public Boolean FullPrecision { get; set; }
+
         /// <summary>
         ///   Gets or sets the workbook's reference style.
         /// </summary>
