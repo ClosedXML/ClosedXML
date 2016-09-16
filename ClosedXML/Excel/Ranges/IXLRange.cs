@@ -83,7 +83,14 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="columns">The columns to return.</param>
         IXLRangeColumns Columns(string columns);
-
+        /// <summary>
+        /// Returns the first row that matches the given predicate
+        /// </summary>
+        IXLRangeColumn FindColumn(Func<IXLRangeColumn, Boolean> predicate);
+        /// <summary>
+        /// Returns the first row that matches the given predicate
+        /// </summary>
+        IXLRangeRow FindRow(Func<IXLRangeRow, Boolean> predicate);
         /// <summary>
         /// Gets the first row of the range.
         /// </summary>
