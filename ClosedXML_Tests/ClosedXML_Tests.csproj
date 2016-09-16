@@ -108,6 +108,7 @@
     <Compile Include="ExcelDocsComparerTests.cs" />
     <Compile Include="Excel\CalcEngine\IsTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
+    <Compile Include="Excel\CalcEngine\LookupTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
     <Compile Include="XLHelperTests.cs" />

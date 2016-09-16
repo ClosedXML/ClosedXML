@@ -806,5 +806,33 @@ namespace ClosedXML.Excel
             base.Clear(clearOptions);
             return this;
         }
+
+        public IXLRangeColumn FindColumn(Func<IXLRangeColumn, bool> predicate)
+        {
+            Int32 columnCount = ColumnCount();
+            for (Int32 c = 1; c <= columnCount; c++)
+            {
+                var column = Column(c);
+                if (predicate == null || predicate(column))
+                    return column;
+                else
+                    column.Dispose();
+            }
+            return null;
+        }
+
+        public IXLRangeRow FindRow(Func<IXLRangeRow, bool> predicate)
+        {
+            Int32 rowCount = RowCount();
+            for (Int32 r = 1; r <= rowCount; r++)
+            {
+                var row = Row(r);
+                if (predicate(row))
+                    return row;
+                else
+                    row.Dispose();
+            }
+            return null;
+        }
     }
 }

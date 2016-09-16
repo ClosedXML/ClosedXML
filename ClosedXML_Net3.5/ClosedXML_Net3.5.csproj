@@ -156,6 +156,9 @@
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Logical.cs">
       <Link>Excel\CalcEngine\Functions\Logical.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Lookup.cs">
+      <Link>Excel\CalcEngine\Functions\Lookup.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\MathTrig.cs">
       <Link>Excel\CalcEngine\Functions\MathTrig.cs</Link>
     </Compile>

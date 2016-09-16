@@ -144,13 +144,13 @@ namespace ClosedXML.Excel.CalcEngine
 			}
 
 			// handle doubles
-			if (v is double)
+			if (v is double || v is int)
 			{
 				return DateTime.FromOADate((double)x);
 			}
 
-			// handle everything else
-			CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
+            // handle everything else
+            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
 			return (DateTime)Convert.ChangeType(v, typeof(DateTime), _ci);
 		}
 
@@ -182,7 +182,12 @@ namespace ClosedXML.Excel.CalcEngine
 			// make sure types are the same
 			if (c1.GetType() != c2.GetType())
 			{
-				c2 = Convert.ChangeType(c2, c1.GetType()) as IComparable;
+                if (c1 is DateTime)
+                    c2 = ((DateTime)other);
+                else if (c2 is DateTime)
+                    c1 = ((DateTime)this);
+                else
+                    c2 = Convert.ChangeType(c2, c1.GetType()) as IComparable;
 			}
 
 			// compare
