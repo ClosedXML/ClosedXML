@@ -52,5 +52,25 @@ namespace ClosedXML_Tests
                 }
             }
         }
+
+        [Test]
+        public void CanClearAutoFilter()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("AutoFilter");
+            ws.Cell("A1").Value = "Names";
+            ws.Cell("A2").Value = "John";
+            ws.Cell("A3").Value = "Hank";
+            ws.Cell("A4").Value = "Dagny";
+
+            ws.AutoFilter.Clear(); // We should be able to clear a filter even if it hasn't been set.
+            Assert.That(!ws.AutoFilter.Enabled);
+
+            ws.RangeUsed().SetAutoFilter();
+            Assert.That(ws.AutoFilter.Enabled);
+
+            ws.AutoFilter.Clear();
+            Assert.That(!ws.AutoFilter.Enabled);
+        }
     }
 }

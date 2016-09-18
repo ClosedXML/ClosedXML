@@ -287,6 +287,7 @@ namespace ClosedXML.Excel.CalcEngine
                 // register built-in functions (and constants)
                 Is.Register(this);
                 Logical.Register(this);
+                Lookup.Register(this);
                 MathTrig.Register(this);
                 Text.Register(this);
                 Statistical.Register(this);

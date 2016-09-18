@@ -102,13 +102,12 @@ namespace ClosedXML_Tests.Examples
             TestHelper.RunTestExample<CFStartsWith>(@"ConditionalFormatting\CFStartsWith.xlsx");
         }
 
-        //
-        //[Test]
-        //public void XXX()
-        //{
-        //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");
-        //}
-        //
+        [Test]
+        public void CFMultipleConditions()
+        {
+            TestHelper.RunTestExample<CFMultipleConditions>(@"ConditionalFormatting\CFMultipleConditions.xlsx");
+        }
+
         //[Test]
         //public void XXX()
         //{

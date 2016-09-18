@@ -72,6 +72,7 @@
     <Compile Include="ExcelDocsComparerTests.cs" />
     <Compile Include="Excel\CalcEngine\IsTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
+    <Compile Include="Excel\CalcEngine\LookupTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
     <Compile Include="XLHelperTests.cs" />
@@ -229,6 +230,7 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEqualsString.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIsBlank.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIsError.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFMultipleConditions.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotBlank.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotContains.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotEqualsNumber.xlsx" />
@@ -239,8 +241,7 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
-    <None Include="Resource\Misc\WorkbookProperties.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />    <None Include="Resource\Misc\WorkbookProperties.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

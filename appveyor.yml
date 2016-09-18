@@ -2,7 +2,7 @@ version: 0.8.{build}
 branches:
   # whitelist
   only:
-    - master
+    - develop
 
   # blacklist
   except:

@@ -85,6 +85,8 @@ namespace ClosedXML.Excel
 
         public XLAutoFilter Clear()
         {
+            if (!Enabled) return this;
+
             Enabled = false;
             Filters.Clear();
             foreach (IXLRangeRow row in Range.Rows().Where(r => r.RowNumber() > 1))
@@ -94,6 +96,9 @@ namespace ClosedXML.Excel
 
         public XLAutoFilter Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase, Boolean ignoreBlanks)
         {
+            if (!Enabled)
+                throw new ApplicationException("Filter has not been enabled.");
+
             var ws = Range.Worksheet as XLWorksheet;
             ws.SuspendEvents();
             Range.Range(Range.FirstCell().CellBelow(), Range.LastCell()).Sort(columnToSortBy, sortOrder, matchCase,
