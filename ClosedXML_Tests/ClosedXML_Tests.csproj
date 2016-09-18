@@ -230,6 +230,7 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEqualsString.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIsBlank.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIsError.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFMultipleConditions.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotBlank.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotContains.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotEqualsNumber.xlsx" />
@@ -240,8 +241,7 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
-    <None Include="Resource\Misc\WorkbookProperties.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />    <None Include="Resource\Misc\WorkbookProperties.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

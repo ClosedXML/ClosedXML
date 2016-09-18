@@ -593,4 +593,25 @@ namespace ClosedXML_Examples
             workbook.SaveAs(filePath);
         }
     }
+
+    public class CFMultipleConditions : IXLExample
+    {
+        public void Create(String filePath)
+        {
+            var workbook = new XLWorkbook();
+            var ws = workbook.AddWorksheet("Sheet1");
+
+            using(var range = ws.Range("A1:A10"))
+            {
+                range.AddConditionalFormat().WhenEquals("3")
+                    .Fill.SetBackgroundColor(XLColor.Blue);
+                range.AddConditionalFormat().WhenEquals("2")
+                    .Fill.SetBackgroundColor(XLColor.Green);
+                range.AddConditionalFormat().WhenEquals("1")
+                    .Fill.SetBackgroundColor(XLColor.Red);
+            }
+
+            workbook.SaveAs(filePath);
+        }
+    }
 }
