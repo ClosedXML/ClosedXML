@@ -1295,7 +1295,9 @@ namespace ClosedXML.Excel
             var cellsDataValidations = new Dictionary<XLAddress, DataValidationToCopy>();
             int firstRow = RangeAddress.FirstAddress.RowNumber;
             int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
-            int lastColumn = Worksheet.Internals.CellsCollection.MaxColumnUsed;
+            int lastColumn = Math.Min(
+                RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1,
+                Worksheet.Internals.CellsCollection.MaxColumnUsed);
 
             if (!onlyUsedCells)
             {
