@@ -1295,7 +1295,9 @@ namespace ClosedXML.Excel
             var cellsDataValidations = new Dictionary<XLAddress, DataValidationToCopy>();
             int firstRow = RangeAddress.FirstAddress.RowNumber;
             int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
-            int lastColumn = RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
+            int lastColumn = Math.Min(
+                RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1,
+                Worksheet.Internals.CellsCollection.MaxColumnUsed);
 
             if (!onlyUsedCells)
             {
@@ -1309,14 +1311,15 @@ namespace ClosedXML.Excel
                             var oldKey = new XLAddress(Worksheet, ro, co, false, false);
                             int newRow = ro + numberOfRows;
                             var newKey = new XLAddress(Worksheet, newRow, co, false, false);
-                            var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co) ??
-                                          Worksheet.Cell(oldKey);
-
-                            var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
-                            newCell.CopyValues(oldCell);
-                            newCell.FormulaA1 = oldCell.FormulaA1;
-                            cellsToInsert.Add(newKey, newCell);
-                            cellsToDelete.Add(oldKey);
+                            var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
+                            if (oldCell != null)
+                            {
+                                var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
+                                newCell.CopyValues(oldCell);
+                                newCell.FormulaA1 = oldCell.FormulaA1;
+                                cellsToInsert.Add(newKey, newCell);
+                                cellsToDelete.Add(oldKey);   
+                            }
                         }
                     }
                 }
