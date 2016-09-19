@@ -241,7 +241,9 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />    <None Include="Resource\Misc\WorkbookProperties.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
+    <None Include="Resource\Misc\WorkbookProperties.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

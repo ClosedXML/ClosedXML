@@ -65,6 +65,7 @@ namespace ClosedXML_Examples
             new RowCells().Create(path + @"\RowCells.xlsx");
             new FreezePanes().Create(path + @"\FreezePanes.xlsx");
             new UsingTables().Create(path + @"\UsingTables.xlsx");
+            new AddingRowToTables().Create(path + @"\AddingRowToTables.xlsx");
             new ShowCase().Create(path + @"\ShowCase.xlsx");
             new CopyingWorksheets().Create(path + @"\CopyingWorksheets.xlsx");
             new InsertingTables().Create(path + @"\InsertingTables.xlsx");
