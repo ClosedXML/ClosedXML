@@ -7,22 +7,27 @@ namespace ClosedXML.Excel
 
     internal class XLHeaderFooter: IXLHeaderFooter
     {
+
         public XLHeaderFooter(XLWorksheet worksheet)
         {
-            Left = new XLHFItem(worksheet);
-            Right = new XLHFItem(worksheet);
-            Center = new XLHFItem(worksheet);
+            this.Worksheet = worksheet;
+            Left = new XLHFItem(this);
+            Right = new XLHFItem(this);
+            Center = new XLHFItem(this);
             SetAsInitial();
         }
 
         public XLHeaderFooter(XLHeaderFooter defaultHF, XLWorksheet worksheet)
         {
+            this.Worksheet = worksheet;
             defaultHF.innerTexts.ForEach(kp => innerTexts.Add(kp.Key, kp.Value));
-            Left = new XLHFItem(defaultHF.Left as XLHFItem, worksheet);
-            Center = new XLHFItem(defaultHF.Center as XLHFItem, worksheet);
-            Right = new XLHFItem(defaultHF.Right as XLHFItem, worksheet);
+            Left = new XLHFItem(defaultHF.Left as XLHFItem, this);
+            Center = new XLHFItem(defaultHF.Center as XLHFItem, this);
+            Right = new XLHFItem(defaultHF.Right as XLHFItem, this);
             SetAsInitial();
         }
+
+        internal readonly IXLWorksheet Worksheet;
 
         public IXLHFItem Left { get; private set; }
         public IXLHFItem Center { get; private set; }
@@ -30,7 +35,7 @@ namespace ClosedXML.Excel
 
         public String GetText(XLHFOccurrence occurrence)
         {
-            if (innerTexts.ContainsKey(occurrence)) return innerTexts[occurrence];
+            //if (innerTexts.ContainsKey(occurrence)) return innerTexts[occurrence];
 
             var retVal = String.Empty;
             var leftText = Left.GetText(occurrence);
@@ -46,13 +51,49 @@ namespace ClosedXML.Excel
 
         private Dictionary<XLHFOccurrence, String> innerTexts = new Dictionary<XLHFOccurrence, String>();
         internal String SetInnerText(XLHFOccurrence occurrence, String text)
-        { 
+        {
+            var parsedElements = ParseFormattedHeaderFooterText(text);
+
+            if (parsedElements.Any(e => e.Item1 == 'L'))
+                this.Left.AddText(string.Join("\r\n", parsedElements.Where(e => e.Item1 == 'L').Select(e => e.Item2).ToArray()), occurrence);
+
+            if (parsedElements.Any(e => e.Item1 == 'C'))
+                this.Center.AddText(string.Join("\r\n", parsedElements.Where(e => e.Item1 == 'C').Select(e => e.Item2).ToArray()), occurrence);
+
+            if (parsedElements.Any(e => e.Item1 == 'R'))
+                this.Right.AddText(string.Join("\r\n", parsedElements.Where(e => e.Item1 == 'R').Select(e => e.Item2).ToArray()), occurrence);
+
+
             if (innerTexts.ContainsKey(occurrence))
                 innerTexts[occurrence] = text;
             else
                 innerTexts.Add(occurrence, text);
 
             return innerTexts[occurrence];
+        }
+
+        private static IEnumerable<Tuple<char, string>> ParseFormattedHeaderFooterText(string text)
+        {
+            var parsedElements = new List<Tuple<char, string>>();
+            var currentPosition = 'L'; // default is LEFT
+            var hfElement = "";
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (i < text.Length - 1 && text[i] == '&' && (new char[] { 'L', 'C', 'R' }.Contains(text[i + 1])))
+                {
+                    if ("" != hfElement) parsedElements.Add(new Tuple<char, string>(currentPosition, hfElement));
+
+                    currentPosition = text[i + 1];
+                    i += 2;
+                    hfElement = "";
+                }
+
+                hfElement += text[i];
+            }
+
+            if ("" != hfElement) parsedElements.Add(new Tuple<char, string>(currentPosition, hfElement));
+            return parsedElements;
         }
 
         private Dictionary<XLHFOccurrence, String> _initialTexts;

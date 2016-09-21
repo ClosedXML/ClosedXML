@@ -6,13 +6,13 @@ namespace ClosedXML.Excel
 {
     internal class XLHFItem : IXLHFItem
     {
-        private readonly XLWorksheet _worksheet;
-        public XLHFItem(XLWorksheet worksheet)
+        internal readonly XLHeaderFooter HeaderFooter;
+        public XLHFItem(XLHeaderFooter headerFooter)
         {
-            _worksheet = worksheet;
+            HeaderFooter = headerFooter;
         }
-        public XLHFItem(XLHFItem defaultHFItem, XLWorksheet worksheet)
-            :this(worksheet)
+        public XLHFItem(XLHFItem defaultHFItem, XLHeaderFooter headerFooter)
+            :this(headerFooter)
         {
             defaultHFItem.texts.ForEach(kp => texts.Add(kp.Key, kp.Value));
         }
@@ -42,7 +42,7 @@ namespace ClosedXML.Excel
         {
             XLRichString richText = new XLRichString(text, XLWorkbook.DefaultStyle.Font, this);
 
-            var hfText = new XLHFText(richText, _worksheet);
+            var hfText = new XLHFText(richText, this);
             if (occurrence == XLHFOccurrence.AllPages)
             {
                 AddTextToOccurrence(hfText, XLHFOccurrence.EvenPages);
@@ -73,6 +73,8 @@ namespace ClosedXML.Excel
                 texts[occurrence].Add(hfText);
             else
                 texts.Add(occurrence, new List<XLHFText> { hfText });
+
+            this.HeaderFooter.Changed = true;
         }
 
         public IXLRichString AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)

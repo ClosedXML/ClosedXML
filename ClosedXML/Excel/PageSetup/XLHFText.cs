@@ -5,18 +5,31 @@ namespace ClosedXML.Excel
 {
     internal class XLHFText
     {
-        private readonly XLWorksheet _worksheet;
-        public XLHFText(XLRichString richText, XLWorksheet worksheet)
+        private readonly XLHFItem _hfItem;
+        public XLHFText(XLRichString richText, XLHFItem hfItem)
         {
             RichText = richText;
-            _worksheet = worksheet;
+            _hfItem = hfItem;
         }
         public XLRichString RichText { get; private set; }
 
         public String GetHFText(String prevText)
         {
+            var wsFont = _hfItem.HeaderFooter.Worksheet.Style.Font;
+
+            var isRichText = RichText.FontName != null && RichText.FontName != wsFont.FontName
+                             || RichText.Bold != wsFont.Bold
+                             || RichText.Italic != wsFont.Italic
+                             || RichText.Strikethrough != wsFont.Strikethrough
+                             || RichText.FontSize > 0 && Math.Abs(RichText.FontSize - wsFont.FontSize) > XLHelper.Epsilon
+                             || RichText.VerticalAlignment != wsFont.VerticalAlignment
+                             || RichText.Underline != wsFont.Underline
+                             || !RichText.FontColor.Equals(wsFont.FontColor);
+
+            if (!isRichText)
+                return RichText.Text;
+
             StringBuilder sb = new StringBuilder();
-            var wsFont = _worksheet.Style.Font;
 
             if (RichText.FontName != null && RichText.FontName != wsFont.FontName)
                 sb.Append("&\"" + RichText.FontName);
