@@ -54,14 +54,14 @@ namespace ClosedXML.Excel
         {
             var parsedElements = ParseFormattedHeaderFooterText(text);
 
-            if (parsedElements.Any(e => e.Item1 == 'L'))
-                this.Left.AddText(string.Join("\r\n", parsedElements.Where(e => e.Item1 == 'L').Select(e => e.Item2).ToArray()), occurrence);
+            if (parsedElements.Any(e => e.Position == 'L'))
+                this.Left.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'L').Select(e => e.Text).ToArray()), occurrence);
 
-            if (parsedElements.Any(e => e.Item1 == 'C'))
-                this.Center.AddText(string.Join("\r\n", parsedElements.Where(e => e.Item1 == 'C').Select(e => e.Item2).ToArray()), occurrence);
+            if (parsedElements.Any(e => e.Position == 'C'))
+                this.Center.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'C').Select(e => e.Text).ToArray()), occurrence);
 
-            if (parsedElements.Any(e => e.Item1 == 'R'))
-                this.Right.AddText(string.Join("\r\n", parsedElements.Where(e => e.Item1 == 'R').Select(e => e.Item2).ToArray()), occurrence);
+            if (parsedElements.Any(e => e.Position == 'R'))
+                this.Right.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'R').Select(e => e.Text).ToArray()), occurrence);
 
 
             if (innerTexts.ContainsKey(occurrence))
@@ -72,9 +72,15 @@ namespace ClosedXML.Excel
             return innerTexts[occurrence];
         }
 
-        private static IEnumerable<Tuple<char, string>> ParseFormattedHeaderFooterText(string text)
+        private struct ParsedHeaderFooterElement
         {
-            var parsedElements = new List<Tuple<char, string>>();
+            public char Position;
+            public string Text;
+        }
+
+        private static IEnumerable<ParsedHeaderFooterElement> ParseFormattedHeaderFooterText(string text)
+        {
+            var parsedElements = new List<ParsedHeaderFooterElement>();
             var currentPosition = 'L'; // default is LEFT
             var hfElement = "";
 
@@ -82,7 +88,11 @@ namespace ClosedXML.Excel
             {
                 if (i < text.Length - 1 && text[i] == '&' && (new char[] { 'L', 'C', 'R' }.Contains(text[i + 1])))
                 {
-                    if ("" != hfElement) parsedElements.Add(new Tuple<char, string>(currentPosition, hfElement));
+                    if ("" != hfElement) parsedElements.Add(new ParsedHeaderFooterElement()
+                    {
+                        Position = currentPosition,
+                        Text = hfElement
+                    });
 
                     currentPosition = text[i + 1];
                     i += 2;
@@ -92,7 +102,12 @@ namespace ClosedXML.Excel
                 hfElement += text[i];
             }
 
-            if ("" != hfElement) parsedElements.Add(new Tuple<char, string>(currentPosition, hfElement));
+            if ("" != hfElement)
+                parsedElements.Add(new ParsedHeaderFooterElement()
+                {
+                    Position = currentPosition,
+                    Text = hfElement
+                });
             return parsedElements;
         }
 
