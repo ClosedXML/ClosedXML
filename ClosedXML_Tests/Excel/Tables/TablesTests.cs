@@ -312,7 +312,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void ChangeFieldName()
         {
-            XLWorkbook wb = new XLWorkbook(); //( @"c:\temp\test.xlsx");
+            XLWorkbook wb = new XLWorkbook();
 
             var ws = wb.AddWorksheet("Sheet");
             ws.Cell("A1").SetValue("FName")
