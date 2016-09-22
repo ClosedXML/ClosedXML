@@ -1,4 +1,5 @@
 ﻿using ClosedXML_Examples.Delete;
+using System.IO;
 
 namespace ClosedXML_Examples
 {
@@ -6,7 +7,8 @@ namespace ClosedXML_Examples
     {
         public static void Run()
         {
-            new DeleteRows().Create(@"C:\ClosedXML_Tests\Modified\DeleteRows.xlsx");
+            var path = Program.BaseModifiedDirectory;
+            new DeleteRows().Create(Path.Combine(path, "DeleteRows.xlsx"));
         }
     }
 }

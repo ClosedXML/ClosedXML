@@ -1,4 +1,5 @@
 ﻿using ClosedXML_Examples.Styles;
+using System.IO;
 
 namespace ClosedXML_Examples
 {
@@ -54,12 +55,12 @@ namespace ClosedXML_Examples
         // Public
         public void Create()
         {
-            var path = @"C:\ClosedXML_Tests\Created";
-            new StyleFont().Create(path + @"\styleFont.xlsx");
-            new StyleFill().Create(path + @"\styleFill.xlsx");
-            new StyleBorder().Create(path + @"\styleBorder.xlsx");
-            new StyleAlignment().Create(path + @"\styleAlignment.xlsx");
-            new StyleNumberFormat().Create(path + @"\styleNumberFormat.xlsx");
+            var path = Program.BaseCreatedDirectory;
+            new StyleFont().Create(Path.Combine(path, "styleFont.xlsx"));
+            new StyleFill().Create(Path.Combine(path, "styleFill.xlsx"));
+            new StyleBorder().Create(Path.Combine(path, "styleBorder.xlsx"));
+            new StyleAlignment().Create(Path.Combine(path, "styleAlignment.xlsx"));
+            new StyleNumberFormat().Create(Path.Combine(path, "styleNumberFormat.xlsx"));
         }
 
         // Private
