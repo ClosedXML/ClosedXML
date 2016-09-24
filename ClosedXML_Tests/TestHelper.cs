@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Threading;
 using ClosedXML.Excel;
@@ -32,9 +34,9 @@ namespace ClosedXML_Tests
 
         private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resource.Examples.");
 
-        public static void SaveWorkbook(XLWorkbook workbook, string fileName)
+        public static void SaveWorkbook(XLWorkbook workbook, params string[] fileNameParts)
         {
-            workbook.SaveAs(Path.Combine(TestsOutputDirectory, fileName));
+            workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()));
         }
 
         public static void RunTestExample<T>(string filePartName)
@@ -44,7 +46,8 @@ namespace ClosedXML_Tests
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
             var example = new T();
-            string filePath1 = Path.Combine(TestsExampleOutputDirectory, filePartName);
+            string[] pathParts = filePartName.Split(new char[] {'\\'});
+            string filePath1 = Path.Combine(new List<string>() { TestsExampleOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
