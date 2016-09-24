@@ -241,7 +241,7 @@
                 var dtTest = (DateTime)Convert.ChangeType(value, typeof (DateTime));
                 Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
-                _cellValue = dtTest.ToOADate().ToString();
+                _cellValue = dtTest.ToOADate().ToString(XLHelper.ParseCulture);
             }
             else if (
                 value is sbyte
@@ -266,7 +266,7 @@
                 else
                 {
                     _dataType = XLCellValues.Number;
-                    _cellValue = value.ToString();
+                    _cellValue = ((Double)Convert.ChangeType(value, typeof (Double))).ToString(XLHelper.ParseCulture);
                 }
             }
             else if (value is Boolean)
@@ -343,7 +343,7 @@
             if (_dataType == XLCellValues.DateTime || IsDateFormat())
             {
                 double dTest;
-                if (Double.TryParse(cValue, out dTest))
+                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
                 {
                     var format = GetFormat();
                     return DateTime.FromOADate(dTest).ToString(format);
@@ -355,7 +355,7 @@
             if (_dataType == XLCellValues.Number)
             {
                 double dTest;
-                if (Double.TryParse(cValue, out dTest))
+                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
                 {
                     var format = GetFormat();
                     return dTest.ToString(format);
@@ -418,10 +418,10 @@
                     return cellValue != "0";
 
                 if (_dataType == XLCellValues.DateTime)
-                    return DateTime.FromOADate(Double.Parse(cellValue));
+                    return DateTime.FromOADate(Double.Parse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture));
 
                 if (_dataType == XLCellValues.Number)
-                    return Double.Parse(cellValue);
+                    return Double.Parse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture);
 
                 if (_dataType == XLCellValues.TimeSpan)
                 {
@@ -813,9 +813,9 @@
                         DateTime dtTest;
                         double dblTest;
                         if (DateTime.TryParse(_cellValue, out dtTest))
-                            _cellValue = dtTest.ToOADate().ToString();
-                        else if (Double.TryParse(_cellValue, out dblTest))
-                            _cellValue = dblTest.ToString();
+                            _cellValue = dtTest.ToOADate().ToString(XLHelper.ParseCulture);
+                        else if (Double.TryParse(_cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dblTest))
+                            _cellValue = dblTest.ToString(XLHelper.ParseCulture);
                         else
                         {
                             throw new ArgumentException(
@@ -841,7 +841,7 @@
                         {
                             try
                             {
-                                _cellValue = (DateTime.FromOADate(Double.Parse(_cellValue)) - BaseDate).ToString();
+                                _cellValue = (DateTime.FromOADate(Double.Parse(_cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture)) - BaseDate).ToString();
                             }
                             catch
                             {
@@ -855,8 +855,8 @@
                     else if (value == XLCellValues.Number)
                     {
                         double dTest;
-                        if (Double.TryParse(_cellValue, out dTest))
-                            _cellValue = Double.Parse(_cellValue).ToString();
+                        if (Double.TryParse(_cellValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out dTest))
+                            _cellValue = dTest.ToString(CultureInfo.InvariantCulture);
                         else
                         {
                             throw new ArgumentException(
@@ -1620,6 +1620,8 @@
                 val = string.Empty;
             else if (value is DateTime)
                 val = ((DateTime)value).ToString("o");
+            else if (value is double)
+                val = ((double)value).ToString(XLHelper.ParseCulture);
             else
                 val = value.ToString();
             _richText = null;
@@ -1645,7 +1647,7 @@
                     if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                         Style.Alignment.WrapText = true;
                 }
-                else if (value is TimeSpan || (!Double.TryParse(val, out dTest) && TimeSpan.TryParse(val, out tsTest)))
+                else if (value is TimeSpan || (!Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest) && TimeSpan.TryParse(val, out tsTest)))
                 {
                     if (!(value is TimeSpan) && TimeSpan.TryParse(val, out tsTest))
                         val = tsTest.ToString();
@@ -1654,7 +1656,7 @@
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         Style.NumberFormat.NumberFormatId = 46;
                 }
-                else if (val.Trim() != "NaN" &&  Double.TryParse(val, out dTest))
+                else if (val.Trim() != "NaN" &&  Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
                     _dataType = XLCellValues.Number;
                 else if (DateTime.TryParse(val, out dtTest) && dtTest >= BaseDate)
                 {
@@ -1667,11 +1669,11 @@
                         DateTime forMillis;
                         if (value is DateTime && (forMillis = (DateTime)value).Millisecond > 0)
                         {
-                            val = forMillis.ToOADate().ToString();
+                            val = forMillis.ToOADate().ToString(XLHelper.ParseCulture);
                         }
                         else
                         {
-                            val = dtTest.ToOADate().ToString();
+                            val = dtTest.ToOADate().ToString(XLHelper.ParseCulture);
                         }
                     }
                     
