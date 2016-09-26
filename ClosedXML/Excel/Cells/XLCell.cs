@@ -241,7 +241,7 @@
                 var dtTest = (DateTime)Convert.ChangeType(value, typeof (DateTime));
                 Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
-                _cellValue = dtTest.ToOADate().ToString(XLHelper.ParseCulture);
+                _cellValue = dtTest.ToOADate().ToInvariantString();
             }
             else if (
                 value is sbyte
@@ -266,7 +266,7 @@
                 else
                 {
                     _dataType = XLCellValues.Number;
-                    _cellValue = ((Double)Convert.ChangeType(value, typeof (Double))).ToString(XLHelper.ParseCulture);
+                    _cellValue = ((Double)Convert.ChangeType(value, typeof (Double))).ToInvariantString();
                 }
             }
             else if (value is Boolean)
@@ -813,9 +813,9 @@
                         DateTime dtTest;
                         double dblTest;
                         if (DateTime.TryParse(_cellValue, out dtTest))
-                            _cellValue = dtTest.ToOADate().ToString(XLHelper.ParseCulture);
+                            _cellValue = dtTest.ToOADate().ToInvariantString();
                         else if (Double.TryParse(_cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dblTest))
-                            _cellValue = dblTest.ToString(XLHelper.ParseCulture);
+                            _cellValue = dblTest.ToInvariantString();
                         else
                         {
                             throw new ArgumentException(
@@ -1621,7 +1621,7 @@
             else if (value is DateTime)
                 val = ((DateTime)value).ToString("o");
             else if (value is double)
-                val = ((double)value).ToString(XLHelper.ParseCulture);
+                val = ((double)value).ToInvariantString();
             else
                 val = value.ToString();
             _richText = null;
@@ -1669,11 +1669,11 @@
                         DateTime forMillis;
                         if (value is DateTime && (forMillis = (DateTime)value).Millisecond > 0)
                         {
-                            val = forMillis.ToOADate().ToString(XLHelper.ParseCulture);
+                            val = forMillis.ToOADate().ToInvariantString();
                         }
                         else
                         {
-                            val = dtTest.ToOADate().ToString(XLHelper.ParseCulture);
+                            val = dtTest.ToOADate().ToInvariantString();
                         }
                     }
                     
