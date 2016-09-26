@@ -39,6 +39,19 @@ namespace ClosedXML_Tests
             workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()));
         }
 
+        // Because different fonts are installed on Unix, 
+        // the columns widths after AdjustToContents() will 
+        // cause the tests to fail.
+        // Therefore we ignore the width attribute when running on Unix
+        public static bool IsRunningOnUnix
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return ((p == 4) || (p == 6) || (p == 128));
+            }
+        }
+
         public static void RunTestExample<T>(string filePartName)
                 where T : IXLExample, new()
         {
@@ -76,7 +89,7 @@ namespace ClosedXML_Tests
                     using (var streamActual = File.OpenRead(filePath2))
                     {
                         string message;
-                        success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);
+                        success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
                         var formattedMessage =
                             String.Format(
                                 "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",

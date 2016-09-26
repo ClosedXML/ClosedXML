@@ -6,24 +6,24 @@ namespace ClosedXML_Tests
 {
     internal static class ExcelDocsComparer
     {
-        public static bool Compare(string left, string right, out string message)
+        public static bool Compare(string left, string right, bool stripColumnWidths, out string message)
         {
             using (FileStream leftStream = File.OpenRead(left))
             {
                 using (FileStream rightStream = File.OpenRead(right))
                 {
-                    return Compare(leftStream, rightStream, out message);
+                    return Compare(leftStream, rightStream, stripColumnWidths, out message);
                 }
             }
         }
 
-        public static bool Compare(Stream left, Stream right, out string message)
+        public static bool Compare(Stream left, Stream right, bool stripColumnWidths, out string message)
         {
             using (Package leftPackage = Package.Open(left))
             {
                 using (Package rightPackage = Package.Open(right))
                 {
-                    return PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, out message);
+                    return PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, stripColumnWidths, out message);
                 }
             }
         }
