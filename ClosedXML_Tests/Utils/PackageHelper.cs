@@ -351,7 +351,8 @@ namespace ClosedXML_Tests
                 {
                     bool stripColumnWidthsFromSheet = stripColumnWidths &&
                         leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
-                        rightPart.ContentType == @"application / vnd.openxmlformats - officedocument.spreadsheetml.worksheet + xml";
+                        rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
+
                     if (!StreamHelper.Compare(oneStream, otherStream, stripColumnWidthsFromSheet))
                     {
                         pair.Status = CompareStatus.NonEqual;
