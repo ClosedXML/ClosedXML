@@ -143,6 +143,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\CellValues.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Collections.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\DataTypes.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\DataTypesUnderDifferentCulture.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\DataValidation.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Formulas.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\FreezePanes.xlsx" />

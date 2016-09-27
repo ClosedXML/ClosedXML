@@ -890,7 +890,7 @@ namespace ClosedXML.Excel
                     {
                         if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         {
-                            var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text)];
+                            var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture)];
 
                             var runs = sharedString.Elements<Run>();
                             var phoneticRuns = sharedString.Elements<PhoneticRun>();
@@ -950,7 +950,7 @@ namespace ClosedXML.Excel
                 else if (cell.DataType == CellValues.Date)
                 {
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
                     xlCell._dataType = XLCellValues.DateTime;
                 }
                 else if (cell.DataType == CellValues.Boolean)
@@ -961,7 +961,7 @@ namespace ClosedXML.Excel
                 else if (cell.DataType == CellValues.Number)
                 {
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
                     if (s == null)
                     {
                         xlCell._dataType = XLCellValues.Number;
@@ -987,7 +987,7 @@ namespace ClosedXML.Excel
                 {
                     var numberFormatId = ((CellFormat) (s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToString();
+                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
                     if (s.NumberingFormats != null &&
                         s.NumberingFormats.Any(nf => ((NumberingFormat) nf).NumberFormatId.Value == numberFormatId))
                     {
