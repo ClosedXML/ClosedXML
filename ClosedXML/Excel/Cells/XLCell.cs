@@ -1586,6 +1586,9 @@
 
         private bool SetEnumerable(object collectionObject)
         {
+            // IXLRichText implements IEnumerable, but we don't want to handle this here.
+            if ((collectionObject as IXLRichText) != null) return false;
+
             var asEnumerable = collectionObject as IEnumerable;
             return InsertData(asEnumerable) != null;
         }
