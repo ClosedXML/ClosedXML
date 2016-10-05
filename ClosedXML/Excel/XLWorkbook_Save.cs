@@ -3916,7 +3916,7 @@ namespace ClosedXML.Excel
                                 if (!XLHelper.IsNullOrWhiteSpace(opCell.InnerText))
                                 {
                                     var cellValue = new CellValue();
-                                    cellValue.Text = Double.Parse(opCell.InnerText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
+                                    cellValue.Text = Double.Parse(opCell.InnerText, XLHelper.NumberStyle, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
                                     cell.CellValue = cellValue;
                                 }
                             }

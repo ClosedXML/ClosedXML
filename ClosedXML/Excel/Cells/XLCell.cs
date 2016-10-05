@@ -855,7 +855,7 @@
                     else if (value == XLCellValues.Number)
                     {
                         double dTest;
-                        if (Double.TryParse(_cellValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out dTest))
+                        if (Double.TryParse(_cellValue, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out dTest))
                             _cellValue = dTest.ToString(CultureInfo.InvariantCulture);
                         else
                         {
