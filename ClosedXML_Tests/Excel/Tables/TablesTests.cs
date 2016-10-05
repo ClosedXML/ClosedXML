@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using ClosedXML.Excel;
-using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -24,8 +24,8 @@ namespace ClosedXML_Tests.Excel
         public void CanSaveTableCreatedFromEmptyDataTable()
         {
             var dt = new DataTable("sheet1");
-            dt.Columns.Add("col1", typeof (string));
-            dt.Columns.Add("col2", typeof (double));
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
 
             var wb = new XLWorkbook();
             wb.AddWorksheet(dt);
@@ -128,8 +128,8 @@ namespace ClosedXML_Tests.Excel
         public void TableCreatedFromEmptyDataTable()
         {
             var dt = new DataTable("sheet1");
-            dt.Columns.Add("col1", typeof (string));
-            dt.Columns.Add("col2", typeof (double));
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
 
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
@@ -177,13 +177,9 @@ namespace ClosedXML_Tests.Excel
             row = table.DataRange.InsertRowsAbove(1).First();
             row.Field("Value").Value = 1;
 
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
-
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
         }
 
         [Test]
@@ -196,20 +192,17 @@ namespace ClosedXML_Tests.Excel
             IXLTable table = ws.Range("A1:A2").CreateTable();
             table.SetShowTotalsRow()
                 .Field(0).TotalsRowFunction = XLTotalsRowFunction.Sum;
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox1.xlsx");
+
             IXLTableRow row = table.DataRange.FirstRow();
             row.Field("Value").Value = 3;
             row = row.InsertRowsAbove(1).First();
             row.Field("Value").Value = 2;
             row = row.InsertRowsAbove(1).First();
             row.Field("Value").Value = 1;
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox2.xlsx");
 
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
         }
 
         [Test]
@@ -229,8 +222,6 @@ namespace ClosedXML_Tests.Excel
             row.Field("Value").Value = 2;
             row = table.DataRange.InsertRowsBelow(1).First();
             row.Field("Value").Value = 3;
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
 
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
@@ -258,8 +249,6 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
         }
 
         [Test]
@@ -272,11 +261,13 @@ namespace ClosedXML_Tests.Excel
                 .CellBelow().SetValue("B")
                 .CellBelow().SetValue("C");
 
-            ws.RangeUsed().CreateTable().SetShowHeaderRow(false);
+            IXLTable table = ws.RangeUsed().CreateTable();
 
-            IXLTable table = ws.Tables.First();
+            Assert.AreEqual("Categories", table.Fields.First().Name);
 
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox1.xlsx");
+            table.SetShowHeaderRow(false);
+
+            Assert.AreEqual("Categories", table.Fields.First().Name);
 
             Assert.IsTrue(ws.Cell(1, 1).IsEmpty(true));
             Assert.AreEqual(null, table.HeadersRow());
@@ -290,15 +281,11 @@ namespace ClosedXML_Tests.Excel
             Assert.AreNotEqual(null, headerRow);
             Assert.AreEqual("Categories", headerRow.Cell(1).GetString());
 
-
             table.SetShowHeaderRow(false);
 
             ws.FirstCell().SetValue("x");
 
             table.SetShowHeaderRow();
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox2.xlsx");
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox3.xlsx");
 
             Assert.AreEqual("x", ws.FirstCell().GetString());
             Assert.AreEqual("Categories", ws.Cell("A2").GetString());
