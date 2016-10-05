@@ -152,6 +152,12 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void RightToLeft()
+        {
+            TestHelper.RunTestExample<RightToLeft>(@"Misc\RightToLeft.xlsx");
+        }
+
+        [Test]
         public void SheetProtection()
         {
             TestHelper.RunTestExample<SheetProtection>(@"Misc\SheetProtection.xlsx");

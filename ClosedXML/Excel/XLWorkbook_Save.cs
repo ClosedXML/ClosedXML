@@ -159,8 +159,8 @@ namespace ClosedXML.Excel
                 }
 
             }
-            // Get the CalculationChainPart 
-            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the 
+            // Get the CalculationChainPart
+            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the
             //workbook whose value is calculated from any formula
 
             CalculationChainPart calChainPart;
@@ -194,7 +194,7 @@ namespace ClosedXML.Excel
             var workbookPart = document.WorkbookPart ?? document.AddWorkbookPart();
 
             var worksheets = WorksheetsInternal;
-            
+
 
             var partsToRemove = workbookPart.Parts.Where(s => worksheets.Deleted.Contains(s.RelationshipId)).ToList();
 
@@ -538,7 +538,7 @@ namespace ClosedXML.Excel
             {
                 workbook.WorkbookProtection = null;
             }
-            
+
 
             if (workbook.BookViews == null)
                 workbook.BookViews = new BookViews();
@@ -3420,6 +3420,10 @@ namespace ClosedXML.Excel
             else
                 sheetView.TabSelected = null;
 
+            if (xlWorksheet.RightToLeft)
+                sheetView.RightToLeft = true;
+            else
+                sheetView.RightToLeft = null;
 
             if (xlWorksheet.ShowFormulas)
                 sheetView.ShowFormulas = true;
@@ -4064,7 +4068,7 @@ namespace ClosedXML.Excel
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
-                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);                    
+                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
                 }
             }
 
