@@ -499,7 +499,7 @@ namespace ClosedXML.Excel
                                 }
 
                                 Int32 co = 1;
-                                foreach (var name in FieldNames.Keys)
+                                foreach (var name in FieldNames.Values.Select(f => f.Name))
                                 {
                                     rangeRow.Cell(co).SetValue(name);
                                     co++;

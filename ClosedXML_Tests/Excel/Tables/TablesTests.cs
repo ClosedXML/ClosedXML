@@ -318,6 +318,15 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("LName", nameBefore);
             Assert.AreEqual("LastName", nameAfter);
             Assert.AreEqual("LastName", cellValue);
+
+            tbl.ShowHeaderRow = false;
+            tbl.Field(tbl.Fields.Last().Index).Name = "LastNameChanged";
+            nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
+            Assert.AreEqual("LastNameChanged", nameAfter);
+
+            tbl.SetShowHeaderRow(true);
+            nameAfter = tbl.Cell("B1").Value.ToString();
+            Assert.AreEqual("LastNameChanged", nameAfter);
         }
     }
 }
