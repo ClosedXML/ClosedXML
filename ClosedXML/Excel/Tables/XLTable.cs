@@ -65,7 +65,7 @@ namespace ClosedXML.Excel
                     foreach (var cell in headersRow.Cells())
                     {
                         var name = cell.GetString();
-                        if (XLHelper.IsNullOrWhiteSpace(name)) 
+                        if (XLHelper.IsNullOrWhiteSpace(name))
                         {
                             name = "Column" + (cellPos + 1);
                             cell.SetValue(name);
@@ -73,7 +73,7 @@ namespace ClosedXML.Excel
                         if (_fieldNames.ContainsKey(name))
                             throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
 
-                        _fieldNames.Add(name, new XLTableField(this) {Index = cellPos++ });
+                        _fieldNames.Add(name, new XLTableField(this, name) {Index = cellPos++ });
                     }
                 }
                 else
@@ -87,7 +87,7 @@ namespace ClosedXML.Excel
                         {
                             var name = "Column" + i;
 
-                            _fieldNames.Add(name, new XLTableField(this) {Index = i - 1 });
+                            _fieldNames.Add(name, new XLTableField(this, name) {Index = i - 1 });
                         }
                     }
                 }
@@ -102,7 +102,7 @@ namespace ClosedXML.Excel
             Int32 cellPos = 0;
             foreach(var name in fieldNames)
             {
-                _fieldNames.Add(name, new XLTableField(this) { Index = cellPos++, Name = name });
+                _fieldNames.Add(name, new XLTableField(this, name) { Index = cellPos++ });
             }
         }
 
@@ -164,8 +164,8 @@ namespace ClosedXML.Excel
         public Boolean ShowColumnStripes { get; set; }
 
         private Boolean _showAutoFilter;
-        public Boolean ShowAutoFilter { 
-            get { return _showHeaderRow && _showAutoFilter; } 
+        public Boolean ShowAutoFilter {
+            get { return _showHeaderRow && _showAutoFilter; }
             set { _showAutoFilter = value; }
             }
         public XLTableTheme Theme { get; set; }
@@ -450,7 +450,7 @@ namespace ClosedXML.Excel
                         _uniqueNames.Add(c.GetString());
                         co++;
                     }
-                    
+
                     headersRow.Clear();
                     RangeAddress.FirstAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + 1,
                                           RangeAddress.FirstAddress.ColumnNumber,
@@ -462,7 +462,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     using(var asRange = Worksheet.Range(
-                        RangeAddress.FirstAddress.RowNumber - 1 , 
+                        RangeAddress.FirstAddress.RowNumber - 1 ,
                         RangeAddress.FirstAddress.ColumnNumber,
                         RangeAddress.LastAddress.RowNumber,
                         RangeAddress.LastAddress.ColumnNumber
@@ -473,7 +473,7 @@ namespace ClosedXML.Excel
                                 if (firstRow.IsEmpty(true))
                                 {
                                     rangeRow = firstRow;
-                                    RangeAddress.FirstAddress = new XLAddress(Worksheet, 
+                                    RangeAddress.FirstAddress = new XLAddress(Worksheet,
                                           RangeAddress.FirstAddress.RowNumber - 1,
                                           RangeAddress.FirstAddress.ColumnNumber,
                                           RangeAddress.FirstAddress.FixedRow,
@@ -513,7 +513,7 @@ namespace ClosedXML.Excel
         public IXLTable SetShowHeaderRow()
         {
             return SetShowHeaderRow(true);
-        } 
+        }
         public IXLTable SetShowHeaderRow(Boolean value)
         {
             ShowHeaderRow = value;
