@@ -248,6 +248,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
     <None Include="Resource\Misc\WorkbookProperties.xlsx" />
   </ItemGroup>
   <ItemGroup />
