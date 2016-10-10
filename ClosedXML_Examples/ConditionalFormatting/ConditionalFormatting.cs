@@ -18,7 +18,7 @@ namespace ClosedXML_Examples
 
             ws.RangeUsed().AddConditionalFormat().ColorScale()
                 .LowestValue(XLColor.Red)
-                .Midpoint(XLCFContentType.Percent, "50", XLColor.Yellow) 
+                .Midpoint(XLCFContentType.Percent, "50", XLColor.Yellow)
                 .HighestValue(XLColor.Green);
 
             workbook.SaveAs(filePath);
@@ -41,6 +41,26 @@ namespace ClosedXML_Examples
             ws.RangeUsed().AddConditionalFormat().ColorScale()
                 .Minimum(XLCFContentType.Number, "2", XLColor.Red)
                 .Maximum(XLCFContentType.Percentile, "90", XLColor.Green);
+
+            workbook.SaveAs(filePath);
+        }
+    }
+
+    public class CFColorScaleMinimumMaximum : IXLExample
+    {
+        public void Create(String filePath)
+        {
+            var workbook = new XLWorkbook();
+            var ws = workbook.AddWorksheet("Sheet1");
+
+            ws.FirstCell().SetValue(1)
+                .CellBelow().SetValue(1)
+                .CellBelow().SetValue(2)
+                .CellBelow().SetValue(3);
+
+            ws.RangeUsed().AddConditionalFormat().ColorScale()
+                .LowestValue(XLColor.FromHtml("#FFFF7128"))
+                .HighestValue(XLColor.FromHtml("#FFFFEF9C"));
 
             workbook.SaveAs(filePath);
         }
@@ -567,7 +587,7 @@ namespace ClosedXML_Examples
             var range = ws.RangeUsed();
             range.AddConditionalFormat().WhenEquals("1").Font.SetBold();
             range.InsertRowsAbove(1);
-            
+
 
             workbook.SaveAs(filePath);
         }
@@ -589,7 +609,7 @@ namespace ClosedXML_Examples
             ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red)
                 .LowestValue()
                 .HighestValue();
-                
+
             workbook.SaveAs(filePath);
         }
     }

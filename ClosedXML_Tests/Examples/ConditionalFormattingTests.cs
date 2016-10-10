@@ -19,6 +19,12 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void CFColorScaleMinimumMaximum()
+        {
+            TestHelper.RunTestExample<CFColorScaleMinimumMaximum>(@"ConditionalFormatting\CFColorScaleMinimumMaximum.xlsx");
+        }
+
+        [Test]
         public void CFContains()
         {
             TestHelper.RunTestExample<CFContains>(@"ConditionalFormatting\CFContains.xlsx");
@@ -107,23 +113,5 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<CFMultipleConditions>(@"ConditionalFormatting\CFMultipleConditions.xlsx");
         }
-
-        //[Test]
-        //public void XXX()
-        //{
-        //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");
-        //}
-        //
-        //[Test]
-        //public void XXX()
-        //{
-        //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");
-        //}
-        //
-        //[Test]
-        //public void XXX()
-        //{
-        //    TestHelper.RunTestExample<XXX>(@"ConditionalFormatting\XXX.xlsx");
-        //}
     }
 }

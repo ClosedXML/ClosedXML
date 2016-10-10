@@ -229,6 +229,7 @@
     <EmbeddedResource Include="Resource\Examples\Comments\AddingComments.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowHigh.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowMidHigh.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleMinimumMaximum.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFContains.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEndsWith.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEqualsNumber.xlsx" />
@@ -245,11 +246,11 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBar.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
-    <None Include="packages.config" />
     <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
     <None Include="Resource\Misc\WorkbookProperties.xlsx" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
