@@ -3432,6 +3432,10 @@ namespace ClosedXML.Excel
             else
                 sheetView.TabSelected = null;
 
+            if (xlWorksheet.RightToLeft)
+                sheetView.RightToLeft = true;
+            else
+                sheetView.RightToLeft = null;
 
             if (xlWorksheet.ShowFormulas)
                 sheetView.ShowFormulas = true;

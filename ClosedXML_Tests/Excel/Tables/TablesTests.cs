@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using ClosedXML.Excel;
-using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -261,9 +261,13 @@ namespace ClosedXML_Tests.Excel
                 .CellBelow().SetValue("B")
                 .CellBelow().SetValue("C");
 
-            ws.RangeUsed().CreateTable().SetShowHeaderRow(false);
+            IXLTable table = ws.RangeUsed().CreateTable();
 
-            IXLTable table = ws.Tables.First();
+            Assert.AreEqual("Categories", table.Fields.First().Name);
+
+            table.SetShowHeaderRow(false);
+
+            Assert.AreEqual("Categories", table.Fields.First().Name);
 
             Assert.IsTrue(ws.Cell(1, 1).IsEmpty(true));
             Assert.AreEqual(null, table.HeadersRow());
@@ -276,7 +280,6 @@ namespace ClosedXML_Tests.Excel
             IXLRangeRow headerRow = table.HeadersRow();
             Assert.AreNotEqual(null, headerRow);
             Assert.AreEqual("Categories", headerRow.Cell(1).GetString());
-
 
             table.SetShowHeaderRow(false);
 
@@ -315,6 +318,15 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("LName", nameBefore);
             Assert.AreEqual("LastName", nameAfter);
             Assert.AreEqual("LastName", cellValue);
+
+            tbl.ShowHeaderRow = false;
+            tbl.Field(tbl.Fields.Last().Index).Name = "LastNameChanged";
+            nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
+            Assert.AreEqual("LastNameChanged", nameAfter);
+
+            tbl.SetShowHeaderRow(true);
+            nameAfter = tbl.Cell("B1").Value.ToString();
+            Assert.AreEqual("LastNameChanged", nameAfter);
         }
     }
 }
