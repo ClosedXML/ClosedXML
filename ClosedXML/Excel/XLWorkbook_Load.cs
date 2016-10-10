@@ -1534,6 +1534,8 @@ namespace ClosedXML.Excel
                     conditionalFormat.ContentTypes.Add(c.Type.Value.ToClosedXml());
                 if (c.Val != null)
                     conditionalFormat.Values.Add(new XLFormula { Value = c.Val.Value });
+                else
+                    conditionalFormat.Values.Add(null);
 
                 if (c.GreaterThanOrEqual != null)
                     conditionalFormat.IconSetOperators.Add(c.GreaterThanOrEqual.Value ? XLCFIconSetOperator.EqualOrGreaterThan : XLCFIconSetOperator.GreaterThan);
