@@ -31,7 +31,7 @@ namespace ClosedXML_Tests.Excel
             wb.AddWorksheet(dt);
 
             using (var ms = new MemoryStream())
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace ClosedXML_Tests.Excel
             ws.Range("A1").CreateTable();
 
             using (var ms = new MemoryStream())
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace ClosedXML_Tests.Excel
             ws.RangeUsed().CreateTable();
             using (var ms = new MemoryStream())
             {
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
                 var wb2 = new XLWorkbook(ms);
                 IXLWorksheet ws2 = wb2.Worksheet(1);
                 IXLTable table2 = ws2.Table(0);
@@ -115,7 +115,7 @@ namespace ClosedXML_Tests.Excel
 
             using (var ms = new MemoryStream())
             {
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
                 var wb2 = new XLWorkbook(ms);
                 IXLWorksheet ws2 = wb2.Worksheet(1);
                 IXLTable table2 = ws2.Table(0);
@@ -177,13 +177,9 @@ namespace ClosedXML_Tests.Excel
             row = table.DataRange.InsertRowsAbove(1).First();
             row.Field("Value").Value = 1;
 
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
-
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
         }
 
         [Test]
@@ -196,20 +192,17 @@ namespace ClosedXML_Tests.Excel
             IXLTable table = ws.Range("A1:A2").CreateTable();
             table.SetShowTotalsRow()
                 .Field(0).TotalsRowFunction = XLTotalsRowFunction.Sum;
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox1.xlsx");
+
             IXLTableRow row = table.DataRange.FirstRow();
             row.Field("Value").Value = 3;
             row = row.InsertRowsAbove(1).First();
             row.Field("Value").Value = 2;
             row = row.InsertRowsAbove(1).First();
             row.Field("Value").Value = 1;
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox2.xlsx");
 
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
         }
 
         [Test]
@@ -229,8 +222,6 @@ namespace ClosedXML_Tests.Excel
             row.Field("Value").Value = 2;
             row = table.DataRange.InsertRowsBelow(1).First();
             row.Field("Value").Value = 3;
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
 
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
@@ -258,8 +249,6 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
         }
 
         [Test]
@@ -275,8 +264,6 @@ namespace ClosedXML_Tests.Excel
             ws.RangeUsed().CreateTable().SetShowHeaderRow(false);
 
             IXLTable table = ws.Tables.First();
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox1.xlsx");
 
             Assert.IsTrue(ws.Cell(1, 1).IsEmpty(true));
             Assert.AreEqual(null, table.HeadersRow());
@@ -296,9 +283,6 @@ namespace ClosedXML_Tests.Excel
             ws.FirstCell().SetValue("x");
 
             table.SetShowHeaderRow();
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox2.xlsx");
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox3.xlsx");
 
             Assert.AreEqual("x", ws.FirstCell().GetString());
             Assert.AreEqual("Categories", ws.Cell("A2").GetString());
