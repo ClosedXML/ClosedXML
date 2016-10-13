@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -913,7 +914,7 @@ namespace ClosedXML.Excel
                             }
 
                             if(!hasRuns)
-                                xlCell._cellValue = sharedString.Text.InnerText;
+                                xlCell._cellValue = XmlEncoder.DecodeString(sharedString.Text.InnerText);
 
                             #region Load PhoneticProperties
 
