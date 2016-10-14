@@ -27,7 +27,10 @@ namespace ClosedXML.Excel
 
         public IXLCFColorScaleMid LowestValue(XLColor color)
         {
-            return Minimum(XLCFContentType.Minimum, "0", color);
+            _conditionalFormat.Values.Initialize(null);
+            _conditionalFormat.Colors.Initialize(color);
+            _conditionalFormat.ContentTypes.Initialize(XLCFContentType.Minimum);
+            return new XLCFColorScaleMid(_conditionalFormat);
         }
     }
 }
