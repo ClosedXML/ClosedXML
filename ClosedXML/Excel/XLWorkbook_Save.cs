@@ -36,6 +36,7 @@ using Underline = DocumentFormat.OpenXml.Spreadsheet.Underline;
 using System.Xml;
 using System.Xml.Linq;
 using System.Text;
+using ClosedXML.Utils;
 using Anchor = DocumentFormat.OpenXml.Vml.Spreadsheet.Anchor;
 using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
@@ -823,7 +824,7 @@ namespace ClosedXML.Excel
                                     EndingBaseIndex = (UInt32)p.End
                                 };
 
-                                var text = new Text {Text = p.Text};
+                                var text = new Text { Text = p.Text };
                                 if (p.Text.PreserveSpaces())
                                     text.Space = SpaceProcessingModeValues.Preserve;
 
@@ -867,7 +868,7 @@ namespace ClosedXML.Excel
                     {
                         var s = c.Value.ToString();
                         var sharedStringItem = new SharedStringItem();
-                        var text = new Text {Text = s};
+                        var text = new Text {Text = XmlEncoder.EncodeString(s)};
                         if (!s.Trim().Equals(s))
                             text.Space = SpaceProcessingModeValues.Preserve;
                         sharedStringItem.Append(text);
