@@ -1,3 +1,4 @@
+﻿using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,16 +87,23 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var range_lookup = p.Count < 4 || (bool)(p[3]);
 
             if (table_array == null || range_reference == null)
-                throw new ApplicationException("table_array has to be a range");
+                throw new NoValueAvailableException("table_array has to be a range");
 
             if (col_index_num < 1)
-                throw new ApplicationException("col_index_num has to be positive");
+                throw new CellReferenceException("col_index_num has to be positive");
 
             if (col_index_num > range.ColumnCount())
-                throw new ApplicationException("col_index_num must be smaller or equal to the number of columns in the table array");
+                throw new CellReferenceException("col_index_num must be smaller or equal to the number of columns in the table array");
 
             IXLRangeRow matching_row;
-            matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
+            try
+            {
+                matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
+            }
+            catch (Exception ex)
+            {
+                throw new NoValueAvailableException("No matches found", ex);
+            }
             if (range_lookup && matching_row == null)
             {
                 var first_row = range.FirstRow().RowNumber();
@@ -112,7 +120,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             if (matching_row == null)
-                throw new ApplicationException("No matches found.");
+                throw new NoValueAvailableException("No matches found.");
 
             return matching_row
                 .Cell(col_index_num)
