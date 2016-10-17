@@ -198,7 +198,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             firstDay = firstDay.Date;
             lastDay = lastDay.Date;
             if (firstDay > lastDay)
-                throw new ArgumentException("Incorrect last day " + lastDay);
+                return -BusinessDaysUntil(lastDay, firstDay, bankHolidays);
 
             TimeSpan span = lastDay - firstDay;
             int businessDays = span.Days + 1;
@@ -265,7 +265,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var daysRequired = (int)p[1];
 
             if (daysRequired == 0) return startDate;
-            if (daysRequired <  0) throw new ArgumentOutOfRangeException("DaysRequired must be >= 0.");
 
             var bankHolidays = new List<DateTime>();
             if (p.Count == 3)
@@ -274,13 +273,18 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
                 bankHolidays.AddRange(t.Select(XLHelper.GetDate));
             }
-            var testDate = startDate.AddDays(((daysRequired / 7) + 2) * 7);
-            return Workday(startDate, testDate, daysRequired, bankHolidays).NextWorkday(bankHolidays);
+            var testDate = startDate.AddDays(((daysRequired / 7) + 2) * 7 * Math.Sign(daysRequired));
+            var return_date = Workday(startDate, testDate, daysRequired, bankHolidays);
+            if (Math.Sign(daysRequired) == 1)
+                return_date = return_date.NextWorkday(bankHolidays);
+            else
+                return_date = return_date.PreviousWorkDay(bankHolidays);
+
+            return return_date;
         }
 
         private static DateTime Workday(DateTime startDate, DateTime testDate, int daysRequired, IEnumerable<DateTime> bankHolidays)
         {
-            
             var businessDays = BusinessDaysUntil(startDate, testDate, bankHolidays);
             if (businessDays == daysRequired)
                 return testDate;
