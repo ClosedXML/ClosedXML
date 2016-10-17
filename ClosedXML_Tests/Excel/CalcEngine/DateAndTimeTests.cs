@@ -40,6 +40,16 @@ namespace ClosedXML_Tests.Excel.DataValidations
         }
 
         [Test]
+        public void Days()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("DAYS(DATE(2016,10,1),DATE(1992,2,29))");
+            Assert.AreEqual(8981, actual);
+
+            actual = XLWorkbook.EvaluateExpr("DAYS(\"2016-10-1\",\"1992-2-29\")");
+            Assert.AreEqual(8981, actual);
+        }
+
+        [Test]
         public void DayWithDifferentCulture()
         {
             CultureInfo ci = new CultureInfo(CultureInfo.InvariantCulture.LCID);
@@ -145,6 +155,16 @@ namespace ClosedXML_Tests.Excel.DataValidations
         {
             Object actual = XLWorkbook.EvaluateExpr("Month(\"8/22/2008\")");
             Assert.AreEqual(8, actual);
+        }
+
+        [Test]
+        public void IsoWeekNum()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("ISOWEEKNUM(DATEVALUE(\"2012-3-9\"))");
+            Assert.AreEqual(10, actual);
+
+            actual = XLWorkbook.EvaluateExpr("ISOWEEKNUM(DATE(2012,12,31))");
+            Assert.AreEqual(1, actual);
         }
 
         [Test]
