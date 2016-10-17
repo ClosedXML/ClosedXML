@@ -7,6 +7,16 @@
 
 ClosedXML makes it easier for developers to create Excel 2007/2010 files. It provides a nice object oriented way to manipulate the files (similar to VBA) without dealing with the hassles of XML Documents. It can be used by any .NET language like C# and Visual Basic (VB).
 
+### Install ClosedXML via NuGet
+
+If you want to include ClosedXML in your project, you can [install it directly from NuGet](https://www.nuget.org/packages/ClosedXML)
+
+To install ClosedXML, run the following command in the Package Manager Console
+
+```
+PM> Install-Package ClosedXML
+```
+
 ### What can you do with this?
 
 ClosedXML allows you to create Excel 2007/2010 files without the Excel application. The typical example is creating Excel reports on a web server.
