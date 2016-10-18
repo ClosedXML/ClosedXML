@@ -274,7 +274,7 @@ namespace ClosedXML.Excel.CalcEngine
                 Functions = new Dictionary<string, FunctionDefinition>(StringComparer.InvariantCultureIgnoreCase);
 
                 // register built-in functions (and constants)
-                Is.Register(this);
+                Information.Register(this);
                 Logical.Register(this);
                 Lookup.Register(this);
                 MathTrig.Register(this);

@@ -13,9 +13,10 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("IF", 2, 3, If);
             ce.RegisterFunction("TRUE", 0, True);
             ce.RegisterFunction("FALSE", 0, False);
+            ce.RegisterFunction("IFERROR",2,IfError);
         }
 
-        private static object And(List<Expression> p)
+        static object And(List<Expression> p)
         {
             var b = true;
             foreach (var v in p)
@@ -25,7 +26,7 @@ namespace ClosedXML.Excel.CalcEngine
             return b;
         }
 
-        private static object Or(List<Expression> p)
+        static object Or(List<Expression> p)
         {
             var b = false;
             foreach (var v in p)
@@ -35,12 +36,12 @@ namespace ClosedXML.Excel.CalcEngine
             return b;
         }
 
-        private static object Not(List<Expression> p)
+        static object Not(List<Expression> p)
         {
             return !p[0];
         }
 
-        private static object If(List<Expression> p)
+        static object If(List<Expression> p)
         {
             if (p[0])
             {
@@ -49,25 +50,25 @@ namespace ClosedXML.Excel.CalcEngine
             return p.Count > 2 ? p[2].Evaluate() : false;
         }
 
-        private static object True(List<Expression> p)
+        static object True(List<Expression> p)
         {
             return true;
         }
 
-        private static object False(List<Expression> p)
+        static object False(List<Expression> p)
         {
             return false;
         }
 
-        private static object IfError(Expression p, object valueIfError)
+        static object IfError(List<Expression> p)
         {
             try
             {
-                return p.Evaluate();
+                return p[0].Evaluate();
             }
             catch (ArgumentException)
             {
-                return valueIfError;
+                return p[1].Evaluate();
             }
         }
     }

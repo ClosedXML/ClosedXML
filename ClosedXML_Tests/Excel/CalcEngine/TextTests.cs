@@ -270,7 +270,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void Proper_Value()
         {
             Object actual = XLWorkbook.EvaluateExpr(@"Proper(""my name is francois botha"")");
-            Assert.AreEqual("My Name Is Francois Botha", actual);
+            Assert.AreEqual("My Name Information Francois Botha", actual);
         }
 
         [Test]
