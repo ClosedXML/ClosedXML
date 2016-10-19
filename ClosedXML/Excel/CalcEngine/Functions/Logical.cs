@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -15,6 +13,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("IF", 2, 3, If);
             ce.RegisterFunction("TRUE", 0, True);
             ce.RegisterFunction("FALSE", 0, False);
+            ce.RegisterFunction("IFERROR",2,IfError);
         }
 
         static object And(List<Expression> p)
@@ -22,41 +21,55 @@ namespace ClosedXML.Excel.CalcEngine
             var b = true;
             foreach (var v in p)
             {
-                b = b && (bool)v;
+                b = b && v;
             }
             return b;
         }
+
         static object Or(List<Expression> p)
         {
             var b = false;
             foreach (var v in p)
             {
-                b = b || (bool)v;
+                b = b || v;
             }
             return b;
         }
+
         static object Not(List<Expression> p)
         {
-            return !(bool)p[0];
+            return !p[0];
         }
+
         static object If(List<Expression> p)
         {
-            if ((bool)p[0] )
+            if (p[0])
             {
                 return p[1].Evaluate();
             }
-            else
-            {
-                return p.Count > 2 ? p[2].Evaluate() : false;
-            }
+            return p.Count > 2 ? p[2].Evaluate() : false;
         }
+
         static object True(List<Expression> p)
         {
             return true;
         }
+
         static object False(List<Expression> p)
         {
             return false;
+        }
+
+        static object IfError(List<Expression> p)
+        {
+            try
+            {
+                return p[0].Evaluate();
+            }
+            catch (ArgumentException)
+            {
+                return p[1].Evaluate();
+            }
         }
     }
 }
