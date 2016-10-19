@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Drawing.Design;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
@@ -8,8 +8,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
     {
         public static void Register(CalcEngine ce)
         {
-            //TODO: Add documentation
-            ce.RegisterFunction("ERRORTYPE",1,ErrorType); 
+            ce.RegisterFunction("ERRORTYPE",1,ErrorType);
             ce.RegisterFunction("ISBLANK", 1,int.MaxValue, IsBlank);
             ce.RegisterFunction("ISERR",1, int.MaxValue, IsErr);
             ce.RegisterFunction("ISERROR",1, int.MaxValue, IsError);
@@ -20,7 +19,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("ISNUMBER",1, int.MaxValue, IsNumber);
             ce.RegisterFunction("ISODD",1,IsOdd);
             ce.RegisterFunction("ISREF",1, int.MaxValue, IsRef);
-            ce.RegisterFunction("ISTEXT", 1, int.MaxValue, IsText);
+            ce.RegisterFunction("ISTEXT",1, int.MaxValue, IsText);
             ce.RegisterFunction("N",1,N);
             ce.RegisterFunction("NA",0,NA);
             ce.RegisterFunction("TYPE",1,Type);
@@ -34,13 +33,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object IsBlank(List<Expression> p)
         {
-            var v = (string) p[0];
+            var v = (string) p[0].Evaluate();
             var isBlank = string.IsNullOrEmpty(v);
+            p.RemoveAt(0);
 
-
-            if (isBlank && p.Count > 1) {
-                var sublist = p.GetRange(1, p.Count);
-                isBlank = (bool)IsBlank(sublist);
+            if (isBlank && p.Count > 0) {
+                isBlank = (bool)IsBlank(p);
             }
 
             return isBlank;
@@ -64,9 +62,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var v = p[0].Evaluate();
             if (v is double)
             {
-                return Math.Abs((double) v%2) < 1;
+                return Math.Abs((double) v%2) < 0;
             }
-            //TODO: Error Exceptions
             throw new ArgumentException("Expression doesn't evaluate to double");
         }
 
@@ -74,11 +71,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var v = p[0].Evaluate();
             var isLogical = v is bool;
-            
-            if (isLogical && p.Count > 1)
+            p.RemoveAt(0);
+
+            if (isLogical && p.Count > 0)
             {
-                var sublist = p.GetRange(1, p.Count);
-                isLogical = (bool) IsLogical(sublist);
+                isLogical = (bool) IsLogical(p);
             }
 
             return isLogical;
@@ -98,31 +95,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         static object IsNumber(List<Expression> p)
         {
             var v = p[0].Evaluate();
+            var isNumber = v is double;
+            p.RemoveAt(0);
 
-            var isNumber = v is double; //Normal number formatting
-            if (!isNumber)
-            {
-                isNumber = v is DateTime; //Handle DateTime Format
-            }
-            if (!isNumber)
-            {
-                //Handle Number Styles
-                try
-                {
-                    var stringValue = (string) v;
-                    double.Parse(stringValue.TrimEnd('%', ' '), NumberStyles.Any);
-                    isNumber = true;
-                }
-                catch (Exception)
-                {
-                    isNumber = false;
-                }
-            }
-            
-            if (isNumber && p.Count > 1) 
-            {
-                var sublist = p.GetRange(1, p.Count);
-                isNumber = (bool)IsNumber(sublist);
+            if (isNumber && p.Count > 0) {
+                isNumber = (bool)IsNumber(p);
             }
 
             return isNumber;
@@ -156,7 +133,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object N(List<Expression> p)
         {
-            return (double) p[0];
+            //TODO: Write Code
+            throw new NotSupportedException();;
         }
 
         static object NA(List<Expression> p)
@@ -167,27 +145,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object Type(List<Expression> p)
         {
-            if ((bool) IsNumber(p))
-            {
-                return 1;
-            }
-            if ((bool) IsText(p))
-            {
-                return 2;
-            }
-            if ((bool) IsLogical(p))
-            {
-                return 4;
-            }
-            if ((bool) IsError(p))
-            {
-                return 16;
-            }
-            if(p.Count > 1)
-            {
-                return 64;
-            }
-            return null;
+            //TODO: Write Code
+            throw new NotSupportedException();;
         }
     }
 }
