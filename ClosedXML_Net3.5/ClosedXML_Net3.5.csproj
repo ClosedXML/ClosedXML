@@ -109,6 +109,9 @@
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\DateAndTime.cs">
       <Link>Excel\CalcEngine\Functions\DateAndTime.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Information.cs">
+      <Link>Excel\CalcEngine\Functions\Information.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Logical.cs">
       <Link>Excel\CalcEngine\Functions\Logical.cs</Link>
     </Compile>
@@ -820,7 +823,6 @@
     <Compile Include="..\ClosedXML\XLHelper.cs">
       <Link>XLHelper.cs</Link>
     </Compile>
-    <Compile Include="Excel\CalcEngine\Functions\Information.cs" />
     <Compile Include="Excel\Style\XLStylizedEmpty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
