@@ -1,7 +1,9 @@
-﻿using ClosedXML.Excel;
+﻿using ClosedXML.Attributes;
+using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -14,10 +16,24 @@ namespace ClosedXML_Tests.Excel
     [TestFixture]
     public class TablesTests
     {
-        public class TestObject
+        public class TestObjectWithoutAttributes
         {
             public String Column1 { get; set; }
             public String Column2 { get; set; }
+        }
+
+        public class TestObjectWithAttributes
+        {
+            public int UnOrderedColumn { get; set; }
+
+            [Display(Name ="SecondColumn"), ColumnOrder(1)]
+            public String Column1 { get; set; }
+
+            [Display(Name = "FirstColumn"), ColumnOrder(0)]
+            public String Column2 { get; set; }
+
+            [Display(Name = "SomeFieldNotProperty"), ColumnOrder(2)]
+            public int MyField;
         }
 
         [Test]
@@ -151,12 +167,31 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void TableCreatedFromEmptyListOfObject()
         {
-            var l = new List<TestObject>();
+            var l = new List<TestObjectWithoutAttributes>();
 
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().InsertTable(l);
             Assert.AreEqual(2, ws.Tables.First().ColumnCount());
+        }
+
+        [Test]
+        public void TableCreatedFromListOfObjectWithPropertyAttributes()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().InsertTable(l);
+            Assert.AreEqual(4, ws.Tables.First().ColumnCount());
+            Assert.AreEqual("FirstColumn", ws.FirstCell().Value);
+            Assert.AreEqual("SecondColumn", ws.FirstCell().CellRight().Value);
+            Assert.AreEqual("SomeFieldNotProperty", ws.FirstCell().CellRight().CellRight().Value);
+            Assert.AreEqual("UnOrderedColumn", ws.FirstCell().CellRight().CellRight().CellRight().Value);
         }
 
         [Test]

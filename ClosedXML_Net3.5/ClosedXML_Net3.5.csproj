@@ -55,6 +55,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ClosedXML\Attributes\ColumnOrderAttribute.cs">
+      <Link>Attributes\ColumnOrderAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\AutoFilters\IXLAutoFilter.cs">
       <Link>Excel\AutoFilters\IXLAutoFilter.cs</Link>
     </Compile>
