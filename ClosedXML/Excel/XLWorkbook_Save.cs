@@ -1640,7 +1640,7 @@ namespace ClosedXML.Excel
                 {
                     var vTDouble1 = new VTDouble
                     {
-                        Text = p.GetValue<Double>().ToString(CultureInfo.InvariantCulture)
+                        Text = p.GetValue<Double>().ToInvariantString()
                     };
                     customDocumentProperty.AppendChild(vTDouble1);
                 }
@@ -2381,10 +2381,10 @@ namespace ClosedXML.Excel
             var dm = ds.Margins;
             if (!dm.Automatic)
                 retVal.Inset = String.Format("{0}in,{1}in,{2}in,{3}in",
-                    dm.Left.ToString(CultureInfo.InvariantCulture),
-                    dm.Top.ToString(CultureInfo.InvariantCulture),
-                    dm.Right.ToString(CultureInfo.InvariantCulture),
-                    dm.Bottom.ToString(CultureInfo.InvariantCulture));
+                    dm.Left.ToInvariantString(),
+                    dm.Top.ToInvariantString(),
+                    dm.Right.ToInvariantString(),
+                    dm.Bottom.ToInvariantString());
 
             return retVal;
         }
@@ -2440,10 +2440,10 @@ namespace ClosedXML.Excel
             sb.Append(";");
 
             sb.Append("width:");
-            sb.Append(Math.Round(c.Style.Size.Width * 7.5, 2).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(c.Style.Size.Width * 7.5, 2).ToInvariantString());
             sb.Append("pt;");
             sb.Append("height:");
-            sb.Append(Math.Round(c.Style.Size.Height, 2).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(c.Style.Size.Height, 2).ToInvariantString());
             sb.Append("pt;");
 
             sb.Append("z-index:");
@@ -3913,7 +3913,7 @@ namespace ClosedXML.Excel
                                 var timeSpan = opCell.GetTimeSpan();
                                 var cellValue = new CellValue();
                                 cellValue.Text =
-                                    XLCell.BaseDate.Add(timeSpan).ToOADate().ToString(CultureInfo.InvariantCulture);
+                                    XLCell.BaseDate.Add(timeSpan).ToOADate().ToInvariantString();
                                 cell.CellValue = cellValue;
                             }
                             else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
@@ -3921,7 +3921,7 @@ namespace ClosedXML.Excel
                                 if (!XLHelper.IsNullOrWhiteSpace(opCell.InnerText))
                                 {
                                     var cellValue = new CellValue();
-                                    cellValue.Text = Double.Parse(opCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).ToString(CultureInfo.InvariantCulture);
+                                    cellValue.Text = Double.Parse(opCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                                     cell.CellValue = cellValue;
                                 }
                             }

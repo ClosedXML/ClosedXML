@@ -851,7 +851,7 @@ namespace ClosedXML.Excel
                     {
                         double dTest;
                         if (Double.TryParse(_cellValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out dTest))
-                            _cellValue = dTest.ToString(CultureInfo.InvariantCulture);
+                            _cellValue = dTest.ToInvariantString();
                         else
                         {
                             throw new ArgumentException(
@@ -865,7 +865,7 @@ namespace ClosedXML.Excel
                         if (_dataType == XLCellValues.Boolean)
                             _cellValue = (_cellValue != "0").ToString();
                         else if (_dataType == XLCellValues.TimeSpan)
-                            _cellValue = BaseDate.Add(GetTimeSpan()).ToOADate().ToString(CultureInfo.InvariantCulture);
+                            _cellValue = BaseDate.Add(GetTimeSpan()).ToOADate().ToInvariantString();
                     }
                 }
 
