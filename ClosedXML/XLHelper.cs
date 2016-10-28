@@ -22,7 +22,6 @@ namespace ClosedXML.Excel
         public const Double Epsilon = 1e-10;
 
         private const Int32 TwoT26 = 26*26;
-        internal static readonly NumberFormatInfo NumberFormatForParse = CultureInfo.InvariantCulture.NumberFormat;
         internal static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(200, 200));
         internal static readonly Double DpiX = Graphic.DpiX;
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
@@ -70,7 +69,7 @@ namespace ClosedXML.Excel
             //Extra check because we allow users to pass row col positions in as strings
             if (columnLetter[0] <= '9')
             {
-                retVal = Int32.Parse(columnLetter, NumberFormatForParse);
+                retVal = Int32.Parse(columnLetter, XLHelper.NumberStyle, XLHelper.ParseCulture);
                 return retVal;
             }
 
