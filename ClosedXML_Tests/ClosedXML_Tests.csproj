@@ -139,6 +139,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\AddingDataSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\AddingDataTableAsWorksheet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\AdjustToContents.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\AdjustToContentsWithAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\AutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\BlankCells.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\CellValues.xlsx" />

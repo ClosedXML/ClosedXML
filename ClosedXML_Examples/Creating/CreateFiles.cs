@@ -52,6 +52,7 @@ namespace ClosedXML_Examples
             new MergeMoves().Create(Path.Combine(path, "MergedMoves.xlsx"));
             new WorkbookProperties().Create(Path.Combine(path, "WorkbookProperties.xlsx"));
             new AdjustToContents().Create(Path.Combine(path, "AdjustToContents.xlsx"));
+            new AdjustToContentsWithAutoFilter().Create(Path.Combine(path, "AdjustToContentsWithAutoFilter.xlsx"));
             new HideUnhide().Create(Path.Combine(path, "HideUnhide.xlsx"));
             new Outline().Create(Path.Combine(path, "Outline.xlsx"));
             new Formulas().Create(Path.Combine(path, "Formulas.xlsx"));

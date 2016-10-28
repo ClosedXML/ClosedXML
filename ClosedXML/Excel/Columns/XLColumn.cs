@@ -127,7 +127,7 @@ namespace ClosedXML.Excel
             {
                 asRange.Delete(XLShiftDeletedCells.ShiftCellsLeft);
             }
-            
+
             Worksheet.Internals.ColumnsCollection.Remove(columnNumber);
             var columnsToMove = new List<Int32>();
             columnsToMove.AddRange(
@@ -433,6 +433,13 @@ namespace ClosedXML.Excel
                 }
                 else
                     thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString(), fontCache);
+
+                if (c.Worksheet.AutoFilter != null
+                    && c.Worksheet.AutoFilter.Range != null
+                    && c.Worksheet.AutoFilter.Range.Contains(c))
+                    thisWidthMax += 2.7148; // Allow room for arrow icon in autofilter
+
+
                 if (thisWidthMax >= maxWidth)
                 {
                     colMaxWidth = maxWidth;
