@@ -127,7 +127,7 @@ namespace ClosedXML.Excel
             {
                 asRange.Delete(XLShiftDeletedCells.ShiftCellsLeft);
             }
-            
+
             Worksheet.Internals.ColumnsCollection.Remove(columnNumber);
             var columnsToMove = new List<Int32>();
             columnsToMove.AddRange(
@@ -161,7 +161,15 @@ namespace ClosedXML.Excel
 
         public new IXLCells Cells()
         {
-            return CellsUsed(true);
+            return Cells(true, true);
+        }
+
+        public new IXLCells Cells(Boolean usedCellsOnly)
+        {
+            if (usedCellsOnly)
+                return Cells(true, true);
+            else
+                return Cells(FirstCellUsed().Address.RowNumber, LastCellUsed().Address.RowNumber);
         }
 
         public IXLCells Cells(Int32 firstRow, Int32 lastRow)

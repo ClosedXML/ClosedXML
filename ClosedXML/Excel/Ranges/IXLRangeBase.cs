@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     {
         Workbook,
         Worksheet
-    } 
+    }
 
     public interface IXLRangeBase: IDisposable
     {
@@ -69,6 +69,10 @@ namespace ClosedXML.Excel
         ///   Returns the collection of cells.
         /// </summary>
         IXLCells Cells();
+
+        IXLCells Cells(Boolean usedCellsOnly);
+
+        IXLCells Cells(Boolean usedCellsOnly, Boolean includeFormats);
 
         IXLCells Cells(String cells);
 
@@ -189,7 +193,7 @@ namespace ClosedXML.Excel
         IXLRange Merge(Boolean checkIntersect);
 
         /// <summary>
-        ///   Creates a named range out of this range. 
+        ///   Creates a named range out of this range.
         ///   <para>If the named range exists, it will add this range to that named range.</para>
         ///   <para>The default scope for the named range is Workbook.</para>
         /// </summary>
@@ -197,7 +201,7 @@ namespace ClosedXML.Excel
         IXLRange AddToNamed(String rangeName);
 
         /// <summary>
-        ///   Creates a named range out of this range. 
+        ///   Creates a named range out of this range.
         ///   <para>If the named range exists, it will add this range to that named range.</para>
         ///   <param name = "rangeName">Name of the range.</param>
         ///   <param name = "scope">The scope for the named range.</param>
@@ -205,7 +209,7 @@ namespace ClosedXML.Excel
         IXLRange AddToNamed(String rangeName, XLScope scope);
 
         /// <summary>
-        ///   Creates a named range out of this range. 
+        ///   Creates a named range out of this range.
         ///   <para>If the named range exists, it will add this range to that named range.</para>
         ///   <param name = "rangeName">Name of the range.</param>
         ///   <param name = "scope">The scope for the named range.</param>
@@ -218,7 +222,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
         IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
-        
+
         /// <summary>
         ///   Deletes the cell comments from this range.
         /// </summary>

@@ -1958,14 +1958,15 @@ namespace ClosedXML.Excel
         }
 
 
-        public IXLCell CopyFrom(XLCell otherCell, Boolean copyDataValidations)
+        public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
         {
-            var source = otherCell;
-            CopyValues(otherCell);
+            var castedOtherCell = otherCell as XLCell; // To expose GetFormulaR1C1, etc
+            var source = castedOtherCell;
+            CopyValues(castedOtherCell);
 
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 
-            var conditionalFormats = otherCell.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(otherCell)).ToList();
+            var conditionalFormats = castedOtherCell.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(castedOtherCell)).ToList();
             foreach (var cf in conditionalFormats)
             {
                 var c = new XLConditionalFormat(cf as XLConditionalFormat) {Range = AsRange()};
@@ -1976,7 +1977,7 @@ namespace ClosedXML.Excel
                     var f = v.Value;
                     if (v.IsFormula)
                     {
-                        var r1c1 = otherCell.GetFormulaR1C1(f);
+                        var r1c1 = castedOtherCell.GetFormulaR1C1(f);
                         f = GetFormulaA1(r1c1);
                     }
 
@@ -1991,8 +1992,8 @@ namespace ClosedXML.Excel
             {
                 var eventTracking = Worksheet.EventTrackingEnabled;
                 Worksheet.EventTrackingEnabled = false;
-                if (otherCell.HasDataValidation)
-                    CopyDataValidation(otherCell, otherCell.DataValidation);
+                if (castedOtherCell.HasDataValidation)
+                    CopyDataValidation(castedOtherCell, castedOtherCell.DataValidation);
                 else if (HasDataValidation)
                 {
                     using (var asRange = AsRange())
