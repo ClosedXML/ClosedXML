@@ -88,6 +88,7 @@ namespace ClosedXML_Examples
             new UsingPhonetics().Create(Path.Combine(path, "UsingPhonetics.xlsx"));
             new WalkingRanges().Create(Path.Combine(path, "CellMoves.xlsx"));
             new AddingComments().Create(Path.Combine(path, "AddingComments.xlsx"));
+            new PivotTables().Create(Path.Combine(path, "PivotTables.xlsx"));
         }
     }
 }

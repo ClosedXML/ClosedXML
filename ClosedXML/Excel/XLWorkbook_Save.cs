@@ -300,6 +300,10 @@ namespace ClosedXML.Excel
                 }
             }
 
+            // Remove empty pivot cache part
+            if (workbookPart.Workbook.PivotCaches != null && !workbookPart.Workbook.PivotCaches.Any())
+                workbookPart.Workbook.RemoveChild(workbookPart.Workbook.PivotCaches);
+
             GenerateCalculationChainPartContent(workbookPart, context);
 
             if (workbookPart.ThemePart == null)
@@ -1791,23 +1795,32 @@ namespace ClosedXML.Excel
             XLWorksheet xlWorksheet,
             SaveContext context)
         {
+            PivotCaches pivotCaches;
+            uint cacheId = 0;
+            if (workbookPart.Workbook.PivotCaches == null)
+                pivotCaches = workbookPart.Workbook.AppendChild(new PivotCaches());
+            else
+            {
+                pivotCaches = workbookPart.Workbook.PivotCaches;
+                if (pivotCaches.Any())
+                    cacheId = pivotCaches.Cast<PivotCache>().Max(pc => pc.CacheId.Value) + 1;
+            }
+
             foreach (var pt in xlWorksheet.PivotTables)
             {
+                // TODO: Avoid duplicate pivot caches of same source range
                 var ptCdp = context.RelIdGenerator.GetNext(RelType.Workbook);
 
                 var pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(ptCdp);
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt);
 
-                var pivotCaches = new PivotCaches();
-                var pivotCache = new PivotCache {CacheId = 0U, Id = ptCdp};
+                var pivotCache = new PivotCache { CacheId = cacheId++, Id = ptCdp };
 
                 pivotCaches.AppendChild(pivotCache);
 
-                workbookPart.Workbook.AppendChild(pivotCaches);
-
                 var pivotTablePart =
                     worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
-                GeneratePivotTablePartContent(pivotTablePart, pt);
+                GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId);
 
                 pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
             }
@@ -1901,12 +1914,12 @@ namespace ClosedXML.Excel
         }
 
         // Generates content of pivotTablePart
-        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart1, IXLPivotTable pt)
+        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart1, IXLPivotTable pt, uint cacheId)
         {
             var pivotTableDefinition = new PivotTableDefinition
             {
                 Name = pt.Name,
-                CacheId = 0U,
+                CacheId = cacheId,
                 DataCaption = "Values",
                 MergeItem = GetBooleanValue(pt.MergeAndCenterWithLabels, true),
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),

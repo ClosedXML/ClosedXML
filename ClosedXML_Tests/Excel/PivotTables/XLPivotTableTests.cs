@@ -1,16 +1,15 @@
-﻿using NUnit.Framework;
+﻿using ClosedXML_Examples;
+using NUnit.Framework;
 
 namespace ClosedXML_Tests
 {
     [TestFixture]
     public class XLPivotTableTests
     {
-        //[Test]
-        //public void CreateTable()
-        //{
-        //    var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-
-
-        //}
+        [Test]
+        public void PivotTables()
+        {
+            TestHelper.RunTestExample<PivotTables>(@"PivotTables\PivotTables.xlsx");
+        }
     }
 }

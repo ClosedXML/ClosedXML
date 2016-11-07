@@ -251,6 +251,7 @@
     <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\PivotTables\PivotTables.xlsx" />
     <None Include="Resource\Misc\WorkbookProperties.xlsx" />
     <None Include="packages.config" />
   </ItemGroup>
