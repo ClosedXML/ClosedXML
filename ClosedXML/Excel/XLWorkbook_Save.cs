@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.VariantTypes;
+using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using Vml = DocumentFormat.OpenXml.Vml;
@@ -42,7 +43,6 @@ using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
 using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
-
 
 namespace ClosedXML.Excel
 {
@@ -80,7 +80,19 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType)
+        private bool Validate(SpreadsheetDocument package)
+        {
+            var validator = new OpenXmlValidator();
+            var errors = validator.Validate(package);
+            if (errors.Any())
+            {
+                var message = string.Join("\r\n", errors.Select(e => string.Format("{0} in {1}", e.Description, e.Path.XPath)).ToArray());
+                throw new ApplicationException(message);
+            }
+            return true;
+        }
+
+        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, bool validate)
         {
             PathHelper.CreateDirectory(Path.GetDirectoryName(filePath));
             var package = File.Exists(filePath)
@@ -90,11 +102,11 @@ namespace ClosedXML.Excel
             using (package)
             {
                 CreateParts(package);
-                //package.Close();
+                if (validate) Validate(package);
             }
         }
 
-        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType)
+        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType, bool validate)
         {
             var package = newStream
                 ? SpreadsheetDocument.Create(stream, spreadsheetDocumentType)
@@ -103,7 +115,7 @@ namespace ClosedXML.Excel
             using (package)
             {
                 CreateParts(package);
-                //package.Close();
+                if (validate) Validate(package);
             }
         }
 

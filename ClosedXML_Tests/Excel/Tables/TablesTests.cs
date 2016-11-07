@@ -40,14 +40,14 @@ namespace ClosedXML_Tests.Excel
         public void CanSaveTableCreatedFromEmptyDataTable()
         {
             var dt = new DataTable("sheet1");
-            dt.Columns.Add("col1", typeof(string));
-            dt.Columns.Add("col2", typeof(double));
+            dt.Columns.Add("col1", typeof (string));
+            dt.Columns.Add("col2", typeof (double));
 
             var wb = new XLWorkbook();
             wb.AddWorksheet(dt);
 
             using (var ms = new MemoryStream())
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace ClosedXML_Tests.Excel
             ws.Range("A1").CreateTable();
 
             using (var ms = new MemoryStream())
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace ClosedXML_Tests.Excel
             ws.RangeUsed().CreateTable();
             using (var ms = new MemoryStream())
             {
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
                 var wb2 = new XLWorkbook(ms);
                 IXLWorksheet ws2 = wb2.Worksheet(1);
                 IXLTable table2 = ws2.Table(0);
@@ -131,7 +131,7 @@ namespace ClosedXML_Tests.Excel
 
             using (var ms = new MemoryStream())
             {
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
                 var wb2 = new XLWorkbook(ms);
                 IXLWorksheet ws2 = wb2.Worksheet(1);
                 IXLTable table2 = ws2.Table(0);
@@ -144,8 +144,8 @@ namespace ClosedXML_Tests.Excel
         public void TableCreatedFromEmptyDataTable()
         {
             var dt = new DataTable("sheet1");
-            dt.Columns.Add("col1", typeof(string));
-            dt.Columns.Add("col2", typeof(double));
+            dt.Columns.Add("col1", typeof (string));
+            dt.Columns.Add("col2", typeof (double));
 
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");

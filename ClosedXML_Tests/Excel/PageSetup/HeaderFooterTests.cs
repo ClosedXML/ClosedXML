@@ -17,7 +17,7 @@ namespace ClosedXML_Tests.Excel
             ws.PageSetup.Header.Center.AddText("Initial page header", XLHFOccurrence.EvenPages);
 
             var ms = new MemoryStream();
-            wb.SaveAs(ms);
+            wb.SaveAs(ms, true);
 
             wb = new XLWorkbook(ms);
             ws = wb.Worksheets.First();
@@ -25,7 +25,7 @@ namespace ClosedXML_Tests.Excel
             ws.PageSetup.Header.Center.Clear();
             ws.PageSetup.Header.Center.AddText("Changed header", XLHFOccurrence.EvenPages);
 
-            wb.SaveAs(ms);
+            wb.SaveAs(ms, true);
 
             wb = new XLWorkbook(ms);
             ws = wb.Worksheets.First();

@@ -19,22 +19,22 @@ namespace ClosedXML_Tests
         //Note: Run example tests parameters
         public static string TestsOutputDirectory
         {
-            get { 
-                return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location); 
+            get {
+                return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             }
 
         }
 
         public const string ActualTestResultPostFix = "";
         public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
-        
+
         private const bool CompareWithResources = true;
 
         private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resource.Examples.");
 
         public static void SaveWorkbook(XLWorkbook workbook, string fileName)
         {
-            workbook.SaveAs(Path.Combine(TestsOutputDirectory, fileName));
+            workbook.SaveAs(Path.Combine(TestsOutputDirectory, fileName), true);
         }
 
         public static void RunTestExample<T>(string filePartName)
@@ -57,7 +57,7 @@ namespace ClosedXML_Tests
             var filePath2 = Path.Combine(directory, fileName);
             //Run test
             example.Create(filePath1);
-            new XLWorkbook(filePath1).SaveAs(filePath2);
+            new XLWorkbook(filePath1).SaveAs(filePath2, true);
             bool success = true;
 #pragma warning disable 162
             try

@@ -175,7 +175,7 @@ namespace ClosedXML.Excel
         private readonly Dictionary<IXLStyle, Int32> _stylesByStyle = new Dictionary<IXLStyle, Int32>();
 
         public XLEventTracking EventTracking { get; set; }
-       
+
         internal Int32 GetStyleId(IXLStyle style)
         {
             Int32 cached;
@@ -411,22 +411,46 @@ namespace ClosedXML.Excel
         /// </summary>
         public void Save()
         {
+#if DEBUG
+            Save(true);
+#else
+            Save(false);
+#endif
+        }
+
+        /// <summary>
+        ///   Saves the current workbook and optionally performs validation
+        /// </summary>
+        public void Save(bool validate)
+        {
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
                 throw new Exception("This is a new file, please use one of the SaveAs methods.");
 
             if (_loadSource == XLLoadSource.Stream)
             {
-                CreatePackage(_originalStream, false, _spreadsheetDocumentType);
+                CreatePackage(_originalStream, false, _spreadsheetDocumentType, validate);
             }
             else
-                CreatePackage(_originalFile, _spreadsheetDocumentType);
+                CreatePackage(_originalFile, _spreadsheetDocumentType, validate);
         }
 
         /// <summary>
         ///   Saves the current workbook to a file.
         /// </summary>
         public void SaveAs(String file)
+        {
+#if DEBUG
+            SaveAs(file, true);
+#else
+            SaveAs(file, false);
+#endif
+        }
+
+        /// <summary>
+        ///   Saves the current workbook to a file and optionally validates it.
+        /// </summary>
+        public void SaveAs(String file, Boolean validate)
         {
             checkForWorksheetsPresent();
             PathHelper.CreateDirectory(Path.GetDirectoryName(file));
@@ -435,14 +459,14 @@ namespace ClosedXML.Excel
                 if (File.Exists(file))
                     File.Delete(file);
 
-                CreatePackage(file, GetSpreadsheetDocumentType(file));
+                CreatePackage(file, GetSpreadsheetDocumentType(file), validate);
             }
             else if (_loadSource == XLLoadSource.File)
             {
                 if (String.Compare(_originalFile.Trim(), file.Trim(), true) != 0)
                     File.Copy(_originalFile, file, true);
 
-                CreatePackage(file, GetSpreadsheetDocumentType(file));
+                CreatePackage(file, GetSpreadsheetDocumentType(file), validate);
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -452,7 +476,7 @@ namespace ClosedXML.Excel
                 {
                     CopyStream(_originalStream, fileStream);
                     //fileStream.Position = 0;
-                    CreatePackage(fileStream, false, _spreadsheetDocumentType);
+                    CreatePackage(fileStream, false, _spreadsheetDocumentType, validate);
                     fileStream.Close();
                 }
             }
@@ -481,6 +505,18 @@ namespace ClosedXML.Excel
         /// </summary>
         public void SaveAs(Stream stream)
         {
+#if DEBUG
+            SaveAs(stream, true);
+#else
+            SaveAs(stream, false);
+#endif
+        }
+
+        /// <summary>
+        ///   Saves the current workbook to a stream and optionally validates it.
+        /// </summary>
+        public void SaveAs(Stream stream, Boolean validate)
+        {
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
             {
@@ -491,13 +527,13 @@ namespace ClosedXML.Excel
                 if (stream.CanRead && stream.CanSeek && stream.CanWrite)
                 {
                     // all is fine the package can be created in a direct way
-                    CreatePackage(stream, true, _spreadsheetDocumentType);
+                    CreatePackage(stream, true, _spreadsheetDocumentType, validate);
                 }
                 else
                 {
                     // the harder way
                     MemoryStream ms = new MemoryStream();
-                    CreatePackage(ms, true, _spreadsheetDocumentType);
+                    CreatePackage(ms, true, _spreadsheetDocumentType, validate);
                     // not really nessesary, because I changed CopyStream too.
                     // but for better understanding and if somebody in the future
                     // provide an changed version of CopyStream
@@ -512,7 +548,7 @@ namespace ClosedXML.Excel
                     CopyStream(fileStream, stream);
                     fileStream.Close();
                 }
-                CreatePackage(stream, false, _spreadsheetDocumentType);
+                CreatePackage(stream, false, _spreadsheetDocumentType, validate);
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -520,7 +556,7 @@ namespace ClosedXML.Excel
                 if (_originalStream != stream)
                     CopyStream(_originalStream, stream);
 
-                CreatePackage(stream, false, _spreadsheetDocumentType);
+                CreatePackage(stream, false, _spreadsheetDocumentType, validate);
             }
         }
 
@@ -589,24 +625,24 @@ namespace ClosedXML.Excel
             return columns;
         }
 
-        #region Fields
+#region Fields
 
         private readonly XLLoadSource _loadSource = XLLoadSource.New;
         private readonly String _originalFile;
         private readonly Stream _originalStream;
 
-        #endregion
+#endregion
 
-        #region Constructor
+#region Constructor
 
-        
+
         /// <summary>
         ///   Creates a new Excel workbook.
         /// </summary>
         public XLWorkbook()
             :this(XLEventTracking.Enabled)
         {
-            
+
         }
 
         public XLWorkbook(XLEventTracking eventTracking)
@@ -665,7 +701,7 @@ namespace ClosedXML.Excel
         /// <param name = "stream">The stream to open.</param>
         public XLWorkbook(Stream stream):this(stream, XLEventTracking.Enabled)
         {
-            
+
         }
 
         public XLWorkbook(Stream stream, XLEventTracking eventTracking)
@@ -676,9 +712,9 @@ namespace ClosedXML.Excel
             Load(stream);
         }
 
-        #endregion
+#endregion
 
-        #region Nested type: UnsupportedSheet
+#region Nested type: UnsupportedSheet
 
         internal sealed class UnsupportedSheet
         {
@@ -687,7 +723,7 @@ namespace ClosedXML.Excel
             public Int32 Position;
         }
 
-        #endregion
+#endregion
 
         public IXLCell Cell(String namedCell)
         {
