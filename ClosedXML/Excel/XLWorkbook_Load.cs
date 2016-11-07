@@ -951,7 +951,7 @@ namespace ClosedXML.Excel
                 else if (cell.DataType == CellValues.Date)
                 {
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
+                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                     xlCell._dataType = XLCellValues.DateTime;
                 }
                 else if (cell.DataType == CellValues.Boolean)
@@ -962,7 +962,7 @@ namespace ClosedXML.Excel
                 else if (cell.DataType == CellValues.Number)
                 {
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
+                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                     if (s == null)
                     {
                         xlCell._dataType = XLCellValues.Number;
