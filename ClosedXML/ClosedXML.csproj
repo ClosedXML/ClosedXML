@@ -64,7 +64,7 @@
     <Compile Include="Attributes\ColumnOrderAttribute.cs" />
     <Compile Include="Excel\CalcEngine\Functions\DateAndTime.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Database.cs" />
-    <Compile Include="Excel\CalcEngine\Functions\Is.cs" />
+    <Compile Include="Excel\CalcEngine\Functions\Information.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Lookup.cs" />
     <Compile Include="Excel\Misc\XLCallbackAction.cs" />
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />

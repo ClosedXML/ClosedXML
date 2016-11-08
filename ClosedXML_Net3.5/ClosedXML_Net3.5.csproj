@@ -112,8 +112,8 @@
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\DateAndTime.cs">
       <Link>Excel\CalcEngine\Functions\DateAndTime.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Is.cs">
-      <Link>Excel\CalcEngine\Functions\Is.cs</Link>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Information.cs">
+      <Link>Excel\CalcEngine\Functions\Information.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Functions\Logical.cs">
       <Link>Excel\CalcEngine\Functions\Logical.cs</Link>
