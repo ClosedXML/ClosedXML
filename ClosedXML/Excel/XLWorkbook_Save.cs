@@ -2157,7 +2157,7 @@ namespace ClosedXML.Excel
 
                 var df = new DataField
                 {
-                    Name = value.SourceName,
+                    Name = value.CustomName,
                     Field = (UInt32)sourceColumn.ColumnNumber() - 1,
                     Subtotal = value.SummaryFormula.ToOpenXml(),
                     ShowDataAs = value.Calculation.ToOpenXml(),
