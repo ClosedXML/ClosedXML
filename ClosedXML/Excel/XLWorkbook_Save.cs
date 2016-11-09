@@ -1986,7 +1986,7 @@ namespace ClosedXML.Excel
             var pivotFields = new PivotFields {Count = Convert.ToUInt32(pt.SourceRange.ColumnCount())};
             foreach (var xlpf in pt.Fields.OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName) ? pt.RowLabels.IndexOf(f) : Int32.MaxValue ))
             {
-                if (pt.RowLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     rowFields.AppendChild(f);
@@ -2002,7 +2002,7 @@ namespace ClosedXML.Excel
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     rowItems.AppendChild(rowItemTotal);
                 }
-                else if (pt.ColumnLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     columnFields.AppendChild(f);
@@ -2024,22 +2024,22 @@ namespace ClosedXML.Excel
             {
                 var pf = new PivotField {ShowAll = false, Name = xlpf.CustomName};
 
-                if (pt.RowLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     pf.Axis = PivotTableAxisValues.AxisRow;
                 }
-                else if (pt.ColumnLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     pf.Axis = PivotTableAxisValues.AxisColumn;
                 }
-                else if (pt.ReportFilters.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                else if (pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     location.ColumnsPerPage = 1;
                     location.RowPageCount = 1;
                     pf.Axis = PivotTableAxisValues.AxisPage;
                     pageFields.AppendChild(new PageField {Hierarchy = -1, Field = pt.Fields.IndexOf(xlpf)});
                 }
-                else if (pt.Values.FirstOrDefault(p => p.CustomName == xlpf.SourceName) != null)
+                else if (pt.Values.Any(p => p.CustomName == xlpf.SourceName))
                 {
                     pf.DataField = true;
                 }
@@ -3743,7 +3743,7 @@ namespace ClosedXML.Excel
             }
 
             var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
-            var noRows = (sheetData.Elements<Row>().FirstOrDefault() == null);
+            var noRows = !sheetData.Elements<Row>().Any();
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
                 Row row;
