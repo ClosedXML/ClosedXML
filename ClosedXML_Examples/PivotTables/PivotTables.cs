@@ -55,21 +55,24 @@ namespace ClosedXML_Examples
                 var header = sheet.Range(1, 1, 1, 3);
                 var dataRange = sheet.Range(header.FirstCell(), range.LastCell());
 
-                // Add a new sheet for our pivot table
-                var ptSheet = wb.Worksheets.Add("PivotTable");
+                for (int i = 1; i <= 3; i++)
+                {
+                    // Add a new sheet for our pivot table
+                    var ptSheet = wb.Worksheets.Add("PivotTable" + i);
 
-                // Create the pivot table, using the data from the "PastrySalesData" table
-                var pt = ptSheet.PivotTables.AddNew("PivotTable", ptSheet.Cell(1, 1), dataRange);
+                    // Create the pivot table, using the data from the "PastrySalesData" table
+                    var pt = ptSheet.PivotTables.AddNew("PivotTable", ptSheet.Cell(1, 1), dataRange);
 
-                // The rows in our pivot table will be the names of the pastries
-                pt.RowLabels.Add("Name");
+                    // The rows in our pivot table will be the names of the pastries
+                    pt.RowLabels.Add("Name");
 
-                // The columns will be the months
-                pt.ColumnLabels.Add("Month");
+                    // The columns will be the months
+                    pt.ColumnLabels.Add("Month");
 
-                // The values in our table will come from the "NumberOfOrders" field
-                // The default calculation setting is a total of each row/column
-                pt.Values.Add("NumberOfOrders");
+                    // The values in our table will come from the "NumberOfOrders" field
+                    // The default calculation setting is a total of each row/column
+                    pt.Values.Add("NumberOfOrders");
+                }
 
                 wb.SaveAs(filePath);
             }
