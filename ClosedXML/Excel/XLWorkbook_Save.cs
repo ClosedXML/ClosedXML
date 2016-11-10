@@ -1982,8 +1982,8 @@ namespace ClosedXML.Excel
             var rowItems = new RowItems();
             var columnItems = new ColumnItems();
             var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count() };
-
             var pivotFields = new PivotFields {Count = Convert.ToUInt32(pt.SourceRange.ColumnCount())};
+
             foreach (var xlpf in pt.Fields.OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName) ? pt.RowLabels.IndexOf(f) : Int32.MaxValue ))
             {
                 if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
@@ -2185,10 +2185,19 @@ namespace ClosedXML.Excel
 
                 if (!String.IsNullOrEmpty(value.BaseField))
                 {
-                    var baseField =
-                        pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToString() == value.BaseField);
+                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToString() == value.BaseField);
                     if (baseField != null)
+                    {
                         df.BaseField = baseField.ColumnNumber() - 1;
+
+                        var items = baseField.CellsUsed()
+                            .Select(c => c.Value)
+                            .Skip(1) // Skip header column
+                            .Distinct().ToList();
+
+                        if (items.Any(i => i.Equals(value.BaseItem)))
+                            df.BaseItem = Convert.ToUInt32(items.IndexOf(value.BaseItem));
+                    }
                 }
                 else
                 {
@@ -2199,9 +2208,8 @@ namespace ClosedXML.Excel
                     df.BaseItem = 1048828U;
                 else if (value.CalculationItem == XLPivotCalculationItem.Next)
                     df.BaseItem = 1048829U;
-                else
+                else if (df.BaseItem == null || !df.BaseItem.HasValue)
                     df.BaseItem = 0U;
-
 
                 dataFields.AppendChild(df);
             }
