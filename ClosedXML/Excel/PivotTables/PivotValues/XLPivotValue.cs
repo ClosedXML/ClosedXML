@@ -34,16 +34,16 @@ namespace ClosedXML.Excel
             SetCalculation(XLPivotCalculation.DifferenceFrom);
             return new XLPivotValueCombination(this);
         }
-        public IXLPivotValueCombination ShowAsPctFrom(String fieldSourceName)
+        public IXLPivotValueCombination ShowAsPercentageFrom(String fieldSourceName)
         {
             BaseField = fieldSourceName;
-            SetCalculation(XLPivotCalculation.PctOf);
+            SetCalculation(XLPivotCalculation.PercentageOf);
             return new XLPivotValueCombination(this);
         }
-        public IXLPivotValueCombination ShowAsPctDifferenceFrom(String fieldSourceName)
+        public IXLPivotValueCombination ShowAsPercentageDifferenceFrom(String fieldSourceName)
         {
             BaseField = fieldSourceName;
-            SetCalculation(XLPivotCalculation.PctDifferenceFrom);
+            SetCalculation(XLPivotCalculation.PercentageDifferenceFrom);
             return new XLPivotValueCombination(this);
         }
         public IXLPivotValue ShowAsRunningTotalIn(String fieldSourceName)
@@ -51,19 +51,19 @@ namespace ClosedXML.Excel
             BaseField = fieldSourceName;
             return SetCalculation(XLPivotCalculation.RunningTotal);
         }
-        public IXLPivotValue ShowAsPctOfRow()
+        public IXLPivotValue ShowAsPercentageOfRow()
         {
-            return SetCalculation(XLPivotCalculation.PctOfRow);
+            return SetCalculation(XLPivotCalculation.PercentageOfRow);
         }
 
-        public IXLPivotValue ShowAsPctOfColumn()
+        public IXLPivotValue ShowAsPercentageOfColumn()
         {
-            return SetCalculation(XLPivotCalculation.PctOfColumn);
+            return SetCalculation(XLPivotCalculation.PercentageOfColumn);
         }
 
-        public IXLPivotValue ShowAsPctOfTotal()
+        public IXLPivotValue ShowAsPercentageOfTotal()
         {
-            return SetCalculation(XLPivotCalculation.PctOfTotal);
+            return SetCalculation(XLPivotCalculation.PercentageOfTotal);
         }
 
         public IXLPivotValue ShowAsIndex()
