@@ -2522,7 +2522,7 @@ namespace ClosedXML.Excel
             var sharedBorders = new Dictionary<IXLBorder, BorderInfo>
             {{defaultStyle.Border, new BorderInfo {BorderId = 0, Border = defaultStyle.Border as XLBorder}}};
 
-            var sharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>
+            var sharedNumberFormats = new Dictionary<IXLNumberFormatBase, NumberFormatInfo>
             {
                 {
                     defaultStyle.NumberFormat,
@@ -2573,6 +2573,7 @@ namespace ClosedXML.Excel
             UInt32 borderCount = 1;
             var numberFormatCount = 1;
             var xlStyles = new HashSet<Int32>();
+            var pivotTableNumberFormats = new HashSet<IXLPivotValueFormat>();
 
             foreach (var worksheet in WorksheetsInternal)
             {
@@ -2591,6 +2592,24 @@ namespace ClosedXML.Excel
                             s => !xlStyles.Contains(s))
                     )
                     xlStyles.Add(s);
+
+                foreach (var ptnf in worksheet.PivotTables.SelectMany(pt => pt.Values.Select(ptv => ptv.NumberFormat)).Distinct().Where(nf => !pivotTableNumberFormats.Contains(nf)))
+                    pivotTableNumberFormats.Add(ptnf);
+            }
+
+            foreach (var numberFormat in pivotTableNumberFormats)
+            {
+                if (numberFormat.NumberFormatId != -1
+                    || sharedNumberFormats.ContainsKey(numberFormat))
+                    continue;
+
+                sharedNumberFormats.Add(numberFormat,
+                    new NumberFormatInfo
+                    {
+                        NumberFormatId = numberFormatCount + 164,
+                        NumberFormat = numberFormat
+                    });
+                numberFormatCount++;
             }
 
             foreach (var xlStyle in xlStyles.Select(GetStyleById))
@@ -3317,9 +3336,9 @@ namespace ClosedXML.Excel
             return nf.Equals(xlFont);
         }
 
-        private static Dictionary<IXLNumberFormat, NumberFormatInfo> ResolveNumberFormats(
+        private static Dictionary<IXLNumberFormatBase, NumberFormatInfo> ResolveNumberFormats(
             WorkbookStylesPart workbookStylesPart,
-            Dictionary<IXLNumberFormat, NumberFormatInfo> sharedNumberFormats,
+            Dictionary<IXLNumberFormatBase, NumberFormatInfo> sharedNumberFormats,
             UInt32 defaultFormatId)
         {
             if (workbookStylesPart.Stylesheet.NumberingFormats == null)
@@ -3332,7 +3351,7 @@ namespace ClosedXML.Excel
                 });
             }
 
-            var allSharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>();
+            var allSharedNumberFormats = new Dictionary<IXLNumberFormatBase, NumberFormatInfo>();
             foreach (var numberFormatInfo in sharedNumberFormats.Values.Where(nf => nf.NumberFormatId != defaultFormatId))
             {
                 var numberingFormatId = 164;
@@ -3368,7 +3387,7 @@ namespace ClosedXML.Excel
             return allSharedNumberFormats;
         }
 
-        private static bool NumberFormatsAreEqual(NumberingFormat nf, IXLNumberFormat xlNumberFormat)
+        private static bool NumberFormatsAreEqual(NumberingFormat nf, IXLNumberFormatBase xlNumberFormat)
         {
             var newXLNumberFormat = new XLNumberFormat();
 

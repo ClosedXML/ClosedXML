@@ -133,7 +133,7 @@ namespace ClosedXML.Excel
         internal struct NumberFormatInfo
         {
             public Int32 NumberFormatId;
-            public IXLNumberFormat NumberFormat;
+            public IXLNumberFormatBase NumberFormat;
         }
         #endregion
         #region Nested type: StyleInfo
@@ -148,8 +148,8 @@ namespace ClosedXML.Excel
         }
         #endregion
 
-        
-        
-       
+
+
+
     }
 }

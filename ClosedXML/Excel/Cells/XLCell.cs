@@ -1478,7 +1478,6 @@ namespace ClosedXML.Excel
 
         private IXLStyle GetStyle()
         {
-            //return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
             if (_style != null)
                 return _style;
 

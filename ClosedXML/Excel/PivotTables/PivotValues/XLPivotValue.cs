@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         }
 
         public IXLPivotValueFormat NumberFormat { get; private set; }
-        public String SourceName { get; private set; }	
+        public String SourceName { get; private set; }
         public String CustomName { get; set; }		public IXLPivotValue SetCustomName(String value) { CustomName = value; return this; }
 
         public XLPivotSummary SummaryFormula { get; set; }		public IXLPivotValue SetSummaryFormula(XLPivotSummary value) { SummaryFormula = value; return this; }
