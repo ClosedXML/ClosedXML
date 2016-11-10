@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
         public IXLPivotValue Add(String sourceName, String customName)
         {
             var pivotValue = new XLPivotValue(sourceName) { CustomName = customName };
-            _pivotValues.Add(sourceName, pivotValue);
+            _pivotValues.Add(customName, pivotValue);
 
             if (_pivotValues.Count > 1 && !this._pivotTable.ColumnLabels.Any(cl => cl.SourceName == XLConstants.PivotTableValuesSentinalLabel) && !this._pivotTable.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
                 _pivotTable.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
