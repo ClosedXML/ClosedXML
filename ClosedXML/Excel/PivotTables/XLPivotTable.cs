@@ -7,13 +7,14 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotTable: IXLPivotTable
     {
+
         public XLPivotTable()
         {
             Fields = new XLPivotFields();
             ReportFilters = new XLPivotFields();
             ColumnLabels=new XLPivotFields();
             RowLabels = new XLPivotFields();
-            Values = new XLPivotValues();
+            Values = new XLPivotValues(this);
             Theme = XLPivotTableTheme.PivotStyleLight16;
 
             SetExcelDefaults();

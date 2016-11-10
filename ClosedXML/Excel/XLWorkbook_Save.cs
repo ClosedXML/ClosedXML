@@ -1914,7 +1914,7 @@ namespace ClosedXML.Excel
         }
 
         // Generates content of pivotTablePart
-        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart1, IXLPivotTable pt, uint cacheId)
+        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart, IXLPivotTable pt, uint cacheId)
         {
             var pivotTableDefinition = new PivotTableDefinition
             {
@@ -1981,7 +1981,7 @@ namespace ClosedXML.Excel
             var columnFields = new ColumnFields();
             var rowItems = new RowItems();
             var columnItems = new ColumnItems();
-            var pageFields = new PageFields {Count = (uint)pt.ReportFilters.Count()};
+            var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count() };
 
             var pivotFields = new PivotFields {Count = Convert.ToUInt32(pt.SourceRange.ColumnCount())};
             foreach (var xlpf in pt.Fields.OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName) ? pt.RowLabels.IndexOf(f) : Int32.MaxValue ))
@@ -2004,7 +2004,7 @@ namespace ClosedXML.Excel
                 }
                 else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
-                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
+                    var f = new Field { Index = pt.Fields.IndexOf(xlpf) };
                     columnFields.AppendChild(f);
 
                     for (var i = 0; i < xlpf.SharedStrings.Count; i++)
@@ -2018,6 +2018,16 @@ namespace ClosedXML.Excel
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     columnItems.AppendChild(rowItemTotal);
                 }
+            }
+
+            // -2 is the sentinal value for "Values"
+            if (pt.ColumnLabels.Any(cl => cl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+                columnFields.AppendChild(new Field { Index = -2 });
+
+            if (pt.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+            {
+                pivotTableDefinition.DataOnRows = true;
+                rowFields.AppendChild(new Field { Index = -2 });
             }
 
             foreach (var xlpf in pt.Fields)
@@ -2114,6 +2124,7 @@ namespace ClosedXML.Excel
                     fieldItems.AppendChild(new Item {ItemType = ItemValues.Default});
                 }
 
+                fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
                 pf.AppendChild(fieldItems);
                 pivotFields.AppendChild(pf);
             }
@@ -2123,27 +2134,35 @@ namespace ClosedXML.Excel
 
             if (pt.RowLabels.Any())
             {
+                rowFields.Count = Convert.ToUInt32(rowFields.Count());
                 pivotTableDefinition.AppendChild(rowFields);
             }
             else
             {
                 rowItems.AppendChild(new RowItem());
             }
+
+            rowItems.Count = Convert.ToUInt32(rowItems.Count());
             pivotTableDefinition.AppendChild(rowItems);
 
             if (!pt.ColumnLabels.Any())
             {
                 columnItems.AppendChild(new RowItem());
+                columnItems.Count = Convert.ToUInt32(columnItems.Count());
                 pivotTableDefinition.AppendChild(columnItems);
             }
             else
             {
+                columnFields.Count = Convert.ToUInt32(columnFields.Count());
                 pivotTableDefinition.AppendChild(columnFields);
+
+                columnItems.Count = Convert.ToUInt32(columnItems.Count());
                 pivotTableDefinition.AppendChild(columnItems);
             }
 
             if (pt.ReportFilters.Any())
             {
+                pageFields.Count = Convert.ToUInt32(pageFields.Count());
                 pivotTableDefinition.AppendChild(pageFields);
             }
 
@@ -2186,6 +2205,8 @@ namespace ClosedXML.Excel
 
                 dataFields.AppendChild(df);
             }
+
+            dataFields.Count = Convert.ToUInt32(dataFields.Count());
             pivotTableDefinition.AppendChild(dataFields);
 
             pivotTableDefinition.AppendChild(new PivotTableStyle
@@ -2217,7 +2238,7 @@ namespace ClosedXML.Excel
 
             #endregion
 
-            pivotTablePart1.PivotTableDefinition = pivotTableDefinition;
+            pivotTablePart.PivotTableDefinition = pivotTableDefinition;
         }
 
 
