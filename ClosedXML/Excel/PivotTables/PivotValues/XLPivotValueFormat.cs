@@ -79,19 +79,17 @@ namespace ClosedXML.Excel
         }
 
         #region Overrides
-        public bool Equals(IXLPivotValueFormat other)
+        public bool Equals(IXLNumberFormatBase other)
         {
-            var otherNf = other as XLPivotValueFormat;
-
             return
-                _numberFormatId == otherNf._numberFormatId
-                && _format == otherNf._format
+                _numberFormatId == other.NumberFormatId
+                && _format == other.Format
                 ;
         }
 
         public override bool Equals(object obj)
         {
-            return Equals((XLPivotValueFormat)obj);
+            return Equals((IXLNumberFormatBase)obj);
         }
 
         public override int GetHashCode()

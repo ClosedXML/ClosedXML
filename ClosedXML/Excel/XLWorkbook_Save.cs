@@ -1820,7 +1820,7 @@ namespace ClosedXML.Excel
 
                 var pivotTablePart =
                     worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
-                GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId);
+                GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId, context);
 
                 pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
             }
@@ -1914,7 +1914,7 @@ namespace ClosedXML.Excel
         }
 
         // Generates content of pivotTablePart
-        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart, IXLPivotTable pt, uint cacheId)
+        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart, IXLPivotTable pt, uint cacheId, SaveContext context)
         {
             var pivotTableDefinition = new PivotTableDefinition
             {
@@ -2020,14 +2020,17 @@ namespace ClosedXML.Excel
                 }
             }
 
-            // -2 is the sentinal value for "Values"
-            if (pt.ColumnLabels.Any(cl => cl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
-                columnFields.AppendChild(new Field { Index = -2 });
-
-            if (pt.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+            if (pt.Values.Count() > 1)
             {
-                pivotTableDefinition.DataOnRows = true;
-                rowFields.AppendChild(new Field { Index = -2 });
+                // -2 is the sentinal value for "Values"
+                if (pt.ColumnLabels.Any(cl => cl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+                    columnFields.AppendChild(new Field { Index = -2 });
+
+                if (pt.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+                {
+                    pivotTableDefinition.DataOnRows = true;
+                    rowFields.AppendChild(new Field { Index = -2 });
+                }
             }
 
             foreach (var xlpf in pt.Fields)
@@ -2174,13 +2177,19 @@ namespace ClosedXML.Excel
                     pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToString() == value.SourceName);
                 if (sourceColumn == null) continue;
 
+                UInt32 numberFormatId = 0;
+                if (value.NumberFormat.NumberFormatId != -1 || context.SharedNumberFormats.ContainsKey(value.NumberFormat.NumberFormatId))
+                    numberFormatId = (UInt32)value.NumberFormat.NumberFormatId;
+                else if (context.SharedNumberFormats.Any(snf => snf.Value.NumberFormat.Format == value.NumberFormat.Format))
+                    numberFormatId = (UInt32)context.SharedNumberFormats.First(snf => snf.Value.NumberFormat.Format == value.NumberFormat.Format).Key;
+
                 var df = new DataField
                 {
                     Name = value.CustomName,
                     Field = (UInt32)sourceColumn.ColumnNumber() - 1,
                     Subtotal = value.SummaryFormula.ToOpenXml(),
                     ShowDataAs = value.Calculation.ToOpenXml(),
-                    NumberFormatId = (UInt32)value.NumberFormat.NumberFormatId
+                    NumberFormatId = numberFormatId
                 };
 
                 if (!String.IsNullOrEmpty(value.BaseField))
@@ -2639,6 +2648,11 @@ namespace ClosedXML.Excel
             }
 
             var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, sharedNumberFormats, defaultFormatId);
+            foreach (var nf in allSharedNumberFormats)
+            {
+                context.SharedNumberFormats.Add(nf.Value.NumberFormatId, nf.Value);
+            }
+
             ResolveFonts(workbookStylesPart, context);
             var allSharedFills = ResolveFills(workbookStylesPart, sharedFills);
             var allSharedBorders = ResolveBorders(workbookStylesPart, sharedBorders);
