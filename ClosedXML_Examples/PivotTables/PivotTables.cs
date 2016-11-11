@@ -55,13 +55,16 @@ namespace ClosedXML_Examples
                 var header = sheet.Range(1, 1, 1, 3);
                 var dataRange = sheet.Range(header.FirstCell(), range.LastCell());
 
+                IXLWorksheet ptSheet;
+                IXLPivotTable pt;
+
                 for (int i = 1; i <= 3; i++)
                 {
                     // Add a new sheet for our pivot table
-                    var ptSheet = wb.Worksheets.Add("PivotTable" + i);
+                    ptSheet = wb.Worksheets.Add("PivotTable" + i);
 
                     // Create the pivot table, using the data from the "PastrySalesData" table
-                    var pt = ptSheet.PivotTables.AddNew("PivotTable", ptSheet.Cell(1, 1), dataRange);
+                    pt = ptSheet.PivotTables.AddNew("PivotTable", ptSheet.Cell(1, 1), dataRange);
 
                     // The rows in our pivot table will be the names of the pastries
                     pt.RowLabels.Add("Name");
@@ -89,6 +92,16 @@ namespace ClosedXML_Examples
 
                     ptSheet.Columns().AdjustToContents();
                 }
+
+                // Different kind of pivot
+                ptSheet = wb.Worksheets.Add("PivotTableNoColumnLabels");
+                pt = ptSheet.PivotTables.AddNew("PivotTableNoColumnLabels", ptSheet.Cell(1, 1), dataRange);
+
+                pt.RowLabels.Add("Name");
+                pt.RowLabels.Add("Month");
+
+                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);//.NumberFormat.Format = "#0.00";
+                pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);//.NumberFormat.Format = "#0.00";
 
                 wb.SaveAs(filePath);
             }

@@ -2025,8 +2025,7 @@ namespace ClosedXML.Excel
                 // -2 is the sentinal value for "Values"
                 if (pt.ColumnLabels.Any(cl => cl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
                     columnFields.AppendChild(new Field { Index = -2 });
-
-                if (pt.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+                else if (pt.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
                 {
                     pivotTableDefinition.DataOnRows = true;
                     rowFields.AppendChild(new Field { Index = -2 });
@@ -2052,7 +2051,7 @@ namespace ClosedXML.Excel
                     pf.Axis = PivotTableAxisValues.AxisPage;
                     pageFields.AppendChild(new PageField {Hierarchy = -1, Field = pt.Fields.IndexOf(xlpf)});
                 }
-                else if (pt.Values.Any(p => p.SourceName == xlpf.SourceName && p.CustomName != xlpf.SourceName))
+                else if (pt.Values.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     pf.DataField = true;
                 }
@@ -2148,17 +2147,25 @@ namespace ClosedXML.Excel
             rowItems.Count = Convert.ToUInt32(rowItems.Count());
             pivotTableDefinition.AppendChild(rowItems);
 
-            if (!pt.ColumnLabels.Any())
+            if (!pt.ColumnLabels.Any(cl => cl.CustomName != XLConstants.PivotTableValuesSentinalLabel))
             {
-                columnItems.AppendChild(new RowItem());
-                columnItems.Count = Convert.ToUInt32(columnItems.Count());
-                pivotTableDefinition.AppendChild(columnItems);
+                for (int i = 0; i < pt.Values.Count(); i++)
+                {
+                    var rowItem = new RowItem();
+                    rowItem.Index = Convert.ToUInt32(i);
+                    rowItem.AppendChild(new MemberPropertyIndex() { Val = i });
+                    columnItems.AppendChild(rowItem);
+                }
             }
-            else
+
+            if (columnFields.Any())
             {
                 columnFields.Count = Convert.ToUInt32(columnFields.Count());
                 pivotTableDefinition.AppendChild(columnFields);
+            }
 
+            if (columnItems.Any())
+            {
                 columnItems.Count = Convert.ToUInt32(columnItems.Count());
                 pivotTableDefinition.AppendChild(columnItems);
             }
