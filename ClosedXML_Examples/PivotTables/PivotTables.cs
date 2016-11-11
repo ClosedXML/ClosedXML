@@ -45,17 +45,17 @@ namespace ClosedXML_Examples
 
             using (var wb = new XLWorkbook())
             {
-
                 var sheet = wb.Worksheets.Add("PastrySalesData");
                 // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
                 var source = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                sheet.Columns().AdjustToContents();
 
                 // Create a range that includes our table, including the header row
                 var range = source.DataRange;
                 var header = sheet.Range(1, 1, 1, 3);
                 var dataRange = sheet.Range(header.FirstCell(), range.LastCell());
 
-                for (int i = 1; i <= 1; i++)
+                for (int i = 1; i <= 3; i++)
                 {
                     // Add a new sheet for our pivot table
                     var ptSheet = wb.Worksheets.Add("PivotTable" + i);
@@ -65,20 +65,29 @@ namespace ClosedXML_Examples
 
                     // The rows in our pivot table will be the names of the pastries
                     pt.RowLabels.Add("Name");
-                    pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                    if (i == 2) pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
 
                     // The columns will be the months
                     pt.ColumnLabels.Add("Month");
-                    //pt.ColumnLabels.Add("{{Values}}");
+                    if (i == 3) pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
 
                     // The values in our table will come from the "NumberOfOrders" field
                     // The default calculation setting is a total of each row/column
-                    pt.Values.Add("NumberOfOrders", "NumberOfOrdersPercentageOfDoughnut")
-                        .ShowAsPctFrom("Name").And("Doughnut")
+                    pt.Values.Add("NumberOfOrders", "NumberOfOrdersPercentageOfBearclaw")
+                        .ShowAsPercentageFrom("Name").And("Bearclaw")
                         .NumberFormat.Format = "0%";
 
-                    pt.Values.Add("Quality", "Sum of Quality");
-                    //pt.Values.Add("NumberOfOrders", "Sum of NumberOfOrders");
+                    if (i > 1)
+                    {
+                        pt.Values.Add("Quality", "Sum of Quality")
+                            .NumberFormat.SetFormat("#,##0.00");
+                    }
+                    if (i > 2)
+                    {
+                        pt.Values.Add("NumberOfOrders", "Sum of NumberOfOrders");
+                    }
+
+                    ptSheet.Columns().AdjustToContents();
                 }
 
                 wb.SaveAs(filePath);
