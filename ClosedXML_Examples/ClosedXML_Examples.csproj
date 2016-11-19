@@ -71,7 +71,10 @@
     <Compile Include="ConditionalFormatting\ConditionalFormatting.cs" />
     <Compile Include="Delete\DeleteFewWorksheets.cs" />
     <Compile Include="IXLExample.cs" />
+    <Compile Include="Misc\AdjustToContentsWithAutoFilter.cs" />
     <Compile Include="Misc\CopyingRowsAndColumns.cs" />
+    <Compile Include="Misc\DataTypesUnderDifferentCulture.cs" />
+    <Compile Include="Misc\RightToLeft.cs" />
     <Compile Include="ModifyFiles.cs" />
     <Compile Include="Creating\CreateFiles.cs" />
     <Compile Include="Loading\ChangingBasicTable.cs" />
@@ -153,6 +156,9 @@
     <Compile Include="Styles\StyleNumberFormat.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="app.config" />
     <None Include="ClosedXML.snk" />
     <None Include="packages.config" />

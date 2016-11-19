@@ -27,6 +27,7 @@ namespace ClosedXML_Examples
             new InsertColumns().Create(Path.Combine(path, "InsertColumns.xlsx"));
             new ColumnCollection().Create(Path.Combine(path, "ColumnCollection.xlsx"));
             new DataTypes().Create(Path.Combine(path, "DataTypes.xlsx"));
+            new DataTypesUnderDifferentCulture().Create(Path.Combine(path, "DataTypesUnderDifferentCulture.xlsx"));
             new MultipleSheets().Create(Path.Combine(path, "MultipleSheets.xlsx"));
             new RowCollection().Create(Path.Combine(path, "RowCollection.xlsx"));
             new DefiningRanges().Create(Path.Combine(path, "DefiningRanges.xlsx"));
@@ -51,6 +52,7 @@ namespace ClosedXML_Examples
             new MergeMoves().Create(Path.Combine(path, "MergedMoves.xlsx"));
             new WorkbookProperties().Create(Path.Combine(path, "WorkbookProperties.xlsx"));
             new AdjustToContents().Create(Path.Combine(path, "AdjustToContents.xlsx"));
+            new AdjustToContentsWithAutoFilter().Create(Path.Combine(path, "AdjustToContentsWithAutoFilter.xlsx"));
             new HideUnhide().Create(Path.Combine(path, "HideUnhide.xlsx"));
             new Outline().Create(Path.Combine(path, "Outline.xlsx"));
             new Formulas().Create(Path.Combine(path, "Formulas.xlsx"));
@@ -66,6 +68,7 @@ namespace ClosedXML_Examples
             new FreezePanes().Create(Path.Combine(path, "FreezePanes.xlsx"));
             new UsingTables().Create(Path.Combine(path, "UsingTables.xlsx"));
             new AddingRowToTables().Create(Path.Combine(path, "AddingRowToTables.xlsx"));
+            new RightToLeft().Create(Path.Combine(path, "RightToLeft.xlsx"));
             new ShowCase().Create(Path.Combine(path, "ShowCase.xlsx"));
             new CopyingWorksheets().Create(Path.Combine(path, "CopyingWorksheets.xlsx"));
             new InsertingTables().Create(Path.Combine(path, "InsertingTables.xlsx"));
@@ -86,6 +89,7 @@ namespace ClosedXML_Examples
             new UsingPhonetics().Create(Path.Combine(path, "UsingPhonetics.xlsx"));
             new WalkingRanges().Create(Path.Combine(path, "CellMoves.xlsx"));
             new AddingComments().Create(Path.Combine(path, "AddingComments.xlsx"));
+            new PivotTables().Create(Path.Combine(path, "PivotTables.xlsx"));
         }
     }
 }

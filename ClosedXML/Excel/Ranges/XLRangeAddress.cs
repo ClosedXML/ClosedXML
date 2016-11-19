@@ -65,7 +65,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     FirstAddress = XLAddress.Create(worksheet, firstPart + "1");
-                    LastAddress = XLAddress.Create(worksheet, secondPart + XLHelper.MaxRowNumber.ToString(CultureInfo.InvariantCulture));    
+                    LastAddress = XLAddress.Create(worksheet, secondPart + XLHelper.MaxRowNumber.ToInvariantString());
                 }
             }
 

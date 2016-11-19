@@ -53,11 +53,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             matching_column = range.FindColumn(c => new Expression(c.Cell(1).Value).CompareTo(lookup_value) == 0);
             if (range_lookup && matching_column == null)
             {
+                var first_column = range.FirstColumn().ColumnNumber();
                 matching_column = range.FindColumn(c =>
                 {
-                    if (c.ColumnNumber() < range.ColumnsUsed().Count() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0 && new Expression(c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    var column_index_in_range = c.ColumnNumber() - first_column + 1;
+                    if (column_index_in_range < range.ColumnsUsed().Count() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0 && new Expression(c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
                         return true;
-                    else if (c.ColumnNumber() == range.ColumnsUsed().Count() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    else if (column_index_in_range == range.ColumnsUsed().Count() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0)
                         return true;
                     else
                         return false;
@@ -96,11 +98,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             matching_row = range.FindRow(r => new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
             if (range_lookup && matching_row == null)
             {
+                var first_row = range.FirstRow().RowNumber();
                 matching_row = range.FindRow(r =>
                 {
-                    if (r.RowNumber() < range.RowsUsed().Count() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0 && new Expression(r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    var row_index_in_range = r.RowNumber() - first_row + 1;
+                    if (row_index_in_range < range.RowsUsed().Count() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0 && new Expression(r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
                         return true;
-                    else if (r.RowNumber() == range.RowsUsed().Count() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    else if (row_index_in_range == range.RowsUsed().Count() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0)
                         return true;
                     else
                         return false;

@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.VariantTypes;
+using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using Vml = DocumentFormat.OpenXml.Vml;
@@ -36,12 +37,12 @@ using Underline = DocumentFormat.OpenXml.Spreadsheet.Underline;
 using System.Xml;
 using System.Xml.Linq;
 using System.Text;
+using ClosedXML.Utils;
 using Anchor = DocumentFormat.OpenXml.Vml.Spreadsheet.Anchor;
 using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
 using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
-
 
 namespace ClosedXML.Excel
 {
@@ -79,7 +80,19 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType)
+        private bool Validate(SpreadsheetDocument package)
+        {
+            var validator = new OpenXmlValidator();
+            var errors = validator.Validate(package);
+            if (errors.Any())
+            {
+                var message = string.Join("\r\n", errors.Select(e => string.Format("{0} in {1}", e.Description, e.Path.XPath)).ToArray());
+                throw new ApplicationException(message);
+            }
+            return true;
+        }
+
+        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, bool validate)
         {
             PathHelper.CreateDirectory(Path.GetDirectoryName(filePath));
             var package = File.Exists(filePath)
@@ -89,11 +102,11 @@ namespace ClosedXML.Excel
             using (package)
             {
                 CreateParts(package);
-                //package.Close();
+                if (validate) Validate(package);
             }
         }
 
-        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType)
+        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType, bool validate)
         {
             var package = newStream
                 ? SpreadsheetDocument.Create(stream, spreadsheetDocumentType)
@@ -102,7 +115,7 @@ namespace ClosedXML.Excel
             using (package)
             {
                 CreateParts(package);
-                //package.Close();
+                if (validate) Validate(package);
             }
         }
 
@@ -159,8 +172,8 @@ namespace ClosedXML.Excel
                 }
 
             }
-            // Get the CalculationChainPart 
-            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the 
+            // Get the CalculationChainPart
+            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the
             //workbook whose value is calculated from any formula
 
             CalculationChainPart calChainPart;
@@ -194,7 +207,7 @@ namespace ClosedXML.Excel
             var workbookPart = document.WorkbookPart ?? document.AddWorkbookPart();
 
             var worksheets = WorksheetsInternal;
-            
+
 
             var partsToRemove = workbookPart.Parts.Where(s => worksheets.Deleted.Contains(s.RelationshipId)).ToList();
 
@@ -286,6 +299,10 @@ namespace ClosedXML.Excel
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
                 }
             }
+
+            // Remove empty pivot cache part
+            if (workbookPart.Workbook.PivotCaches != null && !workbookPart.Workbook.PivotCaches.Any())
+                workbookPart.Workbook.RemoveChild(workbookPart.Workbook.PivotCaches);
 
             GenerateCalculationChainPartContent(workbookPart, context);
 
@@ -538,7 +555,7 @@ namespace ClosedXML.Excel
             {
                 workbook.WorkbookProtection = null;
             }
-            
+
 
             if (workbook.BookViews == null)
                 workbook.BookViews = new BookViews();
@@ -823,7 +840,7 @@ namespace ClosedXML.Excel
                                     EndingBaseIndex = (UInt32)p.End
                                 };
 
-                                var text = new Text {Text = p.Text};
+                                var text = new Text { Text = p.Text };
                                 if (p.Text.PreserveSpaces())
                                     text.Space = SpaceProcessingModeValues.Preserve;
 
@@ -867,7 +884,7 @@ namespace ClosedXML.Excel
                     {
                         var s = c.Value.ToString();
                         var sharedStringItem = new SharedStringItem();
-                        var text = new Text {Text = s};
+                        var text = new Text {Text = XmlEncoder.EncodeString(s)};
                         if (!s.Trim().Equals(s))
                             text.Space = SpaceProcessingModeValues.Preserve;
                         sharedStringItem.Append(text);
@@ -1639,7 +1656,7 @@ namespace ClosedXML.Excel
                 {
                     var vTDouble1 = new VTDouble
                     {
-                        Text = p.GetValue<Double>().ToString(CultureInfo.InvariantCulture)
+                        Text = p.GetValue<Double>().ToInvariantString()
                     };
                     customDocumentProperty.AppendChild(vTDouble1);
                 }
@@ -1778,23 +1795,32 @@ namespace ClosedXML.Excel
             XLWorksheet xlWorksheet,
             SaveContext context)
         {
+            PivotCaches pivotCaches;
+            uint cacheId = 0;
+            if (workbookPart.Workbook.PivotCaches == null)
+                pivotCaches = workbookPart.Workbook.AppendChild(new PivotCaches());
+            else
+            {
+                pivotCaches = workbookPart.Workbook.PivotCaches;
+                if (pivotCaches.Any())
+                    cacheId = pivotCaches.Cast<PivotCache>().Max(pc => pc.CacheId.Value) + 1;
+            }
+
             foreach (var pt in xlWorksheet.PivotTables)
             {
+                // TODO: Avoid duplicate pivot caches of same source range
                 var ptCdp = context.RelIdGenerator.GetNext(RelType.Workbook);
 
                 var pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(ptCdp);
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt);
 
-                var pivotCaches = new PivotCaches();
-                var pivotCache = new PivotCache {CacheId = 0U, Id = ptCdp};
+                var pivotCache = new PivotCache { CacheId = cacheId++, Id = ptCdp };
 
                 pivotCaches.AppendChild(pivotCache);
 
-                workbookPart.Workbook.AppendChild(pivotCaches);
-
                 var pivotTablePart =
                     worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
-                GeneratePivotTablePartContent(pivotTablePart, pt);
+                GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId);
 
                 pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
             }
@@ -1888,12 +1914,12 @@ namespace ClosedXML.Excel
         }
 
         // Generates content of pivotTablePart
-        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart1, IXLPivotTable pt)
+        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart1, IXLPivotTable pt, uint cacheId)
         {
             var pivotTableDefinition = new PivotTableDefinition
             {
                 Name = pt.Name,
-                CacheId = 0U,
+                CacheId = cacheId,
                 DataCaption = "Values",
                 MergeItem = GetBooleanValue(pt.MergeAndCenterWithLabels, true),
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),
@@ -2380,10 +2406,10 @@ namespace ClosedXML.Excel
             var dm = ds.Margins;
             if (!dm.Automatic)
                 retVal.Inset = String.Format("{0}in,{1}in,{2}in,{3}in",
-                    dm.Left.ToString(CultureInfo.InvariantCulture),
-                    dm.Top.ToString(CultureInfo.InvariantCulture),
-                    dm.Right.ToString(CultureInfo.InvariantCulture),
-                    dm.Bottom.ToString(CultureInfo.InvariantCulture));
+                    dm.Left.ToInvariantString(),
+                    dm.Top.ToInvariantString(),
+                    dm.Right.ToInvariantString(),
+                    dm.Bottom.ToInvariantString());
 
             return retVal;
         }
@@ -2439,10 +2465,10 @@ namespace ClosedXML.Excel
             sb.Append(";");
 
             sb.Append("width:");
-            sb.Append(Math.Round(c.Style.Size.Width * 7.5, 2).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(c.Style.Size.Width * 7.5, 2).ToInvariantString());
             sb.Append("pt;");
             sb.Append("height:");
-            sb.Append(Math.Round(c.Style.Size.Height, 2).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(c.Style.Size.Height, 2).ToInvariantString());
             sb.Append("pt;");
 
             sb.Append("z-index:");
@@ -3420,6 +3446,10 @@ namespace ClosedXML.Excel
             else
                 sheetView.TabSelected = null;
 
+            if (xlWorksheet.RightToLeft)
+                sheetView.RightToLeft = true;
+            else
+                sheetView.RightToLeft = null;
 
             if (xlWorksheet.ShowFormulas)
                 sheetView.ShowFormulas = true;
@@ -3908,7 +3938,7 @@ namespace ClosedXML.Excel
                                 var timeSpan = opCell.GetTimeSpan();
                                 var cellValue = new CellValue();
                                 cellValue.Text =
-                                    XLCell.BaseDate.Add(timeSpan).ToOADate().ToString(CultureInfo.InvariantCulture);
+                                    XLCell.BaseDate.Add(timeSpan).ToOADate().ToInvariantString();
                                 cell.CellValue = cellValue;
                             }
                             else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
@@ -3916,7 +3946,7 @@ namespace ClosedXML.Excel
                                 if (!XLHelper.IsNullOrWhiteSpace(opCell.InnerText))
                                 {
                                     var cellValue = new CellValue();
-                                    cellValue.Text = Double.Parse(opCell.InnerText).ToString(CultureInfo.InvariantCulture);
+                                    cellValue.Text = Double.Parse(opCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                                     cell.CellValue = cellValue;
                                 }
                             }
@@ -4064,7 +4094,7 @@ namespace ClosedXML.Excel
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
-                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);                    
+                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
                 }
             }
 

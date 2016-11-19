@@ -1,18 +1,21 @@
-﻿namespace ClosedXML.Excel
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 #if NET4
     using System.ComponentModel.DataAnnotations;
-
+#else
+using System.ComponentModel;
 #endif
+
+namespace ClosedXML.Excel
+{
+    using Attributes;
 
     internal class XLCell : IXLCell, IXLStylized
     {
@@ -241,7 +244,7 @@
                 var dtTest = (DateTime)Convert.ChangeType(value, typeof (DateTime));
                 Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
-                _cellValue = dtTest.ToOADate().ToString();
+                _cellValue = dtTest.ToOADate().ToInvariantString();
             }
             else if (
                 value is sbyte
@@ -266,7 +269,7 @@
                 else
                 {
                     _dataType = XLCellValues.Number;
-                    _cellValue = value.ToString();
+                    _cellValue = ((Double)Convert.ChangeType(value, typeof (Double))).ToInvariantString();
                 }
             }
             else if (value is Boolean)
@@ -326,7 +329,7 @@
                 {
                     cValue = GetString();
                 }
-                catch 
+                catch
                 {
                     cValue = String.Empty;
                 }
@@ -343,7 +346,7 @@
             if (_dataType == XLCellValues.DateTime || IsDateFormat())
             {
                 double dTest;
-                if (Double.TryParse(cValue, out dTest))
+                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
                 {
                     var format = GetFormat();
                     return DateTime.FromOADate(dTest).ToString(format);
@@ -355,7 +358,7 @@
             if (_dataType == XLCellValues.Number)
             {
                 double dTest;
-                if (Double.TryParse(cValue, out dTest))
+                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
                 {
                     var format = GetFormat();
                     return dTest.ToString(format);
@@ -418,10 +421,10 @@
                     return cellValue != "0";
 
                 if (_dataType == XLCellValues.DateTime)
-                    return DateTime.FromOADate(Double.Parse(cellValue));
+                    return DateTime.FromOADate(Double.Parse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture));
 
                 if (_dataType == XLCellValues.Number)
-                    return Double.Parse(cellValue);
+                    return Double.Parse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture);
 
                 if (_dataType == XLCellValues.TimeSpan)
                 {
@@ -572,23 +575,14 @@
                         {
                             var fieldInfo = m.GetType().GetFields();
                             var propertyInfo = m.GetType().GetProperties();
+
+                            var columnOrders = fieldInfo.Select(fi => new KeyValuePair<long, MemberInfo>(GetFieldOrder(fi.GetCustomAttributes(true)), fi))
+                                .Concat(propertyInfo.Select(pi => new KeyValuePair<long, MemberInfo>(GetFieldOrder(pi.GetCustomAttributes(true)), pi)))
+                                .OrderBy(pair => pair.Key);
+
                             if (!hasTitles)
                             {
-                                foreach (var info in fieldInfo)
-                                {
-                                    if ((info as IEnumerable) == null)
-                                    {
-                                        var fieldName = GetFieldName(info.GetCustomAttributes(true));
-                                        if (XLHelper.IsNullOrWhiteSpace(fieldName))
-                                            fieldName = info.Name;
-
-                                        SetValue(fieldName, fRo, co);
-                                    }
-
-                                    co++;
-                                }
-
-                                foreach (var info in propertyInfo)
+                                foreach (var info in columnOrders.Select(o => o.Value))
                                 {
                                     if ((info as IEnumerable) == null)
                                     {
@@ -606,16 +600,17 @@
                                 hasTitles = true;
                             }
 
-                            foreach (var info in fieldInfo)
-                            {
-                                SetValue(info.GetValue(m), ro, co);
-                                co++;
-                            }
 
-                            foreach (var info in propertyInfo)
+                            foreach (var info in columnOrders.Select(o => o.Value))
                             {
-                                if ((info as IEnumerable) == null)
-                                    SetValue(info.GetValue(m, null), ro, co);
+                                var fi = info as FieldInfo;
+                                var pi = info as PropertyInfo;
+
+                                if (fi != null)
+                                    SetValue(fi.GetValue(m), ro, co);
+                                else if (pi != null && info as IEnumerable == null)
+                                    SetValue(pi.GetValue(m, null), ro, co);
+
                                 co++;
                             }
                         }
@@ -813,9 +808,9 @@
                         DateTime dtTest;
                         double dblTest;
                         if (DateTime.TryParse(_cellValue, out dtTest))
-                            _cellValue = dtTest.ToOADate().ToString();
-                        else if (Double.TryParse(_cellValue, out dblTest))
-                            _cellValue = dblTest.ToString();
+                            _cellValue = dtTest.ToOADate().ToInvariantString();
+                        else if (Double.TryParse(_cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dblTest))
+                            _cellValue = dblTest.ToInvariantString();
                         else
                         {
                             throw new ArgumentException(
@@ -841,7 +836,7 @@
                         {
                             try
                             {
-                                _cellValue = (DateTime.FromOADate(Double.Parse(_cellValue)) - BaseDate).ToString();
+                                _cellValue = (DateTime.FromOADate(Double.Parse(_cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture)) - BaseDate).ToString();
                             }
                             catch
                             {
@@ -855,8 +850,8 @@
                     else if (value == XLCellValues.Number)
                     {
                         double dTest;
-                        if (Double.TryParse(_cellValue, out dTest))
-                            _cellValue = Double.Parse(_cellValue).ToString();
+                        if (Double.TryParse(_cellValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out dTest))
+                            _cellValue = dTest.ToInvariantString();
                         else
                         {
                             throw new ArgumentException(
@@ -870,7 +865,7 @@
                         if (_dataType == XLCellValues.Boolean)
                             _cellValue = (_cellValue != "0").ToString();
                         else if (_dataType == XLCellValues.TimeSpan)
-                            _cellValue = BaseDate.Add(GetTimeSpan()).ToOADate().ToString(CultureInfo.InvariantCulture);
+                            _cellValue = BaseDate.Add(GetTimeSpan()).ToOADate().ToInvariantString();
                     }
                 }
 
@@ -1586,6 +1581,9 @@
 
         private bool SetEnumerable(object collectionObject)
         {
+            // IXLRichText implements IEnumerable, but we don't want to handle this here.
+            if ((collectionObject as IXLRichText) != null) return false;
+
             var asEnumerable = collectionObject as IEnumerable;
             return InsertData(asEnumerable) != null;
         }
@@ -1620,6 +1618,8 @@
                 val = string.Empty;
             else if (value is DateTime)
                 val = ((DateTime)value).ToString("o");
+            else if (value is double)
+                val = ((double)value).ToInvariantString();
             else
                 val = value.ToString();
             _richText = null;
@@ -1645,7 +1645,7 @@
                     if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                         Style.Alignment.WrapText = true;
                 }
-                else if (value is TimeSpan || (!Double.TryParse(val, out dTest) && TimeSpan.TryParse(val, out tsTest)))
+                else if (value is TimeSpan || (!Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest) && TimeSpan.TryParse(val, out tsTest)))
                 {
                     if (!(value is TimeSpan) && TimeSpan.TryParse(val, out tsTest))
                         val = tsTest.ToString();
@@ -1654,7 +1654,7 @@
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         Style.NumberFormat.NumberFormatId = 46;
                 }
-                else if (val.Trim() != "NaN" &&  Double.TryParse(val, out dTest))
+                else if (val.Trim() != "NaN" &&  Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
                     _dataType = XLCellValues.Number;
                 else if (DateTime.TryParse(val, out dtTest) && dtTest >= BaseDate)
                 {
@@ -1667,14 +1667,14 @@
                         DateTime forMillis;
                         if (value is DateTime && (forMillis = (DateTime)value).Millisecond > 0)
                         {
-                            val = forMillis.ToOADate().ToString();
+                            val = forMillis.ToOADate().ToInvariantString();
                         }
                         else
                         {
-                            val = dtTest.ToOADate().ToString();
+                            val = dtTest.ToOADate().ToInvariantString();
                         }
                     }
-                    
+
                 }
                 else if (Boolean.TryParse(val, out bTest))
                 {
@@ -1958,14 +1958,15 @@
         }
 
 
-        public IXLCell CopyFrom(XLCell otherCell, Boolean copyDataValidations)
+        public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
         {
-            var source = otherCell;
-            CopyValues(otherCell);
+            var castedOtherCell = otherCell as XLCell; // To expose GetFormulaR1C1, etc
+            var source = castedOtherCell;
+            CopyValues(castedOtherCell);
 
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 
-            var conditionalFormats = otherCell.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(otherCell)).ToList();
+            var conditionalFormats = castedOtherCell.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(castedOtherCell)).ToList();
             foreach (var cf in conditionalFormats)
             {
                 var c = new XLConditionalFormat(cf as XLConditionalFormat) {Range = AsRange()};
@@ -1976,7 +1977,7 @@
                     var f = v.Value;
                     if (v.IsFormula)
                     {
-                        var r1c1 = otherCell.GetFormulaR1C1(f);
+                        var r1c1 = castedOtherCell.GetFormulaR1C1(f);
                         f = GetFormulaA1(r1c1);
                     }
 
@@ -1991,8 +1992,8 @@
             {
                 var eventTracking = Worksheet.EventTrackingEnabled;
                 Worksheet.EventTrackingEnabled = false;
-                if (otherCell.HasDataValidation)
-                    CopyDataValidation(otherCell, otherCell.DataValidation);
+                if (castedOtherCell.HasDataValidation)
+                    CopyDataValidation(castedOtherCell, castedOtherCell.DataValidation);
                 else if (HasDataValidation)
                 {
                     using (var asRange = AsRange())
@@ -2486,8 +2487,15 @@
             var attribute = customAttributes.FirstOrDefault(a => a is DisplayAttribute);
             return attribute != null ? (attribute as DisplayAttribute).Name : null;
 #else
-            return null;
+            var attribute = customAttributes.FirstOrDefault(a => a is DisplayNameAttribute);
+            return attribute != null ? (attribute as DisplayNameAttribute).DisplayName : null;
 #endif
+        }
+
+        private static long GetFieldOrder(Object[] customAttributes)
+        {
+            var attribute = customAttributes.FirstOrDefault(a => a is ColumnOrderAttribute);
+            return attribute != null ? (attribute as ColumnOrderAttribute).Order : long.MaxValue;
         }
 
         #region Nested type: FormulaConversionType

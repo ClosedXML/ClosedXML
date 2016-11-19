@@ -26,6 +26,12 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void AdjustToContentsWithAutoFilter()
+        {
+            TestHelper.RunTestExample<AdjustToContentsWithAutoFilter>(@"Misc\AdjustToContentsWithAutoFilter.xlsx");
+        }
+
+        [Test]
         public void AutoFilter()
         {
             TestHelper.RunTestExample<AutoFilter>(@"Misc\AutoFilter.xlsx");
@@ -71,6 +77,12 @@ namespace ClosedXML_Tests.Examples
         public void DataTypes()
         {
             TestHelper.RunTestExample<DataTypes>(@"Misc\DataTypes.xlsx");
+        }
+
+        [Test]
+        public void DataTypesUnderDifferentCulture()
+        {
+            TestHelper.RunTestExample<DataTypesUnderDifferentCulture>(@"Misc\DataTypesUnderDifferentCulture.xlsx");
         }
 
         [Test]
@@ -143,6 +155,12 @@ namespace ClosedXML_Tests.Examples
         public void Outline()
         {
             TestHelper.RunTestExample<Outline>(@"Misc\Outline.xlsx");
+        }
+
+        [Test]
+        public void RightToLeft()
+        {
+            TestHelper.RunTestExample<RightToLeft>(@"Misc\RightToLeft.xlsx");
         }
 
         [Test]

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.Threading;
 using ClosedXML.Excel;
@@ -21,22 +19,23 @@ namespace ClosedXML_Tests
         //Note: Run example tests parameters
         public static string TestsOutputDirectory
         {
-            get { 
-                return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location); 
+            get
+            {
+                return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             }
 
         }
 
         public const string ActualTestResultPostFix = "";
         public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
-        
+
         private const bool CompareWithResources = true;
 
         private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resource.Examples.");
 
         public static void SaveWorkbook(XLWorkbook workbook, params string[] fileNameParts)
         {
-            workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()));
+            workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
         }
 
         // Because different fonts are installed on Unix, 
@@ -73,7 +72,7 @@ namespace ClosedXML_Tests
             var filePath2 = Path.Combine(directory, fileName);
             //Run test
             example.Create(filePath1);
-            new XLWorkbook(filePath1).SaveAs(filePath2);
+            new XLWorkbook(filePath1).SaveAs(filePath2, true);
             bool success = true;
 #pragma warning disable 162
             try

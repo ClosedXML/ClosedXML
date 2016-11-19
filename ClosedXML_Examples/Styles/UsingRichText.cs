@@ -91,7 +91,21 @@ namespace ClosedXML_Examples.Styles
                 if(richText.Bold)
                     ws.Cell(3, 2).Value = String.Format("\"{0}\" is Bold.", richText.Text);
             }
-            
+
+
+            // Now we'll build a cell with rich text, and some other styles 
+            cell = ws.Cell(5, 1);
+
+            // Add the text parts
+            cell.RichText.AddText("Some").SetFontColor(XLColor.Green);
+            cell.RichText.AddText(" rich text ").SetFontColor(XLColor.Blue).SetBold();
+            cell.RichText.AddText("with a gray background").SetItalic();
+
+            cell.Style.Fill.SetBackgroundColor(XLColor.Gray);
+
+            ws.Cell(5, 2).Value = cell.RichText; // Should copy only rich text, but not background
+
+
             ws.Columns().AdjustToContents();
 
             wb.SaveAs(filePath);
