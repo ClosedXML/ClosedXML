@@ -90,12 +90,20 @@ namespace ClosedXML_Tests
 #pragma warning restore 162
         }
 
-        public static void LoadFile(string filePartName)
+        public static string GetResourcePath(string filePartName)
+        {
+            return filePartName.Replace('\\', '.').TrimStart('.');
+        }
+
+        public static Stream GetStreamFromResource(string resourcePath)
         {
             var extractor = new ResourceFileExtractor(null, ".Resource.");
+            return extractor.ReadFileFromResToStream(resourcePath);
+        }
 
-            string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');
-            using (var stream = extractor.ReadFileFromResToStream(resourcePath))
+        public static void LoadFile(string filePartName)
+        {
+            using (var stream = GetStreamFromResource(GetResourcePath(filePartName)))
             {
                 var wb = new XLWorkbook(stream);
                 wb.Dispose();
