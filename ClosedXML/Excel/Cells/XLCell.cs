@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
             , RegexOptions.Compiled);
 
         private static readonly Regex R1C1Regex = new Regex(
-            @"(?<=\W)([Rr]\[?-?\d{0,7}\]?[Cc]\[?-?\d{0,7}\]?)(?=\W)" // R1C1
+            @"(?<=\W)([Rr](?:\[-?\d{0,7}\]|\d{0,7})?[Cc](?:\[-?\d{0,7}\]|\d{0,7})?)(?=\W)" // R1C1
             + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
             + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)", RegexOptions.Compiled); // C:C
 
@@ -1960,13 +1960,13 @@ namespace ClosedXML.Excel
 
         public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
         {
-            var castedOtherCell = otherCell as XLCell; // To expose GetFormulaR1C1, etc
-            var source = castedOtherCell;
-            CopyValues(castedOtherCell);
+            var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
+            //var source = castedOtherCell;
+            CopyValues(source);
 
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 
-            var conditionalFormats = castedOtherCell.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(castedOtherCell)).ToList();
+            var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(source)).ToList();
             foreach (var cf in conditionalFormats)
             {
                 var c = new XLConditionalFormat(cf as XLConditionalFormat) {Range = AsRange()};
@@ -1977,7 +1977,7 @@ namespace ClosedXML.Excel
                     var f = v.Value;
                     if (v.IsFormula)
                     {
-                        var r1c1 = castedOtherCell.GetFormulaR1C1(f);
+                        var r1c1 = source.GetFormulaR1C1(f);
                         f = GetFormulaA1(r1c1);
                     }
 
@@ -1992,8 +1992,8 @@ namespace ClosedXML.Excel
             {
                 var eventTracking = Worksheet.EventTrackingEnabled;
                 Worksheet.EventTrackingEnabled = false;
-                if (castedOtherCell.HasDataValidation)
-                    CopyDataValidation(castedOtherCell, castedOtherCell.DataValidation);
+                if (source.HasDataValidation)
+                    CopyDataValidation(source, source.DataValidation);
                 else if (HasDataValidation)
                 {
                     using (var asRange = AsRange())
