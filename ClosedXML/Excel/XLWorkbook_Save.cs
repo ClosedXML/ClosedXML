@@ -578,24 +578,36 @@ namespace ClosedXML.Excel
                 sheet.Name = wks.Name;
             }
 
-            foreach (var xlSheet in
-                WorksheetsInternal.Cast<XLWorksheet>().Where(s => s.SheetId == 0).OrderBy(w => w.Position))
+            foreach (var xlSheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
-                var rId = context.RelIdGenerator.GetNext(RelType.Workbook);
-
-                while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
+                string rId;
+                if (xlSheet.SheetId == 0)
+                {
                     rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
-                xlSheet.SheetId = Int32.Parse(rId.Substring(3));
-                xlSheet.RelId = rId;
-                var newSheet = new Sheet
-                {
-                    Name = xlSheet.Name,
-                    Id = rId,
-                    SheetId = (UInt32)xlSheet.SheetId
-                };
+                    while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
+                        rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
-                workbook.Sheets.AppendChild(newSheet);
+                    xlSheet.SheetId = Int32.Parse(rId.Substring(3));
+                    xlSheet.RelId = rId;
+                }
+                else
+                {
+                    rId = String.Format("rId{0}", xlSheet.SheetId);
+                    context.RelIdGenerator.AddValues(new List<string> { rId }, RelType.Workbook);
+                }
+
+                if (!workbook.Sheets.Cast<Sheet>().Any(s => s.Id == rId))
+                {
+                    var newSheet = new Sheet
+                    {
+                        Name = xlSheet.Name,
+                        Id = rId,
+                        SheetId = (UInt32)xlSheet.SheetId
+                    };
+
+                    workbook.Sheets.AppendChild(newSheet);
+                }
             }
 
             var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
