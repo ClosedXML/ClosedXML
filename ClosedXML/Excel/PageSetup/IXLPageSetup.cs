@@ -76,7 +76,7 @@ namespace ClosedXML.Excel
     public enum XLPageOrderValues { DownThenOver, OverThenDown }
     public enum XLShowCommentsValues { None, AtEnd, AsDisplayed }
     public enum XLPrintErrorValues { Blank, Dash, Displayed, NA }
-    
+
     public interface IXLPageSetup
     {
         /// <summary>
@@ -178,8 +178,8 @@ namespace ClosedXML.Excel
         /// <para>The worksheet will be printed on as many pages as necessary to print at the given scale.</para>
         /// <para>Setting this value will override the PagesWide and PagesTall values.</para>
         /// </summary>
-        /// <param name="pctOfNormalSize">The scale at which the worksheet will be printed.</param>
-        void AdjustTo(Int32 pctOfNormalSize);
+        /// <param name="percentageOfNormalSize">The scale at which the worksheet will be printed.</param>
+        void AdjustTo(Int32 percentageOfNormalSize);
         /// <summary>
         /// Gets or sets the number of pages the worksheet will be printed on.
         /// <para>This is equivalent to setting both PagesWide and PagesTall properties.</para>

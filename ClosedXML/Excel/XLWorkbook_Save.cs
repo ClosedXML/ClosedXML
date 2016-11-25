@@ -1832,7 +1832,7 @@ namespace ClosedXML.Excel
 
                 var pivotTablePart =
                     worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
-                GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId);
+                GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId, context);
 
                 pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
             }
@@ -1926,7 +1926,7 @@ namespace ClosedXML.Excel
         }
 
         // Generates content of pivotTablePart
-        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart1, IXLPivotTable pt, uint cacheId)
+        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart, IXLPivotTable pt, uint cacheId, SaveContext context)
         {
             var pivotTableDefinition = new PivotTableDefinition
             {
@@ -1993,12 +1993,12 @@ namespace ClosedXML.Excel
             var columnFields = new ColumnFields();
             var rowItems = new RowItems();
             var columnItems = new ColumnItems();
-            var pageFields = new PageFields {Count = (uint)pt.ReportFilters.Count()};
-
+            var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count() };
             var pivotFields = new PivotFields {Count = Convert.ToUInt32(pt.SourceRange.ColumnCount())};
+
             foreach (var xlpf in pt.Fields.OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName) ? pt.RowLabels.IndexOf(f) : Int32.MaxValue ))
             {
-                if (pt.RowLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     rowFields.AppendChild(f);
@@ -2014,9 +2014,9 @@ namespace ClosedXML.Excel
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     rowItems.AppendChild(rowItemTotal);
                 }
-                else if (pt.ColumnLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
-                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
+                    var f = new Field { Index = pt.Fields.IndexOf(xlpf) };
                     columnFields.AppendChild(f);
 
                     for (var i = 0; i < xlpf.SharedStrings.Count; i++)
@@ -2032,26 +2032,38 @@ namespace ClosedXML.Excel
                 }
             }
 
+            if (pt.Values.Count() > 1)
+            {
+                // -2 is the sentinal value for "Values"
+                if (pt.ColumnLabels.Any(cl => cl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+                    columnFields.AppendChild(new Field { Index = -2 });
+                else if (pt.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+                {
+                    pivotTableDefinition.DataOnRows = true;
+                    rowFields.AppendChild(new Field { Index = -2 });
+                }
+            }
+
             foreach (var xlpf in pt.Fields)
             {
                 var pf = new PivotField {ShowAll = false, Name = xlpf.CustomName};
 
-                if (pt.RowLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     pf.Axis = PivotTableAxisValues.AxisRow;
                 }
-                else if (pt.ColumnLabels.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     pf.Axis = PivotTableAxisValues.AxisColumn;
                 }
-                else if (pt.ReportFilters.FirstOrDefault(p => p.SourceName == xlpf.SourceName) != null)
+                else if (pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     location.ColumnsPerPage = 1;
                     location.RowPageCount = 1;
                     pf.Axis = PivotTableAxisValues.AxisPage;
                     pageFields.AppendChild(new PageField {Hierarchy = -1, Field = pt.Fields.IndexOf(xlpf)});
                 }
-                else if (pt.Values.FirstOrDefault(p => p.CustomName == xlpf.SourceName) != null)
+                else if (pt.Values.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     pf.DataField = true;
                 }
@@ -2126,6 +2138,7 @@ namespace ClosedXML.Excel
                     fieldItems.AppendChild(new Item {ItemType = ItemValues.Default});
                 }
 
+                fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
                 pf.AppendChild(fieldItems);
                 pivotFields.AppendChild(pf);
             }
@@ -2135,27 +2148,43 @@ namespace ClosedXML.Excel
 
             if (pt.RowLabels.Any())
             {
+                rowFields.Count = Convert.ToUInt32(rowFields.Count());
                 pivotTableDefinition.AppendChild(rowFields);
             }
             else
             {
                 rowItems.AppendChild(new RowItem());
             }
+
+            rowItems.Count = Convert.ToUInt32(rowItems.Count());
             pivotTableDefinition.AppendChild(rowItems);
 
-            if (!pt.ColumnLabels.Any())
+            if (!pt.ColumnLabels.Any(cl => cl.CustomName != XLConstants.PivotTableValuesSentinalLabel))
             {
-                columnItems.AppendChild(new RowItem());
-                pivotTableDefinition.AppendChild(columnItems);
+                for (int i = 0; i < pt.Values.Count(); i++)
+                {
+                    var rowItem = new RowItem();
+                    rowItem.Index = Convert.ToUInt32(i);
+                    rowItem.AppendChild(new MemberPropertyIndex() { Val = i });
+                    columnItems.AppendChild(rowItem);
+                }
             }
-            else
+
+            if (columnFields.Any())
             {
+                columnFields.Count = Convert.ToUInt32(columnFields.Count());
                 pivotTableDefinition.AppendChild(columnFields);
+            }
+
+            if (columnItems.Any())
+            {
+                columnItems.Count = Convert.ToUInt32(columnItems.Count());
                 pivotTableDefinition.AppendChild(columnItems);
             }
 
             if (pt.ReportFilters.Any())
             {
+                pageFields.Count = Convert.ToUInt32(pageFields.Count());
                 pivotTableDefinition.AppendChild(pageFields);
             }
 
@@ -2167,21 +2196,36 @@ namespace ClosedXML.Excel
                     pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToString() == value.SourceName);
                 if (sourceColumn == null) continue;
 
+                UInt32 numberFormatId = 0;
+                if (value.NumberFormat.NumberFormatId != -1 || context.SharedNumberFormats.ContainsKey(value.NumberFormat.NumberFormatId))
+                    numberFormatId = (UInt32)value.NumberFormat.NumberFormatId;
+                else if (context.SharedNumberFormats.Any(snf => snf.Value.NumberFormat.Format == value.NumberFormat.Format))
+                    numberFormatId = (UInt32)context.SharedNumberFormats.First(snf => snf.Value.NumberFormat.Format == value.NumberFormat.Format).Key;
+
                 var df = new DataField
                 {
-                    Name = value.SourceName,
+                    Name = value.CustomName,
                     Field = (UInt32)sourceColumn.ColumnNumber() - 1,
                     Subtotal = value.SummaryFormula.ToOpenXml(),
                     ShowDataAs = value.Calculation.ToOpenXml(),
-                    NumberFormatId = (UInt32)value.NumberFormat.NumberFormatId
+                    NumberFormatId = numberFormatId
                 };
 
                 if (!String.IsNullOrEmpty(value.BaseField))
                 {
-                    var baseField =
-                        pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToString() == value.BaseField);
+                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToString() == value.BaseField);
                     if (baseField != null)
+                    {
                         df.BaseField = baseField.ColumnNumber() - 1;
+
+                        var items = baseField.CellsUsed()
+                            .Select(c => c.Value)
+                            .Skip(1) // Skip header column
+                            .Distinct().ToList();
+
+                        if (items.Any(i => i.Equals(value.BaseItem)))
+                            df.BaseItem = Convert.ToUInt32(items.IndexOf(value.BaseItem));
+                    }
                 }
                 else
                 {
@@ -2192,12 +2236,13 @@ namespace ClosedXML.Excel
                     df.BaseItem = 1048828U;
                 else if (value.CalculationItem == XLPivotCalculationItem.Next)
                     df.BaseItem = 1048829U;
-                else
+                else if (df.BaseItem == null || !df.BaseItem.HasValue)
                     df.BaseItem = 0U;
-
 
                 dataFields.AppendChild(df);
             }
+
+            dataFields.Count = Convert.ToUInt32(dataFields.Count());
             pivotTableDefinition.AppendChild(dataFields);
 
             pivotTableDefinition.AppendChild(new PivotTableStyle
@@ -2229,7 +2274,7 @@ namespace ClosedXML.Excel
 
             #endregion
 
-            pivotTablePart1.PivotTableDefinition = pivotTableDefinition;
+            pivotTablePart.PivotTableDefinition = pivotTableDefinition;
         }
 
 
@@ -2505,7 +2550,7 @@ namespace ClosedXML.Excel
             var sharedBorders = new Dictionary<IXLBorder, BorderInfo>
             {{defaultStyle.Border, new BorderInfo {BorderId = 0, Border = defaultStyle.Border as XLBorder}}};
 
-            var sharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>
+            var sharedNumberFormats = new Dictionary<IXLNumberFormatBase, NumberFormatInfo>
             {
                 {
                     defaultStyle.NumberFormat,
@@ -2556,6 +2601,7 @@ namespace ClosedXML.Excel
             UInt32 borderCount = 1;
             var numberFormatCount = 1;
             var xlStyles = new HashSet<Int32>();
+            var pivotTableNumberFormats = new HashSet<IXLPivotValueFormat>();
 
             foreach (var worksheet in WorksheetsInternal)
             {
@@ -2574,6 +2620,24 @@ namespace ClosedXML.Excel
                             s => !xlStyles.Contains(s))
                     )
                     xlStyles.Add(s);
+
+                foreach (var ptnf in worksheet.PivotTables.SelectMany(pt => pt.Values.Select(ptv => ptv.NumberFormat)).Distinct().Where(nf => !pivotTableNumberFormats.Contains(nf)))
+                    pivotTableNumberFormats.Add(ptnf);
+            }
+
+            foreach (var numberFormat in pivotTableNumberFormats)
+            {
+                if (numberFormat.NumberFormatId != -1
+                    || sharedNumberFormats.ContainsKey(numberFormat))
+                    continue;
+
+                sharedNumberFormats.Add(numberFormat,
+                    new NumberFormatInfo
+                    {
+                        NumberFormatId = numberFormatCount + 164,
+                        NumberFormat = numberFormat
+                    });
+                numberFormatCount++;
             }
 
             foreach (var xlStyle in xlStyles.Select(GetStyleById))
@@ -2603,6 +2667,11 @@ namespace ClosedXML.Excel
             }
 
             var allSharedNumberFormats = ResolveNumberFormats(workbookStylesPart, sharedNumberFormats, defaultFormatId);
+            foreach (var nf in allSharedNumberFormats)
+            {
+                context.SharedNumberFormats.Add(nf.Value.NumberFormatId, nf.Value);
+            }
+
             ResolveFonts(workbookStylesPart, context);
             var allSharedFills = ResolveFills(workbookStylesPart, sharedFills);
             var allSharedBorders = ResolveBorders(workbookStylesPart, sharedBorders);
@@ -3300,9 +3369,9 @@ namespace ClosedXML.Excel
             return nf.Equals(xlFont);
         }
 
-        private static Dictionary<IXLNumberFormat, NumberFormatInfo> ResolveNumberFormats(
+        private static Dictionary<IXLNumberFormatBase, NumberFormatInfo> ResolveNumberFormats(
             WorkbookStylesPart workbookStylesPart,
-            Dictionary<IXLNumberFormat, NumberFormatInfo> sharedNumberFormats,
+            Dictionary<IXLNumberFormatBase, NumberFormatInfo> sharedNumberFormats,
             UInt32 defaultFormatId)
         {
             if (workbookStylesPart.Stylesheet.NumberingFormats == null)
@@ -3315,7 +3384,7 @@ namespace ClosedXML.Excel
                 });
             }
 
-            var allSharedNumberFormats = new Dictionary<IXLNumberFormat, NumberFormatInfo>();
+            var allSharedNumberFormats = new Dictionary<IXLNumberFormatBase, NumberFormatInfo>();
             foreach (var numberFormatInfo in sharedNumberFormats.Values.Where(nf => nf.NumberFormatId != defaultFormatId))
             {
                 var numberingFormatId = 164;
@@ -3351,7 +3420,7 @@ namespace ClosedXML.Excel
             return allSharedNumberFormats;
         }
 
-        private static bool NumberFormatsAreEqual(NumberingFormat nf, IXLNumberFormat xlNumberFormat)
+        private static bool NumberFormatsAreEqual(NumberingFormat nf, IXLNumberFormatBase xlNumberFormat)
         {
             var newXLNumberFormat = new XLNumberFormat();
 
@@ -3755,7 +3824,7 @@ namespace ClosedXML.Excel
             }
 
             var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
-            var noRows = (sheetData.Elements<Row>().FirstOrDefault() == null);
+            var noRows = !sheetData.Elements<Row>().Any();
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
                 Row row;

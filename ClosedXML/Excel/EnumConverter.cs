@@ -463,12 +463,12 @@ namespace ClosedXML.Excel
             {
                 case XLPivotCalculation.Normal: return ShowDataAsValues.Normal;
                 case XLPivotCalculation.DifferenceFrom: return ShowDataAsValues.Difference;
-                case XLPivotCalculation.PctOf: return ShowDataAsValues.Percent;
-                case XLPivotCalculation.PctDifferenceFrom: return ShowDataAsValues.PercentageDifference;
+                case XLPivotCalculation.PercentageOf: return ShowDataAsValues.Percent;
+                case XLPivotCalculation.PercentageDifferenceFrom: return ShowDataAsValues.PercentageDifference;
                 case XLPivotCalculation.RunningTotal: return ShowDataAsValues.RunTotal;
-                case XLPivotCalculation.PctOfRow: return ShowDataAsValues.PercentOfRaw; // There's a typo in the OpenXML SDK =)
-                case XLPivotCalculation.PctOfColumn: return ShowDataAsValues.PercentOfColumn;
-                case XLPivotCalculation.PctOfTotal: return ShowDataAsValues.PercentOfTotal;
+                case XLPivotCalculation.PercentageOfRow: return ShowDataAsValues.PercentOfRaw; // There's a typo in the OpenXML SDK =)
+                case XLPivotCalculation.PercentageOfColumn: return ShowDataAsValues.PercentOfColumn;
+                case XLPivotCalculation.PercentageOfTotal: return ShowDataAsValues.PercentOfTotal;
                 case XLPivotCalculation.Index: return ShowDataAsValues.Index;
 
                 #region default
@@ -1085,12 +1085,12 @@ namespace ClosedXML.Excel
             {
                 case ShowDataAsValues.Normal: return XLPivotCalculation.Normal;
                 case ShowDataAsValues.Difference: return XLPivotCalculation.DifferenceFrom;
-                case ShowDataAsValues.Percent: return XLPivotCalculation.PctOf;
-                case ShowDataAsValues.PercentageDifference: return XLPivotCalculation.PctDifferenceFrom;
+                case ShowDataAsValues.Percent: return XLPivotCalculation.PercentageOf;
+                case ShowDataAsValues.PercentageDifference: return XLPivotCalculation.PercentageDifferenceFrom;
                 case ShowDataAsValues.RunTotal: return XLPivotCalculation.RunningTotal;
-                case ShowDataAsValues.PercentOfRaw: return XLPivotCalculation.PctOfRow; // There's a typo in the OpenXML SDK =)
-                case ShowDataAsValues.PercentOfColumn: return XLPivotCalculation.PctOfColumn;
-                case ShowDataAsValues.PercentOfTotal: return XLPivotCalculation.PctOfTotal;
+                case ShowDataAsValues.PercentOfRaw: return XLPivotCalculation.PercentageOfRow; // There's a typo in the OpenXML SDK =)
+                case ShowDataAsValues.PercentOfColumn: return XLPivotCalculation.PercentageOfColumn;
+                case ShowDataAsValues.PercentOfTotal: return XLPivotCalculation.PercentageOfTotal;
                 case ShowDataAsValues.Index: return XLPivotCalculation.Index;
 
                 #region default

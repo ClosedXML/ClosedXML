@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     {
         public XLPageSetup(XLPageSetup defaultPageOptions, XLWorksheet worksheet)
         {
-            
+
             if (defaultPageOptions != null)
             {
                 PrintAreas = new XLPrintAreas(defaultPageOptions.PrintAreas as XLPrintAreas, worksheet);
@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
                 _pagesTall = defaultPageOptions.PagesTall;
                 _pagesWide = defaultPageOptions.PagesWide;
                 _scale = defaultPageOptions.Scale;
-                
+
 
                 if (defaultPageOptions.Margins != null)
                 {
@@ -113,7 +113,7 @@ namespace ClosedXML.Excel
         public IXLMargins Margins { get; set; }
 
         private Int32 _pagesWide;
-        public Int32 PagesWide 
+        public Int32 PagesWide
         {
             get
             {
@@ -126,7 +126,7 @@ namespace ClosedXML.Excel
                     _scale = 0;
             }
         }
-        
+
         private Int32 _pagesTall;
         public Int32 PagesTall
         {
@@ -158,9 +158,9 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void AdjustTo(Int32 pctOfNormalSize)
+        public void AdjustTo(Int32 percentageOfNormalSize)
         {
-            Scale = pctOfNormalSize;
+            Scale = percentageOfNormalSize;
             _pagesWide = 0;
             _pagesTall = 0;
         }

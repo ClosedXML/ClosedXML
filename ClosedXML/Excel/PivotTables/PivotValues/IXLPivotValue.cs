@@ -24,12 +24,12 @@ namespace ClosedXML.Excel
     {
         Normal,
         DifferenceFrom,
-        PctOf,
-        PctDifferenceFrom,
+        PercentageOf,
+        PercentageDifferenceFrom,
         RunningTotal,
-        PctOfRow,
-        PctOfColumn,
-        PctOfTotal,
+        PercentageOfRow,
+        PercentageOfColumn,
+        PercentageOfTotal,
         Index
     }
     public enum XLPivotCalculationItem
@@ -59,12 +59,12 @@ namespace ClosedXML.Excel
 
         IXLPivotValue ShowAsNormal();
         IXLPivotValueCombination ShowAsDifferenceFrom(String fieldSourceName);
-        IXLPivotValueCombination ShowAsPctFrom(String fieldSourceName);
-        IXLPivotValueCombination ShowAsPctDifferenceFrom(String fieldSourceName);
+        IXLPivotValueCombination ShowAsPercentageFrom(String fieldSourceName);
+        IXLPivotValueCombination ShowAsPercentageDifferenceFrom(String fieldSourceName);
         IXLPivotValue ShowAsRunningTotalIn(String fieldSourceName);
-        IXLPivotValue ShowAsPctOfRow();
-        IXLPivotValue ShowAsPctOfColumn();
-        IXLPivotValue ShowAsPctOfTotal();
+        IXLPivotValue ShowAsPercentageOfRow();
+        IXLPivotValue ShowAsPercentageOfColumn();
+        IXLPivotValue ShowAsPercentageOfTotal();
         IXLPivotValue ShowAsIndex();
 
     }
