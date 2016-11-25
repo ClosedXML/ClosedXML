@@ -1388,7 +1388,7 @@ namespace ClosedXML.Excel
                     {
                         var modelFirstColumn = model.FirstCellUsed(true);
                         var modelLastColumn = model.LastCellUsed(true);
-                        if (modelLastColumn != null)
+                        if (modelFirstColumn != null && modelLastColumn != null)
                         {
                             Int32 firstCoReturned = modelFirstColumn.Address.ColumnNumber
                                                     - model.RangeAddress.FirstAddress.ColumnNumber + 1;
