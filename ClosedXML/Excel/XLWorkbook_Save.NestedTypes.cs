@@ -107,7 +107,7 @@ namespace ClosedXML.Excel
                 {
                     _relIds.Add(relType, new List<String>());
                 }
-                _relIds[relType].AddRange(values);
+                _relIds[relType].AddRange(values.Where(v => !_relIds[relType].Contains(v)));
             }
             public void Reset(RelType relType)
             {
@@ -155,9 +155,5 @@ namespace ClosedXML.Excel
             public IXLStyle Style;
         }
         #endregion
-
-
-
-
     }
 }
