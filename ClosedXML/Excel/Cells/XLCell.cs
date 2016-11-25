@@ -966,8 +966,6 @@ namespace ClosedXML.Excel
             set
             {
                 _formulaR1C1 = XLHelper.IsNullOrWhiteSpace(value) ? null : value;
-
-// FormulaA1 = GetFormulaA1(value);
             }
         }
 
@@ -1761,9 +1759,10 @@ namespace ClosedXML.Excel
             {
                 var matchString = match.Value;
                 var matchIndex = match.Index;
-                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
+                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
+                    && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
                 {
-// Check if the match is in between quotes
+                    // Check if the match is in between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     sb.Append(conversionType == FormulaConversionType.A1ToR1C1
                                   ? GetR1C1Address(matchString, rowsToShift, columnsToShift)
