@@ -721,6 +721,8 @@ namespace ClosedXML.Excel
             foreach (DefinedName definedName in workbook.DefinedNames)
             {
                 var name = definedName.Name;
+                var visible = true;
+                if (definedName.Hidden != null) visible = !BooleanValue.ToBoolean(definedName.Hidden);
                 if (name == "_xlnm.Print_Area")
                 {
                     foreach (string area in definedName.Text.Split(','))
@@ -758,12 +760,12 @@ namespace ClosedXML.Excel
                         if (localSheetId == null)
                         {
                             if (!NamedRanges.Any(nr => nr.Name == name))
-                                NamedRanges.Add(name, text, comment);
+                                NamedRanges.Add(name, text, comment).Visible = visible;
                         }
                         else
                         {
                             if (!Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Any(nr => nr.Name == name))
-                                Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment);
+                                Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment).Visible = visible;
                         }
                     }
                 }

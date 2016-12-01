@@ -729,6 +729,10 @@ namespace ClosedXML.Excel
                         LocalSheetId = sheetId,
                         Text = nr.ToString()
                     };
+
+                    if (!nr.Visible)
+                        definedName.Hidden = BooleanValue.FromBoolean(true);
+
                     if (!XLHelper.IsNullOrWhiteSpace(nr.Comment))
                         definedName.Comment = nr.Comment;
                     definedNames.AppendChild(definedName);
@@ -780,6 +784,10 @@ namespace ClosedXML.Excel
                     Name = nr.Name,
                     Text = nr.ToString()
                 };
+
+                if (!nr.Visible)
+                    definedName.Hidden = BooleanValue.FromBoolean(true);
+
                 if (!XLHelper.IsNullOrWhiteSpace(nr.Comment))
                     definedName.Comment = nr.Comment;
                 definedNames.AppendChild(definedName);
