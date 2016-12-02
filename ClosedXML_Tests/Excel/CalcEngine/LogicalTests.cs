@@ -33,5 +33,22 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Object actual = XLWorkbook.EvaluateExpr(@"if(1 = 2, ""T"", ""F"")");
             Assert.AreEqual("F", actual);
         }
+
+        [Test]
+        public void If_Comparing_Against_Empty_String()
+        {
+            Object actual;
+            actual = XLWorkbook.EvaluateExpr(@"if(date(2016, 1, 1) = """", ""A"",""B"")");
+            Assert.AreEqual("B", actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"if("""" = date(2016, 1, 1), ""A"",""B"")");
+            Assert.AreEqual("B", actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"if("""" = 123, ""A"",""B"")");
+            Assert.AreEqual("B", actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"if("""" = """", ""A"",""B"")");
+            Assert.AreEqual("A", actual);
+        }
     }
 }
