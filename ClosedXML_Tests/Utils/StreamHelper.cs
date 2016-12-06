@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ClosedXML_Tests
 {
@@ -19,7 +22,7 @@ namespace ClosedXML_Tests
             var bytes = new byte[iLength];
             for (int i = 0; i < iLength; i++)
             {
-                bytes[i] = (byte) pStream.ReadByte();
+                bytes[i] = (byte)pStream.ReadByte();
             }
             pStream.Close();
             return bytes;
@@ -98,7 +101,7 @@ namespace ClosedXML_Tests
             long rest = length;
             while (rest > 0)
             {
-                int len1 = streamIn.Read(buf, 0, rest >= 512 ? 512 : (int) rest);
+                int len1 = streamIn.Read(buf, 0, rest >= 512 ? 512 : (int)rest);
                 streamToWrite.Write(buf, 0, len1);
                 rest -= len1;
             }
@@ -109,8 +112,9 @@ namespace ClosedXML_Tests
         /// </summary>
         /// <param name="one"></param>
         /// <param name="other"></param>
+        /// /// <param name="stripColumnWidths"></param>
         /// <returns></returns>
-        public static bool Compare(Stream one, Stream other)
+        public static bool Compare(Stream one, Stream other, bool stripColumnWidths)
         {
             #region Check
 
@@ -133,9 +137,35 @@ namespace ClosedXML_Tests
 
             #endregion
 
-            var stringOne = new StreamReader(one).ReadToEnd();
-            var stringOther = new StreamReader(other).ReadToEnd();
+            var stringOne = new StreamReader(one).ReadToEnd().StripColumnWidths(stripColumnWidths);
+            var stringOther = new StreamReader(other).ReadToEnd().StripColumnWidths(stripColumnWidths);
             return stringOne == stringOther;
+        }
+
+        private static Regex columnRegex = new Regex("<x:col.*?width=\"\\d+(\\.\\d+)?\".*?\\/>", RegexOptions.Compiled);
+        private static Regex widthRegex = new Regex("width=\"\\d+(\\.\\d+)?\"\\s+", RegexOptions.Compiled);
+
+        private static string StripColumnWidths(this string s, bool stripIt)
+        {
+            if (!stripIt)
+                return s;
+            else
+            {
+                var replacements = new Dictionary<string, string>();
+                
+                foreach (var m in columnRegex.Matches(s).OfType<Match>())
+                {
+                    var original = m.Groups[0].Value;
+                    var replacement = widthRegex.Replace(original, "");
+                    replacements.Add(original, replacement);
+                }
+
+                foreach (var r in replacements)
+                {
+                    s = s.Replace(r.Key, r.Value);
+                }
+                return s;
+            }
         }
     }
 }
