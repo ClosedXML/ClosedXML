@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -57,6 +58,25 @@ namespace ClosedXML_Tests.Excel
 
                 ws.Cell("A1").CopyTo("B1");
                 Assert.AreEqual("'S10 Data'!B1", ws.Cell("B1").FormulaA1);
+            }
+        }
+
+        [Test]
+        public void DateAgainstStringComparison()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").Value = new DateTime(2016, 1, 1);
+                ws.Cell("A1").DataType = XLCellValues.DateTime;
+
+                ws.Cell("A2").FormulaA1 = @"=IF(A1 = """", ""A"", ""B"")";
+                var actual = ws.Cell("A2").Value;
+                Assert.AreEqual(actual, "B");
+
+                ws.Cell("A3").FormulaA1 = @"=IF("""" = A1, ""A"", ""B"")";
+                actual = ws.Cell("A3").Value;
+                Assert.AreEqual(actual, "B");
             }
         }
     }
