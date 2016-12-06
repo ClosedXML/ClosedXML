@@ -17,6 +17,12 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             workbook = SetupWorkbook();
         }
 
+        [OneTimeTearDown]
+        public void Dispose()
+        {
+            workbook.Dispose();
+        }
+
         private XLWorkbook SetupWorkbook()
         {
             var wb = new XLWorkbook();
