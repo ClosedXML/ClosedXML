@@ -17,8 +17,8 @@ namespace ClosedXML.Excel
 
         #region Events
 
-		public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedRows;
-		public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedColumns;
+        public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedRows;
+        public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedColumns;
 
         #endregion
 
@@ -45,8 +45,8 @@ namespace ClosedXML.Excel
         {
             EventTrackingEnabled = workbook.EventTracking == XLEventTracking.Enabled;
 
-			RangeShiftedRows = new XLReentrantEnumerableSet<XLCallbackAction>();
-			RangeShiftedColumns = new XLReentrantEnumerableSet<XLCallbackAction>();
+            RangeShiftedRows = new XLReentrantEnumerableSet<XLCallbackAction>();
+            RangeShiftedColumns = new XLReentrantEnumerableSet<XLCallbackAction>();
 
             RangeAddress.Worksheet = this;
             RangeAddress.FirstAddress.Worksheet = this;
@@ -70,9 +70,9 @@ namespace ClosedXML.Excel
             _columnWidth = workbook.ColumnWidth;
             _rowHeight = workbook.RowHeight;
             RowHeightChanged = Math.Abs(workbook.RowHeight - XLWorkbook.DefaultRowHeight) > XLHelper.Epsilon;
-			Name = sheetName;
-			SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-			SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+            Name = sheetName;
+            SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
+            SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             Charts = new XLCharts();
             ShowFormulas = workbook.ShowFormulas;
             ShowGridLines = workbook.ShowGridLines;
@@ -1111,7 +1111,7 @@ namespace ClosedXML.Excel
             Int32 thisStyleId = GetStyleId();
             if (!Internals.ColumnsCollection.ContainsKey(column))
             {
-                // This is a new row so we're going to reference all 
+                // This is a new row so we're going to reference all
                 // cells in this row to preserve their formatting
                 Internals.RowsCollection.Keys.ForEach(r => Cell(r, column));
                 Internals.ColumnsCollection.Add(column,
@@ -1348,7 +1348,7 @@ namespace ClosedXML.Excel
             {
                 if (pingCells)
                 {
-                    // This is a new row so we're going to reference all 
+                    // This is a new row so we're going to reference all
                     // cells in columns of this row to preserve their formatting
 
                     var usedColumns = from c in Internals.ColumnsCollection
@@ -1379,9 +1379,17 @@ namespace ClosedXML.Excel
             return (XLPivotTable)PivotTables.PivotTable(name);
         }
 
-        public new XLCells Cells()
+        public new IXLCells Cells()
         {
-            return CellsUsed(true);
+            return Cells(true, true);
+        }
+
+        public new IXLCells Cells(Boolean usedCellsOnly)
+        {
+            if (usedCellsOnly)
+                return Cells(true, true);
+            else
+                return Range(FirstCellUsed(), LastCellUsed()).Cells(false, true);
         }
 
         public new XLCell Cell(String cellAddressInRange)
@@ -1396,11 +1404,11 @@ namespace ClosedXML.Excel
                                                       String.Compare(n.Name, cellAddressInRange, true) == 0
                                                       && n.Ranges.Count == 1);
             if (namedRanges == null || !namedRanges.Ranges.Any()) return null;
-            
+
             return (XLCell)namedRanges.Ranges.First().FirstCell();
         }
 
-        public XLCell CellFast(String cellAddressInRange)
+        internal XLCell CellFast(String cellAddressInRange)
         {
             return Cell(XLAddress.Create(this, cellAddressInRange));
         }
@@ -1438,7 +1446,7 @@ namespace ClosedXML.Excel
         {
             EventTrackingEnabled = _eventTracking;
         }
-        
+
         public IXLRanges SelectedRanges { get; internal set; }
 
         public IXLCell ActiveCell { get; set; }

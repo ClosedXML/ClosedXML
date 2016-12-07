@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
                     columnLetter = cellAddressString.Substring(startPos, rowPos);
                 }
 
-                rowNumber = int.Parse(cellAddressString.Substring(rowPos + 1), XLHelper.NumberFormatForParse);
+                rowNumber = int.Parse(cellAddressString.Substring(rowPos + 1), XLHelper.NumberStyle, XLHelper.ParseCulture);
             }
             else
             {
@@ -67,7 +67,7 @@ namespace ClosedXML.Excel
                     columnLetter = cellAddressString.Substring(startPos, rowPos);
                 }
 
-                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), XLHelper.NumberFormatForParse);
+                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), XLHelper.NumberStyle, XLHelper.ParseCulture);
             }
             return new XLAddress(worksheet, rowNumber, columnLetter, fixedRow, fixedColumn);
         }
@@ -142,7 +142,7 @@ namespace ClosedXML.Excel
             _fixedColumn = fixedColumn;
             _fixedRow = fixedRow;
 
-            
+
         }
         #endregion
         #region Properties

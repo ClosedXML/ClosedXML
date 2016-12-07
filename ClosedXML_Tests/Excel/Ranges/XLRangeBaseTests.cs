@@ -178,7 +178,7 @@ namespace ClosedXML_Tests
         //    ws.NamedRanges.Add("TestRange", "\"Hello\"");
         //    using (MemoryStream memoryStream = new MemoryStream())
         //    {
-        //        wb.SaveAs(memoryStream);
+        //        wb.SaveAs(memoryStream, true);
         //        var wb2 = new XLWorkbook(memoryStream);
         //        var text = wb2.Worksheet("Sheet1").NamedRanges.First()
         //        memoryStream.Close();

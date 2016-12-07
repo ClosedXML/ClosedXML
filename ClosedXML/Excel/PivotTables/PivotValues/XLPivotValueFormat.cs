@@ -78,5 +78,27 @@ namespace ClosedXML.Excel
             return _pivotValue;
         }
 
+        #region Overrides
+        public bool Equals(IXLNumberFormatBase other)
+        {
+            return
+                _numberFormatId == other.NumberFormatId
+                && _format == other.Format
+                ;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals((IXLNumberFormatBase)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return NumberFormatId
+                   ^ Format.GetHashCode();
+        }
+
+        #endregion
+
     }
 }

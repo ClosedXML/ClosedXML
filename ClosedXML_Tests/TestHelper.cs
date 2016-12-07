@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Threading;
 using ClosedXML.Excel;
@@ -19,22 +21,36 @@ namespace ClosedXML_Tests
         //Note: Run example tests parameters
         public static string TestsOutputDirectory
         {
-            get { 
-                return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location); 
+            get
+            {
+                return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             }
 
         }
 
         public const string ActualTestResultPostFix = "";
         public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
-        
+
         private const bool CompareWithResources = true;
 
         private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resource.Examples.");
 
-        public static void SaveWorkbook(XLWorkbook workbook, string fileName)
+        public static void SaveWorkbook(XLWorkbook workbook, params string[] fileNameParts)
         {
-            workbook.SaveAs(Path.Combine(TestsOutputDirectory, fileName));
+            workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
+        }
+
+        // Because different fonts are installed on Unix,
+        // the columns widths after AdjustToContents() will
+        // cause the tests to fail.
+        // Therefore we ignore the width attribute when running on Unix
+        public static bool IsRunningOnUnix
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return ((p == 4) || (p == 6) || (p == 128));
+            }
         }
 
         public static void RunTestExample<T>(string filePartName)
@@ -44,7 +60,8 @@ namespace ClosedXML_Tests
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
             var example = new T();
-            string filePath1 = Path.Combine(TestsExampleOutputDirectory, filePartName);
+            string[] pathParts = filePartName.Split(new char[] {'\\'});
+            string filePath1 = Path.Combine(new List<string>() { TestsExampleOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
@@ -57,7 +74,7 @@ namespace ClosedXML_Tests
             var filePath2 = Path.Combine(directory, fileName);
             //Run test
             example.Create(filePath1);
-            new XLWorkbook(filePath1).SaveAs(filePath2);
+            new XLWorkbook(filePath1).SaveAs(filePath2, true);
             bool success = true;
 #pragma warning disable 162
             try
@@ -73,7 +90,7 @@ namespace ClosedXML_Tests
                     using (var streamActual = File.OpenRead(filePath2))
                     {
                         string message;
-                        success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);
+                        success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
                         var formattedMessage =
                             String.Format(
                                 "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
@@ -90,12 +107,20 @@ namespace ClosedXML_Tests
 #pragma warning restore 162
         }
 
-        public static void LoadFile(string filePartName)
+        public static string GetResourcePath(string filePartName)
+        {
+            return filePartName.Replace('\\', '.').TrimStart('.');
+        }
+
+        public static Stream GetStreamFromResource(string resourcePath)
         {
             var extractor = new ResourceFileExtractor(null, ".Resource.");
+            return extractor.ReadFileFromResToStream(resourcePath);
+        }
 
-            string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');
-            using (var stream = extractor.ReadFileFromResToStream(resourcePath))
+        public static void LoadFile(string filePartName)
+        {
+            using (var stream = GetStreamFromResource(GetResourcePath(filePartName)))
             {
                 var wb = new XLWorkbook(stream);
                 wb.Dispose();

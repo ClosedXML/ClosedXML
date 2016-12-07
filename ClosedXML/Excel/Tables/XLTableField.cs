@@ -5,22 +5,28 @@ namespace ClosedXML.Excel
     internal class XLTableField: IXLTableField
     {
         private XLTable table;
-        public XLTableField(XLTable table)
+        public XLTableField(XLTable table, String name)
         {
             this.table = table;
+            this.name = name;
         }
 
         public Int32 Index { get; internal set; }
 
-        public String Name 
+        private String name;
+
+        public String Name
         {
             get
             {
-                return table.HeadersRow().Cell(Index + 1).GetString();
+                return name;
             }
             set
             {
-                table.HeadersRow().Cell(Index + 1).SetValue(value);
+                if (table.ShowHeaderRow)
+                    table.HeadersRow().Cell(Index + 1).SetValue(value);
+
+                name = value;
             }
         }
 
@@ -28,18 +34,18 @@ namespace ClosedXML.Excel
         public String TotalsRowLabel
         {
             get { return totalsRowLabel; }
-            set 
+            set
             {
                 totalsRowFunction = XLTotalsRowFunction.None;
                 table.TotalsRow().Cell(Index + 1).SetValue(value);
-                totalsRowLabel = value; 
+                totalsRowLabel = value;
             }
         }
 
         public String TotalsRowFormulaA1
         {
             get { return table.TotalsRow().Cell(Index + 1).FormulaA1; }
-            set 
+            set
             {
                 totalsRowFunction = XLTotalsRowFunction.Custom;
                 table.TotalsRow().Cell(Index + 1).FormulaA1 = value;
@@ -59,7 +65,7 @@ namespace ClosedXML.Excel
         public XLTotalsRowFunction TotalsRowFunction
         {
             get { return totalsRowFunction; }
-            set 
+            set
             {
                 if (value != XLTotalsRowFunction.None && value != XLTotalsRowFunction.Custom)
                 {
@@ -85,7 +91,7 @@ namespace ClosedXML.Excel
                         cell.Style.NumberFormat = lastCell.Style.NumberFormat;
                     }
                 }
-                totalsRowFunction = value; 
+                totalsRowFunction = value;
             }
         }
     }

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using ClosedXML.Attributes;
+using ClosedXML.Excel;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
-using ClosedXML.Excel;
-using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -14,10 +16,24 @@ namespace ClosedXML_Tests.Excel
     [TestFixture]
     public class TablesTests
     {
-        public class TestObject
+        public class TestObjectWithoutAttributes
         {
             public String Column1 { get; set; }
             public String Column2 { get; set; }
+        }
+
+        public class TestObjectWithAttributes
+        {
+            public int UnOrderedColumn { get; set; }
+
+            [Display(Name ="SecondColumn"), ColumnOrder(1)]
+            public String Column1 { get; set; }
+
+            [Display(Name = "FirstColumn"), ColumnOrder(0)]
+            public String Column2 { get; set; }
+
+            [Display(Name = "SomeFieldNotProperty"), ColumnOrder(2)]
+            public int MyField;
         }
 
         [Test]
@@ -31,7 +47,7 @@ namespace ClosedXML_Tests.Excel
             wb.AddWorksheet(dt);
 
             using (var ms = new MemoryStream())
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
         }
 
         [Test]
@@ -43,7 +59,7 @@ namespace ClosedXML_Tests.Excel
             ws.Range("A1").CreateTable();
 
             using (var ms = new MemoryStream())
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
         }
 
         [Test]
@@ -85,7 +101,7 @@ namespace ClosedXML_Tests.Excel
             ws.RangeUsed().CreateTable();
             using (var ms = new MemoryStream())
             {
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
                 var wb2 = new XLWorkbook(ms);
                 IXLWorksheet ws2 = wb2.Worksheet(1);
                 IXLTable table2 = ws2.Table(0);
@@ -115,7 +131,7 @@ namespace ClosedXML_Tests.Excel
 
             using (var ms = new MemoryStream())
             {
-                wb.SaveAs(ms);
+                wb.SaveAs(ms, true);
                 var wb2 = new XLWorkbook(ms);
                 IXLWorksheet ws2 = wb2.Worksheet(1);
                 IXLTable table2 = ws2.Table(0);
@@ -151,12 +167,31 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void TableCreatedFromEmptyListOfObject()
         {
-            var l = new List<TestObject>();
+            var l = new List<TestObjectWithoutAttributes>();
 
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().InsertTable(l);
             Assert.AreEqual(2, ws.Tables.First().ColumnCount());
+        }
+
+        [Test]
+        public void TableCreatedFromListOfObjectWithPropertyAttributes()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().InsertTable(l);
+            Assert.AreEqual(4, ws.Tables.First().ColumnCount());
+            Assert.AreEqual("FirstColumn", ws.FirstCell().Value);
+            Assert.AreEqual("SecondColumn", ws.FirstCell().CellRight().Value);
+            Assert.AreEqual("SomeFieldNotProperty", ws.FirstCell().CellRight().CellRight().Value);
+            Assert.AreEqual("UnOrderedColumn", ws.FirstCell().CellRight().CellRight().CellRight().Value);
         }
 
         [Test]
@@ -177,13 +212,9 @@ namespace ClosedXML_Tests.Excel
             row = table.DataRange.InsertRowsAbove(1).First();
             row.Field("Value").Value = 1;
 
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
-
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
         }
 
         [Test]
@@ -196,20 +227,17 @@ namespace ClosedXML_Tests.Excel
             IXLTable table = ws.Range("A1:A2").CreateTable();
             table.SetShowTotalsRow()
                 .Field(0).TotalsRowFunction = XLTotalsRowFunction.Sum;
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox1.xlsx");
+
             IXLTableRow row = table.DataRange.FirstRow();
             row.Field("Value").Value = 3;
             row = row.InsertRowsAbove(1).First();
             row.Field("Value").Value = 2;
             row = row.InsertRowsAbove(1).First();
             row.Field("Value").Value = 1;
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox2.xlsx");
 
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
         }
 
         [Test]
@@ -229,8 +257,6 @@ namespace ClosedXML_Tests.Excel
             row.Field("Value").Value = 2;
             row = table.DataRange.InsertRowsBelow(1).First();
             row.Field("Value").Value = 3;
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
 
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
@@ -258,8 +284,6 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox.xlsx");
         }
 
         [Test]
@@ -272,11 +296,13 @@ namespace ClosedXML_Tests.Excel
                 .CellBelow().SetValue("B")
                 .CellBelow().SetValue("C");
 
-            ws.RangeUsed().CreateTable().SetShowHeaderRow(false);
+            IXLTable table = ws.RangeUsed().CreateTable();
 
-            IXLTable table = ws.Tables.First();
+            Assert.AreEqual("Categories", table.Fields.First().Name);
 
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox1.xlsx");
+            table.SetShowHeaderRow(false);
+
+            Assert.AreEqual("Categories", table.Fields.First().Name);
 
             Assert.IsTrue(ws.Cell(1, 1).IsEmpty(true));
             Assert.AreEqual(null, table.HeadersRow());
@@ -290,15 +316,11 @@ namespace ClosedXML_Tests.Excel
             Assert.AreNotEqual(null, headerRow);
             Assert.AreEqual("Categories", headerRow.Cell(1).GetString());
 
-
             table.SetShowHeaderRow(false);
 
             ws.FirstCell().SetValue("x");
 
             table.SetShowHeaderRow();
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox2.xlsx");
-
-            //wb.SaveAs(@"D:\Excel Files\ForTesting\Sandbox3.xlsx");
 
             Assert.AreEqual("x", ws.FirstCell().GetString());
             Assert.AreEqual("Categories", ws.Cell("A2").GetString());
@@ -331,6 +353,15 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("LName", nameBefore);
             Assert.AreEqual("LastName", nameAfter);
             Assert.AreEqual("LastName", cellValue);
+
+            tbl.ShowHeaderRow = false;
+            tbl.Field(tbl.Fields.Last().Index).Name = "LastNameChanged";
+            nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
+            Assert.AreEqual("LastNameChanged", nameAfter);
+
+            tbl.SetShowHeaderRow(true);
+            nameAfter = tbl.Cell("B1").Value.ToString();
+            Assert.AreEqual("LastNameChanged", nameAfter);
         }
     }
 }

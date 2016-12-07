@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel
 {
-    // Tests in this fixture test only the successful loading of existing Excel files, 
+    // Tests in this fixture test only the successful loading of existing Excel files,
     // i.e. we test that ClosedXML doesn't choke on a given input file
     // These tests DO NOT test that ClosedXML successfully recognises all the Excel parts or that it can successfully save those parts again.
     [TestFixture]
@@ -19,12 +19,25 @@ namespace ClosedXML_Tests.Excel
         {
             var files = new List<string>()
             {
-                @"Misc\TableWithCustomTheme.xlsx"
+                @"Misc\TableWithCustomTheme.xlsx",
+                @"Misc\EmptyTable.xlsx"
             };
 
             foreach (var file in files)
             {
                 TestHelper.LoadFile(file);
+            }
+        }
+
+        [Test]
+        public void CanLoadAndManipulateFileWithEmptyTable()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\EmptyTable.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                var table = ws.Tables.First();
+                table.DataRange.InsertRowsBelow(5);
             }
         }
     }

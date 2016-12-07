@@ -50,14 +50,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 throw new ApplicationException("col_index_num must be smaller or equal to the number of rows in the table array");
 
             IXLRangeColumn matching_column;
-            matching_column = range.FindColumn(c => new Expression(c.Cell(1).Value).CompareTo(lookup_value) == 0);
+            matching_column = range.FindColumn(c => !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) == 0);
             if (range_lookup && matching_column == null)
             {
+                var first_column = range.FirstColumn().ColumnNumber();
                 matching_column = range.FindColumn(c =>
                 {
-                    if (c.ColumnNumber() < range.ColumnsUsed().Count() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0 && new Expression(c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    var column_index_in_range = c.ColumnNumber() - first_column + 1;
+                    if (column_index_in_range < range.ColumnsUsed().Count() && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0 && !c.ColumnRight().Cell(1).IsEmpty() && new Expression(c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
                         return true;
-                    else if (c.ColumnNumber() == range.ColumnsUsed().Count() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    else if (column_index_in_range == range.ColumnsUsed().Count() && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0)
                         return true;
                     else
                         return false;
@@ -93,14 +95,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 throw new ApplicationException("col_index_num must be smaller or equal to the number of columns in the table array");
 
             IXLRangeRow matching_row;
-            matching_row = range.FindRow(r => new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
+            matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
             if (range_lookup && matching_row == null)
             {
+                var first_row = range.FirstRow().RowNumber();
                 matching_row = range.FindRow(r =>
                 {
-                    if (r.RowNumber() < range.RowsUsed().Count() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0 && new Expression(r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    var row_index_in_range = r.RowNumber() - first_row + 1;
+                    if (row_index_in_range < range.RowsUsed().Count() && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0 && !r.RowBelow().Cell(1).IsEmpty() && new Expression(r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
                         return true;
-                    else if (r.RowNumber() == range.RowsUsed().Count() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    else if (row_index_in_range == range.RowsUsed().Count() && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0)
                         return true;
                     else
                         return false;

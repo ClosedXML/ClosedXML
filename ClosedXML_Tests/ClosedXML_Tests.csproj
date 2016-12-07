@@ -70,12 +70,15 @@
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
-    <Compile Include="Excel\CalcEngine\IsTests.cs" />
+    <Compile Include="Excel\CalcEngine\InformationTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
+    <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
     <Compile Include="Excel\PageSetup\HeaderFooterTests.cs" />
+    <Compile Include="Excel\Ranges\UsedAndUnusedCellsTests.cs" />
+    <Compile Include="Excel\Saving\SavingTests.cs" />
     <Compile Include="XLHelperTests.cs" />
     <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
     <Compile Include="Excel\CalcEngine\DateAndTimeTests.cs" />
@@ -138,6 +141,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\AddingDataSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\AddingDataTableAsWorksheet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\AdjustToContents.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\AdjustToContentsWithAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\AutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\BlankCells.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\CellValues.xlsx" />
@@ -229,6 +233,7 @@
     <EmbeddedResource Include="Resource\Examples\Comments\AddingComments.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowHigh.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowMidHigh.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleMinimumMaximum.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFContains.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEndsWith.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEqualsNumber.xlsx" />
@@ -245,10 +250,12 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBar.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
-    <None Include="packages.config" />
+    <EmbeddedResource Include="Resource\Misc\EmptyTable.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
-    <None Include="Resource\Misc\WorkbookProperties.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\PivotTables\PivotTables.xlsx" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

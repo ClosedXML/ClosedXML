@@ -13,6 +13,7 @@ namespace ClosedXML.Excel
         private readonly XLNamedRanges _namedRanges;
         public XLNamedRange(XLNamedRanges namedRanges , String rangeName, String range,  String comment = null)
         {
+            Visible = true;
             Name = rangeName;
             _rangeList.Add(range);
             Comment = comment;
@@ -21,6 +22,7 @@ namespace ClosedXML.Excel
 
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
         {
+            Visible = true;
             Name = rangeName;
             ranges.ForEach(r => _rangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
             Comment = comment;
@@ -33,7 +35,7 @@ namespace ClosedXML.Excel
             get
             {
                 var ranges = new XLRanges();
-                foreach (var rangeToAdd in 
+                foreach (var rangeToAdd in
                    from rangeAddress in _rangeList.SelectMany(c=>c.Split(',')).Where(s=>s[0] != '"')
                    let match = XLHelper.NamedRangeReferenceRegex.Match(rangeAddress)
                    select
@@ -48,6 +50,8 @@ namespace ClosedXML.Excel
         }
 
         public String Comment { get; set; }
+
+        public Boolean Visible { get; set; }
 
         public IXLRanges Add(XLWorkbook workbook, String rangeAddress)
         {

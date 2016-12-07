@@ -27,6 +27,14 @@ namespace ClosedXML.Excel
         String Comment { get; set; }
 
         /// <summary>
+        /// Gets or sets the visibility of this named range.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if visible; otherwise, <c>false</c>.
+        /// </value>
+        Boolean Visible { get; set; }
+
+        /// <summary>
         /// Adds the specified range to this named range.
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>

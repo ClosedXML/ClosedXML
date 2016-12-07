@@ -22,7 +22,9 @@ namespace ClosedXML.Excel
         }
         public void HighestValue(XLColor color)
         {
-            Maximum(XLCFContentType.Maximum, "0", color);
+            _conditionalFormat.Values.Add(null);
+            _conditionalFormat.Colors.Add(color);
+            _conditionalFormat.ContentTypes.Add(XLCFContentType.Maximum);
         }
     }
 }

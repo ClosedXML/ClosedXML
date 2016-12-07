@@ -101,7 +101,7 @@ namespace ClosedXML.Excel
             {
                 var newRanges = new XLRanges { AsRange() };
                 var dataValidation = new XLDataValidation(newRanges);
-                
+
                 Worksheet.DataValidations.Add(dataValidation);
                 return dataValidation;
             }
@@ -305,7 +305,17 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells(false, false) {RangeAddress};
+            return Cells(false);
+        }
+
+        public IXLCells Cells(Boolean usedCellsOnly)
+        {
+            return Cells(usedCellsOnly, false);
+        }
+
+        public IXLCells Cells(Boolean usedCellsOnly, Boolean includeFormats)
+        {
+            var cells = new XLCells(usedCellsOnly, includeFormats) { RangeAddress };
             return cells;
         }
 
@@ -322,13 +332,7 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(true, false) {RangeAddress};
-            return cells;
-        }
-
-        IXLCells IXLRangeBase.CellsUsed(Boolean includeFormats)
-        {
-            return CellsUsed(includeFormats);
+            return Cells(true);
         }
 
         public IXLRange Merge()
@@ -370,7 +374,7 @@ namespace ClosedXML.Excel
                                  clearOptions == XLClearOptions.ContentsAndFormats;
             foreach (var cell in CellsUsed(includeFormats))
             {
-                cell.Clear(clearOptions, true);
+                (cell as XLCell).Clear(clearOptions, true);
             }
 
             if (includeFormats)
@@ -456,7 +460,7 @@ namespace ClosedXML.Excel
             return Worksheet.Range(RangeAddress.FirstAddress, RangeAddress.LastAddress);
         }
 
-      
+
 
         public IXLRange AddToNamed(String rangeName)
         {
@@ -502,8 +506,8 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(Boolean includeFormats)
         {
-            return !CellsUsed(includeFormats).Any<XLCell>() ||
-                   CellsUsed(includeFormats).Any<XLCell>(c => c.IsEmpty(includeFormats));
+            return !CellsUsed(includeFormats).Cast<XLCell>().Any() ||
+                   CellsUsed(includeFormats).Cast<XLCell>().Any(c => c.IsEmpty(includeFormats));
         }
 
         #endregion
@@ -632,8 +636,8 @@ namespace ClosedXML.Excel
                 }
             }
 
-           
-            if (sp.Row > 0) 
+
+            if (sp.Row > 0)
                 return Worksheet.Cell(sp.Row, sp.Column);
 
             return null;
@@ -724,7 +728,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            
+
             if (sp.Row > 0)
                 return Worksheet.Cell(sp.Row, sp.Column);
 
@@ -838,7 +842,7 @@ namespace ClosedXML.Excel
         {
             var newFirstCellAddress = firstCell.Address as XLAddress;
             var newLastCellAddress = lastCell.Address as XLAddress;
-            
+
             return GetRange(newFirstCellAddress, newLastCellAddress);
         }
 
@@ -942,7 +946,7 @@ namespace ClosedXML.Excel
             return address;
         }
 
-        public XLCells CellsUsed(bool includeFormats)
+        public IXLCells CellsUsed(bool includeFormats)
         {
             var cells = new XLCells(true, includeFormats) {RangeAddress};
             return cells;
@@ -1176,13 +1180,13 @@ namespace ClosedXML.Excel
                                              : Worksheet.Style;
                         rangeToReturn.Row(ro).Style = styleToUse;
                     }
-                    
+
                 }
             }
 
 			if(nullReturn)
 				return null;
-            
+
             return rangeToReturn.Columns();
         }
 
@@ -1318,7 +1322,7 @@ namespace ClosedXML.Excel
                                 newCell.CopyValues(oldCell);
                                 newCell.FormulaA1 = oldCell.FormulaA1;
                                 cellsToInsert.Add(newKey, newCell);
-                                cellsToDelete.Add(oldKey);   
+                                cellsToDelete.Add(oldKey);
                             }
                         }
                     }
@@ -1346,7 +1350,7 @@ namespace ClosedXML.Excel
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
-                    
+
                 }
             }
 
@@ -1363,7 +1367,7 @@ namespace ClosedXML.Excel
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(
                 c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
-            
+
 
             Int32 firstRowReturn = RangeAddress.FirstAddress.RowNumber;
             Int32 lastRowReturn = RangeAddress.FirstAddress.RowNumber + numberOfRows - 1;
@@ -1384,7 +1388,7 @@ namespace ClosedXML.Excel
                     {
                         var modelFirstColumn = model.FirstCellUsed(true);
                         var modelLastColumn = model.LastCellUsed(true);
-                        if (modelLastColumn != null)
+                        if (modelFirstColumn != null && modelLastColumn != null)
                         {
                             Int32 firstCoReturned = modelFirstColumn.Address.ColumnNumber
                                                     - model.RangeAddress.FirstAddress.ColumnNumber + 1;
@@ -1702,7 +1706,7 @@ namespace ClosedXML.Excel
             return (XLPivotTable)Worksheet.PivotTables.AddNew(name, targetCell, AsRange());
         }
 
-        public IXLAutoFilter SetAutoFilter() 
+        public IXLAutoFilter SetAutoFilter()
         {
             using (var asRange = AsRange())
               return Worksheet.AutoFilter.Set(asRange);

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
-using ClosedXML.Excel;
-using NUnit.Framework;
 
 namespace ClosedXML_Tests
 {
@@ -56,7 +57,7 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell("A1");
-            var doubleList = new List<Double> {1.0/0.0};
+            var doubleList = new List<Double> { 1.0 / 0.0 };
 
             cell.Value = doubleList.AsEnumerable();
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
@@ -67,7 +68,7 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell("A1");
-            var doubleList = new List<Double> {0.0/0.0};
+            var doubleList = new List<Double> { 0.0 / 0.0 };
 
             cell.Value = doubleList.AsEnumerable();
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
@@ -77,7 +78,7 @@ namespace ClosedXML_Tests
         public void InsertData1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRange range = ws.Cell(2, 2).InsertData(new[] {"a", "b", "c"});
+            IXLRange range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" });
             Assert.AreEqual("'Sheet1'!B2:B4", range.ToString());
         }
 
@@ -344,6 +345,26 @@ namespace ClosedXML_Tests
             cell.Value = expected;
             var actual = (DateTime)cell.Value;
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestInvalidXmlCharacters()
+        {
+            byte[] data;
+
+            using (var stream = new MemoryStream())
+            {
+                var wb = new XLWorkbook();
+                wb.AddWorksheet("Sheet1").FirstCell().SetValue("\u0018");
+                wb.SaveAs(stream);
+                data = stream.ToArray();
+            }
+
+            using (var stream = new MemoryStream(data))
+            {
+                var wb = new XLWorkbook(stream);
+                Assert.AreEqual("\u0018", wb.Worksheets.First().FirstCell().Value);
+            }
         }
     }
 }
