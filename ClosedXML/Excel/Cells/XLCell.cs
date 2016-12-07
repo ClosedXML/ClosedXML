@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Globalization;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Text.RegularExpressions;
 #if NET4
     using System.ComponentModel.DataAnnotations;
 #else
@@ -329,7 +329,7 @@ namespace ClosedXML.Excel
                 {
                     cValue = GetString();
                 }
-                catch
+                catch 
                 {
                     cValue = String.Empty;
                 }
@@ -850,7 +850,7 @@ namespace ClosedXML.Excel
                     else if (value == XLCellValues.Number)
                     {
                         double dTest;
-                        if (Double.TryParse(_cellValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out dTest))
+                        if (Double.TryParse(_cellValue, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out dTest))
                             _cellValue = dTest.ToInvariantString();
                         else
                         {
@@ -1671,7 +1671,7 @@ namespace ClosedXML.Excel
                             val = dtTest.ToOADate().ToInvariantString();
                         }
                     }
-
+                    
                 }
                 else if (Boolean.TryParse(val, out bTest))
                 {
@@ -1761,7 +1761,7 @@ namespace ClosedXML.Excel
                 if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
                     && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
                 {
-                    // Check if the match is in between quotes
+// Check if the match is in between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     sb.Append(conversionType == FormulaConversionType.A1ToR1C1
                                   ? GetR1C1Address(matchString, rowsToShift, columnsToShift)

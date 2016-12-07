@@ -172,8 +172,8 @@ namespace ClosedXML.Excel
                 }
 
             }
-            // Get the CalculationChainPart
-            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the
+            // Get the CalculationChainPart 
+            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the 
             //workbook whose value is calculated from any formula
 
             CalculationChainPart calChainPart;
@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
             var workbookPart = document.WorkbookPart ?? document.AddWorkbookPart();
 
             var worksheets = WorksheetsInternal;
-
+            
 
             var partsToRemove = workbookPart.Parts.Where(s => worksheets.Deleted.Contains(s.RelationshipId)).ToList();
 
@@ -555,7 +555,7 @@ namespace ClosedXML.Excel
             {
                 workbook.WorkbookProtection = null;
             }
-
+            
 
             if (workbook.BookViews == null)
                 workbook.BookViews = new BookViews();
@@ -585,11 +585,11 @@ namespace ClosedXML.Excel
                 {
                     rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
-                    while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
-                        rId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
+                    rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
-                    xlSheet.SheetId = Int32.Parse(rId.Substring(3));
-                    xlSheet.RelId = rId;
+                xlSheet.SheetId = Int32.Parse(rId.Substring(3));
+                xlSheet.RelId = rId;
                 }
                 else
                 {
@@ -599,15 +599,15 @@ namespace ClosedXML.Excel
 
                 if (!workbook.Sheets.Cast<Sheet>().Any(s => s.Id == rId))
                 {
-                    var newSheet = new Sheet
-                    {
-                        Name = xlSheet.Name,
-                        Id = rId,
-                        SheetId = (UInt32)xlSheet.SheetId
-                    };
+                var newSheet = new Sheet
+                {
+                    Name = xlSheet.Name,
+                    Id = rId,
+                    SheetId = (UInt32)xlSheet.SheetId
+                };
 
-                    workbook.Sheets.AppendChild(newSheet);
-                }
+                workbook.Sheets.AppendChild(newSheet);
+            }
             }
 
             var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
@@ -860,7 +860,7 @@ namespace ClosedXML.Excel
                                     EndingBaseIndex = (UInt32)p.End
                                 };
 
-                                var text = new Text { Text = p.Text };
+                                var text = new Text {Text = p.Text};
                                 if (p.Text.PreserveSpaces())
                                     text.Space = SpaceProcessingModeValues.Preserve;
 
@@ -2001,7 +2001,7 @@ namespace ClosedXML.Excel
             var columnFields = new ColumnFields();
             var rowItems = new RowItems();
             var columnItems = new ColumnItems();
-            var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count() };
+            var pageFields = new PageFields {Count = (uint)pt.ReportFilters.Count()};
             var pivotFields = new PivotFields {Count = Convert.ToUInt32(pt.SourceRange.ColumnCount())};
 
             foreach (var xlpf in pt.Fields.OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName) ? pt.RowLabels.IndexOf(f) : Int32.MaxValue ))
@@ -2024,7 +2024,7 @@ namespace ClosedXML.Excel
                 }
                 else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
-                    var f = new Field { Index = pt.Fields.IndexOf(xlpf) };
+                    var f = new Field {Index = pt.Fields.IndexOf(xlpf)};
                     columnFields.AppendChild(f);
 
                     for (var i = 0; i < xlpf.SharedStrings.Count; i++)
@@ -2175,7 +2175,7 @@ namespace ClosedXML.Excel
                     rowItem.Index = Convert.ToUInt32(i);
                     rowItem.AppendChild(new MemberPropertyIndex() { Val = i });
                     columnItems.AppendChild(rowItem);
-                }
+            }
             }
 
             if (columnFields.Any())
@@ -2233,7 +2233,7 @@ namespace ClosedXML.Excel
 
                         if (items.Any(i => i.Equals(value.BaseItem)))
                             df.BaseItem = Convert.ToUInt32(items.IndexOf(value.BaseItem));
-                    }
+                }
                 }
                 else
                 {
@@ -4183,7 +4183,7 @@ namespace ClosedXML.Excel
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
-                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
+                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);                    
                 }
             }
 
