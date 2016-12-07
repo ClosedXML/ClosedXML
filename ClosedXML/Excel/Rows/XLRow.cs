@@ -224,7 +224,15 @@ namespace ClosedXML.Excel
 
         public new IXLCells Cells()
         {
-            return CellsUsed(true);
+            return Cells(true, true);
+        }
+
+        public new IXLCells Cells(Boolean usedCellsOnly)
+        {
+            if (usedCellsOnly)
+                return Cells(true, true);
+            else
+                return Cells(FirstCellUsed().Address.ColumnNumber, LastCellUsed().Address.ColumnNumber);
         }
 
         public new IXLCells Cells(String cellsInRow)
@@ -707,6 +715,6 @@ namespace ClosedXML.Excel
             return base.IsEmpty(includeFormats);
         }
 
-        
+
     }
 }

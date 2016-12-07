@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
@@ -14,10 +12,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("DATE", 3, Date); // Returns the serial number of a particular date
             ce.RegisterFunction("DATEVALUE", 1, Datevalue); // Converts a date in the form of text to a serial number
             ce.RegisterFunction("DAY", 1, Day); // Converts a serial number to a day of the month
+            ce.RegisterFunction("DAYS", 2, Days); // Returns the number of days between two dates.
             ce.RegisterFunction("DAYS360", 2, 3, Days360); // Calculates the number of days between two dates based on a 360-day year
             ce.RegisterFunction("EDATE", 2, Edate); // Returns the serial number of the date that is the indicated number of months before or after the start date
             ce.RegisterFunction("EOMONTH", 2, Eomonth); // Returns the serial number of the last day of the month before or after a specified number of months
             ce.RegisterFunction("HOUR", 1, Hour); // Converts a serial number to an hour
+            ce.RegisterFunction("ISOWEEKNUM", 1, IsoWeekNum); // Returns number of the ISO week number of the year for a given date.
             ce.RegisterFunction("MINUTE", 1, Minute); // Converts a serial number to a minute
             ce.RegisterFunction("MONTH", 1, Month); // Converts a serial number to a month
             ce.RegisterFunction("NETWORKDAYS", 2, 3, Networkdays); // Returns the number of whole workdays between two dates
@@ -31,157 +31,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("WORKDAY", 2, 3, Workday); // Returns the serial number of the date before or after a specified number of workdays
             ce.RegisterFunction("YEAR", 1, Year); // Converts a serial number to a year
             ce.RegisterFunction("YEARFRAC", 2, 3, Yearfrac); // Returns the year fraction representing the number of whole days between start_date and end_date
-
-        }
-
-        private static object Date(List<Expression> p)
-        {
-            var year = (int) p[0];
-            var month = (int) p[1];
-            var day = (int) p[2];
-
-            return (int) Math.Floor(new DateTime(year, month, day).ToOADate());
-        }
-
-        private static object Datevalue(List<Expression> p)
-        {
-            var date = (string) p[0];
-
-            return (int) Math.Floor(DateTime.Parse(date).ToOADate());
-        }
-
-        private static object Day(List<Expression> p)
-        {
-            var date = (DateTime) p[0];
-
-            return date.Day;
-        }
-
-        private static object Month(List<Expression> p)
-        {
-            var date = (DateTime) p[0];
-
-            return date.Month;
-        }
-
-        private static object Year(List<Expression> p)
-        {
-            var date = (DateTime) p[0];
-
-            return date.Year;
-        }
-
-        private static object Minute(List<Expression> p)
-        {
-            var date = (DateTime) p[0];
-
-            return date.Minute;
-        }
-
-        private static object Hour(List<Expression> p)
-        {
-            var date = (DateTime) p[0];
-
-            return date.Hour;
-        }
-
-        private static object Second(List<Expression> p)
-        {
-            var date = (DateTime) p[0];
-
-            return date.Second;
-        }
-
-        private static object Now(List<Expression> p)
-        {
-            return DateTime.Now;
-        }
-
-        private static object Time(List<Expression> p)
-        {
-            var hour = (int) p[0];
-            var minute = (int) p[1];
-            var second = (int) p[2];
-
-            return new TimeSpan(0, hour, minute, second);
-        }
-
-        private static object Timevalue(List<Expression> p)
-        {
-            var date = (DateTime) p[0];
-
-            return (DateTime.MinValue + date.TimeOfDay).ToOADate();
-        }
-
-        private static object Today(List<Expression> p)
-        {
-            return DateTime.Now.Date;
-        }
-
-        private static object Days360(List<Expression> p)
-        {
-            var date1 = (DateTime) p[0];
-            var date2 = (DateTime) p[1];
-            var isEuropean = p.Count == 3 ? p[2] : false;
-
-            return Days360(date1, date2, isEuropean);
-        }
-
-        private static Int32 Days360(DateTime date1, DateTime date2, Boolean isEuropean)
-        {
-            var d1 = date1.Day;
-            var m1 = date1.Month;
-            var y1 = date1.Year;
-            var d2 = date2.Day;
-            var m2 = date2.Month;
-            var y2 = date2.Year;
-
-            if (isEuropean)
-            {
-                if (d1 == 31) d1 = 30;
-                if (d2 == 31) d2 = 30;
-            }
-            else
-            {
-                if (d1 == 31) d1 = 30;
-                if (d2 == 31 && d1 == 30) d2 = 30;
-            }
-
-            return 360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1);
-
-        }
-
-        private static object Edate(List<Expression> p)
-        {
-            var date = (DateTime)p[0];
-            var mod = (int)p[1];
-
-            var retDate = date.AddMonths(mod);
-            return retDate;
-        }
-
-        private static object Eomonth(List<Expression> p)
-        {
-            var date = (DateTime)p[0];
-            var mod = (int)p[1];
-
-            var retDate = date.AddMonths(mod);
-            return new DateTime(retDate.Year, retDate.Month, 1).AddMonths(1).AddDays(-1);
-        }
-
-        private static object Networkdays(List<Expression> p)
-        {
-            var date1 = (DateTime)p[0];
-            var date2 = (DateTime)p[1];
-            var bankHolidays = new List<DateTime>();
-            if (p.Count == 3)
-            {
-                var t = new Tally {p[2]};
-
-                bankHolidays.AddRange(t.Select(XLHelper.GetDate));
-            }
-
-            return BusinessDaysUntil(date1, date2, bankHolidays);
         }
 
         /// <summary>
@@ -234,6 +83,197 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             return businessDays;
+        }
+
+        private static object Date(List<Expression> p)
+        {
+            var year = (int)p[0];
+            var month = (int)p[1];
+            var day = (int)p[2];
+
+            return (int)Math.Floor(new DateTime(year, month, day).ToOADate());
+        }
+
+        private static object Datevalue(List<Expression> p)
+        {
+            var date = (string)p[0];
+
+            return (int)Math.Floor(DateTime.Parse(date).ToOADate());
+        }
+
+        private static object Day(List<Expression> p)
+        {
+            var date = (DateTime)p[0];
+
+            return date.Day;
+        }
+
+        private static object Days(List<Expression> p)
+        {
+            Type type;
+
+            int end_date;
+
+            type = p[0]._token.Value.GetType();
+            if (type == typeof(string))
+                end_date = (int)Datevalue(new List<Expression>() { p[0] });
+            else
+                end_date = (int)p[0];
+
+            int start_date;
+
+            type = p[1]._token.Value.GetType();
+            if (type == typeof(string))
+                start_date = (int)Datevalue(new List<Expression>() { p[1] });
+            else
+                start_date = (int)p[1];
+
+            return end_date - start_date;
+        }
+
+        private static object Days360(List<Expression> p)
+        {
+            var date1 = (DateTime)p[0];
+            var date2 = (DateTime)p[1];
+            var isEuropean = p.Count == 3 ? p[2] : false;
+
+            return Days360(date1, date2, isEuropean);
+        }
+
+        private static Int32 Days360(DateTime date1, DateTime date2, Boolean isEuropean)
+        {
+            var d1 = date1.Day;
+            var m1 = date1.Month;
+            var y1 = date1.Year;
+            var d2 = date2.Day;
+            var m2 = date2.Month;
+            var y2 = date2.Year;
+
+            if (isEuropean)
+            {
+                if (d1 == 31) d1 = 30;
+                if (d2 == 31) d2 = 30;
+            }
+            else
+            {
+                if (d1 == 31) d1 = 30;
+                if (d2 == 31 && d1 == 30) d2 = 30;
+            }
+
+            return 360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1);
+        }
+
+        private static object Edate(List<Expression> p)
+        {
+            var date = (DateTime)p[0];
+            var mod = (int)p[1];
+
+            var retDate = date.AddMonths(mod);
+            return retDate;
+        }
+
+        private static object Eomonth(List<Expression> p)
+        {
+            var start_date = (DateTime)p[0];
+            var months = (int)p[1];
+
+            var retDate = start_date.AddMonths(months);
+            return new DateTime(retDate.Year, retDate.Month, DateTime.DaysInMonth(retDate.Year, retDate.Month));
+        }
+
+        private static Double GetYearAverage(DateTime date1, DateTime date2)
+        {
+            var daysInYears = new List<Int32>();
+            for (int year = date1.Year; year <= date2.Year; year++)
+                daysInYears.Add(DateTime.IsLeapYear(year) ? 366 : 365);
+            return daysInYears.Average();
+        }
+
+        private static object Hour(List<Expression> p)
+        {
+            var date = (DateTime)p[0];
+
+            return date.Hour;
+        }
+
+        // http://stackoverflow.com/questions/11154673/get-the-correct-week-number-of-a-given-date
+        private static object IsoWeekNum(List<Expression> p)
+        {
+            var date = (DateTime)p[0];
+
+            // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll
+            // be the same week# as whatever Thursday, Friday or Saturday are,
+            // and we always get those right
+            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
+            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+            {
+                date = date.AddDays(3);
+            }
+
+            // Return the week of our adjusted day
+            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        }
+
+        private static object Minute(List<Expression> p)
+        {
+            var date = (DateTime)p[0];
+
+            return date.Minute;
+        }
+
+        private static object Month(List<Expression> p)
+        {
+            var date = (DateTime)p[0];
+
+            return date.Month;
+        }
+
+        private static object Networkdays(List<Expression> p)
+        {
+            var date1 = (DateTime)p[0];
+            var date2 = (DateTime)p[1];
+            var bankHolidays = new List<DateTime>();
+            if (p.Count == 3)
+            {
+                var t = new Tally { p[2] };
+
+                bankHolidays.AddRange(t.Select(XLHelper.GetDate));
+            }
+
+            return BusinessDaysUntil(date1, date2, bankHolidays);
+        }
+
+        private static object Now(List<Expression> p)
+        {
+            return DateTime.Now;
+        }
+
+        private static object Second(List<Expression> p)
+        {
+            var date = (DateTime)p[0];
+
+            return date.Second;
+        }
+
+        private static object Time(List<Expression> p)
+        {
+            var hour = (int)p[0];
+            var minute = (int)p[1];
+            var second = (int)p[2];
+
+            return new TimeSpan(0, hour, minute, second);
+        }
+
+        private static object Timevalue(List<Expression> p)
+        {
+            var date = (DateTime)p[0];
+
+            return (DateTime.MinValue + date.TimeOfDay).ToOADate();
+        }
+
+        private static object Today(List<Expression> p)
+        {
+            return DateTime.Today;
         }
 
         private static object Weekday(List<Expression> p)
@@ -294,10 +334,17 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return Workday(startDate, testDate.AddDays(days), daysRequired, bankHolidays);
         }
 
+        private static object Year(List<Expression> p)
+        {
+            var date = (DateTime)p[0];
+
+            return date.Year;
+        }
+
         private static object Yearfrac(List<Expression> p)
         {
-            var date1 = (DateTime) p[0];
-            var date2 = (DateTime) p[1];
+            var date1 = (DateTime)p[0];
+            var date2 = (DateTime)p[1];
             var option = p.Count == 3 ? (int)p[2] : 0;
 
             if (option == 0)
@@ -311,14 +358,5 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             return Days360(date1, date2, true) / 360.0;
         }
-
-        private static Double GetYearAverage(DateTime date1, DateTime date2)
-        {
-            var daysInYears = new List<Int32>();
-            for (int year = date1.Year; year <= date2.Year; year++)
-                daysInYears.Add(DateTime.IsLeapYear(year) ? 366 : 365);
-            return daysInYears.Average();
-        }
     }
-
 }

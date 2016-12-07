@@ -52,6 +52,7 @@ namespace ClosedXML_Examples
             new MergeMoves().Create(Path.Combine(path, "MergedMoves.xlsx"));
             new WorkbookProperties().Create(Path.Combine(path, "WorkbookProperties.xlsx"));
             new AdjustToContents().Create(Path.Combine(path, "AdjustToContents.xlsx"));
+            new AdjustToContentsWithAutoFilter().Create(Path.Combine(path, "AdjustToContentsWithAutoFilter.xlsx"));
             new HideUnhide().Create(Path.Combine(path, "HideUnhide.xlsx"));
             new Outline().Create(Path.Combine(path, "Outline.xlsx"));
             new Formulas().Create(Path.Combine(path, "Formulas.xlsx"));
@@ -88,6 +89,7 @@ namespace ClosedXML_Examples
             new UsingPhonetics().Create(Path.Combine(path, "UsingPhonetics.xlsx"));
             new WalkingRanges().Create(Path.Combine(path, "CellMoves.xlsx"));
             new AddingComments().Create(Path.Combine(path, "AddingComments.xlsx"));
+            new PivotTables().Create(Path.Combine(path, "PivotTables.xlsx"));
         }
     }
 }

@@ -273,9 +273,9 @@ namespace ClosedXML_Tests
         /// <param name="excludeMethod"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static bool Compare(Package left, Package right, bool compareToFirstDifference, out string message)
+        public static bool Compare(Package left, Package right, bool compareToFirstDifference, bool stripColumnWidths, out string message)
         {
-            return Compare(left, right, compareToFirstDifference, null, out message);
+            return Compare(left, right, compareToFirstDifference, null, stripColumnWidths, out message);
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace ClosedXML_Tests
         /// <param name="message"></param>
         /// <returns></returns>
         public static bool Compare(Package left, Package right, bool compareToFirstDifference,
-            Func<Uri, bool> excludeMethod, out string message)
+            Func<Uri, bool> excludeMethod, bool stripColumnWidths, out string message)
         {
             #region Check
 
@@ -344,10 +344,16 @@ namespace ClosedXML_Tests
                 {
                     continue;
                 }
-                using (Stream oneStream = left.GetPart(pair.Uri).GetStream(FileMode.Open, FileAccess.Read))
-                using (Stream otherStream = right.GetPart(pair.Uri).GetStream(FileMode.Open, FileAccess.Read))
+                var leftPart = left.GetPart(pair.Uri);
+                var rightPart = right.GetPart(pair.Uri);
+                using (Stream oneStream = leftPart.GetStream(FileMode.Open, FileAccess.Read))
+                using (Stream otherStream = rightPart.GetStream(FileMode.Open, FileAccess.Read))
                 {
-                    if (!StreamHelper.Compare(oneStream, otherStream))
+                    bool stripColumnWidthsFromSheet = stripColumnWidths &&
+                        leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
+                        rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
+
+                    if (!StreamHelper.Compare(oneStream, otherStream, stripColumnWidthsFromSheet))
                     {
                         pair.Status = CompareStatus.NonEqual;
                         if (compareToFirstDifference)

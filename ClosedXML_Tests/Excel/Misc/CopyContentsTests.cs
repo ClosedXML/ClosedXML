@@ -113,7 +113,7 @@ namespace ClosedXML_Tests.Excel.Misc
                 copyRowSheet.Cell("G2").Value = "must be removed after copy";
                 originalRow.CopyTo(destinationRow);
             }
-            TestHelper.SaveWorkbook(workbook, @"Misc\CopyRowContents.xlsx");
+            TestHelper.SaveWorkbook(workbook, "Misc", "CopyRowContents.xlsx");
         }
     }
 }

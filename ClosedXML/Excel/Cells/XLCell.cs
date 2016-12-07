@@ -1,18 +1,21 @@
-﻿namespace ClosedXML.Excel
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 #if NET4
     using System.ComponentModel.DataAnnotations;
-
+#else
+using System.ComponentModel;
 #endif
+
+namespace ClosedXML.Excel
+{
+    using Attributes;
 
     internal class XLCell : IXLCell, IXLStylized
     {
@@ -56,7 +59,7 @@
             , RegexOptions.Compiled);
 
         private static readonly Regex R1C1Regex = new Regex(
-            @"(?<=\W)([Rr]\[?-?\d{0,7}\]?[Cc]\[?-?\d{0,7}\]?)(?=\W)" // R1C1
+            @"(?<=\W)([Rr](?:\[-?\d{0,7}\]|\d{0,7})?[Cc](?:\[-?\d{0,7}\]|\d{0,7})?)(?=\W)" // R1C1
             + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
             + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)", RegexOptions.Compiled); // C:C
 
@@ -326,7 +329,7 @@
                 {
                     cValue = GetString();
                 }
-                catch 
+                catch
                 {
                     cValue = String.Empty;
                 }
@@ -572,23 +575,14 @@
                         {
                             var fieldInfo = m.GetType().GetFields();
                             var propertyInfo = m.GetType().GetProperties();
+
+                            var columnOrders = fieldInfo.Select(fi => new KeyValuePair<long, MemberInfo>(GetFieldOrder(fi.GetCustomAttributes(true)), fi))
+                                .Concat(propertyInfo.Select(pi => new KeyValuePair<long, MemberInfo>(GetFieldOrder(pi.GetCustomAttributes(true)), pi)))
+                                .OrderBy(pair => pair.Key);
+
                             if (!hasTitles)
                             {
-                                foreach (var info in fieldInfo)
-                                {
-                                    if ((info as IEnumerable) == null)
-                                    {
-                                        var fieldName = GetFieldName(info.GetCustomAttributes(true));
-                                        if (XLHelper.IsNullOrWhiteSpace(fieldName))
-                                            fieldName = info.Name;
-
-                                        SetValue(fieldName, fRo, co);
-                                    }
-
-                                    co++;
-                                }
-
-                                foreach (var info in propertyInfo)
+                                foreach (var info in columnOrders.Select(o => o.Value))
                                 {
                                     if ((info as IEnumerable) == null)
                                     {
@@ -606,16 +600,17 @@
                                 hasTitles = true;
                             }
 
-                            foreach (var info in fieldInfo)
-                            {
-                                SetValue(info.GetValue(m), ro, co);
-                                co++;
-                            }
 
-                            foreach (var info in propertyInfo)
+                            foreach (var info in columnOrders.Select(o => o.Value))
                             {
-                                if ((info as IEnumerable) == null)
-                                    SetValue(info.GetValue(m, null), ro, co);
+                                var fi = info as FieldInfo;
+                                var pi = info as PropertyInfo;
+
+                                if (fi != null)
+                                    SetValue(fi.GetValue(m), ro, co);
+                                else if (pi != null && info as IEnumerable == null)
+                                    SetValue(pi.GetValue(m, null), ro, co);
+
                                 co++;
                             }
                         }
@@ -856,7 +851,7 @@
                     {
                         double dTest;
                         if (Double.TryParse(_cellValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out dTest))
-                            _cellValue = dTest.ToString(CultureInfo.InvariantCulture);
+                            _cellValue = dTest.ToInvariantString();
                         else
                         {
                             throw new ArgumentException(
@@ -870,7 +865,7 @@
                         if (_dataType == XLCellValues.Boolean)
                             _cellValue = (_cellValue != "0").ToString();
                         else if (_dataType == XLCellValues.TimeSpan)
-                            _cellValue = BaseDate.Add(GetTimeSpan()).ToOADate().ToString(CultureInfo.InvariantCulture);
+                            _cellValue = BaseDate.Add(GetTimeSpan()).ToOADate().ToInvariantString();
                     }
                 }
 
@@ -971,8 +966,6 @@
             set
             {
                 _formulaR1C1 = XLHelper.IsNullOrWhiteSpace(value) ? null : value;
-
-// FormulaA1 = GetFormulaA1(value);
             }
         }
 
@@ -1483,7 +1476,6 @@
 
         private IXLStyle GetStyle()
         {
-            //return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
             if (_style != null)
                 return _style;
 
@@ -1679,7 +1671,7 @@
                             val = dtTest.ToOADate().ToInvariantString();
                         }
                     }
-                    
+
                 }
                 else if (Boolean.TryParse(val, out bTest))
                 {
@@ -1766,9 +1758,10 @@
             {
                 var matchString = match.Value;
                 var matchIndex = match.Index;
-                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
+                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
+                    && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
                 {
-// Check if the match is in between quotes
+                    // Check if the match is in between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     sb.Append(conversionType == FormulaConversionType.A1ToR1C1
                                   ? GetR1C1Address(matchString, rowsToShift, columnsToShift)
@@ -1963,14 +1956,15 @@
         }
 
 
-        public IXLCell CopyFrom(XLCell otherCell, Boolean copyDataValidations)
+        public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
         {
-            var source = otherCell;
-            CopyValues(otherCell);
+            var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
+            //var source = castedOtherCell;
+            CopyValues(source);
 
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 
-            var conditionalFormats = otherCell.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(otherCell)).ToList();
+            var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(source)).ToList();
             foreach (var cf in conditionalFormats)
             {
                 var c = new XLConditionalFormat(cf as XLConditionalFormat) {Range = AsRange()};
@@ -1981,7 +1975,7 @@
                     var f = v.Value;
                     if (v.IsFormula)
                     {
-                        var r1c1 = otherCell.GetFormulaR1C1(f);
+                        var r1c1 = source.GetFormulaR1C1(f);
                         f = GetFormulaA1(r1c1);
                     }
 
@@ -1996,8 +1990,8 @@
             {
                 var eventTracking = Worksheet.EventTrackingEnabled;
                 Worksheet.EventTrackingEnabled = false;
-                if (otherCell.HasDataValidation)
-                    CopyDataValidation(otherCell, otherCell.DataValidation);
+                if (source.HasDataValidation)
+                    CopyDataValidation(source, source.DataValidation);
                 else if (HasDataValidation)
                 {
                     using (var asRange = AsRange())
@@ -2491,8 +2485,15 @@
             var attribute = customAttributes.FirstOrDefault(a => a is DisplayAttribute);
             return attribute != null ? (attribute as DisplayAttribute).Name : null;
 #else
-            return null;
+            var attribute = customAttributes.FirstOrDefault(a => a is DisplayNameAttribute);
+            return attribute != null ? (attribute as DisplayNameAttribute).DisplayName : null;
 #endif
+        }
+
+        private static long GetFieldOrder(Object[] customAttributes)
+        {
+            var attribute = customAttributes.FirstOrDefault(a => a is ColumnOrderAttribute);
+            return attribute != null ? (attribute as ColumnOrderAttribute).Order : long.MaxValue;
         }
 
         #region Nested type: FormulaConversionType

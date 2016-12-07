@@ -8,6 +8,14 @@ namespace ClosedXML.Excel
     internal class XLPivotValues: IXLPivotValues
     {
         private readonly Dictionary<String, IXLPivotValue> _pivotValues = new Dictionary<string, IXLPivotValue>();
+
+        private readonly IXLPivotTable _pivotTable;
+
+        internal XLPivotValues(IXLPivotTable pivotTable)
+        {
+            this._pivotTable = pivotTable;
+        }
+
         public IEnumerator<IXLPivotValue> GetEnumerator()
         {
             return _pivotValues.Values.GetEnumerator();
@@ -25,7 +33,11 @@ namespace ClosedXML.Excel
         public IXLPivotValue Add(String sourceName, String customName)
         {
             var pivotValue = new XLPivotValue(sourceName) { CustomName = customName };
-            _pivotValues.Add(sourceName, pivotValue);
+            _pivotValues.Add(customName, pivotValue);
+
+            if (_pivotValues.Count > 1 && !this._pivotTable.ColumnLabels.Any(cl => cl.SourceName == XLConstants.PivotTableValuesSentinalLabel) && !this._pivotTable.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+                _pivotTable.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+
             return pivotValue;
         }
 

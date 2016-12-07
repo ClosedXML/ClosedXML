@@ -1,6 +1,5 @@
-﻿using System;
-using ClosedXML.Excel;
-
+﻿using ClosedXML.Excel;
+using System;
 
 namespace ClosedXML_Examples.Misc
 {
@@ -28,6 +27,12 @@ namespace ClosedXML_Examples.Misc
             // Create a named range with the data:
             wsData.Range("A2:B4").AddToNamed("PeopleData"); // Default named range scope is Workbook
 
+            // Create a hidden named range
+            wb.NamedRanges.Add("Headers", wsData.Range("A1:B1")).Visible = false;
+
+            // Create a hidden named range n worksheet scope
+            wsData.NamedRanges.Add("HeadersAndData", wsData.Range("A1:B4")).Visible = false;
+
             // Let's use the named range in a formula:
             wsPresentation.Cell(1, 1).Value = "People Count:";
             wsPresentation.Cell(1, 2).FormulaA1 = "COUNT(PeopleData)";
@@ -42,7 +47,6 @@ namespace ClosedXML_Examples.Misc
             // Copy the data in a named range:
             wsPresentation.Cell(4, 1).Value = "People Data:";
             wsPresentation.Cell(5, 1).Value = wb.Range("PeopleData");
-            
 
             /////////////////////////////////////////////////////////////////////////
             // For the Excel geeks out there who actually know about
@@ -76,7 +80,6 @@ namespace ClosedXML_Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

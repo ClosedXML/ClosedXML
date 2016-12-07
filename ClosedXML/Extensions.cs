@@ -75,10 +75,10 @@ namespace ClosedXML.Excel
             HashSet<T> distinctItems = new HashSet<T>();
             foreach (var item in source)
             {
-                if (distinctItems.Contains(item))
-                    return true;
-                else
-                    distinctItems.Add(item);
+              if (!distinctItems.Add(item))
+              {
+                return true;
+              }
             }
             return false;
         }

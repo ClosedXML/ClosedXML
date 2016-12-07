@@ -26,6 +26,12 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void AdjustToContentsWithAutoFilter()
+        {
+            TestHelper.RunTestExample<AdjustToContentsWithAutoFilter>(@"Misc\AdjustToContentsWithAutoFilter.xlsx");
+        }
+
+        [Test]
         public void AutoFilter()
         {
             TestHelper.RunTestExample<AutoFilter>(@"Misc\AutoFilter.xlsx");

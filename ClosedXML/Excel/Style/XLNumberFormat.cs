@@ -6,13 +6,11 @@ namespace ClosedXML.Excel
     {
         #region IXLNumberFormat Members
 
-        public bool Equals(IXLNumberFormat other)
+        public bool Equals(IXLNumberFormatBase other)
         {
-            var otherNf = other as XLNumberFormat;
-
             return
-                _numberFormatId == otherNf._numberFormatId
-                && _format == otherNf._format
+                _numberFormatId == other.NumberFormatId
+                && _format == other.Format
                 ;
         }
 
@@ -25,7 +23,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            return Equals((XLNumberFormat)obj);
+            return Equals((IXLNumberFormatBase)obj);
         }
 
         public override int GetHashCode()
