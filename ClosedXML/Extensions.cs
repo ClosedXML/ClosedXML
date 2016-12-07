@@ -149,17 +149,31 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static DateTime NextWorkday(this DateTime date, List<DateTime> bankHolidays)
+        public static DateTime NextWorkday(this DateTime date, IEnumerable<DateTime> bankHolidays)
         {
             var nextDate = date.AddDays(1);
-            while (nextDate.DayOfWeek == DayOfWeek.Saturday
-                || nextDate.DayOfWeek == DayOfWeek.Sunday
-                || bankHolidays.Contains(nextDate)
-                )
+            while (!nextDate.IsWorkDay(bankHolidays))
                 nextDate = nextDate.AddDays(1);
 
             return nextDate;
         }
+
+        public static DateTime PreviousWorkDay(this DateTime date, IEnumerable<DateTime> bankHolidays)
+        {
+            var previousDate = date.AddDays(-1);
+            while (!previousDate.IsWorkDay(bankHolidays))
+                previousDate = previousDate.AddDays(-1);
+
+            return previousDate;
+        }
+
+        public static bool IsWorkDay(this DateTime date, IEnumerable<DateTime> bankHolidays)
+        {
+            return date.DayOfWeek != DayOfWeek.Saturday
+                && date.DayOfWeek != DayOfWeek.Sunday
+                && !bankHolidays.Contains(date);
+        }
+
     }
 
     public static class IntegerExtensions

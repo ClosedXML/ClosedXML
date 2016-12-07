@@ -190,6 +190,16 @@ namespace ClosedXML_Tests.Excel.DataValidations
         }
 
         [Test]
+        public void Networkdays_NegativeResult()
+        {
+            Object actual = XLWorkbook.EvaluateExpr("Networkdays(\"3/01/2009\", \"10/01/2008\")");
+            Assert.AreEqual(-108, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Networkdays(\"2016-01-01\", \"2015-12-23\")");
+            Assert.AreEqual(-8, actual);
+        }
+
+        [Test]
         public void Networkdays_OneHolidaysGiven()
         {
             Object actual = XLWorkbook.EvaluateExpr("Networkdays(\"10/01/2008\", \"3/01/2009\", \"11/26/2008\")");
@@ -407,6 +417,9 @@ namespace ClosedXML_Tests.Excel.DataValidations
         {
             Object actual = XLWorkbook.EvaluateExpr("Workday(\"10/01/2008\", 151)");
             Assert.AreEqual(new DateTime(2009, 4, 30), actual);
+
+            actual = XLWorkbook.EvaluateExpr("Workday(\"2016-01-01\", -10)");
+            Assert.AreEqual(new DateTime(2015, 12, 18), actual);
         }
 
         [Test]
