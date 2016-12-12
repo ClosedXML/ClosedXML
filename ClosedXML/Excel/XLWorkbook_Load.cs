@@ -400,6 +400,142 @@ namespace ClosedXML.Excel
                 }
             }
             LoadDefinedNames(workbook);
+
+            #region Pivot tables
+
+            // Delay loading of pivot tables until all sheets have been loaded
+            foreach (Sheet dSheet in sheets.OfType<Sheet>())
+            {
+                var wsPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
+
+                if (wsPart != null)
+                {
+                    var ws = (XLWorksheet)WorksheetsInternal.Worksheet(dSheet.Name);
+
+                    foreach (var pivotTablePart in wsPart.PivotTableParts)
+                    {
+                        var pivotTableCacheDefinitionPart = pivotTablePart.PivotTableCacheDefinitionPart;
+                        var pivotTableDefinition = pivotTablePart.PivotTableDefinition;
+
+                        var target = ws.FirstCell();
+                        if (pivotTableDefinition.Location != null && pivotTableDefinition.Location.Reference != null && pivotTableDefinition.Location.Reference.HasValue)
+                        {
+                            target = ws.Range(pivotTableDefinition.Location.Reference.Value).FirstCell();
+                        }
+
+                        IXLRange source = null;
+                        if (pivotTableCacheDefinitionPart.PivotCacheDefinition != null
+                            && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource != null
+                            && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource != null)
+                        {
+                            // TODO: Implement other sources besides worksheetSource (e.g. Table source?)
+                            source = ws.Workbook.Range(pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource.Name.Value);
+                        }
+
+                        if (target != null && source != null)
+                        {
+                            var pt = ws.PivotTables.AddNew(pivotTableDefinition.Name, target, source) as XLPivotTable;
+                            pt.RelId = wsPart.GetIdOfPart(pivotTablePart);
+                            pt.CacheDefinitionRelId = pivotTablePart.GetIdOfPart(pivotTableCacheDefinitionPart);
+                            pt.WorkbookCacheRelId = dSpreadsheet.WorkbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
+
+                            if (pivotTableDefinition.MergeItem != null) pt.MergeAndCenterWithLabels = pivotTableDefinition.MergeItem.Value;
+                            if (pivotTableDefinition.Indent != null) pt.RowLabelIndent = (int)pivotTableDefinition.Indent.Value;
+                            if (pivotTableDefinition.PageOverThenDown != null) pt.FilterAreaOrder = pivotTableDefinition.PageOverThenDown.Value ? XLFilterAreaOrder.OverThenDown : XLFilterAreaOrder.DownThenOver;
+                            if (pivotTableDefinition.PageWrap != null) pt.FilterFieldsPageWrap = (int)pivotTableDefinition.PageWrap.Value;
+                            if (pivotTableDefinition.UseAutoFormatting != null) pt.AutofitColumns = pivotTableDefinition.UseAutoFormatting.Value;
+                            if (pivotTableDefinition.PreserveFormatting != null) pt.PreserveCellFormatting = pivotTableDefinition.PreserveFormatting.Value;
+                            if (pivotTableDefinition.RowGrandTotals != null) pt.ShowGrandTotalsRows = pivotTableDefinition.RowGrandTotals.Value;
+                            if (pivotTableDefinition.ColumnGrandTotals != null) pt.ShowGrandTotalsColumns = pivotTableDefinition.ColumnGrandTotals.Value;
+                            if (pivotTableDefinition.SubtotalHiddenItems != null) pt.FilteredItemsInSubtotals = pivotTableDefinition.SubtotalHiddenItems.Value;
+                            if (pivotTableDefinition.MultipleFieldFilters != null) pt.AllowMultipleFilters = pivotTableDefinition.MultipleFieldFilters.Value;
+                            if (pivotTableDefinition.CustomListSort != null) pt.UseCustomListsForSorting = pivotTableDefinition.CustomListSort.Value;
+                            if (pivotTableDefinition.ShowDrill != null) pt.ShowExpandCollapseButtons = pivotTableDefinition.ShowDrill.Value;
+                            if (pivotTableDefinition.ShowDataTips != null) pt.ShowContextualTooltips = pivotTableDefinition.ShowDataTips.Value;
+                            if (pivotTableDefinition.ShowMemberPropertyTips != null) pt.ShowPropertiesInTooltips = pivotTableDefinition.ShowMemberPropertyTips.Value;
+                            if (pivotTableDefinition.ShowHeaders != null) pt.DisplayCaptionsAndDropdowns = pivotTableDefinition.ShowHeaders.Value;
+                            if (pivotTableDefinition.GridDropZones != null) pt.ClassicPivotTableLayout = pivotTableDefinition.GridDropZones.Value;
+                            if (pivotTableDefinition.ShowEmptyRow != null) pt.ShowEmptyItemsOnRows = pivotTableDefinition.ShowEmptyRow.Value;
+                            if (pivotTableDefinition.ShowEmptyColumn != null) pt.ShowEmptyItemsOnColumns = pivotTableDefinition.ShowEmptyColumn.Value;
+                            if (pivotTableDefinition.ShowItems != null) pt.DisplayItemLabels = pivotTableDefinition.ShowItems.Value;
+                            if (pivotTableDefinition.FieldListSortAscending != null) pt.SortFieldsAtoZ = pivotTableDefinition.FieldListSortAscending.Value;
+                            if (pivotTableDefinition.PrintDrill != null) pt.PrintExpandCollapsedButtons = pivotTableDefinition.PrintDrill.Value;
+                            if (pivotTableDefinition.ItemPrintTitles != null) pt.RepeatRowLabels = pivotTableDefinition.ItemPrintTitles.Value;
+                            if (pivotTableDefinition.FieldPrintTitles != null) pt.PrintTitles = pivotTableDefinition.FieldPrintTitles.Value;
+                            if (pivotTableDefinition.EnableDrill != null) pt.EnableShowDetails = pivotTableDefinition.EnableDrill.Value;
+
+                            if (pivotTableDefinition.ShowMissing != null && pivotTableDefinition.MissingCaption != null)
+                                pt.EmptyCellReplacement = pivotTableDefinition.MissingCaption.Value;
+
+                            if (pivotTableDefinition.ShowError != null && pivotTableDefinition.ErrorCaption != null)
+                                pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
+
+                            // Row labels
+                            foreach (var rf in pivotTableDefinition.RowFields.Cast<Field>())
+                            {
+                                if (rf.Index.Value == -2)
+                                    pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                else if (rf.Index < pivotTableDefinition.PivotFields.Count)
+                                {
+                                    var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
+                                    if (pf != null && pf.Name != null) pt.RowLabels.Add(pf.Name.Value);
+                                }
+                            }
+
+                            // Column labels
+                            foreach (var cf in pivotTableDefinition.ColumnFields.Cast<Field>())
+                            {
+                                if (cf.Index.Value == -2)
+                                    pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                                else if (cf.Index < pivotTableDefinition.PivotFields.Count)
+                                {
+                                    var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
+                                    if (pf != null && pf.Name != null) pt.ColumnLabels.Add(pf.Name.Value);
+                                }
+                            }
+
+                            // Values
+                            foreach (var df in pivotTableDefinition.DataFields.Cast<DataField>())
+                            {
+                                if ((int)df.Field.Value == -2)
+                                    pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                                else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
+                                {
+                                    var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;
+                                    if (pf != null && pf.Name != null)
+                                    {
+                                        var pv = pt.Values.Add(pf.Name.Value, df.Name.Value);
+                                        if (df.NumberFormatId != null) pv.NumberFormat.SetNumberFormatId((int)df.NumberFormatId.Value);
+                                        if (df.Subtotal != null) pv = pv.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
+                                        if (df.ShowDataAs != null)
+                                        {
+                                            var calculation = pv.Calculation;
+                                            calculation = df.ShowDataAs.Value.ToClosedXml();
+                                            pv = pv.SetCalculation(calculation);
+                                        }
+                                        if (df.BaseField != null) {
+                                            var col = pt.SourceRange.Column(df.BaseField.Value + 1);
+
+                                            var items = col.CellsUsed()
+                                                        .Select(c => c.Value)
+                                                        .Skip(1) // Skip header column
+                                                        .Distinct().ToList();
+
+                                            pv.BaseField = col.FirstCell().GetValue<string>();
+                                            if (df.BaseItem != null) pv.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            #endregion
+
         }
 
         #region Comment Helpers

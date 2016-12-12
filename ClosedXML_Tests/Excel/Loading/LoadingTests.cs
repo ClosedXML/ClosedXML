@@ -20,7 +20,8 @@ namespace ClosedXML_Tests.Excel
             var files = new List<string>()
             {
                 @"Misc\TableWithCustomTheme.xlsx",
-                @"Misc\EmptyTable.xlsx"
+                @"Misc\EmptyTable.xlsx",
+                @"Misc\LoadPivotTables.xlsx"
             };
 
             foreach (var file in files)
@@ -40,5 +41,28 @@ namespace ClosedXML_Tests.Excel
                 table.DataRange.InsertRowsBelow(5);
             }
         }
+
+        [Test]
+        public void CanLoadBasicPivotTable()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("PivotTable1");
+                var pt = ws.PivotTable("PivotTable1");
+                Assert.AreEqual("PivotTable1", pt.Name);
+
+                Assert.AreEqual(1, pt.RowLabels.Count());
+                Assert.AreEqual("Name", pt.RowLabels.Single().SourceName);
+
+                Assert.AreEqual(1, pt.ColumnLabels.Count());
+                Assert.AreEqual("Month", pt.ColumnLabels.Single().SourceName);
+
+                var pv = pt.Values.Single();
+                Assert.AreEqual("Sum of NumberOfOrders", pv.CustomName);
+                Assert.AreEqual("NumberOfOrders", pv.SourceName);
+            }
+        }
+
     }
 }
