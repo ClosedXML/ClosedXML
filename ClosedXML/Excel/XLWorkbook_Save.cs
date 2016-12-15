@@ -1827,7 +1827,7 @@ namespace ClosedXML.Excel
             PivotCaches pivotCaches;
             uint cacheId = 0;
             if (workbookPart.Workbook.PivotCaches == null)
-                pivotCaches = workbookPart.Workbook.AppendChild(new PivotCaches());
+                pivotCaches = workbookPart.Workbook.InsertAfter(new PivotCaches(), workbookPart.Workbook.CalculationProperties);
             else
             {
                 pivotCaches = workbookPart.Workbook.PivotCaches;
