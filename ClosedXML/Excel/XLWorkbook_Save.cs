@@ -1908,12 +1908,10 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    foreach (var cellValue in source.Cells().Where(cell =>
-                        cell.Address.ColumnNumber == columnNumber &&
-                        cell.Address.RowNumber >
-                        source.FirstRow().RowNumber()).Select(
-                            cell => cell.Value.ToString())
-                        .Where(cellValue => !xlpf.SharedStrings.Contains(cellValue)))
+                    foreach (var cellValue in source.Cells()
+                        .Where(cell => cell.Address.ColumnNumber == columnNumber && cell.Address.RowNumber > source.FirstRow().RowNumber())
+                        .Select(cell => cell.Value.ToString())
+                        .Where(cellValue => !xlpf.SharedStrings.Select(ss => ss.ToLower()).Contains(cellValue.ToLower())))
                     {
                         xlpf.SharedStrings.Add(cellValue);
                     }
