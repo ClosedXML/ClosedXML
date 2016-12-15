@@ -101,7 +101,7 @@ namespace ClosedXML.Excel
                     id++;
                 }
             }
-            public void AddValues(List<String> values, RelType relType)
+            public void AddValues(IEnumerable<String> values, RelType relType)
             {
                 if (!_relIds.ContainsKey(relType))
                 {
