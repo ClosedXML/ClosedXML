@@ -172,8 +172,8 @@ namespace ClosedXML.Excel
                 }
 
             }
-            // Get the CalculationChainPart 
-            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the 
+            // Get the CalculationChainPart
+            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the
             //workbook whose value is calculated from any formula
 
             CalculationChainPart calChainPart;
@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
             var workbookPart = document.WorkbookPart ?? document.AddWorkbookPart();
 
             var worksheets = WorksheetsInternal;
-            
+
 
             var partsToRemove = workbookPart.Parts.Where(s => worksheets.Deleted.Contains(s.RelationshipId)).ToList();
 
@@ -555,7 +555,7 @@ namespace ClosedXML.Excel
             {
                 workbook.WorkbookProtection = null;
             }
-            
+
 
             if (workbook.BookViews == null)
                 workbook.BookViews = new BookViews();
@@ -4183,7 +4183,7 @@ namespace ClosedXML.Excel
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
-                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);                    
+                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
                 }
             }
 
@@ -4373,15 +4373,11 @@ namespace ClosedXML.Excel
             {
                 pageSetup.Scale = null;
 
-                if (xlWorksheet.PageSetup.PagesWide > 0)
+                if (xlWorksheet.PageSetup.PagesWide >= 0 && xlWorksheet.PageSetup.PagesWide != 1)
                     pageSetup.FitToWidth = (UInt32)xlWorksheet.PageSetup.PagesWide;
-                else
-                    pageSetup.FitToWidth = 0;
 
-                if (xlWorksheet.PageSetup.PagesTall > 0)
+                if (xlWorksheet.PageSetup.PagesTall >= 0 && xlWorksheet.PageSetup.PagesTall != 1)
                     pageSetup.FitToHeight = (UInt32)xlWorksheet.PageSetup.PagesTall;
-                else
-                    pageSetup.FitToHeight = 0;
             }
 
             #endregion
