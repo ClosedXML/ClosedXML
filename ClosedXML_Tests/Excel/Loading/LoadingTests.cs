@@ -40,5 +40,24 @@ namespace ClosedXML_Tests.Excel
                 table.DataRange.InsertRowsBelow(5);
             }
         }
+
+        /// <summary>
+        /// For non-English locales, the default style ("Normal" in English) can be
+        /// another piece of text (e.g. Обычный in Russian).
+        /// This test ensures that the default style is correctly detected and
+        /// no style conflicts occur on save.
+        /// </summary>
+        [Test]
+        public void CanSaveFileWithDefaultStyleNameNotInEnglish()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\FileWithDefaultStyleNameNotInEnglish.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                using (var ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms, true);
+                }
+            }
+        }
     }
 }
