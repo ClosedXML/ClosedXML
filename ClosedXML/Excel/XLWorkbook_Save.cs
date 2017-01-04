@@ -2580,8 +2580,8 @@ namespace ClosedXML.Excel
 
             // To determine the default workbook style, we look for the style with builtInId = 0 (I hope that is the correct approach)
             UInt32 defaultFormatId;
-            if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId.HasValue && c.BuiltinId.Value == 0))
-                defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Single(c => c.BuiltinId.HasValue && c.BuiltinId.Value == 0).FormatId.Value;
+            if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0))
+                defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Single(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0).FormatId.Value;
             else if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any())
                 defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Max(c => c.FormatId.Value) + 1;
             else
@@ -2704,7 +2704,7 @@ namespace ClosedXML.Excel
             ResolveCellStyleFormats(workbookStylesPart, context);
             ResolveRest(workbookStylesPart, context);
 
-            if (!workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId.HasValue && c.BuiltinId.Value == 0U))
+            if (!workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0U))
                 workbookStylesPart.Stylesheet.CellStyles.AppendChild(new CellStyle { Name = "Normal", FormatId = defaultFormatId, BuiltinId = 0U });
 
             workbookStylesPart.Stylesheet.CellStyles.Count = (UInt32)workbookStylesPart.Stylesheet.CellStyles.Count();
