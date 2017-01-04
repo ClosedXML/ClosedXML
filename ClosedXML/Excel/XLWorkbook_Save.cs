@@ -4381,15 +4381,11 @@ namespace ClosedXML.Excel
             {
                 pageSetup.Scale = null;
 
-                if (xlWorksheet.PageSetup.PagesWide > 0)
+                if (xlWorksheet.PageSetup.PagesWide >= 0 && xlWorksheet.PageSetup.PagesWide != 1)
                     pageSetup.FitToWidth = (UInt32)xlWorksheet.PageSetup.PagesWide;
-                else
-                    pageSetup.FitToWidth = 0;
 
-                if (xlWorksheet.PageSetup.PagesTall > 0)
+                if (xlWorksheet.PageSetup.PagesTall >= 0 && xlWorksheet.PageSetup.PagesTall != 1)
                     pageSetup.FitToHeight = (UInt32)xlWorksheet.PageSetup.PagesTall;
-                else
-                    pageSetup.FitToHeight = 0;
             }
 
             #endregion
