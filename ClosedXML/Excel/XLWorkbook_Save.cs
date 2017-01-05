@@ -599,9 +599,9 @@ namespace ClosedXML.Excel
                 {
                     if (XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
                     {
-                        rId = String.Format("rId{0}", xlSheet.SheetId);
+                    rId = String.Format("rId{0}", xlSheet.SheetId);
                         context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
-                    }
+                }
                     else
                         rId = xlSheet.RelId;
                 }
@@ -2604,17 +2604,12 @@ namespace ClosedXML.Excel
             if (workbookStylesPart.Stylesheet.CellStyles == null)
                 workbookStylesPart.Stylesheet.CellStyles = new CellStyles();
 
+            // To determine the default workbook style, we look for the style with builtInId = 0 (I hope that is the correct approach)
             UInt32 defaultFormatId;
-            if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.Name == "Normal"))
-            {
-                defaultFormatId =
-                    workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Single(c => c.Name == "Normal").FormatId.Value;
-            }
+            if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0))
+                defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Single(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0).FormatId.Value;
             else if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any())
-            {
-                defaultFormatId =
-                    workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Max(c => c.FormatId.Value) + 1;
-            }
+                defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Max(c => c.FormatId.Value) + 1;
             else
                 defaultFormatId = 0;
 
@@ -2669,7 +2664,7 @@ namespace ClosedXML.Excel
                 sharedNumberFormats.Add(numberFormat,
                     new NumberFormatInfo
                     {
-                        NumberFormatId = numberFormatCount + 164,
+                        NumberFormatId = XLConstants.NumberOfBuiltInStyles + numberFormatCount,
                         NumberFormat = numberFormat
                     });
                 numberFormatCount++;
@@ -2695,7 +2690,7 @@ namespace ClosedXML.Excel
                 sharedNumberFormats.Add(xlStyle.NumberFormat,
                     new NumberFormatInfo
                     {
-                        NumberFormatId = numberFormatCount + 164,
+                        NumberFormatId = XLConstants.NumberOfBuiltInStyles + numberFormatCount,
                         NumberFormat = xlStyle.NumberFormat
                     });
                 numberFormatCount++;
@@ -2735,13 +2730,9 @@ namespace ClosedXML.Excel
             ResolveCellStyleFormats(workbookStylesPart, context);
             ResolveRest(workbookStylesPart, context);
 
-            if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().All(c => c.Name != "Normal"))
-            {
-                //var defaultFormatId = context.SharedStyles.Values.Where(s => s.Style.Equals(DefaultStyle)).Single().StyleId;
+            if (!workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0U))
+                workbookStylesPart.Stylesheet.CellStyles.AppendChild(new CellStyle { Name = "Normal", FormatId = defaultFormatId, BuiltinId = 0U });
 
-                var cellStyle1 = new CellStyle { Name = "Normal", FormatId = defaultFormatId, BuiltinId = 0U };
-                workbookStylesPart.Stylesheet.CellStyles.AppendChild(cellStyle1);
-            }
             workbookStylesPart.Stylesheet.CellStyles.Count = (UInt32)workbookStylesPart.Stylesheet.CellStyles.Count();
 
             var newSharedStyles = new Dictionary<Int32, StyleInfo>();
@@ -2817,7 +2808,7 @@ namespace ClosedXML.Excel
             {
                 var numberFormat = new NumberingFormat
                 {
-                    NumberFormatId = (UInt32)(differentialFormats.Count() + 164),
+                    NumberFormatId = (UInt32)(XLConstants.NumberOfBuiltInStyles + differentialFormats.Count()),
                     FormatCode = cf.Style.NumberFormat.Format
                 };
                 differentialFormat.Append(numberFormat);
@@ -3422,7 +3413,7 @@ namespace ClosedXML.Excel
             var allSharedNumberFormats = new Dictionary<IXLNumberFormatBase, NumberFormatInfo>();
             foreach (var numberFormatInfo in sharedNumberFormats.Values.Where(nf => nf.NumberFormatId != defaultFormatId))
             {
-                var numberingFormatId = 164;
+                var numberingFormatId = XLConstants.NumberOfBuiltInStyles + 1;
                 var foundOne = false;
                 foreach (NumberingFormat nf in workbookStylesPart.Stylesheet.NumberingFormats)
                 {
