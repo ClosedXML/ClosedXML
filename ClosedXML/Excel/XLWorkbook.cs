@@ -406,6 +406,23 @@ namespace ClosedXML.Excel
             return false;
         }
 
+        public IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws)
+        {
+            ws = null;
+            if (!rangeAddress.Contains('!')) return null;
+
+            var split = rangeAddress.Split('!');
+            var first = split[0];
+            var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
+            var localRange = split[1];
+            if (TryGetWorksheet(wsName, out ws))
+            {
+                return ws.Range(localRange);
+            }
+            return null;
+        }
+
+
         /// <summary>
         ///   Saves the current workbook.
         /// </summary>
@@ -739,17 +756,23 @@ namespace ClosedXML.Excel
             return Ranges(namedCells).Cells();
         }
 
-        public IXLRange Range(String namedRange)
+        public IXLRange Range(String range)
         {
-            var range = NamedRange(namedRange);
-            if (range == null) return null;
-            return range.Ranges.FirstOrDefault();
+            var namedRange = NamedRange(range);
+            if (namedRange != null)
+                return namedRange.Ranges.FirstOrDefault();
+            else
+            {
+                IXLWorksheet ws;
+                var r = RangeFromFullAddress(range, out ws);
+                return r;
+            }
         }
 
-        public IXLRanges Ranges(String namedRanges)
+        public IXLRanges Ranges(String ranges)
         {
             var retVal = new XLRanges();
-            var rangePairs = namedRanges.Split(',');
+            var rangePairs = ranges.Split(',');
             foreach (var range in rangePairs.Select(r => Range(r.Trim())).Where(range => range != null))
             {
                 retVal.Add(range);
