@@ -1835,23 +1835,40 @@ namespace ClosedXML.Excel
                     cacheId = pivotCaches.Cast<PivotCache>().Max(pc => pc.CacheId.Value) + 1;
             }
 
-            foreach (var pt in xlWorksheet.PivotTables)
+            foreach (var pt in xlWorksheet.PivotTables.Cast<XLPivotTable>())
             {
                 // TODO: Avoid duplicate pivot caches of same source range
-                var ptCdp = context.RelIdGenerator.GetNext(RelType.Workbook);
 
-                var pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(ptCdp);
+                var workbookCacheRelId = pt.WorkbookCacheRelId;
+                PivotCache pivotCache;
+                PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart;
+                if (!XLHelper.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
+                {
+                    pivotCache = pivotCaches.Cast<PivotCache>().Single(pc => pc.Id.Value == pt.WorkbookCacheRelId);
+                    pivotTableCacheDefinitionPart = workbookPart.GetPartById(pt.WorkbookCacheRelId) as PivotTableCacheDefinitionPart;
+                }
+                else
+                {
+                    workbookCacheRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    pivotCache = new PivotCache { CacheId = cacheId++, Id = workbookCacheRelId };
+                    pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(workbookCacheRelId);
+                }
+
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt);
 
-                var pivotCache = new PivotCache { CacheId = cacheId++, Id = ptCdp };
+                if (XLHelper.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
+                    pivotCaches.AppendChild(pivotCache);
 
-                pivotCaches.AppendChild(pivotCache);
+                PivotTablePart pivotTablePart;
+                if (XLHelper.IsNullOrWhiteSpace(pt.RelId))
+                    pivotTablePart = worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
+                else
+                    pivotTablePart = worksheetPart.GetPartById(pt.RelId) as PivotTablePart;
 
-                var pivotTablePart =
-                    worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
                 GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId, context);
 
-                pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
+                if (XLHelper.IsNullOrWhiteSpace(pt.RelId))
+                    pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
             }
         }
 
@@ -1932,7 +1949,9 @@ namespace ClosedXML.Excel
 
             pivotTableCacheDefinitionPart.PivotCacheDefinition = pivotCacheDefinition;
 
-            var pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
+            var pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().Any() ?
+                pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().First() :
+                pivotTableCacheDefinitionPart.AddNewPart<PivotTableCacheRecordsPart>("rId1");
 
             var pivotCacheRecords = new PivotCacheRecords();
             pivotCacheRecords.AddNamespaceDeclaration("r",
