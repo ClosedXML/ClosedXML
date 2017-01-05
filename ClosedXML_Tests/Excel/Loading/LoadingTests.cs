@@ -1,10 +1,8 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using NUnit.Framework;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using ClosedXML.Excel;
-using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -43,6 +41,22 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void CanLoadAndSaveFileWithMismatchingSheetIdAndRelId()
+        {
+            // This file's workbook.xml contains:
+            // <x:sheet name="Data" sheetId="13" r:id="rId1" />
+            // and the mismatch between the sheetId and r:id can create problems.
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\FileWithMismatchSheetIdAndRelId.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                using (var ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms, true);
+                }
+            }
+        }
+
+        [Test]
         public void CanLoadBasicPivotTable()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
@@ -63,6 +77,5 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual("NumberOfOrders", pv.SourceName);
             }
         }
-
     }
 }
