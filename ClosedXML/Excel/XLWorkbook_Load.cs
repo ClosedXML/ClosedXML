@@ -176,6 +176,7 @@ namespace ClosedXML.Excel
                     ws.Visibility = dSheet.State.Value.ToClosedXml();
 
                 var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
+                PageSetupProperties pageSetupProperties = null;
 
                 using (var reader = OpenXmlReader.Create(wsPart))
                 {
@@ -233,11 +234,11 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(PageMargins))
                             LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(PageSetup))
-                            LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws);
+                            LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
                         else if (reader.ElementType == typeof(HeaderFooter))
                             LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(SheetProperties))
-                            LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws);
+                            LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
                         else if (reader.ElementType == typeof(RowBreaks))
                             LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ColumnBreaks))
@@ -1598,28 +1599,34 @@ namespace ClosedXML.Excel
                 ws.PageSetup.RowBreaks.Add(Int32.Parse(rowBreak.Id.InnerText));
         }
 
-        private void LoadSheetProperties(SheetProperties sheetProperty, XLWorksheet ws)
+        private void LoadSheetProperties(SheetProperties sheetProperty, XLWorksheet ws, out PageSetupProperties pageSetupProperties)
         {
+            pageSetupProperties = null;
             if (sheetProperty == null) return;
 
             if (sheetProperty.TabColor != null)
                 ws.TabColor = GetColor(sheetProperty.TabColor);
 
-            if (sheetProperty.OutlineProperties == null) return;
-
-            if (sheetProperty.OutlineProperties.SummaryBelow != null)
+            if (sheetProperty.OutlineProperties != null)
             {
-                ws.Outline.SummaryVLocation = sheetProperty.OutlineProperties.SummaryBelow
-                                                  ? XLOutlineSummaryVLocation.Bottom
-                                                  : XLOutlineSummaryVLocation.Top;
+
+                if (sheetProperty.OutlineProperties.SummaryBelow != null)
+                {
+                    ws.Outline.SummaryVLocation = sheetProperty.OutlineProperties.SummaryBelow
+                                                      ? XLOutlineSummaryVLocation.Bottom
+                                                      : XLOutlineSummaryVLocation.Top;
+                }
+
+                if (sheetProperty.OutlineProperties.SummaryRight != null)
+                {
+                    ws.Outline.SummaryHLocation = sheetProperty.OutlineProperties.SummaryRight
+                                                      ? XLOutlineSummaryHLocation.Right
+                                                      : XLOutlineSummaryHLocation.Left;
+                }
             }
 
-            if (sheetProperty.OutlineProperties.SummaryRight != null)
-            {
-                ws.Outline.SummaryHLocation = sheetProperty.OutlineProperties.SummaryRight
-                                                  ? XLOutlineSummaryHLocation.Right
-                                                  : XLOutlineSummaryHLocation.Left;
-            }
+            if (sheetProperty.PageSetupProperties != null)
+                pageSetupProperties = sheetProperty.PageSetupProperties;
         }
 
         private static void LoadHeaderFooter(HeaderFooter headerFooter, XLWorksheet ws)
@@ -1663,7 +1670,7 @@ namespace ClosedXML.Excel
             ((XLHeaderFooter)ws.PageSetup.Footer).SetAsInitial();
         }
 
-        private static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws)
+        private static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws, PageSetupProperties pageSetupProperties)
         {
             if (pageSetup == null) return;
 
@@ -1671,11 +1678,16 @@ namespace ClosedXML.Excel
                 ws.PageSetup.PaperSize = (XLPaperSize)Int32.Parse(pageSetup.PaperSize.InnerText);
             if (pageSetup.Scale != null)
                 ws.PageSetup.Scale = Int32.Parse(pageSetup.Scale.InnerText);
-            else
+            if (pageSetupProperties != null && pageSetupProperties.FitToPage != null && pageSetupProperties.FitToPage.Value)
             {
-                if (pageSetup.FitToWidth != null)
+                if (pageSetup.FitToWidth == null)
+                    ws.PageSetup.PagesWide = 1;
+                else
                     ws.PageSetup.PagesWide = Int32.Parse(pageSetup.FitToWidth.InnerText);
-                if (pageSetup.FitToHeight != null)
+
+                if (pageSetup.FitToHeight == null)
+                    ws.PageSetup.PagesTall = 1;
+                else
                     ws.PageSetup.PagesTall = Int32.Parse(pageSetup.FitToHeight.InnerText);
             }
             if (pageSetup.PageOrder != null)

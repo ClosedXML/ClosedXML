@@ -41,6 +41,22 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void CanLoadAndSaveFileWithMismatchingSheetIdAndRelId()
+        {
+            // This file's workbook.xml contains:
+            // <x:sheet name="Data" sheetId="13" r:id="rId1" />
+            // and the mismatch between the sheetId and r:id can create problems.
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\FileWithMismatchSheetIdAndRelId.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                using (var ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms, true);
+                }
+            }
+        }
+
         /// <summary>
         /// For non-English locales, the default style ("Normal" in English) can be
         /// another piece of text (e.g. Обычный in Russian).

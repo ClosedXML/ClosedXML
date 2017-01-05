@@ -121,7 +121,7 @@ namespace ClosedXML.Excel
         internal Boolean ColumnWidthChanged { get; set; }
 
         public Int32 SheetId { get; set; }
-        public String RelId { get; set; }
+        internal String RelId { get; set; }
         public XLDataValidations DataValidations { get; private set; }
         public IXLCharts Charts { get; private set; }
         public XLSheetProtection Protection { get; private set; }

@@ -222,7 +222,14 @@ namespace ClosedXML.Excel
 
             worksheets.Deleted.ToList().ForEach(ws => DeleteSheetAndDependencies(workbookPart, ws));
 
-            context.RelIdGenerator.AddValues(workbookPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Workbook);
+            // Ensure all RelId's have been added to the context
+            context.RelIdGenerator.AddValues(workbookPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
+            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !XLHelper.IsNullOrWhiteSpace(ws.RelId)).Select(ws => ws.RelId), RelType.Workbook);
+            context.RelIdGenerator.AddValues(WorksheetsInternal
+                .Cast<XLWorksheet>()
+                .SelectMany(ws => ws.Tables.Cast<XLTable>())
+                .Where(t => !XLHelper.IsNullOrWhiteSpace(t.RelId))
+                .Select(t => t.RelId), RelType.Workbook);
 
             var extendedFilePropertiesPart = document.ExtendedFilePropertiesPart ??
                                              document.AddNewPart<ExtendedFilePropertiesPart>(
@@ -259,13 +266,10 @@ namespace ClosedXML.Excel
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(wsRelId);
 
 
-                context.RelIdGenerator.AddValues(worksheetPart.HyperlinkRelationships.Select(hr => hr.Id).ToList(),
-                    RelType.Workbook);
-                context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId).ToList(),
-                    RelType.Workbook);
+                context.RelIdGenerator.AddValues(worksheetPart.HyperlinkRelationships.Select(hr => hr.Id), RelType.Workbook);
+                context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
                 if (worksheetPart.DrawingsPart != null)
-                    context.RelIdGenerator.AddValues(
-                        worksheetPart.DrawingsPart.Parts.Select(p => p.RelationshipId).ToList(), RelType.Workbook);
+                    context.RelIdGenerator.AddValues(worksheetPart.DrawingsPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
 
                 // delete comment related parts (todo: review)
                 DeleteComments(worksheetPart, worksheet, context);
@@ -581,7 +585,7 @@ namespace ClosedXML.Excel
             foreach (var xlSheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
                 string rId;
-                if (xlSheet.SheetId == 0)
+                if (xlSheet.SheetId == 0 && XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
                 {
                     rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
@@ -593,8 +597,13 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
+                    if (XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
+                    {
                     rId = String.Format("rId{0}", xlSheet.SheetId);
-                    context.RelIdGenerator.AddValues(new List<string> { rId }, RelType.Workbook);
+                        context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
+                }
+                    else
+                        rId = xlSheet.RelId;
                 }
 
                 if (!workbook.Sheets.Cast<Sheet>().Any(s => s.Id == rId))
@@ -1818,7 +1827,7 @@ namespace ClosedXML.Excel
             PivotCaches pivotCaches;
             uint cacheId = 0;
             if (workbookPart.Workbook.PivotCaches == null)
-                pivotCaches = workbookPart.Workbook.AppendChild(new PivotCaches());
+                pivotCaches = workbookPart.Workbook.InsertAfter(new PivotCaches(), workbookPart.Workbook.CalculationProperties);
             else
             {
                 pivotCaches = workbookPart.Workbook.PivotCaches;
@@ -1899,12 +1908,10 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    foreach (var cellValue in source.Cells().Where(cell =>
-                        cell.Address.ColumnNumber == columnNumber &&
-                        cell.Address.RowNumber >
-                        source.FirstRow().RowNumber()).Select(
-                            cell => cell.Value.ToString())
-                        .Where(cellValue => !xlpf.SharedStrings.Contains(cellValue)))
+                    foreach (var cellValue in source.Cells()
+                        .Where(cell => cell.Address.ColumnNumber == columnNumber && cell.Address.RowNumber > source.FirstRow().RowNumber())
+                        .Select(cell => cell.Value.ToString())
+                        .Where(cellValue => !xlpf.SharedStrings.Select(ss => ss.ToLower()).Contains(cellValue.ToLower())))
                     {
                         xlpf.SharedStrings.Add(cellValue);
                     }
@@ -4365,15 +4372,11 @@ namespace ClosedXML.Excel
             {
                 pageSetup.Scale = null;
 
-                if (xlWorksheet.PageSetup.PagesWide > 0)
+                if (xlWorksheet.PageSetup.PagesWide >= 0 && xlWorksheet.PageSetup.PagesWide != 1)
                     pageSetup.FitToWidth = (UInt32)xlWorksheet.PageSetup.PagesWide;
-                else
-                    pageSetup.FitToWidth = 0;
 
-                if (xlWorksheet.PageSetup.PagesTall > 0)
+                if (xlWorksheet.PageSetup.PagesTall >= 0 && xlWorksheet.PageSetup.PagesTall != 1)
                     pageSetup.FitToHeight = (UInt32)xlWorksheet.PageSetup.PagesTall;
-                else
-                    pageSetup.FitToHeight = 0;
             }
 
             #endregion

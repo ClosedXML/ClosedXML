@@ -252,6 +252,7 @@
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
     <EmbeddedResource Include="Resource\Misc\EmptyTable.xlsx" />
     <EmbeddedResource Include="Resource\Misc\FileWithDefaultStyleNameNotInEnglish.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\FileWithMismatchSheetIdAndRelId.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
