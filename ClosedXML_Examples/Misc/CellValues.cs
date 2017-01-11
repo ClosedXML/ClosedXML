@@ -153,8 +153,8 @@ namespace ClosedXML_Examples.Misc
             TimeSpan timeSpan1 = (TimeSpan)cellTimeSpan.Value;
             TimeSpan timeSpan2 = cellTimeSpan.GetTimeSpan();
             TimeSpan timeSpan3 = cellTimeSpan.GetValue<TimeSpan>();
-            String timeSpanString = cellTimeSpan.GetString();
-            String timeSpanFormattedString = cellTimeSpan.GetFormattedString();
+            String timeSpanString = "'" + cellTimeSpan.GetString();
+            String timeSpanFormattedString = "'" + cellTimeSpan.GetFormattedString();
 
             // Set the values back to cells
             ws.Cell(7, 3).Value = timeSpan1;
