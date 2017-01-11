@@ -1585,6 +1585,10 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Loads the conditional formatting.
+        /// https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.conditionalformattingrule%28v=office.15%29.aspx?f=255&MSPPError=-2147217396
+        /// </summary>
         private void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws, Dictionary<Int32, DifferentialFormat> differentialFormats)
         {
             if (conditionalFormatting == null) return;
@@ -1601,18 +1605,26 @@ namespace ClosedXML.Excel
                         LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
                         LoadNumberFormat(differentialFormats[(Int32)fr.FormatId.Value].NumberingFormat, conditionalFormat.Style.NumberFormat);
                     }
-                    if (fr.Operator != null)
+
+                    // The conditional formatting type is compulsory. If it doesn't exist, skip the entire rule.
+                    if (fr.Type == null) continue;
+                    conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
+
+                    if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
                         conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
-                    if (fr.Type != null)
-                        conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
-                    if (fr.Text != null)
+
+                    if (fr.Text != null && !XLHelper.IsNullOrWhiteSpace(fr.Text))
                         conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
-                    if (fr.Percent != null)
-                        conditionalFormat.Percent = fr.Percent.Value;
-                    if (fr.Bottom != null)
-                        conditionalFormat.Bottom = fr.Bottom.Value;
-                    if (fr.Rank != null)
-                        conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
+
+                    if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
+                    {
+                        if (fr.Percent != null)
+                            conditionalFormat.Percent = fr.Percent.Value;
+                        if (fr.Bottom != null)
+                            conditionalFormat.Bottom = fr.Bottom.Value;
+                        if (fr.Rank != null)
+                            conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
+                    }
 
                     if (fr.Elements<ColorScale>().Any())
                     {
