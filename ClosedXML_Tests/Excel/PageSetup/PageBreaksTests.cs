@@ -30,7 +30,7 @@ namespace ClosedXML_Tests.Excel
         }        
 
         [Test]
-        public void RowBreaksShiftWhenInsertedColumn1()
+        public void ColumnBreaksShiftWhenInsertedColumnBefore()
         {
             var wb = new XLWorkbook();
             IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
@@ -41,7 +41,7 @@ namespace ClosedXML_Tests.Excel
         }        
 
         [Test]
-        public void RowBreaksNotShiftWhenInsertedColumn()
+        public void ColumnBreaksNotShiftWhenInsertedColumnAfter()
         {
             var wb = new XLWorkbook();
             IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
