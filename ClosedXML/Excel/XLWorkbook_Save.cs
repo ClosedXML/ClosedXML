@@ -43,6 +43,7 @@ using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
 using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
+using System.Threading;
 
 namespace ClosedXML.Excel
 {
@@ -82,8 +83,20 @@ namespace ClosedXML.Excel
 
         private bool Validate(SpreadsheetDocument package)
         {
-            var validator = new OpenXmlValidator();
-            var errors = validator.Validate(package);
+            var backupCulture = Thread.CurrentThread.CurrentCulture;
+
+            IEnumerable<ValidationErrorInfo> errors;
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                var validator = new OpenXmlValidator();
+                errors = validator.Validate(package);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = backupCulture;
+            }
+
             if (errors.Any())
             {
                 var message = string.Join("\r\n", errors.Select(e => string.Format("{0} in {1}", e.Description, e.Path.XPath)).ToArray());
