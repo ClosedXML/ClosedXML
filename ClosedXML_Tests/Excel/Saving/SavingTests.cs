@@ -1,6 +1,8 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 
 namespace ClosedXML_Tests.Excel.Saving
 {
@@ -24,6 +26,25 @@ namespace ClosedXML_Tests.Excel.Saving
 
                 memoryStream.Close();
                 memoryStream.Dispose();
+            }
+        }
+
+        [Test]
+        public void CanSaveAndValidateFileInAnotherCulture()
+        {
+            string[] cultures = new string[] { "it", "de-AT" };
+
+            foreach (var culture in cultures)
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+
+                using (var wb = new XLWorkbook())
+                {
+                    var memoryStream = new MemoryStream();
+                    var ws = wb.Worksheets.Add("Sheet1");
+
+                    wb.SaveAs(memoryStream, true);
+                }
             }
         }
     }
