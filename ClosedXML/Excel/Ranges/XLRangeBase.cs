@@ -1374,7 +1374,8 @@ namespace ClosedXML.Excel
             Int32 firstColumnReturn = RangeAddress.FirstAddress.ColumnNumber;
             Int32 lastColumnReturn = RangeAddress.LastAddress.ColumnNumber;
 
-            Worksheet.BreakConditionalFormatsIntoCells(cellsToDelete.Except(cellsToInsert.Keys).ToList());
+		    using(var shiftRange = Worksheet.Range(firstRow, firstColumn, Worksheet.Internals.CellsCollection.MaxRowUsed, lastColumn))
+		        Worksheet.ShiftConditionalFormatsRows(shiftRange, numberOfRows);
             using (var asRange = AsRange())
                 Worksheet.NotifyRangeShiftedRows(asRange, numberOfRows);
 

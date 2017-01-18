@@ -107,5 +107,20 @@ namespace ClosedXML_Tests
             DateTime end = DateTime.Now;
             Assert.IsTrue((end - start).TotalMilliseconds < 500);
         }
+
+        [Test]
+        public void ShiftConditionalFormats()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            ws.Cell(5, 1).AddConditionalFormat().WhenIsTrue("=B5=0").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Cell(5, 2).Value = 0;
+            ws.Row(4).InsertRowsAbove(1);
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            var format = ws.ConditionalFormats.First();
+            Assert.AreEqual(6, format.Range.RangeAddress.FirstAddress.RowNumber);
+            Assert.IsTrue(format.Values.Values.First().IsFormula);
+            Assert.AreEqual("B6=0", format.Values.Values.First().Value);
+        }
     }
 }

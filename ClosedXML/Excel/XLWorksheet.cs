@@ -1294,20 +1294,18 @@ namespace ClosedXML.Excel
         }
 
 
-        internal void BreakConditionalFormatsIntoCells(List<IXLAddress> addresses)
+        internal void ShiftConditionalFormatsRows(IXLRangeBase range, int rowsShifted)
         {
             var newConditionalFormats = new XLConditionalFormats();
             SuspendEvents();
             foreach (var conditionalFormat in ConditionalFormats)
             {
-                foreach (XLCell cell in conditionalFormat.Range.Cells(c=>!addresses.Contains(c.Address)))
+                foreach (XLCell cell in conditionalFormat.Range.Cells(c=>range.Contains(c)))
                 {
-                    var row = cell.Address.RowNumber;
-                    var column = cell.Address.ColumnLetter;
-                    var newConditionalFormat = new XLConditionalFormat(cell.AsRange(), true);
+                    var newConditionalFormat = new XLConditionalFormat(cell.CellBelow(rowsShifted).AsRange(), true);
                     newConditionalFormat.CopyFrom(conditionalFormat);
                     newConditionalFormat.Values.Values.Where(f => f.IsFormula)
-                        .ForEach(f => f._value = XLHelper.ReplaceRelative(f.Value, row, column));
+                        .ForEach(f => f._value = XLCell.ShiftFormulaRows(f.Value, this, (XLRange)range.AsRange(), rowsShifted));
                     newConditionalFormats.Add(newConditionalFormat);
                 }
                 conditionalFormat.Range.Dispose();
