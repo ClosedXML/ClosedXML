@@ -109,7 +109,7 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void ShiftConditionalFormats()
+        public void ShiftConditionalFormatsWhenInsertedRows()
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
@@ -121,6 +121,21 @@ namespace ClosedXML_Tests
             Assert.AreEqual(6, format.Range.RangeAddress.FirstAddress.RowNumber);
             Assert.IsTrue(format.Values.Values.First().IsFormula);
             Assert.AreEqual("B6=0", format.Values.Values.First().Value);
+        }
+
+        [Test]
+        public void ShiftConditionalFormatsWhenInsertedColumns()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            ws.Cell(1, 5).AddConditionalFormat().WhenIsTrue("=E2=0").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Cell(2, 5).Value = 0;
+            ws.Column(4).InsertColumnsBefore(1);
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            var format = ws.ConditionalFormats.First();
+            Assert.AreEqual(6, format.Range.RangeAddress.FirstAddress.ColumnNumber);
+            Assert.IsTrue(format.Values.Values.First().IsFormula);
+            Assert.AreEqual("F2=0", format.Values.Values.First().Value);
         }
     }
 }
