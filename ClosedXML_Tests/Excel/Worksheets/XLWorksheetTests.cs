@@ -114,13 +114,18 @@ namespace ClosedXML_Tests
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell(5, 1).AddConditionalFormat().WhenIsTrue("=B5=0").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Cell(1, 1).AddConditionalFormat().WhenIsTrue("=$B$5=0").Fill.SetBackgroundColor(XLColor.Blue);
             ws.Cell(5, 2).Value = 0;
             ws.Row(4).InsertRowsAbove(1);
-            Assert.AreEqual(1, ws.ConditionalFormats.Count());
-            var format = ws.ConditionalFormats.First();
+            Assert.AreEqual(2, ws.ConditionalFormats.Count());
+            var format = ws.ConditionalFormats.First(x=>x.Range.RangeAddress.FirstAddress.RowNumber==6);
             Assert.AreEqual(6, format.Range.RangeAddress.FirstAddress.RowNumber);
             Assert.IsTrue(format.Values.Values.First().IsFormula);
             Assert.AreEqual("B6=0", format.Values.Values.First().Value);
+            format = ws.ConditionalFormats.First(x=>x.Range.RangeAddress.FirstAddress.RowNumber==1);
+            Assert.AreEqual(1, format.Range.RangeAddress.FirstAddress.RowNumber);
+            Assert.IsTrue(format.Values.Values.First().IsFormula);
+            Assert.AreEqual("$B$5=0", format.Values.Values.First().Value);
         }
 
         [Test]
@@ -129,10 +134,11 @@ namespace ClosedXML_Tests
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell(1, 5).AddConditionalFormat().WhenIsTrue("=E2=0").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Cell(1, 1).AddConditionalFormat().WhenIsTrue("=B5=0").Fill.SetBackgroundColor(XLColor.Blue);
             ws.Cell(2, 5).Value = 0;
             ws.Column(4).InsertColumnsBefore(1);
-            Assert.AreEqual(1, ws.ConditionalFormats.Count());
-            var format = ws.ConditionalFormats.First();
+            Assert.AreEqual(2, ws.ConditionalFormats.Count());
+            var format = ws.ConditionalFormats.First(x => x.Range.RangeAddress.FirstAddress.ColumnNumber == 6);
             Assert.AreEqual(6, format.Range.RangeAddress.FirstAddress.ColumnNumber);
             Assert.IsTrue(format.Values.Values.First().IsFormula);
             Assert.AreEqual("F2=0", format.Values.Values.First().Value);

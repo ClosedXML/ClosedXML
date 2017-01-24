@@ -1319,43 +1319,41 @@ namespace ClosedXML.Excel
 
         internal void ShiftConditionalFormatRows(XLRange range, int rowsShifted)
         {
-            var newConditionalFormats = new XLConditionalFormats();
             SuspendEvents();
-            foreach (var conditionalFormat in ConditionalFormats)
+            var conditionalFormats = ConditionalFormats.Where(c => range.Contains(c.Range)).ToList();
+            foreach (var cf in conditionalFormats)
             {
-                foreach (XLCell cell in conditionalFormat.Range.Cells(c=>range.Contains(c)))
+                ConditionalFormats.Remove(c=>cf==c);
+                foreach (XLCell cell in cf.Range.Cells())
                 {
                     var newConditionalFormat = new XLConditionalFormat(cell.CellBelow(rowsShifted).AsRange(), true);
-                    newConditionalFormat.CopyFrom(conditionalFormat);
+                    newConditionalFormat.CopyFrom(cf);
                     newConditionalFormat.Values.Values.Where(f => f.IsFormula)
                         .ForEach(f => f._value = XLCell.ShiftFormulaRows(f.Value, this, range, rowsShifted));
-                    newConditionalFormats.Add(newConditionalFormat);
+                    ConditionalFormats.Add(newConditionalFormat);
                 }
-                conditionalFormat.Range.Dispose();
             }
             ResumeEvents();
-            ConditionalFormats = newConditionalFormats;
         }
 
 
         internal void ShiftConditionalFormatColumns(XLRange range, int columnsShifted)
         {
-            var newConditionalFormats = new XLConditionalFormats();
             SuspendEvents();
-            foreach (var conditionalFormat in ConditionalFormats)
+            var conditionalFormats = ConditionalFormats.Where(c => range.Contains(c.Range)).ToList();
+            foreach (var cf in conditionalFormats)
             {
-                foreach (XLCell cell in conditionalFormat.Range.Cells(c=>range.Contains(c)))
+                ConditionalFormats.Remove(c => cf == c);
+                foreach (XLCell cell in cf.Range.Cells())
                 {
                     var newConditionalFormat = new XLConditionalFormat(cell.CellRight(columnsShifted).AsRange(), true);
-                    newConditionalFormat.CopyFrom(conditionalFormat);
+                    newConditionalFormat.CopyFrom(cf);
                     newConditionalFormat.Values.Values.Where(f => f.IsFormula)
                         .ForEach(f => f._value = XLCell.ShiftFormulaColumns(f.Value, this, range, columnsShifted));
-                    newConditionalFormats.Add(newConditionalFormat);
+                    ConditionalFormats.Add(newConditionalFormat);
                 }
-                conditionalFormat.Range.Dispose();
             }
             ResumeEvents();
-            ConditionalFormats = newConditionalFormats;
         }
 
 
