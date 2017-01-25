@@ -4689,8 +4689,7 @@ namespace ClosedXML.Excel
 
         private static double GetColumnWidth(double columnWidth)
         {
-            var retVal = columnWidth + ColumnWidthOffset;
-            return retVal > 0 ? retVal : 0;
+            return Math.Min(255.0, Math.Max(0.0, columnWidth + ColumnWidthOffset));
         }
 
         private static void UpdateColumn(Column column, Columns columns, Dictionary<uint, Column> sheetColumnsByMin)
