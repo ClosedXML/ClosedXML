@@ -21,6 +21,7 @@ namespace ClosedXML.Excel
     using Ap;
     using Op;
     using System.Drawing;
+    using System.Text.RegularExpressions;
     using System.Xml.Linq;
 
     #endregion
@@ -852,7 +853,8 @@ namespace ClosedXML.Excel
                 if (definedName.Hidden != null) visible = !BooleanValue.ToBoolean(definedName.Hidden);
                 if (name == "_xlnm.Print_Area")
                 {
-                    foreach (string area in definedName.Text.Split(','))
+                    String[] fixedNames = validateDefinedNames(definedName.Text.Split(','));
+                    foreach (string area in fixedNames)
                     {
                         if (area.Contains("["))
                         {
@@ -899,9 +901,34 @@ namespace ClosedXML.Excel
             }
         }
 
+        private string[] validateDefinedNames(String[] definedNames) 
+        {
+            List<String> fixedNames = new List<String>();
+            String currentName = "";
+            String regex = @"\A'.*'!.*\d\z";
+            foreach (string testName in definedNames)
+            {
+                if(currentName.Equals("")) 
+                {
+                    currentName = testName;
+                } 
+                else 
+                {
+                    currentName += $",{testName}";
+                }
+                Match matchedValidPattern = Regex.Match(currentName, regex);
+                if(matchedValidPattern.Success) 
+                {
+                    fixedNames.Add(currentName);
+                    currentName = "";
+                }
+            }
+            return fixedNames.ToArray();
+        }
+
         private void LoadPrintTitles(DefinedName definedName)
         {
-            var areas = definedName.Text.Split(',');
+            var areas = validateDefinedNames(definedName.Text.Split(','));
             if (areas.Length > 0)
             {
                 foreach (var item in areas)
