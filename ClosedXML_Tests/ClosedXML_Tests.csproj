@@ -260,6 +260,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
     <EmbeddedResource Include="Resource\Examples\PivotTables\PivotTables.xlsx" />
     <None Include="packages.config" />
+    <None Include="Resource\Misc\LoadSheetsWithCommas.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
