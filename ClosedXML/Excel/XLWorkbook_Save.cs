@@ -2097,10 +2097,9 @@ namespace ClosedXML.Excel
                     pf.Axis = PivotTableAxisValues.AxisPage;
                     pageFields.AppendChild(new PageField { Hierarchy = -1, Field = pt.Fields.IndexOf(xlpf) });
                 }
-                else if (pt.Values.Any(p => p.SourceName == xlpf.SourceName))
-                {
+
+                if (pt.Values.Any(p => p.SourceName == xlpf.SourceName))
                     pf.DataField = true;
-                }
 
                 var fieldItems = new Items();
 
