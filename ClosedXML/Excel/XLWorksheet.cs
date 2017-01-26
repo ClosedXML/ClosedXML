@@ -1197,9 +1197,17 @@ namespace ClosedXML.Excel
                 for (Int32 ro = firstRow; ro <= lastRow; ro++)
                 {
                     var cellModel = model.Cell(ro - modelFirstRow + 1);
-                    foreach (var cf in ConditionalFormats.Where(cf => cf.Range.Intersects(cellModel.AsRange())).ToList())
+                    var conditionalFormats = ConditionalFormats.Where(cf =>
                     {
-                        Range(ro, firstColumn, ro, lastColumn).AddConditionalFormat(cf);
+                        using (var cellRng = cellModel.AsRange())
+                            return cf.Range.Intersects(cellRng);
+                    });
+                    foreach (var cf in conditionalFormats.ToList())
+                    {
+                        using (var rng = Range(ro, firstColumn, ro, lastColumn))
+                        {
+                            rng.AddConditionalFormat(cf);
+                        }
                     }
                 }
             }
@@ -1282,9 +1290,15 @@ namespace ClosedXML.Excel
                 for (Int32 co = firstColumn; co <= lastColumn; co++)
                 {
                     var cellModel = model.Cell(co - modelFirstColumn + 1);
-                    foreach (var cf in ConditionalFormats.Where(cf => cf.Range.Intersects(cellModel.AsRange())).ToList())
+                    var conditionalFormats = ConditionalFormats.Where(cf =>
                     {
-                        Range(firstRow, co, lastRow, co).AddConditionalFormat(cf);
+                        using (var cellRng = cellModel.AsRange())
+                            return cf.Range.Intersects(cellRng);
+                    });
+                    foreach (var cf in conditionalFormats.ToList())
+                    {
+                        using (var rng = Range(firstRow, co, lastRow, co))
+                            rng.AddConditionalFormat(cf);
                     }
                 }
             }
