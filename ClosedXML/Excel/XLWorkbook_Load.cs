@@ -989,7 +989,7 @@ namespace ClosedXML.Excel
                 } 
                 else 
                 {
-                    currentName += $",{testName}";
+                    currentName += String.Format(",{0}", testName);
                 }
                 Match matchedValidPattern = Regex.Match(currentName, regex);
                 if(matchedValidPattern.Success) 
