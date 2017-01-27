@@ -905,7 +905,7 @@ namespace ClosedXML.Excel
         {
             List<String> fixedNames = new List<String>();
             String currentName = "";
-            String regex = @"\A'.*'!.*\d\z";
+            String regex = @"\A'.*'!.*\z";
             foreach (string testName in definedNames)
             {
                 if(currentName.Equals("")) 
