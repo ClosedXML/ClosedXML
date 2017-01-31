@@ -380,6 +380,7 @@ namespace ClosedXML.Excel
             if (includeFormats)
             {
                 ClearMerged();
+                Worksheet.ConditionalFormats.Remove(x => x.Range.Intersects(this));
             }
 
             if (clearOptions == XLClearOptions.ContentsAndFormats)

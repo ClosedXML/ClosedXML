@@ -897,6 +897,7 @@ namespace ClosedXML.Excel
                 {
                     Hyperlink = null;
                     _richText = null;
+                    _dataType = XLCellValues.Text;
                     //_comment = null;
                     _cellValue = String.Empty;
                     FormulaA1 = String.Empty;
