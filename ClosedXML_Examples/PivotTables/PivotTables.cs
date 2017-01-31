@@ -102,8 +102,20 @@ namespace ClosedXML_Examples
                 pt.RowLabels.Add("Name");
                 pt.RowLabels.Add("Month");
 
-                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);//.NumberFormat.Format = "#0.00";
-                pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);//.NumberFormat.Format = "#0.00";
+                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+                pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
+
+
+                // Pivot table with collapsed fields
+                ptSheet = wb.Worksheets.Add("pvtCollapsedFields");
+                pt = ptSheet.PivotTables.AddNew("pvtCollapsedFields", ptSheet.Cell(1, 1), dataRange);
+
+                pt.RowLabels.Add("Name").SetCollapsed();
+                pt.RowLabels.Add("Month").SetCollapsed();
+
+                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+                pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
+
 
                 // Pivot table with a field both as a value and as a row/column/filter label
                 ptSheet = wb.Worksheets.Add("pvtFieldAsValueAndLabel");

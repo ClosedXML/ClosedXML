@@ -602,7 +602,7 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-            }
+
 
             #endregion
         }
