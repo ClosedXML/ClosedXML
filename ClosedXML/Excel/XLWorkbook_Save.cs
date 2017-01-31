@@ -3647,6 +3647,26 @@ namespace ClosedXML.Excel
                 sheetView.Append(selection);
             }
 
+            if (xlWorksheet.SheetView.ZoomScale == 100)
+                sheetView.ZoomScale = null;
+            else
+                sheetView.ZoomScale = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScale));
+
+            if (xlWorksheet.SheetView.ZoomScaleNormal == 100)
+                sheetView.ZoomScaleNormal = null;
+            else
+                sheetView.ZoomScaleNormal = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScaleNormal));
+
+            if (xlWorksheet.SheetView.ZoomScalePageLayoutView == 100)
+                sheetView.ZoomScalePageLayoutView = null;
+            else
+                sheetView.ZoomScalePageLayoutView = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScalePageLayoutView));
+
+            if (xlWorksheet.SheetView.ZoomScaleSheetLayoutView == 100)
+                sheetView.ZoomScaleSheetLayoutView = null;
+            else
+                sheetView.ZoomScaleSheetLayoutView = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScaleSheetLayoutView));
+
             #endregion
 
             var maxOutlineColumn = 0;
