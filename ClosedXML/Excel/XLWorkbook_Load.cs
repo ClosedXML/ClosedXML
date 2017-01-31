@@ -438,7 +438,20 @@ namespace ClosedXML.Excel
                             && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource != null)
                         {
                             // TODO: Implement other sources besides worksheetSource (e.g. Table source?)
-                            source = ws.Workbook.Range(pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource.Name.Value);
+                            // But for now assume names and references point directly to a range
+                            var wss = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource;
+                            string rangeAddress = string.Empty;
+                            if (wss.Name != null)
+                                rangeAddress = wss.Name.Value;
+                            else
+                            {
+                                var sourceSheet = wss.Sheet == null ? ws : this.Worksheet(wss.Sheet.Value);
+                                rangeAddress = sourceSheet.Range(wss.Reference.Value).RangeAddress.ToStringRelative(true);
+                            }
+
+                            source = this.Range(rangeAddress);
+                            if (source == null)
+                                continue;
                         }
 
                         if (target != null && source != null)
@@ -484,12 +497,28 @@ namespace ClosedXML.Excel
                             {
                                 foreach (var rf in pivotTableDefinition.RowFields.Cast<Field>())
                                 {
-                                    if (rf.Index.Value == -2)
-                                        pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
-                                    else if (rf.Index < pivotTableDefinition.PivotFields.Count)
+                                    if (rf.Index < pivotTableDefinition.PivotFields.Count)
                                     {
-                                        var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
-                                        if (pf != null && pf.Name != null) pt.RowLabels.Add(pf.Name.Value);
+                                        IXLPivotField pivotField = null;
+                                        if (rf.Index.Value == -2)
+                                            pivotField = pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                        else
+                                        {
+                                            var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
+                                            if (pf == null)
+                                                continue;
+
+                                            var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(rf.Index.Value) as CacheField;
+                                            if (pf.Name != null)
+                                                pivotField = pt.RowLabels.Add(pf.Name.Value);
+                                            else if (cacheField.Name != null)
+                                                pivotField = pt.RowLabels.Add(cacheField.Name.Value);
+                                            else
+                                                continue;
+
+                                            if (pivotField != null && pf.Items.OfType<Item>().All(i => i.HideDetails != null && !i.HideDetails.Value))
+                                                pivotField.SetCollapsed();
+                                        }
                                     }
                                 }
                             }
@@ -499,12 +528,25 @@ namespace ClosedXML.Excel
                             {
                                 foreach (var cf in pivotTableDefinition.ColumnFields.Cast<Field>())
                                 {
+                                    IXLPivotField pivotField = null;
                                     if (cf.Index.Value == -2)
-                                        pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                        pivotField = pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
                                     else if (cf.Index < pivotTableDefinition.PivotFields.Count)
                                     {
                                         var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
-                                        if (pf != null && pf.Name != null) pt.ColumnLabels.Add(pf.Name.Value);
+                                        if (pf == null)
+                                            continue;
+
+                                        var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(cf.Index.Value) as CacheField;
+                                        if (pf.Name != null)
+                                            pivotField = pt.ColumnLabels.Add(pf.Name.Value);
+                                        else if (cacheField.Name != null)
+                                            pivotField = pt.ColumnLabels.Add(cacheField.Name.Value);
+                                        else
+                                            continue;
+
+                                        if (pivotField != null && pf.Items.OfType<Item>().All(i => i.HideDetails != null && !i.HideDetails.Value))
+                                            pivotField.SetCollapsed();
                                     }
                                 }
                             }
@@ -514,41 +556,52 @@ namespace ClosedXML.Excel
                             {
                                 foreach (var df in pivotTableDefinition.DataFields.Cast<DataField>())
                                 {
+                                    IXLPivotValue pivotValue = null;
                                     if ((int)df.Field.Value == -2)
-                                        pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                        pivotValue = pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
                                     else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
                                     {
                                         var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;
-                                        if (pf != null && pf.Name != null)
+                                        if (pf == null)
+                                            continue;
+
+                                        var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt((int)df.Field.Value) as CacheField;
+
+                                        if (pf.Name != null)
+                                            pivotValue = pt.Values.Add(pf.Name.Value, df.Name.Value);
+                                        else if (cacheField.Name != null)
+                                            pivotValue = pt.Values.Add(cacheField.Name.Value, df.Name.Value);
+                                        else
+                                            continue;
+
+                                        if (df.NumberFormatId != null) pivotValue.NumberFormat.SetNumberFormatId((int)df.NumberFormatId.Value);
+                                        if (df.Subtotal != null) pivotValue = pivotValue.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
+                                        if (df.ShowDataAs != null)
                                         {
-                                            var pv = pt.Values.Add(pf.Name.Value, df.Name.Value);
-                                            if (df.NumberFormatId != null) pv.NumberFormat.SetNumberFormatId((int)df.NumberFormatId.Value);
-                                            if (df.Subtotal != null) pv = pv.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
-                                            if (df.ShowDataAs != null)
-                                            {
-                                                var calculation = pv.Calculation;
-                                                calculation = df.ShowDataAs.Value.ToClosedXml();
-                                                pv = pv.SetCalculation(calculation);
-                                            }
-                                            if (df.BaseField != null)
-                                            {
-                                                var col = pt.SourceRange.Column(df.BaseField.Value + 1);
-
-                                                var items = col.CellsUsed()
-                                                            .Select(c => c.Value)
-                                                            .Skip(1) // Skip header column
-                                                            .Distinct().ToList();
-
-                                                pv.BaseField = col.FirstCell().GetValue<string>();
-                                                if (df.BaseItem != null) pv.BaseItem = items[(int)df.BaseItem.Value].ToString();
-                                            }
+                                            var calculation = pivotValue.Calculation;
+                                            calculation = df.ShowDataAs.Value.ToClosedXml();
+                                            pivotValue = pivotValue.SetCalculation(calculation);
                                         }
+
+                                        if (df.BaseField != null)
+                                        {
+                                            var col = pt.SourceRange.Column(df.BaseField.Value + 1);
+
+                                            var items = col.CellsUsed()
+                                                        .Select(c => c.Value)
+                                                        .Skip(1) // Skip header column
+                                                        .Distinct().ToList();
+
+                                            pivotValue.BaseField = col.FirstCell().GetValue<string>();
+                                            if (df.BaseItem != null) pivotValue.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                       }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            }
             }
 
             #endregion
@@ -1070,8 +1123,8 @@ namespace ClosedXML.Excel
                         xlCell._dataType = XLCellValues.Number;
                     else
                         xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
+                    }
                 }
-            }
             else if (cell.CellValue != null)
             {
                 if (s == null)
