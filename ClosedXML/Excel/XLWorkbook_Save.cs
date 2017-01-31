@@ -2102,14 +2102,17 @@ namespace ClosedXML.Excel
 
             foreach (var xlpf in pt.Fields)
             {
+                IXLPivotField labelField = null;
                 var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
 
                 if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
+                    labelField = pt.RowLabels.Single(p => p.SourceName == xlpf.SourceName);
                     pf.Axis = PivotTableAxisValues.AxisRow;
                 }
                 else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
+                    labelField = pt.ColumnLabels.Single(p => p.SourceName == xlpf.SourceName);
                     pf.Axis = PivotTableAxisValues.AxisColumn;
                 }
                 else if (pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
@@ -2129,7 +2132,10 @@ namespace ClosedXML.Excel
                 {
                     for (uint i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
-                        fieldItems.AppendChild(new Item { Index = i });
+                        var item = new Item { Index = i };
+                        if (labelField != null && labelField.Collapsed)
+                            item.HideDetails = BooleanValue.FromBoolean(false);
+                        fieldItems.AppendChild(item);
                     }
                 }
 
