@@ -516,8 +516,12 @@ namespace ClosedXML.Excel
                                             else
                                                 continue;
 
-                                            if (pivotField != null && pf.Items.OfType<Item>().All(i => i.HideDetails != null && !i.HideDetails.Value))
-                                                pivotField.SetCollapsed();
+                                            if (pivotField != null)
+                                            {
+                                                var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
+                                                if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
+                                                    pivotField.SetCollapsed();
+                                            }
                                         }
                                     }
                                 }
@@ -545,8 +549,12 @@ namespace ClosedXML.Excel
                                         else
                                             continue;
 
-                                        if (pivotField != null && pf.Items.OfType<Item>().All(i => i.HideDetails != null && !i.HideDetails.Value))
-                                            pivotField.SetCollapsed();
+                                        if (pivotField != null)
+                                        {
+                                            var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
+                                            if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
+                                                pivotField.SetCollapsed();
+                                        }
                                     }
                                 }
                             }
