@@ -427,7 +427,8 @@ namespace ClosedXML.Excel
                         IXLRange source = null;
                         if (pivotTableCacheDefinitionPart.PivotCacheDefinition != null
                             && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource != null
-                            && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource != null)
+                            && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource != null
+                            && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource.Name != null)
                         {
                             // TODO: Implement other sources besides worksheetSource (e.g. Table source?)
                             source = ws.Workbook.Range(pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource.Name.Value);
