@@ -139,7 +139,7 @@ namespace ClosedXML.Excel
                 if (HasRichText)
                     return _richText.ToString();
 
-                return XLHelper.IsNullOrWhiteSpace(_cellValue) ? FormulaA1 : _cellValue;
+                return string.Empty == _cellValue ? FormulaA1 : _cellValue;
             }
         }
 
@@ -329,7 +329,7 @@ namespace ClosedXML.Excel
                 {
                     cValue = GetString();
                 }
-                catch 
+                catch
                 {
                     cValue = String.Empty;
                 }
@@ -1671,7 +1671,7 @@ namespace ClosedXML.Excel
                             val = dtTest.ToOADate().ToInvariantString();
                         }
                     }
-                    
+
                 }
                 else if (Boolean.TryParse(val, out bTest))
                 {
