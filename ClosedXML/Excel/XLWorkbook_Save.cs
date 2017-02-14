@@ -172,8 +172,8 @@ namespace ClosedXML.Excel
                 }
 
             }
-            // Get the CalculationChainPart 
-            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the 
+            // Get the CalculationChainPart
+            //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the
             //workbook whose value is calculated from any formula
 
             CalculationChainPart calChainPart;
@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
             var workbookPart = document.WorkbookPart ?? document.AddWorkbookPart();
 
             var worksheets = WorksheetsInternal;
-            
+
 
             var partsToRemove = workbookPart.Parts.Where(s => worksheets.Deleted.Contains(s.RelationshipId)).ToList();
 
@@ -555,7 +555,7 @@ namespace ClosedXML.Excel
             {
                 workbook.WorkbookProtection = null;
             }
-            
+
 
             if (workbook.BookViews == null)
                 workbook.BookViews = new BookViews();
@@ -1957,7 +1957,7 @@ namespace ClosedXML.Excel
                 ShowDataTips = GetBooleanValue(pt.ShowContextualTooltips, true),
                 ShowMemberPropertyTips = GetBooleanValue(pt.ShowPropertiesInTooltips, true),
                 ShowHeaders = GetBooleanValue(pt.DisplayCaptionsAndDropdowns, true),
-                GridDropZones = GetBooleanValue(pt.ClassicPivotTableLayout, true),
+                GridDropZones = GetBooleanValue(pt.ClassicPivotTableLayout, false),
                 ShowEmptyRow = GetBooleanValue(pt.ShowEmptyItemsOnRows, true),
                 ShowEmptyColumn = GetBooleanValue(pt.ShowEmptyItemsOnColumns, true),
                 ShowItems = GetBooleanValue(pt.DisplayItemLabels, true),
@@ -4183,7 +4183,7 @@ namespace ClosedXML.Excel
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
-                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);                    
+                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
                 }
             }
 
