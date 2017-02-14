@@ -77,6 +77,7 @@
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
     <Compile Include="Excel\PageSetup\HeaderFooterTests.cs" />
+    <Compile Include="Excel\PageSetup\PageBreaksTests.cs" />
     <Compile Include="Excel\Ranges\UsedAndUnusedCellsTests.cs" />
     <Compile Include="Excel\Saving\SavingTests.cs" />
     <Compile Include="XLHelperTests.cs" />
@@ -251,6 +252,9 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
     <EmbeddedResource Include="Resource\Misc\EmptyTable.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\FileWithDefaultStyleNameNotInEnglish.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\FileWithMismatchSheetIdAndRelId.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadPivotTables.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />

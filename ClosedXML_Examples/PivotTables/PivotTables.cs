@@ -38,9 +38,11 @@ namespace ClosedXML_Examples
                 new Pastry("Danish", 394, -20.24, "Apr"),
                 new Pastry("Danish", 190, 60, "May"),
                 new Pastry("Danish", 221, 24.76, "June"),
+
+                // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
                 new Pastry("Scone", 135, 0, "Apr"),
-                new Pastry("Scone", 122, 5.19, "May"),
-                new Pastry("Scone", 243, 44.2, "June")
+                new Pastry("SconE", 122, 5.19, "May"),
+                new Pastry("SCONE", 243, 44.2, "June")
             };
 
             using (var wb = new XLWorkbook())

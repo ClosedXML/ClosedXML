@@ -107,7 +107,7 @@ namespace ClosedXML.Excel
         }
 
 
-        public String RelId { get; set; }
+        internal String RelId { get; set; }
 
         public IXLTableRange DataRange
         {

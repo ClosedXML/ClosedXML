@@ -176,6 +176,7 @@ namespace ClosedXML.Excel
                     ws.Visibility = dSheet.State.Value.ToClosedXml();
 
                 var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
+                PageSetupProperties pageSetupProperties = null;
 
                 using (var reader = OpenXmlReader.Create(wsPart))
                 {
@@ -233,11 +234,11 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(PageMargins))
                             LoadPageMargins((PageMargins)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(PageSetup))
-                            LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws);
+                            LoadPageSetup((PageSetup)reader.LoadCurrentElement(), ws, pageSetupProperties);
                         else if (reader.ElementType == typeof(HeaderFooter))
                             LoadHeaderFooter((HeaderFooter)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(SheetProperties))
-                            LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws);
+                            LoadSheetProperties((SheetProperties)reader.LoadCurrentElement(), ws, out pageSetupProperties);
                         else if (reader.ElementType == typeof(RowBreaks))
                             LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ColumnBreaks))
@@ -400,6 +401,142 @@ namespace ClosedXML.Excel
                 }
             }
             LoadDefinedNames(workbook);
+
+            #region Pivot tables
+
+            // Delay loading of pivot tables until all sheets have been loaded
+            foreach (Sheet dSheet in sheets.OfType<Sheet>())
+            {
+                var wsPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
+
+                if (wsPart != null)
+                {
+                    var ws = (XLWorksheet)WorksheetsInternal.Worksheet(dSheet.Name);
+
+                    foreach (var pivotTablePart in wsPart.PivotTableParts)
+                    {
+                        var pivotTableCacheDefinitionPart = pivotTablePart.PivotTableCacheDefinitionPart;
+                        var pivotTableDefinition = pivotTablePart.PivotTableDefinition;
+
+                        var target = ws.FirstCell();
+                        if (pivotTableDefinition.Location != null && pivotTableDefinition.Location.Reference != null && pivotTableDefinition.Location.Reference.HasValue)
+                        {
+                            target = ws.Range(pivotTableDefinition.Location.Reference.Value).FirstCell();
+                        }
+
+                        IXLRange source = null;
+                        if (pivotTableCacheDefinitionPart.PivotCacheDefinition != null
+                            && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource != null
+                            && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource != null)
+                        {
+                            // TODO: Implement other sources besides worksheetSource (e.g. Table source?)
+                            source = ws.Workbook.Range(pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource.Name.Value);
+                        }
+
+                        if (target != null && source != null)
+                        {
+                            var pt = ws.PivotTables.AddNew(pivotTableDefinition.Name, target, source) as XLPivotTable;
+                            pt.RelId = wsPart.GetIdOfPart(pivotTablePart);
+                            pt.CacheDefinitionRelId = pivotTablePart.GetIdOfPart(pivotTableCacheDefinitionPart);
+                            pt.WorkbookCacheRelId = dSpreadsheet.WorkbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
+
+                            if (pivotTableDefinition.MergeItem != null) pt.MergeAndCenterWithLabels = pivotTableDefinition.MergeItem.Value;
+                            if (pivotTableDefinition.Indent != null) pt.RowLabelIndent = (int)pivotTableDefinition.Indent.Value;
+                            if (pivotTableDefinition.PageOverThenDown != null) pt.FilterAreaOrder = pivotTableDefinition.PageOverThenDown.Value ? XLFilterAreaOrder.OverThenDown : XLFilterAreaOrder.DownThenOver;
+                            if (pivotTableDefinition.PageWrap != null) pt.FilterFieldsPageWrap = (int)pivotTableDefinition.PageWrap.Value;
+                            if (pivotTableDefinition.UseAutoFormatting != null) pt.AutofitColumns = pivotTableDefinition.UseAutoFormatting.Value;
+                            if (pivotTableDefinition.PreserveFormatting != null) pt.PreserveCellFormatting = pivotTableDefinition.PreserveFormatting.Value;
+                            if (pivotTableDefinition.RowGrandTotals != null) pt.ShowGrandTotalsRows = pivotTableDefinition.RowGrandTotals.Value;
+                            if (pivotTableDefinition.ColumnGrandTotals != null) pt.ShowGrandTotalsColumns = pivotTableDefinition.ColumnGrandTotals.Value;
+                            if (pivotTableDefinition.SubtotalHiddenItems != null) pt.FilteredItemsInSubtotals = pivotTableDefinition.SubtotalHiddenItems.Value;
+                            if (pivotTableDefinition.MultipleFieldFilters != null) pt.AllowMultipleFilters = pivotTableDefinition.MultipleFieldFilters.Value;
+                            if (pivotTableDefinition.CustomListSort != null) pt.UseCustomListsForSorting = pivotTableDefinition.CustomListSort.Value;
+                            if (pivotTableDefinition.ShowDrill != null) pt.ShowExpandCollapseButtons = pivotTableDefinition.ShowDrill.Value;
+                            if (pivotTableDefinition.ShowDataTips != null) pt.ShowContextualTooltips = pivotTableDefinition.ShowDataTips.Value;
+                            if (pivotTableDefinition.ShowMemberPropertyTips != null) pt.ShowPropertiesInTooltips = pivotTableDefinition.ShowMemberPropertyTips.Value;
+                            if (pivotTableDefinition.ShowHeaders != null) pt.DisplayCaptionsAndDropdowns = pivotTableDefinition.ShowHeaders.Value;
+                            if (pivotTableDefinition.GridDropZones != null) pt.ClassicPivotTableLayout = pivotTableDefinition.GridDropZones.Value;
+                            if (pivotTableDefinition.ShowEmptyRow != null) pt.ShowEmptyItemsOnRows = pivotTableDefinition.ShowEmptyRow.Value;
+                            if (pivotTableDefinition.ShowEmptyColumn != null) pt.ShowEmptyItemsOnColumns = pivotTableDefinition.ShowEmptyColumn.Value;
+                            if (pivotTableDefinition.ShowItems != null) pt.DisplayItemLabels = pivotTableDefinition.ShowItems.Value;
+                            if (pivotTableDefinition.FieldListSortAscending != null) pt.SortFieldsAtoZ = pivotTableDefinition.FieldListSortAscending.Value;
+                            if (pivotTableDefinition.PrintDrill != null) pt.PrintExpandCollapsedButtons = pivotTableDefinition.PrintDrill.Value;
+                            if (pivotTableDefinition.ItemPrintTitles != null) pt.RepeatRowLabels = pivotTableDefinition.ItemPrintTitles.Value;
+                            if (pivotTableDefinition.FieldPrintTitles != null) pt.PrintTitles = pivotTableDefinition.FieldPrintTitles.Value;
+                            if (pivotTableDefinition.EnableDrill != null) pt.EnableShowDetails = pivotTableDefinition.EnableDrill.Value;
+
+                            if (pivotTableDefinition.ShowMissing != null && pivotTableDefinition.MissingCaption != null)
+                                pt.EmptyCellReplacement = pivotTableDefinition.MissingCaption.Value;
+
+                            if (pivotTableDefinition.ShowError != null && pivotTableDefinition.ErrorCaption != null)
+                                pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
+
+                            // Row labels
+                            foreach (var rf in pivotTableDefinition.RowFields.Cast<Field>())
+                            {
+                                if (rf.Index.Value == -2)
+                                    pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                else if (rf.Index < pivotTableDefinition.PivotFields.Count)
+                                {
+                                    var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
+                                    if (pf != null && pf.Name != null) pt.RowLabels.Add(pf.Name.Value);
+                                }
+                            }
+
+                            // Column labels
+                            foreach (var cf in pivotTableDefinition.ColumnFields.Cast<Field>())
+                            {
+                                if (cf.Index.Value == -2)
+                                    pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                                else if (cf.Index < pivotTableDefinition.PivotFields.Count)
+                                {
+                                    var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
+                                    if (pf != null && pf.Name != null) pt.ColumnLabels.Add(pf.Name.Value);
+                                }
+                            }
+
+                            // Values
+                            foreach (var df in pivotTableDefinition.DataFields.Cast<DataField>())
+                            {
+                                if ((int)df.Field.Value == -2)
+                                    pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                                else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
+                                {
+                                    var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;
+                                    if (pf != null && pf.Name != null)
+                                    {
+                                        var pv = pt.Values.Add(pf.Name.Value, df.Name.Value);
+                                        if (df.NumberFormatId != null) pv.NumberFormat.SetNumberFormatId((int)df.NumberFormatId.Value);
+                                        if (df.Subtotal != null) pv = pv.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
+                                        if (df.ShowDataAs != null)
+                                        {
+                                            var calculation = pv.Calculation;
+                                            calculation = df.ShowDataAs.Value.ToClosedXml();
+                                            pv = pv.SetCalculation(calculation);
+                                        }
+                                        if (df.BaseField != null) {
+                                            var col = pt.SourceRange.Column(df.BaseField.Value + 1);
+
+                                            var items = col.CellsUsed()
+                                                        .Select(c => c.Value)
+                                                        .Skip(1) // Skip header column
+                                                        .Distinct().ToList();
+
+                                            pv.BaseField = col.FirstCell().GetValue<string>();
+                                            if (df.BaseItem != null) pv.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            #endregion
+
         }
 
         #region Comment Helpers
@@ -1448,6 +1585,10 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Loads the conditional formatting.
+        /// https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.conditionalformattingrule%28v=office.15%29.aspx?f=255&MSPPError=-2147217396
+        /// </summary>
         private void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws, Dictionary<Int32, DifferentialFormat> differentialFormats)
         {
             if (conditionalFormatting == null) return;
@@ -1464,18 +1605,26 @@ namespace ClosedXML.Excel
                         LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
                         LoadNumberFormat(differentialFormats[(Int32)fr.FormatId.Value].NumberingFormat, conditionalFormat.Style.NumberFormat);
                     }
-                    if (fr.Operator != null)
+
+                    // The conditional formatting type is compulsory. If it doesn't exist, skip the entire rule.
+                    if (fr.Type == null) continue;
+                    conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
+
+                    if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
                         conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
-                    if (fr.Type != null)
-                        conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
-                    if (fr.Text != null)
+
+                    if (fr.Text != null && !XLHelper.IsNullOrWhiteSpace(fr.Text))
                         conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
-                    if (fr.Percent != null)
-                        conditionalFormat.Percent = fr.Percent.Value;
-                    if (fr.Bottom != null)
-                        conditionalFormat.Bottom = fr.Bottom.Value;
-                    if (fr.Rank != null)
-                        conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
+
+                    if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
+                    {
+                        if (fr.Percent != null)
+                            conditionalFormat.Percent = fr.Percent.Value;
+                        if (fr.Bottom != null)
+                            conditionalFormat.Bottom = fr.Bottom.Value;
+                        if (fr.Rank != null)
+                            conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
+                    }
 
                     if (fr.Elements<ColorScale>().Any())
                     {
@@ -1598,28 +1747,34 @@ namespace ClosedXML.Excel
                 ws.PageSetup.RowBreaks.Add(Int32.Parse(rowBreak.Id.InnerText));
         }
 
-        private void LoadSheetProperties(SheetProperties sheetProperty, XLWorksheet ws)
+        private void LoadSheetProperties(SheetProperties sheetProperty, XLWorksheet ws, out PageSetupProperties pageSetupProperties)
         {
+            pageSetupProperties = null;
             if (sheetProperty == null) return;
 
             if (sheetProperty.TabColor != null)
                 ws.TabColor = GetColor(sheetProperty.TabColor);
 
-            if (sheetProperty.OutlineProperties == null) return;
-
-            if (sheetProperty.OutlineProperties.SummaryBelow != null)
+            if (sheetProperty.OutlineProperties != null)
             {
-                ws.Outline.SummaryVLocation = sheetProperty.OutlineProperties.SummaryBelow
-                                                  ? XLOutlineSummaryVLocation.Bottom
-                                                  : XLOutlineSummaryVLocation.Top;
+
+                if (sheetProperty.OutlineProperties.SummaryBelow != null)
+                {
+                    ws.Outline.SummaryVLocation = sheetProperty.OutlineProperties.SummaryBelow
+                                                      ? XLOutlineSummaryVLocation.Bottom
+                                                      : XLOutlineSummaryVLocation.Top;
+                }
+
+                if (sheetProperty.OutlineProperties.SummaryRight != null)
+                {
+                    ws.Outline.SummaryHLocation = sheetProperty.OutlineProperties.SummaryRight
+                                                      ? XLOutlineSummaryHLocation.Right
+                                                      : XLOutlineSummaryHLocation.Left;
+                }
             }
 
-            if (sheetProperty.OutlineProperties.SummaryRight != null)
-            {
-                ws.Outline.SummaryHLocation = sheetProperty.OutlineProperties.SummaryRight
-                                                  ? XLOutlineSummaryHLocation.Right
-                                                  : XLOutlineSummaryHLocation.Left;
-            }
+            if (sheetProperty.PageSetupProperties != null)
+                pageSetupProperties = sheetProperty.PageSetupProperties;
         }
 
         private static void LoadHeaderFooter(HeaderFooter headerFooter, XLWorksheet ws)
@@ -1663,7 +1818,7 @@ namespace ClosedXML.Excel
             ((XLHeaderFooter)ws.PageSetup.Footer).SetAsInitial();
         }
 
-        private static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws)
+        private static void LoadPageSetup(PageSetup pageSetup, XLWorksheet ws, PageSetupProperties pageSetupProperties)
         {
             if (pageSetup == null) return;
 
@@ -1671,11 +1826,16 @@ namespace ClosedXML.Excel
                 ws.PageSetup.PaperSize = (XLPaperSize)Int32.Parse(pageSetup.PaperSize.InnerText);
             if (pageSetup.Scale != null)
                 ws.PageSetup.Scale = Int32.Parse(pageSetup.Scale.InnerText);
-            else
+            if (pageSetupProperties != null && pageSetupProperties.FitToPage != null && pageSetupProperties.FitToPage.Value)
             {
-                if (pageSetup.FitToWidth != null)
+                if (pageSetup.FitToWidth == null)
+                    ws.PageSetup.PagesWide = 1;
+                else
                     ws.PageSetup.PagesWide = Int32.Parse(pageSetup.FitToWidth.InnerText);
-                if (pageSetup.FitToHeight != null)
+
+                if (pageSetup.FitToHeight == null)
+                    ws.PageSetup.PagesTall = 1;
+                else
                     ws.PageSetup.PagesTall = Int32.Parse(pageSetup.FitToHeight.InnerText);
             }
             if (pageSetup.PageOrder != null)

@@ -91,6 +91,10 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable SetInsertBlankLines() { InsertBlankLines = true; return this; }	public IXLPivotTable SetInsertBlankLines(Boolean value) { InsertBlankLines = value; return this; }
 
+        internal String RelId { get; set; }
+        internal String CacheDefinitionRelId { get; set; }
+        internal String WorkbookCacheRelId { get; set; }
+
         private void SetExcelDefaults()
         {
             EmptyCellReplacement = String.Empty;
