@@ -20,7 +20,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\TableWithCustomTheme.xlsx",
                 @"Misc\EmptyTable.xlsx",
                 @"Misc\LoadPivotTables.xlsx",
-                @"Misc\LoadSheetsWithCommas.xlsx"
+                @"Misc\LoadSheetsWithCommas.xlsx",
+                @"Misc\MultiplePrintAreas.xlsx"
             };
 
             foreach (var file in files)
