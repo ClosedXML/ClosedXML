@@ -329,7 +329,7 @@ namespace ClosedXML.Excel
                 {
                     cValue = GetString();
                 }
-                catch 
+                catch
                 {
                     cValue = String.Empty;
                 }
@@ -499,7 +499,7 @@ namespace ClosedXML.Excel
                         {
                             if (!hasTitles)
                             {
-                                var fieldName = GetFieldName(m.GetType().GetCustomAttributes(true));
+                                var fieldName = GetFieldName(m.GetType());
                                 if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                     fieldName = m.GetType().Name;
 
@@ -573,27 +573,27 @@ namespace ClosedXML.Excel
                         }
                         else
                         {
-                            var fieldInfo = m.GetType().GetFields();
-                            var propertyInfo = m.GetType().GetProperties();
+                            BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                            var members = m.GetType().GetFields(bindingFlags).Cast<MemberInfo>()
+                                .Concat(m.GetType().GetProperties(bindingFlags));
 
-                            var columnOrders = fieldInfo.Select(fi => new KeyValuePair<long, MemberInfo>(GetFieldOrder(fi.GetCustomAttributes(true)), fi))
-                                .Concat(propertyInfo.Select(pi => new KeyValuePair<long, MemberInfo>(GetFieldOrder(pi.GetCustomAttributes(true)), pi)))
+                            var columnOrders = members.Select(fi => new KeyValuePair<long, MemberInfo>(GetMemberOrder(fi), fi))
                                 .OrderBy(pair => pair.Key);
 
                             if (!hasTitles)
                             {
                                 foreach (var info in columnOrders.Select(o => o.Value))
                                 {
-                                    if ((info as IEnumerable) == null)
+                                    if (!IgnoreMember(info) && (info as IEnumerable) == null)
                                     {
-                                        var fieldName = GetFieldName(info.GetCustomAttributes(true));
+                                        var fieldName = GetFieldName(info);
                                         if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                             fieldName = info.Name;
 
                                         SetValue(fieldName, fRo, co);
+                                        co++;
                                     }
 
-                                    co++;
                                 }
 
                                 co = Address.ColumnNumber;
@@ -603,15 +603,18 @@ namespace ClosedXML.Excel
 
                             foreach (var info in columnOrders.Select(o => o.Value))
                             {
-                                var fi = info as FieldInfo;
-                                var pi = info as PropertyInfo;
+                                if (!IgnoreMember(info))
+                                {
+                                    var fi = info as FieldInfo;
+                                    var pi = info as PropertyInfo;
 
-                                if (fi != null)
-                                    SetValue(fi.GetValue(m), ro, co);
-                                else if (pi != null && info as IEnumerable == null)
-                                    SetValue(pi.GetValue(m, null), ro, co);
+                                    if (fi != null)
+                                        SetValue(fi.GetValue(m), ro, co);
+                                    else if (pi != null && info as IEnumerable == null)
+                                        SetValue(pi.GetValue(m, null), ro, co);
 
-                                co++;
+                                    co++;
+                                }
                             }
                         }
 
@@ -1671,7 +1674,7 @@ namespace ClosedXML.Excel
                             val = dtTest.ToOADate().ToInvariantString();
                         }
                     }
-                    
+
                 }
                 else if (Boolean.TryParse(val, out bTest))
                 {
@@ -2479,9 +2482,11 @@ namespace ClosedXML.Excel
             return Worksheet.Cell(Address.RowNumber + rowsToShift, Address.ColumnNumber + columnsToShift);
         }
 
-        private static String GetFieldName(Object[] customAttributes)
+        private static String GetFieldName(MemberInfo mi)
         {
+            var customAttributes = mi.GetCustomAttributes(true);
 #if NET4
+
             var attribute = customAttributes.FirstOrDefault(a => a is DisplayAttribute);
             return attribute != null ? (attribute as DisplayAttribute).Name : null;
 #else
@@ -2490,10 +2495,18 @@ namespace ClosedXML.Excel
 #endif
         }
 
-        private static long GetFieldOrder(Object[] customAttributes)
+        private static long GetMemberOrder(MemberInfo mi)
         {
+            var customAttributes = mi.GetCustomAttributes(true);
             var attribute = customAttributes.FirstOrDefault(a => a is ColumnOrderAttribute);
             return attribute != null ? (attribute as ColumnOrderAttribute).Order : long.MaxValue;
+        }
+
+        private static bool IgnoreMember(MemberInfo mi)
+        {
+            var customAttributes = mi.GetCustomAttributes(true);
+            var attribute = customAttributes.FirstOrDefault(a => a is IgnoreAttribute);
+            return attribute != null ? (attribute as IgnoreAttribute).Ignore : false;
         }
 
         #region Nested type: FormulaConversionType
