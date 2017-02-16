@@ -36,6 +36,20 @@ namespace ClosedXML_Tests.Excel
             public int MyField;
         }
 
+        public class TestObjectIgnoredColumn
+        {
+            public int UnOrderedColumn { get; set; }
+
+            [Display(Name = "FirstColumn"), ColumnOrder(1)]
+            public String Column1 { get; set; }
+
+            [Display(Name = "IgnoredColumn"), ClosedXML.Attributes.Ignore]
+            public String IgnoredColumn { get; set; }
+
+            [Display(Name = "SecondColumn"), ColumnOrder(2)]
+            public int SecondColumn;
+        }
+
         [Test]
         public void CanSaveTableCreatedFromEmptyDataTable()
         {
@@ -192,6 +206,24 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("SecondColumn", ws.FirstCell().CellRight().Value);
             Assert.AreEqual("SomeFieldNotProperty", ws.FirstCell().CellRight().CellRight().Value);
             Assert.AreEqual("UnOrderedColumn", ws.FirstCell().CellRight().CellRight().CellRight().Value);
+        }
+
+        [Test]
+        public void TableCreatedFromListAndIgnoreColumn()
+        {
+            var l = new List<TestObjectIgnoredColumn>()
+            {
+                new TestObjectIgnoredColumn() { Column1 = "a", IgnoredColumn = "b", SecondColumn = 4, UnOrderedColumn = 999 },
+                new TestObjectIgnoredColumn() { Column1 = "c", IgnoredColumn = "d", SecondColumn = 5, UnOrderedColumn = 777 }
+            };
+
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().InsertTable(l);
+            Assert.AreEqual(3, ws.Tables.First().ColumnCount());
+            Assert.AreEqual("FirstColumn", ws.FirstCell().Value);
+            Assert.AreEqual("SecondColumn", ws.FirstCell().CellRight().Value);
+            Assert.AreEqual("UnOrderedColumn", ws.FirstCell().CellRight().CellRight().Value);
         }
 
         [Test]
