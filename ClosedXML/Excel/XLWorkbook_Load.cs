@@ -933,7 +933,7 @@ namespace ClosedXML.Excel
         private static void ParseReference(string item, out List<Tuple<string, string>> sheetNameAndArea) 
         {
             sheetNameAndArea = new List<Tuple<string, string>>();
-            ParseTreeNode nodes = ExcelFormulaParser.Parse("Test(" + item + ")");
+            ParseTreeNode nodes = ExcelFormulaParser.Parse(String.Format("DummyFormula({0})", item));
             ParseTreeNodeList usableNodes = nodes.ChildNodes.First().ChildNodes.First().ChildNodes.Last().ChildNodes;
             foreach (ParseTreeNode node in usableNodes) 
             {
