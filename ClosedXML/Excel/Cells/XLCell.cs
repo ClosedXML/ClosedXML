@@ -1,17 +1,13 @@
-﻿    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Text.RegularExpressions;
-#if NET4
-    using System.ComponentModel.DataAnnotations;
-#else
-using System.ComponentModel;
-#endif
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClosedXML.Excel
 {
@@ -2481,13 +2477,8 @@ namespace ClosedXML.Excel
 
         private static String GetFieldName(Object[] customAttributes)
         {
-#if NET4
             var attribute = customAttributes.FirstOrDefault(a => a is DisplayAttribute);
             return attribute != null ? (attribute as DisplayAttribute).Name : null;
-#else
-            var attribute = customAttributes.FirstOrDefault(a => a is DisplayNameAttribute);
-            return attribute != null ? (attribute as DisplayNameAttribute).DisplayName : null;
-#endif
         }
 
         private static long GetFieldOrder(Object[] customAttributes)
