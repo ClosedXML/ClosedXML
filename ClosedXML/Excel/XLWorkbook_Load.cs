@@ -934,19 +934,23 @@ namespace ClosedXML.Excel
         {
             sheetNameAndArea = new List<Tuple<string, string>>();
             ParseTreeNode nodes = ExcelFormulaParser.Parse(String.Format("DummyFormula({0})", item));
-            ParseTreeNodeList usableNodes = nodes.ChildNodes.First().ChildNodes.First().ChildNodes.Last().ChildNodes;
+            ParseTreeNodeList usableNodes = nodes.ChildNodes.FirstOrDefault().ChildNodes.FirstOrDefault().ChildNodes.LastOrDefault().ChildNodes;
             foreach (ParseTreeNode node in usableNodes) 
             {
                 string sheetName, sheetArea;
-                Token sheetNameToken = node.AllNodes("SheetNameQuotedToken").First().FindToken();
-                sheetName = sheetNameToken.Text.Substring(0, sheetNameToken.Text.Length - 2);
-                List<String> cellRefs = node.AllNodes("CellToken").Select(x => x.FindTokenAndGetText()).ToList();
-                if(cellRefs == null || cellRefs.Count == 0)
-                    cellRefs = node.AllNodes("VRangeToken").Select(x => x.FindTokenAndGetText()).ToList();
-                if (cellRefs == null || cellRefs.Count == 0)
-                    cellRefs = node.AllNodes("HRangeToken").Select(x => x.FindTokenAndGetText()).ToList();
-                sheetArea = String.Join(":", cellRefs);
-                sheetNameAndArea.Add(new Tuple<string, string>(sheetName, sheetArea));
+                ParseTreeNode sheetNode = node.AllNodes("SheetNameQuotedToken").FirstOrDefault();
+                if (sheetNode != null)
+                {
+                    Token sheetNameToken = sheetNode.FindToken();
+                    sheetName = sheetNameToken.Text.Substring(0, sheetNameToken.Text.Length - 2);
+                    List<String> cellRefs = node.AllNodes("CellToken").Select(x => x.FindTokenAndGetText()).ToList();
+                    if (cellRefs == null || cellRefs.Count == 0)
+                        cellRefs = node.AllNodes("VRangeToken").Select(x => x.FindTokenAndGetText()).ToList();
+                    if (cellRefs == null || cellRefs.Count == 0)
+                        cellRefs = node.AllNodes("HRangeToken").Select(x => x.FindTokenAndGetText()).ToList();
+                    sheetArea = String.Join(":", cellRefs);
+                    sheetNameAndArea.Add(new Tuple<string, string>(sheetName, sheetArea));
+                }
             }
         }
 
