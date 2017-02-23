@@ -225,6 +225,7 @@ namespace ClosedXML.Excel
         {
             FormulaA1 = String.Empty;
             _richText = null;
+            var style = GetStyleForRead();
             if (value is String || value is char)
             {
                 _cellValue = value.ToString();
@@ -236,13 +237,15 @@ namespace ClosedXML.Excel
             {
                 _cellValue = value.ToString();
                 _dataType = XLCellValues.TimeSpan;
-                Style.NumberFormat.NumberFormatId = 46;
+                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                    Style.NumberFormat.NumberFormatId = 46;
             }
             else if (value is DateTime)
             {
                 _dataType = XLCellValues.DateTime;
                 var dtTest = (DateTime)Convert.ChangeType(value, typeof (DateTime));
-                Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
+                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                    Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
                 _cellValue = dtTest.ToOADate().ToInvariantString();
             }
@@ -329,7 +332,7 @@ namespace ClosedXML.Excel
                 {
                     cValue = GetString();
                 }
-                catch 
+                catch
                 {
                     cValue = String.Empty;
                 }
@@ -1671,7 +1674,6 @@ namespace ClosedXML.Excel
                             val = dtTest.ToOADate().ToInvariantString();
                         }
                     }
-                    
                 }
                 else if (Boolean.TryParse(val, out bTest))
                 {
