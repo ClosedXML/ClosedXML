@@ -103,6 +103,7 @@
     <Compile Include="Excel\Ranges\InsertingRangesTests.cs" />
     <Compile Include="Excel\Rows\RowTests.cs" />
     <Compile Include="Excel\Styles\ColorTests.cs" />
+    <Compile Include="Excel\Styles\NumberFormatTests.cs" />
     <Compile Include="Excel\Styles\XLFillTests.cs" />
     <Compile Include="Excel\Tables\TablesTests.cs" />
     <Compile Include="Excel\Worksheets\XLWorksheetTests.cs" />
