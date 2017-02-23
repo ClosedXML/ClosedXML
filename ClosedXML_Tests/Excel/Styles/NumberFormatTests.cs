@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
-using ClosedXML.Excel;
+using System;
 using System.Data;
+using System.Linq;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -21,12 +19,10 @@ namespace ClosedXML_Tests.Excel
                 var table = new DataTable();
                 table.Columns.Add("Date", typeof(DateTime));
 
-                for (int i = 0; i <10; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     table.Rows.Add(new DateTime(2017, 1, 1).AddMonths(i));
                 }
-
-                ws.Cell("B1").Value = table.Columns[0].DataType;
 
                 ws.Cell("A1").InsertData(table.AsEnumerable());
 
