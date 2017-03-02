@@ -225,6 +225,7 @@ namespace ClosedXML.Excel
             // Ensure all RelId's have been added to the context
             context.RelIdGenerator.AddValues(workbookPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
             context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !XLHelper.IsNullOrWhiteSpace(ws.RelId)).Select(ws => ws.RelId), RelType.Workbook);
+            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !XLHelper.IsNullOrWhiteSpace(ws.LegacyDrawingId)).Select(ws => ws.LegacyDrawingId), RelType.Workbook);
             context.RelIdGenerator.AddValues(WorksheetsInternal
                 .Cast<XLWorksheet>()
                 .SelectMany(ws => ws.Tables.Cast<XLTable>())
@@ -276,8 +277,9 @@ namespace ClosedXML.Excel
 
                 if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
                 {
+                    var id = context.RelIdGenerator.GetNext(RelType.Workbook);
                     var worksheetCommentsPart =
-                        worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
+                        worksheetPart.AddNewPart<WorksheetCommentsPart>(id);
 
                     GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
 

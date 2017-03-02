@@ -13,6 +13,10 @@ namespace ClosedXML_Tests.Excel.Saving
             using (var wb = new XLWorkbook())
             {
                 var sheet = wb.Worksheets.Add("TestSheet");
+
+                // Comments might cause duplicate VmlDrawing Id's - ensure it's tested:
+                sheet.Cell(1, 1).Comment.AddText("abc");
+
                 var memoryStream = new MemoryStream();
                 wb.SaveAs(memoryStream, true);
 
