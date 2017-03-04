@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
         // Adds the .ForEach method to all IEnumerables
 
 
-        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
         public static String ToHex(this Color color)
         {
@@ -75,10 +75,10 @@ namespace ClosedXML.Excel
             HashSet<T> distinctItems = new HashSet<T>();
             foreach (var item in source)
             {
-              if (!distinctItems.Add(item))
-              {
-                return true;
-              }
+                if (!distinctItems.Add(item))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -266,7 +266,7 @@ namespace ClosedXML.Excel
             if (font.Bold) fontStyle |= FontStyle.Bold;
             if (font.Italic) fontStyle |= FontStyle.Italic;
             if (font.Strikethrough) fontStyle |= FontStyle.Strikeout;
-            if (font.Underline != XLFontUnderlineValues.None ) fontStyle |= FontStyle.Underline;
+            if (font.Underline != XLFontUnderlineValues.None) fontStyle |= FontStyle.Underline;
             return fontStyle;
         }
 
