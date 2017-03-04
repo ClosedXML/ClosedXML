@@ -481,39 +481,82 @@ namespace ClosedXML.Excel
                 var maxCo = 0;
                 var isDataTable = false;
                 var isDataReader = false;
+                var itemType = data.GetItemType();
+
                 if (!data.Any())
                 {
-                    var t = data.GetItemType();
-                    if (t.IsPrimitive || t == typeof(string) || t == typeof(DateTime) || t == typeof(Decimal))
+                    if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                         maxCo = Address.ColumnNumber + 1;
                     else
-                        maxCo = Address.ColumnNumber + t.GetFields().Length + t.GetProperties().Length;
+                        maxCo = Address.ColumnNumber + itemType.GetFields().Length + itemType.GetProperties().Length;
                 }
-                else
+                else if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                 {
-                    foreach (object m in data)
+                    foreach (object o in data)
                     {
                         var co = Address.ColumnNumber;
 
-                        if (m.GetType().IsPrimitive || m is string || m is DateTime || m is Decimal)
+                        if (!hasTitles)
                         {
-                            if (!hasTitles)
-                            {
-                                var fieldName = GetFieldName(m.GetType().GetCustomAttributes(true));
-                                if (XLHelper.IsNullOrWhiteSpace(fieldName))
-                                    fieldName = m.GetType().Name;
+                            // First try if the XLColumnAttribute exists and has the Header property set
+                            var fieldName = XLColumnAttribute.GetHeader(itemType);
 
-                                SetValue(fieldName, fRo, co);
-                                hasTitles = true;
-                                co = Address.ColumnNumber;
-                            }
+                            // Then try if the DisplayAttribute and has the Name property set
+                            if (XLHelper.IsNullOrWhiteSpace(fieldName))
+                                fieldName = GetFieldName(o.GetType().GetCustomAttributes(true));
 
-                            SetValue(m, ro, co);
-                            co++;
+                            // Finally fall back to the type name
+                            if (XLHelper.IsNullOrWhiteSpace(fieldName))
+                                fieldName = itemType.Name;
+
+                            SetValue(fieldName, fRo, co);
+                            hasTitles = true;
+                            co = Address.ColumnNumber;
                         }
-                        else if (m.GetType().IsArray)
+
+                        SetValue(o, ro, co);
+                        co++;
+
+                        if (co > maxCo)
+                            maxCo = co;
+
+                        ro++;
+                    }
+                }
+                else
+                {
+                    BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                    var memberCache = new Dictionary<Type, IEnumerable<MemberInfo>>();
+                    IEnumerable<MemberInfo> members = null;
+                    bool isPlainObject = itemType == typeof(object);
+
+                    if (!isPlainObject)
+                        members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
+                             .Concat(itemType.GetProperties(bindingFlags))
+                             .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
+                             .OrderBy(mi => XLColumnAttribute.GetOrder(mi));
+
+                    foreach (T m in data)
+                    {
+                        if (isPlainObject)
                         {
-                            foreach (var item in (Array)m)
+                            // In this case data is just IEnumerable<object>, which means we have to determine the runtime type of each element
+                            // This is very inefficient and we prefer type of T to be a concrete class or struct
+                            var type = m.GetType();
+                            if (!memberCache.ContainsKey(type))
+                                memberCache.Add(type, type.GetFields(bindingFlags).Cast<MemberInfo>()
+                                     .Concat(type.GetProperties(bindingFlags))
+                                     .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
+                                     .OrderBy(mi => XLColumnAttribute.GetOrder(mi)));
+
+                            members = memberCache[type];
+                        }
+
+                        var co = Address.ColumnNumber;
+
+                        if (itemType.IsArray)
+                        {
+                            foreach (var item in (m as Array))
                             {
                                 SetValue(item, ro, co);
                                 co++;
@@ -521,12 +564,13 @@ namespace ClosedXML.Excel
                         }
                         else if (isDataTable || m is DataRow)
                         {
+                            var row = m as DataRow;
                             if (!isDataTable)
                                 isDataTable = true;
 
                             if (!hasTitles)
                             {
-                                foreach (var fieldName in from DataColumn column in ((DataRow)m).Table.Columns
+                                foreach (var fieldName in from DataColumn column in row.Table.Columns
                                                           select XLHelper.IsNullOrWhiteSpace(column.Caption)
                                                                      ? column.ColumnName
                                                                      : column.Caption)
@@ -539,7 +583,7 @@ namespace ClosedXML.Excel
                                 hasTitles = true;
                             }
 
-                            foreach (var item in ((DataRow)m).ItemArray)
+                            foreach (var item in row.ItemArray)
                             {
                                 SetValue(item, ro, co);
                                 co++;
@@ -573,22 +617,22 @@ namespace ClosedXML.Excel
                         }
                         else
                         {
-                            var fieldInfo = m.GetType().GetFields();
-                            var propertyInfo = m.GetType().GetProperties();
-
-                            var columnOrders = fieldInfo.Select(fi => new KeyValuePair<long, MemberInfo>(GetFieldOrder(fi.GetCustomAttributes(true)), fi))
-                                .Concat(propertyInfo.Select(pi => new KeyValuePair<long, MemberInfo>(GetFieldOrder(pi.GetCustomAttributes(true)), pi)))
-                                .OrderBy(pair => pair.Key);
-
                             if (!hasTitles)
                             {
-                                foreach (var info in columnOrders.Select(o => o.Value))
+                                foreach (var mi in members)
                                 {
-                                    if ((info as IEnumerable) == null)
+                                    if ((mi as IEnumerable) == null)
                                     {
-                                        var fieldName = GetFieldName(info.GetCustomAttributes(true));
+                                        // First try if the XLColumnAttribute exists and has the Header property set
+                                        var fieldName = XLColumnAttribute.GetHeader(mi);
+
+                                        // Then try if the DisplayAttribute and has the Name property set
                                         if (XLHelper.IsNullOrWhiteSpace(fieldName))
-                                            fieldName = info.Name;
+                                            fieldName = GetFieldName(mi.GetCustomAttributes(true));
+
+                                        // Finally fall back to the type name
+                                        if (XLHelper.IsNullOrWhiteSpace(fieldName))
+                                            fieldName = mi.Name;
 
                                         SetValue(fieldName, fRo, co);
                                     }
@@ -600,15 +644,14 @@ namespace ClosedXML.Excel
                                 hasTitles = true;
                             }
 
-
-                            foreach (var info in columnOrders.Select(o => o.Value))
+                            foreach (var mi in members)
                             {
-                                var fi = info as FieldInfo;
-                                var pi = info as PropertyInfo;
+                                var fi = mi as FieldInfo;
+                                var pi = mi as PropertyInfo;
 
                                 if (fi != null)
                                     SetValue(fi.GetValue(m), ro, co);
-                                else if (pi != null && info as IEnumerable == null)
+                                else if (pi != null && mi as IEnumerable == null)
                                     SetValue(pi.GetValue(m, null), ro, co);
 
                                 co++;
@@ -636,7 +679,6 @@ namespace ClosedXML.Excel
 
             return null;
         }
-
 
         public IXLTable InsertTable(DataTable data)
         {
@@ -690,14 +732,15 @@ namespace ClosedXML.Excel
                 var isDataReader = false;
                 foreach (var m in data)
                 {
+                    var itemType = m.GetType();
                     var co = Address.ColumnNumber;
 
-                    if (m.GetType().IsPrimitive || m is string || m is DateTime || m is Decimal)
+                    if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                     {
                         SetValue(m, ro, co);
                         co++;
                     }
-                    else if (m.GetType().IsArray)
+                    else if (itemType.IsArray)
                     {
                         // dynamic arr = m;
                         foreach (var item in (Array)m)
@@ -733,14 +776,14 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        var fieldInfo = m.GetType().GetFields();
+                        var fieldInfo = itemType.GetFields();
                         foreach (var info in fieldInfo)
                         {
                             SetValue(info.GetValue(m), ro, co);
                             co++;
                         }
 
-                        var propertyInfo = m.GetType().GetProperties();
+                        var propertyInfo = itemType.GetProperties();
                         foreach (var info in propertyInfo)
                         {
                             if ((info as IEnumerable) == null)
@@ -778,7 +821,6 @@ namespace ClosedXML.Excel
             DataType = dataType;
             return this;
         }
-
 
         public XLCellValues DataType
         {
@@ -907,14 +949,12 @@ namespace ClosedXML.Excel
                     if (HasDataValidation)
                         DataValidation.Clear();
 
-
                     SetStyle(Worksheet.Style);
                 }
             }
 
             return this;
         }
-
 
         public void Delete(XLShiftDeletedCells shiftDeleteCells)
         {
@@ -1004,7 +1044,6 @@ namespace ClosedXML.Excel
                     Style.Font.Underline = XLFontUnderlineValues.Single;
             }
         }
-
 
         public IXLCells InsertCellsAbove(int numberOfRows)
         {
@@ -1134,7 +1173,6 @@ namespace ClosedXML.Excel
         {
             return CopyTo(GetTargetCell(target, Worksheet));
         }
-
 
         public IXLCell CopyFrom(IXLCell otherCell)
         {
@@ -1358,7 +1396,7 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        delegate Boolean Func<T>(String input, out T output);
+        private delegate Boolean Func<T>(String input, out T output);
 
         private static Boolean TryGetBasicValue<T, U>(out T value, String currValue, Func<U> func)
         {
@@ -1374,7 +1412,7 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        #endregion
+        #endregion IXLCell Members
 
         #region IXLStylized Members
 
@@ -1407,7 +1445,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         private bool SetRangeColumns(object value)
         {
@@ -1655,7 +1693,6 @@ namespace ClosedXML.Excel
                     _dataType = XLCellValues.Number;
                 else if (DateTime.TryParse(val, out dtTest) && dtTest >= BaseDate)
                 {
-
                     _dataType = XLCellValues.DateTime;
 
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
@@ -1954,7 +1991,6 @@ namespace ClosedXML.Excel
             return defaultWorksheet.Workbook.Worksheet(wsName).Cell(pair[1]);
         }
 
-
         public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
         {
             var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
@@ -1977,7 +2013,6 @@ namespace ClosedXML.Excel
                         var r1c1 = source.GetFormulaR1C1(f);
                         f = GetFormulaA1(r1c1);
                     }
-
 
                     c.Values.Add(new XLFormula { _value = f, IsFormula = v.IsFormula });
                 }
@@ -2488,13 +2523,6 @@ namespace ClosedXML.Excel
             return attribute != null ? (attribute as DisplayNameAttribute).DisplayName : null;
 #endif
         }
-
-        private static long GetFieldOrder(Object[] customAttributes)
-        {
-            var attribute = customAttributes.FirstOrDefault(a => a is ColumnOrderAttribute);
-            return attribute != null ? (attribute as ColumnOrderAttribute).Order : long.MaxValue;
-        }
-
         #region Nested type: FormulaConversionType
 
         private enum FormulaConversionType
