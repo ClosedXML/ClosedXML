@@ -1,14 +1,14 @@
-﻿    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 #if NET4
-    using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 #else
 using System.ComponentModel;
 #endif
@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
             + @"(?<ColumnLetters>\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})" // A:A
             + @")" // End Range
             + @")" // End Group to pick
-            //+ @"(?=\W)" // End with non word
+                   //+ @"(?=\W)" // End with non word
             , RegexOptions.Compiled);
 
         private static readonly Regex A1RowRegex = new Regex(
@@ -76,7 +76,7 @@ namespace ClosedXML.Excel
         private XLHyperlink _hyperlink;
         private XLRichText _richText;
 
-        #endregion
+        #endregion Fields
 
         #region Constructor
 
@@ -117,7 +117,7 @@ namespace ClosedXML.Excel
             StyleChanged = false;
         }
 
-        #endregion
+        #endregion Constructor
 
         public bool SettingHyperlink;
         public int SharedStringId;
@@ -187,11 +187,11 @@ namespace ClosedXML.Excel
                     // MS Excel uses Tahoma 8 Swiss no matter what current style font
                     // var style = GetStyleForRead();
                     var defaultFont = new XLFont
-                        {
-                            FontName = "Tahoma",
-                            FontSize = 8,
-                            FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
-                        };
+                    {
+                        FontName = "Tahoma",
+                        FontSize = 8,
+                        FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
+                    };
                     _comment = new XLComment(this, defaultFont);
                 }
 
@@ -241,7 +241,7 @@ namespace ClosedXML.Excel
             else if (value is DateTime)
             {
                 _dataType = XLCellValues.DateTime;
-                var dtTest = (DateTime)Convert.ChangeType(value, typeof (DateTime));
+                var dtTest = (DateTime)Convert.ChangeType(value, typeof(DateTime));
                 Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
                 _cellValue = dtTest.ToOADate().ToInvariantString();
@@ -260,8 +260,8 @@ namespace ClosedXML.Excel
                 || value is decimal
                 )
             {
-                if ((value is double || value is float) && (Double.IsNaN((Double)Convert.ChangeType(value, typeof (Double)))
-                    || Double.IsInfinity((Double)Convert.ChangeType(value, typeof (Double)))))
+                if ((value is double || value is float) && (Double.IsNaN((Double)Convert.ChangeType(value, typeof(Double)))
+                    || Double.IsInfinity((Double)Convert.ChangeType(value, typeof(Double)))))
                 {
                     _cellValue = value.ToString();
                     _dataType = XLCellValues.Text;
@@ -269,7 +269,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     _dataType = XLCellValues.Number;
-                    _cellValue = ((Double)Convert.ChangeType(value, typeof (Double))).ToInvariantString();
+                    _cellValue = ((Double)Convert.ChangeType(value, typeof(Double))).ToInvariantString();
                 }
             }
             else if (value is Boolean)
@@ -289,7 +289,7 @@ namespace ClosedXML.Excel
         public T GetValue<T>()
         {
             T retVal;
-            if(TryGetValue(out retVal))
+            if (TryGetValue(out retVal))
                 return retVal;
 
             throw new Exception("Cannot convert cell value to " + typeof(T));
@@ -329,7 +329,7 @@ namespace ClosedXML.Excel
                 {
                     cValue = GetString();
                 }
-                catch 
+                catch
                 {
                     cValue = String.Empty;
                 }
@@ -370,7 +370,6 @@ namespace ClosedXML.Excel
             return cValue;
         }
 
-
         public object Value
         {
             get
@@ -410,12 +409,10 @@ namespace ClosedXML.Excel
                         foreach (var v in retValEnumerable)
                             return v;
 
-
                     return retVal;
                 }
 
                 var cellValue = HasRichText ? _richText.ToString() : _cellValue;
-
 
                 if (_dataType == XLCellValues.Boolean)
                     return cellValue != "0";
@@ -473,7 +470,7 @@ namespace ClosedXML.Excel
 
         public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable)
         {
-            if (data != null && data.GetType() != typeof (String))
+            if (data != null && data.GetType() != typeof(String))
             {
                 var ro = Address.RowNumber + 1;
                 var fRo = Address.RowNumber;
@@ -484,7 +481,7 @@ namespace ClosedXML.Excel
                 if (!data.Any())
                 {
                     var t = data.GetItemType();
-                    if (t.IsPrimitive || t == typeof (string) || t == typeof (DateTime) || t == typeof (Decimal))
+                    if (t.IsPrimitive || t == typeof(string) || t == typeof(DateTime) || t == typeof(Decimal))
                         maxCo = Address.ColumnNumber + 1;
                     else
                         maxCo = Address.ColumnNumber + t.GetFields().Length + t.GetProperties().Length;
@@ -682,7 +679,7 @@ namespace ClosedXML.Excel
 
         public IXLRange InsertData(IEnumerable data)
         {
-            if (data != null && data.GetType() != typeof (String))
+            if (data != null && data.GetType() != typeof(String))
             {
                 var ro = Address.RowNumber;
                 var maxCo = 0;
@@ -1272,21 +1269,21 @@ namespace ClosedXML.Excel
 
         private static bool TryGetTimeSpanValue<T>(out T value, object currValue, out bool b)
         {
-            if (typeof (T) == typeof (TimeSpan))
+            if (typeof(T) == typeof(TimeSpan))
             {
                 TimeSpan tmp;
                 Boolean retVal = true;
 
                 if (currValue is TimeSpan)
                 {
-                    tmp = (TimeSpan) currValue;
+                    tmp = (TimeSpan)currValue;
                 }
                 else if (!TimeSpan.TryParse(currValue.ToString(), out tmp))
                 {
                     retVal = false;
                 }
 
-                value = (T) Convert.ChangeType(tmp, typeof (T));
+                value = (T)Convert.ChangeType(tmp, typeof(T));
                 {
                     b = retVal;
                     return true;
@@ -1299,9 +1296,9 @@ namespace ClosedXML.Excel
 
         private bool TryGetRichStringValue<T>(out T value)
         {
-            if (typeof (T) == typeof (IXLRichText))
+            if (typeof(T) == typeof(IXLRichText))
             {
-                value = (T) RichText;
+                value = (T)RichText;
                 return true;
             }
             value = default(T);
@@ -1310,12 +1307,12 @@ namespace ClosedXML.Excel
 
         private static bool TryGetStringValue<T>(out T value, object currValue)
         {
-            if (typeof (T) == typeof (String))
+            if (typeof(T) == typeof(String))
             {
                 var valToUse = currValue.ToString();
                 if (!utfPattern.Match(valToUse).Success)
                 {
-                    value = (T) Convert.ChangeType(valToUse, typeof (T));
+                    value = (T)Convert.ChangeType(valToUse, typeof(T));
                     return true;
                 }
 
@@ -1327,14 +1324,14 @@ namespace ClosedXML.Excel
                     var matchIndex = match.Index;
                     sb.Append(valToUse.Substring(lastIndex, matchIndex - lastIndex));
 
-                    sb.Append((char) int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
+                    sb.Append((char)int.Parse(match.Groups[1].Value, NumberStyles.AllowHexSpecifier));
 
                     lastIndex = matchIndex + matchString.Length;
                 }
                 if (lastIndex < valToUse.Length)
                     sb.Append(valToUse.Substring(lastIndex));
 
-                value = (T) Convert.ChangeType(sb.ToString(), typeof (T));
+                value = (T)Convert.ChangeType(sb.ToString(), typeof(T));
                 return true;
             }
             value = default(T);
@@ -1343,12 +1340,12 @@ namespace ClosedXML.Excel
 
         private static Boolean TryGetBooleanValue<T>(out T value, object currValue)
         {
-            if (typeof (T) == typeof (Boolean))
+            if (typeof(T) == typeof(Boolean))
             {
                 Boolean tmp;
                 if (Boolean.TryParse(currValue.ToString(), out tmp))
                 {
-                    value = (T) Convert.ChangeType(tmp, typeof (T));
+                    value = (T)Convert.ChangeType(tmp, typeof(T));
                     {
                         return true;
                     }
@@ -1360,16 +1357,16 @@ namespace ClosedXML.Excel
 
         delegate Boolean Func<T>(String input, out T output);
 
-        private static Boolean TryGetBasicValue<T, U>(out T value, String currValue, Func<U> func )
+        private static Boolean TryGetBasicValue<T, U>(out T value, String currValue, Func<U> func)
         {
-                U tmp;
-                if (func(currValue, out tmp))
+            U tmp;
+            if (func(currValue, out tmp))
+            {
+                value = (T)Convert.ChangeType(tmp, typeof(T));
                 {
-                    value = (T)Convert.ChangeType(tmp, typeof(T));
-                    {
-                        return true;
-                    }
+                    return true;
                 }
+            }
             value = default(T);
             return false;
         }
@@ -1402,7 +1399,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var retVal = new XLRanges {AsRange()};
+                var retVal = new XLRanges { AsRange() };
                 return retVal;
             }
         }
@@ -1601,7 +1598,7 @@ namespace ClosedXML.Excel
             else
             {
                 if (value is IConvertible)
-                    _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof (T)));
+                    _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
                 else
                     _worksheet.Cell(ro, co).SetValue(value);
             }
@@ -1651,7 +1648,7 @@ namespace ClosedXML.Excel
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         Style.NumberFormat.NumberFormatId = 46;
                 }
-                else if (val.Trim() != "NaN" &&  Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
+                else if (val.Trim() != "NaN" && Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
                     _dataType = XLCellValues.Number;
                 else if (DateTime.TryParse(val, out dtTest) && dtTest >= BaseDate)
                 {
@@ -1671,7 +1668,7 @@ namespace ClosedXML.Excel
                             val = dtTest.ToOADate().ToInvariantString();
                         }
                     }
-                    
+
                 }
                 else if (Boolean.TryParse(val, out bTest))
                 {
@@ -1761,7 +1758,7 @@ namespace ClosedXML.Excel
                 if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
                     && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
                 {
-// Check if the match is in between quotes
+                    // Check if the match is in between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     sb.Append(conversionType == FormulaConversionType.A1ToR1C1
                                   ? GetR1C1Address(matchString, rowsToShift, columnsToShift)
@@ -1967,7 +1964,7 @@ namespace ClosedXML.Excel
             var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(source)).ToList();
             foreach (var cf in conditionalFormats)
             {
-                var c = new XLConditionalFormat(cf as XLConditionalFormat) {Range = AsRange()};
+                var c = new XLConditionalFormat(cf as XLConditionalFormat) { Range = AsRange() };
                 var oldValues = c.Values.Values.ToList();
                 c.Values.Clear();
                 foreach (var v in oldValues)
@@ -1980,7 +1977,7 @@ namespace ClosedXML.Excel
                     }
 
 
-                    c.Values.Add(new XLFormula {_value = f, IsFormula = v.IsFormula});
+                    c.Values.Add(new XLFormula { _value = f, IsFormula = v.IsFormula });
                 }
 
                 _worksheet.ConditionalFormats.Add(c);
@@ -2256,7 +2253,7 @@ namespace ClosedXML.Excel
                 var matchIndex = match.Index;
                 if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0)
                 {
-// Check that the match is not between quotes
+                    // Check that the match is not between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     string sheetName;
                     var useSheetName = false;
@@ -2504,7 +2501,7 @@ namespace ClosedXML.Excel
             R1C1ToA1
         };
 
-        #endregion
+        #endregion Nested type: FormulaConversionType
 
         #region XLCell Above
 
@@ -2528,7 +2525,7 @@ namespace ClosedXML.Excel
             return CellShift(step * -1, 0);
         }
 
-        #endregion
+        #endregion XLCell Above
 
         #region XLCell Below
 
@@ -2552,7 +2549,7 @@ namespace ClosedXML.Excel
             return CellShift(step, 0);
         }
 
-        #endregion
+        #endregion XLCell Below
 
         #region XLCell Left
 
@@ -2576,7 +2573,7 @@ namespace ClosedXML.Excel
             return CellShift(0, step * -1);
         }
 
-        #endregion
+        #endregion XLCell Left
 
         #region XLCell Right
 
@@ -2600,7 +2597,7 @@ namespace ClosedXML.Excel
             return CellShift(0, step);
         }
 
-        #endregion
+        #endregion XLCell Right
 
         public Boolean HasFormula { get { return !XLHelper.IsNullOrWhiteSpace(FormulaA1); } }
 
