@@ -299,6 +299,11 @@ namespace ClosedXML.Excel
         {
             var fontCache = new Dictionary<IXLFontBase, Font>();
             Double colMaxWidth = minWidth;
+
+            Int32 autoFilterRow = 0;
+            if (this.Worksheet.AutoFilter != null && this.Worksheet.AutoFilter.Range != null)
+                autoFilterRow = this.Worksheet.AutoFilter.Range.FirstRow().RowNumber();
+
             foreach (XLCell c in Column(startRow, endRow).CellsUsed())
             {
                 if (c.IsMerged()) continue;
@@ -442,9 +447,7 @@ namespace ClosedXML.Excel
                 else
                     thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString(), fontCache);
 
-                if (c.Worksheet.AutoFilter != null
-                    && c.Worksheet.AutoFilter.Range != null
-                    && c.Worksheet.AutoFilter.Range.Contains(c))
+                if (autoFilterRow == c.Address.RowNumber)
                     thisWidthMax += 2.7148; // Allow room for arrow icon in autofilter
 
 
