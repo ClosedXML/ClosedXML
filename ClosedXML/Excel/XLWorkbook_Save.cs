@@ -43,6 +43,7 @@ using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
 using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
+using System.Threading;
 
 namespace ClosedXML.Excel
 {
@@ -82,8 +83,20 @@ namespace ClosedXML.Excel
 
         private bool Validate(SpreadsheetDocument package)
         {
-            var validator = new OpenXmlValidator();
-            var errors = validator.Validate(package);
+            var backupCulture = Thread.CurrentThread.CurrentCulture;
+            IEnumerable<ValidationErrorInfo> errors;
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                var validator = new OpenXmlValidator();
+
+                errors = validator.Validate(package);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = backupCulture;
+            }
+
             if (errors.Any())
             {
                 var message = string.Join("\r\n", errors.Select(e => string.Format("{0} in {1}", e.Description, e.Path.XPath)).ToArray());
@@ -599,9 +612,9 @@ namespace ClosedXML.Excel
                 {
                     if (XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
                     {
-                    rId = String.Format("rId{0}", xlSheet.SheetId);
+                        rId = String.Format("rId{0}", xlSheet.SheetId);
                         context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
-                }
+                    }
                     else
                         rId = xlSheet.RelId;
                 }
@@ -4204,6 +4217,52 @@ namespace ClosedXML.Excel
                     cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
                 }
             }
+
+
+            if (!worksheetPart.Worksheet.Elements<WorksheetExtensionList>().Any())
+            {
+                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.WorksheetExtensionList);
+                worksheetPart.Worksheet.InsertAfter<WorksheetExtensionList>(new WorksheetExtensionList(), previousElement);
+            }
+            WorksheetExtensionList worksheetExtensionList = worksheetPart.Worksheet.Elements<WorksheetExtensionList>().First();
+            cm.SetElement(XLWSContentManager.XLWSContents.WorksheetExtensionList, worksheetExtensionList);
+            foreach (var cfGroup in (from c in xlWorksheet.ConditionalFormats where typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c)
+                .GroupBy(
+                    c => c.Range.RangeAddress.ToStringRelative(false),
+                    c => c,
+                    (key, g) => new { RangeId = key, CfList = g.ToList<IXLConditionalFormat>() }
+                    )
+                )
+            {
+                foreach (IXLConditionalFormat xLConditionalFormat in cfGroup.CfList)
+                {
+                    DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule conditionalFormattingRule = (
+                            from r in worksheetExtensionList.Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
+                            where r.Id == xLConditionalFormat.Name
+                            select r).SingleOrDefault();
+                    if (conditionalFormattingRule != null)
+                    {
+                        WorksheetExtension worksheetExtension = conditionalFormattingRule.Ancestors<WorksheetExtension>().SingleOrDefault<WorksheetExtension>();
+                        worksheetExtensionList.RemoveChild<WorksheetExtension>(worksheetExtension);
+                    }
+                    WorksheetExtension worksheetExtension1 = new WorksheetExtension { Uri = "{78C0D931-6437-407d-A8EE-F0AAD7539E65}" };
+
+                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+                    var conditionalFormattings = new DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattings();
+
+                    var conditionalFormatting = new DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormatting();
+                    conditionalFormatting.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
+                    conditionalFormatting.Append(XLCFConvertersExtension.Convert(xLConditionalFormat, context));
+                    var referenceSequence = new DocumentFormat.OpenXml.Office.Excel.ReferenceSequence { Text = cfGroup.RangeId };
+                    conditionalFormatting.Append(referenceSequence);
+
+                    conditionalFormattings.Append(conditionalFormatting);
+                    worksheetExtension1.Append(conditionalFormattings);
+
+                    worksheetExtensionList.Append(worksheetExtension1);
+                }
+            }
+
 
             #endregion
 
