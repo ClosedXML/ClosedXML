@@ -669,7 +669,7 @@ namespace ClosedXML.Excel.CalcEngine {
             Throw("Syntax error.");
         }
         static void Throw(string msg) {
-            throw new Exception(msg);
+            throw new ExpressionParseException(msg);
         }
 
         #endregion

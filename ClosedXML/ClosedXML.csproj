@@ -67,6 +67,7 @@
     <Compile Include="AttributeExtensions.cs" />
     <Compile Include="Attributes\XLColumnAttribute.cs" />
     <Compile Include="Excel\CalcEngine\CalcEngineHelpers.cs" />
+    <Compile Include="Excel\CalcEngine\ExpressionParseException.cs" />
     <Compile Include="Excel\CalcEngine\Functions\DateAndTime.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Database.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Information.cs" />

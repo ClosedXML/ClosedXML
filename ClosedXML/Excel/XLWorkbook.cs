@@ -442,7 +442,7 @@ namespace ClosedXML.Excel
         {
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
-                throw new Exception("This is a new file, please use one of the SaveAs methods.");
+                throw new InvalidOperationException("This is a new file, please use one of the SaveAs methods.");
 
             if (_loadSource == XLLoadSource.Stream)
             {
@@ -503,18 +503,18 @@ namespace ClosedXML.Excel
         {
             var extension = Path.GetExtension(filePath);
 
-            if (extension == null) throw new Exception("Empty extension is not supported.");
+            if (extension == null) throw new ArgumentException("Empty extension is not supported.");
 
             if (extension.ToLowerInvariant().Equals(".xlsm")) return SpreadsheetDocumentType.MacroEnabledWorkbook;
 
             if (extension.ToLowerInvariant().Equals(".xlsx")) return SpreadsheetDocumentType.Workbook;
 
-            throw new Exception(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx' and '.xslm'.", extension));
+            throw new ArgumentException(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx' and '.xslm'.", extension));
         }
         private void checkForWorksheetsPresent()
         {
             if (Worksheets.Count() == 0)
-                throw new Exception("Workbooks need at least one worksheet.");
+                throw new InvalidOperationException("Workbooks need at least one worksheet.");
         }
 
         /// <summary>

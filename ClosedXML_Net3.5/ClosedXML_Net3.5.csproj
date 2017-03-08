@@ -113,6 +113,9 @@
     <Compile Include="..\ClosedXML\Excel\CalcEngine\ExpressionCache.cs">
       <Link>Excel\CalcEngine\ExpressionCache.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\ExpressionParseException.cs">
+      <Link>Excel\CalcEngine\ExpressionParseException.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\CalcEngine\FunctionDefinition.cs">
       <Link>Excel\CalcEngine\FunctionDefinition.cs</Link>
     </Compile>

@@ -70,7 +70,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (_evaluating)
             {
-                throw new Exception("Circular Reference");
+                throw new InvalidOperationException("Circular Reference");
             }
             try
             {

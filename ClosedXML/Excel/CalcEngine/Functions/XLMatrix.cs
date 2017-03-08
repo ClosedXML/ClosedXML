@@ -59,7 +59,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public void MakeLU() // Function for LU decomposition
         {
-            if (!IsSquare()) throw new Exception("The matrix is not square!");
+            if (!IsSquare()) throw new InvalidOperationException("The matrix is not square!");
             L = IdentityMatrix(rows, cols);
             U = Duplicate();
 
@@ -79,8 +79,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                         k0 = i;
                     }
                 }
-                if (p == 0) 
-                    throw new Exception("The matrix is singular!");
+                if (p == 0)
+                    throw new InvalidOperationException("The matrix is singular!");
 
                 var pom1 = pi[k];
                 pi[k] = pi[k0];
@@ -115,8 +115,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public XLMatrix SolveWith(XLMatrix v) // Function solves Ax = v in confirmity with solution vector "v"
         {
-            if (rows != cols) throw new Exception("The matrix is not square!");
-            if (rows != v.rows) throw new Exception("Wrong number of results in solution vector!");
+            if (rows != cols) throw new InvalidOperationException("The matrix is not square!");
+            if (rows != v.rows) throw new ArgumentException("Wrong number of results in solution vector!");
             if (L == null) MakeLU();
 
             var b = new XLMatrix(rows, 1);
@@ -242,9 +242,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     for (var j = 0; j < nums.Length; j++) matrix[i, j] = double.Parse(nums[j]);
                 }
             }
-            catch (FormatException)
+            catch (FormatException fe)
             {
-                throw new Exception("Wrong input format!");
+                throw new FormatException("Wrong input format!", fe);
             }
             return matrix;
         }
@@ -345,7 +345,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static XLMatrix StrassenMultiply(XLMatrix A, XLMatrix B) // Smart matrix multiplication
         {
-            if (A.cols != B.rows) throw new Exception("Wrong dimension of matrix!");
+            if (A.cols != B.rows) throw new ArgumentException("Wrong dimension of matrix!");
 
             XLMatrix R;
 
@@ -513,7 +513,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public static XLMatrix StupidMultiply(XLMatrix m1, XLMatrix m2) // Stupid matrix multiplication
         {
-            if (m1.cols != m2.rows) throw new Exception("Wrong dimensions of matrix!");
+            if (m1.cols != m2.rows) throw new ArgumentException("Wrong dimensions of matrix!");
 
             var result = ZeroMatrix(m1.rows, m2.cols);
             for (var i = 0; i < result.rows; i++)
@@ -535,7 +535,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static XLMatrix Add(XLMatrix m1, XLMatrix m2) 
         {
             if (m1.rows != m2.rows || m1.cols != m2.cols)
-                throw new Exception("Matrices must have the same dimensions!");
+                throw new ArgumentException("Matrices must have the same dimensions!");
             var r = new XLMatrix(m1.rows, m1.cols);
             for (var i = 0; i < r.rows; i++)
                 for (var j = 0; j < r.cols; j++)

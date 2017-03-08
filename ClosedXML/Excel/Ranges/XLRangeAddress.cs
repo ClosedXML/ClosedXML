@@ -83,7 +83,7 @@ namespace ClosedXML.Excel
             get
             {
                 if (IsInvalid)
-                    throw new Exception("Range is invalid.");
+                    throw new InvalidOperationException("Range is invalid.");
 
                 return _firstAddress;
             }
@@ -95,7 +95,7 @@ namespace ClosedXML.Excel
             get
             {
                 if (IsInvalid)
-                    throw new Exception("Range is an invalid state.");
+                    throw new InvalidOperationException("Range is an invalid state.");
 
                 return _lastAddress;
             }
