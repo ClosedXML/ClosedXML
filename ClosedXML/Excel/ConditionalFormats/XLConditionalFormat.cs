@@ -10,6 +10,7 @@ namespace ClosedXML.Excel
         
         public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
         {
+            Name = string.Concat("{", Guid.NewGuid().ToString(), "}");
             Range = range;
             Style = new XLStyle(this, range.Worksheet.Style);
             Values = new XLDictionary<XLFormula>();
@@ -20,6 +21,7 @@ namespace ClosedXML.Excel
         }
         public XLConditionalFormat(XLConditionalFormat other)
         {
+            Name = string.Concat("{", Guid.NewGuid().ToString(), "}");
             Range = other.Range;
             Style = new XLStyle(this, other.Style);
             Values = new XLDictionary<XLFormula>(other.Values);
@@ -39,6 +41,7 @@ namespace ClosedXML.Excel
             ShowBarOnly = other.ShowBarOnly;
         }
 
+        public String Name { get; set; }
         public Boolean CopyDefaultModify { get; set; }
         private IXLStyle _style;
         private Int32 _styleCacheId;
@@ -334,9 +337,10 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.ColorScale;
             return new XLCFColorScaleMin(this);
         }
-        public IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false)
+        public IXLCFDataBarMin DataBar(XLColor color, XLColor colorNegative, Boolean showBarOnly = false)
         {
             Colors.Initialize(color);
+            Colors.Add(colorNegative);
             ShowBarOnly = showBarOnly;
             ConditionalFormatType = XLConditionalFormatType.DataBar;
             return new XLCFDataBarMin(this);

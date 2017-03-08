@@ -243,6 +243,8 @@ namespace ClosedXML.Excel
                             LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ColumnBreaks))
                             LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(WorksheetExtensionList))
+                            LoadExtensions((WorksheetExtensionList)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(LegacyDrawing))
                             ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
                     }
@@ -516,7 +518,8 @@ namespace ClosedXML.Excel
                                             calculation = df.ShowDataAs.Value.ToClosedXml();
                                             pv = pv.SetCalculation(calculation);
                                         }
-                                        if (df.BaseField != null) {
+                                        if (df.BaseField != null)
+                                        {
                                             var col = pt.SourceRange.Column(df.BaseField.Value + 1);
 
                                             var items = col.CellsUsed()
@@ -1636,6 +1639,11 @@ namespace ClosedXML.Excel
                         var dataBar = fr.Elements<DataBar>().First();
                         if (dataBar.ShowValue != null)
                             conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
+                        var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
+                        if (id != null)
+                        {
+                            conditionalFormat.Name = id.Text;
+                        }
                         ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
                     }
                     else if (fr.Elements<IconSet>().Any())
@@ -1667,6 +1675,31 @@ namespace ClosedXML.Excel
                     }
                     ws.ConditionalFormats.Add(conditionalFormat);
                 }
+            }
+        }
+
+        private void LoadExtensions(WorksheetExtensionList extensions, XLWorksheet ws)
+        {
+            if (extensions == null)
+            {
+                return;
+            }
+            foreach (var conditionalFormattingRule in
+                from r in extensions.Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
+                where r.Type == ConditionalFormatValues.DataBar
+                select r)
+            {
+                IXLConditionalFormat xLConditionalFormat = (
+                    from cf in ws.ConditionalFormats
+                    where cf.Name == conditionalFormattingRule.Id
+                    select cf).SingleOrDefault<IXLConditionalFormat>();
+                if (xLConditionalFormat == null)
+                {
+                    continue;
+                }
+                var negativeFillColor = conditionalFormattingRule.Descendants<DocumentFormat.OpenXml.Office2010.Excel.NegativeFillColor>().SingleOrDefault();
+                var color = new DocumentFormat.OpenXml.Spreadsheet.Color { Rgb = negativeFillColor.Rgb };
+                xLConditionalFormat.Colors.Add(this.GetColor(color));
             }
         }
 
