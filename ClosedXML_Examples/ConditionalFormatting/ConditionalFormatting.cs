@@ -519,7 +519,7 @@ namespace ClosedXML_Examples
                 .CellBelow().SetValue(2)
                 .CellBelow().SetValue(3);
 
-            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red, true)
+            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Green, XLColor.Red, false)
                 .LowestValue()
                 .Maximum(XLCFContentType.Percent, "100");
 
@@ -606,7 +606,7 @@ namespace ClosedXML_Examples
               .CellBelow().SetValue(3)
               .CellBelow().SetValue(4);
 
-            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red)
+            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red, XLColor.Green)
                 .LowestValue()
                 .HighestValue();
 
