@@ -22,6 +22,8 @@ namespace ClosedXML.Excel
     using Op;
     using System.Drawing;
     using System.Xml.Linq;
+    using XLParser;
+    using Irony.Parsing;
 
     #endregion
 
@@ -850,41 +852,48 @@ namespace ClosedXML.Excel
                 var name = definedName.Name;
                 var visible = true;
                 if (definedName.Hidden != null) visible = !BooleanValue.ToBoolean(definedName.Hidden);
-                if (name == "_xlnm.Print_Area")
+                if (name == "_xlnm.Print_Area") 
                 {
-                    foreach (string area in definedName.Text.Split(','))
+                    List<Tuple<string, string>> sheetNamesAndAreas;
+                    ParseReference(definedName.Text, out sheetNamesAndAreas);
+                    foreach (Tuple<string, string> sheetNameAndArea in sheetNamesAndAreas) 
                     {
-                        if (area.Contains("["))
+                        string sheetName = sheetNameAndArea.Item1;
+                        string sheetArea = sheetNameAndArea.Item2;
+                        if (sheetArea.Contains("[")) 
                         {
-                            String tableName = area.Substring(0, area.IndexOf("["));
+                            String tableName = sheetArea.Substring(0, sheetArea.IndexOf("["));
                             var ws = Worksheets.FirstOrDefault(w => (w as XLWorksheet).SheetId == definedName.LocalSheetId + 1);
                             if (ws != null)
                             {
-                                ws.PageSetup.PrintAreas.Add(area);
+                                ws.PageSetup.PrintAreas.Add(sheetArea);
                             }
                         }
                         else
                         {
-                            string sheetName, sheetArea;
-                            ParseReference(area, out sheetName, out sheetArea);
                             if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!") || sheetArea.Length == 0))
                                 WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                         }
                     }
                 }
-                else if (name == "_xlnm.Print_Titles")
+                else if (name == "_xlnm.Print_Titles") 
                 {
-                    LoadPrintTitles(definedName);
+                    List<Tuple<string, string>> sheetNamesAndAreas;
+                    ParseReference(definedName.Text, out sheetNamesAndAreas);
+                    foreach (Tuple<string, string> sheetNameAndArea in sheetNamesAndAreas) 
+                    {
+                        SetColumnsOrRowsToRepeat(sheetNameAndArea.Item1, sheetNameAndArea.Item2);
+                    }
                 }
                 else
                 {
                     string text = definedName.Text;
 
-                    if (!(text.Equals("#REF") || text.EndsWith("#REF!")))
+                    if (!(text.Equals("#REF") || text.EndsWith("#REF!"))) 
                     {
                         var localSheetId = definedName.LocalSheetId;
                         var comment = definedName.Comment;
-                        if (localSheetId == null)
+                        if (localSheetId == null) 
                         {
                             if (!NamedRanges.Any(nr => nr.Name == name))
                                 NamedRanges.Add(name, text, comment).Visible = visible;
@@ -899,25 +908,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void LoadPrintTitles(DefinedName definedName)
+        private void SetColumnsOrRowsToRepeat(string sheetName, string sheetArea)
         {
-            var areas = definedName.Text.Split(',');
-            if (areas.Length > 0)
-            {
-                foreach (var item in areas)
-                {
-                    SetColumnsOrRowsToRepeat(item);
-                }
-                return;
-            }
-
-            SetColumnsOrRowsToRepeat(definedName.Text);
-        }
-
-        private void SetColumnsOrRowsToRepeat(string area)
-        {
-            string sheetName, sheetArea;
-            ParseReference(area, out sheetName, out sheetArea);
             if (sheetArea.Equals("#REF")) return;
             if (IsColReference(sheetArea))
                 WorksheetsInternal.Worksheet(sheetName).PageSetup.SetColumnsToRepeatAtLeft(sheetArea);
@@ -938,11 +930,28 @@ namespace ClosedXML.Excel
             return char.IsNumber(c);
         }
 
-        private static void ParseReference(string item, out string sheetName, out string sheetArea)
+        private static void ParseReference(string item, out List<Tuple<string, string>> sheetNameAndArea) 
         {
-            var sections = item.Trim().Split('!');
-            sheetName = sections[0].Replace("\'", "");
-            sheetArea = sections[1];
+            sheetNameAndArea = new List<Tuple<string, string>>();
+            ParseTreeNode nodes = ExcelFormulaParser.Parse(String.Format("DummyFormula({0})", item));
+            ParseTreeNodeList usableNodes = nodes.ChildNodes.FirstOrDefault().ChildNodes.FirstOrDefault().ChildNodes.LastOrDefault().ChildNodes;
+            foreach (ParseTreeNode node in usableNodes) 
+            {
+                string sheetName, sheetArea;
+                ParseTreeNode sheetNode = node.AllNodes("SheetNameQuotedToken").FirstOrDefault();
+                if (sheetNode != null)
+                {
+                    Token sheetNameToken = sheetNode.FindToken();
+                    sheetName = sheetNameToken.Text.Substring(0, sheetNameToken.Text.Length - 2);
+                    List<String> cellRefs = node.AllNodes("CellToken").Select(x => x.FindTokenAndGetText()).ToList();
+                    if (cellRefs == null || cellRefs.Count == 0)
+                        cellRefs = node.AllNodes("VRangeToken").Select(x => x.FindTokenAndGetText()).ToList();
+                    if (cellRefs == null || cellRefs.Count == 0)
+                        cellRefs = node.AllNodes("HRangeToken").Select(x => x.FindTokenAndGetText()).ToList();
+                    sheetArea = String.Join(":", cellRefs);
+                    sheetNameAndArea.Add(new Tuple<string, string>(sheetName, sheetArea));
+                }
+            }
         }
 
         private Int32 lastCell;
