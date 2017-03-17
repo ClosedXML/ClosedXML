@@ -1927,7 +1927,7 @@ namespace ClosedXML.Excel
             return columnPart;
         }
 
-        internal void CopyValues(XLCell source)
+        internal void CopyValuesFrom(XLCell source)
         {
             _cellValue = source._cellValue;
             _dataType = source._dataType;
@@ -1960,7 +1960,7 @@ namespace ClosedXML.Excel
         {
             var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
             //var source = castedOtherCell;
-            CopyValues(source);
+            CopyValuesFrom(source);
 
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 
