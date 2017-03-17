@@ -315,6 +315,13 @@ namespace ClosedXML.Excel
                 {
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
                 }
+
+                // Remove any orphaned references - maybe more types?
+                foreach (var orphan in worksheetPart.Worksheet.OfType<LegacyDrawing>().Where(lg => !worksheetPart.Parts.Any(p => p.RelationshipId == lg.Id)))
+                    worksheetPart.Worksheet.RemoveChild(orphan);
+
+                foreach (var orphan in worksheetPart.Worksheet.OfType<Drawing>().Where(d => !worksheetPart.Parts.Any(p => p.RelationshipId == d.Id)))
+                    worksheetPart.Worksheet.RemoveChild(orphan);
             }
 
             // Remove empty pivot cache part
