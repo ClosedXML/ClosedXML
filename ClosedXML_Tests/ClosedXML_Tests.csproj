@@ -81,6 +81,7 @@
     <Compile Include="Excel\PageSetup\PageBreaksTests.cs" />
     <Compile Include="Excel\Ranges\UsedAndUnusedCellsTests.cs" />
     <Compile Include="Excel\Saving\SavingTests.cs" />
+    <Compile Include="RemoveDeprecatedCodeTests.cs" />
     <Compile Include="XLHelperTests.cs" />
     <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
     <Compile Include="Excel\CalcEngine\DateAndTimeTests.cs" />

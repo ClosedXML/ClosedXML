@@ -3,13 +3,12 @@
 namespace ClosedXML.Attributes
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    [Obsolete("Use XLColumnAttribute instead")]
     public class ColumnOrderAttribute : Attribute
     {
-        public ColumnOrderAttribute(long order)
-        {
-            this.Order = order;
-        }
+        // Deprecated, use XLColumnAttribute instead
 
-        public long Order { get; private set; }
+        // This attribute should be kept for "a while" to allow existing users to find the new XLColumnAttribute
+        // Should be removed before ClosedXML turns version 1.0
     }
 }
