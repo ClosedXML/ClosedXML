@@ -19,7 +19,8 @@ namespace ClosedXML_Tests.Excel
             {
                 @"Misc\TableWithCustomTheme.xlsx",
                 @"Misc\EmptyTable.xlsx",
-                @"Misc\LoadPivotTables.xlsx"
+                @"Misc\LoadPivotTables.xlsx",
+                @"Misc\LoadFileWithCustomSheetViews.xlsx"
             };
 
             foreach (var file in files)

@@ -180,8 +180,16 @@ namespace ClosedXML.Excel
 
                 using (var reader = OpenXmlReader.Create(wsPart))
                 {
+                    Type[] ignoredElements = new Type[]
+                    {
+                        typeof(CustomSheetViews) // Custom sheet views contain its own auto filter data, and more, which should be ignored for now
+                    };
+
                     while (reader.Read())
                     {
+                        while (ignoredElements.Contains(reader.ElementType))
+                            reader.ReadNextSibling();
+
                         if (reader.ElementType == typeof(SheetFormatProperties))
                         {
                             var sheetFormatProperties = (SheetFormatProperties)reader.LoadCurrentElement();
@@ -245,6 +253,7 @@ namespace ClosedXML.Excel
                             LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(LegacyDrawing))
                             ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
+
                     }
                     reader.Close();
                 }
