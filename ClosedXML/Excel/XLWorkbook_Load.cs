@@ -180,8 +180,16 @@ namespace ClosedXML.Excel
 
                 using (var reader = OpenXmlReader.Create(wsPart))
                 {
+                    Type[] ignoredElements = new Type[]
+                    {
+                        typeof(CustomSheetViews) // Custom sheet views contain its own auto filter data, and more, which should be ignored for now
+                    };
+
                     while (reader.Read())
                     {
+                        while (ignoredElements.Contains(reader.ElementType))
+                            reader.ReadNextSibling();
+
                         if (reader.ElementType == typeof(SheetFormatProperties))
                         {
                             var sheetFormatProperties = (SheetFormatProperties)reader.LoadCurrentElement();
@@ -245,6 +253,7 @@ namespace ClosedXML.Excel
                             LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(LegacyDrawing))
                             ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
+
                     }
                     reader.Close();
                 }
@@ -472,60 +481,70 @@ namespace ClosedXML.Excel
                                 pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
 
                             // Row labels
-                            foreach (var rf in pivotTableDefinition.RowFields.Cast<Field>())
+                            if (pivotTableDefinition.RowFields != null)
                             {
-                                if (rf.Index.Value == -2)
-                                    pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
-                                else if (rf.Index < pivotTableDefinition.PivotFields.Count)
+                                foreach (var rf in pivotTableDefinition.RowFields.Cast<Field>())
                                 {
-                                    var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
-                                    if (pf != null && pf.Name != null) pt.RowLabels.Add(pf.Name.Value);
+                                    if (rf.Index.Value == -2)
+                                        pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                    else if (rf.Index < pivotTableDefinition.PivotFields.Count)
+                                    {
+                                        var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
+                                        if (pf != null && pf.Name != null) pt.RowLabels.Add(pf.Name.Value);
+                                    }
                                 }
                             }
 
                             // Column labels
-                            foreach (var cf in pivotTableDefinition.ColumnFields.Cast<Field>())
+                            if (pivotTableDefinition.ColumnFields != null)
                             {
-                                if (cf.Index.Value == -2)
-                                    pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
-
-                                else if (cf.Index < pivotTableDefinition.PivotFields.Count)
+                                foreach (var cf in pivotTableDefinition.ColumnFields.Cast<Field>())
                                 {
-                                    var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
-                                    if (pf != null && pf.Name != null) pt.ColumnLabels.Add(pf.Name.Value);
+                                    if (cf.Index.Value == -2)
+                                        pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                                    else if (cf.Index < pivotTableDefinition.PivotFields.Count)
+                                    {
+                                        var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
+                                        if (pf != null && pf.Name != null) pt.ColumnLabels.Add(pf.Name.Value);
+                                    }
                                 }
                             }
 
                             // Values
-                            foreach (var df in pivotTableDefinition.DataFields.Cast<DataField>())
+                            if (pivotTableDefinition.DataFields != null)
                             {
-                                if ((int)df.Field.Value == -2)
-                                    pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
-
-                                else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
+                                foreach (var df in pivotTableDefinition.DataFields.Cast<DataField>())
                                 {
-                                    var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;
-                                    if (pf != null && pf.Name != null)
+                                    if ((int)df.Field.Value == -2)
+                                        pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                                    else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
                                     {
-                                        var pv = pt.Values.Add(pf.Name.Value, df.Name.Value);
-                                        if (df.NumberFormatId != null) pv.NumberFormat.SetNumberFormatId((int)df.NumberFormatId.Value);
-                                        if (df.Subtotal != null) pv = pv.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
-                                        if (df.ShowDataAs != null)
+                                        var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;
+                                        if (pf != null && pf.Name != null)
                                         {
-                                            var calculation = pv.Calculation;
-                                            calculation = df.ShowDataAs.Value.ToClosedXml();
-                                            pv = pv.SetCalculation(calculation);
-                                        }
-                                        if (df.BaseField != null) {
-                                            var col = pt.SourceRange.Column(df.BaseField.Value + 1);
+                                            var pv = pt.Values.Add(pf.Name.Value, df.Name.Value);
+                                            if (df.NumberFormatId != null) pv.NumberFormat.SetNumberFormatId((int)df.NumberFormatId.Value);
+                                            if (df.Subtotal != null) pv = pv.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
+                                            if (df.ShowDataAs != null)
+                                            {
+                                                var calculation = pv.Calculation;
+                                                calculation = df.ShowDataAs.Value.ToClosedXml();
+                                                pv = pv.SetCalculation(calculation);
+                                            }
+                                            if (df.BaseField != null)
+                                            {
+                                                var col = pt.SourceRange.Column(df.BaseField.Value + 1);
 
-                                            var items = col.CellsUsed()
-                                                        .Select(c => c.Value)
-                                                        .Skip(1) // Skip header column
-                                                        .Distinct().ToList();
+                                                var items = col.CellsUsed()
+                                                            .Select(c => c.Value)
+                                                            .Skip(1) // Skip header column
+                                                            .Distinct().ToList();
 
-                                            pv.BaseField = col.FirstCell().GetValue<string>();
-                                            if (df.BaseItem != null) pv.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                                pv.BaseField = col.FirstCell().GetValue<string>();
+                                                if (df.BaseItem != null) pv.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                            }
                                         }
                                     }
                                 }
@@ -536,7 +555,6 @@ namespace ClosedXML.Excel
             }
 
             #endregion
-
         }
 
         #region Comment Helpers
@@ -1050,18 +1068,11 @@ namespace ClosedXML.Excel
                 {
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
+
                     if (s == null)
-                    {
                         xlCell._dataType = XLCellValues.Number;
-                    }
                     else
-                    {
-                        var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                        if (numberFormatId == 46U)
-                            xlCell.DataType = XLCellValues.TimeSpan;
-                        else
-                            xlCell._dataType = XLCellValues.Number;
-                    }
+                        xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                 }
             }
             else if (cell.CellValue != null)
@@ -1075,6 +1086,7 @@ namespace ClosedXML.Excel
                     var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
+
                     if (s.NumberingFormats != null &&
                         s.NumberingFormats.Any(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId))
                     {
@@ -1087,15 +1099,7 @@ namespace ClosedXML.Excel
                     else
                         xlCell.Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
 
-                    if (!XLHelper.IsNullOrWhiteSpace(xlCell.Style.NumberFormat.Format))
-                        xlCell._dataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
-                    else if ((numberFormatId >= 14 && numberFormatId <= 22) ||
-                             (numberFormatId >= 45 && numberFormatId <= 47))
-                        xlCell._dataType = XLCellValues.DateTime;
-                    else if (numberFormatId == 49)
-                        xlCell._dataType = XLCellValues.Text;
-                    else
-                        xlCell._dataType = XLCellValues.Number;
+                    xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                 }
             }
         }
@@ -1360,7 +1364,29 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static XLCellValues GetDataTypeFromFormat(String format)
+        private static XLCellValues GetDataTypeFromCell(IXLNumberFormat numberFormat)
+        {
+            var numberFormatId = numberFormat.NumberFormatId;
+            if (numberFormatId == 46U)
+                return XLCellValues.TimeSpan;
+            else if ((numberFormatId >= 14 && numberFormatId <= 22) ||
+                     (numberFormatId >= 45 && numberFormatId <= 47))
+                return XLCellValues.DateTime;
+            else if (numberFormatId == 49)
+                return XLCellValues.Text;
+            else
+            {
+                if (!XLHelper.IsNullOrWhiteSpace(numberFormat.Format))
+                {
+                    var dataType = GetDataTypeFromFormat(numberFormat.Format);
+                    return dataType.HasValue ? dataType.Value : XLCellValues.Number;
+                }
+                else
+                    return XLCellValues.Number;
+            }
+        }
+
+        private static XLCellValues? GetDataTypeFromFormat(String format)
         {
             int length = format.Length;
             String f = format.ToLower();
@@ -1374,7 +1400,7 @@ namespace ClosedXML.Excel
                 else if (c == 'y' || c == 'm' || c == 'd' || c == 'h' || c == 's')
                     return XLCellValues.DateTime;
             }
-            return XLCellValues.Text;
+            return null;
         }
 
         private static void LoadAutoFilter(AutoFilter af, XLWorksheet ws)
@@ -1917,8 +1943,16 @@ namespace ClosedXML.Excel
                     ws.Cell(selection.ActiveCell).SetActive();
             }
 
-            var pane = sheetView.Elements<Pane>().FirstOrDefault();
+            if (sheetView.ZoomScale != null)
+                ws.SheetView.ZoomScale = (int)UInt32Value.ToUInt32(sheetView.ZoomScale);
+            if (sheetView.ZoomScaleNormal != null)
+                ws.SheetView.ZoomScaleNormal = (int)UInt32Value.ToUInt32(sheetView.ZoomScaleNormal);
+            if (sheetView.ZoomScalePageLayoutView != null)
+                ws.SheetView.ZoomScalePageLayoutView = (int)UInt32Value.ToUInt32(sheetView.ZoomScalePageLayoutView);
+            if (sheetView.ZoomScaleSheetLayoutView != null)
+                ws.SheetView.ZoomScaleSheetLayoutView = (int)UInt32Value.ToUInt32(sheetView.ZoomScaleSheetLayoutView);
 
+            var pane = sheetView.Elements<Pane>().FirstOrDefault();
             if (pane == null) return;
 
             if (pane.State == null ||

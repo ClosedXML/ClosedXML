@@ -75,6 +75,7 @@
     <Compile Include="Misc\CopyingRowsAndColumns.cs" />
     <Compile Include="Misc\DataTypesUnderDifferentCulture.cs" />
     <Compile Include="Misc\RightToLeft.cs" />
+    <Compile Include="Misc\SheetViews.cs" />
     <Compile Include="ModifyFiles.cs" />
     <Compile Include="Creating\CreateFiles.cs" />
     <Compile Include="Loading\ChangingBasicTable.cs" />

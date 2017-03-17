@@ -19,7 +19,8 @@ namespace ClosedXML_Tests.Excel
             {
                 @"Misc\TableWithCustomTheme.xlsx",
                 @"Misc\EmptyTable.xlsx",
-                @"Misc\LoadPivotTables.xlsx"
+                @"Misc\LoadPivotTables.xlsx",
+                @"Misc\LoadFileWithCustomSheetViews.xlsx"
             };
 
             foreach (var file in files)
@@ -93,6 +94,26 @@ namespace ClosedXML_Tests.Excel
                 using (var ms = new MemoryStream())
                 {
                     wb.SaveAs(ms, true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// As per https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.cellvalues(v=office.15).aspx
+        /// the 'Date' DataType is available only in files saved with Microsoft Office
+        /// In other files, the data type will be saved as numeric
+        /// ClosedXML then deduces the data type by inspecting the number format string
+        /// </summary>
+        [Test]
+        public void CanLoadLibreOfficeFileWithDates()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LibreOfficeFileWithDates.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                foreach (var cell in ws.CellsUsed())
+                {
+                    Assert.AreEqual(XLCellValues.DateTime, cell.DataType);
                 }
             }
         }

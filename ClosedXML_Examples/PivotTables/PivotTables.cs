@@ -63,10 +63,10 @@ namespace ClosedXML_Examples
                 for (int i = 1; i <= 3; i++)
                 {
                     // Add a new sheet for our pivot table
-                    ptSheet = wb.Worksheets.Add("PivotTable" + i);
+                    ptSheet = wb.Worksheets.Add("pvt" + i);
 
                     // Create the pivot table, using the data from the "PastrySalesData" table
-                    pt = ptSheet.PivotTables.AddNew("PivotTable", ptSheet.Cell(1, 1), dataRange);
+                    pt = ptSheet.PivotTables.AddNew("pvt", ptSheet.Cell(1, 1), dataRange);
 
                     // The rows in our pivot table will be the names of the pastries
                     pt.RowLabels.Add("Name");
@@ -96,14 +96,23 @@ namespace ClosedXML_Examples
                 }
 
                 // Different kind of pivot
-                ptSheet = wb.Worksheets.Add("PivotTableNoColumnLabels");
-                pt = ptSheet.PivotTables.AddNew("PivotTableNoColumnLabels", ptSheet.Cell(1, 1), dataRange);
+                ptSheet = wb.Worksheets.Add("pvtNoColumnLabels");
+                pt = ptSheet.PivotTables.AddNew("pvtNoColumnLabels", ptSheet.Cell(1, 1), dataRange);
 
                 pt.RowLabels.Add("Name");
                 pt.RowLabels.Add("Month");
 
                 pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);//.NumberFormat.Format = "#0.00";
                 pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);//.NumberFormat.Format = "#0.00";
+
+                // Pivot table with a field both as a value and as a row/column/filter label
+                ptSheet = wb.Worksheets.Add("pvtFieldAsValueAndLabel");
+                pt = ptSheet.PivotTables.AddNew("pvtFieldAsValueAndLabel", ptSheet.Cell(1, 1), dataRange);
+
+                pt.RowLabels.Add("Name");
+                pt.RowLabels.Add("Month");
+
+                pt.Values.Add("Name").SetSummaryFormula(XLPivotSummary.Count);//.NumberFormat.Format = "#0.00";
 
                 wb.SaveAs(filePath);
             }

@@ -203,6 +203,20 @@ namespace ClosedXML.Excel
 
     }
 
+    public static class DecimalExtensions
+    {
+        //All numbers are stored in XL files as invarient culture this is just a easy helper
+        public static String ToInvariantString(this Decimal value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public static Decimal SaveRound(this Decimal value)
+        {
+            return Math.Round(value, 6);
+        }
+    }
+
     public static class DoubleExtensions
     {
         //All numbers are stored in XL files as invarient culture this is just a easy helper
@@ -308,6 +322,24 @@ namespace ClosedXML.Excel
         public static DoubleValue SaveRound(this DoubleValue value)
         {
             return value.HasValue ? new DoubleValue(Math.Round(value, 6)) : value;
+        }
+    }
+
+    public static class ObjectExtensions
+    {
+        public static bool IsNumber(this object value)
+        {
+            return value is sbyte
+                    || value is byte
+                    || value is short
+                    || value is ushort
+                    || value is int
+                    || value is uint
+                    || value is long
+                    || value is ulong
+                    || value is float
+                    || value is double
+                    || value is decimal;
         }
     }
 }
