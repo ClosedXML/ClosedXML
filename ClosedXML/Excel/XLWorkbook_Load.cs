@@ -481,60 +481,70 @@ namespace ClosedXML.Excel
                                 pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
 
                             // Row labels
-                            foreach (var rf in pivotTableDefinition.RowFields.Cast<Field>())
+                            if (pivotTableDefinition.RowFields != null)
                             {
-                                if (rf.Index.Value == -2)
-                                    pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
-                                else if (rf.Index < pivotTableDefinition.PivotFields.Count)
+                                foreach (var rf in pivotTableDefinition.RowFields.Cast<Field>())
                                 {
-                                    var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
-                                    if (pf != null && pf.Name != null) pt.RowLabels.Add(pf.Name.Value);
+                                    if (rf.Index.Value == -2)
+                                        pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                    else if (rf.Index < pivotTableDefinition.PivotFields.Count)
+                                    {
+                                        var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
+                                        if (pf != null && pf.Name != null) pt.RowLabels.Add(pf.Name.Value);
+                                    }
                                 }
                             }
 
                             // Column labels
-                            foreach (var cf in pivotTableDefinition.ColumnFields.Cast<Field>())
+                            if (pivotTableDefinition.ColumnFields != null)
                             {
-                                if (cf.Index.Value == -2)
-                                    pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
-
-                                else if (cf.Index < pivotTableDefinition.PivotFields.Count)
+                                foreach (var cf in pivotTableDefinition.ColumnFields.Cast<Field>())
                                 {
-                                    var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
-                                    if (pf != null && pf.Name != null) pt.ColumnLabels.Add(pf.Name.Value);
+                                    if (cf.Index.Value == -2)
+                                        pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                                    else if (cf.Index < pivotTableDefinition.PivotFields.Count)
+                                    {
+                                        var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
+                                        if (pf != null && pf.Name != null) pt.ColumnLabels.Add(pf.Name.Value);
+                                    }
                                 }
                             }
 
                             // Values
-                            foreach (var df in pivotTableDefinition.DataFields.Cast<DataField>())
+                            if (pivotTableDefinition.DataFields != null)
                             {
-                                if ((int)df.Field.Value == -2)
-                                    pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
-
-                                else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
+                                foreach (var df in pivotTableDefinition.DataFields.Cast<DataField>())
                                 {
-                                    var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;
-                                    if (pf != null && pf.Name != null)
+                                    if ((int)df.Field.Value == -2)
+                                        pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                                    else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
                                     {
-                                        var pv = pt.Values.Add(pf.Name.Value, df.Name.Value);
-                                        if (df.NumberFormatId != null) pv.NumberFormat.SetNumberFormatId((int)df.NumberFormatId.Value);
-                                        if (df.Subtotal != null) pv = pv.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
-                                        if (df.ShowDataAs != null)
+                                        var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;
+                                        if (pf != null && pf.Name != null)
                                         {
-                                            var calculation = pv.Calculation;
-                                            calculation = df.ShowDataAs.Value.ToClosedXml();
-                                            pv = pv.SetCalculation(calculation);
-                                        }
-                                        if (df.BaseField != null) {
-                                            var col = pt.SourceRange.Column(df.BaseField.Value + 1);
+                                            var pv = pt.Values.Add(pf.Name.Value, df.Name.Value);
+                                            if (df.NumberFormatId != null) pv.NumberFormat.SetNumberFormatId((int)df.NumberFormatId.Value);
+                                            if (df.Subtotal != null) pv = pv.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
+                                            if (df.ShowDataAs != null)
+                                            {
+                                                var calculation = pv.Calculation;
+                                                calculation = df.ShowDataAs.Value.ToClosedXml();
+                                                pv = pv.SetCalculation(calculation);
+                                            }
+                                            if (df.BaseField != null)
+                                            {
+                                                var col = pt.SourceRange.Column(df.BaseField.Value + 1);
 
-                                            var items = col.CellsUsed()
-                                                        .Select(c => c.Value)
-                                                        .Skip(1) // Skip header column
-                                                        .Distinct().ToList();
+                                                var items = col.CellsUsed()
+                                                            .Select(c => c.Value)
+                                                            .Skip(1) // Skip header column
+                                                            .Distinct().ToList();
 
-                                            pv.BaseField = col.FirstCell().GetValue<string>();
-                                            if (df.BaseItem != null) pv.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                                pv.BaseField = col.FirstCell().GetValue<string>();
+                                                if (df.BaseItem != null) pv.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                            }
                                         }
                                     }
                                 }
@@ -545,7 +555,6 @@ namespace ClosedXML.Excel
             }
 
             #endregion
-
         }
 
         #region Comment Helpers
