@@ -258,6 +258,7 @@
     <EmbeddedResource Include="Resource\Misc\FileWithMismatchSheetIdAndRelId.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LoadFileWithCustomSheetViews.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LoadPivotTables.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LibreOfficeFileWithDates.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />

@@ -1068,18 +1068,11 @@ namespace ClosedXML.Excel
                 {
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
+
                     if (s == null)
-                    {
                         xlCell._dataType = XLCellValues.Number;
-                    }
                     else
-                    {
-                        var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                        if (numberFormatId == 46U)
-                            xlCell.DataType = XLCellValues.TimeSpan;
-                        else
-                            xlCell._dataType = XLCellValues.Number;
-                    }
+                        xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                 }
             }
             else if (cell.CellValue != null)
@@ -1093,6 +1086,7 @@ namespace ClosedXML.Excel
                     var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                     if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
+
                     if (s.NumberingFormats != null &&
                         s.NumberingFormats.Any(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId))
                     {
@@ -1105,15 +1099,7 @@ namespace ClosedXML.Excel
                     else
                         xlCell.Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
 
-                    if (!XLHelper.IsNullOrWhiteSpace(xlCell.Style.NumberFormat.Format))
-                        xlCell._dataType = GetDataTypeFromFormat(xlCell.Style.NumberFormat.Format);
-                    else if ((numberFormatId >= 14 && numberFormatId <= 22) ||
-                             (numberFormatId >= 45 && numberFormatId <= 47))
-                        xlCell._dataType = XLCellValues.DateTime;
-                    else if (numberFormatId == 49)
-                        xlCell._dataType = XLCellValues.Text;
-                    else
-                        xlCell._dataType = XLCellValues.Number;
+                    xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                 }
             }
         }
@@ -1378,7 +1364,29 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static XLCellValues GetDataTypeFromFormat(String format)
+        private static XLCellValues GetDataTypeFromCell(IXLNumberFormat numberFormat)
+        {
+            var numberFormatId = numberFormat.NumberFormatId;
+            if (numberFormatId == 46U)
+                return XLCellValues.TimeSpan;
+            else if ((numberFormatId >= 14 && numberFormatId <= 22) ||
+                     (numberFormatId >= 45 && numberFormatId <= 47))
+                return XLCellValues.DateTime;
+            else if (numberFormatId == 49)
+                return XLCellValues.Text;
+            else
+            {
+                if (!XLHelper.IsNullOrWhiteSpace(numberFormat.Format))
+                {
+                    var dataType = GetDataTypeFromFormat(numberFormat.Format);
+                    return dataType.HasValue ? dataType.Value : XLCellValues.Number;
+                }
+                else
+                    return XLCellValues.Number;
+            }
+        }
+
+        private static XLCellValues? GetDataTypeFromFormat(String format)
         {
             int length = format.Length;
             String f = format.ToLower();
@@ -1392,7 +1400,7 @@ namespace ClosedXML.Excel
                 else if (c == 'y' || c == 'm' || c == 'd' || c == 'h' || c == 's')
                     return XLCellValues.DateTime;
             }
-            return XLCellValues.Text;
+            return null;
         }
 
         private static void LoadAutoFilter(AutoFilter af, XLWorksheet ws)
