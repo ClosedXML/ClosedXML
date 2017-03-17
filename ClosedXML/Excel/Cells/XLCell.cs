@@ -897,6 +897,7 @@ namespace ClosedXML.Excel
                 {
                     Hyperlink = null;
                     _richText = null;
+                    _dataType = XLCellValues.Text;
                     //_comment = null;
                     _cellValue = String.Empty;
                     FormulaA1 = String.Empty;
@@ -1163,7 +1164,10 @@ namespace ClosedXML.Excel
             get
             {
                 using (var asRange = AsRange())
-                    return Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange) && dv.IsDirty());
+                    return Worksheet.DataValidations.Any(dv =>
+                    {
+                        using (var rngs = dv.Ranges) return rngs.Contains(asRange) && dv.IsDirty();
+                    });
             }
         }
 
@@ -2212,6 +2216,7 @@ namespace ClosedXML.Excel
                             }
                             else
                                 sb.Append(matchString);
+                            matchRange.Dispose();
                         }
                         else
                             sb.Append(matchString);
@@ -2451,6 +2456,7 @@ namespace ClosedXML.Excel
                             }
                             else
                                 sb.Append(matchString);
+                            matchRange.Dispose();
                         }
                         else
                             sb.Append(matchString);
