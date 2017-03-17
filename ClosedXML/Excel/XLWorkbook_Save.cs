@@ -2628,7 +2628,15 @@ namespace ClosedXML.Excel
             // To determine the default workbook style, we look for the style with builtInId = 0 (I hope that is the correct approach)
             UInt32 defaultFormatId;
             if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0))
-                defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Single(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0).FormatId.Value;
+            {
+                // Possible to have duplicate default cell styles - occurs when file gets saved under different cultures.
+                // We prefer the style that is named Normal
+                var normalCellStyles = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>()
+                    .Where(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0)
+                    .OrderBy(c => c.Name != null && c.Name.HasValue && c.Name.Value == "Normal");
+
+                defaultFormatId = normalCellStyles.Last().FormatId.Value;
+            }
             else if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any())
                 defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Max(c => c.FormatId.Value) + 1;
             else
