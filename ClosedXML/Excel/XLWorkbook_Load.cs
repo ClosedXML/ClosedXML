@@ -1935,8 +1935,16 @@ namespace ClosedXML.Excel
                     ws.Cell(selection.ActiveCell).SetActive();
             }
 
-            var pane = sheetView.Elements<Pane>().FirstOrDefault();
+            if (sheetView.ZoomScale != null)
+                ws.SheetView.ZoomScale = (int)UInt32Value.ToUInt32(sheetView.ZoomScale);
+            if (sheetView.ZoomScaleNormal != null)
+                ws.SheetView.ZoomScaleNormal = (int)UInt32Value.ToUInt32(sheetView.ZoomScaleNormal);
+            if (sheetView.ZoomScalePageLayoutView != null)
+                ws.SheetView.ZoomScalePageLayoutView = (int)UInt32Value.ToUInt32(sheetView.ZoomScalePageLayoutView);
+            if (sheetView.ZoomScaleSheetLayoutView != null)
+                ws.SheetView.ZoomScaleSheetLayoutView = (int)UInt32Value.ToUInt32(sheetView.ZoomScaleSheetLayoutView);
 
+            var pane = sheetView.Elements<Pane>().FirstOrDefault();
             if (pane == null) return;
 
             if (pane.State == null ||

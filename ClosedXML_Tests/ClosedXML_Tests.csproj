@@ -163,6 +163,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\MergeMoves.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Outline.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\SheetProtection.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\SheetViews.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\ShiftingFormulas.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\ShowCase.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\TabColors.xlsx" />
