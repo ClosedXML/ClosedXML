@@ -300,9 +300,15 @@ namespace ClosedXML.Excel
             var fontCache = new Dictionary<IXLFontBase, Font>();
             Double colMaxWidth = minWidth;
 
-            Int32 autoFilterRow = 0;
+            List<Int32> autoFilterRows = new List<Int32>();
             if (this.Worksheet.AutoFilter != null && this.Worksheet.AutoFilter.Range != null)
-                autoFilterRow = this.Worksheet.AutoFilter.Range.FirstRow().RowNumber();
+                autoFilterRows.Add(this.Worksheet.AutoFilter.Range.FirstRow().RowNumber());
+
+            autoFilterRows.AddRange(Worksheet.Tables.Where(t => 
+                    t.AutoFilter != null 
+                    && t.AutoFilter.Range != null 
+                    && !autoFilterRows.Contains(t.AutoFilter.Range.FirstRow().RowNumber()))
+                .Select(t => t.AutoFilter.Range.FirstRow().RowNumber()));
 
             foreach (XLCell c in Column(startRow, endRow).CellsUsed())
             {
@@ -447,7 +453,7 @@ namespace ClosedXML.Excel
                 else
                     thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString(), fontCache);
 
-                if (autoFilterRow == c.Address.RowNumber)
+                if (autoFilterRows.Contains(c.Address.RowNumber))
                     thisWidthMax += 2.7148; // Allow room for arrow icon in autofilter
 
 
