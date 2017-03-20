@@ -2005,7 +2005,7 @@ namespace ClosedXML.Excel
                 ShowDataTips = GetBooleanValue(pt.ShowContextualTooltips, true),
                 ShowMemberPropertyTips = GetBooleanValue(pt.ShowPropertiesInTooltips, true),
                 ShowHeaders = GetBooleanValue(pt.DisplayCaptionsAndDropdowns, true),
-                GridDropZones = GetBooleanValue(pt.ClassicPivotTableLayout, true),
+                GridDropZones = GetBooleanValue(pt.ClassicPivotTableLayout, false),
                 ShowEmptyRow = GetBooleanValue(pt.ShowEmptyItemsOnRows, true),
                 ShowEmptyColumn = GetBooleanValue(pt.ShowEmptyItemsOnColumns, true),
                 ShowItems = GetBooleanValue(pt.DisplayItemLabels, true),
