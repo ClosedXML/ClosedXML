@@ -602,7 +602,7 @@ namespace ClosedXML.Excel
 
                                             pivotValue.BaseField = col.FirstCell().GetValue<string>();
                                             if (df.BaseItem != null) pivotValue.BaseItem = items[(int)df.BaseItem.Value].ToString();
-                                       }
+                                        }
                                     }
                                 }
                             }
