@@ -43,6 +43,7 @@ using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
 using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
+using System.Threading;
 
 namespace ClosedXML.Excel
 {
@@ -82,8 +83,20 @@ namespace ClosedXML.Excel
 
         private bool Validate(SpreadsheetDocument package)
         {
-            var validator = new OpenXmlValidator();
-            var errors = validator.Validate(package);
+            var backupCulture = Thread.CurrentThread.CurrentCulture;
+
+            IEnumerable<ValidationErrorInfo> errors;
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                var validator = new OpenXmlValidator();
+                errors = validator.Validate(package);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = backupCulture;
+            }
+
             if (errors.Any())
             {
                 var message = string.Join("\r\n", errors.Select(e => string.Format("{0} in {1}", e.Description, e.Path.XPath)).ToArray());
@@ -225,6 +238,7 @@ namespace ClosedXML.Excel
             // Ensure all RelId's have been added to the context
             context.RelIdGenerator.AddValues(workbookPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
             context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !XLHelper.IsNullOrWhiteSpace(ws.RelId)).Select(ws => ws.RelId), RelType.Workbook);
+            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !XLHelper.IsNullOrWhiteSpace(ws.LegacyDrawingId)).Select(ws => ws.LegacyDrawingId), RelType.Workbook);
             context.RelIdGenerator.AddValues(WorksheetsInternal
                 .Cast<XLWorksheet>()
                 .SelectMany(ws => ws.Tables.Cast<XLTable>())
@@ -276,8 +290,9 @@ namespace ClosedXML.Excel
 
                 if (worksheet.Internals.CellsCollection.GetCells(c => c.HasComment).Any())
                 {
+                    var id = context.RelIdGenerator.GetNext(RelType.Workbook);
                     var worksheetCommentsPart =
-                        worksheetPart.AddNewPart<WorksheetCommentsPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
+                        worksheetPart.AddNewPart<WorksheetCommentsPart>(id);
 
                     GenerateWorksheetCommentsPartContent(worksheetCommentsPart, worksheet);
 
@@ -302,6 +317,13 @@ namespace ClosedXML.Excel
                 {
                     GeneratePivotTables(workbookPart, worksheetPart, worksheet, context);
                 }
+
+                // Remove any orphaned references - maybe more types?
+                foreach (var orphan in worksheetPart.Worksheet.OfType<LegacyDrawing>().Where(lg => !worksheetPart.Parts.Any(p => p.RelationshipId == lg.Id)))
+                    worksheetPart.Worksheet.RemoveChild(orphan);
+
+                foreach (var orphan in worksheetPart.Worksheet.OfType<Drawing>().Where(d => !worksheetPart.Parts.Any(p => p.RelationshipId == d.Id)))
+                    worksheetPart.Worksheet.RemoveChild(orphan);
             }
 
             // Remove empty pivot cache part
@@ -2097,10 +2119,9 @@ namespace ClosedXML.Excel
                     pf.Axis = PivotTableAxisValues.AxisPage;
                     pageFields.AppendChild(new PageField { Hierarchy = -1, Field = pt.Fields.IndexOf(xlpf) });
                 }
-                else if (pt.Values.Any(p => p.SourceName == xlpf.SourceName))
-                {
+
+                if (pt.Values.Any(p => p.SourceName == xlpf.SourceName))
                     pf.DataField = true;
-                }
 
                 var fieldItems = new Items();
 
@@ -2607,7 +2628,15 @@ namespace ClosedXML.Excel
             // To determine the default workbook style, we look for the style with builtInId = 0 (I hope that is the correct approach)
             UInt32 defaultFormatId;
             if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0))
-                defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Single(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0).FormatId.Value;
+            {
+                // Possible to have duplicate default cell styles - occurs when file gets saved under different cultures.
+                // We prefer the style that is named Normal
+                var normalCellStyles = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>()
+                    .Where(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0)
+                    .OrderBy(c => c.Name != null && c.Name.HasValue && c.Name.Value == "Normal");
+
+                defaultFormatId = normalCellStyles.Last().FormatId.Value;
+            }
             else if (workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any())
                 defaultFormatId = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Max(c => c.FormatId.Value) + 1;
             else
@@ -3646,6 +3675,26 @@ namespace ClosedXML.Excel
 
                 sheetView.Append(selection);
             }
+
+            if (xlWorksheet.SheetView.ZoomScale == 100)
+                sheetView.ZoomScale = null;
+            else
+                sheetView.ZoomScale = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScale));
+
+            if (xlWorksheet.SheetView.ZoomScaleNormal == 100)
+                sheetView.ZoomScaleNormal = null;
+            else
+                sheetView.ZoomScaleNormal = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScaleNormal));
+
+            if (xlWorksheet.SheetView.ZoomScalePageLayoutView == 100)
+                sheetView.ZoomScalePageLayoutView = null;
+            else
+                sheetView.ZoomScalePageLayoutView = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScalePageLayoutView));
+
+            if (xlWorksheet.SheetView.ZoomScaleSheetLayoutView == 100)
+                sheetView.ZoomScaleSheetLayoutView = null;
+            else
+                sheetView.ZoomScaleSheetLayoutView = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScaleSheetLayoutView));
 
             #endregion
 
@@ -4689,8 +4738,7 @@ namespace ClosedXML.Excel
 
         private static double GetColumnWidth(double columnWidth)
         {
-            var retVal = columnWidth + ColumnWidthOffset;
-            return retVal > 0 ? retVal : 0;
+            return Math.Min(255.0, Math.Max(0.0, columnWidth + ColumnWidthOffset));
         }
 
         private static void UpdateColumn(Column column, Columns columns, Dictionary<uint, Column> sheetColumnsByMin)

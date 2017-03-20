@@ -164,7 +164,7 @@ namespace ClosedXML.Excel
             if (pRow > 1)
             {
                 pRow--;
-                double prevHeight = cell.CellAbove().WorksheetRow().Height;
+                double prevHeight = cell.Worksheet.Row(pRow).Height;
                 if (prevHeight > 7)
                     pRowOffset = prevHeight - 7;
             }
