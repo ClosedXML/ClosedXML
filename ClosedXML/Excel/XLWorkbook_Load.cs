@@ -611,7 +611,6 @@ namespace ClosedXML.Excel
                 }
             }
 
-
             #endregion
         }
 
@@ -1131,8 +1130,8 @@ namespace ClosedXML.Excel
                         xlCell._dataType = XLCellValues.Number;
                     else
                         xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
-                    }
                 }
+            }
             else if (cell.CellValue != null)
             {
                 if (s == null)
