@@ -253,7 +253,6 @@ namespace ClosedXML.Excel
                             LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(LegacyDrawing))
                             ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
-
                     }
                     reader.Close();
                 }
@@ -502,7 +501,6 @@ namespace ClosedXML.Excel
                                 {
                                     if (cf.Index.Value == -2)
                                         pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
-
                                     else if (cf.Index < pivotTableDefinition.PivotFields.Count)
                                     {
                                         var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
@@ -518,7 +516,6 @@ namespace ClosedXML.Excel
                                 {
                                     if ((int)df.Field.Value == -2)
                                         pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
-
                                     else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
                                     {
                                         var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;
@@ -1783,7 +1780,6 @@ namespace ClosedXML.Excel
 
             if (sheetProperty.OutlineProperties != null)
             {
-
                 if (sheetProperty.OutlineProperties.SummaryBelow != null)
                 {
                     ws.Outline.SummaryVLocation = sheetProperty.OutlineProperties.SummaryBelow
