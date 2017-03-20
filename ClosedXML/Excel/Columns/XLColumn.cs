@@ -47,8 +47,8 @@ namespace ClosedXML.Excel
             _width = column._width;
             IsReference = column.IsReference;
             if (IsReference)
-				SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-			_collapsed = column._collapsed;
+                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+            _collapsed = column._collapsed;
             _isHidden = column._isHidden;
             _outlineLevel = column._outlineLevel;
             SetStyle(column.GetStyleId());
@@ -304,9 +304,9 @@ namespace ClosedXML.Excel
             if (this.Worksheet.AutoFilter != null && this.Worksheet.AutoFilter.Range != null)
                 autoFilterRows.Add(this.Worksheet.AutoFilter.Range.FirstRow().RowNumber());
 
-            autoFilterRows.AddRange(Worksheet.Tables.Where(t => 
-                    t.AutoFilter != null 
-                    && t.AutoFilter.Range != null 
+            autoFilterRows.AddRange(Worksheet.Tables.Where(t =>
+                    t.AutoFilter != null
+                    && t.AutoFilter.Range != null
                     && !autoFilterRows.Contains(t.AutoFilter.Range.FirstRow().RowNumber()))
                 .Select(t => t.AutoFilter.Range.FirstRow().RowNumber()));
 

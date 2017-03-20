@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
 
         public IXLRichString AddText(String text, XLHFOccurrence occurrence)
         {
-            XLRichString richText = new XLRichString(text, XLWorkbook.DefaultStyle.Font, this);
+            XLRichString richText = new XLRichString(text, this.HeaderFooter.Worksheet.Style.Font, this);
 
             var hfText = new XLHFText(richText, this);
             if (occurrence == XLHFOccurrence.AllPages)
