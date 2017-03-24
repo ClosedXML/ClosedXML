@@ -32,7 +32,7 @@ namespace ClosedXML_Tests.Excel.Misc
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().AddConditionalFormat().WhenContains("1").Fill.SetBackgroundColor(XLColor.Blue);
-            ws.Cell("A2").Value = ws.FirstCell();
+            ws.Cell("A3").Value = ws.FirstCell();
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
         }
 

@@ -444,6 +444,11 @@ namespace ClosedXML.Excel
             if (_loadSource == XLLoadSource.New)
                 throw new Exception("This is a new file, please use one of the SaveAs methods.");
 
+            foreach (var worksheet in Worksheets)
+            {
+                worksheet.ConditionalFormats.Compress();
+            }
+
             if (_loadSource == XLLoadSource.Stream)
             {
                 CreatePackage(_originalStream, false, _spreadsheetDocumentType, validate);
@@ -470,6 +475,11 @@ namespace ClosedXML.Excel
         public void SaveAs(String file, Boolean validate)
         {
             checkForWorksheetsPresent();
+            foreach (var worksheet in Worksheets)
+            {
+                worksheet.ConditionalFormats.Compress();
+            }
+
             PathHelper.CreateDirectory(Path.GetDirectoryName(file));
             if (_loadSource == XLLoadSource.New)
             {

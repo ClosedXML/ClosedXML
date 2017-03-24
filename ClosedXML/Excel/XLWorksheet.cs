@@ -1180,32 +1180,19 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void ShiftConditionalFormattingColumns(XLRange range, int columnsShifted)
+        internal void ShiftConditionalFormattingColumns(XLRange range, int columnsShifted)
         {
-            Int32 firstColumn = range.RangeAddress.FirstAddress.ColumnNumber;
-            if (firstColumn == 1) return;
-
-            Int32 lastColumn = range.RangeAddress.FirstAddress.ColumnNumber + columnsShifted - 1;
-            Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
-            Int32 lastRow = range.RangeAddress.LastAddress.RowNumber;
-            var insertedRange = Range(firstRow, firstColumn, lastRow, lastColumn);
-            var fc = insertedRange.FirstColumn();
-            var model = fc.ColumnLeft();
-            Int32 modelFirstRow = model.RangeAddress.FirstAddress.RowNumber;
-            if (ConditionalFormats.Any(cf => cf.Range.Intersects(model)))
+            SuspendEvents();
+            var conditionalFormats = ConditionalFormats.Where(c => range.Contains(c.Range)).ToList();
+            foreach (var cf in conditionalFormats)
             {
-                for (Int32 ro = firstRow; ro <= lastRow; ro++)
-                {
-                    var cellModel = model.Cell(ro - modelFirstRow + 1);
-                    foreach (var cf in ConditionalFormats.Where(cf => cf.Range.Intersects(cellModel.AsRange())).ToList())
-                    {
-                        Range(ro, firstColumn, ro, lastColumn).AddConditionalFormat(cf);
-                    }
-                }
+                cf.Range.Dispose();
+                cf.Range = Range(cf.Range.RangeAddress.FirstAddress.RowNumber, cf.Range.RangeAddress.FirstAddress.ColumnNumber + columnsShifted,
+                    cf.Range.RangeAddress.LastAddress.RowNumber, cf.Range.RangeAddress.LastAddress.ColumnNumber + columnsShifted);
+                cf.Values.Values.Where(f => f.IsFormula)
+                    .ForEach(f => f._value = XLCell.ShiftFormulaColumns(f.Value, this, range, columnsShifted));
             }
-            insertedRange.Dispose();
-            model.Dispose();
-            fc.Dispose();
+            ResumeEvents();
         }
 
         private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
@@ -1248,75 +1235,43 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void ShiftConditionalFormattingRows(XLRange range, int rowsShifted)
+        internal void ShiftConditionalFormattingRows(XLRange range, int rowsShifted)
         {
-            Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
-            if (firstRow == 1) return;
-
             SuspendEvents();
-            var rangeUsed = range.Worksheet.RangeUsed(true);
-            IXLRangeAddress usedAddress;
-            if (rangeUsed == null)
-                usedAddress = range.RangeAddress;
-            else
-                usedAddress = rangeUsed.RangeAddress;
-            ResumeEvents();
-
-            if (firstRow < usedAddress.FirstAddress.RowNumber) firstRow = usedAddress.FirstAddress.RowNumber;
-
-            Int32 lastRow = range.RangeAddress.FirstAddress.RowNumber + rowsShifted - 1;
-            if (lastRow > usedAddress.LastAddress.RowNumber) lastRow = usedAddress.LastAddress.RowNumber;
-
-            Int32 firstColumn = range.RangeAddress.FirstAddress.ColumnNumber;
-            if (firstColumn < usedAddress.FirstAddress.ColumnNumber) firstColumn = usedAddress.FirstAddress.ColumnNumber;
-
-            Int32 lastColumn = range.RangeAddress.LastAddress.ColumnNumber;
-            if (lastColumn > usedAddress.LastAddress.ColumnNumber) lastColumn = usedAddress.LastAddress.ColumnNumber;
-
-            var insertedRange = Range(firstRow, firstColumn, lastRow, lastColumn);
-            var fr = insertedRange.FirstRow();
-            var model = fr.RowAbove();
-            Int32 modelFirstColumn = model.RangeAddress.FirstAddress.ColumnNumber;
-            if (ConditionalFormats.Any(cf=>cf.Range.Intersects(model)))
+            var conditionalFormats = ConditionalFormats.Where(c => range.Contains(c.Range)).ToList();
+            foreach (var cf in conditionalFormats)
             {
-                for (Int32 co = firstColumn; co <= lastColumn; co++)
-                {
-                    var cellModel = model.Cell(co - modelFirstColumn + 1);
-                    foreach (var cf in ConditionalFormats.Where(cf => cf.Range.Intersects(cellModel.AsRange())).ToList())
-                    {
-                        Range(firstRow, co, lastRow, co).AddConditionalFormat(cf);
-                    }
-                }
+                cf.Range.Dispose();
+                cf.Range = Range(cf.Range.RangeAddress.FirstAddress.RowNumber + rowsShifted, cf.Range.RangeAddress.FirstAddress.ColumnNumber,
+                    cf.Range.RangeAddress.LastAddress.RowNumber + rowsShifted, cf.Range.RangeAddress.LastAddress.ColumnNumber);
+                cf.Values.Values.Where(f => f.IsFormula)
+                    .ForEach(f => f._value = XLCell.ShiftFormulaRows(f.Value, this, range, rowsShifted));
             }
-            insertedRange.Dispose();
-            model.Dispose();
-            fr.Dispose();
+            ResumeEvents();
         }
 
 
-        internal void BreakConditionalFormatsIntoCells(List<IXLAddress> addresses)
+        internal void RemoveConditionalFormatsFromRange(XLRangeBase range)
         {
+            ConditionalFormats.Remove(cf => range.Contains(cf.Range));
+            var breakRanges = ConditionalFormats.Where(cf => range.Intersects(cf.Range)).ToArray();
+            if (breakRanges.Length == 0)
+                return;
+
             var newConditionalFormats = new XLConditionalFormats();
-            SuspendEvents();
-            foreach (var conditionalFormat in ConditionalFormats)
+            foreach (var conditionalFormat in breakRanges)
             {
-                foreach (XLCell cell in conditionalFormat.Range.Cells(c=>!addresses.Contains(c.Address)))
+                foreach (XLCell cell in conditionalFormat.Range.Cells(c => !range.Contains(c)))
                 {
-                    var row = cell.Address.RowNumber;
-                    var column = cell.Address.ColumnLetter;
                     var newConditionalFormat = new XLConditionalFormat(cell.AsRange(), true);
                     newConditionalFormat.CopyFrom(conditionalFormat);
-                    newConditionalFormat.Values.Values.Where(f => f.IsFormula)
-                        .ForEach(f => f._value = XLHelper.ReplaceRelative(f.Value, row, column));
                     newConditionalFormats.Add(newConditionalFormat);
                 }
-                conditionalFormat.Range.Dispose();
             }
-            ResumeEvents();
-            ConditionalFormats = newConditionalFormats;
+            ConditionalFormats.Remove(cf => range.Intersects(cf.Range));
+            newConditionalFormats.Compress();
+            newConditionalFormats.ForEach(cf => ConditionalFormats.Add(cf));
         }
-
-
 
         private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)
         {

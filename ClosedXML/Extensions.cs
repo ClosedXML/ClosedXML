@@ -201,6 +201,10 @@ namespace ClosedXML.Excel
             return sValue;
         }
 
+        public static bool Between(this int val, int from, int to)
+        {
+            return val >= from && val <= to;
+        }
     }
 
     public static class DecimalExtensions
@@ -340,6 +344,43 @@ namespace ClosedXML.Excel
                     || value is float
                     || value is double
                     || value is decimal;
+        }
+    }
+
+    public static class RangeExtensions
+    {
+        /// <summary>
+        /// Get cropped range.
+        /// </summary>
+        public static IXLRangeBase Crop(this IXLRangeBase range, IXLRangeBase crop)
+        {
+            var sheet = range.Worksheet;
+            using (var xlRange = sheet.Range(
+                Math.Max(range.RangeAddress.FirstAddress.RowNumber, crop.RangeAddress.FirstAddress.RowNumber),
+                Math.Max(range.RangeAddress.FirstAddress.ColumnNumber, crop.RangeAddress.FirstAddress.ColumnNumber),
+                Math.Min(range.RangeAddress.LastAddress.RowNumber, crop.RangeAddress.LastAddress.RowNumber),
+                Math.Min(range.RangeAddress.LastAddress.ColumnNumber, crop.RangeAddress.LastAddress.ColumnNumber)))
+            {
+                return sheet.Range(xlRange.RangeAddress);
+            }
+        }
+
+        /// <summary>
+        /// Get range relative to another range.
+        /// </summary>
+        /// <param name="range">range</param>
+        /// <param name="baseRange">Coordinate system. Coordinates are calculated relative to this range.</param>
+        /// <param name="targetBase"></param>
+        public static IXLRange Relative(this IXLRangeBase range, IXLRangeBase baseRange, IXLRangeBase targetBase)
+        {
+            using (var xlRange = targetBase.Worksheet.Range(
+                range.RangeAddress.FirstAddress.RowNumber - baseRange.RangeAddress.FirstAddress.RowNumber + 1,
+                range.RangeAddress.FirstAddress.ColumnNumber - baseRange.RangeAddress.FirstAddress.ColumnNumber + 1,
+                range.RangeAddress.LastAddress.RowNumber - baseRange.RangeAddress.FirstAddress.RowNumber + 1,
+                range.RangeAddress.LastAddress.ColumnNumber - baseRange.RangeAddress.FirstAddress.ColumnNumber + 1))
+            {
+                return ((XLRangeBase)targetBase).Range(xlRange.RangeAddress);
+            }
         }
     }
 }

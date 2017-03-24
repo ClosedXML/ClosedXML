@@ -900,6 +900,7 @@ namespace ClosedXML.Excel
                 {
                     Hyperlink = null;
                     _richText = null;
+                    _dataType = XLCellValues.Text;
                     //_comment = null;
                     _cellValue = String.Empty;
                     FormulaA1 = String.Empty;
@@ -1166,7 +1167,10 @@ namespace ClosedXML.Excel
             get
             {
                 using (var asRange = AsRange())
-                    return Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange) && dv.IsDirty());
+                    return Worksheet.DataValidations.Any(dv =>
+                    {
+                        using (var rngs = dv.Ranges) return rngs.Contains(asRange) && dv.IsDirty();
+                    });
             }
         }
 
@@ -1554,7 +1558,7 @@ namespace ClosedXML.Excel
                     Worksheet.Cell(
                         Address.RowNumber + sourceCell.Address.RowNumber - minRow,
                         Address.ColumnNumber + sourceCell.Address.ColumnNumber - minColumn
-                        ).CopyFrom(sourceCell, true);
+                        ).CopyFromInternal(sourceCell as XLCell, true);
                 }
 
                 var rangesToMerge = (from mergedRange in (asRange.Worksheet).Internals.MergedRanges
@@ -1573,10 +1577,53 @@ namespace ClosedXML.Excel
                     ToList();
                 rangesToMerge.ForEach(r => r.Merge());
 
+                CopyConditionalFormatsFrom(asRange);
+
                 return true;
             }
 
             return false;
+        }
+
+        private void CopyConditionalFormatsFrom(XLRangeBase fromRange)
+        {
+            var srcSheet = fromRange.Worksheet;
+            int minRo = fromRange.RangeAddress.FirstAddress.RowNumber;
+            int minCo = fromRange.RangeAddress.FirstAddress.ColumnNumber;
+            if (srcSheet.ConditionalFormats.Any(r => r.Range.Intersects(fromRange)))
+            {
+                var fs = srcSheet.ConditionalFormats.Where(r => r.Range.Intersects(fromRange)).ToArray();
+                if (fs.Any())
+                {
+                    minRo = fs.Max(r => r.Range.RangeAddress.LastAddress.RowNumber);
+                    minCo = fs.Max(r => r.Range.RangeAddress.LastAddress.ColumnNumber);
+                }
+            }
+            int rCnt = minRo - fromRange.RangeAddress.FirstAddress.RowNumber + 1;
+            int cCnt = minCo - fromRange.RangeAddress.FirstAddress.ColumnNumber + 1;
+            rCnt = Math.Min(rCnt, fromRange.RowCount());
+            cCnt = Math.Min(cCnt, fromRange.ColumnCount());
+            var toRange = Worksheet.Range(this, Worksheet.Cell(Address.RowNumber + rCnt - 1, Address.ColumnNumber + cCnt - 1));
+            var formats = srcSheet.ConditionalFormats.Where(f => f.Range.Intersects(fromRange));
+            foreach (var cf in formats.ToList())
+            {
+                var fmtRange = cf.Range.Crop(fromRange).Relative(fromRange, toRange);
+                var c = new XLConditionalFormat((XLRange) fmtRange, true);
+                c.CopyFrom(cf);
+                foreach (var v in c.Values.ToList())
+                {
+                    var f = v.Value.Value;
+                    if (v.Value.IsFormula)
+                    {
+                        var r1c1 = ((XLCell) cf.Range.FirstCell()).GetFormulaR1C1(f);
+                        f = ((XLCell)fmtRange.FirstCell()).GetFormulaA1(r1c1);
+                    }
+
+                    c.Values[v.Key] = new XLFormula {_value = f, IsFormula = v.Value.IsFormula};
+                }
+
+                _worksheet.ConditionalFormats.Add(c);
+            }
         }
 
         private bool SetEnumerable(object collectionObject)
@@ -1733,7 +1780,7 @@ namespace ClosedXML.Excel
             return _formatCodes;
         }
 
-        private string GetFormulaR1C1(string value)
+        internal string GetFormulaR1C1(string value)
         {
             return GetFormula(value, FormulaConversionType.A1ToR1C1, 0, 0);
         }
@@ -1958,13 +2005,34 @@ namespace ClosedXML.Excel
         }
 
 
+        internal IXLCell CopyFromInternal(XLCell otherCell, Boolean copyDataValidations)
+        {
+            CopyValuesFrom(otherCell);
+
+            SetStyle(otherCell._style ?? otherCell.Worksheet.Workbook.GetStyleById(otherCell._styleCacheId));
+
+            if (copyDataValidations)
+            {
+                var eventTracking = Worksheet.EventTrackingEnabled;
+                Worksheet.EventTrackingEnabled = false;
+                if (otherCell.HasDataValidation)
+                    CopyDataValidation(otherCell, otherCell.DataValidation);
+                else if (HasDataValidation)
+                {
+                    using (var asRange = AsRange())
+                        Worksheet.DataValidations.Delete(asRange);
+                }
+                Worksheet.EventTrackingEnabled = eventTracking;
+            }
+            
+            return this;
+        }
+
         public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
         {
             var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
             //var source = castedOtherCell;
-            CopyValuesFrom(source);
-
-            SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
+            CopyFromInternal(source, copyDataValidations);
 
             var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(source)).ToList();
             foreach (var cf in conditionalFormats)
@@ -1986,20 +2054,6 @@ namespace ClosedXML.Excel
                 }
 
                 _worksheet.ConditionalFormats.Add(c);
-            }
-
-            if (copyDataValidations)
-            {
-                var eventTracking = Worksheet.EventTrackingEnabled;
-                Worksheet.EventTrackingEnabled = false;
-                if (source.HasDataValidation)
-                    CopyDataValidation(source, source.DataValidation);
-                else if (HasDataValidation)
-                {
-                    using (var asRange = AsRange())
-                        Worksheet.DataValidations.Delete(asRange);
-                }
-                Worksheet.EventTrackingEnabled = eventTracking;
             }
 
             return this;
@@ -2214,6 +2268,7 @@ namespace ClosedXML.Excel
                             }
                             else
                                 sb.Append(matchString);
+                            matchRange.Dispose();
                         }
                         else
                             sb.Append(matchString);
@@ -2453,6 +2508,7 @@ namespace ClosedXML.Excel
                             }
                             else
                                 sb.Append(matchString);
+                            matchRange.Dispose();
                         }
                         else
                             sb.Append(matchString);
