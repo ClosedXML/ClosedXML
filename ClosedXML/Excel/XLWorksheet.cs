@@ -121,7 +121,7 @@ namespace ClosedXML.Excel
         internal Boolean ColumnWidthChanged { get; set; }
 
         public Int32 SheetId { get; set; }
-        public String RelId { get; set; }
+        internal String RelId { get; set; }
         public XLDataValidations DataValidations { get; private set; }
         public IXLCharts Charts { get; private set; }
         public XLSheetProtection Protection { get; private set; }
@@ -1165,7 +1165,21 @@ namespace ClosedXML.Excel
             Workbook.Worksheets.ForEach(ws => MoveNamedRangesColumns(range, columnsShifted, ws.NamedRanges));
             MoveNamedRangesColumns(range, columnsShifted, Workbook.NamedRanges);
             ShiftConditionalFormattingColumns(range, columnsShifted);
+            ShiftPageBreaksColumns(range, columnsShifted);
         }
+
+        private void ShiftPageBreaksColumns(XLRange range, int columnsShifted)
+        {
+            for (var i = 0; i < PageSetup.ColumnBreaks.Count; i++)
+            {
+                int br = PageSetup.ColumnBreaks[i];
+                if (range.RangeAddress.FirstAddress.ColumnNumber <= br)
+                {
+                    PageSetup.ColumnBreaks[i] = br + columnsShifted;
+                }
+            }
+        }
+
         private void ShiftConditionalFormattingColumns(XLRange range, int columnsShifted)
         {
             Int32 firstColumn = range.RangeAddress.FirstAddress.ColumnNumber;
@@ -1219,7 +1233,21 @@ namespace ClosedXML.Excel
             Workbook.Worksheets.ForEach(ws => MoveNamedRangesRows(range, rowsShifted, ws.NamedRanges));
             MoveNamedRangesRows(range, rowsShifted, Workbook.NamedRanges);
             ShiftConditionalFormattingRows(range, rowsShifted);
+            ShiftPageBreaksRows(range, rowsShifted);
         }
+
+        private void ShiftPageBreaksRows(XLRange range, int rowsShifted)
+        {
+            for (var i = 0; i < PageSetup.RowBreaks.Count; i++)
+            {
+                int br = PageSetup.RowBreaks[i];
+                if (range.RangeAddress.FirstAddress.RowNumber <= br)
+                {
+                    PageSetup.RowBreaks[i] = br + rowsShifted;
+                }
+            }
+        }
+
         private void ShiftConditionalFormattingRows(XLRange range, int rowsShifted)
         {
             Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;

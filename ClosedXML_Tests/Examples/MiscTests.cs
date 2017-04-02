@@ -170,6 +170,12 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void SheetViews()
+        {
+            TestHelper.RunTestExample<SheetViews>(@"Misc\SheetViews.xlsx");
+        }
+
+        [Test]
         public void ShiftingFormulas()
         {
             TestHelper.RunTestExample<ShiftingFormulas>(@"Misc\ShiftingFormulas.xlsx");
