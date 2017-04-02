@@ -43,9 +43,9 @@ namespace ClosedXML_Examples.Misc
 
             // From a query
             var list = new List<Person>();
-            list.Add(new Person() { Name = "John", Age = 30, House = "On Elm St."   });
-            list.Add(new Person() { Name = "Mary", Age = 15, House = "On Main St."  });
-            list.Add(new Person() { Name = "Luis", Age = 21, House = "On 23rd St."  });
+            list.Add(new Person() { Name = "John", Age = 30, House = "On Elm St." });
+            list.Add(new Person() { Name = "Mary", Age = 15, House = "On Main St." });
+            list.Add(new Person() { Name = "Luis", Age = 21, House = "On 23rd St." });
             list.Add(new Person() { Name = "Henry", Age = 45, House = "On 5th Ave." });
 
             var people = from p in list
@@ -55,14 +55,14 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(7, 6).Value = "From Query";
             ws.Range(7, 6, 7, 8).Merge().AddToNamed("Titles");
-            ws.Cell(8, 6).InsertTable(people.AsEnumerable()); 
+            ws.Cell(8, 6).InsertTable(people.AsEnumerable());
 
             // Prepare the style for the titles
             var titlesStyle = wb.Style;
             titlesStyle.Font.Bold = true;
             titlesStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             titlesStyle.Fill.BackgroundColor = XLColor.Cyan;
-            
+
             // Format all titles in one shot
             wb.NamedRanges.NamedRange("Titles").Ranges.Style = titlesStyle;
 
@@ -70,8 +70,8 @@ namespace ClosedXML_Examples.Misc
 
             wb.SaveAs(filePath);
         }
-        
-        class Person
+
+        private class Person
         {
             [Display(Name = "House Street")]
             public String House { get; set; }

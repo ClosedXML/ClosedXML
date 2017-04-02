@@ -22,26 +22,50 @@ namespace ClosedXML_Tests.Excel
             public String Column2 { get; set; }
         }
 
-        public class TestObjectWithAttributes
+        public class TestObjectWithDisplayAttributes
         {
             public int UnOrderedColumn { get; set; }
 
-            [Display(Name ="SecondColumn"), ColumnOrder(1)]
+            [Display(Name = "SecondColumn")]
+            [XLColumn(Order = 1)]
             public String Column1 { get; set; }
 
-            [Display(Name = "FirstColumn"), ColumnOrder(0)]
+            [Display(Name = "FirstColumn")]
+            [XLColumn(Order = 0)]
             public String Column2 { get; set; }
 
-            [Display(Name = "SomeFieldNotProperty"), ColumnOrder(2)]
+            [Display(Name = "SomeFieldNotProperty")]
+            [XLColumn(Order = 2)]
             public int MyField;
+        }
+
+        public class TestObjectWithXLColumnAttributes
+        {
+            public int UnOrderedColumn { get; set; }
+
+            [XLColumn(Header = "SecondXLColumn", Order = 1)]
+            public String Column1 { get; set; }
+
+            [XLColumn(Header = "FirstXLColumn", Order = 0)]
+            public String Column2 { get; set; }
+
+            [XLColumn(Header = "SomeFieldNotPropertyXLColumn", Order = 2)]
+            public int MyField;
+        }
+
+        public class TestObjectWithBothXLColumnAndDisplayAttributes
+        {
+            [Display(Name = "NameFromDisplayAttribute")]
+            [XLColumn(Header = "NameFromXLColumn")]
+            public String Column1 { get; set; }
         }
 
         [Test]
         public void CanSaveTableCreatedFromEmptyDataTable()
         {
             var dt = new DataTable("sheet1");
-            dt.Columns.Add("col1", typeof (string));
-            dt.Columns.Add("col2", typeof (double));
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
 
             var wb = new XLWorkbook();
             wb.AddWorksheet(dt);
@@ -144,8 +168,8 @@ namespace ClosedXML_Tests.Excel
         public void TableCreatedFromEmptyDataTable()
         {
             var dt = new DataTable("sheet1");
-            dt.Columns.Add("col1", typeof (string));
-            dt.Columns.Add("col2", typeof (double));
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
 
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
@@ -176,12 +200,12 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
-        public void TableCreatedFromListOfObjectWithPropertyAttributes()
+        public void TableCreatedFromListOfObjectWithNameFromDisplayPropertyAttributes()
         {
-            var l = new List<TestObjectWithAttributes>()
+            var l = new List<TestObjectWithDisplayAttributes>()
             {
-                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
-                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+                new TestObjectWithDisplayAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithDisplayAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
             };
 
             var wb = new XLWorkbook();
@@ -192,6 +216,41 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("SecondColumn", ws.FirstCell().CellRight().Value);
             Assert.AreEqual("SomeFieldNotProperty", ws.FirstCell().CellRight().CellRight().Value);
             Assert.AreEqual("UnOrderedColumn", ws.FirstCell().CellRight().CellRight().CellRight().Value);
+        }
+
+        [Test]
+        public void TableCreatedFromListOfObjectWithNameFromXLColumnPropertyAttributes()
+        {
+            var l = new List<TestObjectWithXLColumnAttributes>()
+            {
+                new TestObjectWithXLColumnAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithXLColumnAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().InsertTable(l);
+            Assert.AreEqual(4, ws.Tables.First().ColumnCount());
+            Assert.AreEqual("FirstXLColumn", ws.FirstCell().Value);
+            Assert.AreEqual("SecondXLColumn", ws.FirstCell().CellRight().Value);
+            Assert.AreEqual("SomeFieldNotPropertyXLColumn", ws.FirstCell().CellRight().CellRight().Value);
+            Assert.AreEqual("UnOrderedColumn", ws.FirstCell().CellRight().CellRight().CellRight().Value);
+        }
+
+        [Test]
+        public void TableCreatedFromListOfObjectWithFromXLColumnAndDisplayAttributes_ShouldXLColumnTakePrecedence()
+        {
+            var l = new List<TestObjectWithBothXLColumnAndDisplayAttributes>()
+            {
+                new TestObjectWithBothXLColumnAndDisplayAttributes() { Column1 = "a"},
+                new TestObjectWithBothXLColumnAndDisplayAttributes() { Column1 = "c"}
+            };
+
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            ws.FirstCell().InsertTable(l);
+            Assert.AreEqual(1, ws.Tables.First().ColumnCount());
+            Assert.AreEqual("NameFromXLColumn", ws.FirstCell().Value);
         }
 
         [Test]
