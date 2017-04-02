@@ -1,4 +1,4 @@
-﻿using ClosedXML_Examples.Columns;
+using ClosedXML_Examples.Columns;
 using ClosedXML_Examples.Misc;
 using ClosedXML_Examples.PageSetup;
 using ClosedXML_Examples.Ranges;
@@ -90,6 +90,7 @@ namespace ClosedXML_Examples
             new WalkingRanges().Create(Path.Combine(path, "CellMoves.xlsx"));
             new AddingComments().Create(Path.Combine(path, "AddingComments.xlsx"));
             new PivotTables().Create(Path.Combine(path, "PivotTables.xlsx"));
+            new SheetViews().Create(Path.Combine(path, "SheetViews.xlsx"));
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 
 namespace ClosedXML_Tests.Excel.Saving
 {
@@ -13,6 +15,10 @@ namespace ClosedXML_Tests.Excel.Saving
             using (var wb = new XLWorkbook())
             {
                 var sheet = wb.Worksheets.Add("TestSheet");
+
+                // Comments might cause duplicate VmlDrawing Id's - ensure it's tested:
+                sheet.Cell(1, 1).Comment.AddText("abc");
+
                 var memoryStream = new MemoryStream();
                 wb.SaveAs(memoryStream, true);
 
@@ -24,6 +30,25 @@ namespace ClosedXML_Tests.Excel.Saving
 
                 memoryStream.Close();
                 memoryStream.Dispose();
+            }
+        }
+
+        [Test]
+        public void CanSaveAndValidateFileInAnotherCulture()
+        {
+            string[] cultures = new string[] { "it", "de-AT" };
+
+            foreach (var culture in cultures)
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+
+                using (var wb = new XLWorkbook())
+                {
+                    var memoryStream = new MemoryStream();
+                    var ws = wb.Worksheets.Add("Sheet1");
+
+                    wb.SaveAs(memoryStream, true);
+                }
             }
         }
     }

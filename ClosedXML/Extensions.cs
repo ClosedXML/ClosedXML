@@ -1,30 +1,28 @@
-﻿using System;
-using System.Collections;
+using ClosedXML.Utils;
+using DocumentFormat.OpenXml;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using System.IO;
 using System.Xml;
-using ClosedXML.Utils;
-using DocumentFormat.OpenXml;
+using System.Xml.Linq;
 
 [assembly: CLSCompliantAttribute(true)]
+
 namespace ClosedXML.Excel
 {
     public static class Extensions
     {
         // Adds the .ForEach method to all IEnumerables
 
-
-        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
         public static String ToHex(this Color color)
         {
-
             byte[] bytes = new byte[4];
 
             bytes[0] = color.A;
@@ -39,17 +37,14 @@ namespace ClosedXML.Excel
 
             for (int i = 0; i < bytes.Length; i++)
             {
-
                 int b = bytes[i];
 
                 chars[i * 2] = hexDigits[b >> 4];
 
                 chars[i * 2 + 1] = hexDigits[b & 0xF];
-
             }
 
             return new string(chars);
-
         }
 
         public static String RemoveSpecialCharacters(this String str)
@@ -75,10 +70,10 @@ namespace ClosedXML.Excel
             HashSet<T> distinctItems = new HashSet<T>();
             foreach (var item in source)
             {
-              if (!distinctItems.Add(item))
-              {
-                return true;
-              }
+                if (!distinctItems.Add(item))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -87,7 +82,6 @@ namespace ClosedXML.Excel
         {
             return (T)Convert.ChangeType(o, typeof(T));
         }
-
     }
 
     public static class DictionaryExtensions
@@ -106,6 +100,7 @@ namespace ClosedXML.Excel
     public static class StringExtensions
     {
         private static readonly Regex RegexNewLine = new Regex(@"((?<!\r)\n|\r\n)", RegexOptions.Compiled);
+
         public static String FixNewLines(this String value)
         {
             return value.Contains("\n") ? RegexNewLine.Replace(value, Environment.NewLine) : value;
@@ -173,34 +168,28 @@ namespace ClosedXML.Excel
                 && date.DayOfWeek != DayOfWeek.Sunday
                 && !bankHolidays.Contains(date);
         }
-
     }
 
     public static class IntegerExtensions
     {
-        private static readonly NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
-        [ThreadStatic]
-        private static Dictionary<Int32, String> intToString;
         public static String ToInvariantString(this Int32 value)
         {
-            String sValue;
-            if (intToString == null)
-            {
-                intToString = new Dictionary<int, string>();
-                sValue = value.ToString(nfi);
-                intToString.Add(value, sValue);
-            }
-            else
-            {
-                if (!intToString.TryGetValue(value, out sValue))
-                {
-                    sValue = value.ToString(nfi);
-                    intToString.Add(value, sValue);
-                }
-            }
-            return sValue;
+            return value.ToString(CultureInfo.InvariantCulture.NumberFormat);
+        }
+    }
+
+    public static class DecimalExtensions
+    {
+        //All numbers are stored in XL files as invarient culture this is just a easy helper
+        public static String ToInvariantString(this Decimal value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture);
         }
 
+        public static Decimal SaveRound(this Decimal value)
+        {
+            return Math.Round(value, 6);
+        }
     }
 
     public static class DoubleExtensions
@@ -219,7 +208,6 @@ namespace ClosedXML.Excel
 
     public static class FontBaseExtensions
     {
-
         private static Font GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
         {
             Font font;
@@ -252,7 +240,7 @@ namespace ClosedXML.Excel
             if (font.Bold) fontStyle |= FontStyle.Bold;
             if (font.Italic) fontStyle |= FontStyle.Italic;
             if (font.Strikethrough) fontStyle |= FontStyle.Strikeout;
-            if (font.Underline != XLFontUnderlineValues.None ) fontStyle |= FontStyle.Underline;
+            if (font.Underline != XLFontUnderlineValues.None) fontStyle |= FontStyle.Underline;
             return fontStyle;
         }
 
@@ -303,6 +291,18 @@ namespace ClosedXML.Excel
         }
     }
 
+    public static class ListExtensions
+    {
+        public static void RemoveAll<T>(this IList<T> list, Func<T, bool> predicate)
+        {
+            var indices = list.Where(item => predicate(item)).Select((item, i) => i).OrderByDescending(i => i).ToList();
+            foreach (var i in indices)
+            {
+                list.RemoveAt(i);
+            }
+        }
+    }
+
     public static class DoubleValueExtensions
     {
         public static DoubleValue SaveRound(this DoubleValue value)
@@ -310,5 +310,40 @@ namespace ClosedXML.Excel
             return value.HasValue ? new DoubleValue(Math.Round(value, 6)) : value;
         }
     }
-}
 
+    public static class TypeExtensions
+    {
+        public static bool IsNumber(this Type type)
+        {
+            return type == typeof(sbyte)
+                    || type == typeof(byte)
+                    || type == typeof(short)
+                    || type == typeof(ushort)
+                    || type == typeof(int)
+                    || type == typeof(uint)
+                    || type == typeof(long)
+                    || type == typeof(ulong)
+                    || type == typeof(float)
+                    || type == typeof(double)
+                    || type == typeof(decimal);
+        }
+    }
+
+    public static class ObjectExtensions
+    {
+        public static bool IsNumber(this object value)
+        {
+            return value is sbyte
+                    || value is byte
+                    || value is short
+                    || value is ushort
+                    || value is int
+                    || value is uint
+                    || value is long
+                    || value is ulong
+                    || value is float
+                    || value is double
+                    || value is decimal;
+        }
+    }
+}

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -80,6 +80,34 @@ namespace ClosedXML_Tests
             Assert.AreEqual(XLColor.Fulvous, ws.Cell(3, 2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Fulvous, ws.Cell(4, 2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.MacaroniAndCheese, ws.Cell(5, 2).Style.Fill.BackgroundColor);
+        }
+
+        [Test]
+        public void InsertingRowsPreservesComments()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+
+            ws.Cell("A1").SetValue("Insert Below");
+            ws.Cell("A2").SetValue("Already existing cell");
+            ws.Cell("A3").SetValue("Cell with comment").Comment.AddText("Comment here");
+
+            ws.Row(1).InsertRowsBelow(2);
+            Assert.AreEqual("Comment here", ws.Cell("A5").Comment.Text);
+        }
+
+        [Test]
+        public void InsertingColumnsPreservesComments()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+
+            ws.Cell("A1").SetValue("Insert to the right");
+            ws.Cell("B1").SetValue("Already existing cell");
+            ws.Cell("C1").SetValue("Cell with comment").Comment.AddText("Comment here");
+
+            ws.Column(1).InsertColumnsAfter(2);
+            Assert.AreEqual("Comment here", ws.Cell("E1").Comment.Text);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -192,11 +192,13 @@ namespace ClosedXML.Excel
         {
             if (!RowBreaks.Contains(row))
                 RowBreaks.Add(row);
+            RowBreaks.Sort();
         }
         public void AddVerticalPageBreak(Int32 column)
         {
             if (!ColumnBreaks.Contains(column))
                 ColumnBreaks.Add(column);
+            ColumnBreaks.Sort();
         }
 
         //public void SetPageBreak(IXLRange range, XLPageBreakLocations breakLocation)

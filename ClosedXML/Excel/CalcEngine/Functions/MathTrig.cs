@@ -1,10 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using System.Text.RegularExpressions;
 using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -221,7 +218,7 @@ namespace ClosedXML.Excel.CalcEngine
             var tally = new Tally();
             for (var i = 0; i < Math.Min(rangeValues.Count, sumRangeValues.Count); i++)
             {
-                if (ValueSatisfiesCriteria(rangeValues[i], criteria, ce))
+                if (CalcEngineHelpers.ValueSatisfiesCriteria(rangeValues[i], criteria, ce))
                 {
                     tally.AddValue(sumRangeValues[i]);
                 }
@@ -229,71 +226,6 @@ namespace ClosedXML.Excel.CalcEngine
 
             // done
             return tally.Sum();
-        }
-
-        private static bool ValueSatisfiesCriteria(object value, object criteria, CalcEngine ce)
-        {
-            // safety...
-            if (value == null)
-            {
-                return false;
-            }
-
-            // if criteria is a number, straight comparison
-            if (criteria is double)
-            {
-                if (value is Double)
-                    return (double) value == (double) criteria;
-                Double dValue;
-                return Double.TryParse(value.ToString(), out dValue) && dValue == (double) criteria;
-            }
-
-            // convert criteria to string
-            var cs = criteria as string;
-            if (!string.IsNullOrEmpty(cs))
-            {
-                // if criteria is an expression (e.g. ">20"), use calc engine
-                if (cs[0] == '=' || cs[0] == '<' || cs[0] == '>')
-                {
-                    // build expression
-                    var expression = string.Format("{0}{1}", value, cs);
-
-                    // add quotes if necessary
-                    var pattern = @"(\w+)(\W+)(\w+)";
-                    var m = Regex.Match(expression, pattern);
-                    if (m.Groups.Count == 4)
-                    {
-                        double d;
-                        if (!double.TryParse(m.Groups[1].Value, out d) ||
-                            !double.TryParse(m.Groups[3].Value, out d))
-                        {
-                            expression = string.Format("\"{0}\"{1}\"{2}\"",
-                                                       m.Groups[1].Value,
-                                                       m.Groups[2].Value,
-                                                       m.Groups[3].Value);
-                        }
-                    }
-
-                    // evaluate
-                    return (bool) ce.Evaluate(expression);
-                }
-
-                // if criteria is a regular expression, use regex
-                if (cs.IndexOf('*') > -1)
-                {
-                    var pattern = cs.Replace(@"\", @"\\");
-                    pattern = pattern.Replace(".", @"\");
-                    pattern = pattern.Replace("*", ".*");
-                    return Regex.IsMatch(value.ToString(), pattern, RegexOptions.IgnoreCase);
-                }
-
-                // straight string comparison 
-                return string.Equals(value.ToString(), cs, StringComparison.OrdinalIgnoreCase);
-            }
-
-            // should never get here?
-            Debug.Assert(false, "failed to evaluate criteria in SumIf");
-            return false;
         }
 
         private static object Tan(List<Expression> p)
@@ -538,13 +470,13 @@ namespace ClosedXML.Excel.CalcEngine
             var digits = (Int32)(Double)p[1];
             if (digits >= 0)
             {
-                return Math.Round(value, digits);
+                return Math.Round(value, digits, MidpointRounding.AwayFromZero);
             }
             else
             {
                 digits = Math.Abs(digits);
                 double temp = value / Math.Pow(10, digits);
-                temp = Math.Round(temp, 0);
+                temp = Math.Round(temp, 0, MidpointRounding.AwayFromZero);
                 return temp * Math.Pow(10, digits);
             }
 
@@ -609,9 +541,9 @@ namespace ClosedXML.Excel.CalcEngine
                 case 1:
                     return tally.Average();
                 case 2:
-                    return tally.Count();
+                    return tally.Count(true);
                 case 3:
-                    return tally.CountA();
+                    return tally.Count(false);
                 case 4:
                     return tally.Max();
                 case 5:
@@ -636,7 +568,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object SumSq(List<Expression> p)
         {
             var t = new Tally(p);
-            return t.Numerics().Sum(v => Math.Pow(v, 2));
+            return t.NumericValues().Sum(v => Math.Pow(v, 2));
         }
 
         private static object MMult(List<Expression> p)

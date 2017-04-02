@@ -1,4 +1,5 @@
-﻿using System;
+using ClosedXML.Extensions;
+using System;
 using System.Diagnostics;
 
 namespace ClosedXML.Excel
@@ -346,8 +347,8 @@ namespace ClosedXML.Excel
         public String ToStringRelative(Boolean includeSheet)
         {
             if (includeSheet)
-                return String.Format("'{0}'!{1}",
-                    Worksheet.Name,
+                return String.Format("{0}!{1}",
+                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
                     GetTrimmedAddress());
 
             return GetTrimmedAddress();
@@ -371,8 +372,8 @@ namespace ClosedXML.Excel
                 address = String.Format("${0}${1}", ColumnLetter, _rowNumber.ToInvariantString());
 
             if (includeSheet)
-                return String.Format("'{0}'!{1}",
-                    Worksheet.Name,
+                return String.Format("{0}!{1}",
+                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
                     address);
 
             return address;

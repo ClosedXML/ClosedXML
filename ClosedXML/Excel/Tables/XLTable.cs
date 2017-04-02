@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -107,7 +107,7 @@ namespace ClosedXML.Excel
         }
 
 
-        public String RelId { get; set; }
+        internal String RelId { get; set; }
 
         public IXLTableRange DataRange
         {

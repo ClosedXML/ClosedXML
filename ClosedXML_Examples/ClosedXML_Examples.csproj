@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ClosedXML_Examples</RootNamespace>
     <AssemblyName>ClosedXML_Examples</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -24,6 +24,7 @@
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
@@ -32,6 +33,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ClosedXML_Examples.Program</StartupObject>
@@ -42,8 +44,12 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -55,8 +61,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ClosedXML\Properties\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="AutoFilters\DynamicAutoFilter.cs" />
     <Compile Include="AutoFilters\TopBottomAutoFilter.cs" />
     <Compile Include="AutoFilters\CustomAutoFilter.cs" />
@@ -70,11 +80,15 @@
     <Compile Include="Comments\EditingComments.cs" />
     <Compile Include="ConditionalFormatting\ConditionalFormatting.cs" />
     <Compile Include="Delete\DeleteFewWorksheets.cs" />
+    <Compile Include="ImageHandling\ImageFormats.cs" />
+    <Compile Include="ImageHandling\ImageAnchors.cs" />
     <Compile Include="IXLExample.cs" />
     <Compile Include="Misc\AdjustToContentsWithAutoFilter.cs" />
     <Compile Include="Misc\CopyingRowsAndColumns.cs" />
     <Compile Include="Misc\DataTypesUnderDifferentCulture.cs" />
     <Compile Include="Misc\RightToLeft.cs" />
+    <Compile Include="Misc\SheetViews.cs" />
+    <Compile Include="Misc\WorkbookProtection.cs" />
     <Compile Include="ModifyFiles.cs" />
     <Compile Include="Creating\CreateFiles.cs" />
     <Compile Include="Loading\ChangingBasicTable.cs" />
@@ -108,6 +122,7 @@
     <Compile Include="Ranges\CopyingRanges.cs" />
     <Compile Include="Ranges\NamedRanges.cs" />
     <Compile Include="Misc\Formulas.cs" />
+    <Compile Include="Misc\FormulasWithEvaluation.cs" />
     <Compile Include="Misc\Outline.cs" />
     <Compile Include="Misc\HideUnhide.cs" />
     <Compile Include="Misc\WorkbookProperties.cs" />
@@ -168,6 +183,15 @@
       <Project>{BD5E6BFE-E837-4A35-BCA9-39667D873A20}</Project>
       <Name>ClosedXML</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ImageHandling.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ImageHandling.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SampleImage.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

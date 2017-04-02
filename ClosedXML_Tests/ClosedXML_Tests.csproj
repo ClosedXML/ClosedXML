@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ClosedXML_Tests</RootNamespace>
     <AssemblyName>ClosedXML_Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -22,17 +22,19 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;$(AppVeyor)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;$(AppVeyor)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -41,13 +43,13 @@
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.4.1\lib\net40\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -63,20 +65,30 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ClosedXML\Properties\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Examples\AutoFilterTests.cs" />
+    <Compile Include="Examples\ImageHandlingTests.cs" />
     <Compile Include="Examples\CommentsTests.cs" />
     <Compile Include="Examples\ConditionalFormattingTests.cs" />
     <Compile Include="Examples\PageSetupTests.cs" />
+    <Compile Include="Examples\PivotTableTests.cs" />
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
     <Compile Include="Excel\CalcEngine\InformationTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
+    <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
+    <Compile Include="Excel\Comments\CommentsTests.cs" />
+    <Compile Include="Excel\ImageHandling\PictureTests.cs" />
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
+    <Compile Include="OleDb\OleDbTests.cs" />
     <Compile Include="Excel\PageSetup\HeaderFooterTests.cs" />
+    <Compile Include="Excel\PageSetup\PageBreaksTests.cs" />
     <Compile Include="Excel\Ranges\UsedAndUnusedCellsTests.cs" />
     <Compile Include="Excel\Saving\SavingTests.cs" />
     <Compile Include="XLHelperTests.cs" />
@@ -102,6 +114,7 @@
     <Compile Include="Excel\Ranges\InsertingRangesTests.cs" />
     <Compile Include="Excel\Rows\RowTests.cs" />
     <Compile Include="Excel\Styles\ColorTests.cs" />
+    <Compile Include="Excel\Styles\NumberFormatTests.cs" />
     <Compile Include="Excel\Styles\XLFillTests.cs" />
     <Compile Include="Excel\Tables\TablesTests.cs" />
     <Compile Include="Excel\Worksheets\XLWorksheetTests.cs" />
@@ -150,6 +163,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\DataTypesUnderDifferentCulture.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\DataValidation.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Formulas.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\FormulasWithEvaluation.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\FreezePanes.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\HideSheets.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\HideUnhide.xlsx" />
@@ -161,6 +175,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\MergeMoves.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Outline.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\SheetProtection.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\SheetViews.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\ShiftingFormulas.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\ShowCase.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\TabColors.xlsx" />
@@ -250,14 +265,30 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBar.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\CommentsWithIndexedColor81.xlsx" />
     <EmbeddedResource Include="Resource\Misc\EmptyTable.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\FileWithDefaultStyleNameNotInEnglish.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\FileWithMismatchSheetIdAndRelId.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\InvalidPrintTitles.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadFileWithCustomSheetViews.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadPivotTables.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LibreOfficeFileWithDates.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadSheetsWithCommas.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
     <EmbeddedResource Include="Resource\Examples\PivotTables\PivotTables.xlsx" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageAnchors.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageFormats.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\WorkbookProtection.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\ExcelProducedWorkbookWithImages.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\EmptyCellValue.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\AllShapes.xlsx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

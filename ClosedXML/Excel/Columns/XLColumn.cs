@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
@@ -47,8 +47,8 @@ namespace ClosedXML.Excel
             _width = column._width;
             IsReference = column.IsReference;
             if (IsReference)
-				SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-			_collapsed = column._collapsed;
+                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+            _collapsed = column._collapsed;
             _isHidden = column._isHidden;
             _outlineLevel = column._outlineLevel;
             SetStyle(column.GetStyleId());
@@ -299,6 +299,17 @@ namespace ClosedXML.Excel
         {
             var fontCache = new Dictionary<IXLFontBase, Font>();
             Double colMaxWidth = minWidth;
+
+            List<Int32> autoFilterRows = new List<Int32>();
+            if (this.Worksheet.AutoFilter != null && this.Worksheet.AutoFilter.Range != null)
+                autoFilterRows.Add(this.Worksheet.AutoFilter.Range.FirstRow().RowNumber());
+
+            autoFilterRows.AddRange(Worksheet.Tables.Where(t =>
+                    t.AutoFilter != null
+                    && t.AutoFilter.Range != null
+                    && !autoFilterRows.Contains(t.AutoFilter.Range.FirstRow().RowNumber()))
+                .Select(t => t.AutoFilter.Range.FirstRow().RowNumber()));
+
             foreach (XLCell c in Column(startRow, endRow).CellsUsed())
             {
                 if (c.IsMerged()) continue;
@@ -442,9 +453,7 @@ namespace ClosedXML.Excel
                 else
                     thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString(), fontCache);
 
-                if (c.Worksheet.AutoFilter != null
-                    && c.Worksheet.AutoFilter.Range != null
-                    && c.Worksheet.AutoFilter.Range.Contains(c))
+                if (autoFilterRows.Contains(c.Address.RowNumber))
                     thisWidthMax += 2.7148; // Allow room for arrow icon in autofilter
 
 

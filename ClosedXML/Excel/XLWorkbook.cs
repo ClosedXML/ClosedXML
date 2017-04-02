@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.AccessControl;
 using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Extensions;
 using DocumentFormat.OpenXml;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Linq;
-    using System.Data;
 
     public enum XLEventTracking { Enabled, Disabled }
     public enum XLCalculateMode
@@ -396,7 +396,7 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
-            if (Worksheets.Any(w => w.Name.ToLower().Equals(name.ToLower())))
+            if (Worksheets.Any(w => string.Equals(w.Name, XLWorksheets.TrimSheetName(name), StringComparison.OrdinalIgnoreCase)))
             {
                 worksheet = Worksheet(name);
                 return true;
@@ -406,22 +406,39 @@ namespace ClosedXML.Excel
             return false;
         }
 
+        public IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws)
+        {
+            ws = null;
+            if (!rangeAddress.Contains('!')) return null;
+
+            var split = rangeAddress.Split('!');
+            var first = split[0];
+            var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
+            var localRange = split[1];
+            if (TryGetWorksheet(wsName, out ws))
+            {
+                return ws.Range(localRange);
+            }
+            return null;
+        }
+
+
         /// <summary>
         ///   Saves the current workbook.
         /// </summary>
         public void Save()
         {
 #if DEBUG
-            Save(true);
+            Save(true, false);
 #else
-            Save(false);
+            Save(false, false);
 #endif
         }
 
         /// <summary>
         ///   Saves the current workbook and optionally performs validation
         /// </summary>
-        public void Save(bool validate)
+        public void Save(Boolean validate, Boolean evaluateFormulae = false)
         {
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
@@ -429,10 +446,10 @@ namespace ClosedXML.Excel
 
             if (_loadSource == XLLoadSource.Stream)
             {
-                CreatePackage(_originalStream, false, _spreadsheetDocumentType, validate);
+                CreatePackage(_originalStream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
             }
             else
-                CreatePackage(_originalFile, _spreadsheetDocumentType, validate);
+                CreatePackage(_originalFile, _spreadsheetDocumentType, validate, evaluateFormulae);
         }
 
         /// <summary>
@@ -441,16 +458,16 @@ namespace ClosedXML.Excel
         public void SaveAs(String file)
         {
 #if DEBUG
-            SaveAs(file, true);
+            SaveAs(file, true, false);
 #else
-            SaveAs(file, false);
+            SaveAs(file, false, false);
 #endif
         }
 
         /// <summary>
         ///   Saves the current workbook to a file and optionally validates it.
         /// </summary>
-        public void SaveAs(String file, Boolean validate)
+        public void SaveAs(String file, Boolean validate, Boolean evaluateFormulae = false)
         {
             checkForWorksheetsPresent();
             PathHelper.CreateDirectory(Path.GetDirectoryName(file));
@@ -459,14 +476,14 @@ namespace ClosedXML.Excel
                 if (File.Exists(file))
                     File.Delete(file);
 
-                CreatePackage(file, GetSpreadsheetDocumentType(file), validate);
+                CreatePackage(file, GetSpreadsheetDocumentType(file), validate, evaluateFormulae);
             }
             else if (_loadSource == XLLoadSource.File)
             {
                 if (String.Compare(_originalFile.Trim(), file.Trim(), true) != 0)
                     File.Copy(_originalFile, file, true);
 
-                CreatePackage(file, GetSpreadsheetDocumentType(file), validate);
+                CreatePackage(file, GetSpreadsheetDocumentType(file), validate, evaluateFormulae);
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -476,7 +493,7 @@ namespace ClosedXML.Excel
                 {
                     CopyStream(_originalStream, fileStream);
                     //fileStream.Position = 0;
-                    CreatePackage(fileStream, false, _spreadsheetDocumentType, validate);
+                    CreatePackage(fileStream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
                     fileStream.Close();
                 }
             }
@@ -485,15 +502,23 @@ namespace ClosedXML.Excel
         private static SpreadsheetDocumentType GetSpreadsheetDocumentType(string filePath)
         {
             var extension = Path.GetExtension(filePath);
-
             if (extension == null) throw new Exception("Empty extension is not supported.");
+            extension = extension.Substring(1).ToLowerInvariant();
 
-            if (extension.ToLowerInvariant().Equals(".xlsm")) return SpreadsheetDocumentType.MacroEnabledWorkbook;
+            switch (extension)
+            {
+                case "xlsm":
+                case "xltm":
+                    return SpreadsheetDocumentType.MacroEnabledWorkbook;
+                case "xlsx":
+                case "xltx":
+                    return SpreadsheetDocumentType.Workbook;
+                default:
+                    throw new ArgumentException(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx', '.xslm', '.xltx' and '.xltm'.", extension));
 
-            if (extension.ToLowerInvariant().Equals(".xlsx")) return SpreadsheetDocumentType.Workbook;
-
-            throw new Exception(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx' and '.xslm'.", extension));
+            }
         }
+
         private void checkForWorksheetsPresent()
         {
             if (Worksheets.Count() == 0)
@@ -506,16 +531,16 @@ namespace ClosedXML.Excel
         public void SaveAs(Stream stream)
         {
 #if DEBUG
-            SaveAs(stream, true);
+            SaveAs(stream, true, false);
 #else
-            SaveAs(stream, false);
+            SaveAs(stream, false, false);
 #endif
         }
 
         /// <summary>
         ///   Saves the current workbook to a stream and optionally validates it.
         /// </summary>
-        public void SaveAs(Stream stream, Boolean validate)
+        public void SaveAs(Stream stream, Boolean validate, Boolean evaluateFormulae = false)
         {
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
@@ -527,13 +552,13 @@ namespace ClosedXML.Excel
                 if (stream.CanRead && stream.CanSeek && stream.CanWrite)
                 {
                     // all is fine the package can be created in a direct way
-                    CreatePackage(stream, true, _spreadsheetDocumentType, validate);
+                    CreatePackage(stream, true, _spreadsheetDocumentType, validate, evaluateFormulae);
                 }
                 else
                 {
                     // the harder way
                     MemoryStream ms = new MemoryStream();
-                    CreatePackage(ms, true, _spreadsheetDocumentType, validate);
+                    CreatePackage(ms, true, _spreadsheetDocumentType, validate, evaluateFormulae);
                     // not really nessesary, because I changed CopyStream too.
                     // but for better understanding and if somebody in the future
                     // provide an changed version of CopyStream
@@ -548,7 +573,7 @@ namespace ClosedXML.Excel
                     CopyStream(fileStream, stream);
                     fileStream.Close();
                 }
-                CreatePackage(stream, false, _spreadsheetDocumentType, validate);
+                CreatePackage(stream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -556,7 +581,7 @@ namespace ClosedXML.Excel
                 if (_originalStream != stream)
                     CopyStream(_originalStream, stream);
 
-                CreatePackage(stream, false, _spreadsheetDocumentType, validate);
+                CreatePackage(stream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
             }
         }
 
@@ -739,17 +764,23 @@ namespace ClosedXML.Excel
             return Ranges(namedCells).Cells();
         }
 
-        public IXLRange Range(String namedRange)
+        public IXLRange Range(String range)
         {
-            var range = NamedRange(namedRange);
-            if (range == null) return null;
-            return range.Ranges.FirstOrDefault();
+            var namedRange = NamedRange(range);
+            if (namedRange != null)
+                return namedRange.Ranges.FirstOrDefault();
+            else
+            {
+                IXLWorksheet ws;
+                var r = RangeFromFullAddress(range, out ws);
+                return r;
+            }
         }
 
-        public IXLRanges Ranges(String namedRanges)
+        public IXLRanges Ranges(String ranges)
         {
             var retVal = new XLRanges();
-            var rangePairs = namedRanges.Split(',');
+            var rangePairs = ranges.Split(',');
             foreach (var range in rangePairs.Select(r => Range(r.Trim())).Where(range => range != null))
             {
                 retVal.Add(range);
@@ -833,10 +864,47 @@ namespace ClosedXML.Excel
         public XLWorkbook SetLockStructure(Boolean value) { LockStructure = value; return this; }
         public Boolean LockWindows { get; set; }
         public XLWorkbook SetLockWindows(Boolean value) { LockWindows = value; return this; }
+        internal HexBinaryValue LockPassword { get; set; }
+        public Boolean IsPasswordProtected { get { return LockPassword != null; } }
+        
+        public void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword)
+        {
+            if (IsPasswordProtected && workbookPassword == null)
+                throw new InvalidOperationException("The workbook is password protected");
 
+            var hashPassword = workbookPassword.HashPassword();
+            if (IsPasswordProtected && LockPassword != hashPassword)
+                throw new ArgumentException("Invalid password");
+
+            if (IsPasswordProtected && (lockStructure || lockWindows))
+                throw new InvalidOperationException("The workbook is already protected");
+
+            if (IsPasswordProtected && hashPassword != null && !lockStructure && !lockWindows)
+            {
+                // Workbook currently protected, but we're unsetting the 2 flags
+                // Hence unprotect workbook using password.
+                LockPassword = null;
+            }
+
+
+            if (!IsPasswordProtected && hashPassword != null && (lockStructure || lockWindows))
+            {
+                //Protect workbook using password.
+                LockPassword = hashPassword;
+            }
+
+            LockStructure = lockStructure;
+            LockWindows = lockWindows;
+        }
+        
         public void Protect()
         {
             Protect(true);
+        }
+
+        public void Protect(string workbookPassword)
+        {
+            Protect(true, false, workbookPassword);
         }
 
         public void Protect(Boolean lockStructure)
@@ -846,8 +914,17 @@ namespace ClosedXML.Excel
 
         public void Protect(Boolean lockStructure, Boolean lockWindows)
         {
-            LockStructure = lockStructure;
-            LockWindows = LockWindows;
+            Protect(lockStructure, lockWindows, null);
+        }
+
+        public void Unprotect()
+        {
+            Protect(false, false);
+        }
+
+        public void Unprotect(string workbookPassword)
+        {
+            Protect(false, false, workbookPassword);
         }
     }
 }

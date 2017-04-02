@@ -1,46 +1,11 @@
-﻿using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML_Examples.Misc
 {
     public class Formulas : IXLExample
     {
-        #region Variables
-
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Methods
-
-        // Public
-        public void Create(String filePath)
+        public virtual void Create(String filePath)
         {
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Formulas");
@@ -83,7 +48,7 @@ namespace ClosedXML_Examples.Misc
 
             // Setting the formula of a range
             var rngData = ws.Range(2, 1, 4, 7);
-            rngData.LastColumn().FormulaR1C1 = "=IF(RC[-3]=RC[-1],\"Yes\", \"No\")";
+            rngData.LastColumn().FormulaR1C1 = "=IF(RC[-4]=RC[-1],\"Yes\", \"No\")";
 
             // Using an array formula:
             // Just put the formula between curly braces
@@ -109,12 +74,5 @@ namespace ClosedXML_Examples.Misc
 
             wb.SaveAs(filePath);
         }
-
-        // Private
-
-        // Override
-
-
-        #endregion
     }
 }

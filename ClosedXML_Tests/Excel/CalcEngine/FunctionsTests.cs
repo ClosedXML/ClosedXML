@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -379,6 +379,12 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             actual = XLWorkbook.EvaluateExpr("Round(-50.55, -2)");
             Assert.AreEqual(-100.0, actual);
+            
+            actual = XLWorkbook.EvaluateExpr("ROUND(59 * 0.535, 2)"); // (59 * 0.535) = 31.565
+            Assert.AreEqual(31.57, actual);
+
+            actual = XLWorkbook.EvaluateExpr("ROUND(59 * -0.535, 2)"); // (59 * -0.535) = -31.565
+            Assert.AreEqual(-31.57, actual);
         }
 
         [Test]
@@ -467,10 +473,10 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void SubtotalCount()
         {
             object actual = XLWorkbook.EvaluateExpr("Subtotal(2,2,3)");
-            Assert.AreEqual(2.0, actual);
+            Assert.AreEqual(2, actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(2,""A"",3)");
-            Assert.AreEqual(2.0, actual);
+            Assert.AreEqual(1, actual);
         }
 
         [Test]
@@ -609,14 +615,32 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             XLWorkbook wb = new XLWorkbook();
             wb.Worksheets.Add("TallyTests");
             var cell = wb.Worksheet(1).Cell(1, 1).SetFormulaA1("=MAX(D1,D2)");
-            Assert.AreEqual(0, cell.Value); 
+            Assert.AreEqual(0, cell.Value);
             cell = wb.Worksheet(1).Cell(2, 1).SetFormulaA1("=MIN(D1,D2)");
             Assert.AreEqual(0, cell.Value);
             cell = wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=SUM(D1,D2)");
             Assert.AreEqual(0, cell.Value);
-            cell = wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=AVERAGE(D1,D2)");
-            Assert.AreEqual(0, cell.Value);
+            Assert.That(() => wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=AVERAGE(D1,D2)").Value, Throws.Exception);
+        }
 
+        [Test]
+        public void TestOmittedParameters()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                object value;
+                value = wb.Evaluate("=IF(TRUE,1)");
+                Assert.AreEqual(1, value);
+
+                value = wb.Evaluate("=IF(TRUE,1,)");
+                Assert.AreEqual(1, value);
+
+                value = wb.Evaluate("=IF(FALSE,1,)");
+                Assert.AreEqual(false, value);
+
+                value = wb.Evaluate("=IF(FALSE,,2)");
+                Assert.AreEqual(2, value);
+            }
         }
     }
 }

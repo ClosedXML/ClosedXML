@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Globalization;
@@ -477,6 +477,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             actual = XLWorkbook.EvaluateExpr(@"Text(Date(2010, 1, 1), ""M/d/y"")");
             Assert.AreEqual("1/1/10", actual);
+        }
+
+        [Test]
+        public void Text_String_Input()
+        {
+            Object actual = XLWorkbook.EvaluateExpr(@"TEXT(""211x"", ""#00"")");
+            Assert.AreEqual("211x", actual);
         }
 
         [Test]

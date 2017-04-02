@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -82,6 +82,12 @@ namespace ClosedXML.Excel
         internal sealed class RelIdGenerator
         {
             private readonly Dictionary<RelType, List<String>> _relIds = new Dictionary<RelType, List<String>>();
+
+            public String GetNext()
+            {
+                return GetNext(RelType.Workbook);
+            }
+
             public String GetNext(RelType relType)
             {
                 if (!_relIds.ContainsKey(relType))
@@ -101,7 +107,7 @@ namespace ClosedXML.Excel
                     id++;
                 }
             }
-            public void AddValues(List<String> values, RelType relType)
+            public void AddValues(IEnumerable<String> values, RelType relType)
             {
                 if (!_relIds.ContainsKey(relType))
                 {

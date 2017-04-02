@@ -1,4 +1,5 @@
-﻿using System;
+using ClosedXML.Extensions;
+using System;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -74,11 +75,14 @@ namespace ClosedXML.Excel
                 if (_internalAddress.Contains('!'))
                 {
                     return _internalAddress[0] != '\''
-                               ? String.Format("'{0}'!{1}", _internalAddress.Substring(0, _internalAddress.IndexOf('!')),
-                                               _internalAddress.Substring(_internalAddress.IndexOf('!') + 1))
+                               ? String.Format("{0}!{1}",
+                                    _internalAddress
+                                        .Substring(0, _internalAddress.IndexOf('!'))
+                                        .WrapSheetNameInQuotesIfRequired(),
+                                    _internalAddress.Substring(_internalAddress.IndexOf('!') + 1))
                                : _internalAddress;
                 }
-                return String.Format("'{0}'!{1}", Worksheet.Name, _internalAddress);
+                return String.Format("{0}!{1}", Worksheet.Name.WrapSheetNameInQuotesIfRequired(), _internalAddress);
             }
             set
             {

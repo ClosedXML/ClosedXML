@@ -1,4 +1,4 @@
-﻿using ClosedXML.Utils;
+using ClosedXML.Utils;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel

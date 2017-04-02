@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ClosedXML.Excel;
 
 
@@ -65,6 +65,17 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(++ro, co).Value = "TimeSpan:";
             ws.Cell(ro, co + 1).Value = new TimeSpan(33, 45, 22);
+
+            ro++;
+
+            ws.Cell(++ro, co).Value = "Decimal Number:";
+            ws.Cell(ro, co + 1).Value = 123.45m;
+
+            ws.Cell(++ro, co).Value = "Float Number:";
+            ws.Cell(ro, co + 1).Value = 123.45f;
+
+            ws.Cell(++ro, co).Value = "Double Number:";
+            ws.Cell(ro, co + 1).Value = 123.45d;
 
             ro++;
 
@@ -192,7 +203,7 @@ namespace ClosedXML_Examples.Misc
                 .SetDataType(XLCellValues.DateTime)
                 .SetDataType(XLCellValues.Boolean)
                 .SetDataType(XLCellValues.Text);
-                    
+
             ws.Columns(2, 3).AdjustToContents();
 
             workbook.SaveAs(filePath);

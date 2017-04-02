@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -91,7 +91,26 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var month = (int)p[1];
             var day = (int)p[2];
 
-            return (int)Math.Floor(new DateTime(year, month, day).ToOADate());
+            // Excel allows months and days outside the normal range, and adjusts the date accordingly
+            if (month > 12 || month < 1)
+            {
+                year += (int)Math.Floor((double)(month - 1d) / 12.0);
+                month -= (int)Math.Floor((double)(month - 1d) / 12.0) * 12;
+            }
+
+            int daysAdjustment = 0;
+            if (day > DateTime.DaysInMonth(year, month))
+            {
+                daysAdjustment = day - DateTime.DaysInMonth(year, month);
+                day = DateTime.DaysInMonth(year, month);
+            }
+            else if (day < 1)
+            {
+                daysAdjustment = day - 1;
+                day = 1;
+            }
+
+            return (int)Math.Floor(new DateTime(year, month, day).AddDays(daysAdjustment).ToOADate());
         }
 
         private static object Datevalue(List<Expression> p)

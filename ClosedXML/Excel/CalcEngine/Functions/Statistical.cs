@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static void Register(CalcEngine ce)
         {
             //ce.RegisterFunction("AVEDEV", AveDev, 1, int.MaxValue);
-            ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average);
+            ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average); // Returns the average (arithmetic mean) of the arguments
             ce.RegisterFunction("AVERAGEA", 1, int.MaxValue, AverageA);
             //BETADIST	Returns the beta cumulative distribution function
             //BETAINV	Returns the inverse of the cumulative distribution function for a specified beta distribution
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine
             //CORREL	Returns the correlation coefficient between two data sets
             ce.RegisterFunction("COUNT", 1, int.MaxValue, Count);
             ce.RegisterFunction("COUNTA", 1, int.MaxValue, CountA);
-            ce.RegisterFunction("COUNTBLANK", 1, int.MaxValue, CountBlank);
+            ce.RegisterFunction("COUNTBLANK", 1, CountBlank);
             ce.RegisterFunction("COUNTIF", 2, CountIf);
             //COVAR	Returns covariance, the average of the products of paired deviations
             //CRITBINOM	Returns the smallest value for which the cumulative binomial distribution is less than or equal to a criterion value
@@ -77,6 +77,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("STDEVA", 1, int.MaxValue, StDevA);
             ce.RegisterFunction("STDEVP", 1, int.MaxValue, StDevP);
             ce.RegisterFunction("STDEVPA", 1, int.MaxValue, StDevPA);
+            ce.RegisterFunction("STDEV.S", 1, int.MaxValue, StDev);
+            ce.RegisterFunction("STDEV.P", 1, int.MaxValue, StDevP);
             //STEYX	Returns the standard error of the predicted y-value for each x in the regression
             //TDIST	Returns the Student's t-distribution
             //TINV	Returns the inverse of the Student's t-distribution
@@ -87,6 +89,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("VARA", 1, int.MaxValue, VarA);
             ce.RegisterFunction("VARP", 1, int.MaxValue, VarP);
             ce.RegisterFunction("VARPA", 1, int.MaxValue, VarPA);
+            ce.RegisterFunction("VAR.S", 1, int.MaxValue, Var);
+            ce.RegisterFunction("VAR.P", 1, int.MaxValue, VarP);
             //WEIBULL	Returns the Weibull distribution
             //ZTEST	Returns the one-tailed probability-value of a z-test
         }
@@ -131,10 +135,10 @@ namespace ClosedXML.Excel.CalcEngine
             }
             return cnt;
         }
-        static bool IsBlank(object value)
+        internal static bool IsBlank(object value)
         {
-            return 
-                value == null || 
+            return
+                value == null ||
                 value is string && ((string)value).Length == 0;
         }
         static object CountIf(List<Expression> p)
@@ -144,13 +148,12 @@ namespace ClosedXML.Excel.CalcEngine
             var ienum = p[0] as IEnumerable;
             if (ienum != null)
             {
-                var crit = (string)p[1].Evaluate();
+                var criteria = (string)p[1].Evaluate();
                 foreach (var value in ienum)
                 {
                     if (!IsBlank(value))
                     {
-                        var exp = string.Format("{0}{1}", value, crit);
-                        if ((bool)ce.Evaluate(exp))
+                        if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
                             cnt++;
                     }
                 }
@@ -209,7 +212,7 @@ namespace ClosedXML.Excel.CalcEngine
         // utility for tallying statistics
         static Tally GetTally(List<Expression> p, bool numbersOnly)
         {
-            return new Tally(p);
+            return new Tally(p, numbersOnly);
         }
     }
 }
