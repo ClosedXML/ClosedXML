@@ -100,6 +100,9 @@
     <Compile Include="..\ClosedXML\Excel\CalcEngine\CalcEngine.cs">
       <Link>Excel\CalcEngine\CalcEngine.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\CalcEngineHelpers.cs">
+      <Link>Excel\CalcEngine\CalcEngineHelpers.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Expression.cs">
       <Link>Excel\CalcEngine\Expression.cs</Link>
     </Compile>

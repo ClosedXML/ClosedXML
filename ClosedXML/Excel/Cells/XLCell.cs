@@ -134,7 +134,7 @@ namespace ClosedXML.Excel
                 if (HasRichText)
                     return _richText.ToString();
 
-                return XLHelper.IsNullOrWhiteSpace(_cellValue) ? FormulaA1 : _cellValue;
+                return string.Empty == _cellValue ? FormulaA1 : _cellValue;
             }
         }
 
@@ -220,6 +220,7 @@ namespace ClosedXML.Excel
         {
             FormulaA1 = String.Empty;
             _richText = null;
+            var style = GetStyleForRead();
             if (value is String || value is char)
             {
                 _cellValue = value.ToString();
@@ -231,12 +232,14 @@ namespace ClosedXML.Excel
             {
                 _cellValue = value.ToString();
                 _dataType = XLCellValues.TimeSpan;
+                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                 Style.NumberFormat.NumberFormatId = 46;
             }
             else if (value is DateTime)
             {
                 _dataType = XLCellValues.DateTime;
                 var dtTest = (DateTime)Convert.ChangeType(value, typeof(DateTime));
+                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                 Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
                 _cellValue = dtTest.ToOADate().ToInvariantString();
@@ -1631,8 +1634,8 @@ namespace ClosedXML.Excel
                 val = string.Empty;
             else if (value is DateTime)
                 val = ((DateTime)value).ToString("o");
-            else if (value is double)
-                val = ((double)value).ToInvariantString();
+            else if (value.IsNumber())
+                val = Convert.ToDecimal(value).ToInvariantString();
             else
                 val = value.ToString();
             _richText = null;
@@ -1941,7 +1944,7 @@ namespace ClosedXML.Excel
             return columnPart;
         }
 
-        internal void CopyValues(XLCell source)
+        internal void CopyValuesFrom(XLCell source)
         {
             _cellValue = source._cellValue;
             _dataType = source._dataType;
@@ -1973,7 +1976,7 @@ namespace ClosedXML.Excel
         {
             var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
             //var source = castedOtherCell;
-            CopyValues(source);
+            CopyValuesFrom(source);
 
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
 

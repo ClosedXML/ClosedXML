@@ -256,6 +256,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object _Text(List<Expression> p)
         {
+            var value = p[0].Evaluate();
+
+            // Input values of type string don't get any formatting applied.
+            if (value is string) return value;
+
             var number = (double)p[0];
             var format = (string)p[1];
             if (string.IsNullOrEmpty(format.Trim())) return "";
