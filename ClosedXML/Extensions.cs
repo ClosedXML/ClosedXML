@@ -1,30 +1,28 @@
-﻿using System;
-using System.Collections;
+﻿using ClosedXML.Utils;
+using DocumentFormat.OpenXml;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using System.IO;
 using System.Xml;
-using ClosedXML.Utils;
-using DocumentFormat.OpenXml;
+using System.Xml.Linq;
 
 [assembly: CLSCompliantAttribute(true)]
+
 namespace ClosedXML.Excel
 {
     public static class Extensions
     {
         // Adds the .ForEach method to all IEnumerables
 
-
-        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
         public static String ToHex(this Color color)
         {
-
             byte[] bytes = new byte[4];
 
             bytes[0] = color.A;
@@ -39,17 +37,14 @@ namespace ClosedXML.Excel
 
             for (int i = 0; i < bytes.Length; i++)
             {
-
                 int b = bytes[i];
 
                 chars[i * 2] = hexDigits[b >> 4];
 
                 chars[i * 2 + 1] = hexDigits[b & 0xF];
-
             }
 
             return new string(chars);
-
         }
 
         public static String RemoveSpecialCharacters(this String str)
@@ -75,10 +70,10 @@ namespace ClosedXML.Excel
             HashSet<T> distinctItems = new HashSet<T>();
             foreach (var item in source)
             {
-              if (!distinctItems.Add(item))
-              {
-                return true;
-              }
+                if (!distinctItems.Add(item))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -87,7 +82,6 @@ namespace ClosedXML.Excel
         {
             return (T)Convert.ChangeType(o, typeof(T));
         }
-
     }
 
     public static class DictionaryExtensions
@@ -106,6 +100,7 @@ namespace ClosedXML.Excel
     public static class StringExtensions
     {
         private static readonly Regex RegexNewLine = new Regex(@"((?<!\r)\n|\r\n)", RegexOptions.Compiled);
+
         public static String FixNewLines(this String value)
         {
             return value.Contains("\n") ? RegexNewLine.Replace(value, Environment.NewLine) : value;
@@ -173,14 +168,15 @@ namespace ClosedXML.Excel
                 && date.DayOfWeek != DayOfWeek.Sunday
                 && !bankHolidays.Contains(date);
         }
-
     }
 
     public static class IntegerExtensions
     {
         private static readonly NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
+
         [ThreadStatic]
         private static Dictionary<Int32, String> intToString;
+
         public static String ToInvariantString(this Int32 value)
         {
             String sValue;
@@ -200,7 +196,6 @@ namespace ClosedXML.Excel
             }
             return sValue;
         }
-
     }
 
     public static class DecimalExtensions
@@ -233,7 +228,6 @@ namespace ClosedXML.Excel
 
     public static class FontBaseExtensions
     {
-
         private static Font GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
         {
             Font font;
@@ -266,7 +260,7 @@ namespace ClosedXML.Excel
             if (font.Bold) fontStyle |= FontStyle.Bold;
             if (font.Italic) fontStyle |= FontStyle.Italic;
             if (font.Strikethrough) fontStyle |= FontStyle.Strikeout;
-            if (font.Underline != XLFontUnderlineValues.None ) fontStyle |= FontStyle.Underline;
+            if (font.Underline != XLFontUnderlineValues.None) fontStyle |= FontStyle.Underline;
             return fontStyle;
         }
 
@@ -361,4 +355,3 @@ namespace ClosedXML.Excel
         }
     }
 }
-

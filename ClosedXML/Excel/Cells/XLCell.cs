@@ -233,14 +233,14 @@ namespace ClosedXML.Excel
                 _cellValue = value.ToString();
                 _dataType = XLCellValues.TimeSpan;
                 if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                Style.NumberFormat.NumberFormatId = 46;
+                    Style.NumberFormat.NumberFormatId = 46;
             }
             else if (value is DateTime)
             {
                 _dataType = XLCellValues.DateTime;
                 var dtTest = (DateTime)Convert.ChangeType(value, typeof(DateTime));
                 if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
+                    Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
                 _cellValue = dtTest.ToOADate().ToInvariantString();
             }
@@ -480,7 +480,7 @@ namespace ClosedXML.Excel
 
                 if (!data.Any())
                 {
-                    if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof (DateTime) || itemType.IsNumber())
+                    if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                         maxCo = Address.ColumnNumber + 1;
                     else
                         maxCo = Address.ColumnNumber + itemType.GetFields().Length + itemType.GetProperties().Length;
