@@ -1,35 +1,31 @@
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Diagnostics;
-using System.Text;
-using System.Text.RegularExpressions;
-using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Functions;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
-namespace ClosedXML.Excel.CalcEngine {
+namespace ClosedXML.Excel.CalcEngine
+{
     /// <summary>
-	/// CalcEngine parses strings and returns Expression objects that can
+    /// CalcEngine parses strings and returns Expression objects that can
     /// be evaluated.
-	/// </summary>
+    /// </summary>
     /// <remarks>
     /// <para>This class has three extensibility points:</para>
     /// <para>Use the <b>DataContext</b> property to add an object's properties to the engine scope.</para>
     /// <para>Use the <b>RegisterFunction</b> method to define custom functions.</para>
     /// <para>Override the <b>GetExternalObject</b> method to add arbitrary variables to the engine scope.</para>
     /// </remarks>
-	internal class CalcEngine {
+    internal class CalcEngine {
         //---------------------------------------------------------------------------
         #region ** fields
 
         // members
-        string _expr;                       // expression being parsed
-        int _len;                       // length of the expression being parsed
-        int _ptr;				        // current pointer into expression
-        string _idChars;                   // valid characters in identifiers (besides alpha and digits)
-        Token _token;				        // current token being parsed
+        string _expr;                           // expression being parsed
+        int _len;                               // length of the expression being parsed
+        int _ptr;                               // current pointer into expression
+        char[] _idChars;                        // valid characters in identifiers (besides alpha and digits)
+        Token _token;                           // current token being parsed
         Dictionary<object, Token> _tkTbl;       // table with tokens (+, -, etc)
         Dictionary<string, FunctionDefinition> _fnTbl;      // table with constants and functions (pi, sin, etc)
         Dictionary<string, object> _vars;       // table with variables
@@ -37,7 +33,7 @@ namespace ClosedXML.Excel.CalcEngine {
         bool _optimize;                         // optimize expressions when parsing
         ExpressionCache _cache;                 // cache with parsed expressions
         CultureInfo _ci;                        // culture info used to parse numbers/dates
-        char _decimal, _listSep, _percent;                // localized decimal separator, list separator, percent sign
+        char _decimal, _listSep, _percent;      // localized decimal separator, list separator, percent sign
 
         #endregion
 
@@ -104,7 +100,7 @@ namespace ClosedXML.Excel.CalcEngine {
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-		public object Evaluate(string expression) {
+        public object Evaluate(string expression) {
             var x = //Parse(expression);
                 _cache != null
                 ? _cache[expression]
@@ -142,7 +138,7 @@ namespace ClosedXML.Excel.CalcEngine {
         /// additional valid characters such as ':' or '!' (used in Excel range references
         /// for example).
         /// </remarks>
-        public string IdentifierChars {
+        public char[] IdentifierChars {
             get { return _idChars; }
             set { _idChars = value; }
         }
@@ -413,6 +409,12 @@ namespace ClosedXML.Excel.CalcEngine {
         //---------------------------------------------------------------------------
         #region ** parser
 
+        private static IDictionary<char, char> matchingClosingSymbols = new Dictionary<char, char>()
+        {
+            ['\''] = '\'',
+            ['['] = ']'
+        };
+
         void GetToken() {
             // eat white space
             while (_ptr < _len && _expr[_ptr] <= ' ') {
@@ -434,7 +436,13 @@ namespace ClosedXML.Excel.CalcEngine {
             // note that operators must start with non-letter/digit characters.
             var isLetter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
             var isDigit = c >= '0' && c <= '9';
-            if (!isLetter && !isDigit) {
+
+            var isEnclosed = matchingClosingSymbols.Keys.Contains(c);
+            char matchingClosingSymbol = '\0';
+            if (isEnclosed)
+                matchingClosingSymbol = matchingClosingSymbols[c];
+
+            if (!isLetter && !isDigit && !isEnclosed) {
                 // if this is a number starting with a decimal, don't parse as operator
                 var nxt = _ptr + 1 < _len ? _expr[_ptr + 1] : 0;
                 bool isNumber = c == _decimal && nxt >= '0' && nxt <= '9';
@@ -576,7 +584,7 @@ namespace ClosedXML.Excel.CalcEngine {
             }
 
             // identifiers (functions, objects) must start with alpha or underscore
-            if (!isLetter && c != '_' && (_idChars == null || _idChars.IndexOf(c) < 0)) {
+            if (!isEnclosed && !isLetter && c != '_' && (!(_idChars?.Contains(c) ?? false))) {
                 Throw("Identifier expected.");
             }
 
@@ -585,9 +593,28 @@ namespace ClosedXML.Excel.CalcEngine {
                 c = _expr[_ptr + i];
                 isLetter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
                 isDigit = c >= '0' && c <= '9';
-                if (!isLetter && !isDigit && c != '_' && (_idChars == null || _idChars.IndexOf(c) < 0)) {
-                    break;
+
+                if (isEnclosed && c == matchingClosingSymbol)
+                {
+                    isEnclosed = false;
+                    matchingClosingSymbol = '\0';
+
+                    i++;
+                    c = _expr[_ptr + i];
+                    isLetter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+                    isDigit = c >= '0' && c <= '9';
                 }
+
+                var disallowedSymbols = new List<char>() { '\\', '/', '*', '[', ':', '?' };
+                if (isEnclosed && disallowedSymbols.Contains(c))
+                    break;
+
+                var allowedSymbols = new List<char>() { '_' };
+
+                if (!isLetter && !isDigit
+                    && !(isEnclosed || allowedSymbols.Contains(c))
+                    && (!(_idChars?.Contains(c) ?? false)))
+                    break;
             }
 
             // got identifier

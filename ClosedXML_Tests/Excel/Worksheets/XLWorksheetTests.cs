@@ -112,13 +112,14 @@ namespace ClosedXML_Tests
         {
             using (var wb = new XLWorkbook())
             {
-                var ws = wb.Worksheets.Add("Sheet1, Sheet3");
+                var sourceSheetName = "Sheet1, Sheet3";
+                var ws = wb.Worksheets.Add(sourceSheetName);
                 ws.Cell("A1").Value = 1;
                 ws.Cell("A2").Value = 2;
                 ws.Cell("B2").Value = 3;
 
                 ws = wb.Worksheets.Add("Formula");
-                ws.FirstCell().FormulaA1 = "=SUM('Sheet1, Sheet3'!A1:A2,'Sheet1, Sheet3'!B1:B2)";
+                ws.FirstCell().FormulaA1 = string.Format("=SUM('{0}'!A1:A2,'{0}'!B1:B2)", sourceSheetName);
 
                 var value = ws.FirstCell().Value;
                 Assert.AreEqual(6, value);

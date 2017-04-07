@@ -59,6 +59,9 @@ namespace ClosedXML.Excel
         public IXLWorksheet Worksheet(String sheetName)
         {
             XLWorksheet w;
+            if (sheetName.StartsWith("'") && sheetName.EndsWith("'") && sheetName.Length > 2)
+                sheetName = sheetName.Substring(1, sheetName.Length - 2);
+
             if (_worksheets.TryGetValue(sheetName, out w))
                 return w;
 
