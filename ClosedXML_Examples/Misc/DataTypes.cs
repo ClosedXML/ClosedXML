@@ -68,6 +68,17 @@ namespace ClosedXML_Examples.Misc
 
             ro++;
 
+            ws.Cell(++ro, co).Value = "Decimal Number:";
+            ws.Cell(ro, co + 1).Value = 123.45m;
+
+            ws.Cell(++ro, co).Value = "Float Number:";
+            ws.Cell(ro, co + 1).Value = 123.45f;
+
+            ws.Cell(++ro, co).Value = "Double Number:";
+            ws.Cell(ro, co + 1).Value = 123.45d;
+
+            ro++;
+
             ws.Cell(++ro, co).Value = "Explicit Text:";
             ws.Cell(ro, co + 1).Value = "'Hello World.";
 
@@ -192,7 +203,7 @@ namespace ClosedXML_Examples.Misc
                 .SetDataType(XLCellValues.DateTime)
                 .SetDataType(XLCellValues.Boolean)
                 .SetDataType(XLCellValues.Text);
-                    
+
             ws.Columns(2, 3).AdjustToContents();
 
             workbook.SaveAs(filePath);

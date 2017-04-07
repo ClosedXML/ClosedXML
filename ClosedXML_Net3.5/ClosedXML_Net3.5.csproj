@@ -45,6 +45,10 @@
       <HintPath>..\packages\DocumentFormat.OpenXml.1.0\lib\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FastMember.Signed, Version=1.0.0.9, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.Signed.1.1.0\lib\net35\FastMember.Signed.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -55,8 +59,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ClosedXML\Attributes\ColumnOrderAttribute.cs">
-      <Link>Attributes\ColumnOrderAttribute.cs</Link>
+    <Compile Include="..\ClosedXML\AttributeExtensions.cs">
+      <Link>AttributeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Attributes\XLColumnAttribute.cs">
+      <Link>Attributes\XLColumnAttribute.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\AutoFilters\IXLAutoFilter.cs">
       <Link>Excel\AutoFilters\IXLAutoFilter.cs</Link>
@@ -96,6 +103,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\CalcEngine\CalcEngine.cs">
       <Link>Excel\CalcEngine\CalcEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Excel\CalcEngine\CalcEngineHelpers.cs">
+      <Link>Excel\CalcEngine\CalcEngineHelpers.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\CalcEngine\Expression.cs">
       <Link>Excel\CalcEngine\Expression.cs</Link>
