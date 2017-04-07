@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 namespace ClosedXML.Excel
 {
     using Attributes;
+    using FastMember;
 
     internal class XLCell : IXLCell, IXLStylized
     {
@@ -244,19 +245,7 @@ namespace ClosedXML.Excel
 
                 _cellValue = dtTest.ToOADate().ToInvariantString();
             }
-            else if (
-                value is sbyte
-                || value is byte
-                || value is short
-                || value is ushort
-                || value is int
-                || value is uint
-                || value is long
-                || value is ulong
-                || value is float
-                || value is double
-                || value is decimal
-                )
+            else if (value.GetType().IsNumber())
             {
                 if ((value is double || value is float) && (Double.IsNaN((Double)Convert.ChangeType(value, typeof(Double)))
                     || Double.IsInfinity((Double)Convert.ChangeType(value, typeof(Double)))))
@@ -513,16 +502,21 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                    const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
                     var memberCache = new Dictionary<Type, IEnumerable<MemberInfo>>();
+                    var accessorCache = new Dictionary<Type, TypeAccessor>();
                     IEnumerable<MemberInfo> members = null;
+                    TypeAccessor accessor = null;
                     bool isPlainObject = itemType == typeof(object);
 
                     if (!isPlainObject)
+                    {
                         members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
                              .Concat(itemType.GetProperties(bindingFlags))
                              .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
                              .OrderBy(mi => XLColumnAttribute.GetOrder(mi));
+                        accessor = TypeAccessor.Create(itemType);
+                    }
 
                     foreach (T m in data)
                     {
@@ -532,12 +526,20 @@ namespace ClosedXML.Excel
                             // This is very inefficient and we prefer type of T to be a concrete class or struct
                             var type = m.GetType();
                             if (!memberCache.ContainsKey(type))
-                                memberCache.Add(type, type.GetFields(bindingFlags).Cast<MemberInfo>()
+                            {
+                                var _accessor = TypeAccessor.Create(type);
+
+                                var _members = type.GetFields(bindingFlags).Cast<MemberInfo>()
                                      .Concat(type.GetProperties(bindingFlags))
                                      .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
-                                     .OrderBy(mi => XLColumnAttribute.GetOrder(mi)));
+                                     .OrderBy(mi => XLColumnAttribute.GetOrder(mi));
+
+                                memberCache.Add(type, _members);
+                                accessorCache.Add(type, _accessor);
+                            }
 
                             members = memberCache[type];
+                            accessor = accessorCache[type];
                         }
 
                         var co = Address.ColumnNumber;
@@ -627,14 +629,7 @@ namespace ClosedXML.Excel
 
                             foreach (var mi in members)
                             {
-                                var fi = mi as FieldInfo;
-                                var pi = mi as PropertyInfo;
-
-                                if (fi != null)
-                                    SetValue(fi.GetValue(m), ro, co);
-                                else if (pi != null && mi as IEnumerable == null)
-                                    SetValue(pi.GetValue(m, null), ro, co);
-
+                                SetValue(accessor[m, mi.Name], ro, co);
                                 co++;
                             }
                         }
@@ -711,9 +706,32 @@ namespace ClosedXML.Excel
                 var maxCo = 0;
                 var isDataTable = false;
                 var isDataReader = false;
+
+                const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                var memberCache = new Dictionary<Type, IEnumerable<MemberInfo>>();
+                var accessorCache = new Dictionary<Type, TypeAccessor>();
+                IEnumerable<MemberInfo> members = null;
+                TypeAccessor accessor = null;
+
                 foreach (var m in data)
                 {
                     var itemType = m.GetType();
+                    if (!memberCache.ContainsKey(itemType))
+                    {
+                        var _accessor = TypeAccessor.Create(itemType);
+
+                        var _members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
+                             .Concat(itemType.GetProperties(bindingFlags))
+                             .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
+                             .OrderBy(mi => XLColumnAttribute.GetOrder(mi));
+
+                        memberCache.Add(itemType, _members);
+                        accessorCache.Add(itemType, _accessor);
+                    }
+
+                    members = memberCache[itemType];
+                    accessor = accessorCache[itemType];
+
                     var co = Address.ColumnNumber;
 
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
@@ -757,18 +775,9 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        var fieldInfo = itemType.GetFields();
-                        foreach (var info in fieldInfo)
+                        foreach (var mi in members)
                         {
-                            SetValue(info.GetValue(m), ro, co);
-                            co++;
-                        }
-
-                        var propertyInfo = itemType.GetProperties();
-                        foreach (var info in propertyInfo)
-                        {
-                            if ((info as IEnumerable) == null)
-                                SetValue(info.GetValue(m, null), ro, co);
+                            SetValue(accessor[m, mi.Name], ro, co);
                             co++;
                         }
                     }

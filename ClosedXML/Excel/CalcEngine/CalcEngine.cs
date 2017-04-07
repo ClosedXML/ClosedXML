@@ -11,7 +11,7 @@ using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine {
     /// <summary>
-	/// CalcEngine parses strings and returns Expression objects that can 
+	/// CalcEngine parses strings and returns Expression objects that can
     /// be evaluated.
 	/// </summary>
     /// <remarks>
@@ -171,7 +171,7 @@ namespace ClosedXML.Excel.CalcEngine {
         /// <remarks>
         /// This method is useful when the engine needs to create objects dynamically.
         /// For example, a spreadsheet calc engine would use this method to dynamically create cell
-        /// range objects based on identifiers that cannot be enumerated at design time 
+        /// range objects based on identifiers that cannot be enumerated at design time
         /// (such as "AB12", "A1:AB12", etc.)
         /// </remarks>
         public virtual object GetExternalObject(string identifier) {
@@ -375,15 +375,6 @@ namespace ClosedXML.Excel.CalcEngine {
                         break;
                     }
 
-                    // look for bindings
-                    if (DataContext != null) {
-                        var list = new List<BindingInfo>();
-                        for (var t = _token; t != null; t = GetMember()) {
-                            list.Add(new BindingInfo((string)t.Value, GetParameters()));
-                        }
-                        x = new BindingExpression(this, list, _ci);
-                        break;
-                    }
                     Throw("Unexpected identifier");
                     break;
 
@@ -423,7 +414,7 @@ namespace ClosedXML.Excel.CalcEngine {
         #region ** parser
 
         void GetToken() {
-            // eat white space 
+            // eat white space
             while (_ptr < _len && _expr[_ptr] <= ' ') {
                 _ptr++;
             }
@@ -613,7 +604,7 @@ namespace ClosedXML.Excel.CalcEngine {
         }
         List<Expression> GetParameters() // e.g. myfun(a, b, c+2)
         {
-            // check whether next token is a (, 
+            // check whether next token is a (,
             // restore state and bail if it's not
             var pos = _ptr;
             var tk = _token;
@@ -650,7 +641,7 @@ namespace ClosedXML.Excel.CalcEngine {
             return parms;
         }
         Token GetMember() {
-            // check whether next token is a MEMBER token ('.'), 
+            // check whether next token is a MEMBER token ('.'),
             // restore state and bail if it's not
             var pos = _ptr;
             var tk = _token;
