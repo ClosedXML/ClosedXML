@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 
@@ -21,8 +24,6 @@ namespace ClosedXML.Excel
     using Ap;
     using Op;
     using System.Drawing;
-    using System.Text.RegularExpressions;
-    using System.Xml.Linq;
 
     #endregion
 
@@ -928,7 +929,7 @@ namespace ClosedXML.Excel
                 if (definedName.Hidden != null) visible = !BooleanValue.ToBoolean(definedName.Hidden);
                 if (name == "_xlnm.Print_Area")
                 {
-                    String[] fixedNames = validateDefinedNames(definedName.Text.Split(','));
+                    var fixedNames = validateDefinedNames(definedName.Text.Split(','));
                     foreach (string area in fixedNames)
                     {
                         if (area.Contains("["))
@@ -976,44 +977,38 @@ namespace ClosedXML.Excel
             }
         }
 
-        private string[] validateDefinedNames(String[] definedNames) 
+        private static Regex definedNameRegex = new Regex(@"\A'.*'!.*\z", RegexOptions.Compiled);
+
+        private IEnumerable<String> validateDefinedNames(IEnumerable<String> definedNames)
         {
-            List<String> fixedNames = new List<String>();
-            String currentName = "";
-            String regex = @"\A'.*'!.*\z";
+            var fixedNames = new List<String>();
+            var sb = new StringBuilder();
             foreach (string testName in definedNames)
             {
-                if(currentName.Equals("")) 
+                if (sb.Length > 0)
+                    sb.Append(',');
+
+                sb.Append(testName);
+
+                Match matchedValidPattern = definedNameRegex.Match(sb.ToString());
+                if (matchedValidPattern.Success)
                 {
-                    currentName = testName;
-                } 
-                else 
-                {
-                    currentName += String.Format(",{0}", testName);
-                }
-                Match matchedValidPattern = Regex.Match(currentName, regex);
-                if(matchedValidPattern.Success) 
-                {
-                    fixedNames.Add(currentName);
-                    currentName = "";
+                    yield return sb.ToString();
+                    sb = new StringBuilder();
                 }
             }
-            return fixedNames.ToArray();
+
+            if (sb.Length > 0)
+                yield return sb.ToString();
         }
 
         private void LoadPrintTitles(DefinedName definedName)
         {
             var areas = validateDefinedNames(definedName.Text.Split(','));
-            if (areas.Length > 0)
+            foreach (var item in areas)
             {
-                foreach (var item in areas)
-                {
-                    SetColumnsOrRowsToRepeat(item);
-                }
-                return;
+                SetColumnsOrRowsToRepeat(item);
             }
-
-            SetColumnsOrRowsToRepeat(definedName.Text);
         }
 
         private void SetColumnsOrRowsToRepeat(string area)
