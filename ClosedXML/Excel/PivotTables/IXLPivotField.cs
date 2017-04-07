@@ -36,6 +36,7 @@ namespace ClosedXML.Excel
         Boolean InsertBlankLines  { get; set; }
         Boolean ShowBlankItems { get; set; }
         Boolean InsertPageBreaks { get; set; }
+        Boolean Collapsed { get; set; }
 
         IXLPivotField SetCustomName(String value);
 
@@ -48,6 +49,7 @@ namespace ClosedXML.Excel
         IXLPivotField SetInsertBlankLines(); IXLPivotField SetInsertBlankLines(Boolean value);
         IXLPivotField SetShowBlankItems(); IXLPivotField SetShowBlankItems(Boolean value);
         IXLPivotField SetInsertPageBreaks(); IXLPivotField SetInsertPageBreaks(Boolean value);
+        IXLPivotField SetCollapsed(); IXLPivotField SetCollapsed(Boolean value);
 
         List<string> SharedStrings { get; set; }
     }

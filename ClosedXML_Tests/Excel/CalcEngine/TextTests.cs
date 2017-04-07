@@ -480,6 +480,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Text_String_Input()
+        {
+            Object actual = XLWorkbook.EvaluateExpr(@"TEXT(""211x"", ""#00"")");
+            Assert.AreEqual("211x", actual);
+        }
+
+        [Test]
         public void Trim_EmptyInput_Striong()
         {
             Object actual = XLWorkbook.EvaluateExpr(@"Trim("""")");

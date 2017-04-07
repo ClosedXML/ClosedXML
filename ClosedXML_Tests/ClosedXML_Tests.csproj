@@ -73,6 +73,7 @@
     <Compile Include="Excel\CalcEngine\InformationTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
+    <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Excel\Ranges\InsertingRangesTests.cs" />
     <Compile Include="Excel\Rows\RowTests.cs" />
     <Compile Include="Excel\Styles\ColorTests.cs" />
+    <Compile Include="Excel\Styles\NumberFormatTests.cs" />
     <Compile Include="Excel\Styles\XLFillTests.cs" />
     <Compile Include="Excel\Tables\TablesTests.cs" />
     <Compile Include="Excel\Worksheets\XLWorksheetTests.cs" />
@@ -162,6 +164,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\MergeMoves.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Outline.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\SheetProtection.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\SheetViews.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\ShiftingFormulas.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\ShowCase.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\TabColors.xlsx" />
@@ -254,7 +257,9 @@
     <EmbeddedResource Include="Resource\Misc\EmptyTable.xlsx" />
     <EmbeddedResource Include="Resource\Misc\FileWithDefaultStyleNameNotInEnglish.xlsx" />
     <EmbeddedResource Include="Resource\Misc\FileWithMismatchSheetIdAndRelId.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadFileWithCustomSheetViews.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LoadPivotTables.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LibreOfficeFileWithDates.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
