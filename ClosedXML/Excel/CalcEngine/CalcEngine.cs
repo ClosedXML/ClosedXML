@@ -482,8 +482,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static IDictionary<char, char> matchingClosingSymbols = new Dictionary<char, char>()
         {
-            ['\''] = '\'',
-            ['['] = ']'
+            { '\'', '\'' },
+            { '[',  ']' }
         };
 
         private void GetToken()
@@ -682,7 +682,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // identifiers (functions, objects) must start with alpha or underscore
-            if (!isEnclosed && !isLetter && c != '_' && (!(_idChars?.Contains(c) ?? false)))
+            if (!isEnclosed && !isLetter && c != '_' && (_idChars == null || !_idChars.Contains(c)))
             {
                 Throw("Identifier expected.");
             }
@@ -713,7 +713,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                 if (!isLetter && !isDigit
                     && !(isEnclosed || allowedSymbols.Contains(c))
-                    && (!(_idChars?.Contains(c) ?? false)))
+                    && (_idChars == null || !_idChars.Contains(c)))
                     break;
             }
 
