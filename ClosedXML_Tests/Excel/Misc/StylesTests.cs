@@ -63,5 +63,19 @@ namespace ClosedXML_Tests.Excel.Misc
             Assert.AreEqual(XLBorderStyleValues.Thick, range.LastColumn().Cell(2).Style.Border.RightBorder);
             Assert.AreEqual(XLBorderStyleValues.Double, range.LastColumn().Cell(3).Style.Border.RightBorder);
         }
+
+        [Test]
+        public void ResolveThemeColors()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                string color;
+                color = wb.Theme.ResolveThemeColor(XLThemeColor.Accent1).Color.ToHex();
+                Assert.AreEqual("FF4F81BD", color);
+
+                color = wb.Theme.ResolveThemeColor(XLThemeColor.Background1).Color.ToHex();
+                Assert.AreEqual("FFFFFFFF", color);
+            }
+        }
     }
 }
