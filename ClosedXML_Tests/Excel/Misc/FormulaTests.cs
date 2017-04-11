@@ -48,6 +48,7 @@ namespace ClosedXML_Tests.Excel
             {
                 IXLWorksheet ws = wb.Worksheets.Add("S10 Data");
                 ws.Cell("A1").Value = "Some value";
+                ws.Cell("A2").Value = 123;
 
                 ws = wb.Worksheets.Add("Summary");
                 ws.Cell("A1").FormulaA1 = "='S10 Data'!A1";
@@ -58,6 +59,9 @@ namespace ClosedXML_Tests.Excel
 
                 ws.Cell("A1").CopyTo("B1");
                 Assert.AreEqual("'S10 Data'!B1", ws.Cell("B1").FormulaA1);
+
+                ws.Cell("A3").FormulaA1 = "=SUM('S10 Data'!A2)";
+                Assert.AreEqual(123, ws.Cell("A3").Value);
             }
         }
 

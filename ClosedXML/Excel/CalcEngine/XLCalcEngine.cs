@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -10,14 +8,17 @@ namespace ClosedXML.Excel.CalcEngine
     {
         private readonly IXLWorksheet _ws;
         private readonly XLWorkbook _wb;
+
         public XLCalcEngine()
-        {}
+        { }
+
         public XLCalcEngine(XLWorkbook wb)
         {
             _wb = wb;
-            IdentifierChars = "$:!";
+            IdentifierChars = new char[] { '$', ':', '!' };
         }
-        public XLCalcEngine(IXLWorksheet ws): this(ws.Workbook)
+
+        public XLCalcEngine(IXLWorksheet ws) : this(ws.Workbook)
         {
             _ws = ws;
         }
@@ -35,14 +36,13 @@ namespace ClosedXML.Excel.CalcEngine
 
             return identifier;
         }
-
-
     }
 
     internal class CellRangeReference : IValueObject, IEnumerable
     {
         private IXLRange _range;
         private XLCalcEngine _ce;
+
         public CellRangeReference(IXLRange range, XLCalcEngine ce)
         {
             _range = range;
@@ -66,7 +66,7 @@ namespace ClosedXML.Excel.CalcEngine
         private Boolean _evaluating;
 
         // ** implementation
-        object GetValue(IXLCell cell)
+        private object GetValue(IXLCell cell)
         {
             if (_evaluating)
             {
@@ -80,7 +80,6 @@ namespace ClosedXML.Excel.CalcEngine
                     return cell.Value;
                 else
                     return new XLCalcEngine(cell.Worksheet).Evaluate(f);
-
             }
             finally
             {
