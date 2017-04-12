@@ -109,6 +109,7 @@
     <Compile Include="Ranges\CopyingRanges.cs" />
     <Compile Include="Ranges\NamedRanges.cs" />
     <Compile Include="Misc\Formulas.cs" />
+    <Compile Include="Misc\FormulasWithEvaluation.cs" />
     <Compile Include="Misc\Outline.cs" />
     <Compile Include="Misc\HideUnhide.cs" />
     <Compile Include="Misc\WorkbookProperties.cs" />

@@ -60,7 +60,7 @@ namespace ClosedXML.Excel
         private static readonly EnumValue<CellValues> CvDate = new EnumValue<CellValues>(CellValues.Date);
         private static readonly EnumValue<CellValues> CvBoolean = new EnumValue<CellValues>(CellValues.Boolean);
 
-        private static EnumValue<CellValues> GetCellValue(XLCell xlCell)
+        private static EnumValue<CellValues> GetCellValueType(XLCell xlCell)
         {
             switch (xlCell.DataType)
             {
@@ -105,7 +105,7 @@ namespace ClosedXML.Excel
             return true;
         }
 
-        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, bool validate)
+        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, bool validate, bool evaluateFormulae)
         {
             PathHelper.CreateDirectory(Path.GetDirectoryName(filePath));
             var package = File.Exists(filePath)
@@ -114,12 +114,12 @@ namespace ClosedXML.Excel
 
             using (package)
             {
-                CreateParts(package);
+                CreateParts(package, evaluateFormulae);
                 if (validate) Validate(package);
             }
         }
 
-        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType, bool validate)
+        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType, bool validate, bool evaluateFormulae)
         {
             var package = newStream
                 ? SpreadsheetDocument.Create(stream, spreadsheetDocumentType)
@@ -127,7 +127,7 @@ namespace ClosedXML.Excel
 
             using (package)
             {
-                CreateParts(package);
+                CreateParts(package, evaluateFormulae);
                 if (validate) Validate(package);
             }
         }
@@ -213,7 +213,7 @@ namespace ClosedXML.Excel
         }
 
         // Adds child parts and generates content of the specified part.
-        private void CreateParts(SpreadsheetDocument document)
+        private void CreateParts(SpreadsheetDocument document, bool evaluateFormulae)
         {
             var context = new SaveContext();
 
@@ -311,7 +311,7 @@ namespace ClosedXML.Excel
                     GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
                 }
 
-                GenerateWorksheetPartContent(worksheetPart, worksheet, context);
+                GenerateWorksheetPartContent(worksheetPart, worksheet, evaluateFormulae, context);
 
                 if (worksheet.PivotTables.Any())
                 {
@@ -3497,8 +3497,8 @@ namespace ClosedXML.Excel
 
         #region GenerateWorksheetPartContent
 
-        private static void GenerateWorksheetPartContent(WorksheetPart worksheetPart, XLWorksheet xlWorksheet,
-            SaveContext context)
+        private static void GenerateWorksheetPartContent(
+            WorksheetPart worksheetPart, XLWorksheet xlWorksheet, bool evaluateFormulae, SaveContext context)
         {
             #region Worksheet
 
@@ -4066,10 +4066,10 @@ namespace ClosedXML.Excel
                         else
                         {
                             cell.CellFormula = null;
-                            cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValue(xlCell);
+                            cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValueType(xlCell);
                         }
 
-                        if (!xlCell.HasFormula)
+                        if (!xlCell.HasFormula || evaluateFormulae)
                             SetCellValue(xlCell, cell);
 
                     }
@@ -4584,6 +4584,23 @@ namespace ClosedXML.Excel
 
         private static void SetCellValue(XLCell xlCell, Cell openXmlCell)
         {
+            if (xlCell.HasFormula)
+            {
+                var cellValue = new CellValue();
+                try
+                {
+                    cellValue.Text = xlCell.Value.ToString();
+                    openXmlCell.DataType = new EnumValue<CellValues>(CellValues.String);
+                }
+                catch
+                {
+                    cellValue = null;
+                }
+
+                openXmlCell.CellValue = cellValue;
+                return;
+            }
+
             var dataType = xlCell.DataType;
             if (dataType == XLCellValues.Text)
             {

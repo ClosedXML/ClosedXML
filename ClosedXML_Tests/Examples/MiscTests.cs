@@ -98,6 +98,12 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void FormulasWithEvaluation()
+        {
+            TestHelper.RunTestExample<FormulasWithEvaluation>(@"Misc\FormulasWithEvaluation.xlsx", true);
+        }
+
+        [Test]
         public void FreezePanes()
         {
             TestHelper.RunTestExample<FreezePanes>(@"Misc\FreezePanes.xlsx");

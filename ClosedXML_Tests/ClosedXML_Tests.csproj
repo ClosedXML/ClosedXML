@@ -153,6 +153,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\DataTypesUnderDifferentCulture.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\DataValidation.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Formulas.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\FormulasWithEvaluation.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\FreezePanes.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\HideSheets.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\HideUnhide.xlsx" />

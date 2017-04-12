@@ -53,7 +53,7 @@ namespace ClosedXML_Tests
             }
         }
 
-        public static void RunTestExample<T>(string filePartName)
+        public static void RunTestExample<T>(string filePartName, bool evaluateFormulae = false)
                 where T : IXLExample, new()
         {
             // Make sure tests run on a deterministic culture
@@ -74,7 +74,7 @@ namespace ClosedXML_Tests
             var filePath2 = Path.Combine(directory, fileName);
             //Run test
             example.Create(filePath1);
-            new XLWorkbook(filePath1).SaveAs(filePath2, true);
+            new XLWorkbook(filePath1).SaveAs(filePath2, true, evaluateFormulae);
             bool success = true;
 #pragma warning disable 162
             try
