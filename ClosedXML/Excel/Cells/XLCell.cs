@@ -1,7 +1,9 @@
-﻿using System;
+﻿using FastMember;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -11,8 +13,8 @@ using System.Text.RegularExpressions;
 namespace ClosedXML.Excel
 {
     using Attributes;
-    using FastMember;
 
+    [DebuggerDisplay("{Address}")]
     internal class XLCell : IXLCell, IXLStylized
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
