@@ -3991,13 +3991,13 @@ namespace ClosedXML.Excel
                 lastCell = 0;
                 var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
                     ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow) : c.CellReference.Value), c => c);
-                foreach (var opCell in xlWorksheet.Internals.CellsCollection.RowsCollection[distinctRow].Values
+                foreach (var xlCell in xlWorksheet.Internals.CellsCollection.RowsCollection[distinctRow].Values
                     .OrderBy(c => c.Address.ColumnNumber)
                     .Select(c => c))
                 {
-                    var styleId = context.SharedStyles[opCell.GetStyleId()].StyleId;
-                    var cellReference = (opCell.Address).GetTrimmedAddress();
-                    var isEmpty = opCell.IsEmpty(true);
+                    var styleId = context.SharedStyles[xlCell.GetStyleId()].StyleId;
+                    var cellReference = (xlCell.Address).GetTrimmedAddress();
+                    var isEmpty = xlCell.IsEmpty(true);
 
                     Cell cell = null;
                     if (cellsByReference.ContainsKey(cellReference))
@@ -4037,20 +4037,20 @@ namespace ClosedXML.Excel
                         }
 
                         cell.StyleIndex = styleId;
-                        var formula = opCell.FormulaA1;
-                        if (opCell.HasFormula)
+                        var formula = xlCell.FormulaA1;
+                        if (xlCell.HasFormula)
                         {
                             if (formula.StartsWith("{"))
                             {
                                 formula = formula.Substring(1, formula.Length - 2);
                                 var f = new CellFormula { FormulaType = CellFormulaValues.Array };
 
-                                if (opCell.FormulaReference == null)
-                                    opCell.FormulaReference = opCell.AsRange().RangeAddress;
-                                if (opCell.FormulaReference.FirstAddress.Equals(opCell.Address))
+                                if (xlCell.FormulaReference == null)
+                                    xlCell.FormulaReference = xlCell.AsRange().RangeAddress;
+                                if (xlCell.FormulaReference.FirstAddress.Equals(xlCell.Address))
                                 {
                                     f.Text = formula;
-                                    f.Reference = opCell.FormulaReference.ToStringRelative();
+                                    f.Reference = xlCell.FormulaReference.ToStringRelative();
                                 }
 
                                 cell.CellFormula = f;
@@ -4066,11 +4066,11 @@ namespace ClosedXML.Excel
                         else
                         {
                             cell.CellFormula = null;
-                            cell.DataType = opCell.DataType == XLCellValues.DateTime ? null : GetCellValue(opCell);
+                            cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValue(xlCell);
                         }
 
-                        if (!opCell.HasFormula)
-                            SetCellValue(opCell, cell);
+                        if (!xlCell.HasFormula)
+                            SetCellValue(xlCell, cell);
 
                     }
                 }
