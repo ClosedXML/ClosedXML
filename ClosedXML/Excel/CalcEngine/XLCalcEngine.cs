@@ -27,14 +27,36 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (identifier.Contains("!") && _wb != null)
             {
-                var wsName = identifier.Substring(0, identifier.IndexOf("!"));
-                return new CellRangeReference(_wb.Worksheet(wsName).Range(identifier.Substring(identifier.IndexOf("!") + 1)), this);
+                var referencedSheetNames = identifier.Split(':')
+                    .Select(part =>
+                    {
+                        if (part.Contains("!"))
+                            return part.Substring(0, part.IndexOf('!')).ToLower();
+                        else
+                            return null;
+                    })
+                    .Where(sheet => sheet != null)
+                    .Distinct();
+
+                if (!referencedSheetNames.Any())
+                    return new CellRangeReference(_ws.Range(identifier), this);
+                else if (referencedSheetNames.Count() > 1)
+                    throw new ArgumentOutOfRangeException(referencedSheetNames.Last(), "Cross worksheet references may references no more than 1 other worksheet");
+                else
+                {
+                    IXLWorksheet worksheet;
+                    if (!_wb.TryGetWorksheet(referencedSheetNames.Single(), out worksheet))
+                        throw new ArgumentOutOfRangeException(referencedSheetNames.Single(), "The required worksheet cannot be found");
+
+                    identifier = identifier.ToLower().Replace(string.Format("{0}!", worksheet.Name.ToLower()), "");
+
+                    return new CellRangeReference(worksheet.Range(identifier), this);
+                }
             }
-
-            if (_ws != null)
+            else if (_ws != null)
                 return new CellRangeReference(_ws.Range(identifier), this);
-
-            return identifier;
+            else
+                return identifier;
         }
     }
 
