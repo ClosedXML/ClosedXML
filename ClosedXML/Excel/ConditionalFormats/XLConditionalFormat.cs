@@ -37,6 +37,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
+            StopIfTrue = other.StopIfTrue;
         }
 
         public Boolean CopyDefaultModify { get; set; }
@@ -95,6 +96,8 @@ namespace ClosedXML.Excel
         public Boolean ShowIconOnly { get;  set; }
         public Boolean ShowBarOnly { get;  set; }
 
+        public Boolean StopIfTrue { get; set; }
+
         public void CopyFrom(IXLConditionalFormat other)
         {
             Style = other.Style;
@@ -107,6 +110,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
+            StopIfTrue = other.StopIfTrue;
 
             Values.Clear();
             other.Values.ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));

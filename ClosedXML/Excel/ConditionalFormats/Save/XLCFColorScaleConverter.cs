@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
     {
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, Int32 priority, XLWorkbook.SaveContext context)
         {
-            var conditionalFormattingRule = new ConditionalFormattingRule { Type = cf.ConditionalFormatType.ToOpenXml(), Priority = priority };
+            var conditionalFormattingRule = new ConditionalFormattingRule { Type = cf.ConditionalFormatType.ToOpenXml(), Priority = priority, StopIfTrue = cf.StopIfTrue };
 
             var colorScale = new ColorScale();
             for (Int32 i = 1; i <= cf.ContentTypes.Count; i++)

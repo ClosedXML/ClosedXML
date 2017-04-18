@@ -1703,6 +1703,9 @@ namespace ClosedXML.Excel
                 foreach (var fr in conditionalFormatting.Elements<ConditionalFormattingRule>())
                 {
                     var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
+
+                    conditionalFormat.StopIfTrue = fr.StopIfTrue;
+
                     if (fr.FormatId != null)
                     {
                         LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);

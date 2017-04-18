@@ -107,6 +107,7 @@ namespace ClosedXML.Excel
         Boolean ReverseIconOrder { get; }
         Boolean ShowIconOnly { get; }
         Boolean ShowBarOnly { get; }
+        Boolean StopIfTrue { get; set; }
         IXLRange Range { get; set; }
 
         XLDictionary<XLFormula> Values { get; }

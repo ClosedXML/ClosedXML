@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
             String val = GetQuoted(cf.Values[1]);
 
 
-            var conditionalFormattingRule = new ConditionalFormattingRule { FormatId = (UInt32)context.DifferentialFormats[cf.Style], Operator = cf.Operator.ToOpenXml(), Type = cf.ConditionalFormatType.ToOpenXml(), Priority = priority };
+            var conditionalFormattingRule = new ConditionalFormattingRule { FormatId = (UInt32)context.DifferentialFormats[cf.Style], Operator = cf.Operator.ToOpenXml(), Type = cf.ConditionalFormatType.ToOpenXml(), Priority = priority, StopIfTrue =  cf.StopIfTrue};
 
             var formula = new Formula();
             if (cf.Operator == XLCFOperator.Equal || cf.Operator == XLCFOperator.NotEqual)
