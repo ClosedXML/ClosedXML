@@ -4,9 +4,6 @@ using System;
 
 namespace ClosedXML_Tests.Excel
 {
-    /// <summary>
-    ///     Summary description for UnitTest1
-    /// </summary>
     [TestFixture]
     public class FormulaTests
     {
@@ -48,6 +45,7 @@ namespace ClosedXML_Tests.Excel
             {
                 IXLWorksheet ws = wb.Worksheets.Add("S10 Data");
                 ws.Cell("A1").Value = "Some value";
+                ws.Cell("A2").Value = 123;
 
                 ws = wb.Worksheets.Add("Summary");
                 ws.Cell("A1").FormulaA1 = "='S10 Data'!A1";
@@ -58,6 +56,9 @@ namespace ClosedXML_Tests.Excel
 
                 ws.Cell("A1").CopyTo("B1");
                 Assert.AreEqual("'S10 Data'!B1", ws.Cell("B1").FormulaA1);
+
+                ws.Cell("A3").FormulaA1 = "=SUM('S10 Data'!A2)";
+                Assert.AreEqual(123, ws.Cell("A3").Value);
             }
         }
 
@@ -77,6 +78,40 @@ namespace ClosedXML_Tests.Excel
                 ws.Cell("A3").FormulaA1 = @"=IF("""" = A1, ""A"", ""B"")";
                 actual = ws.Cell("A3").Value;
                 Assert.AreEqual(actual, "B");
+            }
+        }
+
+        [Test]
+        public void FormulaThatReferencesEntireRow()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().Value = 1;
+                ws.FirstCell().CellRight().Value = 2;
+                ws.FirstCell().CellRight(5).Value = 3;
+
+                ws.FirstCell().CellBelow().FormulaA1 = "=SUM(1:1)";
+
+                var actual = ws.FirstCell().CellBelow().Value;
+                Assert.AreEqual(6, actual);
+            }
+        }
+
+        [Test]
+        public void FormulaThatReferencesEntireColumn()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().Value = 1;
+                ws.FirstCell().CellBelow().Value = 2;
+                ws.FirstCell().CellBelow(5).Value = 3;
+
+                ws.FirstCell().CellRight().FormulaA1 = "=SUM(A:A)";
+
+                var actual = ws.FirstCell().CellRight().Value;
+                Assert.AreEqual(6, actual);
             }
         }
     }
