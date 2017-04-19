@@ -56,17 +56,24 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        public IXLWorksheet Worksheet(String sheetName)
+        internal static string TrimSheetName(string sheetName)
         {
-            XLWorksheet w;
             if (sheetName.StartsWith("'") && sheetName.EndsWith("'") && sheetName.Length > 2)
                 sheetName = sheetName.Substring(1, sheetName.Length - 2);
+
+            return sheetName;
+        }
+
+        public IXLWorksheet Worksheet(String sheetName)
+        {
+            sheetName = TrimSheetName(sheetName);
+
+            XLWorksheet w;
 
             if (_worksheets.TryGetValue(sheetName, out w))
                 return w;
 
-            var wss = _worksheets.Where(ws => ws.Key.ToLower().Equals(sheetName.ToLower()));
-
+            var wss = _worksheets.Where(ws => string.Equals(ws.Key, sheetName, StringComparison.OrdinalIgnoreCase));
             if (wss.Any())
                 return wss.First().Value;
 

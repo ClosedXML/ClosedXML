@@ -63,6 +63,9 @@
     </None>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="test.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj">

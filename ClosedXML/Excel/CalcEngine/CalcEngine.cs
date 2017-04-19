@@ -624,12 +624,15 @@ namespace ClosedXML.Excel.CalcEngine
                     val = ParseDouble(lit, _ci);
                 }
 
-                // build token
-                _token = new Token(val, TKID.ATOM, TKTYPE.LITERAL);
+                if (c != ':')
+                {
+                    // build token
+                    _token = new Token(val, TKID.ATOM, TKTYPE.LITERAL);
 
-                // advance pointer and return
-                _ptr += i;
-                return;
+                    // advance pointer and return
+                    _ptr += i;
+                    return;
+                }
             }
 
             // parse strings
