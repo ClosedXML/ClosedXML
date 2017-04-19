@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ClosedXML.Utils;
 
 namespace ClosedXML.Excel
 {
@@ -37,7 +38,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
-            StopIfTrue = other.StopIfTrue;
+            StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(other.StopIfTrue, true);
         }
 
         public Boolean CopyDefaultModify { get; set; }
@@ -110,7 +111,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
-            StopIfTrue = other.StopIfTrue;
+            StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(other.StopIfTrue, true);
 
             Values.Clear();
             other.Values.ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));

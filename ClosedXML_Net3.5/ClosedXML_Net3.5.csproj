@@ -233,6 +233,9 @@
     <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\IXLCFConverter.cs">
       <Link>Excel\ConditionalFormats\Save\IXLCFConverter.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFBaseConverter.cs">
+      <Link>Excel\ConditionalFormats\Save\XLCFBaseConverter.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Excel\ConditionalFormats\Save\XLCFCellIsConverter.cs">
       <Link>Excel\ConditionalFormats\Save\XLCFCellIsConverter.cs</Link>
     </Compile>
@@ -829,6 +832,9 @@
     </Compile>
     <Compile Include="..\ClosedXML\Utils\GraphicsUtils.cs">
       <Link>Utils\GraphicsUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\ClosedXML\Utils\OpenXmlHelper.cs">
+      <Link>Utils\OpenXmlHelper.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Utils\XmlEncoder.cs">
       <Link>Utils\XmlEncoder.cs</Link>
