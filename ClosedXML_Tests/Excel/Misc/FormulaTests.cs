@@ -156,13 +156,5 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(6, actual);
             }
         }
-
-#if !APPVEYOR
-        [Test]
-        public void ThisMustFail()
-        {
-            Assert.Fail();
-        }
-#endif
     }
 }
