@@ -12,6 +12,7 @@ namespace ClosedXML_Tests.OleDb
     [TestFixture]
     public class OleDbTests
     {
+#if !APPVEYOR
         [Test]
         public void TestOleDbValues()
         {
@@ -76,6 +77,7 @@ namespace ClosedXML_Tests.OleDb
                 }
             }
         }
+#endif
 
         private string CreateTestFile()
         {
