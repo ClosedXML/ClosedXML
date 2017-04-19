@@ -61,7 +61,9 @@ namespace ClosedXML_Sandbox
                     {
                         if (cell.HasComment)
                         {
+
                             Console.WriteLine($"Cell:{cell.Address} '{cell.Comment.Author}' '{cell.Comment.Text}'");
+
                         }
                     }
                 }
