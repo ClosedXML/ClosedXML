@@ -193,7 +193,7 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void ClearConditionalFormattingsWhenRangeBellow1()
+        public void ClearConditionalFormattingsWhenRangeBelow1()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
@@ -204,7 +204,7 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void ClearConditionalFormattingsWhenRangeBellow2()
+        public void ClearConditionalFormattingsWhenRangeBelow2()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();

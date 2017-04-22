@@ -28,21 +28,15 @@ namespace ClosedXML.Excel
                 if (ReferenceEquals(yy, null)) return false;
                 if (xx.GetType() != yy.GetType()) return false;
 
-                var xxValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v=>v.Value).ToArray();
-                var yyValues = yy.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value).ToArray();
-                var xxFormulas = xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)x.Range.FirstCell()).GetFormulaR1C1(f.Value)).ToArray();
-                var yyFormulas = yy.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)y.Range.FirstCell()).GetFormulaR1C1(f.Value)).ToArray();
+                var xxValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v=>v.Value);
+                var yyValues = yy.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
+                var xxFormulas = xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)x.Range.FirstCell()).GetFormulaR1C1(f.Value));
+                var yyFormulas = yy.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)y.Range.FirstCell()).GetFormulaR1C1(f.Value));
 
                 return Equals(xx._style, yy._style) 
                     && xx._styleCacheId == yy._styleCacheId 
                     && xx.CopyDefaultModify == yy.CopyDefaultModify 
                     && xx.UpdatingStyle == yy.UpdatingStyle
-                    && _listComparer.Equals(xxValues, yyValues)
-                    && _listComparer.Equals(xxFormulas, yyFormulas)
-                    && _colorsComparer.Equals(xx.Colors, yy.Colors)
-                    && _contentsTypeComparer.Equals(xx.ContentTypes, yy.ContentTypes)
-                    && _iconSetTypeComparer.Equals(xx.IconSetOperators, yy.IconSetOperators)
-                    && (!_compareRange || Equals(xx.Range.RangeAddress, yy.Range.RangeAddress)) 
                     && xx.ConditionalFormatType == yy.ConditionalFormatType 
                     && xx.TimePeriod == yy.TimePeriod 
                     && xx.IconSetStyle == yy.IconSetStyle 
@@ -51,7 +45,13 @@ namespace ClosedXML.Excel
                     && xx.Percent == yy.Percent 
                     && xx.ReverseIconOrder == yy.ReverseIconOrder 
                     && xx.ShowIconOnly == yy.ShowIconOnly 
-                    && xx.ShowBarOnly == yy.ShowBarOnly;
+                    && xx.ShowBarOnly == yy.ShowBarOnly
+                    && _listComparer.Equals(xxValues, yyValues)
+                    && _listComparer.Equals(xxFormulas, yyFormulas)
+                    && _colorsComparer.Equals(xx.Colors, yy.Colors)
+                    && _contentsTypeComparer.Equals(xx.ContentTypes, yy.ContentTypes)
+                    && _iconSetTypeComparer.Equals(xx.IconSetOperators, yy.IconSetOperators)
+                    && (!_compareRange || Equals(xx.Range.RangeAddress, yy.Range.RangeAddress)) ;
             }
 
             public int GetHashCode(IXLConditionalFormat obj)

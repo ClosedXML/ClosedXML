@@ -823,6 +823,9 @@
     <Compile Include="..\ClosedXML\Utils\GraphicsUtils.cs">
       <Link>Utils\GraphicsUtils.cs</Link>
     </Compile>
+    <Compile Include="..\ClosedXML\Utils\StringPool.cs">
+      <Link>Utils\StringPool.cs</Link>
+    </Compile>
     <Compile Include="..\ClosedXML\Utils\XmlEncoder.cs">
       <Link>Utils\XmlEncoder.cs</Link>
     </Compile>

@@ -344,10 +344,9 @@ namespace ClosedXML.Excel
         {
             if (checkIntersect)
             {
-                string tAddress = RangeAddress.ToString();
                 foreach (var mergedRange in Worksheet.Internals.MergedRanges)
                 {
-                    if (mergedRange.Intersects(tAddress))
+                    if (mergedRange.Intersects(this))
                         Worksheet.Internals.MergedRanges.Remove(mergedRange);
                 }
             }
@@ -380,7 +379,7 @@ namespace ClosedXML.Excel
             if (includeFormats)
             {
                 ClearMerged();
-                RemoveConditionalFormattings();
+                RemoveConditionalFormatting();
             }
 
             if (clearOptions == XLClearOptions.ContentsAndFormats)
@@ -395,7 +394,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        private void RemoveConditionalFormattings()
+        private void RemoveConditionalFormatting()
         {
             var mf = RangeAddress.FirstAddress;
             var ml = RangeAddress.LastAddress;

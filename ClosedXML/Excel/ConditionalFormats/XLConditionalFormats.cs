@@ -56,8 +56,8 @@ namespace ClosedXML.Excel
                 var addr = item.Range.RangeAddress;
                 var sameFormats = _conditionalFormats.Where(
                         f => f != item
-                             && XLConditionalFormat.NoRangeComparer.Equals(f, item)
-                             && f.Range.Worksheet.Position == item.Range.Worksheet.Position)
+                             && f.Range.Worksheet.Position == item.Range.Worksheet.Position
+                             && XLConditionalFormat.NoRangeComparer.Equals(f, item))
                     .ToArray();
 
                 var format = sameFormats.FirstOrDefault(f => f.Range.Contains(item.Range));
