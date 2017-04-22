@@ -1624,13 +1624,13 @@ namespace ClosedXML.Excel
             if (thisRangeAddress.IsInvalid || shiftedRange.RangeAddress.IsInvalid) return;
 
             if ((columnsShifted < 0
-                // all columns
+                 // all columns
                  &&
                  thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber
                  &&
                  thisRangeAddress.LastAddress.ColumnNumber <=
                  shiftedRange.RangeAddress.FirstAddress.ColumnNumber - columnsShifted
-                // all rows
+                 // all rows
                  && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber
                  && thisRangeAddress.LastAddress.RowNumber <= shiftedRange.RangeAddress.LastAddress.RowNumber
                 ) || (
@@ -1688,10 +1688,10 @@ namespace ClosedXML.Excel
             if (thisRangeAddress.IsInvalid || shiftedRange.RangeAddress.IsInvalid) return;
 
             if ((rowsShifted < 0
-                // all columns
+                 // all columns
                  && thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber
                  && thisRangeAddress.LastAddress.ColumnNumber <= shiftedRange.RangeAddress.FirstAddress.ColumnNumber
-                // all rows
+                 // all rows
                  && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber
                  && thisRangeAddress.LastAddress.RowNumber <= shiftedRange.RangeAddress.LastAddress.RowNumber - rowsShifted
                 ) || (
