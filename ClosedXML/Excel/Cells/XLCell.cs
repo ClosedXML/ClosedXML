@@ -245,7 +245,7 @@ namespace ClosedXML.Excel
 
                 _cellValue = dtTest.ToOADate().ToInvariantString();
             }
-            else if (value.GetType().IsNumber())
+            else if (value != null && value.GetType().IsNumber())
             {
                 if ((value is double || value is float) && (Double.IsNaN((Double)Convert.ChangeType(value, typeof(Double)))
                     || Double.IsInfinity((Double)Convert.ChangeType(value, typeof(Double)))))
