@@ -44,6 +44,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocumentFormat.OpenXml, Version=0.0.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.1\lib\net45\DocumentFormat.OpenXml.dll</HintPath>
@@ -74,6 +77,7 @@
     <Compile Include="Comments\EditingComments.cs" />
     <Compile Include="ConditionalFormatting\ConditionalFormatting.cs" />
     <Compile Include="Delete\DeleteFewWorksheets.cs" />
+    <Compile Include="ImageHandling\ImageAnchors.cs" />
     <Compile Include="IXLExample.cs" />
     <Compile Include="Misc\AdjustToContentsWithAutoFilter.cs" />
     <Compile Include="Misc\CopyingRowsAndColumns.cs" />
@@ -173,6 +177,9 @@
       <Project>{BD5E6BFE-E837-4A35-BCA9-39667D873A20}</Project>
       <Name>ClosedXML</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ImageHandling.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

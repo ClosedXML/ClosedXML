@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Examples\AutoFilterTests.cs" />
+    <Compile Include="Examples\ImageHandlingTests.cs" />
     <Compile Include="Examples\CommentsTests.cs" />
     <Compile Include="Examples\ConditionalFormattingTests.cs" />
     <Compile Include="Examples\PageSetupTests.cs" />
@@ -268,6 +269,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
     <EmbeddedResource Include="Resource\Examples\PivotTables\PivotTables.xlsx" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageHandling.xlsx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
