@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.CustomProperties;
 using DocumentFormat.OpenXml.Drawing;
@@ -2505,7 +2506,9 @@ namespace ClosedXML.Excel
 
         private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture)
         {
-            var drawingsPart = worksheetPart.DrawingsPart ?? worksheetPart.AddNewPart<DrawingsPart>();
+            var drawingsPart = worksheetPart.DrawingsPart ??
+                               worksheetPart.AddNewPart<DrawingsPart>(
+                                    GeneratePartId(picture.Name, worksheetPart));
 
             if (drawingsPart.WorksheetDrawing == null)
             {
@@ -2514,7 +2517,7 @@ namespace ClosedXML.Excel
 
             var worksheetDrawing = drawingsPart.WorksheetDrawing;
 
-            var imagePart = drawingsPart.AddImagePart(ImagePartType.Png);
+            var imagePart = drawingsPart.AddImagePart(ImagePartType.Png, GeneratePartId(picture.Name, drawingsPart));
 
             using (Stream stream = new MemoryStream())
             {
@@ -2655,6 +2658,27 @@ namespace ClosedXML.Excel
                     worksheetDrawing.Append(cellAnchor);
                 }
             }
+        }
+
+        private static Regex embedRegex = new Regex("[^a-zA-Z0-9]");
+
+        public static string GeneratePartId(string name, OpenXmlPart oxp)
+        {
+            var partId = name ?? "rId1";
+            partId = embedRegex.Replace(partId, "");
+
+            // We guarantee the id uniqueness based off the name
+            try
+            {
+                oxp.GetPartById(partId);
+            }
+            catch(ArgumentOutOfRangeException)
+            {
+                return partId;
+            }
+
+            partId += "c";
+            return GeneratePartId(partId, oxp);
         }
 
         private static Vml.TextBox GetTextBox(IXLDrawingStyle ds)
