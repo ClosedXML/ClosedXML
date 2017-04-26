@@ -11,5 +11,11 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<ImageAnchors>(@"ImageHandling\ImageHandling.xlsx");
         }
+
+        [Test]
+        public void ImageFormats()
+        {
+            TestHelper.RunTestExample<ImageFormats>(@"ImageHandling\ImageFormats.xlsx");
+        }
     }
 }

@@ -2517,7 +2517,8 @@ namespace ClosedXML.Excel
 
             var worksheetDrawing = drawingsPart.WorksheetDrawing;
 
-            var imagePart = drawingsPart.AddImagePart(ImagePartType.Png, GeneratePartId(picture.Name, drawingsPart));
+            var imagePart = drawingsPart.AddImagePart(picture.GetImagePartType(),
+                                                        GeneratePartId(picture.Name, drawingsPart));
 
             using (Stream stream = new MemoryStream())
             {
