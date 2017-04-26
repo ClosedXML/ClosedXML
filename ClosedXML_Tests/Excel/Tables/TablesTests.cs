@@ -1,4 +1,4 @@
-using ClosedXML.Attributes;
+﻿using ClosedXML.Attributes;
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
@@ -333,8 +333,8 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void ChangeFieldName()
         {
-            XLWorkbook wb = new XLWorkbook();
-
+            using (var wb = new XLWorkbook())
+            {
             var ws = wb.AddWorksheet("Sheet");
             ws.Cell("A1").SetValue("FName")
                 .CellBelow().SetValue("John");
@@ -361,6 +361,13 @@ namespace ClosedXML_Tests.Excel
             tbl.SetShowHeaderRow(true);
             nameAfter = tbl.Cell("B1").Value.ToString();
             Assert.AreEqual("LastNameChanged", nameAfter);
+
+                var field = tbl.Field("LastNameChanged");
+                Assert.AreEqual("LastNameChanged", field.Name);
+
+                tbl.Cell(1, 1).Value = "FirstName";
+                Assert.AreEqual("FirstName", tbl.Field(0).Name);
         }
     }
+}
 }
