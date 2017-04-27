@@ -8,7 +8,7 @@
 #### Questions:
 - Is there a blog post?
 - Does the knowledge base need an update?
-- Does this add new (C#) dependencies which need to be added to chef?
+- Does this add new (C#) dependencies?
 
 - [ ] C# Code Review: @csreviewer
 - [ ] Test Automation Review: @csreviewer
