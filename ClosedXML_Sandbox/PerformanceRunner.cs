@@ -50,6 +50,26 @@ namespace ClosedXML_Sandbox
             }
         }
 
+        public static void ReadComments()
+        {
+            using (var wb = new XLWorkbook("Excel.xlsx"))
+            {
+                var ws = wb.Worksheets.First();
+                foreach (var row in ws.Rows())
+                {
+                    foreach (var cell in row.Cells(true))
+                    {
+                        if (cell.HasComment)
+                        {
+
+                            Console.WriteLine($"Cell:{cell.Address} '{cell.Comment.Author}' '{cell.Comment.Text}'");
+
+                        }
+                    }
+                }
+            }
+        }
+
         private static void CreateMergedCell(IXLWorksheet worksheet)
         {
             worksheet.Cell(rowCount + 2, 1).Value = "Merged cell";

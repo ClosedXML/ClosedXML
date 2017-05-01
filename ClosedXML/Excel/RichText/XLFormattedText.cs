@@ -176,7 +176,7 @@ namespace ClosedXML.Excel
             return _phonetics == null || Phonetics.Equals(other.Phonetics);
         }
 
-        public String Text { get { return ToString(); } }
+        public string Text { get; set; }
 
         private IXLPhonetics _phonetics;
         public IXLPhonetics Phonetics 
