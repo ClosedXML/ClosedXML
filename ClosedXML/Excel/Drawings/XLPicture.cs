@@ -11,9 +11,7 @@ namespace ClosedXML.Excel.Drawings
         private MemoryStream imgStream;
         private List<IXLMarker> Markers;
         private String name;
-        public bool NoChangeAspect;
-        public bool NoMove;
-        public bool NoResize;
+        private bool isAbsolute;
 
         private long iMaxWidth = 500;
         private long iMaxHeight = 500;
@@ -104,18 +102,18 @@ namespace ClosedXML.Excel.Drawings
             get { return (long)iWidth; }
         }
 
-        public long PaddingX
+        public long OffsetX
         {
             get { return ConvertToEmu(iOffsetX, iHorizontalResolution); }
             set { iOffsetX = value; }
         }
-        public long PaddingY
+        public long OffsetY
         {
             get { return ConvertToEmu(iOffsetY, iVerticalResolution); }
             set { iOffsetY = value; }
         }
 
-        public long EMUOffsetX
+        public long RawOffsetX
         {
             get
             {
@@ -127,7 +125,7 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
-        public long EMUOffsetY
+        public long RawOffsetY
         {
             get
             {
@@ -177,7 +175,7 @@ namespace ClosedXML.Excel.Drawings
 
         public List<IXLMarker> GetMarkers()
         {
-            return Markers;
+            return Markers != null ? Markers : new List<IXLMarker>();
         }
         public void AddMarker(IXLMarker marker)
         {
@@ -197,6 +195,18 @@ namespace ClosedXML.Excel.Drawings
             set
             {
                 name = value;
+            }
+        }
+
+        public bool IsAbsolute
+        {
+            get
+            {
+                return isAbsolute;
+            }
+            set
+            {
+                isAbsolute = value;
             }
         }
     }

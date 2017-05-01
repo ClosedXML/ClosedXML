@@ -17,10 +17,11 @@ namespace ClosedXML.Excel.Drawings
         long MaxWidth { get; set; }
         long Width { get; set; }
         long Height { get; set; }
-        long PaddingX { get; set; }
-        long PaddingY { get; set; }
-        long EMUOffsetX { get; set; }
-        long EMUOffsetY { get; set; }
+        long OffsetX { get; set; }
+        long OffsetY { get; set; }
+        long RawOffsetX { get; set; }
+        long RawOffsetY { get; set; }
+        bool IsAbsolute { get; set; }
 
         String Name { get; set; }
     }

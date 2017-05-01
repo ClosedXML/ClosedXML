@@ -372,6 +372,10 @@ namespace ClosedXML.Excel
 
         List<Drawings.IXLPicture> Pictures();
 
+        /// <summary>
+        /// Adds image to worksheet
+        /// </summary>
+        /// <param name="pic">XLPicture object to be added.</param>
         void AddPicture(Drawings.XLPicture pic);
     }
 }

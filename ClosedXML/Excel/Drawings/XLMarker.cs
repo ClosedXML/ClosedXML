@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.Drawings
             }
             get
             {
-                return this.colId - 1;
+                return this.colId;
             }
         }
 
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel.Drawings
             }
             get
             {
-                return this.rowId - 1;
+                return this.rowId;
             }
         }
 
