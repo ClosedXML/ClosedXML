@@ -614,7 +614,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(0, cell.Value);
             cell = wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=SUM(D1,D2)");
             Assert.AreEqual(0, cell.Value);
-            Assert.That(() => wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=AVERAGE(D1,D2)").Value, Throws.Exception);
+            Assert.That(() => wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=AVERAGE(D1,D2)").Value, Throws.TypeOf<ApplicationException>());
         }
     }
 }
