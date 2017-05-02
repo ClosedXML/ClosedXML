@@ -365,12 +365,6 @@
     <Compile Include="..\ClosedXML\Excel\Drawings\IXLDrawingPosition.cs">
       <Link>Excel\Drawings\IXLDrawingPosition.cs</Link>
     </Compile>
-    <Compile Include="..\ClosedXML\Excel\Drawings\IXLMarker.cs">
-      <Link>Excel\Drawings\IXLMarker.cs</Link>
-    </Compile>
-    <Compile Include="..\ClosedXML\Excel\Drawings\IXLPicture.cs">
-      <Link>Excel\Drawings\IXLPicture.cs</Link>
-    </Compile>
     <Compile Include="..\ClosedXML\Excel\Drawings\Style\IXLDrawingAlignment.cs">
       <Link>Excel\Drawings\Style\IXLDrawingAlignment.cs</Link>
     </Compile>
@@ -430,12 +424,6 @@
     </Compile>
     <Compile Include="..\ClosedXML\Excel\Drawings\XLDrawingPosition.cs">
       <Link>Excel\Drawings\XLDrawingPosition.cs</Link>
-    </Compile>
-    <Compile Include="..\ClosedXML\Excel\Drawings\XLMarker.cs">
-      <Link>Excel\Drawings\XLMarker.cs</Link>
-    </Compile>
-    <Compile Include="..\ClosedXML\Excel\Drawings\XLPicture.cs">
-      <Link>Excel\Drawings\XLPicture.cs</Link>
     </Compile>
     <Compile Include="..\ClosedXML\Excel\EnumConverter.cs">
       <Link>Excel\EnumConverter.cs</Link>
