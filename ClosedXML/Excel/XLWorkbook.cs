@@ -396,7 +396,7 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
-            if (Worksheets.Any(w => w.Name.ToLower().Equals(name.ToLower())))
+            if (Worksheets.Any(w => string.Equals(w.Name, XLWorksheets.TrimSheetName(name), StringComparison.OrdinalIgnoreCase)))
             {
                 worksheet = Worksheet(name);
                 return true;
@@ -504,13 +504,22 @@ namespace ClosedXML.Excel
             var extension = Path.GetExtension(filePath);
 
             if (extension == null) throw new ArgumentException("Empty extension is not supported.");
+            extension = extension.Substring(1).ToLowerInvariant();
 
-            if (extension.ToLowerInvariant().Equals(".xlsm")) return SpreadsheetDocumentType.MacroEnabledWorkbook;
+            switch (extension)
+            {
+                case "xlsm":
+                case "xltm":
+                    return SpreadsheetDocumentType.MacroEnabledWorkbook;
+                case "xlsx":
+                case "xltx":
+                    return SpreadsheetDocumentType.Workbook;
+                default:
+                    throw new ArgumentException(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx', '.xslm', '.xltx' and '.xltm'.", extension));
 
-            if (extension.ToLowerInvariant().Equals(".xlsx")) return SpreadsheetDocumentType.Workbook;
-
-            throw new ArgumentException(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx' and '.xslm'.", extension));
+            }
         }
+
         private void checkForWorksheetsPresent()
         {
             if (Worksheets.Count() == 0)

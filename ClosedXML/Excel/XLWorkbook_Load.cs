@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 
@@ -21,7 +24,6 @@ namespace ClosedXML.Excel
     using Ap;
     using Op;
     using System.Drawing;
-    using System.Xml.Linq;
 
     #endregion
 
@@ -927,7 +929,8 @@ namespace ClosedXML.Excel
                 if (definedName.Hidden != null) visible = !BooleanValue.ToBoolean(definedName.Hidden);
                 if (name == "_xlnm.Print_Area")
                 {
-                    foreach (string area in definedName.Text.Split(','))
+                    var fixedNames = validateDefinedNames(definedName.Text.Split(','));
+                    foreach (string area in fixedNames)
                     {
                         if (area.Contains("["))
                         {
@@ -974,19 +977,38 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void LoadPrintTitles(DefinedName definedName)
+        private static Regex definedNameRegex = new Regex(@"\A'.*'!.*\z", RegexOptions.Compiled);
+
+        private IEnumerable<String> validateDefinedNames(IEnumerable<String> definedNames)
         {
-            var areas = definedName.Text.Split(',');
-            if (areas.Length > 0)
+            var fixedNames = new List<String>();
+            var sb = new StringBuilder();
+            foreach (string testName in definedNames)
             {
-                foreach (var item in areas)
+                if (sb.Length > 0)
+                    sb.Append(',');
+
+                sb.Append(testName);
+
+                Match matchedValidPattern = definedNameRegex.Match(sb.ToString());
+                if (matchedValidPattern.Success)
                 {
-                    SetColumnsOrRowsToRepeat(item);
+                    yield return sb.ToString();
+                    sb = new StringBuilder();
                 }
-                return;
             }
 
-            SetColumnsOrRowsToRepeat(definedName.Text);
+            if (sb.Length > 0)
+                yield return sb.ToString();
+        }
+
+        private void LoadPrintTitles(DefinedName definedName)
+        {
+            var areas = validateDefinedNames(definedName.Text.Split(','));
+            foreach (var item in areas)
+            {
+                SetColumnsOrRowsToRepeat(item);
+            }
         }
 
         private void SetColumnsOrRowsToRepeat(string area)
@@ -1670,8 +1692,8 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// Loads the conditional formatting.
-        /// https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.conditionalformattingrule%28v=office.15%29.aspx?f=255&MSPPError=-2147217396
         /// </summary>
+        // https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.conditionalformattingrule%28v=office.15%29.aspx?f=255&MSPPError=-2147217396
         private void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws, Dictionary<Int32, DifferentialFormat> differentialFormats)
         {
             if (conditionalFormatting == null) return;

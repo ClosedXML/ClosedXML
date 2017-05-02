@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace ClosedXML_Tests
 {
@@ -78,7 +78,6 @@ namespace ClosedXML_Tests
             wb.Worksheets.Add("Sheet2", 1);
             wb.Worksheets.Add("Sheet1", 1);
 
-
             Assert.AreEqual("Sheet1", wb.Worksheet(1).Name);
             Assert.AreEqual("Sheet2", wb.Worksheet(2).Name);
             Assert.AreEqual("Sheet3", wb.Worksheet(3).Name);
@@ -106,6 +105,25 @@ namespace ClosedXML_Tests
             ws.RowCount();
             DateTime end = DateTime.Now;
             Assert.IsTrue((end - start).TotalMilliseconds < 500);
+        }
+
+        [Test]
+        public void SheetsWithCommas()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var sourceSheetName = "Sheet1, Sheet3";
+                var ws = wb.Worksheets.Add(sourceSheetName);
+                ws.Cell("A1").Value = 1;
+                ws.Cell("A2").Value = 2;
+                ws.Cell("B2").Value = 3;
+
+                ws = wb.Worksheets.Add("Formula");
+                ws.FirstCell().FormulaA1 = string.Format("=SUM('{0}'!A1:A2,'{0}'!B1:B2)", sourceSheetName);
+
+                var value = ws.FirstCell().Value;
+                Assert.AreEqual(6, value);
+            }
         }
     }
 }
