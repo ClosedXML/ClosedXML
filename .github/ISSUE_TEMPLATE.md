@@ -12,3 +12,11 @@ if possible a minimal demo of the problem with a sample spreadsheet.**
 **Did this work in previous versions of our tool?  Which versions?**
 
 - [ ] I attached a sample spreadsheet.  (You can drag files on to this issue)
+
+**Code to reproduce problem:**
+```c#
+public void Main()
+{
+    // Where possible, post full code to reproduce your issue.
+}
+```

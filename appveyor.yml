@@ -8,7 +8,9 @@ branches:
   except:
     - gh-pages
 # Build worker image (VM template)
-image: Visual Studio 2017
+image: Visual Studio 2015
+environment:
+  AppVeyor: APPVEYOR
 
 # enable patching of AssemblyInfo.* files
 assembly_info:
@@ -17,7 +19,7 @@ assembly_info:
   assembly_version: "{version}"
   assembly_file_version: "{version}"
   assembly_informational_version: "{version}"
-  
+
 #---------------------------------#
 #       build configuration       #
 #---------------------------------#
@@ -26,16 +28,16 @@ assembly_info:
 platform: Any CPU
 
 build:
-  parallel: true               # enable MSBuild parallel builds
+  parallel: true                                            # enable MSBuild parallel builds
   project: ClosedXML.sln       # path to Visual Studio solution or project
   verbosity: minimal
- 
+
 configuration : Release
 
 #Restore
 before_build:
   - nuget restore
-  
+
 artifacts:
-- path: ClosedXML/bin/Release/ClosedXML.dll
-- path: ClosedXML/bin/Release/ClosedXML.xml
+  - path: ClosedXML/bin/Release/ClosedXML.dll
+  - path: ClosedXML/bin/Release/ClosedXML.xml
