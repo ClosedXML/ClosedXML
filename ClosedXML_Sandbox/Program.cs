@@ -6,11 +6,11 @@ namespace ClosedXML_Sandbox
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine("Running {0}", "OpenTestFile");
+            Console.WriteLine("Running {0}", nameof(PerformanceRunner.OpenTestFile));
             PerformanceRunner.TimeAction(PerformanceRunner.OpenTestFile);
             Console.WriteLine();
 
-            Console.WriteLine("Running {0}", "RunInsertTable");
+            Console.WriteLine("Running {0}", nameof(PerformanceRunner.RunInsertTable));
             PerformanceRunner.TimeAction(PerformanceRunner.RunInsertTable);
             Console.WriteLine();
 
