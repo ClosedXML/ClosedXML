@@ -2518,7 +2518,7 @@ namespace ClosedXML.Excel
 
           using (Stream stream = new MemoryStream())
           {
-            picture.ImageStream.CopyStreamTo(stream);
+            picture.ImageStream.CopyTo(stream);
             stream.Seek(0, SeekOrigin.Begin);
             imagePart.FeedData(stream);
           }

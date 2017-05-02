@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
 {
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Drawing;
 
     /// <summary>
     /// 	Common methods
@@ -238,21 +237,6 @@ namespace ClosedXML.Excel
             return true;
 #endif
 
-        }
-
-        public static void CopyStreamTo(this Stream input, Stream output)
-        {
-#if NET4
-            input.CopyTo(output);
-#else
-            byte[] buffer = new byte[16 * 1024]; // Fairly arbitrary size
-            int bytesRead;
-
-            while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                output.Write(buffer, 0, bytesRead);
-            }
-#endif
         }
 
         private static readonly Regex A1RegexRelative = new Regex(
