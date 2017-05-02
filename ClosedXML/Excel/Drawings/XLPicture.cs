@@ -161,7 +161,7 @@ namespace ClosedXML.Excel.Drawings
           imgStream.Dispose();
           imgStream = new MemoryStream();
         }
-        value.CopyTo(imgStream);
+        value.CopyStreamTo(imgStream);
         imgStream.Seek(0, SeekOrigin.Begin);
         
         using (var bitmap = new System.Drawing.Bitmap(imgStream))
