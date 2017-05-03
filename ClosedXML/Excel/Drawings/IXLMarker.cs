@@ -11,5 +11,15 @@ namespace ClosedXML.Excel.Drawings
         Int32 RowId { get; set; }
         Double ColumnOffset { get; set; }
         Double RowOffset { get; set; }
+
+        /// <summary>
+        /// Get the zero-based column number.
+        /// </summary>
+        Int32 GetZeroBasedColumn();
+
+        /// <summary>
+        /// Get the zero-based row number.
+        /// </summary>
+        Int32 GetZeroBasedRow();
     }
 }

@@ -2579,15 +2579,15 @@ namespace ClosedXML.Excel
                 {
                     fMark = new Xdr.FromMarker
                     {
-                        ColumnId = new Xdr.ColumnId(markers[0].ColumnId.ToString()),
-                        RowId = new Xdr.RowId(markers[0].RowId.ToString()),
+                        ColumnId = new Xdr.ColumnId(markers[0].GetZeroBasedColumn().ToString()),
+                        RowId = new Xdr.RowId(markers[0].GetZeroBasedRow().ToString()),
                         ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset + picture.OffsetX).ToString()),
                         RowOffset = new Xdr.RowOffset((markers[0].RowOffset + picture.OffsetY).ToString())
                     };
                     tMark = new Xdr.ToMarker
                     {
-                        ColumnId = new Xdr.ColumnId(markers[1].ColumnId.ToString()),
-                        RowId = new Xdr.RowId(markers[1].RowId.ToString()),
+                        ColumnId = new Xdr.ColumnId(markers[1].GetZeroBasedColumn().ToString()),
+                        RowId = new Xdr.RowId(markers[1].GetZeroBasedRow().ToString()),
                         ColumnOffset = new Xdr.ColumnOffset((markers[1].ColumnOffset + picture.OffsetX).ToString()),
                         RowOffset = new Xdr.RowOffset((markers[1].RowOffset + picture.OffsetY).ToString())
                     };
@@ -2622,8 +2622,8 @@ namespace ClosedXML.Excel
                 {
                     fMark = new Xdr.FromMarker
                     {
-                        ColumnId = new Xdr.ColumnId(markers[0].ColumnId.ToString()),
-                        RowId = new Xdr.RowId(markers[0].RowId.ToString()),
+                        ColumnId = new Xdr.ColumnId(markers[0].GetZeroBasedColumn().ToString()),
+                        RowId = new Xdr.RowId(markers[0].GetZeroBasedRow().ToString()),
                         ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset + picture.OffsetX).ToString()),
                         RowOffset = new Xdr.RowOffset((markers[0].RowOffset + picture.OffsetY).ToString())
                     };

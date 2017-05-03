@@ -45,8 +45,8 @@ namespace ClosedXML_Examples
 
                 pic.AddMarker(new XLMarker
                 {
-                    ColumnId = 0,
-                    RowId = 0
+                    ColumnId = 1,
+                    RowId = 1
                 });
 
                 ws.AddPicture(pic);
@@ -68,14 +68,14 @@ namespace ClosedXML_Examples
 
                 pic.AddMarker(new XLMarker
                 {
-                    ColumnId = 4,
-                    RowId = 5
+                    ColumnId = 5,
+                    RowId = 6
                 });
 
                 pic.AddMarker(new XLMarker
                 {
-                    ColumnId = 6,
-                    RowId = 8
+                    ColumnId = 7,
+                    RowId = 9
                 });
                 ws.AddPicture(pic);
                 #endregion

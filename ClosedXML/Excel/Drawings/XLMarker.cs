@@ -16,6 +16,9 @@ namespace ClosedXML.Excel.Drawings
         {
             set
             {
+                if (value < 1 || value > XLHelper.MaxColumnNumber)
+                    throw new ArgumentOutOfRangeException(String.Format("Column number must be between 1 and {0}",
+                                                                 XLHelper.MaxColumnNumber));
                 this.colId = value;
             }
             get
@@ -28,6 +31,9 @@ namespace ClosedXML.Excel.Drawings
         {
             set
             {
+                if (value < 1 || value > XLHelper.MaxRowNumber)
+                    throw new ArgumentOutOfRangeException(String.Format("Row number must be between 1 and {0}",
+                                                                 XLHelper.MaxRowNumber));
                 this.rowId = value;
             }
             get
@@ -58,6 +64,16 @@ namespace ClosedXML.Excel.Drawings
             {
                 return this.rowOffset;
             }
+        }
+
+        public Int32 GetZeroBasedColumn()
+        {
+            return colId - 1;
+        }
+
+        public Int32 GetZeroBasedRow()
+        {
+            return rowId - 1;
         }
     }
 }

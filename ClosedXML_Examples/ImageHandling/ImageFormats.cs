@@ -30,8 +30,8 @@ namespace ClosedXML_Examples
 
                 pic.AddMarker(new XLMarker
                 {
-                    ColumnId = 0,
-                    RowId = 0
+                    ColumnId = 1,
+                    RowId = 1
                 });
 
                 ws.AddPicture(pic);
@@ -54,8 +54,8 @@ namespace ClosedXML_Examples
 
                 pic.AddMarker(new XLMarker
                 {
-                    ColumnId = 0,
-                    RowId = 0
+                    ColumnId = 1,
+                    RowId = 1
                 });
 
                 ws.AddPicture(pic);
