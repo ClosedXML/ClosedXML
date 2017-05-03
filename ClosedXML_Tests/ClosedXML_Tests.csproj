@@ -78,6 +78,7 @@
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
+    <Compile Include="Excel\ImageHandling\PictureTests.cs" />
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
     <Compile Include="Excel\PageSetup\HeaderFooterTests.cs" />
@@ -272,7 +273,9 @@
     <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageAnchors.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageFormats.xlsx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

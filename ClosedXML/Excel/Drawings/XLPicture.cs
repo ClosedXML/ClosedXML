@@ -233,7 +233,7 @@ namespace ClosedXML.Excel.Drawings
 
         private String GetExtension(ImagePartType type)
         {
-            return type.ToString();
+            return type.ToString().ToLower();
         }
 
         public ImagePartType GetImagePartType()
