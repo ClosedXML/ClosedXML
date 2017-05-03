@@ -7,9 +7,9 @@ namespace ClosedXML_Tests.Examples
     public class ImageHandlingTests
     {
         [Test]
-        public void ImageHandling()
+        public void ImageAnchors()
         {
-            TestHelper.RunTestExample<ImageAnchors>(@"ImageHandling\ImageHandling.xlsx");
+            TestHelper.RunTestExample<ImageAnchors>(@"ImageHandling\ImageAnchors.xlsx");
         }
 
         [Test]

@@ -13,7 +13,7 @@ namespace ClosedXML_Examples
             var wb = new XLWorkbook();
             XLPicture pic;
             IXLWorksheet ws;
-            
+
             using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.ImageHandling.png"))
             {
                 ws = wb.Worksheets.Add("Images");

@@ -15,8 +15,6 @@ using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using Vml = DocumentFormat.OpenXml.Vml;
-using A = DocumentFormat.OpenXml.Drawing;
-using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using BackgroundColor = DocumentFormat.OpenXml.Spreadsheet.BackgroundColor;
 using BottomBorder = DocumentFormat.OpenXml.Spreadsheet.BottomBorder;
 using Break = DocumentFormat.OpenXml.Spreadsheet.Break;
@@ -37,6 +35,7 @@ using Table = DocumentFormat.OpenXml.Spreadsheet.Table;
 using Text = DocumentFormat.OpenXml.Spreadsheet.Text;
 using TopBorder = DocumentFormat.OpenXml.Spreadsheet.TopBorder;
 using Underline = DocumentFormat.OpenXml.Spreadsheet.Underline;
+using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using System.Xml;
 using System.Xml.Linq;
 using System.Text;
@@ -2551,18 +2550,18 @@ namespace ClosedXML.Excel
                     new Xdr.Picture(
                         new Xdr.NonVisualPictureProperties(
                             new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = picture.Name },
-                            new Xdr.NonVisualPictureDrawingProperties(new A.PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
+                            new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
                         ),
                         new Xdr.BlipFill(
-                            new A.Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = A.BlipCompressionValues.Print },
-                            new A.Stretch(new A.FillRectangle())
+                            new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                            new Stretch(new FillRectangle())
                         ),
                         new Xdr.ShapeProperties(
-                            new A.Transform2D(
-                                new A.Offset { X = 0, Y = 0 },
-                                new A.Extents { Cx = extentsCx, Cy = extentsCy }
+                            new Transform2D(
+                                new Offset { X = 0, Y = 0 },
+                                new Extents { Cx = extentsCx, Cy = extentsCy }
                             ),
-                            new A.PresetGeometry { Preset = A.ShapeTypeValues.Rectangle }
+                            new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
                         )
                     ),
                     new Xdr.ClientData()
@@ -2599,18 +2598,18 @@ namespace ClosedXML.Excel
                         new Xdr.Picture(
                             new Xdr.NonVisualPictureProperties(
                                 new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = picture.Name },
-                                new Xdr.NonVisualPictureDrawingProperties(new A.PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
+                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
                             ),
                             new Xdr.BlipFill(
-                                new A.Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = A.BlipCompressionValues.Print },
-                                new A.Stretch(new A.FillRectangle())
+                                new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                                new Stretch(new FillRectangle())
                             ),
                             new Xdr.ShapeProperties(
-                                new A.Transform2D(
-                                    new A.Offset { X = 0, Y = 0 },
-                                    new A.Extents { Cx = extentsCx, Cy = extentsCy }
+                                new Transform2D(
+                                    new Offset { X = 0, Y = 0 },
+                                    new Extents { Cx = extentsCx, Cy = extentsCy }
                                 ),
-                                new A.PresetGeometry { Preset = A.ShapeTypeValues.Rectangle }
+                                new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
                             )
                         ),
                         new Xdr.ClientData()
@@ -2639,18 +2638,18 @@ namespace ClosedXML.Excel
                         new Xdr.Picture(
                             new Xdr.NonVisualPictureProperties(
                                 new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = picture.Name },
-                                new Xdr.NonVisualPictureDrawingProperties(new A.PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
+                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
                             ),
                             new Xdr.BlipFill(
-                                new A.Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = A.BlipCompressionValues.Print },
-                                new A.Stretch(new A.FillRectangle())
+                                new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                                new Stretch(new FillRectangle())
                             ),
                             new Xdr.ShapeProperties(
-                                new A.Transform2D(
-                                    new A.Offset { X = 0, Y = 0 },
-                                    new A.Extents { Cx = extentsCx, Cy = extentsCy }
+                                new Transform2D(
+                                    new Offset { X = 0, Y = 0 },
+                                    new Extents { Cx = extentsCx, Cy = extentsCy }
                                 ),
-                                new A.PresetGeometry { Preset = A.ShapeTypeValues.Rectangle }
+                                new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
                             )
                         ),
                         new Xdr.ClientData()

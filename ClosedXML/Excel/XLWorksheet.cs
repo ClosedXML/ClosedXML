@@ -1505,6 +1505,6 @@ namespace ClosedXML.Excel
                 pictures = new List<Drawings.IXLPicture>();
             }
             pictures.Add(pic);
-        } 
+        }
     }
 }

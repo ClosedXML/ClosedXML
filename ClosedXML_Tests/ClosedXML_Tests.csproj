@@ -269,7 +269,7 @@
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
     <EmbeddedResource Include="Resource\Examples\PivotTables\PivotTables.xlsx" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageHandling.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageAnchors.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageFormats.xlsx" />
   </ItemGroup>
   <ItemGroup />
