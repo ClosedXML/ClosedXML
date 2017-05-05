@@ -291,13 +291,18 @@ namespace ClosedXML.Excel
             }
 
             // handle doubles
-            if (v is double)
+            if (v is double && ((double)v).IsValidOADateNumber())
             {
                 return DateTime.FromOADate((double)v);
             }
 
             // handle everything else
             return (DateTime)Convert.ChangeType(v, typeof(DateTime));
+        }
+
+        internal static bool IsValidOADateNumber(this double d)
+        {
+            return -657435 <= d && d < 2958466;
         }
     }
 }
