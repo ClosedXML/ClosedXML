@@ -1989,31 +1989,31 @@ namespace ClosedXML.Excel
                 Name = pt.Name,
                 CacheId = cacheId,
                 DataCaption = "Values",
-                MergeItem = GetBooleanValue(pt.MergeAndCenterWithLabels, true),
+                MergeItem = OpenXmlHelper.GetBooleanValue(pt.MergeAndCenterWithLabels, true),
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),
                 PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown),
                 PageWrap = Convert.ToUInt32(pt.FilterFieldsPageWrap),
                 ShowError = String.IsNullOrEmpty(pt.ErrorValueReplacement),
-                UseAutoFormatting = GetBooleanValue(pt.AutofitColumns, true),
-                PreserveFormatting = GetBooleanValue(pt.PreserveCellFormatting, true),
-                RowGrandTotals = GetBooleanValue(pt.ShowGrandTotalsRows, true),
-                ColumnGrandTotals = GetBooleanValue(pt.ShowGrandTotalsColumns, true),
-                SubtotalHiddenItems = GetBooleanValue(pt.FilteredItemsInSubtotals, true),
-                MultipleFieldFilters = GetBooleanValue(pt.AllowMultipleFilters, true),
-                CustomListSort = GetBooleanValue(pt.UseCustomListsForSorting, true),
-                ShowDrill = GetBooleanValue(pt.ShowExpandCollapseButtons, true),
-                ShowDataTips = GetBooleanValue(pt.ShowContextualTooltips, true),
-                ShowMemberPropertyTips = GetBooleanValue(pt.ShowPropertiesInTooltips, true),
-                ShowHeaders = GetBooleanValue(pt.DisplayCaptionsAndDropdowns, true),
-                GridDropZones = GetBooleanValue(pt.ClassicPivotTableLayout, false),
-                ShowEmptyRow = GetBooleanValue(pt.ShowEmptyItemsOnRows, true),
-                ShowEmptyColumn = GetBooleanValue(pt.ShowEmptyItemsOnColumns, true),
-                ShowItems = GetBooleanValue(pt.DisplayItemLabels, true),
-                FieldListSortAscending = GetBooleanValue(pt.SortFieldsAtoZ, true),
-                PrintDrill = GetBooleanValue(pt.PrintExpandCollapsedButtons, true),
-                ItemPrintTitles = GetBooleanValue(pt.RepeatRowLabels, true),
-                FieldPrintTitles = GetBooleanValue(pt.PrintTitles, true),
-                EnableDrill = GetBooleanValue(pt.EnableShowDetails, true)
+                UseAutoFormatting = OpenXmlHelper.GetBooleanValue(pt.AutofitColumns, true),
+                PreserveFormatting = OpenXmlHelper.GetBooleanValue(pt.PreserveCellFormatting, true),
+                RowGrandTotals = OpenXmlHelper.GetBooleanValue(pt.ShowGrandTotalsRows, true),
+                ColumnGrandTotals = OpenXmlHelper.GetBooleanValue(pt.ShowGrandTotalsColumns, true),
+                SubtotalHiddenItems = OpenXmlHelper.GetBooleanValue(pt.FilteredItemsInSubtotals, true),
+                MultipleFieldFilters = OpenXmlHelper.GetBooleanValue(pt.AllowMultipleFilters, true),
+                CustomListSort = OpenXmlHelper.GetBooleanValue(pt.UseCustomListsForSorting, true),
+                ShowDrill = OpenXmlHelper.GetBooleanValue(pt.ShowExpandCollapseButtons, true),
+                ShowDataTips = OpenXmlHelper.GetBooleanValue(pt.ShowContextualTooltips, true),
+                ShowMemberPropertyTips = OpenXmlHelper.GetBooleanValue(pt.ShowPropertiesInTooltips, true),
+                ShowHeaders = OpenXmlHelper.GetBooleanValue(pt.DisplayCaptionsAndDropdowns, true),
+                GridDropZones = OpenXmlHelper.GetBooleanValue(pt.ClassicPivotTableLayout, false),
+                ShowEmptyRow = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnRows, true),
+                ShowEmptyColumn = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnColumns, true),
+                ShowItems = OpenXmlHelper.GetBooleanValue(pt.DisplayItemLabels, true),
+                FieldListSortAscending = OpenXmlHelper.GetBooleanValue(pt.SortFieldsAtoZ, true),
+                PrintDrill = OpenXmlHelper.GetBooleanValue(pt.PrintExpandCollapsedButtons, true),
+                ItemPrintTitles = OpenXmlHelper.GetBooleanValue(pt.RepeatRowLabels, true),
+                FieldPrintTitles = OpenXmlHelper.GetBooleanValue(pt.PrintTitles, true),
+                EnableDrill = OpenXmlHelper.GetBooleanValue(pt.EnableShowDetails, true)
             };
 
             if (pt.EmptyCellReplacement != null)
@@ -4151,19 +4151,19 @@ namespace ClosedXML.Excel
                 sheetProtection.Sheet = protection.Protected;
                 if (!XLHelper.IsNullOrWhiteSpace(protection.PasswordHash))
                     sheetProtection.Password = protection.PasswordHash;
-                sheetProtection.FormatCells = GetBooleanValue(!protection.FormatCells, true);
-                sheetProtection.FormatColumns = GetBooleanValue(!protection.FormatColumns, true);
-                sheetProtection.FormatRows = GetBooleanValue(!protection.FormatRows, true);
-                sheetProtection.InsertColumns = GetBooleanValue(!protection.InsertColumns, true);
-                sheetProtection.InsertHyperlinks = GetBooleanValue(!protection.InsertHyperlinks, true);
-                sheetProtection.InsertRows = GetBooleanValue(!protection.InsertRows, true);
-                sheetProtection.DeleteColumns = GetBooleanValue(!protection.DeleteColumns, true);
-                sheetProtection.DeleteRows = GetBooleanValue(!protection.DeleteRows, true);
-                sheetProtection.AutoFilter = GetBooleanValue(!protection.AutoFilter, true);
-                sheetProtection.PivotTables = GetBooleanValue(!protection.PivotTables, true);
-                sheetProtection.Sort = GetBooleanValue(!protection.Sort, true);
-                sheetProtection.SelectLockedCells = GetBooleanValue(!protection.SelectLockedCells, false);
-                sheetProtection.SelectUnlockedCells = GetBooleanValue(!protection.SelectUnlockedCells, false);
+                sheetProtection.FormatCells = OpenXmlHelper.GetBooleanValue(!protection.FormatCells, true);
+                sheetProtection.FormatColumns = OpenXmlHelper.GetBooleanValue(!protection.FormatColumns, true);
+                sheetProtection.FormatRows = OpenXmlHelper.GetBooleanValue(!protection.FormatRows, true);
+                sheetProtection.InsertColumns = OpenXmlHelper.GetBooleanValue(!protection.InsertColumns, true);
+                sheetProtection.InsertHyperlinks = OpenXmlHelper.GetBooleanValue(!protection.InsertHyperlinks, true);
+                sheetProtection.InsertRows = OpenXmlHelper.GetBooleanValue(!protection.InsertRows, true);
+                sheetProtection.DeleteColumns = OpenXmlHelper.GetBooleanValue(!protection.DeleteColumns, true);
+                sheetProtection.DeleteRows = OpenXmlHelper.GetBooleanValue(!protection.DeleteRows, true);
+                sheetProtection.AutoFilter = OpenXmlHelper.GetBooleanValue(!protection.AutoFilter, true);
+                sheetProtection.PivotTables = OpenXmlHelper.GetBooleanValue(!protection.PivotTables, true);
+                sheetProtection.Sort = OpenXmlHelper.GetBooleanValue(!protection.Sort, true);
+                sheetProtection.SelectLockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectLockedCells, false);
+                sheetProtection.SelectUnlockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectUnlockedCells, false);
             }
             else
             {
@@ -4706,11 +4706,6 @@ namespace ClosedXML.Excel
                 sortState.Append(sortCondition);
                 autoFilter.Append(sortState);
             }
-        }
-
-        private static BooleanValue GetBooleanValue(bool value, bool defaultValue)
-        {
-            return value == defaultValue ? null : new BooleanValue(value);
         }
 
         private static void CollapseColumns(Columns columns, Dictionary<uint, Column> sheetColumns)

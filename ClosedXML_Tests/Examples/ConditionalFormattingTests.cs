@@ -113,5 +113,11 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<CFMultipleConditions>(@"ConditionalFormatting\CFMultipleConditions.xlsx");
         }
+
+        [Test]
+        public void CFStopIfTrue()
+        {
+            TestHelper.RunTestExample<CFStopIfTrue>(@"ConditionalFormatting\CFStopIfTrue.xlsx");
+        }
     }
 }

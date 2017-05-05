@@ -117,8 +117,8 @@ namespace ClosedXML.Excel
         XLCFOperator Operator { get; }
         Boolean Bottom { get;  }
         Boolean Percent { get; }
-        
-        
+
+        IXLConditionalFormat StopIfTrue(bool value);
     }
 }
     

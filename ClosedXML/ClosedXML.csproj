@@ -72,11 +72,13 @@
     <Compile Include="Excel\CalcEngine\Functions\Database.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Information.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Lookup.cs" />
+    <Compile Include="Excel\ConditionalFormats\Save\XLCFBaseConverter.cs" />
     <Compile Include="Excel\Misc\XLCallbackAction.cs" />
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
     <Compile Include="Excel\XLConstants.cs" />
     <Compile Include="Utils\GraphicsUtils.cs" />
+    <Compile Include="Utils\OpenXmlHelper.cs" />
     <Compile Include="Utils\XmlEncoder.cs" />
     <Compile Include="XLHelper.cs" />
     <Compile Include="Excel\AutoFilters\XLFilteredColumn.cs" />
