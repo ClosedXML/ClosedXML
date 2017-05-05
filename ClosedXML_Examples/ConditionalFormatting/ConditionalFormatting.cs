@@ -647,9 +647,7 @@ namespace ClosedXML_Examples
                 .CellBelow().SetValue(2)
                 .CellBelow().SetValue(3);
 
-            var cf = ws.RangeUsed().AddConditionalFormat();
-            cf.StopIfTrue = true;
-            cf.WhenGreaterThan(5);
+            ws.RangeUsed().AddConditionalFormat().StopIfTrue(true).WhenGreaterThan(5);
 
 
             ws.RangeUsed().AddConditionalFormat().IconSet(XLIconSetStyle.ThreeTrafficLights2, true, true)

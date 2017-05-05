@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
-            StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(other.StopIfTrue, true);
+            StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(other.StopIfTrueInternal, true);
         }
 
         public Boolean CopyDefaultModify { get; set; }
@@ -93,11 +93,18 @@ namespace ClosedXML.Excel
         public XLCFOperator Operator { get;  set; }
         public Boolean Bottom { get;  set; }
         public Boolean Percent { get;  set; }
+        
         public Boolean ReverseIconOrder { get;  set; }
         public Boolean ShowIconOnly { get;  set; }
         public Boolean ShowBarOnly { get;  set; }
 
-        public Boolean StopIfTrue { get; set; }
+        internal bool StopIfTrueInternal { get;set; }
+
+        public IXLConditionalFormat StopIfTrue(bool value)
+        {
+            StopIfTrueInternal = value;
+            return this;
+        }
 
         public void CopyFrom(IXLConditionalFormat other)
         {
@@ -111,7 +118,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
-            StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(other.StopIfTrue, true);
+            StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(((XLConditionalFormat)other).StopIfTrueInternal, true);
 
             Values.Clear();
             other.Values.ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));
