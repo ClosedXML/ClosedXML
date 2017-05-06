@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
 using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 
 namespace ClosedXML.Excel
@@ -173,8 +174,10 @@ namespace ClosedXML.Excel
 
         private readonly Dictionary<Int32, IXLStyle> _stylesById = new Dictionary<int, IXLStyle>();
         private readonly Dictionary<IXLStyle, Int32> _stylesByStyle = new Dictionary<IXLStyle, Int32>();
+        private readonly StringPool _stringPool = new StringPool();
 
         public XLEventTracking EventTracking { get; set; }
+        internal StringPool StringPool { get { return _stringPool; } }
 
         internal Int32 GetStyleId(IXLStyle style)
         {
@@ -444,6 +447,11 @@ namespace ClosedXML.Excel
             if (_loadSource == XLLoadSource.New)
                 throw new Exception("This is a new file, please use one of the SaveAs methods.");
 
+            foreach (var worksheet in Worksheets)
+            {
+                worksheet.ConditionalFormats.Compress();
+            }
+
             if (_loadSource == XLLoadSource.Stream)
             {
                 CreatePackage(_originalStream, false, _spreadsheetDocumentType, validate);
@@ -470,6 +478,11 @@ namespace ClosedXML.Excel
         public void SaveAs(String file, Boolean validate)
         {
             checkForWorksheetsPresent();
+            foreach (var worksheet in Worksheets)
+            {
+                worksheet.ConditionalFormats.Compress();
+            }
+
             PathHelper.CreateDirectory(Path.GetDirectoryName(file));
             if (_loadSource == XLLoadSource.New)
             {
@@ -543,6 +556,12 @@ namespace ClosedXML.Excel
         public void SaveAs(Stream stream, Boolean validate)
         {
             checkForWorksheetsPresent();
+            
+            foreach (var worksheet in Worksheets)
+            {
+                worksheet.ConditionalFormats.Compress();
+            }
+
             if (_loadSource == XLLoadSource.New)
             {
                 // dm 20130422, this method or better the method SpreadsheetDocument.Create which is called
