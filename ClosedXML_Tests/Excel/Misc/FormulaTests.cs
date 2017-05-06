@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.Linq;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -59,6 +60,47 @@ namespace ClosedXML_Tests.Excel
 
                 ws.Cell("A3").FormulaA1 = "=SUM('S10 Data'!A2)";
                 Assert.AreEqual(123, ws.Cell("A3").Value);
+            }
+        }
+
+        [Test]
+        public void FormulaWithReferenceIncludingSheetName()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                object value;
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").InsertData(Enumerable.Range(1, 50));
+                ws.Cell("B1").FormulaA1 = "=SUM(A1:A50)";
+                value = ws.Cell("B1").Value;
+                Assert.AreEqual(1275, value);
+
+                ws = wb.AddWorksheet("Sheet2");
+
+                ws.Cell("A1").FormulaA1 = "=SUM(Sheet1!A1:Sheet1!A50)";
+                value = ws.Cell("A1").Value;
+                Assert.AreEqual(1275, value);
+
+                ws.Cell("B1").FormulaA1 = "=SUM(Sheet1!A1:A50)";
+                value = ws.Cell("B1").Value;
+                Assert.AreEqual(1275, value);
+            }
+        }
+
+        [Test]
+        public void InvalidReferences()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").InsertData(Enumerable.Range(1, 50));
+                ws = wb.AddWorksheet("Sheet2");
+
+                ws.Cell("A1").FormulaA1 = "=SUM(Sheet1!A1:Sheet2!A50)";
+                Assert.That(() => ws.Cell("A1").Value, Throws.InstanceOf<ArgumentOutOfRangeException>());
+
+                ws.Cell("B1").FormulaA1 = "=SUM(Sheet1!A1:UnknownSheet!A50)";
+                Assert.That(() => ws.Cell("B1").Value, Throws.InstanceOf<ArgumentOutOfRangeException>());
             }
         }
 

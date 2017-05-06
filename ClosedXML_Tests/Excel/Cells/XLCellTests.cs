@@ -210,6 +210,28 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void TryGetValue_DateTime_BadString()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            DateTime outValue;
+            var date = "ABC";
+            bool success = ws.Cell("A1").SetValue(date).TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
+
+
+        [Test]
+        public void TryGetValue_DateTime_BadString2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            DateTime outValue;
+            var date = 5545454;
+            ws.FirstCell().SetValue(date).DataType = XLCellValues.DateTime;
+            bool success = ws.FirstCell().TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
+
+        [Test]
         public void TryGetValue_RichText_Bad()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");

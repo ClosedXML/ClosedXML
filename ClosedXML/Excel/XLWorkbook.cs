@@ -399,7 +399,7 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
-            if (Worksheets.Any(w => w.Name.ToLower().Equals(name.ToLower())))
+            if (Worksheets.Any(w => string.Equals(w.Name, XLWorksheets.TrimSheetName(name), StringComparison.OrdinalIgnoreCase)))
             {
                 worksheet = Worksheet(name);
                 return true;

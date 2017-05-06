@@ -335,7 +335,8 @@ namespace ClosedXML.Excel
             if (_dataType == XLCellValues.DateTime || IsDateFormat())
             {
                 double dTest;
-                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
+                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest)
+                    && dTest.IsValidOADateNumber())
                 {
                     var format = GetFormat();
                     return DateTime.FromOADate(dTest).ToString(format);
@@ -407,15 +408,25 @@ namespace ClosedXML.Excel
                     return cellValue != "0";
 
                 if (_dataType == XLCellValues.DateTime)
-                    return DateTime.FromOADate(Double.Parse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture));
+                {
+                    Double d;
+                    if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d)
+                        && d.IsValidOADateNumber())
+                        return DateTime.FromOADate(d);
+                }
 
                 if (_dataType == XLCellValues.Number)
-                    return Double.Parse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture);
+                {
+                    Double d;
+                    if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d))
+                        return d;
+                }
 
                 if (_dataType == XLCellValues.TimeSpan)
                 {
-                    // return (DateTime.FromOADate(Double.Parse(cellValue)) - baseDate);
-                    return TimeSpan.Parse(cellValue);
+                    TimeSpan t;
+                    if (TimeSpan.TryParse(cellValue, out t))
+                        return t;
                 }
 
                 return cellValue;
