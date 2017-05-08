@@ -728,12 +728,15 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static double ParseDouble(string str, CultureInfo ci)
         {
+            double rVal;
             if (str.Length > 0 && str[str.Length - 1] == ci.NumberFormat.PercentSymbol[0])
             {
-                str = str.Substring(0, str.Length - 1);
-                return double.Parse(str, NumberStyles.Any, ci) / 100.0;
+              str = str.Substring(0, str.Length - 1);
+              double.TryParse(str, NumberStyles.Any, ci, out rVal);
+              return rVal / 100.0;
             }
-            return double.Parse(str, NumberStyles.Any, ci);
+            double.TryParse(str, NumberStyles.Any, ci, out rVal);
+            return rVal;
         }
 
         private List<Expression> GetParameters() // e.g. myfun(a, b, c+2)

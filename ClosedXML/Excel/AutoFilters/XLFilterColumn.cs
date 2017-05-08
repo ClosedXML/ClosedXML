@@ -28,10 +28,10 @@ namespace ClosedXML.Excel
         {
             if (typeof(T) == typeof(String))
             {
+              XLFilterType type = value.ToString() == "(Blanks)" ? XLFilterType.Blank : XLFilterType.Regular;
                 ApplyCustomFilter(value, XLFilterOperator.Equal,
-                                  v =>
-                                  v.ToString().Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase),
-                                  XLFilterType.Regular);
+                  v => AddFilterStringFunction(v, value.ToString()),
+                                  type);
             }
             else
             {
@@ -41,6 +41,17 @@ namespace ClosedXML.Excel
             return new XLFilteredColumn(_autoFilter, _column);
         }
 
+        private bool AddFilterStringFunction(Object v, String value)
+        {
+          if (value == "(Blanks)")
+          {
+            return (v == null || v.ToString() == "") ? true : false;
+          }
+          else
+          {
+            return v == null ? false : v.ToString().Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+          }
+        }
         public void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
         {
             _autoFilter.Column(_column).TopBottomPart = XLTopBottomPart.Top;
@@ -73,6 +84,11 @@ namespace ClosedXML.Excel
                                                              StringComparison.InvariantCultureIgnoreCase));
             }
 
+            if (typeof(T) == typeof(Double) || typeof(T) == typeof(double))
+            {
+              return ApplyCustomFilter(value, XLFilterOperator.Equal,
+                                       v => v.CastTo<T>().Equals(value));
+            }
             return ApplyCustomFilter(value, XLFilterOperator.Equal,
                                      v => v.CastTo<T>().CompareTo(value) == 0);
         }
@@ -82,7 +98,7 @@ namespace ClosedXML.Excel
             if (typeof(T) == typeof(String))
             {
                 return ApplyCustomFilter(value, XLFilterOperator.NotEqual,
-                                         v =>
+                  v => v == null ? true :
                                          !v.ToString().Equals(value.ToString(),
                                                               StringComparison.InvariantCultureIgnoreCase));
             }
@@ -152,7 +168,7 @@ namespace ClosedXML.Excel
         public IXLFilterConnector Contains(String value)
         {
             return ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal,
-                                     s => ((string)s).ToLower().Contains(value.ToLower()));
+              s => s == null ? false : ((string)s).ToLower().Contains(value.ToLower()));
         }
 
         public IXLFilterConnector NotContains(String value)

@@ -4,8 +4,8 @@ using System.Linq;
 namespace ClosedXML.Excel
 {
     using System.Collections.Generic;
-
-    internal class XLAutoFilter : IXLBaseAutoFilter, IXLAutoFilter
+  
+    public class XLAutoFilter : IXLBaseAutoFilter, IXLAutoFilter
     {
         private readonly Dictionary<Int32, XLFilterColumn> _columns = new Dictionary<int, XLFilterColumn>();
 
@@ -161,5 +161,70 @@ namespace ClosedXML.Excel
             ws.ResumeEvents();
             return this;
         }
-    }
-}
+
+
+        /// <summary>
+        /// Contraty to individual column filtering, this method applies all filters aggregated results at once on all
+        /// rows within the AutoFilter's range.
+        /// </summary>
+        public void ReapplyAllFilter()
+        {
+          var _autoFilter = this;
+          var ws = _autoFilter.Range.Worksheet as XLWorksheet;
+          ws.SuspendEvents();
+          var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
+          foreach (IXLRangeRow _row in rows)
+          {
+            Boolean visible = true;
+
+            //Go through on each filter for each column
+            foreach (var filter in _autoFilter.Filters)
+            {
+              var _column = filter.Key;
+              var _cell = _row.Cell(_column);
+              Boolean isText = _cell.DataType == XLCellValues.Text;
+
+              //Set the default filterMatch OR => false, AND => true;
+              Boolean filterMatch = true;
+              Boolean firstTime = true;
+
+              //Go though on each item condition in each filter
+              foreach (var filterItem in (List<XLFilter>)filter.Value)
+              {
+                //Initialize filterMatch for the first time:
+                if (firstTime)
+                {
+                  firstTime = false;
+                  filterMatch = (filterItem.Connector == XLConnector.And);
+                }
+
+                //match the value for each filterItem
+                Boolean itemMatch = isText
+                           ? filterItem.Condition(_cell.GetString())
+                           : _cell.DataType == XLCellValues.Number &&
+                               filterItem.Condition(_cell.GetDouble());
+
+                //Summarize by the operator
+                if (filterItem.Connector == XLConnector.And)
+                  filterMatch = filterMatch && itemMatch;
+                else
+                  filterMatch = filterMatch || itemMatch;
+              }
+
+              //Summarize filterMatch to adjust row visibility
+              visible = visible && filterMatch;
+
+              //Break out quicker for already hidden rows
+              if (!visible)
+                break;
+            }
+
+            if (visible)
+              _row.WorksheetRow().Unhide();
+            else
+              _row.WorksheetRow().Hide();
+          }
+          ws.ResumeEvents();
+        }
+     }
+  }

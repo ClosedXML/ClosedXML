@@ -14,6 +14,8 @@ using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using Vml = DocumentFormat.OpenXml.Vml;
+using A = DocumentFormat.OpenXml.Drawing;
+using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using BackgroundColor = DocumentFormat.OpenXml.Spreadsheet.BackgroundColor;
 using BottomBorder = DocumentFormat.OpenXml.Spreadsheet.BottomBorder;
 using Break = DocumentFormat.OpenXml.Spreadsheet.Break;
@@ -735,23 +737,6 @@ namespace ClosedXML.Excel
                     definedNames.AppendChild(definedName);
                 }
 
-                if (worksheet.AutoFilter.Enabled)
-                {
-                    var definedName = new DefinedName
-                    {
-                        Name = "_xlnm._FilterDatabase",
-                        LocalSheetId = sheetId,
-                        Text = "'" + worksheet.Name + "'!" +
-                               worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(
-                                   XLReferenceStyle.A1) +
-                               ":" +
-                               worksheet.AutoFilter.Range.RangeAddress.LastAddress.ToStringFixed(
-                                   XLReferenceStyle.A1),
-                        Hidden = BooleanValue.FromBoolean(true)
-                    };
-                    definedNames.AppendChild(definedName);
-                }
-
                 foreach (var nr in worksheet.NamedRanges.Where(n => n.Name != "_xlnm._FilterDatabase"))
                 {
                     var definedName = new DefinedName
@@ -806,6 +791,23 @@ namespace ClosedXML.Excel
                 };
 
                 definedNames.AppendChild(definedName2);
+
+                if (worksheet.AutoFilter.Enabled)
+                {
+                  var definedName = new DefinedName
+                  {
+                    Name = "_xlnm._FilterDatabase",
+                    LocalSheetId = sheetId,
+                    Text = "'" + worksheet.Name + "'!" +
+                           worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(
+                               XLReferenceStyle.A1) +
+                           ":" +
+                           worksheet.AutoFilter.Range.RangeAddress.LastAddress.ToStringFixed(
+                               XLReferenceStyle.A1),
+                    Hidden = BooleanValue.FromBoolean(true)
+                  };
+                  definedNames.AppendChild(definedName);
+                }
             }
 
             foreach (var nr in NamedRanges)
@@ -1832,7 +1834,7 @@ namespace ClosedXML.Excel
                     xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
 
                 PopulateAutoFilter(xlTable.AutoFilter, autoFilter1);
-
+                xlTable.AutoFilter.ReapplyAllFilter();
                 table.AppendChild(autoFilter1);
             }
 
@@ -2501,6 +2503,95 @@ namespace ClosedXML.Excel
             return stroke;
         }
 
+        private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture)
+        {
+          var drawingsPart = worksheetPart.DrawingsPart ?? worksheetPart.AddNewPart<DrawingsPart>();
+
+          if (drawingsPart.WorksheetDrawing == null)
+          {
+            drawingsPart.WorksheetDrawing = new Xdr.WorksheetDrawing();
+          }
+
+          var worksheetDrawing = drawingsPart.WorksheetDrawing;
+
+          var imagePart = drawingsPart.AddImagePart(ImagePartType.Jpeg);
+
+          using (Stream stream = new MemoryStream())
+          {
+            picture.ImageStream.CopyTo(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            imagePart.FeedData(stream);
+          }
+
+          var extentsCx = picture.Width;
+          var extentsCy = picture.Height;
+
+          var nvps = worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>();
+          var nvpId = nvps.Count() > 0 ?
+              (UInt32Value)worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>().Max(p => p.Id.Value) + 1 :
+              1U;
+          var markers = picture.GetMarkers();
+          Xdr.TwoCellAnchor twoCellAnchor;
+          Xdr.FromMarker fMark;
+          Xdr.ToMarker tMark;
+          if (markers.Count == 2)
+          {
+            fMark = new Xdr.FromMarker
+            {
+              ColumnId = new Xdr.ColumnId(markers[0].ColumnId.ToString()),
+              RowId = new Xdr.RowId(markers[0].RowId.ToString()),
+              ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset + picture.PaddingX).ToString()),
+              RowOffset = new Xdr.RowOffset((markers[0].RowOffset + picture.PaddingY).ToString())
+            };
+            tMark = new Xdr.ToMarker
+            {
+              ColumnId = new Xdr.ColumnId(markers[1].ColumnId.ToString()),
+              RowId = new Xdr.RowId(markers[1].RowId.ToString()),
+              ColumnOffset = new Xdr.ColumnOffset((markers[1].ColumnOffset + picture.PaddingX).ToString()),
+              RowOffset = new Xdr.RowOffset((markers[1].RowOffset + picture.PaddingY).ToString())
+            };
+          }
+          else
+          {
+            fMark = new Xdr.FromMarker
+            {
+              ColumnId = new Xdr.ColumnId(markers[0].ColumnId.ToString()),
+              RowId = new Xdr.RowId(markers[0].RowId.ToString()),
+              ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset + picture.PaddingX).ToString()),
+              RowOffset = new Xdr.RowOffset((markers[0].RowOffset + picture.PaddingY).ToString())
+            };
+            tMark = new Xdr.ToMarker
+            {
+              ColumnId = new Xdr.ColumnId(markers[0].ColumnId.ToString()),
+              RowId = new Xdr.RowId(markers[0].RowId.ToString()),
+              ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset + extentsCx + picture.PaddingX).ToString()),
+              RowOffset = new Xdr.RowOffset((markers[0].RowOffset + extentsCy + picture.PaddingY).ToString())
+            };
+          }
+          twoCellAnchor = new Xdr.TwoCellAnchor(
+            fMark, tMark,
+              new Xdr.Picture(
+                  new Xdr.NonVisualPictureProperties(
+                      new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = picture.Name },
+                      new Xdr.NonVisualPictureDrawingProperties(new A.PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
+                  ),
+                  new Xdr.BlipFill(
+                      new A.Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = A.BlipCompressionValues.Print },
+                      new A.Stretch(new A.FillRectangle())
+                  ),
+                  new Xdr.ShapeProperties(
+                      new A.Transform2D(
+                          new A.Offset { X = 0, Y = 0 },
+                          new A.Extents { Cx = extentsCx, Cy = extentsCy }
+                      ),
+                      new A.PresetGeometry { Preset = A.ShapeTypeValues.Rectangle }
+                  )
+              ),
+              new Xdr.ClientData()
+          );
+
+          worksheetDrawing.Append(twoCellAnchor);
+        }
         private static Vml.TextBox GetTextBox(IXLDrawingStyle ds)
         {
             var sb = new StringBuilder();
@@ -4564,19 +4655,6 @@ namespace ClosedXML.Excel
 
             #endregion
 
-            #region Drawings
-
-            //worksheetPart.Worksheet.RemoveAllChildren<Drawing>();
-            //{
-            //    OpenXmlElement previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Drawing);
-            //    worksheetPart.Worksheet.InsertAfter(new Drawing() { Id = String.Format("rId{0}", 1) }, previousElement);
-            //}
-
-            //Drawing drawing = worksheetPart.Worksheet.Elements<Drawing>().First();
-            //cm.SetElement(XLWSContentManager.XLWSContents.Drawing, drawing);
-
-            #endregion
-
             #region Tables
 
             worksheetPart.Worksheet.RemoveAllChildren<TableParts>();
@@ -4593,6 +4671,34 @@ namespace ClosedXML.Excel
                 var tablePart in
                     from XLTable xlTable in xlWorksheet.Tables select new TablePart { Id = xlTable.RelId })
                 tableParts.AppendChild(tablePart);
+
+            #endregion
+            #region Drawings
+
+            //worksheetPart.Worksheet.RemoveAllChildren<Drawing>();
+            //{
+            //    OpenXmlElement previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Drawing);
+            //    worksheetPart.Worksheet.InsertAfter(new Drawing() { Id = String.Format("rId{0}", 1) }, previousElement);
+            //}
+
+            //Drawing drawing = worksheetPart.Worksheet.Elements<Drawing>().First();
+            //cm.SetElement(XLWSContentManager.XLWSContents.Drawing, drawing);
+            var pics = xlWorksheet.Pictures();
+            if (pics != null)
+            {
+              foreach (Drawings.IXLPicture pic in pics)
+              {
+                AddPictureAnchor(worksheetPart, pic);
+              }
+            }
+
+            if (xlWorksheet.Pictures() != null && xlWorksheet.Pictures().Count > 0)
+            {
+              Drawing worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
+              worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+              worksheetPart.Worksheet.InsertBefore<Drawing>(worksheetDrawing, tableParts);
+              //worksheetPart.Worksheet.Append(worksheetDrawing);
+            }
 
             #endregion
 
@@ -4671,6 +4777,10 @@ namespace ClosedXML.Excel
                     var dynamicFilter = new DynamicFilter
                     { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
                     filterColumn.Append(dynamicFilter);
+                }
+                else if (filterType == XLFilterType.Blank)
+                {
+                  filterColumn.Append(new Filters() { Blank = true });
                 }
                 else
                 {

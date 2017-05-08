@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -368,5 +369,9 @@ namespace ClosedXML.Excel
         Object Evaluate(String expression);
 
         String Author { get; set; }
+
+        List<Drawings.IXLPicture> Pictures();
+        
+        void AddPicture(Drawings.XLPicture pic);
     }
 }

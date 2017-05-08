@@ -1257,7 +1257,7 @@ namespace ClosedXML.Excel
         {
             var currValue = Value;
 
-            if (currValue == null)
+            if (currValue == null || currValue.ToString() == "")
             {
                 value = default(T);
                 return true;
