@@ -78,10 +78,6 @@
       <Project>{bd5e6bfe-e837-4a35-bca9-39667d873a20}</Project>
       <Name>ClosedXML</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj">
-      <Project>{03A518D0-1CB7-488E-861C-C4E782B27A46}</Project>
-      <Name>ClosedXML_Examples</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
