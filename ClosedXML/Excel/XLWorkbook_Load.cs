@@ -353,10 +353,11 @@ namespace ClosedXML.Excel
                         // find cell by reference
                         var cell = ws.Cell(c.Reference);
 
-                        cell.Comment.Text = c.InnerText;
-
                         XLComment xlComment = cell.Comment as XLComment;
+
+                        xlComment.Text = c.InnerText;
                         xlComment.Author = authors[(int)c.AuthorId.Value].InnerText;
+                        
                         //xlComment.ShapeId = (Int32)c.ShapeId.Value;
                         //ShapeIdManager.Add(xlComment.ShapeId);
 
