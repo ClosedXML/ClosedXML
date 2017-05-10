@@ -403,6 +403,15 @@ namespace ClosedXML.Excel.CalcEngine
             return (_value as IEnumerable).GetEnumerator();
         }
     }
+
+    /// <summary>
+    /// Expression that represents an omitted parameter.
+    /// </summary>
+    class EmptyValueExpression : Expression
+    {
+        internal EmptyValueExpression() { }
+    }
+
     /// <summary>
     /// Interface supported by external objects that have to return a value
     /// other than themselves (e.g. a cell range object should return the
