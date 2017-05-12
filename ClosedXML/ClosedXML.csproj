@@ -72,6 +72,10 @@
     <Compile Include="Excel\CalcEngine\Functions\Database.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Information.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Lookup.cs" />
+    <Compile Include="Excel\Drawings\XLPicture.cs" />
+    <Compile Include="Excel\Drawings\IXLMarker.cs" />
+    <Compile Include="Excel\Drawings\IXLPicture.cs" />
+    <Compile Include="Excel\Drawings\XLMarker.cs" />
     <Compile Include="Excel\Misc\XLCallbackAction.cs" />
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
