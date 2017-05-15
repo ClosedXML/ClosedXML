@@ -40,5 +40,5 @@ before_build:
   - nuget restore
 
 artifacts:
-  - path: ClosedXML/bin/Release/ClosedXML.dll
-  - path: ClosedXML/bin/Release/ClosedXML.xml
+  - path: ClosedXML/bin/Release/net452/ClosedXML.dll
+  - path: ClosedXML/bin/Release/net461/ClosedXML.dll
