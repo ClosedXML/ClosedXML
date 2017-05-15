@@ -36,6 +36,7 @@ configuration : Release
 
 #Restore
 before_build:
+  - cmd: nuget sources add -name OpenXML-MyGet -Source https://dotnet.myget.org/F/open-xml-sdk/api/v3/index.json
   - nuget restore
 
 artifacts:
