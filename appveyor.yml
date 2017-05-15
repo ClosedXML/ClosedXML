@@ -8,7 +8,7 @@ branches:
   except:
     - gh-pages
 # Build worker image (VM template)
-image: Visual Studio 2015
+image: Visual Studio 2017
 environment:
   AppVeyor: APPVEYOR
 
