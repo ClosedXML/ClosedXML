@@ -922,7 +922,7 @@ namespace ClosedXML.Excel
         {
             if (workbook.DefinedNames == null) return;
 
-            foreach (DefinedName definedName in workbook.DefinedNames)
+            foreach (var definedName in workbook.DefinedNames.OfType<DefinedName>())
             {
                 var name = definedName.Name;
                 var visible = true;
@@ -934,7 +934,6 @@ namespace ClosedXML.Excel
                     {
                         if (area.Contains("["))
                         {
-                            String tableName = area.Substring(0, area.IndexOf("["));
                             var ws = Worksheets.FirstOrDefault(w => (w as XLWorksheet).SheetId == definedName.LocalSheetId + 1);
                             if (ws != null)
                             {
@@ -1007,7 +1006,8 @@ namespace ClosedXML.Excel
             var areas = validateDefinedNames(definedName.Text.Split(','));
             foreach (var item in areas)
             {
-                SetColumnsOrRowsToRepeat(item);
+                if (this.Range(item) != null)
+                    SetColumnsOrRowsToRepeat(item);
             }
         }
 
