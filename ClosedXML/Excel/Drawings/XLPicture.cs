@@ -29,6 +29,27 @@ namespace ClosedXML.Excel.Drawings
 
         private bool isResized = false;
 
+        public XLPicture() { }
+
+        public XLPicture(IXLPicture old)
+        {
+            ImageStream = old.ImageStream;
+
+            old.ImageStream.Position = 0;
+            imgStream.Position = 0;
+
+            Name = old.Name;
+            IsAbsolute = old.IsAbsolute;
+            Type = old.Type;
+            Markers = new List<IXLMarker>();
+            Markers.AddRange(old.GetMarkers());
+            RawOffsetX = old.RawOffsetX;
+            RawOffsetY = old.RawOffsetY;
+            MaxHeight = old.MaxHeight;
+            MaxWidth = old.MaxWidth;
+        }
+
+
         private void Resize()
         {
             if (iWidth > iMaxHeight || iHeight > iMaxWidth)
@@ -121,10 +142,7 @@ namespace ClosedXML.Excel.Drawings
             {
                 return iOffsetX;
             }
-            set
-            {
-                iOffsetX = value;
-            }
+            set { iOffsetX = NormalizeFromEmu(value, iHorizontalResolution); }
         }
 
         public long RawOffsetY
@@ -133,15 +151,17 @@ namespace ClosedXML.Excel.Drawings
             {
                 return iOffsetY;
             }
-            set
-            {
-                iOffsetY = value;
-            }
+            set { iOffsetY = NormalizeFromEmu(value, iVerticalResolution); }
         }
 
         private long ConvertToEmu(long pixels, float resolution)
         {
             return (long)(914400 * pixels / resolution);
+        }
+
+        private long NormalizeFromEmu(long pixels, float resolution)
+        {
+            return (long)(pixels * resolution / 914400);
         }
 
         public Stream ImageStream
@@ -179,6 +199,7 @@ namespace ClosedXML.Excel.Drawings
         {
             return Markers != null ? Markers : new List<IXLMarker>();
         }
+
         public void AddMarker(IXLMarker marker)
         {
             if (Markers == null)

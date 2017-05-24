@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
+using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 #endregion
 
@@ -22,6 +23,7 @@ namespace ClosedXML.Excel
     #region
 
     using Ap;
+    using Drawings;
     using Op;
     using System.Drawing;
 
@@ -84,6 +86,7 @@ namespace ClosedXML.Excel
                         CustomProperties.Add(name, m.VTBool.Text == "true");
                 }
             }
+
 
             var wbProps = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties;
             Use1904DateSystem = wbProps != null && wbProps.Date1904 != null && wbProps.Date1904.Value;
@@ -337,6 +340,9 @@ namespace ClosedXML.Excel
 
                 #endregion
 
+
+                LoadDrawings(wsPart, ws);
+
                 #region LoadComments
 
                 if (wsPart.WorksheetCommentsPart != null)
@@ -411,6 +417,8 @@ namespace ClosedXML.Excel
                 }
             }
             LoadDefinedNames(workbook);
+
+
 
             #region Pivot tables
 
@@ -614,6 +622,74 @@ namespace ClosedXML.Excel
             }
 
             #endregion
+        }
+
+        private void LoadDrawings(WorksheetPart wsPart, XLWorksheet ws)
+        {
+            if (wsPart.DrawingsPart != null)
+            {
+                var drawingsPart = wsPart.DrawingsPart;
+                var imageParts = drawingsPart.ImageParts;
+                var wsdrawing = drawingsPart.WorksheetDrawing;
+
+                foreach (var rel in drawingsPart.Parts.Where(x => x.OpenXmlPart is ImagePart))
+                {
+                    var imgId = rel.RelationshipId;
+                    var image = rel.OpenXmlPart as ImagePart;
+                    var drawing = new XLPicture();
+                    drawing.Type = image.ContentType.Replace("image/", "");
+                    drawing.ImageStream = image.GetStream();
+                    var nonVis = wsdrawing
+                        .Descendants<Xdr.NonVisualDrawingProperties>()
+                        .FirstOrDefault(x => x.Name.Value == imgId);
+
+                    drawing.Name = nonVis.Name.Value;
+
+                    var anchor = nonVis.Parent.Parent.Parent;
+                    if (anchor is Xdr.OneCellAnchor)
+                    {
+                        var oneCellAnchor = anchor as Xdr.OneCellAnchor;
+                        drawing.IsAbsolute = false;
+                        var from = LoadMarker(oneCellAnchor.FromMarker);
+                        drawing.OffsetX = (int)from.ColumnOffset;
+                        drawing.OffsetY = (int)from.RowOffset;
+                        drawing.AddMarker(from);
+                    }
+                    else if (anchor is Xdr.TwoCellAnchor)
+                    {
+                        var twoCellAnchor = anchor as Xdr.TwoCellAnchor;
+                        drawing.IsAbsolute = false;
+
+                        var from = LoadMarker(twoCellAnchor.FromMarker);
+                        var to = LoadMarker(twoCellAnchor.ToMarker);
+
+                        drawing.OffsetX = (int)from.ColumnOffset;
+                        drawing.OffsetY = (int)from.RowOffset;
+                        drawing.AddMarker(from);
+                        drawing.AddMarker(to);
+
+                    }
+                    else if (anchor is Xdr.AbsoluteAnchor)
+                    {
+                        var absAnchor = anchor as Xdr.AbsoluteAnchor;
+                        drawing.IsAbsolute = true;
+                        drawing.RawOffsetX = absAnchor.Position.X;
+                        drawing.RawOffsetY = absAnchor.Position.Y;
+                    }
+
+                    ws.Pictures.Add(drawing);
+                }
+            }
+        }
+
+        private XLMarker LoadMarker(Xdr.MarkerType marker)
+        {
+            var result = new XLMarker();
+            result.ColumnId = Convert.ToInt32(marker.ColumnId.InnerText) + 1;
+            result.ColumnOffset = Convert.ToInt32(marker.ColumnOffset.InnerText);
+            result.RowId = Convert.ToInt32(marker.RowId.InnerText) + 1;
+            result.RowOffset = Convert.ToInt32(marker.RowOffset.InnerText);
+            return result;
         }
 
         #region Comment Helpers

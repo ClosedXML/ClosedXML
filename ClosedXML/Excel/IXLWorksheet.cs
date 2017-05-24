@@ -370,12 +370,12 @@ namespace ClosedXML.Excel
 
         String Author { get; set; }
 
-        List<Drawings.IXLPicture> Pictures();
+        List<Drawings.IXLPicture> Pictures { get; }
 
         /// <summary>
         /// Adds image to worksheet
         /// </summary>
         /// <param name="pic">XLPicture object to be added.</param>
-        void AddPicture(Drawings.XLPicture pic);
+        void AddPicture(Drawings.IXLPicture pic);
     }
 }

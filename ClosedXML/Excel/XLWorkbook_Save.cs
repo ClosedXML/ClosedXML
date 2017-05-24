@@ -2571,7 +2571,11 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var markers = picture.GetMarkers();
+                var markers = picture.GetMarkers()
+                    .OrderBy(x => x.ColumnOffset)
+                    .ThenBy(x => x.RowOffset)
+                    .ToList();
+
                 Xdr.FromMarker fMark;
                 Xdr.ToMarker tMark;
                 if (markers.Count == 2)
@@ -2580,15 +2584,15 @@ namespace ClosedXML.Excel
                     {
                         ColumnId = new Xdr.ColumnId(markers[0].GetZeroBasedColumn().ToString()),
                         RowId = new Xdr.RowId(markers[0].GetZeroBasedRow().ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset + picture.OffsetX).ToString()),
-                        RowOffset = new Xdr.RowOffset((markers[0].RowOffset + picture.OffsetY).ToString())
+                        ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset).ToString()),
+                        RowOffset = new Xdr.RowOffset((markers[0].RowOffset).ToString())
                     };
                     tMark = new Xdr.ToMarker
                     {
                         ColumnId = new Xdr.ColumnId(markers[1].GetZeroBasedColumn().ToString()),
                         RowId = new Xdr.RowId(markers[1].GetZeroBasedRow().ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((markers[1].ColumnOffset + picture.OffsetX).ToString()),
-                        RowOffset = new Xdr.RowOffset((markers[1].RowOffset + picture.OffsetY).ToString())
+                        ColumnOffset = new Xdr.ColumnOffset(((long)markers[1].ColumnOffset).ToString()),
+                        RowOffset = new Xdr.RowOffset(((long)markers[1].RowOffset).ToString())
                     };
 
                     Xdr.TwoCellAnchor cellAnchor;
@@ -2606,7 +2610,7 @@ namespace ClosedXML.Excel
                             ),
                             new Xdr.ShapeProperties(
                                 new Transform2D(
-                                    new Offset { X = 0, Y = 0 },
+                                    new Offset { X = (long)markers[0].ColumnOffset, Y = (long)markers[0].RowOffset },
                                     new Extents { Cx = extentsCx, Cy = extentsCy }
                                 ),
                                 new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
@@ -2623,8 +2627,8 @@ namespace ClosedXML.Excel
                     {
                         ColumnId = new Xdr.ColumnId(markers[0].GetZeroBasedColumn().ToString()),
                         RowId = new Xdr.RowId(markers[0].GetZeroBasedRow().ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset + picture.OffsetX).ToString()),
-                        RowOffset = new Xdr.RowOffset((markers[0].RowOffset + picture.OffsetY).ToString())
+                        ColumnOffset = new Xdr.ColumnOffset(((long)markers[0].ColumnOffset).ToString()),
+                        RowOffset = new Xdr.RowOffset(((long)markers[0].RowOffset).ToString())
                     };
 
                     Xdr.OneCellAnchor cellAnchor;
@@ -2646,7 +2650,7 @@ namespace ClosedXML.Excel
                             ),
                             new Xdr.ShapeProperties(
                                 new Transform2D(
-                                    new Offset { X = 0, Y = 0 },
+                                    new Offset { X = (long)markers[0].ColumnOffset, Y = (long)markers[0].RowOffset },
                                     new Extents { Cx = extentsCx, Cy = extentsCy }
                                 ),
                                 new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
@@ -4765,20 +4769,24 @@ namespace ClosedXML.Excel
 
             #region Drawings
 
-            var pics = xlWorksheet.Pictures();
-            if (pics != null)
+            var pics = xlWorksheet.Pictures;
+            worksheetPart.DeletePart(worksheetPart.DrawingsPart);
+            worksheetPart.DeleteParts(worksheetPart.ImageParts);
+            foreach (Drawings.IXLPicture pic in pics)
             {
-                foreach (Drawings.IXLPicture pic in pics)
-                {
-                    AddPictureAnchor(worksheetPart, pic);
-                }
+                AddPictureAnchor(worksheetPart, pic);
             }
 
-            if (xlWorksheet.Pictures() != null && xlWorksheet.Pictures().Count > 0)
+            if (xlWorksheet.Pictures != null && xlWorksheet.Pictures.Count > 0)
             {
                 Drawing worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-                worksheetPart.Worksheet.InsertBefore<Drawing>(worksheetDrawing, tableParts);
+                var drawings = worksheetPart.Worksheet.Elements<Drawing>();
+                var drawing = drawings.FirstOrDefault(x => x.Id.HasValue && x.Id.InnerText == worksheetDrawing.Id);
+                if (drawing == null)
+                {
+                    worksheetPart.Worksheet.InsertBefore<Drawing>(worksheetDrawing, tableParts);
+                }
             }
 
             #endregion

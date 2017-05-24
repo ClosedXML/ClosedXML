@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Misc;
-
+using ClosedXML.Excel.Drawings;
 
 namespace ClosedXML.Excel
 {
@@ -86,6 +86,8 @@ namespace ClosedXML.Excel
             SelectedRanges = new XLRanges();
 
             Author = workbook.Author;
+
+            pictures = new List<Drawings.IXLPicture>();
         }
 
         #endregion
@@ -579,6 +581,12 @@ namespace ClosedXML.Excel
             targetSheet.SheetView = new XLSheetView(SheetView);
             Internals.MergedRanges.ForEach(
                 kp => targetSheet.Internals.MergedRanges.Add(targetSheet.Range(kp.RangeAddress.ToString())));
+
+            foreach (var pic in Pictures)
+            {
+                var newPic = new XLPicture(pic);
+                targetSheet.AddPicture(newPic);
+            }
 
             foreach (IXLNamedRange r in NamedRanges)
             {
@@ -1493,17 +1501,13 @@ namespace ClosedXML.Excel
 
         public String Author { get; set; }
 
-        public List<Drawings.IXLPicture> Pictures()
+        public List<Drawings.IXLPicture> Pictures
         {
-            return pictures;
+            get { return pictures; }
         }
 
-        public void AddPicture(Drawings.XLPicture pic)
+        public void AddPicture(Drawings.IXLPicture pic)
         {
-            if (pictures == null)
-            {
-                pictures = new List<Drawings.IXLPicture>();
-            }
             pictures.Add(pic);
         }
     }
