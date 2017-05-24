@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
@@ -116,6 +117,53 @@ namespace ClosedXML_Tests.Excel
                 {
                     Assert.AreEqual(XLCellValues.DateTime, cell.DataType);
                 }
+            }
+        }
+
+        [Test]
+        public void CanLoadFileWithImagesWithCorrectAnchorTypes()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(2, ws.Pictures.Count);
+                Assert.IsTrue(ws.Pictures[0].IsAbsolute);
+                Assert.AreEqual(1, ws.Pictures[1].GetMarkers().Count, "Expected image to use a OneCellAnchor.");
+
+                var ws2 = wb.Worksheets.Skip(1).First();
+                Assert.AreEqual(1, ws2.Pictures.Count);
+                Assert.AreEqual(2, ws2.Pictures[0].GetMarkers().Count, "Expected image to use a TwoCellAnchor.");
+            }
+        }
+
+        [Test]
+        public void CanLoadFileWithImagesWithCorrectImageType()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageFormats.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(1, ws.Pictures.Count);
+                Assert.AreEqual("jpeg", ws.Pictures[0].Type);
+
+                var ws2 = wb.Worksheets.Skip(1).First();
+                Assert.AreEqual(1, ws2.Pictures.Count);
+                Assert.AreEqual("png", ws2.Pictures[0].Type);
+            }
+        }
+
+        [Test]
+        public void CanLoadFileWithImagesAndCopyImagesToNewSheet()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(2, ws.Pictures.Count);
+
+                var copy = ws.CopyTo("NewSheet");
+                Assert.AreEqual(2, copy.Pictures.Count);
             }
         }
     }
