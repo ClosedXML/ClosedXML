@@ -289,7 +289,9 @@ namespace ClosedXML_Tests.Excel
                 wb.Protect("Abc@123");
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
-                Assert.Catch<InvalidOperationException>(wb.Unprotect);
+                Assert.Throws(typeof(InvalidOperationException), delegate { wb.Protect(); });
+                Assert.Throws(typeof(InvalidOperationException), delegate { wb.Unprotect(); });
+                Assert.Throws(typeof(ArgumentException), delegate { wb.Unprotect("Cde@345"); });
             }
         }
 
