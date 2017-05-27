@@ -269,9 +269,12 @@
     <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
     <EmbeddedResource Include="Resource\Examples\PivotTables\PivotTables.xlsx" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageAnchors.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageFormats.xlsx" />
+    <None Include="Resource\Examples\Misc\WorkbookProtection.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
