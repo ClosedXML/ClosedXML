@@ -47,7 +47,16 @@ namespace ClosedXML_Sandbox
                 var ws = wb.Worksheets.First();
                 var cell = ws.FirstCellUsed();
                 Console.WriteLine(cell.Value);
+                wb.Protect(false, true, "AAA");
+                wb.Save();
             }
+
+            //using (var wb = new XLWorkbook("test.xlsx"))
+            //{
+            //    wb.Worksheets.Add("Sheet2");
+            //    wb.Protect("BBB");
+            //    wb.Save();
+            //}
         }
 
         private static void CreateMergedCell(IXLWorksheet worksheet)

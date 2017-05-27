@@ -571,6 +571,8 @@ namespace ClosedXML.Excel
 
             #endregion
 
+            #region WorkbookProtection
+
             if (LockStructure || LockWindows)
             {
                 if (workbook.WorkbookProtection == null)
@@ -578,11 +580,16 @@ namespace ClosedXML.Excel
 
                 workbook.WorkbookProtection.LockStructure = LockStructure;
                 workbook.WorkbookProtection.LockWindows = LockWindows;
+
+                if (LockPassword != null)
+                    workbook.WorkbookProtection.WorkbookPassword = LockPassword;
             }
             else
             {
                 workbook.WorkbookProtection = null;
             }
+
+            #endregion
 
 
             if (workbook.BookViews == null)
@@ -623,9 +630,9 @@ namespace ClosedXML.Excel
                 {
                     if (XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
                     {
-                    rId = String.Format("rId{0}", xlSheet.SheetId);
+                        rId = String.Format("rId{0}", xlSheet.SheetId);
                         context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
-                }
+                    }
                     else
                         rId = xlSheet.RelId;
                 }

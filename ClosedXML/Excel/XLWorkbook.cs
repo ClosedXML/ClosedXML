@@ -864,10 +864,16 @@ namespace ClosedXML.Excel
         public XLWorkbook SetLockStructure(Boolean value) { LockStructure = value; return this; }
         public Boolean LockWindows { get; set; }
         public XLWorkbook SetLockWindows(Boolean value) { LockWindows = value; return this; }
-
+        internal HexBinaryValue LockPassword { get; set; }
+        
         public void Protect()
         {
             Protect(true);
+        }
+
+        public void Protect(string password)
+        {
+            Protect(true, false, password);
         }
 
         public void Protect(Boolean lockStructure)
@@ -877,8 +883,77 @@ namespace ClosedXML.Excel
 
         public void Protect(Boolean lockStructure, Boolean lockWindows)
         {
+            Protect(lockStructure, lockWindows, null);
+        }
+
+        public void Protect(Boolean lockStructure, Boolean lockWindows, String lockPassword)
+        {
+            if (lockPassword != null)
+            {
+                var hashPassword = GetPasswordHash(lockPassword);
+                if (LockPassword != null)
+                {
+                    if (LockPassword != hashPassword)
+                    {
+                        throw new ArgumentException("Invalid password");
+                    }
+                    else
+                    {
+                        if (lockStructure || lockWindows)
+                        {
+                            throw new InvalidOperationException("The workbook is already protected");
+                        }
+                        else
+                        {
+                            //Unprotect workbook using password.
+                            LockPassword = null;
+                        }
+                    }  
+                }
+                else
+                {
+                    if (lockStructure || lockWindows)
+                    {
+                        //Protect workbook using password.
+                        LockPassword = hashPassword;
+                    }
+                }
+            }
+            else
+            {
+                if (LockPassword != null)
+                {
+                    throw new InvalidOperationException("The workbook is password protected");
+                }
+            }
             LockStructure = lockStructure;
-            LockWindows = LockWindows;
+            LockWindows = lockWindows;
+        }
+
+        public void Unprotect()
+        {
+            Protect(false, false);
+        }
+
+        public void Unprotect(string password)
+        {
+            Protect(false, false, password);
+        }
+
+        private String GetPasswordHash(String password)
+        {
+            Int32 pLength = password.Length;
+            Int32 hash = 0;
+            if (pLength == 0) return String.Empty;
+
+            for (Int32 i = pLength - 1; i >= 0; i--)
+            {
+                hash ^= password[i];
+                hash = hash >> 14 & 0x01 | hash << 1 & 0x7fff;
+            }
+            hash ^= 0x8000 | 'N' << 8 | 'K';
+            hash ^= pLength;
+            return hash.ToString("X");
         }
     }
 }
