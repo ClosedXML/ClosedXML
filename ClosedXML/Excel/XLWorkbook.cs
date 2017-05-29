@@ -871,9 +871,9 @@ namespace ClosedXML.Excel
             Protect(true);
         }
 
-        public void Protect(string password)
+        public void Protect(string workbookPassword)
         {
-            Protect(true, false, password);
+            Protect(true, false, workbookPassword);
         }
 
         public void Protect(Boolean lockStructure)
@@ -886,11 +886,11 @@ namespace ClosedXML.Excel
             Protect(lockStructure, lockWindows, null);
         }
 
-        public void Protect(Boolean lockStructure, Boolean lockWindows, String lockPassword)
+        public void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword)
         {
-            if (lockPassword != null)
+            if (workbookPassword != null)
             {
-                var hashPassword = GetPasswordHash(lockPassword);
+                var hashPassword = GetPasswordHash(workbookPassword);
                 if (LockPassword != null)
                 {
                     if (LockPassword != hashPassword)
@@ -935,9 +935,9 @@ namespace ClosedXML.Excel
             Protect(false, false);
         }
 
-        public void Unprotect(string password)
+        public void Unprotect(string workbookPassword)
         {
-            Protect(false, false, password);
+            Protect(false, false, workbookPassword);
         }
 
         private String GetPasswordHash(String password)
