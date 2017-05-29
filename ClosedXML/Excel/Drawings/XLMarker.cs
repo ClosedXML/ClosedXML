@@ -5,12 +5,10 @@ using System.Text;
 
 namespace ClosedXML.Excel.Drawings
 {
-    public class XLMarker : IXLMarker
+    internal class XLMarker : IXLMarker
     {
         private Int32 colId;
         private Int32 rowId;
-        private Double colOffset;
-        private Double rowOffset;
 
         public Int32 ColumnId
         {
@@ -42,38 +40,9 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
-        public Double ColumnOffset
-        {
-            set
-            {
-                this.colOffset = value;
-            }
-            get
-            {
-                return this.colOffset;
-            }
-        }
+        public Double ColumnOffset { get; set; }
 
-        public Double RowOffset
-        {
-            set
-            {
-                this.rowOffset = value;
-            }
-            get
-            {
-                return this.rowOffset;
-            }
-        }
+        public Double RowOffset { get; set; }
 
-        public Int32 GetZeroBasedColumn()
-        {
-            return colId - 1;
-        }
-
-        public Int32 GetZeroBasedRow()
-        {
-            return rowId - 1;
-        }
     }
 }

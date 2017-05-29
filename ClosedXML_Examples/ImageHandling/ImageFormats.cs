@@ -17,14 +17,9 @@ namespace ClosedXML_Examples
                 #region Jpeg
 
                 ws = wb.Worksheets.Add("Jpg");
-                ws.AddPicture("JpegImage", fs, XLPictureFormat.Jpeg)
-                    .SetAbsolute(false)
-                    .AtPosition(0, 0)
-                    .WithMarker(new XLMarker
-                    {
-                        ColumnId = 1,
-                        RowId = 1
-                    });
+                ws.AddPicture(fs, XLPictureFormat.Jpeg, "JpegImage")
+                    .WithPlacement(XLPicturePlacement.Move)
+                    .AtPosition(ws.Cell(1, 1));
 
                 #endregion Jpeg
             }
@@ -34,14 +29,9 @@ namespace ClosedXML_Examples
                 #region Png
 
                 ws = wb.Worksheets.Add("Png");
-                ws.AddPicture("PngImage", fs, XLPictureFormat.Png)
-                    .SetAbsolute(false)
-                    .AtPosition(0, 0)
-                    .WithMarker(new XLMarker
-                    {
-                        ColumnId = 1,
-                        RowId = 1
-                    });
+                ws.AddPicture(fs, XLPictureFormat.Png, "PngImage")
+                    .WithPlacement(XLPicturePlacement.Move)
+                    .AtPosition(ws.Cell(1, 1));
 
                 #endregion Png
 

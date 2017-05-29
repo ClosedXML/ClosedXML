@@ -2525,7 +2525,15 @@ namespace ClosedXML.Excel
 
             var worksheetDrawing = drawingsPart.WorksheetDrawing;
 
-            var imagePart = drawingsPart.AddImagePart(picture.Format.ToOpenXml(), context.RelIdGenerator.GetNext(RelType.Workbook));
+            // Add namespaces
+            if (!worksheetDrawing.NamespaceDeclarations.Any(nd => nd.Value.Equals("http://schemas.openxmlformats.org/drawingml/2006/main")))
+                worksheetDrawing.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+
+            if (!worksheetDrawing.NamespaceDeclarations.Any(nd => nd.Value.Equals("http://schemas.openxmlformats.org/officeDocument/2006/relationships")))
+                worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            /////////
+
+            var imagePart = drawingsPart.AddImagePart(pic.Format.ToOpenXml(), context.RelIdGenerator.GetNext(RelType.Workbook));
 
             using (var stream = new MemoryStream())
             {
@@ -2534,81 +2542,34 @@ namespace ClosedXML.Excel
                 imagePart.FeedData(stream);
             }
 
-            var extentsCx = ConvertToEnglishMetricUnits(pic.Width, pic.HorizontalResolution);
-            var extentsCy = ConvertToEnglishMetricUnits(pic.Height, pic.VerticalResolution);
+            var extentsCx = ConvertToEnglishMetricUnits(pic.Width, GraphicsUtils.Graphics.DpiX);
+            var extentsCy = ConvertToEnglishMetricUnits(pic.Height, GraphicsUtils.Graphics.DpiY);
 
             var nvps = worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>();
             var nvpId = nvps.Any() ?
                 (UInt32Value)worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>().Max(p => p.Id.Value) + 1 :
                 1U;
-            if (pic.IsAbsolute)
+
+            Xdr.FromMarker fMark;
+            Xdr.ToMarker tMark;
+            switch (pic.Placement)
             {
-                Xdr.AbsoluteAnchor absoluteAnchor;
-                absoluteAnchor = new Xdr.AbsoluteAnchor(
-                    new Xdr.Position
-                    {
-                        X = ConvertToEnglishMetricUnits(pic.Left, pic.HorizontalResolution),
-                        Y = ConvertToEnglishMetricUnits(pic.Top, pic.VerticalResolution)
-                    },
-                    new Xdr.Extent
-                    {
-                        Cx = extentsCx,
-                        Cy = extentsCy
-                    },
-                    new Xdr.Picture(
-                        new Xdr.NonVisualPictureProperties(
-                            new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
-                            new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
-                        ),
-                        new Xdr.BlipFill(
-                            new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
-                            new Stretch(new FillRectangle())
-                        ),
-                        new Xdr.ShapeProperties(
-                            new Transform2D(
-                                new Offset { X = 0, Y = 0 },
-                                new Extents { Cx = extentsCx, Cy = extentsCy }
-                            ),
-                            new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
-                        )
-                    ),
-                    new Xdr.ClientData()
-                );
-
-                worksheetDrawing.Append(absoluteAnchor);
-            }
-            else
-            {
-                Xdr.FromMarker fMark;
-                Xdr.ToMarker tMark;
-                if (pic.Markers.Count == 2)
-                {
-                    var fromMarker = pic.Markers.First();
-                    fMark = new Xdr.FromMarker
-                    {
-                        ColumnId = new Xdr.ColumnId(fromMarker.GetZeroBasedColumn().ToString()),
-                        RowId = new Xdr.RowId(fromMarker.GetZeroBasedRow().ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((fromMarker.ColumnOffset + pic.Left).ToString()),
-                        RowOffset = new Xdr.RowOffset((fromMarker.RowOffset + pic.Top).ToString())
-                    };
-
-                    var toMarker = pic.Markers.Last();
-                    tMark = new Xdr.ToMarker
-                    {
-                        ColumnId = new Xdr.ColumnId(toMarker.GetZeroBasedColumn().ToString()),
-                        RowId = new Xdr.RowId(toMarker.GetZeroBasedRow().ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((toMarker.ColumnOffset + pic.Left).ToString()),
-                        RowOffset = new Xdr.RowOffset((toMarker.RowOffset + pic.Top).ToString())
-                    };
-
-                    Xdr.TwoCellAnchor cellAnchor;
-                    cellAnchor = new Xdr.TwoCellAnchor(
-                        fMark,
-                        tMark,
+                case Drawings.XLPicturePlacement.FreeFloating:
+                    var absoluteAnchor = new Xdr.AbsoluteAnchor(
+                        new Xdr.Position
+                        {
+                            X = ConvertToEnglishMetricUnits(pic.Left, GraphicsUtils.Graphics.DpiX),
+                            Y = ConvertToEnglishMetricUnits(pic.Top, GraphicsUtils.Graphics.DpiY)
+                        },
+                        new Xdr.Extent
+                        {
+                            Cx = extentsCx,
+                            Cy = extentsCy
+                        },
                         new Xdr.Picture(
                             new Xdr.NonVisualPictureProperties(
                                 new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
-                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
+                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
                             ),
                             new Xdr.BlipFill(
                                 new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
@@ -2625,21 +2586,65 @@ namespace ClosedXML.Excel
                         new Xdr.ClientData()
                     );
 
-                    worksheetDrawing.Append(cellAnchor);
-                }
-                else if (pic.Markers.Count == 1)
-                {
-                    var fromMarker = pic.Markers.First();
+                    worksheetDrawing.Append(absoluteAnchor);
+                    break;
+
+                case Drawings.XLPicturePlacement.MoveAndSize:
+                    var moveAndSizeFromMarker = pic.Markers.First();
                     fMark = new Xdr.FromMarker
                     {
-                        ColumnId = new Xdr.ColumnId(fromMarker.GetZeroBasedColumn().ToString()),
-                        RowId = new Xdr.RowId(fromMarker.GetZeroBasedRow().ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((fromMarker.ColumnOffset + pic.Left).ToString()),
-                        RowOffset = new Xdr.RowOffset((fromMarker.RowOffset + pic.Top).ToString())
+                        ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.ColumnId - 1).ToString()),
+                        RowId = new Xdr.RowId((moveAndSizeFromMarker.RowId - 1).ToString()),
+                        ColumnOffset = new Xdr.ColumnOffset((moveAndSizeFromMarker.ColumnOffset + pic.Left).ToString()),
+                        RowOffset = new Xdr.RowOffset((moveAndSizeFromMarker.RowOffset + pic.Top).ToString())
                     };
 
-                    Xdr.OneCellAnchor cellAnchor;
-                    cellAnchor = new Xdr.OneCellAnchor(
+                    var moveAndSizeToMarker = pic.Markers.Last();
+                    tMark = new Xdr.ToMarker
+                    {
+                        ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.ColumnId - 1).ToString()),
+                        RowId = new Xdr.RowId((moveAndSizeToMarker.RowId - 1).ToString()),
+                        ColumnOffset = new Xdr.ColumnOffset((moveAndSizeToMarker.ColumnOffset + pic.Left).ToString()),
+                        RowOffset = new Xdr.RowOffset((moveAndSizeToMarker.RowOffset + pic.Top).ToString())
+                    };
+
+                    var twoCellAnchor = new Xdr.TwoCellAnchor(
+                        fMark,
+                        tMark,
+                        new Xdr.Picture(
+                            new Xdr.NonVisualPictureProperties(
+                                new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
+                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
+                            ),
+                            new Xdr.BlipFill(
+                                new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                                new Stretch(new FillRectangle())
+                            ),
+                            new Xdr.ShapeProperties(
+                                new Transform2D(
+                                    new Offset { X = 0, Y = 0 },
+                                    new Extents { Cx = extentsCx, Cy = extentsCy }
+                                ),
+                                new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
+                            )
+                        ),
+                        new Xdr.ClientData()
+                    );
+
+                    worksheetDrawing.Append(twoCellAnchor);
+                    break;
+
+                case Drawings.XLPicturePlacement.Move:
+                    var moveFromMarker = pic.Markers.First();
+                    fMark = new Xdr.FromMarker
+                    {
+                        ColumnId = new Xdr.ColumnId((moveFromMarker.ColumnId - 1).ToString()),
+                        RowId = new Xdr.RowId((moveFromMarker.RowId - 1).ToString()),
+                        ColumnOffset = new Xdr.ColumnOffset((moveFromMarker.ColumnOffset + pic.Left).ToString()),
+                        RowOffset = new Xdr.RowOffset((moveFromMarker.RowOffset + pic.Top).ToString())
+                    };
+
+                    var oneCellAnchor = new Xdr.OneCellAnchor(
                         fMark,
                         new Xdr.Extent
                         {
@@ -2649,7 +2654,7 @@ namespace ClosedXML.Excel
                         new Xdr.Picture(
                             new Xdr.NonVisualPictureProperties(
                                 new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
-                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
+                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
                             ),
                             new Xdr.BlipFill(
                                 new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
@@ -2666,8 +2671,8 @@ namespace ClosedXML.Excel
                         new Xdr.ClientData()
                     );
 
-                    worksheetDrawing.Append(cellAnchor);
-                }
+                    worksheetDrawing.Append(oneCellAnchor);
+                    break;
             }
         }
 
