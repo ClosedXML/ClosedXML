@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace ClosedXML_Tests
 {
@@ -42,49 +42,36 @@ namespace ClosedXML_Tests
         [Test]
         public void XLPictureTests()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            XLMarker firstMarker = new XLMarker
+            using (var wb = new XLWorkbook())
             {
-                ColumnId = 1,
-                RowId = 1,
-                ColumnOffset = 100,
-                RowOffset = 0
-            };
-
-            using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
-            {
-                XLPicture pic = new XLPicture
+                var ws = wb.Worksheets.Add("Sheet1");
+                XLMarker firstMarker = new XLMarker
                 {
-                    IsAbsolute = false,
-                    ImageStream = fs,
-                    Name = "Image1",
-                    Type = "png",
-                    OffsetX = 200,
-                    OffsetY = 155
+                    ColumnId = 1,
+                    RowId = 1,
+                    ColumnOffset = 100,
+                    RowOffset = 0
                 };
 
-                fs.Position = 0;
-                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(fs);
+                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
+                {
+                    var pic = ws.AddPicture("Image1", fs, XLPictureFormat.Png)
+                        .SetAbsolute(false)
+                        .AtPosition(220, 155);
 
-                // Get these values manually as they vary from machine to machine
-                float horizontalRes = bitmap.HorizontalResolution;
-                float verticalRes = bitmap.VerticalResolution;
+                    fs.Position = 0;
 
-                pic.AddMarker(firstMarker);
+                    pic.Markers.Add(firstMarker);
 
-                Assert.AreEqual(false, pic.IsAbsolute);
-                Assert.AreEqual("Image1", pic.Name);
-                Assert.AreEqual("png", pic.Type);
-                Assert.AreEqual(1, pic.GetMarkers().Count);
-                Assert.AreNotEqual(null, new XLPicture().GetMarkers());
-                Assert.AreEqual((long)(914400 * 252 / horizontalRes), pic.Width);
-                Assert.AreEqual((long)(914400 * 152 / verticalRes), pic.Height);
-                Assert.AreEqual(252, pic.RawWidth);
-                Assert.AreEqual(152, pic.RawHeight);
-                Assert.AreEqual((long)(914400 * 200 / horizontalRes), pic.OffsetX);
-                Assert.AreEqual((long)(914400 * 155 / verticalRes), pic.OffsetY);
-                Assert.AreEqual(200, pic.RawOffsetX);
-                Assert.AreEqual(155, pic.RawOffsetY);
+                    Assert.AreEqual(false, pic.IsAbsolute);
+                    Assert.AreEqual("Image1", pic.Name);
+                    Assert.AreEqual(XLPictureFormat.Png, pic.Format);
+                    Assert.AreEqual(1, pic.Markers.Count);
+                    Assert.AreEqual(252, pic.Width);
+                    Assert.AreEqual(152, pic.Height);
+                    Assert.AreEqual(220, pic.Left);
+                    Assert.AreEqual(155, pic.Top);
+                }
             }
         }
     }

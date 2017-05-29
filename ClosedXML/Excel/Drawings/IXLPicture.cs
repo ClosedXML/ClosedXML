@@ -1,40 +1,47 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using DocumentFormat.OpenXml.Packaging;
 
 namespace ClosedXML.Excel.Drawings
 {
-    public interface IXLPicture
+    public enum XLPictureFormat
     {
-        Stream ImageStream { get; set; }
+        Bmp = 0,
+        Gif = 1,
+        Png = 2,
+        Tiff = 3,
+        Icon = 4,
+        Pcx = 5,
+        Jpeg = 6,
+        Emf = 7,
+        Wmf = 8
+    }
 
-        List<IXLMarker> GetMarkers();
-        void AddMarker(IXLMarker marker);
-
-        long MaxHeight { get; set; }
-        long MaxWidth { get; set; }
-        long Width { get; set; }
-        long Height { get; set; }
-        long OffsetX { get; set; }
-        long OffsetY { get; set; }
-        long RawOffsetX { get; set; }
-        long RawOffsetY { get; set; }
-        bool IsAbsolute { get; set; }
-
+    public interface IXLPicture : IDisposable
+    {
         /// <summary>
         /// Type of image. The supported formats are defined by OpenXML's ImagePartType.
         /// Default value is "jpeg"
         /// </summary>
-        String Type { get; set; }
+        XLPictureFormat Format { get; }
 
+        long Height { get; set; }
+        MemoryStream ImageStream { get; }
+        bool IsAbsolute { get; }
+        long Left { get; set; }
+        IList<IXLMarker> Markers { get; }
         String Name { get; set; }
+        long Top { get; set; }
+        long Width { get; set; }
 
-        /// <summary>
-        /// Get the enum representation of the Picture type.
-        /// </summary>
-        ImagePartType GetImagePartType();
+        IXLPicture AtPosition(long left, long top);
+
+        IXLPicture SetAbsolute();
+
+        IXLPicture SetAbsolute(bool value);
+
+        IXLMarker WithMarker(IXLMarker marker);
+
+        IXLPicture WithSize(long width, long height);
     }
 }

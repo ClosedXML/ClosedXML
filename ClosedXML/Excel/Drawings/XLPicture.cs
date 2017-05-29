@@ -1,244 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using DocumentFormat.OpenXml.Packaging;
 
 namespace ClosedXML.Excel.Drawings
 {
-    public class XLPicture : IXLPicture
+    internal class XLPicture : IXLPicture
     {
-        private MemoryStream imgStream;
-        private List<IXLMarker> Markers;
-        private String name;
-        private bool isAbsolute;
-        private ImagePartType type = ImagePartType.Jpeg;
+        internal readonly float HorizontalResolution;
+        internal readonly float VerticalResolution;
 
-        private long iMaxWidth = 500;
-        private long iMaxHeight = 500;
-
-        private long iWidth;
-        private long iHeight;
-
-        private long iOffsetX;
-        private long iOffsetY;
-
-        private float iVerticalResolution;
-        private float iHorizontalResolution;
-
-        private bool isResized = false;
-
-        private void Resize()
+        internal XLPicture(Stream stream, XLPictureFormat format)
         {
-            if (iWidth > iMaxHeight || iHeight > iMaxWidth)
-            {
-                var scaleX = (double)iWidth / (double)iMaxWidth;
-                var scaleY = (double)iHeight / (double)iMaxHeight;
-                var scale = Math.Max(scaleX, scaleY);
-                iWidth = (int)((double)iWidth / scale);
-                iHeight = (int)((double)iHeight / scale);
-            }
-            isResized = true;
-        }
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            this.Format = format;
 
-        public long MaxWidth
-        {
-            get
+            this.ImageStream = new MemoryStream();
             {
-                return ConvertToEmu(iMaxWidth, iHorizontalResolution);
-            }
-            set
-            {
-                iMaxWidth = value;
-                isResized = false;
-            }
-        }
+                stream.CopyTo(ImageStream);
+                ImageStream.Seek(0, SeekOrigin.Begin);
 
-
-        public long MaxHeight
-        {
-            get
-            {
-                return ConvertToEmu(iMaxHeight, iVerticalResolution);
-            }
-            set
-            {
-                iMaxHeight = value;
-                isResized = false;
-            }
-        }
-
-        public long Width
-        {
-            get
-            {
-                if (!isResized)
+                using (var bitmap = new Bitmap(ImageStream))
                 {
-                    Resize();
+                    var expectedFormat = typeof(System.Drawing.Imaging.ImageFormat).GetProperty(this.Format.ToString()).GetValue(null, null) as System.Drawing.Imaging.ImageFormat;
+                    if (expectedFormat.Guid != bitmap.RawFormat.Guid)
+                        throw new ArgumentException("The picture format in the stream and the parameter don't match");
+
+                    this.Width = bitmap.Width;
+                    this.Height = bitmap.Height;
+                    HorizontalResolution = bitmap.HorizontalResolution;
+                    VerticalResolution = bitmap.VerticalResolution;
                 }
-                return ConvertToEmu(iWidth, iHorizontalResolution);
-            }
-            set { }
-        }
-
-        public long Height
-        {
-            get
-            {
-                if (!isResized)
-                {
-                    Resize();
-                }
-                return ConvertToEmu(iHeight, iVerticalResolution);
-            }
-            set { }
-        }
-
-        public long RawHeight
-        {
-            get { return (long)iHeight; }
-        }
-        public long RawWidth
-        {
-            get { return (long)iWidth; }
-        }
-
-        public long OffsetX
-        {
-            get { return ConvertToEmu(iOffsetX, iHorizontalResolution); }
-            set { iOffsetX = value; }
-        }
-        public long OffsetY
-        {
-            get { return ConvertToEmu(iOffsetY, iVerticalResolution); }
-            set { iOffsetY = value; }
-        }
-
-        public long RawOffsetX
-        {
-            get
-            {
-                return iOffsetX;
-            }
-            set
-            {
-                iOffsetX = value;
+                ImageStream.Seek(0, SeekOrigin.Begin);
             }
         }
 
-        public long RawOffsetY
+        public XLPictureFormat Format { get; protected set; }
+
+        public long Height { get; set; }
+
+        public MemoryStream ImageStream { get; protected set; }
+
+        public bool IsAbsolute { get; private set; }
+
+        public long Left { get; set; }
+        public IList<IXLMarker> Markers { get; private set; } = new List<IXLMarker>();
+        public String Name { get; set; }
+
+        public long Top { get; set; }
+        public long Width { get; set; }
+
+        public IXLPicture AtPosition(long left, long top)
         {
-            get
-            {
-                return iOffsetY;
-            }
-            set
-            {
-                iOffsetY = value;
-            }
+            this.Left = left;
+            this.Top = top;
+            return this;
         }
 
-        private long ConvertToEmu(long pixels, float resolution)
+        public void Dispose()
         {
-            return (long)(914400 * pixels / resolution);
+            this.ImageStream.Dispose();
         }
 
-        public Stream ImageStream
+        public IXLPicture SetAbsolute()
         {
-            get
-            {
-                return imgStream;
-            }
-            set
-            {
-                if (imgStream == null)
-                {
-                    imgStream = new MemoryStream();
-                }
-                else
-                {
-                    imgStream.Dispose();
-                    imgStream = new MemoryStream();
-                }
-                value.CopyTo(imgStream);
-                imgStream.Seek(0, SeekOrigin.Begin);
-
-                using (var bitmap = new System.Drawing.Bitmap(imgStream))
-                {
-                    iWidth = (long)bitmap.Width;
-                    iHeight = (long)bitmap.Height;
-                    iHorizontalResolution = bitmap.HorizontalResolution;
-                    iVerticalResolution = bitmap.VerticalResolution;
-                }
-                imgStream.Seek(0, SeekOrigin.Begin);
-            }
+            return SetAbsolute(true);
         }
 
-        public List<IXLMarker> GetMarkers()
+        public IXLPicture SetAbsolute(bool value)
         {
-            return Markers != null ? Markers : new List<IXLMarker>();
-        }
-        public void AddMarker(IXLMarker marker)
-        {
-            if (Markers == null)
-            {
-                Markers = new List<IXLMarker>();
-            }
-            Markers.Add(marker);
+            this.IsAbsolute = value;
+            return this;
         }
 
-        public String Name
+        public IXLMarker WithMarker(IXLMarker marker)
         {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
+            if (marker == null) throw new ArgumentNullException(nameof(marker));
+            this.Markers.Add(marker);
+            return marker;
         }
 
-        public bool IsAbsolute
+        public IXLPicture WithSize(long width, long height)
         {
-            get
-            {
-                return isAbsolute;
-            }
-            set
-            {
-                isAbsolute = value;
-            }
-        }
-
-        public String Type
-        {
-            get
-            {
-                return GetExtension(type);
-            }
-            set
-            {
-                try
-                {
-                    type = (ImagePartType)Enum.Parse(typeof(ImagePartType), value, true);
-                }
-                catch
-                {
-                    type = ImagePartType.Jpeg;
-                }
-            }
-        }
-
-        private String GetExtension(ImagePartType type)
-        {
-            return type.ToString().ToLower();
-        }
-
-        public ImagePartType GetImagePartType()
-        {
-            return type;
+            this.Width = width;
+            this.Height = height;
+            return this;
         }
     }
 }

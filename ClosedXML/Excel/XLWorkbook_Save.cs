@@ -1,26 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.CustomProperties;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.VariantTypes;
 using DocumentFormat.OpenXml.Validation;
+using DocumentFormat.OpenXml.VariantTypes;
 using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
-using Vml = DocumentFormat.OpenXml.Vml;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Xml;
+using System.Xml.Linq;
+using Anchor = DocumentFormat.OpenXml.Vml.Spreadsheet.Anchor;
 using BackgroundColor = DocumentFormat.OpenXml.Spreadsheet.BackgroundColor;
 using BottomBorder = DocumentFormat.OpenXml.Spreadsheet.BottomBorder;
 using Break = DocumentFormat.OpenXml.Spreadsheet.Break;
+using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
 using Fill = DocumentFormat.OpenXml.Spreadsheet.Fill;
-using FontScheme = DocumentFormat.OpenXml.Drawing.FontScheme;
 using Fonts = DocumentFormat.OpenXml.Spreadsheet.Fonts;
+using FontScheme = DocumentFormat.OpenXml.Drawing.FontScheme;
 using ForegroundColor = DocumentFormat.OpenXml.Spreadsheet.ForegroundColor;
 using GradientFill = DocumentFormat.OpenXml.Drawing.GradientFill;
 using GradientStop = DocumentFormat.OpenXml.Drawing.GradientStop;
@@ -31,21 +36,15 @@ using Path = System.IO.Path;
 using PatternFill = DocumentFormat.OpenXml.Spreadsheet.PatternFill;
 using Properties = DocumentFormat.OpenXml.ExtendedProperties.Properties;
 using RightBorder = DocumentFormat.OpenXml.Spreadsheet.RightBorder;
+using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
+using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
 using Table = DocumentFormat.OpenXml.Spreadsheet.Table;
 using Text = DocumentFormat.OpenXml.Spreadsheet.Text;
 using TopBorder = DocumentFormat.OpenXml.Spreadsheet.TopBorder;
 using Underline = DocumentFormat.OpenXml.Spreadsheet.Underline;
-using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
-using System.Xml;
-using System.Xml.Linq;
-using System.Text;
-using ClosedXML.Utils;
-using Anchor = DocumentFormat.OpenXml.Vml.Spreadsheet.Anchor;
-using Field = DocumentFormat.OpenXml.Spreadsheet.Field;
-using Run = DocumentFormat.OpenXml.Spreadsheet.Run;
-using RunProperties = DocumentFormat.OpenXml.Spreadsheet.RunProperties;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
-using System.Threading;
+using Vml = DocumentFormat.OpenXml.Vml;
+using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ClosedXML.Excel
 {
@@ -72,12 +71,16 @@ namespace ClosedXML.Excel
                     }
                 case XLCellValues.Number:
                     return CvNumber;
+
                 case XLCellValues.DateTime:
                     return CvDate;
+
                 case XLCellValues.Boolean:
                     return CvBoolean;
+
                 case XLCellValues.TimeSpan:
                     return CvNumber;
+
                 default:
                     throw new NotImplementedException();
             }
@@ -185,7 +188,6 @@ namespace ClosedXML.Excel
                 {
                     Item.Remove();
                 }
-
             }
             // Get the CalculationChainPart
             //Note: An instance of this part type contains an ordered set of references to all cells in all worksheets in the
@@ -222,7 +224,6 @@ namespace ClosedXML.Excel
             var workbookPart = document.WorkbookPart ?? document.AddWorkbookPart();
 
             var worksheets = WorksheetsInternal;
-
 
             var partsToRemove = workbookPart.Parts.Where(s => worksheets.Deleted.Contains(s.RelationshipId)).ToList();
 
@@ -280,7 +281,6 @@ namespace ClosedXML.Excel
                 }
                 else
                     worksheetPart = workbookPart.AddNewPart<WorksheetPart>(wsRelId);
-
 
                 context.RelIdGenerator.AddValues(worksheetPart.HyperlinkRelationships.Select(hr => hr.Id), RelType.Workbook);
                 context.RelIdGenerator.AddValues(worksheetPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
@@ -569,7 +569,7 @@ namespace ClosedXML.Excel
             if (Use1904DateSystem)
                 workbook.WorkbookProperties.Date1904 = true;
 
-            #endregion
+            #endregion WorkbookProperties
 
             if (LockStructure || LockWindows)
             {
@@ -583,7 +583,6 @@ namespace ClosedXML.Excel
             {
                 workbook.WorkbookProtection = null;
             }
-
 
             if (workbook.BookViews == null)
                 workbook.BookViews = new BookViews();
@@ -623,9 +622,9 @@ namespace ClosedXML.Excel
                 {
                     if (XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
                     {
-                    rId = String.Format("rId{0}", xlSheet.SheetId);
+                        rId = String.Format("rId{0}", xlSheet.SheetId);
                         context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
-                }
+                    }
                     else
                         rId = xlSheet.RelId;
                 }
@@ -770,7 +769,6 @@ namespace ClosedXML.Excel
                         definedName.Comment = nr.Comment;
                     definedNames.AppendChild(definedName);
                 }
-
 
                 var definedNameTextRow = String.Empty;
                 var definedNameTextColumn = String.Empty;
@@ -2046,7 +2044,6 @@ namespace ClosedXML.Excel
                 FirstDataColumn = 1U
             };
 
-
             var rowFields = new RowFields();
             var columnFields = new ColumnFields();
             var rowItems = new RowItems();
@@ -2152,42 +2149,52 @@ namespace ClosedXML.Excel
                                 pf.AverageSubTotal = true;
                                 itemSubtotal.ItemType = ItemValues.Average;
                                 break;
+
                             case XLSubtotalFunction.Count:
                                 pf.CountASubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.CountA;
                                 break;
+
                             case XLSubtotalFunction.CountNumbers:
                                 pf.CountSubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.Count;
                                 break;
+
                             case XLSubtotalFunction.Maximum:
                                 pf.MaxSubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.Maximum;
                                 break;
+
                             case XLSubtotalFunction.Minimum:
                                 pf.MinSubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.Minimum;
                                 break;
+
                             case XLSubtotalFunction.PopulationStandardDeviation:
                                 pf.ApplyStandardDeviationPInSubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.StandardDeviationP;
                                 break;
+
                             case XLSubtotalFunction.PopulationVariance:
                                 pf.ApplyVariancePInSubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.VarianceP;
                                 break;
+
                             case XLSubtotalFunction.Product:
                                 pf.ApplyProductInSubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.Product;
                                 break;
+
                             case XLSubtotalFunction.StandardDeviation:
                                 pf.ApplyStandardDeviationInSubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.StandardDeviation;
                                 break;
+
                             case XLSubtotalFunction.Sum:
                                 pf.SumSubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.Sum;
                                 break;
+
                             case XLSubtotalFunction.Variance:
                                 pf.ApplyVarianceInSubtotal = true;
                                 itemSubtotal.ItemType = ItemValues.Variance;
@@ -2250,7 +2257,6 @@ namespace ClosedXML.Excel
                 pageFields.Count = Convert.ToUInt32(pageFields.Count());
                 pivotTableDefinition.AppendChild(pageFields);
             }
-
 
             var dataFields = new DataFields();
             foreach (var value in pt.Values)
@@ -2335,11 +2341,10 @@ namespace ClosedXML.Excel
             pivotTableDefinitionExtensionList.AppendChild(pivotTableDefinitionExtension);
             pivotTableDefinition.AppendChild(pivotTableDefinitionExtensionList);
 
-            #endregion
+            #endregion Excel 2010 Features
 
             pivotTablePart.PivotTableDefinition = pivotTableDefinition;
         }
-
 
         private static void GenerateWorksheetCommentsPartContent(WorksheetCommentsPart worksheetCommentsPart,
             XLWorksheet xlWorksheet)
@@ -2420,7 +2425,6 @@ namespace ClosedXML.Excel
                 xdoc.Root.Elements().ForEach(e => writer.WriteRaw(e.ToString()));
             }
 
-
             writer.WriteEndElement();
             writer.Flush();
             writer.Close();
@@ -2479,7 +2483,6 @@ namespace ClosedXML.Excel
             if (!XLHelper.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
                 shape.Alternate = c.Comment.Style.Web.AlternateText;
 
-
             return shape;
         }
 
@@ -2503,44 +2506,49 @@ namespace ClosedXML.Excel
             return stroke;
         }
 
-        private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture)
+        // http://polymathprogrammer.com/2009/10/22/english-metric-units-and-open-xml/
+        // http://archive.oreilly.com/pub/post/what_is_an_emu.html
+        // https://en.wikipedia.org/wiki/Office_Open_XML_file_formats#DrawingML
+        private static long ConvertToEnglishMetricUnits(long pixels, float resolution)
         {
+            return (long)(914400 * pixels / resolution);
+        }
+
+        private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture, SaveContext context)
+        {
+            var pic = picture as Drawings.XLPicture;
             var drawingsPart = worksheetPart.DrawingsPart ??
-                               worksheetPart.AddNewPart<DrawingsPart>(
-                                    GeneratePartId(picture.Name, worksheetPart));
+                               worksheetPart.AddNewPart<DrawingsPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
 
             if (drawingsPart.WorksheetDrawing == null)
-            {
                 drawingsPart.WorksheetDrawing = new Xdr.WorksheetDrawing();
-            }
 
             var worksheetDrawing = drawingsPart.WorksheetDrawing;
 
-            var imagePart = drawingsPart.AddImagePart(picture.GetImagePartType(),
-                                                        GeneratePartId(picture.Name, drawingsPart));
+            var imagePart = drawingsPart.AddImagePart(picture.Format.ToOpenXml(), context.RelIdGenerator.GetNext(RelType.Workbook));
 
-            using (Stream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                picture.ImageStream.CopyTo(stream);
+                pic.ImageStream.CopyTo(stream);
                 stream.Seek(0, SeekOrigin.Begin);
                 imagePart.FeedData(stream);
             }
 
-            var extentsCx = picture.Width;
-            var extentsCy = picture.Height;
+            var extentsCx = ConvertToEnglishMetricUnits(pic.Width, pic.HorizontalResolution);
+            var extentsCy = ConvertToEnglishMetricUnits(pic.Height, pic.VerticalResolution);
 
             var nvps = worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>();
-            var nvpId = nvps.Count() > 0 ?
+            var nvpId = nvps.Any() ?
                 (UInt32Value)worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>().Max(p => p.Id.Value) + 1 :
                 1U;
-            if (picture.IsAbsolute)
+            if (pic.IsAbsolute)
             {
                 Xdr.AbsoluteAnchor absoluteAnchor;
                 absoluteAnchor = new Xdr.AbsoluteAnchor(
                     new Xdr.Position
                     {
-                        X = picture.OffsetX,
-                        Y = picture.OffsetY
+                        X = ConvertToEnglishMetricUnits(pic.Left, pic.HorizontalResolution),
+                        Y = ConvertToEnglishMetricUnits(pic.Top, pic.VerticalResolution)
                     },
                     new Xdr.Extent
                     {
@@ -2549,7 +2557,7 @@ namespace ClosedXML.Excel
                     },
                     new Xdr.Picture(
                         new Xdr.NonVisualPictureProperties(
-                            new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = picture.Name },
+                            new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
                             new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
                         ),
                         new Xdr.BlipFill(
@@ -2571,24 +2579,26 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var markers = picture.GetMarkers();
                 Xdr.FromMarker fMark;
                 Xdr.ToMarker tMark;
-                if (markers.Count == 2)
+                if (pic.Markers.Count == 2)
                 {
+                    var fromMarker = pic.Markers.First();
                     fMark = new Xdr.FromMarker
                     {
-                        ColumnId = new Xdr.ColumnId(markers[0].GetZeroBasedColumn().ToString()),
-                        RowId = new Xdr.RowId(markers[0].GetZeroBasedRow().ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset + picture.OffsetX).ToString()),
-                        RowOffset = new Xdr.RowOffset((markers[0].RowOffset + picture.OffsetY).ToString())
+                        ColumnId = new Xdr.ColumnId(fromMarker.GetZeroBasedColumn().ToString()),
+                        RowId = new Xdr.RowId(fromMarker.GetZeroBasedRow().ToString()),
+                        ColumnOffset = new Xdr.ColumnOffset((fromMarker.ColumnOffset + pic.Left).ToString()),
+                        RowOffset = new Xdr.RowOffset((fromMarker.RowOffset + pic.Top).ToString())
                     };
+
+                    var toMarker = pic.Markers.Last();
                     tMark = new Xdr.ToMarker
                     {
-                        ColumnId = new Xdr.ColumnId(markers[1].GetZeroBasedColumn().ToString()),
-                        RowId = new Xdr.RowId(markers[1].GetZeroBasedRow().ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((markers[1].ColumnOffset + picture.OffsetX).ToString()),
-                        RowOffset = new Xdr.RowOffset((markers[1].RowOffset + picture.OffsetY).ToString())
+                        ColumnId = new Xdr.ColumnId(toMarker.GetZeroBasedColumn().ToString()),
+                        RowId = new Xdr.RowId(toMarker.GetZeroBasedRow().ToString()),
+                        ColumnOffset = new Xdr.ColumnOffset((toMarker.ColumnOffset + pic.Left).ToString()),
+                        RowOffset = new Xdr.RowOffset((toMarker.RowOffset + pic.Top).ToString())
                     };
 
                     Xdr.TwoCellAnchor cellAnchor;
@@ -2597,7 +2607,7 @@ namespace ClosedXML.Excel
                         tMark,
                         new Xdr.Picture(
                             new Xdr.NonVisualPictureProperties(
-                                new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = picture.Name },
+                                new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
                                 new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
                             ),
                             new Xdr.BlipFill(
@@ -2617,14 +2627,15 @@ namespace ClosedXML.Excel
 
                     worksheetDrawing.Append(cellAnchor);
                 }
-                else if (markers.Count == 1)
+                else if (pic.Markers.Count == 1)
                 {
+                    var fromMarker = pic.Markers.First();
                     fMark = new Xdr.FromMarker
                     {
-                        ColumnId = new Xdr.ColumnId(markers[0].GetZeroBasedColumn().ToString()),
-                        RowId = new Xdr.RowId(markers[0].GetZeroBasedRow().ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((markers[0].ColumnOffset + picture.OffsetX).ToString()),
-                        RowOffset = new Xdr.RowOffset((markers[0].RowOffset + picture.OffsetY).ToString())
+                        ColumnId = new Xdr.ColumnId(fromMarker.GetZeroBasedColumn().ToString()),
+                        RowId = new Xdr.RowId(fromMarker.GetZeroBasedRow().ToString()),
+                        ColumnOffset = new Xdr.ColumnOffset((fromMarker.ColumnOffset + pic.Left).ToString()),
+                        RowOffset = new Xdr.RowOffset((fromMarker.RowOffset + pic.Top).ToString())
                     };
 
                     Xdr.OneCellAnchor cellAnchor;
@@ -2637,7 +2648,7 @@ namespace ClosedXML.Excel
                         },
                         new Xdr.Picture(
                             new Xdr.NonVisualPictureProperties(
-                                new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = picture.Name },
+                                new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
                                 new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true, NoMove = true, NoResize = true })
                             ),
                             new Xdr.BlipFill(
@@ -2658,27 +2669,6 @@ namespace ClosedXML.Excel
                     worksheetDrawing.Append(cellAnchor);
                 }
             }
-        }
-
-        private static Regex embedRegex = new Regex("[^a-zA-Z0-9]");
-
-        public static string GeneratePartId(string name, OpenXmlPart oxp)
-        {
-            var partId = name ?? "rId1";
-            partId = embedRegex.Replace(partId, "");
-
-            // We guarantee the id uniqueness based off the name
-            try
-            {
-                oxp.GetPartById(partId);
-            }
-            catch(ArgumentOutOfRangeException)
-            {
-                return partId;
-            }
-
-            partId += "c";
-            return GeneratePartId(partId, oxp);
         }
 
         private static Vml.TextBox GetTextBox(IXLDrawingStyle ds)
@@ -2772,7 +2762,6 @@ namespace ClosedXML.Excel
 
             sb.Append("z-index:");
             sb.Append(c.ZOrder.ToString());
-
 
             return sb.ToString();
         }
@@ -2977,11 +2966,9 @@ namespace ClosedXML.Excel
             if (workbookStylesPart.Stylesheet.DifferentialFormats == null)
                 workbookStylesPart.Stylesheet.DifferentialFormats = new DifferentialFormats();
 
-
             var differentialFormats = workbookStylesPart.Stylesheet.DifferentialFormats;
 
             FillDifferentialFormatsCollection(differentialFormats, context.DifferentialFormats);
-
 
             foreach (var ws in Worksheets)
             {
@@ -3346,8 +3333,6 @@ namespace ClosedXML.Excel
             }
 
             return nb.Equals(xlBorder);
-
-
         }
 
         private Dictionary<IXLFill, FillInfo> ResolveFills(WorkbookStylesPart workbookStylesPart,
@@ -3673,7 +3658,7 @@ namespace ClosedXML.Excel
             return newXLNumberFormat.Equals(xlNumberFormat);
         }
 
-        #endregion
+        #endregion GenerateWorkbookStylesPartContent
 
         #region GenerateWorksheetPartContent
 
@@ -3695,7 +3680,7 @@ namespace ClosedXML.Excel
                     "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             }
 
-            #endregion
+            #endregion Worksheet
 
             var cm = new XLWSContentManager(worksheetPart.Worksheet);
 
@@ -3724,7 +3709,7 @@ namespace ClosedXML.Excel
                 && (xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0))
                 worksheetPart.Worksheet.SheetProperties.PageSetupProperties = new PageSetupProperties { FitToPage = true };
 
-            #endregion
+            #endregion SheetProperties
 
             var maxColumn = 0;
 
@@ -3825,11 +3810,9 @@ namespace ClosedXML.Excel
                 sheetView.AppendChild(pane);
             }
 
-
             pane.State = PaneStateValues.FrozenSplit;
             Double hSplit = xlWorksheet.SheetView.SplitColumn;
             Double ySplit = xlWorksheet.SheetView.SplitRow;
-
 
             pane.HorizontalSplit = hSplit;
             pane.VerticalSplit = ySplit;
@@ -3851,11 +3834,9 @@ namespace ClosedXML.Excel
                 else if (firstSelection != null)
                     selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
 
-
                 var seqRef = new List<String> { selection.ActiveCell.Value };
                 seqRef.AddRange(xlWorksheet.SelectedRanges
                     .Select(range => range.RangeAddress.ToStringRelative(false)));
-
 
                 selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
 
@@ -3882,7 +3863,7 @@ namespace ClosedXML.Excel
             else
                 sheetView.ZoomScaleSheetLayoutView = (UInt32)Math.Max(10, Math.Min(400, xlWorksheet.SheetView.ZoomScaleSheetLayoutView));
 
-            #endregion
+            #endregion SheetViews
 
             var maxOutlineColumn = 0;
             if (xlWorksheet.ColumnCount() > 0)
@@ -3907,13 +3888,11 @@ namespace ClosedXML.Excel
             else
                 worksheetPart.Worksheet.SheetFormatProperties.CustomHeight = null;
 
-
             var worksheetColumnWidth = GetColumnWidth(xlWorksheet.ColumnWidth).SaveRound();
             if (xlWorksheet.ColumnWidthChanged)
                 worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = worksheetColumnWidth;
             else
                 worksheetPart.Worksheet.SheetFormatProperties.DefaultColumnWidth = null;
-
 
             if (maxOutlineColumn > 0)
                 worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelColumn = (byte)maxOutlineColumn;
@@ -3925,7 +3904,7 @@ namespace ClosedXML.Excel
             else
                 worksheetPart.Worksheet.SheetFormatProperties.OutlineLevelRow = null;
 
-            #endregion
+            #endregion SheetFormatProperties
 
             #region Columns
 
@@ -3965,7 +3944,6 @@ namespace ClosedXML.Excel
                 {
                     UInt32Value min = 1;
                     UInt32Value max = (UInt32)(minInColumnsCollection - 1);
-
 
                     for (var co = min; co <= max; co++)
                     {
@@ -4058,7 +4036,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            #endregion
+            #endregion Columns
 
             #region SheetData
 
@@ -4163,7 +4141,6 @@ namespace ClosedXML.Excel
                     if (kpDel.Value.Count == 0)
                         xlWorksheet.Internals.CellsCollection.deleted.Remove(kpDel.Key);
                 }
-
 
                 if (!xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow)) continue;
 
@@ -4312,7 +4289,7 @@ namespace ClosedXML.Excel
                 sheetDataRows.Remove(r);
             }
 
-            #endregion
+            #endregion SheetData
 
             #region SheetProtection
 
@@ -4351,7 +4328,7 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, null);
             }
 
-            #endregion
+            #endregion SheetProtection
 
             #region AutoFilter
 
@@ -4360,7 +4337,6 @@ namespace ClosedXML.Excel
             {
                 var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.AutoFilter);
                 worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
-
 
                 var autoFilter = worksheetPart.Worksheet.Elements<AutoFilter>().First();
                 cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, autoFilter);
@@ -4372,7 +4348,7 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, null);
             }
 
-            #endregion
+            #endregion AutoFilter
 
             #region MergeCells
 
@@ -4401,7 +4377,7 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWSContentManager.XLWSContents.MergeCells, null);
             }
 
-            #endregion
+            #endregion MergeCells
 
             #region Conditional Formatting
 
@@ -4440,7 +4416,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            #endregion
+            #endregion Conditional Formatting
 
             #region DataValidations
 
@@ -4491,7 +4467,7 @@ namespace ClosedXML.Excel
                 dataValidations.Count = (UInt32)xlWorksheet.DataValidations.Count();
             }
 
-            #endregion
+            #endregion DataValidations
 
             #region Hyperlinks
 
@@ -4537,7 +4513,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            #endregion
+            #endregion Hyperlinks
 
             #region PrintOptions
 
@@ -4555,7 +4531,7 @@ namespace ClosedXML.Excel
             printOptions.Headings = xlWorksheet.PageSetup.ShowRowAndColumnHeadings;
             printOptions.GridLines = xlWorksheet.PageSetup.ShowGridlines;
 
-            #endregion
+            #endregion PrintOptions
 
             #region PageMargins
 
@@ -4574,7 +4550,7 @@ namespace ClosedXML.Excel
             pageMargins.Header = xlWorksheet.PageSetup.Margins.Header;
             pageMargins.Footer = xlWorksheet.PageSetup.Margins.Footer;
 
-            #endregion
+            #endregion PageMargins
 
             #region PageSetup
 
@@ -4633,7 +4609,7 @@ namespace ClosedXML.Excel
                     pageSetup.FitToHeight = (UInt32)xlWorksheet.PageSetup.PagesTall;
             }
 
-            #endregion
+            #endregion PageSetup
 
             #region HeaderFooter
 
@@ -4676,7 +4652,7 @@ namespace ClosedXML.Excel
                 headerFooter.AppendChild(firstFooter);
             }
 
-            #endregion
+            #endregion HeaderFooter
 
             #region RowBreaks
 
@@ -4709,7 +4685,7 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWSContentManager.XLWSContents.RowBreaks, null);
             }
 
-            #endregion
+            #endregion RowBreaks
 
             #region ColumnBreaks
 
@@ -4742,7 +4718,7 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWSContentManager.XLWSContents.ColumnBreaks, null);
             }
 
-            #endregion
+            #endregion ColumnBreaks
 
             #region Tables
 
@@ -4761,27 +4737,23 @@ namespace ClosedXML.Excel
                     from XLTable xlTable in xlWorksheet.Tables select new TablePart { Id = xlTable.RelId })
                 tableParts.AppendChild(tablePart);
 
-            #endregion
+            #endregion Tables
 
             #region Drawings
 
-            var pics = xlWorksheet.Pictures();
-            if (pics != null)
+            foreach (var pic in xlWorksheet.Pictures)
             {
-                foreach (Drawings.IXLPicture pic in pics)
-                {
-                    AddPictureAnchor(worksheetPart, pic);
-                }
+                AddPictureAnchor(worksheetPart, pic, context);
             }
 
-            if (xlWorksheet.Pictures() != null && xlWorksheet.Pictures().Count > 0)
+            if (xlWorksheet.Pictures.Any())
             {
-                Drawing worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
+                var worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-                worksheetPart.Worksheet.InsertBefore<Drawing>(worksheetDrawing, tableParts);
+                worksheetPart.Worksheet.InsertBefore(worksheetDrawing, tableParts);
             }
 
-            #endregion
+            #endregion Drawings
 
             #region LegacyDrawing
 
@@ -4798,7 +4770,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            #endregion
+            #endregion LegacyDrawing
 
             #region LegacyDrawingHeaderFooter
 
@@ -4813,7 +4785,7 @@ namespace ClosedXML.Excel
             //    }
             //}
 
-            #endregion
+            #endregion LegacyDrawingHeaderFooter
         }
 
         private static void PopulateAutoFilter(XLAutoFilter xlAutoFilter, AutoFilter autoFilter)
@@ -4871,7 +4843,6 @@ namespace ClosedXML.Excel
                 }
                 autoFilter.Append(filterColumn);
             }
-
 
             if (xlAutoFilter.Sorted)
             {
@@ -5008,6 +4979,6 @@ namespace ClosedXML.Excel
                      left.OutlineLevel.Value == right.OutlineLevel.Value));
         }
 
-        #endregion
+        #endregion GenerateWorksheetPartContent
     }
 }

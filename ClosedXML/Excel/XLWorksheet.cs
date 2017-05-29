@@ -1,11 +1,11 @@
-﻿using System;
+﻿using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.Drawings;
+using ClosedXML.Excel.Misc;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.Misc;
-
 
 namespace ClosedXML.Excel
 {
@@ -96,7 +96,6 @@ namespace ClosedXML.Excel
         public Boolean LegacyDrawingIsNew;
         private Double _columnWidth;
         public XLWorksheetInternals Internals { get; private set; }
-        private List<Drawings.IXLPicture> pictures;
 
         public override IEnumerable<IXLStyle> Styles
         {
@@ -967,6 +966,9 @@ namespace ClosedXML.Excel
 
             Internals.Dispose();
 
+            foreach (var picture in this.Pictures)
+                picture.Dispose();
+
             base.Dispose();
         }
 
@@ -1493,18 +1495,26 @@ namespace ClosedXML.Excel
 
         public String Author { get; set; }
 
-        public List<Drawings.IXLPicture> Pictures()
+        public IList<Drawings.IXLPicture> Pictures { get; private set; } = new List<Drawings.IXLPicture>();
+
+        public Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format)
         {
-            return pictures;
+            var picture = new XLPicture(stream, format);
+            Pictures.Add(picture);
+            var pictureNumber = this.Pictures.Count;
+            while (Pictures.Any(p => p.Name == $"Picture {pictureNumber}"))
+            {
+                pictureNumber++;
+            }
+            picture.Name = $"Picture {pictureNumber}";
+            return picture;
         }
 
-        public void AddPicture(Drawings.XLPicture pic)
+        public IXLPicture AddPicture(string name, Stream stream, XLPictureFormat format)
         {
-            if (pictures == null)
-            {
-                pictures = new List<Drawings.IXLPicture>();
-            }
-            pictures.Add(pic);
+            var picture = AddPicture(stream, format);
+            picture.Name = name;
+            return picture;
         }
     }
 }

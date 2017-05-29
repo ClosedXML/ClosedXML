@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
+using System.IO;
+using System.Reflection;
 
 namespace ClosedXML_Examples
 {
@@ -11,74 +10,57 @@ namespace ClosedXML_Examples
         public void Create(string filePath)
         {
             var wb = new XLWorkbook();
-            XLPicture pic;
             IXLWorksheet ws;
+            IXLPicture picture;
 
             using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.ImageHandling.png"))
             {
                 ws = wb.Worksheets.Add("Images");
 
                 #region AbsoluteAnchor
-                pic = new XLPicture()
-                {
-                    IsAbsolute = true,
-                    ImageStream = fs,
-                    Name = "Image10",
-                    Type = "png",
-                    OffsetX = 220,
-                    OffsetY = 150
-                };
-                ws.AddPicture(pic);
-                #endregion
+
+                ws.AddPicture("Image10", fs, XLPictureFormat.Png)
+                    .SetAbsolute()
+                    .AtPosition(220, 150);
+
+                #endregion AbsoluteAnchor
 
                 #region OneCellAnchor
+
                 fs.Position = 0;
-                pic = new XLPicture()
-                {
-                    IsAbsolute = false,
-                    ImageStream = fs,
-                    Name = "Image11",
-                    Type = "png",
-                    OffsetX = 0,
-                    OffsetY = 0
-                };
+                ws.AddPicture("Image11", fs, XLPictureFormat.Png)
+                    .SetAbsolute(false)
+                    .AtPosition(0, 0)
+                    .WithMarker(new XLMarker
+                    {
+                        ColumnId = 1,
+                        RowId = 1
+                    });
 
-                pic.AddMarker(new XLMarker
-                {
-                    ColumnId = 1,
-                    RowId = 1
-                });
-
-                ws.AddPicture(pic);
-                #endregion
+                #endregion OneCellAnchor
 
                 ws = wb.Worksheets.Add("MoreImages");
 
                 #region TwoCellAnchor
-                fs.Position = 0;
-                pic = new XLPicture()
-                {
-                    IsAbsolute = false,
-                    ImageStream = fs,
-                    Name = "Image20",
-                    Type = "png",
-                    OffsetX = 0,
-                    OffsetY = 0
-                };
 
-                pic.AddMarker(new XLMarker
+                fs.Position = 0;
+                picture = ws.AddPicture("Image20", fs, XLPictureFormat.Png)
+                    .SetAbsolute(false)
+                    .AtPosition(0, 0);
+
+                picture.Markers.Add(new XLMarker
                 {
                     ColumnId = 5,
                     RowId = 6
                 });
 
-                pic.AddMarker(new XLMarker
+                picture.Markers.Add(new XLMarker
                 {
                     ColumnId = 7,
                     RowId = 9
                 });
-                ws.AddPicture(pic);
-                #endregion
+
+                #endregion TwoCellAnchor
 
                 wb.SaveAs(filePath);
             }

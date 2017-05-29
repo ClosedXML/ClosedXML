@@ -1,8 +1,7 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using ClosedXML.Excel.Drawings;
 using System.IO;
 using System.Reflection;
-using ClosedXML.Excel;
-using ClosedXML.Excel.Drawings;
 
 namespace ClosedXML_Examples
 {
@@ -11,55 +10,40 @@ namespace ClosedXML_Examples
         public void Create(string filePath)
         {
             var wb = new XLWorkbook();
-            XLPicture pic;
             IXLWorksheet ws;
 
             using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.ImageHandling.jpg"))
             {
                 #region Jpeg
+
                 ws = wb.Worksheets.Add("Jpg");
-                pic = new XLPicture()
-                {
-                    IsAbsolute = false,
-                    ImageStream = fs,
-                    Name = "JpegImage",
-                    Type = "jpeg",
-                    OffsetX = 0,
-                    OffsetY = 0
-                };
+                ws.AddPicture("JpegImage", fs, XLPictureFormat.Jpeg)
+                    .SetAbsolute(false)
+                    .AtPosition(0, 0)
+                    .WithMarker(new XLMarker
+                    {
+                        ColumnId = 1,
+                        RowId = 1
+                    });
 
-                pic.AddMarker(new XLMarker
-                {
-                    ColumnId = 1,
-                    RowId = 1
-                });
-
-                ws.AddPicture(pic);
-                #endregion
+                #endregion Jpeg
             }
 
             using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.ImageHandling.png"))
             {
                 #region Png
+
                 ws = wb.Worksheets.Add("Png");
-                pic = new XLPicture()
-                {
-                    IsAbsolute = false,
-                    ImageStream = fs,
-                    Name = "PngImage",
-                    Type = "png",
-                    OffsetX = 0,
-                    OffsetY = 0
-                };
+                ws.AddPicture("PngImage", fs, XLPictureFormat.Png)
+                    .SetAbsolute(false)
+                    .AtPosition(0, 0)
+                    .WithMarker(new XLMarker
+                    {
+                        ColumnId = 1,
+                        RowId = 1
+                    });
 
-                pic.AddMarker(new XLMarker
-                {
-                    ColumnId = 1,
-                    RowId = 1
-                });
-
-                ws.AddPicture(pic);
-                #endregion
+                #endregion Png
 
                 wb.SaveAs(filePath);
             }
