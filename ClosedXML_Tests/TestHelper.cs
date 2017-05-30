@@ -74,7 +74,9 @@ namespace ClosedXML_Tests
             var filePath2 = Path.Combine(directory, fileName);
             //Run test
             example.Create(filePath1);
-            new XLWorkbook(filePath1).SaveAs(filePath2, true);
+            using (var wb = new XLWorkbook(filePath1))
+                wb.SaveAs(filePath2);
+
             bool success = true;
 #pragma warning disable 162
             try
