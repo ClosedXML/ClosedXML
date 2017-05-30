@@ -81,6 +81,8 @@
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
     <Compile Include="Excel\XLConstants.cs" />
+    <Compile Include="Excel\XLWorkbook_ImageHandling.cs" />
+    <Compile Include="Extensions\OpenXmlPartContainerExtensions.cs" />
     <Compile Include="Utils\GraphicsUtils.cs" />
     <Compile Include="Utils\XmlEncoder.cs" />
     <Compile Include="XLHelper.cs" />

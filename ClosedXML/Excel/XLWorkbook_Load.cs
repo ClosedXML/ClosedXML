@@ -87,7 +87,6 @@ namespace ClosedXML.Excel
                 }
             }
 
-
             var wbProps = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties;
             Use1904DateSystem = wbProps != null && wbProps.Date1904 != null && wbProps.Date1904.Value;
 
@@ -340,7 +339,6 @@ namespace ClosedXML.Excel
 
                 #endregion
 
-
                 LoadDrawings(wsPart, ws);
 
                 #region LoadComments
@@ -417,8 +415,6 @@ namespace ClosedXML.Excel
                 }
             }
             LoadDefinedNames(workbook);
-
-
 
             #region Pivot tables
 
@@ -624,72 +620,70 @@ namespace ClosedXML.Excel
             #endregion
         }
 
-        private void LoadDrawings(WorksheetPart wsPart, XLWorksheet ws)
+        private void LoadDrawings(WorksheetPart wsPart, IXLWorksheet ws)
         {
             if (wsPart.DrawingsPart != null)
             {
                 var drawingsPart = wsPart.DrawingsPart;
-                var imageParts = drawingsPart.ImageParts;
-                var wsdrawing = drawingsPart.WorksheetDrawing;
 
-                foreach (var rel in drawingsPart.Parts.Where(x => x.OpenXmlPart is ImagePart))
+                var imageParts = drawingsPart.GetPartsOfType<ImagePart>();
+                for (int i = 0; i < imageParts.Count(); i++)
                 {
-                    var imgId = rel.RelationshipId;
-                    var image = rel.OpenXmlPart as ImagePart;
-                    var drawing = new XLPicture();
-                    drawing.Type = image.ContentType.Replace("image/", "");
-                    drawing.ImageStream = image.GetStream();
-                    var nonVis = wsdrawing
-                        .Descendants<Xdr.NonVisualDrawingProperties>()
-                        .FirstOrDefault(x => x.Name.Value == imgId);
-
-                    drawing.Name = nonVis.Name.Value;
-
-                    var anchor = nonVis.Parent.Parent.Parent;
-                    if (anchor is Xdr.OneCellAnchor)
+                    var imagePart = imageParts.ElementAt(i);
+                    var imgId = drawingsPart.GetIdOfPart(imagePart);
+                    using (var stream = imagePart.GetStream())
                     {
-                        var oneCellAnchor = anchor as Xdr.OneCellAnchor;
-                        drawing.IsAbsolute = false;
-                        var from = LoadMarker(oneCellAnchor.FromMarker);
-                        drawing.OffsetX = (int)from.ColumnOffset;
-                        drawing.OffsetY = (int)from.RowOffset;
-                        drawing.AddMarker(from);
+                        var anchor = GetAnchorFromImageId(wsPart, imgId);
+                        var vsdp = GetPropertiesFromImageIndex(wsPart, i);
+
+                        var picture = ws.AddPicture(stream, vsdp.Name) as XLPicture;
+                        picture.RelId = imgId;
+
+                        Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
+                        picture.Placement = XLPicturePlacement.FreeFloating;
+                        picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, GraphicsUtils.Graphics.DpiX);
+                        picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, GraphicsUtils.Graphics.DpiY);
+
+                        if (anchor is Xdr.OneCellAnchor)
+                        {
+                            var oneCellAnchor = anchor as Xdr.OneCellAnchor;
+                            var from = LoadMarker(ws, oneCellAnchor.FromMarker);
+                            picture.MoveTo(from.Address, from.Offset);
+                        }
+                        else if (anchor is Xdr.TwoCellAnchor)
+                        {
+                            var twoCellAnchor = anchor as Xdr.TwoCellAnchor;
+                            var from = LoadMarker(ws, twoCellAnchor.FromMarker);
+                            var to = LoadMarker(ws, twoCellAnchor.ToMarker);
+                            picture.MoveTo(from.Address, from.Offset, to.Address, to.Offset);
+                        }
+                        else if (anchor is Xdr.AbsoluteAnchor)
+                        {
+                            var absoluteAnchor = anchor as Xdr.AbsoluteAnchor;
+                            picture.MoveTo(
+                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.X.Value, GraphicsUtils.Graphics.DpiX),
+                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.Y.Value, GraphicsUtils.Graphics.DpiY)
+                            );
+                        }
                     }
-                    else if (anchor is Xdr.TwoCellAnchor)
-                    {
-                        var twoCellAnchor = anchor as Xdr.TwoCellAnchor;
-                        drawing.IsAbsolute = false;
-
-                        var from = LoadMarker(twoCellAnchor.FromMarker);
-                        var to = LoadMarker(twoCellAnchor.ToMarker);
-
-                        drawing.OffsetX = (int)from.ColumnOffset;
-                        drawing.OffsetY = (int)from.RowOffset;
-                        drawing.AddMarker(from);
-                        drawing.AddMarker(to);
-
-                    }
-                    else if (anchor is Xdr.AbsoluteAnchor)
-                    {
-                        var absAnchor = anchor as Xdr.AbsoluteAnchor;
-                        drawing.IsAbsolute = true;
-                        drawing.RawOffsetX = absAnchor.Position.X;
-                        drawing.RawOffsetY = absAnchor.Position.Y;
-                    }
-
-                    ws.Pictures.Add(drawing);
                 }
             }
         }
 
-        private XLMarker LoadMarker(Xdr.MarkerType marker)
+        private static Int32 ConvertFromEnglishMetricUnits(long emu, float resolution)
         {
-            var result = new XLMarker();
-            result.ColumnId = Convert.ToInt32(marker.ColumnId.InnerText) + 1;
-            result.ColumnOffset = Convert.ToInt32(marker.ColumnOffset.InnerText);
-            result.RowId = Convert.ToInt32(marker.RowId.InnerText) + 1;
-            result.RowOffset = Convert.ToInt32(marker.RowOffset.InnerText);
-            return result;
+            return Convert.ToInt32(emu * resolution / 914400);
+        }
+
+        private static IXLMarker LoadMarker(IXLWorksheet ws, Xdr.MarkerType marker)
+        {
+            return new XLMarker(
+                ws.Cell(Convert.ToInt32(marker.RowId.InnerText) + 1, Convert.ToInt32(marker.ColumnId.InnerText) + 1).Address,
+                new Point(
+                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.ColumnOffset.InnerText), GraphicsUtils.Graphics.DpiX),
+                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.RowOffset.InnerText), GraphicsUtils.Graphics.DpiY)
+                )
+            );
         }
 
         #region Comment Helpers

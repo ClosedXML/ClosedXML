@@ -1,5 +1,5 @@
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
@@ -128,12 +128,12 @@ namespace ClosedXML_Tests.Excel
             {
                 var ws = wb.Worksheets.First();
                 Assert.AreEqual(2, ws.Pictures.Count);
-                Assert.IsTrue(ws.Pictures[0].IsAbsolute);
-                Assert.AreEqual(1, ws.Pictures[1].GetMarkers().Count, "Expected image to use a OneCellAnchor.");
+                Assert.AreEqual(XLPicturePlacement.FreeFloating, ws.Pictures.First().Placement);
+                Assert.AreEqual(XLPicturePlacement.Move, ws.Pictures.Skip(1).First().Placement);
 
                 var ws2 = wb.Worksheets.Skip(1).First();
                 Assert.AreEqual(1, ws2.Pictures.Count);
-                Assert.AreEqual(2, ws2.Pictures[0].GetMarkers().Count, "Expected image to use a TwoCellAnchor.");
+                Assert.AreEqual(XLPicturePlacement.MoveAndSize, ws2.Pictures.First().Placement);
             }
         }
 
@@ -145,11 +145,11 @@ namespace ClosedXML_Tests.Excel
             {
                 var ws = wb.Worksheets.First();
                 Assert.AreEqual(1, ws.Pictures.Count);
-                Assert.AreEqual("jpeg", ws.Pictures[0].Type);
+                Assert.AreEqual(XLPictureFormat.Jpeg, ws.Pictures.First().Format);
 
                 var ws2 = wb.Worksheets.Skip(1).First();
                 Assert.AreEqual(1, ws2.Pictures.Count);
-                Assert.AreEqual("png", ws2.Pictures[0].Type);
+                Assert.AreEqual(XLPictureFormat.Png, ws2.Pictures.First().Format);
             }
         }
 

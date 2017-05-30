@@ -435,6 +435,10 @@ namespace ClosedXML.Excel
 
         IList<Drawings.IXLPicture> Pictures { get; }
 
+        Drawings.IXLPicture AddPicture(Stream stream);
+
+        Drawings.IXLPicture AddPicture(Stream stream, String name);
+
         Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format);
 
         Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format, String name);
