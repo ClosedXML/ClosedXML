@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
+using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 #endregion
 
@@ -22,6 +23,7 @@ namespace ClosedXML.Excel
     #region
 
     using Ap;
+    using Drawings;
     using Op;
     using System.Drawing;
 
@@ -337,6 +339,8 @@ namespace ClosedXML.Excel
 
                 #endregion
 
+                LoadDrawings(wsPart, ws);
+
                 #region LoadComments
 
                 if (wsPart.WorksheetCommentsPart != null)
@@ -614,6 +618,72 @@ namespace ClosedXML.Excel
             }
 
             #endregion
+        }
+
+        private void LoadDrawings(WorksheetPart wsPart, IXLWorksheet ws)
+        {
+            if (wsPart.DrawingsPart != null)
+            {
+                var drawingsPart = wsPart.DrawingsPart;
+
+                var imageParts = drawingsPart.GetPartsOfType<ImagePart>();
+                for (int i = 0; i < imageParts.Count(); i++)
+                {
+                    var imagePart = imageParts.ElementAt(i);
+                    var imgId = drawingsPart.GetIdOfPart(imagePart);
+                    using (var stream = imagePart.GetStream())
+                    {
+                        var anchor = GetAnchorFromImageId(wsPart, imgId);
+                        var vsdp = GetPropertiesFromImageIndex(wsPart, i);
+
+                        var picture = ws.AddPicture(stream, vsdp.Name) as XLPicture;
+                        picture.RelId = imgId;
+
+                        Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
+                        picture.Placement = XLPicturePlacement.FreeFloating;
+                        picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, GraphicsUtils.Graphics.DpiX);
+                        picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, GraphicsUtils.Graphics.DpiY);
+
+                        if (anchor is Xdr.OneCellAnchor)
+                        {
+                            var oneCellAnchor = anchor as Xdr.OneCellAnchor;
+                            var from = LoadMarker(ws, oneCellAnchor.FromMarker);
+                            picture.MoveTo(from.Address, from.Offset);
+                        }
+                        else if (anchor is Xdr.TwoCellAnchor)
+                        {
+                            var twoCellAnchor = anchor as Xdr.TwoCellAnchor;
+                            var from = LoadMarker(ws, twoCellAnchor.FromMarker);
+                            var to = LoadMarker(ws, twoCellAnchor.ToMarker);
+                            picture.MoveTo(from.Address, from.Offset, to.Address, to.Offset);
+                        }
+                        else if (anchor is Xdr.AbsoluteAnchor)
+                        {
+                            var absoluteAnchor = anchor as Xdr.AbsoluteAnchor;
+                            picture.MoveTo(
+                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.X.Value, GraphicsUtils.Graphics.DpiX),
+                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.Y.Value, GraphicsUtils.Graphics.DpiY)
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        private static Int32 ConvertFromEnglishMetricUnits(long emu, float resolution)
+        {
+            return Convert.ToInt32(emu * resolution / 914400);
+        }
+
+        private static IXLMarker LoadMarker(IXLWorksheet ws, Xdr.MarkerType marker)
+        {
+            return new XLMarker(
+                ws.Cell(Convert.ToInt32(marker.RowId.InnerText) + 1, Convert.ToInt32(marker.ColumnId.InnerText) + 1).Address,
+                new Point(
+                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.ColumnOffset.InnerText), GraphicsUtils.Graphics.DpiX),
+                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.RowOffset.InnerText), GraphicsUtils.Graphics.DpiY)
+                )
+            );
         }
 
         #region Comment Helpers

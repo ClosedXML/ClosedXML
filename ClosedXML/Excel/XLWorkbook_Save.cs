@@ -1,3 +1,4 @@
+using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.CustomProperties;
@@ -2509,9 +2510,9 @@ namespace ClosedXML.Excel
         // http://polymathprogrammer.com/2009/10/22/english-metric-units-and-open-xml/
         // http://archive.oreilly.com/pub/post/what_is_an_emu.html
         // https://en.wikipedia.org/wiki/Office_Open_XML_file_formats#DrawingML
-        private static long ConvertToEnglishMetricUnits(long pixels, float resolution)
+        private static Int64 ConvertToEnglishMetricUnits(Int32 pixels, Double resolution)
         {
-            return (long)(914400 * pixels / resolution);
+            return Convert.ToInt64(914400 * pixels / resolution);
         }
 
         private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture, SaveContext context)
@@ -2533,7 +2534,12 @@ namespace ClosedXML.Excel
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             /////////
 
-            var imagePart = drawingsPart.AddImagePart(pic.Format.ToOpenXml(), context.RelIdGenerator.GetNext(RelType.Workbook));
+            // Overwrite actual image binary data
+            ImagePart imagePart;
+            if (drawingsPart.HasPartWithId(pic.RelId))
+                imagePart = drawingsPart.GetPartById(pic.RelId) as ImagePart;
+            else
+                imagePart = drawingsPart.AddImagePart(pic.Format.ToOpenXml(), context.RelIdGenerator.GetNext(RelType.Workbook));
 
             using (var stream = new MemoryStream())
             {
@@ -2541,14 +2547,17 @@ namespace ClosedXML.Excel
                 stream.Seek(0, SeekOrigin.Begin);
                 imagePart.FeedData(stream);
             }
+            /////////
+
+            // Clear current anchors
+            var existingAnchor = GetAnchorFromImageId(worksheetPart, pic.RelId);
+            if (existingAnchor != null)
+                worksheetDrawing.RemoveChild(existingAnchor);
 
             var extentsCx = ConvertToEnglishMetricUnits(pic.Width, GraphicsUtils.Graphics.DpiX);
             var extentsCy = ConvertToEnglishMetricUnits(pic.Height, GraphicsUtils.Graphics.DpiY);
 
-            var nvps = worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>();
-            var nvpId = nvps.Any() ?
-                (UInt32Value)worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>().Max(p => p.Id.Value) + 1 :
-                1U;
+            var nvpId = Convert.ToUInt32(worksheetDrawing.DrawingsPart.ImageParts.ToList().IndexOf(imagePart) + 1);
 
             Xdr.FromMarker fMark;
             Xdr.ToMarker tMark;
@@ -4751,7 +4760,7 @@ namespace ClosedXML.Excel
                 AddPictureAnchor(worksheetPart, pic, context);
             }
 
-            if (xlWorksheet.Pictures.Any())
+            if (xlWorksheet.Pictures.Any() && !worksheetPart.Worksheet.OfType<Drawing>().Any())
             {
                 var worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");

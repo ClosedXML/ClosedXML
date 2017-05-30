@@ -12,10 +12,44 @@ namespace ClosedXML.Excel.Drawings
     [DebuggerDisplay("{Name}")]
     internal class XLPicture : IXLPicture
     {
+        private static IDictionary<XLPictureFormat, ImageFormat> FormatMap;
         private readonly IXLWorksheet _worksheet;
-
         private Int32 height;
         private Int32 width;
+
+        static XLPicture()
+        {
+            var properties = typeof(ImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public);
+            FormatMap = Enum.GetValues(typeof(XLPictureFormat))
+                .Cast<XLPictureFormat>()
+                .Where(pf => properties.Any(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)))
+                .ToDictionary(
+                    pf => pf,
+                    pf => properties.Single(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)).GetValue(null, null) as ImageFormat
+                );
+        }
+
+        internal XLPicture(IXLWorksheet worksheet, Stream stream)
+                    : this(worksheet)
+        {
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+
+            this.ImageStream = new MemoryStream();
+            {
+                stream.Position = 0;
+                stream.CopyTo(ImageStream);
+                ImageStream.Seek(0, SeekOrigin.Begin);
+
+                using (var bitmap = new Bitmap(ImageStream))
+                {
+                    if (FormatMap.Values.Select(f => f.Guid).Contains(bitmap.RawFormat.Guid))
+                        this.Format = FormatMap.Single(f => f.Value.Guid.Equals(bitmap.RawFormat.Guid)).Key;
+
+                    DeduceDimensionsFromBitmap(bitmap);
+                }
+                ImageStream.Seek(0, SeekOrigin.Begin);
+            }
+        }
 
         internal XLPicture(IXLWorksheet worksheet, Stream stream, XLPictureFormat format)
             : this(worksheet)
@@ -31,9 +65,11 @@ namespace ClosedXML.Excel.Drawings
 
                 using (var bitmap = new Bitmap(ImageStream))
                 {
-                    var expectedFormat = typeof(System.Drawing.Imaging.ImageFormat).GetProperty(this.Format.ToString()).GetValue(null, null) as System.Drawing.Imaging.ImageFormat;
-                    if (expectedFormat.Guid != bitmap.RawFormat.Guid)
-                        throw new ArgumentException("The picture format in the stream and the parameter don't match");
+                    if (FormatMap.ContainsKey(this.Format))
+                    {
+                        if (FormatMap[this.Format].Guid != bitmap.RawFormat.Guid)
+                            throw new ArgumentException("The picture format in the stream and the parameter don't match");
+                    }
 
                     DeduceDimensionsFromBitmap(bitmap);
                 }
@@ -50,13 +86,11 @@ namespace ClosedXML.Excel.Drawings
             ImageStream.Seek(0, SeekOrigin.Begin);
             DeduceDimensionsFromBitmap(bitmap);
 
-            var formats = typeof(ImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public)
-                .Where(pi => (pi.GetValue(null, null) as ImageFormat).Guid.Equals(bitmap.RawFormat.Guid));
-
+            var formats = FormatMap.Where(f => f.Value.Guid.Equals(bitmap.RawFormat.Guid));
             if (!formats.Any() || formats.Count() > 1)
                 throw new ArgumentException("Unsupported or unknown image format in bitmap");
 
-            this.Format = Enum.Parse(typeof(XLPictureFormat), formats.Single().Name, true).CastTo<XLPictureFormat>();
+            this.Format = formats.Single().Key;
         }
 
         private XLPicture(IXLWorksheet worksheet)
@@ -114,8 +148,11 @@ namespace ClosedXML.Excel.Drawings
         }
 
         public String Name { get; set; }
+
         public Int32 OriginalHeight { get; private set; }
+
         public Int32 OriginalWidth { get; private set; }
+
         public XLPicturePlacement Placement { get; set; }
 
         public Int32 Top
@@ -163,6 +200,8 @@ namespace ClosedXML.Excel.Drawings
         }
 
         internal IDictionary<XLMarkerPosition, IXLMarker> Markers { get; private set; }
+
+        internal String RelId { get; set; }
 
         public void Dispose()
         {
@@ -254,6 +293,28 @@ namespace ClosedXML.Excel.Drawings
             this.Width = width;
             this.Height = height;
             return this;
+        }
+
+        private static ImageFormat FromMimeType(string mimeType)
+        {
+            var guid = ImageCodecInfo.GetImageDecoders().FirstOrDefault(c => c.MimeType.Equals(mimeType, StringComparison.OrdinalIgnoreCase))?.FormatID;
+            if (!guid.HasValue) return null;
+            var property = typeof(System.Drawing.Imaging.ImageFormat).GetProperties(BindingFlags.Public | BindingFlags.Static)
+                .FirstOrDefault(pi => (pi.GetValue(null, null) as ImageFormat).Guid.Equals(guid.Value));
+
+            if (property == null) return null;
+            return (property.GetValue(null, null) as ImageFormat);
+        }
+
+        private static string GetMimeType(Image i)
+        {
+            var imgguid = i.RawFormat.Guid;
+            foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageDecoders())
+            {
+                if (codec.FormatID == imgguid)
+                    return codec.MimeType;
+            }
+            return "image/unknown";
         }
 
         private void DeduceDimensionsFromBitmap(Bitmap bitmap)

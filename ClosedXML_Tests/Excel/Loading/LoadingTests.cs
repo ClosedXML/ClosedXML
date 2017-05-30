@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
@@ -116,6 +117,39 @@ namespace ClosedXML_Tests.Excel
                 {
                     Assert.AreEqual(XLCellValues.DateTime, cell.DataType);
                 }
+            }
+        }
+
+        [Test]
+        public void CanLoadFileWithImagesWithCorrectAnchorTypes()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(2, ws.Pictures.Count);
+                Assert.AreEqual(XLPicturePlacement.FreeFloating, ws.Pictures.First().Placement);
+                Assert.AreEqual(XLPicturePlacement.Move, ws.Pictures.Skip(1).First().Placement);
+
+                var ws2 = wb.Worksheets.Skip(1).First();
+                Assert.AreEqual(1, ws2.Pictures.Count);
+                Assert.AreEqual(XLPicturePlacement.MoveAndSize, ws2.Pictures.First().Placement);
+            }
+        }
+
+        [Test]
+        public void CanLoadFileWithImagesWithCorrectImageType()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageFormats.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(1, ws.Pictures.Count);
+                Assert.AreEqual(XLPictureFormat.Jpeg, ws.Pictures.First().Format);
+
+                var ws2 = wb.Worksheets.Skip(1).First();
+                Assert.AreEqual(1, ws2.Pictures.Count);
+                Assert.AreEqual(XLPictureFormat.Png, ws2.Pictures.First().Format);
             }
         }
     }

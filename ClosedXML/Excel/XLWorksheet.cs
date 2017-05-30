@@ -577,6 +577,30 @@ namespace ClosedXML.Excel
             Internals.MergedRanges.ForEach(
                 kp => targetSheet.Internals.MergedRanges.Add(targetSheet.Range(kp.RangeAddress.ToString())));
 
+            foreach (var picture in Pictures)
+            {
+                var newPic = targetSheet.AddPicture(picture.ImageStream, picture.Format, picture.Name)
+                    .WithPlacement(picture.Placement)
+                    .WithSize(picture.Width, picture.Height);
+
+                switch (picture.Placement)
+                {
+                    case XLPicturePlacement.FreeFloating:
+                        newPic.MoveTo(picture.Left, picture.Top);
+                        break;
+                    case XLPicturePlacement.Move:
+                        var newAddress = new XLAddress(targetSheet, picture.TopLeftCellAddress.RowNumber, picture.TopLeftCellAddress.ColumnNumber, false, false);
+                        newPic.MoveTo(newAddress, picture.GetOffset(XLMarkerPosition.TopLeft));
+                        break;
+                    case XLPicturePlacement.MoveAndSize:
+                        var newFromAddress = new XLAddress(targetSheet, picture.TopLeftCellAddress.RowNumber, picture.TopLeftCellAddress.ColumnNumber, false, false);
+                        var newToAddress = new XLAddress(targetSheet, picture.BottomRightCellAddress.RowNumber, picture.BottomRightCellAddress.ColumnNumber, false, false);
+
+                        newPic.MoveTo(newFromAddress, picture.GetOffset(XLMarkerPosition.TopLeft), newToAddress, picture.GetOffset(XLMarkerPosition.BottomRight));
+                        break;
+                }
+            }
+
             foreach (IXLNamedRange r in NamedRanges)
             {
                 var ranges = new XLRanges();
@@ -1507,6 +1531,21 @@ namespace ClosedXML.Excel
             return $"Picture {pictureNumber}";
         }
 
+        public IXLPicture AddPicture(Stream stream)
+        {
+            var picture = new XLPicture(this, stream);
+            Pictures.Add(picture);
+            picture.Name = GetNextPictureName();
+            return picture;
+        }
+
+        public IXLPicture AddPicture(Stream stream, string name)
+        {
+            var picture = AddPicture(stream);
+            picture.Name = name;
+            return picture;
+        }
+
         public Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format)
         {
             var picture = new XLPicture(this, stream, format);
@@ -1554,5 +1593,6 @@ namespace ClosedXML.Excel
             picture.Name = name;
             return picture;
         }
+
     }
 }

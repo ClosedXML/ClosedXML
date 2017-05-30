@@ -180,5 +180,19 @@ namespace ClosedXML_Tests
                 }
             }
         }
+
+        [Test]
+        public void CanLoadFileWithImagesAndCopyImagesToNewSheet()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(2, ws.Pictures.Count);
+
+                var copy = ws.CopyTo("NewSheet");
+                Assert.AreEqual(2, copy.Pictures.Count);
+            }
+        }
     }
 }
