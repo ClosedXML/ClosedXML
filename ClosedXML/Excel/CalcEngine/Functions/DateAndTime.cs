@@ -90,7 +90,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var year = (int)p[0];
             var month = (int)p[1];
             var day = (int)p[2];
-
+            if (month > 12)
+            {
+                int tempMonth = month - 12;
+                var tempDate = new DateTime(year, 12, day).AddMonths(tempMonth);
+                return (int)Math.Floor(new DateTime(tempDate.Year, tempDate.Month, tempDate.Day).ToOADate());
+            }
             return (int)Math.Floor(new DateTime(year, month, day).ToOADate());
         }
 
