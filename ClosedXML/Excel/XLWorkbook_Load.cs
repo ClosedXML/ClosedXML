@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;

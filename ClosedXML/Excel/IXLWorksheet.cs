@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.Drawings;
+using ClosedXML.Excel.Drawings;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

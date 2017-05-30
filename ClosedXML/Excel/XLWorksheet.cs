@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;
 using ClosedXML.Excel.Misc;
 using System;

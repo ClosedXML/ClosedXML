@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
 using System;
