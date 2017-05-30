@@ -1270,6 +1270,8 @@ namespace ClosedXML.Excel
 
             if (TryGetStringValue(out value, currValue)) return true;
 
+            if (TryGetExcelSerialDate(out value, currValue, out b)) return b;
+
             var strValue = currValue.ToString();
             if (typeof(T) == typeof(bool)) return TryGetBasicValue<T, bool>(out value, strValue, bool.TryParse);
             if (typeof(T) == typeof(sbyte)) return TryGetBasicValue<T, sbyte>(out value, strValue, sbyte.TryParse);
@@ -1308,7 +1310,31 @@ namespace ClosedXML.Excel
                 return false;
             }
         }
+        private static bool TryGetExcelSerialDate<T>(out T value, object currValue, out bool b)
+        {
+            if (typeof(T) == typeof(DateTime))
+            {
+                int tmpSerial;
+                DateTime tmpDate = new DateTime(1899, 12, 31);
+                if (currValue is int)
+                {
+                    tmpSerial = (int)currValue;
+                    if (tmpSerial > 59)  //Excel/Lotus 2/29/1900 bug   
+                        tmpSerial -= 1;
 
+                    tmpDate = tmpDate.AddDays(tmpSerial);
+                    value = (T)Convert.ChangeType(tmpDate, typeof(T));
+                    {
+                        b = true;
+                        return true;
+                    }
+
+                }
+            }
+            value = default(T);
+            b = false;
+            return false;
+        }
         private static bool TryGetTimeSpanValue<T>(out T value, object currValue, out bool b)
         {
             if (typeof(T) == typeof(TimeSpan))
