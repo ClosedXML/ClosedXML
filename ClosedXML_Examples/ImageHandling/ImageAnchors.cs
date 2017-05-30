@@ -9,40 +9,68 @@ namespace ClosedXML_Examples
     {
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
-            IXLWorksheet ws;
-
-            using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.ImageHandling.png"))
+            using (var wb = new XLWorkbook())
             {
-                ws = wb.Worksheets.Add("Images");
+                IXLWorksheet ws;
 
-                #region AbsoluteAnchor
+                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.ImageHandling.png"))
+                {
+                    ws = wb.Worksheets.Add("Images1");
 
-                ws.AddPicture(fs, XLPictureFormat.Png, "Image10")
-                    .WithPlacement(XLPicturePlacement.FreeFloating)
-                    .AtPosition(220, 150);
+                    #region AbsoluteAnchor
 
-                #endregion AbsoluteAnchor
+                    ws.AddPicture(fs, XLPictureFormat.Png, "Image10")
+                        .MoveTo(220, 150);
 
-                #region OneCellAnchor
+                    #endregion AbsoluteAnchor
 
-                fs.Position = 0;
-                ws.AddPicture(fs, XLPictureFormat.Png, "Image11")
-                    .WithPlacement(XLPicturePlacement.MoveAndSize)
-                    .AtPosition(ws.Cell(1, 1));
+                    #region OneCellAnchor
 
-                #endregion OneCellAnchor
+                    fs.Position = 0;
+                    ws.AddPicture(fs, XLPictureFormat.Png, "Image11")
+                        .MoveTo(ws.Cell(1, 1).Address);
 
-                ws = wb.Worksheets.Add("MoreImages");
+                    #endregion OneCellAnchor
 
-                #region TwoCellAnchor
+                    ws = wb.Worksheets.Add("Images2");
 
-                fs.Position = 0;
-                ws.AddPicture(fs, XLPictureFormat.Png, "Image20")
-                    .WithPlacement(XLPicturePlacement.MoveAndSize)
-                    .AtPosition(ws.Cell(6, 5), ws.Cell(9, 7));
+                    #region TwoCellAnchor
 
-                #endregion TwoCellAnchor
+                    fs.Position = 0;
+                    ws.AddPicture(fs, XLPictureFormat.Png, "Image20")
+                        .MoveTo(ws.Cell(6, 5).Address, ws.Cell(9, 7).Address);
+
+                    #endregion TwoCellAnchor
+                }
+
+                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                {
+                    // Moving images around and scaling them
+                    ws = wb.Worksheets.Add("Images3");
+
+                    ws.AddPicture(fs, XLPictureFormat.Jpeg)
+                        .MoveTo(ws.Cell(2, 2).Address, 20, 5, ws.Cell(5, 5).Address, 30, 10)
+                        .MoveTo(ws.Cell(2, 2).Address, ws.Cell(5, 5).Address);
+
+                    ws.AddPicture(fs, XLPictureFormat.Jpeg)
+                        .MoveTo(ws.Cell(6, 2).Address, 2, 2, ws.Cell(9, 5).Address, 2, 2)
+                        .MoveTo(ws.Cell(6, 2).Address, 20, 5, ws.Cell(9, 5).Address, 30, 10);
+
+                    ws.AddPicture(fs, XLPictureFormat.Jpeg)
+                        .MoveTo(ws.Cell(10, 2).Address, 20, 5)
+                        .Scale(0.2, true)
+                        .MoveTo(ws.Cell(10, 1).Address);
+                }
+
+                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                {
+                    // Changing of placement
+                    ws = wb.Worksheets.Add("Images4");
+
+                    ws.AddPicture(fs, XLPictureFormat.Jpeg)
+                        .MoveTo(100, 100)
+                        .WithPlacement(XLPicturePlacement.FreeFloating);
+                }
 
                 wb.SaveAs(filePath);
             }

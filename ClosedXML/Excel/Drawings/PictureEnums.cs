@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ClosedXML.Excel.Drawings
 {
+    public enum XLMarkerPosition
+    {
+        TopLeft,
+        BottomRight
+    }
+
     public enum XLPictureFormat
     {
         Bmp = 0,

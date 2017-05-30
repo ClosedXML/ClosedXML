@@ -1,48 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.Drawing;
 
 namespace ClosedXML.Excel.Drawings
 {
+    [DebuggerDisplay("{Address} {Offset}")]
     internal class XLMarker : IXLMarker
     {
-        private Int32 colId;
-        private Int32 rowId;
+        internal XLMarker(IXLAddress address)
+            : this(address, new Point(0, 0))
+        { }
 
-        public Int32 ColumnId
+        internal XLMarker(IXLAddress address, Point offset)
         {
-            set
-            {
-                if (value < 1 || value > XLHelper.MaxColumnNumber)
-                    throw new ArgumentOutOfRangeException(String.Format("Column number must be between 1 and {0}",
-                                                                 XLHelper.MaxColumnNumber));
-                this.colId = value;
-            }
-            get
-            {
-                return this.colId;
-            }
+            this.Address = address;
+            this.Offset = offset;
         }
 
-        public Int32 RowId
-        {
-            set
-            {
-                if (value < 1 || value > XLHelper.MaxRowNumber)
-                    throw new ArgumentOutOfRangeException(String.Format("Row number must be between 1 and {0}",
-                                                                 XLHelper.MaxRowNumber));
-                this.rowId = value;
-            }
-            get
-            {
-                return this.rowId;
-            }
-        }
+        public IXLAddress Address { get; set; }
 
-        public Double ColumnOffset { get; set; }
-
-        public Double RowOffset { get; set; }
-
+        public Point Offset { get; set; }
     }
 }

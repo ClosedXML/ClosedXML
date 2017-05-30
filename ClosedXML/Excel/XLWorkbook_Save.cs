@@ -2590,22 +2590,22 @@ namespace ClosedXML.Excel
                     break;
 
                 case Drawings.XLPicturePlacement.MoveAndSize:
-                    var moveAndSizeFromMarker = pic.Markers.First();
+                    var moveAndSizeFromMarker = pic.Markers[Drawings.XLMarkerPosition.TopLeft];
                     fMark = new Xdr.FromMarker
                     {
-                        ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.ColumnId - 1).ToString()),
-                        RowId = new Xdr.RowId((moveAndSizeFromMarker.RowId - 1).ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((moveAndSizeFromMarker.ColumnOffset + pic.Left).ToString()),
-                        RowOffset = new Xdr.RowOffset((moveAndSizeFromMarker.RowOffset + pic.Top).ToString())
+                        ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.Address.ColumnNumber - 1).ToString()),
+                        RowId = new Xdr.RowId((moveAndSizeFromMarker.Address.RowNumber - 1).ToString()),
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToString())
                     };
 
-                    var moveAndSizeToMarker = pic.Markers.Last();
+                    var moveAndSizeToMarker = pic.Markers[Drawings.XLMarkerPosition.BottomRight];
                     tMark = new Xdr.ToMarker
                     {
-                        ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.ColumnId - 1).ToString()),
-                        RowId = new Xdr.RowId((moveAndSizeToMarker.RowId - 1).ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((moveAndSizeToMarker.ColumnOffset + pic.Left).ToString()),
-                        RowOffset = new Xdr.RowOffset((moveAndSizeToMarker.RowOffset + pic.Top).ToString())
+                        ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.Address.ColumnNumber - 1).ToString()),
+                        RowId = new Xdr.RowId((moveAndSizeToMarker.Address.RowNumber - 1).ToString()),
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToString())
                     };
 
                     var twoCellAnchor = new Xdr.TwoCellAnchor(
@@ -2635,13 +2635,13 @@ namespace ClosedXML.Excel
                     break;
 
                 case Drawings.XLPicturePlacement.Move:
-                    var moveFromMarker = pic.Markers.First();
+                    var moveFromMarker = pic.Markers[Drawings.XLMarkerPosition.TopLeft];
                     fMark = new Xdr.FromMarker
                     {
-                        ColumnId = new Xdr.ColumnId((moveFromMarker.ColumnId - 1).ToString()),
-                        RowId = new Xdr.RowId((moveFromMarker.RowId - 1).ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset((moveFromMarker.ColumnOffset + pic.Left).ToString()),
-                        RowOffset = new Xdr.RowOffset((moveFromMarker.RowOffset + pic.Top).ToString())
+                        ColumnId = new Xdr.ColumnId((moveFromMarker.Address.ColumnNumber - 1).ToString()),
+                        RowId = new Xdr.RowId((moveFromMarker.Address.RowNumber - 1).ToString()),
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X + pic.Left, GraphicsUtils.Graphics.DpiX).ToString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y + pic.Top, GraphicsUtils.Graphics.DpiY).ToString())
                     };
 
                     var oneCellAnchor = new Xdr.OneCellAnchor(

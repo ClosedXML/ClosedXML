@@ -1,11 +1,12 @@
 using System;
+using System.Drawing;
 using System.IO;
 
 namespace ClosedXML.Excel.Drawings
 {
     public interface IXLPicture : IDisposable
     {
-        IXLCell BottomRightCell { get; }
+        IXLAddress BottomRightCellAddress { get; }
 
         /// <summary>
         /// Type of image. The supported formats are defined by OpenXML's ImagePartType.
@@ -13,29 +14,42 @@ namespace ClosedXML.Excel.Drawings
         /// </summary>
         XLPictureFormat Format { get; }
 
-        long Height { get; set; }
+        Int32 Height { get; set; }
         MemoryStream ImageStream { get; }
-        long Left { get; set; }
+        Int32 Left { get; set; }
         String Name { get; set; }
-        long OriginalHeight { get; }
-        long OriginalWidth { get; }
+        Int32 OriginalHeight { get; }
+        Int32 OriginalWidth { get; }
         XLPicturePlacement Placement { get; set; }
-        long Top { get; set; }
-        IXLCell TopLeftCell { get; }
-        long Width { get; set; }
+        Int32 Top { get; set; }
+        IXLAddress TopLeftCellAddress { get; }
+        Int32 Width { get; set; }
+        IXLWorksheet Worksheet { get; }
 
-        IXLPicture AtPosition(long left, long top);
+        Point GetOffset(XLMarkerPosition position);
 
-        IXLPicture AtPosition(IXLCell cell);
+        IXLPicture MoveTo(Int32 left, Int32 top);
 
-        IXLPicture AtPosition(IXLCell fromCell, IXLCell toCell);
+        IXLPicture MoveTo(IXLAddress cell);
 
-        void ScaleHeight(Double factor, Boolean relativeToOriginal = false);
+        IXLPicture MoveTo(IXLAddress cell, Int32 xOffset, Int32 yOffset);
 
-        void ScaleWidth(Double factor, Boolean relativeToOriginal = false);
+        IXLPicture MoveTo(IXLAddress cell, Point offset);
+
+        IXLPicture MoveTo(IXLAddress fromCell, IXLAddress toCell);
+
+        IXLPicture MoveTo(IXLAddress fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLAddress toCell, Int32 toCellXOffset, Int32 toCellYOffset);
+
+        IXLPicture MoveTo(IXLAddress fromCell, Point fromOffset, IXLAddress toCell, Point toOffset);
+
+        IXLPicture Scale(Double factor, Boolean relativeToOriginal = false);
+
+        IXLPicture ScaleHeight(Double factor, Boolean relativeToOriginal = false);
+
+        IXLPicture ScaleWidth(Double factor, Boolean relativeToOriginal = false);
 
         IXLPicture WithPlacement(XLPicturePlacement value);
 
-        IXLPicture WithSize(long width, long height);
+        IXLPicture WithSize(Int32 width, Int32 height);
     }
 }

@@ -1,7 +1,6 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
-using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -13,56 +12,104 @@ namespace ClosedXML_Tests
     public class PictureTests
     {
         [Test]
-        public void XLMarkerTests()
-        {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            XLMarker firstMarker = new XLMarker
-            {
-                ColumnId = 1,
-                RowId = 1,
-                ColumnOffset = 100,
-                RowOffset = 0
-            };
-
-            firstMarker.ColumnId = 10;
-
-            Assert.AreEqual(10, firstMarker.ColumnId);
-            Assert.AreEqual(1, firstMarker.RowId);
-            Assert.AreEqual(100, firstMarker.ColumnOffset);
-            Assert.AreEqual(0, firstMarker.RowOffset);
-            //Assert.AreEqual(9, firstMarker.GetZeroBasedColumn());
-            //Assert.AreEqual(0, firstMarker.GetZeroBasedRow());
-
-            Assert.Throws(typeof(ArgumentOutOfRangeException), delegate { firstMarker.RowId = 0; });
-            Assert.Throws(typeof(ArgumentOutOfRangeException), delegate { firstMarker.ColumnId = 0; });
-            Assert.Throws(typeof(ArgumentOutOfRangeException),
-                            delegate { firstMarker.RowId = XLHelper.MaxRowNumber + 1; });
-            Assert.Throws(typeof(ArgumentOutOfRangeException),
-                            delegate { firstMarker.ColumnId = XLHelper.MaxColumnNumber + 1; });
-        }
-
-        [Test]
-        public void XLPictureTests()
+        public void CanAddPictureFromBitmap()
         {
             using (var wb = new XLWorkbook())
             {
-                var ws = wb.Worksheets.Add("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
 
-                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
+                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
                 {
-                    var pic = ws.AddPicture(stream, XLPictureFormat.Png, "Image1")
+                    var picture = ws.AddPicture(bitmap, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .AtPosition(220, 155);
+                        .MoveTo(50, 50)
+                        .WithSize(200, 200);
 
-                    Assert.AreEqual(XLPicturePlacement.FreeFloating, pic.Placement);
-                    Assert.AreEqual("Image1", pic.Name);
-                    Assert.AreEqual(XLPictureFormat.Png, pic.Format);
+                    Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
+                    Assert.AreEqual(200, picture.Width);
+                    Assert.AreEqual(200, picture.Height);
+                }
+            }
+        }
+
+        [Test]
+        public void CanAddPictureFromFile()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var path = Path.ChangeExtension(Path.GetTempFileName(), "jpg");
+
+                try
+                {
+                    using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                    using (var fileStream = File.Create(path))
+                    {
+                        resourceStream.Seek(0, SeekOrigin.Begin);
+                        resourceStream.CopyTo(fileStream);
+                        fileStream.Close();
+                    }
+
+                    var picture = ws.AddPicture(path)
+                        .WithPlacement(XLPicturePlacement.FreeFloating)
+                        .MoveTo(50, 50);
+
+                    Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
+                    Assert.AreEqual(400, picture.Width);
+                    Assert.AreEqual(400, picture.Height);
+                }
+                finally
+                {
+                    if (File.Exists(path))
+                        File.Delete(path);
+                }
+            }
+        }
+
+        [Test]
+        public void CanScaleImage()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                using (var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
+                using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
+                {
+                    var pic = ws.AddPicture(bitmap, "MyPicture")
+                        .WithPlacement(XLPicturePlacement.FreeFloating)
+                        .MoveTo(50, 50);
+
                     Assert.AreEqual(252, pic.OriginalWidth);
                     Assert.AreEqual(152, pic.OriginalHeight);
                     Assert.AreEqual(252, pic.Width);
                     Assert.AreEqual(152, pic.Height);
-                    Assert.AreEqual(220, pic.Left);
-                    Assert.AreEqual(155, pic.Top);
+
+                    pic.ScaleHeight(0.7);
+                    pic.ScaleWidth(1.2);
+
+                    Assert.AreEqual(252, pic.OriginalWidth);
+                    Assert.AreEqual(152, pic.OriginalHeight);
+                    Assert.AreEqual(302, pic.Width);
+                    Assert.AreEqual(106, pic.Height);
+
+                    pic.ScaleHeight(0.7);
+                    pic.ScaleWidth(1.2);
+
+                    Assert.AreEqual(252, pic.OriginalWidth);
+                    Assert.AreEqual(152, pic.OriginalHeight);
+                    Assert.AreEqual(362, pic.Width);
+                    Assert.AreEqual(74, pic.Height);
+
+                    pic.ScaleHeight(0.8, true);
+                    pic.ScaleWidth(1.1, true);
+
+                    Assert.AreEqual(252, pic.OriginalWidth);
+                    Assert.AreEqual(152, pic.OriginalHeight);
+                    Assert.AreEqual(277, pic.Width);
+                    Assert.AreEqual(122, pic.Height);
                 }
             }
         }
@@ -97,96 +144,39 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void CanAddPictureFromFile()
+        public void XLMarkerTests()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            XLMarker firstMarker = new XLMarker(ws.Cell(1, 10).Address, new Point(100, 0));
 
-                var path = Path.ChangeExtension(Path.GetTempFileName(), "png");
-
-                using (var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.SampleImage.jpg"))
-                using (var fileStream = File.Create(path))
-                {
-                    resourceStream.Seek(0, SeekOrigin.Begin);
-                    resourceStream.CopyTo(fileStream);
-                    fileStream.Close();
-                }
-
-                var picture = ws.AddPicture(path)
-                    .WithPlacement(XLPicturePlacement.FreeFloating)
-                    .AtPosition(50, 50);
-
-                Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
-                Assert.AreEqual(1365, picture.Width);
-                Assert.AreEqual(1365, picture.Height);
-            }
+            Assert.AreEqual("J", firstMarker.Address.ColumnLetter);
+            Assert.AreEqual(1, firstMarker.Address.RowNumber);
+            Assert.AreEqual(100, firstMarker.Offset.X);
+            Assert.AreEqual(0, firstMarker.Offset.Y);
         }
 
         [Test]
-        public void CanAddPictureFromBitmap()
+        public void XLPictureTests()
         {
             using (var wb = new XLWorkbook())
             {
-                var ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.Worksheets.Add("Sheet1");
 
-                using (var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.SampleImage.jpg"))
-                using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
                 {
-                    var picture = ws.AddPicture(bitmap, "MyPicture")
+                    var pic = ws.AddPicture(stream, XLPictureFormat.Png, "Image1")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .AtPosition(50, 50)
-                        .WithSize(200, 200);
+                        .MoveTo(220, 155);
 
-                    Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
-                    Assert.AreEqual(200, picture.Width);
-                    Assert.AreEqual(200, picture.Height);
-                }
-            }
-        }
-
-        [Test]
-        public void CanScaleImage()
-        {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-
-                using (var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
-                using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
-                {
-                    var pic = ws.AddPicture(bitmap, "MyPicture")
-                        .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .AtPosition(50, 50);
-
+                    Assert.AreEqual(XLPicturePlacement.FreeFloating, pic.Placement);
+                    Assert.AreEqual("Image1", pic.Name);
+                    Assert.AreEqual(XLPictureFormat.Png, pic.Format);
                     Assert.AreEqual(252, pic.OriginalWidth);
                     Assert.AreEqual(152, pic.OriginalHeight);
                     Assert.AreEqual(252, pic.Width);
                     Assert.AreEqual(152, pic.Height);
-
-                    pic.ScaleHeight(0.7);
-                    pic.ScaleWidth(1.2);
-
-                    Assert.AreEqual(252, pic.OriginalWidth);
-                    Assert.AreEqual(152, pic.OriginalHeight);
-                    Assert.AreEqual(302, pic.Width);
-                    Assert.AreEqual(106, pic.Height);
-
-                    pic.ScaleHeight(0.7);
-                    pic.ScaleWidth(1.2);
-
-                    Assert.AreEqual(252, pic.OriginalWidth);
-                    Assert.AreEqual(152, pic.OriginalHeight);
-                    Assert.AreEqual(362, pic.Width);
-                    Assert.AreEqual(74, pic.Height);
-
-                    pic.ScaleHeight(0.8, true);
-                    pic.ScaleWidth(1.1, true);
-
-                    Assert.AreEqual(252, pic.OriginalWidth);
-                    Assert.AreEqual(152, pic.OriginalHeight);
-                    Assert.AreEqual(277, pic.Width);
-                    Assert.AreEqual(122, pic.Height);
+                    Assert.AreEqual(220, pic.Left);
+                    Assert.AreEqual(155, pic.Top);
                 }
             }
         }
