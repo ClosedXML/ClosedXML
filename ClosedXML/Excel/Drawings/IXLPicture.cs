@@ -1,40 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using DocumentFormat.OpenXml.Packaging;
 
 namespace ClosedXML.Excel.Drawings
 {
-    public interface IXLPicture
+    public interface IXLPicture : IDisposable
     {
-        Stream ImageStream { get; set; }
-
-        List<IXLMarker> GetMarkers();
-        void AddMarker(IXLMarker marker);
-
-        long MaxHeight { get; set; }
-        long MaxWidth { get; set; }
-        long Width { get; set; }
-        long Height { get; set; }
-        long OffsetX { get; set; }
-        long OffsetY { get; set; }
-        long RawOffsetX { get; set; }
-        long RawOffsetY { get; set; }
-        bool IsAbsolute { get; set; }
+        IXLAddress BottomRightCellAddress { get; }
 
         /// <summary>
         /// Type of image. The supported formats are defined by OpenXML's ImagePartType.
         /// Default value is "jpeg"
         /// </summary>
-        String Type { get; set; }
+        XLPictureFormat Format { get; }
 
+        Int32 Height { get; set; }
+        MemoryStream ImageStream { get; }
+        Int32 Left { get; set; }
         String Name { get; set; }
+        Int32 OriginalHeight { get; }
+        Int32 OriginalWidth { get; }
+        XLPicturePlacement Placement { get; set; }
+        Int32 Top { get; set; }
+        IXLAddress TopLeftCellAddress { get; }
+        Int32 Width { get; set; }
+        IXLWorksheet Worksheet { get; }
 
-        /// <summary>
-        /// Get the enum representation of the Picture type.
-        /// </summary>
-        ImagePartType GetImagePartType();
+        Point GetOffset(XLMarkerPosition position);
+
+        IXLPicture MoveTo(Int32 left, Int32 top);
+
+        IXLPicture MoveTo(IXLAddress cell);
+
+        IXLPicture MoveTo(IXLAddress cell, Int32 xOffset, Int32 yOffset);
+
+        IXLPicture MoveTo(IXLAddress cell, Point offset);
+
+        IXLPicture MoveTo(IXLAddress fromCell, IXLAddress toCell);
+
+        IXLPicture MoveTo(IXLAddress fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLAddress toCell, Int32 toCellXOffset, Int32 toCellYOffset);
+
+        IXLPicture MoveTo(IXLAddress fromCell, Point fromOffset, IXLAddress toCell, Point toOffset);
+
+        IXLPicture Scale(Double factor, Boolean relativeToOriginal = false);
+
+        IXLPicture ScaleHeight(Double factor, Boolean relativeToOriginal = false);
+
+        IXLPicture ScaleWidth(Double factor, Boolean relativeToOriginal = false);
+
+        IXLPicture WithPlacement(XLPicturePlacement value);
+
+        IXLPicture WithSize(Int32 width, Int32 height);
     }
 }

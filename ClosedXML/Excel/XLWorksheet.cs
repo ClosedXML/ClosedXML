@@ -1,26 +1,23 @@
-﻿using System;
+using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.Drawings;
+using ClosedXML.Excel.Misc;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.Misc;
-
 
 namespace ClosedXML.Excel
 {
     internal class XLWorksheet : XLRangeBase, IXLWorksheet
     {
-        #region Constants
-
-        #endregion
-
         #region Events
 
         public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedRows;
         public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedColumns;
 
-        #endregion
+        #endregion Events
 
         #region Fields
 
@@ -33,7 +30,8 @@ namespace ClosedXML.Excel
         private Double _rowHeight;
         private Boolean _tabActive;
         internal Boolean EventTrackingEnabled;
-        #endregion
+
+        #endregion Fields
 
         #region Constructor
 
@@ -88,15 +86,15 @@ namespace ClosedXML.Excel
             Author = workbook.Author;
         }
 
-        #endregion
+        #endregion Constructor
 
         //private IXLStyle _style;
         private const String InvalidNameChars = @":\/?*[]";
+
         public string LegacyDrawingId;
         public Boolean LegacyDrawingIsNew;
         private Double _columnWidth;
         public XLWorksheetInternals Internals { get; private set; }
-        private List<Drawings.IXLPicture> pictures;
 
         public override IEnumerable<IXLStyle> Styles
         {
@@ -274,7 +272,6 @@ namespace ClosedXML.Excel
         {
             return LastColumnUsed(includeFormats);
         }
-
 
         public IXLColumns Columns()
         {
@@ -659,6 +656,7 @@ namespace ClosedXML.Excel
         }
 
         private XLWorksheetVisibility _visibility;
+
         public XLWorksheetVisibility Visibility
         {
             get { return _visibility; }
@@ -707,7 +705,6 @@ namespace ClosedXML.Excel
         {
             return Protection.Unprotect(password);
         }
-
 
         public new IXLRange Sort()
         {
@@ -934,6 +931,7 @@ namespace ClosedXML.Excel
             }
             return rows;
         }
+
         public IXLRows RowsUsed(Func<IXLRow, Boolean> predicate = null)
         {
             return RowsUsed(false, predicate);
@@ -955,6 +953,7 @@ namespace ClosedXML.Excel
             }
             return columns;
         }
+
         public IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate = null)
         {
             return ColumnsUsed(false, predicate);
@@ -967,10 +966,13 @@ namespace ClosedXML.Excel
 
             Internals.Dispose();
 
+            foreach (var picture in this.Pictures)
+                picture.Dispose();
+
             base.Dispose();
         }
 
-        #endregion
+        #endregion IXLWorksheet Members
 
         #region Outlines
 
@@ -1023,7 +1025,7 @@ namespace ClosedXML.Excel
             return _rowOutlineCount.Count == 0 ? 0 : _rowOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
         }
 
-        #endregion
+        #endregion Outlines
 
         public HashSet<Int32> GetStyleIds()
         {
@@ -1038,8 +1040,8 @@ namespace ClosedXML.Excel
         public XLRow FirstRowUsed(Boolean includeFormats)
         {
             using (var asRange = AsRange())
-                using (var rngRow = asRange.FirstRowUsed(includeFormats))
-                    return rngRow != null ? Row(rngRow.RangeAddress.FirstAddress.RowNumber) : null;
+            using (var rngRow = asRange.FirstRowUsed(includeFormats))
+                return rngRow != null ? Row(rngRow.RangeAddress.FirstAddress.RowNumber) : null;
         }
 
         public XLRow LastRowUsed()
@@ -1050,8 +1052,8 @@ namespace ClosedXML.Excel
         public XLRow LastRowUsed(Boolean includeFormats)
         {
             using (var asRange = AsRange())
-                using (var rngRow = asRange.LastRowUsed(includeFormats))
-                    return rngRow != null ? Row(rngRow.RangeAddress.LastAddress.RowNumber) : null;
+            using (var rngRow = asRange.LastRowUsed(includeFormats))
+                return rngRow != null ? Row(rngRow.RangeAddress.LastAddress.RowNumber) : null;
         }
 
         public XLColumn LastColumn()
@@ -1082,8 +1084,8 @@ namespace ClosedXML.Excel
         public XLColumn FirstColumnUsed(Boolean includeFormats)
         {
             using (var asRange = AsRange())
-                using (var rngColumn = asRange.FirstColumnUsed(includeFormats))
-                    return rngColumn != null ? Column(rngColumn.RangeAddress.FirstAddress.ColumnNumber) : null;
+            using (var rngColumn = asRange.FirstColumnUsed(includeFormats))
+                return rngColumn != null ? Column(rngColumn.RangeAddress.FirstAddress.ColumnNumber) : null;
         }
 
         public XLColumn LastColumnUsed()
@@ -1094,8 +1096,8 @@ namespace ClosedXML.Excel
         public XLColumn LastColumnUsed(Boolean includeFormats)
         {
             using (var asRange = AsRange())
-                using (var rngColumn = asRange.LastColumnUsed(includeFormats))
-                    return rngColumn != null ? Column(rngColumn.RangeAddress.LastAddress.ColumnNumber) : null;
+            using (var rngColumn = asRange.LastColumnUsed(includeFormats))
+                return rngColumn != null ? Column(rngColumn.RangeAddress.LastAddress.ColumnNumber) : null;
         }
 
         public XLRow Row(Int32 row)
@@ -1278,7 +1280,7 @@ namespace ClosedXML.Excel
             var fr = insertedRange.FirstRow();
             var model = fr.RowAbove();
             Int32 modelFirstColumn = model.RangeAddress.FirstAddress.ColumnNumber;
-            if (ConditionalFormats.Any(cf=>cf.Range.Intersects(model)))
+            if (ConditionalFormats.Any(cf => cf.Range.Intersects(model)))
             {
                 for (Int32 co = firstColumn; co <= lastColumn; co++)
                 {
@@ -1294,14 +1296,13 @@ namespace ClosedXML.Excel
             fr.Dispose();
         }
 
-
         internal void BreakConditionalFormatsIntoCells(List<IXLAddress> addresses)
         {
             var newConditionalFormats = new XLConditionalFormats();
             SuspendEvents();
             foreach (var conditionalFormat in ConditionalFormats)
             {
-                foreach (XLCell cell in conditionalFormat.Range.Cells(c=>!addresses.Contains(c.Address)))
+                foreach (XLCell cell in conditionalFormat.Range.Cells(c => !addresses.Contains(c.Address)))
                 {
                     var row = cell.Address.RowNumber;
                     var column = cell.Address.ColumnLetter;
@@ -1316,8 +1317,6 @@ namespace ClosedXML.Excel
             ResumeEvents();
             ConditionalFormats = newConditionalFormats;
         }
-
-
 
         private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)
         {
@@ -1345,7 +1344,7 @@ namespace ClosedXML.Excel
         {
             if (RangeShiftedRows != null)
             {
-                foreach(var item in RangeShiftedRows)
+                foreach (var item in RangeShiftedRows)
                 {
                     item.Action(range, rowsShifted);
                 }
@@ -1356,7 +1355,7 @@ namespace ClosedXML.Excel
         {
             if (RangeShiftedColumns != null)
             {
-                foreach(var item in RangeShiftedColumns)
+                foreach (var item in RangeShiftedColumns)
                 {
                     item.Action(range, columnsShifted);
                 }
@@ -1466,11 +1465,13 @@ namespace ClosedXML.Excel
         public IXLConditionalFormats ConditionalFormats { get; private set; }
 
         private Boolean _eventTracking;
+
         public void SuspendEvents()
         {
             _eventTracking = EventTrackingEnabled;
             EventTrackingEnabled = false;
         }
+
         public void ResumeEvents()
         {
             EventTrackingEnabled = _eventTracking;
@@ -1481,6 +1482,7 @@ namespace ClosedXML.Excel
         public IXLCell ActiveCell { get; set; }
 
         private XLCalcEngine _calcEngine;
+
         private XLCalcEngine CalcEngine
         {
             get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
@@ -1493,18 +1495,64 @@ namespace ClosedXML.Excel
 
         public String Author { get; set; }
 
-        public List<Drawings.IXLPicture> Pictures()
+        public IList<Drawings.IXLPicture> Pictures { get; private set; } = new List<Drawings.IXLPicture>();
+
+        private String GetNextPictureName()
         {
-            return pictures;
+            var pictureNumber = this.Pictures.Count;
+            while (Pictures.Any(p => p.Name == $"Picture {pictureNumber}"))
+            {
+                pictureNumber++;
+            }
+            return $"Picture {pictureNumber}";
         }
 
-        public void AddPicture(Drawings.XLPicture pic)
+        public Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format)
         {
-            if (pictures == null)
+            var picture = new XLPicture(this, stream, format);
+            Pictures.Add(picture);
+            picture.Name = GetNextPictureName();
+            return picture;
+        }
+
+        public IXLPicture AddPicture(Stream stream, XLPictureFormat format, string name)
+        {
+            var picture = AddPicture(stream, format);
+            picture.Name = name;
+            return picture;
+        }
+
+        public IXLPicture AddPicture(Bitmap bitmap)
+        {
+            var picture = new XLPicture(this, bitmap);
+            Pictures.Add(picture);
+            picture.Name = GetNextPictureName();
+            return picture;
+        }
+
+        public IXLPicture AddPicture(Bitmap bitmap, string name)
+        {
+            var picture = AddPicture(bitmap);
+            this.Name = name;
+            return picture;
+        }
+
+        public IXLPicture AddPicture(string imageFile)
+        {
+            using (var bitmap = Image.FromFile(imageFile) as Bitmap)
             {
-                pictures = new List<Drawings.IXLPicture>();
+                var picture = new XLPicture(this, bitmap);
+                Pictures.Add(picture);
+                picture.Name = GetNextPictureName();
+                return picture;
             }
-            pictures.Add(pic);
+        }
+
+        public IXLPicture AddPicture(string imageFile, string name)
+        {
+            var picture = AddPicture(imageFile);
+            picture.Name = name;
+            return picture;
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
+using System.IO;
+using System.Reflection;
 
 namespace ClosedXML_Examples
 {
@@ -10,75 +9,68 @@ namespace ClosedXML_Examples
     {
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
-            XLPicture pic;
-            IXLWorksheet ws;
-
-            using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.ImageHandling.png"))
+            using (var wb = new XLWorkbook())
             {
-                ws = wb.Worksheets.Add("Images");
+                IXLWorksheet ws;
 
-                #region AbsoluteAnchor
-                pic = new XLPicture()
+                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.ImageHandling.png"))
                 {
-                    IsAbsolute = true,
-                    ImageStream = fs,
-                    Name = "Image10",
-                    Type = "png",
-                    OffsetX = 220,
-                    OffsetY = 150
-                };
-                ws.AddPicture(pic);
-                #endregion
+                    ws = wb.Worksheets.Add("Images1");
 
-                #region OneCellAnchor
-                fs.Position = 0;
-                pic = new XLPicture()
+                    #region AbsoluteAnchor
+
+                    ws.AddPicture(fs, XLPictureFormat.Png, "Image10")
+                        .MoveTo(220, 150);
+
+                    #endregion AbsoluteAnchor
+
+                    #region OneCellAnchor
+
+                    fs.Position = 0;
+                    ws.AddPicture(fs, XLPictureFormat.Png, "Image11")
+                        .MoveTo(ws.Cell(1, 1).Address);
+
+                    #endregion OneCellAnchor
+
+                    ws = wb.Worksheets.Add("Images2");
+
+                    #region TwoCellAnchor
+
+                    fs.Position = 0;
+                    ws.AddPicture(fs, XLPictureFormat.Png, "Image20")
+                        .MoveTo(ws.Cell(6, 5).Address, ws.Cell(9, 7).Address);
+
+                    #endregion TwoCellAnchor
+                }
+
+                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
                 {
-                    IsAbsolute = false,
-                    ImageStream = fs,
-                    Name = "Image11",
-                    Type = "png",
-                    OffsetX = 0,
-                    OffsetY = 0
-                };
+                    // Moving images around and scaling them
+                    ws = wb.Worksheets.Add("Images3");
 
-                pic.AddMarker(new XLMarker
+                    ws.AddPicture(fs, XLPictureFormat.Jpeg)
+                        .MoveTo(ws.Cell(2, 2).Address, 20, 5, ws.Cell(5, 5).Address, 30, 10)
+                        .MoveTo(ws.Cell(2, 2).Address, ws.Cell(5, 5).Address);
+
+                    ws.AddPicture(fs, XLPictureFormat.Jpeg)
+                        .MoveTo(ws.Cell(6, 2).Address, 2, 2, ws.Cell(9, 5).Address, 2, 2)
+                        .MoveTo(ws.Cell(6, 2).Address, 20, 5, ws.Cell(9, 5).Address, 30, 10);
+
+                    ws.AddPicture(fs, XLPictureFormat.Jpeg)
+                        .MoveTo(ws.Cell(10, 2).Address, 20, 5)
+                        .Scale(0.2, true)
+                        .MoveTo(ws.Cell(10, 1).Address);
+                }
+
+                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
                 {
-                    ColumnId = 1,
-                    RowId = 1
-                });
+                    // Changing of placement
+                    ws = wb.Worksheets.Add("Images4");
 
-                ws.AddPicture(pic);
-                #endregion
-
-                ws = wb.Worksheets.Add("MoreImages");
-
-                #region TwoCellAnchor
-                fs.Position = 0;
-                pic = new XLPicture()
-                {
-                    IsAbsolute = false,
-                    ImageStream = fs,
-                    Name = "Image20",
-                    Type = "png",
-                    OffsetX = 0,
-                    OffsetY = 0
-                };
-
-                pic.AddMarker(new XLMarker
-                {
-                    ColumnId = 5,
-                    RowId = 6
-                });
-
-                pic.AddMarker(new XLMarker
-                {
-                    ColumnId = 7,
-                    RowId = 9
-                });
-                ws.AddPicture(pic);
-                #endregion
+                    ws.AddPicture(fs, XLPictureFormat.Jpeg)
+                        .MoveTo(100, 100)
+                        .WithPlacement(XLPicturePlacement.FreeFloating);
+                }
 
                 wb.SaveAs(filePath);
             }

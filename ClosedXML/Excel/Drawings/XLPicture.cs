@@ -1,244 +1,268 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
-using DocumentFormat.OpenXml.Packaging;
+using System.Reflection;
 
 namespace ClosedXML.Excel.Drawings
 {
-    public class XLPicture : IXLPicture
+    [DebuggerDisplay("{Name}")]
+    internal class XLPicture : IXLPicture
     {
-        private MemoryStream imgStream;
-        private List<IXLMarker> Markers;
-        private String name;
-        private bool isAbsolute;
-        private ImagePartType type = ImagePartType.Jpeg;
+        private readonly IXLWorksheet _worksheet;
 
-        private long iMaxWidth = 500;
-        private long iMaxHeight = 500;
+        private Int32 height;
+        private Int32 width;
 
-        private long iWidth;
-        private long iHeight;
-
-        private long iOffsetX;
-        private long iOffsetY;
-
-        private float iVerticalResolution;
-        private float iHorizontalResolution;
-
-        private bool isResized = false;
-
-        private void Resize()
+        internal XLPicture(IXLWorksheet worksheet, Stream stream, XLPictureFormat format)
+            : this(worksheet)
         {
-            if (iWidth > iMaxHeight || iHeight > iMaxWidth)
-            {
-                var scaleX = (double)iWidth / (double)iMaxWidth;
-                var scaleY = (double)iHeight / (double)iMaxHeight;
-                var scale = Math.Max(scaleX, scaleY);
-                iWidth = (int)((double)iWidth / scale);
-                iHeight = (int)((double)iHeight / scale);
-            }
-            isResized = true;
-        }
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            this.Format = format;
 
-        public long MaxWidth
-        {
-            get
+            this.ImageStream = new MemoryStream();
             {
-                return ConvertToEmu(iMaxWidth, iHorizontalResolution);
-            }
-            set
-            {
-                iMaxWidth = value;
-                isResized = false;
-            }
-        }
+                stream.Position = 0;
+                stream.CopyTo(ImageStream);
+                ImageStream.Seek(0, SeekOrigin.Begin);
 
-
-        public long MaxHeight
-        {
-            get
-            {
-                return ConvertToEmu(iMaxHeight, iVerticalResolution);
-            }
-            set
-            {
-                iMaxHeight = value;
-                isResized = false;
-            }
-        }
-
-        public long Width
-        {
-            get
-            {
-                if (!isResized)
+                using (var bitmap = new Bitmap(ImageStream))
                 {
-                    Resize();
+                    var expectedFormat = typeof(System.Drawing.Imaging.ImageFormat).GetProperty(this.Format.ToString()).GetValue(null, null) as System.Drawing.Imaging.ImageFormat;
+                    if (expectedFormat.Guid != bitmap.RawFormat.Guid)
+                        throw new ArgumentException("The picture format in the stream and the parameter don't match");
+
+                    DeduceDimensionsFromBitmap(bitmap);
                 }
-                return ConvertToEmu(iWidth, iHorizontalResolution);
+                ImageStream.Seek(0, SeekOrigin.Begin);
             }
-            set { }
         }
 
-        public long Height
+        internal XLPicture(IXLWorksheet worksheet, Bitmap bitmap)
+            : this(worksheet)
+        {
+            if (bitmap == null) throw new ArgumentNullException(nameof(bitmap));
+            this.ImageStream = new MemoryStream();
+            bitmap.Save(ImageStream, bitmap.RawFormat);
+            ImageStream.Seek(0, SeekOrigin.Begin);
+            DeduceDimensionsFromBitmap(bitmap);
+
+            var formats = typeof(ImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public)
+                .Where(pi => (pi.GetValue(null, null) as ImageFormat).Guid.Equals(bitmap.RawFormat.Guid));
+
+            if (!formats.Any() || formats.Count() > 1)
+                throw new ArgumentException("Unsupported or unknown image format in bitmap");
+
+            this.Format = Enum.Parse(typeof(XLPictureFormat), formats.Single().Name, true).CastTo<XLPictureFormat>();
+        }
+
+        private XLPicture(IXLWorksheet worksheet)
+        {
+            if (worksheet == null) throw new ArgumentNullException(nameof(worksheet));
+            this._worksheet = worksheet;
+            this.Placement = XLPicturePlacement.MoveAndSize;
+            this.Markers = new Dictionary<XLMarkerPosition, IXLMarker>()
+            {
+                [XLMarkerPosition.TopLeft] = null,
+                [XLMarkerPosition.BottomRight] = null
+            };
+        }
+
+        public IXLAddress BottomRightCellAddress
         {
             get
             {
-                if (!isResized)
-                {
-                    Resize();
-                }
-                return ConvertToEmu(iHeight, iVerticalResolution);
+                return Markers[XLMarkerPosition.BottomRight].Address;
             }
-            set { }
-        }
 
-        public long RawHeight
-        {
-            get { return (long)iHeight; }
-        }
-        public long RawWidth
-        {
-            get { return (long)iWidth; }
-        }
-
-        public long OffsetX
-        {
-            get { return ConvertToEmu(iOffsetX, iHorizontalResolution); }
-            set { iOffsetX = value; }
-        }
-        public long OffsetY
-        {
-            get { return ConvertToEmu(iOffsetY, iVerticalResolution); }
-            set { iOffsetY = value; }
-        }
-
-        public long RawOffsetX
-        {
-            get
+            private set
             {
-                return iOffsetX;
+                if (!value.Worksheet.Equals(this._worksheet))
+                    throw new ArgumentOutOfRangeException(nameof(value.Worksheet));
+                this.Markers[XLMarkerPosition.BottomRight] = new XLMarker(value);
             }
+        }
+
+        public XLPictureFormat Format { get; private set; }
+
+        public Int32 Height
+        {
+            get { return height; }
             set
             {
-                iOffsetX = value;
+                if (this.Placement == XLPicturePlacement.MoveAndSize)
+                    throw new ArgumentException("To set the height, the placement should be FreeFloating or Move");
+                height = value;
             }
         }
 
-        public long RawOffsetY
+        public MemoryStream ImageStream { get; private set; }
+
+        public Int32 Left
+        {
+            get { return Markers[XLMarkerPosition.TopLeft]?.Offset.X ?? 0; }
+            set
+            {
+                if (this.Placement != XLPicturePlacement.FreeFloating)
+                    throw new ArgumentException("To set the left-hand offset, the placement should be FreeFloating");
+
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(_worksheet.Cell(1, 1).Address, new Point(value, this.Top));
+            }
+        }
+
+        public String Name { get; set; }
+        public Int32 OriginalHeight { get; private set; }
+        public Int32 OriginalWidth { get; private set; }
+        public XLPicturePlacement Placement { get; set; }
+
+        public Int32 Top
+        {
+            get { return Markers[XLMarkerPosition.TopLeft]?.Offset.Y ?? 0; }
+            set
+            {
+                if (this.Placement != XLPicturePlacement.FreeFloating)
+                    throw new ArgumentException("To set the top offset, the placement should be FreeFloating");
+
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(_worksheet.Cell(1, 1).Address, new Point(this.Left, value));
+            }
+        }
+
+        public IXLAddress TopLeftCellAddress
         {
             get
             {
-                return iOffsetY;
+                return Markers[XLMarkerPosition.TopLeft].Address;
             }
+
+            private set
+            {
+                if (!value.Worksheet.Equals(this._worksheet))
+                    throw new ArgumentOutOfRangeException(nameof(value.Worksheet));
+
+                this.Markers[XLMarkerPosition.TopLeft] = new XLMarker(value);
+            }
+        }
+
+        public Int32 Width
+        {
+            get { return width; }
             set
             {
-                iOffsetY = value;
+                if (this.Placement == XLPicturePlacement.MoveAndSize)
+                    throw new ArgumentException("To set the width, the placement should be FreeFloating or Move");
+                width = value;
             }
         }
 
-        private long ConvertToEmu(long pixels, float resolution)
+        public IXLWorksheet Worksheet
         {
-            return (long)(914400 * pixels / resolution);
+            get { return _worksheet; }
         }
 
-        public Stream ImageStream
-        {
-            get
-            {
-                return imgStream;
-            }
-            set
-            {
-                if (imgStream == null)
-                {
-                    imgStream = new MemoryStream();
-                }
-                else
-                {
-                    imgStream.Dispose();
-                    imgStream = new MemoryStream();
-                }
-                value.CopyTo(imgStream);
-                imgStream.Seek(0, SeekOrigin.Begin);
+        internal IDictionary<XLMarkerPosition, IXLMarker> Markers { get; private set; }
 
-                using (var bitmap = new System.Drawing.Bitmap(imgStream))
-                {
-                    iWidth = (long)bitmap.Width;
-                    iHeight = (long)bitmap.Height;
-                    iHorizontalResolution = bitmap.HorizontalResolution;
-                    iVerticalResolution = bitmap.VerticalResolution;
-                }
-                imgStream.Seek(0, SeekOrigin.Begin);
-            }
+        public void Dispose()
+        {
+            this.ImageStream.Dispose();
         }
 
-        public List<IXLMarker> GetMarkers()
+        public Point GetOffset(XLMarkerPosition position)
         {
-            return Markers != null ? Markers : new List<IXLMarker>();
-        }
-        public void AddMarker(IXLMarker marker)
-        {
-            if (Markers == null)
-            {
-                Markers = new List<IXLMarker>();
-            }
-            Markers.Add(marker);
+            return Markers[position].Offset;
         }
 
-        public String Name
+        public IXLPicture MoveTo(Int32 left, Int32 top)
         {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
+            this.Placement = XLPicturePlacement.FreeFloating;
+            this.Left = left;
+            this.Top = top;
+            return this;
         }
 
-        public bool IsAbsolute
+        public IXLPicture MoveTo(IXLAddress cell)
         {
-            get
-            {
-                return isAbsolute;
-            }
-            set
-            {
-                isAbsolute = value;
-            }
+            return MoveTo(cell, 0, 0);
         }
 
-        public String Type
+        public IXLPicture MoveTo(IXLAddress cell, Int32 xOffset, Int32 yOffset)
         {
-            get
-            {
-                return GetExtension(type);
-            }
-            set
-            {
-                try
-                {
-                    type = (ImagePartType)Enum.Parse(typeof(ImagePartType), value, true);
-                }
-                catch
-                {
-                    type = ImagePartType.Jpeg;
-                }
-            }
+            return MoveTo(cell, new Point(xOffset, yOffset));
         }
 
-        private String GetExtension(ImagePartType type)
+        public IXLPicture MoveTo(IXLAddress cell, Point offset)
         {
-            return type.ToString().ToLower();
+            if (cell == null) throw new ArgumentNullException(nameof(cell));
+            this.Placement = XLPicturePlacement.Move;
+            this.TopLeftCellAddress = cell;
+            this.Markers[XLMarkerPosition.TopLeft].Offset = offset;
+            return this;
         }
 
-        public ImagePartType GetImagePartType()
+        public IXLPicture MoveTo(IXLAddress fromCell, IXLAddress toCell)
         {
-            return type;
+            return MoveTo(fromCell, 0, 0, toCell, 0, 0);
+        }
+
+        public IXLPicture MoveTo(IXLAddress fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLAddress toCell, Int32 toCellXOffset, Int32 toCellYOffset)
+        {
+            return MoveTo(fromCell, new Point(fromCellXOffset, fromCellYOffset), toCell, new Point(toCellXOffset, toCellYOffset));
+        }
+
+        public IXLPicture MoveTo(IXLAddress fromCell, Point fromOffset, IXLAddress toCell, Point toOffset)
+        {
+            if (fromCell == null) throw new ArgumentNullException(nameof(fromCell));
+            if (toCell == null) throw new ArgumentNullException(nameof(toCell));
+            this.Placement = XLPicturePlacement.MoveAndSize;
+
+            this.TopLeftCellAddress = fromCell;
+            this.Markers[XLMarkerPosition.TopLeft].Offset = fromOffset;
+
+            this.BottomRightCellAddress = toCell;
+            this.Markers[XLMarkerPosition.BottomRight].Offset = toOffset;
+
+            return this;
+        }
+
+        public IXLPicture Scale(Double factor, Boolean relativeToOriginal = false)
+        {
+            return this.ScaleHeight(factor, relativeToOriginal).ScaleWidth(factor, relativeToOriginal);
+        }
+
+        public IXLPicture ScaleHeight(Double factor, Boolean relativeToOriginal = false)
+        {
+            this.Height = Convert.ToInt32((relativeToOriginal ? this.OriginalHeight : this.Height) * factor);
+            return this;
+        }
+
+        public IXLPicture ScaleWidth(Double factor, Boolean relativeToOriginal = false)
+        {
+            this.Width = Convert.ToInt32((relativeToOriginal ? this.OriginalWidth : this.Width) * factor);
+            return this;
+        }
+
+        public IXLPicture WithPlacement(XLPicturePlacement value)
+        {
+            this.Placement = value;
+            return this;
+        }
+
+        public IXLPicture WithSize(Int32 width, Int32 height)
+        {
+            this.Width = width;
+            this.Height = height;
+            return this;
+        }
+
+        private void DeduceDimensionsFromBitmap(Bitmap bitmap)
+        {
+            this.OriginalWidth = bitmap.Width;
+            this.OriginalHeight = bitmap.Height;
+
+            this.width = bitmap.Width;
+            this.height = bitmap.Height;
         }
     }
 }
