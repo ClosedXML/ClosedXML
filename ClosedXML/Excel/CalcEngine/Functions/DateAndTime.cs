@@ -92,7 +92,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var day = (int)p[2];
             int tempMonth = 0;
             int tempDay = 0;
-
+            
+            //Handle day and month
             if ((month > 12 || month < 0) && (day > 31 || day < 0))
             {
                 var tempDate = new DateTime(year, 1, 1);
