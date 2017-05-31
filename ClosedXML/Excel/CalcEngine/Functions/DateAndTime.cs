@@ -84,14 +84,47 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             return businessDays;
         }
-
+        //TODO: fix for excell DATE Formula
         private static object Date(List<Expression> p)
         {
             var year = (int)p[0];
             var month = (int)p[1];
             var day = (int)p[2];
             int tempMonth = 0;
+            int tempDay = 0;
+            //I have no idea for this case 06.12.2013
 
+            if ((month > 12 || month < 0) && (day > 31 || day < 0))
+            {
+                var tempDate = new DateTime(year, 1, 1);
+
+                if (month > 12)
+                {
+                    tempMonth = month - 12;
+                    tempDate = new DateTime(year, 12, 1).AddMonths(tempMonth);
+                }
+                if (month < 0)
+                {
+                    tempMonth = month + -1;
+                    tempDate = new DateTime(year, 1, 1).AddMonths(tempMonth);
+                }
+                if (day > 31)
+                {
+                    tempDay = day - DateTime.DaysInMonth(tempDate.Year, tempDate.Month);
+                    tempDate = new DateTime(tempDate.Year, tempDate.Month, DateTime.DaysInMonth(tempDate.Year, tempDate.Month)).AddDays(tempDay);
+
+                }
+                if (day < 0)
+                {
+                    tempDay = day + -1;
+                    tempDate = new DateTime(tempDate.Year, tempDate.Month, 1).AddDays(tempDay);
+                }
+
+                //  tempDate = tempDate.AddDays(tempDay);
+                //  tempDate = tempDate.AddMonths(tempMonth);
+
+                return (int)Math.Floor(new DateTime(tempDate.Year, tempDate.Month, tempDate.Day).ToOADate());
+            }
 
             if (month > 12)
             {
@@ -105,6 +138,21 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var tempDate = new DateTime(year, 1, day).AddMonths(month);
                 return (int)Math.Floor(new DateTime(tempDate.Year, tempDate.Month, tempDate.Day).ToOADate());
             }
+            if (day > 31)
+            {
+                tempDay = day - DateTime.DaysInMonth(year, month);
+
+                var tempDate = new DateTime(year, month, DateTime.DaysInMonth(year, month)).AddDays(tempDay);
+
+                return (int)Math.Floor(new DateTime(tempDate.Year, tempDate.Month, tempDate.Day).ToOADate());
+            }
+            if (day < 0)
+            {
+                day--;
+                var tempDate = new DateTime(year, month, 1).AddDays(day);
+                return (int)Math.Floor(new DateTime(tempDate.Year, tempDate.Month, tempDate.Day).ToOADate());
+            }
+
             return (int)Math.Floor(new DateTime(year, month, day).ToOADate());
         }
 
