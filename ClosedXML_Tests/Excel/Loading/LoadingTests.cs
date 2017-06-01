@@ -22,7 +22,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\EmptyTable.xlsx",
                 @"Misc\LoadPivotTables.xlsx",
                 @"Misc\LoadFileWithCustomSheetViews.xlsx",
-                @"Misc\LoadSheetsWithCommas.xlsx"
+                @"Misc\LoadSheetsWithCommas.xlsx",
+                @"Misc\ExcelProducedWorkbookWithImages.xlsx"
             };
 
             foreach (var file in files)
@@ -150,6 +151,21 @@ namespace ClosedXML_Tests.Excel
                 var ws2 = wb.Worksheets.Skip(1).First();
                 Assert.AreEqual(1, ws2.Pictures.Count);
                 Assert.AreEqual(XLPictureFormat.Png, ws2.Pictures.First().Format);
+            }
+        }
+
+        [Test]
+        public void CanLoadAndDeduceAnchorsFromExcelGeneratedFile()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\ExcelProducedWorkbookWithImages.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(3, ws.Pictures.Count);
+
+                Assert.AreEqual(XLPicturePlacement.MoveAndSize, ws.Picture("Picture 1").Placement);
+                Assert.AreEqual(XLPicturePlacement.Move, ws.Picture("Picture 2").Placement);
+                Assert.AreEqual(XLPicturePlacement.FreeFloating, ws.Picture("Picture 3").Placement);
             }
         }
     }

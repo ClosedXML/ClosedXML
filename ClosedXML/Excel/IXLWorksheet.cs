@@ -434,6 +434,8 @@ namespace ClosedXML.Excel
 
         IXLPictures Pictures { get; }
 
+        IXLPicture Picture(String pictureName);
+
         IXLPicture AddPicture(Stream stream);
 
         IXLPicture AddPicture(Stream stream, String name);
