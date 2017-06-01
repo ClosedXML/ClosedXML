@@ -2557,7 +2557,10 @@ namespace ClosedXML.Excel
             var extentsCx = ConvertToEnglishMetricUnits(pic.Width, GraphicsUtils.Graphics.DpiX);
             var extentsCy = ConvertToEnglishMetricUnits(pic.Height, GraphicsUtils.Graphics.DpiY);
 
-            var nvpId = Convert.ToUInt32(worksheetDrawing.DrawingsPart.ImageParts.ToList().IndexOf(imagePart) + 1);
+            var nvps = worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>();
+            var nvpId = nvps.Any() ?
+                (UInt32Value)worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>().Max(p => p.Id.Value) + 1 :
+                1U;
 
             Xdr.FromMarker fMark;
             Xdr.ToMarker tMark;
@@ -2649,8 +2652,8 @@ namespace ClosedXML.Excel
                     {
                         ColumnId = new Xdr.ColumnId((moveFromMarker.Address.ColumnNumber - 1).ToString()),
                         RowId = new Xdr.RowId((moveFromMarker.Address.RowNumber - 1).ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X + pic.Left, GraphicsUtils.Graphics.DpiX).ToString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y + pic.Top, GraphicsUtils.Graphics.DpiY).ToString())
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToString())
                     };
 
                     var oneCellAnchor = new Xdr.OneCellAnchor(
@@ -2682,6 +2685,16 @@ namespace ClosedXML.Excel
 
                     worksheetDrawing.Append(oneCellAnchor);
                     break;
+            }
+        }
+
+        private static void RebasePictureIds(WorksheetPart worksheetPart)
+        {
+            for (var i = 0; i < worksheetPart.DrawingsPart.WorksheetDrawing.ChildElements.Count; i++)
+            {
+                var anchor = worksheetPart.DrawingsPart.WorksheetDrawing.ElementAt(i);
+                var props = GetPropertiesFromAnchor(anchor);
+                props.Id = Convert.ToUInt32(i + 1);
             }
         }
 
@@ -4759,6 +4772,9 @@ namespace ClosedXML.Excel
             {
                 AddPictureAnchor(worksheetPart, pic, context);
             }
+
+            if (xlWorksheet.Pictures.Any())
+                RebasePictureIds(worksheetPart);
 
             if (xlWorksheet.Pictures.Any() && !worksheetPart.Worksheet.OfType<Drawing>().Any())
             {

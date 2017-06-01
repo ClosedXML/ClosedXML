@@ -1523,6 +1523,11 @@ namespace ClosedXML.Excel
 
         public IXLPictures Pictures { get; private set; }
 
+        public IXLPicture Picture(string pictureName)
+        {
+            return Pictures.Picture(pictureName);
+        }
+
         public IXLPicture AddPicture(Stream stream)
         {
             return Pictures.Add(stream);
