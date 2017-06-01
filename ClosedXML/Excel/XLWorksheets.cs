@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         private readonly XLWorkbook _workbook;
         private readonly Dictionary<String, XLWorksheet> _worksheets = new Dictionary<String, XLWorksheet>();
 
-        #endregion
+        #endregion Constructor
 
         public HashSet<String> Deleted = new HashSet<String>();
 
@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
             _workbook = workbook;
         }
 
-        #endregion
+        #endregion Constructor
 
         #region IEnumerable<XLWorksheet> Members
 
@@ -34,7 +34,7 @@ namespace ClosedXML.Excel
             return ((IEnumerable<XLWorksheet>)_worksheets.Values).GetEnumerator();
         }
 
-        #endregion
+        #endregion IEnumerable<XLWorksheet> Members
 
         #region IXLWorksheets Members
 
@@ -166,7 +166,7 @@ namespace ClosedXML.Excel
                 Add(t);
         }
 
-        #endregion
+        #endregion IXLWorksheets Members
 
         public void Rename(String oldSheetName, String newSheetName)
         {

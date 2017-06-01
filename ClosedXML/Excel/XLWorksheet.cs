@@ -50,6 +50,7 @@ namespace ClosedXML.Excel
             RangeAddress.FirstAddress.Worksheet = this;
             RangeAddress.LastAddress.Worksheet = this;
 
+            Pictures = new XLPictures(this);
             NamedRanges = new XLNamedRanges(workbook);
             SheetView = new XLSheetView();
             Tables = new XLTables();
@@ -588,10 +589,12 @@ namespace ClosedXML.Excel
                     case XLPicturePlacement.FreeFloating:
                         newPic.MoveTo(picture.Left, picture.Top);
                         break;
+
                     case XLPicturePlacement.Move:
                         var newAddress = new XLAddress(targetSheet, picture.TopLeftCellAddress.RowNumber, picture.TopLeftCellAddress.ColumnNumber, false, false);
                         newPic.MoveTo(newAddress, picture.GetOffset(XLMarkerPosition.TopLeft));
                         break;
+
                     case XLPicturePlacement.MoveAndSize:
                         var newFromAddress = new XLAddress(targetSheet, picture.TopLeftCellAddress.RowNumber, picture.TopLeftCellAddress.ColumnNumber, false, false);
                         var newToAddress = new XLAddress(targetSheet, picture.BottomRightCellAddress.RowNumber, picture.BottomRightCellAddress.ColumnNumber, false, false);
@@ -990,8 +993,7 @@ namespace ClosedXML.Excel
 
             Internals.Dispose();
 
-            foreach (var picture in this.Pictures)
-                picture.Dispose();
+            this.Pictures.ForEach(p => p.Dispose());
 
             base.Dispose();
         }
@@ -1519,80 +1521,46 @@ namespace ClosedXML.Excel
 
         public String Author { get; set; }
 
-        public IList<Drawings.IXLPicture> Pictures { get; private set; } = new List<Drawings.IXLPicture>();
-
-        private String GetNextPictureName()
-        {
-            var pictureNumber = this.Pictures.Count;
-            while (Pictures.Any(p => p.Name == $"Picture {pictureNumber}"))
-            {
-                pictureNumber++;
-            }
-            return $"Picture {pictureNumber}";
-        }
+        public IXLPictures Pictures { get; private set; }
 
         public IXLPicture AddPicture(Stream stream)
         {
-            var picture = new XLPicture(this, stream);
-            Pictures.Add(picture);
-            picture.Name = GetNextPictureName();
-            return picture;
+            return Pictures.Add(stream);
         }
 
         public IXLPicture AddPicture(Stream stream, string name)
         {
-            var picture = AddPicture(stream);
-            picture.Name = name;
-            return picture;
+            return Pictures.Add(stream, name);
         }
 
         public Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format)
         {
-            var picture = new XLPicture(this, stream, format);
-            Pictures.Add(picture);
-            picture.Name = GetNextPictureName();
-            return picture;
+            return Pictures.Add(stream, format);
         }
 
         public IXLPicture AddPicture(Stream stream, XLPictureFormat format, string name)
         {
-            var picture = AddPicture(stream, format);
-            picture.Name = name;
-            return picture;
+            return Pictures.Add(stream, format, name);
         }
 
         public IXLPicture AddPicture(Bitmap bitmap)
         {
-            var picture = new XLPicture(this, bitmap);
-            Pictures.Add(picture);
-            picture.Name = GetNextPictureName();
-            return picture;
+            return Pictures.Add(bitmap);
         }
 
         public IXLPicture AddPicture(Bitmap bitmap, string name)
         {
-            var picture = AddPicture(bitmap);
-            this.Name = name;
-            return picture;
+            return Pictures.Add(bitmap, name);
         }
 
         public IXLPicture AddPicture(string imageFile)
         {
-            using (var bitmap = Image.FromFile(imageFile) as Bitmap)
-            {
-                var picture = new XLPicture(this, bitmap);
-                Pictures.Add(picture);
-                picture.Name = GetNextPictureName();
-                return picture;
-            }
+            return Pictures.Add(imageFile);
         }
 
         public IXLPicture AddPicture(string imageFile, string name)
         {
-            var picture = AddPicture(imageFile);
-            picture.Name = name;
-            return picture;
+            return Pictures.Add(imageFile, name);
         }
-
     }
 }

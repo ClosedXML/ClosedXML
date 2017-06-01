@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -192,6 +193,42 @@ namespace ClosedXML_Tests
 
                 var copy = ws.CopyTo("NewSheet");
                 Assert.AreEqual(2, copy.Pictures.Count);
+            }
+        }
+
+        [Test]
+        public void CanDeletePictures()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                ws.Pictures.Delete(ws.Pictures.First());
+
+                var pictureName = ws.Pictures.First().Name;
+                ws.Pictures.Delete(pictureName);
+            }
+        }
+
+        [Test]
+        public void PictureRenameTests()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("Images3");
+                var picture = ws.Pictures.First();
+                Assert.AreEqual("Picture 1", picture.Name);
+
+                picture.Name = "picture 1";
+                picture.Name = "pICture 1";
+                picture.Name = "Picture 1";
+
+                picture = ws.Pictures.Last();
+                picture.Name = "new name";
+
+                Assert.Throws<ArgumentException>(() => picture.Name = "Picture 1");
+                Assert.Throws<ArgumentException>(() => picture.Name = "picTURE 1");
             }
         }
     }

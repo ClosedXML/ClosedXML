@@ -311,6 +311,18 @@ namespace ClosedXML.Excel
         }
     }
 
+    public static class ListExtensions
+    {
+        public static void RemoveAll<T>(this IList<T> list, Func<T, bool> predicate)
+        {
+            var indices = list.Where(item => predicate(item)).Select((item, i) => i).OrderByDescending(i => i).ToList();
+            foreach (var i in indices)
+            {
+                list.RemoveAt(i);
+            }
+        }
+    }
+
     public static class DoubleValueExtensions
     {
         public static DoubleValue SaveRound(this DoubleValue value)
