@@ -38,12 +38,29 @@ namespace ClosedXML.Excel
                 return matchingAnchor.First();
         }
 
-        public static NonVisualDrawingProperties GetPropertiesFromImageIndex(WorksheetPart worksheetPart, Int32 index)
+        public static NonVisualDrawingProperties GetPropertiesFromAnchor(OpenXmlElement anchor)
         {
-            var drawingsPart = worksheetPart.DrawingsPart;
-            return drawingsPart.WorksheetDrawing
+            if (!IsAllowedAnchor(anchor))
+                return null;
+
+            return anchor
                 .Descendants<Xdr.NonVisualDrawingProperties>()
-                .FirstOrDefault(x => x.Id.Value.Equals(Convert.ToUInt32(index + 1)));
+                .FirstOrDefault();
+        }
+
+        public static String GetImageRelIdFromAnchor(OpenXmlElement anchor)
+        {
+            if (!IsAllowedAnchor(anchor))
+                return null;
+
+            var blipFill = anchor.Descendants<Xdr.BlipFill>().FirstOrDefault();
+            return blipFill?.Blip?.Embed?.Value;
+        }
+
+        private static bool IsAllowedAnchor(OpenXmlElement anchor)
+        {
+            var allowedAnchorTypes = new Type[] { typeof(AbsoluteAnchor), typeof(OneCellAnchor), typeof(TwoCellAnchor) };
+            return (allowedAnchorTypes.Any(t => t == anchor.GetType()));
         }
     }
 }

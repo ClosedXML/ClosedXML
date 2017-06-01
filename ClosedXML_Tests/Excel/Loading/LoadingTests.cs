@@ -157,6 +157,9 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanLoadAndDeduceAnchorsFromExcelGeneratedFile()
         {
+            // This file was produced by Excel. It contains 3 images, but the latter 2 were copied from the first.
+            // There is actually only 1 embedded image if you inspect the file's internals.
+            // Additionally, Excel saves all image anchors as TwoCellAnchor, but uses the EditAs attribute to distinguish the types
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\ExcelProducedWorkbookWithImages.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
@@ -166,6 +169,9 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(XLPicturePlacement.MoveAndSize, ws.Picture("Picture 1").Placement);
                 Assert.AreEqual(XLPicturePlacement.Move, ws.Picture("Picture 2").Placement);
                 Assert.AreEqual(XLPicturePlacement.FreeFloating, ws.Picture("Picture 3").Placement);
+
+                using (var ms = new MemoryStream())
+                    wb.SaveAs(ms, true);
             }
         }
     }
