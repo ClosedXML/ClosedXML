@@ -2652,8 +2652,8 @@ namespace ClosedXML.Excel
                     {
                         ColumnId = new Xdr.ColumnId((moveFromMarker.Address.ColumnNumber - 1).ToString()),
                         RowId = new Xdr.RowId((moveFromMarker.Address.RowNumber - 1).ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X + pic.Left, GraphicsUtils.Graphics.DpiX).ToString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y + pic.Top, GraphicsUtils.Graphics.DpiY).ToString())
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToString())
                     };
 
                     var oneCellAnchor = new Xdr.OneCellAnchor(
