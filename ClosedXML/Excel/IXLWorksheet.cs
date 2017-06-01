@@ -1,6 +1,5 @@
 using ClosedXML.Excel.Drawings;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -433,22 +432,22 @@ namespace ClosedXML.Excel
 
         String Author { get; set; }
 
-        IList<Drawings.IXLPicture> Pictures { get; }
+        IXLPictures Pictures { get; }
 
-        Drawings.IXLPicture AddPicture(Stream stream);
+        IXLPicture AddPicture(Stream stream);
 
-        Drawings.IXLPicture AddPicture(Stream stream, String name);
+        IXLPicture AddPicture(Stream stream, String name);
 
-        Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format);
+        IXLPicture AddPicture(Stream stream, XLPictureFormat format);
 
-        Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format, String name);
+        IXLPicture AddPicture(Stream stream, XLPictureFormat format, String name);
 
-        Drawings.IXLPicture AddPicture(Bitmap bitmap);
+        IXLPicture AddPicture(Bitmap bitmap);
 
-        Drawings.IXLPicture AddPicture(Bitmap bitmap, String name);
+        IXLPicture AddPicture(Bitmap bitmap, String name);
 
-        Drawings.IXLPicture AddPicture(String imageFile);
+        IXLPicture AddPicture(String imageFile);
 
-        Drawings.IXLPicture AddPicture(String imageFile, String name);
+        IXLPicture AddPicture(String imageFile, String name);
     }
 }

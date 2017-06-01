@@ -12,9 +12,11 @@ namespace ClosedXML.Excel.Drawings
     [DebuggerDisplay("{Name}")]
     internal class XLPicture : IXLPicture
     {
+        private const String InvalidNameChars = @":\/?*[]";
         private static IDictionary<XLPictureFormat, ImageFormat> FormatMap;
         private readonly IXLWorksheet _worksheet;
         private Int32 height;
+        private String name = string.Empty;
         private Int32 width;
 
         static XLPicture()
@@ -147,7 +149,28 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
-        public String Name { get; set; }
+        public String Name
+        {
+            get { return name; }
+            set
+            {
+                if (name == value) return;
+
+                if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
+                    throw new ArgumentException($"Picture names cannot contain any of the following characters: {InvalidNameChars}");
+
+                if (XLHelper.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Picture names cannot be empty");
+
+                if (value.Length > 31)
+                    throw new ArgumentException("Picture names cannot be more than 31 characters");
+
+                if ((_worksheet.Pictures.FirstOrDefault(p => p.Name.Equals(value, StringComparison.OrdinalIgnoreCase)) ?? this) != this)
+                    throw new ArgumentException($"The picture name '{value}' already exists.");
+
+                name = value;
+            }
+        }
 
         public Int32 OriginalHeight { get; private set; }
 
@@ -202,6 +225,11 @@ namespace ClosedXML.Excel.Drawings
         internal IDictionary<XLMarkerPosition, IXLMarker> Markers { get; private set; }
 
         internal String RelId { get; set; }
+
+        public void Delete()
+        {
+            Worksheet.Pictures.Delete(this.Name);
+        }
 
         public void Dispose()
         {

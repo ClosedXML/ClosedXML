@@ -15,16 +15,31 @@ namespace ClosedXML.Excel.Drawings
         XLPictureFormat Format { get; }
 
         Int32 Height { get; set; }
+
         MemoryStream ImageStream { get; }
+
         Int32 Left { get; set; }
+
         String Name { get; set; }
+
         Int32 OriginalHeight { get; }
+
         Int32 OriginalWidth { get; }
+
         XLPicturePlacement Placement { get; set; }
+
         Int32 Top { get; set; }
+
         IXLAddress TopLeftCellAddress { get; }
+
         Int32 Width { get; set; }
+
         IXLWorksheet Worksheet { get; }
+
+        /// <summary>
+        /// Deletes this picture.
+        /// </summary>
+        void Delete();
 
         Point GetOffset(XLMarkerPosition position);
 

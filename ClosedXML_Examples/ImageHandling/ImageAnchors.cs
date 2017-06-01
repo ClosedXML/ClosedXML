@@ -70,6 +70,11 @@ namespace ClosedXML_Examples
                     ws.AddPicture(fs, XLPictureFormat.Jpeg)
                         .MoveTo(100, 100)
                         .WithPlacement(XLPicturePlacement.FreeFloating);
+
+                    // Add and delete picture immediately
+                    ws.AddPicture(fs, XLPictureFormat.Jpeg)
+                        .MoveTo(100, 600)
+                        .Delete();
                 }
 
                 wb.SaveAs(filePath);
