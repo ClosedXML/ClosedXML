@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
@@ -255,7 +255,7 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("$A$1:$A$1", wsRanges.First().RangeAddress.ToStringFixed());
             Assert.AreEqual("$A$3:$A$3", wsRanges.Last().RangeAddress.ToStringFixed());
         }
-
+      
         [Test]
         public void WbProtect1()
         {

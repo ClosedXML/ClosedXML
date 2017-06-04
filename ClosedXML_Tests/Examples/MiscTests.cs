@@ -198,7 +198,7 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<WorkbookProperties>(@"Misc\WorkbookProperties.xlsx");
         }
-
+      
         [Test]
         public void WorkbookProtection()
         {

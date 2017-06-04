@@ -273,6 +273,7 @@
     <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageAnchors.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageFormats.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\WorkbookProtection.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\ExcelProducedWorkbookWithImages.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
