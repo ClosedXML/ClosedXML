@@ -28,3 +28,8 @@ var worksheet = workbook.Worksheets.Add("Sample Sheet");
 worksheet.Cell("A1").Value = "Hello World!";
 workbook.SaveAs("HelloWorld.xlsx");
 ```
+
+### Extensions
+Be sure to check out our `ClosedXML` extension projects
+- https://github.com/ClosedXML/ClosedXML.Extensions.AspNet
+- https://github.com/ClosedXML/ClosedXML.Extensions.Mvc
