@@ -85,6 +85,7 @@
     <Compile Include="Excel\XLConstants.cs" />
     <Compile Include="Excel\XLWorkbook_ImageHandling.cs" />
     <Compile Include="Extensions\OpenXmlPartContainerExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Utils\GraphicsUtils.cs" />
     <Compile Include="Utils\XmlEncoder.cs" />
     <Compile Include="XLHelper.cs" />

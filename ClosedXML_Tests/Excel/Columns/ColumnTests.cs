@@ -236,5 +236,6 @@ namespace ClosedXML_Tests.Excel
             var lastCoUsed = ws.LastColumnUsed().ColumnNumber();
             Assert.AreEqual(2, lastCoUsed);
         }
+
     }
 }

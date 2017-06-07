@@ -1125,8 +1125,16 @@ namespace ClosedXML.Excel
         private static void ParseReference(string item, out string sheetName, out string sheetArea)
         {
             var sections = item.Trim().Split('!');
-            sheetName = sections[0].Replace("\'", "");
-            sheetArea = sections[1];
+            if (sections.Count() == 1)
+            {
+                sheetName = string.Empty;
+                sheetArea = item;
+            }
+            else
+            {
+                sheetName = sections[0].Replace("\'", "");
+                sheetArea = sections[1];
+            }
         }
 
         private Int32 lastCell;

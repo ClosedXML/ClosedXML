@@ -4,11 +4,18 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLNamedRanges: IXLNamedRanges
+    internal class XLNamedRanges : IXLNamedRanges
     {
-        readonly Dictionary<String, IXLNamedRange> _namedRanges = new Dictionary<String, IXLNamedRange>();
+        private readonly Dictionary<String, IXLNamedRange> _namedRanges = new Dictionary<String, IXLNamedRange>();
         internal XLWorkbook Workbook { get; set; }
-       
+        internal XLWorksheet Worksheet { get; set; }
+
+        public XLNamedRanges(XLWorksheet worksheet)
+            : this(worksheet.Workbook)
+        {
+            Worksheet = worksheet;
+        }
+
         public XLNamedRanges(XLWorkbook workbook)
         {
             Workbook = workbook;
@@ -29,25 +36,40 @@ namespace ClosedXML.Excel
         {
             return Add(rangeName, rangeAddress, null);
         }
+
         public IXLNamedRange Add(String rangeName, IXLRange range)
         {
             return Add(rangeName, range, null);
         }
+
         public IXLNamedRange Add(String rangeName, IXLRanges ranges)
         {
             return Add(rangeName, ranges, null);
         }
-        public IXLNamedRange Add(String rangeName, String rangeAddress, String comment )
+
+        public IXLNamedRange Add(String rangeName, String rangeAddress, String comment)
         {
+            var match = XLHelper.NamedRangeReferenceRegex.Match(rangeAddress);
+
+            if (!match.Success)
+            {
+                if (Worksheet == null || !XLHelper.NamedRangeReferenceRegex.Match(Worksheet.Range(rangeAddress).ToString()).Success)
+                    throw new ArgumentException("For named ranges in the workbook scope, specify the sheet name in the reference.");
+                else
+                    rangeAddress = Worksheet.Range(rangeAddress).ToString();
+            }
+
             var namedRange = new XLNamedRange(this, rangeName, rangeAddress, comment);
             _namedRanges.Add(rangeName, namedRange);
             return namedRange;
         }
+
         public IXLNamedRange Add(String rangeName, IXLRange range, String comment)
         {
-            var ranges = new XLRanges {range};
+            var ranges = new XLRanges { range };
             return Add(rangeName, ranges, comment);
         }
+
         public IXLNamedRange Add(String rangeName, IXLRanges ranges, String comment)
         {
             var namedRange = new XLNamedRange(this, rangeName, ranges, comment);
@@ -59,16 +81,18 @@ namespace ClosedXML.Excel
         {
             _namedRanges.Remove(rangeName);
         }
+
         public void Delete(Int32 rangeIndex)
         {
             _namedRanges.Remove(_namedRanges.ElementAt(rangeIndex).Key);
         }
+
         public void DeleteAll()
         {
             _namedRanges.Clear();
         }
-        
-        #endregion
+
+        #endregion IXLNamedRanges Members
 
         #region IEnumerable<IXLNamedRange> Members
 
@@ -77,7 +101,7 @@ namespace ClosedXML.Excel
             return _namedRanges.Values.GetEnumerator();
         }
 
-        #endregion
+        #endregion IEnumerable<IXLNamedRange> Members
 
         #region IEnumerable Members
 
@@ -86,21 +110,28 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        #endregion
+        #endregion IEnumerable Members
 
         public Boolean TryGetValue(String name, out IXLNamedRange range)
         {
             if (_namedRanges.TryGetValue(name, out range)) return true;
 
-            range = Workbook.NamedRange(name);
+            if (Worksheet != null)
+                range = Worksheet.NamedRange(name);
+            else
+                range = Workbook.NamedRange(name);
+
             return range != null;
         }
 
         public Boolean Contains(String name)
         {
             if (_namedRanges.ContainsKey(name)) return true;
-            return Workbook.NamedRange(name) != null;
-        }
 
+            if (Worksheet != null)
+                return Worksheet.NamedRange(name) != null;
+            else
+                return Workbook.NamedRange(name) != null;
+        }
     }
 }

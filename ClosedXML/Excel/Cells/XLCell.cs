@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 namespace ClosedXML.Excel
 {
     using Attributes;
+    using ClosedXML.Extensions;
     using FastMember;
 
     internal class XLCell : IXLCell, IXLStylized
@@ -2104,22 +2105,22 @@ namespace ClosedXML.Excel
                                     if (row1String[0] == '$')
                                     {
                                         row1 = "$" +
-                                               (Int32.Parse(row1String.Substring(1)) + rowsShifted).ToInvariantString();
+                                               (XLHelper.TrimRowNumber(Int32.Parse(row1String.Substring(1)) + rowsShifted)).ToInvariantString();
                                     }
                                     else
-                                        row1 = (Int32.Parse(row1String) + rowsShifted).ToInvariantString();
+                                        row1 = (XLHelper.TrimRowNumber(Int32.Parse(row1String) + rowsShifted)).ToInvariantString();
 
                                     string row2;
                                     if (row2String[0] == '$')
                                     {
                                         row2 = "$" +
-                                               (Int32.Parse(row2String.Substring(1)) + rowsShifted).ToInvariantString();
+                                               (XLHelper.TrimRowNumber(Int32.Parse(row2String.Substring(1)) + rowsShifted)).ToInvariantString();
                                     }
                                     else
-                                        row2 = (Int32.Parse(row2String) + rowsShifted).ToInvariantString();
+                                        row2 = (XLHelper.TrimRowNumber(Int32.Parse(row2String) + rowsShifted)).ToInvariantString();
 
                                     sb.Append(useSheetName
-                                                  ? String.Format("'{0}'!{1}:{2}", sheetName, row1, row2)
+                                                  ? String.Format("{0}!{1}:{2}", sheetName.WrapSheetNameInQuotesIfRequired(), row1, row2)
                                                   : String.Format("{0}:{1}", row1, row2));
                                 }
                                 else if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
@@ -2129,12 +2130,10 @@ namespace ClosedXML.Excel
                                     {
                                         if (useSheetName)
                                         {
-                                            sb.Append(String.Format("'{0}'!{1}:{2}",
-                                                                    sheetName,
+                                            sb.Append(String.Format("{0}!{1}:{2}",
+                                                                    sheetName.WrapSheetNameInQuotesIfRequired(),
                                                                     new XLAddress(worksheetInAction,
-                                                                                  matchRange.RangeAddress.
-                                                                                      FirstAddress.RowNumber +
-                                                                                  rowsShifted,
+                                                                                  XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.ColumnLetter,
                                                                                   matchRange.RangeAddress.
@@ -2142,9 +2141,7 @@ namespace ClosedXML.Excel
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedColumn),
                                                                     new XLAddress(worksheetInAction,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.RowNumber +
-                                                                                  rowsShifted,
+                                                                                  XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.ColumnLetter,
                                                                                   matchRange.RangeAddress.
@@ -2156,9 +2153,7 @@ namespace ClosedXML.Excel
                                         {
                                             sb.Append(String.Format("{0}:{1}",
                                                                     new XLAddress(worksheetInAction,
-                                                                                  matchRange.RangeAddress.
-                                                                                      FirstAddress.RowNumber +
-                                                                                  rowsShifted,
+                                                                                  XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.ColumnLetter,
                                                                                   matchRange.RangeAddress.
@@ -2166,9 +2161,7 @@ namespace ClosedXML.Excel
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedColumn),
                                                                     new XLAddress(worksheetInAction,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.RowNumber +
-                                                                                  rowsShifted,
+                                                                                  XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.ColumnLetter,
                                                                                   matchRange.RangeAddress.
@@ -2181,12 +2174,10 @@ namespace ClosedXML.Excel
                                     {
                                         if (useSheetName)
                                         {
-                                            sb.Append(String.Format("'{0}'!{1}",
-                                                                    sheetName,
+                                            sb.Append(String.Format("{0}!{1}",
+                                                                    sheetName.WrapSheetNameInQuotesIfRequired(),
                                                                     new XLAddress(worksheetInAction,
-                                                                                  matchRange.RangeAddress.
-                                                                                      FirstAddress.RowNumber +
-                                                                                  rowsShifted,
+                                                                                  XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.ColumnLetter,
                                                                                   matchRange.RangeAddress.
@@ -2198,9 +2189,7 @@ namespace ClosedXML.Excel
                                         {
                                             sb.Append(String.Format("{0}",
                                                                     new XLAddress(worksheetInAction,
-                                                                                  matchRange.RangeAddress.
-                                                                                      FirstAddress.RowNumber +
-                                                                                  rowsShifted,
+                                                                                  XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.ColumnLetter,
                                                                                   matchRange.RangeAddress.
@@ -2214,13 +2203,11 @@ namespace ClosedXML.Excel
                                 {
                                     if (useSheetName)
                                     {
-                                        sb.Append(String.Format("'{0}'!{1}:{2}",
-                                                                sheetName,
+                                        sb.Append(String.Format("{0}!{1}:{2}",
+                                                                sheetName.WrapSheetNameInQuotesIfRequired(),
                                                                 matchRange.RangeAddress.FirstAddress,
                                                                 new XLAddress(worksheetInAction,
-                                                                              matchRange.RangeAddress.
-                                                                                  LastAddress.RowNumber +
-                                                                              rowsShifted,
+                                                                              XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.ColumnLetter,
                                                                               matchRange.RangeAddress.
@@ -2233,9 +2220,7 @@ namespace ClosedXML.Excel
                                         sb.Append(String.Format("{0}:{1}",
                                                                 matchRange.RangeAddress.FirstAddress,
                                                                 new XLAddress(worksheetInAction,
-                                                                              matchRange.RangeAddress.
-                                                                                  LastAddress.RowNumber +
-                                                                              rowsShifted,
+                                                                              XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.ColumnLetter,
                                                                               matchRange.RangeAddress.
@@ -2331,14 +2316,14 @@ namespace ClosedXML.Excel
                                         column1 = "$" +
                                                   XLHelper.GetColumnLetterFromNumber(
                                                       XLHelper.GetColumnNumberFromLetter(
-                                                          column1String.Substring(1)) + columnsShifted);
+                                                          column1String.Substring(1)) + columnsShifted, true);
                                     }
                                     else
                                     {
                                         column1 =
                                             XLHelper.GetColumnLetterFromNumber(
                                                 XLHelper.GetColumnNumberFromLetter(column1String) +
-                                                columnsShifted);
+                                                columnsShifted, true);
                                     }
 
                                     string column2;
@@ -2347,18 +2332,18 @@ namespace ClosedXML.Excel
                                         column2 = "$" +
                                                   XLHelper.GetColumnLetterFromNumber(
                                                       XLHelper.GetColumnNumberFromLetter(
-                                                          column2String.Substring(1)) + columnsShifted);
+                                                          column2String.Substring(1)) + columnsShifted, true);
                                     }
                                     else
                                     {
                                         column2 =
                                             XLHelper.GetColumnLetterFromNumber(
                                                 XLHelper.GetColumnNumberFromLetter(column2String) +
-                                                columnsShifted);
+                                                columnsShifted, true);
                                     }
 
                                     sb.Append(useSheetName
-                                                  ? String.Format("'{0}'!{1}:{2}", sheetName, column1, column2)
+                                                  ? String.Format("{0}!{1}:{2}", sheetName.WrapSheetNameInQuotesIfRequired(), column1, column2)
                                                   : String.Format("{0}:{1}", column1, column2));
                                 }
                                 else if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
@@ -2368,14 +2353,12 @@ namespace ClosedXML.Excel
                                     {
                                         if (useSheetName)
                                         {
-                                            sb.Append(String.Format("'{0}'!{1}:{2}",
-                                                                    sheetName,
+                                            sb.Append(String.Format("{0}!{1}:{2}",
+                                                                    sheetName.WrapSheetNameInQuotesIfRequired(),
                                                                     new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber,
-                                                                                  matchRange.RangeAddress.
-                                                                                      FirstAddress.ColumnNumber +
-                                                                                  columnsShifted,
+                                                                                  XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
@@ -2383,9 +2366,7 @@ namespace ClosedXML.Excel
                                                                     new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.ColumnNumber +
-                                                                                  columnsShifted,
+                                                                                  XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
@@ -2397,9 +2378,7 @@ namespace ClosedXML.Excel
                                                                     new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber,
-                                                                                  matchRange.RangeAddress.
-                                                                                      FirstAddress.ColumnNumber +
-                                                                                  columnsShifted,
+                                                                                  XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
@@ -2407,9 +2386,7 @@ namespace ClosedXML.Excel
                                                                     new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.RowNumber,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.ColumnNumber +
-                                                                                  columnsShifted,
+                                                                                  XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       LastAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
@@ -2420,14 +2397,12 @@ namespace ClosedXML.Excel
                                     {
                                         if (useSheetName)
                                         {
-                                            sb.Append(String.Format("'{0}'!{1}",
-                                                                    sheetName,
+                                            sb.Append(String.Format("{0}!{1}",
+                                                                    sheetName.WrapSheetNameInQuotesIfRequired(),
                                                                     new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber,
-                                                                                  matchRange.RangeAddress.
-                                                                                      FirstAddress.ColumnNumber +
-                                                                                  columnsShifted,
+                                                                                  XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
@@ -2439,9 +2414,7 @@ namespace ClosedXML.Excel
                                                                     new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.RowNumber,
-                                                                                  matchRange.RangeAddress.
-                                                                                      FirstAddress.ColumnNumber +
-                                                                                  columnsShifted,
+                                                                                  XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
                                                                                   matchRange.RangeAddress.
                                                                                       FirstAddress.FixedRow,
                                                                                   matchRange.RangeAddress.
@@ -2453,15 +2426,13 @@ namespace ClosedXML.Excel
                                 {
                                     if (useSheetName)
                                     {
-                                        sb.Append(String.Format("'{0}'!{1}:{2}",
-                                                                sheetName,
+                                        sb.Append(String.Format("{0}!{1}:{2}",
+                                                                sheetName.WrapSheetNameInQuotesIfRequired(),
                                                                 matchRange.RangeAddress.FirstAddress,
                                                                 new XLAddress(worksheetInAction,
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.RowNumber,
-                                                                              matchRange.RangeAddress.
-                                                                                  LastAddress.ColumnNumber +
-                                                                              columnsShifted,
+                                                                              XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.FixedRow,
                                                                               matchRange.RangeAddress.
@@ -2474,9 +2445,7 @@ namespace ClosedXML.Excel
                                                                 new XLAddress(worksheetInAction,
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.RowNumber,
-                                                                              matchRange.RangeAddress.
-                                                                                  LastAddress.ColumnNumber +
-                                                                              columnsShifted,
+                                                                              XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
                                                                               matchRange.RangeAddress.
                                                                                   LastAddress.FixedRow,
                                                                               matchRange.RangeAddress.
