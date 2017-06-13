@@ -84,7 +84,6 @@
     <Compile Include="Excel\Loading\LoadingTests.cs" />
     <Compile Include="Excel\PageSetup\HeaderFooterTests.cs" />
     <Compile Include="Excel\PageSetup\PageBreaksTests.cs" />
-    <Compile Include="Excel\Ranges\RangeExtensionsTests.cs" />
     <Compile Include="Excel\Ranges\UsedAndUnusedCellsTests.cs" />
     <Compile Include="Excel\Saving\SavingTests.cs" />
     <Compile Include="XLHelperTests.cs" />
