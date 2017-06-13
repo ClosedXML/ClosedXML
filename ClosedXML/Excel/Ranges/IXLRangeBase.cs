@@ -254,5 +254,17 @@ namespace ClosedXML.Excel
         IXLConditionalFormat AddConditionalFormat();
 
         void Select();
+
+        /// <summary>
+        /// Get cropped range.
+        /// </summary>
+        IXLRangeBase Crop(IXLRangeBase crop);
+
+        /// <summary>
+        /// Get range relative to another range.
+        /// </summary>
+        /// <param name="baseRange">Coordinate system. Coordinates are calculated relative to this range.</param>
+        /// <param name="targetBase"></param>
+        IXLRange Relative(IXLRangeBase baseRange, IXLRangeBase targetBase);
     }
 }
