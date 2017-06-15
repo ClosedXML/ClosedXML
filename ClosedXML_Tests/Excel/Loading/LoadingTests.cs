@@ -23,7 +23,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\LoadPivotTables.xlsx",
                 @"Misc\LoadFileWithCustomSheetViews.xlsx",
                 @"Misc\LoadSheetsWithCommas.xlsx",
-                @"Misc\ExcelProducedWorkbookWithImages.xlsx"
+                @"Misc\ExcelProducedWorkbookWithImages.xlsx",
+                @"Misc\EmptyCellValue.xlsx"
             };
 
             foreach (var file in files)
