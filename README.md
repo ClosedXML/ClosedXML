@@ -33,3 +33,9 @@ workbook.SaveAs("HelloWorld.xlsx");
 Be sure to check out our `ClosedXML` extension projects
 - https://github.com/ClosedXML/ClosedXML.Extensions.AspNet
 - https://github.com/ClosedXML/ClosedXML.Extensions.Mvc
+
+## Develop guidelines
+_Full guidelines to follow later_
+* Please submit pull requests that are based on the `develop` branch.
+* Where possible, pull requests should include unit tests that cover as many uses cases as possible. This is especially relevant when implementing Excel functions.
+* Install [NUnit 3.0 Test Adapter](https://github.com/nunit/docs/wiki/Adapter-Installation) if you want to run the test suite in Visual Studio.
