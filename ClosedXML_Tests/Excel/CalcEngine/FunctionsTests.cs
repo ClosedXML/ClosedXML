@@ -380,8 +380,11 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             actual = XLWorkbook.EvaluateExpr("Round(-50.55, -2)");
             Assert.AreEqual(-100.0, actual);
             
-            actual = XLWorkbook.EvaluateExpr("ROUND(59*0.535, 2)");
+            actual = XLWorkbook.EvaluateExpr("ROUND(59 * 0.535, 2)"); // (59 * 0.535) = 31.565
             Assert.AreEqual(31.57, actual);
+
+            actual = XLWorkbook.EvaluateExpr("ROUND(59 * -0.535, 2)"); // (59 * -0.535) = -31.565
+            Assert.AreEqual(-31.57, actual);
         }
 
         [Test]
