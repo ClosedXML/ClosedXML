@@ -4694,10 +4694,14 @@ namespace ClosedXML.Excel
 
             if (xlWorksheet.Pictures() != null && xlWorksheet.Pictures().Count > 0)
             {
-              Drawing worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
-              worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-              worksheetPart.Worksheet.InsertBefore<Drawing>(worksheetDrawing, tableParts);
-              //worksheetPart.Worksheet.Append(worksheetDrawing);
+                if (!worksheetPart.Worksheet.ChildElements.OfType<Drawing>().Any())
+                {
+                    Drawing worksheetDrawing = new Drawing {Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart)};
+                    worksheetDrawing.AddNamespaceDeclaration("r",
+                        "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                    worksheetPart.Worksheet.InsertBefore<Drawing>(worksheetDrawing, tableParts);
+                    //worksheetPart.Worksheet.Append(worksheetDrawing);
+                }
             }
 
             #endregion
