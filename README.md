@@ -2,7 +2,7 @@
 # ClosedXML
 [![Build status](https://ci.appveyor.com/api/projects/status/wobbmnlbukxejjgb?svg=true)](https://ci.appveyor.com/project/Pyropace/closedxml)
 
-ClosedXML makes it easier for developers to create Excel 2007/2010/2013 files. It provides a nice object oriented way to manipulate the files (similar to VBA) without dealing with the hassles of XML Documents. It can be used by any .NET language like C# and Visual Basic (VB).
+ClosedXML makes it easier for developers to create Excel 2007+ (.xlsx, .xlsm, etc) files. It provides a nice object oriented way to manipulate the files (similar to VBA) without dealing with the hassles of XML Documents. It can be used by any .NET language like C# and Visual Basic (VB).
 
 [For more information see the wiki](https://github.com/closedxml/closedxml/wiki)
 
