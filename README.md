@@ -18,7 +18,7 @@ PM> Install-Package ClosedXML
 
 ### What can you do with this?
 
-ClosedXML allows you to create Excel 2007/2010/2013 files without the Excel application. The typical example is creating Excel reports on a web server.
+ClosedXML allows you to create Excel 2007+ (.xlsx, .xlsm, etc) files without the Excel application. The typical example is creating Excel reports on a web server.
 
 If you've ever used the Microsoft Open XML Format SDK you know just how much code you have to write to get the same results as the following 4 lines of code.
 
@@ -34,7 +34,7 @@ Be sure to check out our `ClosedXML` extension projects
 - https://github.com/ClosedXML/ClosedXML.Extensions.AspNet
 - https://github.com/ClosedXML/ClosedXML.Extensions.Mvc
 
-## Develop guidelines
+## Developer guidelines
 _Full guidelines to follow later_
 * Please submit pull requests that are based on the `develop` branch.
 * Where possible, pull requests should include unit tests that cover as many uses cases as possible. This is especially relevant when implementing Excel functions.
