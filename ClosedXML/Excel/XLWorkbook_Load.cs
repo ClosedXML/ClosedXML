@@ -629,6 +629,10 @@ namespace ClosedXML.Excel
                 foreach (var anchor in drawingsPart.WorksheetDrawing.ChildElements)
                 {
                     var imgId = GetImageRelIdFromAnchor(anchor);
+
+                    //If imgId is null, we're probably dealing with a TextBox (or another shape) instead of a picture
+                    if (imgId == null) continue;
+
                     var imagePart = drawingsPart.GetPartById(imgId);
                     using (var stream = imagePart.GetStream())
                     {
