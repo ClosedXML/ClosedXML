@@ -78,6 +78,7 @@
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
+    <Compile Include="Excel\ConditionalFormats\ConditionalFormatesCompressTests.cs" />
     <Compile Include="Excel\ImageHandling\PictureTests.cs" />
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />

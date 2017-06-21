@@ -384,6 +384,7 @@ namespace ClosedXML.Excel
             if (includeFormats)
             {
                 ClearMerged();
+                RemoveConditionalFormatting();
             }
 
             if (clearOptions == XLClearOptions.ContentsAndFormats)
@@ -396,6 +397,56 @@ namespace ClosedXML.Excel
                     );
             }
             return this;
+        }
+
+        private void RemoveConditionalFormatting()
+        {
+            var mf = RangeAddress.FirstAddress;
+            var ml = RangeAddress.LastAddress;
+            foreach (var format in Worksheet.ConditionalFormats.Where(x => x.Range.Intersects(this)).ToList())
+            {
+                var f = format.Range.RangeAddress.FirstAddress;
+                var l = format.Range.RangeAddress.LastAddress;
+                bool byWidth = false, byHeight = false;
+                XLRange rng1 = null, rng2 = null;
+                if (mf.ColumnNumber <= f.ColumnNumber && ml.ColumnNumber >= l.ColumnNumber)
+                {
+                    if (mf.RowNumber.Between(f.RowNumber, l.RowNumber) || ml.RowNumber.Between(f.RowNumber, l.RowNumber))
+                    {
+                        if (mf.RowNumber > f.RowNumber)
+                            rng1 = Worksheet.Range(f.RowNumber, f.ColumnNumber, mf.RowNumber - 1, l.ColumnNumber);
+                        if (ml.RowNumber < l.RowNumber)
+                            rng2 = Worksheet.Range(ml.RowNumber + 1, f.ColumnNumber, l.RowNumber, l.ColumnNumber);
+                    }
+                    byWidth = true;
+                }
+
+                if (mf.RowNumber <= f.RowNumber && ml.RowNumber >= l.RowNumber)
+                {
+                    if (mf.ColumnNumber.Between(f.ColumnNumber, l.ColumnNumber) || ml.ColumnNumber.Between(f.ColumnNumber, l.ColumnNumber))
+                    {
+                        if (mf.ColumnNumber > f.ColumnNumber)
+                            rng1 = Worksheet.Range(f.RowNumber, f.ColumnNumber, l.RowNumber, mf.ColumnNumber - 1);
+                        if (ml.ColumnNumber < l.ColumnNumber)
+                            rng2 = Worksheet.Range(f.RowNumber, ml.ColumnNumber + 1, l.RowNumber, l.ColumnNumber);
+                    }
+                    byHeight = true;
+                }
+
+                if (rng1 != null)
+                {
+                    format.Range = rng1;
+                }
+                if (rng2 != null)
+                {
+                    //TODO: reflect the formula for a new range
+                    if (rng1 == null)
+                        format.Range = rng2;
+                    else
+                        ((XLConditionalFormat)rng2.AddConditionalFormat()).CopyFrom(format);
+                }
+                if (byWidth && byHeight) Worksheet.ConditionalFormats.Remove(x => x == format);
+            }
         }
 
         public void DeleteComments()
@@ -1144,7 +1195,8 @@ namespace ClosedXML.Excel
             Int32 firstColumnReturn = RangeAddress.FirstAddress.ColumnNumber;
             Int32 lastColumnReturn = RangeAddress.FirstAddress.ColumnNumber + numberOfColumns - 1;
 
-            Worksheet.BreakConditionalFormatsIntoCells(cellsToDelete.Except(cellsToInsert.Keys).ToList());
+            using (var shiftRange = Worksheet.Range(firstRow, firstColumn, lastRow, Worksheet.Internals.CellsCollection.MaxColumnUsed))
+                Worksheet.ShiftConditionalFormattingColumns(shiftRange, numberOfColumns);
             using (var asRange = AsRange())
                 Worksheet.NotifyRangeShiftedColumns(asRange, numberOfColumns);
 
@@ -1379,7 +1431,8 @@ namespace ClosedXML.Excel
             Int32 firstColumnReturn = RangeAddress.FirstAddress.ColumnNumber;
             Int32 lastColumnReturn = RangeAddress.LastAddress.ColumnNumber;
 
-            Worksheet.BreakConditionalFormatsIntoCells(cellsToDelete.Except(cellsToInsert.Keys).ToList());
+            using (var shiftRange = Worksheet.Range(firstRow, firstColumn, Worksheet.Internals.CellsCollection.MaxRowUsed, lastColumn))
+                Worksheet.ShiftConditionalFormattingRows(shiftRange, numberOfRows);
             using (var asRange = AsRange())
                 Worksheet.NotifyRangeShiftedRows(asRange, numberOfRows);
 
@@ -1526,13 +1579,36 @@ namespace ClosedXML.Excel
             var hyperlinksToRemove = Worksheet.Hyperlinks.Where(hl => Contains(hl.Cell.AsRange())).ToList();
             hyperlinksToRemove.ForEach(hl => Worksheet.Hyperlinks.Delete(hl));
 
-            Worksheet.BreakConditionalFormatsIntoCells(cellsToDelete.Except(cellsToInsert.Keys).ToList());
-            using (var shiftedRange = AsRange())
+            Worksheet.RemoveConditionalFormatsFromRange(this);
+
+            using (var removedRange = AsRange())
             {
                 if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)
-                    Worksheet.NotifyRangeShiftedRows(shiftedRange, rowModifier * -1);
+                {
+                    using (var ws = Worksheet.AsRange())
+                    using (var row = ws.LastRowUsed(true))
+                        if (row != null)
+                        {
+                            var lastShRow = row.RangeAddress.LastAddress.RowNumber;
+                            var shiftRange = Worksheet.Range(RangeAddress.LastAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber,
+                                lastShRow, RangeAddress.LastAddress.ColumnNumber);
+                            Worksheet.ShiftConditionalFormattingRows(shiftRange, rowModifier * -1);
+                        }
+                    Worksheet.NotifyRangeShiftedRows(removedRange, rowModifier * -1);
+                }
                 else
-                    Worksheet.NotifyRangeShiftedColumns(shiftedRange, columnModifier * -1);
+                {
+                    using (var ws = Worksheet.AsRange())
+                    using (var clmn = ws.LastColumnUsed(true))
+                        if (clmn != null)
+                        {
+                            var lastShClmn = clmn.RangeAddress.LastAddress.ColumnNumber;
+                            var shiftRange = Worksheet.Range(RangeAddress.FirstAddress.RowNumber, RangeAddress.LastAddress.ColumnNumber,
+                                RangeAddress.LastAddress.RowNumber, lastShClmn);
+                            Worksheet.ShiftConditionalFormattingColumns(shiftRange, columnModifier * -1);
+                        }
+                    Worksheet.NotifyRangeShiftedColumns(removedRange, columnModifier * -1);
+                }
             }
         }
 
@@ -2024,6 +2100,39 @@ namespace ClosedXML.Excel
         public void Select()
         {
             Worksheet.SelectedRanges.Add(AsRange());
+        }
+
+        /// <summary>
+        /// Get cropped range.
+        /// </summary>
+        public IXLRangeBase Crop(IXLRangeBase crop)
+        {
+            var sheet = Worksheet;
+            using (var xlRange = sheet.Range(
+                Math.Max(RangeAddress.FirstAddress.RowNumber, crop.RangeAddress.FirstAddress.RowNumber),
+                Math.Max(RangeAddress.FirstAddress.ColumnNumber, crop.RangeAddress.FirstAddress.ColumnNumber),
+                Math.Min(RangeAddress.LastAddress.RowNumber, crop.RangeAddress.LastAddress.RowNumber),
+                Math.Min(RangeAddress.LastAddress.ColumnNumber, crop.RangeAddress.LastAddress.ColumnNumber)))
+            {
+                return sheet.Range(xlRange.RangeAddress);
+            }
+        }
+
+        /// <summary>
+        /// Get range relative to another range.
+        /// </summary>
+        /// <param name="baseRange">Coordinate system. Coordinates are calculated relative to this range.</param>
+        /// <param name="targetBase"></param>
+        public IXLRange Relative(IXLRangeBase baseRange, IXLRangeBase targetBase)
+        {
+            using (var xlRange = targetBase.Worksheet.Range(
+                RangeAddress.FirstAddress.RowNumber - baseRange.RangeAddress.FirstAddress.RowNumber + 1,
+                RangeAddress.FirstAddress.ColumnNumber - baseRange.RangeAddress.FirstAddress.ColumnNumber + 1,
+                RangeAddress.LastAddress.RowNumber - baseRange.RangeAddress.FirstAddress.RowNumber + 1,
+                RangeAddress.LastAddress.ColumnNumber - baseRange.RangeAddress.FirstAddress.ColumnNumber + 1))
+            {
+                return ((XLRangeBase)targetBase).Range(xlRange.RangeAddress);
+            }
         }
     }
 }
