@@ -1,4 +1,4 @@
-﻿using ClosedXML.Attributes;
+using ClosedXML.Attributes;
 using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;

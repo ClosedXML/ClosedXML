@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
+    using System.Drawing;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Drawing;
 
     /// <summary>
     /// 	Common methods
@@ -21,7 +19,7 @@ namespace ClosedXML.Excel
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
-        private const Int32 TwoT26 = 26*26;
+        private const Int32 TwoT26 = 26 * 26;
         internal static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(200, 200));
         internal static readonly Double DpiX = Graphic.DpiX;
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
@@ -87,11 +85,15 @@ namespace ClosedXML.Excel
         private static readonly string[] letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
         /// <summary>
-        /// 	Gets the column letter of a given column number.
+        /// Gets the column letter of a given column number.
         /// </summary>
-        /// <param name="columnNumber"> The column number to translate into a column letter. </param>
-        public static string GetColumnLetterFromNumber(int columnNumber)
+        /// <param name="columnNumber">The column number to translate into a column letter.</param>
+        /// <param name="trimToAllowed">if set to <c>true</c> the column letter will be restricted to the allowed range.</param>
+        /// <returns></returns>
+        public static string GetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
         {
+            if (trimToAllowed) columnNumber = TrimColumnNumber(columnNumber);
+
             columnNumber--; // Adjust for start on column 1
             if (columnNumber <= 25)
             {
@@ -102,6 +104,16 @@ namespace ClosedXML.Excel
             return GetColumnLetterFromNumber(firstPart) + GetColumnLetterFromNumber(remainder);
         }
 
+        internal static int TrimColumnNumber(int columnNumber)
+        {
+            return Math.Max(XLHelper.MinColumnNumber, Math.Min(XLHelper.MaxColumnNumber, columnNumber));
+        }
+
+        internal static int TrimRowNumber(int rowNumber)
+        {
+            return Math.Max(XLHelper.MinRowNumber, Math.Min(XLHelper.MaxRowNumber, rowNumber));
+        }
+
         public static bool IsValidColumn(string column)
         {
             var length = column.Length;
@@ -109,7 +121,6 @@ namespace ClosedXML.Excel
                 return false;
 
             var theColumn = column.ToUpper();
-
 
             var isValid = theColumn[0] >= 'A' && theColumn[0] <= 'Z';
             if (length == 1)
@@ -164,7 +175,6 @@ namespace ClosedXML.Excel
 
         public static Boolean IsValidRangeAddress(IXLRangeAddress rangeAddress)
         {
-
             return !rangeAddress.IsInvalid
                    && rangeAddress.FirstAddress.RowNumber >= 1 && rangeAddress.LastAddress.RowNumber <= MaxRowNumber
                    && rangeAddress.FirstAddress.ColumnNumber >= 1 && rangeAddress.LastAddress.ColumnNumber <= MaxColumnNumber
@@ -188,12 +198,12 @@ namespace ClosedXML.Excel
 
         public static Int32 GetPtFromPx(Double px)
         {
-            return Convert.ToInt32(px*72.0/DpiX);
+            return Convert.ToInt32(px * 72.0 / DpiX);
         }
 
         public static Double GetPxFromPt(Int32 pt)
         {
-            return Convert.ToDouble(pt)*DpiX/72.0;
+            return Convert.ToDouble(pt) * DpiX / 72.0;
         }
 
         internal static IXLTableRows InsertRowsWithoutEvents(Func<int, bool, IXLRangeRows> insertFunc,
@@ -216,8 +226,6 @@ namespace ClosedXML.Excel
             return rows;
         }
 
-
-
         public static bool IsNullOrWhiteSpace(string value)
         {
 #if NET4
@@ -236,7 +244,6 @@ namespace ClosedXML.Excel
             }
             return true;
 #endif
-
         }
 
         private static readonly Regex A1RegexRelative = new Regex(
@@ -291,13 +298,18 @@ namespace ClosedXML.Excel
             }
 
             // handle doubles
-            if (v is double)
+            if (v is double && ((double)v).IsValidOADateNumber())
             {
                 return DateTime.FromOADate((double)v);
             }
 
             // handle everything else
             return (DateTime)Convert.ChangeType(v, typeof(DateTime));
+        }
+
+        internal static bool IsValidOADateNumber(this double d)
+        {
+            return -657435 <= d && d < 2958466;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using ClosedXML_Examples.Styles;
+using ClosedXML_Examples.Styles;
 using System.IO;
 
 namespace ClosedXML_Examples

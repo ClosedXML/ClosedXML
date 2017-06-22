@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -79,7 +79,7 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLRange range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" });
-            Assert.AreEqual("'Sheet1'!B2:B4", range.ToString());
+            Assert.AreEqual("Sheet1!B2:B4", range.ToString());
         }
 
         [Test]
@@ -207,6 +207,28 @@ namespace ClosedXML_Tests
             bool success = cell.TryGetValue(out outValue);
             Assert.IsTrue(success);
             Assert.IsTrue(outValue);
+        }
+
+        [Test]
+        public void TryGetValue_DateTime_BadString()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            DateTime outValue;
+            var date = "ABC";
+            bool success = ws.Cell("A1").SetValue(date).TryGetValue(out outValue);
+            Assert.IsFalse(success);
+        }
+
+
+        [Test]
+        public void TryGetValue_DateTime_BadString2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            DateTime outValue;
+            var date = 5545454;
+            ws.FirstCell().SetValue(date).DataType = XLCellValues.DateTime;
+            bool success = ws.FirstCell().TryGetValue(out outValue);
+            Assert.IsFalse(success);
         }
 
         [Test]

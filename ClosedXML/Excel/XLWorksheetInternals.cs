@@ -1,10 +1,11 @@
-﻿using System;
+using System;
+
 namespace ClosedXML.Excel
 {
-    internal class XLWorksheetInternals: IDisposable
+    internal class XLWorksheetInternals : IDisposable
     {
         public XLWorksheetInternals(
-            XLCellsCollection cellsCollection, 
+            XLCellsCollection cellsCollection,
             XLColumnsCollection columnsCollection,
             XLRowsCollection rowsCollection,
             XLRanges mergedRanges
