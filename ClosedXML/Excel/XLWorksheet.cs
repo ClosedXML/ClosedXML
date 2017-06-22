@@ -1,6 +1,7 @@
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;
 using ClosedXML.Excel.Misc;
+using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -43,6 +44,8 @@ namespace ClosedXML.Excel
         {
             EventTrackingEnabled = workbook.EventTracking == XLEventTracking.Enabled;
 
+            Workbook = workbook;
+
             RangeShiftedRows = new XLReentrantEnumerableSet<XLCallbackAction>();
             RangeShiftedColumns = new XLReentrantEnumerableSet<XLCallbackAction>();
 
@@ -51,7 +54,7 @@ namespace ClosedXML.Excel
             RangeAddress.LastAddress.Worksheet = this;
 
             Pictures = new XLPictures(this);
-            NamedRanges = new XLNamedRanges(workbook);
+            NamedRanges = new XLNamedRanges(this);
             SheetView = new XLSheetView();
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
@@ -60,7 +63,6 @@ namespace ClosedXML.Excel
             Protection = new XLSheetProtection();
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();
-            Workbook = workbook;
             SetStyle(workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
                                                  new XLRowsCollection(), new XLRanges());
@@ -665,7 +667,7 @@ namespace ClosedXML.Excel
                     String name = sheetName.ToLower().Equals(Name.ToLower())
                                       ? newSheetName
                                       : sheetName;
-                    newValue.Append(String.Format("'{0}'!{1}", name, pair[1]));
+                    newValue.Append(String.Format("{0}!{1}", name.WrapSheetNameInQuotesIfRequired(), pair[1]));
                 }
                 else
                 {

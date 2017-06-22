@@ -429,16 +429,16 @@ namespace ClosedXML.Excel
         public void Save()
         {
 #if DEBUG
-            Save(true);
+            Save(true, false);
 #else
-            Save(false);
+            Save(false, false);
 #endif
         }
 
         /// <summary>
         ///   Saves the current workbook and optionally performs validation
         /// </summary>
-        public void Save(bool validate)
+        public void Save(Boolean validate, Boolean evaluateFormulae = false)
         {
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
@@ -446,10 +446,10 @@ namespace ClosedXML.Excel
 
             if (_loadSource == XLLoadSource.Stream)
             {
-                CreatePackage(_originalStream, false, _spreadsheetDocumentType, validate);
+                CreatePackage(_originalStream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
             }
             else
-                CreatePackage(_originalFile, _spreadsheetDocumentType, validate);
+                CreatePackage(_originalFile, _spreadsheetDocumentType, validate, evaluateFormulae);
         }
 
         /// <summary>
@@ -458,16 +458,16 @@ namespace ClosedXML.Excel
         public void SaveAs(String file)
         {
 #if DEBUG
-            SaveAs(file, true);
+            SaveAs(file, true, false);
 #else
-            SaveAs(file, false);
+            SaveAs(file, false, false);
 #endif
         }
 
         /// <summary>
         ///   Saves the current workbook to a file and optionally validates it.
         /// </summary>
-        public void SaveAs(String file, Boolean validate)
+        public void SaveAs(String file, Boolean validate, Boolean evaluateFormulae = false)
         {
             checkForWorksheetsPresent();
             PathHelper.CreateDirectory(Path.GetDirectoryName(file));
@@ -476,14 +476,14 @@ namespace ClosedXML.Excel
                 if (File.Exists(file))
                     File.Delete(file);
 
-                CreatePackage(file, GetSpreadsheetDocumentType(file), validate);
+                CreatePackage(file, GetSpreadsheetDocumentType(file), validate, evaluateFormulae);
             }
             else if (_loadSource == XLLoadSource.File)
             {
                 if (String.Compare(_originalFile.Trim(), file.Trim(), true) != 0)
                     File.Copy(_originalFile, file, true);
 
-                CreatePackage(file, GetSpreadsheetDocumentType(file), validate);
+                CreatePackage(file, GetSpreadsheetDocumentType(file), validate, evaluateFormulae);
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -493,7 +493,7 @@ namespace ClosedXML.Excel
                 {
                     CopyStream(_originalStream, fileStream);
                     //fileStream.Position = 0;
-                    CreatePackage(fileStream, false, _spreadsheetDocumentType, validate);
+                    CreatePackage(fileStream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
                     fileStream.Close();
                 }
             }
@@ -531,16 +531,16 @@ namespace ClosedXML.Excel
         public void SaveAs(Stream stream)
         {
 #if DEBUG
-            SaveAs(stream, true);
+            SaveAs(stream, true, false);
 #else
-            SaveAs(stream, false);
+            SaveAs(stream, false, false);
 #endif
         }
 
         /// <summary>
         ///   Saves the current workbook to a stream and optionally validates it.
         /// </summary>
-        public void SaveAs(Stream stream, Boolean validate)
+        public void SaveAs(Stream stream, Boolean validate, Boolean evaluateFormulae = false)
         {
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
@@ -552,13 +552,13 @@ namespace ClosedXML.Excel
                 if (stream.CanRead && stream.CanSeek && stream.CanWrite)
                 {
                     // all is fine the package can be created in a direct way
-                    CreatePackage(stream, true, _spreadsheetDocumentType, validate);
+                    CreatePackage(stream, true, _spreadsheetDocumentType, validate, evaluateFormulae);
                 }
                 else
                 {
                     // the harder way
                     MemoryStream ms = new MemoryStream();
-                    CreatePackage(ms, true, _spreadsheetDocumentType, validate);
+                    CreatePackage(ms, true, _spreadsheetDocumentType, validate, evaluateFormulae);
                     // not really nessesary, because I changed CopyStream too.
                     // but for better understanding and if somebody in the future
                     // provide an changed version of CopyStream
@@ -573,7 +573,7 @@ namespace ClosedXML.Excel
                     CopyStream(fileStream, stream);
                     fileStream.Close();
                 }
-                CreatePackage(stream, false, _spreadsheetDocumentType, validate);
+                CreatePackage(stream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
             }
             else if (_loadSource == XLLoadSource.Stream)
             {
@@ -581,7 +581,7 @@ namespace ClosedXML.Excel
                 if (_originalStream != stream)
                     CopyStream(_originalStream, stream);
 
-                CreatePackage(stream, false, _spreadsheetDocumentType, validate);
+                CreatePackage(stream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
             }
         }
 
@@ -866,26 +866,6 @@ namespace ClosedXML.Excel
         public XLWorkbook SetLockWindows(Boolean value) { LockWindows = value; return this; }
         internal HexBinaryValue LockPassword { get; set; }
         
-        public void Protect()
-        {
-            Protect(true);
-        }
-
-        public void Protect(string workbookPassword)
-        {
-            Protect(true, false, workbookPassword);
-        }
-
-        public void Protect(Boolean lockStructure)
-        {
-            Protect(lockStructure, false);
-        }
-
-        public void Protect(Boolean lockStructure, Boolean lockWindows)
-        {
-            Protect(lockStructure, lockWindows, null);
-        }
-
         public void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword)
         {
             if (workbookPassword != null)
@@ -928,6 +908,26 @@ namespace ClosedXML.Excel
             }
             LockStructure = lockStructure;
             LockWindows = lockWindows;
+        }
+        
+        public void Protect()
+        {
+            Protect(true);
+        }
+
+        public void Protect(string workbookPassword)
+        {
+            Protect(true, false, workbookPassword);
+        }
+
+        public void Protect(Boolean lockStructure)
+        {
+            Protect(lockStructure, false);
+        }
+
+        public void Protect(Boolean lockStructure, Boolean lockWindows)
+        {
+            Protect(lockStructure, lockWindows, null);
         }
 
         public void Unprotect()
