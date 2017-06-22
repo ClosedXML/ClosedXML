@@ -1,7 +1,9 @@
+using FastMember;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +14,6 @@ namespace ClosedXML.Excel
 {
     using Attributes;
     using ClosedXML.Extensions;
-    using FastMember;
 
     internal class XLCell : IXLCell, IXLStylized
     {

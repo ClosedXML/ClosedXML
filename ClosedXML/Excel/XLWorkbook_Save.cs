@@ -62,7 +62,7 @@ namespace ClosedXML.Excel
         private static readonly EnumValue<CellValues> CvDate = new EnumValue<CellValues>(CellValues.Date);
         private static readonly EnumValue<CellValues> CvBoolean = new EnumValue<CellValues>(CellValues.Boolean);
 
-        private static EnumValue<CellValues> GetCellValue(XLCell xlCell)
+        private static EnumValue<CellValues> GetCellValueType(XLCell xlCell)
         {
             switch (xlCell.DataType)
             {
@@ -111,7 +111,7 @@ namespace ClosedXML.Excel
             return true;
         }
 
-        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, bool validate)
+        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, bool validate, bool evaluateFormulae)
         {
             PathHelper.CreateDirectory(Path.GetDirectoryName(filePath));
             var package = File.Exists(filePath)
@@ -120,12 +120,12 @@ namespace ClosedXML.Excel
 
             using (package)
             {
-                CreateParts(package);
+                CreateParts(package, evaluateFormulae);
                 if (validate) Validate(package);
             }
         }
 
-        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType, bool validate)
+        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType, bool validate, bool evaluateFormulae)
         {
             var package = newStream
                 ? SpreadsheetDocument.Create(stream, spreadsheetDocumentType)
@@ -133,7 +133,7 @@ namespace ClosedXML.Excel
 
             using (package)
             {
-                CreateParts(package);
+                CreateParts(package, evaluateFormulae);
                 if (validate) Validate(package);
             }
         }
@@ -218,7 +218,7 @@ namespace ClosedXML.Excel
         }
 
         // Adds child parts and generates content of the specified part.
-        private void CreateParts(SpreadsheetDocument document)
+        private void CreateParts(SpreadsheetDocument document, bool evaluateFormulae)
         {
             var context = new SaveContext();
 
@@ -314,7 +314,7 @@ namespace ClosedXML.Excel
                     GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
                 }
 
-                GenerateWorksheetPartContent(worksheetPart, worksheet, context);
+                GenerateWorksheetPartContent(worksheetPart, worksheet, evaluateFormulae, context);
 
                 if (worksheet.PivotTables.Any())
                 {
@@ -3695,8 +3695,8 @@ namespace ClosedXML.Excel
 
         #region GenerateWorksheetPartContent
 
-        private static void GenerateWorksheetPartContent(WorksheetPart worksheetPart, XLWorksheet xlWorksheet,
-            SaveContext context)
+        private static void GenerateWorksheetPartContent(
+            WorksheetPart worksheetPart, XLWorksheet xlWorksheet, bool evaluateFormulae, SaveContext context)
         {
             #region Worksheet
 
@@ -4181,16 +4181,13 @@ namespace ClosedXML.Excel
                 lastCell = 0;
                 var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
                     ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow) : c.CellReference.Value), c => c);
-                foreach (var opCell in xlWorksheet.Internals.CellsCollection.RowsCollection[distinctRow].Values
+                foreach (var xlCell in xlWorksheet.Internals.CellsCollection.RowsCollection[distinctRow].Values
                     .OrderBy(c => c.Address.ColumnNumber)
                     .Select(c => c))
                 {
-                    var styleId = context.SharedStyles[opCell.GetStyleId()].StyleId;
-
-                    var dataType = opCell.DataType;
-                    var cellReference = (opCell.Address).GetTrimmedAddress();
-
-                    var isEmpty = opCell.IsEmpty(true);
+                    var styleId = context.SharedStyles[xlCell.GetStyleId()].StyleId;
+                    var cellReference = (xlCell.Address).GetTrimmedAddress();
+                    var isEmpty = xlCell.IsEmpty(true);
 
                     Cell cell = null;
                     if (cellsByReference.ContainsKey(cellReference))
@@ -4230,20 +4227,20 @@ namespace ClosedXML.Excel
                         }
 
                         cell.StyleIndex = styleId;
-                        var formula = opCell.FormulaA1;
-                        if (opCell.HasFormula)
+                        var formula = xlCell.FormulaA1;
+                        if (xlCell.HasFormula)
                         {
                             if (formula.StartsWith("{"))
                             {
                                 formula = formula.Substring(1, formula.Length - 2);
                                 var f = new CellFormula { FormulaType = CellFormulaValues.Array };
 
-                                if (opCell.FormulaReference == null)
-                                    opCell.FormulaReference = opCell.AsRange().RangeAddress;
-                                if (opCell.FormulaReference.FirstAddress.Equals(opCell.Address))
+                                if (xlCell.FormulaReference == null)
+                                    xlCell.FormulaReference = xlCell.AsRange().RangeAddress;
+                                if (xlCell.FormulaReference.FirstAddress.Equals(xlCell.Address))
                                 {
                                     f.Text = formula;
-                                    f.Reference = opCell.FormulaReference.ToStringRelative();
+                                    f.Reference = xlCell.FormulaReference.ToStringRelative();
                                 }
 
                                 cell.CellFormula = f;
@@ -4259,56 +4256,12 @@ namespace ClosedXML.Excel
                         else
                         {
                             cell.CellFormula = null;
-
-                            cell.DataType = opCell.DataType == XLCellValues.DateTime ? null : GetCellValue(opCell);
-
-                            if (dataType == XLCellValues.Text)
-                            {
-                                if (opCell.InnerText.Length == 0)
-                                    cell.CellValue = null;
-                                else
-                                {
-                                    if (opCell.ShareString)
-                                    {
-                                        var cellValue = new CellValue();
-                                        cellValue.Text = opCell.SharedStringId.ToString();
-                                        cell.CellValue = cellValue;
-                                    }
-                                    else
-                                    {
-                                        var text = opCell.GetString();
-                                        var t = new Text(text);
-                                        if (text.PreserveSpaces())
-                                            t.Space = SpaceProcessingModeValues.Preserve;
-
-                                        cell.InlineString = new InlineString { Text = t };
-                                    }
-                                }
-                            }
-                            else if (dataType == XLCellValues.TimeSpan)
-                            {
-                                var timeSpan = opCell.GetTimeSpan();
-                                var cellValue = new CellValue();
-                                cellValue.Text =
-                                    XLCell.BaseDate.Add(timeSpan).ToOADate().ToInvariantString();
-                                cell.CellValue = cellValue;
-                            }
-                            else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
-                            {
-                                if (!XLHelper.IsNullOrWhiteSpace(opCell.InnerText))
-                                {
-                                    var cellValue = new CellValue();
-                                    cellValue.Text = Double.Parse(opCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
-                                    cell.CellValue = cellValue;
-                                }
-                            }
-                            else
-                            {
-                                var cellValue = new CellValue();
-                                cellValue.Text = opCell.InnerText;
-                                cell.CellValue = cellValue;
-                            }
+                            cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValueType(xlCell);
                         }
+
+                        if (!xlCell.HasFormula || evaluateFormulae)
+                            SetCellValue(xlCell, cell);
+
                     }
                 }
                 xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
@@ -4822,6 +4775,74 @@ namespace ClosedXML.Excel
             //}
 
             #endregion LegacyDrawingHeaderFooter
+        }
+
+        private static void SetCellValue(XLCell xlCell, Cell openXmlCell)
+        {
+            if (xlCell.HasFormula)
+            {
+                var cellValue = new CellValue();
+                try
+                {
+                    cellValue.Text = xlCell.Value.ToString();
+                    openXmlCell.DataType = new EnumValue<CellValues>(CellValues.String);
+                }
+                catch
+                {
+                    cellValue = null;
+                }
+
+                openXmlCell.CellValue = cellValue;
+                return;
+            }
+
+            var dataType = xlCell.DataType;
+            if (dataType == XLCellValues.Text)
+            {
+                if (xlCell.InnerText.Length == 0)
+                    openXmlCell.CellValue = null;
+                else
+                {
+                    if (xlCell.ShareString)
+                    {
+                        var cellValue = new CellValue();
+                        cellValue.Text = xlCell.SharedStringId.ToString();
+                        openXmlCell.CellValue = cellValue;
+                    }
+                    else
+                    {
+                        var text = xlCell.GetString();
+                        var t = new Text(text);
+                        if (text.PreserveSpaces())
+                            t.Space = SpaceProcessingModeValues.Preserve;
+
+                        openXmlCell.InlineString = new InlineString { Text = t };
+                    }
+                }
+            }
+            else if (dataType == XLCellValues.TimeSpan)
+            {
+                var timeSpan = xlCell.GetTimeSpan();
+                var cellValue = new CellValue();
+                cellValue.Text =
+                    XLCell.BaseDate.Add(timeSpan).ToOADate().ToInvariantString();
+                openXmlCell.CellValue = cellValue;
+            }
+            else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
+            {
+                if (!XLHelper.IsNullOrWhiteSpace(xlCell.InnerText))
+                {
+                    var cellValue = new CellValue();
+                    cellValue.Text = Double.Parse(xlCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
+                    openXmlCell.CellValue = cellValue;
+                }
+            }
+            else
+            {
+                var cellValue = new CellValue();
+                cellValue.Text = xlCell.InnerText;
+                openXmlCell.CellValue = cellValue;
+            }
         }
 
         private static void PopulateAutoFilter(XLAutoFilter xlAutoFilter, AutoFilter autoFilter)
