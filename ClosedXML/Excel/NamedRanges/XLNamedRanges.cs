@@ -49,14 +49,31 @@ namespace ClosedXML.Excel
 
         public IXLNamedRange Add(String rangeName, String rangeAddress, String comment)
         {
-            var match = XLHelper.NamedRangeReferenceRegex.Match(rangeAddress);
+            return Add(rangeName, rangeAddress, comment, false);
+        }
 
-            if (!match.Success)
+        /// <summary>
+        /// Adds the specified range name.
+        /// </summary>
+        /// <param name="rangeName">Name of the range.</param>
+        /// <param name="rangeAddress">The range address.</param>
+        /// <param name="comment">The comment.</param>
+        /// <param name="acceptInvalidReferences">if set to <c>true</c> range address will not be checked for validity. Necessary when loading files as is.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">For named ranges in the workbook scope, specify the sheet name in the reference.</exception>
+        internal IXLNamedRange Add(String rangeName, String rangeAddress, String comment, bool acceptInvalidReferences)
+        {
+            if (!acceptInvalidReferences)
             {
-                if (Worksheet == null || !XLHelper.NamedRangeReferenceRegex.Match(Worksheet.Range(rangeAddress).ToString()).Success)
-                    throw new ArgumentException("For named ranges in the workbook scope, specify the sheet name in the reference.");
-                else
-                    rangeAddress = Worksheet.Range(rangeAddress).ToString();
+                var match = XLHelper.NamedRangeReferenceRegex.Match(rangeAddress);
+
+                if (!match.Success)
+                {
+                    if (Worksheet == null || !XLHelper.NamedRangeReferenceRegex.Match(Worksheet.Range(rangeAddress).ToString()).Success)
+                        throw new ArgumentException("For named ranges in the workbook scope, specify the sheet name in the reference.");
+                    else
+                        rangeAddress = Worksheet.Range(rangeAddress).ToString();
+                }
             }
 
             var namedRange = new XLNamedRange(this, rangeName, rangeAddress, comment);
