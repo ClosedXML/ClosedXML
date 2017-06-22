@@ -1,4 +1,5 @@
 using ClosedXML.Excel.Misc;
+using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1538,7 +1539,7 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return String.Format("'{0}'!{1}:{2}", Worksheet.Name, RangeAddress.FirstAddress, RangeAddress.LastAddress);
+            return String.Format("{0}!{1}:{2}", Worksheet.Name.WrapSheetNameInQuotesIfRequired(), RangeAddress.FirstAddress, RangeAddress.LastAddress);
         }
 
         protected void ShiftColumns(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int columnsShifted)

@@ -1013,7 +1013,7 @@ namespace ClosedXML.Excel
         {
             if (workbook.DefinedNames == null) return;
 
-            foreach (DefinedName definedName in workbook.DefinedNames)
+            foreach (var definedName in workbook.DefinedNames.OfType<DefinedName>())
             {
                 var name = definedName.Name;
                 var visible = true;
@@ -1025,7 +1025,6 @@ namespace ClosedXML.Excel
                     {
                         if (area.Contains("["))
                         {
-                            String tableName = area.Substring(0, area.IndexOf("["));
                             var ws = Worksheets.FirstOrDefault(w => (w as XLWorksheet).SheetId == definedName.LocalSheetId + 1);
                             if (ws != null)
                             {
@@ -1056,7 +1055,7 @@ namespace ClosedXML.Excel
                         if (localSheetId == null)
                         {
                             if (!NamedRanges.Any(nr => nr.Name == name))
-                                NamedRanges.Add(name, text, comment).Visible = visible;
+                                (NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
                         }
                         else
                         {
@@ -1098,7 +1097,8 @@ namespace ClosedXML.Excel
             var areas = validateDefinedNames(definedName.Text.Split(','));
             foreach (var item in areas)
             {
-                SetColumnsOrRowsToRepeat(item);
+                if (this.Range(item) != null)
+                    SetColumnsOrRowsToRepeat(item);
             }
         }
 
@@ -1129,8 +1129,16 @@ namespace ClosedXML.Excel
         private static void ParseReference(string item, out string sheetName, out string sheetArea)
         {
             var sections = item.Trim().Split('!');
-            sheetName = sections[0].Replace("\'", "");
-            sheetArea = sections[1];
+            if (sections.Count() == 1)
+            {
+                sheetName = string.Empty;
+                sheetArea = item;
+            }
+            else
+            {
+                sheetName = sections[0].Replace("\'", "");
+                sheetArea = sections[1];
+            }
         }
 
         private Int32 lastCell;
@@ -1225,18 +1233,19 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
-                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                     xlCell._dataType = XLCellValues.DateTime;
                 }
                 else if (cell.DataType == CellValues.Boolean)
                 {
-                    xlCell._cellValue = cell.CellValue.Text;
+                    if (cell.CellValue != null)
+                        xlCell._cellValue = cell.CellValue.Text;
                     xlCell._dataType = XLCellValues.Boolean;
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
-                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
 
                     if (s == null)

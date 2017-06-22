@@ -24,6 +24,9 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\LoadFileWithCustomSheetViews.xlsx",
                 @"Misc\LoadSheetsWithCommas.xlsx",
                 @"Misc\ExcelProducedWorkbookWithImages.xlsx",
+                @"Misc\InvalidPrintTitles.xlsx",
+                @"Misc\ExcelProducedWorkbookWithImages.xlsx",
+                @"Misc\EmptyCellValue.xlsx",
                 @"Misc\AllShapes.xlsx"
             };
 

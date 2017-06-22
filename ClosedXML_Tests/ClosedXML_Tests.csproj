@@ -43,13 +43,13 @@
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=0.0.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.1\lib\net45\DocumentFormat.OpenXml.dll</HintPath>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -65,11 +65,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ClosedXML\Properties\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Examples\AutoFilterTests.cs" />
     <Compile Include="Examples\ImageHandlingTests.cs" />
     <Compile Include="Examples\CommentsTests.cs" />
     <Compile Include="Examples\ConditionalFormattingTests.cs" />
     <Compile Include="Examples\PageSetupTests.cs" />
+    <Compile Include="Examples\PivotTableTests.cs" />
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
@@ -261,6 +265,7 @@
     <EmbeddedResource Include="Resource\Misc\EmptyTable.xlsx" />
     <EmbeddedResource Include="Resource\Misc\FileWithDefaultStyleNameNotInEnglish.xlsx" />
     <EmbeddedResource Include="Resource\Misc\FileWithMismatchSheetIdAndRelId.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\InvalidPrintTitles.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LoadFileWithCustomSheetViews.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LoadPivotTables.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LibreOfficeFileWithDates.xlsx" />
@@ -273,6 +278,7 @@
     <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageAnchors.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageFormats.xlsx" />
     <EmbeddedResource Include="Resource\Misc\ExcelProducedWorkbookWithImages.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\EmptyCellValue.xlsx" />
     <EmbeddedResource Include="Resource\Misc\AllShapes.xlsx" />
   </ItemGroup>
   <ItemGroup>
