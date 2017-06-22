@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
+using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +23,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\LoadPivotTables.xlsx",
                 @"Misc\LoadFileWithCustomSheetViews.xlsx",
                 @"Misc\LoadSheetsWithCommas.xlsx",
-                @"Misc\InvalidPrintTitles.xlsx"
+                @"Misc\InvalidPrintTitles.xlsx",
+                @"Misc\ExcelProducedWorkbookWithImages.xlsx"
             };
 
             foreach (var file in files)
@@ -117,6 +119,60 @@ namespace ClosedXML_Tests.Excel
                 {
                     Assert.AreEqual(XLCellValues.DateTime, cell.DataType);
                 }
+            }
+        }
+
+        [Test]
+        public void CanLoadFileWithImagesWithCorrectAnchorTypes()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(2, ws.Pictures.Count);
+                Assert.AreEqual(XLPicturePlacement.FreeFloating, ws.Pictures.First().Placement);
+                Assert.AreEqual(XLPicturePlacement.Move, ws.Pictures.Skip(1).First().Placement);
+
+                var ws2 = wb.Worksheets.Skip(1).First();
+                Assert.AreEqual(1, ws2.Pictures.Count);
+                Assert.AreEqual(XLPicturePlacement.MoveAndSize, ws2.Pictures.First().Placement);
+    }
+}
+
+        [Test]
+        public void CanLoadFileWithImagesWithCorrectImageType()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageFormats.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(1, ws.Pictures.Count);
+                Assert.AreEqual(XLPictureFormat.Jpeg, ws.Pictures.First().Format);
+
+                var ws2 = wb.Worksheets.Skip(1).First();
+                Assert.AreEqual(1, ws2.Pictures.Count);
+                Assert.AreEqual(XLPictureFormat.Png, ws2.Pictures.First().Format);
+            }
+        }
+
+        [Test]
+        public void CanLoadAndDeduceAnchorsFromExcelGeneratedFile()
+        {
+            // This file was produced by Excel. It contains 3 images, but the latter 2 were copied from the first.
+            // There is actually only 1 embedded image if you inspect the file's internals.
+            // Additionally, Excel saves all image anchors as TwoCellAnchor, but uses the EditAs attribute to distinguish the types
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\ExcelProducedWorkbookWithImages.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual(3, ws.Pictures.Count);
+
+                Assert.AreEqual(XLPicturePlacement.MoveAndSize, ws.Picture("Picture 1").Placement);
+                Assert.AreEqual(XLPicturePlacement.Move, ws.Picture("Picture 2").Placement);
+                Assert.AreEqual(XLPicturePlacement.FreeFloating, ws.Picture("Picture 3").Placement);
+
+                using (var ms = new MemoryStream())
+                    wb.SaveAs(ms, true);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿
+
 namespace ClosedXML.Excel
 {
     public enum XLOutlineSummaryVLocation { Top, Bottom };

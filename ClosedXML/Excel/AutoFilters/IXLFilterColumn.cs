@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace ClosedXML.Excel
 {
     public enum XLTopBottomType { Items, Percent }

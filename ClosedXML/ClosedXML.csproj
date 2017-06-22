@@ -46,8 +46,8 @@
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=0.0.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.1\lib\net45\DocumentFormat.OpenXml.dll</HintPath>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FastMember.Signed, Version=1.0.0.9, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
@@ -72,14 +72,19 @@
     <Compile Include="Excel\CalcEngine\Functions\Database.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Information.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Lookup.cs" />
+    <Compile Include="Excel\Drawings\IXLPictures.cs" />
+    <Compile Include="Excel\Drawings\PictureEnums.cs" />
     <Compile Include="Excel\Drawings\XLPicture.cs" />
     <Compile Include="Excel\Drawings\IXLMarker.cs" />
     <Compile Include="Excel\Drawings\IXLPicture.cs" />
     <Compile Include="Excel\Drawings\XLMarker.cs" />
+    <Compile Include="Excel\Drawings\XLPictures.cs" />
     <Compile Include="Excel\Misc\XLCallbackAction.cs" />
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
     <Compile Include="Excel\XLConstants.cs" />
+    <Compile Include="Excel\XLWorkbook_ImageHandling.cs" />
+    <Compile Include="Extensions\OpenXmlPartContainerExtensions.cs" />
     <Compile Include="Utils\GraphicsUtils.cs" />
     <Compile Include="Utils\XmlEncoder.cs" />
     <Compile Include="XLHelper.cs" />
@@ -337,7 +342,9 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="ClosedXML.snk" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
