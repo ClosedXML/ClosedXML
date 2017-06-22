@@ -23,8 +23,10 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\LoadPivotTables.xlsx",
                 @"Misc\LoadFileWithCustomSheetViews.xlsx",
                 @"Misc\LoadSheetsWithCommas.xlsx",
+                @"Misc\ExcelProducedWorkbookWithImages.xlsx",
                 @"Misc\InvalidPrintTitles.xlsx",
-                @"Misc\ExcelProducedWorkbookWithImages.xlsx"
+                @"Misc\ExcelProducedWorkbookWithImages.xlsx",
+                @"Misc\EmptyCellValue.xlsx"
             };
 
             foreach (var file in files)
@@ -136,8 +138,8 @@ namespace ClosedXML_Tests.Excel
                 var ws2 = wb.Worksheets.Skip(1).First();
                 Assert.AreEqual(1, ws2.Pictures.Count);
                 Assert.AreEqual(XLPicturePlacement.MoveAndSize, ws2.Pictures.First().Placement);
-    }
-}
+            }
+        }
 
         [Test]
         public void CanLoadFileWithImagesWithCorrectImageType()
