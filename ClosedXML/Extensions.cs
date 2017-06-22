@@ -172,29 +172,9 @@ namespace ClosedXML.Excel
 
     public static class IntegerExtensions
     {
-        private static readonly NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
-
-        [ThreadStatic]
-        private static Dictionary<Int32, String> intToString;
-
         public static String ToInvariantString(this Int32 value)
         {
-            String sValue;
-            if (intToString == null)
-            {
-                intToString = new Dictionary<int, string>();
-                sValue = value.ToString(nfi);
-                intToString.Add(value, sValue);
-            }
-            else
-            {
-                if (!intToString.TryGetValue(value, out sValue))
-                {
-                    sValue = value.ToString(nfi);
-                    intToString.Add(value, sValue);
-                }
-            }
-            return sValue;
+            return value.ToString(CultureInfo.InvariantCulture.NumberFormat);
         }
     }
 
