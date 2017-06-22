@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClosedXML_Tests</RootNamespace>
+    <AssemblyName>ClosedXML_Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;$(AppVeyor)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(AppVeyor)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=0.0.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.1\lib\net45\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Examples\AutoFilterTests.cs" />
+    <Compile Include="Examples\ImageHandlingTests.cs" />
+    <Compile Include="Examples\CommentsTests.cs" />
+    <Compile Include="Examples\ConditionalFormattingTests.cs" />
+    <Compile Include="Examples\PageSetupTests.cs" />
+    <Compile Include="Examples\RowsTests.cs" />
+    <Compile Include="Examples\StylesTests.cs" />
+    <Compile Include="ExcelDocsComparerTests.cs" />
+    <Compile Include="Excel\CalcEngine\InformationTests.cs" />
+    <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
+    <Compile Include="Excel\CalcEngine\LookupTests.cs" />
+    <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
+    <Compile Include="Excel\CalcEngine\TextTests.cs" />
+    <Compile Include="Excel\ImageHandling\PictureTests.cs" />
+    <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
+    <Compile Include="Excel\Loading\LoadingTests.cs" />
+    <Compile Include="Excel\PageSetup\HeaderFooterTests.cs" />
+    <Compile Include="Excel\PageSetup\PageBreaksTests.cs" />
+    <Compile Include="Excel\Ranges\UsedAndUnusedCellsTests.cs" />
+    <Compile Include="Excel\Saving\SavingTests.cs" />
+    <Compile Include="XLHelperTests.cs" />
+    <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
+    <Compile Include="Excel\CalcEngine\DateAndTimeTests.cs" />
+    <Compile Include="Excel\CalcEngine\XLMathTests.cs" />
+    <Compile Include="Excel\CalcEngine\FunctionsTests.cs" />
+    <Compile Include="Excel\Cells\XLCellTests.cs" />
+    <Compile Include="Excel\Columns\ColumnTests.cs" />
+    <Compile Include="Excel\Coordinates\XLAddressTests.cs" />
+    <Compile Include="Excel\DataValidations\DataValidationTests.cs" />
+    <Compile Include="Excel\Misc\FormulaTests.cs" />
+    <Compile Include="Excel\Misc\StylesTests.cs" />
+    <Compile Include="Excel\Misc\XLWorkbookTests.cs" />
+    <Compile Include="Excel\Misc\ExtensionsTests.cs" />
+    <Compile Include="Excel\NamedRanges\NamedRangesTests.cs" />
+    <Compile Include="Excel\PivotTables\XLPivotTableTests.cs" />
+    <Compile Include="Excel\Ranges\RangeUsedTests.cs" />
+    <Compile Include="Excel\Ranges\MergedRangesTests.cs" />
+    <Compile Include="Excel\Ranges\CopyingRangesTests.cs" />
+    <Compile Include="Excel\Ranges\XLRangeAddressTests.cs" />
+    <Compile Include="Excel\Ranges\XLRangeBaseTests.cs" />
+    <Compile Include="Excel\Ranges\InsertingRangesTests.cs" />
+    <Compile Include="Excel\Rows\RowTests.cs" />
+    <Compile Include="Excel\Styles\ColorTests.cs" />
+    <Compile Include="Excel\Styles\NumberFormatTests.cs" />
+    <Compile Include="Excel\Styles\XLFillTests.cs" />
+    <Compile Include="Excel\Tables\TablesTests.cs" />
+    <Compile Include="Excel\Worksheets\XLWorksheetTests.cs" />
+    <Compile Include="Utils\ExcelDocsComparer.cs" />
+    <Compile Include="Examples\DeleteTests.cs" />
+    <Compile Include="Examples\LoadingTests.cs" />
+    <Compile Include="Examples\MiscTests.cs" />
+    <Compile Include="Excel\Misc\XlHelperTests.cs" />
+    <Compile Include="Examples\ColumnsTests.cs" />
+    <Compile Include="Excel\Misc\CopyContentsTests.cs" />
+    <Compile Include="Examples\RangesTests.cs" />
+    <Compile Include="Utils\PackageHelper.cs" />
+    <Compile Include="Utils\ResourceFileExtractor.cs" />
+    <Compile Include="Utils\StreamHelper.cs" />
+    <Compile Include="TestHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Excel\RichText\XLRichStringTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClosedXML\ClosedXML.csproj">
+      <Project>{BD5E6BFE-E837-4A35-BCA9-39667D873A20}</Project>
+      <Name>ClosedXML</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj">
+      <Project>{03A518D0-1CB7-488E-861C-C4E782B27A46}</Project>
+      <Name>ClosedXML_Examples</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Examples\Columns\ColumnCells.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Columns\ColumnCollection.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Columns\ColumnSettings.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Columns\DeletingColumns.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Columns\InsertColumns.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Delete\RemoveRows.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Loading\ChangingBasicTable.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\AddingDataSet.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\AddingDataTableAsWorksheet.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\AdjustToContents.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\AdjustToContentsWithAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\AutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\BlankCells.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\CellValues.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\Collections.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\DataTypes.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\DataTypesUnderDifferentCulture.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\DataValidation.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\Formulas.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\FreezePanes.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\HideSheets.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\HideUnhide.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\Hyperlinks.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\InsertingData.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\InsertingTables.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\LambdaExpressions.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\MergeCells.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\MergeMoves.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\Outline.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\SheetProtection.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\SheetViews.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\ShiftingFormulas.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\ShowCase.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\TabColors.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\WorkbookProperties.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\PageSetup\HeaderFooters.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\PageSetup\Margins.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\PageSetup\Page.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\PageSetup\Sheets.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\PageSetup\SheetTab.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\PageSetup\TwoPages.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\ClearingRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\CopyingRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\DefiningRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\DeletingRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\InsertingDeletingColumns.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\InsertingDeletingRows.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\MultipleRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\NamedRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\ShiftingRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\SortExample.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\Sorting.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\TransposeRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\TransposeRangesPlus.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Rows\InsertRows.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Rows\RowCells.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Rows\RowCollection.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Rows\RowSettings.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\DefaultStyles.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\StyleAlignment.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\StyleBorder.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\StyleFill.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\StyleFont.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\StyleNumberFormat.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\StyleRowsColumns.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\StyleWorksheet.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\UsingColors.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\CopyRowContents.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Examples\Delete\DeleteFewWorksheets.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Examples\Misc\CopyingWorksheets.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\UsingTables.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Examples\Misc\CopyingRowsAndColumns.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Examples\Styles\UsingRichText.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Examples\Ranges\WalkingRanges.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Examples\Ranges\CurrentRowColumn.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
+    <None Include="ClosedXML.snk" />
+    <EmbeddedResource Include="Resource\Examples\Misc\BasicTable.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\PurpleWorksheet.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Comments\EditingComments.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\TopBottomAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\DynamicAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\RegularAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\CustomAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Comments\AddingComments.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowHigh.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowMidHigh.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleMinimumMaximum.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFContains.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEndsWith.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEqualsNumber.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFEqualsString.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIsBlank.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIsError.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFMultipleConditions.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotBlank.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotContains.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotEqualsNumber.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotEqualsString.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFNotError.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStartsWith.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBar.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\EmptyTable.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\FileWithDefaultStyleNameNotInEnglish.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\FileWithMismatchSheetIdAndRelId.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadFileWithCustomSheetViews.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadPivotTables.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LibreOfficeFileWithDates.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\TableWithCustomTheme.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadSheetsWithCommas.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\AddingRowToTables.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\PivotTables\PivotTables.xlsx" />
+    <None Include="packages.config" />
+    <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageAnchors.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageFormats.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

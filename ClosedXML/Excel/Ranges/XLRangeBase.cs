@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.Misc;
+using ClosedXML.Excel.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -344,11 +344,15 @@ namespace ClosedXML.Excel
         {
             if (checkIntersect)
             {
-                string tAddress = RangeAddress.ToString();
-                foreach (var mergedRange in Worksheet.Internals.MergedRanges)
+                using (IXLRange range = Worksheet.Range(RangeAddress))
                 {
-                    if (mergedRange.Intersects(tAddress))
-                        Worksheet.Internals.MergedRanges.Remove(mergedRange);
+                    foreach (var mergedRange in Worksheet.Internals.MergedRanges)
+                    {
+                        if (mergedRange.Intersects(range))
+                        {
+                            Worksheet.Internals.MergedRanges.Remove(mergedRange);
+                        }
+                    }
                 }
             }
 

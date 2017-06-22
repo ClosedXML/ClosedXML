@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +17,8 @@ namespace ClosedXML_Sandbox
             Console.WriteLine("Action done in " + stopwatch.Elapsed);
         }
 
-        const int rowCount = 5000;
+        private const int rowCount = 5000;
+
         public static void RunInsertTable()
         {
             var rows = new List<OneRow>();
@@ -37,6 +38,16 @@ namespace ClosedXML_Sandbox
             worksheet.Columns().AdjustToContents();
 
             EmulateSave(workbook);
+        }
+
+        public static void OpenTestFile()
+        {
+            using (var wb = new XLWorkbook("test.xlsx"))
+            {
+                var ws = wb.Worksheets.First();
+                var cell = ws.FirstCellUsed();
+                Console.WriteLine(cell.Value);
+            }
         }
 
         private static void CreateMergedCell(IXLWorksheet worksheet)
