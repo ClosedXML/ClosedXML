@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using ClosedXML.Excel;
 using ClosedXML_Examples.Ranges;
 

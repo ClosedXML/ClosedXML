@@ -444,10 +444,11 @@ namespace ClosedXML.Excel.CalcEngine
                 // sub-expressions
                 case TKTYPE.GROUP:
 
-                    // anything other than opening parenthesis is illegal here
+                    // Normally anything other than opening parenthesis is illegal here
+                    // but Excel allows omitted parameters so return empty value expression.
                     if (_token.ID != TKID.OPEN)
                     {
-                        Throw("Expression expected.");
+                        return new EmptyValueExpression();
                     }
 
                     // get expression

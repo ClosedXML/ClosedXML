@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -79,7 +79,7 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLRange range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" });
-            Assert.AreEqual("'Sheet1'!B2:B4", range.ToString());
+            Assert.AreEqual("Sheet1!B2:B4", range.ToString());
         }
 
         [Test]
