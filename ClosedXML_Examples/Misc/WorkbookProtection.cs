@@ -5,37 +5,6 @@ namespace ClosedXML_Examples.Misc
 {
     public class WorkbookProtection : IXLExample
     {
-        #region Variables
-
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
         #region Methods
 
         // Public
@@ -48,11 +17,6 @@ namespace ClosedXML_Examples.Misc
                 wb.SaveAs(filePath);
             }
         }
-
-        // Private
-
-        // Override
-
 
         #endregion
     }
