@@ -70,6 +70,7 @@
     <Compile Include="Examples\CommentsTests.cs" />
     <Compile Include="Examples\ConditionalFormattingTests.cs" />
     <Compile Include="Examples\PageSetupTests.cs" />
+    <Compile Include="Examples\PivotTableTests.cs" />
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />

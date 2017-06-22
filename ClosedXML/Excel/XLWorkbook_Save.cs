@@ -2227,8 +2227,11 @@ namespace ClosedXML.Excel
                 rowItems.AppendChild(new RowItem());
             }
 
-            rowItems.Count = Convert.ToUInt32(rowItems.Count());
-            pivotTableDefinition.AppendChild(rowItems);
+            if (rowItems.Any())
+            {
+                rowItems.Count = Convert.ToUInt32(rowItems.Count());
+                pivotTableDefinition.AppendChild(rowItems);
+            }
 
             if (!pt.ColumnLabels.Any(cl => cl.CustomName != XLConstants.PivotTableValuesSentinalLabel))
             {
@@ -2312,8 +2315,11 @@ namespace ClosedXML.Excel
                 dataFields.AppendChild(df);
             }
 
-            dataFields.Count = Convert.ToUInt32(dataFields.Count());
-            pivotTableDefinition.AppendChild(dataFields);
+            if (dataFields.Any())
+            {
+                dataFields.Count = Convert.ToUInt32(dataFields.Count());
+                pivotTableDefinition.AppendChild(dataFields);
+            }
 
             pivotTableDefinition.AppendChild(new PivotTableStyle
             {
