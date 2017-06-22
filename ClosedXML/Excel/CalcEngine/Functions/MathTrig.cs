@@ -470,13 +470,13 @@ namespace ClosedXML.Excel.CalcEngine
             var digits = (Int32)(Double)p[1];
             if (digits >= 0)
             {
-                return Math.Round(value, digits);
+                return Math.Round(value, digits, MidpointRounding.AwayFromZero);
             }
             else
             {
                 digits = Math.Abs(digits);
                 double temp = value / Math.Pow(10, digits);
-                temp = Math.Round(temp, 0);
+                temp = Math.Round(temp, 0, MidpointRounding.AwayFromZero);
                 return temp * Math.Pow(10, digits);
             }
 
