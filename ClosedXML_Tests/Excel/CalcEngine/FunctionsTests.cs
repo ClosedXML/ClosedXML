@@ -379,6 +379,12 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             actual = XLWorkbook.EvaluateExpr("Round(-50.55, -2)");
             Assert.AreEqual(-100.0, actual);
+            
+            actual = XLWorkbook.EvaluateExpr("ROUND(59 * 0.535, 2)"); // (59 * 0.535) = 31.565
+            Assert.AreEqual(31.57, actual);
+
+            actual = XLWorkbook.EvaluateExpr("ROUND(59 * -0.535, 2)"); // (59 * -0.535) = -31.565
+            Assert.AreEqual(-31.57, actual);
         }
 
         [Test]
@@ -615,6 +621,26 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             cell = wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=SUM(D1,D2)");
             Assert.AreEqual(0, cell.Value);
             Assert.That(() => wb.Worksheet(1).Cell(3, 1).SetFormulaA1("=AVERAGE(D1,D2)").Value, Throws.Exception);
+        }
+
+        [Test]
+        public void TestOmittedParameters()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                object value;
+                value = wb.Evaluate("=IF(TRUE,1)");
+                Assert.AreEqual(1, value);
+
+                value = wb.Evaluate("=IF(TRUE,1,)");
+                Assert.AreEqual(1, value);
+
+                value = wb.Evaluate("=IF(FALSE,1,)");
+                Assert.AreEqual(false, value);
+
+                value = wb.Evaluate("=IF(FALSE,,2)");
+                Assert.AreEqual(2, value);
+            }
         }
     }
 }
