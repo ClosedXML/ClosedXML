@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Text;

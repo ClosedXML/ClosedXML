@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ClosedXML.Excel;
 
 
@@ -91,6 +91,11 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(ro, 1).Style.Font.FontColor = XLColor.Red;
             ws.Cell(ro, 1).Style.Font.Underline = XLFontUnderlineValues.Double;
             ws.Cell(ro, 1).Hyperlink = new XLHyperlink(ws.Range("B1:C2"));
+            
+            // Hyperlink via formula
+            ws.Cell( ++ro, 1 ).SetValue( "Send Email" )
+                .SetFormulaA1( "=HYPERLINK(\"mailto:test@test.com\", \"Send Email\")" )
+                .Hyperlink = new XLHyperlink( "mailto:test@test.com", "'Send Email'" );
 
             // List all hyperlinks in a worksheet:
             var hyperlinksInWorksheet = ws.Hyperlinks;
