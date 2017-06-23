@@ -1,14 +1,14 @@
+using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Extensions;
+using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
-using System.Security.AccessControl;
-using ClosedXML.Excel.CalcEngine;
-using DocumentFormat.OpenXml;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Linq;
-    using System.Data;
 
     public enum XLEventTracking { Enabled, Disabled }
     public enum XLCalculateMode
@@ -865,47 +865,34 @@ namespace ClosedXML.Excel
         public Boolean LockWindows { get; set; }
         public XLWorkbook SetLockWindows(Boolean value) { LockWindows = value; return this; }
         internal HexBinaryValue LockPassword { get; set; }
+        public Boolean IsPasswordProtected { get { return LockPassword != null; } }
         
         public void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword)
         {
-            if (workbookPassword != null)
+            if (IsPasswordProtected && workbookPassword == null)
+                throw new InvalidOperationException("The workbook is password protected");
+
+            var hashPassword = workbookPassword.HashPassword();
+            if (IsPasswordProtected && LockPassword != hashPassword)
+                throw new ArgumentException("Invalid password");
+
+            if (IsPasswordProtected && (lockStructure || lockWindows))
+                throw new InvalidOperationException("The workbook is already protected");
+
+            if (IsPasswordProtected && hashPassword != null && !lockStructure && !lockWindows)
             {
-                var hashPassword = GetPasswordHash(workbookPassword);
-                if (LockPassword != null)
-                {
-                    if (LockPassword != hashPassword)
-                    {
-                        throw new ArgumentException("Invalid password");
-                    }
-                    else
-                    {
-                        if (lockStructure || lockWindows)
-                        {
-                            throw new InvalidOperationException("The workbook is already protected");
-                        }
-                        else
-                        {
-                            //Unprotect workbook using password.
-                            LockPassword = null;
-                        }
-                    }  
-                }
-                else
-                {
-                    if (lockStructure || lockWindows)
-                    {
-                        //Protect workbook using password.
-                        LockPassword = hashPassword;
-                    }
-                }
+                // Workbook currently protected, but we're unsetting the 2 flags
+                // Hence unprotect workbook using password.
+                LockPassword = null;
             }
-            else
+
+
+            if (!IsPasswordProtected && hashPassword != null && (lockStructure || lockWindows))
             {
-                if (LockPassword != null)
-                {
-                    throw new InvalidOperationException("The workbook is password protected");
-                }
+                //Protect workbook using password.
+                LockPassword = hashPassword;
             }
+
             LockStructure = lockStructure;
             LockWindows = lockWindows;
         }
@@ -938,22 +925,6 @@ namespace ClosedXML.Excel
         public void Unprotect(string workbookPassword)
         {
             Protect(false, false, workbookPassword);
-        }
-
-        private String GetPasswordHash(String password)
-        {
-            Int32 pLength = password.Length;
-            Int32 hash = 0;
-            if (pLength == 0) return String.Empty;
-
-            for (Int32 i = pLength - 1; i >= 0; i--)
-            {
-                hash ^= password[i];
-                hash = hash >> 14 & 0x01 | hash << 1 & 0x7fff;
-            }
-            hash ^= 0x8000 | 'N' << 8 | 'K';
-            hash ^= pLength;
-            return hash.ToString("X");
         }
     }
 }
