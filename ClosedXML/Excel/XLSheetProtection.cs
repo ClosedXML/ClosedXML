@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
         {
             set
             {
-                PasswordHash = StringExtensions.GetPasswordHash(value);
+                PasswordHash = GetPasswordHash(value);
             }
         }
 
@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
             else
             {
                 Protected = true;
-                PasswordHash = StringExtensions.GetPasswordHash(password);
+                PasswordHash = GetPasswordHash(password);
             }
             return this;
         }
@@ -80,7 +80,7 @@ namespace ClosedXML.Excel
         {
             if (Protected)
             {
-                String hash = StringExtensions.GetPasswordHash(password);
+                String hash = GetPasswordHash(password);
                 if (hash != PasswordHash)
                     throw new ArgumentException("Invalid password");
                 else
@@ -91,6 +91,22 @@ namespace ClosedXML.Excel
             }
 
             return this;
+        }
+
+        private String GetPasswordHash(String password)
+        {
+            Int32 pLength = password.Length;
+            Int32 hash = 0;
+            if (pLength == 0) return String.Empty;
+
+            for (Int32 i = pLength - 1; i >= 0; i--)
+            {
+                hash ^= password[i];
+                hash = hash >> 14 & 0x01 | hash << 1 & 0x7fff;
+            }
+            hash ^= 0x8000 | 'N' << 8 | 'K';
+            hash ^= pLength;
+            return hash.ToString("X");
         }
     }
 }

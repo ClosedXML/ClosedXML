@@ -132,22 +132,6 @@ namespace ClosedXML.Excel
 
             return value.Substring(0, 1).ToUpper() + value.Substring(1);
         }
-
-        public static String GetPasswordHash(String password)
-        {
-            Int32 pLength = password.Length;
-            Int32 hash = 0;
-            if (pLength == 0) return String.Empty;
-
-            for (Int32 i = pLength - 1; i >= 0; i--)
-            {
-                hash ^= password[i];
-                hash = hash >> 14 & 0x01 | hash << 1 & 0x7fff;
-            }
-            hash ^= 0x8000 | 'N' << 8 | 'K';
-            hash ^= pLength;
-            return hash.ToString("X");
-        }
     }
 
     public static class DateTimeExtensions
