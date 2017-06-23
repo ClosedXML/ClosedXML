@@ -39,3 +39,4 @@ _Full guidelines to follow later_
 * Please submit pull requests that are based on the `develop` branch.
 * Where possible, pull requests should include unit tests that cover as many uses cases as possible. This is especially relevant when implementing Excel functions.
 * Install [NUnit 3.0 Test Adapter](https://github.com/nunit/docs/wiki/Adapter-Installation) if you want to run the test suite in Visual Studio.
+* We use 4 spaces for code indentation. This is the default in Visual Studio. Don't leave any trailing white space at the end of lines or files. To make this easier, ClosedXML has an [editorconfig](http://www.editorconfig.org) configuration file. It is recommended you install editorconfig from the Visual Studio Extension Manager.
