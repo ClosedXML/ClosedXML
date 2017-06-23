@@ -1,14 +1,14 @@
+using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Extensions;
+using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
-using System.Security.AccessControl;
-using ClosedXML.Excel.CalcEngine;
-using DocumentFormat.OpenXml;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Linq;
-    using System.Data;
 
     public enum XLEventTracking { Enabled, Disabled }
     public enum XLCalculateMode
@@ -864,10 +864,47 @@ namespace ClosedXML.Excel
         public XLWorkbook SetLockStructure(Boolean value) { LockStructure = value; return this; }
         public Boolean LockWindows { get; set; }
         public XLWorkbook SetLockWindows(Boolean value) { LockWindows = value; return this; }
+        internal HexBinaryValue LockPassword { get; set; }
+        public Boolean IsPasswordProtected { get { return LockPassword != null; } }
+        
+        public void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword)
+        {
+            if (IsPasswordProtected && workbookPassword == null)
+                throw new InvalidOperationException("The workbook is password protected");
 
+            var hashPassword = workbookPassword.HashPassword();
+            if (IsPasswordProtected && LockPassword != hashPassword)
+                throw new ArgumentException("Invalid password");
+
+            if (IsPasswordProtected && (lockStructure || lockWindows))
+                throw new InvalidOperationException("The workbook is already protected");
+
+            if (IsPasswordProtected && hashPassword != null && !lockStructure && !lockWindows)
+            {
+                // Workbook currently protected, but we're unsetting the 2 flags
+                // Hence unprotect workbook using password.
+                LockPassword = null;
+            }
+
+
+            if (!IsPasswordProtected && hashPassword != null && (lockStructure || lockWindows))
+            {
+                //Protect workbook using password.
+                LockPassword = hashPassword;
+            }
+
+            LockStructure = lockStructure;
+            LockWindows = lockWindows;
+        }
+        
         public void Protect()
         {
             Protect(true);
+        }
+
+        public void Protect(string workbookPassword)
+        {
+            Protect(true, false, workbookPassword);
         }
 
         public void Protect(Boolean lockStructure)
@@ -877,8 +914,17 @@ namespace ClosedXML.Excel
 
         public void Protect(Boolean lockStructure, Boolean lockWindows)
         {
-            LockStructure = lockStructure;
-            LockWindows = LockWindows;
+            Protect(lockStructure, lockWindows, null);
+        }
+
+        public void Unprotect()
+        {
+            Protect(false, false);
+        }
+
+        public void Unprotect(string workbookPassword)
+        {
+            Protect(false, false, workbookPassword);
         }
     }
 }

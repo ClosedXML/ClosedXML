@@ -97,6 +97,8 @@ namespace ClosedXML.Excel
                     LockStructure = wbProtection.LockStructure.Value;
                 if (wbProtection.LockWindows != null)
                     LockWindows = wbProtection.LockWindows.Value;
+                if (wbProtection.WorkbookPassword != null)
+                    LockPassword = wbProtection.WorkbookPassword.Value;
             }
 
             var calculationProperties = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties;

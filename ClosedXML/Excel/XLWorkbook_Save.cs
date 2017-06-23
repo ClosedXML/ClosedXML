@@ -572,6 +572,8 @@ namespace ClosedXML.Excel
 
             #endregion WorkbookProperties
 
+            #region WorkbookProtection
+              
             if (LockStructure || LockWindows)
             {
                 if (workbook.WorkbookProtection == null)
@@ -579,11 +581,16 @@ namespace ClosedXML.Excel
 
                 workbook.WorkbookProtection.LockStructure = LockStructure;
                 workbook.WorkbookProtection.LockWindows = LockWindows;
+              
+                if (LockPassword != null)
+                    workbook.WorkbookProtection.WorkbookPassword = LockPassword;
             }
             else
             {
                 workbook.WorkbookProtection = null;
             }
+          
+            #endregion
 
             if (workbook.BookViews == null)
                 workbook.BookViews = new BookViews();
