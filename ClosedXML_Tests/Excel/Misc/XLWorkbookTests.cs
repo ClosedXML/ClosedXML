@@ -255,7 +255,7 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("$A$1:$A$1", wsRanges.First().RangeAddress.ToStringFixed());
             Assert.AreEqual("$A$3:$A$3", wsRanges.Last().RangeAddress.ToStringFixed());
         }
-      
+
         [Test]
         public void WbProtect1()
         {
@@ -265,6 +265,7 @@ namespace ClosedXML_Tests.Excel
                 wb.Protect();
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
+                Assert.IsFalse(wb.IsPasswordProtected);
             }
         }
 
@@ -277,6 +278,7 @@ namespace ClosedXML_Tests.Excel
                 wb.Protect(true, false);
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
+                Assert.IsFalse(wb.IsPasswordProtected);
             }
         }
 
@@ -289,6 +291,7 @@ namespace ClosedXML_Tests.Excel
                 wb.Protect("Abc@123");
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
+                Assert.IsTrue(wb.IsPasswordProtected);
                 Assert.Throws(typeof(InvalidOperationException), delegate { wb.Protect(); });
                 Assert.Throws(typeof(InvalidOperationException), delegate { wb.Unprotect(); });
                 Assert.Throws(typeof(ArgumentException), delegate { wb.Unprotect("Cde@345"); });
@@ -304,9 +307,11 @@ namespace ClosedXML_Tests.Excel
                 wb.Protect();
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
+                Assert.IsFalse(wb.IsPasswordProtected);
                 wb.Protect("Abc@123");
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
+                Assert.IsTrue(wb.IsPasswordProtected);
             }
         }
 
@@ -319,9 +324,11 @@ namespace ClosedXML_Tests.Excel
                 wb.Protect(true, false, "Abc@123");
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
+                Assert.IsTrue(wb.IsPasswordProtected);
                 wb.Unprotect("Abc@123");
                 Assert.IsFalse(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
+                Assert.IsFalse(wb.IsPasswordProtected);
             }
         }
     }
