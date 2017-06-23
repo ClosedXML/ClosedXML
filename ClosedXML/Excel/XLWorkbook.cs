@@ -870,7 +870,7 @@ namespace ClosedXML.Excel
         {
             if (workbookPassword != null)
             {
-                var hashPassword = GetPasswordHash(workbookPassword);
+                var hashPassword = StringExtensions.GetPasswordHash(workbookPassword);
                 if (LockPassword != null)
                 {
                     if (LockPassword != hashPassword)
@@ -938,22 +938,6 @@ namespace ClosedXML.Excel
         public void Unprotect(string workbookPassword)
         {
             Protect(false, false, workbookPassword);
-        }
-
-        private String GetPasswordHash(String password)
-        {
-            Int32 pLength = password.Length;
-            Int32 hash = 0;
-            if (pLength == 0) return String.Empty;
-
-            for (Int32 i = pLength - 1; i >= 0; i--)
-            {
-                hash ^= password[i];
-                hash = hash >> 14 & 0x01 | hash << 1 & 0x7fff;
-            }
-            hash ^= 0x8000 | 'N' << 8 | 'K';
-            hash ^= pLength;
-            return hash.ToString("X");
         }
     }
 }
