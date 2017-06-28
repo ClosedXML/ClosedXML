@@ -1997,7 +1997,7 @@ namespace ClosedXML.Excel
         public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
         {
             var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
-            //var source = castedOtherCell;
+
             CopyValuesFrom(source);
 
             SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));

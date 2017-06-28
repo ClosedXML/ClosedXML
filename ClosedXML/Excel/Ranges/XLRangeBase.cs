@@ -803,7 +803,7 @@ namespace ClosedXML.Excel
                     && column.GetStyleId() != worksheetStyleId)
                     styleId = column.GetStyleId();
             }
-            var absoluteAddress = new XLAddress(cellAddressInRange.Worksheet,
+            var absoluteAddress = new XLAddress(this.Worksheet,
                                  absRow,
                                  absColumn,
                                  cellAddressInRange.FixedRow,
