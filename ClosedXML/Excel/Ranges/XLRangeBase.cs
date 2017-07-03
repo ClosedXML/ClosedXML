@@ -788,7 +788,6 @@ namespace ClosedXML.Excel
             if (cell != null)
                 return cell;
 
-            //var style = Style;
             Int32 styleId = GetStyleId();
             Int32 worksheetStyleId = Worksheet.GetStyleId();
 
@@ -808,7 +807,15 @@ namespace ClosedXML.Excel
                                  absColumn,
                                  cellAddressInRange.FixedRow,
                                  cellAddressInRange.FixedColumn);
-            var newCell = new XLCell(Worksheet, absoluteAddress, styleId);
+
+            Int32 newCellStyleId = styleId;
+
+            // If the default style for this range base is empty, but the worksheet 
+            // has a default style, use the worksheet's default style
+            if (styleId == 0 && worksheetStyleId != 0)
+                newCellStyleId = worksheetStyleId;
+
+            var newCell = new XLCell(Worksheet, absoluteAddress, newCellStyleId);
             Worksheet.Internals.CellsCollection.Add(absRow, absColumn, newCell);
             return newCell;
         }
