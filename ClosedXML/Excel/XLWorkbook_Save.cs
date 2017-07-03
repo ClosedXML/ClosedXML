@@ -573,7 +573,7 @@ namespace ClosedXML.Excel
             #endregion WorkbookProperties
 
             #region WorkbookProtection
-              
+
             if (LockStructure || LockWindows)
             {
                 if (workbook.WorkbookProtection == null)
@@ -581,7 +581,7 @@ namespace ClosedXML.Excel
 
                 workbook.WorkbookProtection.LockStructure = LockStructure;
                 workbook.WorkbookProtection.LockWindows = LockWindows;
-              
+
                 if (LockPassword != null)
                     workbook.WorkbookProtection.WorkbookPassword = LockPassword;
             }
@@ -589,7 +589,7 @@ namespace ClosedXML.Excel
             {
                 workbook.WorkbookProtection = null;
             }
-          
+
             #endregion
 
             if (workbook.BookViews == null)
@@ -2707,7 +2707,8 @@ namespace ClosedXML.Excel
             {
                 var anchor = worksheetPart.DrawingsPart.WorksheetDrawing.ElementAt(i);
                 var props = GetPropertiesFromAnchor(anchor);
-                props.Id = Convert.ToUInt32(i + 1);
+                if (props != null)
+                    props.Id = Convert.ToUInt32(i + 1);
             }
         }
 
