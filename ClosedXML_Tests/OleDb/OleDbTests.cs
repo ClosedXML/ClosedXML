@@ -16,7 +16,7 @@ namespace ClosedXML_Tests.OleDb
         [Test]
         public void TestOleDbValues()
         {
-            using (var tf = new TestFile(CreateTestFile(), true))
+            using (var tf = new TestFile(CreateTestFile()))
             {
                 Console.Write("Using temporary file\t{0}", tf.Path);
                 var connectionString = string.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1';", tf.Path);
