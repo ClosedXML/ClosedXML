@@ -84,6 +84,21 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void AddingDuplicateSheetNameThrowsException()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws;
+                ws = wb.AddWorksheet("Sheet1");
+
+                Assert.Throws<ArgumentException>(() => wb.AddWorksheet("Sheet1"));
+
+                //Sheet names are case insensitive
+                Assert.Throws<ArgumentException>(() => wb.AddWorksheet("sheet1"));
+            }
+        }
+
+        [Test]
         public void MergedRanges()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");

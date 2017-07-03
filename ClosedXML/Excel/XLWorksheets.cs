@@ -98,7 +98,7 @@ namespace ClosedXML.Excel
         public IXLWorksheet Add(String sheetName)
         {
             var sheet = new XLWorksheet(sheetName, _workbook);
-            _worksheets.Add(sheetName, sheet);
+            Add(sheetName, sheet);
             sheet._position = _worksheets.Count + _workbook.UnsupportedSheets.Count;
             return sheet;
         }
@@ -108,9 +108,17 @@ namespace ClosedXML.Excel
             _worksheets.Values.Where(w => w._position >= position).ForEach(w => w._position += 1);
             _workbook.UnsupportedSheets.Where(w => w.Position >= position).ForEach(w => w.Position += 1);
             var sheet = new XLWorksheet(sheetName, _workbook);
-            _worksheets.Add(sheetName, sheet);
+            Add(sheetName, sheet);
             sheet._position = position;
             return sheet;
+        }
+
+        private void Add(String sheetName, XLWorksheet sheet)
+        {
+            if (_worksheets.Any(ws => ws.Key.Equals(sheetName, StringComparison.OrdinalIgnoreCase)))
+                throw new ArgumentException(String.Format("A worksheet with the same name ({0}) has already been added.", sheetName), nameof(sheetName));
+
+            _worksheets.Add(sheetName, sheet);
         }
 
         public void Delete(String sheetName)
@@ -172,9 +180,12 @@ namespace ClosedXML.Excel
         {
             if (XLHelper.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName)) return;
 
+            if (_worksheets.Any(ws1 => ws1.Key.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)))
+                throw new ArgumentException(String.Format("A worksheet with the same name ({0}) has already been added.", newSheetName), nameof(newSheetName));
+
             var ws = _worksheets[oldSheetName];
             _worksheets.Remove(oldSheetName);
-            _worksheets.Add(newSheetName, ws);
+            Add(newSheetName, ws);
         }
     }
 }
