@@ -2112,6 +2112,21 @@ namespace ClosedXML.Excel
                 IXLPivotField labelField = null;
                 var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
 
+                switch (pt.Subtotals)
+                {
+                    case XLPivotSubtotals.DoNotShow:
+                        pf.DefaultSubtotal = false;
+                        break;
+                    case XLPivotSubtotals.AtBottom:
+                        pf.DefaultSubtotal = true;
+                        pf.SubtotalTop = false;
+                        break;
+                    case XLPivotSubtotals.AtTop:
+                        pf.DefaultSubtotal = true;
+                        pf.SubtotalTop = true;
+                        break;
+                }
+
                 if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     labelField = pt.RowLabels.Single(p => p.SourceName == xlpf.SourceName);
@@ -2135,7 +2150,7 @@ namespace ClosedXML.Excel
 
                 var fieldItems = new Items();
 
-                if (xlpf.SharedStrings.Count > 0)
+                if (xlpf.SharedStrings.Any())
                 {
                     for (uint i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
@@ -2146,7 +2161,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                if (xlpf.Subtotals.Count > 0)
+                if (xlpf.Subtotals.Any())
                 {
                     foreach (var subtotal in xlpf.Subtotals)
                     {
@@ -2211,13 +2226,17 @@ namespace ClosedXML.Excel
                         fieldItems.AppendChild(itemSubtotal);
                     }
                 }
-                else
+                // If the field itself doesn't have subtotals, but the pivot table is set to show pivot tables, add the default item
+                else if (pt.Subtotals != XLPivotSubtotals.DoNotShow)
                 {
                     fieldItems.AppendChild(new Item { ItemType = ItemValues.Default });
                 }
 
-                fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
-                pf.AppendChild(fieldItems);
+                if (fieldItems.Any())
+                {
+                    fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
+                    pf.AppendChild(fieldItems);
+                }
                 pivotFields.AppendChild(pf);
             }
 
