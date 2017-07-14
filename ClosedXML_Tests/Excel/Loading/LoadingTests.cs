@@ -1,6 +1,8 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
+using ClosedXML_Tests.Utils;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -176,6 +178,27 @@ namespace ClosedXML_Tests.Excel
 
                 using (var ms = new MemoryStream())
                     wb.SaveAs(ms, true);
+            }
+        }
+
+        [Test]
+        public void CanLoadFromTemplate()
+        {
+            using (var tf1 = new TemporaryFile())
+            using (var tf2 = new TemporaryFile())
+            {
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\AllShapes.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    // Save as temporary file
+                    wb.SaveAs(tf1.Path);
+                }
+
+                var workbook = XLWorkbook.OpenFromTemplate(tf1.Path);
+                Assert.True(workbook.Worksheets.Any());
+                Assert.Throws<Exception>(() => workbook.Save());
+
+                workbook.SaveAs(tf2.Path);
             }
         }
     }
