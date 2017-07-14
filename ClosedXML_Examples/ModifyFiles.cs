@@ -1,4 +1,4 @@
-﻿using ClosedXML_Examples.Delete;
+using ClosedXML_Examples.Delete;
 using System.IO;
 
 namespace ClosedXML_Examples

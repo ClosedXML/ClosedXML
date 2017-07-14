@@ -1,4 +1,4 @@
-﻿using ClosedXML_Examples.Columns;
+using ClosedXML_Examples.Columns;
 using ClosedXML_Examples.Misc;
 using ClosedXML_Examples.PageSetup;
 using ClosedXML_Examples.Ranges;

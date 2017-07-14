@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -81,6 +81,21 @@ namespace ClosedXML_Tests
             Assert.AreEqual("Sheet1", wb.Worksheet(1).Name);
             Assert.AreEqual("Sheet2", wb.Worksheet(2).Name);
             Assert.AreEqual("Sheet3", wb.Worksheet(3).Name);
+        }
+
+        [Test]
+        public void AddingDuplicateSheetNameThrowsException()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws;
+                ws = wb.AddWorksheet("Sheet1");
+
+                Assert.Throws<ArgumentException>(() => wb.AddWorksheet("Sheet1"));
+
+                //Sheet names are case insensitive
+                Assert.Throws<ArgumentException>(() => wb.AddWorksheet("sheet1"));
+            }
         }
 
         [Test]

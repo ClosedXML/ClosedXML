@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -47,7 +47,14 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 return p[1].Evaluate();
             }
-            return p.Count > 2 ? p[2].Evaluate() : false;
+            else if (p.Count > 2)
+            {
+                if (p[2] is EmptyValueExpression)
+                    return false;
+                else
+                    return p[2].Evaluate();
+            }
+            else return false;
         }
 
         static object True(List<Expression> p)

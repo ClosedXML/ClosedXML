@@ -1,4 +1,5 @@
-﻿using System;
+using ClosedXML.Extensions;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -18,14 +19,14 @@ namespace ClosedXML.Excel
 
         public XLRangeAddress(XLRangeAddress rangeAddress): this(rangeAddress.FirstAddress, rangeAddress.LastAddress)
         {
-            
+
         }
 
         public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress)
         {
             Worksheet = firstAddress.Worksheet;
             FirstAddress = XLAddress.Create(firstAddress);
-            LastAddress = XLAddress.Create(lastAddress); 
+            LastAddress = XLAddress.Create(lastAddress);
         }
 
         public XLRangeAddress(XLWorksheet worksheet, String rangeAddress)
@@ -141,8 +142,8 @@ namespace ClosedXML.Excel
         public String ToStringRelative(Boolean includeSheet)
         {
             if (includeSheet)
-                return String.Format("'{0}'!{1}:{2}", 
-                    Worksheet.Name, 
+                return String.Format("{0}!{1}:{2}",
+                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
                     _firstAddress.ToStringRelative(),
                     _lastAddress.ToStringRelative());
 
@@ -157,12 +158,12 @@ namespace ClosedXML.Excel
         public String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet)
         {
             if (includeSheet)
-                return String.Format("'{0}'!{1}:{2}",
-                    Worksheet.Name,
+                return String.Format("{0}!{1}:{2}",
+                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
                     _firstAddress.ToStringFixed(referenceStyle),
                     _lastAddress.ToStringFixed(referenceStyle));
 
-            return _firstAddress.ToStringFixed(referenceStyle) + ":" + _lastAddress.ToStringFixed(referenceStyle);           
+            return _firstAddress.ToStringFixed(referenceStyle) + ":" + _lastAddress.ToStringFixed(referenceStyle);
         }
 
         public override string ToString()

@@ -37,6 +37,7 @@ configuration : Release
 #Restore
 before_build:
   - nuget restore
+
 artifacts:
   - path: ClosedXML/bin/Release/ClosedXML.dll
   - path: ClosedXML/bin/Release/ClosedXML.xml
