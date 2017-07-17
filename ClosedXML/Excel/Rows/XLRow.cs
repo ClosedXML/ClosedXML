@@ -137,6 +137,12 @@ namespace ClosedXML.Excel
             }
         }
 
+        public void ClearHeight()
+        {
+            Height = Worksheet.RowHeight;
+            HeightChanged = false;
+        }
+
         public void Delete()
         {
             int rowNumber = RowNumber();
