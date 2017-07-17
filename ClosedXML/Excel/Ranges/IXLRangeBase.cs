@@ -239,6 +239,9 @@ namespace ClosedXML.Excel
         Boolean IsEmpty();
         Boolean IsEmpty(Boolean includeFormats);
 
+        Boolean IsEntireRow();
+        Boolean IsEntireColumn();
+
 
         IXLPivotTable CreatePivotTable(IXLCell targetCell);
         IXLPivotTable CreatePivotTable(IXLCell targetCell, String name);

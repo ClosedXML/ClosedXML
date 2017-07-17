@@ -46,8 +46,8 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
-        static Int32 IdCounter = 0;
-        readonly Int32 Id;
+        private static Int32 IdCounter = 0;
+        private readonly Int32 Id;
 
         protected XLRangeBase(XLRangeAddress rangeAddress)
         {
@@ -81,8 +81,6 @@ namespace ClosedXML.Excel
         }
 
         #region Public properties
-
-        //public XLRangeAddress RangeAddress { get; protected set; }
 
         private XLRangeAddress _rangeAddress;
         public XLRangeAddress RangeAddress
@@ -514,6 +512,18 @@ namespace ClosedXML.Excel
         {
             return !CellsUsed(includeFormats).Cast<XLCell>().Any() ||
                    CellsUsed(includeFormats).Cast<XLCell>().Any(c => c.IsEmpty(includeFormats));
+        }
+
+        public Boolean IsEntireRow()
+        {
+            return RangeAddress.FirstAddress.ColumnNumber == 1
+                   && RangeAddress.LastAddress.ColumnNumber == XLHelper.MaxColumnNumber;
+        }
+
+        public Boolean IsEntireColumn()
+        {
+            return RangeAddress.FirstAddress.RowNumber == 1
+                   && RangeAddress.LastAddress.RowNumber == XLHelper.MaxRowNumber;
         }
 
         #endregion
@@ -1092,10 +1102,10 @@ namespace ClosedXML.Excel
                 {
                     for (int co = lastColumn; co >= firstColumn; co--)
                     {
+                        int newColumn = co + numberOfColumns;
                         for (int ro = lastRow; ro >= firstRow; ro--)
                         {
                             var oldKey = new XLAddress(Worksheet, ro, co, false, false);
-                            int newColumn = co + numberOfColumns;
                             var newKey = new XLAddress(Worksheet, ro, newColumn, false, false);
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co) ??
                                           Worksheet.Cell(oldKey);
@@ -1105,6 +1115,11 @@ namespace ClosedXML.Excel
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
                             cellsToDelete.Add(oldKey);
+                        }
+
+                        if (this.IsEntireColumn())
+                        {
+                            Worksheet.Column(newColumn).Width = Worksheet.Column(co).Width;
                         }
                     }
                 }
@@ -1323,10 +1338,11 @@ namespace ClosedXML.Excel
                 {
                     for (int ro = lastRow; ro >= firstRow; ro--)
                     {
+                        int newRow = ro + numberOfRows;
+
                         for (int co = lastColumn; co >= firstColumn; co--)
                         {
                             var oldKey = new XLAddress(Worksheet, ro, co, false, false);
-                            int newRow = ro + numberOfRows;
                             var newKey = new XLAddress(Worksheet, newRow, co, false, false);
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
                             if (oldCell != null)
@@ -1337,6 +1353,10 @@ namespace ClosedXML.Excel
                                 cellsToInsert.Add(newKey, newCell);
                                 cellsToDelete.Add(oldKey);
                             }
+                        }
+                        if (this.IsEntireRow())
+                        {
+                            Worksheet.Row(newRow).Height = Worksheet.Row(ro).Height;
                         }
                     }
                 }
