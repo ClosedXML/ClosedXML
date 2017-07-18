@@ -27,7 +27,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\InvalidPrintTitles.xlsx",
                 @"Misc\ExcelProducedWorkbookWithImages.xlsx",
                 @"Misc\EmptyCellValue.xlsx",
-                @"Misc\AllShapes.xlsx"
+                @"Misc\AllShapes.xlsx",
+                @"Misc\TableWithNameNull.xlsx"
             };
 
             foreach (var file in files)
