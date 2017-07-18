@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
 
         public void Add(IXLTable table)
         {
-            _tables.Add(table.Name, table);
+            _tables.Add(table.Name ?? String.Empty, table);
         }
 
         public IXLTable Table(Int32 index)
@@ -34,7 +34,7 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(String name)
         {
-            return _tables[name];
+            return _tables[name ?? String.Empty];
         }
 
         #endregion
