@@ -413,11 +413,11 @@ namespace ClosedXML.Excel.CalcEngine
                         var pCnt = p == null ? 0 : p.Count;
                         if (fnDef.ParmMin != -1 && pCnt < fnDef.ParmMin)
                         {
-                            Throw("Too few parameters.");
+                            Throw(string.Format("Too few parameters for function '{0}'. Expected a minimum of {1} and a maximum of {2}.", id, fnDef.ParmMin, fnDef.ParmMax));
                         }
                         if (fnDef.ParmMax != -1 && pCnt > fnDef.ParmMax)
                         {
-                            Throw("Too many parameters.");
+                            Throw(string.Format("Too many parameters for function '{0}'.Expected a minimum of {1} and a maximum of {2}.", id, fnDef.ParmMin, fnDef.ParmMax));
                         }
                         x = new FunctionExpression(fnDef, p);
                         break;
