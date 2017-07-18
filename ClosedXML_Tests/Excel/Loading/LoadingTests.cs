@@ -178,5 +178,17 @@ namespace ClosedXML_Tests.Excel
                     wb.SaveAs(ms, true);
             }
         }
+
+        [Test]
+        public void CanLoadAndManipulateTableWithNameNull()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\TableWithNameNull.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                var table = ws.Tables.First();
+                table.DataRange.InsertRowsBelow(5);
+            }
+        }
     }
 }
