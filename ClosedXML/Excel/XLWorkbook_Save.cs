@@ -2525,7 +2525,7 @@ namespace ClosedXML.Excel
         // https://en.wikipedia.org/wiki/Office_Open_XML_file_formats#DrawingML
         private static Int64 ConvertToEnglishMetricUnits(Int32 pixels, Double resolution)
         {
-            return Convert.ToInt64(914400 * pixels / resolution);
+            return Convert.ToInt64(914400L * pixels / resolution);
         }
 
         private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture, SaveContext context)
