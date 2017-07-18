@@ -7,6 +7,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     [TestFixture]
     public class MathTrigTests
     {
+        private readonly double tolerance = 1e-10;
+
         [Test]
         public void Floor()
         {
@@ -60,6 +62,41 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             actual = XLWorkbook.EvaluateExpr(@"FLOOR.MATH(-5.5, 2, -1)");
             Assert.AreEqual(-4, actual);
+        }
+
+        [Test]
+        public void Mod()
+        {
+            double actual;
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(1.5, 1)");
+            Assert.AreEqual(0.5, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(3, 2)");
+            Assert.AreEqual(1, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(-3, 2)");
+            Assert.AreEqual(1, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(3, -2)");
+            Assert.AreEqual(-1, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(-3, -2)");
+            Assert.AreEqual(-1, actual, tolerance);
+
+            //////
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(-4.3, -0.5)");
+            Assert.AreEqual(-0.3, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(6.9, -0.2)");
+            Assert.AreEqual(-0.1, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(0.7, 0.6)");
+            Assert.AreEqual(0.1, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"MOD(6.2, 1.1)");
+            Assert.AreEqual(0.7, actual, tolerance);
         }
     }
 }
