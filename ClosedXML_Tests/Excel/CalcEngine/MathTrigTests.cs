@@ -7,6 +7,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     [TestFixture]
     public class MathTrigTests
     {
+        private readonly double tolerance = 1e-10;
+
         [Test]
         public void Floor()
         {
@@ -43,23 +45,44 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(-4, actual);
         }
 
-        //[Test]
+        [Test]
         // Functions have to support a period first before we can implement this
         public void FloorMath()
         {
-            Object actual;
+            double actual;
 
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR.MATH(24.3, 5)");
-            Assert.AreEqual(20, actual);
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(24.3, 5)");
+            Assert.AreEqual(20, actual, tolerance);
 
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR.MATH(6.7)");
-            Assert.AreEqual(6, actual);
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(6.7)");
+            Assert.AreEqual(6, actual, tolerance);
 
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR.MATH(-8.1, 2)");
-            Assert.AreEqual(-10, actual);
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(-8.1, 2)");
+            Assert.AreEqual(-10, actual, tolerance);
 
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR.MATH(-5.5, 2, -1)");
-            Assert.AreEqual(-4, actual);
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(5.5, 2.1, 0)");
+            Assert.AreEqual(4.2, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(5.5, -2.1, 0)");
+            Assert.AreEqual(4.2, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(5.5, 2.1, -1)");
+            Assert.AreEqual(4.2, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(5.5, -2.1, -1)");
+            Assert.AreEqual(4.2, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(-5.5, 2.1, 0)");
+            Assert.AreEqual(-6.3, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(-5.5, -2.1, 0)");
+            Assert.AreEqual(-6.3, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(-5.5, 2.1, -1)");
+            Assert.AreEqual(-4.2, actual, tolerance);
+
+            actual = (double)XLWorkbook.EvaluateExpr(@"FLOOR.MATH(-5.5, -2.1, -1)");
+            Assert.AreEqual(-4.2, actual, tolerance);
         }
     }
 }

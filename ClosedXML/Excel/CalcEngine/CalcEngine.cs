@@ -85,10 +85,10 @@ namespace ClosedXML.Excel.CalcEngine
             var expr = ParseExpression();
 
             // check for errors
-            if (_token.ID != TKID.END)
-            {
-                Throw();
-            }
+            if (_token.ID == TKID.OPEN)
+                Throw("Unknown function: " + expr.LastParseItem);
+            else if (_token.ID != TKID.END)
+                Throw("Expected end of expression");
 
             // optimize expression
             if (_optimize)
@@ -113,10 +113,9 @@ namespace ClosedXML.Excel.CalcEngine
         /// </remarks>
         public object Evaluate(string expression)
         {
-            var x = //Parse(expression);
-                _cache != null
-                ? _cache[expression]
-                : Parse(expression);
+            var x = _cache != null
+                    ? _cache[expression]
+                    : Parse(expression);
             return x.Evaluate();
         }
 
@@ -713,7 +712,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (isEnclosed && disallowedSymbols.Contains(c))
                     break;
 
-                var allowedSymbols = new List<char>() { '_' };
+                var allowedSymbols = new List<char>() { '_', '.' };
 
                 if (!isLetter && !isDigit
                     && !(isEnclosed || allowedSymbols.Contains(c))
@@ -771,10 +770,10 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // make sure the list was closed correctly
-            if (_token.ID != TKID.CLOSE)
-            {
-                Throw();
-            }
+            if (_token.ID == TKID.OPEN)
+                Throw("Unknown function: " + expr.LastParseItem);
+            else if (_token.ID != TKID.CLOSE)
+                Throw("Syntax error: expected ')'");
 
             // done
             return parms;
