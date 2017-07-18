@@ -335,39 +335,39 @@ namespace ClosedXML_Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-            var ws = wb.AddWorksheet("Sheet");
-            ws.Cell("A1").SetValue("FName")
-                .CellBelow().SetValue("John");
+                var ws = wb.AddWorksheet("Sheet");
+                ws.Cell("A1").SetValue("FName")
+                    .CellBelow().SetValue("John");
 
-            ws.Cell("B1").SetValue("LName")
-                .CellBelow().SetValue("Doe");
+                ws.Cell("B1").SetValue("LName")
+                    .CellBelow().SetValue("Doe");
 
-            var tbl = ws.RangeUsed().CreateTable();
-            var nameBefore = tbl.Field(tbl.Fields.Last().Index).Name;
-            tbl.Field(tbl.Fields.Last().Index).Name = "LastName";
-            var nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
+                var tbl = ws.RangeUsed().CreateTable();
+                var nameBefore = tbl.Field(tbl.Fields.Last().Index).Name;
+                tbl.Field(tbl.Fields.Last().Index).Name = "LastName";
+                var nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
 
-            var cellValue = ws.Cell("B1").GetString();
+                var cellValue = ws.Cell("B1").GetString();
 
-            Assert.AreEqual("LName", nameBefore);
-            Assert.AreEqual("LastName", nameAfter);
-            Assert.AreEqual("LastName", cellValue);
+                Assert.AreEqual("LName", nameBefore);
+                Assert.AreEqual("LastName", nameAfter);
+                Assert.AreEqual("LastName", cellValue);
 
-            tbl.ShowHeaderRow = false;
-            tbl.Field(tbl.Fields.Last().Index).Name = "LastNameChanged";
-            nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
-            Assert.AreEqual("LastNameChanged", nameAfter);
+                tbl.ShowHeaderRow = false;
+                tbl.Field(tbl.Fields.Last().Index).Name = "LastNameChanged";
+                nameAfter = tbl.Field(tbl.Fields.Last().Index).Name;
+                Assert.AreEqual("LastNameChanged", nameAfter);
 
-            tbl.SetShowHeaderRow(true);
-            nameAfter = tbl.Cell("B1").Value.ToString();
-            Assert.AreEqual("LastNameChanged", nameAfter);
+                tbl.SetShowHeaderRow(true);
+                nameAfter = tbl.Cell("B1").Value.ToString();
+                Assert.AreEqual("LastNameChanged", nameAfter);
 
                 var field = tbl.Field("LastNameChanged");
                 Assert.AreEqual("LastNameChanged", field.Name);
 
                 tbl.Cell(1, 1).Value = "FirstName";
                 Assert.AreEqual("FirstName", tbl.Field(0).Name);
+            }
         }
     }
-}
 }
