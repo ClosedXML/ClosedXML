@@ -82,8 +82,6 @@ namespace ClosedXML.Excel
 
         #region Public properties
 
-        //public XLRangeAddress RangeAddress { get; protected set; }
-
         private XLRangeAddress _rangeAddress;
         public XLRangeAddress RangeAddress
         {
@@ -810,7 +808,7 @@ namespace ClosedXML.Excel
 
             Int32 newCellStyleId = styleId;
 
-            // If the default style for this range base is empty, but the worksheet 
+            // If the default style for this range base is empty, but the worksheet
             // has a default style, use the worksheet's default style
             if (styleId == 0 && worksheetStyleId != 0)
                 newCellStyleId = worksheetStyleId;
