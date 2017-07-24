@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading;
 using ClosedXML.Excel;
 using ClosedXML_Examples;
-using DocumentFormat.OpenXml.Drawing;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using Path = System.IO.Path;
 
 namespace ClosedXML_Tests
@@ -25,7 +24,6 @@ namespace ClosedXML_Tests
             {
                 return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             }
-
         }
 
         public const string ActualTestResultPostFix = "";
@@ -53,20 +51,20 @@ namespace ClosedXML_Tests
             }
         }
 
-        public static void RunTestExample<T>(string filePartName)
+        public static void RunTestExample<T>(string filePartName, bool evaluateFormulae = false)
                 where T : IXLExample, new()
         {
             // Make sure tests run on a deterministic culture
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
             var example = new T();
-            string[] pathParts = filePartName.Split(new char[] {'\\'});
+            string[] pathParts = filePartName.Split(new char[] { '\\' });
             string filePath1 = Path.Combine(new List<string>() { TestsExampleOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
 
-            var fileName= Path.GetFileNameWithoutExtension(filePath1);
+            var fileName = Path.GetFileNameWithoutExtension(filePath1);
             fileName += ActualTestResultPostFix;
             fileName = Path.ChangeExtension(fileName, extension);
 
@@ -74,7 +72,9 @@ namespace ClosedXML_Tests
             var filePath2 = Path.Combine(directory, fileName);
             //Run test
             example.Create(filePath1);
-            new XLWorkbook(filePath1).SaveAs(filePath2, true);
+            using (var wb = new XLWorkbook(filePath1))
+                wb.SaveAs(filePath2, true, evaluateFormulae);
+
             bool success = true;
 #pragma warning disable 162
             try
@@ -82,7 +82,7 @@ namespace ClosedXML_Tests
                 //Compare
                 // ReSharper disable ConditionIsAlwaysTrueOrFalse
                 if (CompareWithResources)
-                        // ReSharper restore ConditionIsAlwaysTrueOrFalse
+                // ReSharper restore ConditionIsAlwaysTrueOrFalse
 
                 {
                     string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');

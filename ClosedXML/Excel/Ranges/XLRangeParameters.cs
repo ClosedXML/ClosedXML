@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.Excel
+namespace ClosedXML.Excel
 {
     internal class XLRangeParameters
     {

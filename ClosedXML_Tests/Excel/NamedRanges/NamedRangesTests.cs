@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -30,12 +30,11 @@ namespace ClosedXML_Tests.Excel
             sheet1.Column(1).InsertColumnsBefore(2);
             sheet1.Column(1).Delete();
 
-
-            Assert.AreEqual("'Sheet1'!$C$3,'Sheet1'!$C$4:$D$4,Sheet2!$D$3:$D$4,'Sheet1'!$7:$8,'Sheet1'!$G:$H",
+            Assert.AreEqual("Sheet1!$C$3,Sheet1!$C$4:$D$4,Sheet2!$D$3:$D$4,Sheet1!$7:$8,Sheet1!$G:$H",
                 wb.NamedRanges.First().RefersTo);
-            Assert.AreEqual("'Sheet1'!$C$3,'Sheet1'!$C$4:$D$4,Sheet2!$D$3:$D$4,'Sheet1'!$7:$8,'Sheet1'!$G:$H",
+            Assert.AreEqual("Sheet1!$C$3,Sheet1!$C$4:$D$4,Sheet2!$D$3:$D$4,Sheet1!$7:$8,Sheet1!$G:$H",
                 sheet1.NamedRanges.First().RefersTo);
-            Assert.AreEqual("'Sheet1'!B2,Sheet2!A1", sheet2.NamedRanges.First().RefersTo);
+            Assert.AreEqual("Sheet1!B2,Sheet2!A1", sheet2.NamedRanges.First().RefersTo);
         }
 
         [Test]
@@ -107,6 +106,39 @@ namespace ClosedXML_Tests.Excel
             Boolean result2 = ws.NamedRanges.TryGetValue("NameX", out range2);
             Assert.IsFalse(result2);
             Assert.IsNull(range2);
+        }
+
+        [Test]
+        public void DeleteColumnUsedInNamedRange()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().SetValue("Column1");
+                ws.FirstCell().CellRight().SetValue("Column2").Style.Font.SetBold();
+                ws.FirstCell().CellRight(2).SetValue("Column3");
+                ws.NamedRanges.Add("MyRange", "A1:C1");
+
+                ws.Column(1).Delete();
+
+                Assert.IsTrue(ws.Cell("A1").Style.Font.Bold);
+                Assert.AreEqual("Column3", ws.Cell("B1").GetValue<string>());
+                Assert.IsEmpty(ws.Cell("C1").GetValue<string>());
+            }
+        }
+
+        [Test]
+        public void TestInvalidNamedRangeOnWorkbookScope()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().SetValue("Column1");
+                ws.FirstCell().CellRight().SetValue("Column2").Style.Font.SetBold();
+                ws.FirstCell().CellRight(2).SetValue("Column3");
+
+                Assert.Throws<ArgumentException>(() => wb.NamedRanges.Add("MyRange", "A1:C1"));
+            }
         }
     }
 }

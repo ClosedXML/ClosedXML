@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 namespace ClosedXML.Excel
@@ -28,6 +28,14 @@ namespace ClosedXML.Excel
 
     public partial class XLColor : IEquatable<XLColor>
     {
+        /// <summary>
+        /// Usually indexed colors are limited to max 63
+        /// Index 81 is some special case.
+        /// Some people claim it's the index for tooltip color.
+        /// We'll return normal black when index 81 is found.
+        /// </summary>
+        private const Int32 TOOLTIPCOLORINDEX = 81;
+
         private readonly XLColorType _colorType;
         private int _hashCode;
         private readonly Int32 _indexed;
@@ -50,7 +58,10 @@ namespace ClosedXML.Excel
                     throw new Exception("Cannot convert theme color to Color.");
 
                 if (_colorType == XLColorType.Indexed)
-                    return IndexedColors[_indexed].Color;
+                    if (_indexed == TOOLTIPCOLORINDEX)
+                        return Color.FromArgb(255, Color.Black);
+                    else
+                        return IndexedColors[_indexed].Color;
 
                 return _color;
             }

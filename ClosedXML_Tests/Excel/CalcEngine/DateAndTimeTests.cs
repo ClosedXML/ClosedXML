@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Threading;
 using ClosedXML.Excel;
@@ -21,8 +21,25 @@ namespace ClosedXML_Tests.Excel.DataValidations
         [Test]
         public void Date()
         {
-            Object actual = XLWorkbook.EvaluateExpr("Date(2008, 1, 1)");
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr("Date(2008, 1, 1)");
             Assert.AreEqual(39448, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Date(2008, 15, 1)");
+            Assert.AreEqual(39873, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Date(2008, -50, 1)");
+            Assert.AreEqual(37895, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Date(2008, 5, 63)");
+            Assert.AreEqual(39631, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Date(2008, 13, 63)");
+            Assert.AreEqual(39876, actual);
+
+            actual = XLWorkbook.EvaluateExpr("Date(2008, 15, -120)");
+            Assert.AreEqual(39752, actual);
         }
 
         [Test]

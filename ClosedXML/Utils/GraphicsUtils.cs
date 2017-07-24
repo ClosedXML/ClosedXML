@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 namespace ClosedXML.Utils
@@ -7,7 +7,7 @@ namespace ClosedXML.Utils
     {
         [ThreadStatic]
         private static Graphics threadLocalGraphics;
-        private static Graphics g
+        internal static Graphics Graphics
         {
             get
             {
@@ -22,7 +22,7 @@ namespace ClosedXML.Utils
 
         public static SizeF MeasureString(string s, Font font)
         {
-            SizeF result = g.MeasureString(s, font, Int32.MaxValue, StringFormat.GenericTypographic);
+            SizeF result = Graphics.MeasureString(s, font, Int32.MaxValue, StringFormat.GenericTypographic);
             return result;
         }
     }

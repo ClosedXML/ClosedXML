@@ -1,9 +1,8 @@
-﻿using ClosedXML.Attributes;
+using ClosedXML.Attributes;
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -26,13 +25,13 @@ namespace ClosedXML_Tests.Excel
         {
             public int UnOrderedColumn { get; set; }
 
-            [Display(Name ="SecondColumn"), ColumnOrder(1)]
+            [XLColumn(Header = "SecondColumn", Order = 1)]
             public String Column1 { get; set; }
 
-            [Display(Name = "FirstColumn"), ColumnOrder(0)]
+            [XLColumn(Header = "FirstColumn", Order = 0)]
             public String Column2 { get; set; }
 
-            [Display(Name = "SomeFieldNotProperty"), ColumnOrder(2)]
+            [XLColumn(Header = "SomeFieldNotProperty", Order = 2)]
             public int MyField;
         }
 
@@ -40,8 +39,8 @@ namespace ClosedXML_Tests.Excel
         public void CanSaveTableCreatedFromEmptyDataTable()
         {
             var dt = new DataTable("sheet1");
-            dt.Columns.Add("col1", typeof (string));
-            dt.Columns.Add("col2", typeof (double));
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
 
             var wb = new XLWorkbook();
             wb.AddWorksheet(dt);
@@ -144,8 +143,8 @@ namespace ClosedXML_Tests.Excel
         public void TableCreatedFromEmptyDataTable()
         {
             var dt = new DataTable("sheet1");
-            dt.Columns.Add("col1", typeof (string));
-            dt.Columns.Add("col2", typeof (double));
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
 
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");

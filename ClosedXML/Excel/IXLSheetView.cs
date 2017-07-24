@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ClosedXML.Excel
 {
@@ -19,25 +19,25 @@ namespace ClosedXML.Excel
         XLSheetViewOptions View { get; set; }
 
         /// <summary>
-        /// Window zoom magnification for current view representing percent values. Horizontal & Vertical scale together.
+        /// Window zoom magnification for current view representing percent values. Horizontal and vertical scale together.
         /// </summary>
         /// <remarks>Representing percent values ranging from 10 to 400.</remarks>
         Int32 ZoomScale { get; set; }
 
         /// <summary>
-        /// Zoom magnification to use when in normal view. Horizontal & Vertical scale together
+        /// Zoom magnification to use when in normal view. Horizontal and vertical scale together
         /// </summary>
         /// <remarks>Representing percent values ranging from 10 to 400.</remarks>
         Int32 ZoomScaleNormal { get; set; }
 
         /// <summary>
-        /// Zoom magnification to use when in page layout view. Horizontal & Vertical scale together.
+        /// Zoom magnification to use when in page layout view. Horizontal and vertical scale together.
         /// </summary>
         /// <remarks>Representing percent values ranging from 10 to 400.</remarks>
         Int32 ZoomScalePageLayoutView { get; set; }
 
         /// <summary>
-        /// Zoom magnification to use when in page break preview. Horizontal & Vertical scale together.
+        /// Zoom magnification to use when in page break preview. Horizontal and vertical scale together.
         /// </summary>
         /// <remarks>Representing percent values ranging from 10 to 400.</remarks>
         Int32 ZoomScaleSheetLayoutView { get; set; }
