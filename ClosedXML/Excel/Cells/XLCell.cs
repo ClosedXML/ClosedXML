@@ -221,6 +221,9 @@ namespace ClosedXML.Excel
 
         public IXLCell SetValue<T>(T value)
         {
+            if (value == null)
+                return this.Clear(XLClearOptions.Contents);
+
             FormulaA1 = String.Empty;
             _richText = null;
             var style = GetStyleForRead();
