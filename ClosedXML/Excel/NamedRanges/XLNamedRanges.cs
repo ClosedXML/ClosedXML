@@ -69,7 +69,7 @@ namespace ClosedXML.Excel
 
                 if (!match.Success)
                 {
-                    var range = Worksheet.Range(rangeAddress);
+                    var range = Worksheet?.Range(rangeAddress) ?? Workbook.Range(rangeAddress);
                     if (range == null)
                         throw new ArgumentException(string.Format("The range address '{0}' for the named range '{1}' is not a valid range.", rangeAddress, rangeName));
                     else
