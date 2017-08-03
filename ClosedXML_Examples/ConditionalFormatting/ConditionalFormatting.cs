@@ -519,6 +519,26 @@ namespace ClosedXML_Examples
                 .CellBelow().SetValue(2)
                 .CellBelow().SetValue(3);
 
+            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red, true)
+                .LowestValue()
+                .Maximum(XLCFContentType.Percent, "100");
+
+            workbook.SaveAs(filePath);
+        }
+    }
+
+    public class CFDataBarNegative : IXLExample
+    {
+        public void Create(String filePath)
+        {
+            var workbook = new XLWorkbook();
+            var ws = workbook.AddWorksheet("Sheet1");
+
+            ws.FirstCell().SetValue(1)
+                .CellBelow().SetValue(1)
+                .CellBelow().SetValue(2)
+                .CellBelow().SetValue(3);
+
             ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Green, XLColor.Red, false)
                 .LowestValue()
                 .Maximum(XLCFContentType.Percent, "100");

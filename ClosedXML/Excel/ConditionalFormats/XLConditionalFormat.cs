@@ -337,6 +337,13 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.ColorScale;
             return new XLCFColorScaleMin(this);
         }
+        public IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false)
+        {
+            Colors.Initialize(color);
+            ShowBarOnly = showBarOnly;
+            ConditionalFormatType = XLConditionalFormatType.DataBar;
+            return new XLCFDataBarMin(this);
+        }
         public IXLCFDataBarMin DataBar(XLColor color, XLColor colorNegative, Boolean showBarOnly = false)
         {
             Colors.Initialize(color);

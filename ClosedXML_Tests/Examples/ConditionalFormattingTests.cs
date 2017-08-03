@@ -37,6 +37,12 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void CFDataBarNegative()
+        {
+            TestHelper.RunTestExample<CFDataBarNegative>(@"ConditionalFormatting\CFDataBarNegative.xlsx");
+        }
+
+        [Test]
         public void CFEndsWith()
         {
             TestHelper.RunTestExample<CFEndsWith>(@"ConditionalFormatting\CFEndsWith.xlsx");

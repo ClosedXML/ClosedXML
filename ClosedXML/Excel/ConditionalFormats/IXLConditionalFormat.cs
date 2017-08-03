@@ -99,6 +99,7 @@ namespace ClosedXML.Excel
         IXLStyle WhenIsBottom(Int32 value, XLTopBottomType topBottomType);
 
         IXLCFColorScaleMin ColorScale();
+        IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false);
         IXLCFDataBarMin DataBar(XLColor color, XLColor colorNegative, Boolean showBarOnly = false);
         IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
 
