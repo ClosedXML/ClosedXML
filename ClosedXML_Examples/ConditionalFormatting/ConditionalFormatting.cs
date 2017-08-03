@@ -519,7 +519,7 @@ namespace ClosedXML_Examples
                 .CellBelow().SetValue(2)
                 .CellBelow().SetValue(3);
 
-            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red, true)
+            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Green, XLColor.Red, false)
                 .LowestValue()
                 .Maximum(XLCFContentType.Percent, "100");
 
@@ -579,7 +579,7 @@ namespace ClosedXML_Examples
             var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
-            ws.Cell(2,1).SetValue(1)
+            ws.Cell(2, 1).SetValue(1)
                 .CellRight().SetValue(1)
                 .CellRight().SetValue(2)
                 .CellRight().SetValue(3);
@@ -606,7 +606,7 @@ namespace ClosedXML_Examples
               .CellBelow().SetValue(3)
               .CellBelow().SetValue(4);
 
-            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red)
+            ws.RangeUsed().AddConditionalFormat().DataBar(XLColor.Red, XLColor.Green)
                 .LowestValue()
                 .HighestValue();
 
@@ -621,7 +621,7 @@ namespace ClosedXML_Examples
             var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
-            using(var range = ws.Range("A1:A10"))
+            using (var range = ws.Range("A1:A10"))
             {
                 range.AddConditionalFormat().WhenEquals("3")
                     .Fill.SetBackgroundColor(XLColor.Blue);

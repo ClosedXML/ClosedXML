@@ -62,13 +62,14 @@ namespace ClosedXML.Excel
     public enum XLCFOperator { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan, Between, NotBetween, Contains, NotContains, StartsWith, EndsWith }
     public interface IXLConditionalFormat
     {
+        String Name { get; set; }
         IXLStyle Style { get; set; }
 
         IXLStyle WhenIsBlank();
         IXLStyle WhenNotBlank();
         IXLStyle WhenIsError();
         IXLStyle WhenNotError();
-        IXLStyle WhenDateIs(XLTimePeriod timePeriod );
+        IXLStyle WhenDateIs(XLTimePeriod timePeriod);
         IXLStyle WhenContains(String value);
         IXLStyle WhenNotContains(String value);
         IXLStyle WhenStartsWith(String value);
@@ -98,7 +99,7 @@ namespace ClosedXML.Excel
         IXLStyle WhenIsBottom(Int32 value, XLTopBottomType topBottomType);
 
         IXLCFColorScaleMin ColorScale();
-        IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false);
+        IXLCFDataBarMin DataBar(XLColor color, XLColor colorNegative, Boolean showBarOnly = false);
         IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
 
         XLConditionalFormatType ConditionalFormatType { get; }
