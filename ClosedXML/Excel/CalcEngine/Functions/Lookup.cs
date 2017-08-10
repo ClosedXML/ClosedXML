@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("COLUMNS", , Columns); // Returns the number of columns in a reference
             //ce.RegisterFunction("FORMULATEXT", , Formulatext); // Returns the formula at the given reference as text
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
-            ce.RegisterFunction("HLOOKUP", 4, Hlookup); // Looks in the top row of an array and returns the value of the indicated cell
+            ce.RegisterFunction("HLOOKUP", 3, 4, Hlookup); // Looks in the top row of an array and returns the value of the indicated cell
             //ce.RegisterFunction("HYPERLINK", , Hyperlink); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
             //ce.RegisterFunction("INDEX", , Index); // Uses an index to choose a value from a reference or array
             //ce.RegisterFunction("INDIRECT", , Indirect); // Returns a reference indicated by a text value
@@ -26,7 +26,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("ROWS", , Rows); // Returns the number of rows in a reference
             //ce.RegisterFunction("RTD", , Rtd); // Retrieves real-time data from a program that supports COM automation
             //ce.RegisterFunction("TRANSPOSE", , Transpose); // Returns the transpose of an array
-            ce.RegisterFunction("VLOOKUP", 4, Vlookup); // Looks in the first column of an array and moves across the row to return the value of a cell
+            ce.RegisterFunction("VLOOKUP", 3, 4, Vlookup); // Looks in the first column of an array and moves across the row to return the value of a cell
         }
 
         private static object Hlookup(List<Expression> p)

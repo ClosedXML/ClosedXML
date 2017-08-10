@@ -106,6 +106,9 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,TRUE)");
             Assert.AreEqual(179.64, value);
 
+            value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8)");
+            Assert.AreEqual(179.64, value);
+
             value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,)");
             Assert.AreEqual(179.64, value);
 
