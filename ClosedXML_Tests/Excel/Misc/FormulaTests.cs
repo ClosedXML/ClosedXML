@@ -165,7 +165,7 @@ namespace ClosedXML_Tests.Excel
             Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("YEAR(#VALUE!)"));
             Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("YEAR(#DIV/0!)"));
             Assert.Throws<NameNotRecognizedException>(() => XLWorkbook.EvaluateExpr("YEAR(#NAME?)"));
-            Assert.Throws<NoValueAvailableException>(() => XLWorkbook.EvaluateExpr("YEAR(#N/A!)"));
+            Assert.Throws<NoValueAvailableException>(() => XLWorkbook.EvaluateExpr("YEAR(#N/A)"));
             Assert.Throws<NullValueException>(() => XLWorkbook.EvaluateExpr("YEAR(#NULL!)"));
             Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr("YEAR(#NUM!)"));
         }

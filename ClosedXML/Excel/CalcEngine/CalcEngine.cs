@@ -256,9 +256,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             ["#REF!"] = ErrorExpression.ExpressionErrorType.CellReference,
             ["#VALUE!"] = ErrorExpression.ExpressionErrorType.CellValue,
-            ["#DIV/0!"] = ErrorExpression.ExpressionErrorType.DivideByZero,
+            ["#DIV/0!"] = ErrorExpression.ExpressionErrorType.DivisionByZero,
             ["#NAME?"] = ErrorExpression.ExpressionErrorType.NameNotRecognized,
-            ["#N/A!"] = ErrorExpression.ExpressionErrorType.NoValueAvailable,
+            ["#N/A"] = ErrorExpression.ExpressionErrorType.NoValueAvailable,
             ["#NULL!"] = ErrorExpression.ExpressionErrorType.NullValue,
             ["#NUM!"] = ErrorExpression.ExpressionErrorType.NumberInvalid
         };

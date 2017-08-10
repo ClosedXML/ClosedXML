@@ -463,7 +463,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             CellReference,
             CellValue,
-            DivideByZero,
+            DivisionByZero,
             NameNotRecognized,
             NoValueAvailable,
             NullValue,
@@ -489,7 +489,7 @@ namespace ClosedXML.Excel.CalcEngine
                     throw new CellReferenceException();
                 case ExpressionErrorType.CellValue:
                     throw new CellValueException();
-                case ExpressionErrorType.DivideByZero:
+                case ExpressionErrorType.DivisionByZero:
                     throw new DivisionByZeroException();
                 case ExpressionErrorType.NameNotRecognized:
                     throw new NameNotRecognizedException();
