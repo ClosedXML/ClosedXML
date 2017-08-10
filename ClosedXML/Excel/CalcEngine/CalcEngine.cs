@@ -77,9 +77,11 @@ namespace ClosedXML.Excel.CalcEngine
 
             // skip leading equals sign
             if (_len > 0 && _expr[0] == '=')
-            {
                 _ptr++;
-            }
+
+            // skip leading +'s
+            while (_len > _ptr && _expr[_ptr] == '+')
+                _ptr++;
 
             // parse the expression
             var expr = ParseExpression();
