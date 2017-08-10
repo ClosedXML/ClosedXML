@@ -142,9 +142,10 @@ namespace ClosedXML.Excel
         private void DeleteSheetAndDependencies(WorkbookPart wbPart, string sheetId)
         {
             //Get the SheetToDelete from workbook.xml
-            Sheet worksheet = wbPart.Workbook.Descendants<Sheet>().Where(s => s.Id == sheetId).FirstOrDefault();
+            Sheet worksheet = wbPart.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Id == sheetId);
             if (worksheet == null)
-            { }
+                return;
+
 
             string sheetName = worksheet.Name;
             // Get the pivot Table Parts
@@ -154,8 +155,8 @@ namespace ClosedXML.Excel
             {
                 PivotCacheDefinition pvtCacheDef = Item.PivotCacheDefinition;
                 //Check if this CacheSource is linked to SheetToDelete
-                var pvtCahce = pvtCacheDef.Descendants<CacheSource>().Where(s => s.WorksheetSource.Sheet == sheetName);
-                if (pvtCahce.Count() > 0)
+                var pvtCache = pvtCacheDef.Descendants<CacheSource>().Where(s => s.WorksheetSource.Sheet == sheetName);
+                if (pvtCache.Any())
                 {
                     pvtTableCacheDefinationPart.Add(Item, Item.ToString());
                 }
@@ -178,7 +179,7 @@ namespace ClosedXML.Excel
             {
                 List<DefinedName> defNamesToDelete = new List<DefinedName>();
 
-                foreach (DefinedName Item in definedNames)
+                foreach (var Item in definedNames.OfType<DefinedName>())
                 {
                     // This condition checks to delete only those names which are part of Sheet in question
                     if (Item.Text.Contains(worksheet.Name + "!"))
@@ -201,19 +202,15 @@ namespace ClosedXML.Excel
                 var calChainEntries = calChainPart.CalculationChain.Descendants<CalculationCell>().Where(c => c.SheetId == sheetId);
                 List<CalculationCell> calcsToDelete = new List<CalculationCell>();
                 foreach (CalculationCell Item in calChainEntries)
-                {
                     calcsToDelete.Add(Item);
-                }
+
 
                 foreach (CalculationCell Item in calcsToDelete)
-                {
                     Item.Remove();
-                }
 
-                if (calChainPart.CalculationChain.Count() == 0)
-                {
+
+                if (!calChainPart.CalculationChain.Any())
                     wbPart.DeletePart(calChainPart);
-                }
             }
         }
 
@@ -350,6 +347,9 @@ namespace ClosedXML.Excel
                 GenerateCustomFilePropertiesPartContent(customFilePropertiesPart);
             }
             SetPackageProperties(document);
+
+            // Clear list of deleted worksheets to prevent errors on multiple saves
+            worksheets.Deleted.Clear();
         }
 
         private void DeleteComments(WorksheetPart worksheetPart, XLWorksheet worksheet, SaveContext context)
