@@ -81,6 +81,7 @@
     <Compile Include="Excel\Drawings\XLPictures.cs" />
     <Compile Include="Excel\Misc\XLCallbackAction.cs" />
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
+    <Compile Include="Excel\SaveOptions.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
     <Compile Include="Excel\XLConstants.cs" />
     <Compile Include="Excel\XLWorkbook_ImageHandling.cs" />
