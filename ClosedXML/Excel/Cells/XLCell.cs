@@ -2592,6 +2592,8 @@ namespace ClosedXML.Excel
 
         public Boolean HasFormula { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
 
+        public Boolean HasArrayFormula { get { return FormulaA1.StartsWith("{"); } }
+
         public IXLRangeAddress FormulaReference { get; set; }
     }
 }

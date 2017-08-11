@@ -1175,7 +1175,13 @@ namespace ClosedXML.Excel
                     formula = cell.CellFormula.Text;
 
                 if (cell.CellFormula.Reference != null)
-                    xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+                {
+                    foreach (var childCell in ws.Range(cell.CellFormula.Reference.Value).Cells(c => c.FormulaReference == null))
+                    {
+                        childCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+                        childCell.FormulaA1 = formula;
+                    }
+                }
 
                 xlCell.FormulaA1 = formula;
                 sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
@@ -1187,7 +1193,7 @@ namespace ClosedXML.Excel
             {
                 if (cell.CellFormula.SharedIndex != null)
                     xlCell.FormulaR1C1 = sharedFormulasR1C1[cell.CellFormula.SharedIndex.Value];
-                else
+                else if (!String.IsNullOrWhiteSpace(cell.CellFormula.Text))
                 {
                     String formula;
                     if (cell.CellFormula.FormulaType != null && cell.CellFormula.FormulaType == CellFormulaValues.Array)
@@ -1199,7 +1205,16 @@ namespace ClosedXML.Excel
                 }
 
                 if (cell.CellFormula.Reference != null)
-                    xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+                {
+                    foreach (var childCell in ws.Range(cell.CellFormula.Reference.Value).Cells(c => c.FormulaReference == null || !c.HasFormula))
+                    {
+                        if (childCell.FormulaReference == null)
+                            childCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+
+                        if (!childCell.HasFormula)
+                            childCell.FormulaA1 = xlCell.FormulaA1;
+                    }
+                }
 
                 if (cell.CellValue != null)
                     xlCell.ValueCached = cell.CellValue.Text;

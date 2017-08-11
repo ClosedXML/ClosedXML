@@ -260,7 +260,7 @@ namespace ClosedXML.Excel
         IXLCells InsertCellsBefore(int numberOfColumns);
 
         /// <summary>
-        /// Creates a named range out of this cell. 
+        /// Creates a named range out of this cell.
         /// <para>If the named range exists, it will add this range to that named range.</para>
         /// <para>The default scope for the named range is Workbook.</para>
         /// </summary>
@@ -268,7 +268,7 @@ namespace ClosedXML.Excel
         IXLCell AddToNamed(String rangeName);
 
         /// <summary>
-        /// Creates a named range out of this cell. 
+        /// Creates a named range out of this cell.
         /// <para>If the named range exists, it will add this range to that named range.</para>
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
@@ -276,7 +276,7 @@ namespace ClosedXML.Excel
         IXLCell AddToNamed(String rangeName, XLScope scope);
 
         /// <summary>
-        /// Creates a named range out of this cell. 
+        /// Creates a named range out of this cell.
         /// <para>If the named range exists, it will add this range to that named range.</para>
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
@@ -322,6 +322,7 @@ namespace ClosedXML.Excel
         IXLCell SetActive(Boolean value = true);
 
         Boolean HasFormula { get; }
+        Boolean HasArrayFormula { get; }
 
         IXLRangeAddress FormulaReference { get; set; }
     }
