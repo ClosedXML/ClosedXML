@@ -1176,11 +1176,9 @@ namespace ClosedXML.Excel
 
                 if (cell.CellFormula.Reference != null)
                 {
-                    foreach (var childCell in ws.Range(cell.CellFormula.Reference.Value).Cells(c => c.FormulaReference == null))
-                    {
-                        childCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
-                        childCell.FormulaA1 = formula;
-                    }
+                    // Parent cell of shared formulas
+                    // Child cells will use this shared index to set its R1C1 style formula
+                    xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
                 }
 
                 xlCell.FormulaA1 = formula;

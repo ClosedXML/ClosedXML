@@ -1523,6 +1523,11 @@ namespace ClosedXML.Excel
 
         public String Author { get; set; }
 
+        public override string ToString()
+        {
+            return this.Name;
+        }
+
         public IXLPictures Pictures { get; private set; }
 
         public IXLPicture Picture(string pictureName)
