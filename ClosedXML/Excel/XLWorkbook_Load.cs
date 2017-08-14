@@ -640,7 +640,7 @@ namespace ClosedXML.Excel
                     {
                         var vsdp = GetPropertiesFromAnchor(anchor);
 
-                        var picture = ws.AddPicture(stream, vsdp.Name) as XLPicture;
+                        var picture = (ws as XLWorksheet).AddPicture(stream, vsdp.Name, Convert.ToInt32(vsdp.Id.Value)) as XLPicture;
                         picture.RelId = imgId;
 
                         Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
