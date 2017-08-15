@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Misc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -30,7 +31,7 @@ namespace ClosedXML.Excel
 
             IsReference = xlRowParameters.IsReference;
             if (IsReference)
-                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
+                SubscribeToShiftedRows(WorksheetRangeShiftedRows);
             else
                 _height = xlRowParameters.Worksheet.RowHeight;
         }
@@ -44,7 +45,7 @@ namespace ClosedXML.Excel
             _height = row._height;
             IsReference = row.IsReference;
             if (IsReference)
-                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
+                SubscribeToShiftedRows(WorksheetRangeShiftedRows);
 
             _collapsed = row._collapsed;
             _isHidden = row._isHidden;
@@ -388,7 +389,6 @@ namespace ClosedXML.Excel
             }
         }
 
-
         public Int32 OutlineLevel
         {
             get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].OutlineLevel : _outlineLevel; }
@@ -551,12 +551,12 @@ namespace ClosedXML.Excel
             return Range(1, 1, 1, XLHelper.MaxColumnNumber);
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        private void WorksheetRangeShiftedRows(object sender, RangeShiftedEventArgs e)
         {
-            if (range.RangeAddress.IsValid &&
+            if (e.Range.RangeAddress.IsValid &&
                 RangeAddress.IsValid &&
-                range.RangeAddress.FirstAddress.RowNumber <= RowNumber())
-                SetRowNumber(RowNumber() + rowsShifted);
+                e.Range.RangeAddress.FirstAddress.RowNumber <= RowNumber())
+                SetRowNumber(RowNumber() + e.Shifted);
         }
 
         private void SetRowNumber(Int32 row)

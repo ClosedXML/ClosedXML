@@ -1,6 +1,6 @@
 using System;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
-        private const Int32 TwoT26 = 26*26;
+        private const Int32 TwoT26 = 26 * 26;
 
         internal static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(200, 200));
         internal static readonly Double DpiX = Graphic.DpiX;
@@ -100,7 +100,6 @@ namespace ClosedXML.Excel
 
             throw new ArgumentOutOfRangeException(columnLetter + " is not recognized as a column letter");
         }
-
 
         /// <summary>
         /// Gets the column letter of a given column number.
