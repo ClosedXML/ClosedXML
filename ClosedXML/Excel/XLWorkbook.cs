@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.AccessControl;
 using ClosedXML.Excel.CalcEngine;
 using DocumentFormat.OpenXml;
 
@@ -494,7 +493,6 @@ namespace ClosedXML.Excel
                     CopyStream(_originalStream, fileStream);
                     //fileStream.Position = 0;
                     CreatePackage(fileStream, false, _spreadsheetDocumentType, validate);
-                    fileStream.Close();
                 }
             }
         }
@@ -571,7 +569,6 @@ namespace ClosedXML.Excel
                 using (var fileStream = new FileStream(_originalFile, FileMode.Open, FileAccess.Read))
                 {
                     CopyStream(fileStream, stream);
-                    fileStream.Close();
                 }
                 CreatePackage(stream, false, _spreadsheetDocumentType, validate);
             }

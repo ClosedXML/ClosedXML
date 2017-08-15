@@ -152,6 +152,7 @@ namespace ClosedXML.Excel.Drawings
             }
             set
             {
+#if _NETFRAMEWORK_
                 if (imgStream == null)
                 {
                     imgStream = new MemoryStream();
@@ -172,6 +173,9 @@ namespace ClosedXML.Excel.Drawings
                     iVerticalResolution = bitmap.VerticalResolution;
                 }
                 imgStream.Seek(0, SeekOrigin.Begin);
+#else
+                throw new NotImplementedException("System.Drawing.Bitmap is not implemented in .NET Standard 2.0");
+#endif
             }
         }
 

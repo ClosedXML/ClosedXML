@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Text;
 
+#if _NETSTANDARD_
+using ClosedXML.NetStandard;
+#endif
+
 namespace ClosedXML.Excel
 {
     internal class XLHFText

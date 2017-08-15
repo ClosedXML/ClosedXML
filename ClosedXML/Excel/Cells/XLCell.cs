@@ -686,7 +686,7 @@ namespace ClosedXML.Excel
         {
             if (data == null) return null;
 
-            if (data.Rows.Count > 0) return InsertTable(data.AsEnumerable(), tableName, createTable);
+            if (data.Rows.Count > 0) return InsertTable(data.Rows.Cast<DataRow>(), tableName, createTable);
 
             var ro = Address.RowNumber;
             var co = Address.ColumnNumber;

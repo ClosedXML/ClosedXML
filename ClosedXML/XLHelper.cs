@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+#if _NETFRAMEWORK_
+    using System.Drawing;
+#endif
 
 namespace ClosedXML.Excel
 {
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Drawing;
-
     /// <summary>
     /// 	Common methods
     /// </summary>
@@ -22,8 +22,11 @@ namespace ClosedXML.Excel
         public const Double Epsilon = 1e-10;
 
         private const Int32 TwoT26 = 26*26;
+
+#if _NETFRAMEWORK_
         internal static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(200, 200));
         internal static readonly Double DpiX = Graphic.DpiX;
+#endif
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
@@ -186,15 +189,17 @@ namespace ClosedXML.Excel
             return range.Contains('-') ? range.Replace('-', ':').Split(':') : range.Split(':');
         }
 
+#if _NETFRAMEWORK_
         public static Int32 GetPtFromPx(Double px)
         {
-            return Convert.ToInt32(px*72.0/DpiX);
+            return Convert.ToInt32(px * 72.0 / DpiX);
         }
 
         public static Double GetPxFromPt(Int32 pt)
         {
-            return Convert.ToDouble(pt)*DpiX/72.0;
+            return Convert.ToDouble(pt) * DpiX / 72.0;
         }
+#endif
 
         internal static IXLTableRows InsertRowsWithoutEvents(Func<int, bool, IXLRangeRows> insertFunc,
                                                              XLTableRange tableRange, Int32 numberOfRows,

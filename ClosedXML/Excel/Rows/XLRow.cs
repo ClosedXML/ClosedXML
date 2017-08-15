@@ -277,7 +277,9 @@ namespace ClosedXML.Excel
 
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
+#if _NETFRAMEWORK_
             var fontCache = new Dictionary<IXLFontBase, Font>();
+#endif
             Double rowMaxHeight = minHeight;
             foreach (XLCell c in from XLCell c in Row(startColumn, endColumn).CellsUsed() where !c.IsMerged() select c)
             {
@@ -317,7 +319,11 @@ namespace ClosedXML.Excel
                     }
 
                     Double maxLongCol = kpList.Max(kp => kp.Value.Length);
+#if _NETFRAMEWORK_
                     Double maxHeightCol = kpList.Max(kp => kp.Key.GetHeight(fontCache));
+#else
+                    Double maxHeightCol = kpList.Max(kp => kp.Key.GetHeight());
+#endif
                     Int32 lineCount = kpList.Count(kp => kp.Value.Contains(Environment.NewLine)) + 1;
                     if (textRotation == 0)
                         thisHeight = maxHeightCol * lineCount;
@@ -338,8 +344,11 @@ namespace ClosedXML.Excel
                     }
                 }
                 else
-                    thisHeight = c.Style.Font.GetHeight( fontCache);
-
+#if _NETFRAMEWORK_
+                    thisHeight = c.Style.Font.GetHeight(fontCache);
+#else
+                    thisHeight = c.Style.Font.GetHeight();
+#endif
                 if (thisHeight >= maxHeight)
                 {
                     rowMaxHeight = maxHeight;
@@ -354,10 +363,12 @@ namespace ClosedXML.Excel
 
             Height = rowMaxHeight;
 
+#if _NETFRAMEWORK_
             foreach (IDisposable font in fontCache.Values)
             {
                 font.Dispose();
             }
+#endif
             return this;
         }
 
@@ -581,7 +592,7 @@ namespace ClosedXML.Excel
             return Row(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
         }
 
-        #endregion
+#endregion
 
         public override XLRange AsRange()
         {
@@ -654,7 +665,7 @@ namespace ClosedXML.Excel
             return Worksheet.Row(RowNumber() + rowsToShift);
         }
 
-        #region XLRow Above
+#region XLRow Above
 
         IXLRow IXLRow.RowAbove()
         {
@@ -676,9 +687,9 @@ namespace ClosedXML.Excel
             return RowShift(step * -1);
         }
 
-        #endregion
+#endregion
 
-        #region XLRow Below
+#region XLRow Below
 
         IXLRow IXLRow.RowBelow()
         {
@@ -700,7 +711,7 @@ namespace ClosedXML.Excel
             return RowShift(step);
         }
 
-        #endregion
+#endregion
 
         public new Boolean IsEmpty()
         {

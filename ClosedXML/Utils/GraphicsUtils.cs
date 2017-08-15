@@ -1,4 +1,5 @@
-﻿using System;
+#if _NETFRAMEWORK_
+using System;
 using System.Drawing;
 
 namespace ClosedXML.Utils
@@ -27,3 +28,4 @@ namespace ClosedXML.Utils
         }
     }
 }
+#endif

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using DocumentFormat.OpenXml.Presentation;
 
+#if _NETSTANDARD_
+using ClosedXML.NetStandard;
+#endif
+
 namespace ClosedXML.Excel
 {
     public partial class XLColor
@@ -36,17 +40,24 @@ namespace ClosedXML.Excel
         {
             return FromColor(Color.FromArgb(a, r, g, b));
         }
+
+#if _NETFRAMEWORK_
         public static XLColor FromKnownColor(KnownColor color)
         {
             return FromColor(Color.FromKnownColor(color));
-        }
+        }    
+#endif
         public static XLColor FromName(String name)
         {
             return FromColor(Color.FromName(name));
         }
         public static XLColor FromHtml(String htmlColor)
         {
+#if _NETFRAMEWORK_
             return FromColor(ColorTranslator.FromHtml(htmlColor));
+#else
+            return FromColor(XLColorTranslator.FromHtml(htmlColor));
+#endif
         }
 
         private static readonly Dictionary<Int32, XLColor> ByIndex = new Dictionary<Int32, XLColor>();

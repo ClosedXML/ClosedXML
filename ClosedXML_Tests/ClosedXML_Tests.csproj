@@ -35,6 +35,14 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.7.0" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <PackageReference Include="System.IO.Packaging" Version="4.3.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
     <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />

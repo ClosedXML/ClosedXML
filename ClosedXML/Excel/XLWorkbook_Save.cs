@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if _NETSTANDARD_
+using ClosedXML.NetStandard;
+#endif
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;

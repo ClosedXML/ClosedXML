@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Sandbox", "ClosedXML_Sandbox\ClosedXML_Sandbox.csproj", "{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosedXML_Sandbox", "ClosedXML_Sandbox\ClosedXML_Sandbox.csproj", "{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5C94E22C-85AA-48FD-B082-CF929FFC6C31}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,11 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ClosedXML.vsmdi = ClosedXML.vsmdi
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Examples", "ClosedXML_Examples\ClosedXML_Examples.csproj", "{03A518D0-1CB7-488E-861C-C4E782B27A46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosedXML_Examples", "ClosedXML_Examples\ClosedXML_Examples.csproj", "{03A518D0-1CB7-488E-861C-C4E782B27A46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML", "ClosedXML\ClosedXML.csproj", "{BD5E6BFE-E837-4A35-BCA9-39667D873A20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosedXML", "ClosedXML\ClosedXML.csproj", "{BD5E6BFE-E837-4A35-BCA9-39667D873A20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Tests", "ClosedXML_Tests\ClosedXML_Tests.csproj", "{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosedXML_Tests", "ClosedXML_Tests\ClosedXML_Tests.csproj", "{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{073CFB1C-43DC-4ADC-9D12-BB8D7B10C099}"
 	ProjectSection(SolutionItems) = preProject
@@ -48,6 +48,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E35B7D8-9690-408F-B52A-F4FC485A6B09}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ClosedXML.vsmdi
