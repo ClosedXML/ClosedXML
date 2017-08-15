@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     _value = value.Trim();
-                    IsFormula = !XLHelper.IsNullOrWhiteSpace(_value) && _value.TrimStart()[0] == '=' ;
+                    IsFormula = !String.IsNullOrWhiteSpace(_value) && _value.TrimStart()[0] == '=' ;
                     if (IsFormula)
                         _value = _value.Substring(1);
                 }

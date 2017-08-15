@@ -1,4 +1,4 @@
-﻿namespace ClosedXML.Excel
+namespace ClosedXML.Excel
 {
     public interface IXLTheme
     {

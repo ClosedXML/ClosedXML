@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Linq;
 
@@ -98,7 +98,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 _evaluating = true;
                 var f = cell.FormulaA1;
-                if (XLHelper.IsNullOrWhiteSpace(f))
+                if (String.IsNullOrWhiteSpace(f))
                     return cell.Value;
                 else
                     return new XLCalcEngine(cell.Worksheet).Evaluate(f);

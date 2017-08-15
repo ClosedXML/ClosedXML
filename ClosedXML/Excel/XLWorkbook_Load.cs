@@ -1,4 +1,4 @@
-﻿using ClosedXML.Utils;
+using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
+using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 #if _NETSTANDARD_
 using ClosedXML.NetStandard;
@@ -19,6 +20,7 @@ using ClosedXML.NetStandard;
 namespace ClosedXML.Excel
 {
     using Ap;
+    using Drawings;
     using Op;
     using System.Drawing;
 
@@ -90,6 +92,8 @@ namespace ClosedXML.Excel
                     LockStructure = wbProtection.LockStructure.Value;
                 if (wbProtection.LockWindows != null)
                     LockWindows = wbProtection.LockWindows.Value;
+                if (wbProtection.WorkbookPassword != null)
+                    LockPassword = wbProtection.WorkbookPassword.Value;
             }
 
             var calculationProperties = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties;
@@ -331,6 +335,8 @@ namespace ClosedXML.Excel
                 }
 
 #endregion
+
+                LoadDrawings(wsPart, ws);
 
 #region LoadComments
 
@@ -609,6 +615,93 @@ namespace ClosedXML.Excel
             }
 
 #endregion
+        }
+
+        private void LoadDrawings(WorksheetPart wsPart, IXLWorksheet ws)
+        {
+            if (wsPart.DrawingsPart != null)
+            {
+                var drawingsPart = wsPart.DrawingsPart;
+
+                foreach (var anchor in drawingsPart.WorksheetDrawing.ChildElements)
+                {
+                    var imgId = GetImageRelIdFromAnchor(anchor);
+
+                    //If imgId is null, we're probably dealing with a TextBox (or another shape) instead of a picture
+                    if (imgId == null) continue;
+
+                    var imagePart = drawingsPart.GetPartById(imgId);
+                    using (var stream = imagePart.GetStream())
+                    {
+                        var vsdp = GetPropertiesFromAnchor(anchor);
+
+                        var picture = ws.AddPicture(stream, vsdp.Name) as XLPicture;
+                        picture.RelId = imgId;
+
+                        Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
+                        picture.Placement = XLPicturePlacement.FreeFloating;
+                        picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, GraphicsUtils.Graphics.DpiX);
+                        picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, GraphicsUtils.Graphics.DpiY);
+
+                        if (anchor is Xdr.AbsoluteAnchor)
+                        {
+                            var absoluteAnchor = anchor as Xdr.AbsoluteAnchor;
+                            picture.MoveTo(
+                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.X.Value, GraphicsUtils.Graphics.DpiX),
+                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.Y.Value, GraphicsUtils.Graphics.DpiY)
+                            );
+                        }
+                        else if (anchor is Xdr.OneCellAnchor)
+                        {
+                            var oneCellAnchor = anchor as Xdr.OneCellAnchor;
+                            var from = LoadMarker(ws, oneCellAnchor.FromMarker);
+                            picture.MoveTo(from.Address, from.Offset);
+                        }
+                        else if (anchor is Xdr.TwoCellAnchor)
+                        {
+                            var twoCellAnchor = anchor as Xdr.TwoCellAnchor;
+                            var from = LoadMarker(ws, twoCellAnchor.FromMarker);
+                            var to = LoadMarker(ws, twoCellAnchor.ToMarker);
+
+                            if (twoCellAnchor.EditAs == null || !twoCellAnchor.EditAs.HasValue || twoCellAnchor.EditAs.Value == Xdr.EditAsValues.TwoCell)
+                            {
+                                picture.MoveTo(from.Address, from.Offset, to.Address, to.Offset);
+                            }
+                            else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.Absolute)
+                            {
+                                var shapeProperties = twoCellAnchor.Descendants<Xdr.ShapeProperties>().FirstOrDefault();
+                                if (shapeProperties != null)
+                                {
+                                    picture.MoveTo(
+                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.X, GraphicsUtils.Graphics.DpiX),
+                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.Y, GraphicsUtils.Graphics.DpiY)
+                                    );
+                                }
+                            }
+                            else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.OneCell)
+                            {
+                                picture.MoveTo(from.Address, from.Offset);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static Int32 ConvertFromEnglishMetricUnits(long emu, float resolution)
+        {
+            return Convert.ToInt32(emu * resolution / 914400);
+        }
+
+        private static IXLMarker LoadMarker(IXLWorksheet ws, Xdr.MarkerType marker)
+        {
+            return new XLMarker(
+                ws.Cell(Convert.ToInt32(marker.RowId.InnerText) + 1, Convert.ToInt32(marker.ColumnId.InnerText) + 1).Address,
+                new Point(
+                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.ColumnOffset.InnerText), GraphicsUtils.Graphics.DpiX),
+                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.RowOffset.InnerText), GraphicsUtils.Graphics.DpiY)
+                )
+            );
         }
 
 #region Comment Helpers
@@ -917,7 +1010,7 @@ namespace ClosedXML.Excel
         {
             if (workbook.DefinedNames == null) return;
 
-            foreach (DefinedName definedName in workbook.DefinedNames)
+            foreach (var definedName in workbook.DefinedNames.OfType<DefinedName>())
             {
                 var name = definedName.Name;
                 var visible = true;
@@ -929,7 +1022,6 @@ namespace ClosedXML.Excel
                     {
                         if (area.Contains("["))
                         {
-                            String tableName = area.Substring(0, area.IndexOf("["));
                             var ws = Worksheets.FirstOrDefault(w => (w as XLWorksheet).SheetId == definedName.LocalSheetId + 1);
                             if (ws != null)
                             {
@@ -960,7 +1052,7 @@ namespace ClosedXML.Excel
                         if (localSheetId == null)
                         {
                             if (!NamedRanges.Any(nr => nr.Name == name))
-                                NamedRanges.Add(name, text, comment).Visible = visible;
+                                (NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
                         }
                         else
                         {
@@ -1002,6 +1094,7 @@ namespace ClosedXML.Excel
             var areas = validateDefinedNames(definedName.Text.Split(','));
             foreach (var item in areas)
             {
+                if (this.Range(item) != null)
                 SetColumnsOrRowsToRepeat(item);
             }
         }
@@ -1033,8 +1126,16 @@ namespace ClosedXML.Excel
         private static void ParseReference(string item, out string sheetName, out string sheetArea)
         {
             var sections = item.Trim().Split('!');
+            if (sections.Count() == 1)
+            {
+                sheetName = string.Empty;
+                sheetArea = item;
+            }
+            else
+            {
             sheetName = sections[0].Replace("\'", "");
             sheetArea = sections[1];
+        }
         }
 
         private Int32 lastCell;
@@ -1117,7 +1218,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.SharedString)
                 {
-                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                     {
                         var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture)];
                         ParseCellValue(sharedString, xlCell);
@@ -1129,18 +1230,19 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
-                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                     xlCell._dataType = XLCellValues.DateTime;
                 }
                 else if (cell.DataType == CellValues.Boolean)
                 {
+                    if (cell.CellValue != null)
                     xlCell._cellValue = cell.CellValue.Text;
                     xlCell._dataType = XLCellValues.Boolean;
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
-                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
 
                     if (s == null)
@@ -1158,7 +1260,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
 
                     if (s.NumberingFormats != null &&
@@ -1450,7 +1552,7 @@ namespace ClosedXML.Excel
                 return XLCellValues.Text;
             else
             {
-                if (!XLHelper.IsNullOrWhiteSpace(numberFormat.Format))
+                if (!String.IsNullOrWhiteSpace(numberFormat.Format))
                 {
                     var dataType = GetDataTypeFromFormat(numberFormat.Format);
                     return dataType.HasValue ? dataType.Value : XLCellValues.Number;
@@ -1665,7 +1767,7 @@ namespace ClosedXML.Excel
             foreach (DataValidation dvs in dataValidations.Elements<DataValidation>())
             {
                 String txt = dvs.SequenceOfReferences.InnerText;
-                if (XLHelper.IsNullOrWhiteSpace(txt)) continue;
+                if (String.IsNullOrWhiteSpace(txt)) continue;
                 foreach (var dvt in txt.Split(' ').Select(rangeAddress => ws.Range(rangeAddress).DataValidation))
                 {
                     if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
@@ -1713,7 +1815,7 @@ namespace ClosedXML.Excel
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
                         conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
 
-                    if (fr.Text != null && !XLHelper.IsNullOrWhiteSpace(fr.Text))
+                    if (fr.Text != null && !String.IsNullOrWhiteSpace(fr.Text))
                         conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
 
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)

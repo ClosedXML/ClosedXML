@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel.Misc;
+using ClosedXML.Excel.Misc;
+using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -344,11 +345,15 @@ namespace ClosedXML.Excel
         {
             if (checkIntersect)
             {
-                string tAddress = RangeAddress.ToString();
-                foreach (var mergedRange in Worksheet.Internals.MergedRanges)
+                using (IXLRange range = Worksheet.Range(RangeAddress))
                 {
-                    if (mergedRange.Intersects(tAddress))
-                        Worksheet.Internals.MergedRanges.Remove(mergedRange);
+                    foreach (var mergedRange in Worksheet.Internals.MergedRanges)
+                    {
+                        if (mergedRange.Intersects(range))
+                        {
+                            Worksheet.Internals.MergedRanges.Remove(mergedRange);
+                        }
+                    }
                 }
             }
 
@@ -783,7 +788,6 @@ namespace ClosedXML.Excel
             if (cell != null)
                 return cell;
 
-            //var style = Style;
             Int32 styleId = GetStyleId();
             Int32 worksheetStyleId = Worksheet.GetStyleId();
 
@@ -798,12 +802,20 @@ namespace ClosedXML.Excel
                     && column.GetStyleId() != worksheetStyleId)
                     styleId = column.GetStyleId();
             }
-            var absoluteAddress = new XLAddress(cellAddressInRange.Worksheet,
+            var absoluteAddress = new XLAddress(this.Worksheet,
                                  absRow,
                                  absColumn,
                                  cellAddressInRange.FixedRow,
                                  cellAddressInRange.FixedColumn);
-            var newCell = new XLCell(Worksheet, absoluteAddress, styleId);
+
+            Int32 newCellStyleId = styleId;
+
+            // If the default style for this range base is empty, but the worksheet 
+            // has a default style, use the worksheet's default style
+            if (styleId == 0 && worksheetStyleId != 0)
+                newCellStyleId = worksheetStyleId;
+
+            var newCell = new XLCell(Worksheet, absoluteAddress, newCellStyleId);
             Worksheet.Internals.CellsCollection.Add(absRow, absColumn, newCell);
             return newCell;
         }
@@ -1060,7 +1072,7 @@ namespace ClosedXML.Excel
         {
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
-                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !XLHelper.IsNullOrWhiteSpace(c.FormulaA1)))
+                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !String.IsNullOrWhiteSpace(c.FormulaA1)))
                     using (var asRange = AsRange())
                         cell.ShiftFormulaColumns(asRange, numberOfColumns);
             }
@@ -1291,7 +1303,7 @@ namespace ClosedXML.Excel
             using (var asRange = AsRange())
                 foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
                 {
-                    foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !XLHelper.IsNullOrWhiteSpace(c.FormulaA1)))
+                    foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !String.IsNullOrWhiteSpace(c.FormulaA1)))
                         cell.ShiftFormulaRows(asRange, numberOfRows);
                 }
 
@@ -1465,7 +1477,7 @@ namespace ClosedXML.Excel
                 XLCell cell in
                     Worksheet.Workbook.Worksheets.Cast<XLWorksheet>().SelectMany(
                         xlWorksheet => (xlWorksheet).Internals.CellsCollection.GetCells(
-                            c => !XLHelper.IsNullOrWhiteSpace(c.FormulaA1))))
+                            c => !String.IsNullOrWhiteSpace(c.FormulaA1))))
             {
                 if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)
                     cell.ShiftFormulaRows((XLRange)shiftedRangeFormula, numberOfRows * -1);
@@ -1534,7 +1546,7 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return String.Format("'{0}'!{1}:{2}", Worksheet.Name, RangeAddress.FirstAddress, RangeAddress.LastAddress);
+            return String.Format("{0}!{1}:{2}", Worksheet.Name.WrapSheetNameInQuotesIfRequired(), RangeAddress.FirstAddress, RangeAddress.LastAddress);
         }
 
         protected void ShiftColumns(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int columnsShifted)
@@ -1748,7 +1760,7 @@ namespace ClosedXML.Excel
         public IXLRangeBase Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
             SortColumns.Clear();
-            if (XLHelper.IsNullOrWhiteSpace(columnsToSortBy))
+            if (String.IsNullOrWhiteSpace(columnsToSortBy))
             {
                 columnsToSortBy = String.Empty;
                 Int32 maxColumn = ColumnCount();

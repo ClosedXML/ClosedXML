@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 #if _NETSTANDARD_

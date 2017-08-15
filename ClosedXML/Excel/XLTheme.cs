@@ -1,4 +1,4 @@
-﻿using FastMember;
+using FastMember;
 using System.Linq;
 
 namespace ClosedXML.Excel

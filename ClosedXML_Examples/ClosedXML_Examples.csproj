@@ -21,6 +21,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\SampleImage.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SampleImage.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Resources\ImageHandling.jpg" />
     <EmbeddedResource Include="Resources\ImageHandling.png" />
   </ItemGroup>

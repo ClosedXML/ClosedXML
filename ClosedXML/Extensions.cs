@@ -1,4 +1,4 @@
-﻿using ClosedXML.Utils;
+using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
@@ -172,29 +172,9 @@ namespace ClosedXML.Excel
 
     public static class IntegerExtensions
     {
-        private static readonly NumberFormatInfo nfi = CultureInfo.InvariantCulture.NumberFormat;
-
-        [ThreadStatic]
-        private static Dictionary<Int32, String> intToString;
-
         public static String ToInvariantString(this Int32 value)
         {
-            String sValue;
-            if (intToString == null)
-            {
-                intToString = new Dictionary<int, string>();
-                sValue = value.ToString(nfi);
-                intToString.Add(value, sValue);
-            }
-            else
-            {
-                if (!intToString.TryGetValue(value, out sValue))
-                {
-                    sValue = value.ToString(nfi);
-                    intToString.Add(value, sValue);
-                }
-            }
-            return sValue;
+            return value.ToString(CultureInfo.InvariantCulture.NumberFormat);
         }
     }
 
@@ -249,7 +229,7 @@ namespace ClosedXML.Excel
 #if _NETFRAMEWORK_
         public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, Font> fontCache)
         {
-            if (XLHelper.IsNullOrWhiteSpace(text))
+            if (String.IsNullOrWhiteSpace(text))
                 return 0;
 
             var font = GetCachedFont(fontBase, fontCache);
@@ -330,6 +310,18 @@ namespace ClosedXML.Excel
         public static Type GetItemType<T>(this IEnumerable<T> source)
         {
             return typeof(T);
+        }
+    }
+
+    public static class ListExtensions
+    {
+        public static void RemoveAll<T>(this IList<T> list, Func<T, bool> predicate)
+        {
+            var indices = list.Where(item => predicate(item)).Select((item, i) => i).OrderByDescending(i => i).ToList();
+            foreach (var i in indices)
+            {
+                list.RemoveAt(i);
+            }
         }
     }
 

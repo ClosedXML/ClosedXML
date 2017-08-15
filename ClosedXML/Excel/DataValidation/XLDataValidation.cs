@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ClosedXML.Excel
 {
@@ -41,9 +41,9 @@ namespace ClosedXML.Excel
             return
                 AllowedValues != XLAllowedValues.AnyValue
                 || (ShowInputMessage &&
-                  (!XLHelper.IsNullOrWhiteSpace(InputTitle) || !XLHelper.IsNullOrWhiteSpace(InputMessage)))
+                  (!String.IsNullOrWhiteSpace(InputTitle) || !String.IsNullOrWhiteSpace(InputMessage)))
                 ||(ShowErrorMessage &&
-                  (!XLHelper.IsNullOrWhiteSpace(ErrorTitle) || !XLHelper.IsNullOrWhiteSpace(ErrorMessage)));
+                  (!String.IsNullOrWhiteSpace(ErrorTitle) || !String.IsNullOrWhiteSpace(ErrorMessage)));
 
         }
 
