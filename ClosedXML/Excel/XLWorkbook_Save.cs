@@ -365,7 +365,8 @@ namespace ClosedXML.Excel
             // Only delete the VmlDrawingParts for comments.
             if (vmlDrawingPart != null)
             {
-                var xdoc = XDocumentExtensions.Load(vmlDrawingPart.GetStream(FileMode.Open));
+                var vmlStream = vmlDrawingPart.GetStream(FileMode.Open);                
+                var xdoc = XDocumentExtensions.Load(vmlStream);
                 //xdoc.Root.Elements().Where(e => e.Name.LocalName == "shapelayout").Remove();
                 xdoc.Root.Elements().Where(
                     e => e.Name.LocalName == "shapetype" && (string)e.Attribute("id") == @"_x0000_t202").Remove();
@@ -395,6 +396,7 @@ namespace ClosedXML.Excel
                     legacyParts.ForEach(p => vmlDrawingPartNew.AddPart(p, vmlDrawingPart.GetIdOfPart(p)));
                 }
 
+                vmlStream.Close();
                 worksheetPart.DeletePart(vmlDrawingPart);
 
                 if (hasNewPart && rId != worksheetPart.GetIdOfPart(vmlDrawingPartNew))
@@ -2409,9 +2411,10 @@ namespace ClosedXML.Excel
             SaveContext context)
         {
             var ms = new MemoryStream();
-            CopyStream(vmlDrawingPart.GetStream(FileMode.OpenOrCreate), ms);
+            var stream = vmlDrawingPart.GetStream(FileMode.OpenOrCreate);
+            CopyStream(stream, ms);
             ms.Position = 0;
-            var writer = new XmlTextWriter(vmlDrawingPart.GetStream(FileMode.Create), Encoding.UTF8);
+            var writer = new XmlTextWriter(stream, Encoding.UTF8);
 
             writer.WriteStartElement("xml");
 

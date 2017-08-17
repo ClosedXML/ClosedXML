@@ -1,4 +1,5 @@
-﻿#if !_NETFRAMEWORK_
+﻿#if _NETSTANDARD_
+using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -163,8 +164,14 @@ namespace ClosedXML.NetStandard
             {"black",Color.FromArgb(0, 0, 0)},
         };
 
-        private static Regex HexParser = new Regex("^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$");
-        private static Regex ShortHexParser = new Regex("^#([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$");
+        private static Regex HexParser = new Regex("^#([0-9a-f]{2})?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$");
+        private static Regex ShortHexParser = new Regex("^#([0-9a-f]{1})?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$");
+
+        public static Color FromKnownColor(KnownColor knownColor)
+        {
+            var s = knownColor.ToString().ToLowerInvariant();
+            return XLColorTranslator.FromHtml(s);
+        }
 
         public static Color FromHtml(string htmlColor)
         {
@@ -181,13 +188,20 @@ namespace ClosedXML.NetStandard
                     m = ShortHexParser.Match(id);
                     if (m.Value == String.Empty)
                     {
-                        throw new ArgumentException("Invalid HTML color");
+                        throw new ArgumentException("Invalid HTML color: " + htmlColor);
                     }
                 }
-                return Color.FromArgb(
-                    Convert.ToInt32(m.Groups[1].Value.PadRight(2, m.Groups[1].Value[0]), 16),
-                    Convert.ToInt32(m.Groups[2].Value.PadRight(2, m.Groups[2].Value[0]), 16),
-                    Convert.ToInt32(m.Groups[3].Value.PadRight(2, m.Groups[3].Value[0]), 16));
+                if (String.IsNullOrWhiteSpace(m.Groups[1].Value))
+                    return Color.FromArgb(
+                        Convert.ToInt32(m.Groups[2].Value.PadRight(2, m.Groups[2].Value[0]), 16),
+                        Convert.ToInt32(m.Groups[3].Value.PadRight(2, m.Groups[3].Value[0]), 16),
+                        Convert.ToInt32(m.Groups[4].Value.PadRight(2, m.Groups[4].Value[0]), 16));
+                else
+                    return Color.FromArgb(
+                        Convert.ToInt32(m.Groups[1].Value.PadRight(2, m.Groups[1].Value[0]), 16),
+                        Convert.ToInt32(m.Groups[2].Value.PadRight(2, m.Groups[2].Value[0]), 16),
+                        Convert.ToInt32(m.Groups[3].Value.PadRight(2, m.Groups[3].Value[0]), 16),
+                        Convert.ToInt32(m.Groups[4].Value.PadRight(2, m.Groups[4].Value[0]), 16));
             }
         }
     }

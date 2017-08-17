@@ -19,9 +19,9 @@ namespace ClosedXML_Tests
 
         public static bool Compare(Stream left, Stream right, bool stripColumnWidths, out string message)
         {
-            using (Package leftPackage = Package.Open(left))
+            using (Package leftPackage = Package.Open(left, FileMode.Open, FileAccess.Read))
             {
-                using (Package rightPackage = Package.Open(right))
+                using (Package rightPackage = Package.Open(right, FileMode.Open, FileAccess.Read))
                 {
                     return PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, stripColumnWidths, out message);
                 }

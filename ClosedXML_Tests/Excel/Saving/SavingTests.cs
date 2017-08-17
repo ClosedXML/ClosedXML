@@ -10,6 +10,17 @@ namespace ClosedXML_Tests.Excel.Saving
     public class SavingTests
     {
         [Test]
+        public void CanSaveEmptyFile()
+        {
+            using (var ms = new MemoryStream())
+            using (var wb = new XLWorkbook())
+            {
+                wb.AddWorksheet("Sheet1");
+                wb.SaveAs(ms);
+            }
+        }
+
+        [Test]
         public void CanSuccessfullySaveFileMultipleTimes()
         {
             using (var wb = new XLWorkbook())

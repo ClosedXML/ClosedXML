@@ -41,12 +41,14 @@ namespace ClosedXML.Excel
             return FromColor(Color.FromArgb(a, r, g, b));
         }
 
-#if _NETFRAMEWORK_
         public static XLColor FromKnownColor(KnownColor color)
         {
+#if _NETFRAMEWORK_
             return FromColor(Color.FromKnownColor(color));
-        }    
+#else
+            return FromColor(XLColorTranslator.FromKnownColor(color));
 #endif
+        }    
         public static XLColor FromName(String name)
         {
             return FromColor(Color.FromName(name));

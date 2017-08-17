@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net452;net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;net452;net461</TargetFrameworks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -13,7 +13,7 @@
     <DefineConstants>$(DefineConstants);_NETSTANDARD_;_NETSTANDARD1_6_</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
     <DefineConstants>$(DefineConstants);_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
   </PropertyGroup>
 
@@ -33,11 +33,17 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170427-09" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.17" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.17" />
-    <PackageReference Include="NUnit" Version="3.6.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.7.0" />
+    <PackageReference Include="NUnit" Version="3.7.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.0-vnext0051" />
+    <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
@@ -45,13 +51,12 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <PackageReference Include="System.IO.Packaging" Version="4.3.0" />
+    <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
     <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />
-    <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--<TargetFrameworks>netstandard2.0</TargetFrameworks>-->
     <TargetFrameworks>netstandard2.0;net452;net461</TargetFrameworks>
     <Version>0.9</Version>
     <Authors>Manuel de Leon, Amir Ghezelbash, Francois Botha</Authors>
     <Company />
     <Product />
-    <Description>ClosedXML makes it easier for developers to create Excel 2007/2010/2013 files. It provides a nice object oriented way to manipulate the files (similar to VBA) without dealing with the hassles of XML Documents. It can be used by any .NET language like C# and Visual Basic (VB).</Description>
+    <Description>ClosedXML makes it easier for developers to create Excel 2007+ (.xlsx, .xlsm, etc) files. It provides a nice object oriented way to manipulate the files (similar to VBA) without dealing with the hassles of XML Documents. It can be used by any .NET language like C# and VisualBasic.NET.</Description>
     <Copyright>MIT</Copyright>
     <PackageLicenseUrl>https://github.com/ClosedXML/ClosedXML/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ClosedXML/ClosedXML</PackageProjectUrl>
@@ -32,7 +31,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.0-vnext0051" />
-    <PackageReference Include="System.IO.Packaging" Version="4.3.0" />
+    <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
@@ -42,11 +41,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.0-vnext0051" />
-    <PackageReference Include="System.IO.Packaging" Version="4.3.0" />
+    <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>-->
 
 </Project>

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
+#if _NETFRAMEWORK_
 namespace ClosedXML_Tests
 {
     [TestFixture]
@@ -233,3 +234,4 @@ namespace ClosedXML_Tests
         }
     }
 }
+#endif

@@ -212,8 +212,8 @@ namespace ClosedXML.Excel
 #if _NETSTANDARD_
         public static Double GetWidth(this IXLFontBase fontBase, String text)
         {
-            var textWidth = text.Length * 30;
-            double width = (((textWidth / (double)7) * 256) - (128 / 7)) / 256;
+            var textWidth = text.Length * 8.598;
+            double width = textWidth / 7d - 128d / 7 / 256;
             width = (double)decimal.Round((decimal)width + 0.2M, 2);
 
             return width;

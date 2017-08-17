@@ -12,7 +12,7 @@ namespace ClosedXML_Tests.OleDb
     [TestFixture]
     public class OleDbTests
     {
-#if !APPVEYOR
+#if !APPVEYOR && _NETFRAMEWORK_
         [Test]
         public void TestOleDbValues()
         {
