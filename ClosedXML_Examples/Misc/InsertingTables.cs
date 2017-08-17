@@ -38,7 +38,7 @@ namespace ClosedXML_Examples.Misc
             var dataTable = GetTable();
             ws.Cell(7, 1).Value = "From DataTable";
             ws.Range(7, 1, 7, 4).Merge().AddToNamed("Titles");
-            ws.Cell(8, 1).InsertTable(dataTable.AsEnumerable());
+            ws.Cell(8, 1).InsertTable(dataTable);
 
             // From a query
             var list = new List<Person>();
@@ -53,7 +53,7 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(7, 6).Value = "From Query";
             ws.Range(7, 6, 7, 8).Merge().AddToNamed("Titles");
-            ws.Cell(8, 6).InsertTable(people.AsEnumerable());
+            ws.Cell(8, 6).InsertTable(people);
 
             // Prepare the style for the titles
             var titlesStyle = wb.Style;

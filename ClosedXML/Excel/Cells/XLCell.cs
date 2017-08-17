@@ -442,6 +442,8 @@ namespace ClosedXML.Excel
 
                 if (SetRangeColumns(value)) return;
 
+                if (SetDataTable(value)) return;
+
                 if (SetEnumerable(value)) return;
 
                 if (SetRange(value)) return;
@@ -688,7 +690,7 @@ namespace ClosedXML.Excel
         {
             if (data == null) return null;
 
-            if (data.Rows.Count > 0) return InsertTable(data.AsEnumerable(), tableName, createTable);
+            if (data.Rows.Cast<DataRow>().Any()) return InsertTable(data.Rows.Cast<DataRow>(), tableName, createTable);
 
             var ro = Address.RowNumber;
             var co = Address.ColumnNumber;
@@ -810,6 +812,11 @@ namespace ClosedXML.Excel
             }
 
             return null;
+        }
+
+        public IXLRange InsertData(DataTable dataTable)
+        {
+            return InsertData(dataTable.Rows);
         }
 
         public IXLStyle Style
@@ -1615,6 +1622,13 @@ namespace ClosedXML.Excel
             }
 
             return false;
+        }
+
+        private bool SetDataTable(object o)
+        {
+            var dataTable = o as DataTable;
+            if (dataTable == null) return false;
+            return InsertData(dataTable) != null;
         }
 
         private bool SetEnumerable(object collectionObject)

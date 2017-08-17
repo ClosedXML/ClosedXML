@@ -24,7 +24,7 @@ namespace ClosedXML_Tests.Excel
                     table.Rows.Add(new DateTime(2017, 1, 1).AddMonths(i));
                 }
 
-                ws.Cell("A1").InsertData(table.AsEnumerable());
+                ws.Cell("A1").InsertData(table);
 
                 Assert.AreEqual("yy-MM-dd", ws.Cell("A5").Style.DateFormat.Format);
             }
