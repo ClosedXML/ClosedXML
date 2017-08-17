@@ -29,7 +29,7 @@ namespace ClosedXML_Tests
                     listOfArr.Add(6);
 
                     table.DataRange.InsertRowsBelow(listOfArr.Count - table.DataRange.RowCount());
-                    table.DataRange.FirstCell().InsertData(listOfArr.AsEnumerable());
+                    table.DataRange.FirstCell().InsertData(listOfArr);
 
                     Assert.AreEqual("A1:A5", table.AutoFilter.Range.RangeAddress.ToStringRelative());
                 }
