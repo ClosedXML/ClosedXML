@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.0-vnext0051" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
     <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
   </ItemGroup>
 
@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.0-vnext0051" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
     <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
   </ItemGroup>
 

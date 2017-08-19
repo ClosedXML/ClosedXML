@@ -42,7 +42,6 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.0-vnext0051" />
     <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
   </ItemGroup>
 
