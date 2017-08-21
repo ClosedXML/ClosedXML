@@ -1,5 +1,6 @@
 using MetadataExtractor;
 using MetadataExtractor.Formats.Bmp;
+using MetadataExtractor.Formats.Exif;
 using MetadataExtractor.Formats.Gif;
 using MetadataExtractor.Formats.Ico;
 using MetadataExtractor.Formats.Jpeg;
@@ -38,7 +39,7 @@ namespace ClosedXML.Excel.Drawings
         private Int32 width;
 
         internal XLPicture(IXLWorksheet worksheet, Stream stream)
-                    : this(worksheet)
+            : this(worksheet)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
@@ -337,9 +338,8 @@ namespace ClosedXML.Excel.Drawings
 
                 case XLPictureFormat.Tiff:
                     d = TiffMetadataReader.ReadMetadata(stream).First();
-                    throw new NotImplementedException();
-                    //this.width = d.GetInt32(tiff.TagImageWidth);
-                    //this.height = d.GetInt32(PngDirectory.TagImageHeight);
+                    this.width = d.GetInt32(ExifDirectoryBase.TagImageWidth);
+                    this.height = d.GetInt32(ExifDirectoryBase.TagImageHeight);
                     break;
 
                 case XLPictureFormat.Icon:
