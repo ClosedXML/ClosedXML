@@ -9,7 +9,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     {
         private XLWorkbook workbook;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Init()
         {
             // Make sure tests run on a deterministic culture

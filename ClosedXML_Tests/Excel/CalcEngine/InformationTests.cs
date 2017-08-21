@@ -9,7 +9,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     [TestFixture]
     public class InformationTests
     {
-        [OneTimeSetUp]
+        [SetUp]
         public void SetCultureInfo()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
