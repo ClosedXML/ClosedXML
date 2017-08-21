@@ -1,5 +1,3 @@
-#region
-
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -16,18 +14,15 @@ using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
-#endregion
-
+#if _NETSTANDARD_
+using ClosedXML.NetStandard;
+#endif
 namespace ClosedXML.Excel
 {
-    #region
-
     using Ap;
     using Drawings;
     using Op;
     using System.Drawing;
-
-    #endregion
 
     public partial class XLWorkbook
     {
@@ -263,7 +258,7 @@ namespace ClosedXML.Excel
                     reader.Close();
                 }
 
-                #region LoadTables
+#region LoadTables
 
                 foreach (TableDefinitionPart tablePart in wsPart.TableDefinitionParts)
                 {
@@ -339,11 +334,11 @@ namespace ClosedXML.Excel
                         xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
                 }
 
-                #endregion
+#endregion
 
                 LoadDrawings(wsPart, ws);
 
-                #region LoadComments
+#region LoadComments
 
                 if (wsPart.WorksheetCommentsPart != null)
                 {
@@ -395,7 +390,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                #endregion
+#endregion
             }
 
             var workbook = dSpreadsheet.WorkbookPart.Workbook;
@@ -418,7 +413,7 @@ namespace ClosedXML.Excel
             }
             LoadDefinedNames(workbook);
 
-            #region Pivot tables
+#region Pivot tables
 
             // Delay loading of pivot tables until all sheets have been loaded
             foreach (Sheet dSheet in sheets.OfType<Sheet>())
@@ -619,7 +614,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            #endregion
+#endregion
         }
 
         private void LoadDrawings(WorksheetPart wsPart, IXLWorksheet ws)
@@ -709,7 +704,7 @@ namespace ClosedXML.Excel
             );
         }
 
-        #region Comment Helpers
+#region Comment Helpers
 
         private XDocument GetCommentVmlFile(WorksheetPart wsPart)
         {
@@ -746,7 +741,7 @@ namespace ClosedXML.Excel
             return shape;
         }
 
-        #endregion
+#endregion
 
         private String GetTableColumnName(string name)
         {
@@ -1100,7 +1095,7 @@ namespace ClosedXML.Excel
             foreach (var item in areas)
             {
                 if (this.Range(item) != null)
-                    SetColumnsOrRowsToRepeat(item);
+                SetColumnsOrRowsToRepeat(item);
             }
         }
 
@@ -1138,9 +1133,9 @@ namespace ClosedXML.Excel
             }
             else
             {
-                sheetName = sections[0].Replace("\'", "");
-                sheetArea = sections[1];
-            }
+            sheetName = sections[0].Replace("\'", "");
+            sheetArea = sections[1];
+        }
         }
 
         private Int32 lastCell;
@@ -1242,7 +1237,7 @@ namespace ClosedXML.Excel
                 else if (cell.DataType == CellValues.Boolean)
                 {
                     if (cell.CellValue != null)
-                        xlCell._cellValue = cell.CellValue.Text;
+                    xlCell._cellValue = cell.CellValue.Text;
                     xlCell._dataType = XLCellValues.Boolean;
                 }
                 else if (cell.DataType == CellValues.Number)
@@ -1316,7 +1311,7 @@ namespace ClosedXML.Excel
             if (!hasRuns)
                 xlCell._cellValue = XmlEncoder.DecodeString(element.Text.InnerText);
 
-            #region Load PhoneticProperties
+#region Load PhoneticProperties
 
             var pp = phoneticProperties.FirstOrDefault();
             if (pp != null)
@@ -1329,9 +1324,9 @@ namespace ClosedXML.Excel
                 LoadFont(pp, xlCell.RichText.Phonetics);
             }
 
-            #endregion
+#endregion
 
-            #region Load Phonetic Runs
+#region Load Phonetic Runs
 
             foreach (PhoneticRun pr in phoneticRuns)
             {
@@ -1339,7 +1334,7 @@ namespace ClosedXML.Excel
                                               (Int32)pr.EndingBaseIndex.Value);
             }
 
-            #endregion
+#endregion
         }
 
         private void LoadNumberFormat(NumberingFormat nfSource, IXLNumberFormat nf)
@@ -1637,7 +1632,7 @@ namespace ClosedXML.Excel
                         {
                             case XLFilterOperator.Equal:
                                 if (isText)
-                                    condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                                    condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                                 else
                                     condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
                                 break;
@@ -1648,7 +1643,7 @@ namespace ClosedXML.Excel
                             case XLFilterOperator.LessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) < 0; break;
                             case XLFilterOperator.NotEqual:
                                 if (isText)
-                                    condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                                    condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                                 else
                                     condition = o => (o as IComparable).CompareTo(xlFilter.Value) != 0;
                                 break;
@@ -1684,7 +1679,7 @@ namespace ClosedXML.Excel
                         if (isText)
                         {
                             xlFilter.Value = filter.Val.Value;
-                            condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                            condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                         }
                         else
                         {
@@ -2170,7 +2165,11 @@ namespace ClosedXML.Excel
                     Color thisColor;
                     if (!_colorList.ContainsKey(htmlColor))
                     {
+#if _NETFRAMEWORK_
                         thisColor = ColorTranslator.FromHtml(htmlColor);
+#else
+                        thisColor = XLColorTranslator.FromHtml(htmlColor);
+#endif
                         _colorList.Add(htmlColor, thisColor);
                     }
                     else

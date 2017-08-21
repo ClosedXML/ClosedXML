@@ -54,6 +54,7 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
+#if _NETFRAMEWORK_
         public IXLPicture Add(Bitmap bitmap)
         {
             var picture = new XLPicture(_worksheet, bitmap);
@@ -68,9 +69,12 @@ namespace ClosedXML.Excel.Drawings
             picture.Name = name;
             return picture;
         }
+#endif
 
         public IXLPicture Add(string imageFile)
         {
+#if _NETFRAMEWORK_
+
             using (var bitmap = Image.FromFile(imageFile) as Bitmap)
             {
                 var picture = new XLPicture(_worksheet, bitmap);
@@ -78,6 +82,9 @@ namespace ClosedXML.Excel.Drawings
                 picture.Name = GetNextPictureName();
                 return picture;
             }
+#else
+            throw new NotImplementedException("System.Drawing.Image is not supported in .NET Standard");
+#endif
         }
 
         public IXLPicture Add(string imageFile, string name)

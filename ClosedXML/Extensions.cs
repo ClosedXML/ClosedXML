@@ -208,48 +208,47 @@ namespace ClosedXML.Excel
 
     public static class FontBaseExtensions
     {
-        private static Font GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
+
+#if _NETSTANDARD_
+        public static Double GetWidth(this IXLFontBase fontBase, String text)
         {
-            Font font;
-            if (!fontCache.TryGetValue(fontBase, out font))
-            {
-                font = new Font(fontBase.FontName, (float)fontBase.FontSize, GetFontStyle(fontBase));
-                fontCache.Add(fontBase, font);
-            }
-            return font;
+            var textWidth = text.Length * 8.598;
+            double width = textWidth / 7d - 128d / 7 / 256;
+            width = (double)decimal.Round((decimal)width + 0.2M, 2);
+
+            return width;
         }
 
+        public static Double GetHeight(this IXLFontBase fontBase)
+        {
+            var textHeight = 30;
+            return (double)textHeight * 0.85;
+        }
+#endif
+
+#if _NETFRAMEWORK_
         public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, Font> fontCache)
         {
             if (String.IsNullOrWhiteSpace(text))
                 return 0;
 
             var font = GetCachedFont(fontBase, fontCache);
+            var textWidth = GraphicsUtils.MeasureString(text, font).Width;
 
-            var textSize = GraphicsUtils.MeasureString(text, font);
-
-            double width = (((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
+            double width = (((textWidth / (double)7) * 256) - (128 / 7)) / 256;
             width = (double)decimal.Round((decimal)width + 0.2M, 2);
 
             return width;
         }
 
-        private static FontStyle GetFontStyle(IXLFontBase font)
-        {
-            FontStyle fontStyle = FontStyle.Regular;
-            if (font.Bold) fontStyle |= FontStyle.Bold;
-            if (font.Italic) fontStyle |= FontStyle.Italic;
-            if (font.Strikethrough) fontStyle |= FontStyle.Strikeout;
-            if (font.Underline != XLFontUnderlineValues.None) fontStyle |= FontStyle.Underline;
-            return fontStyle;
-        }
 
         public static Double GetHeight(this IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
         {
             var font = GetCachedFont(fontBase, fontCache);
-            var textSize = GraphicsUtils.MeasureString("X", font);
-            return (double)textSize.Height * 0.85;
+            var textHeight = GraphicsUtils.MeasureString("X", font).Height;
+            return (double)textHeight * 0.85;
         }
+#endif
 
         public static void CopyFont(this IXLFontBase font, IXLFontBase sourceFont)
         {
@@ -264,6 +263,29 @@ namespace ClosedXML.Excel
             font.FontName = sourceFont.FontName;
             font.FontFamilyNumbering = sourceFont.FontFamilyNumbering;
         }
+
+#if _NETFRAMEWORK_
+        private static Font GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
+        {
+            Font font;
+            if (!fontCache.TryGetValue(fontBase, out font))
+            {
+                font = new Font(fontBase.FontName, (float)fontBase.FontSize, GetFontStyle(fontBase));
+                fontCache.Add(fontBase, font);
+            }
+            return font;
+        }
+
+        private static FontStyle GetFontStyle(IXLFontBase font)
+        {
+            FontStyle fontStyle = FontStyle.Regular;
+            if (font.Bold) fontStyle |= FontStyle.Bold;
+            if (font.Italic) fontStyle |= FontStyle.Italic;
+            if (font.Strikethrough) fontStyle |= FontStyle.Strikeout;
+            if (font.Underline != XLFontUnderlineValues.None) fontStyle |= FontStyle.Underline;
+            return fontStyle;
+        }
+#endif
     }
 
     public static class XDocumentExtensions

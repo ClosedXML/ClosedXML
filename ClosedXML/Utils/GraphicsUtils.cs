@@ -5,6 +5,7 @@ namespace ClosedXML.Utils
 {
     internal static class GraphicsUtils
     {
+#if _NETFRAMEWORK_
         [ThreadStatic]
         private static Graphics threadLocalGraphics;
         internal static Graphics Graphics
@@ -25,5 +26,20 @@ namespace ClosedXML.Utils
             SizeF result = Graphics.MeasureString(s, font, Int32.MaxValue, StringFormat.GenericTypographic);
             return result;
         }
+#else
+
+        internal static Graphics Graphics = new Graphics();
+#endif
     }
+
+#if _NETSTANDARD_
+
+    // Stub structure for .NET Standard
+    internal struct Graphics
+    {
+        public float DpiX { get { return 96; } }
+        public float DpiY { get { return 96; } }
+    }
+
+#endif
 }

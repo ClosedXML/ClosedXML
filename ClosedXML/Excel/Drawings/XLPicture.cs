@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+
+#if _NETFRAMEWORK_
 using System.Drawing.Imaging;
+#endif
+
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,12 +17,13 @@ namespace ClosedXML.Excel.Drawings
     internal class XLPicture : IXLPicture
     {
         private const String InvalidNameChars = @":\/?*[]";
-        private static IDictionary<XLPictureFormat, ImageFormat> FormatMap;
         private readonly IXLWorksheet _worksheet;
         private Int32 height;
         private String name = string.Empty;
         private Int32 width;
 
+#if _NETFRAMEWORK_
+        private static IDictionary<XLPictureFormat, ImageFormat> FormatMap;
         static XLPicture()
         {
             var properties = typeof(ImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public);
@@ -30,6 +35,7 @@ namespace ClosedXML.Excel.Drawings
                     pf => properties.Single(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)).GetValue(null, null) as ImageFormat
                 );
         }
+#endif
 
         internal XLPicture(IXLWorksheet worksheet, Stream stream)
                     : this(worksheet)
@@ -42,6 +48,7 @@ namespace ClosedXML.Excel.Drawings
                 stream.CopyTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);
 
+#if _NETFRAMEWORK_
                 using (var bitmap = new Bitmap(ImageStream))
                 {
                     if (FormatMap.Values.Select(f => f.Guid).Contains(bitmap.RawFormat.Guid))
@@ -50,6 +57,8 @@ namespace ClosedXML.Excel.Drawings
                     DeduceDimensionsFromBitmap(bitmap);
                 }
                 ImageStream.Seek(0, SeekOrigin.Begin);
+#endif
+
             }
         }
 
@@ -65,6 +74,7 @@ namespace ClosedXML.Excel.Drawings
                 stream.CopyTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);
 
+#if _NETFRAMEWORK_
                 using (var bitmap = new Bitmap(ImageStream))
                 {
                     if (FormatMap.ContainsKey(this.Format))
@@ -76,9 +86,11 @@ namespace ClosedXML.Excel.Drawings
                     DeduceDimensionsFromBitmap(bitmap);
                 }
                 ImageStream.Seek(0, SeekOrigin.Begin);
+#endif
             }
         }
 
+#if _NETFRAMEWORK_
         internal XLPicture(IXLWorksheet worksheet, Bitmap bitmap)
             : this(worksheet)
         {
@@ -94,6 +106,7 @@ namespace ClosedXML.Excel.Drawings
 
             this.Format = formats.Single().Key;
         }
+#endif
 
         private XLPicture(IXLWorksheet worksheet)
         {
@@ -323,6 +336,7 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
+#if _NETFRAMEWORK_
         private static ImageFormat FromMimeType(string mimeType)
         {
             var guid = ImageCodecInfo.GetImageDecoders().FirstOrDefault(c => c.MimeType.Equals(mimeType, StringComparison.OrdinalIgnoreCase))?.FormatID;
@@ -353,5 +367,6 @@ namespace ClosedXML.Excel.Drawings
             this.width = bitmap.Width;
             this.height = bitmap.Height;
         }
+#endif
     }
 }

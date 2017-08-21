@@ -494,7 +494,6 @@ namespace ClosedXML.Excel
                     CopyStream(_originalStream, fileStream);
                     //fileStream.Position = 0;
                     CreatePackage(fileStream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
-                    fileStream.Close();
                 }
             }
         }
@@ -571,7 +570,6 @@ namespace ClosedXML.Excel
                 using (var fileStream = new FileStream(_originalFile, FileMode.Open, FileAccess.Read))
                 {
                     CopyStream(fileStream, stream);
-                    fileStream.Close();
                 }
                 CreatePackage(stream, false, _spreadsheetDocumentType, validate, evaluateFormulae);
             }
@@ -866,7 +864,7 @@ namespace ClosedXML.Excel
         public XLWorkbook SetLockWindows(Boolean value) { LockWindows = value; return this; }
         internal HexBinaryValue LockPassword { get; set; }
         public Boolean IsPasswordProtected { get { return LockPassword != null; } }
-        
+
         public void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword)
         {
             if (IsPasswordProtected && workbookPassword == null)
@@ -920,11 +918,11 @@ namespace ClosedXML.Excel
         public void Unprotect()
         {
             Protect(false, false);
-        }
+    }
 
         public void Unprotect(string workbookPassword)
         {
             Protect(false, false, workbookPassword);
-        }
+}
     }
 }

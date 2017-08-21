@@ -59,7 +59,7 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell("A1");
             var doubleList = new List<Double> { 1.0 / 0.0 };
 
-            cell.Value = doubleList.AsEnumerable();
+            cell.Value = doubleList;
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
         }
 
@@ -70,7 +70,7 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell("A1");
             var doubleList = new List<Double> { 0.0 / 0.0 };
 
-            cell.Value = doubleList.AsEnumerable();
+            cell.Value = doubleList;
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
         }
 

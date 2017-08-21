@@ -5,6 +5,10 @@ using System.Text;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 
+#if _NETSTANDARD_
+using ClosedXML.NetStandard;
+#endif
+
 namespace ClosedXML.Excel
 {
     internal class XLCFColorScaleConverter : IXLCFConverter

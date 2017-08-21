@@ -1,12 +1,14 @@
 using System;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+#if _NETFRAMEWORK_
+    using System.Drawing;
+#endif
 
 namespace ClosedXML.Excel
 {
-    using System.Drawing;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-
     /// <summary>
     /// 	Common methods
     /// </summary>
@@ -19,9 +21,12 @@ namespace ClosedXML.Excel
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
-        private const Int32 TwoT26 = 26 * 26;
+        private const Int32 TwoT26 = 26*26;
+
+#if _NETFRAMEWORK_
         internal static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(200, 200));
         internal static readonly Double DpiX = Graphic.DpiX;
+#endif
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
@@ -85,9 +90,9 @@ namespace ClosedXML.Excel
         private static readonly string[] letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
         /// <summary>
-        /// Gets the column letter of a given column number.
+        /// 	Gets the column letter of a given column number.
         /// </summary>
-        /// <param name="columnNumber">The column number to translate into a column letter.</param>
+        /// <param name="columnNumber"> The column number to translate into a column letter. </param>
         /// <param name="trimToAllowed">if set to <c>true</c> the column letter will be restricted to the allowed range.</param>
         /// <returns></returns>
         public static string GetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
@@ -196,6 +201,7 @@ namespace ClosedXML.Excel
             return range.Contains('-') ? range.Replace('-', ':').Split(':') : range.Split(':');
         }
 
+#if _NETFRAMEWORK_
         public static Int32 GetPtFromPx(Double px)
         {
             return Convert.ToInt32(px * 72.0 / DpiX);
@@ -205,6 +211,7 @@ namespace ClosedXML.Excel
         {
             return Convert.ToDouble(pt) * DpiX / 72.0;
         }
+#endif
 
         internal static IXLTableRows InsertRowsWithoutEvents(Func<int, bool, IXLRangeRows> insertFunc,
                                                              XLTableRange tableRange, Int32 numberOfRows,

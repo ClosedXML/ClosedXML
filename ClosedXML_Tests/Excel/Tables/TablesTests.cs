@@ -122,7 +122,7 @@ namespace ClosedXML_Tests.Excel
             DataRow dr = dt.NewRow();
             dr[columnName] = "some text";
             dt.Rows.Add(dr);
-            ws.Cell(1, 1).InsertTable(dt.AsEnumerable());
+            ws.Cell(1, 1).InsertTable(dt);
 
             IXLTable table1 = ws.Table(0);
             string fieldName1 = table1.Field(0).Name;

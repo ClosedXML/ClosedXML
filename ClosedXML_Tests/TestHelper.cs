@@ -90,7 +90,11 @@ namespace ClosedXML_Tests
                     using (var streamActual = File.OpenRead(filePath2))
                     {
                         string message;
+#if _NETFRAMEWORK_
                         success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
+#else
+                        success = ExcelDocsComparer.Compare(streamActual, streamExpected, true, out message);
+#endif
                         var formattedMessage =
                             String.Format(
                                 "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",

@@ -1,6 +1,10 @@
 using System;
 using System.Drawing;
 
+#if _NETSTANDARD_
+using ClosedXML.NetStandard;
+#endif
+
 namespace ClosedXML.Excel
 {
     public enum XLColorType
