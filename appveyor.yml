@@ -8,7 +8,7 @@ branches:
   except:
     - gh-pages
 # Build worker image (VM template)
-image: Visual Studio 2017 Preview
+image: Visual Studio 2017
 environment:
   AppVeyor: APPVEYOR
 
@@ -28,7 +28,7 @@ assembly_info:
 platform: Any CPU
 
 build:
-  parallel: true                                            # enable MSBuild parallel builds
+  parallel: true               # enable MSBuild parallel builds
   project: ClosedXML.sln       # path to Visual Studio solution or project
   verbosity: minimal
 
@@ -36,7 +36,11 @@ configuration : Release
 
 #Restore
 before_build:
-  - cmd: nuget sources add -name OpenXML-MyGet -Source https://dotnet.myget.org/F/open-xml-sdk/api/v3/index.json
+  - ps: if (Test-Path 'C:\Tools\NuGet43') { $nugetDir = 'C:\Tools\NuGet43' } else { $nugetDir = 'C:\Tools\NuGet' }
+  - ps: (New-Object Net.WebClient).DownloadFile('https://dist.nuget.org/win-x86-commandline/v4.3.0/nuget.exe', "$nugetDir\NuGet.exe")
+  - cmd: nuget update -self
+  - cmd: nuget
+#  - cmd: nuget sources add -name OpenXML-MyGet -Source https://dotnet.myget.org/F/open-xml-sdk/api/v3/index.json
   - nuget restore
 
 artifacts:
