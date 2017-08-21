@@ -12,7 +12,7 @@ namespace ClosedXML_Tests.Excel.Ranges
     {
         private XLWorkbook workbook;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetupWorkbook()
         {
             workbook = new XLWorkbook();
