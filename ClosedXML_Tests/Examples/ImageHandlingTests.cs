@@ -1,4 +1,3 @@
-#if _NETFRAMEWORK_
 using ClosedXML_Examples;
 using NUnit.Framework;
 
@@ -20,4 +19,3 @@ namespace ClosedXML_Tests.Examples
         }
     }
 }
-#endif

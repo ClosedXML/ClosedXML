@@ -73,18 +73,13 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Add(string imageFile)
         {
-#if _NETFRAMEWORK_
-
-            using (var bitmap = Image.FromFile(imageFile) as Bitmap)
+            using (var fs = File.Open(imageFile, FileMode.Open))
             {
-                var picture = new XLPicture(_worksheet, bitmap);
+                var picture = new XLPicture(_worksheet, fs);
                 _pictures.Add(picture);
                 picture.Name = GetNextPictureName();
                 return picture;
             }
-#else
-            throw new NotImplementedException("System.Drawing.Image is not supported in .NET Standard");
-#endif
         }
 
         public IXLPicture Add(string imageFile, string name)

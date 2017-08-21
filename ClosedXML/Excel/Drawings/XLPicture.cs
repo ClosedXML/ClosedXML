@@ -1,15 +1,18 @@
+using MetadataExtractor;
+using MetadataExtractor.Formats.Bmp;
+using MetadataExtractor.Formats.Gif;
+using MetadataExtractor.Formats.Ico;
+using MetadataExtractor.Formats.Jpeg;
+using MetadataExtractor.Formats.Pcx;
+using MetadataExtractor.Formats.Png;
+using MetadataExtractor.Formats.Tiff;
+using MetadataExtractor.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-
-#if _NETFRAMEWORK_
-using System.Drawing.Imaging;
-#endif
-
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace ClosedXML.Excel.Drawings
 {
@@ -17,25 +20,22 @@ namespace ClosedXML.Excel.Drawings
     internal class XLPicture : IXLPicture
     {
         private const String InvalidNameChars = @":\/?*[]";
+
+        private static IDictionary<FileType, XLPictureFormat> FormatMap = new Dictionary<FileType, XLPictureFormat>()
+        {
+            [FileType.Bmp] = XLPictureFormat.Bmp,
+            [FileType.Gif] = XLPictureFormat.Gif,
+            [FileType.Png] = XLPictureFormat.Png,
+            [FileType.Tiff] = XLPictureFormat.Tiff,
+            [FileType.Ico] = XLPictureFormat.Icon,
+            [FileType.Pcx] = XLPictureFormat.Pcx,
+            [FileType.Jpeg] = XLPictureFormat.Jpeg
+        };
+
         private readonly IXLWorksheet _worksheet;
         private Int32 height;
         private String name = string.Empty;
         private Int32 width;
-
-#if _NETFRAMEWORK_
-        private static IDictionary<XLPictureFormat, ImageFormat> FormatMap;
-        static XLPicture()
-        {
-            var properties = typeof(ImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public);
-            FormatMap = Enum.GetValues(typeof(XLPictureFormat))
-                .Cast<XLPictureFormat>()
-                .Where(pf => properties.Any(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)))
-                .ToDictionary(
-                    pf => pf,
-                    pf => properties.Single(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)).GetValue(null, null) as ImageFormat
-                );
-        }
-#endif
 
         internal XLPicture(IXLWorksheet worksheet, Stream stream)
                     : this(worksheet)
@@ -44,21 +44,14 @@ namespace ClosedXML.Excel.Drawings
 
             this.ImageStream = new MemoryStream();
             {
-                stream.Position = 0;
+                stream.Seek(0, SeekOrigin.Begin);
                 stream.CopyTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);
 
-#if _NETFRAMEWORK_
-                using (var bitmap = new Bitmap(ImageStream))
-                {
-                    if (FormatMap.Values.Select(f => f.Guid).Contains(bitmap.RawFormat.Guid))
-                        this.Format = FormatMap.Single(f => f.Value.Guid.Equals(bitmap.RawFormat.Guid)).Key;
+                DeduceImageFormat(ImageStream);
+                DeduceDimensions(ImageStream);
 
-                    DeduceDimensionsFromBitmap(bitmap);
-                }
                 ImageStream.Seek(0, SeekOrigin.Begin);
-#endif
-
             }
         }
 
@@ -70,23 +63,10 @@ namespace ClosedXML.Excel.Drawings
 
             this.ImageStream = new MemoryStream();
             {
-                stream.Position = 0;
+                stream.Seek(0, SeekOrigin.Begin);
                 stream.CopyTo(ImageStream);
-                ImageStream.Seek(0, SeekOrigin.Begin);
-
-#if _NETFRAMEWORK_
-                using (var bitmap = new Bitmap(ImageStream))
-                {
-                    if (FormatMap.ContainsKey(this.Format))
-                    {
-                        if (FormatMap[this.Format].Guid != bitmap.RawFormat.Guid)
-                            throw new ArgumentException("The picture format in the stream and the parameter don't match");
-                    }
-
-                    DeduceDimensionsFromBitmap(bitmap);
-                }
-                ImageStream.Seek(0, SeekOrigin.Begin);
-#endif
+                DeduceImageFormat(ImageStream, format);
+                DeduceDimensions(ImageStream);
             }
         }
 
@@ -98,13 +78,8 @@ namespace ClosedXML.Excel.Drawings
             this.ImageStream = new MemoryStream();
             bitmap.Save(ImageStream, bitmap.RawFormat);
             ImageStream.Seek(0, SeekOrigin.Begin);
-            DeduceDimensionsFromBitmap(bitmap);
-
-            var formats = FormatMap.Where(f => f.Value.Guid.Equals(bitmap.RawFormat.Guid));
-            if (!formats.Any() || formats.Count() > 1)
-                throw new ArgumentException("Unsupported or unknown image format in bitmap");
-
-            this.Format = formats.Single().Key;
+            DeduceImageFormat(ImageStream);
+            DeduceDimensions(ImageStream);
         }
 #endif
 
@@ -336,37 +311,76 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
-#if _NETFRAMEWORK_
-        private static ImageFormat FromMimeType(string mimeType)
+        private void DeduceDimensions(Stream stream)
         {
-            var guid = ImageCodecInfo.GetImageDecoders().FirstOrDefault(c => c.MimeType.Equals(mimeType, StringComparison.OrdinalIgnoreCase))?.FormatID;
-            if (!guid.HasValue) return null;
-            var property = typeof(System.Drawing.Imaging.ImageFormat).GetProperties(BindingFlags.Public | BindingFlags.Static)
-                .FirstOrDefault(pi => (pi.GetValue(null, null) as ImageFormat).Guid.Equals(guid.Value));
-
-            if (property == null) return null;
-            return (property.GetValue(null, null) as ImageFormat);
-        }
-
-        private static string GetMimeType(Image i)
-        {
-            var imgguid = i.RawFormat.Guid;
-            foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageDecoders())
+            stream.Seek(0, SeekOrigin.Begin);
+            MetadataExtractor.Directory d;
+            switch (this.Format)
             {
-                if (codec.FormatID == imgguid)
-                    return codec.MimeType;
+                case XLPictureFormat.Bmp:
+                    d = BmpMetadataReader.ReadMetadata(stream);
+                    this.width = d.GetInt32(BmpHeaderDirectory.TagImageWidth);
+                    this.height = d.GetInt32(BmpHeaderDirectory.TagImageHeight);
+                    break;
+
+                case XLPictureFormat.Gif:
+                    d = GifMetadataReader.ReadMetadata(stream).OfType<GifHeaderDirectory>().First();
+                    this.width = d.GetInt32(GifHeaderDirectory.TagImageWidth);
+                    this.height = d.GetInt32(GifHeaderDirectory.TagImageHeight);
+                    break;
+
+                case XLPictureFormat.Png:
+                    d = PngMetadataReader.ReadMetadata(stream).OfType<PngDirectory>().First();
+                    this.width = d.GetInt32(PngDirectory.TagImageWidth);
+                    this.height = d.GetInt32(PngDirectory.TagImageHeight);
+                    break;
+
+                case XLPictureFormat.Tiff:
+                    d = TiffMetadataReader.ReadMetadata(stream).First();
+                    throw new NotImplementedException();
+                    //this.width = d.GetInt32(tiff.TagImageWidth);
+                    //this.height = d.GetInt32(PngDirectory.TagImageHeight);
+                    break;
+
+                case XLPictureFormat.Icon:
+                    d = IcoMetadataReader.ReadMetadata(stream).OfType<IcoDirectory>().First();
+                    this.width = d.GetInt32(IcoDirectory.TagImageWidth);
+                    this.height = d.GetInt32(IcoDirectory.TagImageHeight);
+                    break;
+
+                case XLPictureFormat.Pcx:
+                    d = PcxMetadataReader.ReadMetadata(stream);
+                    this.width = d.GetInt32(PcxDirectory.TagXMax);
+                    this.height = d.GetInt32(PcxDirectory.TagYMax);
+                    break;
+
+                case XLPictureFormat.Jpeg:
+                    d = JpegMetadataReader.ReadMetadata(stream).OfType<JpegDirectory>().First();
+                    this.width = d.GetInt32(JpegDirectory.TagImageWidth);
+                    this.height = d.GetInt32(JpegDirectory.TagImageHeight);
+                    break;
             }
-            return "image/unknown";
+            this.OriginalWidth = this.width;
+            this.OriginalHeight = this.height;
         }
 
-        private void DeduceDimensionsFromBitmap(Bitmap bitmap)
+        private void DeduceImageFormat(Stream stream, XLPictureFormat format)
         {
-            this.OriginalWidth = bitmap.Width;
-            this.OriginalHeight = bitmap.Height;
-
-            this.width = bitmap.Width;
-            this.height = bitmap.Height;
+            DeduceImageFormat(stream);
+            if (this.Format != format)
+                throw new ArgumentException(nameof(format));
         }
-#endif
+
+        private void DeduceImageFormat(Stream stream)
+        {
+            stream.Seek(0, SeekOrigin.Begin);
+            var fileType = FileTypeDetector.DetectFileType(stream);
+            if (fileType == FileType.Unknown)
+                throw new NotImplementedException();
+            else if (FormatMap.ContainsKey(fileType))
+                this.Format = FormatMap[fileType];
+            else
+                throw new NotImplementedException();
+        }
     }
 }

@@ -632,10 +632,12 @@ namespace ClosedXML.Excel
 
                     var imagePart = drawingsPart.GetPartById(imgId);
                     using (var stream = imagePart.GetStream())
+                    using (var ms = new MemoryStream())
                     {
+                        stream.CopyTo(ms);
                         var vsdp = GetPropertiesFromAnchor(anchor);
 
-                        var picture = ws.AddPicture(stream, vsdp.Name) as XLPicture;
+                        var picture = ws.AddPicture(ms, vsdp.Name) as XLPicture;
                         picture.RelId = imgId;
 
                         Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();

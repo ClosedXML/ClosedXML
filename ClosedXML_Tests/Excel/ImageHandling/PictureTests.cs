@@ -7,12 +7,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-#if _NETFRAMEWORK_
 namespace ClosedXML_Tests
 {
     [TestFixture]
     public class PictureTests
     {
+#if _NETFRAMEWORK_
         [Test]
         public void CanAddPictureFromBitmap()
         {
@@ -24,6 +24,28 @@ namespace ClosedXML_Tests
                 using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
                 {
                     var picture = ws.AddPicture(bitmap, "MyPicture")
+                        .WithPlacement(XLPicturePlacement.FreeFloating)
+                        .MoveTo(50, 50)
+                        .WithSize(200, 200);
+
+                    Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
+                    Assert.AreEqual(200, picture.Width);
+                    Assert.AreEqual(200, picture.Height);
+                }
+            }
+        }
+#endif
+
+        [Test]
+        public void CanAddPictureFromStream()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                {
+                    var picture = ws.AddPicture(resourceStream, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
                         .MoveTo(50, 50)
                         .WithSize(200, 200);
@@ -78,9 +100,8 @@ namespace ClosedXML_Tests
                 var ws = wb.AddWorksheet("Sheet1");
 
                 using (var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
-                using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
                 {
-                    var pic = ws.AddPicture(bitmap, "MyPicture")
+                    var pic = ws.AddPicture(resourceStream, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
                         .MoveTo(50, 50);
 
@@ -234,4 +255,3 @@ namespace ClosedXML_Tests
         }
     }
 }
-#endif

@@ -25,10 +25,6 @@
     <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET461_</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FastMember.Signed" Version="1.1.0" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
     <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
@@ -44,4 +40,8 @@
     <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FastMember.Signed" Version="1.1.0" />
+    <PackageReference Include="MetadataExtractor" Version="2.0.0" />
+  </ItemGroup>
 </Project>
