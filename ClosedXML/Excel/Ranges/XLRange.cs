@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace ClosedXML.Excel
 {
     internal class XLRange : XLRangeBase, IXLRange
@@ -23,29 +22,28 @@ namespace ClosedXML.Excel
             SetStyle(xlRangeParameters.DefaultStyle);
         }
 
-        #endregion
+        #endregion Constructor
 
         public XLRangeParameters RangeParameters { get; private set; }
 
         #region IXLRange Members
-
 
         IXLRangeRow IXLRange.Row(Int32 row)
         {
             return Row(row);
         }
 
-        IXLRangeColumn IXLRange.Column(Int32 column)
+        IXLRangeColumn IXLRange.Column(Int32 columnNumber)
         {
-            return Column(column);
+            return Column(columnNumber);
         }
 
-        IXLRangeColumn IXLRange.Column(String column)
+        IXLRangeColumn IXLRange.Column(String columnLetter)
         {
-            return Column(column);
+            return Column(columnLetter);
         }
 
-        public IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate = null)
+        public virtual IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate = null)
         {
             var retVal = new XLRangeColumns();
             Int32 columnCount = ColumnCount();
@@ -69,13 +67,13 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRangeColumns Columns(String firstColumn, String lastColumn)
+        public virtual IXLRangeColumns Columns(String firstColumn, String lastColumn)
         {
             return Columns(XLHelper.GetColumnNumberFromLetter(firstColumn),
                            XLHelper.GetColumnNumberFromLetter(lastColumn));
         }
 
-        public IXLRangeColumns Columns(String columns)
+        public virtual IXLRangeColumns Columns(String columns)
         {
             var retVal = new XLRangeColumns();
             var columnPairs = columns.Split(',');
@@ -274,6 +272,7 @@ namespace ClosedXML.Excel
         {
             return CreateTable();
         }
+
         public XLTable CreateTable()
         {
             return new XLTable(this, true, true);
@@ -283,6 +282,7 @@ namespace ClosedXML.Excel
         {
             return CreateTable(name);
         }
+
         public XLTable CreateTable(String name)
         {
             return new XLTable(this, name, true, true);
@@ -333,27 +333,27 @@ namespace ClosedXML.Excel
             return this;
         }
 
-
         public new IXLRange Sort()
         {
             return base.Sort().AsRange();
         }
-        
+
         public new IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
             return base.Sort(columnsToSortBy, sortOrder, matchCase, ignoreBlanks).AsRange();
         }
+
         public new IXLRange Sort(Int32 columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
             return base.Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks).AsRange();
         }
+
         public new IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
             return base.SortLeftToRight(sortOrder, matchCase, ignoreBlanks).AsRange();
         }
-        
 
-        #endregion
+        #endregion IXLRange Members
 
         private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
@@ -362,13 +362,14 @@ namespace ClosedXML.Excel
 
         private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-                ShiftRows(RangeAddress, range, rowsShifted);
+            ShiftRows(RangeAddress, range, rowsShifted);
         }
 
         IXLRangeColumn IXLRange.FirstColumn(Func<IXLRangeColumn, Boolean> predicate)
         {
             return FirstColumn(predicate);
         }
+
         public XLRangeColumn FirstColumn(Func<IXLRangeColumn, Boolean> predicate = null)
         {
             if (predicate == null)
@@ -390,6 +391,7 @@ namespace ClosedXML.Excel
         {
             return LastColumn(predicate);
         }
+
         public XLRangeColumn LastColumn(Func<IXLRangeColumn, Boolean> predicate = null)
         {
             Int32 columnCount = ColumnCount();
@@ -407,10 +409,11 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        IXLRangeColumn IXLRange.FirstColumnUsed(Func<IXLRangeColumn, Boolean> predicate )
+        IXLRangeColumn IXLRange.FirstColumnUsed(Func<IXLRangeColumn, Boolean> predicate)
         {
             return FirstColumnUsed(false, predicate);
         }
+
         public XLRangeColumn FirstColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null)
         {
             return FirstColumnUsed(false, predicate);
@@ -420,6 +423,7 @@ namespace ClosedXML.Excel
         {
             return FirstColumnUsed(includeFormats, predicate);
         }
+
         public XLRangeColumn FirstColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null)
         {
             if (predicate == null)
@@ -450,6 +454,7 @@ namespace ClosedXML.Excel
         {
             return LastColumnUsed(false, predicate);
         }
+
         public XLRangeColumn LastColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null)
         {
             return LastColumnUsed(false, predicate);
@@ -459,6 +464,7 @@ namespace ClosedXML.Excel
         {
             return LastColumnUsed(includeFormats, predicate);
         }
+
         public XLRangeColumn LastColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null)
         {
             if (predicate == null)
@@ -489,6 +495,7 @@ namespace ClosedXML.Excel
         {
             return FirstRow(predicate);
         }
+
         public XLRangeRow FirstRow(Func<IXLRangeRow, Boolean> predicate = null)
         {
             if (predicate == null)
@@ -510,6 +517,7 @@ namespace ClosedXML.Excel
         {
             return LastRow(predicate);
         }
+
         public XLRangeRow LastRow(Func<IXLRangeRow, Boolean> predicate = null)
         {
             Int32 rowCount = RowCount();
@@ -531,6 +539,7 @@ namespace ClosedXML.Excel
         {
             return FirstRowUsed(false, predicate);
         }
+
         public XLRangeRow FirstRowUsed(Func<IXLRangeRow, Boolean> predicate = null)
         {
             return FirstRowUsed(false, predicate);
@@ -540,6 +549,7 @@ namespace ClosedXML.Excel
         {
             return FirstRowUsed(includeFormats, predicate);
         }
+
         public XLRangeRow FirstRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null)
         {
             if (predicate == null)
@@ -572,6 +582,7 @@ namespace ClosedXML.Excel
         {
             return LastRowUsed(false, predicate);
         }
+
         public XLRangeRow LastRowUsed(Func<IXLRangeRow, Boolean> predicate = null)
         {
             return LastRowUsed(false, predicate);
@@ -581,6 +592,7 @@ namespace ClosedXML.Excel
         {
             return LastRowUsed(includeFormats, predicate);
         }
+
         public XLRangeRow LastRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null)
         {
             if (predicate == null)
@@ -607,11 +619,11 @@ namespace ClosedXML.Excel
             return null;
         }
 
-
         IXLRangeRows IXLRange.RowsUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate)
         {
             return RowsUsed(includeFormats, predicate);
         }
+
         public XLRangeRows RowsUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null)
         {
             XLRangeRows rows = new XLRangeRows();
@@ -627,19 +639,23 @@ namespace ClosedXML.Excel
             }
             return rows;
         }
+
         IXLRangeRows IXLRange.RowsUsed(Func<IXLRangeRow, Boolean> predicate)
         {
             return RowsUsed(predicate);
         }
+
         public XLRangeRows RowsUsed(Func<IXLRangeRow, Boolean> predicate = null)
         {
             return RowsUsed(false, predicate);
         }
+
         IXLRangeColumns IXLRange.ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate)
         {
             return ColumnsUsed(includeFormats, predicate);
         }
-        public XLRangeColumns ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null)
+
+        public virtual XLRangeColumns ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null)
         {
             XLRangeColumns columns = new XLRangeColumns();
             Int32 columnCount = ColumnCount();
@@ -654,11 +670,13 @@ namespace ClosedXML.Excel
             }
             return columns;
         }
+
         IXLRangeColumns IXLRange.ColumnsUsed(Func<IXLRangeColumn, Boolean> predicate)
         {
             return ColumnsUsed(predicate);
         }
-        public XLRangeColumns ColumnsUsed(Func<IXLRangeColumn, Boolean> predicate = null)
+
+        public virtual XLRangeColumns ColumnsUsed(Func<IXLRangeColumn, Boolean> predicate = null)
         {
             return ColumnsUsed(false, predicate);
         }
@@ -682,33 +700,29 @@ namespace ClosedXML.Excel
                 new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), false);
         }
 
-        
-
-        public XLRangeColumn Column(Int32 column)
+        public virtual XLRangeColumn Column(Int32 columnNumber)
         {
-            if (column <= 0 || column > XLHelper.MaxColumnNumber)
+            if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber)
                 throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}", XLHelper.MaxColumnNumber));
 
             var firstCellAddress = new XLAddress(Worksheet,
                                                  RangeAddress.FirstAddress.RowNumber,
-                                                 RangeAddress.FirstAddress.ColumnNumber + column - 1,
+                                                 RangeAddress.FirstAddress.ColumnNumber + columnNumber - 1,
                                                  false,
                                                  false);
             var lastCellAddress = new XLAddress(Worksheet,
                                                 RangeAddress.LastAddress.RowNumber,
-                                                RangeAddress.FirstAddress.ColumnNumber + column - 1,
+                                                RangeAddress.FirstAddress.ColumnNumber + columnNumber - 1,
                                                 false,
                                                 false);
             return new XLRangeColumn(
                 new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), false);
         }
 
-        public XLRangeColumn Column(String column)
+        public virtual XLRangeColumn Column(String columnLetter)
         {
-            return Column(XLHelper.GetColumnNumberFromLetter(column));
+            return Column(XLHelper.GetColumnNumberFromLetter(columnLetter));
         }
-
-        
 
         private void TransposeRange(int squareSide)
         {
@@ -728,7 +742,7 @@ namespace ClosedXML.Excel
                 {
                     var oldCell = rngToTranspose.Cell(ro, co);
                     var newKey = rngToTranspose.Cell(co, ro).Address;
-                        // new XLAddress(Worksheet, c.Address.ColumnNumber, c.Address.RowNumber);
+                    // new XLAddress(Worksheet, c.Address.ColumnNumber, c.Address.RowNumber);
                     var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
                     newCell.CopyFrom(oldCell, true);
                     cellsToInsert.Add(new XLSheetPoint(newKey.RowNumber, newKey.ColumnNumber), newCell);

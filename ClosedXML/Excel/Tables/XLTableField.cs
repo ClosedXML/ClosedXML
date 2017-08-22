@@ -1,10 +1,13 @@
 using System;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel
 {
-    internal class XLTableField: IXLTableField
+    [DebuggerDisplay("{Name}")]
+    internal class XLTableField : IXLTableField
     {
-        private XLTable table;
+        private readonly XLTable table;
+
         public XLTableField(XLTable table, String name)
         {
             this.table = table;
@@ -31,6 +34,7 @@ namespace ClosedXML.Excel
         }
 
         internal String totalsRowLabel;
+
         public String TotalsRowLabel
         {
             get { return totalsRowLabel; }
@@ -51,6 +55,7 @@ namespace ClosedXML.Excel
                 table.TotalsRow().Cell(Index + 1).FormulaA1 = value;
             }
         }
+
         public String TotalsRowFormulaR1C1
         {
             get { return table.TotalsRow().Cell(Index + 1).FormulaR1C1; }
@@ -62,6 +67,7 @@ namespace ClosedXML.Excel
         }
 
         internal XLTotalsRowFunction totalsRowFunction;
+
         public XLTotalsRowFunction TotalsRowFunction
         {
             get { return totalsRowFunction; }

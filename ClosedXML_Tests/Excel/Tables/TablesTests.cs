@@ -362,5 +362,31 @@ namespace ClosedXML_Tests.Excel
             nameAfter = tbl.Cell("B1").Value.ToString();
             Assert.AreEqual("LastNameChanged", nameAfter);
         }
+
+        [Test]
+        public void CanDeleteTableField()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var table = ws.FirstCell().InsertTable(l);
+
+                table.Column("C").Delete();
+
+                Assert.AreEqual(3, table.Fields.Count());
+
+                Assert.AreEqual("FirstColumn", table.Fields.First().Name);
+                Assert.AreEqual(0, table.Fields.First().Index);
+
+                Assert.AreEqual("UnOrderedColumn", table.Fields.Last().Name);
+                Assert.AreEqual(2, table.Fields.Last().Index);
+            }
+        }
     }
 }
