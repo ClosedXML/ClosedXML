@@ -1,12 +1,17 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
     [DebuggerDisplay("{Name}")]
     internal class XLTableField : IXLTableField
     {
+        internal XLTotalsRowFunction totalsRowFunction;
+        internal String totalsRowLabel;
         private readonly XLTable table;
+
+        private String name;
 
         public XLTableField(XLTable table, String name)
         {
@@ -14,9 +19,12 @@ namespace ClosedXML.Excel
             this.name = name;
         }
 
-        public Int32 Index { get; internal set; }
+        public IXLRangeColumn Column
+        {
+            get { return table.Column(this.Index); }
+        }
 
-        private String name;
+        public Int32 Index { get; internal set; }
 
         public String Name
         {
@@ -30,19 +38,6 @@ namespace ClosedXML.Excel
                     table.HeadersRow().Cell(Index + 1).SetValue(value);
 
                 name = value;
-            }
-        }
-
-        internal String totalsRowLabel;
-
-        public String TotalsRowLabel
-        {
-            get { return totalsRowLabel; }
-            set
-            {
-                totalsRowFunction = XLTotalsRowFunction.None;
-                table.TotalsRow().Cell(Index + 1).SetValue(value);
-                totalsRowLabel = value;
             }
         }
 
@@ -65,8 +60,6 @@ namespace ClosedXML.Excel
                 table.TotalsRow().Cell(Index + 1).FormulaR1C1 = value;
             }
         }
-
-        internal XLTotalsRowFunction totalsRowFunction;
 
         public XLTotalsRowFunction TotalsRowFunction
         {
@@ -99,6 +92,32 @@ namespace ClosedXML.Excel
                 }
                 totalsRowFunction = value;
             }
+        }
+
+        public String TotalsRowLabel
+        {
+            get { return totalsRowLabel; }
+            set
+            {
+                totalsRowFunction = XLTotalsRowFunction.None;
+                table.TotalsRow().Cell(Index + 1).SetValue(value);
+                totalsRowLabel = value;
+            }
+        }
+
+        public void Delete()
+        {
+            Delete(true);
+        }
+
+        internal void Delete(Boolean deleteUnderlyingRangeColumn)
+        {
+            var fields = table.Fields.Cast<XLTableField>();
+            fields.Where(f => f.Index > this.Index).ForEach(f => f.Index--);
+            table.FieldNames.Remove(this.Name);
+
+            if (deleteUnderlyingRangeColumn)
+                (this.Column as XLRangeColumn).Delete(false);
         }
     }
 }

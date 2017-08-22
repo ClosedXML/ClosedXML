@@ -48,17 +48,20 @@ namespace ClosedXML.Excel
 
         public void Delete()
         {
-            if (IsTableColumn())
+            Delete(true);
+        }
+
+        internal void Delete(Boolean deleteTableField)
+        {
+            if (deleteTableField && IsTableColumn())
             {
                 var table = Table as XLTable;
                 var firstCellValue = Cell(1).Value.ToString();
                 if (!table.FieldNames.ContainsKey(firstCellValue))
                     throw new ArgumentException(string.Format("Field {0} not found.", firstCellValue));
 
-                var fields = table.Fields.Cast<XLTableField>();
-                var field = fields.Single(f => f.Name == firstCellValue);
-                fields.Where(f => f.Index > field.Index).ForEach(f => f.Index--);
-                table.FieldNames.Remove(firstCellValue);
+                var field = table.Fields.Cast<XLTableField>().Single(f => f.Name == firstCellValue);
+                field.Delete(false);
             }
 
             Delete(XLShiftDeletedCells.ShiftCellsLeft);
