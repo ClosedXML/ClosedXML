@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -104,6 +104,16 @@ namespace ClosedXML.Excel
             {
                 _fieldNames.Add(name, new XLTableField(this, name) { Index = cellPos++ });
             }
+        }
+
+        internal void RenameField(String oldName, String newName)
+        {
+            if (!_fieldNames.ContainsKey(oldName))
+                throw new ArgumentException("The field does not exist in this table", "oldName");
+
+            var field = _fieldNames[oldName];
+            _fieldNames.Remove(oldName);
+            _fieldNames.Add(newName, field);
         }
 
 
