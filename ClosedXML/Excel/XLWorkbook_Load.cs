@@ -50,11 +50,17 @@ namespace ClosedXML.Excel
                 LoadSpreadsheetDocument(dSpreadsheet);
         }
 
+        private void LoadSheetsFromTemplate(String fileName)
+        {
+            using (var dSpreadsheet = SpreadsheetDocument.CreateFromTemplate(fileName))
+                LoadSpreadsheetDocument(dSpreadsheet);
+        }
+
         private void LoadSpreadsheetDocument(SpreadsheetDocument dSpreadsheet)
         {
             ShapeIdManager = new XLIdManager();
             SetProperties(dSpreadsheet);
-            //var sharedStrings = dSpreadsheet.WorkbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>();
+
             SharedStringItem[] sharedStrings = null;
             if (dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
             {
@@ -260,11 +266,15 @@ namespace ClosedXML.Excel
 
 #region LoadTables
 
-                foreach (TableDefinitionPart tablePart in wsPart.TableDefinitionParts)
+                foreach (var tablePart in wsPart.TableDefinitionParts)
                 {
                     var dTable = tablePart.Table;
-                    string reference = dTable.Reference.Value;
-                    XLTable xlTable = ws.Range(reference).CreateTable(dTable.Name, false) as XLTable;
+                    String reference = dTable.Reference.Value;
+                    String tableName = dTable?.Name ?? dTable.DisplayName ?? string.Empty;
+                    if (String.IsNullOrWhiteSpace(tableName))
+                        throw new InvalidDataException("The table name is missing.");
+
+                    XLTable xlTable = ws.Range(reference).CreateTable(tableName, false) as XLTable;
                     if (dTable.HeaderRowCount != null && dTable.HeaderRowCount == 0)
                     {
                         xlTable._showHeaderRow = false;
@@ -495,6 +505,14 @@ namespace ClosedXML.Excel
                             if (pivotTableDefinition.ShowError != null && pivotTableDefinition.ErrorCaption != null)
                                 pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
 
+                            // Subtotal configuration
+                            if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && pf.SubtotalTop.Value))
+                                pt.SetSubtotals(XLPivotSubtotals.AtTop);
+                            else if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && !pf.SubtotalTop.Value))
+                                pt.SetSubtotals(XLPivotSubtotals.AtBottom);
+                            else
+                                pt.SetSubtotals(XLPivotSubtotals.DoNotShow);
+
                             // Row labels
                             if (pivotTableDefinition.RowFields != null)
                             {
@@ -637,7 +655,7 @@ namespace ClosedXML.Excel
                         stream.CopyTo(ms);
                         var vsdp = GetPropertiesFromAnchor(anchor);
 
-                        var picture = ws.AddPicture(ms, vsdp.Name) as XLPicture;
+                        var picture = (ws as XLWorksheet).AddPicture(ms, vsdp.Name, Convert.ToInt32(vsdp.Id.Value)) as XLPicture;
                         picture.RelId = imgId;
 
                         Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
@@ -722,7 +740,7 @@ namespace ClosedXML.Excel
                 if (shape != null) break;
             }
 
-            if (xdoc == null) throw new Exception("Could not load comments file");
+            if (xdoc == null) throw new ArgumentException("Could not load comments file");
             return xdoc;
         }
 
@@ -1059,7 +1077,7 @@ namespace ClosedXML.Excel
                         else
                         {
                             if (!Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Any(nr => nr.Name == name))
-                                Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment).Visible = visible;
+                                (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
                         }
                     }
                 }
@@ -1070,7 +1088,6 @@ namespace ClosedXML.Excel
 
         private IEnumerable<String> validateDefinedNames(IEnumerable<String> definedNames)
         {
-            var fixedNames = new List<String>();
             var sb = new StringBuilder();
             foreach (string testName in definedNames)
             {
@@ -1172,7 +1189,11 @@ namespace ClosedXML.Excel
                     formula = cell.CellFormula.Text;
 
                 if (cell.CellFormula.Reference != null)
+                {
+                    // Parent cell of shared formulas
+                    // Child cells will use this shared index to set its R1C1 style formula
                     xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+                }
 
                 xlCell.FormulaA1 = formula;
                 sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
@@ -1184,7 +1205,7 @@ namespace ClosedXML.Excel
             {
                 if (cell.CellFormula.SharedIndex != null)
                     xlCell.FormulaR1C1 = sharedFormulasR1C1[cell.CellFormula.SharedIndex.Value];
-                else
+                else if (!String.IsNullOrWhiteSpace(cell.CellFormula.Text))
                 {
                     String formula;
                     if (cell.CellFormula.FormulaType != null && cell.CellFormula.FormulaType == CellFormulaValues.Array)
@@ -1196,7 +1217,16 @@ namespace ClosedXML.Excel
                 }
 
                 if (cell.CellFormula.Reference != null)
-                    xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+                {
+                    foreach (var childCell in ws.Range(cell.CellFormula.Reference.Value).Cells(c => c.FormulaReference == null || !c.HasFormula))
+                    {
+                        if (childCell.FormulaReference == null)
+                            childCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
+
+                        if (!childCell.HasFormula)
+                            childCell.FormulaA1 = xlCell.FormulaA1;
+                    }
+                }
 
                 if (cell.CellValue != null)
                     xlCell.ValueCached = cell.CellValue.Text;

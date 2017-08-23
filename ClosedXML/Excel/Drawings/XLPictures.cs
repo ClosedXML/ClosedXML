@@ -39,7 +39,7 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
-        public Drawings.IXLPicture Add(Stream stream, XLPictureFormat format)
+        public IXLPicture Add(Stream stream, XLPictureFormat format)
         {
             var picture = new XLPicture(_worksheet, stream, format);
             _pictures.Add(picture);
@@ -129,11 +129,19 @@ namespace ClosedXML.Excel.Drawings
             var matches = _pictures.Where(p => p.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase));
             if (matches.Any())
             {
-                picture = matches.Single();
+                picture = matches.First();
                 return true;
             }
             picture = null;
             return false;
+        }
+
+        internal IXLPicture Add(Stream stream, string name, int Id)
+        {
+            var picture = Add(stream) as XLPicture;
+            picture.SetName(name);
+            picture.Id = Id;
+            return picture;
         }
 
         private String GetNextPictureName()

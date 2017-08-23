@@ -1,4 +1,4 @@
-using ClosedXML.Attributes;
+﻿using ClosedXML.Attributes;
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
@@ -42,17 +42,20 @@ namespace ClosedXML_Tests.Excel
             dt.Columns.Add("col1", typeof(string));
             dt.Columns.Add("col2", typeof(double));
 
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             wb.AddWorksheet(dt);
 
             using (var ms = new MemoryStream())
                 wb.SaveAs(ms, true);
         }
+        }
 
         [Test]
         public void CanSaveTableCreatedFromSingleRow()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Title");
             ws.Range("A1").CreateTable();
@@ -60,11 +63,13 @@ namespace ClosedXML_Tests.Excel
             using (var ms = new MemoryStream())
                 wb.SaveAs(ms, true);
         }
+        }
 
         [Test]
         public void CreatingATableFromHeadersPushCellsBelow()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Title")
                 .CellBelow().SetValue("X");
@@ -73,11 +78,13 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(ws.Cell("A2").GetString(), String.Empty);
             Assert.AreEqual(ws.Cell("A3").GetString(), "X");
         }
+        }
 
         [Test]
         public void Inserting_Column_Sets_Header()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Categories")
                 .CellBelow().SetValue("A")
@@ -88,11 +95,13 @@ namespace ClosedXML_Tests.Excel
             table.InsertColumnsAfter(1);
             Assert.AreEqual("Column2", table.HeadersRow().LastCell().GetString());
         }
+        }
 
         [Test]
         public void SavingLoadingTableWithNewLineInHeader()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             string columnName = "Line1" + Environment.NewLine + "Line2";
             ws.FirstCell().SetValue(columnName)
@@ -108,11 +117,13 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual("Line1\nLine2", fieldName);
             }
         }
+        }
 
         [Test]
         public void SavingLoadingTableWithNewLineInHeader2()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.Worksheets.Add("Test");
 
             var dt = new DataTable();
@@ -138,6 +149,7 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual("Line1\nLine2", fieldName2);
             }
         }
+        }
 
         [Test]
         public void TableCreatedFromEmptyDataTable()
@@ -146,10 +158,12 @@ namespace ClosedXML_Tests.Excel
             dt.Columns.Add("col1", typeof(string));
             dt.Columns.Add("col2", typeof(double));
 
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().InsertTable(dt);
             Assert.AreEqual(2, ws.Tables.First().ColumnCount());
+        }
         }
 
         [Test]
@@ -157,10 +171,12 @@ namespace ClosedXML_Tests.Excel
         {
             var l = new List<Int32>();
 
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().InsertTable(l);
             Assert.AreEqual(1, ws.Tables.First().ColumnCount());
+        }
         }
 
         [Test]
@@ -168,10 +184,12 @@ namespace ClosedXML_Tests.Excel
         {
             var l = new List<TestObjectWithoutAttributes>();
 
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().InsertTable(l);
             Assert.AreEqual(2, ws.Tables.First().ColumnCount());
+        }
         }
 
         [Test]
@@ -183,7 +201,8 @@ namespace ClosedXML_Tests.Excel
                 new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
             };
 
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().InsertTable(l);
             Assert.AreEqual(4, ws.Tables.First().ColumnCount());
@@ -192,11 +211,13 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("SomeFieldNotProperty", ws.FirstCell().CellRight().CellRight().Value);
             Assert.AreEqual("UnOrderedColumn", ws.FirstCell().CellRight().CellRight().CellRight().Value);
         }
+        }
 
         [Test]
         public void TableInsertAboveFromData()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Value");
 
@@ -214,12 +235,14 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
+        }
         }
 
         [Test]
         public void TableInsertAboveFromRows()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Value");
 
@@ -237,12 +260,14 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
+        }
         }
 
         [Test]
         public void TableInsertBelowFromData()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Value");
 
@@ -260,12 +285,14 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(1, ws.Cell(2, 1).GetDouble());
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
+        }
         }
 
         [Test]
         public void TableInsertBelowFromRows()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Value");
 
@@ -284,11 +311,13 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(2, ws.Cell(3, 1).GetDouble());
             Assert.AreEqual(3, ws.Cell(4, 1).GetDouble());
         }
+        }
 
         [Test]
         public void TableShowHeader()
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Categories")
                 .CellBelow().SetValue("A")
@@ -329,12 +358,13 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("A", table.DataRange.FirstCell().GetString());
             Assert.AreEqual("C", table.DataRange.LastCell().GetString());
         }
+        }
 
         [Test]
         public void ChangeFieldName()
         {
-            XLWorkbook wb = new XLWorkbook();
-
+            using (var wb = new XLWorkbook())
+            {
             var ws = wb.AddWorksheet("Sheet");
             ws.Cell("A1").SetValue("FName")
                 .CellBelow().SetValue("John");
@@ -361,6 +391,65 @@ namespace ClosedXML_Tests.Excel
             tbl.SetShowHeaderRow(true);
             nameAfter = tbl.Cell("B1").Value.ToString();
             Assert.AreEqual("LastNameChanged", nameAfter);
+
+                var field = tbl.Field("LastNameChanged");
+                Assert.AreEqual("LastNameChanged", field.Name);
+
+                tbl.Cell(1, 1).Value = "FirstName";
+                Assert.AreEqual("FirstName", tbl.Field(0).Name);
+        }
+    }
+
+        [Test]
+        public void CanDeleteTableColumn()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var table = ws.FirstCell().InsertTable(l);
+
+                table.Column("C").Delete();
+
+                Assert.AreEqual(3, table.Fields.Count());
+
+                Assert.AreEqual("FirstColumn", table.Fields.First().Name);
+                Assert.AreEqual(0, table.Fields.First().Index);
+
+                Assert.AreEqual("UnOrderedColumn", table.Fields.Last().Name);
+                Assert.AreEqual(2, table.Fields.Last().Index);
+}
+        }
+
+        [Test]
+        public void CanDeleteTableField()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var table = ws.FirstCell().InsertTable(l);
+
+                table.Field("SomeFieldNotProperty").Delete();
+
+                Assert.AreEqual(3, table.Fields.Count());
+
+                Assert.AreEqual("FirstColumn", table.Fields.First().Name);
+                Assert.AreEqual(0, table.Fields.First().Index);
+
+                Assert.AreEqual("UnOrderedColumn", table.Fields.Last().Name);
+                Assert.AreEqual(2, table.Fields.Last().Index);
+            }
         }
     }
 }

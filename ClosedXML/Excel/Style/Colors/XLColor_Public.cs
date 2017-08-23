@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
             get
             {
                 if (_colorType == XLColorType.Theme)
-                    throw new Exception("Cannot convert theme color to Color.");
+                    throw new InvalidOperationException("Cannot convert theme color to Color.");
 
                 if (_colorType == XLColorType.Indexed)
                     if (_indexed == TOOLTIPCOLORINDEX)
@@ -76,12 +76,12 @@ namespace ClosedXML.Excel
             get
             {
                 if (ColorType == XLColorType.Theme)
-                    throw new Exception("Cannot convert theme color to indexed color.");
+                    throw new InvalidOperationException("Cannot convert theme color to indexed color.");
 
                 if (ColorType == XLColorType.Indexed)
                     return _indexed;
 
-                throw new Exception("Cannot convert Color to indexed color.");
+                throw new InvalidOperationException("Cannot convert Color to indexed color.");
             }
         }
 
@@ -93,9 +93,9 @@ namespace ClosedXML.Excel
                     return _themeColor;
 
                 if (ColorType == XLColorType.Indexed)
-                    throw new Exception("Cannot convert indexed color to theme color.");
+                    throw new InvalidOperationException("Cannot convert indexed color to theme color.");
 
-                throw new Exception("Cannot convert Color to theme color.");
+                throw new InvalidOperationException("Cannot convert Color to theme color.");
             }
         }
 
@@ -107,7 +107,7 @@ namespace ClosedXML.Excel
                     return _themeTint;
 
                 if (ColorType == XLColorType.Indexed)
-                    throw new Exception("Cannot extract theme tint from an indexed color.");
+                    throw new InvalidOperationException("Cannot extract theme tint from an indexed color.");
 
                 return _color.A/255.0;
             }

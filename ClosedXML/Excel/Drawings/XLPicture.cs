@@ -35,6 +35,7 @@ namespace ClosedXML.Excel.Drawings
 
         private readonly IXLWorksheet _worksheet;
         private Int32 height;
+        private Int32 id;
         private String name = string.Empty;
         private Int32 width;
 
@@ -94,6 +95,13 @@ namespace ClosedXML.Excel.Drawings
                 [XLMarkerPosition.TopLeft] = null,
                 [XLMarkerPosition.BottomRight] = null
             };
+
+            // Calculate default picture ID
+            var allPictures = worksheet.Workbook.Worksheets.SelectMany(ws => ws.Pictures);
+            if (allPictures.Any())
+                this.id = allPictures.Max(p => p.Id) + 1;
+            else
+                this.id = 1;
         }
 
         public IXLAddress BottomRightCellAddress
@@ -124,6 +132,16 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
+        public Int32 Id
+        {
+            get { return id; }
+            internal set
+            {
+                if ((_worksheet.Pictures.FirstOrDefault(p => p.Id.Equals(value)) ?? this) != this)
+                    throw new ArgumentException($"The picture ID '{value}' already exists.");
+            }
+        }
+
         public MemoryStream ImageStream { get; private set; }
 
         public Int32 Left
@@ -145,19 +163,10 @@ namespace ClosedXML.Excel.Drawings
             {
                 if (name == value) return;
 
-                if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
-                    throw new ArgumentException($"Picture names cannot contain any of the following characters: {InvalidNameChars}");
-
-                if (String.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Picture names cannot be empty");
-
-                if (value.Length > 31)
-                    throw new ArgumentException("Picture names cannot be more than 31 characters");
-
                 if ((_worksheet.Pictures.FirstOrDefault(p => p.Name.Equals(value, StringComparison.OrdinalIgnoreCase)) ?? this) != this)
                     throw new ArgumentException($"The picture name '{value}' already exists.");
 
-                name = value;
+                SetName(value);
             }
         }
 
@@ -310,6 +319,20 @@ namespace ClosedXML.Excel.Drawings
             this.Width = width;
             this.Height = height;
             return this;
+        }
+
+        internal void SetName(string value)
+        {
+            if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
+                throw new ArgumentException($"Picture names cannot contain any of the following characters: {InvalidNameChars}");
+
+            if (String.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Picture names cannot be empty");
+
+            if (value.Length > 31)
+                throw new ArgumentException("Picture names cannot be more than 31 characters");
+
+            name = value;
         }
 
         private void DeduceDimensions(Stream stream)

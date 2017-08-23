@@ -91,7 +91,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private bool Validate(SpreadsheetDocument package)
+        private Boolean Validate(SpreadsheetDocument package)
         {
             var backupCulture = Thread.CurrentThread.CurrentCulture;
 
@@ -115,7 +115,7 @@ namespace ClosedXML.Excel
             return true;
         }
 
-        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, bool validate, bool evaluateFormulae)
+        private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
         {
             PathHelper.CreateDirectory(Path.GetDirectoryName(filePath));
             var package = File.Exists(filePath)
@@ -124,12 +124,12 @@ namespace ClosedXML.Excel
 
             using (package)
             {
-                CreateParts(package, evaluateFormulae);
-                if (validate) Validate(package);
+                CreateParts(package, options);
+                if (options.ValidatePackage) Validate(package);
             }
         }
 
-        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType, bool validate, bool evaluateFormulae)
+        private void CreatePackage(Stream stream, bool newStream, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
         {
             var package = newStream
                 ? SpreadsheetDocument.Create(stream, spreadsheetDocumentType)
@@ -137,8 +137,8 @@ namespace ClosedXML.Excel
 
             using (package)
             {
-                CreateParts(package, evaluateFormulae);
-                if (validate) Validate(package);
+                CreateParts(package, options);
+                if (options.ValidatePackage) Validate(package);
             }
         }
 
@@ -146,9 +146,10 @@ namespace ClosedXML.Excel
         private void DeleteSheetAndDependencies(WorkbookPart wbPart, string sheetId)
         {
             //Get the SheetToDelete from workbook.xml
-            Sheet worksheet = wbPart.Workbook.Descendants<Sheet>().Where(s => s.Id == sheetId).FirstOrDefault();
+            Sheet worksheet = wbPart.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Id == sheetId);
             if (worksheet == null)
-            { }
+                return;
+
 
             string sheetName = worksheet.Name;
             // Get the pivot Table Parts
@@ -158,8 +159,8 @@ namespace ClosedXML.Excel
             {
                 PivotCacheDefinition pvtCacheDef = Item.PivotCacheDefinition;
                 //Check if this CacheSource is linked to SheetToDelete
-                var pvtCahce = pvtCacheDef.Descendants<CacheSource>().Where(s => s.WorksheetSource.Sheet == sheetName);
-                if (pvtCahce.Count() > 0)
+                var pvtCache = pvtCacheDef.Descendants<CacheSource>().Where(s => s.WorksheetSource.Sheet == sheetName);
+                if (pvtCache.Any())
                 {
                     pvtTableCacheDefinationPart.Add(Item, Item.ToString());
                 }
@@ -182,7 +183,7 @@ namespace ClosedXML.Excel
             {
                 List<DefinedName> defNamesToDelete = new List<DefinedName>();
 
-                foreach (DefinedName Item in definedNames)
+                foreach (var Item in definedNames.OfType<DefinedName>())
                 {
                     // This condition checks to delete only those names which are part of Sheet in question
                     if (Item.Text.Contains(worksheet.Name + "!"))
@@ -205,24 +206,20 @@ namespace ClosedXML.Excel
                 var calChainEntries = calChainPart.CalculationChain.Descendants<CalculationCell>().Where(c => c.SheetId == sheetId);
                 List<CalculationCell> calcsToDelete = new List<CalculationCell>();
                 foreach (CalculationCell Item in calChainEntries)
-                {
                     calcsToDelete.Add(Item);
-                }
+
 
                 foreach (CalculationCell Item in calcsToDelete)
-                {
                     Item.Remove();
-                }
 
-                if (calChainPart.CalculationChain.Count() == 0)
-                {
+
+                if (!calChainPart.CalculationChain.Any())
                     wbPart.DeletePart(calChainPart);
                 }
             }
-        }
 
         // Adds child parts and generates content of the specified part.
-        private void CreateParts(SpreadsheetDocument document, bool evaluateFormulae)
+        private void CreateParts(SpreadsheetDocument document, SaveOptions options)
         {
             var context = new SaveContext();
 
@@ -318,7 +315,7 @@ namespace ClosedXML.Excel
                     GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
                 }
 
-                GenerateWorksheetPartContent(worksheetPart, worksheet, evaluateFormulae, context);
+                GenerateWorksheetPartContent(worksheetPart, worksheet, options.EvaluateFormulasBeforeSaving, context);
 
                 if (worksheet.PivotTables.Any())
                 {
@@ -337,7 +334,10 @@ namespace ClosedXML.Excel
             if (workbookPart.Workbook.PivotCaches != null && !workbookPart.Workbook.PivotCaches.Any())
                 workbookPart.Workbook.RemoveChild(workbookPart.Workbook.PivotCaches);
 
+            if (options.GenerateCalculationChain)
             GenerateCalculationChainPartContent(workbookPart, context);
+            else
+                DeleteCalculationChainPartContent(workbookPart, context);
 
             if (workbookPart.ThemePart == null)
             {
@@ -354,6 +354,9 @@ namespace ClosedXML.Excel
                 GenerateCustomFilePropertiesPartContent(customFilePropertiesPart);
             }
             SetPackageProperties(document);
+
+            // Clear list of deleted worksheets to prevent errors on multiple saves
+            worksheets.Deleted.Clear();
         }
 
         private void DeleteComments(WorksheetPart worksheetPart, XLWorksheet worksheet, SaveContext context)
@@ -596,7 +599,7 @@ namespace ClosedXML.Excel
                 workbook.WorkbookProtection = null;
             }
 
-            #endregion
+            #endregion WorkbookProtection
 
             if (workbook.BookViews == null)
                 workbook.BookViews = new BookViews();
@@ -1008,11 +1011,16 @@ namespace ClosedXML.Excel
             return run;
         }
 
+        private void DeleteCalculationChainPartContent(WorkbookPart workbookPart, SaveContext context)
+        {
+            if (workbookPart.CalculationChainPart != null)
+                workbookPart.DeletePart(workbookPart.CalculationChainPart);
+        }
+
         private void GenerateCalculationChainPartContent(WorkbookPart workbookPart, SaveContext context)
         {
-            var thisRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
             if (workbookPart.CalculationChainPart == null)
-                workbookPart.AddNewPart<CalculationChainPart>(thisRelId);
+                workbookPart.AddNewPart<CalculationChainPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
 
             if (workbookPart.CalculationChainPart.CalculationChain == null)
                 workbookPart.CalculationChainPart.CalculationChain = new CalculationChain();
@@ -1029,8 +1037,10 @@ namespace ClosedXML.Excel
                         cellsWithoutFormulas.Add(c.Address.ToStringRelative());
                     else
                     {
-                        if (c.FormulaA1.StartsWith("{"))
+                        if (c.HasArrayFormula)
                         {
+                            if (c.FormulaReference.FirstAddress.Equals(c.Address))
+                            {
                             var cc = new CalculationCell
                             {
                                 CellReference = c.Address.ToString(),
@@ -1039,15 +1049,21 @@ namespace ClosedXML.Excel
 
                             if (c.FormulaReference == null)
                                 c.FormulaReference = c.AsRange().RangeAddress;
-                            if (c.FormulaReference.FirstAddress.Equals(c.Address))
-                            {
+
                                 cc.Array = true;
                                 calculationChain.AppendChild(cc);
-                                calculationChain.AppendChild(new CalculationCell { CellReference = c.Address.ToString(), InChildChain = true });
-                            }
-                            else
+
+                                foreach (var childCell in worksheet.Range(c.FormulaReference.ToString()).Cells())
                             {
-                                calculationChain.AppendChild(cc);
+                                    calculationChain.AppendChild(
+                                        new CalculationCell
+                                        {
+                                            CellReference = childCell.Address.ToString(),
+                                            SheetId = worksheet.SheetId,
+                                            InChildChain = true
+                            }
+                                    );
+                        }
                             }
                         }
                         else
@@ -1061,17 +1077,34 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                //var cCellsToRemove = new List<CalculationCell>();
-                var m = from cc in calculationChain.Elements<CalculationCell>()
-                        where !(cc.SheetId != null || cc.InChildChain != null)
-                              && calculationChain.Elements<CalculationCell>()
-                                  .Where(c1 => c1.SheetId != null)
-                                  .Select(c1 => c1.CellReference.Value)
-                                  .Contains(cc.CellReference.Value)
-                              || cellsWithoutFormulas.Contains(cc.CellReference.Value)
-                        select cc;
-                //m.ToList().ForEach(cc => cCellsToRemove.Add(cc));
-                m.ToList().ForEach(cc => calculationChain.RemoveChild(cc));
+                // This part shouldn't be necessary anymore, but I'm keeping it in the DEBUG configuration until I'm 100% sure.
+
+#if DEBUG
+                var sheetCellReferences = calculationChain.Elements<CalculationCell>()
+                    .Where(cc1 => cc1.SheetId != null)
+                    .Select(cc1 => cc1.CellReference.Value)
+                    .ToList();
+
+                // Remove orphaned calc chain cells
+                var cellsToRemove = calculationChain.Elements<CalculationCell>()
+                    .Where(cc =>
+                    {
+                        return cc.SheetId == worksheet.SheetId
+                                   && cellsWithoutFormulas.Contains(cc.CellReference.Value)
+                               || cc.SheetId == null
+                                   && cc.InChildChain == null
+                                   && sheetCellReferences.Contains(cc.CellReference.Value);
+                    })
+                    .ToArray();
+
+                // This shouldn't happen, because the calc chain should be correctly generated
+                System.Diagnostics.Debug.Assert(!cellsToRemove.Any());
+
+                foreach (var cc in cellsToRemove)
+                {
+                    calculationChain.RemoveChild(cc);
+            }
+#endif
             }
 
             if (!calculationChain.Any())
@@ -2118,6 +2151,21 @@ namespace ClosedXML.Excel
                 IXLPivotField labelField = null;
                 var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
 
+                switch (pt.Subtotals)
+                {
+                    case XLPivotSubtotals.DoNotShow:
+                        pf.DefaultSubtotal = false;
+                        break;
+                    case XLPivotSubtotals.AtBottom:
+                        pf.DefaultSubtotal = true;
+                        pf.SubtotalTop = false;
+                        break;
+                    case XLPivotSubtotals.AtTop:
+                        pf.DefaultSubtotal = true;
+                        pf.SubtotalTop = true;
+                        break;
+                }
+
                 if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     labelField = pt.RowLabels.Single(p => p.SourceName == xlpf.SourceName);
@@ -2141,7 +2189,7 @@ namespace ClosedXML.Excel
 
                 var fieldItems = new Items();
 
-                if (xlpf.SharedStrings.Count > 0)
+                if (xlpf.SharedStrings.Any())
                 {
                     for (uint i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
@@ -2152,7 +2200,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                if (xlpf.Subtotals.Count > 0)
+                if (xlpf.Subtotals.Any())
                 {
                     foreach (var subtotal in xlpf.Subtotals)
                     {
@@ -2217,13 +2265,17 @@ namespace ClosedXML.Excel
                         fieldItems.AppendChild(itemSubtotal);
                     }
                 }
-                else
+                // If the field itself doesn't have subtotals, but the pivot table is set to show pivot tables, add the default item
+                else if (pt.Subtotals != XLPivotSubtotals.DoNotShow)
                 {
                     fieldItems.AppendChild(new Item { ItemType = ItemValues.Default });
                 }
 
+                if (fieldItems.Any())
+                {
                 fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
                 pf.AppendChild(fieldItems);
+                }
                 pivotFields.AppendChild(pf);
             }
 
@@ -4246,16 +4298,17 @@ namespace ClosedXML.Excel
                         }
 
                         cell.StyleIndex = styleId;
-                        var formula = xlCell.FormulaA1;
                         if (xlCell.HasFormula)
                         {
-                            if (formula.StartsWith("{"))
+                            var formula = xlCell.FormulaA1;
+                            if (xlCell.HasArrayFormula)
                             {
                                 formula = formula.Substring(1, formula.Length - 2);
                                 var f = new CellFormula { FormulaType = CellFormulaValues.Array };
 
                                 if (xlCell.FormulaReference == null)
                                     xlCell.FormulaReference = xlCell.AsRange().RangeAddress;
+
                                 if (xlCell.FormulaReference.FirstAddress.Equals(xlCell.Address))
                                 {
                                     f.Text = formula;
@@ -4280,7 +4333,6 @@ namespace ClosedXML.Excel
 
                         if (!xlCell.HasFormula || evaluateFormulae)
                             SetCellValue(xlCell, cell);
-
                                     }
                                     }
                 xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);

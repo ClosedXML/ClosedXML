@@ -16,6 +16,8 @@ namespace ClosedXML.Excel.Drawings
 
         Int32 Height { get; set; }
 
+        Int32 Id { get; }
+
         MemoryStream ImageStream { get; }
 
         Int32 Left { get; set; }

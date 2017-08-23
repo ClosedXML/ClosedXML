@@ -13,7 +13,8 @@ namespace ClosedXML_Examples.Misc
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using (var wb = new XLWorkbook())
+            {
             var ws = wb.Worksheets.Add("Inserting Data");
 
             // From a list of strings
@@ -54,6 +55,10 @@ namespace ClosedXML_Examples.Misc
             ws.Range(6, 6, 6, 8).Merge().AddToNamed("Titles");
             ws.Cell(7, 6).InsertData(people);
 
+                ws.Cell("F13").Value = "Transposed";
+                ws.Range(13, 6, 13, 8).Merge().AddToNamed("Titles");
+                ws.Cell("F14").InsertData(people.AsEnumerable(), true);
+
             // Prepare the style for the titles
             var titlesStyle = wb.Style;
             titlesStyle.Font.Bold = true;
@@ -66,6 +71,7 @@ namespace ClosedXML_Examples.Misc
             ws.Columns().AdjustToContents();
 
             wb.SaveAs(filePath);
+        }
         }
 
         class Person

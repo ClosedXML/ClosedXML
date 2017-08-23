@@ -22,7 +22,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             value = ws.Evaluate("AVERAGE(G3:G45)").CastTo<double>();
             Assert.AreEqual(49.3255814, value, tolerance);
 
-            Assert.That(() => ws.Evaluate("AVERAGE(D3:D45)"), Throws.Exception);
+            Assert.That(() => ws.Evaluate("AVERAGE(D3:D45)"), Throws.TypeOf<ApplicationException>());
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             var ws = workbook.Worksheets.First();
             double value;
-            Assert.That(() => ws.Evaluate(@"=STDEV(D3:D45)"), Throws.Exception);
+            Assert.That(() => ws.Evaluate(@"=STDEV(D3:D45)"), Throws.TypeOf<ApplicationException>());
 
             value = ws.Evaluate(@"=STDEV(H3:H45)").CastTo<double>();
             Assert.AreEqual(47.34511769, value, tolerance);
@@ -163,7 +163,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             var ws = workbook.Worksheets.First();
             double value;
-            Assert.That(() => ws.Evaluate(@"=STDEVP(D3:D45)"), Throws.Exception);
+            Assert.That(() => ws.Evaluate(@"=STDEVP(D3:D45)"), Throws.InvalidOperationException);
 
             value = ws.Evaluate(@"=STDEVP(H3:H45)").CastTo<double>();
             Assert.AreEqual(46.79135458, value, tolerance);
@@ -180,7 +180,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             var ws = workbook.Worksheets.First();
             double value;
-            Assert.That(() => ws.Evaluate(@"=VAR(D3:D45)"), Throws.Exception);
+            Assert.That(() => ws.Evaluate(@"=VAR(D3:D45)"), Throws.InvalidOperationException);
 
             value = ws.Evaluate(@"=VAR(H3:H45)").CastTo<double>();
             Assert.AreEqual(2241.560169, value, tolerance);
@@ -197,7 +197,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             var ws = workbook.Worksheets.First();
             double value;
-            Assert.That(() => ws.Evaluate(@"=VARP(D3:D45)"), Throws.Exception);
+            Assert.That(() => ws.Evaluate(@"=VARP(D3:D45)"), Throws.InvalidOperationException);
 
             value = ws.Evaluate(@"=VARP(H3:H45)").CastTo<double>();
             Assert.AreEqual(2189.430863, value, tolerance);

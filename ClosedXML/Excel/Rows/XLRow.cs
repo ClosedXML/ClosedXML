@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
-
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -15,7 +14,7 @@ namespace ClosedXML.Excel
         private Boolean _isHidden;
         private Int32 _outlineLevel;
 
-        #endregion
+        #endregion Private fields
 
         #region Constructor
 
@@ -53,7 +52,7 @@ namespace ClosedXML.Excel
             SetStyle(row.GetStyleId());
         }
 
-        #endregion
+        #endregion Constructor
 
         public Boolean IsReference { get; private set; }
 
@@ -108,6 +107,7 @@ namespace ClosedXML.Excel
         #region IXLRow Members
 
         private Boolean _loading;
+
         public Boolean Loading
         {
             get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Loading : _loading; }
@@ -121,6 +121,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean HeightChanged { get; private set; }
+
         public Double Height
         {
             get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Height : _height; }
@@ -134,6 +135,12 @@ namespace ClosedXML.Excel
                 else
                     _height = value;
             }
+        }
+
+        public void ClearHeight()
+        {
+            Height = Worksheet.RowHeight;
+            HeightChanged = false;
         }
 
         public void Delete()
@@ -592,7 +599,7 @@ namespace ClosedXML.Excel
             return Row(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
         }
 
-#endregion
+        #endregion IXLRow Members
 
         public override XLRange AsRange()
         {
@@ -687,7 +694,7 @@ namespace ClosedXML.Excel
             return RowShift(step * -1);
         }
 
-#endregion
+        #endregion XLRow Above
 
 #region XLRow Below
 
@@ -711,14 +718,14 @@ namespace ClosedXML.Excel
             return RowShift(step);
         }
 
-#endregion
+        #endregion XLRow Below
 
-        public new Boolean IsEmpty()
+        public override Boolean IsEmpty()
         {
             return IsEmpty(false);
         }
 
-        public new Boolean IsEmpty(Boolean includeFormats)
+        public override Boolean IsEmpty(Boolean includeFormats)
         {
             if (includeFormats && !Style.Equals(Worksheet.Style))
                 return false;
@@ -726,6 +733,14 @@ namespace ClosedXML.Excel
             return base.IsEmpty(includeFormats);
         }
 
+        public override Boolean IsEntireRow()
+        {
+            return true;
+        }
 
+        public override Boolean IsEntireColumn()
+        {
+            return false;
     }
+}
 }
