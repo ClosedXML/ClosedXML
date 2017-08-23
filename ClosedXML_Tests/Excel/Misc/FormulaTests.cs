@@ -156,5 +156,22 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(6, actual);
             }
         }
+
+        [Test]
+        public void FormulaThatStartsWithEqualsAndPlus()
+        {
+            object actual;
+            actual = XLWorkbook.EvaluateExpr("=MID(\"This is a test\", 6, 2)");
+            Assert.AreEqual("is", actual);
+
+            actual = XLWorkbook.EvaluateExpr("=+MID(\"This is a test\", 6, 2)");
+            Assert.AreEqual("is", actual);
+
+            actual = XLWorkbook.EvaluateExpr("=+++++MID(\"This is a test\", 6, 2)");
+            Assert.AreEqual("is", actual);
+
+            actual = XLWorkbook.EvaluateExpr("+MID(\"This is a test\", 6, 2)");
+            Assert.AreEqual("is", actual);
+        }
     }
 }

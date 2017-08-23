@@ -1,4 +1,4 @@
-using ClosedXML.Attributes;
+﻿using ClosedXML.Attributes;
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
@@ -391,6 +391,12 @@ namespace ClosedXML_Tests.Excel
                 tbl.SetShowHeaderRow(true);
                 nameAfter = tbl.Cell("B1").Value.ToString();
                 Assert.AreEqual("LastNameChanged", nameAfter);
+
+                var field = tbl.Field("LastNameChanged");
+                Assert.AreEqual("LastNameChanged", field.Name);
+
+                tbl.Cell(1, 1).Value = "FirstName";
+                Assert.AreEqual("FirstName", tbl.Field(0).Name);
             }
         }
 
