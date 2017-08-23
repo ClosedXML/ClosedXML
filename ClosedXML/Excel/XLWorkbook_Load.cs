@@ -55,11 +55,17 @@ namespace ClosedXML.Excel
                 LoadSpreadsheetDocument(dSpreadsheet);
         }
 
+        private void LoadSheetsFromTemplate(String fileName)
+        {
+            using (var dSpreadsheet = SpreadsheetDocument.CreateFromTemplate(fileName))
+                LoadSpreadsheetDocument(dSpreadsheet);
+        }
+
         private void LoadSpreadsheetDocument(SpreadsheetDocument dSpreadsheet)
         {
             ShapeIdManager = new XLIdManager();
             SetProperties(dSpreadsheet);
-            //var sharedStrings = dSpreadsheet.WorkbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>();
+
             SharedStringItem[] sharedStrings = null;
             if (dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
             {
