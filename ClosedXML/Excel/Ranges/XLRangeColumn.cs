@@ -1,9 +1,8 @@
+using System;
+using System.Linq;
+
 namespace ClosedXML.Excel
 {
-    using System;
-    using System.Linq;
-
-
     internal class XLRangeColumn : XLRangeBase, IXLRangeColumn
     {
         #region Constructor
@@ -13,18 +12,24 @@ namespace ClosedXML.Excel
         {
             if (quickLoad) return;
 
-			SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-			SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+            SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
+            SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             SetStyle(rangeParameters.DefaultStyle);
         }
 
-        #endregion
+        public XLRangeColumn(XLRangeParameters rangeParameters, bool quickLoad, IXLTable table)
+            : this(rangeParameters, quickLoad)
+        {
+            this.Table = table;
+        }
+
+        #endregion Constructor
 
         #region IXLRangeColumn Members
 
-        IXLCell IXLRangeColumn.Cell(int row)
+        IXLCell IXLRangeColumn.Cell(int rowNumber)
         {
-            return Cell(row);
+            return Cell(rowNumber);
         }
 
         public new IXLCells Cells(string cellsInColumn)
@@ -43,6 +48,22 @@ namespace ClosedXML.Excel
 
         public void Delete()
         {
+            Delete(true);
+        }
+
+        internal void Delete(Boolean deleteTableField)
+        {
+            if (deleteTableField && IsTableColumn())
+            {
+                var table = Table as XLTable;
+                var firstCellValue = Cell(1).Value.ToString();
+                if (!table.FieldNames.ContainsKey(firstCellValue))
+                    throw new ArgumentException(string.Format("Field {0} not found.", firstCellValue));
+
+                var field = table.Fields.Cast<XLTableField>().Single(f => f.Name == firstCellValue);
+                field.Delete(false);
+            }
+
             Delete(XLShiftDeletedCells.ShiftCellsLeft);
         }
 
@@ -76,7 +97,6 @@ namespace ClosedXML.Excel
             base.Sort(1, sortOrder, matchCase, ignoreBlanks);
             return this;
         }
-
 
         public new IXLRangeColumn CopyTo(IXLCell target)
         {
@@ -166,7 +186,7 @@ namespace ClosedXML.Excel
             return Worksheet.Column(RangeAddress.FirstAddress.ColumnNumber);
         }
 
-        #endregion
+        #endregion IXLRangeColumn Members
 
         public XLCell Cell(int row)
         {
@@ -289,7 +309,7 @@ namespace ClosedXML.Excel
             return ColumnShift(step * -1);
         }
 
-        #endregion
+        #endregion XLRangeColumn Left
 
         #region XLRangeColumn Right
 
@@ -313,29 +333,40 @@ namespace ClosedXML.Excel
             return ColumnShift(step);
         }
 
-        #endregion
-
+        #endregion XLRangeColumn Right
 
         public IXLTable AsTable()
         {
+            if (IsTableColumn())
+                throw new InvalidOperationException("This column is already part of a table.");
+
             using (var asRange = AsRange())
-               return asRange.AsTable();
+                return asRange.AsTable();
         }
 
         public IXLTable AsTable(string name)
         {
+            if (IsTableColumn())
+                throw new InvalidOperationException("This column is already part of a table.");
+
             using (var asRange = AsRange())
                 return asRange.AsTable(name);
         }
 
         public IXLTable CreateTable()
         {
+            if (IsTableColumn())
+                throw new InvalidOperationException("This column is already part of a table.");
+
             using (var asRange = AsRange())
                 return asRange.CreateTable();
         }
 
         public IXLTable CreateTable(string name)
         {
+            if (IsTableColumn())
+                throw new InvalidOperationException("This column is already part of a table.");
+
             using (var asRange = AsRange())
                 return asRange.CreateTable(name);
         }
@@ -351,5 +382,11 @@ namespace ClosedXML.Excel
             return Column(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
         }
 
+        internal IXLTable Table { get; set; }
+
+        public Boolean IsTableColumn()
+        {
+            return Table != null;
+        }
     }
 }
