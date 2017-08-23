@@ -816,7 +816,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static void Throw(string msg)
         {
-            throw new Exception(msg);
+            throw new ExpressionParseException(msg);
         }
 
         #endregion ** static helpers

@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -442,7 +443,7 @@ namespace ClosedXML.Excel
         {
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
-                throw new Exception("This is a new file, please use one of the SaveAs methods.");
+                throw new InvalidOperationException("This is a new file, please use one of the SaveAs methods.");
 
             if (_loadSource == XLLoadSource.Stream)
             {
@@ -502,7 +503,8 @@ namespace ClosedXML.Excel
         private static SpreadsheetDocumentType GetSpreadsheetDocumentType(string filePath)
         {
             var extension = Path.GetExtension(filePath);
-            if (extension == null) throw new Exception("Empty extension is not supported.");
+
+            if (extension == null) throw new ArgumentException("Empty extension is not supported.");
             extension = extension.Substring(1).ToLowerInvariant();
 
             switch (extension)
@@ -522,7 +524,7 @@ namespace ClosedXML.Excel
         private void checkForWorksheetsPresent()
         {
             if (Worksheets.Count() == 0)
-                throw new Exception("Workbooks need at least one worksheet.");
+                throw new InvalidOperationException("Workbooks need at least one worksheet.");
         }
 
         /// <summary>
@@ -650,7 +652,24 @@ namespace ClosedXML.Excel
             return columns;
         }
 
-#region Fields
+        /// <summary>
+        /// Searches the cells' contents for a given piece of text
+        /// </summary>
+        /// <param name="searchText">The search text.</param>
+        /// <param name="compareOptions">The compare options.</param>
+        /// <param name="searchFormulae">if set to <c>true</c> search formulae instead of cell values.</param>
+        /// <returns></returns>
+        public IEnumerable<IXLCell> Search(String searchText, CompareOptions compareOptions = CompareOptions.Ordinal, Boolean searchFormulae = false)
+        {
+            foreach (var ws in WorksheetsInternal)
+            {
+                foreach (var cell in ws.Search(searchText, compareOptions, searchFormulae))
+                    yield return cell;
+            }
+        }
+
+
+        #region Fields
 
         private readonly XLLoadSource _loadSource = XLLoadSource.New;
         private readonly String _originalFile;
@@ -866,7 +885,7 @@ namespace ClosedXML.Excel
         public XLWorkbook SetLockWindows(Boolean value) { LockWindows = value; return this; }
         internal HexBinaryValue LockPassword { get; set; }
         public Boolean IsPasswordProtected { get { return LockPassword != null; } }
-        
+
         public void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword)
         {
             if (IsPasswordProtected && workbookPassword == null)
@@ -896,7 +915,7 @@ namespace ClosedXML.Excel
             LockStructure = lockStructure;
             LockWindows = lockWindows;
         }
-        
+
         public void Protect()
         {
             Protect(true);

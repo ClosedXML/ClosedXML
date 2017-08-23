@@ -159,7 +159,7 @@ namespace ClosedXML.Excel.Drawings
                 if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
                     throw new ArgumentException($"Picture names cannot contain any of the following characters: {InvalidNameChars}");
 
-                if (XLHelper.IsNullOrWhiteSpace(value))
+                if (String.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Picture names cannot be empty");
 
                 if (value.Length > 31)

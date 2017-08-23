@@ -500,6 +500,14 @@ namespace ClosedXML.Excel
                             if (pivotTableDefinition.ShowError != null && pivotTableDefinition.ErrorCaption != null)
                                 pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
 
+                            // Subtotal configuration
+                            if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && pf.SubtotalTop.Value))
+                                pt.SetSubtotals(XLPivotSubtotals.AtTop);
+                            else if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && !pf.SubtotalTop.Value))
+                                pt.SetSubtotals(XLPivotSubtotals.AtBottom);
+                            else
+                                pt.SetSubtotals(XLPivotSubtotals.DoNotShow);
+
                             // Row labels
                             if (pivotTableDefinition.RowFields != null)
                             {
@@ -725,7 +733,7 @@ namespace ClosedXML.Excel
                 if (shape != null) break;
             }
 
-            if (xdoc == null) throw new Exception("Could not load comments file");
+            if (xdoc == null) throw new ArgumentException("Could not load comments file");
             return xdoc;
         }
 
@@ -1223,7 +1231,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.SharedString)
                 {
-                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                     {
                         var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture)];
                         ParseCellValue(sharedString, xlCell);
@@ -1235,7 +1243,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
-                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                     xlCell._dataType = XLCellValues.DateTime;
                 }
@@ -1247,7 +1255,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
-                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
 
                     if (s == null)
@@ -1265,7 +1273,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
 
                     if (s.NumberingFormats != null &&
@@ -1557,7 +1565,7 @@ namespace ClosedXML.Excel
                 return XLCellValues.Text;
             else
             {
-                if (!XLHelper.IsNullOrWhiteSpace(numberFormat.Format))
+                if (!String.IsNullOrWhiteSpace(numberFormat.Format))
                 {
                     var dataType = GetDataTypeFromFormat(numberFormat.Format);
                     return dataType.HasValue ? dataType.Value : XLCellValues.Number;
@@ -1772,7 +1780,7 @@ namespace ClosedXML.Excel
             foreach (DataValidation dvs in dataValidations.Elements<DataValidation>())
             {
                 String txt = dvs.SequenceOfReferences.InnerText;
-                if (XLHelper.IsNullOrWhiteSpace(txt)) continue;
+                if (String.IsNullOrWhiteSpace(txt)) continue;
                 foreach (var dvt in txt.Split(' ').Select(rangeAddress => ws.Range(rangeAddress).DataValidation))
                 {
                     if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
@@ -1820,7 +1828,7 @@ namespace ClosedXML.Excel
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
                         conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
 
-                    if (fr.Text != null && !XLHelper.IsNullOrWhiteSpace(fr.Text))
+                    if (fr.Text != null && !String.IsNullOrWhiteSpace(fr.Text))
                         conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
 
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
