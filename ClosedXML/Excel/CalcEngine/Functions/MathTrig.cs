@@ -367,10 +367,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Mod(List<Expression> p)
         {
-            Int32 n = (int)Math.Abs(p[0]);
-            Int32 d = (int)p[1];
-            var ret = n % d;
-            return d < 0 ? ret * -1 : ret;
+            double number = p[0];
+            double divisor = p[1];
+
+            return number - Math.Floor(number / divisor) * divisor;
         }
 
         private static object MRound(List<Expression> p)
