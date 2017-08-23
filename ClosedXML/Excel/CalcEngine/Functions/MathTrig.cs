@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("FACT", 1, Fact);
             ce.RegisterFunction("FACTDOUBLE", 1, FactDouble);
             ce.RegisterFunction("FLOOR", 1, 2, Floor);
-            //ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
+            ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
             ce.RegisterFunction("GCD", 1, 255, Gcd);
             ce.RegisterFunction("INT", 1, Int);
             ce.RegisterFunction("LCM", 1, 255, Lcm);
@@ -137,6 +137,23 @@ namespace ClosedXML.Excel.CalcEngine
                 return Math.Floor(number);
             else
                 return Math.Floor(number / significance) * significance;
+        }
+
+        private static object FloorMath(List<Expression> p)
+        {
+            double number = p[0];
+            double significance = 1;
+            if (p.Count > 1) significance = p[1];
+
+            double mode = 0;
+            if (p.Count > 2) mode = p[2];
+
+            if (number >= 0)
+                return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
+            else if (mode >= 0)
+                return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
+            else
+                return -Math.Floor(-number / Math.Abs(significance)) * Math.Abs(significance);
         }
 
         private static object Int(List<Expression> p)
