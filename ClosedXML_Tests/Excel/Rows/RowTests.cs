@@ -207,6 +207,10 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(20, ws.Row(4).Height);
                 Assert.AreEqual(25, ws.Row(5).Height);
                 Assert.AreEqual(35, ws.Row(6).Height);
+
+                Assert.AreEqual(20, ws.Row(3).Height);
+                ws.Row(3).ClearHeight();
+                Assert.AreEqual(ws.RowHeight, ws.Row(3).Height);
             }
         }
 
