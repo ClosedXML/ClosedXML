@@ -140,5 +140,38 @@ namespace ClosedXML_Tests.Excel
                 Assert.Throws<ArgumentException>(() => wb.NamedRanges.Add("MyRange", "A1:C1"));
             }
         }
+
+        [Test]
+        public void NamedRangesWhenCopyingWorksheets()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet("Sheet1");
+                ws1.FirstCell().Value = Enumerable.Range(1, 10);
+                wb.NamedRanges.Add("wbNamedRange", ws1.Range("A1:A10"));
+                ws1.NamedRanges.Add("wsNamedRange", ws1.Range("A3"));
+
+                var ws2 = wb.AddWorksheet("Sheet2");
+                ws2.FirstCell().Value = Enumerable.Range(101, 10);
+                ws1.NamedRanges.Add("wsNamedRangeAcrossSheets", ws2.Range("A4"));
+
+                ws1.Cell("C1").FormulaA1 = "=wbNamedRange";
+                ws1.Cell("C2").FormulaA1 = "=wsNamedRange";
+                ws1.Cell("C3").FormulaA1 = "=wsNamedRangeAcrossSheets";
+
+                Assert.AreEqual(1, ws1.Cell("C1").Value);
+                Assert.AreEqual(3, ws1.Cell("C2").Value);
+                Assert.AreEqual(104, ws1.Cell("C3").Value);
+
+                var wsCopy = ws1.CopyTo("Copy");
+                Assert.AreEqual(1, wsCopy.Cell("C1").Value);
+                Assert.AreEqual(3, wsCopy.Cell("C2").Value);
+                Assert.AreEqual(104, wsCopy.Cell("C3").Value);
+
+                Assert.AreEqual("Sheet1!A1:A10", wb.NamedRange("wbNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
+                Assert.AreEqual("Copy!A3:A3", wsCopy.NamedRange("wsNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
+                Assert.AreEqual("Sheet2!A4:A4", wsCopy.NamedRange("wsNamedRangeAcrossSheets").Ranges.First().RangeAddress.ToStringRelative(true));
+            }
+        }
     }
 }
