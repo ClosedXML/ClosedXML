@@ -241,12 +241,12 @@ namespace ClosedXML.Excel
 
             // Ensure all RelId's have been added to the context
             context.RelIdGenerator.AddValues(workbookPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
-            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !XLHelper.IsNullOrWhiteSpace(ws.RelId)).Select(ws => ws.RelId), RelType.Workbook);
-            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !XLHelper.IsNullOrWhiteSpace(ws.LegacyDrawingId)).Select(ws => ws.LegacyDrawingId), RelType.Workbook);
+            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !String.IsNullOrWhiteSpace(ws.RelId)).Select(ws => ws.RelId), RelType.Workbook);
+            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !String.IsNullOrWhiteSpace(ws.LegacyDrawingId)).Select(ws => ws.LegacyDrawingId), RelType.Workbook);
             context.RelIdGenerator.AddValues(WorksheetsInternal
                 .Cast<XLWorksheet>()
                 .SelectMany(ws => ws.Tables.Cast<XLTable>())
-                .Where(t => !XLHelper.IsNullOrWhiteSpace(t.RelId))
+                .Where(t => !String.IsNullOrWhiteSpace(t.RelId))
                 .Select(t => t.RelId), RelType.Workbook);
 
             var extendedFilePropertiesPart = document.ExtendedFilePropertiesPart ??
@@ -303,7 +303,7 @@ namespace ClosedXML.Excel
                     var vmlDrawingPart = worksheetPart.VmlDrawingParts.FirstOrDefault();
                     if (vmlDrawingPart == null)
                     {
-                        if (XLHelper.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
+                        if (String.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
                         {
                             worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Workbook);
                             worksheet.LegacyDrawingIsNew = true;
@@ -473,7 +473,7 @@ namespace ClosedXML.Excel
 
             if (Properties.Manager != null)
             {
-                if (!XLHelper.IsNullOrWhiteSpace(Properties.Manager))
+                if (!String.IsNullOrWhiteSpace(Properties.Manager))
                 {
                     if (properties.Manager == null)
                         properties.Manager = new Manager();
@@ -486,7 +486,7 @@ namespace ClosedXML.Excel
 
             if (Properties.Company == null) return;
 
-            if (!XLHelper.IsNullOrWhiteSpace(Properties.Company))
+            if (!String.IsNullOrWhiteSpace(Properties.Company))
             {
                 if (properties.Company == null)
                     properties.Company = new Company();
@@ -616,7 +616,7 @@ namespace ClosedXML.Excel
             foreach (var xlSheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
                 string rId;
-                if (xlSheet.SheetId == 0 && XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
+                if (xlSheet.SheetId == 0 && String.IsNullOrWhiteSpace(xlSheet.RelId))
                 {
                     rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
@@ -628,7 +628,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    if (XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
+                    if (String.IsNullOrWhiteSpace(xlSheet.RelId))
                     {
                         rId = String.Format("rId{0}", xlSheet.SheetId);
                         context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
@@ -773,7 +773,7 @@ namespace ClosedXML.Excel
                     if (!nr.Visible)
                         definedName.Hidden = BooleanValue.FromBoolean(true);
 
-                    if (!XLHelper.IsNullOrWhiteSpace(nr.Comment))
+                    if (!String.IsNullOrWhiteSpace(nr.Comment))
                         definedName.Comment = nr.Comment;
                     definedNames.AppendChild(definedName);
                 }
@@ -827,7 +827,7 @@ namespace ClosedXML.Excel
                 if (!nr.Visible)
                     definedName.Hidden = BooleanValue.FromBoolean(true);
 
-                if (!XLHelper.IsNullOrWhiteSpace(nr.Comment))
+                if (!String.IsNullOrWhiteSpace(nr.Comment))
                     definedName.Comment = nr.Comment;
                 definedNames.AppendChild(definedName);
             }
@@ -873,7 +873,7 @@ namespace ClosedXML.Excel
                             w.Internals.CellsCollection.GetCells(
                                 c => ((c.DataType == XLCellValues.Text && c.ShareString) || c.HasRichText)
                                      && (c as XLCell).InnerText.Length > 0
-                                     && XLHelper.IsNullOrWhiteSpace(c.FormulaA1)
+                                     && String.IsNullOrWhiteSpace(c.FormulaA1)
                                 )))
             {
                 c.DataType = XLCellValues.Text;
@@ -1019,7 +1019,7 @@ namespace ClosedXML.Excel
                 var cellsWithoutFormulas = new HashSet<String>();
                 foreach (var c in worksheet.Internals.CellsCollection.GetCells())
                 {
-                    if (XLHelper.IsNullOrWhiteSpace(c.FormulaA1))
+                    if (String.IsNullOrWhiteSpace(c.FormulaA1))
                         cellsWithoutFormulas.Add(c.Address.ToStringRelative());
                     else
                     {
@@ -1810,7 +1810,7 @@ namespace ClosedXML.Excel
                             tableColumn1.TotalsRowFormula = new TotalsRowFormula(xlField.TotalsRowFormulaA1);
                     }
 
-                    if (!XLHelper.IsNullOrWhiteSpace(xlField.TotalsRowLabel))
+                    if (!String.IsNullOrWhiteSpace(xlField.TotalsRowLabel))
                         tableColumn1.TotalsRowLabel = xlField.TotalsRowLabel;
                 }
                 tableColumns1.AppendChild(tableColumn1);
@@ -1872,7 +1872,7 @@ namespace ClosedXML.Excel
                 var workbookCacheRelId = pt.WorkbookCacheRelId;
                 PivotCache pivotCache;
                 PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart;
-                if (!XLHelper.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
+                if (!String.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
                 {
                     pivotCache = pivotCaches.Cast<PivotCache>().Single(pc => pc.Id.Value == pt.WorkbookCacheRelId);
                     pivotTableCacheDefinitionPart = workbookPart.GetPartById(pt.WorkbookCacheRelId) as PivotTableCacheDefinitionPart;
@@ -1886,18 +1886,18 @@ namespace ClosedXML.Excel
 
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt);
 
-                if (XLHelper.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
+                if (String.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
                     pivotCaches.AppendChild(pivotCache);
 
                 PivotTablePart pivotTablePart;
-                if (XLHelper.IsNullOrWhiteSpace(pt.RelId))
+                if (String.IsNullOrWhiteSpace(pt.RelId))
                     pivotTablePart = worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
                 else
                     pivotTablePart = worksheetPart.GetPartById(pt.RelId) as PivotTablePart;
 
                 GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId, context);
 
-                if (XLHelper.IsNullOrWhiteSpace(pt.RelId))
+                if (String.IsNullOrWhiteSpace(pt.RelId))
                     pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
             }
         }
@@ -2112,6 +2112,21 @@ namespace ClosedXML.Excel
                 IXLPivotField labelField = null;
                 var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
 
+                switch (pt.Subtotals)
+                {
+                    case XLPivotSubtotals.DoNotShow:
+                        pf.DefaultSubtotal = false;
+                        break;
+                    case XLPivotSubtotals.AtBottom:
+                        pf.DefaultSubtotal = true;
+                        pf.SubtotalTop = false;
+                        break;
+                    case XLPivotSubtotals.AtTop:
+                        pf.DefaultSubtotal = true;
+                        pf.SubtotalTop = true;
+                        break;
+                }
+
                 if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     labelField = pt.RowLabels.Single(p => p.SourceName == xlpf.SourceName);
@@ -2135,7 +2150,7 @@ namespace ClosedXML.Excel
 
                 var fieldItems = new Items();
 
-                if (xlpf.SharedStrings.Count > 0)
+                if (xlpf.SharedStrings.Any())
                 {
                     for (uint i = 0; i < xlpf.SharedStrings.Count; i++)
                     {
@@ -2146,7 +2161,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                if (xlpf.Subtotals.Count > 0)
+                if (xlpf.Subtotals.Any())
                 {
                     foreach (var subtotal in xlpf.Subtotals)
                     {
@@ -2211,13 +2226,17 @@ namespace ClosedXML.Excel
                         fieldItems.AppendChild(itemSubtotal);
                     }
                 }
-                else
+                // If the field itself doesn't have subtotals, but the pivot table is set to show pivot tables, add the default item
+                else if (pt.Subtotals != XLPivotSubtotals.DoNotShow)
                 {
                     fieldItems.AppendChild(new Item { ItemType = ItemValues.Default });
                 }
 
-                fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
-                pf.AppendChild(fieldItems);
+                if (fieldItems.Any())
+                {
+                    fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
+                    pf.AppendChild(fieldItems);
+                }
                 pivotFields.AppendChild(pf);
             }
 
@@ -2494,7 +2513,7 @@ namespace ClosedXML.Excel
                 StrokeWeight = String.Format(CultureInfo.InvariantCulture, "{0}pt", c.Comment.Style.ColorsAndLines.LineWeight),
                 InsetMode = c.Comment.Style.Margins.Automatic ? InsetMarginValues.Auto : InsetMarginValues.Custom
             };
-            if (!XLHelper.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
+            if (!String.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
                 shape.Alternate = c.Comment.Style.Web.AlternateText;
 
             return shape;
@@ -2525,7 +2544,7 @@ namespace ClosedXML.Excel
         // https://en.wikipedia.org/wiki/Office_Open_XML_file_formats#DrawingML
         private static Int64 ConvertToEnglishMetricUnits(Int32 pixels, Double resolution)
         {
-            return Convert.ToInt64(914400 * pixels / resolution);
+            return Convert.ToInt64(914400L * pixels / resolution);
         }
 
         private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture, SaveContext context)
@@ -2556,6 +2575,7 @@ namespace ClosedXML.Excel
 
             using (var stream = new MemoryStream())
             {
+                pic.ImageStream.Position = 0;
                 pic.ImageStream.CopyTo(stream);
                 stream.Seek(0, SeekOrigin.Begin);
                 imagePart.FeedData(stream);
@@ -3047,7 +3067,7 @@ namespace ClosedXML.Excel
         {
             var differentialFormat = new DifferentialFormat();
             differentialFormat.Append(GetNewFont(new FontInfo { Font = cf.Style.Font as XLFont }, false));
-            if (!XLHelper.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
+            if (!String.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
             {
                 var numberFormat = new NumberingFormat
                 {
@@ -3691,7 +3711,7 @@ namespace ClosedXML.Excel
         {
             var newXLNumberFormat = new XLNumberFormat();
 
-            if (nf.FormatCode != null && !XLHelper.IsNullOrWhiteSpace(nf.FormatCode.Value))
+            if (nf.FormatCode != null && !String.IsNullOrWhiteSpace(nf.FormatCode.Value))
                 newXLNumberFormat.Format = nf.FormatCode.Value;
             else if (nf.NumberFormatId != null)
                 newXLNumberFormat.NumberFormatId = (Int32)nf.NumberFormatId.Value;
@@ -4300,7 +4320,7 @@ namespace ClosedXML.Excel
 
                 var protection = xlWorksheet.Protection;
                 sheetProtection.Sheet = protection.Protected;
-                if (!XLHelper.IsNullOrWhiteSpace(protection.PasswordHash))
+                if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
                     sheetProtection.Password = protection.PasswordHash;
                 sheetProtection.FormatCells = GetBooleanValue(!protection.FormatCells, true);
                 sheetProtection.FormatColumns = GetBooleanValue(!protection.FormatColumns, true);
@@ -4501,7 +4521,7 @@ namespace ClosedXML.Excel
                             Display = hl.Cell.GetFormattedString()
                         };
                     }
-                    if (!XLHelper.IsNullOrWhiteSpace(hl.Tooltip))
+                    if (!String.IsNullOrWhiteSpace(hl.Tooltip))
                         hyperlink.Tooltip = hl.Tooltip;
                     hyperlinks.AppendChild(hyperlink);
                 }
@@ -4758,7 +4778,7 @@ namespace ClosedXML.Excel
             {
                 worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
                 {
-                    if (!XLHelper.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
+                    if (!String.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
                     {
                         var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
                         worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
@@ -4838,7 +4858,7 @@ namespace ClosedXML.Excel
             }
             else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
             {
-                if (!XLHelper.IsNullOrWhiteSpace(xlCell.InnerText))
+                if (!String.IsNullOrWhiteSpace(xlCell.InnerText))
                 {
                     var cellValue = new CellValue();
                     cellValue.Text = Double.Parse(xlCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();

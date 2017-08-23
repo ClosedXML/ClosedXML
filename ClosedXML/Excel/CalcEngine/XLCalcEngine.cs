@@ -92,13 +92,13 @@ namespace ClosedXML.Excel.CalcEngine
         {
             if (_evaluating)
             {
-                throw new Exception("Circular Reference");
+                throw new InvalidOperationException("Circular Reference");
             }
             try
             {
                 _evaluating = true;
                 var f = cell.FormulaA1;
-                if (XLHelper.IsNullOrWhiteSpace(f))
+                if (String.IsNullOrWhiteSpace(f))
                     return cell.Value;
                 else
                     return new XLCalcEngine(cell.Worksheet).Evaluate(f);

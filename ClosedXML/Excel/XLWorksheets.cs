@@ -77,18 +77,18 @@ namespace ClosedXML.Excel
             if (wss.Any())
                 return wss.First().Value;
 
-            throw new Exception("There isn't a worksheet named '" + sheetName + "'.");
+            throw new ArgumentException("There isn't a worksheet named '" + sheetName + "'.");
         }
 
         public IXLWorksheet Worksheet(Int32 position)
         {
             int wsCount = _worksheets.Values.Count(w => w.Position == position);
             if (wsCount == 0)
-                throw new Exception("There isn't a worksheet associated with that position.");
+                throw new ArgumentException("There isn't a worksheet associated with that position.");
 
             if (wsCount > 1)
             {
-                throw new Exception(
+                throw new ArgumentException(
                     "Can't retrieve a worksheet because there are multiple worksheets associated with that position.");
             }
 
@@ -130,14 +130,14 @@ namespace ClosedXML.Excel
         {
             int wsCount = _worksheets.Values.Count(w => w.Position == position);
             if (wsCount == 0)
-                throw new Exception("There isn't a worksheet associated with that index.");
+                throw new ArgumentException("There isn't a worksheet associated with that index.");
 
             if (wsCount > 1)
-                throw new Exception(
+                throw new ArgumentException(
                     "Can't delete the worksheet because there are multiple worksheets associated with that index.");
 
             var ws = _worksheets.Values.Single(w => w.Position == position);
-            if (!XLHelper.IsNullOrWhiteSpace(ws.RelId) && !Deleted.Contains(ws.RelId))
+            if (!String.IsNullOrWhiteSpace(ws.RelId) && !Deleted.Contains(ws.RelId))
                 Deleted.Add(ws.RelId);
 
             _worksheets.RemoveAll(w => w.Position == position);
@@ -178,7 +178,7 @@ namespace ClosedXML.Excel
 
         public void Rename(String oldSheetName, String newSheetName)
         {
-            if (XLHelper.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName)) return;
+            if (String.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName)) return;
 
             if (_worksheets.Any(ws1 => ws1.Key.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)))
                 throw new ArgumentException(String.Format("A worksheet with the same name ({0}) has already been added.", newSheetName), nameof(newSheetName));
