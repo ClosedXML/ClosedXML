@@ -500,6 +500,14 @@ namespace ClosedXML.Excel
                             if (pivotTableDefinition.ShowError != null && pivotTableDefinition.ErrorCaption != null)
                                 pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
 
+                            // Subtotal configuration
+                            if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && pf.SubtotalTop.Value))
+                                pt.SetSubtotals(XLPivotSubtotals.AtTop);
+                            else if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && !pf.SubtotalTop.Value))
+                                pt.SetSubtotals(XLPivotSubtotals.AtBottom);
+                            else
+                                pt.SetSubtotals(XLPivotSubtotals.DoNotShow);
+
                             // Row labels
                             if (pivotTableDefinition.RowFields != null)
                             {
