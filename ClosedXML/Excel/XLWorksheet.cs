@@ -1547,7 +1547,12 @@ namespace ClosedXML.Excel
             return Pictures.Add(stream, name);
         }
 
-        public Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format)
+        internal IXLPicture AddPicture(Stream stream, string name, int Id)
+        {
+            return (Pictures as XLPictures).Add(stream, name, Id);
+        }
+
+        public IXLPicture AddPicture(Stream stream, XLPictureFormat format)
         {
             return Pictures.Add(stream, format);
         }
