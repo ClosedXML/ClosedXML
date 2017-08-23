@@ -198,7 +198,7 @@ namespace ClosedXML_Tests.Excel
 
                 var workbook = XLWorkbook.OpenFromTemplate(tf1.Path);
                 Assert.True(workbook.Worksheets.Any());
-                Assert.Throws<Exception>(() => workbook.Save());
+                Assert.Throws<InvalidOperationException>(() => workbook.Save());
 
                 workbook.SaveAs(tf2.Path);
             }
