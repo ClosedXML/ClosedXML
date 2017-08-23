@@ -442,7 +442,7 @@ namespace ClosedXML.Excel
         {
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
-                throw new Exception("This is a new file, please use one of the SaveAs methods.");
+                throw new InvalidOperationException("This is a new file, please use one of the SaveAs methods.");
 
             if (_loadSource == XLLoadSource.Stream)
             {
@@ -502,7 +502,8 @@ namespace ClosedXML.Excel
         private static SpreadsheetDocumentType GetSpreadsheetDocumentType(string filePath)
         {
             var extension = Path.GetExtension(filePath);
-            if (extension == null) throw new Exception("Empty extension is not supported.");
+
+            if (extension == null) throw new ArgumentException("Empty extension is not supported.");
             extension = extension.Substring(1).ToLowerInvariant();
 
             switch (extension)
@@ -522,7 +523,7 @@ namespace ClosedXML.Excel
         private void checkForWorksheetsPresent()
         {
             if (Worksheets.Count() == 0)
-                throw new Exception("Workbooks need at least one worksheet.");
+                throw new InvalidOperationException("Workbooks need at least one worksheet.");
         }
 
         /// <summary>

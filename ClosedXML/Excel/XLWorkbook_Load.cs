@@ -725,7 +725,7 @@ namespace ClosedXML.Excel
                 if (shape != null) break;
             }
 
-            if (xdoc == null) throw new Exception("Could not load comments file");
+            if (xdoc == null) throw new ArgumentException("Could not load comments file");
             return xdoc;
         }
 
