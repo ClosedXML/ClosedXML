@@ -1581,12 +1581,12 @@ namespace ClosedXML.Excel
         {
             return Pictures.Add(imageFile, name);
         }
-        public Boolean IsEntireRow()
+        public override Boolean IsEntireRow()
         {
             return true;
         }
 
-        public Boolean IsEntireColumn()
+        public override Boolean IsEntireColumn()
         {
             return true;
         }

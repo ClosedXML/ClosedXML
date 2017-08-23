@@ -774,12 +774,12 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        public new Boolean IsEmpty()
+        public override Boolean IsEmpty()
         {
             return IsEmpty(false);
         }
 
-        public new Boolean IsEmpty(Boolean includeFormats)
+        public override Boolean IsEmpty(Boolean includeFormats)
         {
             if (includeFormats && !Style.Equals(Worksheet.Style))
                 return false;
@@ -787,12 +787,12 @@ namespace ClosedXML.Excel
             return base.IsEmpty(includeFormats);
         }
 
-        public Boolean IsEntireRow()
+        public override Boolean IsEntireRow()
         {
             return false;
         }
 
-        public Boolean IsEntireColumn()
+        public override Boolean IsEntireColumn()
         {
             return true;
         }

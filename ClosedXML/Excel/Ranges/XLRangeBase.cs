@@ -506,24 +506,24 @@ namespace ClosedXML.Excel
             return Cells().Any(c => c.IsMerged());
         }
 
-        public Boolean IsEmpty()
+        public virtual Boolean IsEmpty()
         {
             return !CellsUsed().Any() || CellsUsed().Any(c => c.IsEmpty());
         }
 
-        public Boolean IsEmpty(Boolean includeFormats)
+        public virtual Boolean IsEmpty(Boolean includeFormats)
         {
             return !CellsUsed(includeFormats).Cast<XLCell>().Any() ||
                    CellsUsed(includeFormats).Cast<XLCell>().Any(c => c.IsEmpty(includeFormats));
         }
 
-        public Boolean IsEntireRow()
+        public virtual Boolean IsEntireRow()
         {
             return RangeAddress.FirstAddress.ColumnNumber == 1
                    && RangeAddress.LastAddress.ColumnNumber == XLHelper.MaxColumnNumber;
         }
 
-        public Boolean IsEntireColumn()
+        public virtual Boolean IsEntireColumn()
         {
             return RangeAddress.FirstAddress.RowNumber == 1
                    && RangeAddress.LastAddress.RowNumber == XLHelper.MaxRowNumber;
