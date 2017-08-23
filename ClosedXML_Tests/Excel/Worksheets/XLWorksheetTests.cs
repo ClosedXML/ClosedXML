@@ -140,5 +140,25 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(6, value);
             }
         }
+
+        [Test]
+        public void CanRenameWorksheet()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet("Sheet1");
+                var ws2 = wb.AddWorksheet("Sheet2");
+
+                ws1.Name = "New sheet name";
+                Assert.AreEqual("New sheet name", ws1.Name);
+
+                ws2.Name = "sheet2";
+                Assert.AreEqual("sheet2", ws2.Name);
+
+                Assert.Throws<ArgumentException>(() => ws1.Name = "SHEET2");
+
+
+            }
+        }
     }
 }

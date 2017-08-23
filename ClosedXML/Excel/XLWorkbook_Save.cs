@@ -87,7 +87,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private bool Validate(SpreadsheetDocument package)
+        private Boolean Validate(SpreadsheetDocument package)
         {
             var backupCulture = Thread.CurrentThread.CurrentCulture;
 
