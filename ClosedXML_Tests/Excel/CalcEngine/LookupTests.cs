@@ -122,11 +122,11 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Vlookup_Exceptions()
         {
-            Assert.That(() => workbook.Evaluate(@"=VLOOKUP("""",Data!$B$2:$I$71,3,FALSE)"), Throws.TypeOf<ApplicationException>());
-            Assert.That(() => workbook.Evaluate(@"=VLOOKUP(50,Data!$B$2:$I$71,3,FALSE)"), Throws.TypeOf<ApplicationException>());
-            Assert.That(() => workbook.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"), Throws.TypeOf<ApplicationException>());
+            Assert.That(() => workbook.Evaluate(@"=VLOOKUP("""",Data!$B$2:$I$71,3,FALSE)"), Throws.TypeOf<ArgumentException>());
+            Assert.That(() => workbook.Evaluate(@"=VLOOKUP(50,Data!$B$2:$I$71,3,FALSE)"), Throws.TypeOf<ArgumentException>());
+            Assert.That(() => workbook.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"), Throws.TypeOf<ArgumentOutOfRangeException>());
 
-            Assert.That(() => workbook.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,9,TRUE)"), Throws.TypeOf<ApplicationException>());
+            Assert.That(() => workbook.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,9,TRUE)"), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
     }
 }
