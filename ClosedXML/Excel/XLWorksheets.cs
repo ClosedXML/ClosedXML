@@ -180,7 +180,8 @@ namespace ClosedXML.Excel
         {
             if (String.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName)) return;
 
-            if (_worksheets.Any(ws1 => ws1.Key.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)))
+            if (!oldSheetName.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)
+                && _worksheets.Any(ws1 => ws1.Key.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)))
                 throw new ArgumentException(String.Format("A worksheet with the same name ({0}) has already been added.", newSheetName), nameof(newSheetName));
 
             var ws = _worksheets[oldSheetName];

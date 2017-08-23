@@ -271,11 +271,15 @@ namespace ClosedXML.Excel
 
                 #region LoadTables
 
-                foreach (TableDefinitionPart tablePart in wsPart.TableDefinitionParts)
+                foreach (var tablePart in wsPart.TableDefinitionParts)
                 {
                     var dTable = tablePart.Table;
-                    string reference = dTable.Reference.Value;
-                    XLTable xlTable = ws.Range(reference).CreateTable(dTable.Name, false) as XLTable;
+                    String reference = dTable.Reference.Value;
+                    String tableName = dTable?.Name ?? dTable.DisplayName ?? string.Empty;
+                    if (String.IsNullOrWhiteSpace(tableName))
+                        throw new InvalidDataException("The table name is missing.");
+
+                    XLTable xlTable = ws.Range(reference).CreateTable(tableName, false) as XLTable;
                     if (dTable.HeaderRowCount != null && dTable.HeaderRowCount == 0)
                     {
                         xlTable._showHeaderRow = false;
@@ -1076,7 +1080,7 @@ namespace ClosedXML.Excel
                         else
                         {
                             if (!Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Any(nr => nr.Name == name))
-                                Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Add(name, text, comment).Visible = visible;
+                                (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
                         }
                     }
                 }
@@ -1087,7 +1091,6 @@ namespace ClosedXML.Excel
 
         private IEnumerable<String> validateDefinedNames(IEnumerable<String> definedNames)
         {
-            var fixedNames = new List<String>();
             var sb = new StringBuilder();
             foreach (string testName in definedNames)
             {

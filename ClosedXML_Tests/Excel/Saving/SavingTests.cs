@@ -34,6 +34,35 @@ namespace ClosedXML_Tests.Excel.Saving
         }
 
         [Test]
+        public void CanSaveFileMultipleTimesAfterDeletingWorksheet()
+        {
+            // https://github.com/ClosedXML/ClosedXML/issues/435
+
+
+            using (var ms = new MemoryStream())
+            {
+                using (XLWorkbook book1 = new XLWorkbook())
+                {
+                    book1.AddWorksheet("sheet1");
+                    book1.AddWorksheet("sheet2");
+
+                    book1.SaveAs(ms);
+                }
+                ms.Position = 0;
+
+                using (XLWorkbook book2 = new XLWorkbook(ms))
+                {
+                    var ws = book2.Worksheet(1);
+                    Assert.AreEqual("sheet1", ws.Name);
+                    ws.Delete();
+                    book2.Save();
+                    book2.Save();
+                }
+            }
+        }
+
+
+        [Test]
         public void CanSaveAndValidateFileInAnotherCulture()
         {
             string[] cultures = new string[] { "it", "de-AT" };

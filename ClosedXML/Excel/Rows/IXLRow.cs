@@ -15,6 +15,11 @@ namespace ClosedXML.Excel
         Double Height { get; set; }
 
         /// <summary>
+        /// Clears the height for the row and defaults it to the spreadsheet row height.
+        /// </summary>
+        void ClearHeight();
+
+        /// <summary>
         /// Deletes this row and shifts the rows below this one accordingly.
         /// </summary>
         void Delete();

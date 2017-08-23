@@ -1,4 +1,4 @@
-using FastMember;
+﻿using FastMember;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -221,6 +221,9 @@ namespace ClosedXML.Excel
 
         public IXLCell SetValue<T>(T value)
         {
+            if (value == null)
+                return this.Clear(XLClearOptions.Contents);
+
             FormulaA1 = String.Empty;
             _richText = null;
             var style = GetStyleForRead();
@@ -437,6 +440,8 @@ namespace ClosedXML.Excel
                 FormulaA1 = String.Empty;
 
                 if (value as XLCells != null) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
+
+                if (SetTableHeader(value)) return;
 
                 if (SetRangeRows(value)) return;
 
@@ -1486,6 +1491,23 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLStylized Members
+
+        private bool SetTableHeader(object value)
+        {
+            foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
+            {
+                var cells = table.HeadersRow().CellsUsed(c => c.Address.Equals(this.Address));
+                if (cells.Any())
+                {
+                    var oldName = cells.First().GetString();
+                    var field = table.Field(oldName);
+                    field.Name = value.ToString();
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         private bool SetRangeColumns(object value)
         {

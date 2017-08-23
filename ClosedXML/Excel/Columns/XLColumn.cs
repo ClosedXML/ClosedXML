@@ -786,5 +786,15 @@ namespace ClosedXML.Excel
 
             return base.IsEmpty(includeFormats);
         }
+
+        public Boolean IsEntireRow()
+        {
+            return false;
+        }
+
+        public Boolean IsEntireColumn()
+        {
+            return true;
+        }
     }
 }

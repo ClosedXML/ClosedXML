@@ -606,11 +606,18 @@ namespace ClosedXML.Excel
                 }
             }
 
-            foreach (IXLNamedRange r in NamedRanges)
+            foreach (var nr in NamedRanges)
             {
                 var ranges = new XLRanges();
-                r.Ranges.ForEach(ranges.Add);
-                targetSheet.NamedRanges.Add(r.Name, ranges);
+                foreach (var r in nr.Ranges)
+                {
+                    if (this == r.Worksheet)
+                        // Named ranges on the source worksheet have to point to the new destination sheet
+                        ranges.Add(targetSheet.Range(r.RangeAddress.FirstAddress.RowNumber, r.RangeAddress.FirstAddress.ColumnNumber, r.RangeAddress.LastAddress.RowNumber, r.RangeAddress.LastAddress.ColumnNumber));
+                    else
+                        ranges.Add(r);
+                }
+                targetSheet.NamedRanges.Add(nr.Name, ranges);
             }
 
             foreach (XLTable t in Tables.Cast<XLTable>())
@@ -1568,6 +1575,15 @@ namespace ClosedXML.Excel
         public IXLPicture AddPicture(string imageFile, string name)
         {
             return Pictures.Add(imageFile, name);
+        }
+        public Boolean IsEntireRow()
+        {
+            return true;
+        }
+
+        public Boolean IsEntireColumn()
+        {
+            return true;
         }
     }
 }

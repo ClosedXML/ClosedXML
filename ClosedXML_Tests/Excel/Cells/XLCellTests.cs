@@ -404,5 +404,27 @@ namespace ClosedXML_Tests
                 Assert.AreEqual("\u0018", wb.Worksheets.First().FirstCell().Value);
             }
         }
+
+        [Test]
+        public void CanClearCellValueBySettingNullValue()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var cell = ws.FirstCell();
+
+                cell.Value = "Test";
+                Assert.AreEqual("Test", cell.Value);
+                Assert.AreEqual(XLCellValues.Text, cell.DataType);
+
+                string s = null;
+                cell.SetValue(s);
+                Assert.AreEqual(string.Empty, cell.Value);
+
+                cell.Value = "Test";
+                cell.Value = null;
+                Assert.AreEqual(string.Empty, cell.Value);
+            }
+        }
     }
 }
