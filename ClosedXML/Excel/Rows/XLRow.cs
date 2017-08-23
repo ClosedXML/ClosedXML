@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
-
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -15,7 +14,7 @@ namespace ClosedXML.Excel
         private Boolean _isHidden;
         private Int32 _outlineLevel;
 
-        #endregion
+        #endregion Private fields
 
         #region Constructor
 
@@ -44,7 +43,7 @@ namespace ClosedXML.Excel
             _height = row._height;
             IsReference = row.IsReference;
             if (IsReference)
-				SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
+                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
 
             _collapsed = row._collapsed;
             _isHidden = row._isHidden;
@@ -53,7 +52,7 @@ namespace ClosedXML.Excel
             SetStyle(row.GetStyleId());
         }
 
-        #endregion
+        #endregion Constructor
 
         public Boolean IsReference { get; private set; }
 
@@ -108,6 +107,7 @@ namespace ClosedXML.Excel
         #region IXLRow Members
 
         private Boolean _loading;
+
         public Boolean Loading
         {
             get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Loading : _loading; }
@@ -121,6 +121,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean HeightChanged { get; private set; }
+
         public Double Height
         {
             get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Height : _height; }
@@ -291,7 +292,7 @@ namespace ClosedXML.Excel
                         foreach (IXLRichString rt in c.RichText)
                         {
                             String formattedString = rt.Text;
-                            var arr = formattedString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+                            var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                             Int32 arrCount = arr.Count();
                             for (Int32 i = 0; i < arrCount; i++)
                             {
@@ -305,7 +306,7 @@ namespace ClosedXML.Excel
                     else
                     {
                         String formattedString = c.GetFormattedString();
-                        var arr = formattedString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+                        var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                         Int32 arrCount = arr.Count();
                         for (Int32 i = 0; i < arrCount; i++)
                         {
@@ -338,7 +339,7 @@ namespace ClosedXML.Excel
                     }
                 }
                 else
-                    thisHeight = c.Style.Font.GetHeight( fontCache);
+                    thisHeight = c.Style.Font.GetHeight(fontCache);
 
                 if (thisHeight >= maxHeight)
                 {
@@ -520,15 +521,15 @@ namespace ClosedXML.Excel
         IXLRangeRow IXLRow.CopyTo(IXLCell target)
         {
             using (var asRange = AsRange())
-                using (var copy = asRange.CopyTo(target))
-                    return copy.Row(1);
+            using (var copy = asRange.CopyTo(target))
+                return copy.Row(1);
         }
 
         IXLRangeRow IXLRow.CopyTo(IXLRangeBase target)
         {
             using (var asRange = AsRange())
-                using (var copy = asRange.CopyTo(target))
-                    return copy.Row(1);
+            using (var copy = asRange.CopyTo(target))
+                return copy.Row(1);
         }
 
         public IXLRow CopyTo(IXLRow row)
@@ -581,7 +582,7 @@ namespace ClosedXML.Excel
             return Row(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
         }
 
-        #endregion
+        #endregion IXLRow Members
 
         public override XLRange AsRange()
         {
@@ -676,7 +677,7 @@ namespace ClosedXML.Excel
             return RowShift(step * -1);
         }
 
-        #endregion
+        #endregion XLRow Above
 
         #region XLRow Below
 
@@ -700,7 +701,7 @@ namespace ClosedXML.Excel
             return RowShift(step);
         }
 
-        #endregion
+        #endregion XLRow Below
 
         public new Boolean IsEmpty()
         {
@@ -715,6 +716,14 @@ namespace ClosedXML.Excel
             return base.IsEmpty(includeFormats);
         }
 
+        public Boolean IsEntireRow()
+        {
+            return true;
+        }
 
+        public Boolean IsEntireColumn()
+        {
+            return false;
+        }
     }
 }
