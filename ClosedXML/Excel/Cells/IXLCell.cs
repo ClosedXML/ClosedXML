@@ -173,6 +173,14 @@ namespace ClosedXML.Excel
         IXLRange InsertData(IEnumerable data);
 
         /// <summary>
+        /// Inserts the IEnumerable data elements and returns the range it occupies.
+        /// </summary>
+        /// <param name="data">The IEnumerable data.</param>
+        /// <param name="tranpose">if set to <c>true</c> the data will be transposed before inserting.</param>
+        /// <returns></returns>
+        IXLRange InsertData(IEnumerable data, Boolean tranpose);
+
+        /// <summary>
         /// Inserts the IEnumerable data elements as a table and returns it.
         /// <para>The new table will receive a generic name: Table#</para>
         /// </summary>
