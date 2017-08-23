@@ -80,6 +80,7 @@
     <Compile Include="Excel\CalcEngine\InformationTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
+    <Compile Include="Excel\CalcEngine\MathTrigTests.cs" />
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Comments\CommentsTests.cs" />
