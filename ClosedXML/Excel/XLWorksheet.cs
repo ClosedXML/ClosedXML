@@ -176,7 +176,7 @@ namespace ClosedXML.Excel
                     throw new ArgumentException("Worksheet names cannot contain any of the following characters: " +
                                                 InvalidNameChars);
 
-                if (XLHelper.IsNullOrWhiteSpace(value))
+                if (String.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Worksheet names cannot be empty");
 
                 if (value.Length > 31)
@@ -651,7 +651,7 @@ namespace ClosedXML.Excel
 
         private String ReplaceRelativeSheet(string newSheetName, String value)
         {
-            if (XLHelper.IsNullOrWhiteSpace(value)) return value;
+            if (String.IsNullOrWhiteSpace(value)) return value;
 
             var newValue = new StringBuilder();
             var addresses = value.Split(',');
@@ -1568,6 +1568,15 @@ namespace ClosedXML.Excel
         public IXLPicture AddPicture(string imageFile, string name)
         {
             return Pictures.Add(imageFile, name);
+        }
+        public Boolean IsEntireRow()
+        {
+            return true;
+        }
+
+        public Boolean IsEntireColumn()
+        {
+            return true;
         }
     }
 }

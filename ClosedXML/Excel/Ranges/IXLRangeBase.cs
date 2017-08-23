@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace ClosedXML.Excel
 {
@@ -8,7 +9,7 @@ namespace ClosedXML.Excel
         Worksheet
     }
 
-    public interface IXLRangeBase: IDisposable
+    public interface IXLRangeBase : IDisposable
     {
         IXLWorksheet Worksheet { get; }
 
@@ -64,7 +65,6 @@ namespace ClosedXML.Excel
 
         IXLHyperlinks Hyperlinks { get; }
 
-
         /// <summary>
         ///   Returns the collection of cells.
         /// </summary>
@@ -92,6 +92,15 @@ namespace ClosedXML.Excel
         IXLCells CellsUsed(Func<IXLCell, Boolean> predicate);
 
         IXLCells CellsUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate);
+
+        /// <summary>
+        /// Searches the cells' contents for a given piece of text
+        /// </summary>
+        /// <param name="searchText">The search text.</param>
+        /// <param name="compareOptions">The compare options.</param>
+        /// <param name="searchFormulae">if set to <c>true</c> search formulae instead of cell values.</param>
+        /// <returns></returns>
+        IXLCells Search(String searchText, CompareOptions compareOptions = CompareOptions.Ordinal, Boolean searchFormulae = false);
 
         /// <summary>
         ///   Returns the first cell of this range.
@@ -236,14 +245,18 @@ namespace ClosedXML.Excel
         IXLRange AsRange();
 
         Boolean IsMerged();
+
         Boolean IsEmpty();
+
         Boolean IsEmpty(Boolean includeFormats);
 
+        Boolean IsEntireRow();
+
+        Boolean IsEntireColumn();
 
         IXLPivotTable CreatePivotTable(IXLCell targetCell);
+
         IXLPivotTable CreatePivotTable(IXLCell targetCell, String name);
-
-
 
         //IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
 

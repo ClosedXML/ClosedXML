@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -65,7 +65,7 @@ namespace ClosedXML.Excel
                     foreach (var cell in headersRow.Cells())
                     {
                         var name = cell.GetString();
-                        if (XLHelper.IsNullOrWhiteSpace(name))
+                        if (String.IsNullOrWhiteSpace(name))
                         {
                             name = "Column" + (cellPos + 1);
                             cell.SetValue(name);
@@ -104,6 +104,16 @@ namespace ClosedXML.Excel
             {
                 _fieldNames.Add(name, new XLTableField(this, name) { Index = cellPos++ });
             }
+        }
+
+        internal void RenameField(String oldName, String newName)
+        {
+            if (!_fieldNames.ContainsKey(oldName))
+                throw new ArgumentException("The field does not exist in this table", "oldName");
+
+            var field = _fieldNames[oldName];
+            _fieldNames.Remove(oldName);
+            _fieldNames.Add(newName, field);
         }
 
 
@@ -395,7 +405,7 @@ namespace ClosedXML.Excel
             Int32 co = 1;
             foreach (IXLCell c in range.Row(1).Cells())
             {
-                if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                     c.Value = GetUniqueName("Column" + co.ToInvariantString());
                 _uniqueNames.Add(c.GetString());
                 co++;
@@ -424,6 +434,10 @@ namespace ClosedXML.Excel
 
         public Int32 GetFieldIndex(String name)
         {
+            // There is a discrepancy in the way headers with line breaks are stored.
+            // The entry in the table definition will contain \r\n
+            // but the shared string value of the actual cell will contain only \n
+            name = name.Replace("\r\n", "\n");
             if (FieldNames.ContainsKey(name))
                 return FieldNames[name].Index;
 
@@ -445,7 +459,7 @@ namespace ClosedXML.Excel
                     Int32 co = 1;
                     foreach (IXLCell c in headersRow.Cells())
                     {
-                        if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                        if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                             c.Value = GetUniqueName("Column" + co.ToInvariantString());
                         _uniqueNames.Add(c.GetString());
                         co++;

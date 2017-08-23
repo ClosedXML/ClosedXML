@@ -117,7 +117,7 @@ namespace ClosedXML.Excel
         public static bool IsValidColumn(string column)
         {
             var length = column.Length;
-            if (IsNullOrWhiteSpace(column) || length > 3)
+            if (String.IsNullOrWhiteSpace(column) || length > 3)
                 return false;
 
             var theColumn = column.ToUpper();
@@ -153,7 +153,7 @@ namespace ClosedXML.Excel
 
         public static bool IsValidA1Address(string address)
         {
-            if (IsNullOrWhiteSpace(address))
+            if (String.IsNullOrWhiteSpace(address))
                 return false;
 
             address = address.Replace("$", "");
@@ -224,26 +224,6 @@ namespace ClosedXML.Excel
             ws.EventTrackingEnabled = tracking;
 
             return rows;
-        }
-
-        public static bool IsNullOrWhiteSpace(string value)
-        {
-#if NET4
-            return String.IsNullOrWhiteSpace(value);
-#else
-            if (value != null)
-            {
-                var length = value.Length;
-                for (int i = 0; i < length; i++)
-                {
-                    if (!char.IsWhiteSpace(value[i]))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-#endif
         }
 
         private static readonly Regex A1RegexRelative = new Regex(
