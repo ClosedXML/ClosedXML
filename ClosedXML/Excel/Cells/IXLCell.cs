@@ -330,6 +330,7 @@ namespace ClosedXML.Excel
         IXLCell SetActive(Boolean value = true);
 
         Boolean HasFormula { get; }
+        Boolean HasArrayFormula { get; }
 
         IXLRangeAddress FormulaReference { get; set; }
     }

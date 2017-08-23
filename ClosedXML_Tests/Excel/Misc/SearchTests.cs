@@ -66,8 +66,8 @@ namespace ClosedXML_Tests.Excel.Misc
                 Assert.AreEqual("C2", foundCells.First().Address.ToString());
 
                 foundCells = ws.Search("A2", CompareOptions.Ordinal, true);
-                Assert.AreEqual(4, foundCells.Count());
-                Assert.AreEqual("C2,D2,B6,A11", string.Join(",", foundCells.Select(c => c.Address.ToString()).ToArray()));
+                Assert.AreEqual(6, foundCells.Count());
+                Assert.AreEqual("C2,D2,B6,C6,D6,A11", string.Join(",", foundCells.Select(c => c.Address.ToString()).ToArray()));
 
                 foundCells = ws.Search("RC", CompareOptions.Ordinal, true);
                 Assert.AreEqual(3, foundCells.Count());
