@@ -83,6 +83,22 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void InsertData2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRange range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" }, false);
+            Assert.AreEqual("Sheet1!B2:B4", range.ToString());
+        }
+
+        [Test]
+        public void InsertData3()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRange range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" }, true);
+            Assert.AreEqual("Sheet1!B2:D2", range.ToString());
+        }
+
+        [Test]
         public void IsEmpty1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
