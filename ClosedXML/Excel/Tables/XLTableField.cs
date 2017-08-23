@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace ClosedXML.Excel
 {
@@ -26,6 +26,7 @@ namespace ClosedXML.Excel
                 if (table.ShowHeaderRow)
                     table.HeadersRow().Cell(Index + 1).SetValue(value);
 
+                table.RenameField(name, value);
                 name = value;
             }
         }

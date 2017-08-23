@@ -60,6 +60,8 @@ namespace ClosedXML_Examples
                 IXLWorksheet ptSheet;
                 IXLPivotTable pt;
 
+                #region Pivots
+
                 for (int i = 1; i <= 3; i++)
                 {
                     // Add a new sheet for our pivot table
@@ -95,7 +97,10 @@ namespace ClosedXML_Examples
                     ptSheet.Columns().AdjustToContents();
                 }
 
-                // Different kind of pivot
+                #endregion Pivots
+
+                #region Different kind of pivot
+
                 ptSheet = wb.Worksheets.Add("pvtNoColumnLabels");
                 pt = ptSheet.PivotTables.AddNew("pvtNoColumnLabels", ptSheet.Cell(1, 1), dataRange);
 
@@ -105,8 +110,10 @@ namespace ClosedXML_Examples
                 pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
                 pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
 
+                #endregion Different kind of pivot
 
-                // Pivot table with collapsed fields
+                #region Pivot table with collapsed fields
+
                 ptSheet = wb.Worksheets.Add("pvtCollapsedFields");
                 pt = ptSheet.PivotTables.AddNew("pvtCollapsedFields", ptSheet.Cell(1, 1), dataRange);
 
@@ -116,8 +123,10 @@ namespace ClosedXML_Examples
                 pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
                 pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
 
+                #endregion Pivot table with collapsed fields
 
-                // Pivot table with a field both as a value and as a row/column/filter label
+                #region Pivot table with a field both as a value and as a row/column/filter label
+
                 ptSheet = wb.Worksheets.Add("pvtFieldAsValueAndLabel");
                 pt = ptSheet.PivotTables.AddNew("pvtFieldAsValueAndLabel", ptSheet.Cell(1, 1), dataRange);
 
@@ -125,6 +134,37 @@ namespace ClosedXML_Examples
                 pt.RowLabels.Add("Month");
 
                 pt.Values.Add("Name").SetSummaryFormula(XLPivotSummary.Count);//.NumberFormat.Format = "#0.00";
+
+                #endregion Pivot table with a field both as a value and as a row/column/filter label
+
+                #region Pivot table with subtotals disabled
+
+                ptSheet = wb.Worksheets.Add("pvtHideSubTotals");
+
+                // Create the pivot table, using the data from the "PastrySalesData" table
+                pt = ptSheet.PivotTables.AddNew("pvtHidesubTotals", ptSheet.Cell(1, 1), dataRange);
+
+                // The rows in our pivot table will be the names of the pastries
+                pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                // The columns will be the months
+                pt.ColumnLabels.Add("Month");
+                pt.ColumnLabels.Add("Name");
+
+                // The values in our table will come from the "NumberOfOrders" field
+                // The default calculation setting is a total of each row/column
+                pt.Values.Add("NumberOfOrders", "NumberOfOrdersPercentageOfBearclaw")
+                    .ShowAsPercentageFrom("Name").And("Bearclaw")
+                    .NumberFormat.Format = "0%";
+
+                pt.Values.Add("Quality", "Sum of Quality")
+                    .NumberFormat.SetFormat("#,##0.00");
+
+                pt.Subtotals = XLPivotSubtotals.DoNotShow;
+
+                ptSheet.Columns().AdjustToContents();
+
+                #endregion Pivot table with subtotals disabled
 
                 wb.SaveAs(filePath);
             }

@@ -28,6 +28,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\ExcelProducedWorkbookWithImages.xlsx",
                 @"Misc\EmptyCellValue.xlsx",
                 @"Misc\AllShapes.xlsx",
+                @"Misc\TableHeadersWithLineBreaks.xlsx",
+                @"Misc\TableWithNameNull.xlsx",
                 @"Misc\DuplicateImageNames.xlsx"
             };
 

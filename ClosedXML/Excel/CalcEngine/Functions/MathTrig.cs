@@ -1,8 +1,8 @@
+using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ClosedXML.Excel.CalcEngine.Functions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -29,7 +29,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("EXP", 1, Exp);
             ce.RegisterFunction("FACT", 1, Fact);
             ce.RegisterFunction("FACTDOUBLE", 1, FactDouble);
-            ce.RegisterFunction("FLOOR", 1, Floor);
+            ce.RegisterFunction("FLOOR", 1, 2, Floor);
+            ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
             ce.RegisterFunction("GCD", 1, 255, Gcd);
             ce.RegisterFunction("INT", 1, Int);
             ce.RegisterFunction("LCM", 1, 255, Lcm);
@@ -120,12 +121,44 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Floor(List<Expression> p)
         {
-            return Math.Floor(p[0]);
+            double number = p[0];
+            double significance = 1;
+            if (p.Count > 1)
+                significance = p[1];
+
+            if (significance < 0)
+            {
+                number = -number;
+                significance = -significance;
+
+                return -Math.Floor(number / significance) * significance;
+            }
+            else if (significance == 1)
+                return Math.Floor(number);
+            else
+                return Math.Floor(number / significance) * significance;
+        }
+
+        private static object FloorMath(List<Expression> p)
+        {
+            double number = p[0];
+            double significance = 1;
+            if (p.Count > 1) significance = p[1];
+
+            double mode = 0;
+            if (p.Count > 2) mode = p[2];
+
+            if (number >= 0)
+                return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
+            else if (mode >= 0)
+                return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
+            else
+                return -Math.Floor(-number / Math.Abs(significance)) * Math.Abs(significance);
         }
 
         private static object Int(List<Expression> p)
         {
-            return (int) ((double) p[0]);
+            return (int)((double)p[0]);
         }
 
         private static object Ln(List<Expression> p)
@@ -135,7 +168,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Log(List<Expression> p)
         {
-            var lbase = p.Count > 1 ? (double) p[1] : 10;
+            var lbase = p.Count > 1 ? (double)p[1] : 10;
             return Math.Log(p[0], lbase);
         }
 
@@ -161,7 +194,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object RandBetween(List<Expression> p)
         {
-            return _rnd.Next((int) (double) p[0], (int) (double) p[1]);
+            return _rnd.Next((int)(double)p[0], (int)(double)p[1]);
         }
 
         private static object Sign(List<Expression> p)
@@ -240,42 +273,42 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Trunc(List<Expression> p)
         {
-            return (double) (int) ((double) p[0]);
+            return (double)(int)((double)p[0]);
         }
 
         public static double DegreesToRadians(double degrees)
         {
-            return (Math.PI/180.0)*degrees;
+            return (Math.PI / 180.0) * degrees;
         }
 
         public static double RadiansToDegrees(double radians)
         {
-            return (180.0/Math.PI)*radians;
+            return (180.0 / Math.PI) * radians;
         }
 
         public static double GradsToRadians(double grads)
         {
-            return (grads/200.0)*Math.PI;
+            return (grads / 200.0) * Math.PI;
         }
 
         public static double RadiansToGrads(double radians)
         {
-            return (radians/Math.PI)*200.0;
+            return (radians / Math.PI) * 200.0;
         }
 
         public static double DegreesToGrads(double degrees)
         {
-            return (degrees/9.0)*10.0;
+            return (degrees / 9.0) * 10.0;
         }
 
         public static double GradsToDegrees(double grads)
         {
-            return (grads/10.0)*9.0;
+            return (grads / 10.0) * 9.0;
         }
 
         public static double ASinh(double x)
         {
-            return (Math.Log(x + Math.Sqrt(x*x + 1.0)));
+            return (Math.Log(x + Math.Sqrt(x * x + 1.0)));
         }
 
         private static object Acosh(List<Expression> p)
@@ -295,8 +328,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Combin(List<Expression> p)
         {
-            Int32 n = (int) p[0];
-            Int32 k = (int) p[1];
+            Int32 n = (int)p[0];
+            Int32 k = (int)p[1];
             return XLMath.Combin(n, k);
         }
 
@@ -304,8 +337,6 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return p[0] * (180.0 / Math.PI);
         }
-
-
 
         private static object Fact(List<Expression> p)
         {
@@ -348,15 +379,15 @@ namespace ClosedXML.Excel.CalcEngine
         private static int Lcm(int a, int b)
         {
             if (a == 0 || b == 0) return 0;
-            return a * ( b / Gcd(a, b));
+            return a * (b / Gcd(a, b));
         }
 
         private static object Mod(List<Expression> p)
         {
-            Int32 n = (int)Math.Abs(p[0]);
-            Int32 d = (int)p[1];
-            var ret = n % d;
-            return d < 0 ? ret * -1 : ret;
+            double number = p[0];
+            double divisor = p[1];
+
+            return number - Math.Floor(number / divisor) * divisor;
         }
 
         private static object MRound(List<Expression> p)
@@ -479,7 +510,6 @@ namespace ClosedXML.Excel.CalcEngine
                 temp = Math.Round(temp, 0, MidpointRounding.AwayFromZero);
                 return temp * Math.Pow(10, digits);
             }
-
         }
 
         private static object RoundDown(List<Expression> p)
@@ -512,7 +542,7 @@ namespace ClosedXML.Excel.CalcEngine
             var obj = p[3] as XObjectExpression;
 
             if (obj == null)
-                return p[3] * Math.Pow(x , n);
+                return p[3] * Math.Pow(x, n);
 
             Double total = 0;
             Int32 i = 0;
@@ -540,26 +570,37 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 case 1:
                     return tally.Average();
+
                 case 2:
                     return tally.Count(true);
+
                 case 3:
                     return tally.Count(false);
+
                 case 4:
                     return tally.Max();
+
                 case 5:
                     return tally.Min();
+
                 case 6:
                     return tally.Product();
+
                 case 7:
                     return tally.Std();
+
                 case 8:
                     return tally.StdP();
+
                 case 9:
                     return tally.Sum();
+
                 case 10:
                     return tally.Var();
+
                 case 11:
                     return tally.VarP();
+
                 default:
                     throw new ArgumentException("Function not supported.");
             }
@@ -591,19 +632,18 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
 
-
             return C;
         }
 
         private static double[,] GetArray(Expression expression)
         {
             var oExp1 = expression as XObjectExpression;
-            if (oExp1 == null) return new [,]{{(Double)expression}};
+            if (oExp1 == null) return new[,] { { (Double)expression } };
 
             var range = (oExp1.Value as CellRangeReference).Range;
             var rowCount = range.RowCount();
             var columnCount = range.ColumnCount();
-            var arr = new double[rowCount,columnCount];
+            var arr = new double[rowCount, columnCount];
 
             for (int row = 0; row < rowCount; row++)
             {
