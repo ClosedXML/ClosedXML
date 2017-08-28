@@ -83,6 +83,22 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void InsertData2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRange range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" }, false);
+            Assert.AreEqual("Sheet1!B2:B4", range.ToString());
+        }
+
+        [Test]
+        public void InsertData3()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLRange range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" }, true);
+            Assert.AreEqual("Sheet1!B2:D2", range.ToString());
+        }
+
+        [Test]
         public void IsEmpty1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -386,6 +402,28 @@ namespace ClosedXML_Tests
             {
                 var wb = new XLWorkbook(stream);
                 Assert.AreEqual("\u0018", wb.Worksheets.First().FirstCell().Value);
+            }
+        }
+
+        [Test]
+        public void CanClearCellValueBySettingNullValue()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var cell = ws.FirstCell();
+
+                cell.Value = "Test";
+                Assert.AreEqual("Test", cell.Value);
+                Assert.AreEqual(XLCellValues.Text, cell.DataType);
+
+                string s = null;
+                cell.SetValue(s);
+                Assert.AreEqual(string.Empty, cell.Value);
+
+                cell.Value = "Test";
+                cell.Value = null;
+                Assert.AreEqual(string.Empty, cell.Value);
             }
         }
     }

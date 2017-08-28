@@ -43,7 +43,13 @@ namespace ClosedXML.Excel
             if (!IsAllowedAnchor(anchor))
                 return null;
 
-            return anchor
+            var picture = anchor
+                .Descendants<Xdr.Picture>()
+                .FirstOrDefault();
+
+            if (picture == null) return null;
+
+            return picture
                 .Descendants<Xdr.NonVisualDrawingProperties>()
                 .FirstOrDefault();
         }

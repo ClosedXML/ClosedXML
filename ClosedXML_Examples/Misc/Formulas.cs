@@ -54,6 +54,7 @@ namespace ClosedXML_Examples.Misc
             // Just put the formula between curly braces
             ws.Cell("A6").Value = "Array Formula: ";
             ws.Cell("B6").FormulaA1 = "{A2+A3}";
+            ws.Range("C6:D6").FormulaA1 = "{TRANSPOSE(A2:A3)}";
 
             ws.Range(1, 1, 1, 7).Style.Fill.BackgroundColor = XLColor.Cyan;
             ws.Range(1, 1, 1, 7).Style.Font.Bold = true;

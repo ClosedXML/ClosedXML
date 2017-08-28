@@ -77,18 +77,20 @@ namespace ClosedXML.Excel.CalcEngine
 
             // skip leading equals sign
             if (_len > 0 && _expr[0] == '=')
-            {
                 _ptr++;
-            }
+
+            // skip leading +'s
+            while (_len > _ptr && _expr[_ptr] == '+')
+                _ptr++;
 
             // parse the expression
             var expr = ParseExpression();
 
             // check for errors
-            if (_token.ID != TKID.END)
-            {
-                Throw();
-            }
+            if (_token.ID == TKID.OPEN)
+                Throw("Unknown function: " + expr.LastParseItem);
+            else if (_token.ID != TKID.END)
+                Throw("Expected end of expression");
 
             // optimize expression
             if (_optimize)
@@ -113,10 +115,9 @@ namespace ClosedXML.Excel.CalcEngine
         /// </remarks>
         public object Evaluate(string expression)
         {
-            var x = //Parse(expression);
-                _cache != null
-                ? _cache[expression]
-                : Parse(expression);
+            var x = _cache != null
+                    ? _cache[expression]
+                    : Parse(expression);
             return x.Evaluate();
         }
 
@@ -425,11 +426,11 @@ namespace ClosedXML.Excel.CalcEngine
                         var pCnt = p == null ? 0 : p.Count;
                         if (fnDef.ParmMin != -1 && pCnt < fnDef.ParmMin)
                         {
-                            Throw("Too few parameters.");
+                            Throw(string.Format("Too few parameters for function '{0}'. Expected a minimum of {1} and a maximum of {2}.", id, fnDef.ParmMin, fnDef.ParmMax));
                         }
                         if (fnDef.ParmMax != -1 && pCnt > fnDef.ParmMax)
                         {
-                            Throw("Too many parameters.");
+                            Throw(string.Format("Too many parameters for function '{0}'.Expected a minimum of {1} and a maximum of {2}.", id, fnDef.ParmMin, fnDef.ParmMax));
                         }
                         x = new FunctionExpression(fnDef, p);
                         break;
@@ -715,7 +716,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (isEnclosed && disallowedSymbols.Contains(c))
                     break;
 
-                var allowedSymbols = new List<char>() { '_' };
+                var allowedSymbols = new List<char>() { '_', '.' };
 
                 if (!isLetter && !isDigit
                     && !(isEnclosed || allowedSymbols.Contains(c))
@@ -773,10 +774,10 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // make sure the list was closed correctly
-            if (_token.ID != TKID.CLOSE)
-            {
-                Throw();
-            }
+            if (_token.ID == TKID.OPEN)
+                Throw("Unknown function: " + expr.LastParseItem);
+            else if (_token.ID != TKID.CLOSE)
+                Throw("Syntax error: expected ')'");
 
             // done
             return parms;
@@ -818,7 +819,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static void Throw(string msg)
         {
-            throw new Exception(msg);
+            throw new ExpressionParseException(msg);
         }
 
         #endregion ** static helpers

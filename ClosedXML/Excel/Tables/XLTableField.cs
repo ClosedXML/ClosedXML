@@ -1,19 +1,30 @@
-using System;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLTableField: IXLTableField
+    [DebuggerDisplay("{Name}")]
+    internal class XLTableField : IXLTableField
     {
-        private XLTable table;
+        internal XLTotalsRowFunction totalsRowFunction;
+        internal String totalsRowLabel;
+        private readonly XLTable table;
+
+        private String name;
+
         public XLTableField(XLTable table, String name)
         {
             this.table = table;
             this.name = name;
         }
 
-        public Int32 Index { get; internal set; }
+        public IXLRangeColumn Column
+        {
+            get { return table.Column(this.Index); }
+        }
 
-        private String name;
+        public Int32 Index { get; internal set; }
 
         public String Name
         {
@@ -26,19 +37,8 @@ namespace ClosedXML.Excel
                 if (table.ShowHeaderRow)
                     table.HeadersRow().Cell(Index + 1).SetValue(value);
 
+                table.RenameField(name, value);
                 name = value;
-            }
-        }
-
-        internal String totalsRowLabel;
-        public String TotalsRowLabel
-        {
-            get { return totalsRowLabel; }
-            set
-            {
-                totalsRowFunction = XLTotalsRowFunction.None;
-                table.TotalsRow().Cell(Index + 1).SetValue(value);
-                totalsRowLabel = value;
             }
         }
 
@@ -51,6 +51,7 @@ namespace ClosedXML.Excel
                 table.TotalsRow().Cell(Index + 1).FormulaA1 = value;
             }
         }
+
         public String TotalsRowFormulaR1C1
         {
             get { return table.TotalsRow().Cell(Index + 1).FormulaR1C1; }
@@ -61,7 +62,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal XLTotalsRowFunction totalsRowFunction;
         public XLTotalsRowFunction TotalsRowFunction
         {
             get { return totalsRowFunction; }
@@ -93,6 +93,32 @@ namespace ClosedXML.Excel
                 }
                 totalsRowFunction = value;
             }
+        }
+
+        public String TotalsRowLabel
+        {
+            get { return totalsRowLabel; }
+            set
+            {
+                totalsRowFunction = XLTotalsRowFunction.None;
+                table.TotalsRow().Cell(Index + 1).SetValue(value);
+                totalsRowLabel = value;
+            }
+        }
+
+        public void Delete()
+        {
+            Delete(true);
+        }
+
+        internal void Delete(Boolean deleteUnderlyingRangeColumn)
+        {
+            var fields = table.Fields.Cast<XLTableField>();
+            fields.Where(f => f.Index > this.Index).ForEach(f => f.Index--);
+            table.FieldNames.Remove(this.Name);
+
+            if (deleteUnderlyingRangeColumn)
+                (this.Column as XLRangeColumn).Delete(false);
         }
     }
 }

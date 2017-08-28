@@ -1,4 +1,4 @@
-using FastMember;
+﻿using FastMember;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -221,6 +221,9 @@ namespace ClosedXML.Excel
 
         public IXLCell SetValue<T>(T value)
         {
+            if (value == null)
+                return this.Clear(XLClearOptions.Contents);
+
             FormulaA1 = String.Empty;
             _richText = null;
             var style = GetStyleForRead();
@@ -281,7 +284,7 @@ namespace ClosedXML.Excel
             if (TryGetValue(out retVal))
                 return retVal;
 
-            throw new Exception("Cannot convert cell value to " + typeof(T));
+            throw new FormatException("Cannot convert cell value to " + typeof(T));
         }
 
         public string GetString()
@@ -365,7 +368,7 @@ namespace ClosedXML.Excel
             get
             {
                 var fA1 = FormulaA1;
-                if (!XLHelper.IsNullOrWhiteSpace(fA1))
+                if (!String.IsNullOrWhiteSpace(fA1))
                 {
                     if (fA1[0] == '{')
                         fA1 = fA1.Substring(1, fA1.Length - 2);
@@ -437,6 +440,8 @@ namespace ClosedXML.Excel
 
                 if (value is XLCells) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
 
+                if (SetTableHeader(value)) return;
+
                 if (SetRangeRows(value)) return;
 
                 if (SetRangeColumns(value)) return;
@@ -469,7 +474,7 @@ namespace ClosedXML.Excel
 
         public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable)
         {
-            if (data != null && data.GetType() != typeof(String))
+            if (data != null && !(data is String))
             {
                 var ro = Address.RowNumber + 1;
                 var fRo = Address.RowNumber;
@@ -495,7 +500,7 @@ namespace ClosedXML.Excel
                         if (!hasTitles)
                         {
                             var fieldName = XLColumnAttribute.GetHeader(itemType);
-                            if (XLHelper.IsNullOrWhiteSpace(fieldName))
+                            if (String.IsNullOrWhiteSpace(fieldName))
                                 fieldName = itemType.Name;
 
                             SetValue(fieldName, fRo, co);
@@ -573,7 +578,7 @@ namespace ClosedXML.Excel
                             if (!hasTitles)
                             {
                                 foreach (var fieldName in from DataColumn column in row.Table.Columns
-                                                          select XLHelper.IsNullOrWhiteSpace(column.Caption)
+                                                          select String.IsNullOrWhiteSpace(column.Caption)
                                                                      ? column.ColumnName
                                                                      : column.Caption)
                                 {
@@ -626,7 +631,7 @@ namespace ClosedXML.Excel
                                     if ((mi as IEnumerable) == null)
                                     {
                                         var fieldName = XLColumnAttribute.GetHeader(mi);
-                                        if (XLHelper.IsNullOrWhiteSpace(fieldName))
+                                        if (String.IsNullOrWhiteSpace(fieldName))
                                             fieldName = mi.Name;
 
                                         SetValue(fieldName, fRo, co);
@@ -712,10 +717,18 @@ namespace ClosedXML.Excel
 
         public IXLRange InsertData(IEnumerable data)
         {
-            if (data != null && data.GetType() != typeof(String))
+            return InsertData(data, false);
+        }
+
+        public IXLRange InsertData(IEnumerable data, Boolean transpose)
+        {
+            if (data != null && !(data is String))
             {
-                var ro = Address.RowNumber;
-                var maxCo = 0;
+                var rowNumber = Address.RowNumber;
+                var columnNumber = Address.ColumnNumber;
+
+                var maxColumnNumber = 0;
+                var maxRowNumber = 0;
                 var isDataTable = false;
                 var isDataReader = false;
 
@@ -744,20 +757,31 @@ namespace ClosedXML.Excel
                     members = memberCache[itemType];
                     accessor = accessorCache[itemType];
 
-                    var co = Address.ColumnNumber;
+                    if (transpose)
+                        rowNumber = Address.RowNumber;
+                    else
+                        columnNumber = Address.ColumnNumber;
+
 
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                     {
-                        SetValue(m, ro, co);
-                        co++;
+                        SetValue(m, rowNumber, columnNumber);
+
+                        if (transpose)
+                            rowNumber++;
+                        else
+                            columnNumber++;
                     }
                     else if (itemType.IsArray)
                     {
-                        // dynamic arr = m;
                         foreach (var item in (Array)m)
                         {
-                            SetValue(item, ro, co);
-                            co++;
+                            SetValue(item, rowNumber, columnNumber);
+
+                            if (transpose)
+                                rowNumber++;
+                            else
+                                columnNumber++;
                         }
                     }
                     else if (isDataTable || m is DataRow)
@@ -767,8 +791,12 @@ namespace ClosedXML.Excel
 
                         foreach (var item in (m as DataRow).ItemArray)
                         {
-                            SetValue(item, ro, co);
-                            co++;
+                            SetValue(item, rowNumber, columnNumber);
+
+                            if (transpose)
+                                rowNumber++;
+                            else
+                                columnNumber++;
                         }
                     }
                     else if (isDataReader || m is IDataRecord)
@@ -781,31 +809,45 @@ namespace ClosedXML.Excel
                         var fieldCount = record.FieldCount;
                         for (var i = 0; i < fieldCount; i++)
                         {
-                            SetValue(record[i], ro, co);
-                            co++;
+                            SetValue(record[i], rowNumber, columnNumber);
+
+                            if (transpose)
+                                rowNumber++;
+                            else
+                                columnNumber++;
                         }
                     }
                     else
                     {
                         foreach (var mi in members)
                         {
-                            SetValue(accessor[m, mi.Name], ro, co);
-                            co++;
+                            SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
+
+                            if (transpose)
+                                rowNumber++;
+                            else
+                                columnNumber++;
                         }
                     }
 
-                    if (co > maxCo)
-                        maxCo = co;
+                    if (transpose)
+                        columnNumber++;
+                    else
+                        rowNumber++;
 
-                    ro++;
+                    if (columnNumber > maxColumnNumber)
+                        maxColumnNumber = columnNumber;
+
+                    if (rowNumber > maxRowNumber)
+                        maxRowNumber = rowNumber;
                 }
 
                 ClearMerged();
                 return _worksheet.Range(
                     Address.RowNumber,
                     Address.ColumnNumber,
-                    ro - 1,
-                    maxCo - 1);
+                    maxRowNumber - 1,
+                    maxColumnNumber - 1);
             }
 
             return null;
@@ -967,9 +1009,9 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (XLHelper.IsNullOrWhiteSpace(_formulaA1))
+                if (String.IsNullOrWhiteSpace(_formulaA1))
                 {
-                    if (!XLHelper.IsNullOrWhiteSpace(_formulaR1C1))
+                    if (!String.IsNullOrWhiteSpace(_formulaR1C1))
                     {
                         _formulaA1 = GetFormulaA1(_formulaR1C1);
                         return FormulaA1;
@@ -989,7 +1031,7 @@ namespace ClosedXML.Excel
 
             set
             {
-                _formulaA1 = XLHelper.IsNullOrWhiteSpace(value) ? null : value;
+                _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
                 _formulaR1C1 = null;
             }
@@ -999,7 +1041,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (XLHelper.IsNullOrWhiteSpace(_formulaR1C1))
+                if (String.IsNullOrWhiteSpace(_formulaR1C1))
                     _formulaR1C1 = GetFormulaR1C1(FormulaA1);
 
                 return _formulaR1C1;
@@ -1007,7 +1049,7 @@ namespace ClosedXML.Excel
 
             set
             {
-                _formulaR1C1 = XLHelper.IsNullOrWhiteSpace(value) ? null : value;
+                _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
             }
         }
 
@@ -1449,6 +1491,23 @@ namespace ClosedXML.Excel
 
         #endregion IXLStylized Members
 
+        private bool SetTableHeader(object value)
+        {
+            foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
+            {
+                var cells = table.HeadersRow().CellsUsed(c => c.Address.Equals(this.Address));
+                if (cells.Any())
+                {
+                    var oldName = cells.First().GetString();
+                    var field = table.Field(oldName);
+                    field.Name = value.ToString();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private bool SetRangeColumns(object value)
         {
             var columns = value as XLRangeColumns;
@@ -1531,7 +1590,7 @@ namespace ClosedXML.Excel
         {
             var style = GetStyleForRead();
             return _dataType == XLCellValues.Number
-                   && XLHelper.IsNullOrWhiteSpace(style.NumberFormat.Format)
+                   && String.IsNullOrWhiteSpace(style.NumberFormat.Format)
                    && ((style.NumberFormat.NumberFormatId >= 14
                         && style.NumberFormat.NumberFormatId <= 22)
                        || (style.NumberFormat.NumberFormatId >= 45
@@ -1542,7 +1601,7 @@ namespace ClosedXML.Excel
         {
             var format = String.Empty;
             var style = GetStyleForRead();
-            if (XLHelper.IsNullOrWhiteSpace(style.NumberFormat.Format))
+            if (String.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
                 var formatCodes = GetFormatCodes();
                 if (formatCodes.ContainsKey(style.NumberFormat.NumberFormatId))
@@ -1619,7 +1678,7 @@ namespace ClosedXML.Excel
         private bool SetEnumerable(object collectionObject)
         {
             // IXLRichText implements IEnumerable, but we don't want to handle this here.
-            if ((collectionObject as IXLRichText) != null) return false;
+            if (collectionObject is IXLRichText) return false;
 
             var asEnumerable = collectionObject as IEnumerable;
             return InsertData(asEnumerable) != null;
@@ -1638,13 +1697,10 @@ namespace ClosedXML.Excel
         {
             if (value == null)
                 _worksheet.Cell(ro, co).SetValue(String.Empty);
+            else if (value is IConvertible)
+                _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
             else
-            {
-                if (value is IConvertible)
-                    _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
-                else
-                    _worksheet.Cell(ro, co).SetValue(value);
-            }
+                _worksheet.Cell(ro, co).SetValue(value);
         }
 
         private void SetValue(object value)
@@ -1782,7 +1838,7 @@ namespace ClosedXML.Excel
         private string GetFormula(string strValue, FormulaConversionType conversionType, int rowsToShift,
                                   int columnsToShift)
         {
-            if (XLHelper.IsNullOrWhiteSpace(strValue))
+            if (String.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
 
             var value = ">" + strValue + "<";
@@ -2056,7 +2112,7 @@ namespace ClosedXML.Excel
         internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                 int rowsShifted)
         {
-            if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (String.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
             var value = formulaA1; // ">" + formulaA1 + "<";
 
@@ -2261,7 +2317,7 @@ namespace ClosedXML.Excel
         internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                    int columnsShifted)
         {
-            if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (String.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
             var value = formulaA1; // ">" + formulaA1 + "<";
 
@@ -2589,7 +2645,9 @@ namespace ClosedXML.Excel
 
         #endregion XLCell Right
 
-        public Boolean HasFormula { get { return !XLHelper.IsNullOrWhiteSpace(FormulaA1); } }
+        public Boolean HasFormula { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
+
+        public Boolean HasArrayFormula { get { return FormulaA1.StartsWith("{"); } }
 
         public IXLRangeAddress FormulaReference { get; set; }
     }

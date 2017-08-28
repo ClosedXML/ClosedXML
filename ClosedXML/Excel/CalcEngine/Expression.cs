@@ -3,10 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
+    internal abstract class ExpressionBase
+    {
+        public abstract string LastParseItem { get; }
+    }
+
     /// <summary>
     /// Base class that represents parsed expressions.
     /// </summary>
@@ -17,13 +23,13 @@ namespace ClosedXML.Excel.CalcEngine
     /// object val = expr.Evaluate();
     /// </code>
     /// </remarks>
-    internal class Expression : IComparable<Expression>
+    internal class Expression : ExpressionBase, IComparable<Expression>
     {
         //---------------------------------------------------------------------------
 
         #region ** fields
 
-        internal Token _token;
+        internal readonly Token _token;
 
         #endregion ** fields
 
@@ -222,6 +228,17 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         #endregion ** IComparable<Expression>
+
+        //---------------------------------------------------------------------------
+
+        #region ** ExpressionBase
+
+        public override string LastParseItem
+        {
+            get { return _token?.Value?.ToString() ?? "Unknown value"; }
+        }
+
+        #endregion ** ExpressionBase
     }
 
     /// <summary>
@@ -258,6 +275,11 @@ namespace ClosedXML.Excel.CalcEngine
             return _expr._token.Type == TKTYPE.LITERAL
                 ? new Expression(this.Evaluate())
                 : this;
+        }
+
+        public override string LastParseItem
+        {
+            get { return _expr.LastParseItem; }
         }
     }
 
@@ -342,6 +364,11 @@ namespace ClosedXML.Excel.CalcEngine
                 ? new Expression(this.Evaluate())
                 : this;
         }
+
+        public override string LastParseItem
+        {
+            get { return _rgt.LastParseItem; }
+        }
     }
 
     /// <summary>
@@ -350,14 +377,13 @@ namespace ClosedXML.Excel.CalcEngine
     internal class FunctionExpression : Expression
     {
         // ** fields
-        private FunctionDefinition _fn;
+        private readonly FunctionDefinition _fn;
 
-        private List<Expression> _parms;
+        private readonly List<Expression> _parms;
 
         // ** ctor
         internal FunctionExpression()
-        {
-        }
+        { }
 
         public FunctionExpression(FunctionDefinition function, List<Expression> parms)
         {
@@ -390,6 +416,11 @@ namespace ClosedXML.Excel.CalcEngine
                 ? new Expression(this.Evaluate())
                 : this;
         }
+
+        public override string LastParseItem
+        {
+            get { return _parms.Last().LastParseItem; }
+        }
     }
 
     /// <summary>
@@ -397,8 +428,8 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class VariableExpression : Expression
     {
-        private Dictionary<string, object> _dct;
-        private string _name;
+        private readonly Dictionary<string, object> _dct;
+        private readonly string _name;
 
         public VariableExpression(Dictionary<string, object> dct, string name)
         {
@@ -410,6 +441,11 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return _dct[_name];
         }
+
+        public override string LastParseItem
+        {
+            get { return _name; }
+        }
     }
 
     /// <summary>
@@ -419,7 +455,7 @@ namespace ClosedXML.Excel.CalcEngine
         Expression,
         IEnumerable
     {
-        private object _value;
+        private readonly object _value;
 
         // ** ctor
         internal XObjectExpression(object value)
@@ -447,6 +483,11 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return (_value as IEnumerable).GetEnumerator();
         }
+
+        public override string LastParseItem
+        {
+            get { return Value.ToString(); }
+        }
     }
 
     /// <summary>
@@ -455,6 +496,11 @@ namespace ClosedXML.Excel.CalcEngine
     internal class EmptyValueExpression : Expression
     {
         internal EmptyValueExpression() { }
+
+        public override string LastParseItem
+        {
+            get { return "<EMPTY VALUE>"; }
+        }
     }
 
     internal class ErrorExpression : Expression

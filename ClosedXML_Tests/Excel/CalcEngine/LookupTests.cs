@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
@@ -105,6 +105,12 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             // Range lookup true
             value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,TRUE)");
+            Assert.AreEqual(179.64, value);
+
+            value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8)");
+            Assert.AreEqual(179.64, value);
+
+            value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,)");
             Assert.AreEqual(179.64, value);
 
             value = workbook.Evaluate("=VLOOKUP(14.5,Data!$B$2:$I$71,8,TRUE)");

@@ -145,6 +145,35 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void TestDefaultIds()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
+                {
+                    ws.AddPicture(stream, XLPictureFormat.Png);
+                    stream.Position = 0;
+
+                    ws.AddPicture(stream, XLPictureFormat.Png);
+                    stream.Position = 0;
+
+                    ws.AddPicture(stream, XLPictureFormat.Png).Name = "Picture 4";
+                    stream.Position = 0;
+
+                    ws.AddPicture(stream, XLPictureFormat.Png);
+                    stream.Position = 0;
+                }
+
+                Assert.AreEqual(1, ws.Pictures.Skip(0).First().Id);
+                Assert.AreEqual(2, ws.Pictures.Skip(1).First().Id);
+                Assert.AreEqual(3, ws.Pictures.Skip(2).First().Id);
+                Assert.AreEqual(4, ws.Pictures.Skip(3).First().Id);
+            }
+        }
+
+        [Test]
         public void XLMarkerTests()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
