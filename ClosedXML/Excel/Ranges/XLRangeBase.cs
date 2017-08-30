@@ -1505,7 +1505,12 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return String.Format("{0}!{1}:{2}", Worksheet.Name.EscapeSheetName(), RangeAddress.FirstAddress, RangeAddress.LastAddress);
+            return String.Concat(
+                Worksheet.Name.EscapeSheetName(),
+                '!',
+                RangeAddress.FirstAddress,
+                ':',
+                RangeAddress.LastAddress);
         }
 
         protected void ShiftColumns(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int columnsShifted)
@@ -1519,7 +1524,7 @@ namespace ClosedXML.Excel
                 return;
 
             bool shiftLeftBoundary = (columnsShifted > 0 && thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber) ||
-                                     (columnsShifted < 0 && thisRangeAddress.FirstAddress.ColumnNumber >  shiftedRange.RangeAddress.FirstAddress.ColumnNumber);
+                                     (columnsShifted < 0 && thisRangeAddress.FirstAddress.ColumnNumber > shiftedRange.RangeAddress.FirstAddress.ColumnNumber);
 
             bool shiftRightBoundary = thisRangeAddress.LastAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber;
 
@@ -1564,13 +1569,13 @@ namespace ClosedXML.Excel
             if (thisRangeAddress.IsInvalid || shiftedRange.RangeAddress.IsInvalid) return;
 
             bool allColumnsAreCovered = thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber &&
-                                        thisRangeAddress.LastAddress.ColumnNumber  <= shiftedRange.RangeAddress.LastAddress.ColumnNumber;
+                                        thisRangeAddress.LastAddress.ColumnNumber <= shiftedRange.RangeAddress.LastAddress.ColumnNumber;
 
             if (!allColumnsAreCovered)
                 return;
 
             bool shiftTopBoundary = (rowsShifted > 0 && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber) ||
-                                    (rowsShifted < 0 && thisRangeAddress.FirstAddress.RowNumber >  shiftedRange.RangeAddress.FirstAddress.RowNumber);
+                                    (rowsShifted < 0 && thisRangeAddress.FirstAddress.RowNumber > shiftedRange.RangeAddress.FirstAddress.RowNumber);
 
             bool shiftBottomBoundary = thisRangeAddress.LastAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber;
 
@@ -1706,7 +1711,6 @@ namespace ClosedXML.Excel
             }
 
             return sb.ToString();
-
         }
 
         public IXLRangeBase Sort()
@@ -1719,7 +1723,6 @@ namespace ClosedXML.Excel
             SortRangeRows();
             return this;
         }
-
 
         public IXLRangeBase Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {

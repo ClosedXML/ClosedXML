@@ -142,12 +142,17 @@ namespace ClosedXML.Excel
         public String ToStringRelative(Boolean includeSheet)
         {
             if (includeSheet)
-                return String.Format("{0}!{1}:{2}",
+                return String.Concat(
                     Worksheet.Name.EscapeSheetName(),
+                    '!',
                     _firstAddress.ToStringRelative(),
+                    ':',
                     _lastAddress.ToStringRelative());
-
-            return _firstAddress.ToStringRelative() + ":" + _lastAddress.ToStringRelative();
+            else
+                return string.Concat(
+                    _firstAddress.ToStringRelative(),
+                    ":",
+                    _lastAddress.ToStringRelative());
         }
 
         public String ToStringFixed(XLReferenceStyle referenceStyle)
