@@ -78,14 +78,11 @@ namespace ClosedXML.Excel
         private bool _fixedRow;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool _fixedColumn;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string _columnLetter;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly int _rowNumber;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly int _columnNumber;
-        private string _trimmedAddress;
         #endregion
         #region Constructors
         /// <summary>
@@ -110,7 +107,6 @@ namespace ClosedXML.Excel
         public XLAddress(XLWorksheet worksheet, int rowNumber, string columnLetter, bool fixedRow, bool fixedColumn)
                 : this(worksheet, rowNumber, XLHelper.GetColumnNumberFromLetter(columnLetter), fixedRow, fixedColumn)
         {
-            _columnLetter = columnLetter;
         }
 
         /// <summary>
@@ -139,11 +135,8 @@ namespace ClosedXML.Excel
 
             _rowNumber = rowNumber;
             _columnNumber = columnNumber;
-            _columnLetter = null;
             _fixedColumn = fixedColumn;
             _fixedRow = fixedRow;
-
-
         }
         #endregion
         #region Properties
@@ -193,7 +186,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public String ColumnLetter
         {
-            get { return _columnLetter ?? (_columnLetter = XLHelper.GetColumnLetterFromNumber(_columnNumber)); }
+            get { return XLHelper.GetColumnLetterFromNumber(_columnNumber); }
         }
         #endregion
         #region Overrides
@@ -232,11 +225,8 @@ namespace ClosedXML.Excel
         #region Methods
         public string GetTrimmedAddress()
         {
-            return _trimmedAddress ?? (_trimmedAddress = ColumnLetter + _rowNumber.ToInvariantString());
+            return ColumnLetter + _rowNumber.ToInvariantString();
         }
-
-
-
         #endregion
         #region Operator Overloads
         public static XLAddress operator +(XLAddress left, XLAddress right)
