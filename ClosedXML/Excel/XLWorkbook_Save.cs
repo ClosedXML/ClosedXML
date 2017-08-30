@@ -4231,7 +4231,9 @@ namespace ClosedXML.Excel
                     {
                         var styleId = context.SharedStyles[xlCell.GetStyleId()].StyleId;
                         var cellReference = (xlCell.Address).GetTrimmedAddress();
-                        var isEmpty = xlCell.IsEmpty(true);
+
+                        // For saving cells to file, ignore conditional formatting. They just bloat the file
+                        var isEmpty = xlCell.IsEmpty(true, false);
 
                         Cell cell = null;
                         if (cellsByReference.ContainsKey(cellReference))

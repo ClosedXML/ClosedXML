@@ -95,7 +95,7 @@ namespace ClosedXML.Excel
             Count--;
             DecrementUsage(RowsUsed, row);
             DecrementUsage(ColumnsUsed, row);
-            
+
             HashSet<Int32> delHash;
             if (deleted.TryGetValue(row, out delHash))
             {
@@ -119,7 +119,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            
+
         }
 
         internal IEnumerable<XLCell> GetCells(Int32 rowStart, Int32 columnStart,
@@ -148,14 +148,22 @@ namespace ClosedXML.Excel
         {
             HashSet<Int32> ids = new HashSet<int>();
             ids.Add(initial);
-            foreach (var row in rowsCollection)
+            foreach (var row in rowsCollection.Values)
             {
-                foreach (var column in row.Value)
+                foreach (var cell in row.Values)
                 {
-                    var id = column.Value.GetStyleId();
-                    if (!ids.Contains(id))
+                    Int32? id = null;
+
+                    if (cell.StyleChanged)
+                        id = cell.GetStyleId();
+                    else if (cell.StyleCacheId() != cell.Worksheet.GetStyleId())
                     {
-                        ids.Add(id);
+                        id = cell.GetStyleId();
+                    }
+
+                    if (id.HasValue && !ids.Contains(id.Value))
+                    {
+                        ids.Add(id.Value);
                     }
                 }
             }

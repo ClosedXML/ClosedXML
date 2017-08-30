@@ -73,55 +73,35 @@ namespace ClosedXML.Excel
         internal XLCellValues _dataType;
         private XLHyperlink _hyperlink;
         private XLRichText _richText;
-
-        #endregion Fields
-
-        #region Constructor
-
-        private Int32 _styleCacheId;
-
-        public XLCell(XLWorksheet worksheet, XLAddress address, Int32 styleId)
-        {
-            Address = address;
-            ShareString = true;
-            _worksheet = worksheet;
-            SetStyle(styleId);
-        }
-
-        private IXLStyle GetStyleForRead()
-        {
-            return Worksheet.Workbook.GetStyleById(GetStyleId());
-        }
-
-        public Int32 GetStyleId()
-        {
-            if (StyleChanged)
-                SetStyle(Style);
-
-            return _styleCacheId;
-        }
-
-        private void SetStyle(IXLStyle styleToUse)
-        {
-            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
-            _style = null;
-            StyleChanged = false;
-        }
-
-        private void SetStyle(Int32 styleId)
-        {
-            _styleCacheId = styleId;
-            _style = null;
-            StyleChanged = false;
-        }
-
-        #endregion Constructor
+        private Int32? _styleCacheId;
 
         public bool SettingHyperlink;
         public int SharedStringId;
         private string _formulaA1;
         private string _formulaR1C1;
         private IXLStyle _style;
+
+        #endregion Fields
+
+        #region Constructor
+
+        public XLCell(XLWorksheet worksheet, XLAddress address, Int32 styleId)
+            : this(worksheet, address)
+        {
+            SetStyle(styleId);
+        }
+
+        public XLCell(XLWorksheet worksheet, XLAddress address)
+        {
+            Address = address;
+            ShareString = true;
+            _worksheet = worksheet;
+        }
+
+
+
+        #endregion Constructor
+
 
         public XLWorksheet Worksheet
         {
@@ -454,7 +434,7 @@ namespace ClosedXML.Excel
                 if (!SetRichText(value))
                     SetValue(value);
 
-                if (_cellValue.Length > 32767) throw new ArgumentException("Cells can only hold 32,767 characters.");
+                if (_cellValue.Length > 32767) throw new ArgumentException("Cells can hold only 32,767 characters.");
             }
         }
 
@@ -1173,10 +1153,15 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(Boolean includeFormats)
         {
+            return IsEmpty(includeFormats, includeFormats);
+        }
+
+        public Boolean IsEmpty(Boolean includeNormalFormats, Boolean includeConditionalFormats)
+        {
             if (InnerText.Length > 0)
                 return false;
 
-            if (includeFormats)
+            if (includeNormalFormats)
             {
                 if (!Style.Equals(Worksheet.Style) || IsMerged() || HasComment || HasDataValidation)
                     return false;
@@ -1191,10 +1176,12 @@ namespace ClosedXML.Excel
                     if (Worksheet.Internals.ColumnsCollection.TryGetValue(Address.ColumnNumber, out column) && !column.Style.Equals(Worksheet.Style))
                         return false;
                 }
-
-                if (Worksheet.ConditionalFormats.Any(cf => cf.Range.Contains(this)))
-                    return false;
             }
+
+            if (includeConditionalFormats
+                && Worksheet.ConditionalFormats.Any(cf => cf.Range.Contains(this)))
+                return false;
+
             return true;
         }
 
@@ -1574,13 +1561,56 @@ namespace ClosedXML.Excel
             return _worksheet.Range(Address, Address);
         }
 
+        #region Styles
         private IXLStyle GetStyle()
         {
             if (_style != null)
                 return _style;
 
-            return _style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId));
+            return _style = new XLStyle(this, Worksheet.Workbook.GetStyleById(StyleCacheId()));
         }
+
+        private IXLStyle GetStyleForRead()
+        {
+            return Worksheet.Workbook.GetStyleById(GetStyleId());
+        }
+
+        public Int32 GetStyleId()
+        {
+            if (StyleChanged)
+                SetStyle(Style);
+
+            return StyleCacheId();
+        }
+
+        private void SetStyle(IXLStyle styleToUse)
+        {
+            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
+            _style = null;
+            StyleChanged = false;
+        }
+
+        private void SetStyle(Int32 styleId)
+        {
+            _styleCacheId = styleId;
+            _style = null;
+            StyleChanged = false;
+        }
+
+        public Int32 StyleCacheId()
+        {
+            if (!_styleCacheId.HasValue)
+                _styleCacheId = Worksheet.GetStyleId();
+            return _styleCacheId.Value;
+
+        }
+
+        public Boolean IsDefaultWorksheetStyle()
+        {
+            return !_styleCacheId.HasValue && !StyleChanged || GetStyleId() == Worksheet.GetStyleId();
+        }
+        #endregion Styles
+
 
         public void DeleteComment()
         {
@@ -2056,7 +2086,8 @@ namespace ClosedXML.Excel
 
             CopyValuesFrom(source);
 
-            SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
+            if (source._styleCacheId.HasValue)
+                SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId.Value));
 
             var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(source)).ToList();
             foreach (var cf in conditionalFormats)

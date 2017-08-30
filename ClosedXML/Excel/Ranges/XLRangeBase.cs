@@ -841,12 +841,14 @@ namespace ClosedXML.Excel
 
             Int32 newCellStyleId = styleId;
 
+            XLCell newCell;
             // If the default style for this range base is empty, but the worksheet
             // has a default style, use the worksheet's default style
-            if (styleId == 0 && worksheetStyleId != 0)
-                newCellStyleId = worksheetStyleId;
+            if (styleId == 0 && worksheetStyleId != 0 || styleId == worksheetStyleId)
+                newCell = new XLCell(Worksheet, absoluteAddress);
+            else
+                newCell = new XLCell(Worksheet, absoluteAddress, newCellStyleId);
 
-            var newCell = new XLCell(Worksheet, absoluteAddress, newCellStyleId);
             Worksheet.Internals.CellsCollection.Add(absRow, absColumn, newCell);
             return newCell;
         }

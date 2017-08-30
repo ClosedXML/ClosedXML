@@ -52,16 +52,18 @@ namespace ClosedXML.Excel
                 {
                     if (oneRange)
                     {
-                        var cellRange = range.Worksheet.Internals.CellsCollection
-                                                .GetCells(
-                                                range.FirstAddress.RowNumber,
-                                                range.FirstAddress.ColumnNumber,
-                                                range.LastAddress.RowNumber,
-                                                range.LastAddress.ColumnNumber)
-                                                .Where(c => 
-                                                            !c.IsEmpty(_includeFormats) 
-                                                            && (_predicate == null || _predicate(c))
-                                                            );
+                        var cellRange = range
+                            .Worksheet
+                            .Internals
+                            .CellsCollection
+                            .GetCells(
+                                range.FirstAddress.RowNumber,
+                                range.FirstAddress.ColumnNumber,
+                                range.LastAddress.RowNumber,
+                                range.LastAddress.ColumnNumber)
+                            .Where(c => !c.IsEmpty(_includeFormats)
+                                        && (_predicate == null || _predicate(c))
+                            );
 
                         foreach(var cell in cellRange)
                         {
@@ -121,13 +123,16 @@ namespace ClosedXML.Excel
             {
                 if (_usedCellsOnly)
                 {
-                    var cellRange = cellsInRanges.SelectMany(
-                                cir =>
-                                cir.Value.Select(a => cir.Key.Internals.CellsCollection.GetCell(a)).Where(
-                                    cell => cell != null && (
-                                                                !cell.IsEmpty(_includeFormats) 
-                                                                && (_predicate == null || _predicate(cell))
-                                                                )));
+                    var cellRange = cellsInRanges
+                        .SelectMany(
+                            cir =>
+                            cir.Value.Select(a => cir.Key.Internals.CellsCollection.GetCell(a)).Where(
+                                cell =>
+                                    cell != null
+                                    && !cell.IsEmpty(_includeFormats)
+                                    && (_predicate == null || _predicate(cell))
+                            )
+                    );
 
                     foreach (var cell in cellRange)
                     {
