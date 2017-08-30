@@ -73,7 +73,7 @@ namespace ClosedXML.Excel
                 Int32 id = _relIds[relType].Count + 1;
                 while (true)
                 {
-                    String relId = String.Format("rId{0}", id);
+                    String relId = String.Concat("rId", id);
                     if (!_relIds[relType].Contains(relId))
                     {
                         _relIds[relType].Add(relId);

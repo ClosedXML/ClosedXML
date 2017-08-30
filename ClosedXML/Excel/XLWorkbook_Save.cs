@@ -661,7 +661,7 @@ namespace ClosedXML.Excel
                 {
                     if (String.IsNullOrWhiteSpace(xlSheet.RelId))
                     {
-                        rId = String.Format("rId{0}", xlSheet.SheetId);
+                        rId = String.Concat("rId", xlSheet.SheetId);
                         context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
                     }
                     else
@@ -2816,7 +2816,7 @@ namespace ClosedXML.Excel
             var rowNumber = c.Address.RowNumber;
             var columnNumber = c.Address.ColumnNumber;
 
-            var shapeId = String.Format("_x0000_s{0}", c.Comment.ShapeId);
+            var shapeId = String.Concat("_x0000_s", c.Comment.ShapeId);
             // Unique per cell (workbook?), e.g.: "_x0000_s1026"
             var anchor = GetAnchor(c);
             var textBox = GetTextBox(c.Comment.Style);
@@ -2857,7 +2857,7 @@ namespace ClosedXML.Excel
                 Style = GetCommentStyle(c),
                 FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2),
                 StrokeColor = "#" + c.Comment.Style.ColorsAndLines.LineColor.Color.ToHex().Substring(2),
-                StrokeWeight = String.Format(CultureInfo.InvariantCulture, "{0}pt", c.Comment.Style.ColorsAndLines.LineWeight),
+                StrokeWeight = String.Concat(c.Comment.Style.ColorsAndLines.LineWeight.ToInvariantString(), "pt"),
                 InsetMode = c.Comment.Style.Margins.Automatic ? InsetMarginValues.Auto : InsetMarginValues.Custom
             };
             if (!String.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
@@ -3105,11 +3105,11 @@ namespace ClosedXML.Excel
             var retVal = new Vml.TextBox { Style = sb.ToString() };
             var dm = ds.Margins;
             if (!dm.Automatic)
-                retVal.Inset = String.Format("{0}in,{1}in,{2}in,{3}in",
-                    dm.Left.ToInvariantString(),
-                    dm.Top.ToInvariantString(),
-                    dm.Right.ToInvariantString(),
-                    dm.Bottom.ToInvariantString());
+                retVal.Inset = String.Concat(
+                    dm.Left.ToInvariantString(), "in,",
+                    dm.Top.ToInvariantString(), "in,",
+                    dm.Right.ToInvariantString(), "in,",
+                    dm.Bottom.ToInvariantString(), "in");
 
             return retVal;
         }
@@ -3146,11 +3146,11 @@ namespace ClosedXML.Excel
             var lrOffset = Convert.ToInt32(lastCell.WorksheetRow().Height - (heightFromRows - cHeight));
             return new Anchor
             {
-                Text = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}",
-                    fcNumber, fcOffset,
-                    frNumber, frOffset,
-                    lcNumber, lcOffset,
-                    lrNumber, lrOffset
+                Text = string.Concat(
+                    fcNumber, ", ", fcOffset, ", ",
+                    frNumber, ", ", frOffset, ", ",
+                    lcNumber, ", ", lcOffset, ", ",
+                    lrNumber, ", ", lrOffset
                     )
             };
         }

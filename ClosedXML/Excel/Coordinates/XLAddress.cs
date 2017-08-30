@@ -237,22 +237,19 @@ namespace ClosedXML.Excel
 
         public string ToString(XLReferenceStyle referenceStyle, bool includeSheet)
         {
-            string address = string.Empty;
+            string address;
             if (referenceStyle == XLReferenceStyle.A1)
-
-                address = ColumnLetter + _rowNumber.ToInvariantString();
-            else if (referenceStyle == XLReferenceStyle.R1C1)
-
-                address = String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
-            else if (HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
-
-                address = String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
+                address = GetTrimmedAddress();
+            else if (referenceStyle == XLReferenceStyle.R1C1
+                     || HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
+                address = "R" + _rowNumber.ToInvariantString() + "C" + ColumnNumber.ToInvariantString();
             else
-                address = ColumnLetter + _rowNumber.ToInvariantString();
+                address = GetTrimmedAddress();
 
             if (includeSheet)
-                return String.Format("{0}!{1}",
+                return String.Concat(
                     Worksheet.Name.EscapeSheetName(),
+                    '!',
                     address);
 
             return address;
@@ -388,9 +385,11 @@ namespace ClosedXML.Excel
         public String ToStringRelative(Boolean includeSheet)
         {
             if (includeSheet)
-                return String.Format("{0}!{1}",
+                return String.Concat(
                     Worksheet.Name.EscapeSheetName(),
-                    GetTrimmedAddress());
+                    '!',
+                    GetTrimmedAddress()
+                );
 
             return GetTrimmedAddress();
         }
@@ -403,18 +402,33 @@ namespace ClosedXML.Excel
         public String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet)
         {
             String address;
-            if (referenceStyle == XLReferenceStyle.A1)
-                address = String.Format("${0}${1}", ColumnLetter, _rowNumber.ToInvariantString());
-            else if (referenceStyle == XLReferenceStyle.R1C1)
-                address = String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
-            else if (HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
-                address = String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
-            else
-                address = String.Format("${0}${1}", ColumnLetter, _rowNumber.ToInvariantString());
+
+            if (referenceStyle == XLReferenceStyle.Default && HasWorksheet)
+                referenceStyle = Worksheet.Workbook.ReferenceStyle;
+
+            if (referenceStyle == XLReferenceStyle.Default)
+                referenceStyle = XLReferenceStyle.A1;
+
+            Debug.Assert(referenceStyle != XLReferenceStyle.Default);
+
+            switch (referenceStyle)
+            {
+                case XLReferenceStyle.A1:
+                    address = String.Concat('$', ColumnLetter, '$', _rowNumber.ToInvariantString());
+                    break;
+
+                case XLReferenceStyle.R1C1:
+                    address = String.Concat('R', _rowNumber.ToInvariantString(), 'C', ColumnNumber);
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
 
             if (includeSheet)
-                return String.Format("{0}!{1}",
+                return String.Concat(
                     Worksheet.Name.EscapeSheetName(),
+                    '!',
                     address);
 
             return address;

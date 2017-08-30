@@ -27,7 +27,7 @@ namespace ClosedXML.Excel
             Int32 id = 1;
             while (true)
             {
-                string tableName = String.Format("Table{0}", id);
+                string tableName = String.Concat("Table", id);
                 if (!Worksheet.Tables.Any(t => t.Name == tableName))
                 {
                     Name = tableName;
