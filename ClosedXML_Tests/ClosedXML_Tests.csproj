@@ -291,6 +291,7 @@
     <EmbeddedResource Include="Resource\Misc\DuplicateImageNames.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableHeadersWithLineBreaks.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableWithNameNull.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\ResizingTables.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />

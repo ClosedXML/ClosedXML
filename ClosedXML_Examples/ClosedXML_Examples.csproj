@@ -113,6 +113,7 @@
     <Compile Include="ExampleHelper.cs" />
     <Compile Include="PivotTables\PivotTables.cs" />
     <Compile Include="Ranges\AddingRowToTables.cs" />
+    <Compile Include="Ranges\ResizingTables.cs" />
     <Compile Include="Ranges\SelectingRanges.cs" />
     <Compile Include="Ranges\CurrentRowColumn.cs" />
     <Compile Include="Ranges\WalkingRanges.cs" />

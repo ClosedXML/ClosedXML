@@ -221,11 +221,23 @@ namespace ClosedXML.Excel
 
         public IXLCell SetValue<T>(T value)
         {
+            return SetValue(value, true);
+        }
+
+        internal IXLCell SetValue<T>(T value, bool setTableHeader)
+        {
             if (value == null)
                 return this.Clear(XLClearOptions.Contents);
 
             FormulaA1 = String.Empty;
             _richText = null;
+
+            if (setTableHeader)
+            {
+                if (SetTableHeader(value)) return this;
+                CheckOverWriteTableFooter();
+            }
+
             var style = GetStyleForRead();
             if (value is String || value is char)
             {
@@ -507,12 +519,12 @@ namespace ClosedXML.Excel
                             if (String.IsNullOrWhiteSpace(fieldName))
                                 fieldName = itemType.Name;
 
-                            SetValue(fieldName, fRo, co);
+                            _worksheet.SetValue(fieldName, fRo, co);
                             hasTitles = true;
                             co = Address.ColumnNumber;
                         }
 
-                        SetValue(o, ro, co);
+                        _worksheet.SetValue(o, ro, co);
                         co++;
 
                         if (co > maxCo)
@@ -569,7 +581,7 @@ namespace ClosedXML.Excel
                         {
                             foreach (var item in (m as Array))
                             {
-                                SetValue(item, ro, co);
+                                _worksheet.SetValue(item, ro, co);
                                 co++;
                             }
                         }
@@ -586,7 +598,7 @@ namespace ClosedXML.Excel
                                                                      ? column.ColumnName
                                                                      : column.Caption)
                                 {
-                                    SetValue(fieldName, fRo, co);
+                                    _worksheet.SetValue(fieldName, fRo, co);
                                     co++;
                                 }
 
@@ -596,7 +608,7 @@ namespace ClosedXML.Excel
 
                             foreach (var item in row.ItemArray)
                             {
-                                SetValue(item, ro, co);
+                                _worksheet.SetValue(item, ro, co);
                                 co++;
                             }
                         }
@@ -612,7 +624,7 @@ namespace ClosedXML.Excel
                             {
                                 for (var i = 0; i < fieldCount; i++)
                                 {
-                                    SetValue(record.GetName(i), fRo, co);
+                                    _worksheet.SetValue(record.GetName(i), fRo, co);
                                     co++;
                                 }
 
@@ -622,7 +634,7 @@ namespace ClosedXML.Excel
 
                             for (var i = 0; i < fieldCount; i++)
                             {
-                                SetValue(record[i], ro, co);
+                                _worksheet.SetValue(record[i], ro, co);
                                 co++;
                             }
                         }
@@ -638,7 +650,7 @@ namespace ClosedXML.Excel
                                         if (String.IsNullOrWhiteSpace(fieldName))
                                             fieldName = mi.Name;
 
-                                        SetValue(fieldName, fRo, co);
+                                        _worksheet.SetValue(fieldName, fRo, co);
                                     }
 
                                     co++;
@@ -650,7 +662,7 @@ namespace ClosedXML.Excel
 
                             foreach (var mi in members)
                             {
-                                SetValue(accessor[m, mi.Name], ro, co);
+                                _worksheet.SetValue(accessor[m, mi.Name], ro, co);
                                 co++;
                             }
                         }
@@ -706,7 +718,7 @@ namespace ClosedXML.Excel
 
             foreach (DataColumn col in data.Columns)
             {
-                SetValue(col.ColumnName, ro, co);
+                _worksheet.SetValue(col.ColumnName, ro, co);
                 co++;
             }
 
@@ -772,7 +784,7 @@ namespace ClosedXML.Excel
 
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                     {
-                        SetValue(m, rowNumber, columnNumber);
+                        _worksheet.SetValue(m, rowNumber, columnNumber);
 
                         if (transpose)
                             rowNumber++;
@@ -783,7 +795,7 @@ namespace ClosedXML.Excel
                     {
                         foreach (var item in (Array)m)
                         {
-                            SetValue(item, rowNumber, columnNumber);
+                            _worksheet.SetValue(item, rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -798,7 +810,7 @@ namespace ClosedXML.Excel
 
                         foreach (var item in (m as DataRow).ItemArray)
                         {
-                            SetValue(item, rowNumber, columnNumber);
+                            _worksheet.SetValue(item, rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -816,7 +828,7 @@ namespace ClosedXML.Excel
                         var fieldCount = record.FieldCount;
                         for (var i = 0; i < fieldCount; i++)
                         {
-                            SetValue(record[i], rowNumber, columnNumber);
+                            _worksheet.SetValue(record[i], rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -828,7 +840,7 @@ namespace ClosedXML.Excel
                     {
                         foreach (var mi in members)
                         {
-                            SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
+                            _worksheet.SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -1515,6 +1527,16 @@ namespace ClosedXML.Excel
             return false;
         }
 
+        private void CheckOverWriteTableFooter()
+        {
+            foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
+            {
+                var cells = table.TotalsRow().Cells(c => c.Address.Equals(this.Address));
+                if (cells.Any())
+                    throw new InvalidOperationException(String.Format("Inserted data will overwrite totals row cell {0}.", this.Address));
+            }
+        }
+
         private bool SetRangeColumns(object value)
         {
             var columns = value as XLRangeColumns;
@@ -1700,15 +1722,6 @@ namespace ClosedXML.Excel
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
-        private void SetValue<T>(T value, int ro, int co) where T : class
-        {
-            if (value == null)
-                _worksheet.Cell(ro, co).SetValue(String.Empty);
-            else if (value is IConvertible)
-                _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
-            else
-                _worksheet.Cell(ro, co).SetValue(value);
-        }
 
         private void SetValue(object value)
         {
@@ -1787,6 +1800,9 @@ namespace ClosedXML.Excel
                 }
             }
             if (val.Length > 32767) throw new ArgumentException("Cells can only hold 32,767 characters.");
+
+            if (SetTableHeader(val)) return;
+
             _cellValue = val;
         }
 

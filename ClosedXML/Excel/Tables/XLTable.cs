@@ -253,6 +253,34 @@ namespace ClosedXML.Excel
             }
         }
 
+        public void Resize(IXLRange range)
+        {
+            if (!this.ShowHeaderRow)
+                throw new NotImplementedException("Resizing of tables with no headers not supported yet.");
+
+            if (this.ShowTotalsRow)
+                throw new NotImplementedException("Resizing of tables with a totals row not supported yet.");
+
+            this.RangeAddress = range.RangeAddress as XLRangeAddress;
+
+            var firstRow = range.Row(1);
+            if (!firstRow.FirstCell().Address.Equals(this.HeadersRow().FirstCell().Address)
+                || !firstRow.LastCell().Address.Equals(this.HeadersRow().LastCell().Address))
+            {
+                _uniqueNames.Clear();
+                var co = this.Fields.Count() - 1;
+                foreach (var c in firstRow.Cells())
+                {
+                    if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                        c.Value = GetUniqueName("Column" + co.ToInvariantString());
+                    _uniqueNames.Add(c.GetString());
+                    co++;
+                }
+            }
+
+            _fieldNames = null;
+        }
+
         public IXLTable SetEmphasizeFirstColumn()
         {
             EmphasizeFirstColumn = true;

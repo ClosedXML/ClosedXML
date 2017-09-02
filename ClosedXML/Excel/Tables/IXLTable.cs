@@ -41,5 +41,7 @@ namespace ClosedXML.Excel
         IXLTable SetShowHeaderRow(); IXLTable SetShowHeaderRow(Boolean value);
 
         IXLTableRange DataRange { get; }
+
+        void Resize(IXLRange range);
     }
 }

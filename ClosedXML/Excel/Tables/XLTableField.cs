@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (table.ShowHeaderRow)
-                    table.HeadersRow().Cell(Index + 1).SetValue(value);
+                    (table.HeadersRow().Cell(Index + 1) as XLCell).SetValue(value, false);
 
                 table.RenameField(name, value);
                 name = value;
@@ -101,7 +101,7 @@ namespace ClosedXML.Excel
             set
             {
                 totalsRowFunction = XLTotalsRowFunction.None;
-                table.TotalsRow().Cell(Index + 1).SetValue(value);
+                (table.TotalsRow().Cell(Index + 1) as XLCell).SetValue(value, false);
                 totalsRowLabel = value;
             }
         }
