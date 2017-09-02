@@ -451,5 +451,21 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(2, table.Fields.Last().Index);
             }
         }
+
+
+        [Test]
+        public void OverlappingTablesThrowsException()
+        {
+            var dt = new DataTable("sheet1");
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
+
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().InsertTable(dt, true);
+                Assert.Throws<InvalidOperationException>(() => ws.FirstCell().CellRight().InsertTable(dt, true));
+            }
+        }
     }
 }

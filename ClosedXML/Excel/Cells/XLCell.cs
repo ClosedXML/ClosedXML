@@ -475,6 +475,9 @@ namespace ClosedXML.Excel
 
         public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable)
         {
+            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
+                throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
+
             if (data != null && !(data is String))
             {
                 var ro = Address.RowNumber + 1;
@@ -692,6 +695,9 @@ namespace ClosedXML.Excel
         public IXLTable InsertTable(DataTable data, string tableName, bool createTable)
         {
             if (data == null) return null;
+
+            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
+                throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
 
             if (data.Rows.Count > 0) return InsertTable(data.AsEnumerable(), tableName, createTable);
 
