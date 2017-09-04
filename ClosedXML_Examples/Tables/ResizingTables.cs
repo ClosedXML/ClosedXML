@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML_Examples.Ranges
+namespace ClosedXML_Examples.Tables
 {
     public class ResizingTables : IXLExample
     {

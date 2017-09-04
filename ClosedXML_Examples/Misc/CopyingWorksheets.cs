@@ -1,6 +1,6 @@
-using System.IO;
 using ClosedXML.Excel;
-using ClosedXML_Examples.Ranges;
+using ClosedXML_Examples.Tables;
+using System.IO;
 
 namespace ClosedXML_Examples.Misc
 {
@@ -18,7 +18,7 @@ namespace ClosedXML_Examples.Misc
                 var wsSource = wb.Worksheet(1);
                 // Copy the worksheet to a new sheet in this workbook
                 wsSource.CopyTo("Copy");
-                
+
                 // We're going to open another workbook to show that you can
                 // copy a sheet from one workbook to another:
                 new BasicTable().Create(tempFile2);
@@ -40,6 +40,5 @@ namespace ClosedXML_Examples.Misc
                 }
             }
         }
-
     }
 }

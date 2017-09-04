@@ -99,18 +99,6 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
-        public void UsingTables()
-        {
-            TestHelper.RunTestExample<UsingTables>(@"Ranges\UsingTables.xlsx");
-        }
-
-        [Test]
-        public void ResizingTables()
-        {
-            TestHelper.RunTestExample<ResizingTables>(@"Ranges\ResizingTables.xlsx");
-        }
-
-        [Test]
         public void AddingRowToTables()
         {
             TestHelper.RunTestExample<AddingRowToTables>(@"Ranges\AddingRowToTables.xlsx");

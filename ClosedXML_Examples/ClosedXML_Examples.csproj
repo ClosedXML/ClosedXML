@@ -113,13 +113,11 @@
     <Compile Include="ExampleHelper.cs" />
     <Compile Include="PivotTables\PivotTables.cs" />
     <Compile Include="Ranges\AddingRowToTables.cs" />
-    <Compile Include="Ranges\ResizingTables.cs" />
     <Compile Include="Ranges\SelectingRanges.cs" />
     <Compile Include="Ranges\CurrentRowColumn.cs" />
     <Compile Include="Ranges\WalkingRanges.cs" />
     <Compile Include="Ranges\SortExample.cs" />
     <Compile Include="Ranges\Sorting.cs" />
-    <Compile Include="Ranges\UsingTables.cs" />
     <Compile Include="Ranges\CopyingRanges.cs" />
     <Compile Include="Ranges\NamedRanges.cs" />
     <Compile Include="Misc\Formulas.cs" />
@@ -170,6 +168,8 @@
     <Compile Include="Styles\StyleFill.cs" />
     <Compile Include="Styles\StyleFont.cs" />
     <Compile Include="Styles\StyleNumberFormat.cs" />
+    <Compile Include="Tables\ResizingTables.cs" />
+    <Compile Include="Tables\UsingTables.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig">

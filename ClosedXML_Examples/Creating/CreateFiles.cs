@@ -4,6 +4,7 @@ using ClosedXML_Examples.PageSetup;
 using ClosedXML_Examples.Ranges;
 using ClosedXML_Examples.Rows;
 using ClosedXML_Examples.Styles;
+using ClosedXML_Examples.Tables;
 using System.IO;
 
 namespace ClosedXML_Examples

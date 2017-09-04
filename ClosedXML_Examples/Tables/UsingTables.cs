@@ -1,10 +1,8 @@
+using ClosedXML.Excel;
 using System;
 using System.IO;
-using ClosedXML.Excel;
-using System.Linq;
 
-
-namespace ClosedXML_Examples.Ranges
+namespace ClosedXML_Examples.Tables
 {
     public class UsingTables : IXLExample
     {
@@ -32,7 +30,7 @@ namespace ClosedXML_Examples.Ranges
                 range.Column(5).Style.NumberFormat.Format = "$ #,##0";
 
                 var table = range.CreateTable(); // You can also use range.AsTable() if you want to
-                // manipulate the range as a table but don't want 
+                // manipulate the range as a table but don't want
                 // to create the table in the worksheet.
 
                 // Let's activate the Totals row and add the sum of Income
@@ -100,7 +98,6 @@ namespace ClosedXML_Examples.Ranges
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }
