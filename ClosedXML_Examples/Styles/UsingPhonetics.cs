@@ -23,8 +23,10 @@ namespace ClosedXML_Examples.Styles
 
             // And then we add the phonetics
             cell.RichText.Phonetics.SetFontSize(8);
-            cell.RichText.Phonetics.Add("げん", 7, 1);
-            cell.RichText.Phonetics.Add("き", 8, 1);
+            cell.RichText.Phonetics.Add("げん", 7, 8);
+            cell.RichText.Phonetics.Add("き", 8, 9);
+
+            //TODO: I'm looking for someone who understands Japanese to confirm the validity of the above code.
 
             wb.SaveAs(filePath);
         }
