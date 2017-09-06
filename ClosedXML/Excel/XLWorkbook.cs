@@ -517,6 +517,9 @@ namespace ClosedXML.Excel
                     CreatePackage(fileStream, false, _spreadsheetDocumentType, options);
                 }
             }
+
+            _loadSource = XLLoadSource.File;
+            _originalFile = file;
         }
 
         private static SpreadsheetDocumentType GetSpreadsheetDocumentType(string filePath)
@@ -614,6 +617,9 @@ namespace ClosedXML.Excel
 
                 CreatePackage(stream, false, _spreadsheetDocumentType, options);
             }
+
+            _loadSource = XLLoadSource.Stream;
+            _originalStream = stream;
         }
 
         internal static void CopyStream(Stream input, Stream output)
@@ -698,9 +704,9 @@ namespace ClosedXML.Excel
 
 #region Fields
 
-        private readonly XLLoadSource _loadSource = XLLoadSource.New;
-        private readonly String _originalFile;
-        private readonly Stream _originalStream;
+        private XLLoadSource _loadSource = XLLoadSource.New;
+        private String _originalFile;
+        private Stream _originalStream;
 
         #endregion Fields
 
