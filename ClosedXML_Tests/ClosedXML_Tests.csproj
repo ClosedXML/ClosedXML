@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="**\*.xlsx" />
+    <EmbeddedResource Include="**\*.xlsx" Exclude="**\~$*.xlsx"/>
     <EmbeddedResource Include="Resource\Images\*.png" />
     <EmbeddedResource Include="Resource\Images\*.jpg" />
   </ItemGroup>
