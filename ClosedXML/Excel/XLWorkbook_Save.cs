@@ -146,7 +146,6 @@ namespace ClosedXML.Excel
             if (worksheet == null)
                 return;
 
-
             string sheetName = worksheet.Name;
             // Get the pivot Table Parts
             IEnumerable<PivotTableCacheDefinitionPart> pvtTableCacheParts = wbPart.PivotTableCacheDefinitionParts;
@@ -204,10 +203,8 @@ namespace ClosedXML.Excel
                 foreach (CalculationCell Item in calChainEntries)
                     calcsToDelete.Add(Item);
 
-
                 foreach (CalculationCell Item in calcsToDelete)
                     Item.Remove();
-
 
                 if (!calChainPart.CalculationChain.Any())
                     wbPart.DeletePart(calChainPart);
@@ -1964,7 +1961,11 @@ namespace ClosedXML.Excel
             {
                 var columnNumber = c.ColumnNumber();
                 var columnName = c.FirstCell().Value.ToString();
-                var xlpf = pt.Fields.Add(columnName);
+                IXLPivotField xlpf;
+                if (pt.Fields.Contains(columnName))
+                    xlpf = pt.Fields.Get(columnName);
+                else
+                    xlpf = pt.Fields.Add(columnName);
 
                 var field =
                     pt.RowLabels.Union(pt.ColumnLabels).Union(pt.ReportFilters).FirstOrDefault(f => f.SourceName == columnName);
@@ -2150,10 +2151,12 @@ namespace ClosedXML.Excel
                     case XLPivotSubtotals.DoNotShow:
                         pf.DefaultSubtotal = false;
                         break;
+
                     case XLPivotSubtotals.AtBottom:
                         pf.DefaultSubtotal = true;
                         pf.SubtotalTop = false;
                         break;
+
                     case XLPivotSubtotals.AtTop:
                         pf.DefaultSubtotal = true;
                         pf.SubtotalTop = true;
