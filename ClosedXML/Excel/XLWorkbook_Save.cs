@@ -1775,8 +1775,19 @@ namespace ClosedXML.Excel
             var modified = Properties.Modified == DateTime.MinValue ? DateTime.Now : Properties.Modified;
             document.PackageProperties.Created = created;
             document.PackageProperties.Modified = modified;
-            document.PackageProperties.LastModifiedBy = Properties.LastModifiedBy;
 
+#if true
+            if (Properties.LastModifiedBy == null) document.PackageProperties.LastModifiedBy = "";
+            if (Properties.Author == null) document.PackageProperties.Creator = "";
+            if (Properties.Title == null) document.PackageProperties.Title = "";
+            if (Properties.Subject == null) document.PackageProperties.Subject = "";
+            if (Properties.Category == null) document.PackageProperties.Category = "";
+            if (Properties.Keywords == null) document.PackageProperties.Keywords = "";
+            if (Properties.Comments == null) document.PackageProperties.Description = "";
+            if (Properties.Status == null) document.PackageProperties.ContentStatus = "";
+#endif
+
+            document.PackageProperties.LastModifiedBy = Properties.LastModifiedBy;
             document.PackageProperties.Creator = Properties.Author;
             document.PackageProperties.Title = Properties.Title;
             document.PackageProperties.Subject = Properties.Subject;
