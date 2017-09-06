@@ -1,6 +1,8 @@
 ﻿using ClosedXML.Excel;
-using System.IO;
+using System;
 using System.Linq;
+
+// TODO: Add example to Wiki
 
 namespace ClosedXML_Examples.Tables
 {
@@ -8,33 +10,37 @@ namespace ClosedXML_Examples.Tables
     {
         public void Create(string filePath)
         {
-            string tempFile = ExampleHelper.GetTempFilePath(filePath);
-            try
+            using (var wb = new XLWorkbook())
             {
-                new UsingTables().Create(tempFile);
-                using (var wb = new XLWorkbook(tempFile))
-                {
-                    var ws1 = wb.Worksheets.First();
+                var ws1 = wb.AddWorksheet("Sheet1");
 
-                    var ws2 = ws1.CopyTo("Contacts 2");
-                    ws2.Cell("A2").Value = "Index";
-                    ws2.Cell("A3").Value = Enumerable.Range(1, 3).ToArray();
-                    var table2 = ws2.Tables.First().SetShowTotalsRow(false);
-                    table2.Resize(ws2.Range(ws2.Cell("A2"), table2.DataRange.LastCell()));
+                var data1 = Enumerable.Range(1, 10)
+                    .Select(i =>
+                    new
+                    {
+                        Index = i,
+                        Character = Convert.ToChar(64 + i),
+                        String = new String('a', i),
+                        Integer = 64 + i
+                    });
 
-                    var ws3 = ws1.CopyTo("Contacts 3");
-                    var table3 = ws3.Tables.First().SetShowTotalsRow(false);
-                    table3.Resize(ws3.Range(table3.AsRange().FirstCell(), table3.DataRange.LastCell().CellLeft()));
+                var table1 = ws1.Cell("B2").InsertTable(data1, true)
+                    .SetShowHeaderRow()
+                    .SetShowTotalsRow();
 
-                    wb.SaveAs(filePath);
-                }
-            }
-            finally
-            {
-                if (File.Exists(tempFile))
-                {
-                    File.Delete(tempFile);
-                }
+                table1.Fields.First().TotalsRowLabel = "Sum of Integer";
+                table1.Fields.Last().TotalsRowFunction = XLTotalsRowFunction.Sum;
+
+                var ws2 = ws1.CopyTo("Sheet2");
+                var table2 = ws2.Tables.First();
+                table2.Resize(table2.FirstCell(), table2.LastCell().CellLeft().CellAbove(3));
+
+                var ws3 = ws2.CopyTo("Sheet3");
+                var table3 = ws3.Tables.First();
+                table3.Resize(table3.FirstCell().CellLeft(), table3.LastCell().CellRight().CellBelow(1));
+
+                wb.Worksheets.ForEach(ws => ws.Columns().AdjustToContents());
+                wb.SaveAs(filePath);
             }
         }
     }

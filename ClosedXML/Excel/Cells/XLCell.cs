@@ -234,8 +234,8 @@ namespace ClosedXML.Excel
 
             if (setTableHeader)
             {
-                if (SetTableHeader(value)) return this;
-                CheckOverWriteTableFooter();
+                if (SetTableHeaderValue(value)) return this;
+                if (SetTableTotalsRowLabel(value)) return this;
             }
 
             var style = GetStyleForRead();
@@ -451,9 +451,9 @@ namespace ClosedXML.Excel
             {
                 FormulaA1 = String.Empty;
 
-                if (value as XLCells != null) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
+                if (value is XLCells) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
 
-                if (SetTableHeader(value)) return;
+                if (SetTableHeaderValue(value)) return;
 
                 if (SetRangeRows(value)) return;
 
@@ -732,6 +732,17 @@ namespace ClosedXML.Excel
             if (createTable) return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
 
             return tableName == null ? range.AsTable() : range.AsTable(tableName);
+        }
+
+        public XLTableCellType TableCellType()
+        {
+            var table = this.Worksheet.Tables.FirstOrDefault(t => t.AsRange().Contains(this));
+            if (table == null) return XLTableCellType.None;
+
+            if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(this.Address.RowNumber)) return XLTableCellType.Header;
+            if (table.ShowTotalsRow && table.TotalsRow().RowNumber().Equals(this.Address.RowNumber)) return XLTableCellType.Total;
+
+            return XLTableCellType.Data;
         }
 
         public IXLRange InsertData(IEnumerable data)
@@ -1510,7 +1521,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLStylized Members
 
-        private bool SetTableHeader(object value)
+        private Boolean SetTableHeaderValue(object value)
         {
             foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
             {
@@ -1527,14 +1538,24 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        private void CheckOverWriteTableFooter()
+        private Boolean SetTableTotalsRowLabel(object value)
         {
             foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
             {
                 var cells = table.TotalsRow().Cells(c => c.Address.Equals(this.Address));
                 if (cells.Any())
-                    throw new InvalidOperationException(String.Format("Inserted data will overwrite totals row cell {0}.", this.Address));
+                {
+                    var cell = cells.First();
+                    var field = table.Fields.First(f => f.Column.ColumnNumber() == cell.WorksheetColumn().ColumnNumber());
+                    field.TotalsRowFunction = XLTotalsRowFunction.None;
+                    field.TotalsRowLabel = value.ToString();
+                    this._cellValue = value.ToString();
+                    this.DataType = XLCellValues.Text;
+                    return true;
+                }
             }
+
+            return false;
         }
 
         private bool SetRangeColumns(object value)
@@ -1801,7 +1822,8 @@ namespace ClosedXML.Excel
             }
             if (val.Length > 32767) throw new ArgumentException("Cells can only hold 32,767 characters.");
 
-            if (SetTableHeader(val)) return;
+            if (SetTableHeaderValue(val)) return;
+            if (SetTableTotalsRowLabel(val)) return;
 
             _cellValue = val;
         }

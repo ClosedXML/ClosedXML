@@ -7,6 +7,8 @@ namespace ClosedXML.Excel
 {
     public enum XLCellValues { Text, Number, Boolean, DateTime, TimeSpan }
 
+    public enum XLTableCellType { None, Header, Data, Total }
+
     public enum XLClearOptions
     {
         ContentsAndFormats,
@@ -253,6 +255,7 @@ namespace ClosedXML.Excel
         /// </param>
         IXLTable InsertTable(DataTable data, String tableName, Boolean createTable);
 
+        XLTableCellType TableCellType();
 
         XLHyperlink Hyperlink { get; set; }
         IXLWorksheet Worksheet { get; }
