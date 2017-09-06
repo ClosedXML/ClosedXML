@@ -1102,7 +1102,7 @@ namespace ClosedXML.Excel
         {
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
-                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !String.IsNullOrWhiteSpace(c.FormulaA1)))
+                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !XLHelper.IsNullOrWhiteSpace(c.FormulaA1)))
                     using (var asRange = AsRange())
                         cell.ShiftFormulaColumns(asRange, numberOfColumns);
             }
@@ -1338,7 +1338,7 @@ namespace ClosedXML.Excel
             using (var asRange = AsRange())
                 foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
                 {
-                    foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !String.IsNullOrWhiteSpace(c.FormulaA1)))
+                    foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !XLHelper.IsNullOrWhiteSpace(c.FormulaA1)))
                         cell.ShiftFormulaRows(asRange, numberOfRows);
                 }
 
@@ -1514,7 +1514,7 @@ namespace ClosedXML.Excel
                 XLCell cell in
                     Worksheet.Workbook.Worksheets.Cast<XLWorksheet>().SelectMany(
                         xlWorksheet => (xlWorksheet).Internals.CellsCollection.GetCells(
-                            c => !String.IsNullOrWhiteSpace(c.FormulaA1))))
+                            c => !XLHelper.IsNullOrWhiteSpace(c.FormulaA1))))
             {
                 if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)
                     cell.ShiftFormulaRows((XLRange)shiftedRangeFormula, numberOfRows * -1);
@@ -1794,7 +1794,7 @@ namespace ClosedXML.Excel
         public IXLRangeBase Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
             SortColumns.Clear();
-            if (String.IsNullOrWhiteSpace(columnsToSortBy))
+            if (XLHelper.IsNullOrWhiteSpace(columnsToSortBy))
             {
                 columnsToSortBy = String.Empty;
                 Int32 maxColumn = ColumnCount();

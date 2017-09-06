@@ -2,6 +2,7 @@ using System.IO;
 using ClosedXML_Examples;
 using DocumentFormat.OpenXml.Packaging;
 using NUnit.Framework;
+using ClosedXML_Tests.Utils;
 
 namespace ClosedXML_Tests
 {

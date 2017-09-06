@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClosedXML.Extensions
 {
@@ -33,6 +30,5 @@ namespace ClosedXML.Extensions
             hash ^= pLength;
             return hash.ToString("X");
         }
-
     }
 }

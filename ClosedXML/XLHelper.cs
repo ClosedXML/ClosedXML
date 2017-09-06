@@ -122,7 +122,7 @@ namespace ClosedXML.Excel
         public static bool IsValidColumn(string column)
         {
             var length = column.Length;
-            if (String.IsNullOrWhiteSpace(column) || length > 3)
+            if (XLHelper.IsNullOrWhiteSpace(column) || length > 3)
                 return false;
 
             var theColumn = column.ToUpper();
@@ -158,7 +158,7 @@ namespace ClosedXML.Excel
 
         public static bool IsValidA1Address(string address)
         {
-            if (String.IsNullOrWhiteSpace(address))
+            if (XLHelper.IsNullOrWhiteSpace(address))
                 return false;
 
             address = address.Replace("$", "");
@@ -233,6 +233,16 @@ namespace ClosedXML.Excel
             return rows;
         }
 
+
+        public static bool IsNullOrWhiteSpace(string value)
+        {
+#if _NET35_
+            if (value == null) return true;
+            return value.All(c => char.IsWhiteSpace(c));
+#else
+            return String.IsNullOrWhiteSpace(value);
+#endif
+        }
         private static readonly Regex A1RegexRelative = new Regex(
       @"(?<=\W)(?<one>\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
     + @"|(?<=\W)(?<two>\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1

@@ -210,7 +210,7 @@ namespace ClosedXML.Excel
     {
         public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, Font> fontCache)
         {
-            if (String.IsNullOrWhiteSpace(text))
+            if (XLHelper.IsNullOrWhiteSpace(text))
                 return 0;
 
             var font = GetCachedFont(fontBase, fontCache);

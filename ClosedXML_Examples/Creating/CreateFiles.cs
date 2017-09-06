@@ -86,7 +86,7 @@ namespace ClosedXML_Examples
             new ShiftingFormulas().Create(Path.Combine(path, "ShiftingFormulas.xlsx"));
             new CopyingRowsAndColumns().Create(Path.Combine(path, "CopyingRowsAndColumns.xlsx"));
             new UsingRichText().Create(Path.Combine(path, "UsingRichText.xlsx"));
-            new UsingPhonetics().Create(Path.Combine(path, "UsingPhonetics.xlsx"));
+            //new UsingPhonetics().Create(Path.Combine(path, "UsingPhonetics.xlsx"));
             new WalkingRanges().Create(Path.Combine(path, "CellMoves.xlsx"));
             new AddingComments().Create(Path.Combine(path, "AddingComments.xlsx"));
             new PivotTables().Create(Path.Combine(path, "PivotTables.xlsx"));

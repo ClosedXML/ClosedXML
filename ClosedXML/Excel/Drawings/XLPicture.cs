@@ -1,3 +1,4 @@
+using ClosedXML.Extensions;
 using MetadataExtractor;
 using MetadataExtractor.Formats.Bmp;
 using MetadataExtractor.Formats.Exif;
@@ -326,7 +327,7 @@ namespace ClosedXML.Excel.Drawings
             if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
                 throw new ArgumentException($"Picture names cannot contain any of the following characters: {InvalidNameChars}");
 
-            if (String.IsNullOrWhiteSpace(value))
+            if (XLHelper.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Picture names cannot be empty");
 
             if (value.Length > 31)

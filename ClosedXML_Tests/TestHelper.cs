@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using ClosedXML_Examples;
+using ClosedXML_Tests.Utils;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace ClosedXML_Tests
 
         public static void SaveWorkbook(XLWorkbook workbook, params string[] fileNameParts)
         {
-            workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
+            workbook.SaveAs(PathHelper.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
         }
 
         // Because different fonts are installed on Unix,
@@ -59,7 +60,7 @@ namespace ClosedXML_Tests
 
             var example = new T();
             string[] pathParts = filePartName.Split(new char[] { '\\' });
-            string filePath1 = Path.Combine(new List<string>() { TestsExampleOutputDirectory }.Concat(pathParts).ToArray());
+            string filePath1 = PathHelper.Combine(new List<string>() { TestsExampleOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
