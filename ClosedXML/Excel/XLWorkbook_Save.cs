@@ -48,7 +48,9 @@ using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using ClosedXML.Extensions;
 
 #if _NETSTANDARD_
+
 using ClosedXML.NetStandard;
+
 #endif
 
 namespace ClosedXML.Excel
@@ -150,7 +152,6 @@ namespace ClosedXML.Excel
             if (worksheet == null)
                 return;
 
-
             string sheetName = worksheet.Name;
             // Get the pivot Table Parts
             IEnumerable<PivotTableCacheDefinitionPart> pvtTableCacheParts = wbPart.PivotTableCacheDefinitionParts;
@@ -208,15 +209,13 @@ namespace ClosedXML.Excel
                 foreach (CalculationCell Item in calChainEntries)
                     calcsToDelete.Add(Item);
 
-
                 foreach (CalculationCell Item in calcsToDelete)
                     Item.Remove();
 
-
                 if (!calChainPart.CalculationChain.Any())
                     wbPart.DeletePart(calChainPart);
-                }
             }
+        }
 
         // Adds child parts and generates content of the specified part.
         private void CreateParts(SpreadsheetDocument document, SaveOptions options)
@@ -335,7 +334,7 @@ namespace ClosedXML.Excel
                 workbookPart.Workbook.RemoveChild(workbookPart.Workbook.PivotCaches);
 
             if (options.GenerateCalculationChain)
-            GenerateCalculationChainPartContent(workbookPart, context);
+                GenerateCalculationChainPartContent(workbookPart, context);
             else
                 DeleteCalculationChainPartContent(workbookPart, context);
 
@@ -368,7 +367,7 @@ namespace ClosedXML.Excel
             // Only delete the VmlDrawingParts for comments.
             if (vmlDrawingPart != null)
             {
-                var vmlStream = vmlDrawingPart.GetStream(FileMode.Open);                
+                var vmlStream = vmlDrawingPart.GetStream(FileMode.Open);
                 var xdoc = XDocumentExtensions.Load(vmlStream);
                 //xdoc.Root.Elements().Where(e => e.Name.LocalName == "shapelayout").Remove();
                 xdoc.Root.Elements().Where(
@@ -639,9 +638,9 @@ namespace ClosedXML.Excel
                 {
                     if (String.IsNullOrWhiteSpace(xlSheet.RelId))
                     {
-                    rId = String.Format("rId{0}", xlSheet.SheetId);
+                        rId = String.Format("rId{0}", xlSheet.SheetId);
                         context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
-                }
+                    }
                     else
                         rId = xlSheet.RelId;
                 }
@@ -1041,29 +1040,29 @@ namespace ClosedXML.Excel
                         {
                             if (c.FormulaReference.FirstAddress.Equals(c.Address))
                             {
-                            var cc = new CalculationCell
-                            {
-                                CellReference = c.Address.ToString(),
-                                SheetId = worksheet.SheetId
-                            };
+                                var cc = new CalculationCell
+                                {
+                                    CellReference = c.Address.ToString(),
+                                    SheetId = worksheet.SheetId
+                                };
 
-                            if (c.FormulaReference == null)
-                                c.FormulaReference = c.AsRange().RangeAddress;
+                                if (c.FormulaReference == null)
+                                    c.FormulaReference = c.AsRange().RangeAddress;
 
                                 cc.Array = true;
                                 calculationChain.AppendChild(cc);
 
                                 foreach (var childCell in worksheet.Range(c.FormulaReference.ToString()).Cells())
-                            {
+                                {
                                     calculationChain.AppendChild(
                                         new CalculationCell
                                         {
                                             CellReference = childCell.Address.ToString(),
                                             SheetId = worksheet.SheetId,
                                             InChildChain = true
-                            }
+                                        }
                                     );
-                        }
+                                }
                             }
                         }
                         else
@@ -1103,7 +1102,7 @@ namespace ClosedXML.Excel
                 foreach (var cc in cellsToRemove)
                 {
                     calculationChain.RemoveChild(cc);
-            }
+                }
 #endif
             }
 
@@ -1776,7 +1775,8 @@ namespace ClosedXML.Excel
             document.PackageProperties.Created = created;
             document.PackageProperties.Modified = modified;
 
-#if true
+#if true // Workaround: https://github.com/OfficeDev/Open-XML-SDK/issues/235
+
             if (Properties.LastModifiedBy == null) document.PackageProperties.LastModifiedBy = "";
             if (Properties.Author == null) document.PackageProperties.Creator = "";
             if (Properties.Title == null) document.PackageProperties.Title = "";
@@ -1785,9 +1785,11 @@ namespace ClosedXML.Excel
             if (Properties.Keywords == null) document.PackageProperties.Keywords = "";
             if (Properties.Comments == null) document.PackageProperties.Description = "";
             if (Properties.Status == null) document.PackageProperties.ContentStatus = "";
+
 #endif
 
             document.PackageProperties.LastModifiedBy = Properties.LastModifiedBy;
+
             document.PackageProperties.Creator = Properties.Author;
             document.PackageProperties.Title = Properties.Title;
             document.PackageProperties.Subject = Properties.Subject;
@@ -2167,10 +2169,12 @@ namespace ClosedXML.Excel
                     case XLPivotSubtotals.DoNotShow:
                         pf.DefaultSubtotal = false;
                         break;
+
                     case XLPivotSubtotals.AtBottom:
                         pf.DefaultSubtotal = true;
                         pf.SubtotalTop = false;
                         break;
+
                     case XLPivotSubtotals.AtTop:
                         pf.DefaultSubtotal = true;
                         pf.SubtotalTop = true;
@@ -2284,8 +2288,8 @@ namespace ClosedXML.Excel
 
                 if (fieldItems.Any())
                 {
-                fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
-                pf.AppendChild(fieldItems);
+                    fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
+                    pf.AppendChild(fieldItems);
                 }
                 pivotFields.AppendChild(pf);
             }
@@ -2305,8 +2309,8 @@ namespace ClosedXML.Excel
 
             if (rowItems.Any())
             {
-            rowItems.Count = Convert.ToUInt32(rowItems.Count());
-            pivotTableDefinition.AppendChild(rowItems);
+                rowItems.Count = Convert.ToUInt32(rowItems.Count());
+                pivotTableDefinition.AppendChild(rowItems);
             }
 
             if (!pt.ColumnLabels.Any(cl => cl.CustomName != XLConstants.PivotTableValuesSentinalLabel))
@@ -2393,8 +2397,8 @@ namespace ClosedXML.Excel
 
             if (dataFields.Any())
             {
-            dataFields.Count = Convert.ToUInt32(dataFields.Count());
-            pivotTableDefinition.AppendChild(dataFields);
+                dataFields.Count = Convert.ToUInt32(dataFields.Count());
+                pivotTableDefinition.AppendChild(dataFields);
             }
 
             pivotTableDefinition.AppendChild(new PivotTableStyle
@@ -2652,37 +2656,37 @@ namespace ClosedXML.Excel
             {
                 case Drawings.XLPicturePlacement.FreeFloating:
                     var absoluteAnchor = new Xdr.AbsoluteAnchor(
-                    new Xdr.Position
-                    {
+                        new Xdr.Position
+                        {
                             X = ConvertToEnglishMetricUnits(pic.Left, GraphicsUtils.Graphics.DpiX),
                             Y = ConvertToEnglishMetricUnits(pic.Top, GraphicsUtils.Graphics.DpiY)
-                    },
-                    new Xdr.Extent
-                    {
-                        Cx = extentsCx,
-                        Cy = extentsCy
-                    },
-                    new Xdr.Picture(
-                        new Xdr.NonVisualPictureProperties(
-                                new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
-                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
-                        ),
-                        new Xdr.BlipFill(
-                            new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
-                            new Stretch(new FillRectangle())
-                        ),
-                        new Xdr.ShapeProperties(
-                            new Transform2D(
-                                new Offset { X = 0, Y = 0 },
-                                new Extents { Cx = extentsCx, Cy = extentsCy }
+                        },
+                        new Xdr.Extent
+                        {
+                            Cx = extentsCx,
+                            Cy = extentsCy
+                        },
+                        new Xdr.Picture(
+                            new Xdr.NonVisualPictureProperties(
+                                    new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
+                                    new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
                             ),
-                            new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
-                        )
-                    ),
-                    new Xdr.ClientData()
-                );
+                            new Xdr.BlipFill(
+                                new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                                new Stretch(new FillRectangle())
+                            ),
+                            new Xdr.ShapeProperties(
+                                new Transform2D(
+                                    new Offset { X = 0, Y = 0 },
+                                    new Extents { Cx = extentsCx, Cy = extentsCy }
+                                ),
+                                new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
+                            )
+                        ),
+                        new Xdr.ClientData()
+                    );
 
-                worksheetDrawing.Append(absoluteAnchor);
+                    worksheetDrawing.Append(absoluteAnchor);
                     break;
 
                 case Drawings.XLPicturePlacement.MoveAndSize:
@@ -2772,8 +2776,8 @@ namespace ClosedXML.Excel
 
                     worksheetDrawing.Append(oneCellAnchor);
                     break;
-                }
             }
+        }
 
         private static void RebasePictureIds(WorksheetPart worksheetPart)
         {
@@ -2784,7 +2788,7 @@ namespace ClosedXML.Excel
                 if (props != null)
                     props.Id = Convert.ToUInt32(i + 1);
             }
-            }
+        }
 
         private static Vml.TextBox GetTextBox(IXLDrawingStyle ds)
         {
@@ -4344,8 +4348,8 @@ namespace ClosedXML.Excel
 
                         if (!xlCell.HasFormula || evaluateFormulae)
                             SetCellValue(xlCell, cell);
-                                    }
-                                    }
+                    }
+                }
                 xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
             }
             foreach (
@@ -4812,7 +4816,7 @@ namespace ClosedXML.Excel
             foreach (var pic in xlWorksheet.Pictures)
             {
                 AddPictureAnchor(worksheetPart, pic, context);
-                }
+            }
 
             if (xlWorksheet.Pictures.Any())
                 RebasePictureIds(worksheetPart);
