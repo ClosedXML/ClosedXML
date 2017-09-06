@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
-
-#if _NETSTANDARD_
-using ClosedXML.NetStandard;
-#endif
+using System;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -30,9 +23,11 @@ namespace ClosedXML.Excel
                 case XLColorType.Color:
                     color.Rgb = cf.Colors[1].Color.ToHex();
                     break;
+
                 case XLColorType.Theme:
                     color.Theme = System.Convert.ToUInt32(cf.Colors[1].ThemeColor);
                     break;
+
                 case XLColorType.Indexed:
                     color.Indexed = System.Convert.ToUInt32(cf.Colors[1].Indexed);
                     break;

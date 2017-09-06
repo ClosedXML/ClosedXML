@@ -1,16 +1,15 @@
 ﻿#if _NETSTANDARD_
-using ClosedXML.Excel;
+
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace ClosedXML.NetStandard
 {
     public class XLColorTranslator
     {
         private static IDictionary<string, Color> NAMED_COLOR_MAP = new Dictionary<string, Color>{
-             
             //X11 Color Names (W3C color names)
             //Red color names
             {"indianred", Color.FromArgb(205, 92, 92)},
@@ -206,4 +205,5 @@ namespace ClosedXML.NetStandard
         }
     }
 }
+
 #endif

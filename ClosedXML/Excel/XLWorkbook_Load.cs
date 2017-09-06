@@ -17,6 +17,7 @@ using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 #if _NETSTANDARD_
 using ClosedXML.NetStandard;
 #endif
+
 namespace ClosedXML.Excel
 {
     using Ap;

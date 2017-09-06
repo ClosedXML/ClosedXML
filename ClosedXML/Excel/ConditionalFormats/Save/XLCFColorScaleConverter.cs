@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
-
-#if _NETSTANDARD_
-using ClosedXML.NetStandard;
-#endif
+using System;
 
 namespace ClosedXML.Excel
 {

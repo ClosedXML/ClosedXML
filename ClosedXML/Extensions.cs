@@ -208,30 +208,6 @@ namespace ClosedXML.Excel
 
     public static class FontBaseExtensions
     {
-
-#if _NETSTANDARD_
-        public static Double GetWidth(this IXLFontBase fontBase, String text)
-        {
-            // Calibri size 11's width of the @ character is 13.112628
-            // @ is one of the widest regular characters
-
-            var textWidth = text.Length * 13.112628 * fontBase.FontSize / 11f;
-
-            double width = (textWidth / 7d * 256 - 128 / 7) / 256;
-            width = (double)decimal.Round((decimal)width + 0.2M, 2);
-
-            return width;
-        }
-
-        public static Double GetHeight(this IXLFontBase fontBase)
-        {
-            // Calibri size 11's height of the X character is 17.9036427
-            var textHeight = 17.9036427 * fontBase.FontSize / 11f;
-            return (double)textHeight * 0.85;
-        }
-#endif
-
-#if _NETFRAMEWORK_
         public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, Font> fontCache)
         {
             if (String.IsNullOrWhiteSpace(text))
@@ -246,14 +222,12 @@ namespace ClosedXML.Excel
             return width;
         }
 
-
         public static Double GetHeight(this IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
         {
             var font = GetCachedFont(fontBase, fontCache);
             var textHeight = GraphicsUtils.MeasureString("X", font).Height;
             return (double)textHeight * 0.85;
         }
-#endif
 
         public static void CopyFont(this IXLFontBase font, IXLFontBase sourceFont)
         {
@@ -269,7 +243,6 @@ namespace ClosedXML.Excel
             font.FontFamilyNumbering = sourceFont.FontFamilyNumbering;
         }
 
-#if _NETFRAMEWORK_
         private static Font GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
         {
             Font font;
@@ -290,7 +263,6 @@ namespace ClosedXML.Excel
             if (font.Underline != XLFontUnderlineValues.None) fontStyle |= FontStyle.Underline;
             return fontStyle;
         }
-#endif
     }
 
     public static class XDocumentExtensions

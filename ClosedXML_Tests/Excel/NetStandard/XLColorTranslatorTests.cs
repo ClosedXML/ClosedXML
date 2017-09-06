@@ -1,9 +1,7 @@
 #if _NETSTANDARD_
 
-using ClosedXML.Excel;
 using ClosedXML.NetStandard;
 using NUnit.Framework;
-using System.Linq;
 using System.Drawing;
 
 namespace ClosedXML_Tests.Excel.NetStandard
@@ -14,8 +12,6 @@ namespace ClosedXML_Tests.Excel.NetStandard
     [TestFixture]
     public class XLColorTranslatorTests
     {
-
-
         [Test]
         public void CanResolveFromHtmlColor()
         {

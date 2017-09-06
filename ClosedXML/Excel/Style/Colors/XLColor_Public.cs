@@ -1,10 +1,6 @@
 using System;
 using System.Drawing;
 
-#if _NETSTANDARD_
-using ClosedXML.NetStandard;
-#endif
-
 namespace ClosedXML.Excel
 {
     public enum XLColorType
@@ -109,7 +105,7 @@ namespace ClosedXML.Excel
                 if (ColorType == XLColorType.Indexed)
                     throw new InvalidOperationException("Cannot extract theme tint from an indexed color.");
 
-                return _color.A/255.0;
+                return _color.A / 255.0;
             }
         }
 
@@ -136,11 +132,11 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        #endregion
+        #endregion IEquatable<XLColor> Members
 
         public override bool Equals(object obj)
         {
-            return Equals((XLColor) obj);
+            return Equals((XLColor)obj);
         }
 
         public override int GetHashCode()
