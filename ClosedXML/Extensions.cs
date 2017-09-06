@@ -212,8 +212,12 @@ namespace ClosedXML.Excel
 #if _NETSTANDARD_
         public static Double GetWidth(this IXLFontBase fontBase, String text)
         {
-            var textWidth = text.Length * 8.598;
-            double width = textWidth / 7d - 128d / 7 / 256;
+            // Calibri size 11's width of the @ character is 13.112628
+            // @ is one of the widest regular characters
+
+            var textWidth = text.Length * 13.112628 * fontBase.FontSize / 11f;
+
+            double width = (textWidth / 7d * 256 - 128 / 7) / 256;
             width = (double)decimal.Round((decimal)width + 0.2M, 2);
 
             return width;
@@ -221,7 +225,8 @@ namespace ClosedXML.Excel
 
         public static Double GetHeight(this IXLFontBase fontBase)
         {
-            var textHeight = 30;
+            // Calibri size 11's height of the X character is 17.9036427
+            var textHeight = 17.9036427 * fontBase.FontSize / 11f;
             return (double)textHeight * 0.85;
         }
 #endif
@@ -235,7 +240,7 @@ namespace ClosedXML.Excel
             var font = GetCachedFont(fontBase, fontCache);
             var textWidth = GraphicsUtils.MeasureString(text, font).Width;
 
-            double width = (((textWidth / (double)7) * 256) - (128 / 7)) / 256;
+            double width = (textWidth / 7d * 256 - 128 / 7) / 256;
             width = (double)decimal.Round((decimal)width + 0.2M, 2);
 
             return width;
