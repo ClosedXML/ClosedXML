@@ -1984,8 +1984,8 @@ namespace ClosedXML.Excel
                 var columnNumber = c.ColumnNumber();
                 var columnName = c.FirstCell().Value.ToString();
                 IXLPivotField xlpf;
-                if (pt.Fields.Any(f => f.SourceName == columnName))
-                    xlpf = pt.Fields.Single(f => f.SourceName == columnName);
+                if (pt.Fields.Contains(columnName))
+                    xlpf = pt.Fields.Get(columnName);
                 else
                     xlpf = pt.Fields.Add(columnName);
 
