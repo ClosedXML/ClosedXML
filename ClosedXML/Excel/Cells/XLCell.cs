@@ -15,6 +15,8 @@ namespace ClosedXML.Excel
     using Attributes;
     using ClosedXML.Extensions;
 
+    [DebuggerDisplay("{Address}")]
+
     internal class XLCell : IXLCell, IXLStylized
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
