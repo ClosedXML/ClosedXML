@@ -55,9 +55,13 @@ namespace ClosedXML_Examples.Misc
                 ws.Range(6, 6, 6, 8).Merge().AddToNamed("Titles");
                 ws.Cell(7, 6).InsertData(people.AsEnumerable());
 
-                ws.Cell("F13").Value = "Transposed";
-                ws.Range(13, 6, 13, 8).Merge().AddToNamed("Titles");
-                ws.Cell("F14").InsertData(people.AsEnumerable(), true);
+                ws.Cell(11, 6).Value = "From List";
+                ws.Range(11, 6, 11, 9).Merge().AddToNamed("Titles");
+                ws.Cell(12, 6).InsertData(list);
+
+                ws.Cell("A13").Value = "Transposed";
+                ws.Range(13, 1, 13, 3).Merge().AddToNamed("Titles");
+                ws.Cell("A14").InsertData(people.AsEnumerable(), true);
 
                 // Prepare the style for the titles
                 var titlesStyle = wb.Style;
@@ -79,6 +83,7 @@ namespace ClosedXML_Examples.Misc
             public String House { get; set; }
             public String Name { get; set; }
             public Int32 Age { get; set; }
+            public static String ClassType { get { return nameof(Person); } }
         }
 
         // Private
