@@ -672,6 +672,8 @@ namespace ClosedXML.Excel
                     var xlSheet = Worksheet(sheet.Name);
                     if (xlSheet.Visibility != XLWorksheetVisibility.Visible)
                         sheet.State = xlSheet.Visibility.ToOpenXml();
+                    else
+                        sheet.State = null;
 
                     if (foundVisible) continue;
 
