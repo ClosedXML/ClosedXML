@@ -86,6 +86,7 @@
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Comments\CommentsTests.cs" />
     <Compile Include="Excel\ImageHandling\PictureTests.cs" />
+    <Compile Include="Excel\Misc\HyperlinkTests.cs" />
     <Compile Include="Excel\Misc\SearchTests.cs" />
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />

@@ -7,6 +7,7 @@ namespace ClosedXML.Excel
     internal class XLAddress : IXLAddress
     {
         #region Static
+
         /// <summary>
         /// Create address without worksheet. For calculation only!
         /// </summary>
@@ -72,22 +73,32 @@ namespace ClosedXML.Excel
             }
             return new XLAddress(worksheet, rowNumber, columnLetter, fixedRow, fixedColumn);
         }
-        #endregion
+
+        #endregion Static
+
         #region Private fields
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool _fixedRow;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool _fixedColumn;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string _columnLetter;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly int _rowNumber;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly int _columnNumber;
+
         private string _trimmedAddress;
-        #endregion
+
+        #endregion Private fields
+
         #region Constructors
+
         /// <summary>
         /// 	Initializes a new <see cref = "XLAddress" /> struct using a mixed notation.  Attention: without worksheet for calculation only!
         /// </summary>
@@ -99,6 +110,7 @@ namespace ClosedXML.Excel
                 : this(null, rowNumber, columnLetter, fixedRow, fixedColumn)
         {
         }
+
         /// <summary>
         /// 	Initializes a new <see cref = "XLAddress" /> struct using a mixed notation.
         /// </summary>
@@ -124,6 +136,7 @@ namespace ClosedXML.Excel
                 : this(null, rowNumber, columnNumber, fixedRow, fixedColumn)
         {
         }
+
         /// <summary>
         /// 	Initializes a new <see cref = "XLAddress" /> struct using R1C1 notation.
         /// </summary>
@@ -142,12 +155,14 @@ namespace ClosedXML.Excel
             _columnLetter = null;
             _fixedColumn = fixedColumn;
             _fixedRow = fixedRow;
-
-
         }
-        #endregion
+
+        #endregion Constructors
+
         #region Properties
+
         public XLWorksheet Worksheet { get; internal set; }
+
         IXLWorksheet IXLAddress.Worksheet
         {
             [DebuggerStepThrough]
@@ -195,8 +210,11 @@ namespace ClosedXML.Excel
         {
             get { return _columnLetter ?? (_columnLetter = XLHelper.GetColumnLetterFromNumber(_columnNumber)); }
         }
-        #endregion
+
+        #endregion Properties
+
         #region Overrides
+
         public override string ToString()
         {
             String retVal = ColumnLetter;
@@ -214,31 +232,45 @@ namespace ClosedXML.Excel
 
         public string ToString(XLReferenceStyle referenceStyle)
         {
-            if (referenceStyle == XLReferenceStyle.A1)
-            {
-                return ColumnLetter + _rowNumber.ToInvariantString();
-            }
-            if (referenceStyle == XLReferenceStyle.R1C1)
-            {
-                return String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
-            }
-            if (HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
-            {
-                return String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
-            }
-            return ColumnLetter + _rowNumber.ToInvariantString();
+            return ToString(referenceStyle, false);
         }
-        #endregion
+
+        public string ToString(XLReferenceStyle referenceStyle, bool includeSheet)
+        {
+            string address = string.Empty;
+            if (referenceStyle == XLReferenceStyle.A1)
+
+                address = ColumnLetter + _rowNumber.ToInvariantString();
+            else if (referenceStyle == XLReferenceStyle.R1C1)
+
+                address = String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
+            else if (HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
+
+                address = String.Format("R{0}C{1}", _rowNumber.ToInvariantString(), ColumnNumber);
+            else
+                address = ColumnLetter + _rowNumber.ToInvariantString();
+
+            if (includeSheet)
+                return String.Format("{0}!{1}",
+                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
+                    address);
+
+            return address;
+        }
+
+        #endregion Overrides
+
         #region Methods
+
         public string GetTrimmedAddress()
         {
             return _trimmedAddress ?? (_trimmedAddress = ColumnLetter + _rowNumber.ToInvariantString());
         }
 
+        #endregion Methods
 
-
-        #endregion
         #region Operator Overloads
+
         public static XLAddress operator +(XLAddress left, XLAddress right)
         {
             return new XLAddress(left.Worksheet,
@@ -288,9 +320,13 @@ namespace ClosedXML.Excel
         {
             return !(left == right);
         }
-        #endregion
+
+        #endregion Operator Overloads
+
         #region Interface Requirements
+
         #region IEqualityComparer<XLCellAddress> Members
+
         public Boolean Equals(IXLAddress x, IXLAddress y)
         {
             return x == y;
@@ -315,8 +351,11 @@ namespace ClosedXML.Excel
         {
             return _rowNumber ^ _columnNumber;
         }
-        #endregion
+
+        #endregion IEqualityComparer<XLCellAddress> Members
+
         #region IEquatable<XLCellAddress> Members
+
         public bool Equals(IXLAddress other)
         {
             var right = other as XLAddress;
@@ -329,10 +368,12 @@ namespace ClosedXML.Excel
 
         public override Boolean Equals(Object other)
         {
-            return Equals((XLAddress) other);
+            return Equals((XLAddress)other);
         }
-        #endregion
-        #endregion
+
+        #endregion IEquatable<XLCellAddress> Members
+
+        #endregion Interface Requirements
 
         public String ToStringRelative()
         {
