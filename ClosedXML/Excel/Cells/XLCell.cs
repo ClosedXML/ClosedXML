@@ -399,8 +399,7 @@ namespace ClosedXML.Excel
                     var retValEnumerable = retVal as IEnumerable;
 
                     if (retValEnumerable != null && !(retVal is String))
-                        foreach (var v in retValEnumerable)
-                            return v;
+                        return retValEnumerable.Cast<object>().First();
 
                     return retVal;
                 }
@@ -439,7 +438,7 @@ namespace ClosedXML.Excel
             {
                 FormulaA1 = String.Empty;
 
-                if (value as XLCells != null) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
+                if (value is XLCells) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
 
                 if (SetTableHeader(value)) return;
 

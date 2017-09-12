@@ -253,6 +253,18 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** token/keyword tables
 
+        private static readonly IDictionary<string, ErrorExpression.ExpressionErrorType> ErrorMap = new Dictionary<string, ErrorExpression.ExpressionErrorType>()
+        {
+            ["#REF!"] = ErrorExpression.ExpressionErrorType.CellReference,
+            ["#VALUE!"] = ErrorExpression.ExpressionErrorType.CellValue,
+            ["#DIV/0!"] = ErrorExpression.ExpressionErrorType.DivisionByZero,
+            ["#NAME?"] = ErrorExpression.ExpressionErrorType.NameNotRecognized,
+            ["#N/A"] = ErrorExpression.ExpressionErrorType.NoValueAvailable,
+            ["#NULL!"] = ErrorExpression.ExpressionErrorType.NullValue,
+            ["#NUM!"] = ErrorExpression.ExpressionErrorType.NumberInvalid
+        };
+
+
         // build/get static token table
         private Dictionary<object, Token> GetSymbolTable()
         {
@@ -463,6 +475,10 @@ namespace ClosedXML.Excel.CalcEngine
                     }
 
                     break;
+
+                case TKTYPE.ERROR:
+                    x = new ErrorExpression((ErrorExpression.ExpressionErrorType)_token.Value);
+                    break;
             }
 
             // make sure we got something...
@@ -663,26 +679,12 @@ namespace ClosedXML.Excel.CalcEngine
                 return;
             }
 
-            // parse dates (review)
-            if (c == '#')
+            // parse #REF! (and other errors) in formula
+            if (c == '#' && ErrorMap.Any(pair => _len > _ptr+pair.Key.Length && _expr.Substring(_ptr, pair.Key.Length).Equals(pair.Key, StringComparison.OrdinalIgnoreCase)))
             {
-                // look for end #
-                for (i = 1; i + _ptr < _len; i++)
-                {
-                    c = _expr[_ptr + i];
-                    if (c == '#') break;
-                }
-
-                // check that we got the end of the date
-                if (c != '#')
-                {
-                    Throw("Can't find final date delimiter ('#').");
-                }
-
-                // end of date
-                var lit = _expr.Substring(_ptr + 1, i - 1);
-                _ptr += i + 1;
-                _token = new Token(DateTime.Parse(lit, _ci), TKID.ATOM, TKTYPE.LITERAL);
+                var errorPair = ErrorMap.Single(pair => _len > _ptr + pair.Key.Length && _expr.Substring(_ptr, pair.Key.Length).Equals(pair.Key, StringComparison.OrdinalIgnoreCase));
+                _ptr += errorPair.Key.Length;
+                _token = new Token(errorPair.Value, TKID.ATOM, TKTYPE.ERROR);
                 return;
             }
 

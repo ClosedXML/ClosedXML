@@ -1,3 +1,4 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,11 +36,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             var table_array = p[1] as XObjectExpression;
             if (table_array == null)
-                throw new ArgumentException("table_array has to be a range");
+                throw new NoValueAvailableException("table_array has to be a range");
 
             var range_reference = table_array.Value as CellRangeReference;
             if (range_reference == null)
-                throw new ArgumentException("table_array has to be a range");
+                throw new NoValueAvailableException("table_array has to be a range");
 
             var range = range_reference.Range;
 
@@ -49,10 +50,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                                || (bool)(p[3]);
 
             if (row_index_num < 1)
-                throw new ArgumentOutOfRangeException("Row index", "row_index_num has to be positive");
+                throw new CellReferenceException("Row index has to be positive");
 
             if (row_index_num > range.RowCount())
-                throw new ArgumentOutOfRangeException("Row index", "row_index_num has to be positive");
+                throw new CellReferenceException("Row index has to be positive");
 
             IXLRangeColumn matching_column;
             matching_column = range.FindColumn(c => !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) == 0);
@@ -72,7 +73,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             if (matching_column == null)
-                throw new ArgumentException("No matches found.");
+                throw new NoValueAvailableException("No matches found.");
 
             return matching_column
                 .Cell(row_index_num)
@@ -85,11 +86,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             var table_array = p[1] as XObjectExpression;
             if (table_array == null)
-                throw new ArgumentException("table_array has to be a range");
+                throw new NoValueAvailableException("table_array has to be a range");
 
             var range_reference = table_array.Value as CellRangeReference;
             if (range_reference == null)
-                throw new ArgumentException("table_array has to be a range");
+                throw new NoValueAvailableException("table_array has to be a range");
 
             var range = range_reference.Range;
 
@@ -99,13 +100,20 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                                || (bool)(p[3]);
 
             if (col_index_num < 1)
-                throw new ArgumentOutOfRangeException("Column index", "col_index_num has to be positive");
+                throw new CellReferenceException("Column index has to be positive");
 
             if (col_index_num > range.ColumnCount())
-                throw new ArgumentOutOfRangeException("Column index", "col_index_num must be smaller or equal to the number of columns in the table array");
+                throw new CellReferenceException("Colum index must be smaller or equal to the number of columns in the table array");
 
             IXLRangeRow matching_row;
-            matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
+            try
+            {
+                matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
+            }
+            catch (Exception ex)
+            {
+                throw new NoValueAvailableException("No matches found", ex);
+            }
             if (range_lookup && matching_row == null)
             {
                 var first_row = range.FirstRow().RowNumber();
@@ -122,7 +130,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             if (matching_row == null)
-                throw new ArgumentException("No matches found.");
+                throw new NoValueAvailableException("No matches found.");
 
             return matching_row
                 .Cell(col_index_num)

@@ -1,3 +1,4 @@
+﻿using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -44,7 +45,9 @@ namespace ClosedXML.Excel.CalcEngine
         private static object _Char(List<Expression> p)
         {
             var i = (int)p[0];
-            if (i < 1 || i > 255) throw new IndexOutOfRangeException();
+            if (i < 1 || i > 255)
+                throw new CellValueException(string.Format("The number {0} is out of the required range (1 to 255)", i));
+
             var c = (char)i;
             return c.ToString();
         }
