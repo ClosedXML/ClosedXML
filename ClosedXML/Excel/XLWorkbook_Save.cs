@@ -4225,7 +4225,6 @@ namespace ClosedXML.Excel
 
                 if (xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow))
                 {
-
                     var isNewRow = !row.Elements<Cell>().Any();
                     lastCell = 0;
                     var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
@@ -4234,6 +4233,8 @@ namespace ClosedXML.Excel
                         .OrderBy(c => c.Address.ColumnNumber)
                         .Select(c => c))
                     {
+                        XLTableField field = null;
+
                         var styleId = context.SharedStyles[xlCell.GetStyleId()].StyleId;
                         var cellReference = (xlCell.Address).GetTrimmedAddress();
 
@@ -4305,14 +4306,29 @@ namespace ClosedXML.Excel
 
                                 cell.CellValue = null;
                             }
+                            else if (xlCell.TableCellType() == XLTableCellType.Total)
+                            {
+                                var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
+                                field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
+
+                                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                                {
+                                    cell.DataType = XLWorkbook.CvSharedString;
+                                }
+                                else
+                                {
+                                    cell.DataType = null;
+                                }
+                                cell.CellFormula = null;
+                            }
                             else
                             {
                                 cell.CellFormula = null;
                                 cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValueType(xlCell);
                             }
 
-                            if (!xlCell.HasFormula || evaluateFormulae)
-                                SetCellValue(xlCell, cell);
+                            if (evaluateFormulae || field != null || !xlCell.HasFormula)
+                                SetCellValue(xlCell, field, cell);
                         }
                     }
                     xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
@@ -4351,7 +4367,6 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-
 
             foreach (
                 var r in
@@ -4864,8 +4879,25 @@ namespace ClosedXML.Excel
             #endregion LegacyDrawingHeaderFooter
         }
 
-        private static void SetCellValue(XLCell xlCell, Cell openXmlCell)
+        private static void SetCellValue(XLCell xlCell, XLTableField field, Cell openXmlCell)
         {
+            if (field != null)
+            {
+                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                {
+                    var cellValue = new CellValue();
+                    cellValue.Text = xlCell.SharedStringId.ToString();
+                    openXmlCell.DataType = CvSharedString;
+                    openXmlCell.CellValue = cellValue;
+                }
+                else if (field.TotalsRowFunction == XLTotalsRowFunction.None)
+                {
+                    openXmlCell.DataType = CvSharedString;
+                    openXmlCell.CellValue = null;
+                }
+                return;
+            }
+
             if (xlCell.HasFormula)
             {
                 var cellValue = new CellValue();

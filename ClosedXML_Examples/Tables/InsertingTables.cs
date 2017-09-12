@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace ClosedXML_Examples.Misc
+namespace ClosedXML_Examples.Tables
 {
     public class InsertingTables : IXLExample
     {

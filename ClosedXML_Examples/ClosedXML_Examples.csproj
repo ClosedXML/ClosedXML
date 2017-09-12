@@ -105,7 +105,6 @@
     <Compile Include="Misc\DataValidation.cs" />
     <Compile Include="Misc\Hyperlinks.cs" />
     <Compile Include="Misc\InsertingData.cs" />
-    <Compile Include="Misc\InsertingTables.cs" />
     <Compile Include="Misc\CopyingWorksheets.cs" />
     <Compile Include="Misc\FreezePanes.cs" />
     <Compile Include="PageSetup\TwoPages.cs" />
@@ -118,7 +117,6 @@
     <Compile Include="Ranges\WalkingRanges.cs" />
     <Compile Include="Ranges\SortExample.cs" />
     <Compile Include="Ranges\Sorting.cs" />
-    <Compile Include="Ranges\UsingTables.cs" />
     <Compile Include="Ranges\CopyingRanges.cs" />
     <Compile Include="Ranges\NamedRanges.cs" />
     <Compile Include="Misc\Formulas.cs" />
@@ -169,6 +167,9 @@
     <Compile Include="Styles\StyleFill.cs" />
     <Compile Include="Styles\StyleFont.cs" />
     <Compile Include="Styles\StyleNumberFormat.cs" />
+    <Compile Include="Tables\InsertingTables.cs" />
+    <Compile Include="Tables\ResizingTables.cs" />
+    <Compile Include="Tables\UsingTables.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig">

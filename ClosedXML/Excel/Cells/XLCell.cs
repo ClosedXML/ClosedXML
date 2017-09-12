@@ -16,7 +16,6 @@ namespace ClosedXML.Excel
     using ClosedXML.Extensions;
 
     [DebuggerDisplay("{Address}")]
-
     internal class XLCell : IXLCell, IXLStylized
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
@@ -100,10 +99,7 @@ namespace ClosedXML.Excel
             _worksheet = worksheet;
         }
 
-
-
         #endregion Constructor
-
 
         public XLWorksheet Worksheet
         {
@@ -203,11 +199,23 @@ namespace ClosedXML.Excel
 
         public IXLCell SetValue<T>(T value)
         {
+            return SetValue(value, true);
+        }
+
+        internal IXLCell SetValue<T>(T value, bool setTableHeader)
+        {
             if (value == null)
                 return this.Clear(XLClearOptions.Contents);
 
             FormulaA1 = String.Empty;
             _richText = null;
+
+            if (setTableHeader)
+            {
+                if (SetTableHeaderValue(value)) return this;
+                if (SetTableTotalsRowLabel(value)) return this;
+            }
+
             var style = GetStyleForRead();
             if (value is String || value is char)
             {
@@ -422,7 +430,7 @@ namespace ClosedXML.Excel
 
                 if (value is XLCells) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
 
-                if (SetTableHeader(value)) return;
+                if (SetTableHeaderValue(value)) return;
 
                 if (SetRangeRows(value)) return;
 
@@ -456,6 +464,9 @@ namespace ClosedXML.Excel
 
         public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable)
         {
+            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
+                throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
+
             if (data != null && !(data is String))
             {
                 var ro = Address.RowNumber + 1;
@@ -485,12 +496,12 @@ namespace ClosedXML.Excel
                             if (String.IsNullOrWhiteSpace(fieldName))
                                 fieldName = itemType.Name;
 
-                            SetValue(fieldName, fRo, co);
+                            _worksheet.SetValue(fieldName, fRo, co);
                             hasTitles = true;
                             co = Address.ColumnNumber;
                         }
 
-                        SetValue(o, ro, co);
+                        _worksheet.SetValue(o, ro, co);
                         co++;
 
                         if (co > maxCo)
@@ -547,7 +558,7 @@ namespace ClosedXML.Excel
                         {
                             foreach (var item in (m as Array))
                             {
-                                SetValue(item, ro, co);
+                                _worksheet.SetValue(item, ro, co);
                                 co++;
                             }
                         }
@@ -564,7 +575,7 @@ namespace ClosedXML.Excel
                                                                      ? column.ColumnName
                                                                      : column.Caption)
                                 {
-                                    SetValue(fieldName, fRo, co);
+                                    _worksheet.SetValue(fieldName, fRo, co);
                                     co++;
                                 }
 
@@ -574,7 +585,7 @@ namespace ClosedXML.Excel
 
                             foreach (var item in row.ItemArray)
                             {
-                                SetValue(item, ro, co);
+                                _worksheet.SetValue(item, ro, co);
                                 co++;
                             }
                         }
@@ -590,7 +601,7 @@ namespace ClosedXML.Excel
                             {
                                 for (var i = 0; i < fieldCount; i++)
                                 {
-                                    SetValue(record.GetName(i), fRo, co);
+                                    _worksheet.SetValue(record.GetName(i), fRo, co);
                                     co++;
                                 }
 
@@ -600,7 +611,7 @@ namespace ClosedXML.Excel
 
                             for (var i = 0; i < fieldCount; i++)
                             {
-                                SetValue(record[i], ro, co);
+                                _worksheet.SetValue(record[i], ro, co);
                                 co++;
                             }
                         }
@@ -616,7 +627,7 @@ namespace ClosedXML.Excel
                                         if (String.IsNullOrWhiteSpace(fieldName))
                                             fieldName = mi.Name;
 
-                                        SetValue(fieldName, fRo, co);
+                                        _worksheet.SetValue(fieldName, fRo, co);
                                     }
 
                                     co++;
@@ -629,11 +640,11 @@ namespace ClosedXML.Excel
                             foreach (var mi in members)
                             {
                                 if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                    SetValue((mi as PropertyInfo).GetValue(null), ro, co);
+                                    _worksheet.SetValue((mi as PropertyInfo).GetValue(null), ro, co);
                                 else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
-                                    SetValue((mi as FieldInfo).GetValue(null), ro, co);
+                                    _worksheet.SetValue((mi as FieldInfo).GetValue(null), ro, co);
                                 else
-                                    SetValue(accessor[m, mi.Name], ro, co);
+                                    _worksheet.SetValue(accessor[m, mi.Name], ro, co);
 
                                 co++;
                             }
@@ -680,6 +691,9 @@ namespace ClosedXML.Excel
         {
             if (data == null) return null;
 
+            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
+                throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
+
             if (data.Rows.Count > 0) return InsertTable(data.AsEnumerable(), tableName, createTable);
 
             var ro = Address.RowNumber;
@@ -687,7 +701,7 @@ namespace ClosedXML.Excel
 
             foreach (DataColumn col in data.Columns)
             {
-                SetValue(col.ColumnName, ro, co);
+                _worksheet.SetValue(col.ColumnName, ro, co);
                 co++;
             }
 
@@ -701,6 +715,17 @@ namespace ClosedXML.Excel
             if (createTable) return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
 
             return tableName == null ? range.AsTable() : range.AsTable(tableName);
+        }
+
+        public XLTableCellType TableCellType()
+        {
+            var table = this.Worksheet.Tables.FirstOrDefault(t => t.AsRange().Contains(this));
+            if (table == null) return XLTableCellType.None;
+
+            if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(this.Address.RowNumber)) return XLTableCellType.Header;
+            if (table.ShowTotalsRow && table.TotalsRow().RowNumber().Equals(this.Address.RowNumber)) return XLTableCellType.Total;
+
+            return XLTableCellType.Data;
         }
 
         public IXLRange InsertData(IEnumerable data)
@@ -735,10 +760,9 @@ namespace ClosedXML.Excel
                     else
                         columnNumber = Address.ColumnNumber;
 
-
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                     {
-                        SetValue(m, rowNumber, columnNumber);
+                        _worksheet.SetValue(m, rowNumber, columnNumber);
 
                         if (transpose)
                             rowNumber++;
@@ -749,7 +773,7 @@ namespace ClosedXML.Excel
                     {
                         foreach (var item in (Array)m)
                         {
-                            SetValue(item, rowNumber, columnNumber);
+                            _worksheet.SetValue(item, rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -764,7 +788,7 @@ namespace ClosedXML.Excel
 
                         foreach (var item in (m as DataRow).ItemArray)
                         {
-                            SetValue(item, rowNumber, columnNumber);
+                            _worksheet.SetValue(item, rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -782,7 +806,7 @@ namespace ClosedXML.Excel
                         var fieldCount = record.FieldCount;
                         for (var i = 0; i < fieldCount; i++)
                         {
-                            SetValue(record[i], rowNumber, columnNumber);
+                            _worksheet.SetValue(record[i], rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -811,12 +835,12 @@ namespace ClosedXML.Excel
                         foreach (var mi in members)
                         {
                             if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                SetValue((mi as PropertyInfo).GetValue(null), rowNumber, columnNumber);
+                                _worksheet.SetValue((mi as PropertyInfo).GetValue(null), rowNumber, columnNumber);
                             else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
-                                SetValue((mi as FieldInfo).GetValue(null), rowNumber, columnNumber);
+                                _worksheet.SetValue((mi as FieldInfo).GetValue(null), rowNumber, columnNumber);
                             else
+                                _worksheet.SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
 
-                                SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
                             if (transpose)
                                 rowNumber++;
                             else
@@ -1492,7 +1516,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLStylized Members
 
-        private bool SetTableHeader(object value)
+        private Boolean SetTableHeaderValue(object value)
         {
             foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
             {
@@ -1502,6 +1526,26 @@ namespace ClosedXML.Excel
                     var oldName = cells.First().GetString();
                     var field = table.Field(oldName);
                     field.Name = value.ToString();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private Boolean SetTableTotalsRowLabel(object value)
+        {
+            foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
+            {
+                var cells = table.TotalsRow().Cells(c => c.Address.Equals(this.Address));
+                if (cells.Any())
+                {
+                    var cell = cells.First();
+                    var field = table.Fields.First(f => f.Column.ColumnNumber() == cell.WorksheetColumn().ColumnNumber());
+                    field.TotalsRowFunction = XLTotalsRowFunction.None;
+                    field.TotalsRowLabel = value.ToString();
+                    this._cellValue = value.ToString();
+                    this.DataType = XLCellValues.Text;
                     return true;
                 }
             }
@@ -1575,6 +1619,7 @@ namespace ClosedXML.Excel
         }
 
         #region Styles
+
         private IXLStyle GetStyle()
         {
             if (_style != null)
@@ -1615,15 +1660,14 @@ namespace ClosedXML.Excel
             if (!_styleCacheId.HasValue)
                 _styleCacheId = Worksheet.GetStyleId();
             return _styleCacheId.Value;
-
         }
 
         public Boolean IsDefaultWorksheetStyle()
         {
             return !_styleCacheId.HasValue && !StyleChanged || GetStyleId() == Worksheet.GetStyleId();
         }
-        #endregion Styles
 
+        #endregion Styles
 
         public void DeleteComment()
         {
@@ -1737,16 +1781,6 @@ namespace ClosedXML.Excel
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
-        private void SetValue<T>(T value, int ro, int co) where T : class
-        {
-            if (value == null)
-                _worksheet.Cell(ro, co).SetValue(String.Empty);
-            else if (value is IConvertible)
-                _worksheet.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
-            else
-                _worksheet.Cell(ro, co).SetValue(value);
-        }
-
         private void SetValue(object value)
         {
             FormulaA1 = String.Empty;
@@ -1824,6 +1858,10 @@ namespace ClosedXML.Excel
                 }
             }
             if (val.Length > 32767) throw new ArgumentException("Cells can only hold 32,767 characters.");
+
+            if (SetTableHeaderValue(val)) return;
+            if (SetTableTotalsRowLabel(val)) return;
+
             _cellValue = val;
         }
 
