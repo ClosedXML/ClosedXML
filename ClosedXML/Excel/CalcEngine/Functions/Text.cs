@@ -1,3 +1,4 @@
+﻿using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -44,7 +45,9 @@ namespace ClosedXML.Excel.CalcEngine
         private static object _Char(List<Expression> p)
         {
             var i = (int)p[0];
-            if (i < 1 || i > 255) throw new IndexOutOfRangeException();
+            if (i < 1 || i > 255)
+                throw new CellValueException(string.Format("The number {0} is out of the required range (1 to 255)", i));
+
             var c = (char)i;
             return c.ToString();
         }
@@ -76,7 +79,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
             var index = text.IndexOf(srch, start, StringComparison.Ordinal);
             if (index == -1)
-                throw new Exception("String not found.");
+                throw new ArgumentException("String not found.");
             else
                 return index + 1;
         }
@@ -192,7 +195,7 @@ namespace ClosedXML.Excel.CalcEngine
             var search = WildcardToRegex((string)p[0]);
             var text = (string)p[1];
 
-            if ("" == text) throw new Exception("Invalid input string.");
+            if ("" == text) throw new ArgumentException("Invalid input string.");
 
             var start = 0;
             if (p.Count > 2)
@@ -203,12 +206,12 @@ namespace ClosedXML.Excel.CalcEngine
             Regex r = new Regex(search, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var match = r.Match(text.Substring(start));
             if (!match.Success)
-                throw new Exception("Search failed.");
+                throw new ArgumentException("Search failed.");
             else
                 return match.Index + start + 1;
             //var index = text.IndexOf(search, start, StringComparison.OrdinalIgnoreCase);
             //if (index == -1)
-            //    throw new Exception("String not found.");
+            //    throw new ArgumentException("String not found.");
             //else
             //    return index + 1;
         }
@@ -233,7 +236,7 @@ namespace ClosedXML.Excel.CalcEngine
             int index = (int)p[3];
             if (index < 1)
             {
-                throw new Exception("Invalid index in Substitute.");
+                throw new ArgumentException("Invalid index in Substitute.");
             }
             int pos = text.IndexOf(oldText);
             while (pos > -1 && index > 1)

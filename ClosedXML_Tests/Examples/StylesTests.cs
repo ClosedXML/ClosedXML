@@ -67,6 +67,12 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void UsingPhonetics()
+        {
+            TestHelper.RunTestExample<UsingPhonetics>(@"Styles\UsingPhonetics.xlsx");
+        }
+
+        [Test]
         public void UsingRichText()
         {
             TestHelper.RunTestExample<UsingRichText>(@"Styles\UsingRichText.xlsx");

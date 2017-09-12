@@ -18,11 +18,14 @@ namespace ClosedXML.Excel
 
     public interface IXLTableField
     {
+        IXLRangeColumn Column { get; }
         Int32 Index { get; }
         String Name { get; set; }
-        String TotalsRowLabel { get; set; }
         String TotalsRowFormulaA1 { get; set; }
         String TotalsRowFormulaR1C1 { get; set; }
         XLTotalsRowFunction TotalsRowFunction { get; set; }
+        String TotalsRowLabel { get; set; }
+
+        void Delete();
     }
 }

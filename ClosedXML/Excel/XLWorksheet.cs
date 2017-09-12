@@ -606,11 +606,18 @@ namespace ClosedXML.Excel
                 }
             }
 
-            foreach (IXLNamedRange r in NamedRanges)
+            foreach (var nr in NamedRanges)
             {
                 var ranges = new XLRanges();
-                r.Ranges.ForEach(ranges.Add);
-                targetSheet.NamedRanges.Add(r.Name, ranges);
+                foreach (var r in nr.Ranges)
+                {
+                    if (this == r.Worksheet)
+                        // Named ranges on the source worksheet have to point to the new destination sheet
+                        ranges.Add(targetSheet.Range(r.RangeAddress.FirstAddress.RowNumber, r.RangeAddress.FirstAddress.ColumnNumber, r.RangeAddress.LastAddress.RowNumber, r.RangeAddress.LastAddress.ColumnNumber));
+                    else
+                        ranges.Add(r);
+                }
+                targetSheet.NamedRanges.Add(nr.Name, ranges);
             }
 
             foreach (XLTable t in Tables.Cast<XLTable>())
@@ -1523,6 +1530,11 @@ namespace ClosedXML.Excel
 
         public String Author { get; set; }
 
+        public override string ToString()
+        {
+            return this.Name;
+        }
+
         public IXLPictures Pictures { get; private set; }
 
         public IXLPicture Picture(string pictureName)
@@ -1540,7 +1552,12 @@ namespace ClosedXML.Excel
             return Pictures.Add(stream, name);
         }
 
-        public Drawings.IXLPicture AddPicture(Stream stream, XLPictureFormat format)
+        internal IXLPicture AddPicture(Stream stream, string name, int Id)
+        {
+            return (Pictures as XLPictures).Add(stream, name, Id);
+        }
+
+        public IXLPicture AddPicture(Stream stream, XLPictureFormat format)
         {
             return Pictures.Add(stream, format);
         }
@@ -1569,5 +1586,25 @@ namespace ClosedXML.Excel
         {
             return Pictures.Add(imageFile, name);
         }
+        public override Boolean IsEntireRow()
+        {
+            return true;
+        }
+
+        public override Boolean IsEntireColumn()
+        {
+            return true;
+        }
+
+        internal void SetValue<T>(T value, int ro, int co) where T : class
+        {
+            if (value == null)
+                this.Cell(ro, co).SetValue(String.Empty);
+            else if (value is IConvertible)
+                this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
+            else
+                this.Cell(ro, co).SetValue(value);
+        }
+
     }
 }

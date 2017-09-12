@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -155,6 +156,35 @@ namespace ClosedXML_Tests.Excel
                 var actual = ws.FirstCell().CellRight().Value;
                 Assert.AreEqual(6, actual);
             }
+        }
+
+        [Test]
+        public void FormulaThatStartsWithEqualsAndPlus()
+        {
+            object actual;
+            actual = XLWorkbook.EvaluateExpr("=MID(\"This is a test\", 6, 2)");
+            Assert.AreEqual("is", actual);
+
+            actual = XLWorkbook.EvaluateExpr("=+MID(\"This is a test\", 6, 2)");
+            Assert.AreEqual("is", actual);
+
+            actual = XLWorkbook.EvaluateExpr("=+++++MID(\"This is a test\", 6, 2)");
+            Assert.AreEqual("is", actual);
+
+            actual = XLWorkbook.EvaluateExpr("+MID(\"This is a test\", 6, 2)");
+            Assert.AreEqual("is", actual);
+        }
+
+        [Test]
+        public void FormulasWithErrors()
+        {
+            Assert.Throws<CellReferenceException>(() => XLWorkbook.EvaluateExpr("YEAR(#REF!)"));
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("YEAR(#VALUE!)"));
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("YEAR(#DIV/0!)"));
+            Assert.Throws<NameNotRecognizedException>(() => XLWorkbook.EvaluateExpr("YEAR(#NAME?)"));
+            Assert.Throws<NoValueAvailableException>(() => XLWorkbook.EvaluateExpr("YEAR(#N/A)"));
+            Assert.Throws<NullValueException>(() => XLWorkbook.EvaluateExpr("YEAR(#NULL!)"));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr("YEAR(#NUM!)"));
         }
     }
 }

@@ -2,7 +2,6 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Data;
-using System.Linq;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -14,7 +13,6 @@ namespace ClosedXML_Tests.Excel
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
-                ws.Column(1).Style.NumberFormat.Format = "yy-MM-dd";
 
                 var table = new DataTable();
                 table.Columns.Add("Date", typeof(DateTime));
@@ -24,9 +22,13 @@ namespace ClosedXML_Tests.Excel
                     table.Rows.Add(new DateTime(2017, 1, 1).AddMonths(i));
                 }
 
+                ws.Column(1).Style.NumberFormat.Format = "yy-MM-dd";
                 ws.Cell("A1").InsertData(table);
-
                 Assert.AreEqual("yy-MM-dd", ws.Cell("A5").Style.DateFormat.Format);
+
+                ws.Row(1).Style.NumberFormat.Format = "yy-MM-dd";
+                ws.Cell("A1").InsertData(table.AsEnumerable(), true);
+                Assert.AreEqual("yy-MM-dd", ws.Cell("E1").Style.DateFormat.Format);
             }
         }
     }

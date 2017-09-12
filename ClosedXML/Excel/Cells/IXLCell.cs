@@ -7,6 +7,8 @@ namespace ClosedXML.Excel
 {
     public enum XLCellValues { Text, Number, Boolean, DateTime, TimeSpan }
 
+    public enum XLTableCellType { None, Header, Data, Total }
+
     public enum XLClearOptions
     {
         ContentsAndFormats,
@@ -30,7 +32,7 @@ namespace ClosedXML.Excel
 
         /// <summary>Gets this cell's address, relative to the worksheet.</summary>
         /// <value>The cell's address.</value>
-        IXLAddress Address { get;  }
+        IXLAddress Address { get; }
 
         /// <summary>
         /// Gets or sets the type of this cell's data.
@@ -115,8 +117,6 @@ namespace ClosedXML.Excel
 
         Boolean TryGetValue<T>(out T value);
 
-
-
         Boolean HasHyperlink { get; }
 
         /// <summary>
@@ -152,7 +152,6 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRange AsRange();
 
-
         /// <summary>
         /// Gets or sets the cell's style.
         /// </summary>
@@ -171,6 +170,14 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="data">The IEnumerable data.</param>
         IXLRange InsertData(IEnumerable data);
+
+        /// <summary>
+        /// Inserts the IEnumerable data elements and returns the range it occupies.
+        /// </summary>
+        /// <param name="data">The IEnumerable data.</param>
+        /// <param name="tranpose">if set to <c>true</c> the data will be transposed before inserting.</param>
+        /// <returns></returns>
+        IXLRange InsertData(IEnumerable data, Boolean tranpose);
 
         /// <summary>
         /// Inserts the data of a data table.
@@ -215,7 +222,6 @@ namespace ClosedXML.Excel
         /// </param>
         IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable);
 
-
         /// <summary>
         /// Inserts the DataTable data elements as a table and returns it.
         /// <para>The new table will receive a generic name: Table#</para>
@@ -252,18 +258,22 @@ namespace ClosedXML.Excel
         /// </param>
         IXLTable InsertTable(DataTable data, String tableName, Boolean createTable);
 
+        XLTableCellType TableCellType();
 
         XLHyperlink Hyperlink { get; set; }
         IXLWorksheet Worksheet { get; }
 
         IXLDataValidation DataValidation { get; }
         IXLDataValidation NewDataValidation { get; }
+
         IXLDataValidation SetDataValidation();
 
-
         IXLCells InsertCellsAbove(int numberOfRows);
+
         IXLCells InsertCellsBelow(int numberOfRows);
+
         IXLCells InsertCellsAfter(int numberOfColumns);
+
         IXLCells InsertCellsBefore(int numberOfColumns);
 
         /// <summary>
@@ -292,8 +302,11 @@ namespace ClosedXML.Excel
         IXLCell AddToNamed(String rangeName, XLScope scope, String comment);
 
         IXLCell CopyFrom(IXLCell otherCell);
+
         IXLCell CopyFrom(String otherCell);
+
         IXLCell CopyTo(IXLCell target);
+
         IXLCell CopyTo(String target);
 
         String ValueCached { get; }
@@ -304,19 +317,29 @@ namespace ClosedXML.Excel
         Boolean HasComment { get; }
 
         Boolean IsMerged();
+
         Boolean IsEmpty();
+
         Boolean IsEmpty(Boolean includeFormats);
 
         IXLCell CellAbove();
+
         IXLCell CellAbove(Int32 step);
+
         IXLCell CellBelow();
+
         IXLCell CellBelow(Int32 step);
+
         IXLCell CellLeft();
+
         IXLCell CellLeft(Int32 step);
+
         IXLCell CellRight();
+
         IXLCell CellRight(Int32 step);
 
         IXLColumn WorksheetColumn();
+
         IXLRow WorksheetRow();
 
         Boolean HasDataValidation { get; }
@@ -326,9 +349,11 @@ namespace ClosedXML.Excel
         void Select();
 
         Boolean Active { get; set; }
+
         IXLCell SetActive(Boolean value = true);
 
         Boolean HasFormula { get; }
+        Boolean HasArrayFormula { get; }
 
         IXLRangeAddress FormulaReference { get; set; }
     }
