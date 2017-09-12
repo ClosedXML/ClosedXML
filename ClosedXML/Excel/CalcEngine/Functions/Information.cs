@@ -1,3 +1,4 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,27 +10,42 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         public static void Register(CalcEngine ce)
         {
             //TODO: Add documentation
-            ce.RegisterFunction("ERRORTYPE",1,ErrorType); 
-            ce.RegisterFunction("ISBLANK", 1,int.MaxValue, IsBlank);
-            ce.RegisterFunction("ISERR",1, int.MaxValue, IsErr);
-            ce.RegisterFunction("ISERROR",1, int.MaxValue, IsError);
-            ce.RegisterFunction("ISEVEN",1, IsEven);
-            ce.RegisterFunction("ISLOGICAL",1,int.MaxValue,IsLogical);
-            ce.RegisterFunction("ISNA",1, int.MaxValue, IsNa);
-            ce.RegisterFunction("ISNONTEXT",1, int.MaxValue, IsNonText);
-            ce.RegisterFunction("ISNUMBER",1, int.MaxValue, IsNumber);
-            ce.RegisterFunction("ISODD",1,IsOdd);
-            ce.RegisterFunction("ISREF",1, int.MaxValue, IsRef);
+            ce.RegisterFunction("ERRORTYPE", 1, ErrorType);
+            ce.RegisterFunction("ISBLANK", 1, int.MaxValue, IsBlank);
+            ce.RegisterFunction("ISERR", 1, int.MaxValue, IsErr);
+            ce.RegisterFunction("ISERROR", 1, int.MaxValue, IsError);
+            ce.RegisterFunction("ISEVEN", 1, IsEven);
+            ce.RegisterFunction("ISLOGICAL", 1, int.MaxValue, IsLogical);
+            ce.RegisterFunction("ISNA", 1, int.MaxValue, IsNa);
+            ce.RegisterFunction("ISNONTEXT", 1, int.MaxValue, IsNonText);
+            ce.RegisterFunction("ISNUMBER", 1, int.MaxValue, IsNumber);
+            ce.RegisterFunction("ISODD", 1, IsOdd);
+            ce.RegisterFunction("ISREF", 1, int.MaxValue, IsRef);
             ce.RegisterFunction("ISTEXT", 1, int.MaxValue, IsText);
-            ce.RegisterFunction("N",1,N);
-            ce.RegisterFunction("NA",0,NA);
-            ce.RegisterFunction("TYPE",1,Type);
+            ce.RegisterFunction("N", 1, N);
+            ce.RegisterFunction("NA", 0, NA);
+            ce.RegisterFunction("TYPE", 1, Type);
         }
+
+        static IDictionary<ErrorExpression.ExpressionErrorType, int> errorTypes = new Dictionary<ErrorExpression.ExpressionErrorType, int>()
+        {
+            [ErrorExpression.ExpressionErrorType.NullValue] = 1,
+            [ErrorExpression.ExpressionErrorType.DivisionByZero] = 2,
+            [ErrorExpression.ExpressionErrorType.CellValue] = 3,
+            [ErrorExpression.ExpressionErrorType.CellReference] = 4,
+            [ErrorExpression.ExpressionErrorType.NameNotRecognized] = 5,
+            [ErrorExpression.ExpressionErrorType.NumberInvalid] = 6,
+            [ErrorExpression.ExpressionErrorType.NoValueAvailable] = 7
+        };
 
         static object ErrorType(List<Expression> p)
         {
-            //TODO: Write Code
-            throw new NotSupportedException();;
+            var v = p[0].Evaluate();
+
+            if (v is ErrorExpression.ExpressionErrorType)
+                return errorTypes[(ErrorExpression.ExpressionErrorType)v];
+            else
+                throw new NoValueAvailableException();
         }
 
         static object IsBlank(List<Expression> p)
@@ -46,17 +62,19 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return isBlank;
         }
 
-        //TODO: Support for Error Values
         static object IsErr(List<Expression> p)
         {
-            //TODO: Write Code
-            throw new NotSupportedException();
+            var v = p[0].Evaluate();
+
+            return v is ErrorExpression.ExpressionErrorType
+                && ((ErrorExpression.ExpressionErrorType)v) != ErrorExpression.ExpressionErrorType.NoValueAvailable;
         }
-            
+
         static object IsError(List<Expression> p)
         {
-            //TODO: Write Code
-            throw new NotSupportedException();
+            var v = p[0].Evaluate();
+
+            return v is ErrorExpression.ExpressionErrorType;
         }
 
         static object IsEven(List<Expression> p)
@@ -74,7 +92,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var v = p[0].Evaluate();
             var isLogical = v is bool;
-            
+
             if (isLogical && p.Count > 1)
             {
                 var sublist = p.GetRange(1, p.Count);
@@ -86,8 +104,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object IsNa(List<Expression> p)
         {
-            //TODO: Write Code
-            throw new NotSupportedException();;
+            var v = p[0].Evaluate();
+
+            return v is ErrorExpression.ExpressionErrorType
+                && ((ErrorExpression.ExpressionErrorType)v) == ErrorExpression.ExpressionErrorType.NoValueAvailable;
         }
 
         static object IsNonText(List<Expression> p)
@@ -110,16 +130,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 try
                 {
                     var stringValue = (string) v;
-                    double.Parse(stringValue.TrimEnd('%', ' '), NumberStyles.Any);
-                    isNumber = true;
+                    double dv;
+                    return double.TryParse(stringValue.TrimEnd('%', ' '), NumberStyles.Any, null, out dv);
                 }
                 catch (Exception)
                 {
                     isNumber = false;
                 }
             }
-            
-            if (isNumber && p.Count > 1) 
+
+            if (isNumber && p.Count > 1)
             {
                 var sublist = p.GetRange(1, p.Count);
                 isNumber = (bool)IsNumber(sublist);
@@ -135,8 +155,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object IsRef(List<Expression> p)
         {
-            //TODO: Write Code
-            throw new NotSupportedException();;
+            var oe = p[0] as XObjectExpression;
+            if (oe == null)
+                return false;
+
+            var crr = oe.Value as CellRangeReference;
+
+            return crr != null;
         }
 
         static object IsText(List<Expression> p)
@@ -161,8 +186,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object NA(List<Expression> p)
         {
-            //TODO: Write Code
-            throw new NotSupportedException();;
+            return ErrorExpression.ExpressionErrorType.NoValueAvailable;
         }
 
         static object Type(List<Expression> p)

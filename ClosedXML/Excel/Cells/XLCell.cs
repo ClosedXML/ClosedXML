@@ -15,6 +15,7 @@ namespace ClosedXML.Excel
     using Attributes;
     using ClosedXML.Extensions;
 
+    [DebuggerDisplay("{Address}")]
     internal class XLCell : IXLCell, IXLStylized
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
@@ -73,55 +74,32 @@ namespace ClosedXML.Excel
         internal XLCellValues _dataType;
         private XLHyperlink _hyperlink;
         private XLRichText _richText;
-
-        #endregion Fields
-
-        #region Constructor
-
-        private Int32 _styleCacheId;
-
-        public XLCell(XLWorksheet worksheet, XLAddress address, Int32 styleId)
-        {
-            Address = address;
-            ShareString = true;
-            _worksheet = worksheet;
-            SetStyle(styleId);
-        }
-
-        private IXLStyle GetStyleForRead()
-        {
-            return Worksheet.Workbook.GetStyleById(GetStyleId());
-        }
-
-        public Int32 GetStyleId()
-        {
-            if (StyleChanged)
-                SetStyle(Style);
-
-            return _styleCacheId;
-        }
-
-        private void SetStyle(IXLStyle styleToUse)
-        {
-            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
-            _style = null;
-            StyleChanged = false;
-        }
-
-        private void SetStyle(Int32 styleId)
-        {
-            _styleCacheId = styleId;
-            _style = null;
-            StyleChanged = false;
-        }
-
-        #endregion Constructor
+        private Int32? _styleCacheId;
 
         public bool SettingHyperlink;
         public int SharedStringId;
         private string _formulaA1;
         private string _formulaR1C1;
         private IXLStyle _style;
+
+        #endregion Fields
+
+        #region Constructor
+
+        public XLCell(XLWorksheet worksheet, XLAddress address, Int32 styleId)
+            : this(worksheet, address)
+        {
+            SetStyle(styleId);
+        }
+
+        public XLCell(XLWorksheet worksheet, XLAddress address)
+        {
+            Address = address;
+            ShareString = true;
+            _worksheet = worksheet;
+        }
+
+        #endregion Constructor
 
         public XLWorksheet Worksheet
         {
@@ -411,8 +389,7 @@ namespace ClosedXML.Excel
                     var retValEnumerable = retVal as IEnumerable;
 
                     if (retValEnumerable != null && !(retVal is String))
-                        foreach (var v in retValEnumerable)
-                            return v;
+                        return retValEnumerable.Cast<object>().First();
 
                     return retVal;
                 }
@@ -466,7 +443,7 @@ namespace ClosedXML.Excel
                 if (!SetRichText(value))
                     SetValue(value);
 
-                if (_cellValue.Length > 32767) throw new ArgumentException("Cells can only hold 32,767 characters.");
+                if (_cellValue.Length > 32767) throw new ArgumentException("Cells can hold only 32,767 characters.");
             }
         }
 
@@ -535,7 +512,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                    const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
                     var memberCache = new Dictionary<Type, IEnumerable<MemberInfo>>();
                     var accessorCache = new Dictionary<Type, TypeAccessor>();
                     IEnumerable<MemberInfo> members = null;
@@ -644,7 +621,7 @@ namespace ClosedXML.Excel
                             {
                                 foreach (var mi in members)
                                 {
-                                    if ((mi as IEnumerable) == null)
+                                    if (!(mi is IEnumerable))
                                     {
                                         var fieldName = XLColumnAttribute.GetHeader(mi);
                                         if (String.IsNullOrWhiteSpace(fieldName))
@@ -662,7 +639,13 @@ namespace ClosedXML.Excel
 
                             foreach (var mi in members)
                             {
-                                _worksheet.SetValue(accessor[m, mi.Name], ro, co);
+                                if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
+                                    _worksheet.SetValue((mi as PropertyInfo).GetValue(null), ro, co);
+                                else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
+                                    _worksheet.SetValue((mi as FieldInfo).GetValue(null), ro, co);
+                                else
+                                    _worksheet.SetValue(accessor[m, mi.Name], ro, co);
+
                                 co++;
                             }
                         }
@@ -762,7 +745,7 @@ namespace ClosedXML.Excel
                 var isDataTable = false;
                 var isDataReader = false;
 
-                const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
                 var memberCache = new Dictionary<Type, IEnumerable<MemberInfo>>();
                 var accessorCache = new Dictionary<Type, TypeAccessor>();
                 IEnumerable<MemberInfo> members = null;
@@ -771,27 +754,11 @@ namespace ClosedXML.Excel
                 foreach (var m in data)
                 {
                     var itemType = m.GetType();
-                    if (!memberCache.ContainsKey(itemType))
-                    {
-                        var _accessor = TypeAccessor.Create(itemType);
-
-                        var _members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
-                             .Concat(itemType.GetProperties(bindingFlags))
-                             .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
-                             .OrderBy(mi => XLColumnAttribute.GetOrder(mi));
-
-                        memberCache.Add(itemType, _members);
-                        accessorCache.Add(itemType, _accessor);
-                    }
-
-                    members = memberCache[itemType];
-                    accessor = accessorCache[itemType];
 
                     if (transpose)
                         rowNumber = Address.RowNumber;
                     else
                         columnNumber = Address.ColumnNumber;
-
 
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                     {
@@ -849,9 +816,30 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
+                        if (!memberCache.ContainsKey(itemType))
+                        {
+                            var _accessor = TypeAccessor.Create(itemType);
+
+                            var _members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
+                                 .Concat(itemType.GetProperties(bindingFlags))
+                                 .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
+                                 .OrderBy(mi => XLColumnAttribute.GetOrder(mi));
+
+                            memberCache.Add(itemType, _members);
+                            accessorCache.Add(itemType, _accessor);
+                        }
+
+                        accessor = accessorCache[itemType];
+                        members = memberCache[itemType];
+
                         foreach (var mi in members)
                         {
-                            _worksheet.SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
+                            if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
+                                _worksheet.SetValue((mi as PropertyInfo).GetValue(null), rowNumber, columnNumber);
+                            else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
+                                _worksheet.SetValue((mi as FieldInfo).GetValue(null), rowNumber, columnNumber);
+                            else
+                                _worksheet.SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -1202,10 +1190,15 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(Boolean includeFormats)
         {
+            return IsEmpty(includeFormats, includeFormats);
+        }
+
+        public Boolean IsEmpty(Boolean includeNormalFormats, Boolean includeConditionalFormats)
+        {
             if (InnerText.Length > 0)
                 return false;
 
-            if (includeFormats)
+            if (includeNormalFormats)
             {
                 if (!Style.Equals(Worksheet.Style) || IsMerged() || HasComment || HasDataValidation)
                     return false;
@@ -1220,10 +1213,12 @@ namespace ClosedXML.Excel
                     if (Worksheet.Internals.ColumnsCollection.TryGetValue(Address.ColumnNumber, out column) && !column.Style.Equals(Worksheet.Style))
                         return false;
                 }
-
-                if (Worksheet.ConditionalFormats.Any(cf => cf.Range.Contains(this)))
-                    return false;
             }
+
+            if (includeConditionalFormats
+                && Worksheet.ConditionalFormats.Any(cf => cf.Range.Contains(this)))
+                return false;
+
             return true;
         }
 
@@ -1623,13 +1618,56 @@ namespace ClosedXML.Excel
             return _worksheet.Range(Address, Address);
         }
 
+        #region Styles
+
         private IXLStyle GetStyle()
         {
             if (_style != null)
                 return _style;
 
-            return _style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId));
+            return _style = new XLStyle(this, Worksheet.Workbook.GetStyleById(StyleCacheId()));
         }
+
+        private IXLStyle GetStyleForRead()
+        {
+            return Worksheet.Workbook.GetStyleById(GetStyleId());
+        }
+
+        public Int32 GetStyleId()
+        {
+            if (StyleChanged)
+                SetStyle(Style);
+
+            return StyleCacheId();
+        }
+
+        private void SetStyle(IXLStyle styleToUse)
+        {
+            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
+            _style = null;
+            StyleChanged = false;
+        }
+
+        private void SetStyle(Int32 styleId)
+        {
+            _styleCacheId = styleId;
+            _style = null;
+            StyleChanged = false;
+        }
+
+        public Int32 StyleCacheId()
+        {
+            if (!_styleCacheId.HasValue)
+                _styleCacheId = Worksheet.GetStyleId();
+            return _styleCacheId.Value;
+        }
+
+        public Boolean IsDefaultWorksheetStyle()
+        {
+            return !_styleCacheId.HasValue && !StyleChanged || GetStyleId() == Worksheet.GetStyleId();
+        }
+
+        #endregion Styles
 
         public void DeleteComment()
         {
@@ -1742,7 +1780,6 @@ namespace ClosedXML.Excel
 
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
-
 
         private void SetValue(object value)
         {
@@ -2100,7 +2137,8 @@ namespace ClosedXML.Excel
 
             CopyValuesFrom(source);
 
-            SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId));
+            if (source._styleCacheId.HasValue)
+                SetStyle(source._style ?? source.Worksheet.Workbook.GetStyleById(source._styleCacheId.Value));
 
             var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(source)).ToList();
             foreach (var cf in conditionalFormats)

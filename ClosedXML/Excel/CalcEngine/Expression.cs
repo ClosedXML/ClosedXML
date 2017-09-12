@@ -1,3 +1,4 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -79,12 +80,18 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator string(Expression x)
         {
+            if (x is ErrorExpression)
+                (x as ErrorExpression).ThrowApplicableException();
+
             var v = x.Evaluate();
             return v == null ? string.Empty : v.ToString();
         }
 
         public static implicit operator double(Expression x)
         {
+            if (x is ErrorExpression)
+                (x as ErrorExpression).ThrowApplicableException();
+
             // evaluate
             var v = x.Evaluate();
 
@@ -119,6 +126,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator bool(Expression x)
         {
+            if (x is ErrorExpression)
+                (x as ErrorExpression).ThrowApplicableException();
+
             // evaluate
             var v = x.Evaluate();
 
@@ -146,6 +156,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator DateTime(Expression x)
         {
+            if (x is ErrorExpression)
+                (x as ErrorExpression).ThrowApplicableException();
+
             // evaluate
             var v = x.Evaluate();
 
@@ -487,6 +500,52 @@ namespace ClosedXML.Excel.CalcEngine
         public override string LastParseItem
         {
             get { return "<EMPTY VALUE>"; }
+        }
+    }
+
+    internal class ErrorExpression : Expression
+    {
+        internal enum ExpressionErrorType
+        {
+            CellReference,
+            CellValue,
+            DivisionByZero,
+            NameNotRecognized,
+            NoValueAvailable,
+            NullValue,
+            NumberInvalid
+        }
+
+        internal ErrorExpression(ExpressionErrorType eet)
+            : base(new Token(eet, TKID.ATOM, TKTYPE.ERROR))
+        { }
+
+        public override object Evaluate()
+        {
+            return this._token.Value;
+        }
+
+        public void ThrowApplicableException()
+        {
+            var eet = (ExpressionErrorType)_token.Value;
+            switch (eet)
+            {
+                // TODO: include last token in exception message
+                case ExpressionErrorType.CellReference:
+                    throw new CellReferenceException();
+                case ExpressionErrorType.CellValue:
+                    throw new CellValueException();
+                case ExpressionErrorType.DivisionByZero:
+                    throw new DivisionByZeroException();
+                case ExpressionErrorType.NameNotRecognized:
+                    throw new NameNotRecognizedException();
+                case ExpressionErrorType.NoValueAvailable:
+                    throw new NoValueAvailableException();
+                case ExpressionErrorType.NullValue:
+                    throw new NullValueException();
+                case ExpressionErrorType.NumberInvalid:
+                    throw new NumberException();
+            }
         }
     }
 
