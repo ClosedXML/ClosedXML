@@ -68,7 +68,7 @@ namespace ClosedXML_Examples.Misc
             var dataTable = GetTable();
             ws.Cell(6, 1).Value = "DataTable";
             ws.Range(6, 1, 6, 4).Merge().AddToNamed("Titles");
-            ws.Cell(7, 1).Value = dataTable.AsEnumerable();
+            ws.Cell(7, 1).Value = dataTable;
 
             // From a query
             var list = new List<Person>();
@@ -83,8 +83,7 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(6, 6).Value = "Query";
             ws.Range(6, 6, 6, 8).Merge().AddToNamed("Titles");
-            ws.Cell(7, 6).Value = people.AsEnumerable();    // Very Important to call the AsEnumerable method
-                                                            // otherwise it won't be copied.
+            ws.Cell(7, 6).Value = people;
 
 
             // Prepare the style for the titles
@@ -92,7 +91,7 @@ namespace ClosedXML_Examples.Misc
             titlesStyle.Font.Bold = true;
             titlesStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             titlesStyle.Fill.BackgroundColor = XLColor.Cyan;
-            
+
             // Format all titles in one shot
             wb.NamedRanges.NamedRange("Titles").Ranges.Style = titlesStyle;
 

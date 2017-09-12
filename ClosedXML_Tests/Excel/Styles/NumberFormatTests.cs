@@ -2,7 +2,6 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Data;
-using System.Linq;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -24,7 +23,7 @@ namespace ClosedXML_Tests.Excel
                 }
 
                 ws.Column(1).Style.NumberFormat.Format = "yy-MM-dd";
-                ws.Cell("A1").InsertData(table.AsEnumerable());
+                ws.Cell("A1").InsertData(table);
                 Assert.AreEqual("yy-MM-dd", ws.Cell("A5").Style.DateFormat.Format);
 
                 ws.Row(1).Style.NumberFormat.Format = "yy-MM-dd";
