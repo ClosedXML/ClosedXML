@@ -1,5 +1,6 @@
 ﻿#if _NETSTANDARD_
 
+using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -190,7 +191,7 @@ namespace ClosedXML.NetStandard
                         throw new ArgumentException("Invalid HTML color: " + htmlColor);
                     }
                 }
-                if (String.IsNullOrWhiteSpace(m.Groups[1].Value))
+                if (XLHelper.IsNullOrWhiteSpace(m.Groups[1].Value))
                     return Color.FromArgb(
                         Convert.ToInt32(m.Groups[2].Value.PadRight(2, m.Groups[2].Value[0]), 16),
                         Convert.ToInt32(m.Groups[3].Value.PadRight(2, m.Groups[3].Value[0]), 16),

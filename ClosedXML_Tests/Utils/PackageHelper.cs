@@ -1,3 +1,4 @@
+using ClosedXML_Tests.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

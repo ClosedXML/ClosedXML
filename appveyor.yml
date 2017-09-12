@@ -29,7 +29,6 @@ test:
   assemblies:
     - ClosedXML_Tests/bin/Release/netcoreapp2.0/ClosedXML_Tests.dll
     - ClosedXML_Tests/bin/Release/net40/ClosedXML_Tests.dll
-    - ClosedXML_Tests/bin/Release/net452/ClosedXML_Tests.dll
     - ClosedXML_Tests/bin/Release/net461/ClosedXML_Tests.dll
 
 
@@ -41,5 +40,6 @@ before_build:
 
 artifacts:
   - path: ClosedXML/bin/Release/netstandard2.0/ClosedXML.dll
+  - path: ClosedXML/bin/Release/net35/ClosedXML.dll
   - path: ClosedXML/bin/Release/net40/ClosedXML.dll
   - path: ClosedXML/bin/Release/net461/ClosedXML.dll

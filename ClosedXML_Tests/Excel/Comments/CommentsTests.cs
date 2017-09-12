@@ -1,10 +1,6 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClosedXML_Tests.Excel.Comments
 {
@@ -23,11 +19,9 @@ namespace ClosedXML_Tests.Excel.Comments
                 Assert.AreEqual(XLColorType.Indexed, xlColor.ColorType);
                 Assert.AreEqual(81, xlColor.Indexed);
 
-
                 var color = xlColor.Color.ToHex();
                 Assert.AreEqual("FF000000", color);
             }
-
         }
     }
 }
