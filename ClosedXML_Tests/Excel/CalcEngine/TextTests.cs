@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Globalization;
@@ -20,13 +21,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Char_Empty_Input_String()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Char("""")"), Throws.TypeOf<IndexOutOfRangeException>());
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(@"Char("""")"));
         }
 
         [Test]
         public void Char_Input_Too_Large()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Char(9797)"), Throws.TypeOf<IndexOutOfRangeException>());
+            Assert.Throws< CellValueException>(() => XLWorkbook.EvaluateExpr(@"Char(9797)"));
         }
 
         [Test]

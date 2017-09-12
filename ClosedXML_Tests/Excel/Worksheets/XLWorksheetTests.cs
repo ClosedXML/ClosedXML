@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace ClosedXML_Tests
@@ -156,8 +157,40 @@ namespace ClosedXML_Tests
                 Assert.AreEqual("sheet2", ws2.Name);
 
                 Assert.Throws<ArgumentException>(() => ws1.Name = "SHEET2");
+            }
+        }
 
+        [Test]
+        public void HideWorksheet()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add("VisibleSheet");
+                    wb.Worksheets.Add("HiddenSheet").Hide();
+                    wb.SaveAs(ms);
+                }
 
+                // unhide the hidden sheet
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual(XLWorksheetVisibility.Visible, wb.Worksheet("VisibleSheet").Visibility);
+                    Assert.AreEqual(XLWorksheetVisibility.Hidden, wb.Worksheet("HiddenSheet").Visibility);
+
+                    var ws = wb.Worksheet("HiddenSheet");
+                    ws.Unhide().Name = "NoAlsoVisible";
+
+                    Assert.AreEqual(XLWorksheetVisibility.Visible, ws.Visibility);
+
+                    wb.Save();
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual(XLWorksheetVisibility.Visible, wb.Worksheet("VisibleSheet").Visibility);
+                    Assert.AreEqual(XLWorksheetVisibility.Visible, wb.Worksheet("NoAlsoVisible").Visibility);
+                }
             }
         }
     }

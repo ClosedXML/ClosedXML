@@ -133,7 +133,7 @@ namespace ClosedXML_Tests.Excel
             DataRow dr = dt.NewRow();
             dr[columnName] = "some text";
             dt.Rows.Add(dr);
-            ws.Cell(1, 1).InsertTable(dt);
+                ws.Cell(1, 1).InsertTable(dt);
 
             IXLTable table1 = ws.Table(0);
             string fieldName1 = table1.Field(0).Name;
@@ -451,5 +451,134 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(2, table.Fields.Last().Index);
             }
         }
+
+        [Test]
+        public void OverlappingTablesThrowsException()
+        {
+            var dt = new DataTable("sheet1");
+            dt.Columns.Add("col1", typeof(string));
+            dt.Columns.Add("col2", typeof(double));
+
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().InsertTable(dt, true);
+                Assert.Throws<InvalidOperationException>(() => ws.FirstCell().CellRight().InsertTable(dt, true));
+    }
+}
+
+        [Test]
+        public void OverwritingTableTotalsRow()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var data1 = Enumerable.Range(1, 10)
+                    .Select(i =>
+                    new
+                    {
+                        Index = i,
+                        Character = Convert.ToChar(64 + i),
+                        String = new String('a', i)
+                    });
+
+                var table = ws.FirstCell().InsertTable(data1, true)
+                    .SetShowHeaderRow()
+                    .SetShowTotalsRow();
+                table.Fields.First().TotalsRowFunction = XLTotalsRowFunction.Sum;
+
+                var data2 = Enumerable.Range(1, 20)
+                    .Select(i =>
+                    new
+                    {
+                        Index = i,
+                        Character = Convert.ToChar(64 + i),
+                        String = new String('b', i),
+                        Int = 64 + i
+                    });
+
+                ws.FirstCell().CellBelow().InsertData(data2);
+
+                table.Fields.ForEach(f => Assert.AreEqual(XLTotalsRowFunction.None, f.TotalsRowFunction));
+
+                Assert.AreEqual("11", table.Field(0).TotalsRowLabel);
+                Assert.AreEqual("K", table.Field(1).TotalsRowLabel);
+                Assert.AreEqual("bbbbbbbbbbb", table.Field(2).TotalsRowLabel);
+            }
+        }
+
+        [Test]
+        public void CanResizeTable()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var data1 = Enumerable.Range(1, 10)
+                    .Select(i =>
+                    new
+                    {
+                        Index = i,
+                        Character = Convert.ToChar(64 + i),
+                        String = new String('a', i)
+                    });
+
+                var table = ws.FirstCell().InsertTable(data1, true)
+                    .SetShowHeaderRow()
+                    .SetShowTotalsRow();
+                table.Fields.First().TotalsRowFunction = XLTotalsRowFunction.Sum;
+
+                var data2 = Enumerable.Range(1, 10)
+                    .Select(i =>
+                    new
+                    {
+                        Index = i,
+                        Character = Convert.ToChar(64 + i),
+                        String = new String('b', i),
+                        Integer = 64 + i
+                    });
+
+                ws.FirstCell().CellBelow().InsertData(data2);
+                table.Resize(table.FirstCell().Address, table.AsRange().LastCell().CellRight().Address);
+
+                Assert.AreEqual(4, table.Fields.Count());
+
+                Assert.AreEqual("Column4", table.Field(3).Name);
+
+                ws.Cell("D1").Value = "Integer";
+                Assert.AreEqual("Integer", table.Field(3).Name);
+            }
+        }
+
+        [Test]
+        public void TestTableCellTypes()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var data1 = Enumerable.Range(1, 10)
+                    .Select(i =>
+                    new
+                    {
+                        Index = i,
+                        Character = Convert.ToChar(64 + i),
+                        String = new String('a', i)
+                    });
+
+                var table = ws.FirstCell().InsertTable(data1, true)
+                    .SetShowHeaderRow()
+                    .SetShowTotalsRow();
+                table.Fields.First().TotalsRowFunction = XLTotalsRowFunction.Sum;
+
+                Assert.AreEqual(XLTableCellType.Header, table.HeadersRow().Cell(1).TableCellType());
+                Assert.AreEqual(XLTableCellType.Data, table.HeadersRow().Cell(1).CellBelow().TableCellType());
+                Assert.AreEqual(XLTableCellType.Total, table.TotalsRow().Cell(1).TableCellType());
+                Assert.AreEqual(XLTableCellType.None, ws.Cell("Z100").TableCellType());
+            }
+        }
+
+        //TODO: Delete table (not underlying range)
     }
 }

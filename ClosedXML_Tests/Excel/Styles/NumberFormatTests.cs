@@ -2,7 +2,6 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Data;
-using System.Linq;
 
 namespace ClosedXML_Tests.Excel
 {

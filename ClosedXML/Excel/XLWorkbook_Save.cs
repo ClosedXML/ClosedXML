@@ -150,7 +150,6 @@ namespace ClosedXML.Excel
             if (worksheet == null)
                 return;
 
-
             string sheetName = worksheet.Name;
             // Get the pivot Table Parts
             IEnumerable<PivotTableCacheDefinitionPart> pvtTableCacheParts = wbPart.PivotTableCacheDefinitionParts;
@@ -208,10 +207,8 @@ namespace ClosedXML.Excel
                 foreach (CalculationCell Item in calChainEntries)
                     calcsToDelete.Add(Item);
 
-
                 foreach (CalculationCell Item in calcsToDelete)
                     Item.Remove();
-
 
                 if (!calChainPart.CalculationChain.Any())
                     wbPart.DeletePart(calChainPart);
@@ -681,6 +678,8 @@ namespace ClosedXML.Excel
                     var xlSheet = Worksheet(sheet.Name);
                     if (xlSheet.Visibility != XLWorksheetVisibility.Visible)
                         sheet.State = xlSheet.Visibility.ToOpenXml();
+                    else
+                        sheet.State = null;
 
                     if (foundVisible) continue;
 
@@ -1981,7 +1980,11 @@ namespace ClosedXML.Excel
             {
                 var columnNumber = c.ColumnNumber();
                 var columnName = c.FirstCell().Value.ToString();
-                var xlpf = pt.Fields.Add(columnName);
+                IXLPivotField xlpf;
+                if (pt.Fields.Contains(columnName))
+                    xlpf = pt.Fields.Get(columnName);
+                else
+                    xlpf = pt.Fields.Add(columnName);
 
                 var field =
                     pt.RowLabels.Union(pt.ColumnLabels).Union(pt.ReportFilters).FirstOrDefault(f => f.SourceName == columnName);
@@ -2167,10 +2170,12 @@ namespace ClosedXML.Excel
                     case XLPivotSubtotals.DoNotShow:
                         pf.DefaultSubtotal = false;
                         break;
+
                     case XLPivotSubtotals.AtBottom:
                         pf.DefaultSubtotal = true;
                         pf.SubtotalTop = false;
                         break;
+
                     case XLPivotSubtotals.AtTop:
                         pf.DefaultSubtotal = true;
                         pf.SubtotalTop = true;
@@ -4165,15 +4170,15 @@ namespace ClosedXML.Excel
             cm.SetElement(XLWSContentManager.XLWSContents.SheetData, sheetData);
 
             var lastRow = 0;
-            var sheetDataRows =
+            var existingSheetDataRows =
                 sheetData.Elements<Row>().ToDictionary(r => r.RowIndex == null ? ++lastRow : (Int32)r.RowIndex.Value,
                     r => r);
             foreach (
                 var r in
-                    xlWorksheet.Internals.RowsCollection.Deleted.Where(r => sheetDataRows.ContainsKey(r.Key)))
+                    xlWorksheet.Internals.RowsCollection.Deleted.Where(r => existingSheetDataRows.ContainsKey(r.Key)))
             {
-                sheetData.RemoveChild(sheetDataRows[r.Key]);
-                sheetDataRows.Remove(r.Key);
+                sheetData.RemoveChild(existingSheetDataRows[r.Key]);
+                existingSheetDataRows.Remove(r.Key);
                 xlWorksheet.Internals.CellsCollection.deleted.Remove(r.Key);
             }
 
@@ -4182,28 +4187,10 @@ namespace ClosedXML.Excel
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
                 Row row;
-                if (sheetDataRows.ContainsKey(distinctRow))
-                    row = sheetDataRows[distinctRow];
+                if (existingSheetDataRows.ContainsKey(distinctRow))
+                    row = existingSheetDataRows[distinctRow];
                 else
-                {
                     row = new Row { RowIndex = (UInt32)distinctRow };
-                    if (noRows)
-                    {
-                        sheetData.AppendChild(row);
-                        noRows = false;
-                    }
-                    else
-                    {
-                        if (sheetDataRows.Any(r => r.Key > row.RowIndex.Value))
-                        {
-                            var minRow = sheetDataRows.Where(r => r.Key > (Int32)row.RowIndex.Value).Min(r => r.Key);
-                            var rowBeforeInsert = sheetDataRows[minRow];
-                            sheetData.InsertBefore(row, rowBeforeInsert);
-                        }
-                        else
-                            sheetData.AppendChild(row);
-                    }
-                }
 
                 if (maxColumn > 0)
                     row.Spans = new ListValue<StringValue> { InnerText = "1:" + maxColumn.ToInvariantString() };
@@ -4257,8 +4244,8 @@ namespace ClosedXML.Excel
                         xlWorksheet.Internals.CellsCollection.deleted.Remove(kpDel.Key);
                 }
 
-                if (!xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow)) continue;
-
+                if (xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow))
+                {
                 var isNewRow = !row.Elements<Cell>().Any();
                 lastCell = 0;
                 var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
@@ -4267,9 +4254,13 @@ namespace ClosedXML.Excel
                     .OrderBy(c => c.Address.ColumnNumber)
                     .Select(c => c))
                 {
+                        XLTableField field = null;
+
                     var styleId = context.SharedStyles[xlCell.GetStyleId()].StyleId;
                     var cellReference = (xlCell.Address).GetTrimmedAddress();
-                    var isEmpty = xlCell.IsEmpty(true);
+
+                        // For saving cells to file, ignore conditional formatting. They just bloat the file
+                        var isEmpty = xlCell.IsEmpty(true, false);
 
                     Cell cell = null;
                     if (cellsByReference.ContainsKey(cellReference))
@@ -4336,25 +4327,75 @@ namespace ClosedXML.Excel
 
                             cell.CellValue = null;
                         }
+                            else if (xlCell.TableCellType() == XLTableCellType.Total)
+                            {
+                                var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
+                                field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
+
+                                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                                {
+                                    cell.DataType = XLWorkbook.CvSharedString;
+                                }
                         else
                         {
+                                    cell.DataType = null;
+                                }
                             cell.CellFormula = null;
+                            }
+                            else
+                            {
+                                cell.CellFormula = null;
                             cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValueType(xlCell);
                         }
 
-                        if (!xlCell.HasFormula || evaluateFormulae)
-                            SetCellValue(xlCell, cell);
-                                    }
-                                    }
-                xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
+                            if (evaluateFormulae || field != null || !xlCell.HasFormula)
+                                SetCellValue(xlCell, field, cell);
+                        }
+                    }
+                    xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
+                }
+
+                // If we're adding a new row (not in sheet already and it's not "empty"
+                if (!existingSheetDataRows.ContainsKey(distinctRow))
+                {
+                    var invalidRow = row.Height == null
+                        && row.CustomHeight == null
+                        && row.Hidden == null
+                        && row.StyleIndex == null
+                        && row.CustomFormat == null
+                        && row.Collapsed == null
+                        && row.OutlineLevel == null
+                        && !row.Elements().Any();
+
+                    if (!invalidRow)
+                    {
+                        if (noRows)
+                        {
+                            sheetData.AppendChild(row);
+                            noRows = false;
+                        }
+                        else
+                        {
+                            if (existingSheetDataRows.Any(r => r.Key > row.RowIndex.Value))
+                            {
+                                var minRow = existingSheetDataRows.Where(r => r.Key > (Int32)row.RowIndex.Value).Min(r => r.Key);
+                                var rowBeforeInsert = existingSheetDataRows[minRow];
+                                sheetData.InsertBefore(row, rowBeforeInsert);
+                            }
+                            else
+                                sheetData.AppendChild(row);
+                        }
+                    }
+                }
             }
+
             foreach (
                 var r in
                     xlWorksheet.Internals.CellsCollection.deleted.Keys.Where(
-                        sheetDataRows.ContainsKey))
+                        existingSheetDataRows.ContainsKey))
             {
-                sheetData.RemoveChild(sheetDataRows[r]);
-                sheetDataRows.Remove(r);
+                sheetData.RemoveChild(existingSheetDataRows[r]);
+                existingSheetDataRows.Remove(r);
             }
 
             #endregion SheetData
@@ -4859,8 +4900,25 @@ namespace ClosedXML.Excel
             #endregion LegacyDrawingHeaderFooter
         }
 
-        private static void SetCellValue(XLCell xlCell, Cell openXmlCell)
+        private static void SetCellValue(XLCell xlCell, XLTableField field, Cell openXmlCell)
         {
+            if (field != null)
+            {
+                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                {
+                    var cellValue = new CellValue();
+                    cellValue.Text = xlCell.SharedStringId.ToString();
+                    openXmlCell.DataType = CvSharedString;
+                    openXmlCell.CellValue = cellValue;
+                }
+                else if (field.TotalsRowFunction == XLTotalsRowFunction.None)
+                {
+                    openXmlCell.DataType = CvSharedString;
+                    openXmlCell.CellValue = null;
+                }
+                return;
+            }
+
             if (xlCell.HasFormula)
             {
                 var cellValue = new CellValue();
