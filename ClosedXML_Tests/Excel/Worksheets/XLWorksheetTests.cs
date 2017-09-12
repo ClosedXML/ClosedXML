@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace ClosedXML_Tests
@@ -138,6 +139,58 @@ namespace ClosedXML_Tests
 
                 var value = ws.FirstCell().Value;
                 Assert.AreEqual(6, value);
+            }
+        }
+
+        [Test]
+        public void CanRenameWorksheet()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet("Sheet1");
+                var ws2 = wb.AddWorksheet("Sheet2");
+
+                ws1.Name = "New sheet name";
+                Assert.AreEqual("New sheet name", ws1.Name);
+
+                ws2.Name = "sheet2";
+                Assert.AreEqual("sheet2", ws2.Name);
+
+                Assert.Throws<ArgumentException>(() => ws1.Name = "SHEET2");
+            }
+        }
+
+        [Test]
+        public void HideWorksheet()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add("VisibleSheet");
+                    wb.Worksheets.Add("HiddenSheet").Hide();
+                    wb.SaveAs(ms);
+                }
+
+                // unhide the hidden sheet
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual(XLWorksheetVisibility.Visible, wb.Worksheet("VisibleSheet").Visibility);
+                    Assert.AreEqual(XLWorksheetVisibility.Hidden, wb.Worksheet("HiddenSheet").Visibility);
+
+                    var ws = wb.Worksheet("HiddenSheet");
+                    ws.Unhide().Name = "NoAlsoVisible";
+
+                    Assert.AreEqual(XLWorksheetVisibility.Visible, ws.Visibility);
+
+                    wb.Save();
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual(XLWorksheetVisibility.Visible, wb.Worksheet("VisibleSheet").Visibility);
+                    Assert.AreEqual(XLWorksheetVisibility.Visible, wb.Worksheet("NoAlsoVisible").Visibility);
+                }
             }
         }
     }

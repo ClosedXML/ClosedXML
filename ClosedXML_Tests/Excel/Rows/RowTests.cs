@@ -185,6 +185,36 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void InsertingRowsAbove4()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+
+                ws.Row(2).Height = 15;
+                ws.Row(3).Height = 20;
+                ws.Row(4).Height = 25;
+                ws.Row(5).Height = 35;
+
+                ws.Row(2).FirstCell().SetValue("Row height: 15");
+                ws.Row(3).FirstCell().SetValue("Row height: 20");
+                ws.Row(4).FirstCell().SetValue("Row height: 25");
+                ws.Row(5).FirstCell().SetValue("Row height: 35");
+
+                ws.Range("3:3").InsertRowsAbove(1);
+
+                Assert.AreEqual(15, ws.Row(2).Height);
+                Assert.AreEqual(20, ws.Row(4).Height);
+                Assert.AreEqual(25, ws.Row(5).Height);
+                Assert.AreEqual(35, ws.Row(6).Height);
+
+                Assert.AreEqual(20, ws.Row(3).Height);
+                ws.Row(3).ClearHeight();
+                Assert.AreEqual(ws.RowHeight, ws.Row(3).Height);
+            }
+        }
+
+        [Test]
         public void NoRowsUsed()
         {
             var wb = new XLWorkbook();

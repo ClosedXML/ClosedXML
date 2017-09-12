@@ -68,6 +68,7 @@
     <Compile Include="AttributeExtensions.cs" />
     <Compile Include="Attributes\XLColumnAttribute.cs" />
     <Compile Include="Excel\CalcEngine\CalcEngineHelpers.cs" />
+    <Compile Include="Excel\CalcEngine\ExpressionParseException.cs" />
     <Compile Include="Excel\CalcEngine\Functions\DateAndTime.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Database.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Information.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Excel\Drawings\XLPictures.cs" />
     <Compile Include="Excel\Misc\XLCallbackAction.cs" />
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
+    <Compile Include="Excel\SaveOptions.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
     <Compile Include="Excel\XLConstants.cs" />
     <Compile Include="Excel\XLWorkbook_ImageHandling.cs" />

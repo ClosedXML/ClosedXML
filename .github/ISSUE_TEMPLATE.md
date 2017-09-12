@@ -1,3 +1,5 @@
+## Read and complete the full issue template
+
 **Do you want to request a *feature* or report a *bug*?**
 - [x] Bug
 - [ ] Feature
@@ -8,20 +10,26 @@ e.g. 0.87.1
 
 **What is the current behavior?**
 
-**If the current behavior is a bug, please provide the steps to reproduce and 
-if possible a minimal demo of the problem with a sample spreadsheet.**
+Complete this.
 
 **What is the expected behavior or new feature?**
 
+Complete this.
+
 **Did this work in previous versions of our tool?  Which versions?**
 
-- [ ] I attached a sample spreadsheet.  (You can drag files on to this issue)
+Yes/No/v0.XX
+
+## Reproducibility
+**This is an important section. Read it carefully. Failure to do so will cause a 'RTFM' comment.**
+
+Without a code sample, it is unlikely that your issue will get attention. Don't be lazy. Do the effort and assist the developers to reproduce your problem. Code samples should be [minimal complete and verifiable](https://stackoverflow.com/help/mcve). Sample spreadsheets should be attached whenever applicable. Remove sensitive information.
 
 **Code to reproduce problem:**
 ```c#
 public void Main()
 {
-    // Where possible, post full code to reproduce your issue that adheres to:
+    // Code standards:
     // - Fully runnable. I should be able to copy and paste this code into a 
     //   console application and run it without having to edit it much.
     // - Declare all your variables (this follows from the previous point)
@@ -30,3 +38,4 @@ public void Main()
     //   post your full application.
 }
 ```
+- [ ] I attached a sample spreadsheet.  (You can drag files on to this issue)

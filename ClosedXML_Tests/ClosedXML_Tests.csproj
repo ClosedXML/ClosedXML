@@ -80,10 +80,12 @@
     <Compile Include="Excel\CalcEngine\InformationTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
+    <Compile Include="Excel\CalcEngine\MathTrigTests.cs" />
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Comments\CommentsTests.cs" />
     <Compile Include="Excel\ImageHandling\PictureTests.cs" />
+    <Compile Include="Excel\Misc\SearchTests.cs" />
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
     <Compile Include="OleDb\OleDbTests.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="Excel\PageSetup\PageBreaksTests.cs" />
     <Compile Include="Excel\Ranges\UsedAndUnusedCellsTests.cs" />
     <Compile Include="Excel\Saving\SavingTests.cs" />
+    <Compile Include="Utils\TemporaryFile.cs" />
     <Compile Include="XLHelperTests.cs" />
     <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
     <Compile Include="Excel\CalcEngine\DateAndTimeTests.cs" />
@@ -285,6 +288,10 @@
     <EmbeddedResource Include="Resource\Misc\ExcelProducedWorkbookWithImages.xlsx" />
     <EmbeddedResource Include="Resource\Misc\EmptyCellValue.xlsx" />
     <EmbeddedResource Include="Resource\Misc\AllShapes.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\DuplicateImageNames.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\TableHeadersWithLineBreaks.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\TableWithNameNull.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\UsingPhonetics.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
