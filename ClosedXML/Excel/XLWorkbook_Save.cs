@@ -4149,15 +4149,15 @@ namespace ClosedXML.Excel
             cm.SetElement(XLWSContentManager.XLWSContents.SheetData, sheetData);
 
             var lastRow = 0;
-            var sheetDataRows =
+            var existingSheetDataRows =
                 sheetData.Elements<Row>().ToDictionary(r => r.RowIndex == null ? ++lastRow : (Int32)r.RowIndex.Value,
                     r => r);
             foreach (
                 var r in
-                    xlWorksheet.Internals.RowsCollection.Deleted.Where(r => sheetDataRows.ContainsKey(r.Key)))
+                    xlWorksheet.Internals.RowsCollection.Deleted.Where(r => existingSheetDataRows.ContainsKey(r.Key)))
             {
-                sheetData.RemoveChild(sheetDataRows[r.Key]);
-                sheetDataRows.Remove(r.Key);
+                sheetData.RemoveChild(existingSheetDataRows[r.Key]);
+                existingSheetDataRows.Remove(r.Key);
                 xlWorksheet.Internals.CellsCollection.deleted.Remove(r.Key);
             }
 
@@ -4166,28 +4166,10 @@ namespace ClosedXML.Excel
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
                 Row row;
-                if (sheetDataRows.ContainsKey(distinctRow))
-                    row = sheetDataRows[distinctRow];
+                if (existingSheetDataRows.ContainsKey(distinctRow))
+                    row = existingSheetDataRows[distinctRow];
                 else
-                {
                     row = new Row { RowIndex = (UInt32)distinctRow };
-                    if (noRows)
-                    {
-                        sheetData.AppendChild(row);
-                        noRows = false;
-                    }
-                    else
-                    {
-                        if (sheetDataRows.Any(r => r.Key > row.RowIndex.Value))
-                        {
-                            var minRow = sheetDataRows.Where(r => r.Key > (Int32)row.RowIndex.Value).Min(r => r.Key);
-                            var rowBeforeInsert = sheetDataRows[minRow];
-                            sheetData.InsertBefore(row, rowBeforeInsert);
-                        }
-                        else
-                            sheetData.AppendChild(row);
-                    }
-                }
 
                 if (maxColumn > 0)
                     row.Spans = new ListValue<StringValue> { InnerText = "1:" + maxColumn.ToInvariantString() };
@@ -4241,104 +4223,143 @@ namespace ClosedXML.Excel
                         xlWorksheet.Internals.CellsCollection.deleted.Remove(kpDel.Key);
                 }
 
-                if (!xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow)) continue;
-
-                var isNewRow = !row.Elements<Cell>().Any();
-                lastCell = 0;
-                var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
-                    ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow) : c.CellReference.Value), c => c);
-                foreach (var xlCell in xlWorksheet.Internals.CellsCollection.RowsCollection[distinctRow].Values
-                    .OrderBy(c => c.Address.ColumnNumber)
-                    .Select(c => c))
+                if (xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow))
                 {
-                    var styleId = context.SharedStyles[xlCell.GetStyleId()].StyleId;
-                    var cellReference = (xlCell.Address).GetTrimmedAddress();
-                    var isEmpty = xlCell.IsEmpty(true);
 
-                    Cell cell = null;
-                    if (cellsByReference.ContainsKey(cellReference))
+                    var isNewRow = !row.Elements<Cell>().Any();
+                    lastCell = 0;
+                    var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
+                        ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow) : c.CellReference.Value), c => c);
+                    foreach (var xlCell in xlWorksheet.Internals.CellsCollection.RowsCollection[distinctRow].Values
+                        .OrderBy(c => c.Address.ColumnNumber)
+                        .Select(c => c))
                     {
-                        cell = cellsByReference[cellReference];
-                        if (isEmpty)
-                        {
-                            cell.Remove();
-                        }
-                    }
+                        var styleId = context.SharedStyles[xlCell.GetStyleId()].StyleId;
+                        var cellReference = (xlCell.Address).GetTrimmedAddress();
 
-                    if (!isEmpty)
-                    {
-                        if (cell == null)
-                        {
-                            cell = new Cell();
-                            cell.CellReference = new StringValue(cellReference);
+                        // For saving cells to file, ignore conditional formatting. They just bloat the file
+                        var isEmpty = xlCell.IsEmpty(true, false);
 
-                            if (isNewRow)
-                                row.AppendChild(cell);
-                            else
+                        Cell cell = null;
+                        if (cellsByReference.ContainsKey(cellReference))
+                        {
+                            cell = cellsByReference[cellReference];
+                            if (isEmpty)
                             {
-                                var newColumn = XLHelper.GetColumnNumberFromAddress(cellReference);
+                                cell.Remove();
+                            }
+                        }
 
-                                Cell cellBeforeInsert = null;
-                                int[] lastCo = { Int32.MaxValue };
-                                foreach (var c in mRows.Where(kp => kp.Key > newColumn).Where(c => lastCo[0] > c.Key))
-                                {
-                                    cellBeforeInsert = c.Value;
-                                    lastCo[0] = c.Key;
-                                }
-                                if (cellBeforeInsert == null)
+                        if (!isEmpty)
+                        {
+                            if (cell == null)
+                            {
+                                cell = new Cell();
+                                cell.CellReference = new StringValue(cellReference);
+
+                                if (isNewRow)
                                     row.AppendChild(cell);
                                 else
-                                    row.InsertBefore(cell, cellBeforeInsert);
-                            }
-                        }
-
-                        cell.StyleIndex = styleId;
-                        if (xlCell.HasFormula)
-                        {
-                            var formula = xlCell.FormulaA1;
-                            if (xlCell.HasArrayFormula)
-                            {
-                                formula = formula.Substring(1, formula.Length - 2);
-                                var f = new CellFormula { FormulaType = CellFormulaValues.Array };
-
-                                if (xlCell.FormulaReference == null)
-                                    xlCell.FormulaReference = xlCell.AsRange().RangeAddress;
-
-                                if (xlCell.FormulaReference.FirstAddress.Equals(xlCell.Address))
                                 {
-                                    f.Text = formula;
-                                    f.Reference = xlCell.FormulaReference.ToStringRelative();
+                                    var newColumn = XLHelper.GetColumnNumberFromAddress(cellReference);
+
+                                    Cell cellBeforeInsert = null;
+                                    int[] lastCo = { Int32.MaxValue };
+                                    foreach (var c in mRows.Where(kp => kp.Key > newColumn).Where(c => lastCo[0] > c.Key))
+                                    {
+                                        cellBeforeInsert = c.Value;
+                                        lastCo[0] = c.Key;
+                                    }
+                                    if (cellBeforeInsert == null)
+                                        row.AppendChild(cell);
+                                    else
+                                        row.InsertBefore(cell, cellBeforeInsert);
+                                }
+                            }
+
+                            cell.StyleIndex = styleId;
+                            if (xlCell.HasFormula)
+                            {
+                                var formula = xlCell.FormulaA1;
+                                if (xlCell.HasArrayFormula)
+                                {
+                                    formula = formula.Substring(1, formula.Length - 2);
+                                    var f = new CellFormula { FormulaType = CellFormulaValues.Array };
+
+                                    if (xlCell.FormulaReference == null)
+                                        xlCell.FormulaReference = xlCell.AsRange().RangeAddress;
+
+                                    if (xlCell.FormulaReference.FirstAddress.Equals(xlCell.Address))
+                                    {
+                                        f.Text = formula;
+                                        f.Reference = xlCell.FormulaReference.ToStringRelative();
+                                    }
+
+                                    cell.CellFormula = f;
+                                }
+                                else
+                                {
+                                    cell.CellFormula = new CellFormula();
+                                    cell.CellFormula.Text = formula;
                                 }
 
-                                cell.CellFormula = f;
+                                cell.CellValue = null;
                             }
                             else
                             {
-                                cell.CellFormula = new CellFormula();
-                                cell.CellFormula.Text = formula;
+                                cell.CellFormula = null;
+                                cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValueType(xlCell);
                             }
 
-                            cell.CellValue = null;
+                            if (!xlCell.HasFormula || evaluateFormulae)
+                                SetCellValue(xlCell, cell);
+                        }
+                    }
+                    xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
+                }
+
+                // If we're adding a new row (not in sheet already and it's not "empty"
+                if (!existingSheetDataRows.ContainsKey(distinctRow))
+                {
+                    var invalidRow = row.Height == null
+                        && row.CustomHeight == null
+                        && row.Hidden == null
+                        && row.StyleIndex == null
+                        && row.CustomFormat == null
+                        && row.Collapsed == null
+                        && row.OutlineLevel == null
+                        && !row.Elements().Any();
+
+                    if (!invalidRow)
+                    {
+                        if (noRows)
+                        {
+                            sheetData.AppendChild(row);
+                            noRows = false;
                         }
                         else
                         {
-                            cell.CellFormula = null;
-                            cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValueType(xlCell);
+                            if (existingSheetDataRows.Any(r => r.Key > row.RowIndex.Value))
+                            {
+                                var minRow = existingSheetDataRows.Where(r => r.Key > (Int32)row.RowIndex.Value).Min(r => r.Key);
+                                var rowBeforeInsert = existingSheetDataRows[minRow];
+                                sheetData.InsertBefore(row, rowBeforeInsert);
+                            }
+                            else
+                                sheetData.AppendChild(row);
                         }
-
-                        if (!xlCell.HasFormula || evaluateFormulae)
-                            SetCellValue(xlCell, cell);
                     }
                 }
-                xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
             }
+
+
             foreach (
                 var r in
                     xlWorksheet.Internals.CellsCollection.deleted.Keys.Where(
-                        sheetDataRows.ContainsKey))
+                        existingSheetDataRows.ContainsKey))
             {
-                sheetData.RemoveChild(sheetDataRows[r]);
-                sheetDataRows.Remove(r);
+                sheetData.RemoveChild(existingSheetDataRows[r]);
+                existingSheetDataRows.Remove(r);
             }
 
             #endregion SheetData
