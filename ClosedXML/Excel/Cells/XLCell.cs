@@ -519,7 +519,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                    const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
                     var memberCache = new Dictionary<Type, IEnumerable<MemberInfo>>();
                     var accessorCache = new Dictionary<Type, TypeAccessor>();
                     IEnumerable<MemberInfo> members = null;
@@ -628,7 +628,7 @@ namespace ClosedXML.Excel
                             {
                                 foreach (var mi in members)
                                 {
-                                    if ((mi as IEnumerable) == null)
+                                    if (!(mi is IEnumerable))
                                     {
                                         var fieldName = XLColumnAttribute.GetHeader(mi);
                                         if (String.IsNullOrWhiteSpace(fieldName))
@@ -646,7 +646,13 @@ namespace ClosedXML.Excel
 
                             foreach (var mi in members)
                             {
-                                SetValue(accessor[m, mi.Name], ro, co);
+                                if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
+                                    SetValue((mi as PropertyInfo).GetValue(null), ro, co);
+                                else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
+                                    SetValue((mi as FieldInfo).GetValue(null), ro, co);
+                                else
+                                    SetValue(accessor[m, mi.Name], ro, co);
+
                                 co++;
                             }
                         }
@@ -732,7 +738,7 @@ namespace ClosedXML.Excel
                 var isDataTable = false;
                 var isDataReader = false;
 
-                const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
                 var memberCache = new Dictionary<Type, IEnumerable<MemberInfo>>();
                 var accessorCache = new Dictionary<Type, TypeAccessor>();
                 IEnumerable<MemberInfo> members = null;
@@ -741,21 +747,6 @@ namespace ClosedXML.Excel
                 foreach (var m in data)
                 {
                     var itemType = m.GetType();
-                    if (!memberCache.ContainsKey(itemType))
-                    {
-                        var _accessor = TypeAccessor.Create(itemType);
-
-                        var _members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
-                             .Concat(itemType.GetProperties(bindingFlags))
-                             .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
-                             .OrderBy(mi => XLColumnAttribute.GetOrder(mi));
-
-                        memberCache.Add(itemType, _members);
-                        accessorCache.Add(itemType, _accessor);
-                    }
-
-                    members = memberCache[itemType];
-                    accessor = accessorCache[itemType];
 
                     if (transpose)
                         rowNumber = Address.RowNumber;
@@ -819,10 +810,31 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
+                        if (!memberCache.ContainsKey(itemType))
+                        {
+                            var _accessor = TypeAccessor.Create(itemType);
+
+                            var _members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
+                                 .Concat(itemType.GetProperties(bindingFlags))
+                                 .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
+                                 .OrderBy(mi => XLColumnAttribute.GetOrder(mi));
+
+                            memberCache.Add(itemType, _members);
+                            accessorCache.Add(itemType, _accessor);
+                        }
+
+                        accessor = accessorCache[itemType];
+                        members = memberCache[itemType];
+
                         foreach (var mi in members)
                         {
-                            SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
+                            if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
+                                SetValue((mi as PropertyInfo).GetValue(null), rowNumber, columnNumber);
+                            else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
+                                SetValue((mi as FieldInfo).GetValue(null), rowNumber, columnNumber);
+                            else
 
+                                SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
                             if (transpose)
                                 rowNumber++;
                             else
