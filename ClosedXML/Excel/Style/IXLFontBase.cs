@@ -2,7 +2,7 @@ using System;
 
 namespace ClosedXML.Excel
 {
-   
+
 
     public interface IXLFontBase
     {
@@ -16,7 +16,6 @@ namespace ClosedXML.Excel
         XLColor FontColor { get; set; }
         String FontName { get; set; }
         XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
-
-
+        XLFontCharSet FontCharSet { get; set; }
     }
 }

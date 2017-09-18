@@ -17,6 +17,7 @@ namespace ClosedXML.Excel
         IXLPhonetics SetFontColor(XLColor value);
         IXLPhonetics SetFontName(String value);
         IXLPhonetics SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
+        IXLPhonetics SetFontCharSet(XLFontCharSet value);
 
         IXLPhonetics Add(String text, Int32 start, Int32 end);
         IXLPhonetics ClearText();
