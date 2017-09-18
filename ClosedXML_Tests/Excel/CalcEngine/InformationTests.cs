@@ -158,6 +158,17 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
         #endregion IsLogical Tests
 
+        [Test]
+        public void IsNA()
+        {
+            object actual;
+            actual = XLWorkbook.EvaluateExpr("ISNA(#N/A)");
+            Assert.AreEqual(true, actual);
+
+            actual = XLWorkbook.EvaluateExpr("ISNA(#REF!)");
+            Assert.AreEqual(false, actual);
+        }
+
         #region IsNotText Tests
 
         [Test]
@@ -287,6 +298,30 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             }
         }
         #endregion IsOdd Test
+
+        [Test]
+        public void IsRef()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet");
+                ws.Cell("A1").Value = "123";
+
+                ws.Cell("B1").FormulaA1 = "ISREF(A1)";
+                ws.Cell("B2").FormulaA1 = "ISREF(5)";
+                ws.Cell("B3").FormulaA1 = "ISREF(YEAR(TODAY()))";
+
+                bool actual;
+                actual = ws.Cell("B1").GetValue<bool>();
+                Assert.AreEqual(true, actual);
+
+                actual = ws.Cell("B2").GetValue<bool>();
+                Assert.AreEqual(false, actual);
+
+                actual = ws.Cell("B3").GetValue<bool>();
+                Assert.AreEqual(false, actual);
+            }
+        }
 
         #region IsText Tests
 

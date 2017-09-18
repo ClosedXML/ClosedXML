@@ -1,4 +1,6 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Globalization;
@@ -19,13 +21,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Char_Empty_Input_String()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Char("""")"), Throws.Exception);
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(@"Char("""")"));
         }
 
         [Test]
         public void Char_Input_Too_Large()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Char(9797)"), Throws.Exception);
+            Assert.Throws< CellValueException>(() => XLWorkbook.EvaluateExpr(@"Char(9797)"));
         }
 
         [Test]
@@ -56,7 +58,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void Code_Empty_Input_String()
         {
             // Todo: more specific exception - ValueException?
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Code("""")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Code("""")"), Throws.TypeOf<IndexOutOfRangeException>());
         }
 
         [Test]
@@ -82,7 +84,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Dollar_Empty_Input_String()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Dollar("", 3)"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Dollar("", 3)"), Throws.TypeOf<ExpressionParseException>());
         }
 
         [Test]
@@ -121,26 +123,26 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Find_Start_Position_Too_Large()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Find(""abc"", ""abcdef"", 10)"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Find(""abc"", ""abcdef"", 10)"), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
         public void Find_String_In_Another_Empty_String()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Find(""abc"", """")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Find(""abc"", """")"), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void Find_String_Not_Found()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Find(""123"", ""asdf"")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Find(""123"", ""asdf"")"), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void Find_Case_Sensitive_String_Not_Found()
         {
             // Find is case-sensitive
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Find(""excel"", ""Microsoft Excel 2010"")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Find(""excel"", ""Microsoft Excel 2010"")"), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
@@ -159,7 +161,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Fixed_Input_Is_String()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Fixed(""asdf"")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Fixed(""asdf"")"), Throws.TypeOf<ApplicationException>());
         }
 
         [Test]
@@ -297,7 +299,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Rept_Start_Is_Negative()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Rept(""Francois"", -1)"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Rept(""Francois"", -1)"), Throws.TypeOf<IndexOutOfRangeException>());
         }
 
         [Test]
@@ -344,7 +346,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Search_No_Parameters_With_Values()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search("""", """")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search("""", """")"), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
@@ -357,31 +359,31 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Search_Start_Position_Too_Large()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""abc"", ""abcdef"", 10)"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""abc"", ""abcdef"", 10)"), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
         public void Search_Empty_Input_String()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""abc"", """")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""abc"", """")"), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void Search_String_Not_Found()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""123"", ""asdf"")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""123"", ""asdf"")"), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void Search_Wildcard_String_Not_Found()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""soft?2010"", ""Microsoft Excel 2010"")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""soft?2010"", ""Microsoft Excel 2010"")"), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void Search_Start_Position_Too_Large2()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""text"", ""This is some text"", 15)"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Search(""text"", ""This is some text"", 15)"), Throws.TypeOf<ArgumentException>());
         }
 
         // http://www.excel-easy.com/examples/find-vs-search.html
@@ -517,7 +519,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Value_Input_String_Is_Not_A_Number()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Value(""asdf"")"), Throws.Exception);
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Value(""asdf"")"), Throws.TypeOf<FormatException>());
         }
 
         [Test]

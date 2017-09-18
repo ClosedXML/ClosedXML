@@ -23,7 +23,7 @@ namespace ClosedXML.Attributes
         {
             var attribute = GetXLColumnAttribute(mi);
             if (attribute == null) return null;
-            return XLHelper.IsNullOrWhiteSpace(attribute.Header) ? null : attribute.Header;
+            return String.IsNullOrWhiteSpace(attribute.Header) ? null : attribute.Header;
         }
 
         internal static Int32 GetOrder(MemberInfo mi)

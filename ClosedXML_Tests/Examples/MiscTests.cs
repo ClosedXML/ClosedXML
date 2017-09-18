@@ -133,11 +133,6 @@ namespace ClosedXML_Tests.Examples
             TestHelper.RunTestExample<InsertingData>(@"Misc\InsertingData.xlsx");
         }
 
-        [Test]
-        public void InsertingTables()
-        {
-            TestHelper.RunTestExample<InsertingTables>(@"Misc\InsertingTables.xlsx");
-        }
 
         [Test]
         public void LambdaExpressions()
@@ -204,7 +199,7 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<WorkbookProperties>(@"Misc\WorkbookProperties.xlsx");
         }
-      
+
         [Test]
         public void WorkbookProtection()
         {

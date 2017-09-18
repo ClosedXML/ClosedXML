@@ -77,18 +77,20 @@ namespace ClosedXML.Excel.CalcEngine
 
             // skip leading equals sign
             if (_len > 0 && _expr[0] == '=')
-            {
                 _ptr++;
-            }
+
+            // skip leading +'s
+            while (_len > _ptr && _expr[_ptr] == '+')
+                _ptr++;
 
             // parse the expression
             var expr = ParseExpression();
 
             // check for errors
-            if (_token.ID != TKID.END)
-            {
-                Throw();
-            }
+            if (_token.ID == TKID.OPEN)
+                Throw("Unknown function: " + expr.LastParseItem);
+            else if (_token.ID != TKID.END)
+                Throw("Expected end of expression");
 
             // optimize expression
             if (_optimize)
@@ -113,10 +115,9 @@ namespace ClosedXML.Excel.CalcEngine
         /// </remarks>
         public object Evaluate(string expression)
         {
-            var x = //Parse(expression);
-                _cache != null
-                ? _cache[expression]
-                : Parse(expression);
+            var x = _cache != null
+                    ? _cache[expression]
+                    : Parse(expression);
             return x.Evaluate();
         }
 
@@ -251,6 +252,18 @@ namespace ClosedXML.Excel.CalcEngine
         //---------------------------------------------------------------------------
 
         #region ** token/keyword tables
+
+        private static readonly IDictionary<string, ErrorExpression.ExpressionErrorType> ErrorMap = new Dictionary<string, ErrorExpression.ExpressionErrorType>()
+        {
+            ["#REF!"] = ErrorExpression.ExpressionErrorType.CellReference,
+            ["#VALUE!"] = ErrorExpression.ExpressionErrorType.CellValue,
+            ["#DIV/0!"] = ErrorExpression.ExpressionErrorType.DivisionByZero,
+            ["#NAME?"] = ErrorExpression.ExpressionErrorType.NameNotRecognized,
+            ["#N/A"] = ErrorExpression.ExpressionErrorType.NoValueAvailable,
+            ["#NULL!"] = ErrorExpression.ExpressionErrorType.NullValue,
+            ["#NUM!"] = ErrorExpression.ExpressionErrorType.NumberInvalid
+        };
+
 
         // build/get static token table
         private Dictionary<object, Token> GetSymbolTable()
@@ -413,11 +426,11 @@ namespace ClosedXML.Excel.CalcEngine
                         var pCnt = p == null ? 0 : p.Count;
                         if (fnDef.ParmMin != -1 && pCnt < fnDef.ParmMin)
                         {
-                            Throw("Too few parameters.");
+                            Throw(string.Format("Too few parameters for function '{0}'. Expected a minimum of {1} and a maximum of {2}.", id, fnDef.ParmMin, fnDef.ParmMax));
                         }
                         if (fnDef.ParmMax != -1 && pCnt > fnDef.ParmMax)
                         {
-                            Throw("Too many parameters.");
+                            Throw(string.Format("Too many parameters for function '{0}'.Expected a minimum of {1} and a maximum of {2}.", id, fnDef.ParmMin, fnDef.ParmMax));
                         }
                         x = new FunctionExpression(fnDef, p);
                         break;
@@ -461,6 +474,10 @@ namespace ClosedXML.Excel.CalcEngine
                         Throw("Unbalanced parenthesis.");
                     }
 
+                    break;
+
+                case TKTYPE.ERROR:
+                    x = new ErrorExpression((ErrorExpression.ExpressionErrorType)_token.Value);
                     break;
             }
 
@@ -662,26 +679,12 @@ namespace ClosedXML.Excel.CalcEngine
                 return;
             }
 
-            // parse dates (review)
-            if (c == '#')
+            // parse #REF! (and other errors) in formula
+            if (c == '#' && ErrorMap.Any(pair => _len > _ptr+pair.Key.Length && _expr.Substring(_ptr, pair.Key.Length).Equals(pair.Key, StringComparison.OrdinalIgnoreCase)))
             {
-                // look for end #
-                for (i = 1; i + _ptr < _len; i++)
-                {
-                    c = _expr[_ptr + i];
-                    if (c == '#') break;
-                }
-
-                // check that we got the end of the date
-                if (c != '#')
-                {
-                    Throw("Can't find final date delimiter ('#').");
-                }
-
-                // end of date
-                var lit = _expr.Substring(_ptr + 1, i - 1);
-                _ptr += i + 1;
-                _token = new Token(DateTime.Parse(lit, _ci), TKID.ATOM, TKTYPE.LITERAL);
+                var errorPair = ErrorMap.Single(pair => _len > _ptr + pair.Key.Length && _expr.Substring(_ptr, pair.Key.Length).Equals(pair.Key, StringComparison.OrdinalIgnoreCase));
+                _ptr += errorPair.Key.Length;
+                _token = new Token(errorPair.Value, TKID.ATOM, TKTYPE.ERROR);
                 return;
             }
 
@@ -713,7 +716,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (isEnclosed && disallowedSymbols.Contains(c))
                     break;
 
-                var allowedSymbols = new List<char>() { '_' };
+                var allowedSymbols = new List<char>() { '_', '.' };
 
                 if (!isLetter && !isDigit
                     && !(isEnclosed || allowedSymbols.Contains(c))
@@ -771,10 +774,10 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // make sure the list was closed correctly
-            if (_token.ID != TKID.CLOSE)
-            {
-                Throw();
-            }
+            if (_token.ID == TKID.OPEN)
+                Throw("Unknown function: " + expr.LastParseItem);
+            else if (_token.ID != TKID.CLOSE)
+                Throw("Syntax error: expected ')'");
 
             // done
             return parms;
@@ -816,7 +819,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static void Throw(string msg)
         {
-            throw new Exception(msg);
+            throw new ExpressionParseException(msg);
         }
 
         #endregion ** static helpers

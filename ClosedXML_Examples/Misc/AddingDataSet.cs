@@ -1,45 +1,11 @@
+using ClosedXML.Excel;
 using System;
 using System.Data;
-using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
     public class AddingDataSet : IXLExample
     {
-        #region Variables
-
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Methods
-
-        // Public
         public void Create(String filePath)
         {
             var wb = new XLWorkbook();
@@ -52,7 +18,6 @@ namespace ClosedXML_Examples.Misc
             wb.SaveAs(filePath);
         }
 
-        // Private
         private DataSet GetDataSet()
         {
             var ds = new DataSet();
@@ -78,9 +43,5 @@ namespace ClosedXML_Examples.Misc
             table.Rows.Add(100, "Dilantin", "Melanie", new DateTime(2000, 1, 5));
             return table;
         }
-        // Override
-
-
-        #endregion
     }
 }

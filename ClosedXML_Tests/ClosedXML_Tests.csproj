@@ -76,14 +76,19 @@
     <Compile Include="Examples\PivotTableTests.cs" />
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
+    <Compile Include="Examples\TablesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
+    <Compile Include="Excel\CalcEngine\CalcEngineExceptionTests.cs" />
     <Compile Include="Excel\CalcEngine\InformationTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
+    <Compile Include="Excel\CalcEngine\MathTrigTests.cs" />
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Comments\CommentsTests.cs" />
     <Compile Include="Excel\ImageHandling\PictureTests.cs" />
+    <Compile Include="Excel\Misc\HyperlinkTests.cs" />
+    <Compile Include="Excel\Misc\SearchTests.cs" />
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
     <Compile Include="OleDb\OleDbTests.cs" />
@@ -91,6 +96,7 @@
     <Compile Include="Excel\PageSetup\PageBreaksTests.cs" />
     <Compile Include="Excel\Ranges\UsedAndUnusedCellsTests.cs" />
     <Compile Include="Excel\Saving\SavingTests.cs" />
+    <Compile Include="Utils\TemporaryFile.cs" />
     <Compile Include="XLHelperTests.cs" />
     <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
     <Compile Include="Excel\CalcEngine\DateAndTimeTests.cs" />
@@ -169,7 +175,6 @@
     <EmbeddedResource Include="Resource\Examples\Misc\HideUnhide.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Hyperlinks.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\InsertingData.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Misc\InsertingTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\LambdaExpressions.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\MergeCells.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\MergeMoves.xlsx" />
@@ -219,7 +224,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Examples\Misc\CopyingWorksheets.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Ranges\UsingTables.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Examples\Misc\CopyingRowsAndColumns.xlsx" />
@@ -285,7 +289,13 @@
     <EmbeddedResource Include="Resource\Misc\ExcelProducedWorkbookWithImages.xlsx" />
     <EmbeddedResource Include="Resource\Misc\EmptyCellValue.xlsx" />
     <EmbeddedResource Include="Resource\Misc\AllShapes.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBarNegative.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\DuplicateImageNames.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\TableHeadersWithLineBreaks.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\TableWithNameNull.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Styles\UsingPhonetics.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Tables\ResizingTables.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Tables\UsingTables.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Tables\InsertingTables.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />

@@ -1,7 +1,6 @@
 using ClosedXML.Extensions;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -10,16 +9,18 @@ namespace ClosedXML.Excel
     {
         #region Private fields
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] private XLAddress _firstAddress;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] private XLAddress _lastAddress;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private XLAddress _firstAddress;
 
-        #endregion
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private XLAddress _lastAddress;
+
+        #endregion Private fields
 
         #region Constructor
 
-        public XLRangeAddress(XLRangeAddress rangeAddress): this(rangeAddress.FirstAddress, rangeAddress.LastAddress)
+        public XLRangeAddress(XLRangeAddress rangeAddress) : this(rangeAddress.FirstAddress, rangeAddress.LastAddress)
         {
-
         }
 
         public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress)
@@ -73,7 +74,7 @@ namespace ClosedXML.Excel
             Worksheet = worksheet;
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Public properties
 
@@ -84,7 +85,7 @@ namespace ClosedXML.Excel
             get
             {
                 if (IsInvalid)
-                    throw new Exception("Range is invalid.");
+                    throw new InvalidOperationException("Range is invalid.");
 
                 return _firstAddress;
             }
@@ -96,7 +97,7 @@ namespace ClosedXML.Excel
             get
             {
                 if (IsInvalid)
-                    throw new Exception("Range is an invalid state.");
+                    throw new InvalidOperationException("Range is an invalid state.");
 
                 return _lastAddress;
             }
@@ -122,10 +123,9 @@ namespace ClosedXML.Excel
             set { LastAddress = value as XLAddress; }
         }
 
-
         public bool IsInvalid { get; set; }
 
-        #endregion
+        #endregion Public properties
 
         #region Public methods
 
@@ -168,7 +168,20 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return _firstAddress + ":" + _lastAddress;
+            return String.Concat(_firstAddress, ':', _lastAddress);
+        }
+
+        public string ToString(XLReferenceStyle referenceStyle)
+        {
+            return ToString(referenceStyle, false);
+        }
+
+        public string ToString(XLReferenceStyle referenceStyle, bool includeSheet)
+        {
+            if (referenceStyle == XLReferenceStyle.R1C1)
+                return ToStringFixed(referenceStyle, true);
+            else
+                return ToStringRelative(includeSheet);
         }
 
         public override bool Equals(object obj)
@@ -187,6 +200,6 @@ namespace ClosedXML.Excel
                 ^ LastAddress.GetHashCode();
         }
 
-        #endregion
+        #endregion Public methods
     }
 }

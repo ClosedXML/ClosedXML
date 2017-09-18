@@ -13,6 +13,7 @@ namespace ClosedXML_Tests
             IXLRangeAddress address = ws.Cell(1, 1).AsRange().RangeAddress;
 
             Assert.AreEqual("A1:A1", address.ToString());
+            Assert.AreEqual("Sheet1!R1C1:R1C1", address.ToString(XLReferenceStyle.R1C1, true));
 
             Assert.AreEqual("A1:A1", address.ToStringRelative());
             Assert.AreEqual("Sheet1!A1:A1", address.ToStringRelative(true));
@@ -33,6 +34,7 @@ namespace ClosedXML_Tests
             IXLRangeAddress address = ws.Cell(1, 1).AsRange().RangeAddress;
 
             Assert.AreEqual("A1:A1", address.ToString());
+            Assert.AreEqual("'Sheet 1'!R1C1:R1C1", address.ToString(XLReferenceStyle.R1C1, true));
 
             Assert.AreEqual("A1:A1", address.ToStringRelative());
             Assert.AreEqual("'Sheet 1'!A1:A1", address.ToStringRelative(true));
