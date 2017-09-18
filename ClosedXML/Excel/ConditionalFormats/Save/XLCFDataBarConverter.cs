@@ -16,12 +16,24 @@ namespace ClosedXML.Excel
             var dataBar = new DataBar { ShowValue = !cf.ShowBarOnly };
 
             var conditionalFormatValueObject1 = new ConditionalFormatValueObject { Type = cf.ContentTypes[1].ToOpenXml() };
-            if (cf.Values.Count >= 1) conditionalFormatValueObject1.Val = cf.Values[1].Value;
+            if (cf.Values.Any() && cf.Values[1]?.Value != null) conditionalFormatValueObject1.Val = cf.Values[1].Value;
 
             var conditionalFormatValueObject2 = new ConditionalFormatValueObject { Type = cf.ContentTypes[2].ToOpenXml() };
-            if (cf.Values.Count >= 2) conditionalFormatValueObject2.Val = cf.Values[2].Value;
+            if (cf.Values.Count >= 2 && cf.Values[2]?.Value != null) conditionalFormatValueObject2.Val = cf.Values[2].Value;
 
-            var color = new Color { Rgb = cf.Colors[1].Color.ToHex() };
+            var color = new Color();
+            switch (cf.Colors[1].ColorType)
+            {
+                case XLColorType.Color:
+                    color.Rgb = cf.Colors[1].Color.ToHex();
+                    break;
+                case XLColorType.Theme:
+                    color.Theme = System.Convert.ToUInt32(cf.Colors[1].ThemeColor);
+                    break;
+                case XLColorType.Indexed:
+                    color.Indexed = System.Convert.ToUInt32(cf.Colors[1].Indexed);
+                    break;
+            }
 
             dataBar.Append(conditionalFormatValueObject1);
             dataBar.Append(conditionalFormatValueObject2);

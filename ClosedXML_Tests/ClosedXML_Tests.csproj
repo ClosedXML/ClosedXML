@@ -296,6 +296,7 @@
     <EmbeddedResource Include="Resource\Examples\Tables\ResizingTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Tables\UsingTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Tables\InsertingTables.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBarNegative.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
