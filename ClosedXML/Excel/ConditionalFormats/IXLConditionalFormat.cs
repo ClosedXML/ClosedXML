@@ -100,7 +100,7 @@ namespace ClosedXML.Excel
 
         IXLCFColorScaleMin ColorScale();
         IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false);
-        IXLCFDataBarMin DataBar(XLColor color, XLColor colorNegative, Boolean showBarOnly = false);
+        IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false);
         IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
 
         XLConditionalFormatType ConditionalFormatType { get; }
@@ -123,4 +123,3 @@ namespace ClosedXML.Excel
         
     }
 }
-    

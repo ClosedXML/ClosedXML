@@ -10,11 +10,6 @@ namespace ClosedXML.Excel
         private readonly List<IXLConditionalFormat> _conditionalFormats = new List<IXLConditionalFormat>();
         public void Add(IXLConditionalFormat conditionalFormat)
         {
-            byte[] bytes = new byte[16];
-            BitConverter.GetBytes(_conditionalFormats.Count + 1).CopyTo(bytes, 0);
-            var guid = new Guid(bytes);
-            conditionalFormat.Name = string.Concat("{", guid.ToString(), "}");
-
             _conditionalFormats.Add(conditionalFormat);
         }
 

@@ -344,10 +344,10 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.DataBar;
             return new XLCFDataBarMin(this);
         }
-        public IXLCFDataBarMin DataBar(XLColor color, XLColor colorNegative, Boolean showBarOnly = false)
+        public IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false)
         {
-            Colors.Initialize(color);
-            Colors.Add(colorNegative);
+            Colors.Initialize(positiveColor);
+            Colors.Add(negativeColor);
             ShowBarOnly = showBarOnly;
             ConditionalFormatType = XLConditionalFormatType.DataBar;
             return new XLCFDataBarMin(this);
