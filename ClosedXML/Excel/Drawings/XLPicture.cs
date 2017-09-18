@@ -147,6 +147,8 @@ namespace ClosedXML.Excel.Drawings
             {
                 if ((_worksheet.Pictures.FirstOrDefault(p => p.Id.Equals(value)) ?? this) != this)
                     throw new ArgumentException($"The picture ID '{value}' already exists.");
+
+                id = value;
             }
         }
 
