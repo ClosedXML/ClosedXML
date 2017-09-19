@@ -81,6 +81,9 @@
     <Compile Include="Excel\CalcEngine\Functions\Database.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Information.cs" />
     <Compile Include="Excel\CalcEngine\Functions\Lookup.cs" />
+    <Compile Include="Excel\ConditionalFormats\Save\IXLCFConverterExtension.cs" />
+    <Compile Include="Excel\ConditionalFormats\Save\XLCFConvertersExtension.cs" />
+    <Compile Include="Excel\ConditionalFormats\Save\XLCFDataBarConverterExtension.cs" />
     <Compile Include="Excel\Drawings\IXLPictures.cs" />
     <Compile Include="Excel\Drawings\PictureEnums.cs" />
     <Compile Include="Excel\Drawings\XLPicture.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
     <Compile Include="Excel\XLConstants.cs" />
     <Compile Include="Excel\XLWorkbook_ImageHandling.cs" />
+    <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\OpenXmlPartContainerExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Utils\GraphicsUtils.cs" />
