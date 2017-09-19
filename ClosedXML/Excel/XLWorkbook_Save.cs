@@ -4525,12 +4525,10 @@ namespace ClosedXML.Excel
                         )
                     )
                 {
-                    foreach (IXLConditionalFormat xLConditionalFormat in cfGroup.CfList)
+                    foreach (var xlConditionalFormat in cfGroup.CfList.Cast<XLConditionalFormat>())
                     {
-                        DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule conditionalFormattingRule = (
-                                from r in worksheetExtensionList.Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
-                                where r.Id == xLConditionalFormat.Name
-                                select r).SingleOrDefault();
+                        var conditionalFormattingRule = worksheetExtensionList.Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
+                                .SingleOrDefault(r => r.Id == xlConditionalFormat.Id.WrapInBraces());
                         if (conditionalFormattingRule != null)
                         {
                             WorksheetExtension worksheetExtension = conditionalFormattingRule.Ancestors<WorksheetExtension>().SingleOrDefault<WorksheetExtension>();
@@ -4542,7 +4540,7 @@ namespace ClosedXML.Excel
 
                         var conditionalFormatting = new DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormatting();
                         conditionalFormatting.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
-                        conditionalFormatting.Append(XLCFConvertersExtension.Convert(xLConditionalFormat, context));
+                        conditionalFormatting.Append(XLCFConvertersExtension.Convert(xlConditionalFormat, context));
                         var referenceSequence = new DocumentFormat.OpenXml.Office.Excel.ReferenceSequence { Text = cfGroup.RangeId };
                         conditionalFormatting.Append(referenceSequence);
 

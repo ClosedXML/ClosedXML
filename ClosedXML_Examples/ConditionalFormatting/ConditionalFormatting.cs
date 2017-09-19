@@ -544,7 +544,7 @@ namespace ClosedXML_Examples
             var guid = new Guid(bytes);
 
             var conditionalFormat = ws.RangeUsed().AddConditionalFormat();
-            conditionalFormat.Name = string.Concat("{", guid.ToString(), "}");
+            //conditionalFormat.Id = string.Concat("{", guid.ToString(), "}");
             conditionalFormat.DataBar(XLColor.Green, XLColor.Red, false)
                 .LowestValue()
                 .Maximum(XLCFContentType.Percent, "100");

@@ -7,10 +7,9 @@ namespace ClosedXML.Excel
 {
     internal class XLConditionalFormat : IXLConditionalFormat, IXLStylized
     {
-
         public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
         {
-            Name = string.Concat("{", Guid.NewGuid().ToString(), "}");
+            Id = Guid.NewGuid();
             Range = range;
             Style = new XLStyle(this, range.Worksheet.Style);
             Values = new XLDictionary<XLFormula>();
@@ -19,29 +18,30 @@ namespace ClosedXML.Excel
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
             CopyDefaultModify = copyDefaultModify;
         }
-        public XLConditionalFormat(XLConditionalFormat other)
+
+        public XLConditionalFormat(XLConditionalFormat conditionalFormat)
         {
-            Name = string.Concat("{", Guid.NewGuid().ToString(), "}");
-            Range = other.Range;
-            Style = new XLStyle(this, other.Style);
-            Values = new XLDictionary<XLFormula>(other.Values);
-            Colors = new XLDictionary<XLColor>(other.Colors);
-            ContentTypes = new XLDictionary<XLCFContentType>(other.ContentTypes);
-            IconSetOperators = new XLDictionary<XLCFIconSetOperator>(other.IconSetOperators);
+            Id = Guid.NewGuid();
+            Range = conditionalFormat.Range;
+            Style = new XLStyle(this, conditionalFormat.Style);
+            Values = new XLDictionary<XLFormula>(conditionalFormat.Values);
+            Colors = new XLDictionary<XLColor>(conditionalFormat.Colors);
+            ContentTypes = new XLDictionary<XLCFContentType>(conditionalFormat.ContentTypes);
+            IconSetOperators = new XLDictionary<XLCFIconSetOperator>(conditionalFormat.IconSetOperators);
 
 
-            ConditionalFormatType = other.ConditionalFormatType;
-            TimePeriod = other.TimePeriod;
-            IconSetStyle = other.IconSetStyle;
-            Operator = other.Operator;
-            Bottom = other.Bottom;
-            Percent = other.Percent;
-            ReverseIconOrder = other.ReverseIconOrder;
-            ShowIconOnly = other.ShowIconOnly;
-            ShowBarOnly = other.ShowBarOnly;
+            ConditionalFormatType = conditionalFormat.ConditionalFormatType;
+            TimePeriod = conditionalFormat.TimePeriod;
+            IconSetStyle = conditionalFormat.IconSetStyle;
+            Operator = conditionalFormat.Operator;
+            Bottom = conditionalFormat.Bottom;
+            Percent = conditionalFormat.Percent;
+            ReverseIconOrder = conditionalFormat.ReverseIconOrder;
+            ShowIconOnly = conditionalFormat.ShowIconOnly;
+            ShowBarOnly = conditionalFormat.ShowBarOnly;
         }
 
-        public String Name { get; set; }
+        public Guid Id { get; internal set; }
         public Boolean CopyDefaultModify { get; set; }
         private IXLStyle _style;
         private Int32 _styleCacheId;
