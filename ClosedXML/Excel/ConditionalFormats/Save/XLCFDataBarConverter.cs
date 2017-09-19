@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
+using ClosedXML.Extensions;
 
 namespace ClosedXML.Excel
 {
@@ -48,7 +49,10 @@ namespace ClosedXML.Excel
 
                 ConditionalFormattingRuleExtension conditionalFormattingRuleExtension = new ConditionalFormattingRuleExtension { Uri = "{B025F937-C7B1-47D3-B67F-A62EFF666E3E}" };
                 conditionalFormattingRuleExtension.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
-                DocumentFormat.OpenXml.Office2010.Excel.Id id = new DocumentFormat.OpenXml.Office2010.Excel.Id { Text = cf.Name };
+                DocumentFormat.OpenXml.Office2010.Excel.Id id = new DocumentFormat.OpenXml.Office2010.Excel.Id
+                {
+                    Text = (cf as XLConditionalFormat).Id.WrapInBraces()
+                };
                 conditionalFormattingRuleExtension.Append(id);
 
                 conditionalFormattingRuleExtensionList.Append(conditionalFormattingRuleExtension);

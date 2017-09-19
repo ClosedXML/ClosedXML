@@ -1,8 +1,5 @@
-﻿using DocumentFormat.OpenXml;
-//using DocumentFormat.OpenXml.Spreadsheet;
+﻿using ClosedXML.Extensions;
 using DocumentFormat.OpenXml.Office2010.Excel;
-using System;
-using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -17,7 +14,7 @@ namespace ClosedXML.Excel
             ConditionalFormattingRule conditionalFormattingRule = new ConditionalFormattingRule()
             {
                 Type = DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValues.DataBar,
-                Id = cf.Name
+                Id = (cf as XLConditionalFormat).Id.WrapInBraces()
             };
 
             DataBar dataBar = new DataBar()

@@ -1,5 +1,6 @@
 #region
 
+using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -1875,12 +1876,11 @@ namespace ClosedXML.Excel
                         var dataBar = fr.Elements<DataBar>().First();
                         if (dataBar.ShowValue != null)
                             conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
-                        var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
-                        if (id != null)
-                        {
 
-                            conditionalFormat.Name = id.Text;
-                        }
+                        var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
+                        if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
+                            conditionalFormat.Id = Guid.Parse(id.Text.Substring(1, id.Text.Length - 2));
+
                         ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
                     }
                     else if (fr.Elements<IconSet>().Any())
@@ -1922,24 +1922,22 @@ namespace ClosedXML.Excel
                 return;
             }
 
-            foreach (var conditionalFormattingRule in
-                from r in extensions.Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
-                where r.Type == ConditionalFormatValues.DataBar
-                select r)
+            foreach (var conditionalFormattingRule in extensions
+                .Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
+                .Where(cf =>
+                    cf.Type != null
+                    && cf.Type.HasValue
+                    && cf.Type.Value == ConditionalFormatValues.DataBar))
             {
-                IXLConditionalFormat xLConditionalFormat = (
-                    from cf in ws.ConditionalFormats
-                    where cf.Name == conditionalFormattingRule.Id
-                    select cf).SingleOrDefault<IXLConditionalFormat>();
-
-                if (xLConditionalFormat == null)
+                var xlConditionalFormat = ws.ConditionalFormats
+                    .Cast<XLConditionalFormat>()
+                    .SingleOrDefault(cf => cf.Id.WrapInBraces() == conditionalFormattingRule.Id);
+                if (xlConditionalFormat != null)
                 {
-                    continue;
+                    var negativeFillColor = conditionalFormattingRule.Descendants<DocumentFormat.OpenXml.Office2010.Excel.NegativeFillColor>().SingleOrDefault();
+                    var color = new DocumentFormat.OpenXml.Spreadsheet.Color { Rgb = negativeFillColor.Rgb };
+                    xlConditionalFormat.Colors.Add(this.GetColor(color));
                 }
-
-                var negativeFillColor = conditionalFormattingRule.Descendants<DocumentFormat.OpenXml.Office2010.Excel.NegativeFillColor>().SingleOrDefault();
-                var color = new DocumentFormat.OpenXml.Spreadsheet.Color { Rgb = negativeFillColor.Rgb };
-                xLConditionalFormat.Colors.Add(this.GetColor(color));
             }
         }
 

@@ -62,7 +62,6 @@ namespace ClosedXML.Excel
     public enum XLCFOperator { Equal, NotEqual, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan, Between, NotBetween, Contains, NotContains, StartsWith, EndsWith }
     public interface IXLConditionalFormat
     {
-        String Name { get; set; }
         IXLStyle Style { get; set; }
 
         IXLStyle WhenIsBlank();
@@ -115,11 +114,11 @@ namespace ClosedXML.Excel
         XLDictionary<XLColor> Colors { get; }
         XLDictionary<XLCFContentType> ContentTypes { get; }
         XLDictionary<XLCFIconSetOperator> IconSetOperators { get; }
-        
+
         XLCFOperator Operator { get; }
         Boolean Bottom { get;  }
         Boolean Percent { get; }
-        
-        
+
+
     }
 }

@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML_Examples
 {
@@ -27,7 +26,6 @@ namespace ClosedXML_Examples
 
     public class CFColorScaleLowHigh : IXLExample
     {
-
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
@@ -220,7 +218,6 @@ namespace ClosedXML_Examples
             workbook.SaveAs(filePath);
         }
     }
-
 
     public class CFEqualsString : IXLExample
     {
@@ -539,13 +536,9 @@ namespace ClosedXML_Examples
                 .CellBelow().SetValue(2)
                 .CellBelow().SetValue(3);
 
-            byte[] bytes = new byte[16];
-            BitConverter.GetBytes(1).CopyTo(bytes, 0);
-            var guid = new Guid(bytes);
-
-            var conditionalFormat = ws.RangeUsed().AddConditionalFormat();
-            conditionalFormat.Name = string.Concat("{", guid.ToString(), "}");
-            conditionalFormat.DataBar(XLColor.Green, XLColor.Red, false)
+            ws.RangeUsed()
+                .AddConditionalFormat()
+                .DataBar(XLColor.Green, XLColor.Red, showBarOnly: false)
                 .LowestValue()
                 .Maximum(XLCFContentType.Percent, "100");
 
@@ -613,7 +606,6 @@ namespace ClosedXML_Examples
             var range = ws.RangeUsed();
             range.AddConditionalFormat().WhenEquals("1").Font.SetBold();
             range.InsertRowsAbove(1);
-
 
             workbook.SaveAs(filePath);
         }
