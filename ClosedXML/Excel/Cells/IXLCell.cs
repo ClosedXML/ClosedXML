@@ -35,6 +35,14 @@ namespace ClosedXML.Excel
         IXLAddress Address { get; }
 
         /// <summary>
+        /// Returns the current region. The current region is a range bounded by any combination of blank rows and blank columns
+        /// </summary>
+        /// <value>
+        /// The current region.
+        /// </value>
+        IXLRange CurrentRegion { get; }
+
+        /// <summary>
         /// Gets or sets the type of this cell's data.
         /// <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
         /// <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
