@@ -2060,6 +2060,12 @@ namespace ClosedXML.Excel
                 EnableDrill = GetBooleanValue(pt.EnableShowDetails, true)
             };
 
+            if (pt.ClassicPivotTableLayout)
+            {
+                pivotTableDefinition.Compact = false;
+                pivotTableDefinition.CompactData = false;
+            }
+
             if (pt.EmptyCellReplacement != null)
             {
                 pivotTableDefinition.ShowMissing = true;
@@ -2147,6 +2153,12 @@ namespace ClosedXML.Excel
             {
                 IXLPivotField labelField = null;
                 var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
+
+                if (pt.ClassicPivotTableLayout)
+                {
+                    pf.Outline = false;
+                    pf.Compact = false;
+                }
 
                 switch (pt.Subtotals)
                 {
