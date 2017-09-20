@@ -691,7 +691,8 @@ namespace ClosedXML.Excel
 
         public IXLTable InsertTable(DataTable data, string tableName, bool createTable)
         {
-            if (data == null) return null;
+            if (data == null || data.Columns.Count == 0)
+                return null;
 
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
                 throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
