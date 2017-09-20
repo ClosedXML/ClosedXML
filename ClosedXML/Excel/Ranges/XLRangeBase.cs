@@ -1757,8 +1757,16 @@ namespace ClosedXML.Excel
 
         public IXLAutoFilter SetAutoFilter()
         {
-            using (var asRange = AsRange())
-                return Worksheet.AutoFilter.Set(asRange);
+            return SetAutoFilter(true);
+        }
+
+        public IXLAutoFilter SetAutoFilter(Boolean value)
+        {
+            if (value)
+                using (var asRange = AsRange())
+                    return Worksheet.AutoFilter.Set(asRange);
+            else
+                return Worksheet.AutoFilter.Clear();
         }
 
         #region Sort

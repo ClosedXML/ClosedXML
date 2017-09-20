@@ -262,6 +262,8 @@ namespace ClosedXML.Excel
 
         IXLAutoFilter SetAutoFilter();
 
+        IXLAutoFilter SetAutoFilter(Boolean value);
+
         IXLDataValidation SetDataValidation();
 
         IXLConditionalFormat AddConditionalFormat();
