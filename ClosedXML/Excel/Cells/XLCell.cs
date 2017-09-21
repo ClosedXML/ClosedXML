@@ -2751,31 +2751,16 @@ namespace ClosedXML.Excel
         {
             get
             {
-                return this.Worksheet.Range(SearchCurrentRegion(this.AsRange()));
+                return this.Worksheet.Range(FindCurrentRegion(this.AsRange()));
             }
         }
 
-        internal IEnumerable<XLCell> SurroundingCells(IXLRangeBase range)
-        {
-            var rowNumbers = Enumerable.Range(range.RangeAddress.FirstAddress.RowNumber - 1, range.RangeAddress.LastAddress.RowNumber - range.RangeAddress.FirstAddress.RowNumber + 3);
-            var columnNumbers = Enumerable.Range(range.RangeAddress.FirstAddress.ColumnNumber - 1, range.RangeAddress.LastAddress.ColumnNumber - range.RangeAddress.FirstAddress.ColumnNumber + 3);
-
-            // Cartesian product
-            var addresses = rowNumbers.SelectMany(row => columnNumbers, (row, column) => new { row, column });
-
-            addresses = addresses.Where(a => a.row >= 1 && a.row <= XLHelper.MaxRowNumber && a.column >= 1 && a.column <= XLHelper.MaxColumnNumber)
-                // Don't select range cells self
-                .Where(a => !range.Cells().Any(rc => a.row == rc.Address.RowNumber && a.column == rc.Address.ColumnNumber));
-
-            return addresses.Select(a => this.Worksheet.Cell(a.row, a.column));
-        }
-
-        internal IXLRangeAddress SearchCurrentRegion(IXLRangeBase range)
+        internal IXLRangeAddress FindCurrentRegion(IXLRangeBase range)
         {
             var rangeAddress = range.RangeAddress;
 
-            var filledCells = SurroundingCells(this.Worksheet.Range(rangeAddress))
-                .Where(c => !c.IsEmpty(false, false))
+            var filledCells = range
+                .SurroundingCells(c => !(c as XLCell).IsEmpty(false, false))
                 .Concat(this.Worksheet.Range(rangeAddress).Cells());
 
             var grownRangeAddress = new XLRangeAddress(
@@ -2783,11 +2768,10 @@ namespace ClosedXML.Excel
                 new XLAddress(this.Worksheet, filledCells.Max(c => c.Address.RowNumber), filledCells.Max(c => c.Address.ColumnNumber), false, false)
             );
 
-
             if (rangeAddress.Equals(grownRangeAddress))
                 return this.Worksheet.Range(grownRangeAddress).RangeAddress;
             else
-                return SearchCurrentRegion(this.Worksheet.Range(grownRangeAddress));
+                return FindCurrentRegion(this.Worksheet.Range(grownRangeAddress));
         }
     }
 }
