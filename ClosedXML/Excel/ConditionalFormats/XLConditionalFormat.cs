@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using ClosedXML.Utils;
 
 namespace ClosedXML.Excel
 {
@@ -17,6 +16,7 @@ namespace ClosedXML.Excel
             ContentTypes = new XLDictionary<XLCFContentType>();
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
             CopyDefaultModify = copyDefaultModify;
+
         }
 
         public XLConditionalFormat(XLConditionalFormat conditionalFormat)
@@ -39,6 +39,9 @@ namespace ClosedXML.Excel
             ReverseIconOrder = conditionalFormat.ReverseIconOrder;
             ShowIconOnly = conditionalFormat.ShowIconOnly;
             ShowBarOnly = conditionalFormat.ShowBarOnly;
+            StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(conditionalFormat.StopIfTrueInternal, true);
+
+
         }
 
         public Guid Id { get; internal set; }
@@ -98,6 +101,14 @@ namespace ClosedXML.Excel
         public Boolean ShowIconOnly { get; set; }
         public Boolean ShowBarOnly { get; set; }
 
+        internal bool StopIfTrueInternal { get; set; }
+
+        public IXLConditionalFormat StopIfTrue(bool value)
+        {
+            StopIfTrueInternal = value;
+            return this;
+        }
+
         public void CopyFrom(IXLConditionalFormat other)
         {
             Style = other.Style;
@@ -110,6 +121,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
+            StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(((XLConditionalFormat)other).StopIfTrueInternal, true);
 
             Values.Clear();
             other.Values.ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));

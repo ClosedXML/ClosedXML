@@ -652,4 +652,28 @@ namespace ClosedXML_Examples
             workbook.SaveAs(filePath);
         }
     }
+
+    public class CFStopIfTrue : IXLExample
+    {
+        public void Create(String filePath)
+        {
+            var workbook = new XLWorkbook();
+            var ws = workbook.AddWorksheet("Sheet1");
+
+            ws.FirstCell().SetValue(6)
+                .CellBelow().SetValue(1)
+                .CellBelow().SetValue(2)
+                .CellBelow().SetValue(3);
+
+            ws.RangeUsed().AddConditionalFormat().StopIfTrue(true).WhenGreaterThan(5);
+
+
+            ws.RangeUsed().AddConditionalFormat().IconSet(XLIconSetStyle.ThreeTrafficLights2, true, true)
+                .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "0", XLCFContentType.Number)
+                .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "2", XLCFContentType.Number)
+                .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "3", XLCFContentType.Number);
+
+            workbook.SaveAs(filePath);
+        }
+    }
 }
