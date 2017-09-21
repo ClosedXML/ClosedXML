@@ -1,5 +1,8 @@
 ﻿using ClosedXML.Extensions;
+using DocumentFormat.OpenXml.Office.Excel;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using System;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -22,11 +25,25 @@ namespace ClosedXML.Excel
                 MinLength = 0,
                 MaxLength = 100,
                 Gradient = false,
-                AxisPosition = DataBarAxisPositionValues.Middle
+                AxisPosition = DataBarAxisPositionValues.Middle,
+                ShowValue = !cf.ShowBarOnly
             };
 
-            var cfMin = new ConditionalFormattingValueObject { Type = ConditionalFormattingValueObjectTypeValues.AutoMin };
-            var cfMax = new ConditionalFormattingValueObject() { Type = ConditionalFormattingValueObjectTypeValues.AutoMax };
+            ConditionalFormattingValueObjectTypeValues cfMinType = Convert(cf.ContentTypes[1].ToOpenXml());
+            var cfMin = new ConditionalFormattingValueObject { Type = cfMinType };
+            if (cf.Values.Any() && cf.Values[1]?.Value != null)
+            {
+                cfMin.Type = ConditionalFormattingValueObjectTypeValues.Numeric;
+                cfMin.Append(new Formula() { Text = cf.Values[1].Value });
+            }
+
+            ConditionalFormattingValueObjectTypeValues cfMaxType = Convert(cf.ContentTypes[2].ToOpenXml());
+            var cfMax = new ConditionalFormattingValueObject { Type = cfMaxType };
+            if (cf.Values.Count >= 2 && cf.Values[2]?.Value != null)
+            {
+                cfMax.Type = ConditionalFormattingValueObjectTypeValues.Numeric;
+                cfMax.Append(new Formula() { Text = cf.Values[2].Value });
+            }
 
             var barAxisColor = new BarAxisColor { Rgb = XLColor.Black.Color.ToHex() };
 
@@ -45,6 +62,27 @@ namespace ClosedXML.Excel
             conditionalFormattingRule.Append(dataBar);
 
             return conditionalFormattingRule;
+        }
+
+        private ConditionalFormattingValueObjectTypeValues Convert(DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues obj)
+        {
+            switch (obj)
+            {
+                case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Max:
+                    return ConditionalFormattingValueObjectTypeValues.AutoMax;
+                case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Min:
+                    return ConditionalFormattingValueObjectTypeValues.AutoMin;
+                case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Number:
+                    return ConditionalFormattingValueObjectTypeValues.Numeric;
+                case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Percent:
+                    return ConditionalFormattingValueObjectTypeValues.Percent;
+                case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Percentile:
+                    return ConditionalFormattingValueObjectTypeValues.Percentile;
+                case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Formula:
+                    return ConditionalFormattingValueObjectTypeValues.Formula;
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }
