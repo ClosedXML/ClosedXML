@@ -267,5 +267,64 @@ namespace ClosedXML.Excel
         IXLConditionalFormat AddConditionalFormat();
 
         void Select();
+
+        /// <summary>
+        /// Grows this the current range by one cell to each side
+        /// </summary>
+        IXLRangeBase Grow();
+
+        /// <summary>
+        /// Grows this the current range by the specified number of cells to each side.
+        /// </summary>
+        /// <param name="growCount">The grow count.</param>
+        /// <returns></returns>
+        IXLRangeBase Grow(Int32 growCount);
+
+        /// <summary>
+        /// Shrinks this current range by one cell.
+        /// </summary>
+        IXLRangeBase Shrink();
+
+        /// <summary>
+        /// Shrinks the current range by the specified number of cells from each side.
+        /// </summary>
+        /// <param name="shrinkCount">The shrink count.</param>
+        /// <returns></returns>
+        IXLRangeBase Shrink(Int32 shrinkCount);
+
+        /// <summary>
+        /// Returns the intersection of this range with another range on the same worksheet.
+        /// </summary>
+        /// <param name="otherRange">The other range.</param>
+        /// <param name="thisRangePredicate">Predicate applied to this range's cells.</param>
+        /// <param name="otherRangePredicate">Predicate applied to the other range's cells.</param>
+        /// <returns></returns>
+        IXLRangeBase Intersection(IXLRangeBase otherRange, Func<IXLCell, Boolean> thisRangePredicate = null, Func<IXLCell, Boolean> otherRangePredicate = null);
+
+        /// <summary>
+        /// Returns the set of cells surrounding the current range.
+        /// </summary>
+        /// <param name="predicate">The predicate to apply on the resulting set of cells.</param>
+        IXLCells SurroundingCells(Func<IXLCell, Boolean> predicate = null);
+
+        /// <summary>
+        /// Calculates the union of two ranges on the same worksheet.
+        /// </summary>
+        /// <param name="otherRange">The other range.</param>
+        /// <param name="thisRangePredicate">Predicate applied to this range's cells.</param>
+        /// <param name="otherRangePredicate">Predicate applied to the other range's cells.</param>
+        /// <returns>
+        /// The union
+        /// </returns>
+        IXLCells Union(IXLRangeBase otherRange, Func<IXLCell, Boolean> thisRangePredicate = null, Func<IXLCell, Boolean> otherRangePredicate = null);
+
+        /// <summary>
+        /// Returns all cells in the current range that are not in the other range.
+        /// </summary>
+        /// <param name="otherRange">The other range.</param>
+        /// <param name="thisRangePredicate">Predicate applied to this range's cells.</param>
+        /// <param name="otherRangePredicate">Predicate applied to the other range's cells.</param>
+        /// <returns></returns>
+        IXLCells Difference(IXLRangeBase otherRange, Func<IXLCell, Boolean> thisRangePredicate = null, Func<IXLCell, Boolean> otherRangePredicate = null);
     }
 }
