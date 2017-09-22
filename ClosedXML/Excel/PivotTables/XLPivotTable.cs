@@ -10,10 +10,10 @@ namespace ClosedXML.Excel
 
         public XLPivotTable()
         {
-            Fields = new XLPivotFields();
-            ReportFilters = new XLPivotFields();
-            ColumnLabels=new XLPivotFields();
-            RowLabels = new XLPivotFields();
+            Fields = new XLPivotFields(this);
+            ReportFilters = new XLPivotFields(this);
+            ColumnLabels=new XLPivotFields(this);
+            RowLabels = new XLPivotFields(this);
             Values = new XLPivotValues(this);
             Theme = XLPivotTableTheme.PivotStyleLight16;
 
@@ -22,6 +22,10 @@ namespace ClosedXML.Excel
 
         public IXLCell TargetCell { get; set; }
         public IXLRange SourceRange { get; set; }
+        public IEnumerable<string> SourceRangeFieldsAvailable
+        {
+            get { return this.SourceRange.FirstRow().Cells().Select(c => c.GetString()); }
+        }
 
         public IXLPivotFields Fields { get; private set; }
         public IXLPivotFields ReportFilters { get; private set; }

@@ -52,6 +52,20 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void PreventAddingOfEmptyDataTable()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var dt = new DataTable();
+                var table = ws.FirstCell().InsertTable(dt);
+
+                Assert.AreEqual(null, table);
+            }
+        }
+
+        [Test]
         public void CanSaveTableCreatedFromSingleRow()
         {
             using (var wb = new XLWorkbook())

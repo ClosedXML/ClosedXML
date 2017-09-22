@@ -283,5 +283,40 @@ namespace ClosedXML_Tests
                 Assert.Throws<ArgumentException>(() => picture.Name = "picTURE 1");
             }
         }
+
+        [Test]
+        public void HandleDuplicatePictureIdsAcrossWorksheets()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet("Sheet1");
+                var ws2 = wb.AddWorksheet("Sheet2");
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
+                {
+                    (ws1 as XLWorksheet).AddPicture(stream, "Picture 1", 2);
+                    (ws1 as XLWorksheet).AddPicture(stream, "Picture 2", 3);
+
+                    //Internal method - used for loading files
+                    var pic = (ws2 as XLWorksheet).AddPicture(stream, "Picture 1", 2)
+                        .WithPlacement(XLPicturePlacement.FreeFloating)
+                        .MoveTo(220, 155) as XLPicture;
+
+                    var id = pic.Id;
+
+                    pic.Id = id;
+                    Assert.AreEqual(id, pic.Id);
+
+                    pic.Id = 3;
+                    Assert.AreEqual(3, pic.Id);
+
+                    pic.Id = id;
+
+                    var pic2 = (ws2 as XLWorksheet).AddPicture(stream, "Picture 2", 3)
+                        .WithPlacement(XLPicturePlacement.FreeFloating)
+                        .MoveTo(440, 300) as XLPicture;
+                }
+            }
+        }
     }
 }

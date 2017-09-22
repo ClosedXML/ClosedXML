@@ -5,11 +5,11 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLConditionalFormat: IXLConditionalFormat, IXLStylized
+    internal class XLConditionalFormat : IXLConditionalFormat, IXLStylized
     {
-        
         public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
         {
+            Id = Guid.NewGuid();
             Range = range;
             Style = new XLStyle(this, range.Worksheet.Style);
             Values = new XLDictionary<XLFormula>();
@@ -18,31 +18,34 @@ namespace ClosedXML.Excel
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
             CopyDefaultModify = copyDefaultModify;
         }
-        public XLConditionalFormat(XLConditionalFormat other)
+
+        public XLConditionalFormat(XLConditionalFormat conditionalFormat)
         {
-            Range = other.Range;
-            Style = new XLStyle(this, other.Style);
-            Values = new XLDictionary<XLFormula>(other.Values);
-            Colors = new XLDictionary<XLColor>(other.Colors);
-            ContentTypes = new XLDictionary<XLCFContentType>(other.ContentTypes);
-            IconSetOperators = new XLDictionary<XLCFIconSetOperator>(other.IconSetOperators);
+            Id = Guid.NewGuid();
+            Range = conditionalFormat.Range;
+            Style = new XLStyle(this, conditionalFormat.Style);
+            Values = new XLDictionary<XLFormula>(conditionalFormat.Values);
+            Colors = new XLDictionary<XLColor>(conditionalFormat.Colors);
+            ContentTypes = new XLDictionary<XLCFContentType>(conditionalFormat.ContentTypes);
+            IconSetOperators = new XLDictionary<XLCFIconSetOperator>(conditionalFormat.IconSetOperators);
 
 
-            ConditionalFormatType = other.ConditionalFormatType;
-            TimePeriod = other.TimePeriod;
-            IconSetStyle = other.IconSetStyle;
-            Operator = other.Operator;
-            Bottom = other.Bottom;
-            Percent = other.Percent;
-            ReverseIconOrder = other.ReverseIconOrder;
-            ShowIconOnly = other.ShowIconOnly;
-            ShowBarOnly = other.ShowBarOnly;
+            ConditionalFormatType = conditionalFormat.ConditionalFormatType;
+            TimePeriod = conditionalFormat.TimePeriod;
+            IconSetStyle = conditionalFormat.IconSetStyle;
+            Operator = conditionalFormat.Operator;
+            Bottom = conditionalFormat.Bottom;
+            Percent = conditionalFormat.Percent;
+            ReverseIconOrder = conditionalFormat.ReverseIconOrder;
+            ShowIconOnly = conditionalFormat.ShowIconOnly;
+            ShowBarOnly = conditionalFormat.ShowBarOnly;
         }
 
+        public Guid Id { get; internal set; }
         public Boolean CopyDefaultModify { get; set; }
         private IXLStyle _style;
         private Int32 _styleCacheId;
-        public IXLStyle Style{ get { return GetStyle(); } set { SetStyle(value); } }
+        public IXLStyle Style { get { return GetStyle(); } set { SetStyle(value); } }
         private IXLStyle GetStyle()
         {
             //return _style;
@@ -88,12 +91,12 @@ namespace ClosedXML.Excel
         public XLConditionalFormatType ConditionalFormatType { get; set; }
         public XLTimePeriod TimePeriod { get; set; }
         public XLIconSetStyle IconSetStyle { get; set; }
-        public XLCFOperator Operator { get;  set; }
-        public Boolean Bottom { get;  set; }
-        public Boolean Percent { get;  set; }
-        public Boolean ReverseIconOrder { get;  set; }
-        public Boolean ShowIconOnly { get;  set; }
-        public Boolean ShowBarOnly { get;  set; }
+        public XLCFOperator Operator { get; set; }
+        public Boolean Bottom { get; set; }
+        public Boolean Percent { get; set; }
+        public Boolean ReverseIconOrder { get; set; }
+        public Boolean ShowIconOnly { get; set; }
+        public Boolean ShowBarOnly { get; set; }
 
         public void CopyFrom(IXLConditionalFormat other)
         {
@@ -279,8 +282,8 @@ namespace ClosedXML.Excel
             return Style;
         }
         public IXLStyle WhenBetween(Double minValue, Double maxValue)
-    {
-            Values.Initialize(new XLFormula (minValue));
+        {
+            Values.Initialize(new XLFormula(minValue));
             Values.Add(new XLFormula(maxValue));
             Operator = XLCFOperator.Between;
             ConditionalFormatType = XLConditionalFormatType.CellIs;
@@ -308,7 +311,7 @@ namespace ClosedXML.Excel
         public IXLStyle WhenIsTrue(String formula)
         {
             String f = formula.TrimStart()[0] == '=' ? formula : "=" + formula;
-            Values.Initialize(new XLFormula {Value = f});
+            Values.Initialize(new XLFormula { Value = f });
             ConditionalFormatType = XLConditionalFormatType.Expression;
             return Style;
         }
@@ -328,7 +331,7 @@ namespace ClosedXML.Excel
             Bottom = true;
             return Style;
         }
-        
+
         public IXLCFColorScaleMin ColorScale()
         {
             ConditionalFormatType = XLConditionalFormatType.ColorScale;
@@ -337,6 +340,14 @@ namespace ClosedXML.Excel
         public IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false)
         {
             Colors.Initialize(color);
+            ShowBarOnly = showBarOnly;
+            ConditionalFormatType = XLConditionalFormatType.DataBar;
+            return new XLCFDataBarMin(this);
+        }
+        public IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false)
+        {
+            Colors.Initialize(positiveColor);
+            Colors.Add(negativeColor);
             ShowBarOnly = showBarOnly;
             ConditionalFormatType = XLConditionalFormatType.DataBar;
             return new XLCFDataBarMin(this);

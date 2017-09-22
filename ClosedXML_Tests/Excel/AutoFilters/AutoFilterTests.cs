@@ -72,5 +72,27 @@ namespace ClosedXML_Tests
             ws.AutoFilter.Clear();
             Assert.That(!ws.AutoFilter.Enabled);
         }
+
+        [Test]
+        public void CanClearAutoFilter2()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("AutoFilter");
+                ws.Cell("A1").Value = "Names";
+                ws.Cell("A2").Value = "John";
+                ws.Cell("A3").Value = "Hank";
+                ws.Cell("A4").Value = "Dagny";
+
+                ws.SetAutoFilter(false);
+                Assert.That(!ws.AutoFilter.Enabled);
+
+                ws.RangeUsed().SetAutoFilter();
+                Assert.That(ws.AutoFilter.Enabled);
+
+                ws.RangeUsed().SetAutoFilter(false);
+                Assert.That(!ws.AutoFilter.Enabled);
+            }
+        }
     }
 }

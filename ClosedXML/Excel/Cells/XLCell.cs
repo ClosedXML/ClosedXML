@@ -691,7 +691,8 @@ namespace ClosedXML.Excel
 
         public IXLTable InsertTable(DataTable data, string tableName, bool createTable)
         {
-            if (data == null) return null;
+            if (data == null || data.Columns.Count == 0)
+                return null;
 
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
                 throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
@@ -2746,5 +2747,32 @@ namespace ClosedXML.Excel
         public Boolean HasArrayFormula { get { return FormulaA1.StartsWith("{"); } }
 
         public IXLRangeAddress FormulaReference { get; set; }
+
+        public IXLRange CurrentRegion
+        {
+            get
+            {
+                return this.Worksheet.Range(FindCurrentRegion(this.AsRange()));
+            }
+        }
+
+        internal IXLRangeAddress FindCurrentRegion(IXLRangeBase range)
+        {
+            var rangeAddress = range.RangeAddress;
+
+            var filledCells = range
+                .SurroundingCells(c => !(c as XLCell).IsEmpty(false, false))
+                .Concat(this.Worksheet.Range(rangeAddress).Cells());
+
+            var grownRangeAddress = new XLRangeAddress(
+                new XLAddress(this.Worksheet, filledCells.Min(c => c.Address.RowNumber), filledCells.Min(c => c.Address.ColumnNumber), false, false),
+                new XLAddress(this.Worksheet, filledCells.Max(c => c.Address.RowNumber), filledCells.Max(c => c.Address.ColumnNumber), false, false)
+            );
+
+            if (rangeAddress.Equals(grownRangeAddress))
+                return this.Worksheet.Range(grownRangeAddress).RangeAddress;
+            else
+                return FindCurrentRegion(this.Worksheet.Range(grownRangeAddress));
+        }
     }
 }

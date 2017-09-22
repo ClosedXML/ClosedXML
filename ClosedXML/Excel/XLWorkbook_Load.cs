@@ -1,3 +1,4 @@
+using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -260,6 +261,8 @@ namespace ClosedXML.Excel
                             LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ColumnBreaks))
                             LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(WorksheetExtensionList))
+                            LoadExtensions((WorksheetExtensionList)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(LegacyDrawing))
                             ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
                     }
@@ -1436,11 +1439,14 @@ namespace ClosedXML.Excel
             if (fontColor.HasValue)
                 fontBase.FontColor = fontColor;
 
-            var fontFamilyNumbering =
-                fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
+            var fontFamilyNumbering = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
             if (fontFamilyNumbering != null && fontFamilyNumbering.Val != null)
-                fontBase.FontFamilyNumbering =
-                    (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
+                fontBase.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
+
+            var fontCharSet = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontCharSet>().FirstOrDefault();
+            if (fontCharSet != null && fontCharSet.Val != null)
+                fontBase.FontCharSet = (XLFontCharSet)Int32.Parse(fontCharSet.Val.ToString());
+
             var runFont = fontSource.Elements<RunFont>().FirstOrDefault();
             if (runFont != null)
             {
@@ -1872,6 +1878,11 @@ namespace ClosedXML.Excel
                         var dataBar = fr.Elements<DataBar>().First();
                         if (dataBar.ShowValue != null)
                             conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
+
+                        var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
+                        if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
+                            conditionalFormat.Id = Guid.Parse(id.Text.Substring(1, id.Text.Length - 2));
+
                         ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
                     }
                     else if (fr.Elements<IconSet>().Any())
@@ -1902,6 +1913,32 @@ namespace ClosedXML.Excel
                         }
                     }
                     ws.ConditionalFormats.Add(conditionalFormat);
+                }
+            }
+        }
+
+        private void LoadExtensions(WorksheetExtensionList extensions, XLWorksheet ws)
+        {
+            if (extensions == null)
+            {
+                return;
+            }
+
+            foreach (var conditionalFormattingRule in extensions
+                .Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
+                .Where(cf =>
+                    cf.Type != null
+                    && cf.Type.HasValue
+                    && cf.Type.Value == ConditionalFormatValues.DataBar))
+            {
+                var xlConditionalFormat = ws.ConditionalFormats
+                    .Cast<XLConditionalFormat>()
+                    .SingleOrDefault(cf => cf.Id.WrapInBraces() == conditionalFormattingRule.Id);
+                if (xlConditionalFormat != null)
+                {
+                    var negativeFillColor = conditionalFormattingRule.Descendants<DocumentFormat.OpenXml.Office2010.Excel.NegativeFillColor>().SingleOrDefault();
+                    var color = new DocumentFormat.OpenXml.Spreadsheet.Color { Rgb = negativeFillColor.Rgb };
+                    xlConditionalFormat.Colors.Add(this.GetColor(color));
                 }
             }
         }

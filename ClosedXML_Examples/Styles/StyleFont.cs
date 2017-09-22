@@ -1,6 +1,5 @@
+﻿using ClosedXML.Excel;
 using System;
-using ClosedXML.Excel;
-
 
 namespace ClosedXML_Examples.Styles
 {
@@ -22,6 +21,11 @@ namespace ClosedXML_Examples.Styles
 
             ws.Cell(++ro, co).Value = "FontFamilyNumbering - Script";
             ws.Cell(ro, co).Style.Font.FontFamilyNumbering = XLFontFamilyNumberingValues.Script;
+
+            ws.Cell(++ro, co).Value = "FontCharSet - العربية التنضيد";
+            ws.Cell(ro, co).Style
+                .Font.SetFontName("Arabic Typesetting")
+                .Font.SetFontCharSet(XLFontCharSet.Arabic);
 
             ws.Cell(++ro, co).Value = "FontName - Stencil";
             ws.Cell(ro, co).Style.Font.FontName = "Stencil";

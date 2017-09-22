@@ -241,6 +241,7 @@ namespace ClosedXML.Excel
             font.FontColor = sourceFont.FontColor;
             font.FontName = sourceFont.FontName;
             font.FontFamilyNumbering = sourceFont.FontFamilyNumbering;
+            font.FontCharSet = sourceFont.FontCharSet;
         }
 
         private static Font GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)

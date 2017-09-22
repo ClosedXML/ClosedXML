@@ -68,7 +68,7 @@ namespace ClosedXML.Excel
         IXLStyle WhenNotBlank();
         IXLStyle WhenIsError();
         IXLStyle WhenNotError();
-        IXLStyle WhenDateIs(XLTimePeriod timePeriod );
+        IXLStyle WhenDateIs(XLTimePeriod timePeriod);
         IXLStyle WhenContains(String value);
         IXLStyle WhenNotContains(String value);
         IXLStyle WhenStartsWith(String value);
@@ -99,6 +99,7 @@ namespace ClosedXML.Excel
 
         IXLCFColorScaleMin ColorScale();
         IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false);
+        IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false);
         IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
 
         XLConditionalFormatType ConditionalFormatType { get; }
@@ -113,12 +114,11 @@ namespace ClosedXML.Excel
         XLDictionary<XLColor> Colors { get; }
         XLDictionary<XLCFContentType> ContentTypes { get; }
         XLDictionary<XLCFIconSetOperator> IconSetOperators { get; }
-        
+
         XLCFOperator Operator { get; }
         Boolean Bottom { get;  }
         Boolean Percent { get; }
-        
-        
+
+
     }
 }
-    
