@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -117,20 +118,22 @@ namespace ClosedXML.Excel
         IXLCell TargetCell { get; set; }
         IXLRange SourceRange { get; set; }
 
+        IEnumerable<String> SourceRangeFieldsAvailable { get; }
+
         Boolean MergeAndCenterWithLabels { get; set; } // MergeItem
         Int32 RowLabelIndent { get; set; } // Indent
-        XLFilterAreaOrder FilterAreaOrder { get; set; } // PageOverThenDown 
+        XLFilterAreaOrder FilterAreaOrder { get; set; } // PageOverThenDown
         Int32 FilterFieldsPageWrap { get; set; } // PageWrap
         String ErrorValueReplacement { get; set; } // ErrorCaption
         String EmptyCellReplacement { get; set; } // MissingCaption
-        Boolean AutofitColumns { get; set; } //UseAutoFormatting 
-        Boolean PreserveCellFormatting { get; set; } // PreserveFormatting 
-        
-        Boolean ShowGrandTotalsRows { get; set; } // RowGrandTotals 
-        Boolean ShowGrandTotalsColumns { get; set; } // ColumnGrandTotals 
+        Boolean AutofitColumns { get; set; } //UseAutoFormatting
+        Boolean PreserveCellFormatting { get; set; } // PreserveFormatting
+
+        Boolean ShowGrandTotalsRows { get; set; } // RowGrandTotals
+        Boolean ShowGrandTotalsColumns { get; set; } // ColumnGrandTotals
         Boolean FilteredItemsInSubtotals { get; set; } // Subtotal filtered page items
-        Boolean AllowMultipleFilters { get; set; } // MultipleFieldFilters 
-        Boolean UseCustomListsForSorting { get; set; } // CustomListSort 
+        Boolean AllowMultipleFilters { get; set; } // MultipleFieldFilters
+        Boolean UseCustomListsForSorting { get; set; } // CustomListSort
 
         Boolean ShowExpandCollapseButtons { get; set; }
         Boolean ShowContextualTooltips { get; set; }
