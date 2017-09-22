@@ -9,6 +9,7 @@ namespace ClosedXML.Excel
         private Boolean _bold;
         private XLColor _fontColor;
         private XLFontFamilyNumberingValues _fontFamilyNumbering;
+        private XLFontCharSet _fontCharSet;
         private String _fontName;
         private Double _fontSize;
         private Boolean _italic;
@@ -37,6 +38,7 @@ namespace ClosedXML.Excel
             _fontColor = defaultFont.FontColor;
             _fontName = defaultFont.FontName;
             _fontFamilyNumbering = defaultFont.FontFamilyNumbering;
+            _fontCharSet = defaultFont.FontCharSet;
 
             if (useDefaultModify)
             {
@@ -52,6 +54,7 @@ namespace ClosedXML.Excel
                 FontColorModified = d.FontColorModified;
                 FontNameModified = d.FontNameModified;
                 FontFamilyNumberingModified = d.FontFamilyNumberingModified;
+                FontCharSetModified = d.FontCharSetModified;
             }
         }
 
@@ -105,7 +108,7 @@ namespace ClosedXML.Excel
                     _underline = value;
                     UnderlineModified = true;
                 }
-                    
+
             }
         }
 
@@ -236,6 +239,23 @@ namespace ClosedXML.Excel
             }
         }
 
+        public Boolean FontCharSetModified { get; set; }
+        public XLFontCharSet FontCharSet
+        {
+            get { return _fontCharSet; }
+            set
+            {
+                SetStyleChanged();
+                if (_container != null && !_container.UpdatingStyle)
+                    _container.Styles.ForEach(s => s.Font.FontCharSet = value);
+                else
+                {
+                    _fontCharSet = value;
+                    FontCharSetModified = true;
+                }
+            }
+        }
+
         public IXLStyle SetBold()
         {
             Bold = true;
@@ -323,6 +343,12 @@ namespace ClosedXML.Excel
         public IXLStyle SetFontFamilyNumbering(XLFontFamilyNumberingValues value)
         {
             FontFamilyNumbering = value;
+            return _container.Style;
+        }
+
+        public IXLStyle SetFontCharSet(XLFontCharSet value)
+        {
+            FontCharSet = value;
             return _container.Style;
         }
 

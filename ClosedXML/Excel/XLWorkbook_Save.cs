@@ -3608,6 +3608,10 @@ namespace ClosedXML.Excel
                 ? new FontFamilyNumbering { Val = (Int32)fontInfo.Font.FontFamilyNumbering }
                 : null;
 
+            var fontCharSet = (fontInfo.Font.FontCharSetModified || ignoreMod) && fontInfo.Font.FontCharSet != XLFontCharSet.Default
+                ? new FontCharSet { Val = (Int32)fontInfo.Font.FontCharSet }
+                : null;
+
             if (bold != null)
                 font.AppendChild(bold);
             if (italic != null)
@@ -3628,6 +3632,8 @@ namespace ClosedXML.Excel
                 font.AppendChild(fontName);
             if (fontFamilyNumbering != null)
                 font.AppendChild(fontFamilyNumbering);
+            if (fontCharSet != null)
+                font.AppendChild(fontCharSet);
 
             return font;
         }
