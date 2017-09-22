@@ -1,3 +1,4 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections;
@@ -64,7 +65,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SUBTOTAL", 2, 255, Subtotal);
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum);
             ce.RegisterFunction("SUMIF", 2, 3, SumIf);
-            //ce.RegisterFunction("SUMPRODUCT", 1, SumProduct);
+            ce.RegisterFunction("SUMPRODUCT", 1, 30, SumProduct);
             ce.RegisterFunction("SUMSQ", 1, 255, SumSq);
             //ce.RegisterFunction("SUMX2MY2", SumX2MY2, 1);
             //ce.RegisterFunction("SUMX2PY2", SumX2PY2, 1);
@@ -259,6 +260,37 @@ namespace ClosedXML.Excel.CalcEngine
 
             // done
             return tally.Sum();
+        }
+
+        private static object SumProduct(List<Expression> p)
+        {
+            // all parameters should be IEnumerable
+            if (p.Any(param => !(param is IEnumerable)))
+                throw new NoValueAvailableException();
+
+            var counts = p.Cast<IEnumerable>().Select(param =>
+            {
+                int i = 0;
+                foreach (var item in param)
+                    i++;
+                return i;
+            })
+            .Distinct();
+
+            // All parameters should have the same length
+            if (counts.Count() > 1)
+                throw new NoValueAvailableException();
+
+            var values = p
+                .Cast<IEnumerable>()
+                .Select(range => range.Cast<double>().ToList());
+
+            return Enumerable.Range(0, counts.Single())
+                .Aggregate(0d, (t, i) =>
+                    t + values.Aggregate(1d,
+                        (product, list) => product * list[i]
+                    )
+                );
         }
 
         private static object Tan(List<Expression> p)

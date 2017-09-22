@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.Linq;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
 {
@@ -118,6 +119,22 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             actual = (double)XLWorkbook.EvaluateExpr(@"MOD(6.2, 1.1)");
             Assert.AreEqual(0.7, actual, tolerance);
+        }
+
+        [Test]
+        public void SumProduct()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.FirstCell().Value = Enumerable.Range(1, 10);
+                ws.FirstCell().CellRight().Value = Enumerable.Range(1, 10).Reverse();
+
+                Assert.AreEqual(2, ws.Evaluate("SUMPRODUCT(A2)"));
+                Assert.AreEqual(55, ws.Evaluate("SUMPRODUCT(A1:A10)"));
+                Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+            }
         }
     }
 }
