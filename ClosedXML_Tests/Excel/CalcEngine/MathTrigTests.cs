@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -134,6 +135,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(2, ws.Evaluate("SUMPRODUCT(A2)"));
                 Assert.AreEqual(55, ws.Evaluate("SUMPRODUCT(A1:A10)"));
                 Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+
+                Assert.Throws<NoValueAvailableException>(() => ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
             }
         }
     }
