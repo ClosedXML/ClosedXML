@@ -1880,8 +1880,8 @@ namespace ClosedXML.Excel
                             conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
 
                         var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
-                        if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
-                            conditionalFormat.Id = Guid.Parse(id.Text.Substring(1, id.Text.Length - 2));
+                        if (id != null && id.Text != null && !XLHelper.IsNullOrWhiteSpace(id.Text))
+                            conditionalFormat.Id = new Guid(id.Text.Substring(1, id.Text.Length - 2));
 
                         ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
                     }
