@@ -993,7 +993,7 @@ namespace ClosedXML.Excel
         {
             //Note: We have to check if the cell is part of a merged range. If so we have to clear the whole range
             //Checking if called from range to avoid stack overflow
-            if (IsMerged() && !calledFromRange)
+            if (!calledFromRange && IsMerged())
             {
                 using (var asRange = AsRange())
                 {
@@ -1187,7 +1187,7 @@ namespace ClosedXML.Excel
 
         public Boolean IsMerged()
         {
-            return Worksheet.Internals.MergedRanges.Any(r => r.Contains(this));
+            return Worksheet.Internals.MergedRanges.Contains(this);
         }
 
         public Boolean IsEmpty()
@@ -1277,7 +1277,7 @@ namespace ClosedXML.Excel
             get
             {
                 using (var asRange = AsRange())
-                    return Worksheet.DataValidations.Any(dv => dv.Ranges.Contains(asRange) && dv.IsDirty());
+                    return Worksheet.DataValidations.Any(dv => dv.IsDirty() && dv.Ranges.Contains(asRange));
             }
         }
 
