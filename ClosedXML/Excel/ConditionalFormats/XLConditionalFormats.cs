@@ -25,11 +25,13 @@ namespace ClosedXML.Excel
 
         public void Remove(Predicate<IXLConditionalFormat> predicate)
         {
+            _conditionalFormats.Where(cf=>predicate(cf)).ForEach(cf=>cf.Range.Dispose());
             _conditionalFormats.RemoveAll(predicate);
         }
 
         public void RemoveAll()
         {
+            _conditionalFormats.ForEach(cf => cf.Range.Dispose());
             _conditionalFormats.Clear();
         }
     }
