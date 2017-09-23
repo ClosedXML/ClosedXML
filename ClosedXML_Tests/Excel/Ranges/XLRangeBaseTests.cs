@@ -170,6 +170,38 @@ namespace ClosedXML_Tests
             Assert.AreEqual("$A$3:$A$3", namedRanges.Last().RangeAddress.ToStringFixed());
         }
 
+
+        [Test]
+        public void IntersectionTest()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.Worksheets.Add("Sheet");
+                var range1 = ws.Range("B3:D8");
+                var range2 = ws.Range("A5:E6");
+
+                var assert = range1.Intersection(range2);
+
+                Assert.AreEqual("B5", assert.RangeAddress.FirstAddress.ToStringRelative());
+                Assert.AreEqual("D6", assert.RangeAddress.LastAddress.ToStringRelative());
+            }
+        }
+
+        [Test]
+        public void IntersectionNotMatchShouldReturnsNull()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.Worksheets.Add("Sheet");
+                var range1 = ws.Range("A1:B2");
+                var range2 = ws.Range("A5:E6");
+
+                var assert = range1.Intersection(range2);
+
+                Assert.IsNull(assert);
+            }
+        }
+
         //[Test]
         //public void WsNamedRangeLiteral()
         //{

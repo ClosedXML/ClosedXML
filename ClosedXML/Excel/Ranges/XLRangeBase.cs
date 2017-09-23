@@ -2067,5 +2067,26 @@ namespace ClosedXML.Excel
         {
             Worksheet.SelectedRanges.Add(AsRange());
         }
+
+        /// <summary>
+        /// Get the range common to both ranges.
+        /// </summary>
+        /// <param name = "range">The range to match.</param>
+        /// <returns>Returns the range common to both ranges. If the regions do not intersect, then returns null.</returns>
+        public IXLRangeBase Intersection(IXLRangeBase range)
+        {
+            if (!Intersects(range))
+                return null;
+
+            var sheet = this.Worksheet;
+            using (var xlRange = sheet.Range(
+                Math.Max(this.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.FirstAddress.RowNumber),
+                Math.Max(this.RangeAddress.FirstAddress.ColumnNumber, range.RangeAddress.FirstAddress.ColumnNumber),
+                Math.Min(this.RangeAddress.LastAddress.RowNumber, range.RangeAddress.LastAddress.RowNumber),
+                Math.Min(this.RangeAddress.LastAddress.ColumnNumber, range.RangeAddress.LastAddress.ColumnNumber)))
+            {
+                return sheet.Range(xlRange.RangeAddress);
+            }
+        }
     }
 }

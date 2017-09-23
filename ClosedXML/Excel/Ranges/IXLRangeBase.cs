@@ -267,5 +267,11 @@ namespace ClosedXML.Excel
         IXLConditionalFormat AddConditionalFormat();
 
         void Select();
+
+        /// <summary>
+        /// Get the range common to both ranges.
+        /// </summary>
+        /// <param name = "range">The range to match.</param>
+        IXLRangeBase Intersection(IXLRangeBase range);
     }
 }
