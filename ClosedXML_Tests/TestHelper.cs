@@ -75,36 +75,23 @@ namespace ClosedXML_Tests
             using (var wb = new XLWorkbook(filePath1))
                 wb.SaveAs(filePath2, true, evaluateFormulae);
 
-            bool success = true;
-#pragma warning disable 162
-            try
+            if (CompareWithResources)
+
             {
-                //Compare
-                // ReSharper disable ConditionIsAlwaysTrueOrFalse
-                if (CompareWithResources)
-                // ReSharper restore ConditionIsAlwaysTrueOrFalse
-
+                string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');
+                using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
+                using (var streamActual = File.OpenRead(filePath2))
                 {
-                    string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');
-                    using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
-                    using (var streamActual = File.OpenRead(filePath2))
-                    {
-                        string message;
-                        success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
-                        var formattedMessage =
-                            String.Format(
-                                "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
-                                filePath2, resourcePath, message);
+                    string message;
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
+                    var formattedMessage =
+                        String.Format(
+                            "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
+                            filePath2, resourcePath, message);
 
-                        Assert.IsTrue(success, formattedMessage);
-                    }
+                    Assert.IsTrue(success, formattedMessage);
                 }
             }
-            finally
-            {
-                //if (success && File.Exists(filePath)) File.Delete(filePath);
-            }
-#pragma warning restore 162
         }
 
         public static string GetResourcePath(string filePartName)
