@@ -2250,7 +2250,7 @@ namespace ClosedXML.Excel
             foreach (var xlpf in pt.Fields.Cast<XLPivotField>())
             {
                 var ptfi = pti.Fields[xlpf.SourceName];
-                IXLPivotField labelField = null;
+                IXLPivotField labelOrFilterField = null;
                 var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
 
                 if (pt.ClassicPivotTableLayout)
@@ -2276,19 +2276,19 @@ namespace ClosedXML.Excel
                         break;
                 }
 
-                if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
+                if (pt.RowLabels.Contains(xlpf.SourceName))
                 {
-                    labelField = pt.RowLabels.Single(p => p.SourceName == xlpf.SourceName);
+                    labelOrFilterField = pt.RowLabels.Get(xlpf.SourceName);
                     pf.Axis = PivotTableAxisValues.AxisRow;
                 }
-                else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
+                else if (pt.ColumnLabels.Contains(xlpf.SourceName))
                 {
-                    labelField = pt.ColumnLabels.Single(p => p.SourceName == xlpf.SourceName);
+                    labelOrFilterField = pt.ColumnLabels.Get(xlpf.SourceName);
                     pf.Axis = PivotTableAxisValues.AxisColumn;
                 }
-                else if (pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
+                else if (pt.ReportFilters.Contains(xlpf.SourceName))
                 {
-                    var reportFilter = pt.ReportFilters.First(p => p.SourceName == xlpf.SourceName);
+                    labelOrFilterField = pt.ReportFilters.Get(xlpf.SourceName);
 
                     location.ColumnsPerPage = 1;
                     location.RowPageCount = 1;
@@ -2300,14 +2300,14 @@ namespace ClosedXML.Excel
                         Field = pt.Fields.IndexOf(xlpf)
                     };
 
-                    if (reportFilter.SelectedValues.Count == 1)
+                    if (labelOrFilterField.SelectedValues.Count == 1)
                     {
                         if (ptfi.MixedDataType || ptfi.DataType == XLCellValues.Text)
                         {
                             var values = ptfi.DistinctValues
                                 .Select(v => v.ToString().ToLower())
                                 .ToList();
-                            var selectedValue = reportFilter.SelectedValues.Single().ToString().ToLower();
+                            var selectedValue = labelOrFilterField.SelectedValues.Single().ToString().ToLower();
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
@@ -2316,7 +2316,7 @@ namespace ClosedXML.Excel
                             var values = ptfi.DistinctValues
                                 .Select(v => Convert.ToDateTime(v))
                                 .ToList();
-                            var selectedValue = Convert.ToDateTime(reportFilter.SelectedValues.Single());
+                            var selectedValue = Convert.ToDateTime(labelOrFilterField.SelectedValues.Single());
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
@@ -2325,7 +2325,7 @@ namespace ClosedXML.Excel
                             var values = ptfi.DistinctValues
                                 .Select(v => Convert.ToDouble(v))
                                 .ToList();
-                            var selectedValue = Convert.ToDouble(reportFilter.SelectedValues.Single());
+                            var selectedValue = Convert.ToDouble(labelOrFilterField.SelectedValues.Single());
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
@@ -2336,6 +2336,9 @@ namespace ClosedXML.Excel
                     pageFields.AppendChild(pageField);
                 }
 
+                if ((labelOrFilterField?.SelectedValues?.Count ?? 0) > 1)
+                    pf.MultipleItemSelectionAllowed = true;
+
                 if (pt.Values.Any(p => p.SourceName == xlpf.SourceName))
                     pf.DataField = true;
 
@@ -2343,16 +2346,25 @@ namespace ClosedXML.Excel
 
                 // Output items only for row / column / filter fields
                 if (ptfi.DistinctValues.Any()
-                    && (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
-                        || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
-                        || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName)))
+                    && (pt.RowLabels.Contains(xlpf.SourceName)
+                        || pt.ColumnLabels.Contains(xlpf.SourceName)
+                        || pt.ReportFilters.Contains(xlpf.SourceName)))
                 {
-                    for (uint i = 0; i < ptfi.DistinctValues.Count(); i++)
+                    uint i = 0;
+                    foreach (var value in ptfi.DistinctValues)
                     {
                         var item = new Item { Index = i };
-                        if (labelField != null && labelField.Collapsed)
+
+                        if (labelOrFilterField != null && labelOrFilterField.Collapsed)
                             item.HideDetails = BooleanValue.FromBoolean(false);
+
+                        if (labelOrFilterField.SelectedValues.Count > 1
+                                 && !labelOrFilterField.SelectedValues.Contains(value))
+                            item.Hidden = BooleanValue.FromBoolean(true);
+                        
                         fieldItems.AppendChild(item);
+
+                        i++;
                     }
                 }
 

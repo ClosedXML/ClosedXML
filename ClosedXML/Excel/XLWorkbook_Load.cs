@@ -683,6 +683,28 @@ namespace ClosedXML.Excel
                                         else
                                             throw new NotImplementedException();
                                     }
+                                    else if (BooleanValue.ToBoolean(pf.MultipleItemSelectionAllowed))
+                                    {
+                                        foreach (var item in pf.Items.Cast<Item>())
+                                        {
+                                            if (item.Hidden == null || !BooleanValue.ToBoolean(item.Hidden))
+                                            {
+                                                var sharedItem = cacheField.SharedItems.ElementAt(Convert.ToInt32((uint)item.Index));
+                                                var numberItem = sharedItem as NumberItem;
+                                                var stringItem = sharedItem as StringItem;
+                                                var dateTimeItem = sharedItem as DateTimeItem;
+
+                                                if (numberItem != null)
+                                                    rf.AddSelectedValue(Convert.ToDouble(numberItem.Val.Value));
+                                                else if (dateTimeItem != null)
+                                                    rf.AddSelectedValue(Convert.ToDateTime(dateTimeItem.Val.Value));
+                                                else if (stringItem != null)
+                                                    rf.AddSelectedValue(stringItem.Val.Value);
+                                                else
+                                                    throw new NotImplementedException();
+                                            }
+                                        }
+                                    }
                                 }
 
                                 pt.TargetCell = pt.TargetCell.CellAbove(pt.ReportFilters.Count() + 1);

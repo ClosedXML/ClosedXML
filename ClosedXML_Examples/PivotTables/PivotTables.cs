@@ -183,7 +183,8 @@ namespace ClosedXML_Examples
                 pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
 
                 pt.ReportFilters.Add("Name")
-                    .AddSelectedValue("Scone");
+                    .AddSelectedValue("Scone")
+                    .AddSelectedValue("Doughnut");
 
                 pt.ReportFilters.Add("Quality")
                     .AddSelectedValue(5.19);
