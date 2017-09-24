@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -50,7 +48,5 @@ namespace ClosedXML.Excel
         IXLPivotField SetShowBlankItems(); IXLPivotField SetShowBlankItems(Boolean value);
         IXLPivotField SetInsertPageBreaks(); IXLPivotField SetInsertPageBreaks(Boolean value);
         IXLPivotField SetCollapsed(); IXLPivotField SetCollapsed(Boolean value);
-
-        List<string> SharedStrings { get; set; }
     }
 }

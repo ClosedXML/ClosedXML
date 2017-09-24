@@ -1962,11 +1962,11 @@ namespace ClosedXML.Excel
             {
                 var columnNumber = c.ColumnNumber();
                 var columnName = c.FirstCell().Value.ToString();
-                IXLPivotField xlpf;
+                XLPivotField xlpf;
                 if (pt.Fields.Contains(columnName))
-                    xlpf = pt.Fields.Get(columnName);
+                    xlpf = pt.Fields.Get(columnName) as XLPivotField;
                 else
-                    xlpf = pt.Fields.Add(columnName);
+                    xlpf = pt.Fields.Add(columnName) as XLPivotField;
 
                 var field =
                     pt.RowLabels.Union(pt.ColumnLabels).Union(pt.ReportFilters).FirstOrDefault(f => f.SourceName == columnName);
@@ -2106,7 +2106,12 @@ namespace ClosedXML.Excel
             var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count() };
             var pivotFields = new PivotFields { Count = Convert.ToUInt32(pt.SourceRange.ColumnCount()) };
 
-            foreach (var xlpf in pt.Fields.OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName) ? pt.RowLabels.IndexOf(f) : Int32.MaxValue))
+            foreach (var xlpf in pt
+                .Fields
+                .Cast<XLPivotField>()
+                .OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName)
+                              ? pt.RowLabels.IndexOf(f)
+                              : Int32.MaxValue))
             {
                 if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
@@ -2154,7 +2159,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            foreach (var xlpf in pt.Fields)
+            foreach (var xlpf in pt.Fields.Cast<XLPivotField>())
             {
                 IXLPivotField labelField = null;
                 var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
