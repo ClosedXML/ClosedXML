@@ -1989,18 +1989,14 @@ namespace ClosedXML.Excel
 
                 var sharedItems = new SharedItems();
 
-                var onlyNumbers = !source
-                    .Cells(cell => cell.Address.ColumnNumber == columnNumber
-                                   && cell.Address.RowNumber > source.FirstRow().RowNumber()
-                                   && cell.DataType != XLCellValues.Number)
-                    .Any();
-
-                var fieldValueCells = source.Cells(cell => cell.Address.ColumnNumber == columnNumber
-                                                       && cell.Address.RowNumber > source.FirstRow().RowNumber());
-
                 var ptfi = new PivotTableFieldInfo();
 
-                if (onlyNumbers)
+                var fieldValueCells = source.Cells(cell => cell.Address.ColumnNumber == columnNumber
+                                                           && cell.Address.RowNumber > source.FirstRow().RowNumber());
+                var types = fieldValueCells.Select(cell => cell.DataType).Distinct();
+
+
+                if (types.Count() == 1 && types.Single() == XLCellValues.Number)
                 {
                     sharedItems.ContainsSemiMixedTypes = false;
                     sharedItems.ContainsString = false;
@@ -2027,10 +2023,36 @@ namespace ClosedXML.Excel
                     sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
                     sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
                 }
+                else if (types.Count() == 1 && types.Single() == XLCellValues.DateTime)
+                {
+                    sharedItems.ContainsSemiMixedTypes = false;
+                    sharedItems.ContainsString = false;
+                    sharedItems.ContainsNumber = false;
+                    sharedItems.ContainsDate = true;
+
+                    ptfi.DataType = XLCellValues.DateTime;
+                    ptfi.MixedDataType = false;
+                    ptfi.DistinctValues = fieldValueCells
+                            .Select(cell => cell.GetDateTime())
+                            .Distinct()
+                            .Cast<object>();
+
+                    pti.Fields.Add(xlpf.SourceName, ptfi);
+
+                    // Output items only for row / column / filter fields
+                    if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
+                        || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
+                        || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
+                    {
+                        foreach (var value in ptfi.DistinctValues)
+                            sharedItems.AppendChild(new DateTimeItem { Val = (DateTime)value });
+                    }
+
+                    sharedItems.MinDate = (DateTime)ptfi.DistinctValues.Min();
+                    sharedItems.MaxDate = (DateTime)ptfi.DistinctValues.Max();
+                }
                 else
                 {
-                    var types = fieldValueCells.Select(cell => cell.DataType).Distinct();
-
                     if (types.Any())
                     {
                         ptfi.DataType = types.First();
@@ -2289,7 +2311,16 @@ namespace ClosedXML.Excel
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
-                        else
+                        else if (ptfi.DataType == XLCellValues.DateTime)
+                        {
+                            var values = ptfi.DistinctValues
+                                .Select(v => Convert.ToDateTime(v))
+                                .ToList();
+                            var selectedValue = Convert.ToDateTime(reportFilter.SelectedValues.Single());
+                            if (values.Contains(selectedValue))
+                                pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
+                        }
+                        else if (ptfi.DataType == XLCellValues.Number)
                         {
                             var values = ptfi.DistinctValues
                                 .Select(v => Convert.ToDouble(v))
@@ -2298,6 +2329,8 @@ namespace ClosedXML.Excel
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
+                        else
+                            throw new NotImplementedException();
                     }
 
                     pageFields.AppendChild(pageField);
