@@ -48,5 +48,8 @@ namespace ClosedXML.Excel
         IXLPivotField SetShowBlankItems(); IXLPivotField SetShowBlankItems(Boolean value);
         IXLPivotField SetInsertPageBreaks(); IXLPivotField SetInsertPageBreaks(Boolean value);
         IXLPivotField SetCollapsed(); IXLPivotField SetCollapsed(Boolean value);
+
+        IList<Object> SelectedValues { get; }
+        IXLPivotField AddSelectedValue(Object value);
     }
 }
