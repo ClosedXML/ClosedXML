@@ -531,16 +531,27 @@ namespace ClosedXML_Examples
             var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
-            ws.FirstCell().SetValue(-1)
+            ws.Cell(1, 1).SetValue(-1)
                 .CellBelow().SetValue(1)
                 .CellBelow().SetValue(2)
                 .CellBelow().SetValue(3);
 
-            ws.RangeUsed()
+            ws.Range(ws.Cell(1, 1), ws.Cell(4, 1))
                 .AddConditionalFormat()
                 .DataBar(XLColor.Green, XLColor.Red, showBarOnly: false)
                 .LowestValue()
-                .Maximum(XLCFContentType.Percent, "100");
+                .HighestValue();
+
+            ws.Cell(1,3).SetValue(-20)
+                .CellBelow().SetValue(40)
+                .CellBelow().SetValue(-60)
+                .CellBelow().SetValue(30);
+
+            ws.Range(ws.Cell(1, 3), ws.Cell(4, 3))
+                .AddConditionalFormat()
+                .DataBar(XLColor.Green, XLColor.Red, showBarOnly: true)
+                .Minimum(XLCFContentType.Number, -100)
+                .Maximum(XLCFContentType.Number, 100);
 
             workbook.SaveAs(filePath);
         }

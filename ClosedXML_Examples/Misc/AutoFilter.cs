@@ -50,11 +50,11 @@ namespace ClosedXML_Examples.Misc
             ws.Cell("A4").Value = "Dagny";
 
             ws.RangeUsed().SetAutoFilter();
-            
-            // Your can turn off the autofilter in three ways:
-            // 1) worksheet.AutoFilterRange.SetAutoFilter(false)
-            // 2) worksheet.AutoFilterRange = null
-            // 3) Pick any range in the worksheet and call range.SetAutoFilter(false);
+
+            // Your can turn off the autofilter by:
+            // 1) worksheet.AutoFilter.Clear()
+            // 2) worksheet.SetAutoFilter(false)
+            // 3) Pick any range in the worksheet and call the above methods on the range
 
             wb.SaveAs(filePath);
         }

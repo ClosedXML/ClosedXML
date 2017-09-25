@@ -33,6 +33,7 @@ namespace ClosedXML.Excel
         public XLColor FontColor { get; set; }
         public String FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
+        public XLFontCharSet FontCharSet { get; set; }
 
         public IXLRichString SetBold() { Bold = true; return this; }	public IXLRichString SetBold(Boolean value) { Bold = value; return this; }
         public IXLRichString SetItalic() { Italic = true; return this; }	public IXLRichString SetItalic(Boolean value) { Italic = value; return this; }
@@ -44,6 +45,7 @@ namespace ClosedXML.Excel
         public IXLRichString SetFontColor(XLColor value) { FontColor = value; return this; }
         public IXLRichString SetFontName(String value) { FontName = value; return this; }
         public IXLRichString SetFontFamilyNumbering(XLFontFamilyNumberingValues value) { FontFamilyNumbering = value; return this; }
+        public IXLRichString SetFontCharSet(XLFontCharSet value) { FontCharSet = value; return this; }
 
         public Boolean Equals(IXLRichString other)
         {

@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -8,7 +8,8 @@ namespace ClosedXML.Excel
     {
         private readonly List<IXLPhonetic> _phonetics = new List<IXLPhonetic>();
 
-        readonly IXLFontBase _defaultFont;
+        private readonly IXLFontBase _defaultFont;
+
         public XLPhonetics(IXLFontBase defaultFont)
         {
             _defaultFont = defaultFont;
@@ -22,7 +23,7 @@ namespace ClosedXML.Excel
             _defaultFont = defaultFont;
             Type = defaultPhonetics.Type;
             Alignment = defaultPhonetics.Alignment;
-            
+
             this.CopyFont(defaultPhonetics);
         }
 
@@ -36,28 +37,52 @@ namespace ClosedXML.Excel
         public XLColor FontColor { get; set; }
         public String FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
+        public XLFontCharSet FontCharSet { get; set; }
 
-        public IXLPhonetics SetBold() { Bold = true; return this; }	public IXLPhonetics SetBold(Boolean value) { Bold = value; return this; }
-        public IXLPhonetics SetItalic() { Italic = true; return this; }	public IXLPhonetics SetItalic(Boolean value) { Italic = value; return this; }
-        public IXLPhonetics SetUnderline() { Underline = XLFontUnderlineValues.Single; return this; }	public IXLPhonetics SetUnderline(XLFontUnderlineValues value) { Underline = value; return this; }
-        public IXLPhonetics SetStrikethrough() { Strikethrough = true; return this; }	public IXLPhonetics SetStrikethrough(Boolean value) { Strikethrough = value; return this; }
+        public IXLPhonetics SetBold() { Bold = true; return this; }
+
+        public IXLPhonetics SetBold(Boolean value) { Bold = value; return this; }
+
+        public IXLPhonetics SetItalic() { Italic = true; return this; }
+
+        public IXLPhonetics SetItalic(Boolean value) { Italic = value; return this; }
+
+        public IXLPhonetics SetUnderline() { Underline = XLFontUnderlineValues.Single; return this; }
+
+        public IXLPhonetics SetUnderline(XLFontUnderlineValues value) { Underline = value; return this; }
+
+        public IXLPhonetics SetStrikethrough() { Strikethrough = true; return this; }
+
+        public IXLPhonetics SetStrikethrough(Boolean value) { Strikethrough = value; return this; }
+
         public IXLPhonetics SetVerticalAlignment(XLFontVerticalTextAlignmentValues value) { VerticalAlignment = value; return this; }
-        public IXLPhonetics SetShadow() { Shadow = true; return this; }	public IXLPhonetics SetShadow(Boolean value) { Shadow = value; return this; }
+
+        public IXLPhonetics SetShadow() { Shadow = true; return this; }
+
+        public IXLPhonetics SetShadow(Boolean value) { Shadow = value; return this; }
+
         public IXLPhonetics SetFontSize(Double value) { FontSize = value; return this; }
+
         public IXLPhonetics SetFontColor(XLColor value) { FontColor = value; return this; }
+
         public IXLPhonetics SetFontName(String value) { FontName = value; return this; }
+
         public IXLPhonetics SetFontFamilyNumbering(XLFontFamilyNumberingValues value) { FontFamilyNumbering = value; return this; }
+
+        public IXLPhonetics SetFontCharSet(XLFontCharSet value) { FontCharSet = value; return this; }
 
         public IXLPhonetics Add(String text, Int32 start, Int32 end)
         {
             _phonetics.Add(new XLPhonetic(text, start, end));
             return this;
         }
+
         public IXLPhonetics ClearText()
         {
             _phonetics.Clear();
             return this;
         }
+
         public IXLPhonetics ClearFont()
         {
             this.CopyFont(_defaultFont);
@@ -70,6 +95,7 @@ namespace ClosedXML.Excel
         public XLPhoneticType Type { get; set; }
 
         public IXLPhonetics SetAlignment(XLPhoneticAlignment phoneticAlignment) { Alignment = phoneticAlignment; return this; }
+
         public IXLPhonetics SetType(XLPhoneticType phoneticType) { Type = phoneticType; return this; }
 
         public IEnumerator<IXLPhonetic> GetEnumerator()
@@ -104,8 +130,7 @@ namespace ClosedXML.Excel
                 && FontSize == other.FontSize
                 && FontColor.Equals(other.FontColor)
                 && FontName == other.FontName
-                && FontFamilyNumbering == other.FontFamilyNumbering
-    ;
+                && FontFamilyNumbering == other.FontFamilyNumbering;
         }
     }
 }
