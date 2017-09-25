@@ -1839,7 +1839,7 @@ namespace ClosedXML.Excel
                 {
                     var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
 
-                    conditionalFormat.StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
+                    conditionalFormat.StopIfTrueInternal = fr.StopIfTrue;
 
                     if (fr.FormatId != null)
                     {

@@ -103,7 +103,7 @@ namespace ClosedXML.Excel
 
         internal bool StopIfTrueInternal { get; set; }
 
-        public IXLConditionalFormat StopIfTrue(bool value)
+        public IXLConditionalFormat StopIfTrue(bool value = true)
         {
             StopIfTrueInternal = value;
             return this;
@@ -121,7 +121,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
-            StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(((XLConditionalFormat)other).StopIfTrueInternal, true);
+            StopIfTrueInternal = ((XLConditionalFormat)other).StopIfTrueInternal;
 
             Values.Clear();
             other.Values.ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));

@@ -119,7 +119,7 @@ namespace ClosedXML.Excel
         Boolean Bottom { get;  }
         Boolean Percent { get; }
 
-        IXLConditionalFormat StopIfTrue(bool value);
+        IXLConditionalFormat StopIfTrue(bool value = true);
 
     }
 }
