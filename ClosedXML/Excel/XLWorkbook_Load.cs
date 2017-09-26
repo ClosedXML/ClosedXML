@@ -478,6 +478,13 @@ namespace ClosedXML.Excel
                         if (target != null && source != null)
                         {
                             var pt = ws.PivotTables.AddNew(pivotTableDefinition.Name, target, source) as XLPivotTable;
+
+                            if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
+                                pt.SetColumnHeaderCaption(StringValue.ToString(pivotTableDefinition.ColumnHeaderCaption));
+
+                            if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.RowHeaderCaption ?? String.Empty)))
+                                pt.SetRowHeaderCaption(StringValue.ToString(pivotTableDefinition.RowHeaderCaption));
+
                             pt.RelId = wsPart.GetIdOfPart(pivotTablePart);
                             pt.CacheDefinitionRelId = pivotTablePart.GetIdOfPart(pivotTableCacheDefinitionPart);
                             pt.WorkbookCacheRelId = dSpreadsheet.WorkbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
