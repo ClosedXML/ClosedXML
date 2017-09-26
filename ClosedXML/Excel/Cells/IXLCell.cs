@@ -19,11 +19,11 @@ namespace ClosedXML.Excel
     public interface IXLCell
     {
         /// <summary>
-        /// Gets or sets the cell's value. To get a strongly typed object use the method GetValue&lt;T&gt;.
-        /// <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from this cell.</para>
-        /// <para>If the object is a range ClosedXML will copy the range starting from this cell.</para>
+        /// Gets or sets the cell's value. To get or set a strongly typed value, use the GetValue&lt;T&gt; and SetValue methods.
+        /// <para>ClosedXML will try to detect the data type through parsing. If it can't then the value will be left as a string.</para>
+        /// <para>If the object is an IEnumerable, ClosedXML will copy the collection's data into a table starting from this cell.</para>
+        /// <para>If the object is a range, ClosedXML will copy the range starting from this cell.</para>
         /// <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
-        /// <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
         /// </summary>
         /// <value>
         /// The object containing the value(s) to set.
