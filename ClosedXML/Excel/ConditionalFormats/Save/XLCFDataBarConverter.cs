@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Spreadsheet;
 using ClosedXML.Extensions;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ClosedXML.Excel
 {
@@ -12,7 +9,7 @@ namespace ClosedXML.Excel
     {
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, Int32 priority, XLWorkbook.SaveContext context)
         {
-            var conditionalFormattingRule = new ConditionalFormattingRule { Type = cf.ConditionalFormatType.ToOpenXml(), Priority = priority };
+            var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
 
             var dataBar = new DataBar { ShowValue = !cf.ShowBarOnly };
 

@@ -1440,14 +1440,11 @@ namespace ClosedXML.Excel
             if (fontColor.HasValue)
                 fontBase.FontColor = fontColor;
 
-            var fontFamilyNumbering = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
+            var fontFamilyNumbering =
+                fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
             if (fontFamilyNumbering != null && fontFamilyNumbering.Val != null)
-                fontBase.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
-
-            var fontCharSet = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontCharSet>().FirstOrDefault();
-            if (fontCharSet != null && fontCharSet.Val != null)
-                fontBase.FontCharSet = (XLFontCharSet)Int32.Parse(fontCharSet.Val.ToString());
-
+                fontBase.FontFamilyNumbering =
+                    (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
             var runFont = fontSource.Elements<RunFont>().FirstOrDefault();
             if (runFont != null)
             {
@@ -1841,6 +1838,9 @@ namespace ClosedXML.Excel
                 foreach (var fr in conditionalFormatting.Elements<ConditionalFormattingRule>())
                 {
                     var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
+
+                    conditionalFormat.StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
+
                     if (fr.FormatId != null)
                     {
                         LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
