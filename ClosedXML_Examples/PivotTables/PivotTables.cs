@@ -110,6 +110,8 @@ namespace ClosedXML_Examples
                 pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
                 pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
 
+                pt.SetRowHeaderCaption("Pastry name");
+
                 #endregion Different kind of pivot
 
                 #region Pivot table with collapsed fields
@@ -161,6 +163,8 @@ namespace ClosedXML_Examples
                     .NumberFormat.SetFormat("#,##0.00");
 
                 pt.Subtotals = XLPivotSubtotals.DoNotShow;
+
+                pt.SetColumnHeaderCaption("Measures");
 
                 ptSheet.Columns().AdjustToContents();
 

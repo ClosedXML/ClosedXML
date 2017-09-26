@@ -2060,6 +2060,12 @@ namespace ClosedXML.Excel
                 EnableDrill = OpenXmlHelper.GetBooleanValue(pt.EnableShowDetails, true)
             };
 
+            if (!String.IsNullOrEmpty(pt.ColumnHeaderCaption))
+                pivotTableDefinition.ColumnHeaderCaption = StringValue.FromString(pt.ColumnHeaderCaption);
+
+            if (!String.IsNullOrEmpty(pt.RowHeaderCaption))
+                pivotTableDefinition.RowHeaderCaption = StringValue.FromString(pt.RowHeaderCaption);
+
             if (pt.ClassicPivotTableLayout)
             {
                 pivotTableDefinition.Compact = false;
