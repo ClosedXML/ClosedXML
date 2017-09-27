@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
     {
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, Int32 priority, XLWorkbook.SaveContext context)
         {
-            var conditionalFormattingRule = new ConditionalFormattingRule { Type = cf.ConditionalFormatType.ToOpenXml(), Priority = priority };
+            var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
 
             var dataBar = new DataBar { ShowValue = !cf.ShowBarOnly };
 
@@ -38,7 +38,6 @@ namespace ClosedXML.Excel
             dataBar.Append(conditionalFormatValueObject1);
             dataBar.Append(conditionalFormatValueObject2);
             dataBar.Append(color);
-
 
             conditionalFormattingRule.Append(dataBar);
 

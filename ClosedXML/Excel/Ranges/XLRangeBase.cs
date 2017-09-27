@@ -1214,7 +1214,8 @@ namespace ClosedXML.Excel
                                                    - model.RangeAddress.FirstAddress.RowNumber + 1;
                             for (Int32 ro = firstRoReturned; ro <= lastRoReturned; ro++)
                             {
-                                rangeToReturn.Row(ro).Style = model.Cell(ro).Style;
+                                using (var row = rangeToReturn.Row(ro))
+                                    row.Style = model.Cell(ro).Style;
                             }
                         }
                     }
@@ -1231,13 +1232,17 @@ namespace ClosedXML.Excel
                         var styleToUse = Worksheet.Internals.RowsCollection.ContainsKey(ro)
                                              ? Worksheet.Internals.RowsCollection[ro].Style
                                              : Worksheet.Style;
-                        rangeToReturn.Row(ro).Style = styleToUse;
+                        using (var row = rangeToReturn.Row(ro))
+                            row.Style = styleToUse;
                     }
                 }
             }
 
             if (nullReturn)
+            {
+                rangeToReturn.Dispose();
                 return null;
+            }
 
             return rangeToReturn.Columns();
         }
@@ -1453,7 +1458,8 @@ namespace ClosedXML.Excel
                                                    - model.RangeAddress.FirstAddress.ColumnNumber + 1;
                             for (Int32 co = firstCoReturned; co <= lastCoReturned; co++)
                             {
-                                rangeToReturn.Column(co).Style = model.Cell(co).Style;
+                                using (var column = rangeToReturn.Column(co))
+                                    column.Style = model.Cell(co).Style;
                             }
                         }
                     }
@@ -1470,14 +1476,18 @@ namespace ClosedXML.Excel
                         var styleToUse = Worksheet.Internals.ColumnsCollection.ContainsKey(co)
                                              ? Worksheet.Internals.ColumnsCollection[co].Style
                                              : Worksheet.Style;
-                        rangeToReturn.Column(co).Style = styleToUse;
+                        using (var column = rangeToReturn.Column(co))
+                            column.Style = styleToUse;
                     }
                 }
             }
 
             // Skip calling .Rows() for performance reasons if required.
             if (nullReturn)
+            {
+                rangeToReturn.Dispose();
                 return null;
+            }
 
             return rangeToReturn.Rows();
         }
