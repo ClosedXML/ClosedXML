@@ -992,5 +992,10 @@ namespace ClosedXML.Excel
         {
             Protect(false, false, workbookPassword);
         }
+
+        public override string ToString()
+        {
+            return _originalFile ?? String.Format("XLWorkbook({0})", _originalStream.ToString());
+        }
     }
 }
