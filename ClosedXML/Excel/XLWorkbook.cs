@@ -523,6 +523,7 @@ namespace ClosedXML.Excel
 
             _loadSource = XLLoadSource.File;
             _originalFile = file;
+            _originalStream = null;
         }
 
         private static SpreadsheetDocumentType GetSpreadsheetDocumentType(string filePath)
@@ -624,6 +625,7 @@ namespace ClosedXML.Excel
 
             _loadSource = XLLoadSource.Stream;
             _originalStream = stream;
+            _originalFile = null;
         }
 
         internal static void CopyStream(Stream input, Stream output)
