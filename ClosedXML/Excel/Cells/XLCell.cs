@@ -1925,7 +1925,7 @@ namespace ClosedXML.Excel
             return _formatCodes;
         }
 
-        private string GetFormulaR1C1(string value)
+        internal string GetFormulaR1C1(string value)
         {
             return GetFormula(value, FormulaConversionType.A1ToR1C1, 0, 0);
         }

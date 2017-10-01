@@ -13,6 +13,22 @@ namespace ClosedXML.Excel
             _conditionalFormats.Add(conditionalFormat);
         }
 
+        private bool RangeAbove(IXLRangeAddress newAddr, IXLRangeAddress addr)
+        {
+            return newAddr.FirstAddress.ColumnNumber == addr.FirstAddress.ColumnNumber
+                   && newAddr.LastAddress.ColumnNumber == addr.LastAddress.ColumnNumber
+                   && newAddr.FirstAddress.RowNumber < addr.FirstAddress.RowNumber
+                   && (newAddr.LastAddress.RowNumber+1).Between(addr.FirstAddress.RowNumber, addr.LastAddress.RowNumber);
+        }
+
+        private bool RangeBefore(IXLRangeAddress newAddr, IXLRangeAddress addr)
+        {
+            return newAddr.FirstAddress.RowNumber == addr.FirstAddress.RowNumber
+                   && newAddr.LastAddress.RowNumber == addr.LastAddress.RowNumber
+                   && newAddr.FirstAddress.ColumnNumber < addr.FirstAddress.ColumnNumber
+                   && (newAddr.LastAddress.ColumnNumber+1).Between(addr.FirstAddress.ColumnNumber, addr.LastAddress.ColumnNumber);
+        }
+
         public IEnumerator<IXLConditionalFormat> GetEnumerator()
         {
             return _conditionalFormats.GetEnumerator();
@@ -27,6 +43,52 @@ namespace ClosedXML.Excel
         {
             _conditionalFormats.Where(cf=>predicate(cf)).ForEach(cf=>cf.Range.Dispose());
             _conditionalFormats.RemoveAll(predicate);
+        }
+
+        public void Compress()
+        {
+            var formats = _conditionalFormats
+                .OrderByDescending(x=>x.Range.RangeAddress.FirstAddress.RowNumber)
+                .ThenByDescending(x=>x.Range.RangeAddress.FirstAddress.ColumnNumber)
+                .ToList();
+            foreach (var item in formats)
+            {
+                var addr = item.Range.RangeAddress;
+                var sameFormats = _conditionalFormats.Where(
+                        f => f != item
+                             && f.Range.Worksheet.Position == item.Range.Worksheet.Position
+                             && XLConditionalFormat.NoRangeComparer.Equals(f, item))
+                    .ToArray();
+
+                var format = sameFormats.FirstOrDefault(f => f.Range.Contains(item.Range));
+                if (format != null)
+                {
+                    _conditionalFormats.Remove(item);
+                    continue;
+                }
+
+                format = sameFormats.FirstOrDefault(f => RangeAbove(addr, f.Range.RangeAddress) || RangeBefore(addr, f.Range.RangeAddress));
+                if (format != null)
+                {
+                    Merge(format, item);
+                    _conditionalFormats.Remove(item);
+                    // compress with bottom range
+                    var newaddr = format.Range.RangeAddress;
+                    var bottom = sameFormats.FirstOrDefault(f => RangeAbove(newaddr, f.Range.RangeAddress));
+                    if (bottom != null)
+                    {
+                        Merge(bottom, format);
+                        _conditionalFormats.Remove(format);
+                    }
+                }
+            }
+        }
+
+        private static void Merge(IXLConditionalFormat format, IXLConditionalFormat item)
+        {
+            foreach (var v in format.Values.ToList())
+                format.Values[v.Key] = item.Values[v.Key];
+            format.Range.RangeAddress.FirstAddress = item.Range.RangeAddress.FirstAddress;
         }
 
         public void RemoveAll()
