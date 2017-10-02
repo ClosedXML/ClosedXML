@@ -92,8 +92,7 @@
     <Compile Include="Excel\Drawings\IXLPicture.cs" />
     <Compile Include="Excel\Drawings\XLMarker.cs" />
     <Compile Include="Excel\Drawings\XLPictures.cs" />
-    <Compile Include="Excel\Misc\XLCallbackAction.cs" />
-    <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
+    <Compile Include="Excel\Misc\RangeShiftedEventArgs.cs" />
     <Compile Include="Excel\SaveOptions.cs" />
     <Compile Include="Excel\Style\XLPredefinedFormat.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />

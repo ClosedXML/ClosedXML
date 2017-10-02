@@ -15,8 +15,9 @@ namespace ClosedXML.Excel
     {
         #region Events
 
-        public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedRows;
-        public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedColumns;
+        public event EventHandler<RangeShiftedEventArgs> RowsShifted = delegate { };
+
+        public event EventHandler<RangeShiftedEventArgs> ColumnsShifted = delegate { };
 
         #endregion Events
 
@@ -46,9 +47,6 @@ namespace ClosedXML.Excel
 
             Workbook = workbook;
 
-            RangeShiftedRows = new XLReentrantEnumerableSet<XLCallbackAction>();
-            RangeShiftedColumns = new XLReentrantEnumerableSet<XLCallbackAction>();
-
             RangeAddress.Worksheet = this;
             RangeAddress.FirstAddress.Worksheet = this;
             RangeAddress.LastAddress.Worksheet = this;
@@ -72,8 +70,8 @@ namespace ClosedXML.Excel
             _rowHeight = workbook.RowHeight;
             RowHeightChanged = Math.Abs(workbook.RowHeight - XLWorkbook.DefaultRowHeight) > XLHelper.Epsilon;
             Name = sheetName;
-            SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-            SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+            SubscribeToShiftedRows(WorksheetRangeShiftedRows);
+            SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
             Charts = new XLCharts();
             ShowFormulas = workbook.ShowFormulas;
             ShowGridLines = workbook.ShowGridLines;
@@ -1177,8 +1175,11 @@ namespace ClosedXML.Excel
             Internals.RowsCollection.Clear();
         }
 
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        private void WorksheetRangeShiftedColumns(object sender, RangeShiftedEventArgs e)
         {
+            var range = e.Range;
+            var columnsShifted = e.Shifted;
+
             var newMerge = new XLRanges();
             foreach (IXLRange rngMerged in Internals.MergedRanges)
             {
@@ -1246,8 +1247,11 @@ namespace ClosedXML.Excel
             fc.Dispose();
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        private void WorksheetRangeShiftedRows(object sender, RangeShiftedEventArgs e)
         {
+            var range = e.Range;
+            var rowsShifted = e.Shifted;
+
             var newMerge = new XLRanges();
             foreach (IXLRange rngMerged in Internals.MergedRanges)
             {
@@ -1377,24 +1381,12 @@ namespace ClosedXML.Excel
 
         public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
         {
-            if (RangeShiftedRows != null)
-            {
-                foreach (var item in RangeShiftedRows)
-                {
-                    item.Action(range, rowsShifted);
-                }
-            }
+            RowsShifted?.Invoke(this, new RangeShiftedEventArgs(range, rowsShifted));
         }
 
         public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
         {
-            if (RangeShiftedColumns != null)
-            {
-                foreach (var item in RangeShiftedColumns)
-                {
-                    item.Action(range, columnsShifted);
-                }
-            }
+            ColumnsShifted?.Invoke(this, new RangeShiftedEventArgs(range, columnsShifted));
         }
 
         public XLRow Row(Int32 row, Boolean pingCells)
@@ -1586,6 +1578,7 @@ namespace ClosedXML.Excel
         {
             return Pictures.Add(imageFile, name);
         }
+
         public override Boolean IsEntireRow()
         {
             return true;
@@ -1605,6 +1598,5 @@ namespace ClosedXML.Excel
             else
                 this.Cell(ro, co).SetValue(value);
         }
-
     }
 }
