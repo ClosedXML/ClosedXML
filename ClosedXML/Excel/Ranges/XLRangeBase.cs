@@ -2053,11 +2053,33 @@ namespace ClosedXML.Excel
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Usually left for disposing of managed resources;
+            }
+
             if (rowsShiftedSubscribed)
+            {
                 WeakEventManager<XLWorksheet, RangeShiftedEventArgs>.RemoveHandler(RangeAddress.Worksheet, "RowsShifted", worksheetRangeShiftedRows);
+                rowsShiftedSubscribed = false;
+            }
 
             if (columnsShiftedSubscribed)
+            {
                 WeakEventManager<XLWorksheet, RangeShiftedEventArgs>.RemoveHandler(RangeAddress.Worksheet, "ColumnsShifted", worksheetRangeShiftedColumns);
+                columnsShiftedSubscribed = false;
+            }
+        }
+
+        ~XLRangeBase()
+        {
+            Dispose(false);
         }
 
         public IXLDataValidation SetDataValidation()
