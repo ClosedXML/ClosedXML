@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
@@ -137,6 +138,38 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
 
                 Assert.Throws<NoValueAvailableException>(() => ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
+            }
+        }
+
+        [TestCase(1, 0.850918128)]
+        [TestCase(2, 0.275720565)]
+        [TestCase(3, 0.09982157)]
+        [TestCase(4, 0.03664357)]
+        [TestCase(5, 0.013476506)]
+        [TestCase(6, 0.004957535)]
+        [TestCase(7, 0.001823765)]
+        [TestCase(8, 0.000670925)]
+        [TestCase(9, 0.00024682)]
+        [TestCase(10, 0.000090799859712122200000)]
+        [TestCase(11, 0.0000334034)]
+        public void CSch_CalculatesCorrectValues(double input, double expectedOutput)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().Value = input;
+                Assert.AreEqual(expectedOutput, (double)ws.Evaluate("CSCH(A1)"), 0.000000001);
+            }
+        }
+
+        [Test]
+        public void Csh_ThrowsOnInput0()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().Value = 0;
+                Assert.AreEqual(ErrorExpression.ExpressionErrorType.DivisionByZero, ws.Evaluate("CSH(A1)"));
             }
         }
     }
