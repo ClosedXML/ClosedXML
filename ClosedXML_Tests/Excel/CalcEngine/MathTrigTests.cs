@@ -163,7 +163,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Csh_ThrowsOnInput0()
+        public void Csh_ReturnsDivisionByZeroErrorOnInput0()
         {
             using (var wb = new XLWorkbook())
             {
