@@ -26,6 +26,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COMBIN", 2, Combin);
             ce.RegisterFunction("COS", 1, Cos);
             ce.RegisterFunction("COSH", 1, Cosh);
+            ce.RegisterFunction("COT", 1, Cot);
             ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
             ce.RegisterFunction("DEGREES", 1, Degrees);
             ce.RegisterFunction("EVEN", 1, Even);
@@ -115,6 +116,16 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Cosh(List<Expression> p)
         {
             return Math.Cosh(p[0]);
+        }
+
+        private static object Cot(List<Expression> p)
+        {
+            var tan = (double)Math.Tan(p[0]);
+
+            if (tan == 0)
+                throw new DivisionByZeroException();
+
+            return 1 / tan;
         }
 
         private static object Decimal(List<Expression> p)
