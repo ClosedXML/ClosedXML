@@ -22,7 +22,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Decimal_ZeroIsZeroInAnyRadix([Range(1, 36)] int radix)
+        public void Decimal_ZeroIsZeroInAnyRadix([Range(2, 36)] int radix)
         {
             Assert.AreEqual(0, XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
         }
