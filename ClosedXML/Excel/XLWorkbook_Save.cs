@@ -148,19 +148,18 @@ namespace ClosedXML.Excel
 
             string sheetName = worksheet.Name;
             // Get the pivot Table Parts
-            IEnumerable<PivotTableCacheDefinitionPart> pvtTableCacheParts = wbPart.PivotTableCacheDefinitionParts;
-            Dictionary<PivotTableCacheDefinitionPart, string> pvtTableCacheDefinationPart = new Dictionary<PivotTableCacheDefinitionPart, string>();
+            var pvtTableCacheParts = wbPart.PivotTableCacheDefinitionParts;
+            var pvtTableCacheDefinitionPart = new Dictionary<PivotTableCacheDefinitionPart, string>();
             foreach (PivotTableCacheDefinitionPart Item in pvtTableCacheParts)
             {
                 PivotCacheDefinition pvtCacheDef = Item.PivotCacheDefinition;
                 //Check if this CacheSource is linked to SheetToDelete
-                var pvtCache = pvtCacheDef.Descendants<CacheSource>().Where(s => s.WorksheetSource.Sheet == sheetName);
-                if (pvtCache.Any())
+                if (pvtCacheDef.Descendants<CacheSource>().Any(s => s.WorksheetSource != null && s.WorksheetSource.Sheet == sheetName))
                 {
-                    pvtTableCacheDefinationPart.Add(Item, Item.ToString());
+                    pvtTableCacheDefinitionPart.Add(Item, Item.ToString());
                 }
             }
-            foreach (var Item in pvtTableCacheDefinationPart)
+            foreach (var Item in pvtTableCacheDefinitionPart)
             {
                 wbPart.DeletePart(Item.Key);
             }
