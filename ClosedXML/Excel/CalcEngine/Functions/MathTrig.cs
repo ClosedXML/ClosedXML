@@ -118,10 +118,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Csch(List<Expression> p)
         {
-            if (p[0].Evaluate().Equals(0.0))
-            {
-                return ErrorExpression.ExpressionErrorType.DivisionByZero;
-            }
+            if (Math.Abs((double)p[0].Evaluate()) < Double.Epsilon)
+                throw new DivisionByZeroException();
+
             return 1 / Math.Sinh(p[0]);
         }
 

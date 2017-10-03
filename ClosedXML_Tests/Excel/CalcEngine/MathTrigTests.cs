@@ -154,23 +154,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(11, 0.0000334034)]
         public void CSch_CalculatesCorrectValues(double input, double expectedOutput)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.FirstCell().Value = input;
-                Assert.AreEqual(expectedOutput, (double)ws.Evaluate("CSCH(A1)"), 0.000000001);
-            }
+            Assert.AreEqual(expectedOutput, (double)XLWorkbook.EvaluateExpr($@"CSCH({input})"), 0.000000001);
         }
 
         [Test]
         public void Csch_ReturnsDivisionByZeroErrorOnInput0()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.FirstCell().Value = 0;
-                Assert.AreEqual(ErrorExpression.ExpressionErrorType.DivisionByZero, ws.Evaluate("CSCH(A1)"));
-            }
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("CSCH(0)"));
         }
     }
 }
