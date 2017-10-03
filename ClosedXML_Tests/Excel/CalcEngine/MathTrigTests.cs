@@ -163,13 +163,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Csh_ReturnsDivisionByZeroErrorOnInput0()
+        public void Csch_ReturnsDivisionByZeroErrorOnInput0()
         {
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().Value = 0;
-                Assert.AreEqual(ErrorExpression.ExpressionErrorType.DivisionByZero, ws.Evaluate("CSH(A1)"));
+                Assert.AreEqual(ErrorExpression.ExpressionErrorType.DivisionByZero, ws.Evaluate("CSCH(A1)"));
             }
         }
     }
