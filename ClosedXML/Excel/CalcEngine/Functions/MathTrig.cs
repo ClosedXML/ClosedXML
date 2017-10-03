@@ -132,11 +132,14 @@ namespace ClosedXML.Excel.CalcEngine
 
             foreach (byte digit in asciiValues)
             {
+                if (digit > 90)
+                {
+                    throw new NumberException();
+                }
+
                 int digitNumber = digit >= 48 && digit < 58
                     ? digit - 48
-                    : digit > 90
-                        ? throw new NumberException()
-                        : digit - 55;
+                    : digit - 55;
 
                 if (digitNumber > radix - 1)
                     throw new NumberException();
