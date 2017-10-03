@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
@@ -10,6 +11,33 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     public class MathTrigTests
     {
         private readonly double tolerance = 1e-10;
+
+        [TestCase("FF", 16, 255)]
+        [TestCase("111", 2, 7)]
+        [TestCase("zap", 36, 45745)]
+        public void Decimal(string inputString, int radix, int expectedResult)
+        {
+            var actualResult = XLWorkbook.EvaluateExpr($"DECIMAL(\"{inputString}\", {radix})");
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [Test]
+        public void Decimal_ZeroIsZeroInAnyRadix([Range(2, 36)] int radix)
+        {
+            Assert.AreEqual(0, XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
+        }
+
+        [Theory]
+        public void Decimal_ReturnsErrorForRadiansGreater36([Range(37, 255)] int radix)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
+        }
+
+        [Theory]
+        public void Decimal_ReturnsErrorForRadiansSmaller2([Range(-5, 1)] int radix)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
+        }
 
         [Test]
         public void Floor()
