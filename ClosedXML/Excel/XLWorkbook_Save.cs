@@ -1819,32 +1819,55 @@ namespace ClosedXML.Excel
             else
                 table.TotalsRowShown = false;
 
-            var tableColumns1 = new TableColumns { Count = (UInt32)xlTable.ColumnCount() };
+            var tableColumns = new TableColumns { Count = (UInt32)xlTable.ColumnCount() };
 
             UInt32 columnId = 0;
             foreach (var xlField in xlTable.Fields)
             {
                 columnId++;
                 var fieldName = xlField.Name;
-                var tableColumn1 = new TableColumn
+                var tableColumn = new TableColumn
                 {
                     Id = columnId,
                     Name = fieldName.Replace("_x000a_", "_x005f_x000a_").Replace(Environment.NewLine, "_x000a_")
                 };
+
+                // https://github.com/ClosedXML/ClosedXML/issues/513
+                if (xlField.IsConsistentFormula())
+                {
+                    string formula = xlField.Column.Cells()
+                        .Skip(xlTable.ShowHeaderRow ? 1 : 0)
+                        .First()
+                        .FormulaA1;
+
+                    while (formula.StartsWith("=") && formula.Length > 1)
+                        formula = formula.Substring(1);
+
+                    if (!String.IsNullOrWhiteSpace(formula))
+                    {
+                        tableColumn.CalculatedColumnFormula = new CalculatedColumnFormula
+                        {
+                            Text = formula
+                        };
+                    }
+                }
+                else
+                    tableColumn.CalculatedColumnFormula = null;
+
                 if (xlTable.ShowTotalsRow)
                 {
                     if (xlField.TotalsRowFunction != XLTotalsRowFunction.None)
                     {
-                        tableColumn1.TotalsRowFunction = xlField.TotalsRowFunction.ToOpenXml();
+                        tableColumn.TotalsRowFunction = xlField.TotalsRowFunction.ToOpenXml();
 
                         if (xlField.TotalsRowFunction == XLTotalsRowFunction.Custom)
-                            tableColumn1.TotalsRowFormula = new TotalsRowFormula(xlField.TotalsRowFormulaA1);
+                            tableColumn.TotalsRowFormula = new TotalsRowFormula(xlField.TotalsRowFormulaA1);
                     }
 
                     if (!String.IsNullOrWhiteSpace(xlField.TotalsRowLabel))
-                        tableColumn1.TotalsRowLabel = xlField.TotalsRowLabel;
+                        tableColumn.TotalsRowLabel = xlField.TotalsRowLabel;
                 }
-                tableColumns1.AppendChild(tableColumn1);
+                tableColumns.AppendChild(tableColumn);
             }
 
             var tableStyleInfo1 = new TableStyleInfo
@@ -1875,7 +1898,7 @@ namespace ClosedXML.Excel
                 table.AppendChild(autoFilter1);
             }
 
-            table.AppendChild(tableColumns1);
+            table.AppendChild(tableColumns);
             table.AppendChild(tableStyleInfo1);
 
             tableDefinitionPart.Table = table;
