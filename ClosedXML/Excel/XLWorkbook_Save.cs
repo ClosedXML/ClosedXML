@@ -1833,6 +1833,19 @@ namespace ClosedXML.Excel
                 };
 
                 // https://github.com/ClosedXML/ClosedXML/issues/513
+                if (xlField.IsConsistentStyle())
+                {
+                    var style = xlField.Column.Cells()
+                        .Skip(xlTable.ShowHeaderRow ? 1 : 0)
+                        .First()
+                        .Style;
+
+                    if (!DefaultStyle.Equals(style) && context.DifferentialFormats.ContainsKey(style))
+                        tableColumn.DataFormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[style]));
+                }
+                else
+                    tableColumn.DataFormatId = null;
+
                 if (xlField.IsConsistentFormula())
                 {
                     string formula = xlField.Column.Cells()
@@ -2972,7 +2985,7 @@ namespace ClosedXML.Excel
             UInt32 fontCount = 1;
             UInt32 fillCount = 3;
             UInt32 borderCount = 1;
-            var numberFormatCount = 1;
+            var numberFormatCount = 0; // 0-based
             var xlStyles = new HashSet<Int32>();
             var pivotTableNumberFormats = new HashSet<IXLPivotValueFormat>();
 
@@ -3113,8 +3126,24 @@ namespace ClosedXML.Excel
             {
                 foreach (var cf in ws.ConditionalFormats)
                 {
-                    if (!context.DifferentialFormats.ContainsKey(cf.Style))
-                        AddDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, cf, context);
+                    //var ie = context.DifferentialFormats.Keys.First().Equals(cf.Style);
+
+                    if (!cf.Style.Equals(DefaultStyle) && !context.DifferentialFormats.ContainsKey(cf.Style))
+                        AddConditionalDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, cf, context);
+                }
+
+                foreach (var tf in ws.Tables.SelectMany(t => t.Fields))
+                {
+                    if (tf.IsConsistentStyle())
+                    {
+                        var style = tf.Column.Cells()
+                            .Skip(tf.Table.ShowHeaderRow ? 1 : 0)
+                            .First()
+                            .Style;
+
+                        if (!style.Equals(DefaultStyle) && !context.DifferentialFormats.ContainsKey(style))
+                            AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, style, context);
+                    }
                 }
             }
 
@@ -3128,19 +3157,26 @@ namespace ClosedXML.Excel
         {
             dictionary.Clear();
             var id = 0;
+
             foreach (var df in differentialFormats.Elements<DifferentialFormat>())
             {
-                var style = new XLStyle(new XLStylizedEmpty(DefaultStyle), DefaultStyle);
+                var emptyContainer = new XLStylizedEmpty(DefaultStyle);
+                emptyContainer.UpdatingStyle = true;
+
+                var style = new XLStyle(emptyContainer, DefaultStyle);
                 LoadFont(df.Font, style.Font);
                 LoadBorder(df.Border, style.Border);
                 LoadNumberFormat(df.NumberingFormat, style.NumberFormat);
                 LoadFill(df.Fill, style.Fill);
+
+                emptyContainer.UpdatingStyle = false;
+
                 if (!dictionary.ContainsKey(style))
-                    dictionary.Add(style, ++id);
+                    dictionary.Add(style, id++);
             }
         }
 
-        private static void AddDifferentialFormat(DifferentialFormats differentialFormats, IXLConditionalFormat cf,
+        private static void AddConditionalDifferentialFormat(DifferentialFormats differentialFormats, IXLConditionalFormat cf,
             SaveContext context)
         {
             var differentialFormat = new DifferentialFormat();
@@ -3160,6 +3196,43 @@ namespace ClosedXML.Excel
             differentialFormats.Append(differentialFormat);
 
             context.DifferentialFormats.Add(cf.Style, differentialFormats.Count() - 1);
+        }
+
+        private static void AddStyleAsDifferentialFormat(DifferentialFormats differentialFormats, IXLStyle style,
+            SaveContext context)
+        {
+            var differentialFormat = new DifferentialFormat();
+            differentialFormat.Append(GetNewFont(new FontInfo { Font = style.Font as XLFont }, false));
+            if (!String.IsNullOrWhiteSpace(style.NumberFormat.Format) || style.NumberFormat.NumberFormatId != 0)
+            {
+                var numberFormat = new NumberingFormat();
+
+                if (style.NumberFormat.NumberFormatId == -1)
+                {
+                    numberFormat.FormatCode = style.NumberFormat.Format;
+                    numberFormat.NumberFormatId = (UInt32)(XLConstants.NumberOfBuiltInStyles +
+                        differentialFormats
+                            .Descendants<DifferentialFormat>()
+                            .Count(df => df.NumberingFormat != null && df.NumberingFormat.NumberFormatId != null && df.NumberingFormat.NumberFormatId.Value >= XLConstants.NumberOfBuiltInStyles));
+                }
+                else
+                {
+                    numberFormat.NumberFormatId = (UInt32)(style.NumberFormat.NumberFormatId);
+                    if (!string.IsNullOrEmpty(style.NumberFormat.Format))
+                        numberFormat.FormatCode = style.NumberFormat.Format;
+                    else if (XLPredefinedFormat.FormatCodes.ContainsKey(style.NumberFormat.NumberFormatId))
+                        numberFormat.FormatCode = XLPredefinedFormat.FormatCodes[style.NumberFormat.NumberFormatId];
+
+                }
+
+                differentialFormat.Append(numberFormat);
+            }
+            differentialFormat.Append(GetNewFill(new FillInfo { Fill = style.Fill as XLFill }, false));
+            differentialFormat.Append(GetNewBorder(new BorderInfo { Border = style.Border as XLBorder }, false));
+
+            differentialFormats.Append(differentialFormat);
+
+            context.DifferentialFormats.Add(style, differentialFormats.Count() - 1);
         }
 
         private static void ResolveRest(WorkbookStylesPart workbookStylesPart, SaveContext context)
@@ -3758,7 +3831,7 @@ namespace ClosedXML.Excel
             var allSharedNumberFormats = new Dictionary<IXLNumberFormatBase, NumberFormatInfo>();
             foreach (var numberFormatInfo in sharedNumberFormats.Values.Where(nf => nf.NumberFormatId != defaultFormatId))
             {
-                var numberingFormatId = XLConstants.NumberOfBuiltInStyles + 1;
+                var numberingFormatId = XLConstants.NumberOfBuiltInStyles; // 0-based
                 var foundOne = false;
                 foreach (NumberingFormat nf in workbookStylesPart.Stylesheet.NumberingFormats)
                 {
@@ -4550,7 +4623,6 @@ namespace ClosedXML.Excel
                 }
             }
 
-
             var exlst = from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && c.Colors.Count > 1 && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c;
             if (exlst != null && exlst.Count() > 0)
             {
@@ -4602,7 +4674,6 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-
 
             #endregion Conditional Formatting
 

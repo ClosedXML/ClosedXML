@@ -1388,10 +1388,11 @@ namespace ClosedXML.Excel
         {
             if (nfSource == null) return;
 
-            if (nfSource.FormatCode != null)
+            if (nfSource.NumberFormatId != null && nfSource.NumberFormatId.Value < XLConstants.NumberOfBuiltInStyles)
+                nf.NumberFormatId = (Int32)nfSource.NumberFormatId.Value;
+            else if (nfSource.FormatCode != null)
                 nf.Format = nfSource.FormatCode.Value;
-            //if (nfSource.NumberFormatId != null)
-            //    nf.NumberFormatId = (Int32)nfSource.NumberFormatId.Value;
+
         }
 
         private void LoadBorder(Border borderSource, IXLBorder border)
@@ -2253,7 +2254,7 @@ namespace ClosedXML.Excel
                         thisColor = _colorList[htmlColor];
                     retVal = XLColor.FromColor(thisColor);
                 }
-                else if (color.Indexed != null && color.Indexed < 64)
+                else if (color.Indexed != null && color.Indexed <= 64)
                     retVal = XLColor.FromIndex((Int32)color.Indexed.Value);
                 else if (color.Theme != null)
                 {

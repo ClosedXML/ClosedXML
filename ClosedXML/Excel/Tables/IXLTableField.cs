@@ -44,6 +44,11 @@ namespace ClosedXML.Excel
         String Name { get; set; }
 
         /// <summary>
+        /// Gets the underlying table for this table field.
+        /// </summary>
+        IXLTable Table { get; }
+
+        /// <summary>
         /// Gets or sets the totals row formula in A1 format.
         /// </summary>
         /// <value>
@@ -84,5 +89,10 @@ namespace ClosedXML.Excel
         /// Determines whether all cells this table field have a consistent formula.
         /// </summary>
         Boolean IsConsistentFormula();
+
+        /// <summary>
+        /// Determines whether all cells this table field have a consistent style.
+        /// </summary>
+        Boolean IsConsistentStyle();
     }
 }

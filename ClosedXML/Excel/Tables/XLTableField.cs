@@ -11,6 +11,8 @@ namespace ClosedXML.Excel
         internal String totalsRowLabel;
         private readonly XLTable table;
 
+        private IXLRangeColumn _column;
+        private Int32 index;
         private String name;
 
         public XLTableField(XLTable table, String name)
@@ -18,8 +20,6 @@ namespace ClosedXML.Excel
             this.table = table;
             this.name = name;
         }
-
-        private IXLRangeColumn _column;
 
         public IXLRangeColumn Column
         {
@@ -32,8 +32,6 @@ namespace ClosedXML.Excel
                 return _column;
             }
         }
-
-        private Int32 index;
 
         public Int32 Index
         {
@@ -61,6 +59,8 @@ namespace ClosedXML.Excel
                 name = value;
             }
         }
+
+        public IXLTable Table { get { return table; } }
 
         public String TotalsRowFormulaA1
         {
@@ -92,6 +92,71 @@ namespace ClosedXML.Excel
             }
         }
 
+        public String TotalsRowLabel
+        {
+            get { return totalsRowLabel; }
+            set
+            {
+                totalsRowFunction = XLTotalsRowFunction.None;
+                (table.TotalsRow().Cell(Index + 1) as XLCell).SetValue(value, false);
+                totalsRowLabel = value;
+            }
+        }
+
+        public void Delete()
+        {
+            Delete(true);
+        }
+
+        public Boolean IsConsistentFormula()
+        {
+            var formulas = this.Column
+                .Cells()
+                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Select(c => c.FormulaR1C1);
+
+            if (this.table.ShowTotalsRow)
+                formulas = formulas.Take(formulas.Count() - 1);
+
+            var distinctFormulas = formulas
+                .GroupBy(f => f)
+                .Select(g => new { Key = g.Key, Count = g.Count() });
+
+            return distinctFormulas.Count() == 1;
+        }
+
+        public bool IsConsistentStyle()
+        {
+            var styles = this.Column
+                .Cells()
+                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Select(c => c.Style);
+
+            if (this.table.ShowTotalsRow)
+                styles = styles.Take(styles.Count() - 1);
+
+            var distinctStyles = styles
+                .GroupBy(f => f)
+                .Select(g => new { Key = g.Key, Count = g.Count() });
+
+            var ie = distinctStyles.First().Key.Equals(distinctStyles.Last().Key);
+
+            return distinctStyles.Count() == 1;
+        }
+
+        internal void Delete(Boolean deleteUnderlyingRangeColumn)
+        {
+            var fields = table.Fields.Cast<XLTableField>().ToArray();
+
+            if (deleteUnderlyingRangeColumn)
+            {
+                table.AsRange().ColumnQuick(this.Index + 1).Delete();
+            }
+
+            fields.Where(f => f.Index > this.Index).ForEach(f => f.Index--);
+            table.FieldNames.Remove(this.Name);
+        }
+
         internal void UpdateUnderlyingCellFormula()
         {
             if (TotalsRowFunction != XLTotalsRowFunction.None && TotalsRowFunction != XLTotalsRowFunction.Custom)
@@ -118,52 +183,6 @@ namespace ClosedXML.Excel
                     cell.Style.NumberFormat = lastCell.Style.NumberFormat;
                 }
             }
-        }
-
-        public String TotalsRowLabel
-        {
-            get { return totalsRowLabel; }
-            set
-            {
-                totalsRowFunction = XLTotalsRowFunction.None;
-                (table.TotalsRow().Cell(Index + 1) as XLCell).SetValue(value, false);
-                totalsRowLabel = value;
-            }
-        }
-
-        public void Delete()
-        {
-            Delete(true);
-        }
-
-        internal void Delete(Boolean deleteUnderlyingRangeColumn)
-        {
-            var fields = table.Fields.Cast<XLTableField>().ToArray();
-
-            if (deleteUnderlyingRangeColumn)
-            {
-                table.AsRange().ColumnQuick(this.Index + 1).Delete();
-            }
-
-            fields.Where(f => f.Index > this.Index).ForEach(f => f.Index--);
-            table.FieldNames.Remove(this.Name);
-        }
-
-        public Boolean IsConsistentFormula()
-        {
-            var formulas = this.Column
-                .Cells()
-                .Skip(this.table.ShowHeaderRow ? 1 : 0)
-                .Select(c => c.FormulaR1C1);
-
-            if (this.table.ShowTotalsRow)
-                formulas = formulas.Take(formulas.Count() - 1);
-
-            var distinctFormulas = formulas
-                .GroupBy(f => f)
-                .Select(g => new { Key = g.Key, Count = g.Count() });
-
-            return distinctFormulas.Count() == 1;
         }
     }
 }
