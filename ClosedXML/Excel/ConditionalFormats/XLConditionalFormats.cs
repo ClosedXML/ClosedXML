@@ -48,38 +48,48 @@ namespace ClosedXML.Excel
         public void Compress()
         {
             var formats = _conditionalFormats
-                .OrderByDescending(x=>x.Range.RangeAddress.FirstAddress.RowNumber)
-                .ThenByDescending(x=>x.Range.RangeAddress.FirstAddress.ColumnNumber)
+                .OrderByDescending(x => x.Range.RangeAddress.FirstAddress.RowNumber)
+                .ThenByDescending(x => x.Range.RangeAddress.FirstAddress.ColumnNumber)
                 .ToList();
+
+            var orderedFormats = formats.ToList();
+
             foreach (var item in formats)
             {
-                var addr = item.Range.RangeAddress;
-                var sameFormats = _conditionalFormats.Where(
-                        f => f != item
-                             && f.Range.Worksheet.Position == item.Range.Worksheet.Position
-                             && XLConditionalFormat.NoRangeComparer.Equals(f, item))
-                    .ToArray();
+                var itemAddr = item.Range.RangeAddress;
+                var itemRowNum = itemAddr.FirstAddress.RowNumber;
 
-                var format = sameFormats.FirstOrDefault(f => f.Range.Contains(item.Range));
-                if (format != null)
-                {
-                    _conditionalFormats.Remove(item);
-                    continue;
-                }
+                bool IsSameFormat(IXLConditionalFormat f) => f != item && f.Range.Worksheet.Position == item.Range.Worksheet.Position &&
+                                                             XLConditionalFormat.NoRangeComparer.Equals(f, item);
 
-                format = sameFormats.FirstOrDefault(f => RangeAbove(addr, f.Range.RangeAddress) || RangeBefore(addr, f.Range.RangeAddress));
+                var format = orderedFormats
+                    .TakeWhile(f => f.Range.RangeAddress.FirstAddress.RowNumber >= itemRowNum)
+                    .FirstOrDefault(f => (RangeAbove(itemAddr, f.Range.RangeAddress) || RangeBefore(itemAddr, f.Range.RangeAddress)) && IsSameFormat(f));
                 if (format != null)
                 {
                     Merge(format, item);
                     _conditionalFormats.Remove(item);
+                    orderedFormats.Remove(item);
                     // compress with bottom range
                     var newaddr = format.Range.RangeAddress;
-                    var bottom = sameFormats.FirstOrDefault(f => RangeAbove(newaddr, f.Range.RangeAddress));
+                    var newRowNum = newaddr.FirstAddress.RowNumber;
+                    var bottom = orderedFormats
+                        .TakeWhile(f => f.Range.RangeAddress.FirstAddress.RowNumber >= newRowNum)
+                        .FirstOrDefault(f => RangeAbove(newaddr, f.Range.RangeAddress) && IsSameFormat(f));
                     if (bottom != null)
                     {
                         Merge(bottom, format);
                         _conditionalFormats.Remove(format);
+                        orderedFormats.Remove(format);
                     }
+                    continue;
+                }
+
+                format = _conditionalFormats.FirstOrDefault(f => f.Range.Contains(item.Range) && IsSameFormat(f));
+                if (format != null)
+                {
+                    _conditionalFormats.Remove(item);
+                    orderedFormats.Remove(item);
                 }
             }
         }
