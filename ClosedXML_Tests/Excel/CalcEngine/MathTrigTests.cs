@@ -195,5 +195,27 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.Throws<NoValueAvailableException>(() => ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
             }
         }
+
+        [TestCase(1, 0.850918128)]
+        [TestCase(2, 0.275720565)]
+        [TestCase(3, 0.09982157)]
+        [TestCase(4, 0.03664357)]
+        [TestCase(5, 0.013476506)]
+        [TestCase(6, 0.004957535)]
+        [TestCase(7, 0.001823765)]
+        [TestCase(8, 0.000670925)]
+        [TestCase(9, 0.00024682)]
+        [TestCase(10, 0.000090799859712122200000)]
+        [TestCase(11, 0.0000334034)]
+        public void CSch_CalculatesCorrectValues(double input, double expectedOutput)
+        {
+            Assert.AreEqual(expectedOutput, (double)XLWorkbook.EvaluateExpr($@"CSCH({input})"), 0.000000001);
+        }
+
+        [Test]
+        public void Csch_ReturnsDivisionByZeroErrorOnInput0()
+        {
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("CSCH(0)"));
+        }
     }
 }
