@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -17,7 +16,7 @@ namespace ClosedXML.Excel
                 ;
         }
 
-        #endregion
+        #endregion IXLFill Members
 
         private void SetStyleChanged()
         {
@@ -42,7 +41,6 @@ namespace ClosedXML.Excel
         private XLColor _patternColor;
         private XLFillPatternValues _patternType;
 
-        public Boolean BackgroundColorModified;
         public XLColor BackgroundColor
         {
             get { return _backgroundColor; }
@@ -61,15 +59,12 @@ namespace ClosedXML.Excel
                         || _backgroundColor.ColorType == XLColorType.Indexed && _backgroundColor.Indexed == 64))
                     {
                         _patternType = value.HasValue ? XLFillPatternValues.Solid : XLFillPatternValues.None;
-                        PatternTypeModified = true;
                     }
                     _backgroundColor = value;
-                    BackgroundColorModified = true;
                 }
             }
         }
 
-        public Boolean PatternColorModified;
         public XLColor PatternColor
         {
             get { return _patternColor; }
@@ -81,12 +76,10 @@ namespace ClosedXML.Excel
                 else
                 {
                     _patternColor = value;
-                    PatternColorModified = true;
                 }
             }
         }
 
-        public Boolean PatternTypeModified;
         public XLFillPatternValues PatternType
         {
             get { return _patternType; }
@@ -98,7 +91,6 @@ namespace ClosedXML.Excel
                 else
                 {
                     _patternType = value;
-                    PatternTypeModified = true;
                 }
             }
         }
@@ -121,7 +113,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
@@ -142,12 +134,10 @@ namespace ClosedXML.Excel
             if (useDefaultModify)
             {
                 var d = defaultFill as XLFill;
-                PatternColorModified = d.PatternColorModified;
-                PatternTypeModified = d.PatternTypeModified;
             }
         }
 
-        #endregion
+        #endregion Constructors
 
         #region Overridden
 
@@ -166,6 +156,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion Overridden
     }
 }
