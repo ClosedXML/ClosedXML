@@ -3111,7 +3111,7 @@ namespace ClosedXML.Excel
                 LoadFont(df.Font, style.Font);
                 LoadBorder(df.Border, style.Border);
                 LoadNumberFormat(df.NumberingFormat, style.NumberFormat);
-                LoadFill(df.Fill, style.Fill);
+                LoadFill(df.Fill, style.Fill, differentialFillFormat: true);
                 if (!dictionary.ContainsKey(style))
                     dictionary.Add(style, ++id);
             }
@@ -3131,7 +3131,7 @@ namespace ClosedXML.Excel
                 };
                 differentialFormat.Append(numberFormat);
             }
-            differentialFormat.Append(GetNewFill(new FillInfo { Fill = cf.Style.Fill as XLFill }, false));
+            differentialFormat.Append(GetNewFill(new FillInfo { Fill = cf.Style.Fill as XLFill }, differentialFillFormat: true, ignoreMod: false));
             differentialFormat.Append(GetNewBorder(new BorderInfo { Border = cf.Style.Border as XLBorder }, false));
 
             differentialFormats.Append(differentialFormat);
@@ -3467,7 +3467,7 @@ namespace ClosedXML.Excel
                 var foundOne = false;
                 foreach (Fill f in workbookStylesPart.Stylesheet.Fills)
                 {
-                    if (FillsAreEqual(f, fillInfo.Fill))
+                    if (FillsAreEqual(f, fillInfo.Fill, fromDifferentialFormat: false))
                     {
                         foundOne = true;
                         break;
@@ -3476,7 +3476,7 @@ namespace ClosedXML.Excel
                 }
                 if (!foundOne)
                 {
-                    var fill = GetNewFill(fillInfo);
+                    var fill = GetNewFill(fillInfo, differentialFillFormat: false);
                     workbookStylesPart.Stylesheet.Fills.AppendChild(fill);
                 }
                 allSharedFills.Add(fillInfo.Fill, new FillInfo { Fill = fillInfo.Fill, FillId = (UInt32)fillId });
@@ -3500,7 +3500,7 @@ namespace ClosedXML.Excel
             fills.AppendChild(fill1);
         }
 
-        private static Fill GetNewFill(FillInfo fillInfo, Boolean ignoreMod = true)
+        private static Fill GetNewFill(FillInfo fillInfo, Boolean differentialFillFormat, Boolean ignoreMod = true)
         {
             var fill = new Fill();
 
@@ -3508,36 +3508,123 @@ namespace ClosedXML.Excel
             if (fillInfo.Fill.PatternTypeModified || ignoreMod)
                 patternFill.PatternType = fillInfo.Fill.PatternType.ToOpenXml();
 
-            if (fillInfo.Fill.PatternColorModified || ignoreMod)
+            switch (fillInfo.Fill.PatternType)
             {
-                var foregroundColor = new ForegroundColor();
-                if (fillInfo.Fill.PatternColor.ColorType == XLColorType.Color)
-                    foregroundColor.Rgb = fillInfo.Fill.PatternColor.Color.ToHex();
-                else if (fillInfo.Fill.PatternColor.ColorType == XLColorType.Indexed)
-                    foregroundColor.Indexed = (UInt32)fillInfo.Fill.PatternColor.Indexed;
-                else
-                {
-                    foregroundColor.Theme = (UInt32)fillInfo.Fill.PatternColor.ThemeColor;
-                    if (fillInfo.Fill.PatternColor.ThemeTint != 0)
-                        foregroundColor.Tint = fillInfo.Fill.PatternColor.ThemeTint;
-                }
-                patternFill.AppendChild(foregroundColor);
-            }
+                case XLFillPatternValues.None:
+                    break;
 
-            if (fillInfo.Fill.PatternBackgroundColorModified || ignoreMod)
-            {
-                var backgroundColor = new BackgroundColor();
-                if (fillInfo.Fill.PatternBackgroundColor.ColorType == XLColorType.Color)
-                    backgroundColor.Rgb = fillInfo.Fill.PatternBackgroundColor.Color.ToHex();
-                else if (fillInfo.Fill.PatternBackgroundColor.ColorType == XLColorType.Indexed)
-                    backgroundColor.Indexed = (UInt32)fillInfo.Fill.PatternBackgroundColor.Indexed;
-                else
-                {
-                    backgroundColor.Theme = (UInt32)fillInfo.Fill.PatternBackgroundColor.ThemeColor;
-                    if (fillInfo.Fill.PatternBackgroundColor.ThemeTint != 0)
-                        backgroundColor.Tint = fillInfo.Fill.PatternBackgroundColor.ThemeTint;
-                }
-                patternFill.AppendChild(backgroundColor);
+                case XLFillPatternValues.Solid:
+                    if (differentialFillFormat)
+                    {
+                        patternFill.AppendChild(new ForegroundColor { Auto = true });
+                        // ClosedXML Background color to be populated into OpenXML fgColor
+                        if (fillInfo.Fill.BackgroundColorModified || ignoreMod)
+                        {
+                            var backgroundColor = new BackgroundColor();
+                            switch (fillInfo.Fill.BackgroundColor.ColorType)
+                            {
+                                case XLColorType.Color:
+                                    backgroundColor.Rgb = fillInfo.Fill.BackgroundColor.Color.ToHex();
+                                    break;
+
+                                case XLColorType.Indexed:
+                                    backgroundColor.Indexed = (UInt32)fillInfo.Fill.BackgroundColor.Indexed;
+                                    break;
+
+                                case XLColorType.Theme:
+                                    backgroundColor.Theme = (UInt32)fillInfo.Fill.BackgroundColor.ThemeColor;
+
+                                    if (fillInfo.Fill.BackgroundColor.ThemeTint != 0)
+                                        backgroundColor.Tint = fillInfo.Fill.BackgroundColor.ThemeTint;
+
+                                    break;
+                            }
+
+                            patternFill.AppendChild(backgroundColor);
+                        }
+                    }
+                    else
+                    {
+                        // ClosedXML Background color to be populated into OpenXML fgColor
+                        if (fillInfo.Fill.BackgroundColorModified || ignoreMod)
+                        {
+                            var foregroundColor = new ForegroundColor();
+                            switch (fillInfo.Fill.BackgroundColor.ColorType)
+                            {
+                                case XLColorType.Color:
+                                    foregroundColor.Rgb = fillInfo.Fill.BackgroundColor.Color.ToHex();
+                                    break;
+
+                                case XLColorType.Indexed:
+                                    foregroundColor.Indexed = (UInt32)fillInfo.Fill.BackgroundColor.Indexed;
+                                    break;
+
+                                case XLColorType.Theme:
+                                    foregroundColor.Theme = (UInt32)fillInfo.Fill.BackgroundColor.ThemeColor;
+
+                                    if (fillInfo.Fill.BackgroundColor.ThemeTint != 0)
+                                        foregroundColor.Tint = fillInfo.Fill.BackgroundColor.ThemeTint;
+
+                                    break;
+                            }
+
+                            patternFill.AppendChild(foregroundColor);
+                        }
+                    }
+                    break;
+
+                default:
+
+                    if (fillInfo.Fill.PatternColorModified || ignoreMod)
+                    {
+                        var foregroundColor = new ForegroundColor();
+                        switch (fillInfo.Fill.PatternColor.ColorType)
+                        {
+                            case XLColorType.Color:
+                                foregroundColor.Rgb = fillInfo.Fill.PatternColor.Color.ToHex();
+                                break;
+
+                            case XLColorType.Indexed:
+                                foregroundColor.Indexed = (UInt32)fillInfo.Fill.PatternColor.Indexed;
+                                break;
+
+                            case XLColorType.Theme:
+                                foregroundColor.Theme = (UInt32)fillInfo.Fill.PatternColor.ThemeColor;
+
+                                if (fillInfo.Fill.PatternColor.ThemeTint != 0)
+                                    foregroundColor.Tint = fillInfo.Fill.PatternColor.ThemeTint;
+
+                                break;
+                        }
+
+                        patternFill.AppendChild(foregroundColor);
+                    }
+
+                    if (fillInfo.Fill.BackgroundColorModified || ignoreMod)
+                    {
+                        var backgroundColor = new BackgroundColor();
+                        switch (fillInfo.Fill.BackgroundColor.ColorType)
+                        {
+                            case XLColorType.Color:
+                                backgroundColor.Rgb = fillInfo.Fill.BackgroundColor.Color.ToHex();
+                                break;
+
+                            case XLColorType.Indexed:
+                                backgroundColor.Indexed = (UInt32)fillInfo.Fill.BackgroundColor.Indexed;
+                                break;
+
+                            case XLColorType.Theme:
+                                backgroundColor.Theme = (UInt32)fillInfo.Fill.BackgroundColor.ThemeColor;
+
+                                if (fillInfo.Fill.BackgroundColor.ThemeTint != 0)
+                                    backgroundColor.Tint = fillInfo.Fill.BackgroundColor.ThemeTint;
+
+                                break;
+                        }
+
+                        patternFill.AppendChild(backgroundColor);
+                    }
+                    break;
             }
 
             fill.AppendChild(patternFill);
@@ -3545,22 +3632,12 @@ namespace ClosedXML.Excel
             return fill;
         }
 
-        private bool FillsAreEqual(Fill f, IXLFill xlFill)
+        private bool FillsAreEqual(Fill f, IXLFill xlFill, Boolean fromDifferentialFormat)
         {
             var nF = new XLFill();
-            if (f.PatternFill != null)
-            {
-                if (f.PatternFill.PatternType != null)
-                    nF.PatternType = f.PatternFill.PatternType.Value.ToClosedXml();
 
-                var fColor = GetColor(f.PatternFill.ForegroundColor);
-                if (fColor.HasValue)
-                    nF.PatternColor = fColor;
+            LoadFill(f, nF, fromDifferentialFormat);
 
-                var bColor = GetColor(f.PatternFill.BackgroundColor);
-                if (bColor.HasValue)
-                    nF.PatternBackgroundColor = bColor;
-            }
             return nF.Equals(xlFill);
         }
 
@@ -4527,7 +4604,6 @@ namespace ClosedXML.Excel
                 }
             }
 
-
             var exlst = from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && c.Colors.Count > 1 && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c;
             if (exlst != null && exlst.Count() > 0)
             {
@@ -4579,7 +4655,6 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-
 
             #endregion Conditional Formatting
 
