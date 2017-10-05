@@ -1423,21 +1423,44 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void LoadFill(Fill fillSource, IXLFill fill)
+        // Differential fills store the patterns differently than other fills
+        // Actually differential fills make more sense. bg is bg and fg is fg
+        // 'Other' fills store the bg color in the fg field when pattern type is solid
+        private void LoadFill(Fill openXMLFill, IXLFill closedXMLFill, Boolean differentialFillFormat)
         {
-            if (fillSource == null) return;
+            if (openXMLFill == null || openXMLFill.PatternFill == null) return;
 
-            if (fillSource.PatternFill != null)
+            if (openXMLFill.PatternFill.PatternType != null)
+                closedXMLFill.PatternType = openXMLFill.PatternFill.PatternType.Value.ToClosedXml();
+            else
+                closedXMLFill.PatternType = XLFillPatternValues.Solid;
+
+            switch (closedXMLFill.PatternType)
             {
-                if (fillSource.PatternFill.PatternType != null)
-                    fill.PatternType = fillSource.PatternFill.PatternType.Value.ToClosedXml();
-                else
-                    fill.PatternType = XLFillPatternValues.Solid;
+                case XLFillPatternValues.None:
+                    break;
 
-                if (fillSource.PatternFill.ForegroundColor != null)
-                    fill.PatternColor = GetColor(fillSource.PatternFill.ForegroundColor);
-                if (fillSource.PatternFill.BackgroundColor != null)
-                    fill.PatternBackgroundColor = GetColor(fillSource.PatternFill.BackgroundColor);
+                case XLFillPatternValues.Solid:
+                    if (differentialFillFormat)
+                    {
+                        if (openXMLFill.PatternFill.BackgroundColor != null)
+                            closedXMLFill.BackgroundColor = GetColor(openXMLFill.PatternFill.BackgroundColor);
+                    }
+                    else
+                    {
+                        // yes, source is foreground!
+                        if (openXMLFill.PatternFill.ForegroundColor != null)
+                            closedXMLFill.BackgroundColor = GetColor(openXMLFill.PatternFill.ForegroundColor);
+                    }
+                    break;
+
+                default:
+                    if (openXMLFill.PatternFill.ForegroundColor != null)
+                        closedXMLFill.PatternColor = GetColor(openXMLFill.PatternFill.ForegroundColor);
+
+                    if (openXMLFill.PatternFill.BackgroundColor != null)
+                        closedXMLFill.BackgroundColor = GetColor(openXMLFill.PatternFill.BackgroundColor);
+                    break;
             }
         }
 
@@ -1854,7 +1877,7 @@ namespace ClosedXML.Excel
                     if (fr.FormatId != null)
                     {
                         LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
-                        LoadFill(differentialFormats[(Int32)fr.FormatId.Value].Fill, conditionalFormat.Style.Fill);
+                        LoadFill(differentialFormats[(Int32)fr.FormatId.Value].Fill, conditionalFormat.Style.Fill, differentialFillFormat: true);
                         LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
                         LoadNumberFormat(differentialFormats[(Int32)fr.FormatId.Value].NumberingFormat, conditionalFormat.Style.NumberFormat);
                     }
@@ -2291,15 +2314,7 @@ namespace ClosedXML.Excel
                 var fill = (Fill)fills.ElementAt((Int32)cellFormat.FillId.Value);
                 if (fill.PatternFill != null)
                 {
-                    if (fill.PatternFill.PatternType != null)
-                        xlStylized.InnerStyle.Fill.PatternType = fill.PatternFill.PatternType.Value.ToClosedXml();
-
-                    var fgColor = GetColor(fill.PatternFill.ForegroundColor);
-                    if (fgColor.HasValue) xlStylized.InnerStyle.Fill.PatternColor = fgColor;
-
-                    var bgColor = GetColor(fill.PatternFill.BackgroundColor);
-                    if (bgColor.HasValue)
-                        xlStylized.InnerStyle.Fill.PatternBackgroundColor = bgColor;
+                    LoadFill(fill, xlStylized.InnerStyle.Fill, differentialFillFormat: false);
                 }
             }
 

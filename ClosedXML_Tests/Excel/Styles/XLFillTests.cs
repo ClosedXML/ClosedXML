@@ -26,16 +26,16 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void BackgroundPatternEqualCheck()
         {
-            var fill1 = new XLFill {PatternBackgroundColor = XLColor.Blue};
-            var fill2 = new XLFill {PatternBackgroundColor = XLColor.Blue};
+            var fill1 = new XLFill {BackgroundColor = XLColor.Blue};
+            var fill2 = new XLFill {BackgroundColor = XLColor.Blue};
             Assert.IsTrue(fill1.Equals(fill2));
         }
 
         [Test]
         public void BackgroundPatternNotEqualCheck()
         {
-            var fill1 = new XLFill {PatternBackgroundColor = XLColor.Blue};
-            var fill2 = new XLFill {PatternBackgroundColor = XLColor.Red};
+            var fill1 = new XLFill {BackgroundColor = XLColor.Blue};
+            var fill2 = new XLFill {BackgroundColor = XLColor.Red};
             Assert.IsFalse(fill1.Equals(fill2));
         }
 
@@ -48,8 +48,8 @@ namespace ClosedXML_Tests.Excel
             var cf = worksheet.Cell(2, 2).AddConditionalFormat();
             var style = cf.WhenNotBlank();
             style
-                    .Border.SetOutsideBorder(XLBorderStyleValues.Thick)
-                    .Border.SetOutsideBorderColor(XLColor.Blue);
+                .Border.SetOutsideBorder(XLBorderStyleValues.Thick)
+                .Border.SetOutsideBorderColor(XLColor.Blue);
 
             Assert.AreEqual(style.Border.BottomBorder, XLBorderStyleValues.Thick);
             Assert.AreEqual(style.Border.TopBorder, XLBorderStyleValues.Thick);
