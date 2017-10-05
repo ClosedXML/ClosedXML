@@ -24,6 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ATANH", 1, Atanh);
             ce.RegisterFunction("CEILING", 1, Ceiling);
             ce.RegisterFunction("COMBIN", 2, Combin);
+            ce.RegisterFunction("COMBINA", 2, CombinA);
             ce.RegisterFunction("COS", 1, Cos);
             ce.RegisterFunction("COSH", 1, Cosh);
             ce.RegisterFunction("COT", 1, Cot);
@@ -419,6 +420,24 @@ namespace ClosedXML.Excel.CalcEngine
             Int32 n = (int)p[0];
             Int32 k = (int)p[1];
             return XLMath.Combin(n, k);
+        }
+
+        private static object CombinA(List<Expression> p)
+        {
+            Int32 number = (int)p[0]; // casting truncates towards 0 as specified
+            Int32 chosen = (int)p[1];
+
+            if (number < 0 || number < chosen)
+                throw new NumberException();
+            if (chosen < 0)
+                throw new NumberException();
+
+            int n = number + chosen - 1;
+            int k = number - 1;
+
+            return n == k || k == 0
+                ? 1
+                : (long)XLMath.Combin(n, k);
         }
 
         private static object Degrees(List<Expression> p)
