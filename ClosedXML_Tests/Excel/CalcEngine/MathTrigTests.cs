@@ -3,6 +3,7 @@ using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
@@ -11,6 +12,33 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     public class MathTrigTests
     {
         private readonly double tolerance = 1e-10;
+        
+        [TestCase(1, 0.642092616)]
+        [TestCase(2, -0.457657554)]
+        [TestCase(3, -7.015252551)]
+        [TestCase(4, 0.863691154)]
+        [TestCase(5, -0.295812916)]
+        [TestCase(6, -3.436353004)]
+        [TestCase(7, 1.147515422)]
+        [TestCase(8, -0.147065064)]
+        [TestCase(9, -2.210845411)]
+        [TestCase(10, 1.542351045)]
+        [TestCase(11, -0.004425741)]
+        [TestCase(Math.PI*0.5, 0)]
+        [TestCase(45, 0.617369624)]
+        [TestCase(-2, 0.457657554)]
+        [TestCase(-3, 7.015252551)]
+        public void Cot(double input, double expected)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"COT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expected, actual, tolerance * 10.0);
+        }
+
+        [Test]
+        public void Cot_Input0()
+        {
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("COT(0)"));
+        }
 
         [TestCase("FF", 16, 255)]
         [TestCase("111", 2, 7)]
