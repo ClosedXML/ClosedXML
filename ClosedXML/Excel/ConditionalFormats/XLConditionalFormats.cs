@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
                 var itemAddr = item.Range.RangeAddress;
                 var itemRowNum = itemAddr.FirstAddress.RowNumber;
 
-                bool IsSameFormat(IXLConditionalFormat f) => f != item && f.Range.Worksheet.Position == item.Range.Worksheet.Position &&
+                Func<IXLConditionalFormat, bool> IsSameFormat = f => f != item && f.Range.Worksheet.Position == item.Range.Worksheet.Position &&
                                                              XLConditionalFormat.NoRangeComparer.Equals(f, item);
 
                 var format = orderedFormats
