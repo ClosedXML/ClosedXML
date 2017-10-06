@@ -401,14 +401,7 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
-            if (Worksheets.Any(w => string.Equals(w.Name, XLWorksheets.TrimSheetName(name), StringComparison.OrdinalIgnoreCase)))
-            {
-                worksheet = Worksheet(name);
-                return true;
-            }
-
-            worksheet = null;
-            return false;
+            return Worksheets.TryGetWorksheet(name, out worksheet);
         }
 
         public IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws)
