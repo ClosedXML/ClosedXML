@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -25,6 +26,9 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COMBIN", 2, Combin);
             ce.RegisterFunction("COS", 1, Cos);
             ce.RegisterFunction("COSH", 1, Cosh);
+            ce.RegisterFunction("COT", 1, Cot);
+            ce.RegisterFunction("CSCH", 1, Csch);
+            ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
             ce.RegisterFunction("DEGREES", 1, Degrees);
             ce.RegisterFunction("EVEN", 1, Even);
             ce.RegisterFunction("EXP", 1, Exp);
@@ -115,6 +119,58 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Cosh(p[0]);
         }
 
+        private static object Cot(List<Expression> p)
+        {
+            var tan = (double)Math.Tan(p[0]);
+
+            if (tan == 0)
+                throw new DivisionByZeroException();
+
+            return 1 / tan;
+        }
+
+        private static object Csch(List<Expression> p)
+        {
+            if (Math.Abs((double)p[0].Evaluate()) < Double.Epsilon)
+                throw new DivisionByZeroException();
+
+            return 1 / Math.Sinh(p[0]);
+        }
+
+        private static object Decimal(List<Expression> p)
+        {
+            string source = p[0];
+            double radix = p[1];
+
+            if (radix < 2 || radix > 36)
+                throw new NumberException();
+
+            var asciiValues = Encoding.ASCII.GetBytes(source.ToUpperInvariant());
+
+            double result = 0;
+            int i = 0;
+
+            foreach (byte digit in asciiValues)
+            {
+                if (digit > 90)
+                {
+                    throw new NumberException();
+                }
+
+                int digitNumber = digit >= 48 && digit < 58
+                    ? digit - 48
+                    : digit - 55;
+
+                if (digitNumber > radix - 1)
+                    throw new NumberException();
+
+                result = result * radix + digitNumber;
+                i++;
+            }
+
+            return result;
+        }
+
         private static object Exp(List<Expression> p)
         {
             return Math.Exp(p[0]);
@@ -159,7 +215,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Int(List<Expression> p)
         {
-            return (int)((double)p[0]);
+            return Math.Floor(p[0]);
         }
 
         private static object Ln(List<Expression> p)
