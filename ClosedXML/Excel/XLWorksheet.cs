@@ -651,7 +651,8 @@ namespace ClosedXML.Excel
             }
 
             if (AutoFilter.Enabled)
-                targetSheet.Range(AutoFilter.Range.RangeAddress).SetAutoFilter();
+                using (var range = targetSheet.Range(AutoFilter.Range.RangeAddress.FirstAddress.RowNumber, AutoFilter.Range.RangeAddress.FirstAddress.ColumnNumber, AutoFilter.Range.RangeAddress.LastAddress.RowNumber, AutoFilter.Range.RangeAddress.LastAddress.ColumnNumber))
+                    range.SetAutoFilter();
 
             return targetSheet;
         }
