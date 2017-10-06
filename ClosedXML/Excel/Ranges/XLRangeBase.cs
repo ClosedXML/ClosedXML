@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Windows;
 
 namespace ClosedXML.Excel
 {
@@ -23,7 +22,7 @@ namespace ClosedXML.Excel
             if (Worksheet == null || !Worksheet.EventTrackingEnabled || handler == null) return;
 
             worksheetRangeShiftedRows = handler;
-            WeakEventManager<XLWorksheet, RangeShiftedEventArgs>.AddHandler(RangeAddress.Worksheet, nameof(XLWorksheet.RowsShifted), worksheetRangeShiftedRows);
+            Worksheet.RowsShifted += worksheetRangeShiftedRows;
             rowsShiftedSubscribed = true;
         }
 
@@ -32,7 +31,7 @@ namespace ClosedXML.Excel
             if (Worksheet == null || !Worksheet.EventTrackingEnabled || handler == null) return;
 
             worksheetRangeShiftedColumns = handler;
-            WeakEventManager<XLWorksheet, RangeShiftedEventArgs>.AddHandler(RangeAddress.Worksheet, nameof(XLWorksheet.ColumnsShifted), worksheetRangeShiftedColumns);
+            Worksheet.ColumnsShifted += worksheetRangeShiftedColumns;
             columnsShiftedSubscribed = true;
         }
 
@@ -2066,13 +2065,13 @@ namespace ClosedXML.Excel
 
             if (rowsShiftedSubscribed)
             {
-                WeakEventManager<XLWorksheet, RangeShiftedEventArgs>.RemoveHandler(RangeAddress.Worksheet, "RowsShifted", worksheetRangeShiftedRows);
+                Worksheet.RowsShifted -= worksheetRangeShiftedRows;
                 rowsShiftedSubscribed = false;
             }
 
             if (columnsShiftedSubscribed)
             {
-                WeakEventManager<XLWorksheet, RangeShiftedEventArgs>.RemoveHandler(RangeAddress.Worksheet, "ColumnsShifted", worksheetRangeShiftedColumns);
+                Worksheet.ColumnsShifted -= worksheetRangeShiftedColumns;
                 columnsShiftedSubscribed = false;
             }
         }

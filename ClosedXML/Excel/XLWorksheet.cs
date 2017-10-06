@@ -15,9 +15,31 @@ namespace ClosedXML.Excel
     {
         #region Events
 
-        public event EventHandler<RangeShiftedEventArgs> RowsShifted = delegate { };
+        private readonly WeakEvent.WeakEventSource<RangeShiftedEventArgs> rowsShiftedEventSource = new WeakEvent.WeakEventSource<RangeShiftedEventArgs>();
 
-        public event EventHandler<RangeShiftedEventArgs> ColumnsShifted = delegate { };
+        public event EventHandler<RangeShiftedEventArgs> RowsShifted
+        {
+            add { rowsShiftedEventSource.Subscribe(value); }
+            remove { rowsShiftedEventSource.Unsubscribe(value); }
+        }
+
+        public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
+        {
+            rowsShiftedEventSource.Raise(this, new RangeShiftedEventArgs(range, rowsShifted));
+        }
+
+        private readonly WeakEvent.WeakEventSource<RangeShiftedEventArgs> columnsShiftedEventSource = new WeakEvent.WeakEventSource<RangeShiftedEventArgs>();
+
+        public event EventHandler<RangeShiftedEventArgs> ColumnsShifted
+        {
+            add { columnsShiftedEventSource.Subscribe(value); }
+            remove { columnsShiftedEventSource.Unsubscribe(value); }
+        }
+
+        public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
+        {
+            columnsShiftedEventSource.Raise(this, new RangeShiftedEventArgs(range, columnsShifted));
+        }
 
         #endregion Events
 
@@ -1378,16 +1400,6 @@ namespace ClosedXML.Excel
                         newReference => newReference.Length > 0).ToList();
                 nr.RangeList = newRangeList;
             }
-        }
-
-        public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
-        {
-            RowsShifted?.Invoke(this, new RangeShiftedEventArgs(range, rowsShifted));
-        }
-
-        public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
-        {
-            ColumnsShifted?.Invoke(this, new RangeShiftedEventArgs(range, columnsShifted));
         }
 
         public XLRow Row(Int32 row, Boolean pingCells)

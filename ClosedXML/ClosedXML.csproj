@@ -101,6 +101,7 @@
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\OpenXmlPartContainerExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Patterns\WeakEvent\WeakEventSource.cs" />
     <Compile Include="Utils\GraphicsUtils.cs" />
     <Compile Include="Utils\OpenXmlHelper.cs" />
     <Compile Include="Utils\XmlEncoder.cs" />
@@ -363,6 +364,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Patterns\WeakEvent\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
