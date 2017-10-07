@@ -22,8 +22,7 @@ namespace WeakEvent
             {
                 var failedHandlers = _handlers
                     .ToArray()
-                    .Where(h => !h.Invoke(sender, e))
-                    .ToArray();
+                    .Where(h => !h.Invoke(sender, e));
 
                 foreach (var h in failedHandlers)
                     _handlers.Remove(h);
