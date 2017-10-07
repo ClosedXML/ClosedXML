@@ -1798,7 +1798,7 @@ namespace ClosedXML.Excel
             var formats = srcSheet.ConditionalFormats.Where(f => f.Range.Intersects(fromRange));
             foreach (var cf in formats.ToList())
             {
-                var fmtRange = Relative(cf.Range.Intersection(fromRange), fromRange, toRange);
+                var fmtRange = Relative(Intersection(cf.Range, fromRange), fromRange, toRange);
                 var c = new XLConditionalFormat((XLRange) fmtRange, true);
                 c.CopyFrom(cf);
                 foreach (var v in c.Values.ToList())
@@ -1814,6 +1814,19 @@ namespace ClosedXML.Excel
                 }
 
                 _worksheet.ConditionalFormats.Add(c);
+            }
+        }
+
+        private static IXLRangeBase Intersection(IXLRangeBase range, IXLRangeBase crop)
+        {
+            var sheet = range.Worksheet;
+            using (var xlRange = sheet.Range(
+                Math.Max(range.RangeAddress.FirstAddress.RowNumber, crop.RangeAddress.FirstAddress.RowNumber),
+                Math.Max(range.RangeAddress.FirstAddress.ColumnNumber, crop.RangeAddress.FirstAddress.ColumnNumber),
+                Math.Min(range.RangeAddress.LastAddress.RowNumber, crop.RangeAddress.LastAddress.RowNumber),
+                Math.Min(range.RangeAddress.LastAddress.ColumnNumber, crop.RangeAddress.LastAddress.ColumnNumber)))
+            {
+                return sheet.Range(xlRange.RangeAddress);
             }
         }
 
