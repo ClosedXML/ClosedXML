@@ -5032,6 +5032,11 @@ namespace ClosedXML.Excel
                     cellValue.Text = Double.Parse(xlCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                     openXmlCell.CellValue = cellValue;
                 }
+                else
+                {
+                    openXmlCell.DataType = dataType == XLCellValues.DateTime ? CvDate : CvNumber;
+                    openXmlCell.CellValue = null;
+                }
             }
             else
             {
