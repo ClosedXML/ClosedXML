@@ -36,7 +36,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        #endregion
+        #endregion IXLTableRow Members
 
         private XLTableRow RowShift(Int32 rowsToShift)
         {
@@ -65,7 +65,7 @@ namespace ClosedXML.Excel
             return RowShift(step * -1);
         }
 
-        #endregion
+        #endregion XLTableRow Above
 
         #region XLTableRow Below
 
@@ -89,9 +89,9 @@ namespace ClosedXML.Excel
             return RowShift(step);
         }
 
-        #endregion
+        #endregion XLTableRow Below
 
-        public new IXLTableRow Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public new IXLTableRow Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             base.Clear(clearOptions);
             return this;
@@ -101,6 +101,7 @@ namespace ClosedXML.Excel
         {
             return XLHelper.InsertRowsWithoutEvents(base.InsertRowsAbove, _tableRange, numberOfRows, !_tableRange.Table.ShowTotalsRow);
         }
+
         public new IXLTableRows InsertRowsBelow(int numberOfRows)
         {
             return XLHelper.InsertRowsWithoutEvents(base.InsertRowsBelow, _tableRange, numberOfRows, !_tableRange.Table.ShowTotalsRow);

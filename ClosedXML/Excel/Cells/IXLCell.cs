@@ -9,13 +9,6 @@ namespace ClosedXML.Excel
 
     public enum XLTableCellType { None, Header, Data, Total }
 
-    public enum XLClearOptions
-    {
-        ContentsAndFormats,
-        Contents,
-        Formats
-    }
-
     public interface IXLCell
     {
         /// <summary>
@@ -131,7 +124,7 @@ namespace ClosedXML.Excel
         /// Clears the contents of this cell.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        IXLCell Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        IXLCell Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         /// <summary>
         /// Deletes the current cell and shifts the surrounding cells according to the shiftDeleteCells parameter.

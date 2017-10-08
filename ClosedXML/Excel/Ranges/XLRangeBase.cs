@@ -322,34 +322,38 @@ namespace ClosedXML.Excel
             return asRange;
         }
 
-        public IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
-            var includeFormats = clearOptions == XLClearOptions.Formats ||
-                                 clearOptions == XLClearOptions.ContentsAndFormats;
+            var includeFormats = clearOptions.HasFlag(XLClearOptions.NormalFormats) ||
+                                 clearOptions.HasFlag(XLClearOptions.ConditionalFormats);
+
             foreach (var cell in CellsUsed(includeFormats))
             {
-                (cell as XLCell).Clear(clearOptions, true);
+                // We'll clear the conditional formatting later down.
+                (cell as XLCell).Clear(clearOptions & ~XLClearOptions.ConditionalFormats, true);
             }
 
             if (includeFormats)
             {
                 ClearMerged();
-                RemoveConditionalFormatting();
             }
 
-            if (clearOptions == XLClearOptions.ContentsAndFormats)
+            if (clearOptions.HasFlag(XLClearOptions.ConditionalFormats))
+                RemoveConditionalFormatting();
+
+            if (clearOptions == XLClearOptions.All)
             {
                 Worksheet.Internals.CellsCollection.RemoveAll(
                     RangeAddress.FirstAddress.RowNumber,
                     RangeAddress.FirstAddress.ColumnNumber,
                     RangeAddress.LastAddress.RowNumber,
                     RangeAddress.LastAddress.ColumnNumber
-                    );
+                );
             }
             return this;
         }
 
-        private void RemoveConditionalFormatting()
+        internal void RemoveConditionalFormatting()
         {
             var mf = RangeAddress.FirstAddress;
             var ml = RangeAddress.LastAddress;

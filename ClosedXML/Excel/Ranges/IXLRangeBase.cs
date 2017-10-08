@@ -230,7 +230,7 @@ namespace ClosedXML.Excel
         /// Clears the contents of this range.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         /// <summary>
         ///   Deletes the cell comments from this range.

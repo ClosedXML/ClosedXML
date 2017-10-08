@@ -350,7 +350,7 @@ namespace ClosedXML.Excel
 
         #endregion XLRangeRow Below
 
-        public new IXLRangeRow Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public new IXLRangeRow Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             base.Clear(clearOptions);
             return this;

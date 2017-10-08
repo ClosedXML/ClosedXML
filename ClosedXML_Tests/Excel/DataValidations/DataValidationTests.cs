@@ -213,7 +213,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
                 validation.WholeNumber.Between(0, 100);
 
                 //Act
-                ws.Cell("B2").Clear(XLClearOptions.ContentsAndFormats);
+                ws.Cell("B2").Clear(XLClearOptions.DataValidation);
 
                 //Assert
                 Assert.IsFalse(ws.Cell("B2").HasDataValidation);

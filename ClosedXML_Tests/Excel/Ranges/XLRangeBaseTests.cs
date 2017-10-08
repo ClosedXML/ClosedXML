@@ -304,7 +304,7 @@ namespace ClosedXML_Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
-            ws.Range("B2:E3").Clear(XLClearOptions.Formats);
+            ws.Range("B2:E3").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             Assert.AreEqual("C4:D7", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
@@ -315,7 +315,7 @@ namespace ClosedXML_Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
-            ws.Range("C3:D3").Clear(XLClearOptions.Formats);
+            ws.Range("C3:D3").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             Assert.AreEqual("C4:D7", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
@@ -326,7 +326,7 @@ namespace ClosedXML_Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
-            ws.Range("B7:E8").Clear(XLClearOptions.Formats);
+            ws.Range("B7:E8").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             Assert.AreEqual("C3:D6", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
@@ -337,7 +337,7 @@ namespace ClosedXML_Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
-            ws.Range("C7:D7").Clear(XLClearOptions.Formats);
+            ws.Range("C7:D7").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             Assert.AreEqual("C3:D6", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
@@ -348,7 +348,7 @@ namespace ClosedXML_Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
-            ws.Range("C5:E5").Clear(XLClearOptions.Formats);
+            ws.Range("C5:E5").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
             Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "C3:D4"));
@@ -360,7 +360,7 @@ namespace ClosedXML_Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:G4").AddConditionalFormat();
-            ws.Range("E2:E4").Clear(XLClearOptions.Formats);
+            ws.Range("E2:E4").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
             Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "C3:D4"));
@@ -372,7 +372,7 @@ namespace ClosedXML_Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:G4").AddConditionalFormat();
-            ws.Range("B2:G4").Clear(XLClearOptions.Formats);
+            ws.Range("B2:G4").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(0, ws.ConditionalFormats.Count());
         }
@@ -382,7 +382,7 @@ namespace ClosedXML_Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             ws.Range("C3:G4").AddConditionalFormat();
-            ws.Range("C2:D3").Clear(XLClearOptions.Formats);
+            ws.Range("C2:D3").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             Assert.AreEqual("C3:G4", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());

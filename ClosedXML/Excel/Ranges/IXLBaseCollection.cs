@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLBaseCollection<TSingle, TMultiple>: IEnumerable<TSingle>
-    { 
+    public interface IXLBaseCollection<TSingle, TMultiple> : IEnumerable<TSingle>
+    {
         Int32 Count { get; }
 
         IXLStyle Style { get; set; }
@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         IXLDataValidation SetDataValidation();
 
         /// <summary>
-        /// Creates a named range out of these ranges. 
+        /// Creates a named range out of these ranges.
         /// <para>If the named range exists, it will add these ranges to that named range.</para>
         /// <para>The default scope for the named range is Workbook.</para>
         /// </summary>
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
         TMultiple AddToNamed(String rangeName);
 
         /// <summary>
-        /// Creates a named range out of these ranges. 
+        /// Creates a named range out of these ranges.
         /// <para>If the named range exists, it will add these ranges to that named range.</para>
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
         TMultiple AddToNamed(String rangeName, XLScope scope);
 
         /// <summary>
-        /// Creates a named range out of these ranges. 
+        /// Creates a named range out of these ranges.
         /// <para>If the named range exists, it will add these ranges to that named range.</para>
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
@@ -72,6 +72,6 @@ namespace ClosedXML.Excel
         /// Clears the contents of these ranges.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        TMultiple Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        TMultiple Clear(XLClearOptions clearOptions = XLClearOptions.All);
     }
 }

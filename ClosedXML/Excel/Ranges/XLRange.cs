@@ -815,7 +815,7 @@ namespace ClosedXML.Excel
                    ^ Worksheet.GetHashCode();
         }
 
-        public new IXLRange Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public new IXLRange Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             base.Clear(clearOptions);
             return this;

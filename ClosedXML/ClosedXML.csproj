@@ -104,6 +104,7 @@
     <Compile Include="Excel\SaveOptions.cs" />
     <Compile Include="Excel\Style\XLPredefinedFormat.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
+    <Compile Include="Excel\XLClearOptions.cs" />
     <Compile Include="Excel\XLConstants.cs" />
     <Compile Include="Excel\IXLWorkbook.cs" />
     <Compile Include="Excel\XLWorkbook_ImageHandling.cs" />

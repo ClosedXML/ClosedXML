@@ -213,7 +213,7 @@ namespace ClosedXML.Excel
             return Worksheet.Rows(rowNum, rowNum + numberOfRows - 1);
         }
 
-        public new IXLRow Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public new IXLRow Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             base.Clear(clearOptions);
             return this;

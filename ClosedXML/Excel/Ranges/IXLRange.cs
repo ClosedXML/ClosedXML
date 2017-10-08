@@ -280,7 +280,7 @@ namespace ClosedXML.Excel
         /// Clears the contents of this range.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        new IXLRange Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        new IXLRange Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         IXLRangeRows RowsUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
 
