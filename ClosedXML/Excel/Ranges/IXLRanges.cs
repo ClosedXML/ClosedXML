@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRanges: IEnumerable<IXLRange>, IDisposable
+    public interface IXLRanges : IEnumerable<IXLRange>, IDisposable
     {
         /// <summary>
         /// Adds the specified range to this group.
@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
         IXLDataValidation SetDataValidation();
 
         /// <summary>
-        /// Creates a named range out of these ranges. 
+        /// Creates a named range out of these ranges.
         /// <para>If the named range exists, it will add these ranges to that named range.</para>
         /// <para>The default scope for the named range is Workbook.</para>
         /// </summary>
@@ -36,7 +36,7 @@ namespace ClosedXML.Excel
         IXLRanges AddToNamed(String rangeName);
 
         /// <summary>
-        /// Creates a named range out of these ranges. 
+        /// Creates a named range out of these ranges.
         /// <para>If the named range exists, it will add these ranges to that named range.</para>
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
         IXLRanges AddToNamed(String rangeName, XLScope scope);
 
         /// <summary>
-        /// Creates a named range out of these ranges. 
+        /// Creates a named range out of these ranges.
         /// <para>If the named range exists, it will add these ranges to that named range.</para>
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
@@ -88,7 +88,7 @@ namespace ClosedXML.Excel
         /// Clears the contents of these ranges.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         void Select();
     }

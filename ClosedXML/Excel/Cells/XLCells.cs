@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -10,6 +9,7 @@ namespace ClosedXML.Excel
     internal class XLCells : IXLCells, IXLStylized, IEnumerable<XLCell>
     {
         public Boolean StyleChanged { get; set; }
+
         #region Fields
 
         private readonly bool _includeFormats;
@@ -17,7 +17,8 @@ namespace ClosedXML.Excel
         private readonly bool _usedCellsOnly;
         private IXLStyle _style;
         private readonly Func<IXLCell, Boolean> _predicate;
-        #endregion
+
+        #endregion Fields
 
         #region Constructor
 
@@ -29,7 +30,7 @@ namespace ClosedXML.Excel
             _predicate = predicate;
         }
 
-        #endregion
+        #endregion Constructor
 
         #region IEnumerable<XLCell> Members
 
@@ -65,7 +66,7 @@ namespace ClosedXML.Excel
                                         && (_predicate == null || _predicate(c))
                             );
 
-                        foreach(var cell in cellRange)
+                        foreach (var cell in cellRange)
                         {
                             yield return cell;
                         }
@@ -89,12 +90,12 @@ namespace ClosedXML.Excel
                 else
                 {
                     var mm = new MinMax
-                                 {
-                                     MinRow = range.FirstAddress.RowNumber,
-                                     MaxRow = range.LastAddress.RowNumber,
-                                     MinColumn = range.FirstAddress.ColumnNumber,
-                                     MaxColumn = range.LastAddress.ColumnNumber
-                                 };
+                    {
+                        MinRow = range.FirstAddress.RowNumber,
+                        MaxRow = range.LastAddress.RowNumber,
+                        MinColumn = range.FirstAddress.ColumnNumber,
+                        MaxColumn = range.LastAddress.ColumnNumber
+                    };
                     if (mm.MaxRow > 0 && mm.MaxColumn > 0)
                     {
                         for (Int32 ro = mm.MinRow; ro <= mm.MaxRow; ro++)
@@ -154,7 +155,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion IEnumerable<XLCell> Members
 
         #region IXLCells Members
 
@@ -195,14 +196,14 @@ namespace ClosedXML.Excel
             set { this.ForEach<XLCell>(c => c.DataType = value); }
         }
 
-
-        public IXLCells Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLCells Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             this.ForEach<XLCell>(c => c.Clear(clearOptions));
             return this;
         }
 
-        public void DeleteComments() {
+        public void DeleteComments()
+        {
             this.ForEach<XLCell>(c => c.DeleteComment());
         }
 
@@ -216,7 +217,7 @@ namespace ClosedXML.Excel
             set { this.ForEach<XLCell>(c => c.FormulaR1C1 = value); }
         }
 
-        #endregion
+        #endregion IXLCells Members
 
         #region IXLStylized Members
 
@@ -250,7 +251,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         public void Add(XLRangeAddress rangeAddress)
         {
@@ -274,7 +275,7 @@ namespace ClosedXML.Excel
             public Int32 MinRow;
         }
 
-        #endregion
+        #endregion Nested type: MinMax
 
         public void Select()
         {

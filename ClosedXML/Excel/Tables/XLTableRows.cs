@@ -10,7 +10,6 @@ namespace ClosedXML.Excel
         public Boolean StyleChanged { get; set; }
         private readonly List<XLTableRow> _ranges = new List<XLTableRow>();
         private IXLStyle _style;
-        
 
         public XLTableRows(IXLStyle defaultStyle)
         {
@@ -57,11 +56,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         #region IXLTableRows Members
 
-        public IXLTableRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLTableRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             _ranges.ForEach(r => r.Clear(clearOptions));
             return this;
@@ -118,7 +117,7 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        #endregion
+        #endregion IXLTableRows Members
 
         public void Select()
         {

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRangeColumns: IEnumerable<IXLRangeColumn>, IDisposable
+    public interface IXLRangeColumns : IEnumerable<IXLRangeColumn>, IDisposable
     {
-
         /// <summary>
         /// Adds a column range to this group.
         /// </summary>
@@ -16,7 +15,7 @@ namespace ClosedXML.Excel
         /// Returns the collection of cells.
         /// </summary>
         IXLCells Cells();
-        
+
         /// <summary>
         /// Returns the collection of cells that have a value.
         /// </summary>
@@ -41,7 +40,7 @@ namespace ClosedXML.Excel
         /// Clears the contents of these columns.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         void Select();
     }

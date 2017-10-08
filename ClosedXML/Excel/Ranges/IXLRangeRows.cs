@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
         /// Returns the collection of cells.
         /// </summary>
         IXLCells Cells();
-        
+
         /// <summary>
         /// Returns the collection of cells that have a value.
         /// </summary>
@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
         /// Clears the contents of these rows.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         void Select();
     }

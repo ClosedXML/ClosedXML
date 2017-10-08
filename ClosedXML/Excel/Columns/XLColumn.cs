@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
-
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -16,7 +15,7 @@ namespace ClosedXML.Excel
 
         private Double _width;
 
-        #endregion
+        #endregion Private fields
 
         #region Constructor
 
@@ -54,7 +53,7 @@ namespace ClosedXML.Excel
             SetStyle(column.GetStyleId());
         }
 
-        #endregion
+        #endregion Constructor
 
         public Boolean IsReference { get; private set; }
 
@@ -139,7 +138,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public new IXLColumn Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public new IXLColumn Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             base.Clear(clearOptions);
             return this;
@@ -327,7 +326,7 @@ namespace ClosedXML.Excel
                         foreach (IXLRichString rt in c.RichText)
                         {
                             String formattedString = rt.Text;
-                            var arr = formattedString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+                            var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                             Int32 arrCount = arr.Count();
                             for (Int32 i = 0; i < arrCount; i++)
                             {
@@ -341,7 +340,7 @@ namespace ClosedXML.Excel
                     else
                     {
                         String formattedString = c.GetFormattedString();
-                        var arr = formattedString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+                        var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                         Int32 arrCount = arr.Count();
                         for (Int32 i = 0; i < arrCount; i++)
                         {
@@ -352,7 +351,7 @@ namespace ClosedXML.Excel
                         }
                     }
 
-                    #endregion
+                    #endregion if (c.HasRichText)
 
                     #region foreach (var kp in kpList)
 
@@ -385,7 +384,7 @@ namespace ClosedXML.Excel
                             else
                                 runningWidth += f.GetWidth(formattedString, fontCache);
 
-                            #endregion
+                            #endregion if (newLinePosition >= 0)
                         }
                         else
                         {
@@ -424,11 +423,11 @@ namespace ClosedXML.Excel
                                     runningWidth += f.GetWidth(formattedString, fontCache);
                             }
 
-                            #endregion
+                            #endregion if (textRotation == 255)
                         }
                     }
 
-                    #endregion
+                    #endregion foreach (var kp in kpList)
 
                     if (runningWidth > thisWidthMax)
                         thisWidthMax = runningWidth;
@@ -448,14 +447,13 @@ namespace ClosedXML.Excel
                         thisWidthMax = (thisWidthMax * Math.Cos(r)) + (maxLineWidth * lineCount);
                     }
 
-                    #endregion
+                    #endregion if (rotated)
                 }
                 else
                     thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString(), fontCache);
 
                 if (autoFilterRows.Contains(c.Address.RowNumber))
                     thisWidthMax += 2.7148; // Allow room for arrow icon in autofilter
-
 
                 if (thisWidthMax >= maxWidth)
                 {
@@ -478,7 +476,6 @@ namespace ClosedXML.Excel
             }
             return this;
         }
-
 
         public IXLColumn Hide()
         {
@@ -590,19 +587,18 @@ namespace ClosedXML.Excel
             return this;
         }
 
-
         IXLRangeColumn IXLColumn.CopyTo(IXLCell target)
         {
             using (var asRange = AsRange())
-                using (var copy = asRange.CopyTo(target))
-                    return copy.Column(1);
+            using (var copy = asRange.CopyTo(target))
+                return copy.Column(1);
         }
 
         IXLRangeColumn IXLColumn.CopyTo(IXLRangeBase target)
         {
             using (var asRange = AsRange())
-                using (var copy = asRange.CopyTo(target))
-                    return copy.Column(1);
+            using (var copy = asRange.CopyTo(target))
+                return copy.Column(1);
         }
 
         public IXLColumn CopyTo(IXLColumn column)
@@ -658,7 +654,7 @@ namespace ClosedXML.Excel
             return Column(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
         }
 
-        #endregion
+        #endregion IXLColumn Members
 
         public override XLRange AsRange()
         {
@@ -720,7 +716,6 @@ namespace ClosedXML.Excel
             return Math.PI * angle / 180.0;
         }
 
-
         private XLColumn ColumnShift(Int32 columnsToShift)
         {
             return Worksheet.Column(ColumnNumber() + columnsToShift);
@@ -748,7 +743,7 @@ namespace ClosedXML.Excel
             return ColumnShift(step * -1);
         }
 
-        #endregion
+        #endregion XLColumn Left
 
         #region XLColumn Right
 
@@ -772,7 +767,7 @@ namespace ClosedXML.Excel
             return ColumnShift(step);
         }
 
-        #endregion
+        #endregion XLColumn Right
 
         public override Boolean IsEmpty()
         {

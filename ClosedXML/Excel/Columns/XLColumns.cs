@@ -213,7 +213,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        #endregion
+        #endregion IXLColumns Members
 
         #region IXLStylized Members
 
@@ -254,7 +254,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         public void Add(XLColumn column)
         {
@@ -266,9 +266,9 @@ namespace ClosedXML.Excel
             _columns.ForEach(c => c.Collapsed = true);
         }
 
-        public IXLColumns Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLColumns Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
-            _columns.ForEach(c=>c.Clear(clearOptions));
+            _columns.ForEach(c => c.Clear(clearOptions));
             return this;
         }
 
