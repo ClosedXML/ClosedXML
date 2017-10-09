@@ -5034,7 +5034,6 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    openXmlCell.DataType = dataType == XLCellValues.DateTime ? CvDate : CvNumber;
                     openXmlCell.CellValue = null;
                 }
             }
