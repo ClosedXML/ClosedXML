@@ -12,6 +12,46 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     {
         private readonly double tolerance = 1e-10;
 
+        [TestCase(4, 3, 20)]
+        [TestCase(10, 3, 220)]
+        [TestCase(0, 0, 1)]
+        public void Combina_CalculatesCorrectValues(int number, int chosen, int expectedResult)
+        {
+            var actualResult = XLWorkbook.EvaluateExpr($"COMBINA({number}, {chosen})");
+            Assert.AreEqual(expectedResult, (long)actualResult);
+        }
+
+        [Theory]
+        public void Combina_Returns1WhenChosenIs0([Range(0, 10)]int number)
+        {
+            Combina_CalculatesCorrectValues(number, 0, 1);
+        }
+
+        [TestCase(4.23, 3, 20)]
+        [TestCase(10.4, 3.14, 220)]
+        [TestCase(0, 0.4, 1)]
+        public void Combina_TruncatesNumbersCorrectly(double number, double chosen, int expectedResult)
+        {
+            var actualResult = XLWorkbook.EvaluateExpr(string.Format(
+                @"COMBINA({0}, {1})",
+                number.ToString(CultureInfo.InvariantCulture),
+                chosen.ToString(CultureInfo.InvariantCulture)));
+
+            Assert.AreEqual(expectedResult, (long)actualResult);
+        }
+
+        [TestCase(-1, 2)]
+        [TestCase(-3, -2)]
+        [TestCase(2, -2)]
+        public void Combina_ThrowsNumExceptionOnInvalidValues(int number, int chosen)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"COMBINA({0}, {1})",
+                    number.ToString(CultureInfo.InvariantCulture),
+                    chosen.ToString(CultureInfo.InvariantCulture))));
+        }
+
         [TestCase(1, 0.642092616)]
         [TestCase(2, -0.457657554)]
         [TestCase(3, -7.015252551)]
