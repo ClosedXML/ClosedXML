@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
@@ -12,7 +11,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     public class MathTrigTests
     {
         private readonly double tolerance = 1e-10;
-        
+
         [TestCase(1, 0.642092616)]
         [TestCase(2, -0.457657554)]
         [TestCase(3, -7.015252551)]
@@ -24,7 +23,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(9, -2.210845411)]
         [TestCase(10, 1.542351045)]
         [TestCase(11, -0.004425741)]
-        [TestCase(Math.PI*0.5, 0)]
+        [TestCase(Math.PI * 0.5, 0)]
         [TestCase(45, 0.617369624)]
         [TestCase(-2, 0.457657554)]
         [TestCase(-3, 7.015252551)]
@@ -216,6 +215,15 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void Csch_ReturnsDivisionByZeroErrorOnInput0()
         {
             Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("CSCH(0)"));
+        }
+
+        [TestCase(8.9, 8)]
+        [TestCase(-8.9, -9)]
+        public void Int(double input, double expected)
+        {
+            var actual = XLWorkbook.EvaluateExpr(string.Format(@"INT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expected, actual);
+
         }
     }
 }

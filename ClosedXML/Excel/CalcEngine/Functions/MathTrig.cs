@@ -215,7 +215,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Int(List<Expression> p)
         {
-            return (int)((double)p[0]);
+            return Math.Floor(p[0]);
         }
 
         private static object Ln(List<Expression> p)
