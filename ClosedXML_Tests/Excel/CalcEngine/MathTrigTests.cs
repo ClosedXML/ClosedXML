@@ -41,10 +41,15 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [TestCase(-1, 2)]
-        [TestCase(0, 0)]
+        [TestCase(-3, -2)]
+        [TestCase(2, -2)]
         public void Combina_ThrowsNumExceptionOnInvalidValues(int number, int chosen)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"COMBINA({number}, {chosen})"));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"COMBINA({0}, {1})",
+                    number.ToString(CultureInfo.InvariantCulture),
+                    chosen.ToString(CultureInfo.InvariantCulture))));
         }
 
         [TestCase(1, 0.642092616)]
