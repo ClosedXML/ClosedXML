@@ -248,6 +248,71 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 () => XLWorkbook.EvaluateExpr(@"MULTINOMIAL(x)"));
         }
 
+        [TestCase(   0, 1)]
+        [TestCase( 0.3, 1.0467516)]
+        [TestCase( 0.6, 1.21162831)]
+        [TestCase( 0.9, 1.60872581)]
+        [TestCase( 1.2, 2.759703601)]
+        [TestCase( 1.5, 14.1368329)]
+        [TestCase( 1.8, -4.401367872)]
+        [TestCase( 2.1, -1.980801656)]
+        [TestCase( 2.4, -1.356127641)]
+        [TestCase( 2.7, -1.10610642)]
+        [TestCase( 3.0, -1.010108666)]
+        [TestCase( 3.3, -1.012678974)]
+        [TestCase( 3.6, -1.115127532)]
+        [TestCase( 3.9, -1.377538917)]
+        [TestCase( 4.2, -2.039730601)]
+        [TestCase( 4.5, -4.743927548)]
+        [TestCase( 4.8, 11.42870421)]
+        [TestCase( 5.1, 2.645658426)]
+        [TestCase( 5.4, 1.575565187)]
+        [TestCase( 5.7, 1.198016873)]
+        [TestCase( 6.0, 1.041481927)]
+        [TestCase( 6.3, 1.000141384)]
+        [TestCase( 6.6, 1.052373922)]
+        [TestCase( 6.9, 1.225903187)]
+        [TestCase( 7.2, 1.643787029)]
+        [TestCase( 7.5, 2.884876262)]
+        [TestCase( 7.8, 18.53381902)]
+        [TestCase( 8.1, -4.106031636)]
+        [TestCase( 8.4, -1.925711244)]
+        [TestCase( 8.7, -1.335743646)]
+        [TestCase( 9.0, -1.097537906)]
+        [TestCase( 9.3, -1.007835594)]
+        [TestCase( 9.6, -1.015550252)]
+        [TestCase( 9.9, -1.124617578)]
+        [TestCase(10.2, -1.400039323)]
+        [TestCase(10.5, -2.102886109)]
+        [TestCase(10.8, -5.145888341)]
+        [TestCase(11.1, 9.593612018)]
+        [TestCase(11.4, 2.541355049)]
+        [TestCase(45, 1.90359)]
+        [TestCase(30, 6.48292)]
+        public void Sec_ReturnsCorrectNumber(double input, double expectedOutput)
+        {
+            double result = (double)XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"SEC({0})",
+                    input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedOutput, result, 0.00001);
+
+            // as the secant is symmetric for positive and negative numbers, let's assert twice:
+            double resultForNegative = (double)XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"SEC({0})",
+                    (-input).ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedOutput, resultForNegative, 0.00001);
+        }
+
+        [Test]
+        public void Sec_ThrowsCellValueExceptionOnNonNumericValue()
+        {
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"SEC(number)")));
+        }
+
         [Test]
         public void SumProduct()
         {

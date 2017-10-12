@@ -60,6 +60,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ROUND", 2, Round);
             ce.RegisterFunction("ROUNDDOWN", 2, RoundDown);
             ce.RegisterFunction("ROUNDUP", 1, 2, RoundUp);
+            ce.RegisterFunction("SEC", 1, Sec);
             ce.RegisterFunction("SERIESSUM", 4, SeriesSum);
             ce.RegisterFunction("SIGN", 1, Sign);
             ce.RegisterFunction("SIN", 1, Sin);
@@ -643,6 +644,14 @@ namespace ClosedXML.Excel.CalcEngine
                 return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
 
             return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+        }
+
+        private static object Sec(List<Expression> p)
+        {
+            if (double.TryParse(p[0], out double number))
+                return 1.0 / Math.Cos(number);
+            else
+                throw new CellValueException();
         }
 
         private static object SeriesSum(List<Expression> p)
