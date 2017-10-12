@@ -177,6 +177,77 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(0.7, actual, tolerance);
         }
 
+        [Theory]
+        public void Multinomial_AnySingleValue_ReturnsOne([Range(0, 10, 0.1)] double number)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(
+                @"MULTINOMIAL({0})",
+                number.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(1, actual);
+        }
+
+        [TestCase(1, 2, 3)]
+        [TestCase(2, 3, 10)]
+        [TestCase(3, 4, 35)]
+        [TestCase(4, 5, 126)]
+        [TestCase(5, 6, 462)]
+        [TestCase(6, 7, 1716)]
+        [TestCase(7, 8, 6435)]
+        [TestCase(8, 9, 24310)]
+        [TestCase(9, 10, 92378)]
+        [TestCase(10, 11, 352716)]
+        [TestCase(11, 12, 1352078)]
+        [TestCase(12, 13, 5200300)]
+        [TestCase(13, 14, 20058300)]
+        [TestCase(14, 15, 77558760)]
+        [TestCase(15, 16, 300540195)]
+        public void Multinomial_TwoValuesReturnCorrectValue(long first, long second, long expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(
+                @"MULTINOMIAL({0}, {1})",
+                first.ToString(CultureInfo.InvariantCulture),
+                second.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, Math.Pow(10, -5));
+        }
+
+        [TestCase(1, 1)]
+        [TestCase(2, 3)]
+        [TestCase(3, 60)]
+        [TestCase(4, 12600)]
+        [TestCase(5, 37837800)]
+        [TestCase(6, 2053230379200)]
+        public void Multinomial_Values1ToNReturnCorrectValue(int last, long expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(
+                @"MULTINOMIAL({0})",
+                string.Join(
+                    ", ",
+                    Enumerable.Range(1, last)
+                        .Select(i => i.ToString(CultureInfo.InvariantCulture)))));
+
+            Assert.AreEqual(expectedResult, actual, 0.01);
+        }
+
+        [Theory]
+        public void Multinomial_AnyNegativeValueThrowsNumberException([Range(-10, -1)] int x)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"MULTINOMIAL({0})",
+                    string.Join(
+                        ", ",
+                        Enumerable.Range(x, 2)
+                            .Reverse()
+                            .Select(i => i.ToString(CultureInfo.InvariantCulture))))));
+        }
+
+        [Test]
+        public void Multinomial_NonNumericValueThrowsNameNotRecognizedException()
+        {
+            Assert.Throws<NameNotRecognizedException>(
+                () => XLWorkbook.EvaluateExpr(@"MULTINOMIAL(x)"));
+        }
+
         [Test]
         public void SumProduct()
         {

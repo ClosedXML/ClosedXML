@@ -494,14 +494,37 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Multinomial(List<Expression> p)
         {
-            return Multinomial(p.Select(v => (double)v).ToList());
+            var parsedParameters = p
+                .Select(v =>
+                    {
+                        bool isDouble = double.TryParse(
+                            (string)v,
+                            out double parsedValue);
+                        return new Tuple<bool, double>(isDouble, parsedValue);
+                    })
+                .ToList();
+
+            if (parsedParameters.Any(x => !x.Item1))
+            {
+                throw new NameNotRecognizedException();
+            }
+
+            return Multinomial(
+                parsedParameters
+                    .Select(x => x.Item2)
+                    .ToList());
         }
 
         private static double Multinomial(List<double> numbers)
         {
             double numbersSum = 0;
             foreach (var number in numbers)
+            {
+                if (number < 0)
+                    throw new NumberException();
+
                 numbersSum += number;
+            }
 
             double maxNumber = numbers.Max();
             var denomFactorPowers = new double[(uint)numbers.Max() + 1];
