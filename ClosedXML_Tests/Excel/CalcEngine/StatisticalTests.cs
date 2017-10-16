@@ -91,6 +91,21 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(24, value);
         }
 
+        [TestCase(@"=COUNTIF(Data!E:E, ""J*"")", 12)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*i*"")", 21)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*in*"")", 9)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*i*l"")", 9)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*i?e*"")", 9)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*o??s*"")", 10)]
+        [TestCase(@"=COUNTIF(Data!E:E, """")", 0)]
+        public void CountIf_ConditionWithWildcards(string formula, int expectedResult)
+        {
+            var ws = workbook.Worksheets.First();
+
+            int value = ws.Evaluate(formula).CastTo<int>();
+            Assert.AreEqual(expectedResult, value);
+        }
+
         [OneTimeTearDown]
         public void Dispose()
         {
