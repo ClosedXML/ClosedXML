@@ -91,19 +91,47 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(24, value);
         }
 
-        [TestCase(@"=COUNTIF(Data!E:E, ""J*"")", 12)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""J*"")", 13)]
         [TestCase(@"=COUNTIF(Data!E:E, ""*i*"")", 21)]
         [TestCase(@"=COUNTIF(Data!E:E, ""*in*"")", 9)]
         [TestCase(@"=COUNTIF(Data!E:E, ""*i*l"")", 9)]
         [TestCase(@"=COUNTIF(Data!E:E, ""*i?e*"")", 9)]
         [TestCase(@"=COUNTIF(Data!E:E, ""*o??s*"")", 10)]
-        [TestCase(@"=COUNTIF(Data!E:E, """")", 0)]
+        [TestCase(@"=COUNTIF(Data!X1:X1000, """")", 1000)]
+        [TestCase(@"=COUNTIF(Data!E1:E44, """")", 1)]
         public void CountIf_ConditionWithWildcards(string formula, int expectedResult)
         {
             var ws = workbook.Worksheets.First();
 
             int value = ws.Evaluate(formula).CastTo<int>();
             Assert.AreEqual(expectedResult, value);
+        }
+
+        [TestCase("x", @"=COUNTIF(A1:A1, ""?"")", 1)]
+        [TestCase("x", @"=COUNTIF(A1:A1, ""~?"")", 0)]
+        [TestCase("?", @"=COUNTIF(A1:A1, ""~?"")", 1)]
+        [TestCase("~?", @"=COUNTIF(A1:A1, ""~?"")", 0)] 
+        [TestCase("~?", @"=COUNTIF(A1:A1, ""~~~?"")", 1)] 
+        [TestCase("?", @"=COUNTIF(A1:A1, ""~~?"")", 0)]
+        [TestCase("~?", @"=COUNTIF(A1:A1, ""~~?"")", 1)]
+        [TestCase("~x", @"=COUNTIF(A1:A1, ""~~?"")", 1)]
+        [TestCase("*", @"=COUNTIF(A1:A1, ""~*"")", 1)]
+        [TestCase("~*", @"=COUNTIF(A1:A1, ""~*"")", 0)]
+        [TestCase("~*", @"=COUNTIF(A1:A1, ""~~~*"")", 1)]
+        [TestCase("*", @"=COUNTIF(A1:A1, ""~~*"")", 0)]
+        [TestCase("~*", @"=COUNTIF(A1:A1, ""~~*"")", 1)]
+        [TestCase("~x", @"=COUNTIF(A1:A1, ""~~*"")", 1)]
+        [TestCase("~xyz", @"=COUNTIF(A1:A1, ""~~*"")", 1)]
+        public void CountIf_MoreWildcards(string cellContent, string formula, int expectedResult)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.Cell(1, 1).Value = cellContent;
+
+                Assert.AreEqual(expectedResult, (double)ws.Evaluate(formula));
+            }
         }
 
         [OneTimeTearDown]
