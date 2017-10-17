@@ -353,7 +353,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         /// <param name="formula"></param>
         [TestCase( 2000, "SUMIF(A2:A7,\"Fruits\", C2:C7)")]
         [TestCase(12000, "SUMIF(A2:A7,\"Vegetables\", C2:C7)")]
-        [TestCase( 4300, "SUMIF(A2:A7, \"*es\", C2:C7)")]
+        [TestCase( 4300, "SUMIF(B2:B7, \"*es\", C2:C7)")]
         [TestCase(  400, "SUMIF(A2:A7, \"\", C2:C7)")]
         public void SumIf_ReturnsCorrectValues_ReferenceExample2FromMicrosoft(int expectedOutcome, string formula)
         {
