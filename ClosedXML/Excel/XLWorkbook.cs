@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
         Simple = 1,
     }
 
-    public partial class XLWorkbook: IDisposable
+    public partial class XLWorkbook: IXLWorkbook, IDisposable
     {
         #region Static
 
