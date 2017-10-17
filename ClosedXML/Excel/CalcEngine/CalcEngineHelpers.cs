@@ -64,6 +64,7 @@ namespace ClosedXML.Excel.CalcEngine
                     var patternReplacements = new Dictionary<string, Tuple<string, string>>();
                     // key: the literal string to match
                     // value: a tuple: first item: the search pattern, second item: the replacement
+                    patternReplacements.Add(@"~~", new Tuple<string, string>(@"~~", "~"));
                     patternReplacements.Add(@"~*", new Tuple<string, string>(@"~\*", @"\*"));
                     patternReplacements.Add(@"~?", new Tuple<string, string>(@"~\?", @"\?"));
                     patternReplacements.Add(@"?", new Tuple<string, string>(@"\?", ".?"));
@@ -76,6 +77,7 @@ namespace ClosedXML.Excel.CalcEngine
                                 patternReplacements.Values.Select(t => t.Item1))
                         + ")",
                         m => patternReplacements[m.Value].Item2);
+                    pattern = $"^{pattern}$";
 
                     return Regex.IsMatch(value.ToString(), pattern, RegexOptions.IgnoreCase);
                 }
