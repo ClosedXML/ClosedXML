@@ -217,6 +217,82 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(0.7, actual, tolerance);
         }
 
+        /// <summary>
+        /// refers to Example 1 from the Excel documentation,
+        /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&rs=en-US&ad=US"/>
+        /// </summary>
+        /// <param name="expectedOutcome"></param>
+        /// <param name="formula"></param>
+        [TestCase(63000, "SUMIF(A1:A4,\">160000\", B1:B4)")]
+        [TestCase(900000, "SUMIF(A1:A4,\">160000\")")]
+        [TestCase(21000, "SUMIF(A1:A4, 300000, B1:B4)")]
+        [TestCase(28000, "SUMIF(A1:A4, \">\" &C1, B1:B4)")]
+        public void SumIf_ReturnsCorrectValues_ReferenceExample1FromMicrosoft(int expectedOutcome, string formula)
+        {
+            using(var wb = new XLWorkbook())
+            {
+                wb.ReferenceStyle = XLReferenceStyle.A1;
+
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell(1, 1).Value = 100000;
+                ws.Cell(1, 2).Value = 7000;
+                ws.Cell(2, 1).Value = 200000;
+                ws.Cell(2, 2).Value = 14000;
+                ws.Cell(3, 1).Value = 300000;
+                ws.Cell(3, 2).Value = 21000;
+                ws.Cell(4, 1).Value = 400000;
+                ws.Cell(4, 2).Value = 28000;
+
+                ws.Cell(1, 3).Value = 300000;
+
+                Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
+            }
+        }
+
+        /// <summary>
+        /// refers to Example 2 from the Excel documentation,
+        /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&rs=en-US&ad=US"/>
+        /// </summary>
+        /// <param name="expectedOutcome"></param>
+        /// <param name="formula"></param>
+        [TestCase( 2000, "SUMIF(A2:A7,\"Fruits\", C2:C7)")]
+        [TestCase(12000, "SUMIF(A2:A7,\"Vegetables\", C2:C7)")]
+        [TestCase( 4300, "SUMIF(B2:B7, \"*es\", C2:C7)")]
+        [TestCase(  400, "SUMIF(A2:A7, \"\", C2:C7)")]
+        public void SumIf_ReturnsCorrectValues_ReferenceExample2FromMicrosoft(int expectedOutcome, string formula)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                wb.ReferenceStyle = XLReferenceStyle.A1;
+
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell(2, 1).Value = "Vegetables";
+                ws.Cell(3, 1).Value = "Vegetables";
+                ws.Cell(4, 1).Value = "Fruits";
+                ws.Cell(5, 1).Value = "";
+                ws.Cell(6, 1).Value = "Vegetables";
+                ws.Cell(7, 1).Value = "Fruits";
+
+                ws.Cell(2, 2).Value = "Tomatoes";
+                ws.Cell(3, 2).Value = "Celery";
+                ws.Cell(4, 2).Value = "Oranges";
+                ws.Cell(5, 2).Value = "Butter";
+                ws.Cell(6, 2).Value = "Carrots";
+                ws.Cell(7, 2).Value = "Apples";
+
+                ws.Cell(2, 3).Value = 2300;
+                ws.Cell(3, 3).Value = 5500;
+                ws.Cell(4, 3).Value = 800;
+                ws.Cell(5, 3).Value = 400;
+                ws.Cell(6, 3).Value = 4200;
+                ws.Cell(7, 3).Value = 1200;
+
+                ws.Cell(1, 3).Value = 300000;
+
+                Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
+            }
+        }
+
         [Test]
         public void SumProduct()
         {
