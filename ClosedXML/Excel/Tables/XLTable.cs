@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 
@@ -752,6 +754,78 @@ namespace ClosedXML.Excel
             var columns = base.ColumnsUsed(predicate);
             columns.Cast<XLRangeColumn>().ForEach(column => column.Table = this);
             return columns;
+        }
+
+        public IEnumerable<dynamic> AsDynamicEnumerable()
+        {
+            foreach (var row in this.DataRange.Rows())
+            {
+                dynamic expando = new ExpandoObject();
+                foreach (var f in this.Fields)
+                {
+                    var value = row.Cell(f.Index + 1).Value;
+                    // ExpandoObject supports IDictionary so we can extend it like this
+                    var expandoDict = expando as IDictionary<string, object>;
+                    if (expandoDict.ContainsKey(f.Name))
+                        expandoDict[f.Name] = value;
+                    else
+                        expandoDict.Add(f.Name, value);
+                }
+
+                yield return expando;
+            }
+        }
+
+        public DataTable AsNativeDataTable()
+        {
+            var table = new DataTable(this.Name);
+
+            foreach (var f in Fields.Cast<XLTableField>())
+            {
+                Type type = typeof(object);
+                if (f.IsConsistentDataType())
+                {
+                    var c = f.Column.Cells().Skip(this.ShowHeaderRow ? 1 : 0).First();
+                    switch (c.DataType)
+                    {
+                        case XLCellValues.Text:
+                            type = typeof(String);
+                            break;
+
+                        case XLCellValues.Boolean:
+                            type = typeof(Boolean);
+                            break;
+
+                        case XLCellValues.DateTime:
+                            type = typeof(DateTime);
+                            break;
+
+                        case XLCellValues.TimeSpan:
+                            type = typeof(TimeSpan);
+                            break;
+
+                        case XLCellValues.Number:
+                            type = typeof(Double);
+                            break;
+                    }
+                }
+
+                table.Columns.Add(f.Name, type);
+            }
+
+            foreach (var row in this.DataRange.Rows())
+            {
+                var dr = table.NewRow();
+
+                foreach (var f in this.Fields)
+                {
+                    dr[f.Name] = row.Cell(f.Index + 1).Value;
+                }
+
+                table.Rows.Add(dr);
+            }
+
+            return table;
         }
     }
 }

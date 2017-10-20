@@ -23,7 +23,14 @@ namespace ClosedXML.Excel
 
         public IXLRangeColumn Column
         {
-            get { return _column ?? (_column = table.HeadersRow(false).Cell(this.Index + 1).AsRange().Columns().Single()); }
+            get
+            {
+                if (_column == null)
+                {
+                    _column = this.table.AsRange().Column(this.Index + 1);
+                }
+                return _column;
+            }
         }
 
         private Int32 index;
@@ -136,11 +143,27 @@ namespace ClosedXML.Excel
             if (deleteUnderlyingRangeColumn)
             {
                 table.AsRange().ColumnQuick(this.Index + 1).Delete();
-                // (this.Column as XLRangeColumn).Delete(false);
             }
 
             fields.Where(f => f.Index > this.Index).ForEach(f => f.Index--);
             table.FieldNames.Remove(this.Name);
+        }
+
+        public bool IsConsistentDataType()
+        {
+            var dataTypes = this.Column
+                .Cells()
+                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Select(c => c.DataType);
+
+            if (this.table.ShowTotalsRow)
+                dataTypes = dataTypes.Take(dataTypes.Count() - 1);
+
+            var distinctDataTypes = dataTypes
+                .GroupBy(dt => dt)
+                .Select(g => new { Key = g.Key, Count = g.Count() });
+
+            return distinctDataTypes.Count() == 1;
         }
     }
 }
