@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         ///   Gets an object to manipulate the worksheets.
         /// </summary>
         IXLWorksheets Worksheets { get; }
-        
+
         /// <summary>
         ///   Gets an object to manipulate this workbook's named ranges.
         /// </summary>
@@ -93,7 +93,7 @@ namespace ClosedXML.Excel
         Boolean DefaultShowRowColHeaders { get; }
 
         Boolean DefaultShowRuler { get; }
-        
+
         Boolean DefaultShowWhiteSpace { get; }
 
         Boolean DefaultShowZeros { get; }
