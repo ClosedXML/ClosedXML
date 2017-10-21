@@ -628,8 +628,6 @@ namespace ClosedXML.Excel
                                           RangeAddress.FirstAddress.ColumnNumber,
                                           RangeAddress.FirstAddress.FixedRow,
                                           RangeAddress.FirstAddress.FixedColumn);
-
-                    HeadersRow().DataType = XLCellValues.Text;
                 }
                 else
                 {
@@ -678,6 +676,9 @@ namespace ClosedXML.Excel
                     }
                 }
                 _showHeaderRow = value;
+
+                if (_showHeaderRow)
+                    HeadersRow().DataType = XLCellValues.Text;
             }
         }
 
