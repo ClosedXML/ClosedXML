@@ -8,6 +8,21 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal class CalcEngineHelpers
     {
+        private static Lazy<Dictionary<string, Tuple<string, string>>> patternReplacements =
+            new Lazy<Dictionary<string, Tuple<string, string>>>(() =>
+            {
+                var patternReplacements = new Dictionary<string, Tuple<string, string>>();
+                // key: the literal string to match
+                // value: a tuple: first item: the search pattern, second item: the replacement
+                patternReplacements.Add(@"~~", new Tuple<string, string>(@"~~", "~"));
+                patternReplacements.Add(@"~*", new Tuple<string, string>(@"~\*", @"\*"));
+                patternReplacements.Add(@"~?", new Tuple<string, string>(@"~\?", @"\?"));
+                patternReplacements.Add(@"?", new Tuple<string, string>(@"\?", ".?"));
+                patternReplacements.Add(@"*", new Tuple<string, string>(@"\*", ".*"));
+
+                return patternReplacements;
+            });
+
         internal static bool ValueSatisfiesCriteria(object value, object criteria, CalcEngine ce)
         {
             // safety...
@@ -60,23 +75,14 @@ namespace ClosedXML.Excel.CalcEngine
 
                 // if criteria is a regular expression, use regex
                 if (cs.IndexOfAny(new[] { '*', '?' }) > -1)
-                {
-                    var patternReplacements = new Dictionary<string, Tuple<string, string>>();
-                    // key: the literal string to match
-                    // value: a tuple: first item: the search pattern, second item: the replacement
-                    patternReplacements.Add(@"~~", new Tuple<string, string>(@"~~", "~"));
-                    patternReplacements.Add(@"~*", new Tuple<string, string>(@"~\*", @"\*"));
-                    patternReplacements.Add(@"~?", new Tuple<string, string>(@"~\?", @"\?"));
-                    patternReplacements.Add(@"?", new Tuple<string, string>(@"\?", ".?"));
-                    patternReplacements.Add(@"*", new Tuple<string, string>(@"\*", ".*"));
-                    
+                {                    
                     var pattern = Regex.Replace(
                         cs,
                         "(" + String.Join(
                                 "|",
-                                patternReplacements.Values.Select(t => t.Item1))
+                                patternReplacements.Value.Values.Select(t => t.Item1))
                         + ")",
-                        m => patternReplacements[m.Value].Item2);
+                        m => patternReplacements.Value[m.Value].Item2);
                     pattern = $"^{pattern}$";
 
                     return Regex.IsMatch(value.ToString(), pattern, RegexOptions.IgnoreCase);
