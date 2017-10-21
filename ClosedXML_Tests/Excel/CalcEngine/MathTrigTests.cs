@@ -219,7 +219,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
         /// <summary>
         /// refers to Example 1 from the Excel documentation,
-        /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&rs=en-US&ad=US"/>
+        /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&amp;rs=en-US&amp;ad=US"/>
         /// </summary>
         /// <param name="expectedOutcome"></param>
         /// <param name="formula"></param>
@@ -229,7 +229,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(28000, "SUMIF(A1:A4, \">\" &C1, B1:B4)")]
         public void SumIf_ReturnsCorrectValues_ReferenceExample1FromMicrosoft(int expectedOutcome, string formula)
         {
-            using(var wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 wb.ReferenceStyle = XLReferenceStyle.A1;
 
@@ -251,14 +251,14 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
         /// <summary>
         /// refers to Example 2 from the Excel documentation,
-        /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&rs=en-US&ad=US"/>
+        /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&amp;rs=en-US&amp;ad=US"/>
         /// </summary>
         /// <param name="expectedOutcome"></param>
         /// <param name="formula"></param>
-        [TestCase( 2000, "SUMIF(A2:A7,\"Fruits\", C2:C7)")]
+        [TestCase(2000, "SUMIF(A2:A7,\"Fruits\", C2:C7)")]
         [TestCase(12000, "SUMIF(A2:A7,\"Vegetables\", C2:C7)")]
-        [TestCase( 4300, "SUMIF(B2:B7, \"*es\", C2:C7)")]
-        [TestCase(  400, "SUMIF(A2:A7, \"\", C2:C7)")]
+        [TestCase(4300, "SUMIF(B2:B7, \"*es\", C2:C7)")]
+        [TestCase(400, "SUMIF(A2:A7, \"\", C2:C7)")]
         public void SumIf_ReturnsCorrectValues_ReferenceExample2FromMicrosoft(int expectedOutcome, string formula)
         {
             using (var wb = new XLWorkbook())

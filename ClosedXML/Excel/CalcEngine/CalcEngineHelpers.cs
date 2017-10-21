@@ -75,7 +75,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                 // if criteria is a regular expression, use regex
                 if (cs.IndexOfAny(new[] { '*', '?' }) > -1)
-                {                    
+                {
                     var pattern = Regex.Replace(
                         cs,
                         "(" + String.Join(
