@@ -61,6 +61,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ROUND", 2, Round);
             ce.RegisterFunction("ROUNDDOWN", 2, RoundDown);
             ce.RegisterFunction("ROUNDUP", 1, 2, RoundUp);
+            ce.RegisterFunction("SEC", 1, Sec);
             ce.RegisterFunction("SERIESSUM", 4, SeriesSum);
             ce.RegisterFunction("SIGN", 1, Sign);
             ce.RegisterFunction("SIN", 1, Sin);
@@ -513,14 +514,37 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Multinomial(List<Expression> p)
         {
-            return Multinomial(p.Select(v => (double)v).ToList());
+            var parsedParameters = p
+                .Select(v =>
+                    {
+                        bool isDouble = double.TryParse(
+                            (string)v,
+                            out double parsedValue);
+                        return new Tuple<bool, double>(isDouble, parsedValue);
+                    })
+                .ToList();
+
+            if (parsedParameters.Any(x => !x.Item1))
+            {
+                throw new NameNotRecognizedException();
+            }
+
+            return Multinomial(
+                parsedParameters
+                    .Select(x => x.Item2)
+                    .ToList());
         }
 
         private static double Multinomial(List<double> numbers)
         {
             double numbersSum = 0;
             foreach (var number in numbers)
+            {
+                if (number < 0)
+                    throw new NumberException();
+
                 numbersSum += number;
+            }
 
             double maxNumber = numbers.Max();
             var denomFactorPowers = new double[(uint)numbers.Max() + 1];
@@ -639,6 +663,14 @@ namespace ClosedXML.Excel.CalcEngine
                 return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
 
             return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+        }
+
+        private static object Sec(List<Expression> p)
+        {
+            if (double.TryParse(p[0], out double number))
+                return 1.0 / Math.Cos(number);
+            else
+                throw new CellValueException();
         }
 
         private static object SeriesSum(List<Expression> p)

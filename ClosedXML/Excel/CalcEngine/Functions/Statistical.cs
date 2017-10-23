@@ -151,11 +151,8 @@ namespace ClosedXML.Excel.CalcEngine
                 var criteria = (string)p[1].Evaluate();
                 foreach (var value in ienum)
                 {
-                    if (!IsBlank(value))
-                    {
-                        if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
-                            cnt++;
-                    }
+                    if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
+                        cnt++;
                 }
             }
             return cnt;

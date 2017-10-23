@@ -217,6 +217,218 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(0.7, actual, tolerance);
         }
 
+        [Theory]
+        public void Multinomial_AnySingleValue_ReturnsOne([Range(0, 10, 0.1)] double number)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(
+                @"MULTINOMIAL({0})",
+                number.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(1, actual);
+        }
+
+        [TestCase(1, 2, 3)]
+        [TestCase(2, 3, 10)]
+        [TestCase(3, 4, 35)]
+        [TestCase(4, 5, 126)]
+        [TestCase(5, 6, 462)]
+        [TestCase(6, 7, 1716)]
+        [TestCase(7, 8, 6435)]
+        [TestCase(8, 9, 24310)]
+        [TestCase(9, 10, 92378)]
+        [TestCase(10, 11, 352716)]
+        [TestCase(11, 12, 1352078)]
+        [TestCase(12, 13, 5200300)]
+        [TestCase(13, 14, 20058300)]
+        [TestCase(14, 15, 77558760)]
+        [TestCase(15, 16, 300540195)]
+        public void Multinomial_TwoValuesReturnCorrectValue(long first, long second, long expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(
+                @"MULTINOMIAL({0}, {1})",
+                first.ToString(CultureInfo.InvariantCulture),
+                second.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, Math.Pow(10, -5));
+        }
+
+        [TestCase(1, 1)]
+        [TestCase(2, 3)]
+        [TestCase(3, 60)]
+        [TestCase(4, 12600)]
+        [TestCase(5, 37837800)]
+        [TestCase(6, 2053230379200)]
+        public void Multinomial_Values1ToNReturnCorrectValue(int last, long expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(
+                @"MULTINOMIAL({0})",
+                string.Join(
+                    ", ",
+                    Enumerable.Range(1, last)
+                        .Select(i => i.ToString(CultureInfo.InvariantCulture)))));
+
+            Assert.AreEqual(expectedResult, actual, 0.01);
+        }
+
+        [Theory]
+        public void Multinomial_AnyNegativeValueThrowsNumberException([Range(-10, -1)] int x)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"MULTINOMIAL({0})",
+                    string.Join(
+                        ", ",
+                        Enumerable.Range(x, 2)
+                            .Reverse()
+                            .Select(i => i.ToString(CultureInfo.InvariantCulture))))));
+        }
+
+        [Test]
+        public void Multinomial_NonNumericValueThrowsNameNotRecognizedException()
+        {
+            Assert.Throws<NameNotRecognizedException>(
+                () => XLWorkbook.EvaluateExpr(@"MULTINOMIAL(x)"));
+        }
+
+        [TestCase(   0, 1)]
+        [TestCase( 0.3, 1.0467516)]
+        [TestCase( 0.6, 1.21162831)]
+        [TestCase( 0.9, 1.60872581)]
+        [TestCase( 1.2, 2.759703601)]
+        [TestCase( 1.5, 14.1368329)]
+        [TestCase( 1.8, -4.401367872)]
+        [TestCase( 2.1, -1.980801656)]
+        [TestCase( 2.4, -1.356127641)]
+        [TestCase( 2.7, -1.10610642)]
+        [TestCase( 3.0, -1.010108666)]
+        [TestCase( 3.3, -1.012678974)]
+        [TestCase( 3.6, -1.115127532)]
+        [TestCase( 3.9, -1.377538917)]
+        [TestCase( 4.2, -2.039730601)]
+        [TestCase( 4.5, -4.743927548)]
+        [TestCase( 4.8, 11.42870421)]
+        [TestCase( 5.1, 2.645658426)]
+        [TestCase( 5.4, 1.575565187)]
+        [TestCase( 5.7, 1.198016873)]
+        [TestCase( 6.0, 1.041481927)]
+        [TestCase( 6.3, 1.000141384)]
+        [TestCase( 6.6, 1.052373922)]
+        [TestCase( 6.9, 1.225903187)]
+        [TestCase( 7.2, 1.643787029)]
+        [TestCase( 7.5, 2.884876262)]
+        [TestCase( 7.8, 18.53381902)]
+        [TestCase( 8.1, -4.106031636)]
+        [TestCase( 8.4, -1.925711244)]
+        [TestCase( 8.7, -1.335743646)]
+        [TestCase( 9.0, -1.097537906)]
+        [TestCase( 9.3, -1.007835594)]
+        [TestCase( 9.6, -1.015550252)]
+        [TestCase( 9.9, -1.124617578)]
+        [TestCase(10.2, -1.400039323)]
+        [TestCase(10.5, -2.102886109)]
+        [TestCase(10.8, -5.145888341)]
+        [TestCase(11.1, 9.593612018)]
+        [TestCase(11.4, 2.541355049)]
+        [TestCase(45, 1.90359)]
+        [TestCase(30, 6.48292)]
+        public void Sec_ReturnsCorrectNumber(double input, double expectedOutput)
+        {
+            double result = (double)XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"SEC({0})",
+                    input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedOutput, result, 0.00001);
+
+            // as the secant is symmetric for positive and negative numbers, let's assert twice:
+            double resultForNegative = (double)XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"SEC({0})",
+                    (-input).ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedOutput, resultForNegative, 0.00001);
+        }
+
+        [Test]
+        public void Sec_ThrowsCellValueExceptionOnNonNumericValue()
+        {
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"SEC(number)")));
+        }
+
+        /// <summary>
+        /// refers to Example 1 from the Excel documentation,
+        /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&rs=en-US&ad=US"/>
+        /// </summary>
+        /// <param name="expectedOutcome"></param>
+        /// <param name="formula"></param>
+        [TestCase(63000, "SUMIF(A1:A4,\">160000\", B1:B4)")]
+        [TestCase(900000, "SUMIF(A1:A4,\">160000\")")]
+        [TestCase(21000, "SUMIF(A1:A4, 300000, B1:B4)")]
+        [TestCase(28000, "SUMIF(A1:A4, \">\" &C1, B1:B4)")]
+        public void SumIf_ReturnsCorrectValues_ReferenceExample1FromMicrosoft(int expectedOutcome, string formula)
+        {
+            using(var wb = new XLWorkbook())
+            {
+                wb.ReferenceStyle = XLReferenceStyle.A1;
+
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell(1, 1).Value = 100000;
+                ws.Cell(1, 2).Value = 7000;
+                ws.Cell(2, 1).Value = 200000;
+                ws.Cell(2, 2).Value = 14000;
+                ws.Cell(3, 1).Value = 300000;
+                ws.Cell(3, 2).Value = 21000;
+                ws.Cell(4, 1).Value = 400000;
+                ws.Cell(4, 2).Value = 28000;
+
+                ws.Cell(1, 3).Value = 300000;
+
+                Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
+            }
+        }
+
+        /// <summary>
+        /// refers to Example 2 from the Excel documentation,
+        /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&rs=en-US&ad=US"/>
+        /// </summary>
+        /// <param name="expectedOutcome"></param>
+        /// <param name="formula"></param>
+        [TestCase( 2000, "SUMIF(A2:A7,\"Fruits\", C2:C7)")]
+        [TestCase(12000, "SUMIF(A2:A7,\"Vegetables\", C2:C7)")]
+        [TestCase( 4300, "SUMIF(B2:B7, \"*es\", C2:C7)")]
+        [TestCase(  400, "SUMIF(A2:A7, \"\", C2:C7)")]
+        public void SumIf_ReturnsCorrectValues_ReferenceExample2FromMicrosoft(int expectedOutcome, string formula)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                wb.ReferenceStyle = XLReferenceStyle.A1;
+
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell(2, 1).Value = "Vegetables";
+                ws.Cell(3, 1).Value = "Vegetables";
+                ws.Cell(4, 1).Value = "Fruits";
+                ws.Cell(5, 1).Value = "";
+                ws.Cell(6, 1).Value = "Vegetables";
+                ws.Cell(7, 1).Value = "Fruits";
+
+                ws.Cell(2, 2).Value = "Tomatoes";
+                ws.Cell(3, 2).Value = "Celery";
+                ws.Cell(4, 2).Value = "Oranges";
+                ws.Cell(5, 2).Value = "Butter";
+                ws.Cell(6, 2).Value = "Carrots";
+                ws.Cell(7, 2).Value = "Apples";
+
+                ws.Cell(2, 3).Value = 2300;
+                ws.Cell(3, 3).Value = 5500;
+                ws.Cell(4, 3).Value = 800;
+                ws.Cell(5, 3).Value = 400;
+                ws.Cell(6, 3).Value = 4200;
+                ws.Cell(7, 3).Value = 1200;
+
+                ws.Cell(1, 3).Value = 300000;
+
+                Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
+            }
+        }
+
         [Test]
         public void SumProduct()
         {
