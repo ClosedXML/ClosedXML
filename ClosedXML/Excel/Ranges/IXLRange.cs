@@ -46,7 +46,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the specified column of the range.
         /// </summary>
-        /// <param name="columnName">Column letter.</param>
+        /// <param name="columnLetter">Column letter.</param>
         IXLRangeColumn Column(string columnLetter);
 
         /// <summary>

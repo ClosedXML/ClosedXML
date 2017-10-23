@@ -59,7 +59,7 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell("A1");
             var doubleList = new List<Double> { 1.0 / 0.0 };
 
-            cell.Value = doubleList.AsEnumerable();
+            cell.Value = doubleList;
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
         }
 
@@ -70,7 +70,7 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell("A1");
             var doubleList = new List<Double> { 0.0 / 0.0 };
 
-            cell.Value = doubleList.AsEnumerable();
+            cell.Value = doubleList;
             Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
         }
 
@@ -234,7 +234,6 @@ namespace ClosedXML_Tests
             bool success = ws.Cell("A1").SetValue(date).TryGetValue(out outValue);
             Assert.IsFalse(success);
         }
-
 
         [Test]
         public void TryGetValue_DateTime_BadString2()
@@ -424,6 +423,91 @@ namespace ClosedXML_Tests
                 cell.Value = "Test";
                 cell.Value = null;
                 Assert.AreEqual(string.Empty, cell.Value);
+            }
+        }
+
+        [Test]
+        public void CurrentRegion()
+        {
+            // Partially based on sample in https://github.com/ClosedXML/ClosedXML/issues/120
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.Cell("B1").SetValue("x")
+                    .CellBelow().SetValue("x")
+                    .CellBelow().SetValue("x");
+
+                ws.Cell("C1").SetValue("x")
+                    .CellBelow().SetValue("x")
+                    .CellBelow().SetValue("x");
+
+                //Deliberately D2
+                ws.Cell("D2").SetValue("x")
+                    .CellBelow().SetValue("x");
+
+                ws.Cell("G1").SetValue("x")
+                    .CellBelow() // skip a cell
+                    .CellBelow().SetValue("x")
+                    .CellBelow().SetValue("x");
+
+                // Deliberately H2
+                ws.Cell("H2").SetValue("x")
+                    .CellBelow().SetValue("x")
+                    .CellBelow().SetValue("x");
+
+                // A diagonal
+                ws.Cell("E8").SetValue("x")
+                    .CellBelow().CellRight().SetValue("x")
+                    .CellBelow().CellRight().SetValue("x")
+                    .CellBelow().CellRight().SetValue("x")
+                    .CellBelow().CellRight().SetValue("x");
+
+                Assert.AreEqual("A10:A10", ws.Cell("A10").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("B5:B5", ws.Cell("B5").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("P1:P1", ws.Cell("P1").CurrentRegion.RangeAddress.ToString());
+
+                Assert.AreEqual("B1:D3", ws.Cell("D3").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("B1:D4", ws.Cell("D4").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("B1:E4", ws.Cell("E4").CurrentRegion.RangeAddress.ToString());
+
+                foreach (var c in ws.Range("B1:D3").Cells())
+                {
+                    Assert.AreEqual("B1:D3", c.CurrentRegion.RangeAddress.ToString());
+                }
+
+                foreach (var c in ws.Range("A1:A3").Cells())
+                {
+                    Assert.AreEqual("A1:D3", c.CurrentRegion.RangeAddress.ToString());
+                }
+
+                Assert.AreEqual("A1:D4", ws.Cell("A4").CurrentRegion.RangeAddress.ToString());
+
+                foreach (var c in ws.Range("E1:E3").Cells())
+                {
+                    Assert.AreEqual("B1:E3", c.CurrentRegion.RangeAddress.ToString());
+                }
+                Assert.AreEqual("B1:E4", ws.Cell("E4").CurrentRegion.RangeAddress.ToString());
+
+                //// SECOND REGION
+                foreach (var c in ws.Range("F1:F4").Cells())
+                {
+                    Assert.AreEqual("F1:H4", c.CurrentRegion.RangeAddress.ToString());
+                }
+                Assert.AreEqual("F1:H5", ws.Cell("F5").CurrentRegion.RangeAddress.ToString());
+
+                //// DIAGONAL
+                Assert.AreEqual("E8:I12", ws.Cell("E8").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("E8:I12", ws.Cell("F9").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("E8:I12", ws.Cell("G10").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("E8:I12", ws.Cell("H11").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("E8:I12", ws.Cell("I12").CurrentRegion.RangeAddress.ToString());
+
+                Assert.AreEqual("E8:I12", ws.Cell("G9").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("E8:I12", ws.Cell("F10").CurrentRegion.RangeAddress.ToString());
+
+                Assert.AreEqual("D7:I12", ws.Cell("D7").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("E8:J13", ws.Cell("J13").CurrentRegion.RangeAddress.ToString());
             }
         }
     }

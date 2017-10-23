@@ -4,9 +4,16 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    public class XLPivotFields : IXLPivotFields
+    internal class XLPivotFields : IXLPivotFields
     {
+
         private readonly Dictionary<String, IXLPivotField> _pivotFields = new Dictionary<string, IXLPivotField>();
+        private readonly IXLPivotTable _pivotTable;
+
+        internal XLPivotFields(IXLPivotTable pivotTable)
+        {
+            this._pivotTable = pivotTable;
+        }
 
         public IXLPivotField Add(String sourceName)
         {
@@ -15,6 +22,9 @@ namespace ClosedXML.Excel
 
         public IXLPivotField Add(String sourceName, String customName)
         {
+            if (sourceName != XLConstants.PivotTableValuesSentinalLabel && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName, StringComparer.OrdinalIgnoreCase))
+                throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
+
             var pivotField = new XLPivotField(sourceName) { CustomName = customName };
             _pivotFields.Add(sourceName, pivotField);
             return pivotField;
@@ -49,7 +59,8 @@ namespace ClosedXML.Excel
         {
             var selectedItem = _pivotFields.Select((item, index) => new { Item = item, Position = index }).FirstOrDefault(i => i.Item.Key == pf.SourceName);
             if (selectedItem == null)
-                throw new IndexOutOfRangeException("Invalid field name.");
+                throw new ArgumentNullException(nameof(pf), "Invalid field name.");
+
             return selectedItem.Position;
         }
 

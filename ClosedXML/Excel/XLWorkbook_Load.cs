@@ -1,5 +1,6 @@
 #region
 
+using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -263,6 +264,8 @@ namespace ClosedXML.Excel
                             LoadRowBreaks((RowBreaks)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(ColumnBreaks))
                             LoadColumnBreaks((ColumnBreaks)reader.LoadCurrentElement(), ws);
+                        else if (reader.ElementType == typeof(WorksheetExtensionList))
+                            LoadExtensions((WorksheetExtensionList)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(LegacyDrawing))
                             ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
                     }
@@ -475,6 +478,13 @@ namespace ClosedXML.Excel
                         if (target != null && source != null)
                         {
                             var pt = ws.PivotTables.AddNew(pivotTableDefinition.Name, target, source) as XLPivotTable;
+
+                            if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
+                                pt.SetColumnHeaderCaption(StringValue.ToString(pivotTableDefinition.ColumnHeaderCaption));
+
+                            if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.RowHeaderCaption ?? String.Empty)))
+                                pt.SetRowHeaderCaption(StringValue.ToString(pivotTableDefinition.RowHeaderCaption));
+
                             pt.RelId = wsPart.GetIdOfPart(pivotTablePart);
                             pt.CacheDefinitionRelId = pivotTablePart.GetIdOfPart(pivotTableCacheDefinitionPart);
                             pt.WorkbookCacheRelId = dSpreadsheet.WorkbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
@@ -718,8 +728,10 @@ namespace ClosedXML.Excel
 
         private static IXLMarker LoadMarker(IXLWorksheet ws, Xdr.MarkerType marker)
         {
+            var row = Math.Max(1, Convert.ToInt32(marker.RowId.InnerText) + 1);
+            var column = Math.Min(XLHelper.MaxColumnNumber, Convert.ToInt32(marker.ColumnId.InnerText) + 1);
             return new XLMarker(
-                ws.Cell(Convert.ToInt32(marker.RowId.InnerText) + 1, Convert.ToInt32(marker.ColumnId.InnerText) + 1).Address,
+                ws.Cell(row, column).Address,
                 new Point(
                     ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.ColumnOffset.InnerText), GraphicsUtils.Graphics.DpiX),
                     ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.RowOffset.InnerText), GraphicsUtils.Graphics.DpiY)
@@ -1835,6 +1847,9 @@ namespace ClosedXML.Excel
                 foreach (var fr in conditionalFormatting.Elements<ConditionalFormattingRule>())
                 {
                     var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
+
+                    conditionalFormat.StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
+
                     if (fr.FormatId != null)
                     {
                         LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
@@ -1873,6 +1888,11 @@ namespace ClosedXML.Excel
                         var dataBar = fr.Elements<DataBar>().First();
                         if (dataBar.ShowValue != null)
                             conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
+
+                        var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
+                        if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
+                            conditionalFormat.Id = Guid.Parse(id.Text.Substring(1, id.Text.Length - 2));
+
                         ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
                     }
                     else if (fr.Elements<IconSet>().Any())
@@ -1903,6 +1923,32 @@ namespace ClosedXML.Excel
                         }
                     }
                     ws.ConditionalFormats.Add(conditionalFormat);
+                }
+            }
+        }
+
+        private void LoadExtensions(WorksheetExtensionList extensions, XLWorksheet ws)
+        {
+            if (extensions == null)
+            {
+                return;
+            }
+
+            foreach (var conditionalFormattingRule in extensions
+                .Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattingRule>()
+                .Where(cf =>
+                    cf.Type != null
+                    && cf.Type.HasValue
+                    && cf.Type.Value == ConditionalFormatValues.DataBar))
+            {
+                var xlConditionalFormat = ws.ConditionalFormats
+                    .Cast<XLConditionalFormat>()
+                    .SingleOrDefault(cf => cf.Id.WrapInBraces() == conditionalFormattingRule.Id);
+                if (xlConditionalFormat != null)
+                {
+                    var negativeFillColor = conditionalFormattingRule.Descendants<DocumentFormat.OpenXml.Office2010.Excel.NegativeFillColor>().SingleOrDefault();
+                    var color = new DocumentFormat.OpenXml.Spreadsheet.Color { Rgb = negativeFillColor.Rgb };
+                    xlConditionalFormat.Colors.Add(this.GetColor(color));
                 }
             }
         }

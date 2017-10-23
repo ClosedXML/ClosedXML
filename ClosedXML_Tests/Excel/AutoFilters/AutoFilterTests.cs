@@ -1,8 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ClosedXML_Tests
 {
@@ -29,7 +30,7 @@ namespace ClosedXML_Tests
                     listOfArr.Add(6);
 
                     table.DataRange.InsertRowsBelow(listOfArr.Count - table.DataRange.RowCount());
-                    table.DataRange.FirstCell().InsertData(listOfArr.AsEnumerable());
+                    table.DataRange.FirstCell().InsertData(listOfArr);
 
                     Assert.AreEqual("A1:A5", table.AutoFilter.Range.RangeAddress.ToStringRelative());
                 }
@@ -71,6 +72,58 @@ namespace ClosedXML_Tests
 
             ws.AutoFilter.Clear();
             Assert.That(!ws.AutoFilter.Enabled);
+        }
+
+        [Test]
+        public void CanClearAutoFilter2()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("AutoFilter");
+                ws.Cell("A1").Value = "Names";
+                ws.Cell("A2").Value = "John";
+                ws.Cell("A3").Value = "Hank";
+                ws.Cell("A4").Value = "Dagny";
+
+                ws.SetAutoFilter(false);
+                Assert.That(!ws.AutoFilter.Enabled);
+
+                ws.RangeUsed().SetAutoFilter();
+                Assert.That(ws.AutoFilter.Enabled);
+
+                ws.RangeUsed().SetAutoFilter(false);
+                Assert.That(!ws.AutoFilter.Enabled);
+            }
+        }
+
+        [Test]
+        public void CanCopyAutoFilterToNewSheetOnNewWorkbook()
+        {
+            using (var ms1 = new MemoryStream())
+            using (var ms2 = new MemoryStream())
+            {
+                using (var wb1 = new XLWorkbook())
+                using (var wb2 = new XLWorkbook())
+                {
+                    var ws = wb1.Worksheets.Add("AutoFilter");
+                    ws.Cell("A1").Value = "Names";
+                    ws.Cell("A2").Value = "John";
+                    ws.Cell("A3").Value = "Hank";
+                    ws.Cell("A4").Value = "Dagny";
+
+                    ws.RangeUsed().SetAutoFilter();
+
+                    wb1.SaveAs(ms1);
+
+                    ws.CopyTo(wb2, ws.Name);
+                    wb2.SaveAs(ms2);
+                }
+
+                using (var wb2 = new XLWorkbook(ms2))
+                {
+                    Assert.IsTrue(wb2.Worksheets.First().AutoFilter.Enabled);
+                }
+            }
         }
     }
 }

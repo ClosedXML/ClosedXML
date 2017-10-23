@@ -72,6 +72,11 @@ namespace ClosedXML.Excel
             }
         }
 
+        public Boolean Contains(IXLCell cell)
+        {
+            return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Contains(cell));
+        }
+
         public Boolean Contains(IXLRange range)
         {
             return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Contains(range));

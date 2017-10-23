@@ -161,6 +161,27 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void TryGetWorksheet()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet("Sheet1");
+                var ws2 = wb.AddWorksheet("Sheet2");
+
+                IXLWorksheet ws;
+                Assert.IsTrue(wb.Worksheets.TryGetWorksheet("Sheet1", out ws));
+                Assert.IsTrue(wb.Worksheets.TryGetWorksheet("sheet1", out ws));
+                Assert.IsTrue(wb.Worksheets.TryGetWorksheet("sHEeT1", out ws));
+                Assert.IsFalse(wb.Worksheets.TryGetWorksheet("Sheeeet2", out ws));
+
+                Assert.IsTrue(wb.TryGetWorksheet("Sheet1", out ws));
+                Assert.IsTrue(wb.TryGetWorksheet("sheet1", out ws));
+                Assert.IsTrue(wb.TryGetWorksheet("sHEeT1", out ws));
+                Assert.IsFalse(wb.TryGetWorksheet("Sheeeet2", out ws));
+            }
+        }
+
+        [Test]
         public void HideWorksheet()
         {
             using (var ms = new MemoryStream())

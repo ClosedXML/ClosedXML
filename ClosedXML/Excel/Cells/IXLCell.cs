@@ -7,6 +7,8 @@ namespace ClosedXML.Excel
 {
     public enum XLCellValues { Text, Number, Boolean, DateTime, TimeSpan }
 
+    public enum XLTableCellType { None, Header, Data, Total }
+
     public enum XLClearOptions
     {
         ContentsAndFormats,
@@ -17,11 +19,11 @@ namespace ClosedXML.Excel
     public interface IXLCell
     {
         /// <summary>
-        /// Gets or sets the cell's value. To get a strongly typed object use the method GetValue&lt;T&gt;.
-        /// <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from this cell.</para>
-        /// <para>If the object is a range ClosedXML will copy the range starting from this cell.</para>
+        /// Gets or sets the cell's value. To get or set a strongly typed value, use the GetValue&lt;T&gt; and SetValue methods.
+        /// <para>ClosedXML will try to detect the data type through parsing. If it can't then the value will be left as a string.</para>
+        /// <para>If the object is an IEnumerable, ClosedXML will copy the collection's data into a table starting from this cell.</para>
+        /// <para>If the object is a range, ClosedXML will copy the range starting from this cell.</para>
         /// <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
-        /// <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
         /// </summary>
         /// <value>
         /// The object containing the value(s) to set.
@@ -30,7 +32,15 @@ namespace ClosedXML.Excel
 
         /// <summary>Gets this cell's address, relative to the worksheet.</summary>
         /// <value>The cell's address.</value>
-        IXLAddress Address { get;  }
+        IXLAddress Address { get; }
+
+        /// <summary>
+        /// Returns the current region. The current region is a range bounded by any combination of blank rows and blank columns
+        /// </summary>
+        /// <value>
+        /// The current region.
+        /// </value>
+        IXLRange CurrentRegion { get; }
 
         /// <summary>
         /// Gets or sets the type of this cell's data.
@@ -115,8 +125,6 @@ namespace ClosedXML.Excel
 
         Boolean TryGetValue<T>(out T value);
 
-
-
         Boolean HasHyperlink { get; }
 
         /// <summary>
@@ -152,7 +160,6 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRange AsRange();
 
-
         /// <summary>
         /// Gets or sets the cell's style.
         /// </summary>
@@ -179,6 +186,13 @@ namespace ClosedXML.Excel
         /// <param name="tranpose">if set to <c>true</c> the data will be transposed before inserting.</param>
         /// <returns></returns>
         IXLRange InsertData(IEnumerable data, Boolean tranpose);
+
+        /// <summary>
+        /// Inserts the data of a data table.
+        /// </summary>
+        /// <param name="dataTable">The data table.</param>
+        /// <returns>The range occupied by the inserted data</returns>
+        IXLRange InsertData(DataTable dataTable);
 
         /// <summary>
         /// Inserts the IEnumerable data elements as a table and returns it.
@@ -216,7 +230,6 @@ namespace ClosedXML.Excel
         /// </param>
         IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable);
 
-
         /// <summary>
         /// Inserts the DataTable data elements as a table and returns it.
         /// <para>The new table will receive a generic name: Table#</para>
@@ -253,18 +266,22 @@ namespace ClosedXML.Excel
         /// </param>
         IXLTable InsertTable(DataTable data, String tableName, Boolean createTable);
 
+        XLTableCellType TableCellType();
 
         XLHyperlink Hyperlink { get; set; }
         IXLWorksheet Worksheet { get; }
 
         IXLDataValidation DataValidation { get; }
         IXLDataValidation NewDataValidation { get; }
+
         IXLDataValidation SetDataValidation();
 
-
         IXLCells InsertCellsAbove(int numberOfRows);
+
         IXLCells InsertCellsBelow(int numberOfRows);
+
         IXLCells InsertCellsAfter(int numberOfColumns);
+
         IXLCells InsertCellsBefore(int numberOfColumns);
 
         /// <summary>
@@ -293,8 +310,11 @@ namespace ClosedXML.Excel
         IXLCell AddToNamed(String rangeName, XLScope scope, String comment);
 
         IXLCell CopyFrom(IXLCell otherCell);
+
         IXLCell CopyFrom(String otherCell);
+
         IXLCell CopyTo(IXLCell target);
+
         IXLCell CopyTo(String target);
 
         String ValueCached { get; }
@@ -305,19 +325,29 @@ namespace ClosedXML.Excel
         Boolean HasComment { get; }
 
         Boolean IsMerged();
+
         Boolean IsEmpty();
+
         Boolean IsEmpty(Boolean includeFormats);
 
         IXLCell CellAbove();
+
         IXLCell CellAbove(Int32 step);
+
         IXLCell CellBelow();
+
         IXLCell CellBelow(Int32 step);
+
         IXLCell CellLeft();
+
         IXLCell CellLeft(Int32 step);
+
         IXLCell CellRight();
+
         IXLCell CellRight(Int32 step);
 
         IXLColumn WorksheetColumn();
+
         IXLRow WorksheetRow();
 
         Boolean HasDataValidation { get; }
@@ -327,6 +357,7 @@ namespace ClosedXML.Excel
         void Select();
 
         Boolean Active { get; set; }
+
         IXLCell SetActive(Boolean value = true);
 
         Boolean HasFormula { get; }

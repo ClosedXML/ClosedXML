@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -106,7 +107,7 @@ namespace ClosedXML.Excel
 
         IXLPivotFields Fields { get; }
         IXLPivotFields ReportFilters { get; }
-        IXLPivotFields  ColumnLabels { get; }
+        IXLPivotFields ColumnLabels { get; }
         IXLPivotFields RowLabels { get; }
         IXLPivotValues Values { get; }
 
@@ -114,23 +115,28 @@ namespace ClosedXML.Excel
         String Title { get; set; }
         String Description { get; set; }
 
+        String ColumnHeaderCaption { get; set; }
+        String RowHeaderCaption { get; set; }
+
         IXLCell TargetCell { get; set; }
         IXLRange SourceRange { get; set; }
 
+        IEnumerable<String> SourceRangeFieldsAvailable { get; }
+
         Boolean MergeAndCenterWithLabels { get; set; } // MergeItem
         Int32 RowLabelIndent { get; set; } // Indent
-        XLFilterAreaOrder FilterAreaOrder { get; set; } // PageOverThenDown 
+        XLFilterAreaOrder FilterAreaOrder { get; set; } // PageOverThenDown
         Int32 FilterFieldsPageWrap { get; set; } // PageWrap
         String ErrorValueReplacement { get; set; } // ErrorCaption
         String EmptyCellReplacement { get; set; } // MissingCaption
-        Boolean AutofitColumns { get; set; } //UseAutoFormatting 
-        Boolean PreserveCellFormatting { get; set; } // PreserveFormatting 
-        
-        Boolean ShowGrandTotalsRows { get; set; } // RowGrandTotals 
-        Boolean ShowGrandTotalsColumns { get; set; } // ColumnGrandTotals 
+        Boolean AutofitColumns { get; set; } //UseAutoFormatting
+        Boolean PreserveCellFormatting { get; set; } // PreserveFormatting
+
+        Boolean ShowGrandTotalsRows { get; set; } // RowGrandTotals
+        Boolean ShowGrandTotalsColumns { get; set; } // ColumnGrandTotals
         Boolean FilteredItemsInSubtotals { get; set; } // Subtotal filtered page items
-        Boolean AllowMultipleFilters { get; set; } // MultipleFieldFilters 
-        Boolean UseCustomListsForSorting { get; set; } // CustomListSort 
+        Boolean AllowMultipleFilters { get; set; } // MultipleFieldFilters
+        Boolean UseCustomListsForSorting { get; set; } // CustomListSort
 
         Boolean ShowExpandCollapseButtons { get; set; }
         Boolean ShowContextualTooltips { get; set; }
@@ -192,6 +198,9 @@ namespace ClosedXML.Excel
         IXLPivotTable SetRefreshDataOnOpen(); IXLPivotTable SetRefreshDataOnOpen(Boolean value);
         IXLPivotTable SetItemsToRetainPerField(XLItemsToRetain value);
         IXLPivotTable SetEnableCellEditing(); IXLPivotTable SetEnableCellEditing(Boolean value);
+
+        IXLPivotTable SetColumnHeaderCaption(String value);
+        IXLPivotTable SetRowHeaderCaption(String value);
 
         Boolean ShowRowHeaders { get; set; }
         Boolean ShowColumnHeaders { get; set; }

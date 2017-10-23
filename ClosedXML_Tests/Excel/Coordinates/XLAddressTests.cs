@@ -9,13 +9,14 @@ namespace ClosedXML_Tests
         [Test]
         public void ToStringTest()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLAddress address = ws.Cell(1, 1).Address;
 
             Assert.AreEqual("A1", address.ToString());
             Assert.AreEqual("A1", address.ToString(XLReferenceStyle.A1));
             Assert.AreEqual("R1C1", address.ToString(XLReferenceStyle.R1C1));
             Assert.AreEqual("A1", address.ToString(XLReferenceStyle.Default));
+            Assert.AreEqual("Sheet1!A1", address.ToString(XLReferenceStyle.Default, true));
 
             Assert.AreEqual("A1", address.ToStringRelative());
             Assert.AreEqual("Sheet1!A1", address.ToStringRelative(true));
@@ -39,6 +40,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual("A1", address.ToString(XLReferenceStyle.A1));
             Assert.AreEqual("R1C1", address.ToString(XLReferenceStyle.R1C1));
             Assert.AreEqual("A1", address.ToString(XLReferenceStyle.Default));
+            Assert.AreEqual("'Sheet 1'!A1", address.ToString(XLReferenceStyle.Default, true));
 
             Assert.AreEqual("A1", address.ToStringRelative());
             Assert.AreEqual("'Sheet 1'!A1", address.ToStringRelative(true));

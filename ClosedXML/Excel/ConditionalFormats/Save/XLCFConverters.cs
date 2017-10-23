@@ -29,6 +29,7 @@ namespace ClosedXML.Excel
             Converters.Add(XLConditionalFormatType.DataBar, new XLCFDataBarConverter());
             Converters.Add(XLConditionalFormatType.IconSet, new XLCFIconSetConverter());
         }
+
         public static ConditionalFormattingRule Convert(IXLConditionalFormat conditionalFormat, Int32 priority, XLWorkbook.SaveContext context)
         {
             return Converters[conditionalFormat.ConditionalFormatType].Convert(conditionalFormat, priority, context);

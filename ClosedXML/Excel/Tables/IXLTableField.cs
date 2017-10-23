@@ -27,5 +27,10 @@ namespace ClosedXML.Excel
         String TotalsRowLabel { get; set; }
 
         void Delete();
+
+        /// <summary>
+        /// Determines whether all cells this table field have a consistent data type.
+        /// </summary>
+        Boolean IsConsistentDataType();
     }
 }

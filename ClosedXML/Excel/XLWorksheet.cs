@@ -651,7 +651,8 @@ namespace ClosedXML.Excel
             }
 
             if (AutoFilter.Enabled)
-                targetSheet.Range(AutoFilter.Range.RangeAddress).SetAutoFilter();
+                using (var range = targetSheet.Range(AutoFilter.Range.RangeAddress.FirstAddress.RowNumber, AutoFilter.Range.RangeAddress.FirstAddress.ColumnNumber, AutoFilter.Range.RangeAddress.LastAddress.RowNumber, AutoFilter.Range.RangeAddress.LastAddress.ColumnNumber))
+                    range.SetAutoFilter();
 
             return targetSheet;
         }
@@ -1595,5 +1596,16 @@ namespace ClosedXML.Excel
         {
             return true;
         }
+
+        internal void SetValue<T>(T value, int ro, int co) where T : class
+        {
+            if (value == null)
+                this.Cell(ro, co).SetValue(String.Empty);
+            else if (value is IConvertible)
+                this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
+            else
+                this.Cell(ro, co).SetValue(value);
+        }
+
     }
 }

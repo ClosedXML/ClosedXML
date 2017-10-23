@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -29,6 +26,7 @@ namespace ClosedXML.Excel
         public String FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
 
+        public XLFontCharSet FontCharSet { get; set; }
 
         public IXLDrawingStyle SetBold()
         {
@@ -120,5 +118,10 @@ namespace ClosedXML.Excel
             return _style;
         }
 
+        public IXLDrawingStyle SetFontCharSet(XLFontCharSet value)
+        {
+            FontCharSet = value;
+            return _style;
+        }
     }
 }

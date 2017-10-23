@@ -10,10 +10,10 @@ namespace ClosedXML.Excel
 
         public XLPivotTable()
         {
-            Fields = new XLPivotFields();
-            ReportFilters = new XLPivotFields();
-            ColumnLabels=new XLPivotFields();
-            RowLabels = new XLPivotFields();
+            Fields = new XLPivotFields(this);
+            ReportFilters = new XLPivotFields(this);
+            ColumnLabels=new XLPivotFields(this);
+            RowLabels = new XLPivotFields(this);
             Values = new XLPivotValues(this);
             Theme = XLPivotTableTheme.PivotStyleLight16;
 
@@ -22,6 +22,10 @@ namespace ClosedXML.Excel
 
         public IXLCell TargetCell { get; set; }
         public IXLRange SourceRange { get; set; }
+        public IEnumerable<string> SourceRangeFieldsAvailable
+        {
+            get { return this.SourceRange.FirstRow().Cells().Select(c => c.GetString()); }
+        }
 
         public IXLPivotFields Fields { get; private set; }
         public IXLPivotFields ReportFilters { get; private set; }
@@ -33,6 +37,20 @@ namespace ClosedXML.Excel
         public String Name { get; set; }		public IXLPivotTable SetName(String value) { Name = value; return this; }
         public String Title { get; set; }		public IXLPivotTable SetTitle(String value) { Title = value; return this; }
         public String Description { get; set; }		public IXLPivotTable SetDescription(String value) { Description = value; return this; }
+
+        public String ColumnHeaderCaption { get; set; }
+        public IXLPivotTable SetColumnHeaderCaption(String value)
+        {
+            ColumnHeaderCaption = value;
+            return this;
+        }
+
+        public String RowHeaderCaption { get; set; }
+        public IXLPivotTable SetRowHeaderCaption(String value)
+        {
+            RowHeaderCaption = value;
+            return this;
+        }
 
         public Boolean MergeAndCenterWithLabels { get; set; }	public IXLPivotTable SetMergeAndCenterWithLabels() { MergeAndCenterWithLabels = true; return this; }	public IXLPivotTable SetMergeAndCenterWithLabels(Boolean value) { MergeAndCenterWithLabels = value; return this; }
         public Int32 RowLabelIndent { get; set; }		public IXLPivotTable SetRowLabelIndent(Int32 value) { RowLabelIndent = value; return this; }

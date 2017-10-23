@@ -1,8 +1,8 @@
+using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
 {
@@ -38,7 +38,7 @@ namespace ClosedXML_Examples.Misc
                 var dataTable = GetTable();
                 ws.Cell(6, 1).Value = "From DataTable";
                 ws.Range(6, 1, 6, 4).Merge().AddToNamed("Titles");
-                ws.Cell(7, 1).InsertData(dataTable.AsEnumerable());
+                ws.Cell(7, 1).InsertData(dataTable);
 
                 // From a query
                 var list = new List<Person>();
@@ -53,11 +53,15 @@ namespace ClosedXML_Examples.Misc
 
                 ws.Cell(6, 6).Value = "From Query";
                 ws.Range(6, 6, 6, 8).Merge().AddToNamed("Titles");
-                ws.Cell(7, 6).InsertData(people.AsEnumerable());
+                ws.Cell(7, 6).InsertData(people);
 
-                ws.Cell("F13").Value = "Transposed";
-                ws.Range(13, 6, 13, 8).Merge().AddToNamed("Titles");
-                ws.Cell("F14").InsertData(people.AsEnumerable(), true);
+                ws.Cell(11, 6).Value = "From List";
+                ws.Range(11, 6, 11, 9).Merge().AddToNamed("Titles");
+                ws.Cell(12, 6).InsertData(list);
+
+                ws.Cell("A13").Value = "Transposed";
+                ws.Range(13, 1, 13, 3).Merge().AddToNamed("Titles");
+                ws.Cell("A14").InsertData(people.AsEnumerable(), true);
 
                 // Prepare the style for the titles
                 var titlesStyle = wb.Style;
@@ -74,17 +78,17 @@ namespace ClosedXML_Examples.Misc
             }
         }
 
-        class Person
+        private class Person
         {
             public String House { get; set; }
             public String Name { get; set; }
             public Int32 Age { get; set; }
+            public static String ClassType { get { return nameof(Person); } }
         }
 
         // Private
         private DataTable GetTable()
         {
-
             DataTable table = new DataTable();
             table.Columns.Add("Dosage", typeof(int));
             table.Columns.Add("Drug", typeof(string));
@@ -98,9 +102,9 @@ namespace ClosedXML_Examples.Misc
             table.Rows.Add(100, "Dilantin", "Melanie", new DateTime(2000, 1, 5));
             return table;
         }
+
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

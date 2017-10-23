@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
     public interface IXLRichString: IXLFontBase, IEquatable<IXLRichString>, IXLWithRichString
     {
         String Text { get; set; }
-        
+
 
         IXLRichString SetBold(); IXLRichString SetBold(Boolean value);
         IXLRichString SetItalic(); IXLRichString SetItalic(Boolean value);
@@ -22,5 +22,6 @@ namespace ClosedXML.Excel
         IXLRichString SetFontColor(XLColor value);
         IXLRichString SetFontName(String value);
         IXLRichString SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
+        IXLRichString SetFontCharSet(XLFontCharSet value);
     }
 }
