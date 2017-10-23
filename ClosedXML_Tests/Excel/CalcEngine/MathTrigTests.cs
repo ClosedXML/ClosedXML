@@ -1,8 +1,8 @@
 ﻿using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
@@ -11,6 +11,73 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     public class MathTrigTests
     {
         private readonly double tolerance = 1e-10;
+
+        [TestCase(4, 3, 20)]
+        [TestCase(10, 3, 220)]
+        [TestCase(0, 0, 1)]
+        public void Combina_CalculatesCorrectValues(int number, int chosen, int expectedResult)
+        {
+            var actualResult = XLWorkbook.EvaluateExpr($"COMBINA({number}, {chosen})");
+            Assert.AreEqual(expectedResult, (long)actualResult);
+        }
+
+        [Theory]
+        public void Combina_Returns1WhenChosenIs0([Range(0, 10)]int number)
+        {
+            Combina_CalculatesCorrectValues(number, 0, 1);
+        }
+
+        [TestCase(4.23, 3, 20)]
+        [TestCase(10.4, 3.14, 220)]
+        [TestCase(0, 0.4, 1)]
+        public void Combina_TruncatesNumbersCorrectly(double number, double chosen, int expectedResult)
+        {
+            var actualResult = XLWorkbook.EvaluateExpr(string.Format(
+                @"COMBINA({0}, {1})",
+                number.ToString(CultureInfo.InvariantCulture),
+                chosen.ToString(CultureInfo.InvariantCulture)));
+
+            Assert.AreEqual(expectedResult, (long)actualResult);
+        }
+
+        [TestCase(-1, 2)]
+        [TestCase(-3, -2)]
+        [TestCase(2, -2)]
+        public void Combina_ThrowsNumExceptionOnInvalidValues(int number, int chosen)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"COMBINA({0}, {1})",
+                    number.ToString(CultureInfo.InvariantCulture),
+                    chosen.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase(1, 0.642092616)]
+        [TestCase(2, -0.457657554)]
+        [TestCase(3, -7.015252551)]
+        [TestCase(4, 0.863691154)]
+        [TestCase(5, -0.295812916)]
+        [TestCase(6, -3.436353004)]
+        [TestCase(7, 1.147515422)]
+        [TestCase(8, -0.147065064)]
+        [TestCase(9, -2.210845411)]
+        [TestCase(10, 1.542351045)]
+        [TestCase(11, -0.004425741)]
+        [TestCase(Math.PI * 0.5, 0)]
+        [TestCase(45, 0.617369624)]
+        [TestCase(-2, 0.457657554)]
+        [TestCase(-3, 7.015252551)]
+        public void Cot(double input, double expected)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"COT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expected, actual, tolerance * 10.0);
+        }
+
+        [Test]
+        public void Cot_Input0()
+        {
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("COT(0)"));
+        }
 
         [TestCase("FF", 16, 255)]
         [TestCase("111", 2, 7)]
@@ -188,6 +255,15 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void Csch_ReturnsDivisionByZeroErrorOnInput0()
         {
             Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("CSCH(0)"));
+        }
+
+        [TestCase(8.9, 8)]
+        [TestCase(-8.9, -9)]
+        public void Int(double input, double expected)
+        {
+            var actual = XLWorkbook.EvaluateExpr(string.Format(@"INT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expected, actual);
+
         }
     }
 }

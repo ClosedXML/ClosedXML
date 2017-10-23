@@ -86,6 +86,11 @@ namespace ClosedXML.Excel
         void Delete();
 
         /// <summary>
+        /// Determines whether all cells this table field have a consistent data type.
+        /// </summary>
+        Boolean IsConsistentDataType();
+
+        /// <summary>
         /// Determines whether all cells this table field have a consistent formula.
         /// </summary>
         Boolean IsConsistentFormula();

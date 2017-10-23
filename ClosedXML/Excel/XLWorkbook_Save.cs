@@ -53,7 +53,6 @@ namespace ClosedXML.Excel
     {
         private const Double ColumnWidthOffset = 0.710625;
 
-        //private Dictionary<String, UInt32> sharedStrings;
         //private Dictionary<IXLStyle, StyleInfo> context.SharedStyles;
 
         private static readonly EnumValue<CellValues> CvSharedString = new EnumValue<CellValues>(CellValues.SharedString);
@@ -1934,6 +1933,8 @@ namespace ClosedXML.Excel
 
             foreach (var pt in xlWorksheet.PivotTables.Cast<XLPivotTable>())
             {
+                context.PivotTables.Clear();
+
                 // TODO: Avoid duplicate pivot caches of same source range
 
                 var workbookCacheRelId = pt.WorkbookCacheRelId;
@@ -1951,7 +1952,7 @@ namespace ClosedXML.Excel
                     pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(workbookCacheRelId);
                 }
 
-                GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt);
+                GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt, context);
 
                 if (String.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
                     pivotCaches.AppendChild(pivotCache);
@@ -1971,10 +1972,16 @@ namespace ClosedXML.Excel
 
         // Generates content of pivotTableCacheDefinitionPart
         private static void GeneratePivotTableCacheDefinitionPartContent(
-            PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart, IXLPivotTable pt)
+            PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart, IXLPivotTable pt,
+            SaveContext context)
         {
-            var source = pt.SourceRange;
+            var pti = new PivotTableInfo
+            {
+                Guid = (pt as XLPivotTable).Guid,
+                Fields = new Dictionary<String, PivotTableFieldInfo>()
+            };
 
+            var source = pt.SourceRange;
             var pivotCacheDefinition = new PivotCacheDefinition
             {
                 Id = "rId1",
@@ -1998,14 +2005,18 @@ namespace ClosedXML.Excel
             {
                 var columnNumber = c.ColumnNumber();
                 var columnName = c.FirstCell().Value.ToString();
-                IXLPivotField xlpf;
-                if (pt.Fields.Contains(columnName))
-                    xlpf = pt.Fields.Get(columnName);
-                else
-                    xlpf = pt.Fields.Add(columnName);
 
-                var field =
-                    pt.RowLabels.Union(pt.ColumnLabels).Union(pt.ReportFilters).FirstOrDefault(f => f.SourceName == columnName);
+                XLPivotField xlpf;
+                if (pt.Fields.Contains(columnName))
+                    xlpf = pt.Fields.Get(columnName) as XLPivotField;
+                else
+                    xlpf = pt.Fields.Add(columnName) as XLPivotField;
+
+                var field = pt.RowLabels
+                    .Union(pt.ColumnLabels)
+                    .Union(pt.ReportFilters)
+                    .FirstOrDefault(f => f.SourceName == columnName);
+
                 if (field != null)
                 {
                     xlpf.CustomName = field.CustomName;
@@ -2014,31 +2025,95 @@ namespace ClosedXML.Excel
 
                 var sharedItems = new SharedItems();
 
-                var onlyNumbers =
-                    !source.Cells().Any(
-                        cell =>
-                            cell.Address.ColumnNumber == columnNumber &&
-                            cell.Address.RowNumber > source.FirstRow().RowNumber() && cell.DataType != XLCellValues.Number);
-                if (onlyNumbers)
+                var ptfi = new PivotTableFieldInfo();
+
+                var fieldValueCells = source.Cells(cell => cell.Address.ColumnNumber == columnNumber
+                                                           && cell.Address.RowNumber > source.FirstRow().RowNumber());
+                var types = fieldValueCells.Select(cell => cell.DataType).Distinct();
+
+
+                if (types.Count() == 1 && types.Single() == XLCellValues.Number)
                 {
-                    sharedItems = new SharedItems
-                    { ContainsSemiMixedTypes = false, ContainsString = false, ContainsNumber = true };
+                    sharedItems.ContainsSemiMixedTypes = false;
+                    sharedItems.ContainsString = false;
+                    sharedItems.ContainsNumber = true;
+
+                    ptfi.DataType = XLCellValues.Number;
+                    ptfi.MixedDataType = false;
+                    ptfi.DistinctValues = fieldValueCells
+                            .Select(cell => cell.GetDouble())
+                            .Distinct()
+                            .Cast<object>();
+
+                    pti.Fields.Add(xlpf.SourceName, ptfi);
+
+                    // Output items only for row / column / filter fields
+                    if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
+                        || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
+                        || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
+                    {
+                        foreach (var value in ptfi.DistinctValues)
+                            sharedItems.AppendChild(new NumberItem { Val = (double)value });
+                    }
+
+                    sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
+                    sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
+                }
+                else if (types.Count() == 1 && types.Single() == XLCellValues.DateTime)
+                {
+                    sharedItems.ContainsSemiMixedTypes = false;
+                    sharedItems.ContainsString = false;
+                    sharedItems.ContainsNumber = false;
+                    sharedItems.ContainsDate = true;
+
+                    ptfi.DataType = XLCellValues.DateTime;
+                    ptfi.MixedDataType = false;
+                    ptfi.DistinctValues = fieldValueCells
+                            .Select(cell => cell.GetDateTime())
+                            .Distinct()
+                            .Cast<object>();
+
+                    pti.Fields.Add(xlpf.SourceName, ptfi);
+
+                    // Output items only for row / column / filter fields
+                    if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
+                        || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
+                        || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
+                    {
+                        foreach (var value in ptfi.DistinctValues)
+                            sharedItems.AppendChild(new DateTimeItem { Val = (DateTime)value });
+                    }
+
+                    sharedItems.MinDate = (DateTime)ptfi.DistinctValues.Min();
+                    sharedItems.MaxDate = (DateTime)ptfi.DistinctValues.Max();
                 }
                 else
                 {
-                    foreach (var cellValue in source.Cells()
-                        .Where(cell => cell.Address.ColumnNumber == columnNumber && cell.Address.RowNumber > source.FirstRow().RowNumber())
-                        .Select(cell => cell.Value.ToString())
-                        .Where(cellValue => !xlpf.SharedStrings.Select(ss => ss.ToLower()).Contains(cellValue.ToLower())))
+                    if (types.Any())
                     {
-                        xlpf.SharedStrings.Add(cellValue);
-                    }
+                        ptfi.DataType = types.First();
+                        ptfi.MixedDataType = types.Count() > 1;
 
-                    foreach (var li in xlpf.SharedStrings)
-                    {
-                        sharedItems.AppendChild(new StringItem { Val = li });
+                        if (!ptfi.MixedDataType && ptfi.DataType == XLCellValues.Text)
+                            ptfi.DistinctValues = fieldValueCells
+                                .Select(cell => cell.Value)
+                                .Cast<String>()
+                                .Distinct(StringComparer.OrdinalIgnoreCase);
+                        else
+                            ptfi.DistinctValues = fieldValueCells
+                                .Select(cell => cell.GetString())
+                                .Cast<String>()
+                                .Distinct(StringComparer.OrdinalIgnoreCase);
+
+                        pti.Fields.Add(xlpf.SourceName, ptfi);
+
+                        foreach (var value in ptfi.DistinctValues)
+                            sharedItems.AppendChild(new StringItem { Val = (string)value });
                     }
                 }
+
+                if (ptfi.DistinctValues.Any())
+                    sharedItems.Count = Convert.ToUInt32(ptfi.DistinctValues.Count());
 
                 var cacheField = new CacheField { Name = xlpf.SourceName };
                 cacheField.AppendChild(sharedItems);
@@ -2056,13 +2131,19 @@ namespace ClosedXML.Excel
 
             var pivotCacheRecords = new PivotCacheRecords();
             pivotCacheRecords.AddNamespaceDeclaration("r",
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             pivotTableCacheRecordsPart.PivotCacheRecords = pivotCacheRecords;
+
+            context.PivotTables.Add(pti.Guid, pti);
         }
 
         // Generates content of pivotTablePart
-        private static void GeneratePivotTablePartContent(PivotTablePart pivotTablePart, IXLPivotTable pt, uint cacheId, SaveContext context)
+        private static void GeneratePivotTablePartContent(
+            PivotTablePart pivotTablePart, IXLPivotTable pt,
+            uint cacheId, SaveContext context)
         {
+            var pti = context.PivotTables[(pt as XLPivotTable).Guid];
+
             var pivotTableDefinition = new PivotTableDefinition
             {
                 Name = pt.Name,
@@ -2129,11 +2210,16 @@ namespace ClosedXML.Excel
 
             var location = new Location
             {
-                Reference = pt.TargetCell.Address.ToString(),
                 FirstHeaderRow = 1U,
                 FirstDataRow = 1U,
                 FirstDataColumn = 1U
             };
+
+            if (pt.ReportFilters.Any())
+                // Reference cell is the part BELOW the report filters
+                location.Reference = pt.TargetCell.CellBelow(pt.ReportFilters.Count() + 1).Address.ToString();
+            else
+                location.Reference = pt.TargetCell.Address.ToString();
 
             var rowFields = new RowFields();
             var columnFields = new ColumnFields();
@@ -2142,14 +2228,21 @@ namespace ClosedXML.Excel
             var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count() };
             var pivotFields = new PivotFields { Count = Convert.ToUInt32(pt.SourceRange.ColumnCount()) };
 
-            foreach (var xlpf in pt.Fields.OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName) ? pt.RowLabels.IndexOf(f) : Int32.MaxValue))
+            foreach (var xlpf in pt
+                .Fields
+                .Cast<XLPivotField>()
+                .OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName)
+                              ? pt.RowLabels.IndexOf(f)
+                              : Int32.MaxValue))
             {
+                var ptfi = pti.Fields[xlpf.SourceName];
+
                 if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
                 {
                     var f = new Field { Index = pt.Fields.IndexOf(xlpf) };
                     rowFields.AppendChild(f);
 
-                    for (var i = 0; i < xlpf.SharedStrings.Count; i++)
+                    for (var i = 0; i < ptfi.DistinctValues.Count(); i++)
                     {
                         var rowItem = new RowItem();
                         rowItem.AppendChild(new MemberPropertyIndex { Val = i });
@@ -2165,7 +2258,7 @@ namespace ClosedXML.Excel
                     var f = new Field { Index = pt.Fields.IndexOf(xlpf) };
                     columnFields.AppendChild(f);
 
-                    for (var i = 0; i < xlpf.SharedStrings.Count; i++)
+                    for (var i = 0; i < ptfi.DistinctValues.Count(); i++)
                     {
                         var rowItem = new RowItem();
                         rowItem.AppendChild(new MemberPropertyIndex { Val = i });
@@ -2190,9 +2283,10 @@ namespace ClosedXML.Excel
                 }
             }
 
-            foreach (var xlpf in pt.Fields)
+            foreach (var xlpf in pt.Fields.Cast<XLPivotField>())
             {
-                IXLPivotField labelField = null;
+                var ptfi = pti.Fields[xlpf.SourceName];
+                IXLPivotField labelOrFilterField = null;
                 var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
 
                 if (pt.ClassicPivotTableLayout)
@@ -2218,37 +2312,95 @@ namespace ClosedXML.Excel
                         break;
                 }
 
-                if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
+                if (pt.RowLabels.Contains(xlpf.SourceName))
                 {
-                    labelField = pt.RowLabels.Single(p => p.SourceName == xlpf.SourceName);
+                    labelOrFilterField = pt.RowLabels.Get(xlpf.SourceName);
                     pf.Axis = PivotTableAxisValues.AxisRow;
                 }
-                else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
+                else if (pt.ColumnLabels.Contains(xlpf.SourceName))
                 {
-                    labelField = pt.ColumnLabels.Single(p => p.SourceName == xlpf.SourceName);
+                    labelOrFilterField = pt.ColumnLabels.Get(xlpf.SourceName);
                     pf.Axis = PivotTableAxisValues.AxisColumn;
                 }
-                else if (pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
+                else if (pt.ReportFilters.Contains(xlpf.SourceName))
                 {
+                    labelOrFilterField = pt.ReportFilters.Get(xlpf.SourceName);
+
                     location.ColumnsPerPage = 1;
                     location.RowPageCount = 1;
                     pf.Axis = PivotTableAxisValues.AxisPage;
-                    pageFields.AppendChild(new PageField { Hierarchy = -1, Field = pt.Fields.IndexOf(xlpf) });
+
+                    var pageField = new PageField
+                    {
+                        Hierarchy = -1,
+                        Field = pt.Fields.IndexOf(xlpf)
+                    };
+
+                    if (labelOrFilterField.SelectedValues.Count == 1)
+                    {
+                        if (ptfi.MixedDataType || ptfi.DataType == XLCellValues.Text)
+                        {
+                            var values = ptfi.DistinctValues
+                                .Select(v => v.ToString().ToLower())
+                                .ToList();
+                            var selectedValue = labelOrFilterField.SelectedValues.Single().ToString().ToLower();
+                            if (values.Contains(selectedValue))
+                                pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
+                        }
+                        else if (ptfi.DataType == XLCellValues.DateTime)
+                        {
+                            var values = ptfi.DistinctValues
+                                .Select(v => Convert.ToDateTime(v))
+                                .ToList();
+                            var selectedValue = Convert.ToDateTime(labelOrFilterField.SelectedValues.Single());
+                            if (values.Contains(selectedValue))
+                                pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
+                        }
+                        else if (ptfi.DataType == XLCellValues.Number)
+                        {
+                            var values = ptfi.DistinctValues
+                                .Select(v => Convert.ToDouble(v))
+                                .ToList();
+                            var selectedValue = Convert.ToDouble(labelOrFilterField.SelectedValues.Single());
+                            if (values.Contains(selectedValue))
+                                pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
+                        }
+                        else
+                            throw new NotImplementedException();
+                    }
+
+                    pageFields.AppendChild(pageField);
                 }
+
+                if ((labelOrFilterField?.SelectedValues?.Count ?? 0) > 1)
+                    pf.MultipleItemSelectionAllowed = true;
 
                 if (pt.Values.Any(p => p.SourceName == xlpf.SourceName))
                     pf.DataField = true;
 
                 var fieldItems = new Items();
 
-                if (xlpf.SharedStrings.Any())
+                // Output items only for row / column / filter fields
+                if (ptfi.DistinctValues.Any()
+                    && (pt.RowLabels.Contains(xlpf.SourceName)
+                        || pt.ColumnLabels.Contains(xlpf.SourceName)
+                        || pt.ReportFilters.Contains(xlpf.SourceName)))
                 {
-                    for (uint i = 0; i < xlpf.SharedStrings.Count; i++)
+                    uint i = 0;
+                    foreach (var value in ptfi.DistinctValues)
                     {
                         var item = new Item { Index = i };
-                        if (labelField != null && labelField.Collapsed)
+
+                        if (labelOrFilterField != null && labelOrFilterField.Collapsed)
                             item.HideDetails = BooleanValue.FromBoolean(false);
+
+                        if (labelOrFilterField.SelectedValues.Count > 1
+                                 && !labelOrFilterField.SelectedValues.Contains(value))
+                            item.Hidden = BooleanValue.FromBoolean(true);
+                        
                         fieldItems.AppendChild(item);
+
+                        i++;
                     }
                 }
 
