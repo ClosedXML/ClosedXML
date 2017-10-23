@@ -642,6 +642,73 @@ namespace ClosedXML.Excel
                                     }
                                 }
                             }
+
+                            // Filters
+                            if (pivotTableDefinition.PageFields != null)
+                            {
+                                foreach (var pageField in pivotTableDefinition.PageFields.Cast<PageField>())
+                                {
+                                    var pf = pivotTableDefinition.PivotFields.ElementAt((int)pageField.Field.Value) as PivotField;
+                                    if (pf == null)
+                                        continue;
+
+                                    var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt((int)pageField.Field.Value) as CacheField;
+
+                                    var filterName = pf.Name?.Value ?? cacheField.Name?.Value;
+
+                                    IXLPivotField rf;
+                                    if (pageField.Name?.Value != null)
+                                        rf = pt.ReportFilters.Add(filterName, pageField.Name.Value);
+                                    else
+                                        rf = pt.ReportFilters.Add(filterName);
+
+                                    if ((pageField.Item?.HasValue ?? false)
+                                        && pf.Items.Any() && cacheField.SharedItems.Any())
+                                    {
+                                        var item = pf.Items.ElementAt(Convert.ToInt32(pageField.Item.Value)) as Item;
+                                        if (item == null)
+                                            continue;
+
+                                        var sharedItem = cacheField.SharedItems.ElementAt(Convert.ToInt32((uint)item.Index));
+                                        var numberItem = sharedItem as NumberItem;
+                                        var stringItem = sharedItem as StringItem;
+                                        var dateTimeItem = sharedItem as DateTimeItem;
+
+                                        if (numberItem != null)
+                                            rf.AddSelectedValue(Convert.ToDouble(numberItem.Val.Value));
+                                        else if (dateTimeItem != null)
+                                            rf.AddSelectedValue(Convert.ToDateTime(dateTimeItem.Val.Value));
+                                        else if (stringItem != null)
+                                            rf.AddSelectedValue(stringItem.Val.Value);
+                                        else
+                                            throw new NotImplementedException();
+                                    }
+                                    else if (BooleanValue.ToBoolean(pf.MultipleItemSelectionAllowed))
+                                    {
+                                        foreach (var item in pf.Items.Cast<Item>())
+                                        {
+                                            if (item.Hidden == null || !BooleanValue.ToBoolean(item.Hidden))
+                                            {
+                                                var sharedItem = cacheField.SharedItems.ElementAt(Convert.ToInt32((uint)item.Index));
+                                                var numberItem = sharedItem as NumberItem;
+                                                var stringItem = sharedItem as StringItem;
+                                                var dateTimeItem = sharedItem as DateTimeItem;
+
+                                                if (numberItem != null)
+                                                    rf.AddSelectedValue(Convert.ToDouble(numberItem.Val.Value));
+                                                else if (dateTimeItem != null)
+                                                    rf.AddSelectedValue(Convert.ToDateTime(dateTimeItem.Val.Value));
+                                                else if (stringItem != null)
+                                                    rf.AddSelectedValue(stringItem.Val.Value);
+                                                else
+                                                    throw new NotImplementedException();
+                                            }
+                                        }
+                                    }
+                                }
+
+                                pt.TargetCell = pt.TargetCell.CellAbove(pt.ReportFilters.Count() + 1);
+                            }
                         }
                     }
                 }
