@@ -1,15 +1,16 @@
-using System;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 
 namespace ClosedXML.Excel
 {
     internal class XLCFIsBlankConverter : IXLCFConverter
     {
-
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
-            conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cf.Style];
+
+            if (!cf.Style.Equals(XLWorkbook.DefaultStyle))
+                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cf.Style];
 
             var formula = new Formula { Text = "LEN(TRIM(" + cf.Range.RangeAddress.FirstAddress.ToStringRelative(false) + "))=0" };
 
@@ -17,6 +18,5 @@ namespace ClosedXML.Excel
 
             return conditionalFormattingRule;
         }
-
     }
 }

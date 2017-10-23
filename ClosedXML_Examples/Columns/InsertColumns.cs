@@ -1,46 +1,11 @@
+using ClosedXML.Excel;
 using System;
 using System.Linq;
-using ClosedXML.Excel;
-
 
 namespace ClosedXML_Examples.Columns
 {
     public class InsertColumns : IXLExample
     {
-        #region Variables
-
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Methods
-
-        // Public
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
@@ -54,13 +19,11 @@ namespace ClosedXML_Examples.Columns
                 foreach (var c in Enumerable.Range(1, 5))
                     ws.Cell(r, c).Value = "X";
 
-
             var blueColumn = ws.Column(2);
             var redColumn = ws.Column(5);
 
             blueColumn.Style.Fill.BackgroundColor = XLColor.Blue;
             blueColumn.InsertColumnsAfter(2);
-
 
             redColumn.Style.Fill.BackgroundColor = XLColor.Red;
             redColumn.InsertColumnsBefore(2);
@@ -73,12 +36,5 @@ namespace ClosedXML_Examples.Columns
 
             workbook.SaveAs(filePath);
         }
-
-        // Private
-
-        // Override
-
-
-        #endregion
     }
 }

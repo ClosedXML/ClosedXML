@@ -11,6 +11,8 @@ namespace ClosedXML.Excel
         internal String totalsRowLabel;
         private readonly XLTable table;
 
+        private IXLRangeColumn _column;
+        private Int32 index;
         private String name;
 
         public XLTableField(XLTable table, String name)
@@ -18,8 +20,6 @@ namespace ClosedXML.Excel
             this.table = table;
             this.name = name;
         }
-
-        private IXLRangeColumn _column;
 
         public IXLRangeColumn Column
         {
@@ -32,8 +32,6 @@ namespace ClosedXML.Excel
                 return _column;
             }
         }
-
-        private Int32 index;
 
         public Int32 Index
         {
@@ -62,6 +60,8 @@ namespace ClosedXML.Excel
             }
         }
 
+        public IXLTable Table { get { return table; } }
+
         public String TotalsRowFormulaA1
         {
             get { return table.TotalsRow().Cell(Index + 1).FormulaA1; }
@@ -89,34 +89,6 @@ namespace ClosedXML.Excel
             {
                 totalsRowFunction = value;
                 UpdateUnderlyingCellFormula();
-            }
-        }
-
-        internal void UpdateUnderlyingCellFormula()
-        {
-            if (TotalsRowFunction != XLTotalsRowFunction.None && TotalsRowFunction != XLTotalsRowFunction.Custom)
-            {
-                var cell = table.TotalsRow().Cell(Index + 1);
-                String formula = String.Empty;
-                switch (TotalsRowFunction)
-                {
-                    case XLTotalsRowFunction.Sum: formula = "109"; break;
-                    case XLTotalsRowFunction.Minimum: formula = "105"; break;
-                    case XLTotalsRowFunction.Maximum: formula = "104"; break;
-                    case XLTotalsRowFunction.Average: formula = "101"; break;
-                    case XLTotalsRowFunction.Count: formula = "103"; break;
-                    case XLTotalsRowFunction.CountNumbers: formula = "102"; break;
-                    case XLTotalsRowFunction.StandardDeviation: formula = "107"; break;
-                    case XLTotalsRowFunction.Variance: formula = "110"; break;
-                }
-
-                cell.FormulaA1 = "SUBTOTAL(" + formula + ",[" + Name + "])";
-                var lastCell = table.LastRow().Cell(Index + 1);
-                if (lastCell.DataType != XLCellValues.Text)
-                {
-                    cell.DataType = lastCell.DataType;
-                    cell.Style.NumberFormat = lastCell.Style.NumberFormat;
-                }
             }
         }
 
@@ -164,6 +136,70 @@ namespace ClosedXML.Excel
                 .Select(g => new { Key = g.Key, Count = g.Count() });
 
             return distinctDataTypes.Count() == 1;
+        }
+
+        public Boolean IsConsistentFormula()
+        {
+            var formulas = this.Column
+                .Cells()
+                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Select(c => c.FormulaR1C1);
+
+            if (this.table.ShowTotalsRow)
+                formulas = formulas.Take(formulas.Count() - 1);
+
+            var distinctFormulas = formulas
+                .GroupBy(f => f)
+                .Select(g => new { Key = g.Key, Count = g.Count() });
+
+            return distinctFormulas.Count() == 1;
+        }
+
+        public bool IsConsistentStyle()
+        {
+            var styles = this.Column
+                .Cells()
+                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Select(c => c.Style);
+
+            if (this.table.ShowTotalsRow)
+                styles = styles.Take(styles.Count() - 1);
+
+            var distinctStyles = styles
+                .GroupBy(f => f)
+                .Select(g => new { Key = g.Key, Count = g.Count() });
+
+            var ie = distinctStyles.First().Key.Equals(distinctStyles.Last().Key);
+
+            return distinctStyles.Count() == 1;
+        }
+
+        internal void UpdateUnderlyingCellFormula()
+        {
+            if (TotalsRowFunction != XLTotalsRowFunction.None && TotalsRowFunction != XLTotalsRowFunction.Custom)
+            {
+                var cell = table.TotalsRow().Cell(Index + 1);
+                String formula = String.Empty;
+                switch (TotalsRowFunction)
+                {
+                    case XLTotalsRowFunction.Sum: formula = "109"; break;
+                    case XLTotalsRowFunction.Minimum: formula = "105"; break;
+                    case XLTotalsRowFunction.Maximum: formula = "104"; break;
+                    case XLTotalsRowFunction.Average: formula = "101"; break;
+                    case XLTotalsRowFunction.Count: formula = "103"; break;
+                    case XLTotalsRowFunction.CountNumbers: formula = "102"; break;
+                    case XLTotalsRowFunction.StandardDeviation: formula = "107"; break;
+                    case XLTotalsRowFunction.Variance: formula = "110"; break;
+                }
+
+                cell.FormulaA1 = "SUBTOTAL(" + formula + ",[" + Name + "])";
+                var lastCell = table.LastRow().Cell(Index + 1);
+                if (lastCell.DataType != XLCellValues.Text)
+                {
+                    cell.DataType = lastCell.DataType;
+                    cell.Style.NumberFormat = lastCell.Style.NumberFormat;
+                }
+            }
         }
     }
 }
