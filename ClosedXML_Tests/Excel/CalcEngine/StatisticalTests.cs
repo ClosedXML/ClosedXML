@@ -91,6 +91,117 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(24, value);
         }
 
+        [TestCase(@"=COUNTIF(Data!E:E, ""J*"")", 13)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*i*"")", 21)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*in*"")", 9)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*i*l"")", 9)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*i?e*"")", 9)]
+        [TestCase(@"=COUNTIF(Data!E:E, ""*o??s*"")", 10)]
+        [TestCase(@"=COUNTIF(Data!X1:X1000, """")", 1000)]
+        [TestCase(@"=COUNTIF(Data!E1:E44, """")", 1)]
+        public void CountIf_ConditionWithWildcards(string formula, int expectedResult)
+        {
+            var ws = workbook.Worksheets.First();
+
+            int value = ws.Evaluate(formula).CastTo<int>();
+            Assert.AreEqual(expectedResult, value);
+        }
+
+        [TestCase("x", @"=COUNTIF(A1:A1, ""?"")", 1)]
+        [TestCase("x", @"=COUNTIF(A1:A1, ""~?"")", 0)]
+        [TestCase("?", @"=COUNTIF(A1:A1, ""~?"")", 1)]
+        [TestCase("~?", @"=COUNTIF(A1:A1, ""~?"")", 0)] 
+        [TestCase("~?", @"=COUNTIF(A1:A1, ""~~~?"")", 1)] 
+        [TestCase("?", @"=COUNTIF(A1:A1, ""~~?"")", 0)]
+        [TestCase("~?", @"=COUNTIF(A1:A1, ""~~?"")", 1)]
+        [TestCase("~x", @"=COUNTIF(A1:A1, ""~~?"")", 1)]
+        [TestCase("*", @"=COUNTIF(A1:A1, ""~*"")", 1)]
+        [TestCase("~*", @"=COUNTIF(A1:A1, ""~*"")", 0)]
+        [TestCase("~*", @"=COUNTIF(A1:A1, ""~~~*"")", 1)]
+        [TestCase("*", @"=COUNTIF(A1:A1, ""~~*"")", 0)]
+        [TestCase("~*", @"=COUNTIF(A1:A1, ""~~*"")", 1)]
+        [TestCase("~x", @"=COUNTIF(A1:A1, ""~~*"")", 1)]
+        [TestCase("~xyz", @"=COUNTIF(A1:A1, ""~~*"")", 1)]
+        public void CountIf_MoreWildcards(string cellContent, string formula, int expectedResult)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.Cell(1, 1).Value = cellContent;
+
+                Assert.AreEqual(expectedResult, (double)ws.Evaluate(formula));
+            }
+        }
+
+        [TestCase("=COUNTIFS(B1:D1, \"=Yes\")", 1)]
+        [TestCase("=COUNTIFS(B1:B4, \"=Yes\", C1:C4, \"=Yes\")", 2)]
+        [TestCase("= COUNTIFS(B4:D4, \"=Yes\", B2:D2, \"=Yes\")", 1)]
+        public void CountIfs_ReferenceExample1FromExcelDocumentations(
+            string formula,
+            int expectedOutcome)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                wb.ReferenceStyle = XLReferenceStyle.A1;
+
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.Cell(1, 1).Value = "Davidoski";
+                ws.Cell(1, 2).Value = "Yes";
+                ws.Cell(1, 3).Value = "No";
+                ws.Cell(1, 4).Value = "No";
+
+                ws.Cell(2, 1).Value = "Burke";
+                ws.Cell(2, 2).Value = "Yes";
+                ws.Cell(2, 3).Value = "Yes";
+                ws.Cell(2, 4).Value = "No";
+
+                ws.Cell(3, 1).Value = "Sundaram";
+                ws.Cell(3, 2).Value = "Yes";
+                ws.Cell(3, 3).Value = "Yes";
+                ws.Cell(3, 4).Value = "Yes";
+
+                ws.Cell(4, 1).Value = "Levitan";
+                ws.Cell(4, 2).Value = "No";
+                ws.Cell(4, 3).Value = "Yes";
+                ws.Cell(4, 4).Value = "Yes";
+
+                Assert.AreEqual(expectedOutcome, (int)ws.Evaluate(formula));
+            }
+        }
+
+        [Test]
+        public void CountIfs_SingleCondition()
+        {
+            var ws = workbook.Worksheets.First();
+            int value;
+            value = ws.Evaluate(@"=COUNTIFS(D3:D45,""Central"")").CastTo<int>();
+            Assert.AreEqual(24, value);
+
+            value = ws.Evaluate(@"=COUNTIFS(D:D,""Central"")").CastTo<int>();
+            Assert.AreEqual(24, value);
+
+            value = workbook.Evaluate(@"=COUNTIFS(Data!D:D,""Central"")").CastTo<int>();
+            Assert.AreEqual(24, value);
+        }
+
+        [TestCase(@"=COUNTIFS(Data!E:E, ""J*"")", 13)]
+        [TestCase(@"=COUNTIFS(Data!E:E, ""*i*"")", 21)]
+        [TestCase(@"=COUNTIFS(Data!E:E, ""*in*"")", 9)]
+        [TestCase(@"=COUNTIFS(Data!E:E, ""*i*l"")", 9)]
+        [TestCase(@"=COUNTIFS(Data!E:E, ""*i?e*"")", 9)]
+        [TestCase(@"=COUNTIFS(Data!E:E, ""*o??s*"")", 10)]
+        [TestCase(@"=COUNTIFS(Data!X1:X1000, """")", 1000)]
+        [TestCase(@"=COUNTIFS(Data!E1:E44, """")", 1)]
+        public void CountIfs_SingleConditionWithWildcards(string formula, int expectedResult)
+        {
+            var ws = workbook.Worksheets.First();
+
+            int value = ws.Evaluate(formula).CastTo<int>();
+            Assert.AreEqual(expectedResult, value);
+        }
+
         [OneTimeTearDown]
         public void Dispose()
         {

@@ -36,7 +36,7 @@ namespace ClosedXML_Tests
 
         public static void SaveWorkbook(XLWorkbook workbook, params string[] fileNameParts)
         {
-            workbook.SaveAs(PathHelper.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
+            workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
         }
 
         // Because different fonts are installed on Unix,
@@ -60,7 +60,7 @@ namespace ClosedXML_Tests
 
             var example = new T();
             string[] pathParts = filePartName.Split(new char[] { '\\' });
-            string filePath1 = PathHelper.Combine(new List<string>() { TestsExampleOutputDirectory }.Concat(pathParts).ToArray());
+            string filePath1 = Path.Combine(new List<string>() { TestsExampleOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
@@ -76,14 +76,7 @@ namespace ClosedXML_Tests
             using (var wb = new XLWorkbook(filePath1))
                 wb.SaveAs(filePath2, true, evaluateFormulae);
 
-            bool success = true;
-#pragma warning disable 162
-            try
-            {
-                //Compare
-                // ReSharper disable ConditionIsAlwaysTrueOrFalse
                 if (CompareWithResources)
-                // ReSharper restore ConditionIsAlwaysTrueOrFalse
 
                 {
                     string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');
@@ -92,9 +85,9 @@ namespace ClosedXML_Tests
                     {
                         string message;
 #if _NETFRAMEWORK_
-                        success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
+                        var success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
 #else
-                        success = ExcelDocsComparer.Compare(streamActual, streamExpected, true, out message);
+                        var success = ExcelDocsComparer.Compare(streamActual, streamExpected, true, out message);
 #endif
                         var formattedMessage =
                             String.Format(
@@ -105,12 +98,6 @@ namespace ClosedXML_Tests
                     }
                 }
             }
-            finally
-            {
-                //if (success && File.Exists(filePath)) File.Delete(filePath);
-            }
-#pragma warning restore 162
-        }
 
         public static string GetResourcePath(string filePartName)
         {

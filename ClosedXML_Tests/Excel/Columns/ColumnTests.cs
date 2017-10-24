@@ -108,8 +108,6 @@ namespace ClosedXML_Tests.Excel
             IXLColumn column3 = ws.Column(3);
 
             IXLColumn columnIns = ws.Column(2).InsertColumnsBefore(1).First();
-            string outputPath = PathHelper.Combine(TestHelper.TestsOutputDirectory, "ForTesting", "Sandbox.xlsx");
-            wb.SaveAs(outputPath, true);
 
             Assert.AreEqual(XLColor.Red, ws.Column(1).Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, ws.Column(1).Cell(2).Style.Fill.BackgroundColor);

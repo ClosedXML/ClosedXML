@@ -8,41 +8,43 @@ namespace ClosedXML_Examples
     {
         private class Pastry
         {
-            public Pastry(string name, int numberOfOrders, double quality, string month)
+            public Pastry(string name, int numberOfOrders, double quality, string month, DateTime bakeDate)
             {
                 Name = name;
                 NumberOfOrders = numberOfOrders;
                 Quality = quality;
                 Month = month;
+                BakeDate = bakeDate;
             }
 
             public string Name { get; set; }
             public int NumberOfOrders { get; set; }
             public double Quality { get; set; }
             public string Month { get; set; }
+            public DateTime BakeDate { get; set; }
         }
 
         public void Create(String filePath)
         {
             var pastries = new List<Pastry>
             {
-                new Pastry("Croissant", 150, 60.2, "Apr"),
-                new Pastry("Croissant", 250, 50.42, "May"),
-                new Pastry("Croissant", 134, 22.12, "June"),
-                new Pastry("Doughnut", 250, 89.99, "Apr"),
-                new Pastry("Doughnut", 225, 70, "May"),
-                new Pastry("Doughnut", 210, 75.33, "June"),
-                new Pastry("Bearclaw", 134, 10.24, "Apr"),
-                new Pastry("Bearclaw", 184, 33.33, "May"),
-                new Pastry("Bearclaw", 124, 25, "June"),
-                new Pastry("Danish", 394, -20.24, "Apr"),
-                new Pastry("Danish", 190, 60, "May"),
-                new Pastry("Danish", 221, 24.76, "June"),
+                new Pastry("Croissant", 150, 60.2, "Apr", new DateTime(2016, 04, 21)),
+                new Pastry("Croissant", 250, 50.42, "May", new DateTime(2016, 05, 03)),
+                new Pastry("Croissant", 134, 22.12, "Jun", new DateTime(2016, 06, 24)),
+                new Pastry("Doughnut", 250, 89.99, "Apr", new DateTime(2017, 04, 23)),
+                new Pastry("Doughnut", 225, 70, "May", new DateTime(2016, 05, 24)),
+                new Pastry("Doughnut", 210, 75.33, "Jun", new DateTime(2016, 06, 02)),
+                new Pastry("Bearclaw", 134, 10.24, "Apr", new DateTime(2016, 04, 27)),
+                new Pastry("Bearclaw", 184, 33.33, "May", new DateTime(2016, 05, 20)),
+                new Pastry("Bearclaw", 124, 25, "Jun", new DateTime(2017, 06, 05)),
+                new Pastry("Danish", 394, -20.24, "Apr", new DateTime(2017, 04, 24)),
+                new Pastry("Danish", 190, 60, "May", new DateTime(2017, 05, 08)),
+                new Pastry("Danish", 221, 24.76, "Jun", new DateTime(2016, 06, 21)),
 
                 // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
-                new Pastry("Scone", 135, 0, "Apr"),
-                new Pastry("SconE", 122, 5.19, "May"),
-                new Pastry("SCONE", 243, 44.2, "June")
+                new Pastry("Scone", 135, 0, "Apr", new DateTime(2017, 04, 22)),
+                new Pastry("SconE", 122, 5.19, "May", new DateTime(2017, 05, 03)),
+                new Pastry("SCONE", 243, 44.2, "Jun", new DateTime(2017, 06, 14)),
             };
 
             using (var wb = new XLWorkbook())
@@ -169,6 +171,28 @@ namespace ClosedXML_Examples
                 ptSheet.Columns().AdjustToContents();
 
                 #endregion Pivot table with subtotals disabled
+
+                #region Pivot Table with filter
+
+                ptSheet = wb.Worksheets.Add("pvtFilter");
+
+                pt = ptSheet.PivotTables.AddNew("pvtFilter", ptSheet.Cell(1, 1), dataRange);
+
+                pt.RowLabels.Add("Month");
+
+                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+                pt.ReportFilters.Add("Name")
+                    .AddSelectedValue("Scone")
+                    .AddSelectedValue("Doughnut");
+
+                pt.ReportFilters.Add("Quality")
+                    .AddSelectedValue(5.19);
+
+                pt.ReportFilters.Add("BakeDate")
+                    .AddSelectedValue(new DateTime(2017, 05, 03));
+
+                #endregion Pivot Table with filter
 
                 wb.SaveAs(filePath);
             }

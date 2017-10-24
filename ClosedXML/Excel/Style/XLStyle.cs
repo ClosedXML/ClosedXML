@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
         public IXLFill Fill { get; set; }
 
         private IXLNumberFormat numberFormat;
-        public IXLNumberFormat NumberFormat 
+        public IXLNumberFormat NumberFormat
         {
             get
             {

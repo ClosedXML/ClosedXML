@@ -566,6 +566,73 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void TableAsDynamicEnumerable()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var table = ws.FirstCell().InsertTable(l);
+
+                foreach (var d in table.AsDynamicEnumerable())
+                {
+                    Assert.DoesNotThrow(() =>
+                    {
+                        object value;
+                        value = d.FirstColumn;
+                        value = d.SecondColumn;
+                        value = d.UnOrderedColumn;
+                        value = d.SomeFieldNotProperty;
+                    });
+                }
+            }
+        }
+
+        [Test]
+        public void TableAsDotNetDataTable()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var table = ws.FirstCell().InsertTable(l).AsNativeDataTable();
+
+                Assert.AreEqual(4, table.Columns.Count);
+                Assert.AreEqual("FirstColumn", table.Columns[0].ColumnName);
+                Assert.AreEqual("SecondColumn", table.Columns[1].ColumnName);
+                Assert.AreEqual("SomeFieldNotProperty", table.Columns[2].ColumnName);
+                Assert.AreEqual("UnOrderedColumn", table.Columns[3].ColumnName);
+
+                Assert.AreEqual(typeof(String), table.Columns[0].DataType);
+                Assert.AreEqual(typeof(String), table.Columns[1].DataType);
+                Assert.AreEqual(typeof(Double), table.Columns[2].DataType);
+                Assert.AreEqual(typeof(Double), table.Columns[3].DataType);
+
+                var dr = table.Rows[0];
+                Assert.AreEqual("b", dr["FirstColumn"]);
+                Assert.AreEqual("a", dr["SecondColumn"]);
+                Assert.AreEqual(4, dr["SomeFieldNotProperty"]);
+                Assert.AreEqual(999, dr["UnOrderedColumn"]);
+
+                dr = table.Rows[1];
+                Assert.AreEqual("d", dr["FirstColumn"]);
+                Assert.AreEqual("c", dr["SecondColumn"]);
+                Assert.AreEqual(5, dr["SomeFieldNotProperty"]);
+                Assert.AreEqual(777, dr["UnOrderedColumn"]);
+            }
+        }
+
+        [Test]
         public void TestTableCellTypes()
         {
             using (var wb = new XLWorkbook())

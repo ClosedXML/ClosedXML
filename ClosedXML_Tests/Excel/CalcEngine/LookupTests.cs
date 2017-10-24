@@ -129,5 +129,20 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             Assert.Throws<CellReferenceException>(() => workbook.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"));
         }
+
+        [Test]
+        public void Hyperlink()
+        {
+            XLHyperlink hl;
+            hl = XLWorkbook.EvaluateExpr("HYPERLINK(\"http://github.com/ClosedXML/ClosedXML\")") as XLHyperlink;
+            Assert.IsNotNull(hl);
+            Assert.AreEqual("http://github.com/ClosedXML/ClosedXML", hl.ExternalAddress.ToString());
+            Assert.AreEqual(string.Empty, hl.Tooltip);
+
+            hl = XLWorkbook.EvaluateExpr("HYPERLINK(\"mailto:jsmith@github.com\", \"jsmith@github.com\")") as XLHyperlink;
+            Assert.IsNotNull(hl);
+            Assert.AreEqual("mailto:jsmith@github.com", hl.ExternalAddress.ToString());
+            Assert.AreEqual("jsmith@github.com", hl.Tooltip);
+        }
     }
 }

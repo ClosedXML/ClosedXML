@@ -217,7 +217,7 @@ namespace ClosedXML.Excel
             var textWidth = GraphicsUtils.MeasureString(text, font).Width;
 
             double width = (textWidth / 7d * 256 - 128 / 7) / 256;
-            width = (double)decimal.Round((decimal)width + 0.2M, 2);
+            width = Math.Round(width + 0.2, 2);
 
             return width;
         }
