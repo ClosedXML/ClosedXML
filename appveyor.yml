@@ -25,13 +25,6 @@ build:
   project: ClosedXML.sln
   verbosity: minimal
 
-test:
-  assemblies:
-    - ClosedXML_Tests/bin/Release/netcoreapp2.0/ClosedXML_Tests.dll
-    - ClosedXML_Tests/bin/Release/net40/ClosedXML_Tests.dll
-    - ClosedXML_Tests/bin/Release/net461/ClosedXML_Tests.dll
-
-
 before_build:
   - ps: if (Test-Path 'C:\Tools\NuGet43') { $nugetDir = 'C:\Tools\NuGet43' } else { $nugetDir = 'C:\Tools\NuGet' }
   - ps: (New-Object Net.WebClient).DownloadFile('https://dist.nuget.org/win-x86-commandline/v4.3.0/nuget.exe', "$nugetDir\NuGet.exe")
