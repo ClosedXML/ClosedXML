@@ -11,6 +11,8 @@ namespace ClosedXML.Excel
         internal String totalsRowLabel;
         private readonly XLTable table;
 
+        private IXLRangeColumn _column;
+        private Int32 index;
         private String name;
 
         public XLTableField(XLTable table, String name)
@@ -19,14 +21,17 @@ namespace ClosedXML.Excel
             this.name = name;
         }
 
-        private IXLRangeColumn _column;
-
         public IXLRangeColumn Column
         {
-            get { return _column ?? (_column = table.HeadersRow(false).Cell(this.Index + 1).AsRange().Columns().Single()); }
+            get
+            {
+                if (_column == null)
+                {
+                    _column = this.table.AsRange().Column(this.Index + 1);
+                }
+                return _column;
+            }
         }
-
-        private Int32 index;
 
         public Int32 Index
         {
@@ -54,6 +59,8 @@ namespace ClosedXML.Excel
                 name = value;
             }
         }
+
+        public IXLTable Table { get { return table; } }
 
         public String TotalsRowFormulaA1
         {
@@ -85,6 +92,88 @@ namespace ClosedXML.Excel
             }
         }
 
+        public String TotalsRowLabel
+        {
+            get { return totalsRowLabel; }
+            set
+            {
+                totalsRowFunction = XLTotalsRowFunction.None;
+                (table.TotalsRow().Cell(Index + 1) as XLCell).SetValue(value, false);
+                totalsRowLabel = value;
+            }
+        }
+
+        public void Delete()
+        {
+            Delete(true);
+        }
+
+        internal void Delete(Boolean deleteUnderlyingRangeColumn)
+        {
+            var fields = table.Fields.Cast<XLTableField>().ToArray();
+
+            if (deleteUnderlyingRangeColumn)
+            {
+                table.AsRange().ColumnQuick(this.Index + 1).Delete();
+            }
+
+            fields.Where(f => f.Index > this.Index).ForEach(f => f.Index--);
+            table.FieldNames.Remove(this.Name);
+        }
+
+        public bool IsConsistentDataType()
+        {
+            var dataTypes = this.Column
+                .Cells()
+                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Select(c => c.DataType);
+
+            if (this.table.ShowTotalsRow)
+                dataTypes = dataTypes.Take(dataTypes.Count() - 1);
+
+            var distinctDataTypes = dataTypes
+                .GroupBy(dt => dt)
+                .Select(g => new { Key = g.Key, Count = g.Count() });
+
+            return distinctDataTypes.Count() == 1;
+        }
+
+        public Boolean IsConsistentFormula()
+        {
+            var formulas = this.Column
+                .Cells()
+                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Select(c => c.FormulaR1C1);
+
+            if (this.table.ShowTotalsRow)
+                formulas = formulas.Take(formulas.Count() - 1);
+
+            var distinctFormulas = formulas
+                .GroupBy(f => f)
+                .Select(g => new { Key = g.Key, Count = g.Count() });
+
+            return distinctFormulas.Count() == 1;
+        }
+
+        public bool IsConsistentStyle()
+        {
+            var styles = this.Column
+                .Cells()
+                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Select(c => c.Style);
+
+            if (this.table.ShowTotalsRow)
+                styles = styles.Take(styles.Count() - 1);
+
+            var distinctStyles = styles
+                .GroupBy(f => f)
+                .Select(g => new { Key = g.Key, Count = g.Count() });
+
+            var ie = distinctStyles.First().Key.Equals(distinctStyles.Last().Key);
+
+            return distinctStyles.Count() == 1;
+        }
+
         internal void UpdateUnderlyingCellFormula()
         {
             if (TotalsRowFunction != XLTotalsRowFunction.None && TotalsRowFunction != XLTotalsRowFunction.Custom)
@@ -111,36 +200,6 @@ namespace ClosedXML.Excel
                     cell.Style.NumberFormat = lastCell.Style.NumberFormat;
                 }
             }
-        }
-
-        public String TotalsRowLabel
-        {
-            get { return totalsRowLabel; }
-            set
-            {
-                totalsRowFunction = XLTotalsRowFunction.None;
-                (table.TotalsRow().Cell(Index + 1) as XLCell).SetValue(value, false);
-                totalsRowLabel = value;
-            }
-        }
-
-        public void Delete()
-        {
-            Delete(true);
-        }
-
-        internal void Delete(Boolean deleteUnderlyingRangeColumn)
-        {
-            var fields = table.Fields.Cast<XLTableField>().ToArray();
-
-            if (deleteUnderlyingRangeColumn)
-            {
-                table.AsRange().ColumnQuick(this.Index + 1).Delete();
-                // (this.Column as XLRangeColumn).Delete(false);
-            }
-
-            fields.Where(f => f.Index > this.Index).ForEach(f => f.Index--);
-            table.FieldNames.Remove(this.Name);
         }
     }
 }

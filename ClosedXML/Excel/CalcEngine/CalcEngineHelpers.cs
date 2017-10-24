@@ -1,11 +1,28 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     internal class CalcEngineHelpers
     {
+        private static Lazy<Dictionary<string, Tuple<string, string>>> patternReplacements =
+            new Lazy<Dictionary<string, Tuple<string, string>>>(() =>
+            {
+                var patternReplacements = new Dictionary<string, Tuple<string, string>>();
+                // key: the literal string to match
+                // value: a tuple: first item: the search pattern, second item: the replacement
+                patternReplacements.Add(@"~~", new Tuple<string, string>(@"~~", "~"));
+                patternReplacements.Add(@"~*", new Tuple<string, string>(@"~\*", @"\*"));
+                patternReplacements.Add(@"~?", new Tuple<string, string>(@"~\?", @"\?"));
+                patternReplacements.Add(@"?", new Tuple<string, string>(@"\?", ".?"));
+                patternReplacements.Add(@"*", new Tuple<string, string>(@"\*", ".*"));
+
+                return patternReplacements;
+            });
+
         internal static bool ValueSatisfiesCriteria(object value, object criteria, CalcEngine ce)
         {
             // safety...
@@ -25,8 +42,11 @@ namespace ClosedXML.Excel.CalcEngine
 
             // convert criteria to string
             var cs = criteria as string;
-            if (!string.IsNullOrEmpty(cs))
+            if (cs != null)
             {
+                if (cs == "")
+                    return cs.Equals(value);
+
                 // if criteria is an expression (e.g. ">20"), use calc engine
                 if (cs[0] == '=' || cs[0] == '<' || cs[0] == '>')
                 {
@@ -54,11 +74,17 @@ namespace ClosedXML.Excel.CalcEngine
                 }
 
                 // if criteria is a regular expression, use regex
-                if (cs.IndexOf('*') > -1)
+                if (cs.IndexOfAny(new[] { '*', '?' }) > -1)
                 {
-                    var pattern = cs.Replace(@"\", @"\\");
-                    pattern = pattern.Replace(".", @"\");
-                    pattern = pattern.Replace("*", ".*");
+                    var pattern = Regex.Replace(
+                        cs,
+                        "(" + String.Join(
+                                "|",
+                                patternReplacements.Value.Values.Select(t => t.Item1))
+                        + ")",
+                        m => patternReplacements.Value[m.Value].Item2);
+                    pattern = $"^{pattern}$";
+
                     return Regex.IsMatch(value.ToString(), pattern, RegexOptions.IgnoreCase);
                 }
 

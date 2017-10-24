@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace ClosedXML.Excel
 {
@@ -116,5 +117,17 @@ namespace ClosedXML.Excel
         IXLTable SetShowTotalsRow(Boolean value);
 
         IXLRangeRow TotalsRow();
+
+        /// <summary>
+        /// Converts the table to an enumerable of dynamic objects
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<dynamic> AsDynamicEnumerable();
+
+        /// <summary>
+        /// Converts the table to a standard .NET System.Data.DataTable
+        /// </summary>
+        /// <returns></returns>
+        DataTable AsNativeDataTable();
     }
 }
