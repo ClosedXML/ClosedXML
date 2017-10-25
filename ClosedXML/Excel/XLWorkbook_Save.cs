@@ -65,20 +65,20 @@ namespace ClosedXML.Excel
         {
             switch (xlCell.DataType)
             {
-                case XLCellValues.Text:
+                case XLDataType.Text:
                     {
                         return xlCell.ShareString ? CvSharedString : CvInlineString;
                     }
-                case XLCellValues.Number:
+                case XLDataType.Number:
                     return CvNumber;
 
-                case XLCellValues.DateTime:
+                case XLDataType.DateTime:
                     return CvDate;
 
-                case XLCellValues.Boolean:
+                case XLDataType.Boolean:
                     return CvBoolean;
 
-                case XLCellValues.TimeSpan:
+                case XLDataType.TimeSpan:
                     return CvNumber;
 
                 default:
@@ -871,12 +871,12 @@ namespace ClosedXML.Excel
                     Worksheets.Cast<XLWorksheet>().SelectMany(
                         w =>
                             w.Internals.CellsCollection.GetCells(
-                                c => ((c.DataType == XLCellValues.Text && c.ShareString) || c.HasRichText)
+                                c => ((c.DataType == XLDataType.Text && c.ShareString) || c.HasRichText)
                                      && (c as XLCell).InnerText.Length > 0
                                      && String.IsNullOrWhiteSpace(c.FormulaA1)
                                 )))
             {
-                c.DataType = XLCellValues.Text;
+                c.DataType = XLDataType.Text;
                 if (c.HasRichText)
                 {
                     if (newRichStrings.ContainsKey(c.RichText))
@@ -2032,13 +2032,13 @@ namespace ClosedXML.Excel
                 var types = fieldValueCells.Select(cell => cell.DataType).Distinct();
 
 
-                if (types.Count() == 1 && types.Single() == XLCellValues.Number)
+                if (types.Count() == 1 && types.Single() == XLDataType.Number)
                 {
                     sharedItems.ContainsSemiMixedTypes = false;
                     sharedItems.ContainsString = false;
                     sharedItems.ContainsNumber = true;
 
-                    ptfi.DataType = XLCellValues.Number;
+                    ptfi.DataType = XLDataType.Number;
                     ptfi.MixedDataType = false;
                     ptfi.DistinctValues = fieldValueCells
                             .Select(cell => cell.GetDouble())
@@ -2059,14 +2059,14 @@ namespace ClosedXML.Excel
                     sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
                     sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
                 }
-                else if (types.Count() == 1 && types.Single() == XLCellValues.DateTime)
+                else if (types.Count() == 1 && types.Single() == XLDataType.DateTime)
                 {
                     sharedItems.ContainsSemiMixedTypes = false;
                     sharedItems.ContainsString = false;
                     sharedItems.ContainsNumber = false;
                     sharedItems.ContainsDate = true;
 
-                    ptfi.DataType = XLCellValues.DateTime;
+                    ptfi.DataType = XLDataType.DateTime;
                     ptfi.MixedDataType = false;
                     ptfi.DistinctValues = fieldValueCells
                             .Select(cell => cell.GetDateTime())
@@ -2094,7 +2094,7 @@ namespace ClosedXML.Excel
                         ptfi.DataType = types.First();
                         ptfi.MixedDataType = types.Count() > 1;
 
-                        if (!ptfi.MixedDataType && ptfi.DataType == XLCellValues.Text)
+                        if (!ptfi.MixedDataType && ptfi.DataType == XLDataType.Text)
                             ptfi.DistinctValues = fieldValueCells
                                 .Select(cell => cell.Value)
                                 .Cast<String>()
@@ -2338,7 +2338,7 @@ namespace ClosedXML.Excel
 
                     if (labelOrFilterField.SelectedValues.Count == 1)
                     {
-                        if (ptfi.MixedDataType || ptfi.DataType == XLCellValues.Text)
+                        if (ptfi.MixedDataType || ptfi.DataType == XLDataType.Text)
                         {
                             var values = ptfi.DistinctValues
                                 .Select(v => v.ToString().ToLower())
@@ -2347,7 +2347,7 @@ namespace ClosedXML.Excel
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
-                        else if (ptfi.DataType == XLCellValues.DateTime)
+                        else if (ptfi.DataType == XLDataType.DateTime)
                         {
                             var values = ptfi.DistinctValues
                                 .Select(v => Convert.ToDateTime(v))
@@ -2356,7 +2356,7 @@ namespace ClosedXML.Excel
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
-                        else if (ptfi.DataType == XLCellValues.Number)
+                        else if (ptfi.DataType == XLDataType.Number)
                         {
                             var values = ptfi.DistinctValues
                                 .Select(v => Convert.ToDouble(v))
@@ -4662,7 +4662,7 @@ namespace ClosedXML.Excel
                             else
                             {
                                 cell.CellFormula = null;
-                                cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValueType(xlCell);
+                                cell.DataType = xlCell.DataType == XLDataType.DateTime ? null : GetCellValueType(xlCell);
                             }
 
                             if (evaluateFormulae || field != null || !xlCell.HasFormula)
@@ -5306,7 +5306,7 @@ namespace ClosedXML.Excel
             }
 
             var dataType = xlCell.DataType;
-            if (dataType == XLCellValues.Text)
+            if (dataType == XLDataType.Text)
             {
                 if (xlCell.InnerText.Length == 0)
                     openXmlCell.CellValue = null;
@@ -5329,7 +5329,7 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-            else if (dataType == XLCellValues.TimeSpan)
+            else if (dataType == XLDataType.TimeSpan)
             {
                 var timeSpan = xlCell.GetTimeSpan();
                 var cellValue = new CellValue();
@@ -5337,7 +5337,7 @@ namespace ClosedXML.Excel
                     XLCell.BaseDate.Add(timeSpan).ToOADate().ToInvariantString();
                 openXmlCell.CellValue = cellValue;
             }
-            else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
+            else if (dataType == XLDataType.DateTime || dataType == XLDataType.Number)
             {
                 if (!String.IsNullOrWhiteSpace(xlCell.InnerText))
                 {

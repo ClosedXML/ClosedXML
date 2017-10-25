@@ -251,7 +251,7 @@ namespace ClosedXML.Excel
             set { Cells().ForEach(c => c.Value = value); }
         }
 
-        public XLCellValues DataType
+        public XLDataType DataType
         {
             set { Cells().ForEach(c => c.DataType = value); }
         }

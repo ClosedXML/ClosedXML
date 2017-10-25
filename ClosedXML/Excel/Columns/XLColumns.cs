@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLColumns SetDataType(XLCellValues dataType)
+        public IXLColumns SetDataType(XLDataType dataType)
         {
             _columns.ForEach(c => c.DataType = dataType);
             return this;

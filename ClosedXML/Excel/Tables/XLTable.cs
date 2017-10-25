@@ -100,7 +100,7 @@ namespace ClosedXML.Excel
                     {
                         name = GetUniqueName("Column", cellPos + 1, true);
                         cell.SetValue(name);
-                        cell.DataType = XLCellValues.Text;
+                        cell.DataType = XLDataType.Text;
                     }
                     if (_fieldNames.ContainsKey(name))
                         throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
@@ -383,7 +383,7 @@ namespace ClosedXML.Excel
                     if (!c.IsEmpty() && newHeaders.Contains(f.Name))
                     {
                         f.TotalsRowLabel = c.GetFormattedString();
-                        c.DataType = XLCellValues.Text;
+                        c.DataType = XLDataType.Text;
                     }
                 }
 
@@ -395,7 +395,7 @@ namespace ClosedXML.Excel
                         var c = this.TotalsRow().Cell(f.Index + 1);
                         if (!String.IsNullOrWhiteSpace(f.TotalsRowLabel))
                         {
-                            c.DataType = XLCellValues.Text;
+                            c.DataType = XLDataType.Text;
 
                             //Remove previous row's label
                             var oldTotalsCell = this.Worksheet.Cell(oldTotalsRowNumber, f.Column.ColumnNumber());
@@ -404,7 +404,7 @@ namespace ClosedXML.Excel
                         }
 
                         if (f.TotalsRowFunction != XLTotalsRowFunction.None)
-                            c.DataType = XLCellValues.Number;
+                            c.DataType = XLDataType.Number;
                     }
                 }
             }
@@ -545,7 +545,7 @@ namespace ClosedXML.Excel
             if (setAutofilter)
                 InitializeAutoFilter();
 
-            AsRange().Row(1).DataType = XLCellValues.Text;
+            AsRange().Row(1).DataType = XLDataType.Text;
 
             if (RowCount() == 1)
                 InsertRowsBelow(1);
@@ -678,7 +678,7 @@ namespace ClosedXML.Excel
                 _showHeaderRow = value;
 
                 if (_showHeaderRow)
-                    HeadersRow().DataType = XLCellValues.Text;
+                    HeadersRow().DataType = XLDataType.Text;
             }
         }
 
@@ -789,23 +789,23 @@ namespace ClosedXML.Excel
                     var c = f.Column.Cells().Skip(this.ShowHeaderRow ? 1 : 0).First();
                     switch (c.DataType)
                     {
-                        case XLCellValues.Text:
+                        case XLDataType.Text:
                             type = typeof(String);
                             break;
 
-                        case XLCellValues.Boolean:
+                        case XLDataType.Boolean:
                             type = typeof(Boolean);
                             break;
 
-                        case XLCellValues.DateTime:
+                        case XLDataType.DateTime:
                             type = typeof(DateTime);
                             break;
 
-                        case XLCellValues.TimeSpan:
+                        case XLDataType.TimeSpan:
                             type = typeof(TimeSpan);
                             break;
 
-                        case XLCellValues.Number:
+                        case XLDataType.Number:
                             type = typeof(Double);
                             break;
                     }

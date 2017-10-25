@@ -150,7 +150,7 @@ namespace ClosedXML.Excel
 
         internal struct PivotTableFieldInfo
         {
-            public XLCellValues DataType;
+            public XLDataType DataType;
             public Boolean MixedDataType;
             public IEnumerable<Object> DistinctValues;
         }

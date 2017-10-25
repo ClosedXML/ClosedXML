@@ -112,7 +112,7 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRows AddHorizontalPageBreaks();
 
-        IXLRows SetDataType(XLCellValues dataType);
+        IXLRows SetDataType(XLDataType dataType);
 
         /// <summary>
         /// Clears the contents of these rows.

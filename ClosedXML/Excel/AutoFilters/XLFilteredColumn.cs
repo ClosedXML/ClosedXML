@@ -46,7 +46,7 @@ namespace ClosedXML.Excel
                     if ((isText && condition(row.Cell(_column).GetString())) || (
                                                                                     !isText &&
                                                                                     row.Cell(_column).DataType ==
-                                                                                    XLCellValues.Number &&
+                                                                                    XLDataType.Number &&
                                                                                     condition(
                                                                                         row.Cell(_column).GetValue<T>()))
                         )

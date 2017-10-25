@@ -82,7 +82,7 @@ namespace ClosedXML.Excel
         /// <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         IXLCells CellsUsed(Boolean includeFormats);
 
-        IXLRanges SetDataType(XLCellValues dataType);
+        IXLRanges SetDataType(XLDataType dataType);
 
         /// <summary>
         /// Clears the contents of these ranges.

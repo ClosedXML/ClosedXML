@@ -112,7 +112,7 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLColumns AddVerticalPageBreaks();
 
-        IXLColumns SetDataType(XLCellValues dataType);
+        IXLColumns SetDataType(XLDataType dataType);
 
         /// <summary>
         /// Clears the contents of these columns.

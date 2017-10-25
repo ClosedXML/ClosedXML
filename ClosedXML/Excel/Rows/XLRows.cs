@@ -203,7 +203,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLRows SetDataType(XLCellValues dataType)
+        public IXLRows SetDataType(XLDataType dataType)
         {
             _rows.ForEach(c => c.DataType = dataType);
             return this;
