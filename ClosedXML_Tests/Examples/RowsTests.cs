@@ -24,5 +24,11 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<RowSettings>(@"Rows\RowSettings.xlsx");
         }
+
+        //[Test] // Not working yet
+        public void InsertRows()
+        {
+            TestHelper.RunTestExample<InsertRows>(@"Rows\InsertRows.xlsx");
+        }
     }
 }

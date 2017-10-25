@@ -17,7 +17,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("FORMULATEXT", , Formulatext); // Returns the formula at the given reference as text
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
             ce.RegisterFunction("HLOOKUP", 3, 4, Hlookup); // Looks in the top row of an array and returns the value of the indicated cell
-            //ce.RegisterFunction("HYPERLINK", , Hyperlink); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
+            ce.RegisterFunction("HYPERLINK", 1, 2, Hyperlink); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
             //ce.RegisterFunction("INDEX", , Index); // Uses an index to choose a value from a reference or array
             //ce.RegisterFunction("INDIRECT", , Indirect); // Returns a reference indicated by a text value
             //ce.RegisterFunction("LOOKUP", , Lookup); // Looks up values in a vector or array
@@ -78,6 +78,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return matching_column
                 .Cell(row_index_num)
                 .Value;
+        }
+
+        private static object Hyperlink(List<Expression> p)
+        {
+            String address = p[0];
+            String toolTip = p.Count == 2 ? p[1] : String.Empty;
+            return new XLHyperlink(address, toolTip);
         }
 
         private static object Vlookup(List<Expression> p)

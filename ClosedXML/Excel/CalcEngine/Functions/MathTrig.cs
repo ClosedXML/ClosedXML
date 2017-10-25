@@ -24,6 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ATANH", 1, Atanh);
             ce.RegisterFunction("CEILING", 1, Ceiling);
             ce.RegisterFunction("COMBIN", 2, Combin);
+            ce.RegisterFunction("COMBINA", 2, CombinA);
             ce.RegisterFunction("COS", 1, Cos);
             ce.RegisterFunction("COSH", 1, Cosh);
             ce.RegisterFunction("COT", 1, Cot);
@@ -69,6 +70,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SUBTOTAL", 2, 255, Subtotal);
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum);
             ce.RegisterFunction("SUMIF", 2, 3, SumIf);
+            ce.RegisterFunction("SUMIFS", 3, 255, SumIfs);
             ce.RegisterFunction("SUMPRODUCT", 1, 30, SumProduct);
             ce.RegisterFunction("SUMSQ", 1, 255, SumSq);
             //ce.RegisterFunction("SUMX2MY2", SumX2MY2, 1);
@@ -287,9 +289,9 @@ namespace ClosedXML.Excel.CalcEngine
         private static object SumIf(List<Expression> p)
         {
             // get parameters
-            var range = p[0] as IEnumerable;
-            var sumRange = p.Count < 3 ? range : p[2] as IEnumerable;
-            var criteria = p[1].Evaluate();
+            var range = p[0] as IEnumerable;                            // range of values to match the criteria against
+            var sumRange = p.Count < 3 ? range : p[2] as IEnumerable;   // range of values to sum up
+            var criteria = p[1].Evaluate();                             // the criteria to evaluate
 
             // build list of values in range and sumRange
             var rangeValues = new List<object>();
@@ -312,6 +314,63 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     tally.AddValue(sumRangeValues[i]);
                 }
+            }
+
+            // done
+            return tally.Sum();
+        }
+
+        private static object SumIfs(List<Expression> p)
+        {
+            // get parameters
+            var sumRange = p[0] as IEnumerable;
+
+            var sumRangeValues = new List<object>();
+            foreach (var value in sumRange)
+            {
+                sumRangeValues.Add(value);
+            }
+
+            var ce = new CalcEngine();
+            var tally = new Tally();
+
+            int numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
+
+            // prepare criteria-parameters:
+            var criteriaRanges = new Tuple<object, List<object>>[numberOfCriteria];
+            for(int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
+            {
+                var criterion = p[criteriaPair * 2 + 1].Evaluate();
+                var criteriaRange = p[(criteriaPair + 1) * 2] as IEnumerable;   
+                var criteriaRangeValues = new List<object>();
+                foreach (var value in criteriaRange)
+                {
+                    criteriaRangeValues.Add(value);
+                }
+
+                criteriaRanges[criteriaPair] = new Tuple<object, List<object>>(
+                    criterion,
+                    criteriaRangeValues);
+            }
+
+            for (var i = 0; i < sumRangeValues.Count; i++)
+            {
+                bool shouldUseValue = true;
+
+                foreach(var criteriaPair in criteriaRanges)
+                {
+                    if (!CalcEngineHelpers.ValueSatisfiesCriteria(
+                        criteriaPair.Item2[i],
+                        criteriaPair.Item1,
+                        ce))
+                    {
+                        shouldUseValue = false;
+                        break; // we're done with the inner loop as we can't ever get true again.
+                    }
+                }
+
+                if (shouldUseValue)
+                    tally.AddValue(sumRangeValues[i]);
             }
 
             // done
@@ -419,6 +478,24 @@ namespace ClosedXML.Excel.CalcEngine
             Int32 n = (int)p[0];
             Int32 k = (int)p[1];
             return XLMath.Combin(n, k);
+        }
+
+        private static object CombinA(List<Expression> p)
+        {
+            Int32 number = (int)p[0]; // casting truncates towards 0 as specified
+            Int32 chosen = (int)p[1];
+
+            if (number < 0 || number < chosen)
+                throw new NumberException();
+            if (chosen < 0)
+                throw new NumberException();
+
+            int n = number + chosen - 1;
+            int k = number - 1;
+
+            return n == k || k == 0
+                ? 1
+                : (long)XLMath.Combin(n, k);
         }
 
         private static object Degrees(List<Expression> p)
