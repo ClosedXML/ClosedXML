@@ -125,7 +125,7 @@ namespace ClosedXML_Tests.Excel
                 var ws = wb.Worksheets.First();
                 foreach (var cell in ws.CellsUsed())
                 {
-                    Assert.AreEqual(XLCellValues.DateTime, cell.DataType);
+                    Assert.AreEqual(XLDataType.DateTime, cell.DataType);
                 }
             }
         }

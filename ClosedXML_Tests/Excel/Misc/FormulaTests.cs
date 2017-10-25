@@ -112,7 +112,7 @@ namespace ClosedXML_Tests.Excel
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell("A1").Value = new DateTime(2016, 1, 1);
-                ws.Cell("A1").DataType = XLCellValues.DateTime;
+                ws.Cell("A1").DataType = XLDataType.DateTime;
 
                 ws.Cell("A2").FormulaA1 = @"=IF(A1 = """", ""A"", ""B"")";
                 var actual = ws.Cell("A2").Value;

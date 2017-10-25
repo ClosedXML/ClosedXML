@@ -166,7 +166,7 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLColumn AddVerticalPageBreak();
 
-        IXLColumn SetDataType(XLCellValues dataType);
+        IXLColumn SetDataType(XLDataType dataType);
 
         IXLColumn ColumnLeft();
         IXLColumn ColumnLeft(Int32 step);

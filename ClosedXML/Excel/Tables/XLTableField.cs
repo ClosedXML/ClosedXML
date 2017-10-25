@@ -194,7 +194,7 @@ namespace ClosedXML.Excel
 
                 cell.FormulaA1 = "SUBTOTAL(" + formula + ",[" + Name + "])";
                 var lastCell = table.LastRow().Cell(Index + 1);
-                if (lastCell.DataType != XLCellValues.Text)
+                if (lastCell.DataType != XLDataType.Text)
                 {
                     cell.DataType = lastCell.DataType;
                     cell.Style.NumberFormat = lastCell.Style.NumberFormat;
