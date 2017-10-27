@@ -17,6 +17,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ABS", 1, Abs);
             ce.RegisterFunction("ACOS", 1, Acos);
             ce.RegisterFunction("ACOSH", 1, Acosh);
+            ce.RegisterFunction("ACOT", 1, Acot);
             ce.RegisterFunction("ASIN", 1, Asin);
             ce.RegisterFunction("ASINH", 1, Asinh);
             ce.RegisterFunction("ATAN", 1, Atan);
@@ -481,6 +482,18 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Acosh(List<Expression> p)
         {
             return XLMath.ACosh(p[0]);
+        }
+
+        private static object Acot(List<Expression> p)
+        {
+            double x = Math.Atan(1.0 / p[0]);
+
+            // Acot in Excel calculates the modulus of the function above.
+            // as the % operator is not the modulus, but the remainder, we have to calculate the modulus by hand:
+            while (x < 0)
+                x = x + Math.PI;
+
+            return x;
         }
 
         private static object Asinh(List<Expression> p)

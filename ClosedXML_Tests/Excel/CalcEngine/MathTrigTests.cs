@@ -12,6 +12,33 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     {
         private readonly double tolerance = 1e-10;
 
+        [TestCase(-10, 3.041924001)]
+        [TestCase(-9, 3.030935432)]
+        [TestCase(-8, 3.017237659)]
+        [TestCase(-7, 2.999695599)]
+        [TestCase(-6, 2.976443976)]
+        [TestCase(-5, 2.944197094)]
+        [TestCase(-4, 2.89661399)]
+        [TestCase(-3, 2.819842099)]
+        [TestCase(-2, 2.677945045)]
+        [TestCase(-1, 2.35619449)]
+        [TestCase(0, 1.570796327)]
+        [TestCase(1, 0.785398163)]
+        [TestCase(2, 0.463647609)]
+        [TestCase(3, 0.321750554)]
+        [TestCase(4, 0.244978663)]
+        [TestCase(5, 0.19739556)]
+        [TestCase(6, 0.165148677)]
+        [TestCase(7, 0.141897055)]
+        [TestCase(8, 0.124354995)]
+        [TestCase(9, 0.110657221)]
+        [TestCase(10, 0.099668652)]
+        public void Acot_ReturnsCorrectValue(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance * 10);
+        }
+
         [TestCase(4, 3, 20)]
         [TestCase(10, 3, 220)]
         [TestCase(0, 0, 1)]
