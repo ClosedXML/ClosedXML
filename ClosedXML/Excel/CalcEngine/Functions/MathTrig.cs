@@ -746,7 +746,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Sec(List<Expression> p)
         {
-            if (double.TryParse(p[0], out double number))
+            double number;
+            if (double.TryParse(p[0], out number))
                 return 1.0 / Math.Cos(number);
             else
                 throw new CellValueException();
