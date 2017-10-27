@@ -18,6 +18,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ACOS", 1, Acos);
             ce.RegisterFunction("ACOSH", 1, Acosh);
             ce.RegisterFunction("ACOT", 1, Acot);
+            ce.RegisterFunction("ACOTH", 1, Acoth);
             ce.RegisterFunction("ASIN", 1, Asin);
             ce.RegisterFunction("ASINH", 1, Asinh);
             ce.RegisterFunction("ATAN", 1, Atan);
@@ -494,6 +495,15 @@ namespace ClosedXML.Excel.CalcEngine
                 x = x + Math.PI;
 
             return x;
+        }
+
+        private static object Acoth(List<Expression> p)
+        {
+            double number = p[0];
+            if (Math.Abs(number) < 1)
+                throw new NumberException();
+
+            return 0.5 * Math.Log((number + 1) / (number - 1));
         }
 
         private static object Asinh(List<Expression> p)
