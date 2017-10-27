@@ -29,6 +29,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COSH", 1, Cosh);
             ce.RegisterFunction("COT", 1, Cot);
             ce.RegisterFunction("COTH", 1, Coth);
+            ce.RegisterFunction("CSC", 1, Csc);
             ce.RegisterFunction("CSCH", 1, Csch);
             ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
             ce.RegisterFunction("DEGREES", 1, Degrees);
@@ -139,6 +140,15 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new DivisionByZeroException();
 
             return 1 / Math.Tanh(input);
+        }
+
+        private static object Csc(List<Expression> p)
+        {
+            double input = p[0];
+            if (input == 0)
+                throw new DivisionByZeroException();
+
+            return 1 / Math.Sin(input);
         }
 
         private static object Csch(List<Expression> p)

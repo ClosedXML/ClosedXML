@@ -111,6 +111,39 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr(@"COTH(0)"));
         }
 
+        [TestCase(-10, 1.838163961)]
+        [TestCase(-9, -2.426486644)]
+        [TestCase(-8, -1.010756218)]
+        [TestCase(-7, -1.522101063)]
+        [TestCase(-6, 3.578899547)]
+        [TestCase(-5, 1.042835213)]
+        [TestCase(-4, 1.321348709)]
+        [TestCase(-3, -7.086167396)]
+        [TestCase(-2, -1.09975017)]
+        [TestCase(-1, -1.188395106)]
+        [TestCase(1, 1.188395106)]
+        [TestCase(2, 1.09975017)]
+        [TestCase(3, 7.086167396)]
+        [TestCase(4, -1.321348709)]
+        [TestCase(5, -1.042835213)]
+        [TestCase(6, -3.578899547)]
+        [TestCase(7, 1.522101063)]
+        [TestCase(8, 1.010756218)]
+        [TestCase(9, 2.426486644)]
+        [TestCase(10, -1.838163961)]
+        public void Csc_ReturnsCorrectValues(double input, double expected)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"CSC({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expected, actual, tolerance * 10);
+        }
+
+        [Test]
+        public void Csc_On0_ThrowsDivisionByZeroException()
+        {
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr(@"CSC(0)"));
+        }
+
+
         [TestCase("FF", 16, 255)]
         [TestCase("111", 2, 7)]
         [TestCase("zap", 36, 45745)]
