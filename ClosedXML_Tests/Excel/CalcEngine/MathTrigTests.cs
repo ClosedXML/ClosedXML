@@ -79,6 +79,38 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("COT(0)"));
         }
 
+        [TestCase(-10, -1.000000004)]
+        [TestCase(-9, -1.00000003)]
+        [TestCase(-8, -1.000000225)]
+        [TestCase(-7, -1.000001663)]
+        [TestCase(-6, -1.000012289)]
+        [TestCase(-5, -1.000090804)]
+        [TestCase(-4, -1.00067115)]
+        [TestCase(-3, -1.004969823)]
+        [TestCase(-2, -1.037314721)]
+        [TestCase(-1, -1.313035285)]
+        [TestCase(1, 1.313035285)]
+        [TestCase(2, 1.037314721)]
+        [TestCase(3, 1.004969823)]
+        [TestCase(4, 1.00067115)]
+        [TestCase(5, 1.000090804)]
+        [TestCase(6, 1.000012289)]
+        [TestCase(7, 1.000001663)]
+        [TestCase(8, 1.000000225)]
+        [TestCase(9, 1.00000003)]
+        [TestCase(10, 1.000000004)]
+        public void Coth_Examples(double input, double expected)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"COTH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expected, actual, tolerance * 10.0);
+        }
+
+        [Test]
+        public void Cot_On0_ThrowsDivisionByZeroException()
+        {
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr(@"COTH(0)"));
+        }
+
         [TestCase("FF", 16, 255)]
         [TestCase("111", 2, 7)]
         [TestCase("zap", 36, 45745)]
