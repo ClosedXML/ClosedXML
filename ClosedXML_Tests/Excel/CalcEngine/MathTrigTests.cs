@@ -404,6 +404,32 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                     @"SEC(number)")));
         }
 
+        [TestCase(-9, 0.00024682)]
+        [TestCase(-8, 0.000670925)]
+        [TestCase(-7, 0.001823762)]
+        [TestCase(-6, 0.004957474)]
+        [TestCase(-5, 0.013475282)]
+        [TestCase(-4, 0.036618993)]
+        [TestCase(-3, 0.099327927)]
+        [TestCase(-2, 0.265802229)]
+        [TestCase(-1, 0.648054274)]
+        [TestCase(0, 1)]
+        public void Sech_ReturnsCorrectNumber(double input, double expectedOutput)
+        {
+            double result = (double)XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"SECH({0})",
+                    input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedOutput, result, 0.00001);
+
+            // as the secant is symmetric for positive and negative numbers, let's assert twice:
+            double resultForNegative = (double)XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"SECH({0})",
+                    (-input).ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedOutput, resultForNegative, 0.00001);
+        }
+
         /// <summary>
         /// refers to Example 1 from the Excel documentation,
         /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&amp;rs=en-US&amp;ad=US"/>

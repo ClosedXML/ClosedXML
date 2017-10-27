@@ -66,6 +66,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ROUNDDOWN", 2, RoundDown);
             ce.RegisterFunction("ROUNDUP", 1, 2, RoundUp);
             ce.RegisterFunction("SEC", 1, Sec);
+            ce.RegisterFunction("SECH", 1, Sech);
             ce.RegisterFunction("SERIESSUM", 4, SeriesSum);
             ce.RegisterFunction("SIGN", 1, Sign);
             ce.RegisterFunction("SIN", 1, Sin);
@@ -749,6 +750,11 @@ namespace ClosedXML.Excel.CalcEngine
                 return 1.0 / Math.Cos(number);
             else
                 throw new CellValueException();
+        }
+
+        private static object Sech(List<Expression> p)
+        {
+            return 1.0 / Math.Cosh(p[0]);
         }
 
         private static object SeriesSum(List<Expression> p)
