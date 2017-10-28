@@ -488,6 +488,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Acosh(List<Expression> p)
         {
+            double number = p[0];
+            if (number < 1)
+                throw new NumberException();
+
             return XLMath.ACosh(p[0]);
         }
 

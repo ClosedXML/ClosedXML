@@ -88,6 +88,36 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, actual, tolerance*10);
         }
 
+        [Theory]
+        public void Acosh_NumbersBelow1ThrowNumberException([Range(-1, 0.9, 0.1)] double input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOSH({0})", input.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase(1.2, 0.622362504)]
+        [TestCase(1.5, 0.96242365)]
+        [TestCase(1.8, 1.192910731)]
+        [TestCase(2.1, 1.372859144)]
+        [TestCase(2.4, 1.522079367)]
+        [TestCase(2.7, 1.650193455)]
+        [TestCase(3, 1.762747174)]
+        [TestCase(3.3, 1.863279351)]
+        [TestCase(3.6, 1.954207529)]
+        [TestCase(3.9, 2.037266466)]
+        [TestCase(4.2, 2.113748231)]
+        [TestCase(4.5, 2.184643792)]
+        [TestCase(4.8, 2.250731414)]
+        [TestCase(5.1, 2.312634419)]
+        [TestCase(5.4, 2.370860342)]
+        [TestCase(5.7, 2.425828318)]
+        [TestCase(6, 2.47788873)]
+        [TestCase(1, 0)]
+        public void Acosh_ReturnsCorrectValue(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOSH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance * 10);
+        }
+
         [TestCase(-10, -0.100335348)]
         [TestCase(-9, -0.111571776)]
         [TestCase(-8, -0.125657214)]
