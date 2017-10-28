@@ -94,6 +94,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Acos(List<Expression> p)
         {
+            double input = p[0];
+            if (Math.Abs(input) > 1)
+                throw new NumberException();
+
             return Math.Acos(p[0]);
         }
 

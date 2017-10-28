@@ -53,6 +53,41 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
+        [Theory]
+        public void Acos_ThrowsNumberExceptionOutsideRange([Range(1.1, 3, 0.1)] double input)
+        {
+            // checking input and it's additive inverse as both are outside range.
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase(-1, 3.141592654)]
+        [TestCase(-0.9, 2.690565842)]
+        [TestCase(-0.8, 2.498091545)]
+        [TestCase(-0.7, 2.346193823)]
+        [TestCase(-0.6, 2.214297436)]
+        [TestCase(-0.5, 2.094395102)]
+        [TestCase(-0.4, 1.982313173)]
+        [TestCase(-0.3, 1.875488981)]
+        [TestCase(-0.2, 1.772154248)]
+        [TestCase(-0.1, 1.670963748)]
+        [TestCase(0, 1.570796327)]
+        [TestCase(0.1, 1.470628906)]
+        [TestCase(0.2, 1.369438406)]
+        [TestCase(0.3, 1.266103673)]
+        [TestCase(0.4, 1.159279481)]
+        [TestCase(0.5, 1.047197551)]
+        [TestCase(0.6, 0.927295218)]
+        [TestCase(0.7, 0.79539883)]
+        [TestCase(0.8, 0.643501109)]
+        [TestCase(0.9, 0.451026812)]
+        [TestCase(1, 0)]
+        public void Acos_ReturnsCorrectValue(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance*10);
+        }
+
         [TestCase(-10, -0.100335348)]
         [TestCase(-9, -0.111571776)]
         [TestCase(-8, -0.125657214)]
