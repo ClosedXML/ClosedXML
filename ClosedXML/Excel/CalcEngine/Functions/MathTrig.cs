@@ -19,6 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ACOSH", 1, Acosh);
             ce.RegisterFunction("ACOT", 1, Acot);
             ce.RegisterFunction("ACOTH", 1, Acoth);
+            ce.RegisterFunction("ARABIC", 1, Arabic);
             ce.RegisterFunction("ASIN", 1, Asin);
             ce.RegisterFunction("ASINH", 1, Asinh);
             ce.RegisterFunction("ATAN", 1, Atan);
@@ -514,6 +515,31 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new NumberException();
 
             return 0.5 * Math.Log((number + 1) / (number - 1));
+        }
+
+        private static object Arabic(List<Expression> p)
+        {
+            string input = ((string)p[0]).Trim();
+
+            try
+            {
+                if (input == "")
+                    return 0;
+                if (input == "-")
+                    throw new NumberException();
+                else if (input[0] == '-')
+                    return -XLMath.RomanToArabic(input.Substring(1));
+                else
+                    return XLMath.RomanToArabic(input);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw new CellValueException();
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         private static object Asinh(List<Expression> p)

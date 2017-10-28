@@ -148,6 +148,31 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOTH({0})", input.ToString(CultureInfo.InvariantCulture))));
         }
 
+        [TestCase("LVII", 57)]
+        [TestCase("mcmxii", 1912)]
+        [TestCase("", 0)]
+        [TestCase("-IV", -4)]
+        [TestCase("   XIV", 14)]
+        [TestCase("MCMLXXXIII ", 1983)]
+        public void Arabic_ReturnsCorrectNumber(string roman, int arabic)
+        {
+            var actual = (int)XLWorkbook.EvaluateExpr(string.Format($"ARABIC(\"{roman}\")"));
+            Assert.AreEqual(arabic, actual);
+        }
+
+        [Test]
+        public void Arabic_ThrowsNumberExceptionOnMinus()
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr("ARABIC(\"-\")"));
+        }
+
+        [TestCase("- I")]
+        [TestCase("roman")]
+        public void Arabic_ThrowsValueExceptionOnInvalidNumber(string invalidRoman)
+        {
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr($"ARABIC(\"{invalidRoman}\")"));
+        }
+
         [TestCase(4, 3, 20)]
         [TestCase(10, 3, 220)]
         [TestCase(0, 0, 1)]
