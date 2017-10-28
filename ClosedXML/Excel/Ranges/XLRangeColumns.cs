@@ -83,7 +83,7 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        public IXLRangeColumns SetDataType(XLCellValues dataType)
+        public IXLRangeColumns SetDataType(XLDataType dataType)
         {
             _ranges.ForEach(c => c.DataType = dataType);
             return this;

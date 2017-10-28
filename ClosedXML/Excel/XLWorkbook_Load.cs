@@ -1327,7 +1327,7 @@ namespace ClosedXML.Excel
                     else
                         xlCell._cellValue = String.Empty;
 
-                    xlCell._dataType = XLCellValues.Text;
+                    xlCell._dataType = XLDataType.Text;
                     xlCell.ShareString = false;
                 }
                 else if (cell.DataType == CellValues.SharedString)
@@ -1340,19 +1340,19 @@ namespace ClosedXML.Excel
                     else
                         xlCell._cellValue = String.Empty;
 
-                    xlCell._dataType = XLCellValues.Text;
+                    xlCell._dataType = XLDataType.Text;
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
                     if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
-                    xlCell._dataType = XLCellValues.DateTime;
+                    xlCell._dataType = XLDataType.DateTime;
                 }
                 else if (cell.DataType == CellValues.Boolean)
                 {
                     if (cell.CellValue != null)
                         xlCell._cellValue = cell.CellValue.Text;
-                    xlCell._dataType = XLCellValues.Boolean;
+                    xlCell._dataType = XLDataType.Boolean;
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
@@ -1360,7 +1360,7 @@ namespace ClosedXML.Excel
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
 
                     if (s == null)
-                        xlCell._dataType = XLCellValues.Number;
+                        xlCell._dataType = XLDataType.Number;
                     else
                         xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                 }
@@ -1369,7 +1369,7 @@ namespace ClosedXML.Excel
             {
                 if (s == null)
                 {
-                    xlCell._dataType = XLCellValues.Number;
+                    xlCell._dataType = XLDataType.Number;
                 }
                 else
                 {
@@ -1678,29 +1678,29 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static XLCellValues GetDataTypeFromCell(IXLNumberFormat numberFormat)
+        private static XLDataType GetDataTypeFromCell(IXLNumberFormat numberFormat)
         {
             var numberFormatId = numberFormat.NumberFormatId;
             if (numberFormatId == 46U)
-                return XLCellValues.TimeSpan;
+                return XLDataType.TimeSpan;
             else if ((numberFormatId >= 14 && numberFormatId <= 22) ||
                      (numberFormatId >= 45 && numberFormatId <= 47))
-                return XLCellValues.DateTime;
+                return XLDataType.DateTime;
             else if (numberFormatId == 49)
-                return XLCellValues.Text;
+                return XLDataType.Text;
             else
             {
                 if (!String.IsNullOrWhiteSpace(numberFormat.Format))
                 {
                     var dataType = GetDataTypeFromFormat(numberFormat.Format);
-                    return dataType.HasValue ? dataType.Value : XLCellValues.Number;
+                    return dataType.HasValue ? dataType.Value : XLDataType.Number;
                 }
                 else
-                    return XLCellValues.Number;
+                    return XLDataType.Number;
             }
         }
 
-        private static XLCellValues? GetDataTypeFromFormat(String format)
+        private static XLDataType? GetDataTypeFromFormat(String format)
         {
             int length = format.Length;
             String f = format.ToLower();
@@ -1710,9 +1710,9 @@ namespace ClosedXML.Excel
                 if (c == '"')
                     i = f.IndexOf('"', i + 1);
                 else if (c == '0' || c == '#' || c == '?')
-                    return XLCellValues.Number;
+                    return XLDataType.Number;
                 else if (c == 'y' || c == 'm' || c == 'd' || c == 'h' || c == 's')
-                    return XLCellValues.DateTime;
+                    return XLDataType.DateTime;
             }
             return null;
         }

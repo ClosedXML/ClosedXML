@@ -17,6 +17,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ABS", 1, Abs);
             ce.RegisterFunction("ACOS", 1, Acos);
             ce.RegisterFunction("ACOSH", 1, Acosh);
+            ce.RegisterFunction("ACOT", 1, Acot);
+            ce.RegisterFunction("ACOTH", 1, Acoth);
             ce.RegisterFunction("ASIN", 1, Asin);
             ce.RegisterFunction("ASINH", 1, Asinh);
             ce.RegisterFunction("ATAN", 1, Atan);
@@ -28,6 +30,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COS", 1, Cos);
             ce.RegisterFunction("COSH", 1, Cosh);
             ce.RegisterFunction("COT", 1, Cot);
+            ce.RegisterFunction("COTH", 1, Coth);
+            ce.RegisterFunction("CSC", 1, Csc);
             ce.RegisterFunction("CSCH", 1, Csch);
             ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
             ce.RegisterFunction("DEGREES", 1, Degrees);
@@ -61,6 +65,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ROUND", 2, Round);
             ce.RegisterFunction("ROUNDDOWN", 2, RoundDown);
             ce.RegisterFunction("ROUNDUP", 1, 2, RoundUp);
+            ce.RegisterFunction("SEC", 1, Sec);
+            ce.RegisterFunction("SECH", 1, Sech);
             ce.RegisterFunction("SERIESSUM", 4, SeriesSum);
             ce.RegisterFunction("SIGN", 1, Sign);
             ce.RegisterFunction("SIN", 1, Sin);
@@ -129,6 +135,24 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new DivisionByZeroException();
 
             return 1 / tan;
+        }
+
+        private static object Coth(List<Expression> p)
+        {
+            double input = p[0];
+            if (input == 0)
+                throw new DivisionByZeroException();
+
+            return 1 / Math.Tanh(input);
+        }
+
+        private static object Csc(List<Expression> p)
+        {
+            double input = p[0];
+            if (input == 0)
+                throw new DivisionByZeroException();
+
+            return 1 / Math.Sin(input);
         }
 
         private static object Csch(List<Expression> p)
@@ -463,6 +487,27 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.ACosh(p[0]);
         }
 
+        private static object Acot(List<Expression> p)
+        {
+            double x = Math.Atan(1.0 / p[0]);
+
+            // Acot in Excel calculates the modulus of the function above.
+            // as the % operator is not the modulus, but the remainder, we have to calculate the modulus by hand:
+            while (x < 0)
+                x = x + Math.PI;
+
+            return x;
+        }
+
+        private static object Acoth(List<Expression> p)
+        {
+            double number = p[0];
+            if (Math.Abs(number) < 1)
+                throw new NumberException();
+
+            return 0.5 * Math.Log((number + 1) / (number - 1));
+        }
+
         private static object Asinh(List<Expression> p)
         {
             return XLMath.ASinh(p[0]);
@@ -697,6 +742,20 @@ namespace ClosedXML.Excel.CalcEngine
                 return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
 
             return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+        }
+
+        private static object Sec(List<Expression> p)
+        {
+            double number;
+            if (double.TryParse(p[0], out number))
+                return 1.0 / Math.Cos(number);
+            else
+                throw new CellValueException();
+        }
+
+        private static object Sech(List<Expression> p)
+        {
+            return 1.0 / Math.Cosh(p[0]);
         }
 
         private static object SeriesSum(List<Expression> p)

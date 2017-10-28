@@ -274,7 +274,7 @@ namespace ClosedXML.Excel
 
         IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
 
-        IXLRange SetDataType(XLCellValues dataType);
+        IXLRange SetDataType(XLDataType dataType);
 
         /// <summary>
         /// Clears the contents of this range.
