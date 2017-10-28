@@ -12,6 +12,20 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     {
         private readonly double tolerance = 1e-10;
 
+        [Theory]
+        public void Abs_ReturnsItselfOnPositiveNumbers([Range(0, 10, 0.1)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ABS({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(input, actual, tolerance * 10);
+        }
+
+        [Theory]
+        public void Abs_ReturnsTheCorrectValueOnNegativeInput([Range(-10, -0.1, 0.1)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ABS({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(-input, actual, tolerance * 10);
+        }
+
         [TestCase(-10, 3.041924001)]
         [TestCase(-9, 3.030935432)]
         [TestCase(-8, 3.017237659)]
