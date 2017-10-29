@@ -173,6 +173,40 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr($"ARABIC(\"{invalidRoman}\")"));
         }
 
+        [Theory]
+        public void Asin_ThrowsNumberExceptionWhenAbsOfInputGreaterThan1([Range(-3, -1.1, 0.1)] double input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase(-1, -1.570796327)]
+        [TestCase(-0.9, -1.119769515)]
+        [TestCase(-0.8, -0.927295218)]
+        [TestCase(-0.7, -0.775397497)]
+        [TestCase(-0.6, -0.643501109)]
+        [TestCase(-0.5, -0.523598776)]
+        [TestCase(-0.4, -0.411516846)]
+        [TestCase(-0.3, -0.304692654)]
+        [TestCase(-0.2, -0.201357921)]
+        [TestCase(-0.1, -0.100167421)]
+        [TestCase(0, 0)]
+        [TestCase(0.1, 0.100167421)]
+        [TestCase(0.2, 0.201357921)]
+        [TestCase(0.3, 0.304692654)]
+        [TestCase(0.4, 0.411516846)]
+        [TestCase(0.5, 0.523598776)]
+        [TestCase(0.6, 0.643501109)]
+        [TestCase(0.7, 0.775397497)]
+        [TestCase(0.8, 0.927295218)]
+        [TestCase(0.9, 1.119769515)]
+        [TestCase(1, 1.570796327)]
+        public void Asin_ReturnsCorrectResult(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance * 10);
+        }
+
         [TestCase(4, 3, 20)]
         [TestCase(10, 3, 220)]
         [TestCase(0, 0, 1)]

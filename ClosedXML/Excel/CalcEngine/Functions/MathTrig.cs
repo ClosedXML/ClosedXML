@@ -104,7 +104,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Asin(List<Expression> p)
         {
-            return Math.Asin(p[0]);
+            double input = p[0];
+            if (Math.Abs(input) > 1)
+                throw new NumberException();
+
+            return Math.Asin(input);
         }
 
         private static object Atan(List<Expression> p)
