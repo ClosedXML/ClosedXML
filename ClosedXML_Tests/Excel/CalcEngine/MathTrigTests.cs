@@ -230,6 +230,29 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(-expectedResult, minusActual, tolerance);
         }
 
+        [TestCase(0, 0)]
+        [TestCase(0.1, 0.099668652491162)]
+        [TestCase(0.2, 0.197395559849881)]
+        [TestCase(0.3, 0.291456794477867)]
+        [TestCase(0.4, 0.380506377112365)]
+        [TestCase(0.5, 0.463647609000806)]
+        [TestCase(0.6, 0.540419500270584)]
+        [TestCase(0.7, 0.610725964389209)]
+        [TestCase(0.8, 0.674740942223553)]
+        [TestCase(0.9, 0.732815101786507)]
+        [TestCase(1, 0.785398163397448)]
+        [TestCase(2, 1.10714871779409)]
+        [TestCase(3, 1.24904577239825)]
+        [TestCase(4, 1.32581766366803)]
+        [TestCase(5, 1.37340076694502)]
+        public void Atan_ReturnsCorrectResult(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance);
+            var minusActual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN({0})", (-input).ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(-expectedResult, minusActual, tolerance);
+        }
+
         [TestCase(4, 3, 20)]
         [TestCase(10, 3, 220)]
         [TestCase(0, 0, 1)]
