@@ -85,7 +85,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void Acos_ReturnsCorrectValue(double input, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", input.ToString(CultureInfo.InvariantCulture)));
-            Assert.AreEqual(expectedResult, actual, tolerance*10);
+            Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
         [Theory]
@@ -205,6 +205,29 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
+        }
+
+        [TestCase(0, 0)]
+        [TestCase(0.1, 0.0998340788992076)]
+        [TestCase(0.2, 0.198690110349241)]
+        [TestCase(0.3, 0.295673047563422)]
+        [TestCase(0.4, 0.390035319770715)]
+        [TestCase(0.5, 0.481211825059603)]
+        [TestCase(0.6, 0.568824898732248)]
+        [TestCase(0.7, 0.652666566082356)]
+        [TestCase(0.8, 0.732668256045411)]
+        [TestCase(0.9, 0.808866935652783)]
+        [TestCase(1, 0.881373587019543)]
+        [TestCase(2, 1.44363547517881)]
+        [TestCase(3, 1.81844645923207)]
+        [TestCase(4, 2.0947125472611)]
+        [TestCase(5, 2.31243834127275)]
+        public void Asinh_ReturnsCorrectResult(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ASINH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance);
+            var minusActual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ASINH({0})", (-input).ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(-expectedResult, minusActual, tolerance);
         }
 
         [TestCase(4, 3, 20)]
