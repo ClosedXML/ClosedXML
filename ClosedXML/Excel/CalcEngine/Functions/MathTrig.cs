@@ -558,6 +558,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Atanh(List<Expression> p)
         {
+            double input = p[0];
+            if (Math.Abs(input) >= 1)
+                throw new NumberException();
+
             return XLMath.ATanh(p[0]);
         }
 

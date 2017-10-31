@@ -330,6 +330,37 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             }
         }
 
+        [Theory]
+        public void Atanh_ThrowsNumberExceptionWhenAbsOfInput1OrGreater([Range(1, 5, 0.2)] double input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase(-0.99, -2.64665241236225)]
+        [TestCase(-0.9, -1.47221948958322)]
+        [TestCase(-0.8, -1.09861228866811)]
+        [TestCase(-0.6, -0.693147180559945)]
+        [TestCase(-0.4, -0.423648930193602)]
+        [TestCase(-0.2, -0.202732554054082)]
+        [TestCase(0, 0)]
+        [TestCase(0.2, 0.202732554054082)]
+        [TestCase(0.4, 0.423648930193602)]
+        [TestCase(0.6, 0.693147180559945)]
+        [TestCase(0.8, 1.09861228866811)]
+        [TestCase(-0.9, -1.47221948958322)]
+        [TestCase(-0.990, -2.64665241236225)]
+        [TestCase(-0.999, -3.8002011672502)]
+        public void Atanh_ReturnsCorrectResults(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"ATANH({0})",
+                    input.ToString(CultureInfo.InvariantCulture)));
+
+            Assert.AreEqual(expectedResult, actual, tolerance * 10);
+        }
+
         [TestCase(4, 3, 20)]
         [TestCase(10, 3, 220)]
         [TestCase(0, 0, 1)]
