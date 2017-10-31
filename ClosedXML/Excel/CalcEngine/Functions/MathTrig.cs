@@ -118,7 +118,12 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Atan2(List<Expression> p)
         {
-            return Math.Atan2(p[0], p[1]);
+            double x = p[0];
+            double y = p[1];
+            if (x == 0 && y == 0)
+                throw new DivisionByZeroException();
+
+            return Math.Atan2(y, x);
         }
 
         private static object Ceiling(List<Expression> p)
