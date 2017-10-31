@@ -151,5 +151,36 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             
             throw new ArgumentOutOfRangeException("text is not a valid roman number");
         }
+
+        public static string ChangeBase(long number, int radix)
+        {
+            if (number < 0)
+                throw new ArgumentOutOfRangeException("number must be greater or equal to 0");
+            if (radix < 2)
+                throw new ArgumentOutOfRangeException("radix must be greater or equal to 2");
+            if (radix > 36)
+                throw new ArgumentOutOfRangeException("radix must be smaller than or equal to 36");
+
+            StringBuilder sb = new StringBuilder();
+            long remaining = number;
+
+            if (remaining == 0)
+            {
+                sb.Insert(0, '0');
+            }
+
+            while (remaining > 0)
+            {
+                var nextDigitDecimal = remaining % radix;
+                remaining = remaining / radix;
+
+                if (nextDigitDecimal < 10)
+                    sb.Insert(0, nextDigitDecimal);
+                else
+                    sb.Insert(0, (char)(nextDigitDecimal + 55));
+            }
+
+            return sb.ToString();
+        }
     }
 }

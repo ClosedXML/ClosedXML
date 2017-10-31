@@ -361,6 +361,92 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
+        [Theory]
+        public void Base_ThrowsNumberExceptionOnBaseSmallerThan2([Range(-2, 1)] int theBase)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"BASE(0, {0})", theBase.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [Theory]
+        public void Base_ThrowsNumberExceptionOnInputSmallerThan0([Range(-5, -1)] int input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, 2)", input.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [Theory]
+        public void Base_ThrowsNumberExceptionOnRadixGreaterThan36([Range(37, 40)] int radix)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"BASE(1, {0})", radix.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase("x", "2", "2")]
+        [TestCase("0", "x", "2")]
+        [TestCase("0", "2", "x")]
+        public void Base_ThrowsValueExceptionOnAnyInputNotANumber(string input, string theBase, string minLength)
+        {
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"BASE({0}, {1}, {2})",
+                    input,
+                    theBase,
+                    minLength)));
+        }
+
+        [TestCase(0, 36, "0")]
+        [TestCase(1, 36, "1")]
+        [TestCase(2, 36, "2")]
+        [TestCase(3, 36, "3")]
+        [TestCase(4, 36, "4")]
+        [TestCase(5, 36, "5")]
+        [TestCase(6, 36, "6")]
+        [TestCase(7, 36, "7")]
+        [TestCase(8, 36, "8")]
+        [TestCase(9, 36, "9")]
+        [TestCase(10, 36, "A")]
+        [TestCase(11, 36, "B")]
+        [TestCase(12, 36, "C")]
+        [TestCase(13, 36, "D")]
+        [TestCase(14, 36, "E")]
+        [TestCase(15, 36, "F")]
+        [TestCase(16, 36, "G")]
+        [TestCase(17, 36, "H")]
+        [TestCase(18, 36, "I")]
+        [TestCase(19, 36, "J")]
+        [TestCase(20, 36, "K")]
+        [TestCase(21, 36, "L")]
+        [TestCase(22, 36, "M")]
+        [TestCase(23, 36, "N")]
+        [TestCase(24, 36, "O")]
+        [TestCase(25, 36, "P")]
+        [TestCase(26, 36, "Q")]
+        [TestCase(27, 36, "R")]
+        [TestCase(28, 36, "S")]
+        [TestCase(29, 36, "T")]
+        [TestCase(30, 36, "U")]
+        [TestCase(31, 36, "V")]
+        [TestCase(32, 36, "W")]
+        [TestCase(33, 36, "X")]
+        [TestCase(34, 36, "Y")]
+        [TestCase(35, 36, "Z")]
+        [TestCase(36, 36, "10")]
+        [TestCase(255, 29, "8N")]
+        [TestCase(255, 2, "11111111")]
+        public void Base_ReturnsCorrectResultOnInput(int input, int theBase, string expectedResult)
+        {
+            var actual = (string)XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, {1})", input, theBase));
+            Assert.AreEqual(expectedResult, actual);
+        }
+
+        [TestCase(255, 2, 3, "11111111")]
+        [TestCase(255, 2, 8, "11111111")]
+        [TestCase(255, 2, 10, "0011111111")]
+        [TestCase(10, 3, 4, "0101")]
+        public void Base_ReturnsCorrectResultOnInputWithMinimalLength(int input, int theBase, int minLength, string expectedResult)
+        {
+            var actual = (string)XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, {1}, {2})", input, theBase, minLength));
+            Assert.AreEqual(expectedResult, actual);
+        }
+
         [TestCase(4, 3, 20)]
         [TestCase(10, 3, 220)]
         [TestCase(0, 0, 1)]

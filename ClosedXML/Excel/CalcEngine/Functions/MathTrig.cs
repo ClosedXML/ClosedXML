@@ -25,6 +25,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ATAN", 1, Atan);
             ce.RegisterFunction("ATAN2", 2, Atan2);
             ce.RegisterFunction("ATANH", 1, Atanh);
+            ce.RegisterFunction("BASE", 2, 3, Base);
             ce.RegisterFunction("CEILING", 1, Ceiling);
             ce.RegisterFunction("COMBIN", 2, Combin);
             ce.RegisterFunction("COMBINA", 2, CombinA);
@@ -563,6 +564,39 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new NumberException();
 
             return XLMath.ATanh(p[0]);
+        }
+
+        private static object Base(List<Expression> p)
+        {
+            long number;
+            int radix;
+            int minLength = 0;
+
+            var rawNumber = p[0].Evaluate();
+            if (rawNumber is long || rawNumber is int || rawNumber is byte || rawNumber is double || rawNumber is float)
+                number = Convert.ToInt64(rawNumber);
+            else
+                throw new CellValueException();
+
+            var rawRadix = p[1].Evaluate();
+            if (rawRadix is long || rawRadix is int || rawRadix is byte || rawRadix is double || rawRadix is float)
+                radix = Convert.ToInt32(rawRadix);
+            else
+                throw new CellValueException();
+
+            if (p.Count > 2)
+            {
+                var rawMinLength = p[2].Evaluate();
+                if (rawMinLength is long || rawMinLength is int || rawMinLength is byte || rawMinLength is double || rawMinLength is float)
+                    minLength = Convert.ToInt32(rawMinLength);
+                else
+                    throw new CellValueException();
+            }
+
+            if (number < 0 || radix < 2 || radix > 36)
+                throw new NumberException();
+
+            return XLMath.ChangeBase(number, radix).PadLeft(minLength, '0');
         }
 
         private static object Combin(List<Expression> p)
