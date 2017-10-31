@@ -19,11 +19,13 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ACOSH", 1, Acosh);
             ce.RegisterFunction("ACOT", 1, Acot);
             ce.RegisterFunction("ACOTH", 1, Acoth);
+            ce.RegisterFunction("ARABIC", 1, Arabic);
             ce.RegisterFunction("ASIN", 1, Asin);
             ce.RegisterFunction("ASINH", 1, Asinh);
             ce.RegisterFunction("ATAN", 1, Atan);
             ce.RegisterFunction("ATAN2", 2, Atan2);
             ce.RegisterFunction("ATANH", 1, Atanh);
+            ce.RegisterFunction("BASE", 2, 3, Base);
             ce.RegisterFunction("CEILING", 1, Ceiling);
             ce.RegisterFunction("COMBIN", 2, Combin);
             ce.RegisterFunction("COMBINA", 2, CombinA);
@@ -94,12 +96,20 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Acos(List<Expression> p)
         {
+            double input = p[0];
+            if (Math.Abs(input) > 1)
+                throw new NumberException();
+
             return Math.Acos(p[0]);
         }
 
         private static object Asin(List<Expression> p)
         {
-            return Math.Asin(p[0]);
+            double input = p[0];
+            if (Math.Abs(input) > 1)
+                throw new NumberException();
+
+            return Math.Asin(input);
         }
 
         private static object Atan(List<Expression> p)
@@ -109,7 +119,12 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Atan2(List<Expression> p)
         {
-            return Math.Atan2(p[0], p[1]);
+            double x = p[0];
+            double y = p[1];
+            if (x == 0 && y == 0)
+                throw new DivisionByZeroException();
+
+            return Math.Atan2(y, x);
         }
 
         private static object Ceiling(List<Expression> p)
@@ -484,6 +499,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Acosh(List<Expression> p)
         {
+            double number = p[0];
+            if (number < 1)
+                throw new NumberException();
+
             return XLMath.ACosh(p[0]);
         }
 
@@ -508,6 +527,31 @@ namespace ClosedXML.Excel.CalcEngine
             return 0.5 * Math.Log((number + 1) / (number - 1));
         }
 
+        private static object Arabic(List<Expression> p)
+        {
+            string input = ((string)p[0]).Trim();
+
+            try
+            {
+                if (input == "")
+                    return 0;
+                if (input == "-")
+                    throw new NumberException();
+                else if (input[0] == '-')
+                    return -XLMath.RomanToArabic(input.Substring(1));
+                else
+                    return XLMath.RomanToArabic(input);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw new CellValueException();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         private static object Asinh(List<Expression> p)
         {
             return XLMath.ASinh(p[0]);
@@ -515,7 +559,44 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Atanh(List<Expression> p)
         {
+            double input = p[0];
+            if (Math.Abs(input) >= 1)
+                throw new NumberException();
+
             return XLMath.ATanh(p[0]);
+        }
+
+        private static object Base(List<Expression> p)
+        {
+            long number;
+            int radix;
+            int minLength = 0;
+
+            var rawNumber = p[0].Evaluate();
+            if (rawNumber is long || rawNumber is int || rawNumber is byte || rawNumber is double || rawNumber is float)
+                number = Convert.ToInt64(rawNumber);
+            else
+                throw new CellValueException();
+
+            var rawRadix = p[1].Evaluate();
+            if (rawRadix is long || rawRadix is int || rawRadix is byte || rawRadix is double || rawRadix is float)
+                radix = Convert.ToInt32(rawRadix);
+            else
+                throw new CellValueException();
+
+            if (p.Count > 2)
+            {
+                var rawMinLength = p[2].Evaluate();
+                if (rawMinLength is long || rawMinLength is int || rawMinLength is byte || rawMinLength is double || rawMinLength is float)
+                    minLength = Convert.ToInt32(rawMinLength);
+                else
+                    throw new CellValueException();
+            }
+
+            if (number < 0 || radix < 2 || radix > 36)
+                throw new NumberException();
+
+            return XLMath.ChangeBase(number, radix).PadLeft(minLength, '0');
         }
 
         private static object Combin(List<Expression> p)

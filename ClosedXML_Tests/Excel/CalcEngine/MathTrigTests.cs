@@ -12,6 +12,20 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     {
         private readonly double tolerance = 1e-10;
 
+        [Theory]
+        public void Abs_ReturnsItselfOnPositiveNumbers([Range(0, 10, 0.1)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ABS({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(input, actual, tolerance * 10);
+        }
+
+        [Theory]
+        public void Abs_ReturnsTheCorrectValueOnNegativeInput([Range(-10, -0.1, 0.1)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ABS({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(-input, actual, tolerance * 10);
+        }
+
         [TestCase(-10, 3.041924001)]
         [TestCase(-9, 3.030935432)]
         [TestCase(-8, 3.017237659)]
@@ -36,6 +50,71 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void Acot_ReturnsCorrectValue(double input, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance * 10);
+        }
+
+        [Theory]
+        public void Acos_ThrowsNumberExceptionOutsideRange([Range(1.1, 3, 0.1)] double input)
+        {
+            // checking input and it's additive inverse as both are outside range.
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase(-1, 3.141592654)]
+        [TestCase(-0.9, 2.690565842)]
+        [TestCase(-0.8, 2.498091545)]
+        [TestCase(-0.7, 2.346193823)]
+        [TestCase(-0.6, 2.214297436)]
+        [TestCase(-0.5, 2.094395102)]
+        [TestCase(-0.4, 1.982313173)]
+        [TestCase(-0.3, 1.875488981)]
+        [TestCase(-0.2, 1.772154248)]
+        [TestCase(-0.1, 1.670963748)]
+        [TestCase(0, 1.570796327)]
+        [TestCase(0.1, 1.470628906)]
+        [TestCase(0.2, 1.369438406)]
+        [TestCase(0.3, 1.266103673)]
+        [TestCase(0.4, 1.159279481)]
+        [TestCase(0.5, 1.047197551)]
+        [TestCase(0.6, 0.927295218)]
+        [TestCase(0.7, 0.79539883)]
+        [TestCase(0.8, 0.643501109)]
+        [TestCase(0.9, 0.451026812)]
+        [TestCase(1, 0)]
+        public void Acos_ReturnsCorrectValue(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance * 10);
+        }
+
+        [Theory]
+        public void Acosh_NumbersBelow1ThrowNumberException([Range(-1, 0.9, 0.1)] double input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOSH({0})", input.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase(1.2, 0.622362504)]
+        [TestCase(1.5, 0.96242365)]
+        [TestCase(1.8, 1.192910731)]
+        [TestCase(2.1, 1.372859144)]
+        [TestCase(2.4, 1.522079367)]
+        [TestCase(2.7, 1.650193455)]
+        [TestCase(3, 1.762747174)]
+        [TestCase(3.3, 1.863279351)]
+        [TestCase(3.6, 1.954207529)]
+        [TestCase(3.9, 2.037266466)]
+        [TestCase(4.2, 2.113748231)]
+        [TestCase(4.5, 2.184643792)]
+        [TestCase(4.8, 2.250731414)]
+        [TestCase(5.1, 2.312634419)]
+        [TestCase(5.4, 2.370860342)]
+        [TestCase(5.7, 2.425828318)]
+        [TestCase(6, 2.47788873)]
+        [TestCase(1, 0)]
+        public void Acosh_ReturnsCorrectValue(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ACOSH({0})", input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedResult, actual, tolerance * 10);
         }
 
@@ -67,6 +146,305 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void Acoth_ForPlusMinusXSmallerThan1_ThrowsNumberException([Range(-0.9, 0.9, 0.1)] double input)
         {
             Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOTH({0})", input.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase("LVII", 57)]
+        [TestCase("mcmxii", 1912)]
+        [TestCase("", 0)]
+        [TestCase("-IV", -4)]
+        [TestCase("   XIV", 14)]
+        [TestCase("MCMLXXXIII ", 1983)]
+        public void Arabic_ReturnsCorrectNumber(string roman, int arabic)
+        {
+            var actual = (int)XLWorkbook.EvaluateExpr(string.Format($"ARABIC(\"{roman}\")"));
+            Assert.AreEqual(arabic, actual);
+        }
+
+        [Test]
+        public void Arabic_ThrowsNumberExceptionOnMinus()
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr("ARABIC(\"-\")"));
+        }
+
+        [TestCase("- I")]
+        [TestCase("roman")]
+        public void Arabic_ThrowsValueExceptionOnInvalidNumber(string invalidRoman)
+        {
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr($"ARABIC(\"{invalidRoman}\")"));
+        }
+
+        [Theory]
+        public void Asin_ThrowsNumberExceptionWhenAbsOfInputGreaterThan1([Range(-3, -1.1, 0.1)] double input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase(-1, -1.570796327)]
+        [TestCase(-0.9, -1.119769515)]
+        [TestCase(-0.8, -0.927295218)]
+        [TestCase(-0.7, -0.775397497)]
+        [TestCase(-0.6, -0.643501109)]
+        [TestCase(-0.5, -0.523598776)]
+        [TestCase(-0.4, -0.411516846)]
+        [TestCase(-0.3, -0.304692654)]
+        [TestCase(-0.2, -0.201357921)]
+        [TestCase(-0.1, -0.100167421)]
+        [TestCase(0, 0)]
+        [TestCase(0.1, 0.100167421)]
+        [TestCase(0.2, 0.201357921)]
+        [TestCase(0.3, 0.304692654)]
+        [TestCase(0.4, 0.411516846)]
+        [TestCase(0.5, 0.523598776)]
+        [TestCase(0.6, 0.643501109)]
+        [TestCase(0.7, 0.775397497)]
+        [TestCase(0.8, 0.927295218)]
+        [TestCase(0.9, 1.119769515)]
+        [TestCase(1, 1.570796327)]
+        public void Asin_ReturnsCorrectResult(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance * 10);
+        }
+
+        [TestCase(0, 0)]
+        [TestCase(0.1, 0.0998340788992076)]
+        [TestCase(0.2, 0.198690110349241)]
+        [TestCase(0.3, 0.295673047563422)]
+        [TestCase(0.4, 0.390035319770715)]
+        [TestCase(0.5, 0.481211825059603)]
+        [TestCase(0.6, 0.568824898732248)]
+        [TestCase(0.7, 0.652666566082356)]
+        [TestCase(0.8, 0.732668256045411)]
+        [TestCase(0.9, 0.808866935652783)]
+        [TestCase(1, 0.881373587019543)]
+        [TestCase(2, 1.44363547517881)]
+        [TestCase(3, 1.81844645923207)]
+        [TestCase(4, 2.0947125472611)]
+        [TestCase(5, 2.31243834127275)]
+        public void Asinh_ReturnsCorrectResult(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ASINH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance);
+            var minusActual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ASINH({0})", (-input).ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(-expectedResult, minusActual, tolerance);
+        }
+
+        [TestCase(0, 0)]
+        [TestCase(0.1, 0.099668652491162)]
+        [TestCase(0.2, 0.197395559849881)]
+        [TestCase(0.3, 0.291456794477867)]
+        [TestCase(0.4, 0.380506377112365)]
+        [TestCase(0.5, 0.463647609000806)]
+        [TestCase(0.6, 0.540419500270584)]
+        [TestCase(0.7, 0.610725964389209)]
+        [TestCase(0.8, 0.674740942223553)]
+        [TestCase(0.9, 0.732815101786507)]
+        [TestCase(1, 0.785398163397448)]
+        [TestCase(2, 1.10714871779409)]
+        [TestCase(3, 1.24904577239825)]
+        [TestCase(4, 1.32581766366803)]
+        [TestCase(5, 1.37340076694502)]
+        public void Atan_ReturnsCorrectResult(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance);
+            var minusActual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN({0})", (-input).ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(-expectedResult, minusActual, tolerance);
+        }
+
+        [Test]
+        public void Atan2_ThrowsDiv0ExceptionOn0And0()
+        {
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr(@"ATAN2(0, 0)"));
+        }
+
+        [Test]
+        public void Atan2_ReturnsPiOn0AsSecondInputWhenFirstSmaller0([Range(-5, -0.1, 0.4)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2({0}, 0)", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(Math.PI, actual, tolerance);
+        }
+
+        [Test]
+        public void Atan2_ReturnsHalfPiOn0AsFirstInputWhenSecondGreater0([Range(0.1, 5, 0.4)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2(0, {0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(0.5 * Math.PI, actual, tolerance);
+        }
+
+        [Test]
+        public void Atan2_ReturnsMinusHalfPiOn0AsFirstInputWhenSecondSmaller0([Range(-5, -0.1, 0.4)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2(0, {0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(-0.5 * Math.PI, actual, tolerance);
+        }
+
+        [Test]
+        public void Atan2_Returns0OnSecond0AndFirstGreater0([Range(0.1, 5, 0.4)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2({0}, 0)", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(0, actual, tolerance);
+        }
+
+        public void Atan2_ReturnsQuarterOfPiWhenInputsAreEqualAndGreater0([Range(-5, 5, 0.3)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2(0, {0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(0.25 * Math.PI, actual, tolerance);
+        }
+
+        public void Atan2_Returns3QuartersOfPiWhenFirstSmaller0AndSecondItsNegative([Range(-5, 5, 0.3)] double input)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2(0, {0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(0.25 * Math.PI, actual, tolerance);
+        }
+
+        [TestCase(1, 2, 1.10714871779409)]
+        [TestCase(1, 3, 1.24904577239825)]
+        [TestCase(2, 3, 0.98279372324733)]
+        [TestCase(1, 4, 1.32581766366803)]
+        [TestCase(3, 4, 0.92729521800161)]
+        [TestCase(1, 5, 1.37340076694502)]
+        [TestCase(2, 5, 1.19028994968253)]
+        [TestCase(3, 5, 1.03037682652431)]
+        [TestCase(4, 5, 0.89605538457134)]
+        [TestCase(1, 6, 1.40564764938027)]
+        [TestCase(5, 6, 0.87605805059819)]
+        [TestCase(1, 7, 1.42889927219073)]
+        [TestCase(2, 7, 1.29249666778979)]
+        [TestCase(3, 7, 1.16590454050981)]
+        [TestCase(4, 7, 1.05165021254837)]
+        [TestCase(5, 7, 0.95054684081208)]
+        [TestCase(6, 7, 0.86217005466723)]
+        public void Atan2_ReturnsCorrectResults_EqualOnAllMultiplesOfFraction(double x, double y, double expectedResult)
+        {
+            for (int i=1; i<5; i++)
+            {
+                var actual = (double)XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"ATAN2({0}, {1})",
+                    (x * i).ToString(CultureInfo.InvariantCulture),
+                    (y * i).ToString(CultureInfo.InvariantCulture)));
+
+                Assert.AreEqual(expectedResult, actual, tolerance);
+            }
+        }
+
+        [Theory]
+        public void Atanh_ThrowsNumberExceptionWhenAbsOfInput1OrGreater([Range(1, 5, 0.2)] double input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase(-0.99, -2.64665241236225)]
+        [TestCase(-0.9, -1.47221948958322)]
+        [TestCase(-0.8, -1.09861228866811)]
+        [TestCase(-0.6, -0.693147180559945)]
+        [TestCase(-0.4, -0.423648930193602)]
+        [TestCase(-0.2, -0.202732554054082)]
+        [TestCase(0, 0)]
+        [TestCase(0.2, 0.202732554054082)]
+        [TestCase(0.4, 0.423648930193602)]
+        [TestCase(0.6, 0.693147180559945)]
+        [TestCase(0.8, 1.09861228866811)]
+        [TestCase(-0.9, -1.47221948958322)]
+        [TestCase(-0.990, -2.64665241236225)]
+        [TestCase(-0.999, -3.8002011672502)]
+        public void Atanh_ReturnsCorrectResults(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"ATANH({0})",
+                    input.ToString(CultureInfo.InvariantCulture)));
+
+            Assert.AreEqual(expectedResult, actual, tolerance * 10);
+        }
+
+        [Theory]
+        public void Base_ThrowsNumberExceptionOnBaseSmallerThan2([Range(-2, 1)] int theBase)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"BASE(0, {0})", theBase.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [Theory]
+        public void Base_ThrowsNumberExceptionOnInputSmallerThan0([Range(-5, -1)] int input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, 2)", input.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [Theory]
+        public void Base_ThrowsNumberExceptionOnRadixGreaterThan36([Range(37, 40)] int radix)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"BASE(1, {0})", radix.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase("x", "2", "2")]
+        [TestCase("0", "x", "2")]
+        [TestCase("0", "2", "x")]
+        public void Base_ThrowsValueExceptionOnAnyInputNotANumber(string input, string theBase, string minLength)
+        {
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"BASE({0}, {1}, {2})",
+                    input,
+                    theBase,
+                    minLength)));
+        }
+
+        [TestCase(0, 36, "0")]
+        [TestCase(1, 36, "1")]
+        [TestCase(2, 36, "2")]
+        [TestCase(3, 36, "3")]
+        [TestCase(4, 36, "4")]
+        [TestCase(5, 36, "5")]
+        [TestCase(6, 36, "6")]
+        [TestCase(7, 36, "7")]
+        [TestCase(8, 36, "8")]
+        [TestCase(9, 36, "9")]
+        [TestCase(10, 36, "A")]
+        [TestCase(11, 36, "B")]
+        [TestCase(12, 36, "C")]
+        [TestCase(13, 36, "D")]
+        [TestCase(14, 36, "E")]
+        [TestCase(15, 36, "F")]
+        [TestCase(16, 36, "G")]
+        [TestCase(17, 36, "H")]
+        [TestCase(18, 36, "I")]
+        [TestCase(19, 36, "J")]
+        [TestCase(20, 36, "K")]
+        [TestCase(21, 36, "L")]
+        [TestCase(22, 36, "M")]
+        [TestCase(23, 36, "N")]
+        [TestCase(24, 36, "O")]
+        [TestCase(25, 36, "P")]
+        [TestCase(26, 36, "Q")]
+        [TestCase(27, 36, "R")]
+        [TestCase(28, 36, "S")]
+        [TestCase(29, 36, "T")]
+        [TestCase(30, 36, "U")]
+        [TestCase(31, 36, "V")]
+        [TestCase(32, 36, "W")]
+        [TestCase(33, 36, "X")]
+        [TestCase(34, 36, "Y")]
+        [TestCase(35, 36, "Z")]
+        [TestCase(36, 36, "10")]
+        [TestCase(255, 29, "8N")]
+        [TestCase(255, 2, "11111111")]
+        public void Base_ReturnsCorrectResultOnInput(int input, int theBase, string expectedResult)
+        {
+            var actual = (string)XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, {1})", input, theBase));
+            Assert.AreEqual(expectedResult, actual);
+        }
+
+        [TestCase(255, 2, 3, "11111111")]
+        [TestCase(255, 2, 8, "11111111")]
+        [TestCase(255, 2, 10, "0011111111")]
+        [TestCase(10, 3, 4, "0101")]
+        public void Base_ReturnsCorrectResultOnInputWithMinimalLength(int input, int theBase, int minLength, string expectedResult)
+        {
+            var actual = (string)XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, {1}, {2})", input, theBase, minLength));
+            Assert.AreEqual(expectedResult, actual);
         }
 
         [TestCase(4, 3, 20)]
