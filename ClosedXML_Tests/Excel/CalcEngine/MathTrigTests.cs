@@ -724,6 +724,29 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
         }
 
+        [TestCase(0, 0)]
+        [TestCase(Math.PI, 180)]
+        [TestCase(Math.PI * 2, 360)]
+        [TestCase(1, 57.2957795130823)]
+        [TestCase(2, 114.591559026165)]
+        [TestCase(3, 171.887338539247)]
+        [TestCase(4, 229.183118052329)]
+        [TestCase(5, 286.478897565412)]
+        [TestCase(6, 343.774677078494)]
+        [TestCase(7, 401.070456591576)]
+        [TestCase(8, 458.366236104659)]
+        [TestCase(9, 515.662015617741)]
+        [TestCase(10, 572.957795130823)]
+        [TestCase(Math.PI * 0.5, 90)]
+        [TestCase(Math.PI * 1.5, 270)]
+        [TestCase(Math.PI * 0.25, 45)]
+        [TestCase(-1, -57.2957795130823)]
+        public void Degrees_ReturnsCorrectResult(double input, double expected)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"DEGREES({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expected, actual, tolerance);
+        }
+
         [Theory]
         public void Decimal_ReturnsErrorForRadiansSmaller2([Range(-5, 1)] int radix)
         {
