@@ -318,7 +318,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(6, 7, 0.86217005466723)]
         public void Atan2_ReturnsCorrectResults_EqualOnAllMultiplesOfFraction(double x, double y, double expectedResult)
         {
-            for (int i=1; i<5; i++)
+            for (int i = 1; i < 5; i++)
             {
                 var actual = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
@@ -494,7 +494,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             var actual = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, 1)", n));
             Assert.AreEqual(n, actual);
 
-            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, n-1));
+            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, n - 1));
             Assert.AreEqual(n, actual2);
         }
 
@@ -509,7 +509,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             var actual = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, k));
             Assert.AreEqual(expectedResult, actual);
 
-            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, n-k));
+            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, n - k));
             Assert.AreEqual(expectedResult, actual2);
         }
 
@@ -579,6 +579,36 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             var actualResult = (double)XLWorkbook.EvaluateExpr(string.Format("COS({0})", input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedResult, actualResult, tolerance);
+        }
+
+        [TestCase(0, 1)]
+        [TestCase(0.4, 1.08107237183845)]
+        [TestCase(0.8, 1.33743494630484)]
+        [TestCase(1.2, 1.81065556732437)]
+        [TestCase(1.6, 2.57746447119489)]
+        [TestCase(2, 3.76219569108363)]
+        [TestCase(2.4, 5.55694716696551)]
+        [TestCase(2.8, 8.25272841686113)]
+        [TestCase(3.2, 12.2866462005439)]
+        [TestCase(3.6, 18.3127790830626)]
+        [TestCase(4, 27.3082328360165)]
+        [TestCase(4.4, 40.7315730024356)]
+        [TestCase(4.8, 60.7593236328919)]
+        [TestCase(5.2, 90.638879219786)]
+        [TestCase(5.6, 135.215052644935)]
+        [TestCase(6, 201.715636122456)]
+        [TestCase(6.4, 300.923349714678)]
+        [TestCase(6.8, 448.924202712783)]
+        [TestCase(7.2, 669.715755490113)]
+        [TestCase(7.6, 999.098197777775)]
+        [TestCase(8, 1490.47916125218)]
+        [TestCase(8.4, 2223.53348628359)]
+        public void Cosh_ReturnsCorrectResult(double input, double expectedResult)
+        {
+            var actualResult = (double)XLWorkbook.EvaluateExpr(string.Format("COSH({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actualResult, tolerance);
+            var actualResult2 = (double)XLWorkbook.EvaluateExpr(string.Format("COSH({0})", (-input).ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actualResult2, tolerance);
         }
 
         [TestCase(1, 0.642092616)]
