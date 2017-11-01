@@ -753,6 +753,18 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
         }
 
+        [TestCase(1.5, 2)]
+        [TestCase(3, 4)]
+        [TestCase(2, 2)]
+        [TestCase(-1, -2)]
+        [TestCase(0, 0)]
+        [TestCase(Math.PI, 4)]
+        public void Even_ReturnsCorrectResults(double input, int expectedResult)
+        {
+            var actual = (int)XLWorkbook.EvaluateExpr(string.Format(@"EVEN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual);
+        }
+
         [Test]
         public void Floor()
         {
