@@ -651,8 +651,19 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Fact(List<Expression> p)
         {
-            var num = Math.Floor(p[0]);
+            var input = p[0].Evaluate();
+
+            if (!(input is long || input is int || input is byte || input is double || input is float))
+                throw new CellValueException();
+
+
+            var num = Math.Floor((double)input);
             double fact = 1.0;
+
+            
+            if (num < 0)
+                throw new NumberException();
+
             if (num > 1)
                 for (int i = 2; i <= num; i++)
                     fact *= i;

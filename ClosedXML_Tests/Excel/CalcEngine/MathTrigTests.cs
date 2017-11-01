@@ -784,6 +784,44 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, actual, tolerance);
         }
 
+        [TestCase(0, 1L)]
+        [TestCase(1, 1L)]
+        [TestCase(2, 2L)]
+        [TestCase(3, 6L)]
+        [TestCase(4, 24L)]
+        [TestCase(5, 120L)]
+        [TestCase(6, 720L)]
+        [TestCase(7, 5040L)]
+        [TestCase(8, 40320L)]
+        [TestCase(9, 362880L)]
+        [TestCase(10, 3628800L)]
+        [TestCase(11, 39916800L)]
+        [TestCase(12, 479001600L)]
+        [TestCase(13, 6227020800L)]
+        [TestCase(14, 87178291200L)]
+        [TestCase(15, 1307674368000L)]
+        [TestCase(16, 20922789888000L)]
+        [TestCase(0.1, 1L)]
+        [TestCase(2.3, 2L)]
+        [TestCase(2.8, 2L)]
+        public void Fact_ReturnsCorrectResult(double input, long expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"FACT({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual);
+        }
+
+        [Theory]
+        public void Fact_ThrowsNumberExceptionForNegativeInput([Range(-10, -1)] int input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACT({0})", input.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [Test]
+        public void Fact_ThrowsValueExceptionForNonNumericInput()
+        {
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACT(""x"")")));
+        }
+
         [Test]
         public void Floor()
         {
