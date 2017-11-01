@@ -765,6 +765,25 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, actual);
         }
 
+        [TestCase(0, 1)]
+        [TestCase(1, Math.E)]
+        [TestCase(2, 7.38905609893065)]
+        [TestCase(3, 20.0855369231877)]
+        [TestCase(4, 54.5981500331442)]
+        [TestCase(5, 148.413159102577)]
+        [TestCase(6, 403.428793492735)]
+        [TestCase(7, 1096.63315842846)]
+        [TestCase(8, 2980.95798704173)]
+        [TestCase(9, 8103.08392757538)]
+        [TestCase(10, 22026.4657948067)]
+        [TestCase(11, 59874.1417151978)]
+        [TestCase(12, 162754.791419004)]
+        public void Exp_ReturnsCorrectResults(double input, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"EXP({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual, tolerance);
+        }
+
         [Test]
         public void Floor()
         {
