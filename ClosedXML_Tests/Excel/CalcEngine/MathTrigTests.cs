@@ -553,6 +553,34 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                     chosen.ToString(CultureInfo.InvariantCulture))));
         }
 
+        [TestCase(0, 1)]
+        [TestCase(0.4, 0.921060994002885)]
+        [TestCase(0.8, 0.696706709347165)]
+        [TestCase(1.2, 0.362357754476674)]
+        [TestCase(1.6, -0.0291995223012888)]
+        [TestCase(2, -0.416146836547142)]
+        [TestCase(2.4, -0.737393715541245)]
+        [TestCase(2.8, -0.942222340668658)]
+        [TestCase(3.2, -0.998294775794753)]
+        [TestCase(3.6, -0.896758416334147)]
+        [TestCase(4, -0.653643620863612)]
+        [TestCase(4.4, -0.307332869978419)]
+        [TestCase(4.8, 0.0874989834394464)]
+        [TestCase(5.2, 0.468516671300377)]
+        [TestCase(5.6, 0.77556587851025)]
+        [TestCase(6, 0.960170286650366)]
+        [TestCase(6.4, 0.993184918758193)]
+        [TestCase(6.8, 0.869397490349825)]
+        [TestCase(7.2, 0.608351314532255)]
+        [TestCase(7.6, 0.251259842582256)]
+        [TestCase(8, -0.145500033808614)]
+        [TestCase(8.4, -0.519288654116686)]
+        public void Cos_ReturnsCorrectResult(double input, double expectedResult)
+        {
+            var actualResult = (double)XLWorkbook.EvaluateExpr(string.Format("COS({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actualResult, tolerance);
+        }
+
         [TestCase(1, 0.642092616)]
         [TestCase(2, -0.457657554)]
         [TestCase(3, -7.015252551)]
