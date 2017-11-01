@@ -672,8 +672,17 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object FactDouble(List<Expression> p)
         {
+            var input = p[0].Evaluate();
+
+            if (!(input is long || input is int || input is byte || input is double || input is float))
+                throw new CellValueException();
+
             var num = Math.Floor(p[0]);
             double fact = 1.0;
+
+            if (num < -1)
+                throw new NumberException();
+
             if (num > 1)
             {
                 var start = Math.Abs(num % 2) < XLHelper.Epsilon ? 2 : 1;

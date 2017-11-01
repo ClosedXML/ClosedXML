@@ -822,6 +822,47 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACT(""x"")")));
         }
 
+        [TestCase(0, 1L)]
+        [TestCase(1, 1L)]
+        [TestCase(2, 2L)]
+        [TestCase(3, 3L)]
+        [TestCase(4, 8L)]
+        [TestCase(5, 15L)]
+        [TestCase(6, 48L)]
+        [TestCase(7, 105L)]
+        [TestCase(8, 384L)]
+        [TestCase(9, 945L)]
+        [TestCase(10, 3840L)]
+        [TestCase(11, 10395L)]
+        [TestCase(12, 46080L)]
+        [TestCase(13, 135135L)]
+        [TestCase(14, 645120)]
+        [TestCase(15, 2027025)]
+        [TestCase(16, 10321920)]
+        [TestCase(-1, 1L)]
+        [TestCase(0, 1)]
+        [TestCase(0.1, 1L)]
+        [TestCase(1.4, 1L)]
+        [TestCase(2.3, 2L)]
+        [TestCase(2.8, 2L)]
+        public void FactDouble_ReturnsCorrectResult(double input, long expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE({0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(expectedResult, actual);
+        }
+
+        [Theory]
+        public void FactDouble_ThrowsNumberExceptionForInputSmallerThanMinus1([Range(-10, -2)] int input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE({0})", input.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [Test]
+        public void FactDouble_ThrowsValueExceptionForNonNumericInput()
+        {
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE(""x"")")));
+        }
+
         [Test]
         public void Floor()
         {
