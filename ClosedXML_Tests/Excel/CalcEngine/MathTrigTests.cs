@@ -447,6 +447,72 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, actual);
         }
 
+        [Theory]
+        public void Combin_ThrowsNumberExceptionForAnyArgumentSmaller0([Range(-4, -1)] int smaller0)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"COMBIN({0}, {1})",
+                    smaller0.ToString(CultureInfo.InvariantCulture),
+                    (-smaller0).ToString(CultureInfo.InvariantCulture))));
+
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"COMBIN({0}, {1})",
+                    (-smaller0).ToString(CultureInfo.InvariantCulture),
+                    smaller0.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [TestCase("\"no number\"")]
+        [TestCase("\"\"")]
+        public void Combin_ThrowsNumericExceptionForAnyArgumentNotNumeric(string input)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"COMBIN({0}, 1)",
+                    input?.ToString(CultureInfo.InvariantCulture))));
+
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+                string.Format(
+                    @"COMBIN(1, {0})",
+                    input?.ToString(CultureInfo.InvariantCulture))));
+        }
+
+        [Theory]
+        public void Combin_Returns1ForKis0OrKEqualsN([Range(0, 10)] int n)
+        {
+            var actual = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, 0)", n));
+            Assert.AreEqual(1, actual);
+
+            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {0})", n));
+            Assert.AreEqual(1, actual2);
+        }
+
+        [Theory]
+        public void Combin_ReturnsNforKis1OrKisNminus1([Range(1, 10)] int n)
+        {
+            var actual = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, 1)", n));
+            Assert.AreEqual(n, actual);
+
+            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, n-1));
+            Assert.AreEqual(n, actual2);
+        }
+
+        [TestCase(4, 2, 6)]
+        [TestCase(5, 2, 10)]
+        [TestCase(6, 2, 15)]
+        [TestCase(6, 3, 20)]
+        [TestCase(7, 2, 21)]
+        [TestCase(7, 3, 35)]
+        public void Combin_ReturnsCorrectResults(int n, int k, int expectedResult)
+        {
+            var actual = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, k));
+            Assert.AreEqual(expectedResult, actual);
+
+            var actual2 = XLWorkbook.EvaluateExpr(string.Format(@"COMBIN({0}, {1})", n, n-k));
+            Assert.AreEqual(expectedResult, actual2);
+        }
+
         [TestCase(4, 3, 20)]
         [TestCase(10, 3, 220)]
         [TestCase(0, 0, 1)]
