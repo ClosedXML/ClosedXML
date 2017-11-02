@@ -601,8 +601,28 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Combin(List<Expression> p)
         {
-            Int32 n = (int)p[0];
-            Int32 k = (int)p[1];
+            Int32 n;
+            Int32 k;
+
+            var rawN = p[0].Evaluate();
+            var rawK = p[1].Evaluate();
+            if (rawN is long || rawN is int || rawN is byte || rawN is double || rawN is float)
+                n = (int)Math.Floor((double)rawN);
+            else
+                throw new NumberException();
+
+            if (rawK is long || rawK is int || rawK is byte || rawK is double || rawK is float)
+                k = (int)Math.Floor((double)rawK);
+            else
+                throw new NumberException();
+
+
+            n = (int)p[0];
+            k = (int)p[1];
+
+            if (n < 0 || n < k || k < 0)
+                throw new NumberException();
+
             return XLMath.Combin(n, k);
         }
 
@@ -631,8 +651,19 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Fact(List<Expression> p)
         {
-            var num = Math.Floor(p[0]);
+            var input = p[0].Evaluate();
+
+            if (!(input is long || input is int || input is byte || input is double || input is float))
+                throw new CellValueException();
+
+
+            var num = Math.Floor((double)input);
             double fact = 1.0;
+
+            
+            if (num < 0)
+                throw new NumberException();
+
             if (num > 1)
                 for (int i = 2; i <= num; i++)
                     fact *= i;
@@ -641,8 +672,17 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object FactDouble(List<Expression> p)
         {
+            var input = p[0].Evaluate();
+
+            if (!(input is long || input is int || input is byte || input is double || input is float))
+                throw new CellValueException();
+
             var num = Math.Floor(p[0]);
             double fact = 1.0;
+
+            if (num < -1)
+                throw new NumberException();
+
             if (num > 1)
             {
                 var start = Math.Abs(num % 2) < XLHelper.Epsilon ? 2 : 1;
