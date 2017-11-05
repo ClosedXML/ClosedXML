@@ -32,7 +32,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\AllShapes.xlsx",
                 @"Misc\TableHeadersWithLineBreaks.xlsx",
                 @"Misc\TableWithNameNull.xlsx",
-                @"Misc\DuplicateImageNames.xlsx"
+                @"Misc\DuplicateImageNames.xlsx",
+                @"Misc\InvalidPrintArea.xlsx"
             };
 
             foreach (var file in files)
