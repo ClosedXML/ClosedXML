@@ -320,36 +320,36 @@ namespace ClosedXML.Excel
                 cValue = _cellValue;
             }
 
+            var format = GetFormat();
+
             if (_dataType == XLDataType.Boolean)
-                return (cValue != "0").ToString();
-            if (_dataType == XLDataType.TimeSpan)
-                return cValue;
-            if (_dataType == XLDataType.DateTime || IsDateFormat())
+                return (cValue != "0").ToExcelFormat(format);
+
+            else if (_dataType == XLDataType.TimeSpan || _dataType == XLDataType.DateTime || IsDateFormat())
             {
                 double dTest;
                 if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest)
                     && dTest.IsValidOADateNumber())
                 {
-                    var format = GetFormat();
-                    return DateTime.FromOADate(dTest).ToString(format);
+                    return DateTime.FromOADate(dTest).ToExcelFormat(format);
                 }
 
                 return cValue;
             }
 
-            if (_dataType == XLDataType.Number)
+            else if (_dataType == XLDataType.Number)
             {
                 double dTest;
                 if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
                 {
-                    var format = GetFormat();
-                    return dTest.ToString(format);
+                    return dTest.ToExcelFormat(format);
                 }
 
                 return cValue;
             }
 
-            return cValue;
+            else
+                return cValue;
         }
 
         public object Value
