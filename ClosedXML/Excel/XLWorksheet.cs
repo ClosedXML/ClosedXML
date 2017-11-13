@@ -584,8 +584,9 @@ namespace ClosedXML.Excel
             foreach (var picture in Pictures)
             {
                 var newPic = targetSheet.AddPicture(picture.ImageStream, picture.Format, picture.Name)
-                    .WithPlacement(picture.Placement)
-                    .WithSize(picture.Width, picture.Height);
+                    .WithPlacement(XLPicturePlacement.FreeFloating)
+                    .WithSize(picture.Width, picture.Height)
+                    .WithPlacement(picture.Placement);
 
                 switch (picture.Placement)
                 {
