@@ -2397,7 +2397,7 @@ namespace ClosedXML.Excel
                         if (labelOrFilterField.SelectedValues.Count > 1
                                  && !labelOrFilterField.SelectedValues.Contains(value))
                             item.Hidden = BooleanValue.FromBoolean(true);
-                        
+
                         fieldItems.AppendChild(item);
 
                         i++;
@@ -5087,6 +5087,12 @@ namespace ClosedXML.Excel
                     pageSetup.FitToHeight = (UInt32)xlWorksheet.PageSetup.PagesTall;
             }
 
+            // For some reason some Excel files already contains pageSetup.Copies = 0
+            // The validation fails for this
+            // Let's remove the attribute of that's the case.
+            if ((pageSetup?.Copies ?? 0) <= 0)
+                pageSetup.Copies = null;
+
             #endregion PageSetup
 
             #region HeaderFooter
@@ -5105,8 +5111,6 @@ namespace ClosedXML.Excel
             if (((XLHeaderFooter)xlWorksheet.PageSetup.Header).Changed
                 || ((XLHeaderFooter)xlWorksheet.PageSetup.Footer).Changed)
             {
-                //var headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().First();
-
                 headerFooter.RemoveAllChildren();
 
                 headerFooter.ScaleWithDoc = xlWorksheet.PageSetup.ScaleHFWithDocument;
