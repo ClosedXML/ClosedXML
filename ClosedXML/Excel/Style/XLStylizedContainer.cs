@@ -19,11 +19,12 @@ namespace ClosedXML.Excel
 
         public IEnumerable<IXLStyle> Styles
         {
-            get 
+            get
             {
+                var _backupUpdatingStyle = _container.UpdatingStyle;
                 _container.UpdatingStyle = true;
                 yield return Style;
-                _container.UpdatingStyle = false;
+                _container.UpdatingStyle = _backupUpdatingStyle;
             }
         }
 

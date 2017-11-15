@@ -24,6 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COUNTA", 1, int.MaxValue, CountA);
             ce.RegisterFunction("COUNTBLANK", 1, CountBlank);
             ce.RegisterFunction("COUNTIF", 2, CountIf);
+            ce.RegisterFunction("COUNTIFS", 2, 144, CountIfs);
             //COVAR	Returns covariance, the average of the products of paired deviations
             //CRITBINOM	Returns the smallest value for which the cumulative binomial distribution is less than or equal to a criterion value
             //DEVSQ	Returns the sum of squares of deviations
@@ -135,12 +136,14 @@ namespace ClosedXML.Excel.CalcEngine
             }
             return cnt;
         }
+
         internal static bool IsBlank(object value)
         {
             return
                 value == null ||
                 value is string && ((string)value).Length == 0;
         }
+
         static object CountIf(List<Expression> p)
         {
             CalcEngine ce = new CalcEngine();
@@ -151,23 +154,72 @@ namespace ClosedXML.Excel.CalcEngine
                 var criteria = (string)p[1].Evaluate();
                 foreach (var value in ienum)
                 {
-                    if (!IsBlank(value))
-                    {
-                        if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
-                            cnt++;
-                    }
+                    if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
+                        cnt++;
                 }
             }
             return cnt;
         }
+
+        private static object CountIfs(List<Expression> p)
+        {
+            // get parameters
+            var ce = new CalcEngine();
+            int count = 0;
+
+            int numberOfCriteria = p.Count / 2;
+
+            // prepare criteria-parameters:
+            var criteriaRanges = new Tuple<object, List<object>>[numberOfCriteria];
+            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
+            {
+                var criteriaRange = p[criteriaPair * 2] as IEnumerable;
+                var criterion = p[(criteriaPair * 2) + 1].Evaluate();
+                var criteriaRangeValues = new List<object>();
+                foreach (var value in criteriaRange)
+                {
+                    criteriaRangeValues.Add(value);
+                }
+
+                criteriaRanges[criteriaPair] = new Tuple<object, List<object>>(
+                    criterion,
+                    criteriaRangeValues);
+            }
+
+            for (var i = 0; i < criteriaRanges[0].Item2.Count; i++)
+            {
+                bool shouldUseValue = true;
+
+                foreach (var criteriaPair in criteriaRanges)
+                {
+                    if (!CalcEngineHelpers.ValueSatisfiesCriteria(
+                        criteriaPair.Item2[i],
+                        criteriaPair.Item1,
+                        ce))
+                    {
+                        shouldUseValue = false;
+                        break; // we're done with the inner loop as we can't ever get true again.
+                    }
+                }
+
+                if (shouldUseValue)
+                    count++;
+            }
+
+            // done
+            return count;
+        }
+
         static object Max(List<Expression> p)
         {
             return GetTally(p, true).Max();
         }
+
         static object MaxA(List<Expression> p)
         {
             return GetTally(p, false).Max();
         }
+
         static object Min(List<Expression> p)
         {
             return GetTally(p, true).Min();

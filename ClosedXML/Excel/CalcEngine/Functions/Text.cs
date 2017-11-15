@@ -39,7 +39,6 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
             ce.RegisterFunction("VALUE", 1, Value); // Converts a text argument to a number
-            ce.RegisterFunction("HYPERLINK", 2, Hyperlink);
         }
 
         private static object _Char(List<Expression> p)
@@ -298,13 +297,6 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Asc(List<Expression> p)
         {
             return (string)p[0];
-        }
-
-        private static object Hyperlink(List<Expression> p)
-        {
-            String address = p[0];
-            String toolTip = p.Count == 2 ? p[1] : String.Empty;
-            return new XLHyperlink(address, toolTip);
         }
 
         private static object Clean(List<Expression> p)

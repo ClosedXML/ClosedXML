@@ -1,5 +1,5 @@
 using System;
-using System.Text;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -11,12 +11,12 @@ namespace ClosedXML.Excel
         {
             return
                 _patternType == other.PatternType
+                && _backgroundColor.Equals(other.BackgroundColor)
                 && _patternColor.Equals(other.PatternColor)
-                && _patternBackgroundColor.Equals(other.PatternBackgroundColor)
                 ;
         }
 
-        #endregion
+        #endregion IXLFill Members
 
         private void SetStyleChanged()
         {
@@ -37,13 +37,13 @@ namespace ClosedXML.Excel
 
         #region Properties
 
-        private XLColor _patternBackgroundColor;
+        private XLColor _backgroundColor;
         private XLColor _patternColor;
         private XLFillPatternValues _patternType;
 
         public XLColor BackgroundColor
         {
-            get { return _patternColor; }
+            get { return _backgroundColor; }
             set
             {
                 SetStyleChanged();
@@ -51,18 +51,20 @@ namespace ClosedXML.Excel
                     _container.Styles.ForEach(s => s.Fill.BackgroundColor = value);
                 else
                 {
-                    _patternType = value.HasValue ? XLFillPatternValues.Solid : XLFillPatternValues.None;
-                    _patternColor = value;
-                    _patternBackgroundColor = value;
-
-                    PatternTypeModified = true;
-                    PatternColorModified = true;
-                    PatternBackgroundColorModified = true;
+                    // 4 ways of determining an "empty" color
+                    if (new XLFillPatternValues[] { XLFillPatternValues.None, XLFillPatternValues.Solid }.Contains(_patternType)
+                        && (_backgroundColor == null
+                        || !_backgroundColor.HasValue
+                        || _backgroundColor == XLColor.NoColor
+                        || _backgroundColor.ColorType == XLColorType.Indexed && _backgroundColor.Indexed == 64))
+                    {
+                        _patternType = value.HasValue ? XLFillPatternValues.Solid : XLFillPatternValues.None;
+                    }
+                    _backgroundColor = value;
                 }
             }
         }
 
-        public Boolean PatternColorModified;
         public XLColor PatternColor
         {
             get { return _patternColor; }
@@ -74,29 +76,10 @@ namespace ClosedXML.Excel
                 else
                 {
                     _patternColor = value;
-                    PatternColorModified = true;
                 }
             }
         }
 
-        public Boolean PatternBackgroundColorModified;
-        public XLColor PatternBackgroundColor
-        {
-            get { return _patternBackgroundColor; }
-            set
-            {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Fill.PatternBackgroundColor = value);
-                else
-                {
-                    _patternBackgroundColor = value;
-                    PatternBackgroundColorModified = true;
-                }
-            }
-        }
-
-        public Boolean PatternTypeModified;
         public XLFillPatternValues PatternType
         {
             get { return _patternType; }
@@ -108,7 +91,6 @@ namespace ClosedXML.Excel
                 else
                 {
                     _patternType = value;
-                    PatternTypeModified = true;
                 }
             }
         }
@@ -125,19 +107,13 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetPatternBackgroundColor(XLColor value)
-        {
-            PatternBackgroundColor = value;
-            return _container.Style;
-        }
-
         public IXLStyle SetPatternType(XLFillPatternValues value)
         {
             PatternType = value;
             return _container.Style;
         }
 
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
@@ -152,33 +128,34 @@ namespace ClosedXML.Excel
             _container = container;
             if (defaultFill == null) return;
             _patternType = defaultFill.PatternType;
+            _backgroundColor = defaultFill.BackgroundColor;
             _patternColor = defaultFill.PatternColor;
-            _patternBackgroundColor = defaultFill.PatternBackgroundColor;
 
             if (useDefaultModify)
             {
                 var d = defaultFill as XLFill;
-                PatternBackgroundColorModified = d.PatternBackgroundColorModified;
-                PatternColorModified = d.PatternColorModified;
-                PatternTypeModified = d.PatternTypeModified;
             }
         }
 
-        #endregion
+        #endregion Constructors
 
         #region Overridden
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
-            sb.Append(BackgroundColor);
-            sb.Append("-");
-            sb.Append(PatternType.ToString());
-            sb.Append("-");
-            sb.Append(PatternColor);
-            return sb.ToString();
+            switch (PatternType)
+            {
+                case XLFillPatternValues.None:
+                    return "None";
+
+                case XLFillPatternValues.Solid:
+                    return string.Concat("Solid ", BackgroundColor.ToString());
+
+                default:
+                    return string.Concat(PatternType.ToString(), " pattern: ", PatternColor.ToString(), " on ", BackgroundColor.ToString());
+            }
         }
 
-        #endregion
+        #endregion Overridden
     }
 }

@@ -401,14 +401,7 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
-            if (Worksheets.Any(w => string.Equals(w.Name, XLWorksheets.TrimSheetName(name), StringComparison.OrdinalIgnoreCase)))
-            {
-                worksheet = Worksheet(name);
-                return true;
-            }
-
-            worksheet = null;
-            return false;
+            return Worksheets.TryGetWorksheet(name, out worksheet);
         }
 
         public IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws)
@@ -524,6 +517,7 @@ namespace ClosedXML.Excel
 
             _loadSource = XLLoadSource.File;
             _originalFile = file;
+            _originalStream = null;
         }
 
         private static SpreadsheetDocumentType GetSpreadsheetDocumentType(string filePath)
@@ -626,6 +620,7 @@ namespace ClosedXML.Excel
 
             _loadSource = XLLoadSource.Stream;
             _originalStream = stream;
+            _originalFile = null;
         }
 
         internal static void CopyStream(Stream input, Stream output)
@@ -991,6 +986,11 @@ namespace ClosedXML.Excel
         public void Unprotect(string workbookPassword)
         {
             Protect(false, false, workbookPassword);
+        }
+
+        public override string ToString()
+        {
+            return _originalFile ?? String.Format("XLWorkbook({0})", _originalStream.ToString());
         }
     }
 }

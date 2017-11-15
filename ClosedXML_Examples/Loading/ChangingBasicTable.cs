@@ -28,7 +28,7 @@ namespace ClosedXML_Examples
                 foreach (var cell in rngNumbers.Cells())
                 {
                     string formattedString = cell.GetFormattedString();
-                    cell.DataType = XLCellValues.Text;
+                    cell.DataType = XLDataType.Text;
                     cell.Value = formattedString + " Dollars";
                 }
 

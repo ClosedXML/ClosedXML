@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
         IXLRangeColumn Column(IXLCell start, IXLCell end);
         IXLRangeColumns Columns(String columns);
 
-        IXLRangeColumn SetDataType(XLCellValues dataType);
+        IXLRangeColumn SetDataType(XLDataType dataType);
 
         IXLRangeColumn ColumnLeft();
         IXLRangeColumn ColumnLeft(Int32 step);
