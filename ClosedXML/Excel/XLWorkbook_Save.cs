@@ -2027,7 +2027,7 @@ namespace ClosedXML.Excel
 
                 var ptfi = new PivotTableFieldInfo();
 
-                var fieldValueCells = source.Cells(cell => cell.Address.ColumnNumber == columnNumber
+                var fieldValueCells = source.CellsUsed(cell => cell.Address.ColumnNumber == columnNumber
                                                            && cell.Address.RowNumber > source.FirstRow().RowNumber());
                 var types = fieldValueCells.Select(cell => cell.DataType).Distinct();
 
