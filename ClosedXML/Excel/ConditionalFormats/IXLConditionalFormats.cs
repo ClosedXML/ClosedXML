@@ -10,6 +10,5 @@ namespace ClosedXML.Excel
         void Add(IXLConditionalFormat conditionalFormat);
         void RemoveAll();
         void Remove(Predicate<IXLConditionalFormat> predicate);
-        void Compress();
     }
 }

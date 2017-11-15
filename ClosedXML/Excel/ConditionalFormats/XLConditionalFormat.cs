@@ -47,6 +47,7 @@ namespace ClosedXML.Excel
                     && xx.Bottom == yy.Bottom 
                     && xx.Percent == yy.Percent 
                     && xx.ReverseIconOrder == yy.ReverseIconOrder 
+                    && xx.StopIfTrueInternal == yy.StopIfTrueInternal
                     && xx.ShowIconOnly == yy.ShowIconOnly 
                     && xx.ShowBarOnly == yy.ShowBarOnly
                     && _listComparer.Equals(xxValues, yyValues)
@@ -59,7 +60,34 @@ namespace ClosedXML.Excel
 
             public int GetHashCode(IXLConditionalFormat obj)
             {
-                throw new NotImplementedException();
+                var xx = (XLConditionalFormat)obj;
+                var xStyle = xx._style ?? xx.Range.Worksheet.Workbook.GetStyleById(xx._styleCacheId);
+                var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value)
+                    .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Range.FirstCell()).GetFormulaR1C1(f.Value)));
+
+                unchecked
+                {
+                    var hashCode = xStyle.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx._styleCacheId;
+                    hashCode = (hashCode * 397) ^ xx.CopyDefaultModify.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.UpdatingStyle.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xValues.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (xx.Colors != null ? xx.Colors.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (xx.ContentTypes != null ? xx.ContentTypes.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (xx.IconSetOperators != null ? xx.IconSetOperators.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (_compareRange && xx.Range != null ? xx.Range.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (int)xx.ConditionalFormatType;
+                    hashCode = (hashCode * 397) ^ (int)xx.TimePeriod;
+                    hashCode = (hashCode * 397) ^ (int)xx.IconSetStyle;
+                    hashCode = (hashCode * 397) ^ (int)xx.Operator;
+                    hashCode = (hashCode * 397) ^ xx.Bottom.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.Percent.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.ReverseIconOrder.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.ShowIconOnly.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.ShowBarOnly.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.StopIfTrueInternal.GetHashCode();
+                    return hashCode;
+                }
             }
         }
 

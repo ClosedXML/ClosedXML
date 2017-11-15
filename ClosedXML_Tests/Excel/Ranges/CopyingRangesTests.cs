@@ -93,7 +93,7 @@ namespace ClosedXML_Tests
             FillRow(ws.Row(2));
             FillRow(ws.Row(3));
 
-            ws.ConditionalFormats.Compress();
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
             ws.Cell(5, 2).Value = ws.Row(2).Row(1, 7);
 

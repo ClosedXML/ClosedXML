@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
             _conditionalFormats.Add(conditionalFormat);
         }
 
-        private bool RangeAbove(IXLRangeAddress newAddr, IXLRangeAddress addr)
+        private bool IsRangeAbove(IXLRangeAddress newAddr, IXLRangeAddress addr)
         {
             return newAddr.FirstAddress.ColumnNumber == addr.FirstAddress.ColumnNumber
                    && newAddr.LastAddress.ColumnNumber == addr.LastAddress.ColumnNumber
@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
                    && (newAddr.LastAddress.RowNumber+1).Between(addr.FirstAddress.RowNumber, addr.LastAddress.RowNumber);
         }
 
-        private bool RangeBefore(IXLRangeAddress newAddr, IXLRangeAddress addr)
+        private bool IsRangeToLeft(IXLRangeAddress newAddr, IXLRangeAddress addr)
         {
             return newAddr.FirstAddress.RowNumber == addr.FirstAddress.RowNumber
                    && newAddr.LastAddress.RowNumber == addr.LastAddress.RowNumber
@@ -45,12 +45,14 @@ namespace ClosedXML.Excel
             _conditionalFormats.RemoveAll(predicate);
         }
 
-        public void Compress()
+        /// <summary>
+        /// The method consolidate the same conditional formats, which are located in adjacent ranges.
+        /// </summary>
+        internal void Consolidate()
         {
             var formats = _conditionalFormats
                 .OrderByDescending(x => x.Range.RangeAddress.FirstAddress.RowNumber)
-                .ThenByDescending(x => x.Range.RangeAddress.FirstAddress.ColumnNumber)
-                .ToList();
+                .ThenByDescending(x => x.Range.RangeAddress.FirstAddress.ColumnNumber);
 
             var orderedFormats = formats.ToList();
 
@@ -62,9 +64,10 @@ namespace ClosedXML.Excel
                 Func<IXLConditionalFormat, bool> IsSameFormat = f => f != item && f.Range.Worksheet.Position == item.Range.Worksheet.Position &&
                                                              XLConditionalFormat.NoRangeComparer.Equals(f, item);
 
+                // search for an adjacent range
                 var format = orderedFormats
                     .TakeWhile(f => f.Range.RangeAddress.FirstAddress.RowNumber >= itemRowNum)
-                    .FirstOrDefault(f => (RangeAbove(itemAddr, f.Range.RangeAddress) || RangeBefore(itemAddr, f.Range.RangeAddress)) && IsSameFormat(f));
+                    .FirstOrDefault(f => (IsRangeAbove(itemAddr, f.Range.RangeAddress) || IsRangeToLeft(itemAddr, f.Range.RangeAddress)) && IsSameFormat(f));
                 if (format != null)
                 {
                     Merge(format, item);
@@ -75,7 +78,7 @@ namespace ClosedXML.Excel
                     var newRowNum = newaddr.FirstAddress.RowNumber;
                     var bottom = orderedFormats
                         .TakeWhile(f => f.Range.RangeAddress.FirstAddress.RowNumber >= newRowNum)
-                        .FirstOrDefault(f => RangeAbove(newaddr, f.Range.RangeAddress) && IsSameFormat(f));
+                        .FirstOrDefault(f => IsRangeAbove(newaddr, f.Range.RangeAddress) && IsSameFormat(f));
                     if (bottom != null)
                     {
                         Merge(bottom, format);
@@ -85,6 +88,7 @@ namespace ClosedXML.Excel
                     continue;
                 }
 
+                // search for an encompassable range
                 format = _conditionalFormats.FirstOrDefault(f => f.Range.Contains(item.Range) && IsSameFormat(f));
                 if (format != null)
                 {

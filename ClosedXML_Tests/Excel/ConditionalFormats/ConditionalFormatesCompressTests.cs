@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace ClosedXML_Tests.Excel.ConditionalFormats
 {
     [TestFixture]
-    public class ConditionalFormatesCompressTests
+    public class ConditionalFormatsCompressTests
     {
         [Test]
         public void ConsecutivelyRowsCompressTest()
@@ -17,7 +17,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             SetFormat1(ws.Range("B4:C4").AddConditionalFormat());
             SetFormat1(ws.Range("B3:C3").AddConditionalFormat());
 
-            ws.ConditionalFormats.Compress();
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             var format = ws.ConditionalFormats.First();
@@ -35,7 +35,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             SetFormat1(ws.Range("B2:B3").AddConditionalFormat());
             SetFormat1(ws.Range("C2:C3").AddConditionalFormat());
 
-            ws.ConditionalFormats.Compress();
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             var format = ws.ConditionalFormats.First();
@@ -52,7 +52,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             SetFormat1(ws.Range("B11:D12").AddConditionalFormat());
             SetFormat1(ws.Range("C12:D12").AddConditionalFormat());
 
-            ws.ConditionalFormats.Compress();
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             var format = ws.ConditionalFormats.First();
@@ -69,7 +69,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             SetFormat1(ws.Range("B14:C14").AddConditionalFormat());
             SetFormat1(ws.Range("B14:B14").AddConditionalFormat());
 
-            ws.ConditionalFormats.Compress();
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             var format = ws.ConditionalFormats.First();
@@ -86,7 +86,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             SetFormat1(ws.Range("B16:D18").AddConditionalFormat());
             SetFormat1(ws.Range("B18:D19").AddConditionalFormat());
 
-            ws.ConditionalFormats.Compress();
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             var format = ws.ConditionalFormats.First();
@@ -104,7 +104,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             SetFormat1(ws.Range("B8:B8").AddConditionalFormat());
             SetFormat1(ws.Range("B9:C9").AddConditionalFormat());
 
-            ws.ConditionalFormats.Compress();
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
             Assert.AreEqual(3, ws.ConditionalFormats.Count());
         }
@@ -118,7 +118,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             SetFormat1(ws.Range("B11:D12").AddConditionalFormat());
             SetFormat2(ws.Range("C12:D12").AddConditionalFormat());
 
-            ws.ConditionalFormats.Compress();
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
         }

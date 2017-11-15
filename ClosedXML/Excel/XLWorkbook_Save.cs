@@ -3788,6 +3788,8 @@ namespace ClosedXML.Excel
         private static void GenerateWorksheetPartContent(
             WorksheetPart worksheetPart, XLWorksheet xlWorksheet, bool evaluateFormulae, SaveContext context)
         {
+            ((XLConditionalFormats)xlWorksheet.ConditionalFormats).Consolidate();
+
             #region Worksheet
 
             if (worksheetPart.Worksheet == null)
