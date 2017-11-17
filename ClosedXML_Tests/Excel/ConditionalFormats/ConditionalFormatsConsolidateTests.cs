@@ -5,10 +5,10 @@ using NUnit.Framework;
 namespace ClosedXML_Tests.Excel.ConditionalFormats
 {
     [TestFixture]
-    public class ConditionalFormatsCompressTests
+    public class ConditionalFormatsConsolidateTests
     {
         [Test]
-        public void ConsecutivelyRowsCompressTest()
+        public void ConsecutivelyRowsConsolidateTest()
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
@@ -26,7 +26,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         }
 
         [Test]
-        public void ConsecutivelyColumnsCompressTest()
+        public void ConsecutivelyColumnsConsolidateTest()
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
@@ -44,7 +44,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         }
 
         [Test]
-        public void Contains1CompressTest()
+        public void Contains1ConsolidateTest()
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
@@ -61,7 +61,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         }
 
         [Test]
-        public void Contains2CompressTest()
+        public void Contains2ConsolidateTest()
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
@@ -78,7 +78,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         }
 
         [Test]
-        public void SuperimposedCompressTest()
+        public void SuperimposedConsolidateTest()
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
@@ -95,7 +95,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         }
 
         [Test]
-        public void DifferentRangesNoCompressTest()
+        public void DifferentRangesNoConsolidateTest()
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
@@ -110,7 +110,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         }
 
         [Test]
-        public void DifferentFormatNoCompressTest()
+        public void DifferentFormatNoConsolidateTest()
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");

@@ -494,7 +494,6 @@ namespace ClosedXML.Excel
         public void SaveAs(String file, SaveOptions options)
         {
             checkForWorksheetsPresent();
-			
             PathHelper.CreateDirectory(Path.GetDirectoryName(file));
             if (_loadSource == XLLoadSource.New)
             {
@@ -582,7 +581,6 @@ namespace ClosedXML.Excel
         public void SaveAs(Stream stream, SaveOptions options)
         {
             checkForWorksheetsPresent();
-
             if (_loadSource == XLLoadSource.New)
             {
                 // dm 20130422, this method or better the method SpreadsheetDocument.Create which is called
