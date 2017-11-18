@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -299,6 +300,7 @@
     <EmbeddedResource Include="Resource\Examples\Tables\InsertingTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBarNegative.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStopIfTrue.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\InvalidPrintArea.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />

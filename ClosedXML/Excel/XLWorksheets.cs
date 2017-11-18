@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
         public bool TryGetWorksheet(string sheetName, out IXLWorksheet worksheet)
         {
             XLWorksheet w;
-            if (_worksheets.TryGetValue(sheetName, out w))
+            if (_worksheets.TryGetValue(TrimSheetName(sheetName).ToLowerInvariant(), out w))
             {
                 worksheet = w;
                 return true;
@@ -70,7 +70,7 @@ namespace ClosedXML.Excel
 
             XLWorksheet w;
 
-            if (_worksheets.TryGetValue(sheetName, out w))
+            if (_worksheets.TryGetValue(sheetName.ToLowerInvariant(), out w))
                 return w;
 
             var wss = _worksheets.Where(ws => string.Equals(ws.Key, sheetName, StringComparison.OrdinalIgnoreCase));
@@ -118,12 +118,12 @@ namespace ClosedXML.Excel
             if (_worksheets.Any(ws => ws.Key.Equals(sheetName, StringComparison.OrdinalIgnoreCase)))
                 throw new ArgumentException(String.Format("A worksheet with the same name ({0}) has already been added.", sheetName), nameof(sheetName));
 
-            _worksheets.Add(sheetName, sheet);
+            _worksheets.Add(sheetName.ToLowerInvariant(), sheet);
         }
 
         public void Delete(String sheetName)
         {
-            Delete(_worksheets[sheetName].Position);
+            Delete(_worksheets[sheetName.ToLowerInvariant()].Position);
         }
 
         public void Delete(Int32 position)
@@ -178,14 +178,14 @@ namespace ClosedXML.Excel
 
         public void Rename(String oldSheetName, String newSheetName)
         {
-            if (String.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName)) return;
+            if (String.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName.ToLowerInvariant())) return;
 
             if (!oldSheetName.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)
                 && _worksheets.Any(ws1 => ws1.Key.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)))
                 throw new ArgumentException(String.Format("A worksheet with the same name ({0}) has already been added.", newSheetName), nameof(newSheetName));
 
-            var ws = _worksheets[oldSheetName];
-            _worksheets.Remove(oldSheetName);
+            var ws = _worksheets[oldSheetName.ToLowerInvariant()];
+            _worksheets.Remove(oldSheetName.ToLowerInvariant());
             Add(newSheetName, ws);
         }
     }

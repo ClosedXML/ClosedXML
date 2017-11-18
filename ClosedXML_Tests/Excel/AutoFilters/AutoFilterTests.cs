@@ -1,8 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ClosedXML_Tests
 {
@@ -92,6 +93,36 @@ namespace ClosedXML_Tests
 
                 ws.RangeUsed().SetAutoFilter(false);
                 Assert.That(!ws.AutoFilter.Enabled);
+            }
+        }
+
+        [Test]
+        public void CanCopyAutoFilterToNewSheetOnNewWorkbook()
+        {
+            using (var ms1 = new MemoryStream())
+            using (var ms2 = new MemoryStream())
+            {
+                using (var wb1 = new XLWorkbook())
+                using (var wb2 = new XLWorkbook())
+                {
+                    var ws = wb1.Worksheets.Add("AutoFilter");
+                    ws.Cell("A1").Value = "Names";
+                    ws.Cell("A2").Value = "John";
+                    ws.Cell("A3").Value = "Hank";
+                    ws.Cell("A4").Value = "Dagny";
+
+                    ws.RangeUsed().SetAutoFilter();
+
+                    wb1.SaveAs(ms1);
+
+                    ws.CopyTo(wb2, ws.Name);
+                    wb2.SaveAs(ms2);
+                }
+
+                using (var wb2 = new XLWorkbook(ms2))
+                {
+                    Assert.IsTrue(wb2.Worksheets.First().AutoFilter.Enabled);
+                }
             }
         }
     }

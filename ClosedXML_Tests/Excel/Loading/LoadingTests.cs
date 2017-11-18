@@ -32,7 +32,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\AllShapes.xlsx",
                 @"Misc\TableHeadersWithLineBreaks.xlsx",
                 @"Misc\TableWithNameNull.xlsx",
-                @"Misc\DuplicateImageNames.xlsx"
+                @"Misc\DuplicateImageNames.xlsx",
+                @"Misc\InvalidPrintArea.xlsx"
             };
 
             foreach (var file in files)
@@ -125,7 +126,7 @@ namespace ClosedXML_Tests.Excel
                 var ws = wb.Worksheets.First();
                 foreach (var cell in ws.CellsUsed())
                 {
-                    Assert.AreEqual(XLCellValues.DateTime, cell.DataType);
+                    Assert.AreEqual(XLDataType.DateTime, cell.DataType);
                 }
             }
         }

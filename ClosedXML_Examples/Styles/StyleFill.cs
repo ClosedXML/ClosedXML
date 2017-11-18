@@ -1,11 +1,8 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML_Examples.Styles
 {
-
-
     public class StyleFill : IXLExample
     {
         public void Create(String filePath)
@@ -19,10 +16,10 @@ namespace ClosedXML_Examples.Styles
             ws.Cell(++ro, co + 1).Value = "BackgroundColor = Red";
             ws.Cell(ro, co).Style.Fill.BackgroundColor = XLColor.Red;
 
-            ws.Cell(++ro, co + 1).Value = "PatternType = DarkTrellis; PatternColor = Orange; PatternBackgroundColor = Blue";
+            ws.Cell(++ro, co + 1).Value = "PatternType = DarkTrellis; PatternColor = Orange; BackgroundColor = Blue";
             ws.Cell(ro, co).Style.Fill.PatternType = XLFillPatternValues.DarkTrellis;
             ws.Cell(ro, co).Style.Fill.PatternColor = XLColor.Orange;
-            ws.Cell(ro, co).Style.Fill.PatternBackgroundColor = XLColor.Blue;
+            ws.Cell(ro, co).Style.Fill.BackgroundColor = XLColor.Blue;
 
             workbook.SaveAs(filePath);
         }

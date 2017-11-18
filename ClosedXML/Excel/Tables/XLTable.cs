@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 
@@ -98,7 +100,7 @@ namespace ClosedXML.Excel
                     {
                         name = GetUniqueName("Column", cellPos + 1, true);
                         cell.SetValue(name);
-                        cell.DataType = XLCellValues.Text;
+                        cell.DataType = XLDataType.Text;
                     }
                     if (_fieldNames.ContainsKey(name))
                         throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
@@ -381,7 +383,7 @@ namespace ClosedXML.Excel
                     if (!c.IsEmpty() && newHeaders.Contains(f.Name))
                     {
                         f.TotalsRowLabel = c.GetFormattedString();
-                        c.DataType = XLCellValues.Text;
+                        c.DataType = XLDataType.Text;
                     }
                 }
 
@@ -393,7 +395,7 @@ namespace ClosedXML.Excel
                         var c = this.TotalsRow().Cell(f.Index + 1);
                         if (!String.IsNullOrWhiteSpace(f.TotalsRowLabel))
                         {
-                            c.DataType = XLCellValues.Text;
+                            c.DataType = XLDataType.Text;
 
                             //Remove previous row's label
                             var oldTotalsCell = this.Worksheet.Cell(oldTotalsRowNumber, f.Column.ColumnNumber());
@@ -402,7 +404,7 @@ namespace ClosedXML.Excel
                         }
 
                         if (f.TotalsRowFunction != XLTotalsRowFunction.None)
-                            c.DataType = XLCellValues.Number;
+                            c.DataType = XLDataType.Number;
                     }
                 }
             }
@@ -543,7 +545,7 @@ namespace ClosedXML.Excel
             if (setAutofilter)
                 InitializeAutoFilter();
 
-            AsRange().Row(1).DataType = XLCellValues.Text;
+            AsRange().Row(1).DataType = XLDataType.Text;
 
             if (RowCount() == 1)
                 InsertRowsBelow(1);
@@ -626,8 +628,6 @@ namespace ClosedXML.Excel
                                           RangeAddress.FirstAddress.ColumnNumber,
                                           RangeAddress.FirstAddress.FixedRow,
                                           RangeAddress.FirstAddress.FixedColumn);
-
-                    HeadersRow().DataType = XLCellValues.Text;
                 }
                 else
                 {
@@ -676,6 +676,9 @@ namespace ClosedXML.Excel
                     }
                 }
                 _showHeaderRow = value;
+
+                if (_showHeaderRow)
+                    HeadersRow().DataType = XLDataType.Text;
             }
         }
 
@@ -752,6 +755,78 @@ namespace ClosedXML.Excel
             var columns = base.ColumnsUsed(predicate);
             columns.Cast<XLRangeColumn>().ForEach(column => column.Table = this);
             return columns;
+        }
+
+        public IEnumerable<dynamic> AsDynamicEnumerable()
+        {
+            foreach (var row in this.DataRange.Rows())
+            {
+                dynamic expando = new ExpandoObject();
+                foreach (var f in this.Fields)
+                {
+                    var value = row.Cell(f.Index + 1).Value;
+                    // ExpandoObject supports IDictionary so we can extend it like this
+                    var expandoDict = expando as IDictionary<string, object>;
+                    if (expandoDict.ContainsKey(f.Name))
+                        expandoDict[f.Name] = value;
+                    else
+                        expandoDict.Add(f.Name, value);
+                }
+
+                yield return expando;
+            }
+        }
+
+        public DataTable AsNativeDataTable()
+        {
+            var table = new DataTable(this.Name);
+
+            foreach (var f in Fields.Cast<XLTableField>())
+            {
+                Type type = typeof(object);
+                if (f.IsConsistentDataType())
+                {
+                    var c = f.Column.Cells().Skip(this.ShowHeaderRow ? 1 : 0).First();
+                    switch (c.DataType)
+                    {
+                        case XLDataType.Text:
+                            type = typeof(String);
+                            break;
+
+                        case XLDataType.Boolean:
+                            type = typeof(Boolean);
+                            break;
+
+                        case XLDataType.DateTime:
+                            type = typeof(DateTime);
+                            break;
+
+                        case XLDataType.TimeSpan:
+                            type = typeof(TimeSpan);
+                            break;
+
+                        case XLDataType.Number:
+                            type = typeof(Double);
+                            break;
+                    }
+                }
+
+                table.Columns.Add(f.Name, type);
+            }
+
+            foreach (var row in this.DataRange.Rows())
+            {
+                var dr = table.NewRow();
+
+                foreach (var f in this.Fields)
+                {
+                    dr[f.Name] = row.Cell(f.Index + 1).Value;
+                }
+
+                table.Rows.Add(dr);
+            }
+
+            return table;
         }
     }
 }
