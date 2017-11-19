@@ -33,7 +33,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\TableHeadersWithLineBreaks.xlsx",
                 @"Misc\TableWithNameNull.xlsx",
                 @"Misc\DuplicateImageNames.xlsx",
-                @"Misc\InvalidPrintArea.xlsx"
+                @"Misc\InvalidPrintArea.xlsx",
+                @"Misc\Date1904System.xlsx"
             };
 
             foreach (var file in files)
@@ -51,6 +52,35 @@ namespace ClosedXML_Tests.Excel
                 var ws = wb.Worksheets.First();
                 var table = ws.Tables.First();
                 table.DataRange.InsertRowsBelow(5);
+            }
+        }
+
+        [Test]
+        public void CanLoadDate1904SystemCorrectly()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\Date1904System.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheets.First();
+                    var c = ws.Cell("A2");
+                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                    Assert.AreEqual(new DateTime(2017, 10, 27, 21, 0, 0), c.GetDateTime());
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    var c = ws.Cell("A2");
+                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                    Assert.AreEqual(new DateTime(2017, 10, 27, 21, 0, 0), c.GetDateTime());
+                    wb.SaveAs(ms);
+                }
+
             }
         }
 
@@ -94,7 +124,7 @@ namespace ClosedXML_Tests.Excel
 
         /// <summary>
         /// For non-English locales, the default style ("Normal" in English) can be
-        /// another piece of text (e.g. Обычный in Russian).
+        /// another piece of text (e.g. ??????? in Russian).
         /// This test ensures that the default style is correctly detected and
         /// no style conflicts occur on save.
         /// </summary>

@@ -95,7 +95,7 @@ namespace ClosedXML.Excel
             }
 
             var wbProps = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties;
-            Use1904DateSystem = wbProps != null && wbProps.Date1904 != null && wbProps.Date1904.Value;
+            Use1904DateSystem = wbProps?.Date1904?.Value ?? false;
 
             var wbProtection = dSpreadsheet.WorkbookPart.Workbook.WorkbookProtection;
             if (wbProtection != null)
@@ -1391,6 +1391,13 @@ namespace ClosedXML.Excel
 
                     xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                 }
+            }
+
+            if (Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)
+            {
+                // Internally ClosedXML stores cells as standard 1900-based style
+                // so if a workbook is in 1904-format, we do that adjustment here and when saving.
+                xlCell.SetValue(xlCell.GetDateTime().AddDays(1462));
             }
         }
 

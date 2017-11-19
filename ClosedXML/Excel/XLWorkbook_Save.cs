@@ -5346,7 +5346,16 @@ namespace ClosedXML.Excel
                 if (!String.IsNullOrWhiteSpace(xlCell.InnerText))
                 {
                     var cellValue = new CellValue();
-                    cellValue.Text = Double.Parse(xlCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
+                    var d = Double.Parse(xlCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture);
+
+                    if (xlCell.Worksheet.Workbook.Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)
+                    {
+                        // Internally ClosedXML stores cells as standard 1900-based style
+                        // so if a workbook is in 1904-format, we do that adjustment here and when loading.
+                        d -= 1462;
+                    }
+
+                    cellValue.Text = d.ToInvariantString();
                     openXmlCell.CellValue = cellValue;
                 }
             }

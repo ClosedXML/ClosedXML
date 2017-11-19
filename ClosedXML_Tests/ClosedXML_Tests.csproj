@@ -290,6 +290,7 @@
     <EmbeddedResource Include="Resource\Misc\ExcelProducedWorkbookWithImages.xlsx" />
     <EmbeddedResource Include="Resource\Misc\EmptyCellValue.xlsx" />
     <EmbeddedResource Include="Resource\Misc\AllShapes.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\Date1904System.xlsx" />
     <EmbeddedResource Include="Resource\Misc\DuplicateImageNames.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableHeadersWithLineBreaks.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableWithNameNull.xlsx" />
