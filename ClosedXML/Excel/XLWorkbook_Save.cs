@@ -2149,7 +2149,7 @@ namespace ClosedXML.Excel
                 Name = pt.Name,
                 CacheId = cacheId,
                 DataCaption = "Values",
-                MergeItem = OpenXmlHelper.GetBooleanValue(pt.MergeAndCenterWithLabels, true),
+                MergeItem = OpenXmlHelper.GetBooleanValue(pt.MergeAndCenterWithLabels, false),
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),
                 PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown),
                 PageWrap = Convert.ToUInt32(pt.FilterFieldsPageWrap),
