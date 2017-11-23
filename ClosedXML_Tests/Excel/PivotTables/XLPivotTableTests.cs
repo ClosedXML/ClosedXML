@@ -49,15 +49,15 @@ namespace ClosedXML_Tests
                 pt.ColumnHeaderCaption = "clmn header";
                 pt.RowHeaderCaption = "row header";
 
-                pt.AutofitColumns = false;
+                pt.AutofitColumns = true;
                 pt.PreserveCellFormatting = false;
-                pt.ShowGrandTotalsColumns = false;
-                pt.ShowGrandTotalsRows = false;
+                pt.ShowGrandTotalsColumns = true;
+                pt.ShowGrandTotalsRows = true;
                 pt.UseCustomListsForSorting = false;
                 pt.ShowExpandCollapseButtons = false;
                 pt.ShowContextualTooltips = false;
                 pt.DisplayCaptionsAndDropdowns = false;
-                pt.RepeatRowLabels = false;
+                pt.RepeatRowLabels = true;
                 pt.SaveSourceData = false;
                 pt.EnableShowDetails = false;
                 pt.ShowColumnHeaders = false;
@@ -65,19 +65,19 @@ namespace ClosedXML_Tests
 
                 pt.MergeAndCenterWithLabels = true; // MergeItem
                 pt.RowLabelIndent = 12; // Indent
-                pt.FilterAreaOrder = XLFilterAreaOrder.DownThenOver; // PageOverThenDown
+                pt.FilterAreaOrder = XLFilterAreaOrder.OverThenDown; // PageOverThenDown
                 pt.FilterFieldsPageWrap = 14; // PageWrap
                 pt.ErrorValueReplacement = "error test"; // ErrorCaption
                 pt.EmptyCellReplacement = "empty test"; // MissingCaption
 
                 pt.FilteredItemsInSubtotals = true; // Subtotal filtered page items
-                pt.AllowMultipleFilters = true; // MultipleFieldFilters
+                pt.AllowMultipleFilters = false; // MultipleFieldFilters
 
-                pt.ShowPropertiesInTooltips = true;
+                pt.ShowPropertiesInTooltips = false;
                 pt.ClassicPivotTableLayout = true;
                 pt.ShowEmptyItemsOnRows = true;
                 pt.ShowEmptyItemsOnColumns = true;
-                pt.DisplayItemLabels = true;
+                pt.DisplayItemLabels = false;
                 pt.SortFieldsAtoZ = true;
 
                 pt.PrintExpandCollapsedButtons = true;
@@ -106,28 +106,28 @@ namespace ClosedXML_Tests
                         Assert.AreEqual("row header", ptassert.RowHeaderCaption, "RowHeaderCaption save failure");
                         Assert.AreEqual(true, ptassert.MergeAndCenterWithLabels, "MergeAndCenterWithLabels save failure");
                         Assert.AreEqual(12, ptassert.RowLabelIndent, "RowLabelIndent save failure");
-                        Assert.AreEqual(XLFilterAreaOrder.DownThenOver, ptassert.FilterAreaOrder, "FilterAreaOrder save failure");
+                        Assert.AreEqual(XLFilterAreaOrder.OverThenDown, ptassert.FilterAreaOrder, "FilterAreaOrder save failure");
                         Assert.AreEqual(14, ptassert.FilterFieldsPageWrap, "FilterFieldsPageWrap save failure");
                         Assert.AreEqual("error test", ptassert.ErrorValueReplacement, "ErrorValueReplacement save failure");
                         Assert.AreEqual("empty test", ptassert.EmptyCellReplacement, "EmptyCellReplacement save failure");
-                        Assert.AreEqual(false, ptassert.AutofitColumns, "AutofitColumns save failure");
+                        Assert.AreEqual(true, ptassert.AutofitColumns, "AutofitColumns save failure");
                         Assert.AreEqual(false, ptassert.PreserveCellFormatting, "PreserveCellFormatting save failure");
-                        Assert.AreEqual(false, ptassert.ShowGrandTotalsRows, "ShowGrandTotalsRows save failure");
-                        Assert.AreEqual(false, ptassert.ShowGrandTotalsColumns, "ShowGrandTotalsColumns save failure");
+                        Assert.AreEqual(true, ptassert.ShowGrandTotalsRows, "ShowGrandTotalsRows save failure");
+                        Assert.AreEqual(true, ptassert.ShowGrandTotalsColumns, "ShowGrandTotalsColumns save failure");
                         Assert.AreEqual(true, ptassert.FilteredItemsInSubtotals, "FilteredItemsInSubtotals save failure");
-                        Assert.AreEqual(true, ptassert.AllowMultipleFilters, "AllowMultipleFilters save failure");
+                        Assert.AreEqual(false, ptassert.AllowMultipleFilters, "AllowMultipleFilters save failure");
                         Assert.AreEqual(false, ptassert.UseCustomListsForSorting, "UseCustomListsForSorting save failure");
                         Assert.AreEqual(false, ptassert.ShowExpandCollapseButtons, "ShowExpandCollapseButtons save failure");
                         Assert.AreEqual(false, ptassert.ShowContextualTooltips, "ShowContextualTooltips save failure");
-                        Assert.AreEqual(true, ptassert.ShowPropertiesInTooltips, "ShowPropertiesInTooltips save failure");
+                        Assert.AreEqual(false, ptassert.ShowPropertiesInTooltips, "ShowPropertiesInTooltips save failure");
                         Assert.AreEqual(false, ptassert.DisplayCaptionsAndDropdowns, "DisplayCaptionsAndDropdowns save failure");
                         Assert.AreEqual(true, ptassert.ClassicPivotTableLayout, "ClassicPivotTableLayout save failure");
                         Assert.AreEqual(true, ptassert.ShowEmptyItemsOnRows, "ShowEmptyItemsOnRows save failure");
                         Assert.AreEqual(true, ptassert.ShowEmptyItemsOnColumns, "ShowEmptyItemsOnColumns save failure");
-                        Assert.AreEqual(true, ptassert.DisplayItemLabels, "DisplayItemLabels save failure");
+                        Assert.AreEqual(false, ptassert.DisplayItemLabels, "DisplayItemLabels save failure");
                         Assert.AreEqual(true, ptassert.SortFieldsAtoZ, "SortFieldsAtoZ save failure");
                         Assert.AreEqual(true, ptassert.PrintExpandCollapsedButtons, "PrintExpandCollapsedButtons save failure");
-                        Assert.AreEqual(false, ptassert.RepeatRowLabels, "RepeatRowLabels save failure");
+                        Assert.AreEqual(true, ptassert.RepeatRowLabels, "RepeatRowLabels save failure");
                         Assert.AreEqual(true, ptassert.PrintTitles, "PrintTitles save failure");
                         Assert.AreEqual(false, ptassert.SaveSourceData, "SaveSourceData save failure");
                         Assert.AreEqual(false, ptassert.EnableShowDetails, "EnableShowDetails save failure");
