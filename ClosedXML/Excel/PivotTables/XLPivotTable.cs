@@ -297,8 +297,6 @@ namespace ClosedXML.Excel
             EmptyCellReplacement = String.Empty;
             AutofitColumns = true;
             PreserveCellFormatting = true;
-            ShowGrandTotalsColumns = true;
-            ShowGrandTotalsRows = true;
             UseCustomListsForSorting = true;
             ShowExpandCollapseButtons = true;
             ShowContextualTooltips = true;
