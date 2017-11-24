@@ -556,25 +556,25 @@ namespace ClosedXML.Excel
                                             {
                                                 if (pf.AverageSubTotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.Average);
-                                                else if (pf.CountASubtotal != null) 
+                                                if (pf.CountASubtotal != null) 
                                                     pivotField.AddSubtotal(XLSubtotalFunction.Count);
-                                                else if (pf.CountSubtotal != null)
+                                                if (pf.CountSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
-                                                else if (pf.MaxSubtotal != null)
+                                                if (pf.MaxSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
-                                                else if (pf.MinSubtotal != null)
+                                                if (pf.MinSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
-                                                else if (pf.ApplyStandardDeviationPInSubtotal != null)
+                                                if (pf.ApplyStandardDeviationPInSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
-                                                else if (pf.ApplyVariancePInSubtotal != null)
+                                                if (pf.ApplyVariancePInSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
-                                                else if (pf.ApplyProductInSubtotal != null)
+                                                if (pf.ApplyProductInSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.Product);
-                                                else if (pf.ApplyStandardDeviationInSubtotal != null)
+                                                if (pf.ApplyStandardDeviationInSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
-                                                else if (pf.SumSubtotal != null)
+                                                if (pf.SumSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.Sum);
-                                                else if (pf.ApplyVarianceInSubtotal != null)
+                                                if (pf.ApplyVarianceInSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.Variance);
                                                 var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                                 if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
@@ -611,25 +611,25 @@ namespace ClosedXML.Excel
                                         {
                                             if (pf.AverageSubTotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.Average);
-                                            else if (pf.CountASubtotal != null)
+                                            if (pf.CountASubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.Count);
-                                            else if (pf.CountSubtotal != null)
+                                            if (pf.CountSubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
-                                            else if (pf.MaxSubtotal != null)
+                                            if (pf.MaxSubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
-                                            else if (pf.MinSubtotal != null)
+                                            if (pf.MinSubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
-                                            else if (pf.ApplyStandardDeviationPInSubtotal != null)
+                                            if (pf.ApplyStandardDeviationPInSubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
-                                            else if (pf.ApplyVariancePInSubtotal != null)
+                                            if (pf.ApplyVariancePInSubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
-                                            else if (pf.ApplyProductInSubtotal != null)
+                                            if (pf.ApplyProductInSubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.Product);
-                                            else if (pf.ApplyStandardDeviationInSubtotal != null)
+                                            if (pf.ApplyStandardDeviationInSubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
-                                            else if (pf.SumSubtotal != null)
+                                            if (pf.SumSubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.Sum);
-                                            else if (pf.ApplyVarianceInSubtotal != null)
+                                            if (pf.ApplyVarianceInSubtotal != null)
                                                 pivotField.AddSubtotal(XLSubtotalFunction.Variance);
                                             var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                             if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
