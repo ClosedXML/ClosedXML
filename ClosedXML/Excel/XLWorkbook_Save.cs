@@ -2020,6 +2020,7 @@ namespace ClosedXML.Excel
                 if (field != null)
                 {
                     xlpf.CustomName = field.CustomName;
+                    xlpf.SortType = field.SortType;
                     xlpf.Subtotals.AddRange(field.Subtotals);
                 }
 
@@ -2293,6 +2294,11 @@ namespace ClosedXML.Excel
                 {
                     pf.Outline = false;
                     pf.Compact = false;
+                }
+
+                if (xlpf.SortType != XLPivotSortType.Manual)
+                {
+                    pf.SortType = new EnumValue<FieldSortValues>((FieldSortValues)xlpf.SortType);
                 }
 
                 switch (pt.Subtotals)
