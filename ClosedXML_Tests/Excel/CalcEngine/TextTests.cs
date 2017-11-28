@@ -456,7 +456,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual("", actual);
         }
 
-        //[Test] Needs to be fixed in ExcelNumberFormat first.
+        [Test]
         public void Text_Value()
         {
             Object actual;
