@@ -113,6 +113,11 @@ namespace ClosedXML.Excel.CalcEngine
                 return ((DateTime)v).ToOADate();
             }
 
+            if (v is TimeSpan)
+            {
+                return ((TimeSpan)v).TotalDays;
+            }
+
             // handle nulls
             if (v == null || v is string)
             {
