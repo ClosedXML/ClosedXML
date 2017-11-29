@@ -513,12 +513,40 @@ namespace ClosedXML.Excel
                             if (pivotTableDefinition.ItemPrintTitles != null) pt.RepeatRowLabels = pivotTableDefinition.ItemPrintTitles.Value;
                             if (pivotTableDefinition.FieldPrintTitles != null) pt.PrintTitles = pivotTableDefinition.FieldPrintTitles.Value;
                             if (pivotTableDefinition.EnableDrill != null) pt.EnableShowDetails = pivotTableDefinition.EnableDrill.Value;
+                            if (pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData != null) pt.SaveSourceData = pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData.Value;
+
+                            if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit != null)
+                            {
+                                if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit == 0U)
+                                    pt.ItemsToRetainPerField = XLItemsToRetain.None;
+                                else if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit == XLHelper.MaxRowNumber)
+                                    pt.ItemsToRetainPerField = XLItemsToRetain.Max;
+                            }
 
                             if (pivotTableDefinition.ShowMissing != null && pivotTableDefinition.MissingCaption != null)
                                 pt.EmptyCellReplacement = pivotTableDefinition.MissingCaption.Value;
 
                             if (pivotTableDefinition.ShowError != null && pivotTableDefinition.ErrorCaption != null)
                                 pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
+
+                            var pivotTableDefinitionExtensionList = pivotTableDefinition.GetFirstChild<PivotTableDefinitionExtensionList>();
+                            var pivotTableDefinitionExtension = pivotTableDefinitionExtensionList?.GetFirstChild<PivotTableDefinitionExtension>();
+                            var pivotTableDefinition2 = pivotTableDefinitionExtension?.GetFirstChild<DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition>();
+                            if (pivotTableDefinition2 != null)
+                            {
+                                if (pivotTableDefinition2.EnableEdit != null) pt.EnableCellEditing = pivotTableDefinition2.EnableEdit.Value;
+                                if (pivotTableDefinition2.HideValuesRow != null) pt.ShowValuesRow = !pivotTableDefinition2.HideValuesRow.Value;
+                            }
+
+                            var pivotTableStyle = pivotTableDefinition.GetFirstChild<PivotTableStyle>();
+                            if (pivotTableStyle != null)
+                            {
+                                pt.Theme = (XLPivotTableTheme) Enum.Parse(typeof(XLPivotTableTheme), pivotTableStyle.Name);
+                                pt.ShowRowHeaders = pivotTableStyle.ShowRowHeaders;
+                                pt.ShowColumnHeaders = pivotTableStyle.ShowColumnHeaders;
+                                pt.ShowRowStripes = pivotTableStyle.ShowRowStripes;
+                                pt.ShowColumnStripes = pivotTableStyle.ShowColumnStripes;
+                            }
 
                             // Subtotal configuration
                             if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && pf.SubtotalTop.Value))
