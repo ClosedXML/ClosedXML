@@ -68,7 +68,7 @@ namespace ClosedXML.Excel
             SetProperties(dSpreadsheet);
 
             SharedStringItem[] sharedStrings = null;
-            if (dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
+            if (dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Any())
             {
                 var shareStringPart = dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
                 sharedStrings = shareStringPart.SharedStringTable.Elements<SharedStringItem>().ToArray();
