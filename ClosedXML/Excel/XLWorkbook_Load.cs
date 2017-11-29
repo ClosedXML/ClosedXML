@@ -683,7 +683,7 @@ namespace ClosedXML.Excel
                                         else
                                             throw new NotImplementedException();
                                     }
-                                    else if (pf.MultipleItemSelectionAllowed != null && BooleanValue.ToBoolean(pf.MultipleItemSelectionAllowed))
+                                    else if (OpenXmlHelper.GetBooleanValueAsBool(pf.MultipleItemSelectionAllowed, false))
                                     {
                                         foreach (var item in pf.Items.Cast<Item>())
                                         {
