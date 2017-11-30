@@ -1,10 +1,13 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace ClosedXML.Utils
 {
     public static class XmlEncoder
     {
+        private static readonly Regex xHHHHRegex = new Regex("_(x[\\dA-F]{4})_", RegexOptions.Compiled);
+
         /// <summary>
         /// Checks if a character is not allowed to the XML Spec http://www.w3.org/TR/REC-xml/#charsets
         /// </summary>
@@ -23,20 +26,23 @@ namespace ClosedXML.Utils
         {
             if (encodeStr == null) return null;
 
-            var newString = new StringBuilder();
+            encodeStr = xHHHHRegex.Replace(encodeStr, "_x005F_$1_");
+
+            var sb = new StringBuilder(encodeStr.Length);
 
             foreach (var ch in encodeStr)
             {
                 if (IsXmlChar(ch)) //this method is new in .NET 4
                 {
-                    newString.Append(ch);
+                    sb.Append(ch);
                 }
                 else
                 {
-                    newString.Append(XmlConvert.EncodeName(ch.ToString()));
+                    sb.Append(XmlConvert.EncodeName(ch.ToString()));
                 }
             }
-            return newString.ToString();
+
+            return sb.ToString();
         }
 
         public static string DecodeString(string decodeStr)

@@ -176,6 +176,11 @@ namespace ClosedXML.Excel
         {
             return value.ToString(CultureInfo.InvariantCulture.NumberFormat);
         }
+
+        public static bool Between(this int val, int from, int to)
+        {
+            return val >= from && val <= to;
+        }
     }
 
     public static class DecimalExtensions
