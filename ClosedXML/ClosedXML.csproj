@@ -51,6 +51,10 @@
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FastMember.Signed, Version=1.0.0.9, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
       <HintPath>..\packages\FastMember.Signed.1.1.0\lib\net40\FastMember.Signed.dll</HintPath>
       <Private>True</Private>
@@ -101,6 +105,7 @@
     <Compile Include="Excel\XLConstants.cs" />
     <Compile Include="Excel\IXLWorkbook.cs" />
     <Compile Include="Excel\XLWorkbook_ImageHandling.cs" />
+    <Compile Include="Extensions\FormatExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\OpenXmlPartContainerExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

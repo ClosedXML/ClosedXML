@@ -295,19 +295,35 @@ namespace ClosedXML.Excel
         private void SetExcelDefaults()
         {
             EmptyCellReplacement = String.Empty;
-            AutofitColumns = true;
-            PreserveCellFormatting = true;
-            ShowGrandTotalsColumns = true;
-            ShowGrandTotalsRows = true;
-            UseCustomListsForSorting = true;
-            ShowExpandCollapseButtons = true;
-            ShowContextualTooltips = true;
-            DisplayCaptionsAndDropdowns = true;
-            RepeatRowLabels = true;
             SaveSourceData = true;
-            EnableShowDetails = true;
             ShowColumnHeaders = true;
             ShowRowHeaders = true;
+
+            // source http://www.datypic.com/sc/ooxml/e-ssml_pivotTableDefinition.html
+            DisplayItemLabels = true;	//	Show Item Names
+            ShowExpandCollapseButtons = true;	//	Show Expand Collapse
+            PrintExpandCollapsedButtons = false;	//	Print Drill Indicators
+            ShowPropertiesInTooltips = true;	//	Show Member Property ToolTips
+            ShowContextualTooltips = true;	//	Show ToolTips on Data
+            EnableShowDetails = true;	//	Enable Drill Down
+            PreserveCellFormatting = true;	//	Preserve Formatting
+            AutofitColumns = false;	//	Auto Formatting
+            FilterAreaOrder = XLFilterAreaOrder.DownThenOver;	//	Page Over Then Down
+            FilteredItemsInSubtotals = false;	//	Subtotal Hidden Items
+            ShowGrandTotalsRows = true;	//	Row Grand Totals
+            ShowGrandTotalsColumns = true;	//	Grand Totals On Columns
+            PrintTitles = false;	//	Field Print Titles
+            RepeatRowLabels = false;	//	Item Print Titles
+            MergeAndCenterWithLabels = false;	//	Merge Titles
+            RowLabelIndent = 1;	//	Indentation for Compact Axis
+            ShowEmptyItemsOnRows = false;	//	Show Empty Row
+            ShowEmptyItemsOnColumns = false;	//	Show Empty Column
+            DisplayCaptionsAndDropdowns = true;	//	Show Field Headers
+            ClassicPivotTableLayout = false;	//	Enable Drop Zones
+            AllowMultipleFilters = true;	//	Multiple Field Filters
+            SortFieldsAtoZ = false;	//	Default Sort Order
+            UseCustomListsForSorting = true; //	Custom List AutoSort
+
         }
     }
 }
