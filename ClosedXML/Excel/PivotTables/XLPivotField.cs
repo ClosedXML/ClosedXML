@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
             SourceName = sourceName;
             Subtotals = new List<XLSubtotalFunction>();
             SelectedValues = new List<Object>();
-            SortType = XLPivotSortType.Manual;
+            SortType = XLPivotSortType.Default;
         }
 
         public String SourceName { get; private set; }

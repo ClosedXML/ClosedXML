@@ -193,6 +193,21 @@ namespace ClosedXML_Examples
                     .AddSelectedValue(new DateTime(2017, 05, 03));
 
                 #endregion Pivot Table with filter
+                
+                #region Pivot table sorting
+
+                ptSheet = wb.Worksheets.Add("pvtSort");
+                pt = ptSheet.PivotTables.AddNew("pvtSort", ptSheet.Cell(1, 1), dataRange);
+
+                pt.RowLabels.Add("Name").SetSort(XLPivotSortType.Ascending);
+                pt.RowLabels.Add("Month").SetSort(XLPivotSortType.Descending);
+
+                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+                pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
+
+                pt.SetRowHeaderCaption("Pastry name");
+
+                #endregion Different kind of pivot
 
                 wb.SaveAs(filePath);
             }

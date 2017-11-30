@@ -93,7 +93,7 @@ namespace ClosedXML.Excel
 
     public enum XLPivotSortType
     {
-        Manual = 0,
+        Default = 0,
         Ascending = 1,
         Descending = 2
     }

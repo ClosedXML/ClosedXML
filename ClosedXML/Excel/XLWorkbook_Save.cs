@@ -2296,7 +2296,7 @@ namespace ClosedXML.Excel
                     pf.Compact = false;
                 }
 
-                if (xlpf.SortType != XLPivotSortType.Manual)
+                if (xlpf.SortType != XLPivotSortType.Default)
                 {
                     pf.SortType = new EnumValue<FieldSortValues>((FieldSortValues)xlpf.SortType);
                 }
