@@ -2547,7 +2547,7 @@ namespace ClosedXML.Excel
                 var df = new DataField
                 {
                     Name = value.CustomName,
-                    Field = (UInt32)sourceColumn.ColumnNumber() - 1,
+                    Field = (UInt32)(sourceColumn.ColumnNumber() - pt.SourceRange.RangeAddress.FirstAddress.ColumnNumber),
                     Subtotal = value.SummaryFormula.ToOpenXml(),
                     ShowDataAs = value.Calculation.ToOpenXml(),
                     NumberFormatId = numberFormatId
