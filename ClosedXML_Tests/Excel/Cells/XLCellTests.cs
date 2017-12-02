@@ -345,6 +345,46 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void GetValue_MaximumRecursionDepthExceeded()
+        {
+            Assert.Throws<StackOverflowException>(() =>
+            {
+                IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+                IXLCell cell = ws.Cell(1, 1);
+                cell.FormulaA1 = "A1";
+                cell.GetValue(maximumRecursiveDepth: 1000);
+            });
+        }
+
+        [Test]
+        public void GetValue_MaximumRecursionDepthExceeded2()
+        {
+            Assert.Throws<StackOverflowException>(() =>
+            {
+                IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+                IXLCell firstCell = ws.Cell(1, 1);
+                firstCell.FormulaA1 = "B1";
+                ws.Cell(1, 2).FormulaA1 = "C1";
+                ws.Cell(1, 3).Value = 5;
+
+                var actualValue = firstCell.GetValue(maximumRecursiveDepth: 1);
+            });
+        }
+
+        [Test]
+        public void GetValue_MaximumRecursionDepthNotExceeded()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell firstCell = ws.Cell(1, 1);
+            firstCell.FormulaA1 = "B1";
+            ws.Cell(1, 2).FormulaA1 = "C1";
+            ws.Cell(1, 3).Value = 5;
+
+            var actualValue = firstCell.GetValue(maximumRecursiveDepth: 2);
+            Assert.AreEqual(5, actualValue);
+        }
+
+        [Test]
         public void ValueSetToEmptyString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");

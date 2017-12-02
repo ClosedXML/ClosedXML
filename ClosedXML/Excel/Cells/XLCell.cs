@@ -63,6 +63,12 @@ namespace ClosedXML.Excel
 
         private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_", RegexOptions.Compiled);
 
+        /// <summary>
+        /// Default value is from Excel specifications and limits
+        /// Feature, Iterations: https://support.office.com/en-us/article/Excel-specifications-and-limits-1672b34d-7043-467e-8e27-269d656771c3
+        /// </summary>
+        private static readonly int DefaultMaximumRecursiveDepth = 32767;
+
         #region Fields
 
         private readonly XLWorksheet _worksheet;
@@ -356,7 +362,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                return GetValue();
+                return GetValue(DefaultMaximumRecursiveDepth);
             }
 
             set
@@ -384,7 +390,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private object GetValue()
+        public object GetValue(int maximumRecursiveDepth, int resursiveCallCounter = 0)
         {
             var fA1 = FormulaA1;
             if (!String.IsNullOrWhiteSpace(fA1))
@@ -412,7 +418,14 @@ namespace ClosedXML.Excel
                     w => String.Compare(w.Name, sName, true) == 0)
                     && XLHelper.IsValidA1Address(cAddress)
                     )
-                    return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
+                {
+                    if (resursiveCallCounter == maximumRecursiveDepth)
+                    {
+                        throw new StackOverflowException($"Maximum recursion depth exceeded ({maximumRecursiveDepth})");
+                    }
+
+                    return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).GetValue(maximumRecursiveDepth, ++resursiveCallCounter);
+                }
 
                 var retVal = Worksheet.Evaluate(fA1);
                 var retValEnumerable = retVal as IEnumerable;
