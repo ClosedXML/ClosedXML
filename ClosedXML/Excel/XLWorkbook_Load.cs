@@ -585,6 +585,11 @@ namespace ClosedXML.Excel
                                                 var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                                 if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                                                     pivotField.SetCollapsed();
+
+                                                if (pf.SortType != null)
+                                                {
+                                                    pivotField.SetSort((XLPivotSortType)pf.SortType.Value);
+                                                }
                                             }
                                         }
                                     }
@@ -618,6 +623,11 @@ namespace ClosedXML.Excel
                                             var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                             if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                                                 pivotField.SetCollapsed();
+
+                                            if (pf.SortType != null)
+                                            {
+                                                pivotField.SetSort((XLPivotSortType)pf.SortType.Value);
+                                            }
                                         }
                                     }
                                 }
