@@ -2287,12 +2287,29 @@ namespace ClosedXML.Excel
             {
                 var ptfi = pti.Fields[xlpf.SourceName];
                 IXLPivotField labelOrFilterField = null;
-                var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
-
+                var pf = new PivotField
+                {
+                    Name = xlpf.CustomName,
+                    IncludeNewItemsInFilter = OpenXmlHelper.GetBooleanValue(xlpf.IncludeNewItemsInFilter, false),
+                    InsertBlankRow = OpenXmlHelper.GetBooleanValue(xlpf.InsertBlankLines, false),
+                    ShowAll = OpenXmlHelper.GetBooleanValue(xlpf.ShowBlankItems, true),
+                    InsertPageBreak = OpenXmlHelper.GetBooleanValue(xlpf.InsertPageBreaks, false),
+                    //TODO pivotField.RepeatItemLabels = pf.;
+                };
+                if (!string.IsNullOrWhiteSpace(xlpf.SubtotalCaption))
+                {
+                    pf.SubtotalCaption = xlpf.SubtotalCaption;
+                }
+                    
                 if (pt.ClassicPivotTableLayout)
                 {
                     pf.Outline = false;
                     pf.Compact = false;
+                }
+                else
+                {
+                    pf.Outline = OpenXmlHelper.GetBooleanValue(xlpf.Outline, true);
+                    pf.Compact = OpenXmlHelper.GetBooleanValue(xlpf.Compact, true);
                 }
 
                 switch (pt.Subtotals)
@@ -2307,9 +2324,12 @@ namespace ClosedXML.Excel
                         break;
 
                     case XLPivotSubtotals.AtTop:
-                        pf.DefaultSubtotal = true;
-                        pf.SubtotalTop = true;
+                        // at top is by default
                         break;
+                }
+                if (xlpf.SubtotalsAtTop.HasValue)
+                {
+                    pf.SubtotalTop = OpenXmlHelper.GetBooleanValue(xlpf.SubtotalsAtTop.Value, true);
                 }
 
                 if (pt.RowLabels.Contains(xlpf.SourceName))

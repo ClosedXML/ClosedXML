@@ -582,6 +582,8 @@ namespace ClosedXML.Excel
 
                                             if (pivotField != null)
                                             {
+                                                SetFieldOptions(pf, pivotField);
+
                                                 var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                                 if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                                                     pivotField.SetCollapsed();
@@ -615,6 +617,8 @@ namespace ClosedXML.Excel
 
                                         if (pivotField != null)
                                         {
+                                            SetFieldOptions(pf, pivotField);
+
                                             var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                             if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                                                 pivotField.SetCollapsed();
@@ -743,6 +747,18 @@ namespace ClosedXML.Excel
             }
 
             #endregion
+        }
+
+        private static void SetFieldOptions(PivotField pf, IXLPivotField pivotField)
+        {
+            if (pf.SubtotalCaption != null) pivotField.SubtotalCaption = pf.SubtotalCaption;
+            if (pf.IncludeNewItemsInFilter != null) pivotField.IncludeNewItemsInFilter = pf.IncludeNewItemsInFilter.Value;
+            if (pf.Outline != null) pivotField.Outline = pf.Outline.Value;
+            if (pf.Compact != null) pivotField.Compact = pf.Compact.Value;
+            //TODO if (pf. != null) pivotField.RepeatItemLabels = pf.;
+            if (pf.InsertBlankRow != null) pivotField.InsertBlankLines = pf.InsertBlankRow.Value;
+            if (pf.ShowAll != null) pivotField.ShowBlankItems = pf.ShowAll.Value;
+            if (pf.InsertPageBreak != null) pivotField.InsertPageBreaks = pf.InsertPageBreak.Value;
         }
 
         private void LoadDrawings(WorksheetPart wsPart, IXLWorksheet ws)
