@@ -1360,6 +1360,7 @@ namespace ClosedXML.Excel
                 conditionalFormat.Range.Dispose();
             }
             ResumeEvents();
+            newConditionalFormats.Consolidate();
             ConditionalFormats = newConditionalFormats;
         }
 

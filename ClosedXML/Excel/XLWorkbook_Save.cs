@@ -2019,6 +2019,7 @@ namespace ClosedXML.Excel
                 if (field != null)
                 {
                     xlpf.CustomName = field.CustomName;
+                    xlpf.SortType = field.SortType;
                     xlpf.Subtotals.AddRange(field.Subtotals);
                 }
 
@@ -2165,16 +2166,16 @@ namespace ClosedXML.Excel
                 Name = pt.Name,
                 CacheId = cacheId,
                 DataCaption = "Values",
-                MergeItem = OpenXmlHelper.GetBooleanValue(pt.MergeAndCenterWithLabels, true),
+                MergeItem = OpenXmlHelper.GetBooleanValue(pt.MergeAndCenterWithLabels, false),
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),
                 PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown),
                 PageWrap = Convert.ToUInt32(pt.FilterFieldsPageWrap),
                 ShowError = String.IsNullOrEmpty(pt.ErrorValueReplacement),
-                UseAutoFormatting = OpenXmlHelper.GetBooleanValue(pt.AutofitColumns, true),
+                UseAutoFormatting = OpenXmlHelper.GetBooleanValue(pt.AutofitColumns, false),
                 PreserveFormatting = OpenXmlHelper.GetBooleanValue(pt.PreserveCellFormatting, true),
                 RowGrandTotals = OpenXmlHelper.GetBooleanValue(pt.ShowGrandTotalsRows, true),
                 ColumnGrandTotals = OpenXmlHelper.GetBooleanValue(pt.ShowGrandTotalsColumns, true),
-                SubtotalHiddenItems = OpenXmlHelper.GetBooleanValue(pt.FilteredItemsInSubtotals, true),
+                SubtotalHiddenItems = OpenXmlHelper.GetBooleanValue(pt.FilteredItemsInSubtotals, false),
                 MultipleFieldFilters = OpenXmlHelper.GetBooleanValue(pt.AllowMultipleFilters, true),
                 CustomListSort = OpenXmlHelper.GetBooleanValue(pt.UseCustomListsForSorting, true),
                 ShowDrill = OpenXmlHelper.GetBooleanValue(pt.ShowExpandCollapseButtons, true),
@@ -2182,13 +2183,13 @@ namespace ClosedXML.Excel
                 ShowMemberPropertyTips = OpenXmlHelper.GetBooleanValue(pt.ShowPropertiesInTooltips, true),
                 ShowHeaders = OpenXmlHelper.GetBooleanValue(pt.DisplayCaptionsAndDropdowns, true),
                 GridDropZones = OpenXmlHelper.GetBooleanValue(pt.ClassicPivotTableLayout, false),
-                ShowEmptyRow = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnRows, true),
-                ShowEmptyColumn = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnColumns, true),
+                ShowEmptyRow = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnRows, false),
+                ShowEmptyColumn = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnColumns, false),
                 ShowItems = OpenXmlHelper.GetBooleanValue(pt.DisplayItemLabels, true),
-                FieldListSortAscending = OpenXmlHelper.GetBooleanValue(pt.SortFieldsAtoZ, true),
-                PrintDrill = OpenXmlHelper.GetBooleanValue(pt.PrintExpandCollapsedButtons, true),
-                ItemPrintTitles = OpenXmlHelper.GetBooleanValue(pt.RepeatRowLabels, true),
-                FieldPrintTitles = OpenXmlHelper.GetBooleanValue(pt.PrintTitles, true),
+                FieldListSortAscending = OpenXmlHelper.GetBooleanValue(pt.SortFieldsAtoZ, false),
+                PrintDrill = OpenXmlHelper.GetBooleanValue(pt.PrintExpandCollapsedButtons, false),
+                ItemPrintTitles = OpenXmlHelper.GetBooleanValue(pt.RepeatRowLabels, false),
+                FieldPrintTitles = OpenXmlHelper.GetBooleanValue(pt.PrintTitles, false),
                 EnableDrill = OpenXmlHelper.GetBooleanValue(pt.EnableShowDetails, true)
             };
 
@@ -2309,6 +2310,11 @@ namespace ClosedXML.Excel
                 {
                     pf.Outline = false;
                     pf.Compact = false;
+                }
+
+                if (xlpf.SortType != XLPivotSortType.Default)
+                {
+                    pf.SortType = new EnumValue<FieldSortValues>((FieldSortValues)xlpf.SortType);
                 }
 
                 switch (pt.Subtotals)
@@ -2563,7 +2569,7 @@ namespace ClosedXML.Excel
                 var df = new DataField
                 {
                     Name = value.CustomName,
-                    Field = (UInt32)sourceColumn.ColumnNumber() - 1,
+                    Field = (UInt32)(sourceColumn.ColumnNumber() - pt.SourceRange.RangeAddress.FirstAddress.ColumnNumber),
                     Subtotal = value.SummaryFormula.ToOpenXml(),
                     ShowDataAs = value.Calculation.ToOpenXml(),
                     NumberFormatId = numberFormatId
@@ -4118,6 +4124,8 @@ namespace ClosedXML.Excel
         private static void GenerateWorksheetPartContent(
             WorksheetPart worksheetPart, XLWorksheet xlWorksheet, bool evaluateFormulae, SaveContext context)
         {
+            ((XLConditionalFormats)xlWorksheet.ConditionalFormats).Consolidate();
+
             #region Worksheet
 
             if (worksheetPart.Worksheet == null)

@@ -122,6 +122,20 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void CanLoadOrderedPivotTable()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("OrderedPivotTable");
+                var pt = ws.PivotTable("OrderedPivotTable");
+
+                Assert.AreEqual(XLPivotSortType.Ascending, pt.RowLabels.Single().SortType);
+                Assert.AreEqual(XLPivotSortType.Descending, pt.ColumnLabels.Single().SortType);
+            }
+        }
+
         /// <summary>
         /// For non-English locales, the default style ("Normal" in English) can be
         /// another piece of text (e.g. ??????? in Russian).
