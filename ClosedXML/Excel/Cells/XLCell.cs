@@ -356,71 +356,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var fA1 = FormulaA1;
-                if (!String.IsNullOrWhiteSpace(fA1))
-                {
-                    if (fA1[0] == '{')
-                        fA1 = fA1.Substring(1, fA1.Length - 2);
-
-                    string sName;
-                    string cAddress;
-                    if (fA1.Contains('!'))
-                    {
-                        sName = fA1.Substring(0, fA1.IndexOf('!'));
-                        if (sName[0] == '\'')
-                            sName = sName.Substring(1, sName.Length - 2);
-
-                        cAddress = fA1.Substring(fA1.IndexOf('!') + 1);
-                    }
-                    else
-                    {
-                        sName = Worksheet.Name;
-                        cAddress = fA1;
-                    }
-
-                    if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
-                        w => String.Compare(w.Name, sName, true) == 0)
-                        && XLHelper.IsValidA1Address(cAddress)
-                        )
-                        return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
-
-                    var retVal = Worksheet.Evaluate(fA1);
-                    var retValEnumerable = retVal as IEnumerable;
-
-                    if (retValEnumerable != null && !(retVal is String))
-                        return retValEnumerable.Cast<object>().First();
-
-                    return retVal;
-                }
-
-                var cellValue = HasRichText ? _richText.ToString() : _cellValue;
-
-                if (_dataType == XLDataType.Boolean)
-                    return cellValue != "0";
-
-                if (_dataType == XLDataType.DateTime)
-                {
-                    Double d;
-                    if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d)
-                        && d.IsValidOADateNumber())
-                        return DateTime.FromOADate(d);
-                }
-
-                if (_dataType == XLDataType.Number)
-                {
-                    Double d;
-                    if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d))
-                        return d;
-                }
-
-                if (_dataType == XLDataType.TimeSpan)
-                {
-                    TimeSpan t;
-                    if (TimeSpan.TryParse(cellValue, out t))
-                        return t;
-                }
-
-                return cellValue;
+                return GetValue();
             }
 
             set
@@ -446,6 +382,75 @@ namespace ClosedXML.Excel
 
                 if (_cellValue.Length > 32767) throw new ArgumentException("Cells can hold only 32,767 characters.");
             }
+        }
+
+        private object GetValue()
+        {
+            var fA1 = FormulaA1;
+            if (!String.IsNullOrWhiteSpace(fA1))
+            {
+                if (fA1[0] == '{')
+                    fA1 = fA1.Substring(1, fA1.Length - 2);
+
+                string sName;
+                string cAddress;
+                if (fA1.Contains('!'))
+                {
+                    sName = fA1.Substring(0, fA1.IndexOf('!'));
+                    if (sName[0] == '\'')
+                        sName = sName.Substring(1, sName.Length - 2);
+
+                    cAddress = fA1.Substring(fA1.IndexOf('!') + 1);
+                }
+                else
+                {
+                    sName = Worksheet.Name;
+                    cAddress = fA1;
+                }
+
+                if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
+                    w => String.Compare(w.Name, sName, true) == 0)
+                    && XLHelper.IsValidA1Address(cAddress)
+                    )
+                    return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
+
+                var retVal = Worksheet.Evaluate(fA1);
+                var retValEnumerable = retVal as IEnumerable;
+
+                if (retValEnumerable != null && !(retVal is String))
+                    return retValEnumerable.Cast<object>().First();
+
+                return retVal;
+            }
+
+            var cellValue = HasRichText ? _richText.ToString() : _cellValue;
+
+            if (_dataType == XLDataType.Boolean)
+                return cellValue != "0";
+
+            if (_dataType == XLDataType.DateTime)
+            {
+                Double d;
+                if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d)
+                    && d.IsValidOADateNumber())
+                    return DateTime.FromOADate(d);
+            }
+
+            if (_dataType == XLDataType.Number)
+            {
+                Double d;
+                if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d))
+                    return d;
+            }
+
+            if (_dataType == XLDataType.TimeSpan)
+            {
+                TimeSpan t;
+                if (TimeSpan.TryParse(cellValue, out t))
+                    return t;
+            }
+
+            return cellValue;
         }
 
         public IXLTable InsertTable<T>(IEnumerable<T> data)
