@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
             SourceName = sourceName;
             Subtotals = new List<XLSubtotalFunction>();
             SelectedValues = new List<Object>();
-
+            SortType = XLPivotSortType.Default;
             SetExcelDefaults();
         }
 
@@ -85,6 +85,10 @@ namespace ClosedXML.Excel
         public IXLPivotField SetCollapsed() { Collapsed = true; return this; }
 
         public IXLPivotField SetCollapsed(Boolean value) { Collapsed = value; return this; }
+
+        public XLPivotSortType SortType { get; set; }
+
+        public IXLPivotField SetSort(XLPivotSortType value) { SortType = value; return this; }
 
         public IList<Object> SelectedValues { get; private set; }
         public IXLPivotField AddSelectedValue(Object value)

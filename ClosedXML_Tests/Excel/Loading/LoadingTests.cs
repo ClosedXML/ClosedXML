@@ -122,6 +122,37 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void CanLoadOrderedPivotTable()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("OrderedPivotTable");
+                var pt = ws.PivotTable("OrderedPivotTable");
+
+                Assert.AreEqual(XLPivotSortType.Ascending, pt.RowLabels.Single().SortType);
+                Assert.AreEqual(XLPivotSortType.Descending, pt.ColumnLabels.Single().SortType);
+            }
+        }
+
+        [Test]
+        public void CanLoadPivotTableSubtotals()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("PivotTableSubtotals");
+                var pt = ws.PivotTable("PivotTableSubtotals");
+
+                var subtotals = pt.RowLabels.Get("Group").Subtotals.ToArray();
+                Assert.AreEqual(3, subtotals.Length);
+                Assert.AreEqual(XLSubtotalFunction.Average, subtotals[0]);
+                Assert.AreEqual(XLSubtotalFunction.Count, subtotals[1]);
+                Assert.AreEqual(XLSubtotalFunction.Sum, subtotals[2]);
+            }
+        }
+
         /// <summary>
         /// For non-English locales, the default style ("Normal" in English) can be
         /// another piece of text (e.g. ??????? in Russian).

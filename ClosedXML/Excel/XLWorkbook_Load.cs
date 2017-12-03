@@ -582,11 +582,38 @@ namespace ClosedXML.Excel
 
                                             if (pivotField != null)
                                             {
-                                                SetFieldOptions(pf, pivotField);
-
+												SetFieldOptions(pf, pivotField);
+												
+                                                if (pf.AverageSubTotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Average);
+                                                if (pf.CountASubtotal != null) 
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Count);
+                                                if (pf.CountSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
+                                                if (pf.MaxSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
+                                                if (pf.MinSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
+                                                if (pf.ApplyStandardDeviationPInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
+                                                if (pf.ApplyVariancePInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
+                                                if (pf.ApplyProductInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Product);
+                                                if (pf.ApplyStandardDeviationInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
+                                                if (pf.SumSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Sum);
+                                                if (pf.ApplyVarianceInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Variance);
                                                 var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                                 if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                                                     pivotField.SetCollapsed();
+
+                                                if (pf.SortType != null)
+                                                {
+                                                    pivotField.SetSort((XLPivotSortType)pf.SortType.Value);
+                                                }
                                             }
                                         }
                                     }
@@ -617,11 +644,38 @@ namespace ClosedXML.Excel
 
                                         if (pivotField != null)
                                         {
-                                            SetFieldOptions(pf, pivotField);
-
+											SetFieldOptions(pf, pivotField);
+											
+                                            if (pf.AverageSubTotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Average);
+                                            if (pf.CountASubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Count);
+                                            if (pf.CountSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
+                                            if (pf.MaxSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
+                                            if (pf.MinSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
+                                            if (pf.ApplyStandardDeviationPInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
+                                            if (pf.ApplyVariancePInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
+                                            if (pf.ApplyProductInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Product);
+                                            if (pf.ApplyStandardDeviationInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
+                                            if (pf.SumSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Sum);
+                                            if (pf.ApplyVarianceInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Variance);
                                             var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                             if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                                                 pivotField.SetCollapsed();
+
+                                            if (pf.SortType != null)
+                                            {
+                                                pivotField.SetSort((XLPivotSortType)pf.SortType.Value);
+                                            }
                                         }
                                     }
                                 }
