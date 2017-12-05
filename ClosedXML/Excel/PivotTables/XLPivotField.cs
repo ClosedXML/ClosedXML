@@ -105,7 +105,9 @@ namespace ClosedXML.Excel
             InsertBlankLines = false;
             ShowBlankItems = true;
             InsertPageBreaks = false;
-            //TODO RepeatItemLabels = ;
+            RepeatItemLabels = false;
+            SubtotalsAtTop = true;
+            Collapsed = false;
         }
     }
 }

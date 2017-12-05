@@ -573,42 +573,17 @@ namespace ClosedXML.Excel
                                                 continue;
 
                                             var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(rf.Index.Value) as CacheField;
-                                            if (pf.Name != null)
-                                                pivotField = pt.RowLabels.Add(pf.Name.Value);
-                                            else if (cacheField.Name != null)
-                                                pivotField = pt.RowLabels.Add(cacheField.Name.Value);
+                                            if (cacheField.Name != null)
+                                                pivotField = pf.Name != null
+                                                    ? pt.RowLabels.Add(cacheField.Name, pf.Name.Value)
+                                                    : pt.RowLabels.Add(cacheField.Name.Value);
                                             else
                                                 continue;
 
                                             if (pivotField != null)
                                             {
-												SetFieldOptions(pf, pivotField);
-												
-                                                if (pf.AverageSubTotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.Average);
-                                                if (pf.CountASubtotal != null) 
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.Count);
-                                                if (pf.CountSubtotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
-                                                if (pf.MaxSubtotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
-                                                if (pf.MinSubtotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
-                                                if (pf.ApplyStandardDeviationPInSubtotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
-                                                if (pf.ApplyVariancePInSubtotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
-                                                if (pf.ApplyProductInSubtotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.Product);
-                                                if (pf.ApplyStandardDeviationInSubtotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
-                                                if (pf.SumSubtotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.Sum);
-                                                if (pf.ApplyVarianceInSubtotal != null)
-                                                    pivotField.AddSubtotal(XLSubtotalFunction.Variance);
-                                                var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
-                                                if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
-                                                    pivotField.SetCollapsed();
+												LoadFieldOptions(pf, pivotField);
+                                                LoadSubtotals(pf, pivotField);
 
                                                 if (pf.SortType != null)
                                                 {
@@ -635,42 +610,17 @@ namespace ClosedXML.Excel
                                             continue;
 
                                         var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(cf.Index.Value) as CacheField;
-                                        if (pf.Name != null)
-                                            pivotField = pt.ColumnLabels.Add(pf.Name.Value);
-                                        else if (cacheField.Name != null)
-                                            pivotField = pt.ColumnLabels.Add(cacheField.Name.Value);
+                                        if (cacheField.Name != null)
+                                            pivotField = pf.Name != null
+                                                ? pt.ColumnLabels.Add(cacheField.Name, pf.Name.Value)
+                                                : pt.ColumnLabels.Add(cacheField.Name.Value);
                                         else
                                             continue;
 
                                         if (pivotField != null)
                                         {
-											SetFieldOptions(pf, pivotField);
-											
-                                            if (pf.AverageSubTotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.Average);
-                                            if (pf.CountASubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.Count);
-                                            if (pf.CountSubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
-                                            if (pf.MaxSubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
-                                            if (pf.MinSubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
-                                            if (pf.ApplyStandardDeviationPInSubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
-                                            if (pf.ApplyVariancePInSubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
-                                            if (pf.ApplyProductInSubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.Product);
-                                            if (pf.ApplyStandardDeviationInSubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
-                                            if (pf.SumSubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.Sum);
-                                            if (pf.ApplyVarianceInSubtotal != null)
-                                                pivotField.AddSubtotal(XLSubtotalFunction.Variance);
-                                            var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
-                                            if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
-                                                pivotField.SetCollapsed();
+											LoadFieldOptions(pf, pivotField);
+                                            LoadSubtotals(pf, pivotField);
 
                                             if (pf.SortType != null)
                                             {
@@ -803,16 +753,51 @@ namespace ClosedXML.Excel
             #endregion
         }
 
-        private static void SetFieldOptions(PivotField pf, IXLPivotField pivotField)
+        private static void LoadFieldOptions(PivotField pf, IXLPivotField pivotField)
         {
             if (pf.SubtotalCaption != null) pivotField.SubtotalCaption = pf.SubtotalCaption;
             if (pf.IncludeNewItemsInFilter != null) pivotField.IncludeNewItemsInFilter = pf.IncludeNewItemsInFilter.Value;
             if (pf.Outline != null) pivotField.Outline = pf.Outline.Value;
             if (pf.Compact != null) pivotField.Compact = pf.Compact.Value;
-            //TODO if (pf. != null) pivotField.RepeatItemLabels = pf.;
             if (pf.InsertBlankRow != null) pivotField.InsertBlankLines = pf.InsertBlankRow.Value;
             if (pf.ShowAll != null) pivotField.ShowBlankItems = pf.ShowAll.Value;
             if (pf.InsertPageBreak != null) pivotField.InsertPageBreaks = pf.InsertPageBreak.Value;
+            if (pf.SubtotalTop != null) pivotField.SubtotalsAtTop = pf.SubtotalTop.Value;
+            if (pf.AllDrilled != null) pivotField.Collapsed = !pf.AllDrilled.Value;
+
+            var pivotFieldExtensionList = pf.GetFirstChild<PivotFieldExtensionList>();
+            var pivotFieldExtension = pivotFieldExtensionList?.GetFirstChild<PivotFieldExtension>();
+            var field2010 = pivotFieldExtension?.GetFirstChild<DocumentFormat.OpenXml.Office2010.Excel.PivotField>();
+            if (field2010?.FillDownLabels != null) pivotField.RepeatItemLabels = field2010.FillDownLabels.Value;
+        }
+
+        private static void LoadSubtotals(PivotField pf, IXLPivotField pivotField)
+        {
+            if (pf.AverageSubTotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.Average);
+            if (pf.CountASubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.Count);
+            if (pf.CountSubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
+            if (pf.MaxSubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
+            if (pf.MinSubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
+            if (pf.ApplyStandardDeviationPInSubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
+            if (pf.ApplyVariancePInSubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
+            if (pf.ApplyProductInSubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.Product);
+            if (pf.ApplyStandardDeviationInSubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
+            if (pf.SumSubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.Sum);
+            if (pf.ApplyVarianceInSubtotal != null)
+                pivotField.AddSubtotal(XLSubtotalFunction.Variance);
+            var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
+            if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
+                pivotField.SetCollapsed();
         }
 
         private void LoadDrawings(WorksheetPart wsPart, IXLWorksheet ws)
