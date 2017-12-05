@@ -298,5 +298,94 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(0, ws.Range("C3:D6").AsRange().SurroundingCells(c => !c.IsEmpty()).Count());
             }
         }
+
+        [Test]
+        public void ClearConditionalFormattingsWhenRangeAbove1()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Range("C3:D7").AddConditionalFormat();
+            ws.Range("B2:E3").Clear(XLClearOptions.Formats);
+
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            Assert.AreEqual("C4:D7", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
+        }
+
+        [Test]
+        public void ClearConditionalFormattingsWhenRangeAbove2()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Range("C3:D7").AddConditionalFormat();
+            ws.Range("C3:D3").Clear(XLClearOptions.Formats);
+
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            Assert.AreEqual("C4:D7", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
+        }
+
+        [Test]
+        public void ClearConditionalFormattingsWhenRangeBelow1()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Range("C3:D7").AddConditionalFormat();
+            ws.Range("B7:E8").Clear(XLClearOptions.Formats);
+
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            Assert.AreEqual("C3:D6", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
+        }
+
+        [Test]
+        public void ClearConditionalFormattingsWhenRangeBelow2()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Range("C3:D7").AddConditionalFormat();
+            ws.Range("C7:D7").Clear(XLClearOptions.Formats);
+
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            Assert.AreEqual("C3:D6", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
+        }
+
+        [Test]
+        public void ClearConditionalFormattingsWhenRangeRowInMiddle()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Range("C3:D7").AddConditionalFormat();
+            ws.Range("C5:E5").Clear(XLClearOptions.Formats);
+
+            Assert.AreEqual(2, ws.ConditionalFormats.Count());
+            Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "C3:D4"));
+            Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "C6:D7"));
+        }
+
+        [Test]
+        public void ClearConditionalFormattingsWhenRangeColumnInMiddle()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Range("C3:G4").AddConditionalFormat();
+            ws.Range("E2:E4").Clear(XLClearOptions.Formats);
+
+            Assert.AreEqual(2, ws.ConditionalFormats.Count());
+            Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "C3:D4"));
+            Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "F3:G4"));
+        }
+
+        [Test]
+        public void ClearConditionalFormattingsWhenRangeContainsFormatWhole()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Range("C3:G4").AddConditionalFormat();
+            ws.Range("B2:G4").Clear(XLClearOptions.Formats);
+
+            Assert.AreEqual(0, ws.ConditionalFormats.Count());
+        }
+
+        [Test]
+        public void NoClearConditionalFormattingsWhenRangePartiallySuperimposed()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Range("C3:G4").AddConditionalFormat();
+            ws.Range("C2:D3").Clear(XLClearOptions.Formats);
+
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            Assert.AreEqual("C3:G4", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
+        }
     }
 }
