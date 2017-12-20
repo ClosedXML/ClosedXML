@@ -206,7 +206,7 @@ namespace ClosedXML.Excel
                         }
 
                         var cell = row.Cell(_column);
-                        if (cell.DataType != XLCellValues.Number || !condition(cell.GetDouble())) continue;
+                        if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
                         row.WorksheetRow().Unhide();
                         foundOne = true;
                     }
@@ -224,7 +224,7 @@ namespace ClosedXML.Excel
             {
                 using (var subColumn = column.Column(2, column.CellCount()))
                 {
-                    var cellsUsed = subColumn.CellsUsed(c => c.DataType == XLCellValues.Number);
+                    var cellsUsed = subColumn.CellsUsed(c => c.DataType == XLDataType.Number);
                     if (takeTop)
                     {
                         if (type == XLTopBottomType.Items)
@@ -284,7 +284,7 @@ namespace ClosedXML.Excel
                         }
 
                         var cell = row.Cell(_column);
-                        if (cell.DataType != XLCellValues.Number || !condition(cell.GetDouble())) continue;
+                        if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
                         row.WorksheetRow().Unhide();
                         foundOne = true;
                     }
@@ -304,17 +304,17 @@ namespace ClosedXML.Excel
             {
                 using (var subColumn = column.Column(2, column.CellCount()))
                 {
-                    Double average = subColumn.CellsUsed(c => c.DataType == XLCellValues.Number).Select(c => c.GetDouble()).Average();
+                    Double average = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble()).Average();
 
                     if (aboveAverage)
                     {
                         return
-                            subColumn.CellsUsed(c => c.DataType == XLCellValues.Number).
+                            subColumn.CellsUsed(c => c.DataType == XLDataType.Number).
                                 Select(c => c.GetDouble()).Where(c => c > average).Distinct();
                     }
 
                     return
-                        subColumn.CellsUsed(c => c.DataType == XLCellValues.Number).
+                        subColumn.CellsUsed(c => c.DataType == XLDataType.Number).
                             Select(c => c.GetDouble()).Where(c => c < average).Distinct();
 
                 }
@@ -371,7 +371,7 @@ namespace ClosedXML.Excel
             {
                 Boolean match = isText
                                     ? condition(row.Cell(_column).GetString())
-                                    : row.Cell(_column).DataType == XLCellValues.Number &&
+                                    : row.Cell(_column).DataType == XLDataType.Number &&
                                         condition(row.Cell(_column).GetDouble());
                 if (match)
                     row.WorksheetRow().Unhide();

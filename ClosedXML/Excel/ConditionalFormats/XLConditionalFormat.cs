@@ -1,11 +1,108 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClosedXML.Utils;
 
 namespace ClosedXML.Excel
 {
     internal class XLConditionalFormat : IXLConditionalFormat, IXLStylized
     {
+        private sealed class FullEqualityComparer : IEqualityComparer<IXLConditionalFormat>
+        {
+            private readonly bool _compareRange;
+            private readonly DictionaryComparer<int, XLColor> _colorsComparer = new DictionaryComparer<int, XLColor>();
+            private readonly EnumerableComparer<string> _listComparer = new EnumerableComparer<string>();
+            private readonly DictionaryComparer<int, XLCFContentType> _contentsTypeComparer = new DictionaryComparer<int, XLCFContentType>();
+            private readonly DictionaryComparer<int, XLCFIconSetOperator> _iconSetTypeComparer = new DictionaryComparer<int, XLCFIconSetOperator>();
+
+            public FullEqualityComparer(bool compareRange)
+            {
+                _compareRange = compareRange;
+            }
+
+            public bool Equals(IXLConditionalFormat x, IXLConditionalFormat y)
+            {
+                var xx = (XLConditionalFormat) x;
+                var yy = (XLConditionalFormat) y;
+                if (ReferenceEquals(xx, yy)) return true;
+                if (ReferenceEquals(xx, null)) return false;
+                if (ReferenceEquals(yy, null)) return false;
+                if (xx.GetType() != yy.GetType()) return false;
+
+                var xxValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v=>v.Value);
+                var yyValues = yy.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
+                var xxFormulas = xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)x.Range.FirstCell()).GetFormulaR1C1(f.Value));
+                var yyFormulas = yy.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)y.Range.FirstCell()).GetFormulaR1C1(f.Value));
+
+                var xStyle = xx._style ?? xx.Range.Worksheet.Workbook.GetStyleById(xx._styleCacheId);
+                var yStyle = yy._style ?? yy.Range.Worksheet.Workbook.GetStyleById(yy._styleCacheId);
+
+                return Equals(xStyle, yStyle)
+                    && xx.CopyDefaultModify == yy.CopyDefaultModify 
+                    && xx.UpdatingStyle == yy.UpdatingStyle
+                    && xx.ConditionalFormatType == yy.ConditionalFormatType 
+                    && xx.TimePeriod == yy.TimePeriod 
+                    && xx.IconSetStyle == yy.IconSetStyle 
+                    && xx.Operator == yy.Operator 
+                    && xx.Bottom == yy.Bottom 
+                    && xx.Percent == yy.Percent 
+                    && xx.ReverseIconOrder == yy.ReverseIconOrder 
+                    && xx.StopIfTrueInternal == yy.StopIfTrueInternal
+                    && xx.ShowIconOnly == yy.ShowIconOnly 
+                    && xx.ShowBarOnly == yy.ShowBarOnly
+                    && _listComparer.Equals(xxValues, yyValues)
+                    && _listComparer.Equals(xxFormulas, yyFormulas)
+                    && _colorsComparer.Equals(xx.Colors, yy.Colors)
+                    && _contentsTypeComparer.Equals(xx.ContentTypes, yy.ContentTypes)
+                    && _iconSetTypeComparer.Equals(xx.IconSetOperators, yy.IconSetOperators)
+                    && (!_compareRange || Equals(xx.Range.RangeAddress, yy.Range.RangeAddress)) ;
+            }
+
+            public int GetHashCode(IXLConditionalFormat obj)
+            {
+                var xx = (XLConditionalFormat)obj;
+                var xStyle = xx._style ?? xx.Range.Worksheet.Workbook.GetStyleById(xx._styleCacheId);
+                var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value)
+                    .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Range.FirstCell()).GetFormulaR1C1(f.Value)));
+
+                unchecked
+                {
+                    var hashCode = xStyle.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx._styleCacheId;
+                    hashCode = (hashCode * 397) ^ xx.CopyDefaultModify.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.UpdatingStyle.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xValues.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (xx.Colors != null ? xx.Colors.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (xx.ContentTypes != null ? xx.ContentTypes.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (xx.IconSetOperators != null ? xx.IconSetOperators.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (_compareRange && xx.Range != null ? xx.Range.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (int)xx.ConditionalFormatType;
+                    hashCode = (hashCode * 397) ^ (int)xx.TimePeriod;
+                    hashCode = (hashCode * 397) ^ (int)xx.IconSetStyle;
+                    hashCode = (hashCode * 397) ^ (int)xx.Operator;
+                    hashCode = (hashCode * 397) ^ xx.Bottom.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.Percent.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.ReverseIconOrder.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.ShowIconOnly.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.ShowBarOnly.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.StopIfTrueInternal.GetHashCode();
+                    return hashCode;
+                }
+            }
+        }
+
+        private static readonly IEqualityComparer<IXLConditionalFormat> FullComparerInstance = new FullEqualityComparer(true);
+        public static IEqualityComparer<IXLConditionalFormat> FullComparer
+        {
+            get { return FullComparerInstance; }
+        }
+
+        private static readonly IEqualityComparer<IXLConditionalFormat> NoRangeComparerInstance = new FullEqualityComparer(false);
+        public static IEqualityComparer<IXLConditionalFormat> NoRangeComparer
+        {
+            get { return NoRangeComparerInstance; }
+        }
+
         public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
         {
             Id = Guid.NewGuid();
@@ -374,6 +471,60 @@ namespace ClosedXML.Excel
             ReverseIconOrder = reverseIconOrder;
             ShowIconOnly = showIconOnly;
             return new XLCFIconSet(this);
+        }
+    }
+
+    internal class DictionaryComparer<TKey, TValue> :
+        IEqualityComparer<Dictionary<TKey, TValue>>
+    {
+        private readonly IEqualityComparer<TValue> _valueComparer;
+        public DictionaryComparer(IEqualityComparer<TValue> valueComparer = null)
+        {
+            this._valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
+        }
+        public bool Equals(Dictionary<TKey, TValue> x, Dictionary<TKey, TValue> y)
+        {
+            if (x.Count != y.Count)
+                return false;
+            if (x.Keys.Except(y.Keys).Any())
+                return false;
+            if (y.Keys.Except(x.Keys).Any())
+                return false;
+            foreach (var pair in x)
+                if (!_valueComparer.Equals(pair.Value, y[pair.Key]))
+                    return false;
+            return true;
+        }
+
+        public int GetHashCode(Dictionary<TKey, TValue> obj)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class EnumerableComparer<T> : IEqualityComparer<IEnumerable<T>>
+    {
+        private readonly IEqualityComparer<T> _valueComparer;
+        public EnumerableComparer(IEqualityComparer<T> valueComparer = null)
+        {
+            this._valueComparer = valueComparer ?? EqualityComparer<T>.Default;
+        }
+
+        public bool Equals(IEnumerable<T> x, IEnumerable<T> y)
+        {
+            return SetEquals(x, y, _valueComparer);
+        }
+
+        public int GetHashCode(IEnumerable<T> obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool SetEquals(IEnumerable<T> first, IEnumerable<T> second,
+            IEqualityComparer<T> comparer)
+        {
+            return new HashSet<T>(second, comparer ?? EqualityComparer<T>.Default)
+                .SetEquals(first);
         }
     }
 }

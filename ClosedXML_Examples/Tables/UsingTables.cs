@@ -21,7 +21,7 @@ namespace ClosedXML_Examples.Tables
                     ws.Name = "Contacts Table";
                     var firstCell = ws.FirstCellUsed();
                     var lastCell = ws.LastCellUsed();
-                    var range = ws.Range(firstCell.Address, lastCell.Address);
+                    var range = ws.Range(firstCell.Address, lastCell.CellRight().Address);
                     range.FirstRow().Delete(); // Deleting the "Contacts" header (we don't need it for our purposes)
 
                     // We want to use a theme for table, not the hard coded format of the BasicTable
@@ -29,6 +29,15 @@ namespace ClosedXML_Examples.Tables
                     // Put back the date and number formats
                     range.Column(4).Style.NumberFormat.NumberFormatId = 15;
                     range.Column(5).Style.NumberFormat.Format = "$ #,##0";
+
+                    // Add a field
+                    range.Column(6).FirstCell().SetValue("Age");
+                    var c = range.Column(6).FirstCell().CellBelow();
+                    c.Style.NumberFormat.SetFormat("0.00");
+                    c.FormulaA1 = "=(DATE(2017, 10, 3) - E3) / 365";
+
+                    c.CopyTo(c.CellBelow())
+                        .CopyTo(c.CellBelow().CellBelow());
 
                     var table = range.CreateTable(); // You can also use range.AsTable() if you want to
                                                      // manipulate the range as a table but don't want
@@ -40,8 +49,10 @@ namespace ClosedXML_Examples.Tables
                     // Just for fun let's add the text "Sum Of Income" to the totals row
                     table.Field(0).TotalsRowLabel = "Sum Of Income";
 
+                    table.Field("Age").TotalsRowFunction = XLTotalsRowFunction.Average;
+
                     // Copy all the headers
-                    Int32 columnWithHeaders = lastCell.Address.ColumnNumber + 2;
+                    Int32 columnWithHeaders = lastCell.Address.ColumnNumber + 3;
                     Int32 currentRow = table.RangeAddress.FirstAddress.RowNumber;
                     ws.Cell(currentRow, columnWithHeaders).Value = "Table Headers";
                     foreach (var cell in table.HeadersRow().Cells())
@@ -82,7 +93,7 @@ namespace ClosedXML_Examples.Tables
                     namesTable.ShowAutoFilter = false;
 
                     ws.Columns().AdjustToContents();
-                    ws.Columns("A,G,I").Width = 3;
+                    ws.Columns("A,H,J").Width = 3;
 
                     wb.SaveAs(filePath);
                 }

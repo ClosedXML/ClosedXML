@@ -214,5 +214,25 @@ namespace ClosedXML_Tests
                 }
             }
         }
+
+        [Test]
+        public void CanCopySheetsWithAllAnchorTypes()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                ws.CopyTo("Copy1");
+
+                var ws2 = wb.Worksheets.Skip(1).First();
+                ws2.CopyTo("Copy2");
+
+                var ws3 = wb.Worksheets.Skip(2).First();
+                ws3.CopyTo("Copy3");
+
+                var ws4 = wb.Worksheets.Skip(3).First();
+                ws3.CopyTo("Copy4");
+            }
+        }
     }
 }

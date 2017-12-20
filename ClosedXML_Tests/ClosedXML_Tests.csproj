@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -86,6 +87,7 @@
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Comments\CommentsTests.cs" />
+    <Compile Include="Excel\ConditionalFormats\ConditionalFormatsConsolidateTests.cs" />
     <Compile Include="Excel\ImageHandling\PictureTests.cs" />
     <Compile Include="Excel\Misc\HyperlinkTests.cs" />
     <Compile Include="Excel\Misc\SearchTests.cs" />
@@ -289,6 +291,7 @@
     <EmbeddedResource Include="Resource\Misc\ExcelProducedWorkbookWithImages.xlsx" />
     <EmbeddedResource Include="Resource\Misc\EmptyCellValue.xlsx" />
     <EmbeddedResource Include="Resource\Misc\AllShapes.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\Date1904System.xlsx" />
     <EmbeddedResource Include="Resource\Misc\DuplicateImageNames.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableHeadersWithLineBreaks.xlsx" />
     <EmbeddedResource Include="Resource\Misc\TableWithNameNull.xlsx" />
@@ -298,6 +301,7 @@
     <EmbeddedResource Include="Resource\Examples\Tables\InsertingTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBarNegative.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStopIfTrue.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\InvalidPrintArea.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />

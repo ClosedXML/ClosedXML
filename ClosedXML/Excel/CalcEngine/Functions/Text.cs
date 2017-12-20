@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel.CalcEngine.Exceptions;
+using ExcelNumberFormat;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -39,7 +40,6 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
             ce.RegisterFunction("VALUE", 1, Value); // Converts a text argument to a number
-            ce.RegisterFunction("HYPERLINK", 2, Hyperlink);
         }
 
         private static object _Char(List<Expression> p)
@@ -268,14 +268,12 @@ namespace ClosedXML.Excel.CalcEngine
             var format = (string)p[1];
             if (string.IsNullOrEmpty(format.Trim())) return "";
 
-            // We'll have to guess as to whether the format represents a date and/or time.
-            // Not sure whether there's a better way to detect this.
-            bool isDateFormat = new string[] { "y", "m", "d", "h", "s" }.Any(part => format.ToLower().Contains(part.ToLower()));
+            var nf = new NumberFormat(format);
 
-            if (isDateFormat)
-                return DateTime.FromOADate(number).ToString(format, CultureInfo.CurrentCulture);
+            if (nf.IsDateTimeFormat)
+                return nf.Format(DateTime.FromOADate(number), CultureInfo.InvariantCulture);
             else
-                return number.ToString(format, CultureInfo.CurrentCulture);
+                return nf.Format(number, CultureInfo.InvariantCulture);
         }
 
         private static object Trim(List<Expression> p)
@@ -298,13 +296,6 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Asc(List<Expression> p)
         {
             return (string)p[0];
-        }
-
-        private static object Hyperlink(List<Expression> p)
-        {
-            String address = p[0];
-            String toolTip = p.Count == 2 ? p[1] : String.Empty;
-            return new XLHyperlink(address, toolTip);
         }
 
         private static object Clean(List<Expression> p)

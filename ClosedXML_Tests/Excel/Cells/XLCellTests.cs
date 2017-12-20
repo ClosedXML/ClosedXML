@@ -60,7 +60,7 @@ namespace ClosedXML_Tests
             var doubleList = new List<Double> { 1.0 / 0.0 };
 
             cell.Value = doubleList;
-            Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
+            Assert.AreNotEqual(XLDataType.Number, cell.DataType);
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace ClosedXML_Tests
             var doubleList = new List<Double> { 0.0 / 0.0 };
 
             cell.Value = doubleList;
-            Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
+            Assert.AreNotEqual(XLDataType.Number, cell.DataType);
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell("A1");
             cell.Value = "NaN";
 
-            Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
+            Assert.AreNotEqual(XLDataType.Number, cell.DataType);
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell("A1");
             cell.Value = "Nan";
 
-            Assert.AreNotEqual(XLCellValues.Number, cell.DataType);
+            Assert.AreNotEqual(XLDataType.Number, cell.DataType);
         }
 
         [Test]
@@ -241,7 +241,7 @@ namespace ClosedXML_Tests
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             DateTime outValue;
             var date = 5545454;
-            ws.FirstCell().SetValue(date).DataType = XLCellValues.DateTime;
+            ws.FirstCell().SetValue(date).DataType = XLDataType.DateTime;
             bool success = ws.FirstCell().TryGetValue(out outValue);
             Assert.IsFalse(success);
         }
@@ -414,7 +414,7 @@ namespace ClosedXML_Tests
 
                 cell.Value = "Test";
                 Assert.AreEqual("Test", cell.Value);
-                Assert.AreEqual(XLCellValues.Text, cell.DataType);
+                Assert.AreEqual(XLDataType.Text, cell.DataType);
 
                 string s = null;
                 cell.SetValue(s);

@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace ClosedXML_Tests.Excel.Saving
@@ -34,10 +35,31 @@ namespace ClosedXML_Tests.Excel.Saving
         }
 
         [Test]
+        public void CanEscape_xHHHH_Correctly()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet1");
+                    ws.FirstCell().Value = "Reserve_TT_A_BLOCAGE_CAG_x6904_2";
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    Assert.AreEqual("Reserve_TT_A_BLOCAGE_CAG_x6904_2", ws.FirstCell().Value);
+                }
+            }
+        }
+
+        [Test]
         public void CanSaveFileMultipleTimesAfterDeletingWorksheet()
         {
             // https://github.com/ClosedXML/ClosedXML/issues/435
-
 
             using (var ms = new MemoryStream())
             {
@@ -60,7 +82,6 @@ namespace ClosedXML_Tests.Excel.Saving
                 }
             }
         }
-
 
         [Test]
         public void CanSaveAndValidateFileInAnotherCulture()

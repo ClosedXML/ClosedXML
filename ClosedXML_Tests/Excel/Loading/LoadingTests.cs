@@ -32,7 +32,9 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\AllShapes.xlsx",
                 @"Misc\TableHeadersWithLineBreaks.xlsx",
                 @"Misc\TableWithNameNull.xlsx",
-                @"Misc\DuplicateImageNames.xlsx"
+                @"Misc\DuplicateImageNames.xlsx",
+                @"Misc\InvalidPrintArea.xlsx",
+                @"Misc\Date1904System.xlsx"
             };
 
             foreach (var file in files)
@@ -50,6 +52,35 @@ namespace ClosedXML_Tests.Excel
                 var ws = wb.Worksheets.First();
                 var table = ws.Tables.First();
                 table.DataRange.InsertRowsBelow(5);
+            }
+        }
+
+        [Test]
+        public void CanLoadDate1904SystemCorrectly()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\Date1904System.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheets.First();
+                    var c = ws.Cell("A2");
+                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                    Assert.AreEqual(new DateTime(2017, 10, 27, 21, 0, 0), c.GetDateTime());
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    var c = ws.Cell("A2");
+                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                    Assert.AreEqual(new DateTime(2017, 10, 27, 21, 0, 0), c.GetDateTime());
+                    wb.SaveAs(ms);
+                }
+
             }
         }
 
@@ -91,9 +122,40 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void CanLoadOrderedPivotTable()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("OrderedPivotTable");
+                var pt = ws.PivotTable("OrderedPivotTable");
+
+                Assert.AreEqual(XLPivotSortType.Ascending, pt.RowLabels.Single().SortType);
+                Assert.AreEqual(XLPivotSortType.Descending, pt.ColumnLabels.Single().SortType);
+            }
+        }
+
+        [Test]
+        public void CanLoadPivotTableSubtotals()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("PivotTableSubtotals");
+                var pt = ws.PivotTable("PivotTableSubtotals");
+
+                var subtotals = pt.RowLabels.Get("Group").Subtotals.ToArray();
+                Assert.AreEqual(3, subtotals.Length);
+                Assert.AreEqual(XLSubtotalFunction.Average, subtotals[0]);
+                Assert.AreEqual(XLSubtotalFunction.Count, subtotals[1]);
+                Assert.AreEqual(XLSubtotalFunction.Sum, subtotals[2]);
+            }
+        }
+
         /// <summary>
         /// For non-English locales, the default style ("Normal" in English) can be
-        /// another piece of text (e.g. Обычный in Russian).
+        /// another piece of text (e.g. ??????? in Russian).
         /// This test ensures that the default style is correctly detected and
         /// no style conflicts occur on save.
         /// </summary>
@@ -125,7 +187,7 @@ namespace ClosedXML_Tests.Excel
                 var ws = wb.Worksheets.First();
                 foreach (var cell in ws.CellsUsed())
                 {
-                    Assert.AreEqual(XLCellValues.DateTime, cell.DataType);
+                    Assert.AreEqual(XLDataType.DateTime, cell.DataType);
                 }
             }
         }

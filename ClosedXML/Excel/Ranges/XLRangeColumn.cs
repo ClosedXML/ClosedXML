@@ -175,7 +175,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRangeColumn SetDataType(XLCellValues dataType)
+        public IXLRangeColumn SetDataType(XLDataType dataType)
         {
             DataType = dataType;
             return this;
@@ -253,13 +253,13 @@ namespace ClosedXML.Excel
                 {
                     if (thisCell.DataType == otherCell.DataType)
                     {
-                        if (thisCell.DataType == XLCellValues.Text)
+                        if (thisCell.DataType == XLDataType.Text)
                         {
                             comparison = e.MatchCase
                                              ? thisCell.InnerText.CompareTo(otherCell.InnerText)
                                              : String.Compare(thisCell.InnerText, otherCell.InnerText, true);
                         }
-                        else if (thisCell.DataType == XLCellValues.TimeSpan)
+                        else if (thisCell.DataType == XLDataType.TimeSpan)
                             comparison = thisCell.GetTimeSpan().CompareTo(otherCell.GetTimeSpan());
                         else
                             comparison = Double.Parse(thisCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).CompareTo(Double.Parse(otherCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture));

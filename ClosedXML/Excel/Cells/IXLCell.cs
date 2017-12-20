@@ -5,7 +5,7 @@ using System.Data;
 
 namespace ClosedXML.Excel
 {
-    public enum XLCellValues { Text, Number, Boolean, DateTime, TimeSpan }
+    public enum XLDataType { Text, Number, Boolean, DateTime, TimeSpan }
 
     public enum XLTableCellType { None, Header, Data, Total }
 
@@ -51,7 +51,7 @@ namespace ClosedXML.Excel
         /// The type of the cell's data.
         /// </value>
         /// <exception cref="ArgumentException"></exception>
-        XLCellValues DataType { get; set; }
+        XLDataType DataType { get; set; }
 
         /// <summary>
         /// Sets the type of this cell's data.
@@ -60,7 +60,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="dataType">Type of the data.</param>
         /// <returns></returns>
-        IXLCell SetDataType(XLCellValues dataType);
+        IXLCell SetDataType(XLDataType dataType);
 
         /// <summary>
         /// Sets the cell's value.
