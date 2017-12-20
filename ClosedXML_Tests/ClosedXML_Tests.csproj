@@ -93,6 +93,7 @@
     <Compile Include="Excel\Misc\SearchTests.cs" />
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
+    <Compile Include="Excel\Workbook\XLWorkbookTests.cs" />
     <Compile Include="OleDb\OleDbTests.cs" />
     <Compile Include="Excel\PageSetup\HeaderFooterTests.cs" />
     <Compile Include="Excel\PageSetup\PageBreaksTests.cs" />

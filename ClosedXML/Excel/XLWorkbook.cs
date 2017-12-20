@@ -988,7 +988,11 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return _originalFile ?? String.Format("XLWorkbook({0})", _originalStream.ToString());
+            var result = (string.IsNullOrWhiteSpace(_originalFile) && _originalStream == null)
+                ? GetType().ToString()
+                : _originalFile ?? String.Format("XLWorkbook({0})", _originalStream.ToString());
+
+            return result;
         }
     }
 }
