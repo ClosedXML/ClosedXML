@@ -327,7 +327,7 @@ namespace ClosedXML.Excel
                                           lastColumnNumber);
         }
 
-        public IXLRange SetDataType(XLCellValues dataType)
+        public IXLRange SetDataType(XLDataType dataType)
         {
             DataType = dataType;
             return this;

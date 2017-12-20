@@ -1,5 +1,5 @@
-using System;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 
 namespace ClosedXML.Excel
 {
@@ -10,7 +10,10 @@ namespace ClosedXML.Excel
             String val = GetQuoted(cf.Values[1]);
 
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
-            conditionalFormattingRule.FormatId = (UInt32) context.DifferentialFormats[cf.Style];
+
+            if (!cf.Style.Equals(XLWorkbook.DefaultStyle))
+                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cf.Style];
+
             conditionalFormattingRule.Operator = cf.Operator.ToOpenXml();
 
             var formula = new Formula();
@@ -20,10 +23,10 @@ namespace ClosedXML.Excel
                 formula.Text = val;
             conditionalFormattingRule.Append(formula);
 
-            if(cf.Operator == XLCFOperator.Between || cf.Operator == XLCFOperator.NotBetween)
+            if (cf.Operator == XLCFOperator.Between || cf.Operator == XLCFOperator.NotBetween)
             {
                 var formula2 = new Formula { Text = GetQuoted(cf.Values[2]) };
-                conditionalFormattingRule.Append(formula2);    
+                conditionalFormattingRule.Append(formula2);
             }
 
             return conditionalFormattingRule;
@@ -38,7 +41,5 @@ namespace ClosedXML.Excel
 
             return value;
         }
-
-
     }
 }

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -37,6 +35,7 @@ namespace ClosedXML.Excel
         Boolean ShowBlankItems { get; set; }
         Boolean InsertPageBreaks { get; set; }
         Boolean Collapsed { get; set; }
+        XLPivotSortType SortType { get; set; }
 
         IXLPivotField SetCustomName(String value);
 
@@ -50,7 +49,9 @@ namespace ClosedXML.Excel
         IXLPivotField SetShowBlankItems(); IXLPivotField SetShowBlankItems(Boolean value);
         IXLPivotField SetInsertPageBreaks(); IXLPivotField SetInsertPageBreaks(Boolean value);
         IXLPivotField SetCollapsed(); IXLPivotField SetCollapsed(Boolean value);
+        IXLPivotField SetSort(XLPivotSortType value);
 
-        List<string> SharedStrings { get; set; }
+        IList<Object> SelectedValues { get; }
+        IXLPivotField AddSelectedValue(Object value);
     }
 }

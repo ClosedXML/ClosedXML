@@ -128,7 +128,7 @@ namespace ClosedXML.Excel
                             {
                                 Boolean match = isText
                                                     ? filter.Condition(row.Cell(kp.Key).GetString())
-                                                    : row.Cell(kp.Key).DataType == XLCellValues.Number &&
+                                                    : row.Cell(kp.Key).DataType == XLDataType.Number &&
                                                       filter.Condition(row.Cell(kp.Key).GetDouble());
                                 if (firstFilter)
                                 {

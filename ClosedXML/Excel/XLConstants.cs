@@ -4,7 +4,7 @@ namespace ClosedXML.Excel
     public static class XLConstants
     {
         public const string PivotTableValuesSentinalLabel = "{{Values}}";
-        public const int NumberOfBuiltInStyles = 163;
+        public const int NumberOfBuiltInStyles = 164; // But they are stored as 0-based (0 - 163)
 
         internal static class Comment
         {

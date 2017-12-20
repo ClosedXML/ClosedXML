@@ -92,7 +92,7 @@ namespace ClosedXML.Excel
         IXLRangeRow Row(IXLCell start, IXLCell end);
         IXLRangeRows Rows(String rows);
 
-        IXLRangeRow SetDataType(XLCellValues dataType);
+        IXLRangeRow SetDataType(XLDataType dataType);
 
         IXLRangeRow RowAbove();
         IXLRangeRow RowAbove(Int32 step);

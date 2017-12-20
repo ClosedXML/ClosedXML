@@ -176,6 +176,11 @@ namespace ClosedXML.Excel
         {
             return value.ToString(CultureInfo.InvariantCulture.NumberFormat);
         }
+
+        public static bool Between(this int val, int from, int to)
+        {
+            return val >= from && val <= to;
+        }
     }
 
     public static class DecimalExtensions
@@ -229,7 +234,7 @@ namespace ClosedXML.Excel
             var textSize = GraphicsUtils.MeasureString(text, font);
 
             double width = (((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
-            width = (double)decimal.Round((decimal)width + 0.2M, 2);
+            width = Math.Round(width + 0.2, 2);
 
             return width;
         }

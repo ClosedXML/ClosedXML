@@ -26,9 +26,9 @@ namespace ClosedXML.Excel
         /// The type of the cell's data.
         /// </value>
         /// <exception cref="ArgumentException"></exception>
-        XLCellValues DataType { set; }
+        XLDataType DataType { set; }
 
-        IXLCells SetDataType(XLCellValues dataType);
+        IXLCells SetDataType(XLDataType dataType);
 
         /// <summary>
         /// Clears the contents of these cells.

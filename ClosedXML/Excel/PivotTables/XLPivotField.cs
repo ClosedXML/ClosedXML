@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ClosedXML.Excel
 {
+    [DebuggerDisplay("{SourceName}")]
     public class XLPivotField : IXLPivotField
     {
         public XLPivotField(string sourceName)
         {
             SourceName = sourceName;
-            SharedStrings = new List<string>();
             Subtotals = new List<XLSubtotalFunction>();
+            SelectedValues = new List<Object>();
+            SortType = XLPivotSortType.Default;
         }
 
         public String SourceName { get; private set; }
@@ -67,6 +70,15 @@ namespace ClosedXML.Excel
 
         public IXLPivotField SetCollapsed(Boolean value) { Collapsed = value; return this; }
 
-        public List<string> SharedStrings { get; set; }
+        public XLPivotSortType SortType { get; set; }
+
+        public IXLPivotField SetSort(XLPivotSortType value) { SortType = value; return this; }
+
+        public IList<Object> SelectedValues { get; private set; }
+        public IXLPivotField AddSelectedValue(Object value)
+        {
+            SelectedValues.Add(value);
+            return this;
+        }
     }
 }
