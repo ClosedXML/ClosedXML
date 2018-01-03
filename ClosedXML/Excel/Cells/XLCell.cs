@@ -419,12 +419,16 @@ namespace ClosedXML.Excel
                     && XLHelper.IsValidA1Address(cAddress)
                     )
                 {
-                    if (resursiveCallCounter == maximumRecursiveDepth)
+                    var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                    if (referenceCell.IsEmpty(false))
+                        return 0;
+                    else
                     {
-                        throw new StackOverflowException($"Maximum recursion depth exceeded ({maximumRecursiveDepth})");
-                    }
+                        if (resursiveCallCounter == maximumRecursiveDepth)
+                            throw new StackOverflowException($"Maximum recursion depth exceeded ({maximumRecursiveDepth})");
 
-                    return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).GetValue(maximumRecursiveDepth, ++resursiveCallCounter);
+                        return referenceCell.GetValue(maximumRecursiveDepth, ++resursiveCallCounter);
+                    }
                 }
 
                 var retVal = Worksheet.Evaluate(fA1);

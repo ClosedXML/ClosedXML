@@ -91,6 +91,13 @@ namespace ClosedXML.Excel
         PivotStyleMedium9
     }
 
+    public enum XLPivotSortType
+    {
+        Default = 0,
+        Ascending = 1,
+        Descending = 2
+    }
+
     public enum XLPivotSubtotals
     {
         DoNotShow,

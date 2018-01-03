@@ -1937,7 +1937,6 @@ namespace ClosedXML.Excel
 
                 // TODO: Avoid duplicate pivot caches of same source range
 
-                var workbookCacheRelId = pt.WorkbookCacheRelId;
                 PivotCache pivotCache;
                 PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart;
                 if (!String.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
@@ -1947,7 +1946,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    workbookCacheRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    var workbookCacheRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
                     pivotCache = new PivotCache { CacheId = cacheId++, Id = workbookCacheRelId };
                     pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(workbookCacheRelId);
                 }
@@ -2020,6 +2019,7 @@ namespace ClosedXML.Excel
                 if (field != null)
                 {
                     xlpf.CustomName = field.CustomName;
+                    xlpf.SortType = field.SortType;
                     xlpf.Subtotals.AddRange(field.Subtotals);
                 }
 
@@ -2029,10 +2029,13 @@ namespace ClosedXML.Excel
 
                 var fieldValueCells = source.CellsUsed(cell => cell.Address.ColumnNumber == columnNumber
                                                            && cell.Address.RowNumber > source.FirstRow().RowNumber());
-                var types = fieldValueCells.Select(cell => cell.DataType).Distinct();
+                var types = fieldValueCells.Select(cell => cell.DataType).Distinct().ToArray();
+                var containsBlank = source.CellsUsed(true, cell => cell.Address.ColumnNumber == columnNumber
+                                                               && cell.Address.RowNumber > source.FirstRow().RowNumber()
+                                                               && cell.IsEmpty()).Any();
 
 
-                if (types.Count() == 1 && types.Single() == XLDataType.Number)
+                if (types.Length == 1 && types.Single() == XLDataType.Number)
                 {
                     sharedItems.ContainsSemiMixedTypes = false;
                     sharedItems.ContainsString = false;
@@ -2043,7 +2046,12 @@ namespace ClosedXML.Excel
                     ptfi.DistinctValues = fieldValueCells
                             .Select(cell => cell.GetDouble())
                             .Distinct()
-                            .Cast<object>();
+                            .Cast<object>()
+                            .ToArray();
+
+                    int val;
+                    var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out val));
+                    if (allInteger) sharedItems.ContainsInteger = true;
 
                     pti.Fields.Add(xlpf.SourceName, ptfi);
 
@@ -2054,24 +2062,27 @@ namespace ClosedXML.Excel
                     {
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new NumberItem { Val = (double)value });
+
+                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
                     }
 
                     sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
                     sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
                 }
-                else if (types.Count() == 1 && types.Single() == XLDataType.DateTime)
+                else if (types.Length == 1 && types.Single() == XLDataType.DateTime)
                 {
                     sharedItems.ContainsSemiMixedTypes = false;
+                    sharedItems.ContainsNonDate = false;
                     sharedItems.ContainsString = false;
-                    sharedItems.ContainsNumber = false;
                     sharedItems.ContainsDate = true;
 
                     ptfi.DataType = XLDataType.DateTime;
                     ptfi.MixedDataType = false;
                     ptfi.DistinctValues = fieldValueCells
-                            .Select(cell => cell.GetDateTime())
-                            .Distinct()
-                            .Cast<object>();
+                        .Select(cell => cell.GetDateTime())
+                        .Distinct()
+                        .Cast<object>()
+                        .ToArray();
 
                     pti.Fields.Add(xlpf.SourceName, ptfi);
 
@@ -2082,6 +2093,8 @@ namespace ClosedXML.Excel
                     {
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new DateTimeItem { Val = (DateTime)value });
+
+                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
                     }
 
                     sharedItems.MinDate = (DateTime)ptfi.DistinctValues.Min();
@@ -2092,26 +2105,30 @@ namespace ClosedXML.Excel
                     if (types.Any())
                     {
                         ptfi.DataType = types.First();
-                        ptfi.MixedDataType = types.Count() > 1;
+                        ptfi.MixedDataType = types.Length > 1;
 
                         if (!ptfi.MixedDataType && ptfi.DataType == XLDataType.Text)
                             ptfi.DistinctValues = fieldValueCells
                                 .Select(cell => cell.Value)
                                 .Cast<String>()
-                                .Distinct(StringComparer.OrdinalIgnoreCase);
+                                .Distinct(StringComparer.OrdinalIgnoreCase)
+                                .ToArray();
                         else
                             ptfi.DistinctValues = fieldValueCells
                                 .Select(cell => cell.GetString())
-                                .Cast<String>()
-                                .Distinct(StringComparer.OrdinalIgnoreCase);
+                                .Distinct(StringComparer.OrdinalIgnoreCase)
+                                .ToArray();
 
                         pti.Fields.Add(xlpf.SourceName, ptfi);
 
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new StringItem { Val = (string)value });
+
+                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
                     }
                 }
 
+                if (containsBlank) sharedItems.ContainsBlank = true;
                 if (ptfi.DistinctValues.Any())
                     sharedItems.Count = Convert.ToUInt32(ptfi.DistinctValues.Count());
 
@@ -2293,6 +2310,11 @@ namespace ClosedXML.Excel
                 {
                     pf.Outline = false;
                     pf.Compact = false;
+                }
+
+                if (xlpf.SortType != XLPivotSortType.Default)
+                {
+                    pf.SortType = new EnumValue<FieldSortValues>((FieldSortValues)xlpf.SortType);
                 }
 
                 switch (pt.Subtotals)
