@@ -382,7 +382,13 @@ namespace ClosedXML.Excel
                         w => String.Compare(w.Name, sName, true) == 0)
                         && XLHelper.IsValidA1Address(cAddress)
                         )
-                        return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
+                    {
+                        var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                        if (referenceCell.IsEmpty(false))
+                            return 0;
+                        else
+                            return referenceCell.Value;
+                    }
 
                     var retVal = Worksheet.Evaluate(fA1);
                     var retValEnumerable = retVal as IEnumerable;
@@ -2194,7 +2200,7 @@ namespace ClosedXML.Excel
                 }
                 Worksheet.EventTrackingEnabled = eventTracking;
             }
-            
+
             return this;
         }
 
