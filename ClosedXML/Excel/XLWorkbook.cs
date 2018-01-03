@@ -988,7 +988,17 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return _originalFile ?? String.Format("XLWorkbook({0})", _originalStream.ToString());
+            switch (_loadSource)
+            {
+                case XLLoadSource.New:
+                    return "XLWorkbook(new)";
+                case XLLoadSource.File:
+                    return String.Format("XLWorkbook({0})", _originalFile);
+                case XLLoadSource.Stream:
+                    return String.Format("XLWorkbook({0})", _originalStream.ToString());
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }
