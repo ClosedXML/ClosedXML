@@ -78,7 +78,11 @@ namespace ClosedXML.Excel
             {
                 foreach (var m in dSpreadsheet.CustomFilePropertiesPart.Properties.Elements<CustomDocumentProperty>())
                 {
-                    String name = m.Name.Value;
+                    String name = m.Name?.Value;
+
+                    if (string.IsNullOrWhiteSpace(name))
+                        continue;
+
                     if (m.VTLPWSTR != null)
                         CustomProperties.Add(name, m.VTLPWSTR.Text);
                     else if (m.VTFileTime != null)
