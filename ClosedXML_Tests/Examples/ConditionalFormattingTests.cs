@@ -125,5 +125,11 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<CFStopIfTrue>(@"ConditionalFormatting\CFStopIfTrue.xlsx");
         }
+
+        [Test]
+        public void CFDatesOccurring()
+        {
+            TestHelper.RunTestExample<CFDatesOccurring>(@"ConditionalFormatting\CFDatesOccurring.xlsx");
+        }
     }
 }

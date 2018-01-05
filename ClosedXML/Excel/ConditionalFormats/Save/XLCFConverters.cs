@@ -28,11 +28,22 @@ namespace ClosedXML.Excel
             Converters.Add(XLConditionalFormatType.Top10, new XLCFTopConverter());
             Converters.Add(XLConditionalFormatType.DataBar, new XLCFDataBarConverter());
             Converters.Add(XLConditionalFormatType.IconSet, new XLCFIconSetConverter());
+            Converters.Add(XLConditionalFormatType.TimePeriod, new XLCFDatesOccurringConverter());
+
+            foreach (var cft in Enum.GetValues(typeof(XLConditionalFormatType)).Cast<XLConditionalFormatType>())
+            {
+                if (!Converters.ContainsKey(cft))
+                    Converters.Add(cft, null);
+            }
         }
 
         public static ConditionalFormattingRule Convert(IXLConditionalFormat conditionalFormat, Int32 priority, XLWorkbook.SaveContext context)
         {
-            return Converters[conditionalFormat.ConditionalFormatType].Convert(conditionalFormat, priority, context);
+            var converter = Converters[conditionalFormat.ConditionalFormatType];
+            if (converter == null)
+                throw new NotImplementedException(string.Format("Conditional formatting rule '{0}' hasn't been implemented", conditionalFormat.ConditionalFormatType));
+
+            return converter.Convert(conditionalFormat, priority, context);
         }
     }
 }

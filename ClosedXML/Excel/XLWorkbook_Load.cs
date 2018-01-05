@@ -2061,6 +2061,13 @@ namespace ClosedXML.Excel
                         if (fr.Rank != null)
                             conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
                     }
+                    else if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.TimePeriod)
+                    {
+                        if (fr.TimePeriod != null)
+                            conditionalFormat.TimePeriod = fr.TimePeriod.Value.ToClosedXml();
+                        else
+                            conditionalFormat.TimePeriod = XLTimePeriod.Yesterday;
+                    }
 
                     if (fr.Elements<ColorScale>().Any())
                     {
