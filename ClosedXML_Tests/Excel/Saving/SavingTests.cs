@@ -1,5 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,6 +12,14 @@ namespace ClosedXML_Tests.Excel.Saving
     [TestFixture]
     public class SavingTests
     {
+        private List<string> _tempFiles;
+
+        [SetUp]
+        public void Setup()
+        {
+            _tempFiles = new List<string>();
+        }
+
         [Test]
         public void CanSuccessfullySaveFileMultipleTimes()
         {
@@ -100,6 +110,48 @@ namespace ClosedXML_Tests.Excel.Saving
                     wb.SaveAs(memoryStream, true);
                 }
             }
+        }
+
+        [Test]
+        public void CanSaveAsCopyReadOnlyFile()
+        {
+            // Arrange
+            string original = string.Format("original{0}.xlsx", Guid.NewGuid());
+            string copy = string.Format("copy_of_{0}", original);
+
+            using (var wb = new XLWorkbook())
+            {
+                var sheet = wb.Worksheets.Add("TestSheet");
+                wb.SaveAs(original);
+                _tempFiles.Add(original);
+            }
+            System.IO.File.SetAttributes(original, FileAttributes.ReadOnly);
+
+            // Act
+            using (var wb = new XLWorkbook(original))
+            {
+                wb.SaveAs(copy);
+                _tempFiles.Add(copy);
+            }
+
+            // Assert
+            Assert.IsTrue(System.IO.File.Exists(copy));
+            Assert.IsFalse(System.IO.File.GetAttributes(copy).HasFlag(FileAttributes.ReadOnly));
+        }
+
+        [TearDown]
+        public void DeleteTempFiles()
+        {
+            foreach (var fileName in _tempFiles)
+            {
+                try
+                {
+                    System.IO.File.Delete(fileName);
+                }
+                catch
+                { }
+            }
+            _tempFiles.Clear();
         }
     }
 }
