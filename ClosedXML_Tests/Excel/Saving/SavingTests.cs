@@ -12,11 +12,13 @@ namespace ClosedXML_Tests.Excel.Saving
     [TestFixture]
     public class SavingTests
     {
+        private string _tempFolder;
         private List<string> _tempFiles;
 
         [SetUp]
         public void Setup()
         {
+            _tempFolder = Path.GetTempPath();
             _tempFiles = new List<string>();
         }
 
@@ -116,8 +118,9 @@ namespace ClosedXML_Tests.Excel.Saving
         public void CanSaveAsCopyReadOnlyFile()
         {
             // Arrange
-            string original = string.Format("original{0}.xlsx", Guid.NewGuid());
-            string copy = string.Format("copy_of_{0}", original);
+            string id = Guid.NewGuid().ToString();
+            string original = string.Format("{0}original{1}.xlsx", _tempFolder, id);
+            string copy = string.Format("{0}copy_of_{1}.xlsx", _tempFolder, id);
 
             using (var wb = new XLWorkbook())
             {
