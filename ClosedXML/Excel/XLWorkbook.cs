@@ -498,7 +498,10 @@ namespace ClosedXML.Excel
             else if (_loadSource == XLLoadSource.File)
             {
                 if (String.Compare(_originalFile.Trim(), file.Trim(), true) != 0)
+                {
                     File.Copy(_originalFile, file, true);
+                    File.SetAttributes(file, FileAttributes.Normal);
+                }
 
                 CreatePackage(file, GetSpreadsheetDocumentType(file), options);
             }
