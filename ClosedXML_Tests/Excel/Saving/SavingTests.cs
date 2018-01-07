@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClosedXML_Tests.Excel.Saving
 {
@@ -141,6 +142,55 @@ namespace ClosedXML_Tests.Excel.Saving
             Assert.IsTrue(System.IO.File.Exists(copy));
             Assert.IsFalse(System.IO.File.GetAttributes(copy).HasFlag(FileAttributes.ReadOnly));
         }
+
+        [Test]
+        public void CanSaveAsOverwriteExistingFile()
+        {
+            // Arrange
+            string id = Guid.NewGuid().ToString();
+            string existing = string.Format("{0}existing{1}.xlsx", _tempFolder, id);
+
+            System.IO.File.WriteAllText(existing, "");
+            _tempFiles.Add(existing);
+
+            // Act
+            using (var wb = new XLWorkbook())
+            {
+                var sheet = wb.Worksheets.Add("TestSheet");
+                wb.SaveAs(existing);
+            }
+
+            // Assert
+            Assert.IsTrue(System.IO.File.Exists(existing));
+            Assert.Greater(new System.IO.FileInfo(existing).Length, 0);
+        }
+
+
+        [Test]
+        public void CannotSaveAsOverwriteExistingReadOnlyFile()
+        {
+            // Arrange
+            string id = Guid.NewGuid().ToString();
+            string existing = string.Format("{0}existing{1}.xlsx", _tempFolder, id);
+
+            System.IO.File.WriteAllText(existing, "");
+            _tempFiles.Add(existing);
+            System.IO.File.SetAttributes(existing, FileAttributes.ReadOnly);
+
+            // Act
+            TestDelegate saveAs = () =>
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.Worksheets.Add("TestSheet");
+                    wb.SaveAs(existing);
+                }
+            };
+
+            // Assert
+            Assert.Throws(typeof(UnauthorizedAccessException), saveAs);
+        }
+
 
         [TearDown]
         public void DeleteTempFiles()
