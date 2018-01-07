@@ -1248,12 +1248,12 @@ namespace ClosedXML.Excel
                         var comment = definedName.Comment;
                         if (localSheetId == null)
                         {
-                            if (!NamedRanges.Any(nr => nr.Name == name))
+                            if (NamedRanges.All(nr => nr.Name != name))
                                 (NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
                         }
                         else
                         {
-                            if (!Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.Any(nr => nr.Name == name))
+                            if (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.All(nr => nr.Name != name))
                                 (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
                         }
                     }
@@ -1729,7 +1729,7 @@ namespace ClosedXML.Excel
             if (columns == null) return;
 
             var wsDefaultColumn =
-                columns.Elements<Column>().Where(c => c.Max == XLHelper.MaxColumnNumber).FirstOrDefault();
+                columns.Elements<Column>().FirstOrDefault(c => c.Max == XLHelper.MaxColumnNumber);
 
             if (wsDefaultColumn != null && wsDefaultColumn.Width != null)
                 ws.ColumnWidth = wsDefaultColumn.Width - ColumnWidthOffset;

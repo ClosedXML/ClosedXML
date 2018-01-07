@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
             var pivotValue = new XLPivotValue(sourceName) { CustomName = customName };
             _pivotValues.Add(customName, pivotValue);
 
-            if (_pivotValues.Count > 1 && !this._pivotTable.ColumnLabels.Any(cl => cl.SourceName == XLConstants.PivotTableValuesSentinalLabel) && !this._pivotTable.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
+            if (_pivotValues.Count > 1 && this._pivotTable.ColumnLabels.All(cl => cl.SourceName != XLConstants.PivotTableValuesSentinalLabel) && this._pivotTable.RowLabels.All(rl => rl.SourceName != XLConstants.PivotTableValuesSentinalLabel))
                 _pivotTable.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
 
             return pivotValue;

@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
             while (true)
             {
                 string tableName = String.Concat("Table", id);
-                if (!Worksheet.Tables.Any(t => t.Name == tableName))
+                if (Worksheet.Tables.All(t => t.Name != tableName))
                 {
                     Name = tableName;
                     AddToTables(range, addToTables);
@@ -119,7 +119,7 @@ namespace ClosedXML.Excel
                 Int32 colCount = ColumnCount();
                 for (Int32 i = 1; i <= colCount; i++)
                 {
-                    if (!_fieldNames.Values.Any(f => f.Index == i - 1))
+                    if (_fieldNames.Values.All(f => f.Index != i - 1))
                     {
                         var name = "Column" + i;
 
