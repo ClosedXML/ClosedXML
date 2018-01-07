@@ -11,7 +11,7 @@ namespace ClosedXML.Utils
 
         public static bool GetBooleanValueAsBool(BooleanValue value, bool defaultValue)
         {
-            return value == null ? defaultValue : value.Value;
+            return value.HasValue ? defaultValue : value.Value;
         }
     }
 }
