@@ -546,7 +546,7 @@ namespace ClosedXML.Excel
 
         private void checkForWorksheetsPresent()
         {
-            if (Worksheets.Count() == 0)
+            if (!Worksheets.Any())
                 throw new InvalidOperationException("Workbooks need at least one worksheet.");
         }
 
