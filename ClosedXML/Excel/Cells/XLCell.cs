@@ -1881,7 +1881,7 @@ namespace ClosedXML.Excel
             else if (value is DateTime)
                 val = ((DateTime)value).ToString("o");
             else if (value.IsNumber())
-                val = Convert.ToDecimal(value).ToInvariantString();
+                val = value.ToInvariantString();
             else
                 val = value.ToString();
             _richText = null;

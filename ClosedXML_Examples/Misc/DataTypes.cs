@@ -77,6 +77,9 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(++ro, co).Value = "Double Number:";
             ws.Cell(ro, co + 1).Value = 123.45d;
 
+            ws.Cell(++ro, co).Value = "Large Double Number:";
+            ws.Cell(ro, co + 1).Value = 9.999E307d;
+
             ro++;
 
             ws.Cell(++ro, co).Value = "Explicit Text:";
