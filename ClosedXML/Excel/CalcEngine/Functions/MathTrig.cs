@@ -329,7 +329,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             // get parameters
             var range = p[0] as IEnumerable;                            // range of values to match the criteria against
-            var sumRange = p.Count < 3 ? range : p[2] as IEnumerable;   // range of values to sum up
+            var sumRange = p.Count < 3 ?
+                p[0] as XObjectExpression :
+                p[2] as XObjectExpression;   // range of values to sum up
             var criteria = p[1].Evaluate();                             // the criteria to evaluate
 
             // build list of values in range and sumRange
@@ -338,10 +340,10 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 rangeValues.Add(value);
             }
-            var sumRangeValues = new List<object>();
-            foreach (var value in sumRange)
+            var sumRangeValues = new List<IXLCell>();
+            foreach (var cell in ((CellRangeReference)sumRange.Value).Range.Cells())
             {
-                sumRangeValues.Add(value);
+                sumRangeValues.Add(cell);
             }
 
             // compute total
@@ -351,7 +353,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (CalcEngineHelpers.ValueSatisfiesCriteria(rangeValues[i], criteria, ce))
                 {
-                    tally.AddValue(sumRangeValues[i]);
+                    tally.AddValue(sumRangeValues[i].Value);
                 }
             }
 

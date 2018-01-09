@@ -85,6 +85,7 @@
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
     <Compile Include="Excel\CalcEngine\MathTrigTests.cs" />
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
+    <Compile Include="Excel\CalcEngine\SumIfTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Comments\CommentsTests.cs" />
     <Compile Include="Excel\ConditionalFormats\ConditionalFormatsConsolidateTests.cs" />
@@ -303,6 +304,7 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStopIfTrue.xlsx" />
     <EmbeddedResource Include="Resource\Misc\InvalidPrintArea.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDatesOccurring.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Functions\TestSumIf.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
