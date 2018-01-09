@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXML_Sandbox", "ClosedXML_Sandbox\ClosedXML_Sandbox.csproj", "{38B882F0-E6F2-45C5-9BE9-CDC27FBEB4AB}"
 EndProject
@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{073C
 		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppForIssueTracking", "AppForIssueTracking\AppForIssueTracking.csproj", "{94ED9B9C-5F82-44FB-BF9D-FDC7E8080759}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,9 +47,16 @@ Global
 		{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09B066ED-E4A7-4545-A1A4-FF03DD524BDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94ED9B9C-5F82-44FB-BF9D-FDC7E8080759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94ED9B9C-5F82-44FB-BF9D-FDC7E8080759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94ED9B9C-5F82-44FB-BF9D-FDC7E8080759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94ED9B9C-5F82-44FB-BF9D-FDC7E8080759}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1DFD8B8A-54D9-4ADB-8287-5C2DB7A9C434}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ClosedXML.vsmdi
