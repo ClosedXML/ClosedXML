@@ -1987,6 +1987,7 @@ namespace ClosedXML.Excel
             if (sp.AutoFilter != null) ws.Protection.AutoFilter = !sp.AutoFilter.Value;
             if (sp.PivotTables != null) ws.Protection.PivotTables = !sp.PivotTables.Value;
             if (sp.Sort != null) ws.Protection.Sort = !sp.Sort.Value;
+            if (sp.Objects != null) ws.Protection.Objects = !sp.Objects.Value;
             if (sp.SelectLockedCells != null) ws.Protection.SelectLockedCells = sp.SelectLockedCells.Value;
             if (sp.SelectUnlockedCells != null) ws.Protection.SelectUnlockedCells = sp.SelectUnlockedCells.Value;
         }
