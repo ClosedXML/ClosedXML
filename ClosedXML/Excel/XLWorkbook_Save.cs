@@ -4769,6 +4769,7 @@ namespace ClosedXML.Excel
                 sheetProtection.AutoFilter = OpenXmlHelper.GetBooleanValue(!protection.AutoFilter, true);
                 sheetProtection.PivotTables = OpenXmlHelper.GetBooleanValue(!protection.PivotTables, true);
                 sheetProtection.Sort = OpenXmlHelper.GetBooleanValue(!protection.Sort, true);
+                sheetProtection.Objects = OpenXmlHelper.GetBooleanValue(!protection.Objects, true);
                 sheetProtection.SelectLockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectLockedCells, false);
                 sheetProtection.SelectUnlockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectUnlockedCells, false);
             }
