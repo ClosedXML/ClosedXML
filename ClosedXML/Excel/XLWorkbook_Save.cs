@@ -4992,8 +4992,9 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
                 var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
 
-                var priority = 1; // priority is 1 origin in Microsoft Excel
-                foreach (var cfGroup in xlWorksheet.ConditionalFormats
+                var conditionalFormats = xlWorksheet.ConditionalFormats.ToList(); // Required for IndexOf method
+
+                foreach (var cfGroup in conditionalFormats
                     .GroupBy(
                         c => c.Range.RangeAddress.ToStringRelative(false),
                         c => c,
@@ -5008,8 +5009,8 @@ namespace ClosedXML.Excel
                     };
                     foreach (var cf in cfGroup.CfList)
                     {
+                        var priority = conditionalFormats.IndexOf(cf) + 1;
                         conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
-                        priority++;
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;

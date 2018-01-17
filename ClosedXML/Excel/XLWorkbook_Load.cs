@@ -276,6 +276,8 @@ namespace ClosedXML.Excel
                     reader.Close();
                 }
 
+                (ws.ConditionalFormats as XLConditionalFormats).ReorderAccordingToOriginalPriority();
+
                 #region LoadTables
 
                 foreach (var tableDefinitionPart in worksheetPart.TableDefinitionParts)
@@ -2143,6 +2145,7 @@ namespace ClosedXML.Excel
                     // The conditional formatting type is compulsory. If it doesn't exist, skip the entire rule.
                     if (fr.Type == null) continue;
                     conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
+                    conditionalFormat.OriginalPriority = fr.Priority?.Value ?? Int32.MaxValue;
 
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
                         conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
