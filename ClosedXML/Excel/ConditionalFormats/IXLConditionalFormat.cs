@@ -139,6 +139,7 @@ namespace ClosedXML.Excel
         Boolean ReverseIconOrder { get; }
         Boolean ShowIconOnly { get; }
         Boolean ShowBarOnly { get; }
+        Boolean StopIfTrue { get; }
         IXLRange Range { get; set; }
 
         XLDictionary<XLFormula> Values { get; }
@@ -150,6 +151,7 @@ namespace ClosedXML.Excel
         Boolean Bottom { get; }
         Boolean Percent { get; }
 
-        IXLConditionalFormat StopIfTrue(bool value = true);
+        IXLConditionalFormat SetStopIfTrue();
+        IXLConditionalFormat SetStopIfTrue(Boolean value);
     }
 }

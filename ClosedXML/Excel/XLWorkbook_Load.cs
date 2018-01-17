@@ -2036,7 +2036,7 @@ namespace ClosedXML.Excel
                 {
                     var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
 
-                    conditionalFormat.StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
+                    conditionalFormat.StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
 
                     if (fr.FormatId != null)
                     {

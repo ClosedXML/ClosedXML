@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
             {
                 Type = cf.ConditionalFormatType.ToOpenXml(),
                 Priority = priority,
-                StopIfTrue = OpenXmlHelper.GetBooleanValue(((XLConditionalFormat)cf).StopIfTrueInternal, false)
+                StopIfTrue = OpenXmlHelper.GetBooleanValue(cf.StopIfTrue, false)
             };
         }
     }
