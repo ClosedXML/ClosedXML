@@ -266,5 +266,29 @@ namespace ClosedXML_Tests.Excel
                 workbook.SaveAs(tf2.Path);
             }
         }
+
+        [Test]
+        public void CanRoundTripSheetProtectionForObjects()
+        {
+            using (var book = new XLWorkbook())
+            {
+                var sheet = book.AddWorksheet("TestSheet");
+                sheet.Protect()
+                    .SetObjects(true)
+                    .SetScenarios(true);
+
+                using (var xlStream = new MemoryStream())
+                {
+                    book.SaveAs(xlStream);
+
+                    using (var persistedBook = new XLWorkbook(xlStream))
+                    {
+                        var persistedSheet = persistedBook.Worksheets.Worksheet(1);
+
+                        Assert.AreEqual(sheet.Protection.Objects, persistedSheet.Protection.Objects);
+                    }
+                }
+            }
+        }
     }
 }
