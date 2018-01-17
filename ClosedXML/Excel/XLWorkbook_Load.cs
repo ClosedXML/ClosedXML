@@ -588,7 +588,7 @@ namespace ClosedXML.Excel
                                             {
                                                 if (pf.AverageSubTotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.Average);
-                                                if (pf.CountASubtotal != null) 
+                                                if (pf.CountASubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.Count);
                                                 if (pf.CountSubtotal != null)
                                                     pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
@@ -826,8 +826,12 @@ namespace ClosedXML.Excel
 
                         Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
                         picture.Placement = XLPicturePlacement.FreeFloating;
-                        picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, GraphicsUtils.Graphics.DpiX);
-                        picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, GraphicsUtils.Graphics.DpiY);
+
+                        if (spPr?.Transform2D?.Extents?.Cx.HasValue ?? false)
+                            picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, GraphicsUtils.Graphics.DpiX);
+
+                        if (spPr?.Transform2D?.Extents?.Cy.HasValue ?? false)
+                            picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, GraphicsUtils.Graphics.DpiY);
 
                         if (anchor is Xdr.AbsoluteAnchor)
                         {

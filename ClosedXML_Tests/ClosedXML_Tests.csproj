@@ -303,6 +303,7 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStopIfTrue.xlsx" />
     <EmbeddedResource Include="Resource\Misc\InvalidPrintArea.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDatesOccurring.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadImageWithoutTransform2D.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
