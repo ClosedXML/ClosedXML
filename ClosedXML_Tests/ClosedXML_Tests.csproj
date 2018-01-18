@@ -85,7 +85,6 @@
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
     <Compile Include="Excel\CalcEngine\MathTrigTests.cs" />
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
-    <Compile Include="Excel\CalcEngine\SumIfTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
     <Compile Include="Excel\Comments\CommentsTests.cs" />
     <Compile Include="Excel\ConditionalFormats\ConditionalFormatsConsolidateTests.cs" />
@@ -305,10 +304,12 @@
     <EmbeddedResource Include="Resource\Misc\InvalidPrintArea.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDatesOccurring.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LoadImageWithoutTransform2D.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Functions\TestSumIf.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resource\Examples\Functions\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
