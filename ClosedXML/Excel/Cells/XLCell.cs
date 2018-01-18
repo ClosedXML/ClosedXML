@@ -647,7 +647,7 @@ namespace ClosedXML.Excel
                             foreach (var mi in members)
                             {
                                 if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                    _worksheet.SetValue((mi as PropertyInfo).GetValue(null), ro, co);
+                                    _worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), ro, co);
                                 else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
                                     _worksheet.SetValue((mi as FieldInfo).GetValue(null), ro, co);
                                 else
@@ -842,7 +842,7 @@ namespace ClosedXML.Excel
                         foreach (var mi in members)
                         {
                             if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                _worksheet.SetValue((mi as PropertyInfo).GetValue(null), rowNumber, columnNumber);
+                                _worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), rowNumber, columnNumber);
                             else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
                                 _worksheet.SetValue((mi as FieldInfo).GetValue(null), rowNumber, columnNumber);
                             else
