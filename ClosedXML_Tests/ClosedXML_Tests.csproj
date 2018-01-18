@@ -26,7 +26,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,13 +43,13 @@
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    <Reference Include="DocumentFormat.OpenXml, Version=0.0.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.1\lib\net45\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -66,39 +65,24 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ClosedXML\Properties\AssemblyVersionInfo.cs">
-      <Link>Properties\AssemblyVersionInfo.cs</Link>
-    </Compile>
     <Compile Include="Examples\AutoFilterTests.cs" />
-    <Compile Include="Examples\ImageHandlingTests.cs" />
     <Compile Include="Examples\CommentsTests.cs" />
     <Compile Include="Examples\ConditionalFormattingTests.cs" />
     <Compile Include="Examples\PageSetupTests.cs" />
-    <Compile Include="Examples\PivotTableTests.cs" />
     <Compile Include="Examples\RowsTests.cs" />
     <Compile Include="Examples\StylesTests.cs" />
-    <Compile Include="Examples\TablesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
-    <Compile Include="Excel\CalcEngine\CalcEngineExceptionTests.cs" />
     <Compile Include="Excel\CalcEngine\InformationTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
     <Compile Include="Excel\CalcEngine\LookupTests.cs" />
-    <Compile Include="Excel\CalcEngine\MathTrigTests.cs" />
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
-    <Compile Include="Excel\Comments\CommentsTests.cs" />
-    <Compile Include="Excel\ConditionalFormats\ConditionalFormatsConsolidateTests.cs" />
-    <Compile Include="Excel\ImageHandling\PictureTests.cs" />
-    <Compile Include="Excel\Misc\HyperlinkTests.cs" />
-    <Compile Include="Excel\Misc\SearchTests.cs" />
     <Compile Include="Excel\Misc\XmlEncoderTests.cs" />
     <Compile Include="Excel\Loading\LoadingTests.cs" />
-    <Compile Include="OleDb\OleDbTests.cs" />
     <Compile Include="Excel\PageSetup\HeaderFooterTests.cs" />
     <Compile Include="Excel\PageSetup\PageBreaksTests.cs" />
     <Compile Include="Excel\Ranges\UsedAndUnusedCellsTests.cs" />
     <Compile Include="Excel\Saving\SavingTests.cs" />
-    <Compile Include="Utils\TemporaryFile.cs" />
     <Compile Include="XLHelperTests.cs" />
     <Compile Include="Excel\AutoFilters\AutoFilterTests.cs" />
     <Compile Include="Excel\CalcEngine\DateAndTimeTests.cs" />
@@ -171,12 +155,12 @@
     <EmbeddedResource Include="Resource\Examples\Misc\DataTypesUnderDifferentCulture.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\DataValidation.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Formulas.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Misc\FormulasWithEvaluation.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\FreezePanes.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\HideSheets.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\HideUnhide.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\Hyperlinks.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\InsertingData.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Misc\InsertingTables.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\LambdaExpressions.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\MergeCells.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Misc\MergeMoves.xlsx" />
@@ -226,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Examples\Misc\CopyingWorksheets.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\Ranges\UsingTables.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Examples\Misc\CopyingRowsAndColumns.xlsx" />
@@ -271,11 +256,9 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBar.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFIconSet.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Ranges\SelectingRanges.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\CommentsWithIndexedColor81.xlsx" />
     <EmbeddedResource Include="Resource\Misc\EmptyTable.xlsx" />
     <EmbeddedResource Include="Resource\Misc\FileWithDefaultStyleNameNotInEnglish.xlsx" />
     <EmbeddedResource Include="Resource\Misc\FileWithMismatchSheetIdAndRelId.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\InvalidPrintTitles.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LoadFileWithCustomSheetViews.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LoadPivotTables.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LibreOfficeFileWithDates.xlsx" />
@@ -285,32 +268,8 @@
     <EmbeddedResource Include="Resource\Examples\Misc\RightToLeft.xlsx" />
     <EmbeddedResource Include="Resource\Examples\PivotTables\PivotTables.xlsx" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageAnchors.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\ImageHandling\ImageFormats.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Misc\WorkbookProtection.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\ExcelProducedWorkbookWithImages.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\EmptyCellValue.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\AllShapes.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\Date1904System.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\DuplicateImageNames.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\TableHeadersWithLineBreaks.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\TableWithNameNull.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Styles\UsingPhonetics.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Tables\ResizingTables.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Tables\UsingTables.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\Tables\InsertingTables.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBarNegative.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStopIfTrue.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\InvalidPrintArea.xlsx" />
-    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDatesOccurring.xlsx" />
-    <EmbeddedResource Include="Resource\Misc\LoadImageWithoutTransform2D.xlsx" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resource\Examples\Functions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
