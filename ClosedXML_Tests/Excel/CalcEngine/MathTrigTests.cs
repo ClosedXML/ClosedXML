@@ -1302,7 +1302,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             }
         }
 
-        
+
         [Test]
         public void SumProduct()
         {
