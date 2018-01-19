@@ -731,7 +731,7 @@ namespace ClosedXML.Excel
                     var definedNameText = worksheet.PageSetup.PrintAreas.Aggregate(String.Empty,
                         (current, printArea) =>
                             current +
-                            ("'" + worksheetName + "'!" +
+                            (worksheetName.EscapeSheetName() + "!" +
                              printArea.RangeAddress.
                                  FirstAddress.ToStringFixed(
                                      XLReferenceStyle.A1) +
@@ -750,7 +750,7 @@ namespace ClosedXML.Excel
                     {
                         Name = "_xlnm._FilterDatabase",
                         LocalSheetId = sheetId,
-                        Text = "'" + worksheet.Name + "'!" +
+                        Text = worksheet.Name.EscapeSheetName() + "!" +
                                worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(
                                    XLReferenceStyle.A1) +
                                ":" +
@@ -782,14 +782,14 @@ namespace ClosedXML.Excel
                 var definedNameTextColumn = String.Empty;
                 if (worksheet.PageSetup.FirstRowToRepeatAtTop > 0)
                 {
-                    definedNameTextRow = "'" + worksheet.Name + "'!" + worksheet.PageSetup.FirstRowToRepeatAtTop
+                    definedNameTextRow = worksheet.Name.EscapeSheetName() + "!" + worksheet.PageSetup.FirstRowToRepeatAtTop
                                          + ":" + worksheet.PageSetup.LastRowToRepeatAtTop;
                 }
                 if (worksheet.PageSetup.FirstColumnToRepeatAtLeft > 0)
                 {
                     var minColumn = worksheet.PageSetup.FirstColumnToRepeatAtLeft;
                     var maxColumn = worksheet.PageSetup.LastColumnToRepeatAtLeft;
-                    definedNameTextColumn = "'" + worksheet.Name + "'!" +
+                    definedNameTextColumn = worksheet.Name.EscapeSheetName() + "!" +
                                             XLHelper.GetColumnLetterFromNumber(minColumn)
                                             + ":" + XLHelper.GetColumnLetterFromNumber(maxColumn);
                 }

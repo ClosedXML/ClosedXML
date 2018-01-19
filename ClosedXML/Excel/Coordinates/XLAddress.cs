@@ -252,7 +252,7 @@ namespace ClosedXML.Excel
 
             if (includeSheet)
                 return String.Format("{0}!{1}",
-                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
+                    Worksheet.Name.EscapeSheetName(),
                     address);
 
             return address;
@@ -389,7 +389,7 @@ namespace ClosedXML.Excel
         {
             if (includeSheet)
                 return String.Format("{0}!{1}",
-                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
+                    Worksheet.Name.EscapeSheetName(),
                     GetTrimmedAddress());
 
             return GetTrimmedAddress();
@@ -414,7 +414,7 @@ namespace ClosedXML.Excel
 
             if (includeSheet)
                 return String.Format("{0}!{1}",
-                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
+                    Worksheet.Name.EscapeSheetName(),
                     address);
 
             return address;

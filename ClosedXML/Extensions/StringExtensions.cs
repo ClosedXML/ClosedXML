@@ -8,12 +8,20 @@ namespace ClosedXML.Extensions
 {
     internal static class StringExtensions
     {
-        internal static String WrapSheetNameInQuotesIfRequired(this String sheetName)
+        internal static string EscapeSheetName(this String sheetName)
         {
-            if (sheetName.Contains(' '))
-                return "'" + sheetName + "'";
-            else
-                return sheetName;
+            if (sheetName.Contains("'") ||
+                sheetName.Contains(" "))
+                return string.Format("'{0}'", sheetName.Replace("'", "''"));
+
+            return sheetName;
+        }
+
+        internal static string UnescapeSheetName(this String sheetName)
+        {
+            return sheetName
+                .Trim('\'')
+                .Replace("''", "'");
         }
 
         internal static String HashPassword(this String password)

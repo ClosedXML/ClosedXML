@@ -1324,7 +1324,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                sheetName = sections[0].Replace("\'", "");
+                sheetName = sections[0].UnescapeSheetName();
                 sheetArea = sections[1];
             }
         }

@@ -143,7 +143,7 @@ namespace ClosedXML.Excel
         {
             if (includeSheet)
                 return String.Format("{0}!{1}:{2}",
-                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
+                    Worksheet.Name.EscapeSheetName(),
                     _firstAddress.ToStringRelative(),
                     _lastAddress.ToStringRelative());
 
@@ -159,7 +159,7 @@ namespace ClosedXML.Excel
         {
             if (includeSheet)
                 return String.Format("{0}!{1}:{2}",
-                    Worksheet.Name.WrapSheetNameInQuotesIfRequired(),
+                    Worksheet.Name.EscapeSheetName(),
                     _firstAddress.ToStringFixed(referenceStyle),
                     _lastAddress.ToStringFixed(referenceStyle));
 
