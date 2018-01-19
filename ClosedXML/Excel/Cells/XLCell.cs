@@ -2318,7 +2318,7 @@ namespace ClosedXML.Excel
                                             row2 = (XLHelper.TrimRowNumber(Int32.Parse(row2String) + rowsShifted)).ToInvariantString();
 
                                         sb.Append(useSheetName
-                                                      ? String.Format("{0}!{1}:{2}", sheetName.WrapSheetNameInQuotesIfRequired(), row1, row2)
+                                                      ? String.Format("{0}!{1}:{2}", sheetName.EscapeSheetName(), row1, row2)
                                                       : String.Format("{0}:{1}", row1, row2));
                                     }
                                     else if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
@@ -2329,7 +2329,7 @@ namespace ClosedXML.Excel
                                             if (useSheetName)
                                             {
                                                 sb.Append(String.Format("{0}!{1}:{2}",
-                                                                        sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                        sheetName.EscapeSheetName(),
                                                                         new XLAddress(worksheetInAction,
                                                                                       XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
                                                                                       matchRange.RangeAddress.
@@ -2373,7 +2373,7 @@ namespace ClosedXML.Excel
                                             if (useSheetName)
                                             {
                                                 sb.Append(String.Format("{0}!{1}",
-                                                                        sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                        sheetName.EscapeSheetName(),
                                                                         new XLAddress(worksheetInAction,
                                                                                       XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
                                                                                       matchRange.RangeAddress.
@@ -2402,7 +2402,7 @@ namespace ClosedXML.Excel
                                         if (useSheetName)
                                         {
                                             sb.Append(String.Format("{0}!{1}:{2}",
-                                                                    sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                    sheetName.EscapeSheetName(),
                                                                     matchRange.RangeAddress.FirstAddress,
                                                                     new XLAddress(worksheetInAction,
                                                                                   XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
@@ -2543,7 +2543,7 @@ namespace ClosedXML.Excel
                                         }
 
                                         sb.Append(useSheetName
-                                                      ? String.Format("{0}!{1}:{2}", sheetName.WrapSheetNameInQuotesIfRequired(), column1, column2)
+                                                      ? String.Format("{0}!{1}:{2}", sheetName.EscapeSheetName(), column1, column2)
                                                       : String.Format("{0}:{1}", column1, column2));
                                     }
                                     else if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
@@ -2554,7 +2554,7 @@ namespace ClosedXML.Excel
                                             if (useSheetName)
                                             {
                                                 sb.Append(String.Format("{0}!{1}:{2}",
-                                                                        sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                        sheetName.EscapeSheetName(),
                                                                         new XLAddress(worksheetInAction,
                                                                                       matchRange.RangeAddress.
                                                                                           FirstAddress.RowNumber,
@@ -2598,7 +2598,7 @@ namespace ClosedXML.Excel
                                             if (useSheetName)
                                             {
                                                 sb.Append(String.Format("{0}!{1}",
-                                                                        sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                        sheetName.EscapeSheetName(),
                                                                         new XLAddress(worksheetInAction,
                                                                                       matchRange.RangeAddress.
                                                                                           FirstAddress.RowNumber,
@@ -2627,7 +2627,7 @@ namespace ClosedXML.Excel
                                         if (useSheetName)
                                         {
                                             sb.Append(String.Format("{0}!{1}:{2}",
-                                                                    sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                    sheetName.EscapeSheetName(),
                                                                     matchRange.RangeAddress.FirstAddress,
                                                                     new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.

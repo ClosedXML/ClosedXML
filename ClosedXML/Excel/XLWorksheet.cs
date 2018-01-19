@@ -182,6 +182,12 @@ namespace ClosedXML.Excel
                 if (value.Length > 31)
                     throw new ArgumentException("Worksheet names cannot be more than 31 characters");
 
+                if (value.StartsWith("'", StringComparison.Ordinal))
+                    throw new ArgumentException("Worksheet names cannot start with an apostrophe");
+
+                if (value.EndsWith("'", StringComparison.Ordinal))
+                    throw new ArgumentException("Worksheet names cannot end with an apostrophe");
+
                 Workbook.WorksheetsInternal.Rename(_name, value);
                 _name = value;
             }
@@ -677,7 +683,7 @@ namespace ClosedXML.Excel
                     String name = sheetName.ToLower().Equals(Name.ToLower())
                                       ? newSheetName
                                       : sheetName;
-                    newValue.Append(String.Format("{0}!{1}", name.WrapSheetNameInQuotesIfRequired(), pair[1]));
+                    newValue.Append(String.Format("{0}!{1}", name.EscapeSheetName(), pair[1]));
                 }
                 else
                 {

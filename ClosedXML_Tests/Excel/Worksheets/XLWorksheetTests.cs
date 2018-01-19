@@ -234,5 +234,62 @@ namespace ClosedXML_Tests
                 ws3.CopyTo("Copy4");
             }
         }
+
+        [Test]
+        public void WorksheetNameCannotStartWithApostrophe()
+        {
+            var title = "'StartsWithApostrophe";
+            TestDelegate addWorksheet = () =>
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(title);
+                }
+            };
+
+            Assert.Throws(typeof(ArgumentException), addWorksheet);
+        }
+
+        [Test]
+        public void WorksheetNameCannotEndWithApostrophe()
+        {
+            var title = "EndsWithApostrophe'";
+            TestDelegate addWorksheet = () =>
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(title);
+                }
+            };
+
+            Assert.Throws(typeof(ArgumentException), addWorksheet);
+        }
+
+        [Test]
+        public void WorksheetNameCanContainApostrophe()
+        {
+            var title = "With'Apostrophe";
+            var savedTitle = "";
+            TestDelegate saveAndOpenWorkbook = () =>
+            {
+                using (var ms = new MemoryStream())
+                {
+                    using (var wb = new XLWorkbook())
+                    {
+                        wb.Worksheets.Add(title);
+                        wb.Worksheets.First().Cell(1, 1).FormulaA1 = $"{title}!A2";
+                        wb.SaveAs(ms);
+                    }
+
+                    using (var wb = new XLWorkbook(ms))
+                    {
+                        savedTitle = wb.Worksheets.First().Name;
+                    }
+                }
+            };
+
+            Assert.DoesNotThrow(saveAndOpenWorkbook);
+            Assert.AreEqual(title, savedTitle);
+        }
     }
 }
