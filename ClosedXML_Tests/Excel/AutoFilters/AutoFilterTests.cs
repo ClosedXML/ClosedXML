@@ -125,5 +125,36 @@ namespace ClosedXML_Tests
                 }
             }
         }
+        
+        [Test]
+        [TestCase("A1:A4")]
+        [TestCase("A1:B4")]
+        [TestCase("A1:C4")]
+        public void AutoFilterRangeRemainsValidOnInsertColumn(string rangeAddress)
+        {
+            //Arrange
+            using (var ms1 = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("AutoFilter");
+                    ws.Cell("A1").Value = "Ids";
+                    ws.Cell("B1").Value = "Names";
+                    ws.Cell("B2").Value = "John";
+                    ws.Cell("B3").Value = "Hank";
+                    ws.Cell("B4").Value = "Dagny";
+                    ws.Cell("C1").Value = "Phones";
+
+                    ws.Range("B1:B4").SetAutoFilter(true);
+
+                    //Act
+                    var range = ws.Range(rangeAddress);
+                    range.InsertColumnsBefore(1);
+
+                    //Assert
+                    Assert.IsFalse(ws.AutoFilter.Range.RangeAddress.IsInvalid);
+                }
+            }
+        }
     }
 }
