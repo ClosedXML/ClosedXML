@@ -109,5 +109,108 @@ namespace ClosedXML_Tests
             ws.Column(1).InsertColumnsAfter(2);
             Assert.AreEqual("Comment here", ws.Cell("E1").Comment.Text);
         }
+
+        [Test]
+        [TestCase("C4:F7", "C4:F7",  2, "E4:H7")] // Coincide, shift right
+        [TestCase("C4:F7", "C4:F7", -2, "C4:D7")] // Coincide, shift left
+        [TestCase("D5:E6", "C4:F7",  2, "F5:G6")] // Inside, shift right
+        [TestCase("D5:E6", "C4:F7", -2, "C5:C6")] // Inside, shift left
+        [TestCase("B4:G7", "C4:F7",  2, "B4:I7")] // Includes, shift right
+        [TestCase("B4:G7", "C4:F7", -2, "B4:E7")] // Includes, shift left
+        [TestCase("B4:E7", "C4:F7",  2, "B4:G7")] // Intersects at left, shift right
+        [TestCase("B4:E7", "C4:F7", -2, "B4:C7")] // Intersects at left, shift left
+        [TestCase("D4:G7", "C4:F7",  2, "F4:I7")] // Intersects at right, shift right
+        [TestCase("D4:G7", "C4:F7", -2, "C4:E7")] // Intersects at right, shift left
+        [TestCase("A5:B6", "C4:F7",  2, "A5:B6")] // No intersection, at left, shift right
+        [TestCase("A5:B6", "C4:F7", -1, "A5:B6")] // No intersection, at left, shift left
+        [TestCase("H5:I6", "C4:F7",  2, "J5:K6")] // No intersection, at right, shift right
+        [TestCase("H5:I6", "C4:F7", -2, "F5:G6")] // No intersection, at right, shift left
+        [TestCase("C8:F11", "C4:F7", 2, "C8:F11")] // Different rows
+        [TestCase("B1:B8", "A1:C4",  1, "B1:B8")]  // More rows, shift right
+        [TestCase("B1:B8", "A1:C4", -1, "B1:B8")]  // More rows, shift left
+
+        public void ShiftColumnsValid(string thisRangeAddress, string shiftedRangeAddress, int shiftedColumns, string expectedRange)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                var thisRange = ws.Range(thisRangeAddress) as XLRange;
+                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+
+                thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
+
+                Assert.IsFalse(thisRange.RangeAddress.IsInvalid);
+                Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
+            }
+        }
+
+
+        [Test]
+        [TestCase("B1:B4", "A1:C4", -2)] // Shift left too much
+        public void ShiftColumnsInvalid(string thisRangeAddress, string shiftedRangeAddress, int shiftedColumns)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                var thisRange = ws.Range(thisRangeAddress) as XLRange;
+                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+
+                thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
+
+                Assert.IsTrue(thisRange.RangeAddress.IsInvalid);
+            }
+        }
+
+
+        [Test]
+        [TestCase("C4:F7", "C4:F7",  2, "C6:F9")]   // Coincide, shift down
+        [TestCase("C4:F7", "C4:F7", -2, "C4:F5")]   // Coincide, shift up
+        [TestCase("D5:E6", "C4:F7",  2, "D7:E8")]   // Inside, shift down
+        [TestCase("D5:E6", "C4:F7", -2, "D4:E4")]   // Inside, shift up
+        [TestCase("C3:F8", "C4:F7",  2, "C3:F10")]  // Includes, shift down
+        [TestCase("C3:F8", "C4:F7", -2, "C3:F6")]   // Includes, shift up
+        [TestCase("C3:F6", "C4:F7",  2, "C3:F8")]   // Intersects at top, shift down
+        [TestCase("C2:F6", "C4:F7", -3, "C2:F3")]   // Intersects at top, shift up to the sheet boundary
+        [TestCase("C3:F6", "C4:F7", -2, "C3:F4")]   // Intersects at top, shift up
+        [TestCase("C5:F8", "C4:F7",  2, "C7:F10")]  // Intersects at bottom, shift down
+        [TestCase("C5:F8", "C4:F7", -2, "C4:F6")]   // Intersects at bottom, shift up
+        [TestCase("C1:F3", "C4:F7",  2, "C1:F3")]   // No intersection, at top, shift down
+        [TestCase("C1:F3", "C4:F7", -2, "C1:F3")]   // No intersection, at top, shift up
+        [TestCase("C8:F10","C4:F7",  2, "C10:F12")] // No intersection, at bottom, shift down
+        [TestCase("C8:F10","C4:F7", -2, "C6:F8")]   // No intersection, at bottom, shift up
+        [TestCase("G4:J7", "C4:F7",  2, "G4:J7")]   // Different columns
+        [TestCase("A2:D2", "A1:C4",  1, "A2:D2")]   // More columns, shift down
+        [TestCase("A2:D2", "A1:C4", -1, "A2:D2")]   // More columns, shift up
+
+        public void ShiftRowsValid(string thisRangeAddress, string shiftedRangeAddress, int shiftedRows, string expectedRange)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                var thisRange = ws.Range(thisRangeAddress) as XLRange;
+                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+
+                thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
+
+                Assert.IsFalse(thisRange.RangeAddress.IsInvalid);
+                Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
+            }
+        }
+
+        [Test]
+        [TestCase("A2:C2", "A1:C4", -2)] // Shift up too much
+        public void ShiftRowsInvalid(string thisRangeAddress, string shiftedRangeAddress, int shiftedRows)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                var thisRange = ws.Range(thisRangeAddress) as XLRange;
+                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+
+                thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
+
+                Assert.IsTrue(thisRange.RangeAddress.IsInvalid);
+            }
+        }
     }
 }
