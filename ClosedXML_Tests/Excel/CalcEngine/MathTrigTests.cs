@@ -1270,6 +1270,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
 
                 Assert.Throws<NoValueAvailableException>(() => ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
+
+                // Blank cells and cells with text should be treated as zeros
+                ws.Range("A1:A5").Clear();
+                Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+
+                ws.Range("A1:A5").SetValue("asdf");
+                Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
             }
         }
 

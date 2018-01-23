@@ -380,7 +380,7 @@ namespace ClosedXML.Excel.CalcEngine
             for(int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
                 var criterion = p[criteriaPair * 2 + 1].Evaluate();
-                var criteriaRange = p[(criteriaPair + 1) * 2] as IEnumerable;   
+                var criteriaRange = p[(criteriaPair + 1) * 2] as IEnumerable;
                 var criteriaRangeValues = new List<object>();
                 foreach (var value in criteriaRange)
                 {
@@ -437,7 +437,19 @@ namespace ClosedXML.Excel.CalcEngine
 
             var values = p
                 .Cast<IEnumerable>()
-                .Select(range => range.Cast<double>().ToList());
+                .Select(range =>
+                {
+                    var results = new List<double>();
+                    foreach (var c in range)
+                    {
+                        if (c.IsNumber())
+                            results.Add(c.CastTo<double>());
+                        else
+                            results.Add(0.0);
+                    }
+                    return results;
+                })
+                .ToArray();
 
             return Enumerable.Range(0, counts.Single())
                 .Aggregate(0d, (t, i) =>
@@ -660,7 +672,7 @@ namespace ClosedXML.Excel.CalcEngine
             var num = Math.Floor((double)input);
             double fact = 1.0;
 
-            
+
             if (num < 0)
                 throw new NumberException();
 
