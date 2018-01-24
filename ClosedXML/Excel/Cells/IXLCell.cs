@@ -310,7 +310,30 @@ namespace ClosedXML.Excel
 
         IXLCell CopyTo(String target);
 
+        /// <summary>
+        /// Textual representation of cell calculated value (as it is saved to a workbook or read from it)
+        /// </summary>
         String ValueCached { get; }
+
+        /// <summary>
+        /// Calculated value of cell formula. Is used for decreasing number of computations perfromed.
+        /// May hold invalid value when <see cref="RecalculationNeeded"/> flag is True.
+        /// </summary>
+        Object ValueCalculated { get; }
+
+        /// <summary>
+        /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
+        /// </summary>
+        Boolean RecalculationNeeded { get; }
+
+        /// <summary>
+        /// Perform an evaluation of cell formula. If cell does not contain formula nothing happens, if cell does not need
+        /// recalculation (<see cref="RecalculationNeeded"/> is False) nothing happens either, unless <paramref name="force"/> flag is specified.
+        /// Otherwise recalculation is perfomed, result value is preserved in <see cref="ValueCalculated"/> and returned.
+        /// </summary>
+        /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
+        /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
+        object Evaluate(bool force = false);
 
         IXLRichText RichText { get; }
         Boolean HasRichText { get; }

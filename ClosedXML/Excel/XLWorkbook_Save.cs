@@ -4841,7 +4841,20 @@ namespace ClosedXML.Excel
                                     cell.CellFormula.Text = formula;
                                 }
 
-                                cell.CellValue = null;
+                                if (!evaluateFormulae || xlCell.ValueCalculated == null || xlCell.RecalculationNeeded)
+                                    cell.CellValue = null;
+                                else
+                                {
+                                    string valueCalculated;
+                                    if (xlCell.ValueCalculated is int)
+                                        valueCalculated = ((int)xlCell.ValueCalculated).ToInvariantString();
+                                    else if (xlCell.ValueCalculated is double)
+                                        valueCalculated = ((double)xlCell.ValueCalculated).ToInvariantString();
+                                    else
+                                        valueCalculated = xlCell.ValueCalculated.ToString();
+                                    
+                                    cell.CellValue = new CellValue(valueCalculated);
+                                }
                             }
                             else if (tableTotalCells.Contains(xlCell.Address))
                             {

@@ -119,6 +119,59 @@ namespace ClosedXML_Tests.Excel.Saving
         }
 
         [Test]
+        public void NotSaveCachedValueWhenFlagIsFalse()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (XLWorkbook book1 = new XLWorkbook())
+                {
+                    var sheet = book1.AddWorksheet("sheet1");
+                    sheet.Cell("A1").Value = 123;
+                    sheet.Cell("A2").FormulaA1 = "A1*10";
+                    book1.RecalculateAllFormulas();
+                    var options = new SaveOptions { EvaluateFormulasBeforeSaving = false };
+
+                    book1.SaveAs(ms, options);
+                }
+                ms.Position = 0;
+
+                using (XLWorkbook book2 = new XLWorkbook(ms))
+                {
+                    var ws = book2.Worksheet(1);
+                    var storedValue = ws.Cell("A2").ValueCached;
+
+                    Assert.IsNull(storedValue);
+                }
+            }
+        }
+        
+        [Test]
+        public void SaveCachedValueWhenFlagIsTrue()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (XLWorkbook book1 = new XLWorkbook())
+                {
+                    var sheet = book1.AddWorksheet("sheet1");
+                    sheet.Cell("A1").Value = 123;
+                    sheet.Cell("A2").FormulaA1 = "A1*10";
+                    var options = new SaveOptions { EvaluateFormulasBeforeSaving = true };
+
+                    book1.SaveAs(ms, options);
+                }
+                ms.Position = 0;
+
+                using (XLWorkbook book2 = new XLWorkbook(ms))
+                {
+                    var ws = book2.Worksheet(1);
+                    var storedValue = ws.Cell("A2").ValueCached;
+
+                    Assert.AreEqual("1230", storedValue);
+                }
+            }
+        }
+
+        [Test]
         public void CanSaveAsCopyReadOnlyFile()
         {
             using (var original = new TemporaryFile())

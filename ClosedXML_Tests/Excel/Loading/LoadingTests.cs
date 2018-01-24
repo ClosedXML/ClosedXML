@@ -312,5 +312,38 @@ namespace ClosedXML_Tests.Excel
                 }
             }
         }
+
+        [Test]
+        [TestCase("A1*10", "1230")]
+        [TestCase("A1/10", "12.3")]
+        [TestCase("A1&\" cells\"", "123 cells")]
+        [TestCase("A1&\"000\"", "123000")]
+        [TestCase("ISNUMBER(A1)", "True")]
+        [TestCase("ISBLANK(A1)", "False")]
+        [TestCase("DATE(2018,1,28)", "43128")]
+        public void LoadFormulaCachedValue(string formula, object expectedValue)
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (XLWorkbook book1 = new XLWorkbook())
+                {
+                    var sheet = book1.AddWorksheet("sheet1");
+                    sheet.Cell("A1").Value = 123;
+                    sheet.Cell("A2").FormulaA1 = formula;
+                    var options = new SaveOptions { EvaluateFormulasBeforeSaving = true };
+
+                    book1.SaveAs(ms, options);
+                }
+                ms.Position = 0;
+
+                using (XLWorkbook book2 = new XLWorkbook(ms))
+                {
+                    var ws = book2.Worksheet(1);
+                    var storedValueA2 = ws.Cell("A2").ValueCached;
+                    Assert.IsTrue(ws.Cell("A2").RecalculationNeeded);
+                    Assert.AreEqual(expectedValue, storedValueA2);
+                }
+            }
+        }
     }
 }

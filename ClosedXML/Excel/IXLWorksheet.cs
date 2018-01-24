@@ -430,6 +430,11 @@ namespace ClosedXML.Excel
 
         Object Evaluate(String expression);
 
+        /// <summary>
+        /// Force recalculation of all cell formulas.
+        /// </summary>
+        void RecalculateAllFormulas();
+
         String Author { get; set; }
 
         IXLPictures Pictures { get; }

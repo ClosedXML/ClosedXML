@@ -18,6 +18,10 @@ namespace ClosedXML_Sandbox
             Console.WriteLine();
 #endif
 
+            Console.WriteLine("Running {0}", nameof(PerformanceRunner.PerformHeavyCalculation));
+            PerformanceRunner.TimeAction(PerformanceRunner.PerformHeavyCalculation);
+            Console.WriteLine();
+
             Console.WriteLine("Press any key to continue");
             Console.ReadKey();
         }
