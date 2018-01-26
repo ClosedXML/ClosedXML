@@ -546,5 +546,35 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(0, c3);
             }
         }
+
+        [Test]
+        public void SetFormulaA1AffectsR1C1()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var cell = ws.Cell(1, 1);
+                cell.FormulaR1C1 = "R[1]C";
+
+                cell.FormulaA1 = "B2";
+
+                Assert.AreEqual("R[1]C[1]", cell.FormulaR1C1);
+            }
+        }
+
+        [Test]
+        public void SetFormulaR1C1AffectsA1()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var cell = ws.Cell(1, 1);
+                cell.FormulaA1 = "A2";
+
+                cell.FormulaR1C1 = "R[1]C[1]";
+
+                Assert.AreEqual("B2", cell.FormulaA1);
+            }
+        }
     }
 }

@@ -1080,6 +1080,8 @@ namespace ClosedXML.Excel
             set
             {
                 _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
+
+                _formulaA1 = null;
             }
         }
 
