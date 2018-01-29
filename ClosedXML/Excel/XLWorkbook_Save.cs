@@ -2034,7 +2034,6 @@ namespace ClosedXML.Excel
                                                                && cell.Address.RowNumber > source.FirstRow().RowNumber()
                                                                && cell.IsEmpty()).Any();
 
-
                 if (types.Length == 1 && types.Single() == XLDataType.Number)
                 {
                     sharedItems.ContainsSemiMixedTypes = false;
@@ -4278,30 +4277,57 @@ namespace ClosedXML.Excel
             pane.HorizontalSplit = hSplit;
             pane.VerticalSplit = ySplit;
 
+            pane.ActivePane = (ySplit == 0 ? PaneValues.TopRight : 0)
+                              | (hSplit == 0 ? PaneValues.BottomLeft : 0);
+
             pane.TopLeftCell = XLHelper.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
                                + (xlWorksheet.SheetView.SplitRow + 1);
 
             if (hSplit == 0 && ySplit == 0)
+            {
+                pane = null;
                 sheetView.RemoveAllChildren<Pane>();
+            }
+            else
+                sheetView.TopLeftCell = null;
 
             if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
             {
                 sheetView.RemoveAllChildren<Selection>();
 
                 var firstSelection = xlWorksheet.SelectedRanges.FirstOrDefault();
-                var selection = new Selection();
-                if (xlWorksheet.ActiveCell != null)
-                    selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
-                else if (firstSelection != null)
-                    selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
 
-                var seqRef = new List<String> { selection.ActiveCell.Value };
-                seqRef.AddRange(xlWorksheet.SelectedRanges
-                    .Select(range => range.RangeAddress.ToStringRelative(false)));
+                Action<Selection> populateSelection = (Selection selection) =>
+                {
+                    if (xlWorksheet.ActiveCell != null)
+                        selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
+                    else if (firstSelection != null)
+                        selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
 
-                selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
+                    var seqRef = new List<String> { selection.ActiveCell.Value };
+                    seqRef.AddRange(xlWorksheet.SelectedRanges
+                        .Select(range =>
+                        {
+                            if (range.RangeAddress.FirstAddress.Equals(range.RangeAddress.LastAddress))
+                                return range.RangeAddress.FirstAddress.ToStringRelative(false);
+                            else
+                                return range.RangeAddress.ToStringRelative(false);
+                        }));
 
-                sheetView.Append(selection);
+                    selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
+
+                    sheetView.Append(selection);
+                };
+
+                populateSelection(new Selection());
+                // If a pane exists, we need to set the active pane too
+                if (pane != null)
+                {
+                    populateSelection(new Selection()
+                    {
+                        Pane = pane.ActivePane
+                    });
+                }
             }
 
             if (xlWorksheet.SheetView.ZoomScale == 100)
