@@ -228,15 +228,30 @@ namespace ClosedXML_Tests
         [Test]
         public void CanDeletePictures()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
-            using (var wb = new XLWorkbook(stream))
+            using (var ms = new MemoryStream())
             {
-                var ws = wb.Worksheets.First();
-                ws.Pictures.Delete(ws.Pictures.First());
+                int originalCount;
 
-                var pictureName = ws.Pictures.First().Name;
-                ws.Pictures.Delete(pictureName);
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheets.First();
+                    originalCount = ws.Pictures.Count;
+                    ws.Pictures.Delete(ws.Pictures.First());
+
+                    var pictureName = ws.Pictures.First().Name;
+                    ws.Pictures.Delete(pictureName);
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    Assert.AreEqual(originalCount - 2, ws.Pictures.Count);
+                }
             }
+        
         }
 
         [Test]
