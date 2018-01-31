@@ -1,7 +1,7 @@
+using ClosedXML.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using DocumentFormat.OpenXml.Presentation;
 
 namespace ClosedXML.Excel
 {
@@ -28,25 +28,30 @@ namespace ClosedXML.Excel
         {
             return FromColor(Color.FromArgb(argb));
         }
+
         public static XLColor FromArgb(Int32 r, Int32 g, Int32 b)
         {
             return FromColor(Color.FromArgb(r, g, b));
         }
+
         public static XLColor FromArgb(Int32 a, Int32 r, Int32 g, Int32 b)
         {
             return FromColor(Color.FromArgb(a, r, g, b));
         }
+
         public static XLColor FromKnownColor(KnownColor color)
         {
             return FromColor(Color.FromKnownColor(color));
         }
+
         public static XLColor FromName(String name)
         {
             return FromColor(Color.FromName(name));
         }
+
         public static XLColor FromHtml(String htmlColor)
         {
-            return FromColor(ColorTranslator.FromHtml(htmlColor));
+            return FromColor(ColorStringParser.ParseFromHtml(htmlColor));
         }
 
         private static readonly Dictionary<Int32, XLColor> ByIndex = new Dictionary<Int32, XLColor>();
@@ -113,6 +118,7 @@ namespace ClosedXML.Excel
         }
 
         private static Dictionary<Int32, XLColor> _indexedColors;
+
         public static Dictionary<Int32, XLColor> IndexedColors
         {
             get
