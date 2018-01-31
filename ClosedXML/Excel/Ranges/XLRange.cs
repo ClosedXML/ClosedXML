@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,8 @@ namespace ClosedXML.Excel
 
             if (!xlRangeParameters.IgnoreEvents)
             {
-                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
-                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-                //xlRangeParameters.IgnoreEvents = true;
+                SubscribeToShiftedRows(WorksheetRangeShiftedRows);
+                SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
             }
             SetStyle(xlRangeParameters.DefaultStyle);
         }
@@ -355,14 +355,14 @@ namespace ClosedXML.Excel
 
         #endregion IXLRange Members
 
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        private void WorksheetRangeShiftedColumns(object sender, RangeShiftedEventArgs e)
         {
-            ShiftColumns(RangeAddress, range, columnsShifted);
+            ShiftColumns(RangeAddress, e.Range, e.Shifted);
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        private void WorksheetRangeShiftedRows(object sender, RangeShiftedEventArgs e)
         {
-            ShiftRows(RangeAddress, range, rowsShifted);
+            ShiftRows(RangeAddress, e.Range, e.Shifted);
         }
 
         IXLRangeColumn IXLRange.FirstColumn(Func<IXLRangeColumn, Boolean> predicate)

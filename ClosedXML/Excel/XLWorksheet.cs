@@ -15,8 +15,31 @@ namespace ClosedXML.Excel
     {
         #region Events
 
-        public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedRows;
-        public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedColumns;
+        private readonly WeakEvent.WeakEventSource<RangeShiftedEventArgs> rowsShiftedEventSource = new WeakEvent.WeakEventSource<RangeShiftedEventArgs>();
+
+        public event EventHandler<RangeShiftedEventArgs> RowsShifted
+        {
+            add { rowsShiftedEventSource.Subscribe(value); }
+            remove { rowsShiftedEventSource.Unsubscribe(value); }
+        }
+
+        public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
+        {
+            rowsShiftedEventSource.Raise(this, new RangeShiftedEventArgs(range, rowsShifted));
+        }
+
+        private readonly WeakEvent.WeakEventSource<RangeShiftedEventArgs> columnsShiftedEventSource = new WeakEvent.WeakEventSource<RangeShiftedEventArgs>();
+
+        public event EventHandler<RangeShiftedEventArgs> ColumnsShifted
+        {
+            add { columnsShiftedEventSource.Subscribe(value); }
+            remove { columnsShiftedEventSource.Unsubscribe(value); }
+        }
+
+        public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
+        {
+            columnsShiftedEventSource.Raise(this, new RangeShiftedEventArgs(range, columnsShifted));
+        }
 
         #endregion Events
 
@@ -46,9 +69,6 @@ namespace ClosedXML.Excel
 
             Workbook = workbook;
 
-            RangeShiftedRows = new XLReentrantEnumerableSet<XLCallbackAction>();
-            RangeShiftedColumns = new XLReentrantEnumerableSet<XLCallbackAction>();
-
             RangeAddress.Worksheet = this;
             RangeAddress.FirstAddress.Worksheet = this;
             RangeAddress.LastAddress.Worksheet = this;
@@ -72,8 +92,8 @@ namespace ClosedXML.Excel
             _rowHeight = workbook.RowHeight;
             RowHeightChanged = Math.Abs(workbook.RowHeight - XLWorkbook.DefaultRowHeight) > XLHelper.Epsilon;
             Name = sheetName;
-            SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-            SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+            SubscribeToShiftedRows(WorksheetRangeShiftedRows);
+            SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
             Charts = new XLCharts();
             ShowFormulas = workbook.ShowFormulas;
             ShowGridLines = workbook.ShowGridLines;
@@ -1194,8 +1214,11 @@ namespace ClosedXML.Excel
             Internals.RowsCollection.Clear();
         }
 
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        private void WorksheetRangeShiftedColumns(object sender, RangeShiftedEventArgs e)
         {
+            var range = e.Range;
+            var columnsShifted = e.Shifted;
+
             var newMerge = new XLRanges();
             foreach (IXLRange rngMerged in Internals.MergedRanges)
             {
@@ -1263,8 +1286,11 @@ namespace ClosedXML.Excel
             fc.Dispose();
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        private void WorksheetRangeShiftedRows(object sender, RangeShiftedEventArgs e)
         {
+            var range = e.Range;
+            var rowsShifted = e.Shifted;
+
             var newMerge = new XLRanges();
             foreach (IXLRange rngMerged in Internals.MergedRanges)
             {
@@ -1389,28 +1415,6 @@ namespace ClosedXML.Excel
                     nr.RangeList.Select(r => XLCell.ShiftFormulaColumns(r, this, range, columnsShifted)).Where(
                         newReference => newReference.Length > 0).ToList();
                 nr.RangeList = newRangeList;
-            }
-        }
-
-        public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
-        {
-            if (RangeShiftedRows != null)
-            {
-                foreach (var item in RangeShiftedRows)
-                {
-                    item.Action(range, rowsShifted);
-                }
-            }
-        }
-
-        public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
-        {
-            if (RangeShiftedColumns != null)
-            {
-                foreach (var item in RangeShiftedColumns)
-                {
-                    item.Action(range, columnsShifted);
-                }
             }
         }
 
@@ -1604,6 +1608,7 @@ namespace ClosedXML.Excel
         {
             return Pictures.Add(imageFile, name);
         }
+
         public override Boolean IsEntireRow()
         {
             return true;
@@ -1623,6 +1628,5 @@ namespace ClosedXML.Excel
             else
                 this.Cell(ro, co).SetValue(value);
         }
-
     }
 }

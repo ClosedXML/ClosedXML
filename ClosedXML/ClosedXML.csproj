@@ -99,8 +99,7 @@
     <Compile Include="Excel\Drawings\IXLPicture.cs" />
     <Compile Include="Excel\Drawings\XLMarker.cs" />
     <Compile Include="Excel\Drawings\XLPictures.cs" />
-    <Compile Include="Excel\Misc\XLCallbackAction.cs" />
-    <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
+    <Compile Include="Excel\Misc\RangeShiftedEventArgs.cs" />
     <Compile Include="Excel\SaveOptions.cs" />
     <Compile Include="Excel\Style\XLPredefinedFormat.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
@@ -111,6 +110,7 @@
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\OpenXmlPartContainerExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Patterns\WeakEvent\WeakEventSource.cs" />
     <Compile Include="Utils\GraphicsUtils.cs" />
     <Compile Include="Utils\OpenXmlHelper.cs" />
     <Compile Include="Utils\XmlEncoder.cs" />
@@ -373,6 +373,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Patterns\WeakEvent\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

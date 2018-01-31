@@ -9,6 +9,34 @@ namespace ClosedXML.Excel
 {
     internal abstract class XLRangeBase : IXLRangeBase, IXLStylized
     {
+        #region Events
+
+        private EventHandler<RangeShiftedEventArgs> worksheetRangeShiftedRows;
+        private EventHandler<RangeShiftedEventArgs> worksheetRangeShiftedColumns;
+
+        private bool rowsShiftedSubscribed = false;
+        private bool columnsShiftedSubscribed = false;
+
+        protected void SubscribeToShiftedRows(EventHandler<RangeShiftedEventArgs> handler)
+        {
+            if (Worksheet == null || !Worksheet.EventTrackingEnabled || handler == null) return;
+
+            worksheetRangeShiftedRows = handler;
+            Worksheet.RowsShifted += worksheetRangeShiftedRows;
+            rowsShiftedSubscribed = true;
+        }
+
+        protected void SubscribeToShiftedColumns(EventHandler<RangeShiftedEventArgs> handler)
+        {
+            if (Worksheet == null || !Worksheet.EventTrackingEnabled || handler == null) return;
+
+            worksheetRangeShiftedColumns = handler;
+            Worksheet.ColumnsShifted += worksheetRangeShiftedColumns;
+            columnsShiftedSubscribed = true;
+        }
+
+        #endregion Events
+
         public Boolean StyleChanged { get; set; }
 
         #region Fields
@@ -61,28 +89,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion Constructor
-
-        private XLCallbackAction _shiftedRowsAction;
-
-        protected void SubscribeToShiftedRows(Action<XLRange, Int32> action)
-        {
-            if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
-
-            _shiftedRowsAction = new XLCallbackAction(action);
-
-            RangeAddress.Worksheet.RangeShiftedRows.Add(_shiftedRowsAction);
-        }
-
-        private XLCallbackAction _shiftedColumnsAction;
-
-        protected void SubscribeToShiftedColumns(Action<XLRange, Int32> action)
-        {
-            if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
-
-            _shiftedColumnsAction = new XLCallbackAction(action);
-
-            RangeAddress.Worksheet.RangeShiftedColumns.Add(_shiftedColumnsAction);
-        }
 
         #region Public properties
 
@@ -2046,17 +2052,33 @@ namespace ClosedXML.Excel
 
         public void Dispose()
         {
-            if (_shiftedRowsAction != null)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                RangeAddress.Worksheet.RangeShiftedRows.Remove(_shiftedRowsAction);
-                _shiftedRowsAction = null;
+                // Usually left for disposing of managed resources;
             }
 
-            if (_shiftedColumnsAction != null)
+            if (rowsShiftedSubscribed)
             {
-                RangeAddress.Worksheet.RangeShiftedColumns.Remove(_shiftedColumnsAction);
-                _shiftedColumnsAction = null;
+                Worksheet.RowsShifted -= worksheetRangeShiftedRows;
+                rowsShiftedSubscribed = false;
             }
+
+            if (columnsShiftedSubscribed)
+            {
+                Worksheet.ColumnsShifted -= worksheetRangeShiftedColumns;
+                columnsShiftedSubscribed = false;
+            }
+        }
+
+        ~XLRangeBase()
+        {
+            Dispose(false);
         }
 
         public IXLDataValidation SetDataValidation()

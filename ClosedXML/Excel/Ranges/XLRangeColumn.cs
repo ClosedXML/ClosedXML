@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Misc;
 using System;
 using System.Linq;
 
@@ -12,8 +13,8 @@ namespace ClosedXML.Excel
         {
             if (quickLoad) return;
 
-            SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-            SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+            SubscribeToShiftedRows(WorksheetRangeShiftedRows);
+            SubscribeToShiftedColumns(WorksheetRangeShiftedColumns);
             SetStyle(rangeParameters.DefaultStyle);
         }
 
@@ -193,14 +194,14 @@ namespace ClosedXML.Excel
             return Cell(row, 1);
         }
 
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        private void WorksheetRangeShiftedColumns(object sender, RangeShiftedEventArgs e)
         {
-            ShiftColumns(RangeAddress, range, columnsShifted);
+            ShiftColumns(RangeAddress, e.Range, e.Shifted);
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        private void WorksheetRangeShiftedRows(object sender, RangeShiftedEventArgs e)
         {
-            ShiftRows(RangeAddress, range, rowsShifted);
+            ShiftRows(RangeAddress, e.Range, e.Shifted);
         }
 
         public XLRange Range(int firstRow, int lastRow)
