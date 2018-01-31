@@ -44,6 +44,9 @@ namespace ClosedXML.Excel.CalcEngine
             var cs = criteria as string;
             if (cs != null)
             {
+                if (value is string && (value as string).Trim() == "")
+                    return cs == "";
+
                 if (cs == "")
                     return cs.Equals(value);
 
@@ -54,7 +57,7 @@ namespace ClosedXML.Excel.CalcEngine
                     var expression = string.Format("{0}{1}", value, cs);
 
                     // add quotes if necessary
-                    var pattern = @"(\w+)(\W+)(\w+)";
+                    var pattern = @"([\w\s]+)(\W+)(\w+)";
                     var m = Regex.Match(expression, pattern);
                     if (m.Groups.Count == 4)
                     {
