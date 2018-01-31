@@ -29,6 +29,8 @@ namespace ClosedXML.Excel.Drawings
 
         void Delete(IXLPicture picture);
 
+        ICollection<String> Deleted { get; }
+
         IXLPicture Picture(String pictureName);
 
         bool TryGetPicture(string pictureName, out IXLPicture picture);
