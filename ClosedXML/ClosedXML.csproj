@@ -111,6 +111,7 @@
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\OpenXmlPartContainerExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Utils\ColorStringParser.cs" />
     <Compile Include="Utils\GraphicsUtils.cs" />
     <Compile Include="Utils\OpenXmlHelper.cs" />
     <Compile Include="Utils\XmlEncoder.cs" />

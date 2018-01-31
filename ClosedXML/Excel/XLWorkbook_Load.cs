@@ -2442,7 +2442,7 @@ namespace ClosedXML.Excel
                     Color thisColor;
                     if (!_colorList.ContainsKey(htmlColor))
                     {
-                        thisColor = ColorTranslator.FromHtml(htmlColor);
+                        thisColor = ColorStringParser.ParseFromHtml(htmlColor);
                         _colorList.Add(htmlColor, thisColor);
                     }
                     else
