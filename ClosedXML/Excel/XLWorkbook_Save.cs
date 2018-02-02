@@ -5189,21 +5189,35 @@ namespace ClosedXML.Excel
 
             #region RowBreaks
 
-            if (!worksheetPart.Worksheet.Elements<RowBreaks>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.RowBreaks);
-                worksheetPart.Worksheet.InsertAfter(new RowBreaks(), previousElement);
-            }
-
-            var rowBreaks = worksheetPart.Worksheet.Elements<RowBreaks>().First();
-
             var rowBreakCount = xlWorksheet.PageSetup.RowBreaks.Count;
             if (rowBreakCount > 0)
             {
+                if (!worksheetPart.Worksheet.Elements<RowBreaks>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.RowBreaks);
+                    worksheetPart.Worksheet.InsertAfter(new RowBreaks(), previousElement);
+                }
+
+                var rowBreaks = worksheetPart.Worksheet.Elements<RowBreaks>().First();
+
+                var existingBreaks = rowBreaks.ChildElements.OfType<Break>();
+                var rowBreaksToDelete = existingBreaks
+                    .Where(rb => !rb.Id.HasValue ||
+                                 !xlWorksheet.PageSetup.RowBreaks.Contains((int)rb.Id.Value))
+                    .ToList();
+
+                foreach (var rb in rowBreaksToDelete)
+                {
+                    rowBreaks.RemoveChild(rb);
+                }
+
+                var rowBreaksToAdd = xlWorksheet.PageSetup.RowBreaks
+                    .Where(xlRb => !existingBreaks.Any(rb => rb.Id.HasValue && rb.Id.Value == xlRb));
+
                 rowBreaks.Count = (UInt32)rowBreakCount;
                 rowBreaks.ManualBreakCount = (UInt32)rowBreakCount;
                 var lastRowNum = (UInt32)xlWorksheet.RangeAddress.LastAddress.RowNumber;
-                foreach (var break1 in xlWorksheet.PageSetup.RowBreaks.Select(rb => new Break
+                foreach (var break1 in rowBreaksToAdd.Select(rb => new Break
                 {
                     Id = (UInt32)rb,
                     Max = lastRowNum,
@@ -5222,21 +5236,35 @@ namespace ClosedXML.Excel
 
             #region ColumnBreaks
 
-            if (!worksheetPart.Worksheet.Elements<ColumnBreaks>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ColumnBreaks);
-                worksheetPart.Worksheet.InsertAfter(new ColumnBreaks(), previousElement);
-            }
-
-            var columnBreaks = worksheetPart.Worksheet.Elements<ColumnBreaks>().First();
-
             var columnBreakCount = xlWorksheet.PageSetup.ColumnBreaks.Count;
             if (columnBreakCount > 0)
             {
+                if (!worksheetPart.Worksheet.Elements<ColumnBreaks>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ColumnBreaks);
+                    worksheetPart.Worksheet.InsertAfter(new ColumnBreaks(), previousElement);
+                }
+
+                var columnBreaks = worksheetPart.Worksheet.Elements<ColumnBreaks>().First();
+
+                var existingBreaks = columnBreaks.ChildElements.OfType<Break>();
+                var columnBreaksToDelete = existingBreaks
+                    .Where(cb => !cb.Id.HasValue ||
+                                 !xlWorksheet.PageSetup.ColumnBreaks.Contains((int)cb.Id.Value))
+                    .ToList();
+
+                foreach (var rb in columnBreaksToDelete)
+                {
+                    columnBreaks.RemoveChild(rb);
+                }
+
+                var columnBreaksToAdd = xlWorksheet.PageSetup.ColumnBreaks
+                    .Where(xlCb => !existingBreaks.Any(cb => cb.Id.HasValue && cb.Id.Value == xlCb));
+
                 columnBreaks.Count = (UInt32)columnBreakCount;
                 columnBreaks.ManualBreakCount = (UInt32)columnBreakCount;
                 var maxColumnNumber = (UInt32)xlWorksheet.RangeAddress.LastAddress.ColumnNumber;
-                foreach (var break1 in xlWorksheet.PageSetup.ColumnBreaks.Select(cb => new Break
+                foreach (var break1 in columnBreaksToAdd.Select(cb => new Break
                 {
                     Id = (UInt32)cb,
                     Max = maxColumnNumber,
