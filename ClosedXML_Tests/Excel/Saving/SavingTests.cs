@@ -191,6 +191,32 @@ namespace ClosedXML_Tests.Excel.Saving
             Assert.Throws(typeof(UnauthorizedAccessException), saveAs);
         }
 
+        [Test]
+        public void PageBreaksDontDuplicateAtSaving()
+        {
+            // https://github.com/ClosedXML/ClosedXML/issues/666
+
+            using (var ms = new MemoryStream())
+            {
+                using (var wb1 = new XLWorkbook())
+                {
+                    var ws = wb1.Worksheets.Add("Page Breaks");
+                    ws.PageSetup.PrintAreas.Add("A1:D5");
+                    ws.PageSetup.AddHorizontalPageBreak(2);
+                    ws.PageSetup.AddVerticalPageBreak(2);
+                    wb1.SaveAs(ms);
+                    wb1.Save();
+                }
+                using (var wb2 = new XLWorkbook(ms))
+                {
+                    var ws = wb2.Worksheets.First();
+
+                    Assert.AreEqual(1, ws.PageSetup.ColumnBreaks.Count);
+                    Assert.AreEqual(1, ws.PageSetup.RowBreaks.Count);
+                }
+            }
+        }
+
 
         [TearDown]
         public void DeleteTempFiles()
