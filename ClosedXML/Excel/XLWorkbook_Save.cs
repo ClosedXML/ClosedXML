@@ -5302,6 +5302,16 @@ namespace ClosedXML.Excel
 
             #region Drawings
 
+            if (worksheetPart.DrawingsPart != null)
+            {
+                var xlPictures = xlWorksheet.Pictures as Drawings.XLPictures;
+                foreach (var removedPicture in xlPictures.Deleted)
+                {
+                    worksheetPart.DrawingsPart.DeletePart(removedPicture);
+                }
+                xlPictures.Deleted.Clear();
+            }
+
             foreach (var pic in xlWorksheet.Pictures)
             {
                 AddPictureAnchor(worksheetPart, pic, context);
@@ -5316,6 +5326,14 @@ namespace ClosedXML.Excel
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
                 worksheetPart.Worksheet.InsertBefore(worksheetDrawing, tableParts);
             }
+
+            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null)
+            {
+                var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
+                worksheetPart.Worksheet.RemoveChild<Drawing>(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
+                worksheetPart.DeletePart(worksheetPart.DrawingsPart);
+            }
+
 
             #endregion Drawings
 

@@ -12,10 +12,12 @@ namespace ClosedXML.Excel.Drawings
     {
         private readonly List<XLPicture> _pictures = new List<XLPicture>();
         private readonly XLWorksheet _worksheet;
+        internal ICollection<String> Deleted { get; private set; }
 
         public XLPictures(XLWorksheet worksheet)
         {
             _worksheet = worksheet;
+             Deleted = new HashSet<String>();
         }
 
         public int Count
@@ -94,7 +96,17 @@ namespace ClosedXML.Excel.Drawings
 
         public void Delete(string pictureName)
         {
-            _pictures.RemoveAll(picture => picture.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase));
+            var picturesToDelete = _pictures
+                .Where(picture => picture.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            foreach (var picture in picturesToDelete)
+            {
+                if (!string.IsNullOrEmpty(picture.RelId))
+                    Deleted.Add(picture.RelId);
+
+                _pictures.Remove(picture);
+            }
         }
 
         IEnumerator<IXLPicture> IEnumerable<IXLPicture>.GetEnumerator()
