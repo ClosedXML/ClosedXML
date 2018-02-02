@@ -12,7 +12,7 @@ namespace ClosedXML.Excel.Drawings
     {
         private readonly List<XLPicture> _pictures = new List<XLPicture>();
         private readonly XLWorksheet _worksheet;
-        public ICollection<String> Deleted { get; private set; }
+        internal ICollection<String> Deleted { get; private set; }
 
         public XLPictures(XLWorksheet worksheet)
         {

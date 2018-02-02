@@ -5276,11 +5276,12 @@ namespace ClosedXML.Excel
 
             if (worksheetPart.DrawingsPart != null)
             {
-                foreach (var removedPicture in xlWorksheet.Pictures.Deleted)
+                var xlPictures = xlWorksheet.Pictures as Drawings.XLPictures;
+                foreach (var removedPicture in xlPictures.Deleted)
                 {
                     worksheetPart.DrawingsPart.DeletePart(removedPicture);
                 }
-                xlWorksheet.Pictures.Deleted.Clear();
+                xlPictures.Deleted.Clear();
             }
 
             foreach (var pic in xlWorksheet.Pictures)
