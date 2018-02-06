@@ -50,5 +50,18 @@ namespace ClosedXML.Excel
         {
             _dataValidations.RemoveAll(dv => dv.Ranges.Contains(range));
         }
+
+        internal IXLDataValidation GetDataValidationForCell(IXLCell cell)
+        {
+            foreach (var xlDataValidation in _dataValidations)
+            {
+                foreach (var range in xlDataValidation.Ranges)
+                {
+                    if (range.Contains(cell))
+                        return xlDataValidation;
+                }
+            }
+            return null;
+        }
     }
 }

@@ -1161,13 +1161,13 @@ namespace ClosedXML.Excel
                     var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
                     var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                     newCell.CopyValuesFrom(c);
-                    if (c.HasDataValidation)
+                    /*if (c.HasDataValidation)
                     {
                         cellsDataValidations.Add(newCell.Address,
                                                  new DataValidationToCopy
                                                  { DataValidation = c.DataValidation, SourceAddress = c.Address });
                         c.DataValidation.Clear();
-                    }
+                    }*/
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
@@ -1180,7 +1180,7 @@ namespace ClosedXML.Excel
                 if (!cellsToInsert.TryGetValue(kp.Key, out targetCell))
                     targetCell = Worksheet.Cell(kp.Key);
 
-                targetCell.CopyDataValidation(Worksheet.Cell(kp.Value.SourceAddress), kp.Value.DataValidation);
+                //targetCell.CopyDataValidation(Worksheet.Cell(kp.Value.SourceAddress), kp.Value.DataValidation);
             });
 
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
@@ -1405,20 +1405,20 @@ namespace ClosedXML.Excel
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
                     var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
                     newCell.CopyValuesFrom(c);
-                    if (c.HasDataValidation)
+                    /*if (c.HasDataValidation)
                     {
                         cellsDataValidations.Add(newCell.Address,
                                                  new DataValidationToCopy
                                                  { DataValidation = c.DataValidation, SourceAddress = c.Address });
                         c.DataValidation.Clear();
-                    }
+                    }*/
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
                 }
             }
 
-            cellsDataValidations
+            /*cellsDataValidations
                 .ForEach(kp =>
                 {
                     XLCell targetCell;
@@ -1427,7 +1427,7 @@ namespace ClosedXML.Excel
 
                     targetCell.CopyDataValidation(
                         Worksheet.Cell(kp.Value.SourceAddress), kp.Value.DataValidation);
-                });
+                });*/
 
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));

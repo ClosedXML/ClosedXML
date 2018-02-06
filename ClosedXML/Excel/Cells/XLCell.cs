@@ -153,7 +153,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                using (var asRange = AsRange())
+                /*using (var asRange = AsRange())
                 {
                     var dv = asRange.DataValidation; // Call the data validation to break it into pieces
                     foreach (var d in Worksheet.DataValidations)
@@ -169,7 +169,8 @@ namespace ClosedXML.Excel
                         }
                     }
                 }
-                return null;
+                return null;*/
+                return Worksheet.DataValidations.GetDataValidationForCell(this) as XLDataValidation;
             }
         }
 
@@ -1321,6 +1322,13 @@ namespace ClosedXML.Excel
 
         public IXLDataValidation SetDataValidation()
         {
+            if (DataValidation != null)
+                return DataValidation;
+
+            var asRanges = new XLRanges() { this };
+            Worksheet.DataValidations.Add(new XLDataValidation(asRanges));
+            Debug.Assert(DataValidation != null);
+
             return DataValidation;
         }
 
@@ -2266,7 +2274,7 @@ namespace ClosedXML.Excel
 
         internal void CopyDataValidation(XLCell otherCell, XLDataValidation otherDv)
         {
-            var thisDv = DataValidation;
+            var thisDv = SetDataValidation() as XLDataValidation;
             thisDv.CopyFrom(otherDv);
             thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
             thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));

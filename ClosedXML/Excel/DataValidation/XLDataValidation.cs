@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
                                {
                                    var newR =
                                        new XLRange(new XLRangeParameters(r.RangeAddress as XLRangeAddress,
-                                                                         r.Worksheet.Style) {IgnoreEvents = true});
+                                                                         r.Worksheet.Style));
                                    (Ranges as XLRanges).Add(newR);
                                } );
             Initialize();
