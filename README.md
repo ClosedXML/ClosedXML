@@ -1,5 +1,6 @@
 # ClosedXML
 [![Build status](https://ci.appveyor.com/api/projects/status/wobbmnlbukxejjgb?svg=true)](https://ci.appveyor.com/project/Pyropace/ClosedXML/branch/develop/artifacts)
+[![Open Source Helpers](https://www.codetriage.com/closedxml/closedxml/badges/users.svg)](https://www.codetriage.com/closedxml/closedxml)
 
 [💾 Download unstable CI build](https://ci.appveyor.com/project/Pyropace/ClosedXML/branch/develop/artifacts)
 
