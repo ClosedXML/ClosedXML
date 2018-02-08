@@ -75,7 +75,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             Assert.AreEqual("Sheet1!A1", ws2.Cell("B1").DataValidation.Value);
         }
 
-        [Test]
+        [Test, Ignore("Wait for proper formula shifting (#686)")]
         public void Validation_3()
         {
             var wb = new XLWorkbook();
@@ -98,7 +98,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             Assert.AreEqual("A2", ws.Cell("B2").DataValidation.Value);
         }
 
-        [Test]
+        [Test, Ignore("Wait for proper formula shifting (#686)")]
         public void Validation_5()
         {
             var wb = new XLWorkbook();
