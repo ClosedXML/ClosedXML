@@ -150,6 +150,11 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(ro, co + 1).Value = "'123.45";
             ws.Cell(ro, co + 1).DataType = XLDataType.Number;
 
+            ws.Cell(++ro, co).Value = "Percentage Text to Number:";
+            ws.Cell(ro, co + 1).Value = "'55.12%";
+            ws.Cell(ro, co + 1).Style.NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.PercentPrecision2);
+            ws.Cell(ro, co + 1).DataType = XLDataType.Number;
+
             ws.Cell(++ro, co).Value = "@ format to Number:";
             ws.Cell(ro, co + 1).Style.NumberFormat.Format = "@";
             ws.Cell(ro, co + 1).Value = 123.45;
