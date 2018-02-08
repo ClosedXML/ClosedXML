@@ -965,9 +965,17 @@ namespace ClosedXML.Excel
                     }
                     else if (value == XLDataType.Number)
                     {
+                        var v = _cellValue;
                         double dTest;
-                        if (Double.TryParse(_cellValue, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out dTest))
-                            _cellValue = dTest.ToInvariantString();
+                        double factor = 1.0;
+                        if (v.EndsWith("%"))
+                        {
+                            v = v.Substring(0, v.Length - 1);
+                            factor = 1 / 100.0;
+                        }
+
+                        if (Double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out dTest))
+                            _cellValue = (dTest * factor).ToInvariantString();
                         else
                         {
                             throw new ArgumentException(
