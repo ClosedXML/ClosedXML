@@ -149,28 +149,19 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLDataValidation DataValidation
+        public IXLDataValidation DataValidation
         {
             get
             {
-                /*using (var asRange = AsRange())
+                foreach (var xlDataValidation in Worksheet.DataValidations)
                 {
-                    var dv = asRange.DataValidation; // Call the data validation to break it into pieces
-                    foreach (var d in Worksheet.DataValidations)
+                    foreach (var range in xlDataValidation.Ranges)
                     {
-                        var rs = d.Ranges;
-                        if (rs.Count == 1)
-                        {
-                            var r = rs.Single();
-                            var ra1 = r.RangeAddress.ToStringRelative();
-                            var ra2 = asRange.RangeAddress.ToStringRelative();
-                            if (ra1.Equals(ra2))
-                                return d as XLDataValidation;
-                        }
+                        if (range.Contains(this))
+                            return xlDataValidation;
                     }
                 }
-                return null;*/
-                return Worksheet.DataValidations.GetDataValidationForCell(this) as XLDataValidation;
+                return null;
             }
         }
 
@@ -1310,14 +1301,7 @@ namespace ClosedXML.Excel
 
         public Boolean HasDataValidation
         {
-            get
-            {
-                using (var asRange = AsRange())
-                    return Worksheet.DataValidations.Any(dv =>
-                    {
-                        using (var rngs = dv.Ranges) return dv.IsDirty() && rngs.Contains(asRange);
-                    });
-            }
+            get { return DataValidation != null; }
         }
 
         public IXLDataValidation SetDataValidation()
@@ -1325,9 +1309,8 @@ namespace ClosedXML.Excel
             if (DataValidation != null)
                 return DataValidation;
 
-            var asRanges = new XLRanges() { this };
-            Worksheet.DataValidations.Add(new XLDataValidation(asRanges));
-            Debug.Assert(DataValidation != null);
+            using (var range = this.AsRange())
+                Worksheet.DataValidations.Add(new XLDataValidation(range));
 
             return DataValidation;
         }
@@ -2272,7 +2255,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        internal void CopyDataValidation(XLCell otherCell, XLDataValidation otherDv)
+        internal void CopyDataValidation(XLCell otherCell, IXLDataValidation otherDv)
         {
             var thisDv = SetDataValidation() as XLDataValidation;
             thisDv.CopyFrom(otherDv);

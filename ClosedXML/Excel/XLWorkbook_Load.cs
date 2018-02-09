@@ -2090,8 +2090,9 @@ namespace ClosedXML.Excel
             {
                 String txt = dvs.SequenceOfReferences.InnerText;
                 if (String.IsNullOrWhiteSpace(txt)) continue;
-                foreach (var dvt in txt.Split(' ').Select(rangeAddress => ws.Range(rangeAddress).DataValidation))
+                foreach (var range in txt.Split(' ').Select(rangeAddress => ws.Range(rangeAddress)))
                 {
+                    var dvt = range.SetDataValidation();
                     if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
                     if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;
                     if (dvs.ShowErrorMessage != null) dvt.ShowErrorMessage = dvs.ShowErrorMessage;
