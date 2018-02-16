@@ -65,20 +65,20 @@ namespace ClosedXML.Excel
         {
             switch (xlCell.DataType)
             {
-                case XLCellValues.Text:
+                case XLDataType.Text:
                     {
                         return xlCell.ShareString ? CvSharedString : CvInlineString;
                     }
-                case XLCellValues.Number:
+                case XLDataType.Number:
                     return CvNumber;
 
-                case XLCellValues.DateTime:
+                case XLDataType.DateTime:
                     return CvDate;
 
-                case XLCellValues.Boolean:
+                case XLDataType.Boolean:
                     return CvBoolean;
 
-                case XLCellValues.TimeSpan:
+                case XLDataType.TimeSpan:
                     return CvNumber;
 
                 default:
@@ -733,7 +733,7 @@ namespace ClosedXML.Excel
                     var definedNameText = worksheet.PageSetup.PrintAreas.Aggregate(String.Empty,
                         (current, printArea) =>
                             current +
-                            ("'" + worksheetName + "'!" +
+                            (worksheetName.EscapeSheetName() + "!" +
                              printArea.RangeAddress.
                                  FirstAddress.ToStringFixed(
                                      XLReferenceStyle.A1) +
@@ -752,7 +752,7 @@ namespace ClosedXML.Excel
                     {
                         Name = "_xlnm._FilterDatabase",
                         LocalSheetId = sheetId,
-                        Text = "'" + worksheet.Name + "'!" +
+                        Text = worksheet.Name.EscapeSheetName() + "!" +
                                worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(
                                    XLReferenceStyle.A1) +
                                ":" +
@@ -784,14 +784,14 @@ namespace ClosedXML.Excel
                 var definedNameTextColumn = String.Empty;
                 if (worksheet.PageSetup.FirstRowToRepeatAtTop > 0)
                 {
-                    definedNameTextRow = "'" + worksheet.Name + "'!" + worksheet.PageSetup.FirstRowToRepeatAtTop
+                    definedNameTextRow = worksheet.Name.EscapeSheetName() + "!" + worksheet.PageSetup.FirstRowToRepeatAtTop
                                          + ":" + worksheet.PageSetup.LastRowToRepeatAtTop;
                 }
                 if (worksheet.PageSetup.FirstColumnToRepeatAtLeft > 0)
                 {
                     var minColumn = worksheet.PageSetup.FirstColumnToRepeatAtLeft;
                     var maxColumn = worksheet.PageSetup.LastColumnToRepeatAtLeft;
-                    definedNameTextColumn = "'" + worksheet.Name + "'!" +
+                    definedNameTextColumn = worksheet.Name.EscapeSheetName() + "!" +
                                             XLHelper.GetColumnLetterFromNumber(minColumn)
                                             + ":" + XLHelper.GetColumnLetterFromNumber(maxColumn);
                 }
@@ -873,12 +873,12 @@ namespace ClosedXML.Excel
                     Worksheets.Cast<XLWorksheet>().SelectMany(
                         w =>
                             w.Internals.CellsCollection.GetCells(
-                                c => ((c.DataType == XLCellValues.Text && c.ShareString) || c.HasRichText)
+                                c => ((c.DataType == XLDataType.Text && c.ShareString) || c.HasRichText)
                                      && (c as XLCell).InnerText.Length > 0
                                      && XLHelper.IsNullOrWhiteSpace(c.FormulaA1)
                                 )))
             {
-                c.DataType = XLCellValues.Text;
+                c.DataType = XLDataType.Text;
                 if (c.HasRichText)
                 {
                     if (newRichStrings.ContainsKey(c.RichText))
@@ -1953,7 +1953,6 @@ namespace ClosedXML.Excel
 
                 // TODO: Avoid duplicate pivot caches of same source range
 
-                var workbookCacheRelId = pt.WorkbookCacheRelId;
                 PivotCache pivotCache;
                 PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart;
                 if (!XLHelper.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
@@ -1963,7 +1962,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    workbookCacheRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    var workbookCacheRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
                     pivotCache = new PivotCache { CacheId = cacheId++, Id = workbookCacheRelId };
                     pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(workbookCacheRelId);
                 }
@@ -2036,6 +2035,7 @@ namespace ClosedXML.Excel
                 if (field != null)
                 {
                     xlpf.CustomName = field.CustomName;
+                    xlpf.SortType = field.SortType;
                     xlpf.Subtotals.AddRange(field.Subtotals);
                 }
 
@@ -2043,23 +2043,30 @@ namespace ClosedXML.Excel
 
                 var ptfi = new PivotTableFieldInfo();
 
-                var fieldValueCells = source.Cells(cell => cell.Address.ColumnNumber == columnNumber
+                var fieldValueCells = source.CellsUsed(cell => cell.Address.ColumnNumber == columnNumber
                                                            && cell.Address.RowNumber > source.FirstRow().RowNumber());
-                var types = fieldValueCells.Select(cell => cell.DataType).Distinct();
+                var types = fieldValueCells.Select(cell => cell.DataType).Distinct().ToArray();
+                var containsBlank = source.CellsUsed(true, cell => cell.Address.ColumnNumber == columnNumber
+                                                               && cell.Address.RowNumber > source.FirstRow().RowNumber()
+                                                               && cell.IsEmpty()).Any();
 
-
-                if (types.Count() == 1 && types.Single() == XLCellValues.Number)
+                if (types.Length == 1 && types.Single() == XLDataType.Number)
                 {
                     sharedItems.ContainsSemiMixedTypes = false;
                     sharedItems.ContainsString = false;
                     sharedItems.ContainsNumber = true;
 
-                    ptfi.DataType = XLCellValues.Number;
+                    ptfi.DataType = XLDataType.Number;
                     ptfi.MixedDataType = false;
                     ptfi.DistinctValues = fieldValueCells
                             .Select(cell => cell.GetDouble())
                             .Distinct()
-                            .Cast<object>();
+                            .Cast<object>()
+                            .ToArray();
+
+                    int val;
+                    var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out val));
+                    if (allInteger) sharedItems.ContainsInteger = true;
 
                     pti.Fields.Add(xlpf.SourceName, ptfi);
 
@@ -2070,24 +2077,27 @@ namespace ClosedXML.Excel
                     {
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new NumberItem { Val = (double)value });
+
+                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
                 }
 
                     sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
                     sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
                 }
-                else if (types.Count() == 1 && types.Single() == XLCellValues.DateTime)
+                else if (types.Length == 1 && types.Single() == XLDataType.DateTime)
                 {
                     sharedItems.ContainsSemiMixedTypes = false;
+                    sharedItems.ContainsNonDate = false;
                     sharedItems.ContainsString = false;
-                    sharedItems.ContainsNumber = false;
                     sharedItems.ContainsDate = true;
 
-                    ptfi.DataType = XLCellValues.DateTime;
+                    ptfi.DataType = XLDataType.DateTime;
                     ptfi.MixedDataType = false;
                     ptfi.DistinctValues = fieldValueCells
                             .Select(cell => cell.GetDateTime())
                             .Distinct()
-                            .Cast<object>();
+                        .Cast<object>()
+                        .ToArray();
 
                     pti.Fields.Add(xlpf.SourceName, ptfi);
 
@@ -2098,6 +2108,8 @@ namespace ClosedXML.Excel
                     {
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new DateTimeItem { Val = (DateTime)value });
+
+                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
                     }
 
                     sharedItems.MinDate = (DateTime)ptfi.DistinctValues.Min();
@@ -2108,26 +2120,30 @@ namespace ClosedXML.Excel
                     if (types.Any())
                     {
                         ptfi.DataType = types.First();
-                        ptfi.MixedDataType = types.Count() > 1;
+                        ptfi.MixedDataType = types.Length > 1;
 
-                        if (!ptfi.MixedDataType && ptfi.DataType == XLCellValues.Text)
+                        if (!ptfi.MixedDataType && ptfi.DataType == XLDataType.Text)
                             ptfi.DistinctValues = fieldValueCells
                                 .Select(cell => cell.Value)
                                 .Cast<String>()
-                                .Distinct(StringComparer.OrdinalIgnoreCase);
+                                .Distinct(StringComparer.OrdinalIgnoreCase)
+                                .ToArray();
                         else
                             ptfi.DistinctValues = fieldValueCells
                                 .Select(cell => cell.GetString())
-                                .Cast<String>()
-                                .Distinct(StringComparer.OrdinalIgnoreCase);
+                                .Distinct(StringComparer.OrdinalIgnoreCase)
+                                .ToArray();
 
                         pti.Fields.Add(xlpf.SourceName, ptfi);
 
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new StringItem { Val = (string)value });
+
+                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
                     }
                 }
 
+                if (containsBlank) sharedItems.ContainsBlank = true;
                 if (ptfi.DistinctValues.Any())
                     sharedItems.Count = Convert.ToUInt32(ptfi.DistinctValues.Count());
 
@@ -2165,16 +2181,16 @@ namespace ClosedXML.Excel
                 Name = pt.Name,
                 CacheId = cacheId,
                 DataCaption = "Values",
-                MergeItem = OpenXmlHelper.GetBooleanValue(pt.MergeAndCenterWithLabels, true),
+                MergeItem = OpenXmlHelper.GetBooleanValue(pt.MergeAndCenterWithLabels, false),
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),
                 PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown),
                 PageWrap = Convert.ToUInt32(pt.FilterFieldsPageWrap),
                 ShowError = String.IsNullOrEmpty(pt.ErrorValueReplacement),
-                UseAutoFormatting = OpenXmlHelper.GetBooleanValue(pt.AutofitColumns, true),
+                UseAutoFormatting = OpenXmlHelper.GetBooleanValue(pt.AutofitColumns, false),
                 PreserveFormatting = OpenXmlHelper.GetBooleanValue(pt.PreserveCellFormatting, true),
                 RowGrandTotals = OpenXmlHelper.GetBooleanValue(pt.ShowGrandTotalsRows, true),
                 ColumnGrandTotals = OpenXmlHelper.GetBooleanValue(pt.ShowGrandTotalsColumns, true),
-                SubtotalHiddenItems = OpenXmlHelper.GetBooleanValue(pt.FilteredItemsInSubtotals, true),
+                SubtotalHiddenItems = OpenXmlHelper.GetBooleanValue(pt.FilteredItemsInSubtotals, false),
                 MultipleFieldFilters = OpenXmlHelper.GetBooleanValue(pt.AllowMultipleFilters, true),
                 CustomListSort = OpenXmlHelper.GetBooleanValue(pt.UseCustomListsForSorting, true),
                 ShowDrill = OpenXmlHelper.GetBooleanValue(pt.ShowExpandCollapseButtons, true),
@@ -2182,13 +2198,13 @@ namespace ClosedXML.Excel
                 ShowMemberPropertyTips = OpenXmlHelper.GetBooleanValue(pt.ShowPropertiesInTooltips, true),
                 ShowHeaders = OpenXmlHelper.GetBooleanValue(pt.DisplayCaptionsAndDropdowns, true),
                 GridDropZones = OpenXmlHelper.GetBooleanValue(pt.ClassicPivotTableLayout, false),
-                ShowEmptyRow = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnRows, true),
-                ShowEmptyColumn = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnColumns, true),
+                ShowEmptyRow = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnRows, false),
+                ShowEmptyColumn = OpenXmlHelper.GetBooleanValue(pt.ShowEmptyItemsOnColumns, false),
                 ShowItems = OpenXmlHelper.GetBooleanValue(pt.DisplayItemLabels, true),
-                FieldListSortAscending = OpenXmlHelper.GetBooleanValue(pt.SortFieldsAtoZ, true),
-                PrintDrill = OpenXmlHelper.GetBooleanValue(pt.PrintExpandCollapsedButtons, true),
-                ItemPrintTitles = OpenXmlHelper.GetBooleanValue(pt.RepeatRowLabels, true),
-                FieldPrintTitles = OpenXmlHelper.GetBooleanValue(pt.PrintTitles, true),
+                FieldListSortAscending = OpenXmlHelper.GetBooleanValue(pt.SortFieldsAtoZ, false),
+                PrintDrill = OpenXmlHelper.GetBooleanValue(pt.PrintExpandCollapsedButtons, false),
+                ItemPrintTitles = OpenXmlHelper.GetBooleanValue(pt.RepeatRowLabels, false),
+                FieldPrintTitles = OpenXmlHelper.GetBooleanValue(pt.PrintTitles, false),
                 EnableDrill = OpenXmlHelper.GetBooleanValue(pt.EnableShowDetails, true)
             };
 
@@ -2311,6 +2327,11 @@ namespace ClosedXML.Excel
                     pf.Compact = false;
                 }
 
+                if (xlpf.SortType != XLPivotSortType.Default)
+                {
+                    pf.SortType = new EnumValue<FieldSortValues>((FieldSortValues)xlpf.SortType);
+                }
+
                 switch (pt.Subtotals)
                 {
                     case XLPivotSubtotals.DoNotShow:
@@ -2354,7 +2375,7 @@ namespace ClosedXML.Excel
 
                     if (labelOrFilterField.SelectedValues.Count == 1)
                     {
-                        if (ptfi.MixedDataType || ptfi.DataType == XLCellValues.Text)
+                        if (ptfi.MixedDataType || ptfi.DataType == XLDataType.Text)
                         {
                             var values = ptfi.DistinctValues
                                 .Select(v => v.ToString().ToLower())
@@ -2363,7 +2384,7 @@ namespace ClosedXML.Excel
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                 }
-                        else if (ptfi.DataType == XLCellValues.DateTime)
+                        else if (ptfi.DataType == XLDataType.DateTime)
                         {
                             var values = ptfi.DistinctValues
                                 .Select(v => Convert.ToDateTime(v))
@@ -2372,7 +2393,7 @@ namespace ClosedXML.Excel
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
-                        else if (ptfi.DataType == XLCellValues.Number)
+                        else if (ptfi.DataType == XLDataType.Number)
                         {
                             var values = ptfi.DistinctValues
                                 .Select(v => Convert.ToDouble(v))
@@ -2563,7 +2584,7 @@ namespace ClosedXML.Excel
                 var df = new DataField
                 {
                     Name = value.CustomName,
-                    Field = (UInt32)sourceColumn.ColumnNumber() - 1,
+                    Field = (UInt32)(sourceColumn.ColumnNumber() - pt.SourceRange.RangeAddress.FirstAddress.ColumnNumber),
                     Subtotal = value.SummaryFormula.ToOpenXml(),
                     ShowDataAs = value.Calculation.ToOpenXml(),
                     NumberFormatId = numberFormatId
@@ -4122,6 +4143,8 @@ namespace ClosedXML.Excel
         private static void GenerateWorksheetPartContent(
             WorksheetPart worksheetPart, XLWorksheet xlWorksheet, bool evaluateFormulae, SaveContext context)
         {
+            ((XLConditionalFormats)xlWorksheet.ConditionalFormats).Consolidate();
+
             #region Worksheet
 
             if (worksheetPart.Worksheet == null)
@@ -4274,18 +4297,28 @@ namespace ClosedXML.Excel
             pane.HorizontalSplit = hSplit;
             pane.VerticalSplit = ySplit;
 
+            pane.ActivePane = (ySplit == 0 ? PaneValues.TopRight : 0)
+                              | (hSplit == 0 ? PaneValues.BottomLeft : 0);
+
             pane.TopLeftCell = XLHelper.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
                                + (xlWorksheet.SheetView.SplitRow + 1);
 
             if (hSplit == 0 && ySplit == 0)
+            {
+                pane = null;
                 sheetView.RemoveAllChildren<Pane>();
+            }
+            else
+                sheetView.TopLeftCell = null;
 
             if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
             {
                 sheetView.RemoveAllChildren<Selection>();
 
                 var firstSelection = xlWorksheet.SelectedRanges.FirstOrDefault();
-                var selection = new Selection();
+
+                Action<Selection> populateSelection = (Selection selection) =>
+                {
                 if (xlWorksheet.ActiveCell != null)
                     selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
                 else if (firstSelection != null)
@@ -4293,11 +4326,28 @@ namespace ClosedXML.Excel
 
                 var seqRef = new List<String> { selection.ActiveCell.Value };
                 seqRef.AddRange(xlWorksheet.SelectedRanges
-                    .Select(range => range.RangeAddress.ToStringRelative(false)));
+                        .Select(range =>
+                        {
+                            if (range.RangeAddress.FirstAddress.Equals(range.RangeAddress.LastAddress))
+                                return range.RangeAddress.FirstAddress.ToStringRelative(false);
+                            else
+                                return range.RangeAddress.ToStringRelative(false);
+                        }));
 
                 selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
 
                 sheetView.Append(selection);
+                };
+
+                populateSelection(new Selection());
+                // If a pane exists, we need to set the active pane too
+                if (pane != null)
+                {
+                    populateSelection(new Selection()
+                    {
+                        Pane = pane.ActivePane
+                    });
+            }
             }
 
             if (xlWorksheet.SheetView.ZoomScale == 100)
@@ -4682,7 +4732,7 @@ namespace ClosedXML.Excel
                             else
                             {
                                 cell.CellFormula = null;
-                                cell.DataType = xlCell.DataType == XLCellValues.DateTime ? null : GetCellValueType(xlCell);
+                                cell.DataType = xlCell.DataType == XLDataType.DateTime ? null : GetCellValueType(xlCell);
                             }
 
                             if (evaluateFormulae || field != null || !xlCell.HasFormula)
@@ -4765,6 +4815,7 @@ namespace ClosedXML.Excel
                 sheetProtection.AutoFilter = OpenXmlHelper.GetBooleanValue(!protection.AutoFilter, true);
                 sheetProtection.PivotTables = OpenXmlHelper.GetBooleanValue(!protection.PivotTables, true);
                 sheetProtection.Sort = OpenXmlHelper.GetBooleanValue(!protection.Sort, true);
+                sheetProtection.Objects = OpenXmlHelper.GetBooleanValue(!protection.Objects, true);
                 sheetProtection.SelectLockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectLockedCells, false);
                 sheetProtection.SelectUnlockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectUnlockedCells, false);
             }
@@ -5107,6 +5158,12 @@ namespace ClosedXML.Excel
                     pageSetup.FitToHeight = (UInt32)xlWorksheet.PageSetup.PagesTall;
             }
 
+            // For some reason some Excel files already contains pageSetup.Copies = 0
+            // The validation fails for this
+            // Let's remove the attribute of that's the case.
+            if ((pageSetup?.Copies ?? 0) <= 0)
+                pageSetup.Copies = null;
+
             #endregion PageSetup
 
             #region HeaderFooter
@@ -5125,8 +5182,6 @@ namespace ClosedXML.Excel
             if (((XLHeaderFooter)xlWorksheet.PageSetup.Header).Changed
                 || ((XLHeaderFooter)xlWorksheet.PageSetup.Footer).Changed)
             {
-                //var headerFooter = worksheetPart.Worksheet.Elements<HeaderFooter>().First();
-
                 headerFooter.RemoveAllChildren();
 
                 headerFooter.ScaleWithDoc = xlWorksheet.PageSetup.ScaleHFWithDocument;
@@ -5154,6 +5209,9 @@ namespace ClosedXML.Excel
 
             #region RowBreaks
 
+            var rowBreakCount = xlWorksheet.PageSetup.RowBreaks.Count;
+            if (rowBreakCount > 0)
+            {
             if (!worksheetPart.Worksheet.Elements<RowBreaks>().Any())
             {
                 var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.RowBreaks);
@@ -5162,13 +5220,24 @@ namespace ClosedXML.Excel
 
             var rowBreaks = worksheetPart.Worksheet.Elements<RowBreaks>().First();
 
-            var rowBreakCount = xlWorksheet.PageSetup.RowBreaks.Count;
-            if (rowBreakCount > 0)
+                var existingBreaks = rowBreaks.ChildElements.OfType<Break>();
+                var rowBreaksToDelete = existingBreaks
+                    .Where(rb => !rb.Id.HasValue ||
+                                 !xlWorksheet.PageSetup.RowBreaks.Contains((int)rb.Id.Value))
+                    .ToList();
+
+                foreach (var rb in rowBreaksToDelete)
             {
+                    rowBreaks.RemoveChild(rb);
+                }
+
+                var rowBreaksToAdd = xlWorksheet.PageSetup.RowBreaks
+                    .Where(xlRb => !existingBreaks.Any(rb => rb.Id.HasValue && rb.Id.Value == xlRb));
+
                 rowBreaks.Count = (UInt32)rowBreakCount;
                 rowBreaks.ManualBreakCount = (UInt32)rowBreakCount;
                 var lastRowNum = (UInt32)xlWorksheet.RangeAddress.LastAddress.RowNumber;
-                foreach (var break1 in xlWorksheet.PageSetup.RowBreaks.Select(rb => new Break
+                foreach (var break1 in rowBreaksToAdd.Select(rb => new Break
                 {
                     Id = (UInt32)rb,
                     Max = lastRowNum,
@@ -5187,6 +5256,9 @@ namespace ClosedXML.Excel
 
             #region ColumnBreaks
 
+            var columnBreakCount = xlWorksheet.PageSetup.ColumnBreaks.Count;
+            if (columnBreakCount > 0)
+            {
             if (!worksheetPart.Worksheet.Elements<ColumnBreaks>().Any())
             {
                 var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ColumnBreaks);
@@ -5195,13 +5267,24 @@ namespace ClosedXML.Excel
 
             var columnBreaks = worksheetPart.Worksheet.Elements<ColumnBreaks>().First();
 
-            var columnBreakCount = xlWorksheet.PageSetup.ColumnBreaks.Count;
-            if (columnBreakCount > 0)
+                var existingBreaks = columnBreaks.ChildElements.OfType<Break>();
+                var columnBreaksToDelete = existingBreaks
+                    .Where(cb => !cb.Id.HasValue ||
+                                 !xlWorksheet.PageSetup.ColumnBreaks.Contains((int)cb.Id.Value))
+                    .ToList();
+
+                foreach (var rb in columnBreaksToDelete)
             {
+                    columnBreaks.RemoveChild(rb);
+                }
+
+                var columnBreaksToAdd = xlWorksheet.PageSetup.ColumnBreaks
+                    .Where(xlCb => !existingBreaks.Any(cb => cb.Id.HasValue && cb.Id.Value == xlCb));
+
                 columnBreaks.Count = (UInt32)columnBreakCount;
                 columnBreaks.ManualBreakCount = (UInt32)columnBreakCount;
                 var maxColumnNumber = (UInt32)xlWorksheet.RangeAddress.LastAddress.ColumnNumber;
-                foreach (var break1 in xlWorksheet.PageSetup.ColumnBreaks.Select(cb => new Break
+                foreach (var break1 in columnBreaksToAdd.Select(cb => new Break
                 {
                     Id = (UInt32)cb,
                     Max = maxColumnNumber,
@@ -5239,6 +5322,16 @@ namespace ClosedXML.Excel
 
             #region Drawings
 
+            if (worksheetPart.DrawingsPart != null)
+            {
+                var xlPictures = xlWorksheet.Pictures as Drawings.XLPictures;
+                foreach (var removedPicture in xlPictures.Deleted)
+                {
+                    worksheetPart.DrawingsPart.DeletePart(removedPicture);
+                }
+                xlPictures.Deleted.Clear();
+            }
+
             foreach (var pic in xlWorksheet.Pictures)
             {
                 AddPictureAnchor(worksheetPart, pic, context);
@@ -5253,6 +5346,14 @@ namespace ClosedXML.Excel
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
                 worksheetPart.Worksheet.InsertBefore(worksheetDrawing, tableParts);
             }
+
+            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null)
+            {
+                var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
+                worksheetPart.Worksheet.RemoveChild<Drawing>(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
+                worksheetPart.DeletePart(worksheetPart.DrawingsPart);
+            }
+
 
             #endregion Drawings
 
@@ -5326,7 +5427,7 @@ namespace ClosedXML.Excel
             }
 
             var dataType = xlCell.DataType;
-            if (dataType == XLCellValues.Text)
+            if (dataType == XLDataType.Text)
             {
                 if (xlCell.InnerText.Length == 0)
                     openXmlCell.CellValue = null;
@@ -5349,7 +5450,7 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-            else if (dataType == XLCellValues.TimeSpan)
+            else if (dataType == XLDataType.TimeSpan)
             {
                 var timeSpan = xlCell.GetTimeSpan();
                 var cellValue = new CellValue();
@@ -5357,12 +5458,21 @@ namespace ClosedXML.Excel
                     XLCell.BaseDate.Add(timeSpan).ToOADate().ToInvariantString();
                 openXmlCell.CellValue = cellValue;
             }
-            else if (dataType == XLCellValues.DateTime || dataType == XLCellValues.Number)
+            else if (dataType == XLDataType.DateTime || dataType == XLDataType.Number)
             {
                 if (!XLHelper.IsNullOrWhiteSpace(xlCell.InnerText))
                 {
                     var cellValue = new CellValue();
-                    cellValue.Text = Double.Parse(xlCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
+                    var d = Double.Parse(xlCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture);
+
+                    if (xlCell.Worksheet.Workbook.Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)
+                    {
+                        // Internally ClosedXML stores cells as standard 1900-based style
+                        // so if a workbook is in 1904-format, we do that adjustment here and when loading.
+                        d -= 1462;
+                    }
+
+                    cellValue.Text = d.ToInvariantString();
                     openXmlCell.CellValue = cellValue;
                 }
             }

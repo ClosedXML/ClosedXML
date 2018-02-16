@@ -1,3 +1,4 @@
+using ClosedXML.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -52,7 +53,7 @@ namespace ClosedXML.Excel
 
         public static XLColor FromHtml(String htmlColor)
         {
-            return FromColor(ColorTranslator.FromHtml(htmlColor));
+            return FromColor(ColorStringParser.ParseFromHtml(htmlColor));
         }
 
         private static readonly Dictionary<Int32, XLColor> ByIndex = new Dictionary<Int32, XLColor>();

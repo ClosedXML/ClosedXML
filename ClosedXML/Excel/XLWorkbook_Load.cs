@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
             SetProperties(dSpreadsheet);
 
             SharedStringItem[] sharedStrings = null;
-            if (dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
+            if (dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Any())
             {
                 var shareStringPart = dSpreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
                 sharedStrings = shareStringPart.SharedStringTable.Elements<SharedStringItem>().ToArray();
@@ -71,7 +71,11 @@ namespace ClosedXML.Excel
             {
                 foreach (var m in dSpreadsheet.CustomFilePropertiesPart.Properties.Elements<CustomDocumentProperty>())
                 {
-                    String name = m.Name.Value;
+                    String name = m.Name?.Value;
+
+                    if (string.IsNullOrWhiteSpace(name))
+                        continue;
+
                     if (m.VTLPWSTR != null)
                         CustomProperties.Add(name, m.VTLPWSTR.Text);
                     else if (m.VTFileTime != null)
@@ -88,7 +92,7 @@ namespace ClosedXML.Excel
             }
 
             var wbProps = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties;
-            Use1904DateSystem = wbProps != null && wbProps.Date1904 != null && wbProps.Date1904.Value;
+            Use1904DateSystem = wbProps?.Date1904?.Value ?? false;
 
             var wbProtection = dSpreadsheet.WorkbookPart.Workbook.WorkbookProtection;
             if (wbProtection != null)
@@ -506,12 +510,40 @@ namespace ClosedXML.Excel
                             if (pivotTableDefinition.ItemPrintTitles != null) pt.RepeatRowLabels = pivotTableDefinition.ItemPrintTitles.Value;
                             if (pivotTableDefinition.FieldPrintTitles != null) pt.PrintTitles = pivotTableDefinition.FieldPrintTitles.Value;
                             if (pivotTableDefinition.EnableDrill != null) pt.EnableShowDetails = pivotTableDefinition.EnableDrill.Value;
+                            if (pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData != null) pt.SaveSourceData = pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData.Value;
+
+                            if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit != null)
+                            {
+                                if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit == 0U)
+                                    pt.ItemsToRetainPerField = XLItemsToRetain.None;
+                                else if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit == XLHelper.MaxRowNumber)
+                                    pt.ItemsToRetainPerField = XLItemsToRetain.Max;
+                            }
 
                             if (pivotTableDefinition.ShowMissing != null && pivotTableDefinition.MissingCaption != null)
                                 pt.EmptyCellReplacement = pivotTableDefinition.MissingCaption.Value;
 
                             if (pivotTableDefinition.ShowError != null && pivotTableDefinition.ErrorCaption != null)
                                 pt.ErrorValueReplacement = pivotTableDefinition.ErrorCaption.Value;
+
+                            var pivotTableDefinitionExtensionList = pivotTableDefinition.GetFirstChild<PivotTableDefinitionExtensionList>();
+                            var pivotTableDefinitionExtension = pivotTableDefinitionExtensionList?.GetFirstChild<PivotTableDefinitionExtension>();
+                            var pivotTableDefinition2 = pivotTableDefinitionExtension?.GetFirstChild<DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition>();
+                            if (pivotTableDefinition2 != null)
+                            {
+                                if (pivotTableDefinition2.EnableEdit != null) pt.EnableCellEditing = pivotTableDefinition2.EnableEdit.Value;
+                                if (pivotTableDefinition2.HideValuesRow != null) pt.ShowValuesRow = !pivotTableDefinition2.HideValuesRow.Value;
+                            }
+
+                            var pivotTableStyle = pivotTableDefinition.GetFirstChild<PivotTableStyle>();
+                            if (pivotTableStyle != null)
+                            {
+                                pt.Theme = (XLPivotTableTheme) Enum.Parse(typeof(XLPivotTableTheme), pivotTableStyle.Name);
+                                pt.ShowRowHeaders = pivotTableStyle.ShowRowHeaders;
+                                pt.ShowColumnHeaders = pivotTableStyle.ShowColumnHeaders;
+                                pt.ShowRowStripes = pivotTableStyle.ShowRowStripes;
+                                pt.ShowColumnStripes = pivotTableStyle.ShowColumnStripes;
+                            }
 
                             // Subtotal configuration
                             if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && pf.SubtotalTop.Value))
@@ -547,13 +579,40 @@ namespace ClosedXML.Excel
 
                                             if (pivotField != null)
                                             {
+                                                if (pf.AverageSubTotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Average);
+                                                if (pf.CountASubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Count);
+                                                if (pf.CountSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
+                                                if (pf.MaxSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
+                                                if (pf.MinSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
+                                                if (pf.ApplyStandardDeviationPInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
+                                                if (pf.ApplyVariancePInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
+                                                if (pf.ApplyProductInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Product);
+                                                if (pf.ApplyStandardDeviationInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
+                                                if (pf.SumSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Sum);
+                                                if (pf.ApplyVarianceInSubtotal != null)
+                                                    pivotField.AddSubtotal(XLSubtotalFunction.Variance);
                                                 var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                                 if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                                                     pivotField.SetCollapsed();
+
+                                                if (pf.SortType != null)
+                                                {
+                                                    pivotField.SetSort((XLPivotSortType)pf.SortType.Value);
                                             }
                                         }
                                     }
                                 }
+                            }
                             }
 
                             // Column labels
@@ -580,12 +639,39 @@ namespace ClosedXML.Excel
 
                                         if (pivotField != null)
                                         {
+                                            if (pf.AverageSubTotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Average);
+                                            if (pf.CountASubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Count);
+                                            if (pf.CountSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
+                                            if (pf.MaxSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
+                                            if (pf.MinSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
+                                            if (pf.ApplyStandardDeviationPInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
+                                            if (pf.ApplyVariancePInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
+                                            if (pf.ApplyProductInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Product);
+                                            if (pf.ApplyStandardDeviationInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
+                                            if (pf.SumSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Sum);
+                                            if (pf.ApplyVarianceInSubtotal != null)
+                                                pivotField.AddSubtotal(XLSubtotalFunction.Variance);
                                             var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
                                             if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
                                                 pivotField.SetCollapsed();
+
+                                            if (pf.SortType != null)
+                                            {
+                                                pivotField.SetSort((XLPivotSortType)pf.SortType.Value);
                                         }
                                     }
                                 }
+                            }
                             }
 
                             // Values
@@ -676,7 +762,7 @@ namespace ClosedXML.Excel
                                         else
                                             throw new NotImplementedException();
                                     }
-                                    else if (BooleanValue.ToBoolean(pf.MultipleItemSelectionAllowed))
+                                    else if (OpenXmlHelper.GetBooleanValueAsBool(pf.MultipleItemSelectionAllowed, false))
                                     {
                                         foreach (var item in pf.Items.Cast<Item>())
                                         {
@@ -735,7 +821,11 @@ namespace ClosedXML.Excel
 
                         Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
                         picture.Placement = XLPicturePlacement.FreeFloating;
+
+                        if (spPr?.Transform2D?.Extents?.Cx.HasValue ?? false)
                         picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, GraphicsUtils.Graphics.DpiX);
+
+                        if (spPr?.Transform2D?.Extents?.Cy.HasValue ?? false)
                         picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, GraphicsUtils.Graphics.DpiY);
 
                         if (anchor is Xdr.AbsoluteAnchor)
@@ -1129,7 +1219,7 @@ namespace ClosedXML.Excel
                         {
                             string sheetName, sheetArea;
                             ParseReference(area, out sheetName, out sheetArea);
-                            if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!") || sheetArea.Length == 0))
+                            if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!") || sheetArea.Length == 0 || sheetName.Length == 0))
                                 WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                         }
                     }
@@ -1229,7 +1319,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-            sheetName = sections[0].Replace("\'", "");
+                sheetName = sections[0].UnescapeSheetName();
             sheetArea = sections[1];
         }
         }
@@ -1322,7 +1412,7 @@ namespace ClosedXML.Excel
                     else
                         xlCell._cellValue = String.Empty;
 
-                    xlCell._dataType = XLCellValues.Text;
+                    xlCell._dataType = XLDataType.Text;
                     xlCell.ShareString = false;
                 }
                 else if (cell.DataType == CellValues.SharedString)
@@ -1335,19 +1425,19 @@ namespace ClosedXML.Excel
                     else
                         xlCell._cellValue = String.Empty;
 
-                    xlCell._dataType = XLCellValues.Text;
+                    xlCell._dataType = XLDataType.Text;
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
                     if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
-                    xlCell._dataType = XLCellValues.DateTime;
+                    xlCell._dataType = XLDataType.DateTime;
                 }
                 else if (cell.DataType == CellValues.Boolean)
                 {
                     if (cell.CellValue != null)
                     xlCell._cellValue = cell.CellValue.Text;
-                    xlCell._dataType = XLCellValues.Boolean;
+                    xlCell._dataType = XLDataType.Boolean;
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
@@ -1355,7 +1445,7 @@ namespace ClosedXML.Excel
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
 
                     if (s == null)
-                        xlCell._dataType = XLCellValues.Number;
+                        xlCell._dataType = XLDataType.Number;
                     else
                         xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                 }
@@ -1364,7 +1454,7 @@ namespace ClosedXML.Excel
             {
                 if (s == null)
                 {
-                    xlCell._dataType = XLCellValues.Number;
+                    xlCell._dataType = XLDataType.Number;
                 }
                 else
                 {
@@ -1387,6 +1477,13 @@ namespace ClosedXML.Excel
                     xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                 }
             }
+
+            if (Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)
+            {
+                // Internally ClosedXML stores cells as standard 1900-based style
+                // so if a workbook is in 1904-format, we do that adjustment here and when saving.
+                xlCell.SetValue(xlCell.GetDateTime().AddDays(1462));
+        }
         }
 
         /// <summary>
@@ -1673,29 +1770,29 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static XLCellValues GetDataTypeFromCell(IXLNumberFormat numberFormat)
+        private static XLDataType GetDataTypeFromCell(IXLNumberFormat numberFormat)
         {
             var numberFormatId = numberFormat.NumberFormatId;
             if (numberFormatId == 46U)
-                return XLCellValues.TimeSpan;
+                return XLDataType.TimeSpan;
             else if ((numberFormatId >= 14 && numberFormatId <= 22) ||
                      (numberFormatId >= 45 && numberFormatId <= 47))
-                return XLCellValues.DateTime;
+                return XLDataType.DateTime;
             else if (numberFormatId == 49)
-                return XLCellValues.Text;
+                return XLDataType.Text;
             else
             {
                 if (!XLHelper.IsNullOrWhiteSpace(numberFormat.Format))
                 {
                     var dataType = GetDataTypeFromFormat(numberFormat.Format);
-                    return dataType.HasValue ? dataType.Value : XLCellValues.Number;
+                    return dataType.HasValue ? dataType.Value : XLDataType.Number;
                 }
                 else
-                    return XLCellValues.Number;
+                    return XLDataType.Number;
             }
         }
 
-        private static XLCellValues? GetDataTypeFromFormat(String format)
+        private static XLDataType? GetDataTypeFromFormat(String format)
         {
             int length = format.Length;
             String f = format.ToLower();
@@ -1705,9 +1802,9 @@ namespace ClosedXML.Excel
                 if (c == '"')
                     i = f.IndexOf('"', i + 1);
                 else if (c == '0' || c == '#' || c == '?')
-                    return XLCellValues.Number;
+                    return XLDataType.Number;
                 else if (c == 'y' || c == 'm' || c == 'd' || c == 'h' || c == 's')
-                    return XLCellValues.DateTime;
+                    return XLDataType.DateTime;
             }
             return null;
         }
@@ -1889,6 +1986,7 @@ namespace ClosedXML.Excel
             if (sp.AutoFilter != null) ws.Protection.AutoFilter = !sp.AutoFilter.Value;
             if (sp.PivotTables != null) ws.Protection.PivotTables = !sp.PivotTables.Value;
             if (sp.Sort != null) ws.Protection.Sort = !sp.Sort.Value;
+            if (sp.Objects != null) ws.Protection.Objects = !sp.Objects.Value;
             if (sp.SelectLockedCells != null) ws.Protection.SelectLockedCells = sp.SelectLockedCells.Value;
             if (sp.SelectUnlockedCells != null) ws.Protection.SelectUnlockedCells = sp.SelectUnlockedCells.Value;
         }
@@ -1934,7 +2032,7 @@ namespace ClosedXML.Excel
                 {
                     var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
 
-                    conditionalFormat.StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
+                    conditionalFormat.StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
 
                     if (fr.FormatId != null)
                     {
@@ -1962,6 +2060,13 @@ namespace ClosedXML.Excel
                             conditionalFormat.Bottom = fr.Bottom.Value;
                         if (fr.Rank != null)
                             conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
+                    }
+                    else if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.TimePeriod)
+                    {
+                        if (fr.TimePeriod != null)
+                            conditionalFormat.TimePeriod = fr.TimePeriod.Value.ToClosedXml();
+                        else
+                            conditionalFormat.TimePeriod = XLTimePeriod.Yesterday;
                     }
 
                     if (fr.Elements<ColorScale>().Any())
@@ -2332,7 +2437,7 @@ namespace ClosedXML.Excel
                     Color thisColor;
                     if (!_colorList.ContainsKey(htmlColor))
                     {
-                        thisColor = ColorTranslator.FromHtml(htmlColor);
+                        thisColor = ColorStringParser.ParseFromHtml(htmlColor);
                         _colorList.Add(htmlColor, thisColor);
                     }
                     else

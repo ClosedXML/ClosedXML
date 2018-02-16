@@ -118,5 +118,69 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             throw new ArgumentOutOfRangeException("something bad happened");
         }
 
+        public static int RomanToArabic(string text)
+        {
+            if (text == "")
+                return 0;
+            if (text.StartsWith("M", StringComparison.InvariantCultureIgnoreCase))
+                return 1000 + RomanToArabic(text.Substring(1));
+            if (text.StartsWith("CM", StringComparison.InvariantCultureIgnoreCase))
+                return 900 + RomanToArabic(text.Substring(2));
+            if (text.StartsWith("D", StringComparison.InvariantCultureIgnoreCase))
+                return 500 + RomanToArabic(text.Substring(1));
+            if (text.StartsWith("CD", StringComparison.InvariantCultureIgnoreCase))
+                return 400 + RomanToArabic(text.Substring(2));
+            if (text.StartsWith("C", StringComparison.InvariantCultureIgnoreCase))
+                return 100 + RomanToArabic(text.Substring(1));
+            if (text.StartsWith("XC", StringComparison.InvariantCultureIgnoreCase))
+                return 90 + RomanToArabic(text.Substring(2));
+            if (text.StartsWith("L", StringComparison.InvariantCultureIgnoreCase))
+                return 50 + RomanToArabic(text.Substring(1));
+            if (text.StartsWith("XL", StringComparison.InvariantCultureIgnoreCase))
+                return 40 + RomanToArabic(text.Substring(2));
+            if (text.StartsWith("X", StringComparison.InvariantCultureIgnoreCase))
+                return 10 + RomanToArabic(text.Substring(1));
+            if (text.StartsWith("IX", StringComparison.InvariantCultureIgnoreCase))
+                return 9 + RomanToArabic(text.Substring(2));
+            if (text.StartsWith("V", StringComparison.InvariantCultureIgnoreCase))
+                return 5 + RomanToArabic(text.Substring(1));
+            if (text.StartsWith("IV", StringComparison.InvariantCultureIgnoreCase))
+                return 4 + RomanToArabic(text.Substring(2));
+            if (text.StartsWith("I", StringComparison.InvariantCultureIgnoreCase))
+                return 1 + RomanToArabic(text.Substring(1));
+            
+            throw new ArgumentOutOfRangeException("text is not a valid roman number");
+        }
+
+        public static string ChangeBase(long number, int radix)
+        {
+            if (number < 0)
+                throw new ArgumentOutOfRangeException("number must be greater or equal to 0");
+            if (radix < 2)
+                throw new ArgumentOutOfRangeException("radix must be greater or equal to 2");
+            if (radix > 36)
+                throw new ArgumentOutOfRangeException("radix must be smaller than or equal to 36");
+
+            StringBuilder sb = new StringBuilder();
+            long remaining = number;
+
+            if (remaining == 0)
+            {
+                sb.Insert(0, '0');
+            }
+
+            while (remaining > 0)
+            {
+                var nextDigitDecimal = remaining % radix;
+                remaining = remaining / radix;
+
+                if (nextDigitDecimal < 10)
+                    sb.Insert(0, nextDigitDecimal);
+                else
+                    sb.Insert(0, (char)(nextDigitDecimal + 55));
+            }
+
+            return sb.ToString();
+        }
     }
 }

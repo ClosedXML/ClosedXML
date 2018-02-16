@@ -78,11 +78,11 @@ namespace ClosedXML.Excel
                                ? String.Format("{0}!{1}",
                                     _internalAddress
                                         .Substring(0, _internalAddress.IndexOf('!'))
-                                        .WrapSheetNameInQuotesIfRequired(),
+                                        .EscapeSheetName(),
                                     _internalAddress.Substring(_internalAddress.IndexOf('!') + 1))
                                : _internalAddress;
                 }
-                return String.Format("{0}!{1}", Worksheet.Name.WrapSheetNameInQuotesIfRequired(), _internalAddress);
+                return String.Format("{0}!{1}", Worksheet.Name.EscapeSheetName(), _internalAddress);
             }
             set
             {

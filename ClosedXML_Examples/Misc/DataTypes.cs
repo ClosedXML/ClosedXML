@@ -77,6 +77,9 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(++ro, co).Value = "Double Number:";
             ws.Cell(ro, co + 1).Value = 123.45d;
 
+            ws.Cell(++ro, co).Value = "Large Double Number:";
+            ws.Cell(ro, co + 1).Value = 9.999E307d;
+
             ro++;
 
             ws.Cell(++ro, co).Value = "Explicit Text:";
@@ -113,67 +116,72 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(++ro, co).Value = "Date to Text:";
             ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2);
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Text;
 
             ws.Cell(++ro, co).Value = "DateTime to Text:";
             ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2, 13, 45, 22);
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Text;
 
             ws.Cell(++ro, co).Value = "Boolean to Text:";
             ws.Cell(ro, co + 1).Value = true;
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Text;
 
             ws.Cell(++ro, co).Value = "Number to Text:";
             ws.Cell(ro, co + 1).Value = 123.45;
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Text;
 
             ws.Cell(++ro, co).Value = "TimeSpan to Text:";
             ws.Cell(ro, co + 1).Value = new TimeSpan(33, 45, 22);
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Text;
 
             ws.Cell(++ro, co).Value = "Text to Date:";
             ws.Cell(ro, co + 1).Value = "'" + new DateTime(2010, 9, 2).ToString();
-            ws.Cell(ro, co + 1).DataType = XLCellValues.DateTime;
+            ws.Cell(ro, co + 1).DataType = XLDataType.DateTime;
 
             ws.Cell(++ro, co).Value = "Text to DateTime:";
             ws.Cell(ro, co + 1).Value = "'" + new DateTime(2010, 9, 2, 13, 45, 22).ToString();
-            ws.Cell(ro, co + 1).DataType = XLCellValues.DateTime;
+            ws.Cell(ro, co + 1).DataType = XLDataType.DateTime;
 
             ws.Cell(++ro, co).Value = "Text to Boolean:";
             ws.Cell(ro, co + 1).Value = "'" + true.ToString();
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Boolean;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Boolean;
 
             ws.Cell(++ro, co).Value = "Text to Number:";
             ws.Cell(ro, co + 1).Value = "'123.45";
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Number;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Number;
+
+            ws.Cell(++ro, co).Value = "Percentage Text to Number:";
+            ws.Cell(ro, co + 1).Value = "'55.12%";
+            ws.Cell(ro, co + 1).Style.NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.PercentPrecision2);
+            ws.Cell(ro, co + 1).DataType = XLDataType.Number;
 
             ws.Cell(++ro, co).Value = "@ format to Number:";
             ws.Cell(ro, co + 1).Style.NumberFormat.Format = "@";
             ws.Cell(ro, co + 1).Value = 123.45;
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Number;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Number;
 
             ws.Cell(++ro, co).Value = "Text to TimeSpan:";
             ws.Cell(ro, co + 1).Value = "'" + new TimeSpan(33, 45, 22).ToString();
-            ws.Cell(ro, co + 1).DataType = XLCellValues.TimeSpan;
+            ws.Cell(ro, co + 1).DataType = XLDataType.TimeSpan;
 
             ro++;
 
             ws.Cell(++ro, co).Value = "Formatted Date to Text:";
             ws.Cell(ro, co + 1).Value = new DateTime(2010, 9, 2);
             ws.Cell(ro, co + 1).Style.DateFormat.Format = "yyyy-MM-dd";
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Text;
 
             ws.Cell(++ro, co).Value = "Formatted Number to Text:";
             ws.Cell(ro, co + 1).Value = 12345.6789;
             ws.Cell(ro, co + 1).Style.NumberFormat.Format = "#,##0.00";
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Text;
 
             ro++;
 
             ws.Cell(++ro, co).Value = "Blank Text:";
             ws.Cell(ro, co + 1).Value = 12345.6789;
             ws.Cell(ro, co + 1).Style.NumberFormat.Format = "#,##0.00";
-            ws.Cell(ro, co + 1).DataType = XLCellValues.Text;
+            ws.Cell(ro, co + 1).DataType = XLDataType.Text;
             ws.Cell(ro, co + 1).Value = "";
 
             ro++;
@@ -192,17 +200,17 @@ namespace ClosedXML_Examples.Misc
             // workbook.GetSharedStrings()
 
             ws.Cell(++ro, co)
-                .SetDataType(XLCellValues.Text)
-                .SetDataType(XLCellValues.Boolean)
-                .SetDataType(XLCellValues.DateTime)
-                .SetDataType(XLCellValues.Number)
-                .SetDataType(XLCellValues.TimeSpan)
-                .SetDataType(XLCellValues.Text)
-                .SetDataType(XLCellValues.TimeSpan)
-                .SetDataType(XLCellValues.Number)
-                .SetDataType(XLCellValues.DateTime)
-                .SetDataType(XLCellValues.Boolean)
-                .SetDataType(XLCellValues.Text);
+                .SetDataType(XLDataType.Text)
+                .SetDataType(XLDataType.Boolean)
+                .SetDataType(XLDataType.DateTime)
+                .SetDataType(XLDataType.Number)
+                .SetDataType(XLDataType.TimeSpan)
+                .SetDataType(XLDataType.Text)
+                .SetDataType(XLDataType.TimeSpan)
+                .SetDataType(XLDataType.Number)
+                .SetDataType(XLDataType.DateTime)
+                .SetDataType(XLDataType.Boolean)
+                .SetDataType(XLDataType.Text);
 
             ws.Columns(2, 3).AdjustToContents();
 

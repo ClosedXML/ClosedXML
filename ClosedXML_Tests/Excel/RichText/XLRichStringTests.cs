@@ -18,7 +18,7 @@ namespace ClosedXML_Tests
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.RichText.AddText("12");
-            cell.DataType = XLCellValues.Number;
+            cell.DataType = XLDataType.Number;
 
             Assert.AreEqual(12.0, cell.GetDouble());
 
@@ -30,7 +30,7 @@ namespace ClosedXML_Tests
 
             Assert.AreEqual("1234", cell.GetString());
 
-            Assert.AreEqual(XLCellValues.Number, cell.DataType);
+            Assert.AreEqual(XLDataType.Number, cell.DataType);
 
             Assert.AreEqual(1234.0, cell.GetDouble());
         }
@@ -147,11 +147,11 @@ namespace ClosedXML_Tests
 
             Assert.AreEqual(true, cell.HasRichText);
 
-            cell.DataType = XLCellValues.Text;
+            cell.DataType = XLDataType.Text;
 
             Assert.AreEqual(true, cell.HasRichText);
 
-            cell.DataType = XLCellValues.Number;
+            cell.DataType = XLDataType.Number;
 
             Assert.AreEqual(false, cell.HasRichText);
 

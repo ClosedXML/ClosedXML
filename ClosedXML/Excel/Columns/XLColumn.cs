@@ -644,7 +644,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLColumn SetDataType(XLCellValues dataType)
+        public IXLColumn SetDataType(XLDataType dataType)
         {
             DataType = dataType;
             return this;

@@ -182,6 +182,12 @@ namespace ClosedXML.Excel
                 if (value.Length > 31)
                     throw new ArgumentException("Worksheet names cannot be more than 31 characters");
 
+                if (value.StartsWith("'", StringComparison.Ordinal))
+                    throw new ArgumentException("Worksheet names cannot start with an apostrophe");
+
+                if (value.EndsWith("'", StringComparison.Ordinal))
+                    throw new ArgumentException("Worksheet names cannot end with an apostrophe");
+
                 Workbook.WorksheetsInternal.Rename(_name, value);
                 _name = value;
             }
@@ -379,8 +385,9 @@ namespace ClosedXML.Excel
                     firstRow = tPair;
                     lastRow = tPair;
                 }
-                foreach (IXLRow row in Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
-                    retVal.Add((XLRow)row);
+                using (var xlRows = Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
+                    foreach (IXLRow row in xlRows)
+                        retVal.Add((XLRow)row);
             }
             return retVal;
         }
@@ -583,8 +590,9 @@ namespace ClosedXML.Excel
             foreach (var picture in Pictures)
             {
                 var newPic = targetSheet.AddPicture(picture.ImageStream, picture.Format, picture.Name)
-                    .WithPlacement(picture.Placement)
-                    .WithSize(picture.Width, picture.Height);
+                    .WithPlacement(XLPicturePlacement.FreeFloating)
+                    .WithSize(picture.Width, picture.Height)
+                    .WithPlacement(picture.Placement);
 
                 switch (picture.Placement)
                 {
@@ -675,7 +683,7 @@ namespace ClosedXML.Excel
                     String name = sheetName.ToLower().Equals(Name.ToLower())
                                       ? newSheetName
                                       : sheetName;
-                    newValue.Append(String.Format("{0}!{1}", name.WrapSheetNameInQuotesIfRequired(), pair[1]));
+                    newValue.Append(String.Format("{0}!{1}", name.EscapeSheetName(), pair[1]));
                 }
                 else
                 {
@@ -933,15 +941,23 @@ namespace ClosedXML.Excel
             foreach (string rangeAddressStr in ranges.Split(',').Select(s => s.Trim()))
             {
                 if (XLHelper.IsValidRangeAddress(rangeAddressStr))
-                    retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
+                {
+                    using (var range = Range(new XLRangeAddress(Worksheet, rangeAddressStr)))
+                        retVal.Add(range);
+                }
                 else if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))
-                    NamedRange(rangeAddressStr).Ranges.ForEach(retVal.Add);
+                {
+                    using (var xlRanges = NamedRange(rangeAddressStr).Ranges)
+                        xlRanges.ForEach(retVal.Add);
+                }
                 else
                 {
-                    Workbook.NamedRanges.First(n =>
-                                               String.Compare(n.Name, rangeAddressStr, true) == 0
-                                               && n.Ranges.First().Worksheet == this)
-                        .Ranges.ForEach(retVal.Add);
+                    using (var xlRanges = Workbook.NamedRanges.First(n =>
+                        String.Compare(n.Name, rangeAddressStr, true) == 0
+                        && n.Ranges.First().Worksheet == this).Ranges)
+                    {
+                        xlRanges.ForEach(retVal.Add);
+                    }
                 }
             }
             return retVal;
@@ -1235,11 +1251,11 @@ namespace ClosedXML.Excel
             {
                 for (Int32 ro = firstRow; ro <= lastRow; ro++)
                 {
-                    var cellModel = model.Cell(ro - modelFirstRow + 1);
-                    foreach (var cf in ConditionalFormats.Where(cf => cf.Range.Intersects(cellModel.AsRange())).ToList())
-                    {
-                        Range(ro, firstColumn, ro, lastColumn).AddConditionalFormat(cf);
-                    }
+                    using (var cellModel = model.Cell(ro - modelFirstRow + 1).AsRange())
+                        foreach (var cf in ConditionalFormats.Where(cf => cf.Range.Intersects(cellModel)).ToList())
+                        {
+                            using (var r = Range(ro, firstColumn, ro, lastColumn)) r.AddConditionalFormat(cf);
+                        }
                 }
             }
             insertedRange.Dispose();
@@ -1293,12 +1309,11 @@ namespace ClosedXML.Excel
             if (firstRow == 1) return;
 
             SuspendEvents();
-            var rangeUsed = range.Worksheet.RangeUsed(true);
             IXLRangeAddress usedAddress;
-            if (rangeUsed == null)
-                usedAddress = range.RangeAddress;
-            else
-                usedAddress = rangeUsed.RangeAddress;
+            using (var rangeUsed = range.Worksheet.RangeUsed(true))
+            {
+                usedAddress = rangeUsed == null ? range.RangeAddress : rangeUsed.RangeAddress;
+            }
             ResumeEvents();
 
             if (firstRow < usedAddress.FirstAddress.RowNumber) firstRow = usedAddress.FirstAddress.RowNumber;
@@ -1320,11 +1335,11 @@ namespace ClosedXML.Excel
             {
                 for (Int32 co = firstColumn; co <= lastColumn; co++)
                 {
-                    var cellModel = model.Cell(co - modelFirstColumn + 1);
-                    foreach (var cf in ConditionalFormats.Where(cf => cf.Range.Intersects(cellModel.AsRange())).ToList())
-                    {
-                        Range(firstRow, co, lastRow, co).AddConditionalFormat(cf);
-                    }
+                    using (var cellModel = model.Cell(co - modelFirstColumn + 1).AsRange()) 
+                        foreach (var cf in ConditionalFormats.Where(cf => cf.Range.Intersects(cellModel)).ToList())
+                        {
+                            using (var r = Range(firstRow, co, lastRow, co)) r.AddConditionalFormat(cf);
+                        }
                 }
             }
             insertedRange.Dispose();
@@ -1351,6 +1366,7 @@ namespace ClosedXML.Excel
                 conditionalFormat.Range.Dispose();
             }
             ResumeEvents();
+            newConditionalFormats.Consolidate();
             ConditionalFormats = newConditionalFormats;
         }
 
@@ -1469,7 +1485,8 @@ namespace ClosedXML.Excel
                                                       && n.Ranges.Count == 1);
             if (namedRanges == null || !namedRanges.Ranges.Any()) return null;
 
-            return (XLCell)namedRanges.Ranges.First().FirstCell();
+            using (var rs = namedRanges.Ranges)
+                return (XLCell)rs.First().FirstCell();
         }
 
         internal XLCell CellFast(String cellAddressInRange)

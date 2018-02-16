@@ -39,7 +39,7 @@ namespace ClosedXML.Excel
         ///   The type of the cell's data.
         /// </value>
         /// <exception cref = "ArgumentException"></exception>
-        XLCellValues DataType { set; }
+        XLDataType DataType { set; }
 
         /// <summary>
         ///   Sets the cells' formula with A1 references.

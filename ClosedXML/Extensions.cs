@@ -176,6 +176,11 @@ namespace ClosedXML.Excel
         {
             return value.ToString(CultureInfo.InvariantCulture.NumberFormat);
         }
+
+        public static bool Between(this int val, int from, int to)
+        {
+            return val >= from && val <= to;
+        }
     }
 
     public static class DecimalExtensions
@@ -344,6 +349,34 @@ namespace ClosedXML.Excel
                     || value is float
                     || value is double
                     || value is decimal;
+        }
+
+        public static string ToInvariantString(this object value)
+        {
+            if (value is sbyte)
+                return ((sbyte)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is byte)
+                return ((byte)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is short)
+                return ((short)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is ushort)
+                return ((ushort)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is int)
+                return ((int)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is uint)
+                return ((uint)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is long)
+                return ((long)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is ulong)
+                return ((ulong)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is float)
+                return ((float)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is double)
+                return ((double)value).ToString(CultureInfo.InvariantCulture);
+            else if (value is decimal)
+                return ((decimal)value).ToString(CultureInfo.InvariantCulture);
+            else
+                return value.ToString();
         }
     }
 }

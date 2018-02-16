@@ -578,7 +578,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLRow SetDataType(XLCellValues dataType)
+        public IXLRow SetDataType(XLDataType dataType)
         {
             DataType = dataType;
             return this;

@@ -542,7 +542,7 @@ namespace ClosedXML_Examples
                 .LowestValue()
                 .HighestValue();
 
-            ws.Cell(1,3).SetValue(-20)
+            ws.Cell(1, 3).SetValue(-20)
                 .CellBelow().SetValue(40)
                 .CellBelow().SetValue(-60)
                 .CellBelow().SetValue(30);
@@ -676,8 +676,7 @@ namespace ClosedXML_Examples
                 .CellBelow().SetValue(2)
                 .CellBelow().SetValue(3);
 
-            ws.RangeUsed().AddConditionalFormat().StopIfTrue().WhenGreaterThan(5);
-
+            ws.RangeUsed().AddConditionalFormat().SetStopIfTrue().WhenGreaterThan(5);
 
             ws.RangeUsed().AddConditionalFormat().IconSet(XLIconSetStyle.ThreeTrafficLights2, true, true)
                 .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "0", XLCFContentType.Number)
@@ -685,6 +684,38 @@ namespace ClosedXML_Examples
                 .AddValue(XLCFIconSetOperator.EqualOrGreaterThan, "3", XLCFContentType.Number);
 
             workbook.SaveAs(filePath);
+        }
+    }
+
+    public class CFDatesOccurring : IXLExample
+    {
+        public void Create(String filePath)
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.AddWorksheet("Sheet1");
+
+                using (var range = ws.Range("A1:A10"))
+                {
+                    range.AddConditionalFormat()
+                        .WhenDateIs(XLTimePeriod.Tomorrow)
+                        .Fill.SetBackgroundColor(XLColor.GrannySmithApple);
+
+                    range.AddConditionalFormat()
+                        .WhenDateIs(XLTimePeriod.Yesterday)
+                        .Fill.SetBackgroundColor(XLColor.Orange);
+
+                    range.AddConditionalFormat()
+                        .WhenDateIs(XLTimePeriod.InTheLast7Days)
+                        .Fill.SetBackgroundColor(XLColor.Blue);
+
+                    range.AddConditionalFormat()
+                        .WhenDateIs(XLTimePeriod.ThisMonth)
+                        .Fill.SetBackgroundColor(XLColor.Red);
+                }
+
+                workbook.SaveAs(filePath);
+            }
         }
     }
 }

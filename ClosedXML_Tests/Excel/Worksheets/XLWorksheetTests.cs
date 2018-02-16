@@ -214,5 +214,82 @@ namespace ClosedXML_Tests
                 }
             }
         }
+
+        [Test]
+        public void CanCopySheetsWithAllAnchorTypes()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                ws.CopyTo("Copy1");
+
+                var ws2 = wb.Worksheets.Skip(1).First();
+                ws2.CopyTo("Copy2");
+
+                var ws3 = wb.Worksheets.Skip(2).First();
+                ws3.CopyTo("Copy3");
+
+                var ws4 = wb.Worksheets.Skip(3).First();
+                ws3.CopyTo("Copy4");
+            }
+        }
+
+        [Test]
+        public void WorksheetNameCannotStartWithApostrophe()
+        {
+            var title = "'StartsWithApostrophe";
+            TestDelegate addWorksheet = () =>
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(title);
+                }
+            };
+
+            Assert.Throws(typeof(ArgumentException), addWorksheet);
+        }
+
+        [Test]
+        public void WorksheetNameCannotEndWithApostrophe()
+        {
+            var title = "EndsWithApostrophe'";
+            TestDelegate addWorksheet = () =>
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(title);
+                }
+            };
+
+            Assert.Throws(typeof(ArgumentException), addWorksheet);
+        }
+
+        [Test]
+        public void WorksheetNameCanContainApostrophe()
+        {
+            var title = "With'Apostrophe";
+            var savedTitle = "";
+            TestDelegate saveAndOpenWorkbook = () =>
+            {
+                using (var ms = new MemoryStream())
+                {
+                    using (var wb = new XLWorkbook())
+                    {
+                        wb.Worksheets.Add(title);
+                        wb.Worksheets.First().Cell(1, 1).FormulaA1 = $"{title}!A2";
+                        wb.SaveAs(ms);
+                    }
+
+                    using (var wb = new XLWorkbook(ms))
+                    {
+                        savedTitle = wb.Worksheets.First().Name;
+                    }
+                }
+            };
+
+            Assert.DoesNotThrow(saveAndOpenWorkbook);
+            Assert.AreEqual(title, savedTitle);
+        }
     }
 }

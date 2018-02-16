@@ -91,7 +91,7 @@ namespace ClosedXML_Sandbox
             }
             foreach (var str in strings)
             {
-                str.SetValue(row, tmpString.ToString());
+                str.SetValue(row, tmpString.ToString(), null);
             }
 
             // Format decimals
@@ -99,7 +99,7 @@ namespace ClosedXML_Sandbox
 
             foreach (var dec in decimals)
             {
-                dec.SetValue(row, tmpDec);
+                dec.SetValue(row, tmpDec, null);
             }
 
             // Format ints
@@ -107,7 +107,7 @@ namespace ClosedXML_Sandbox
 
             foreach (var intValue in ints)
             {
-                intValue.SetValue(row, tmpInt);
+                intValue.SetValue(row, tmpInt, null);
             }
 
             // Format dates
@@ -115,7 +115,7 @@ namespace ClosedXML_Sandbox
             tmpDate = tmpDate.AddSeconds(rnd.Next(-10000, 100000));
             foreach (var dt in dates)
             {
-                dt.SetValue(row, tmpDate);
+                dt.SetValue(row, tmpDate, null);
             }
 
             // Format timespans
@@ -123,14 +123,14 @@ namespace ClosedXML_Sandbox
 
             foreach (var ts in timeSpans)
             {
-                ts.SetValue(row, tmpTimespan);
+                ts.SetValue(row, tmpTimespan, null);
             }
 
             // Format booleans
             var tmpBool = (rnd.Next(0, 2) > 0);
             foreach (var bl in booleans)
             {
-                bl.SetValue(row, tmpBool);
+                bl.SetValue(row, tmpBool, null);
             }
 
             return row;

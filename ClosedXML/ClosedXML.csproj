@@ -54,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ExcelNumberFormat" Version="1.0.3" />
     <PackageReference Include="FastMember.Signed" Version="1.1.0" />
   </ItemGroup>
 </Project>

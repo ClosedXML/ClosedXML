@@ -1,3 +1,4 @@
+using ClosedXML.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace ClosedXML.Excel
         public bool TryGetWorksheet(string sheetName, out IXLWorksheet worksheet)
         {
             XLWorksheet w;
-            if (_worksheets.TryGetValue(TrimSheetName(sheetName).ToLowerInvariant(), out w))
+            if (_worksheets.TryGetValue(sheetName.UnescapeSheetName().ToLowerInvariant(), out w))
             {
                 worksheet = w;
                 return true;
@@ -56,17 +57,9 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        internal static string TrimSheetName(string sheetName)
-        {
-            if (sheetName.StartsWith("'") && sheetName.EndsWith("'") && sheetName.Length > 2)
-                sheetName = sheetName.Substring(1, sheetName.Length - 2);
-
-            return sheetName;
-        }
-
         public IXLWorksheet Worksheet(String sheetName)
         {
-            sheetName = TrimSheetName(sheetName);
+            sheetName = sheetName.UnescapeSheetName();
 
             XLWorksheet w;
 

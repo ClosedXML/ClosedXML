@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel.CalcEngine.Exceptions;
+using ExcelNumberFormat;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -267,14 +268,12 @@ namespace ClosedXML.Excel.CalcEngine
             var format = (string)p[1];
             if (string.IsNullOrEmpty(format.Trim())) return "";
 
-            // We'll have to guess as to whether the format represents a date and/or time.
-            // Not sure whether there's a better way to detect this.
-            bool isDateFormat = new string[] { "y", "m", "d", "h", "s" }.Any(part => format.ToLower().Contains(part.ToLower()));
+            var nf = new NumberFormat(format);
 
-            if (isDateFormat)
-                return DateTime.FromOADate(number).ToString(format, CultureInfo.CurrentCulture);
+            if (nf.IsDateTimeFormat)
+                return nf.Format(DateTime.FromOADate(number), CultureInfo.InvariantCulture);
             else
-                return number.ToString(format, CultureInfo.CurrentCulture);
+                return nf.Format(number, CultureInfo.InvariantCulture);
         }
 
         private static object Trim(List<Expression> p)

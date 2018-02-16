@@ -27,7 +27,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Char_Input_Too_Large()
         {
-            Assert.Throws< CellValueException>(() => XLWorkbook.EvaluateExpr(@"Char(9797)"));
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(@"Char(9797)"));
         }
 
         [Test]
@@ -459,7 +459,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Text_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Text(Date(2010, 1, 1), ""yyyy-MM-dd"")");
+            Object actual;
+            actual = XLWorkbook.EvaluateExpr(@"Text(Date(2010, 1, 1), ""yyyy-MM-dd"")");
             Assert.AreEqual("2010-01-01", actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Text(1469.07, ""0,000,000.00"")");
@@ -486,6 +487,18 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             Object actual = XLWorkbook.EvaluateExpr(@"TEXT(""211x"", ""#00"")");
             Assert.AreEqual("211x", actual);
+        }
+
+        [TestCase(2020, 11, 1, 9, 23, 11, "m/d/yyyy h:mm:ss", "11/1/2020 9:23:11")]
+        [TestCase(2023, 7, 14, 2, 12, 3, "m/d/yyyy h:mm:ss", "7/14/2023 2:12:03")]
+        [TestCase(2025, 10, 14, 2, 48, 55, "m/d/yyyy h:mm:ss", "10/14/2025 2:48:55")]
+        [TestCase(2023, 2, 19, 22, 1, 38, "m/d/yyyy h:mm:ss", "2/19/2023 22:01:38")]
+        [TestCase(2025, 12, 19, 19, 43, 58, "m/d/yyyy h:mm:ss", "12/19/2025 19:43:58")]
+        [TestCase(2034, 11, 16, 1, 48, 9, "m/d/yyyy h:mm:ss", "11/16/2034 1:48:09")]
+        [TestCase(2018, 12, 10, 11, 22, 42, "m/d/yyyy h:mm:ss", "12/10/2018 11:22:42")]
+        public void Text_DateFormats(int year, int months, int days, int hour, int minutes, int seconds, string format, string expected)
+        {
+            Assert.AreEqual(expected, XLWorkbook.EvaluateExpr($@"TEXT(DATE({year}, {months}, {days}) + TIME({hour}, {minutes}, {seconds}), ""{format}"")"));
         }
 
         [Test]
