@@ -1,19 +1,20 @@
-using System.IO;
-using ClosedXML_Examples;
 using DocumentFormat.OpenXml.Packaging;
 using NUnit.Framework;
-using ClosedXML_Tests.Utils;
+using System.IO;
 
 namespace ClosedXML_Tests
 {
     [TestFixture]
     public class OpenXMLTests
     {
-#if !APPVEYOR
         [Test]
+        [Ignore("Workaround has been included in ClosedXML")]
         public static void SetPackagePropertiesEntryToNullWithOpenXml()
         {
-            // Will fail until https://github.com/OfficeDev/Open-XML-SDK/issues/235 is fixed. 
+            // Fixed in .NET Standard 2.1
+            // See:
+            //      https://github.com/OfficeDev/Open-XML-SDK/issues/235
+            //      https://github.com/dotnet/corefx/issues/23795
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
             using (var ms = new MemoryStream())
             {
@@ -25,6 +26,5 @@ namespace ClosedXML_Tests
                 }
             }
         }
-#endif
     }
 }
