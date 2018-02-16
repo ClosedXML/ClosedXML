@@ -15,10 +15,6 @@ using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
-#if _NETSTANDARD_
-using ClosedXML.NetStandard;
-#endif
-
 namespace ClosedXML.Excel
 {
     using Ap;
@@ -2336,11 +2332,7 @@ namespace ClosedXML.Excel
                     Color thisColor;
                     if (!_colorList.ContainsKey(htmlColor))
                     {
-#if _NETFRAMEWORK_
                         thisColor = ColorTranslator.FromHtml(htmlColor);
-#else
-                        thisColor = XLColorTranslator.FromHtml(htmlColor);
-#endif
                         _colorList.Add(htmlColor, thisColor);
                     }
                     else

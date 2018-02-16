@@ -18,7 +18,7 @@ namespace ClosedXML_Tests
             column1.Cell(2).Style.Fill.SetBackgroundColor(XLColor.FromArgb(1, 1, 1));
             column1.Cell(3).Style.Fill.SetBackgroundColor(XLColor.FromHtml("#CCCCCC"));
             column1.Cell(4).Style.Fill.SetBackgroundColor(XLColor.FromIndex(26));
-            column1.Cell(5).Style.Fill.SetBackgroundColor(XLColor.FromKnownColor(KnownColor.MediumSeaGreen));
+            column1.Cell(5).Style.Fill.SetBackgroundColor(XLColor.FromColor(Color.MediumSeaGreen));
             column1.Cell(6).Style.Fill.SetBackgroundColor(XLColor.FromName("Blue"));
             column1.Cell(7).Style.Fill.SetBackgroundColor(XLColor.FromTheme(XLThemeColor.Accent3));
 
@@ -30,7 +30,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual(XLColor.FromArgb(1, 1, 1), column2.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromHtml("#CCCCCC"), column2.Cell(3).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromIndex(26), column2.Cell(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromKnownColor(KnownColor.MediumSeaGreen),
+            Assert.AreEqual(XLColor.FromColor(Color.MediumSeaGreen),
                 column2.Cell(5).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromName("Blue"), column2.Cell(6).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromTheme(XLThemeColor.Accent3), column2.Cell(7).Style.Fill.BackgroundColor);
@@ -40,7 +40,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual(XLColor.FromArgb(1, 1, 1), column3.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromHtml("#CCCCCC"), column3.Cell(3).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromIndex(26), column3.Cell(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromKnownColor(KnownColor.MediumSeaGreen),
+            Assert.AreEqual(XLColor.FromColor(Color.MediumSeaGreen),
                 column3.Cell(5).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromName("Blue"), column3.Cell(6).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromTheme(XLThemeColor.Accent3), column3.Cell(7).Style.Fill.BackgroundColor);
@@ -57,7 +57,7 @@ namespace ClosedXML_Tests
             row1.Cell(2).Style.Fill.SetBackgroundColor(XLColor.FromArgb(1, 1, 1));
             row1.Cell(3).Style.Fill.SetBackgroundColor(XLColor.FromHtml("#CCCCCC"));
             row1.Cell(4).Style.Fill.SetBackgroundColor(XLColor.FromIndex(26));
-            row1.Cell(5).Style.Fill.SetBackgroundColor(XLColor.FromKnownColor(KnownColor.MediumSeaGreen));
+            row1.Cell(5).Style.Fill.SetBackgroundColor(XLColor.FromColor(Color.MediumSeaGreen));
             row1.Cell(6).Style.Fill.SetBackgroundColor(XLColor.FromName("Blue"));
             row1.Cell(7).Style.Fill.SetBackgroundColor(XLColor.FromTheme(XLThemeColor.Accent3));
 
@@ -69,7 +69,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual(XLColor.FromArgb(1, 1, 1), row2.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromHtml("#CCCCCC"), row2.Cell(3).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromIndex(26), row2.Cell(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromKnownColor(KnownColor.MediumSeaGreen), row2.Cell(5).Style.Fill.BackgroundColor);
+            Assert.AreEqual(XLColor.FromColor(Color.MediumSeaGreen), row2.Cell(5).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromName("Blue"), row2.Cell(6).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromTheme(XLThemeColor.Accent3), row2.Cell(7).Style.Fill.BackgroundColor);
 
@@ -78,7 +78,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual(XLColor.FromArgb(1, 1, 1), row3.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromHtml("#CCCCCC"), row3.Cell(3).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromIndex(26), row3.Cell(4).Style.Fill.BackgroundColor);
-            Assert.AreEqual(XLColor.FromKnownColor(KnownColor.MediumSeaGreen), row3.Cell(5).Style.Fill.BackgroundColor);
+            Assert.AreEqual(XLColor.FromColor(Color.MediumSeaGreen), row3.Cell(5).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromName("Blue"), row3.Cell(6).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.FromTheme(XLThemeColor.Accent3), row3.Cell(7).Style.Fill.BackgroundColor);
         }

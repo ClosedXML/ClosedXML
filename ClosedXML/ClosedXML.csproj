@@ -26,9 +26,9 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-preview1-r131" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.0-preview1-25914-04" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
     <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
@@ -55,6 +55,5 @@
 
   <ItemGroup>
     <PackageReference Include="FastMember.Signed" Version="1.1.0" />
-    <PackageReference Include="MetadataExtractor" Version="2.0.0" />
   </ItemGroup>
 </Project>

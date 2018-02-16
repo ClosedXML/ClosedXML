@@ -47,12 +47,6 @@ using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAli
 using Vml = DocumentFormat.OpenXml.Vml;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
-#if _NETSTANDARD_
-
-using ClosedXML.NetStandard;
-
-#endif
-
 namespace ClosedXML.Excel
 {
     public partial class XLWorkbook
