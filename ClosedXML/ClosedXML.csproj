@@ -11,6 +11,8 @@
     <PackageLicenseUrl>https://github.com/ClosedXML/ClosedXML/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ClosedXML/ClosedXML</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ClosedXML/ClosedXML</RepositoryUrl>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
