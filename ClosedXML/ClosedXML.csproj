@@ -42,6 +42,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
