@@ -40,6 +40,6 @@ artifacts:
 
 test:
   assemblies:
-    only: 
-      - ClosedXML_Tests/bin/Release/netcoreapp2.0/ClosedXML_Tests.dll
-      - ClosedXML_Tests/bin/Release/net461/ClosedXML_Tests.dll
+    - ClosedXML_Tests/bin/Release/netcoreapp2.0/ClosedXML_Tests.dll
+    - ClosedXML_Tests/bin/Release/net40/ClosedXML_Tests.dll
+    - ClosedXML_Tests/bin/Release/net461/ClosedXML_Tests.dll
