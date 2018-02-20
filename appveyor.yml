@@ -19,7 +19,7 @@ assembly_info:
   assembly_file_version: "{version}"
   assembly_informational_version: "{version}"
 
-platform: Any CPU
+# platform: Any CPU
 configuration : Release
 
 build:
