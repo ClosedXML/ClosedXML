@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -9,6 +10,9 @@ namespace ClosedXML.Excel.CalcEngine
     {
         private readonly List<object> _list = new List<object>();
         private readonly bool NumbersOnly;
+
+        private IReadOnlyList<double> _numericValues;
+
 
         public Tally()
             : this(false)
@@ -32,7 +36,7 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
 
-            this.NumbersOnly = numbersOnly;
+            NumbersOnly = numbersOnly;
         }
 
         public void Add(Expression e)
@@ -45,6 +49,7 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     _list.Add(value);
                 }
+                _numericValues = null;
                 return;
             }
 
@@ -56,40 +61,44 @@ namespace ClosedXML.Excel.CalcEngine
             else
                 foreach (var v in valEnumerable)
                     _list.Add(v);
+
+            _numericValues = null;
         }
 
         public void AddValue(Object v)
         {
             _list.Add(v);
+            _numericValues = null;
         }
 
         public double Count()
         {
-            return this.Count(this.NumbersOnly);
+            return Count(NumbersOnly);
         }
 
         public double Count(bool numbersOnly)
         {
             if (numbersOnly)
-                return NumericValues().Count();
+                return NumericValues().Count;
             else
-                return _list.Where(o => !Statistical.IsBlank(o)).Count();
+                return _list.Count(o => !Statistical.IsBlank(o));
         }
 
-        public IEnumerable<Double> NumericValues()
+        IEnumerable<double> NumericValuesInternal()
         {
-            var retVal = new List<double>();
             foreach (var value in _list)
             {
-                Double tmp;
                 var vEnumerable = value as IEnumerable;
-                if (vEnumerable == null && Double.TryParse(value.ToString(), out tmp))
-                    yield return tmp;
+                if (vEnumerable == null)
+                {
+                    if (double.TryParse(value.ToString(), out double tmp))
+                        yield return tmp;
+                }
                 else
                 {
                     foreach (var v in vEnumerable)
                     {
-                        if (Double.TryParse(v.ToString(), out tmp))
+                        if (double.TryParse(v.ToString(), out double tmp))
                             yield return tmp;
                         break;
                     }
@@ -97,44 +106,42 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
+        public IReadOnlyList<double> NumericValues()
+            => LazyInitializer.EnsureInitialized(ref _numericValues, () => NumericValuesInternal().ToList().AsReadOnly());
+
         public double Product()
         {
             var nums = NumericValues();
-            if (!nums.Any()) return 0;
-
-            Double retVal = 1;
-            nums.ForEach(n => retVal *= n);
-
-            return retVal;
+            return nums.Count == 0
+                ? 0
+                : nums.Aggregate(1d, (a, b) => a * b);
         }
 
-        public double Sum() { return NumericValues().Sum(); }
+        public double Sum() => NumericValues().Sum();
 
         public double Average()
         {
-            if (NumericValues().Any())
-                return NumericValues().Average();
-            else
-                throw new ApplicationException("No values");
+            var nums = NumericValues();
+            return nums.Count == 0
+                ? throw new ApplicationException("No values")
+                : nums.Average();
         }
 
         public double Min()
         {
-            return NumericValues().Any() ? NumericValues().Min() : 0;
+            var nums = NumericValues();
+            return nums.Count == 0 ? 0 : nums.Min();
         }
 
         public double Max()
         {
-            return NumericValues().Any() ? NumericValues().Max() : 0;
-        }
-
-        public double Range()
-        {
             var nums = NumericValues();
-            return nums.Max() - nums.Min();
+            return nums.Count == 0 ? 0 : nums.Max();
         }
 
-        private double Sum2(List<Double> nums)
+        public double Range() => Max() - Min();
+
+        static double Sum2(IEnumerable<double> nums)
         {
             return nums.Sum(d => d * d);
         }
@@ -143,8 +150,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var nums = NumericValues();
             var avg = nums.Average();
-            var sum2 = nums.Sum(d => d * d);
-            return nums.Count() <= 1 ? 0 : sum2 / nums.Count() - avg * avg;
+            var sum2 = Sum2(nums);
+            var count = nums.Count;
+            return count <= 1 ? 0 : sum2 / count - avg * avg;
         }
 
         public double StdP()
@@ -152,29 +160,32 @@ namespace ClosedXML.Excel.CalcEngine
             var nums = NumericValues();
             var avg = nums.Average();
             var sum2 = nums.Sum(d => d * d);
-            return nums.Count() <= 1 ? 0 : Math.Sqrt(sum2 / nums.Count() - avg * avg);
+            var count = nums.Count;
+            return count <= 1 ? 0 : Math.Sqrt(sum2 / count - avg * avg);
         }
 
         public double Var()
         {
             var nums = NumericValues();
             var avg = nums.Average();
-            var sum2 = nums.Sum(d => d * d);
-            return nums.Count() <= 1 ? 0 : (sum2 / nums.Count() - avg * avg) * nums.Count() / (nums.Count() - 1);
+            var sum2 = Sum2(nums);
+            var count = nums.Count;
+            return count <= 1 ? 0 : (sum2 / count - avg * avg) * count / (count - 1);
         }
 
         public double Std()
         {
             var values = NumericValues();
+            var count = values.Count;
             double ret = 0;
-            if (values.Any())
+            if (count != 0)
             {
                 //Compute the Average
                 double avg = values.Average();
                 //Perform the Sum of (value-avg)_2_2
                 double sum = values.Sum(d => Math.Pow(d - avg, 2));
                 //Put it all together
-                ret = Math.Sqrt((sum) / (values.Count() - 1));
+                ret = Math.Sqrt((sum) / (count - 1));
             }
             else
             {
