@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net40;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net40;net46</TargetFrameworks>
     <Version>0.9</Version>
     <Authors>Manuel de Leon, Amir Ghezelbash, Francois Botha</Authors>
     <Company />
@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/ClosedXML/ClosedXML</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+    <NoWarn>$(NoWarn);NU1605</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
@@ -23,33 +24,20 @@
     <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET40_</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET461_</DefineConstants>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET46_</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.0-preview1-25914-04" />
-    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
-    <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
-    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-    <PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
-    <PackageReference Include="System.IO.Packaging" Version="4.4.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
     <PackageReference Include="ExcelNumberFormat" Version="1.0.3" />
     <PackageReference Include="FastMember.Signed" Version="1.1.0" />
   </ItemGroup>
