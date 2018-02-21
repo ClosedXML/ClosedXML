@@ -885,8 +885,8 @@ namespace ClosedXML.Excel
 
         private static IXLMarker LoadMarker(IXLWorksheet ws, Xdr.MarkerType marker)
         {
-            var row = Math.Max(1, Convert.ToInt32(marker.RowId.InnerText) + 1);
-            var column = Math.Min(XLHelper.MaxColumnNumber, Convert.ToInt32(marker.ColumnId.InnerText) + 1);
+            var row = Math.Min(XLHelper.MaxRowNumber, Math.Max(1, Convert.ToInt32(marker.RowId.InnerText) + 1));
+            var column = Math.Min(XLHelper.MaxColumnNumber, Math.Max(1, Convert.ToInt32(marker.ColumnId.InnerText) + 1));
             return new XLMarker(
                 ws.Cell(row, column).Address,
                 new Point(
