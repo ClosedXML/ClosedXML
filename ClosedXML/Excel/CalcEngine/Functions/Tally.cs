@@ -11,7 +11,7 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly List<object> _list = new List<object>();
         private readonly bool NumbersOnly;
 
-        private IReadOnlyList<double> _numericValues;
+        private double[] _numericValues;
 
 
         public Tally()
@@ -79,26 +79,27 @@ namespace ClosedXML.Excel.CalcEngine
         public double Count(bool numbersOnly)
         {
             if (numbersOnly)
-                return NumericValues().Count;
+                return NumericValuesInternal().Length;
             else
                 return _list.Count(o => !Statistical.IsBlank(o));
         }
 
-        IEnumerable<double> NumericValuesInternal()
+        IEnumerable<double> NumericValuesEnumerable()
         {
             foreach (var value in _list)
             {
+                double tmp;
                 var vEnumerable = value as IEnumerable;
                 if (vEnumerable == null)
                 {
-                    if (double.TryParse(value.ToString(), out double tmp))
+                    if (double.TryParse(value.ToString(), out tmp))
                         yield return tmp;
                 }
                 else
                 {
                     foreach (var v in vEnumerable)
                     {
-                        if (double.TryParse(v.ToString(), out double tmp))
+                        if (double.TryParse(v.ToString(), out tmp))
                             yield return tmp;
                         break;
                     }
@@ -106,37 +107,39 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public IReadOnlyList<double> NumericValues()
-            => LazyInitializer.EnsureInitialized(ref _numericValues, () => NumericValuesInternal().ToList().AsReadOnly());
+        double[] NumericValuesInternal()
+            => LazyInitializer.EnsureInitialized(ref _numericValues, () => NumericValuesEnumerable().ToArray());
+
+        public IEnumerable<double> NumericValues()
+            => NumericValuesInternal().AsEnumerable();
 
         public double Product()
         {
-            var nums = NumericValues();
-            return nums.Count == 0
+            var nums = NumericValuesInternal();
+            return nums.Length == 0
                 ? 0
                 : nums.Aggregate(1d, (a, b) => a * b);
         }
 
-        public double Sum() => NumericValues().Sum();
+        public double Sum() => NumericValuesInternal().Sum();
 
         public double Average()
         {
-            var nums = NumericValues();
-            return nums.Count == 0
-                ? throw new ApplicationException("No values")
-                : nums.Average();
+            var nums = NumericValuesInternal();
+            if (nums.Length == 0) throw new ApplicationException("No values");
+            return nums.Average();
         }
 
         public double Min()
         {
-            var nums = NumericValues();
-            return nums.Count == 0 ? 0 : nums.Min();
+            var nums = NumericValuesInternal();
+            return nums.Length == 0 ? 0 : nums.Min();
         }
 
         public double Max()
         {
-            var nums = NumericValues();
-            return nums.Count == 0 ? 0 : nums.Max();
+            var nums = NumericValuesInternal();
+            return nums.Length == 0 ? 0 : nums.Max();
         }
 
         public double Range() => Max() - Min();
@@ -148,35 +151,35 @@ namespace ClosedXML.Excel.CalcEngine
 
         public double VarP()
         {
-            var nums = NumericValues();
+            var nums = NumericValuesInternal();
             var avg = nums.Average();
             var sum2 = Sum2(nums);
-            var count = nums.Count;
+            var count = nums.Length;
             return count <= 1 ? 0 : sum2 / count - avg * avg;
         }
 
         public double StdP()
         {
-            var nums = NumericValues();
+            var nums = NumericValuesInternal();
             var avg = nums.Average();
             var sum2 = nums.Sum(d => d * d);
-            var count = nums.Count;
+            var count = nums.Length;
             return count <= 1 ? 0 : Math.Sqrt(sum2 / count - avg * avg);
         }
 
         public double Var()
         {
-            var nums = NumericValues();
+            var nums = NumericValuesInternal();
             var avg = nums.Average();
             var sum2 = Sum2(nums);
-            var count = nums.Count;
+            var count = nums.Length;
             return count <= 1 ? 0 : (sum2 / count - avg * avg) * count / (count - 1);
         }
 
         public double Std()
         {
-            var values = NumericValues();
-            var count = values.Count;
+            var values = NumericValuesInternal();
+            var count = values.Length;
             double ret = 0;
             if (count != 0)
             {
