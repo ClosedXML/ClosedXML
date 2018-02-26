@@ -105,7 +105,27 @@ namespace ClosedXML.Excel
             get { return _worksheet; }
         }
 
-        public XLAddress Address { get; internal set; }
+
+        private int _rowNumber;
+        private int _colNumber;
+        private bool _fixedRow;
+        private bool _fixedCol;
+        public XLAddress Address
+        {
+            get
+            {
+                return new XLAddress(_worksheet, _rowNumber, _colNumber, _fixedRow, _fixedCol);
+            }
+            internal  set
+            {
+                if (value == null)
+                    return;
+                _rowNumber = value.RowNumber;
+                _colNumber = value.ColumnNumber;
+                _fixedRow = value.FixedRow;
+                _fixedCol = value.FixedColumn;
+            }
+        }
 
         public string InnerText
         {
