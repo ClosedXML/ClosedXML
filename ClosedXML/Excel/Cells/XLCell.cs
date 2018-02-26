@@ -107,21 +107,21 @@ namespace ClosedXML.Excel
 
 
         private int _rowNumber;
-        private int _colNumber;
+        private int _columnNumber;
         private bool _fixedRow;
         private bool _fixedCol;
         public XLAddress Address
         {
             get
             {
-                return new XLAddress(_worksheet, _rowNumber, _colNumber, _fixedRow, _fixedCol);
+                return new XLAddress(_worksheet, _rowNumber, _columnNumber, _fixedRow, _fixedCol);
             }
             internal  set
             {
                 if (value == null)
                     return;
                 _rowNumber = value.RowNumber;
-                _colNumber = value.ColumnNumber;
+                _columnNumber = value.ColumnNumber;
                 _fixedRow = value.FixedRow;
                 _fixedCol = value.FixedColumn;
             }
@@ -496,8 +496,8 @@ namespace ClosedXML.Excel
 
             if (data != null && !(data is String))
             {
-                var ro = Address.RowNumber + 1;
-                var fRo = Address.RowNumber;
+                var ro = _rowNumber + 1;
+                var fRo = _rowNumber;
                 var hasTitles = false;
                 var maxCo = 0;
                 var isDataTable = false;
@@ -507,15 +507,15 @@ namespace ClosedXML.Excel
                 if (!data.Any())
                 {
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
-                        maxCo = Address.ColumnNumber + 1;
+                        maxCo = _columnNumber + 1;
                     else
-                        maxCo = Address.ColumnNumber + itemType.GetFields().Length + itemType.GetProperties().Length;
+                        maxCo = _columnNumber + itemType.GetFields().Length + itemType.GetProperties().Length;
                 }
                 else if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                 {
                     foreach (object o in data)
                     {
-                        var co = Address.ColumnNumber;
+                        var co = _columnNumber;
 
                         if (!hasTitles)
                         {
@@ -525,7 +525,7 @@ namespace ClosedXML.Excel
 
                             _worksheet.SetValue(fieldName, fRo, co);
                             hasTitles = true;
-                            co = Address.ColumnNumber;
+                            co = _columnNumber;
                         }
 
                         _worksheet.SetValue(o, ro, co);
@@ -579,7 +579,7 @@ namespace ClosedXML.Excel
                             accessor = accessorCache[type];
                         }
 
-                        var co = Address.ColumnNumber;
+                        var co = _columnNumber;
 
                         if (itemType.IsArray)
                         {
@@ -606,7 +606,7 @@ namespace ClosedXML.Excel
                                     co++;
                                 }
 
-                                co = Address.ColumnNumber;
+                                co = _columnNumber;
                                 hasTitles = true;
                             }
 
@@ -632,7 +632,7 @@ namespace ClosedXML.Excel
                                     co++;
                                 }
 
-                                co = Address.ColumnNumber;
+                                co = _columnNumber;
                                 hasTitles = true;
                             }
 
@@ -660,7 +660,7 @@ namespace ClosedXML.Excel
                                     co++;
                                 }
 
-                                co = Address.ColumnNumber;
+                                co = _columnNumber;
                                 hasTitles = true;
                             }
 
@@ -686,8 +686,8 @@ namespace ClosedXML.Excel
 
                 ClearMerged();
                 var range = _worksheet.Range(
-                    Address.RowNumber,
-                    Address.ColumnNumber,
+                    _rowNumber,
+                    _columnNumber,
                     ro - 1,
                     maxCo - 1);
 
@@ -723,8 +723,8 @@ namespace ClosedXML.Excel
                 throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
 
             if (data.Rows.Cast<DataRow>().Any()) return InsertTable(data.Rows.Cast<DataRow>(), tableName, createTable);
-            var ro = Address.RowNumber;
-            var co = Address.ColumnNumber;
+            var ro = _rowNumber;
+            var co = _columnNumber;
 
             foreach (DataColumn col in data.Columns)
             {
@@ -734,8 +734,8 @@ namespace ClosedXML.Excel
 
             ClearMerged();
             var range = _worksheet.Range(
-                Address.RowNumber,
-                Address.ColumnNumber,
+                _rowNumber,
+                _columnNumber,
                 ro,
                 co - 1);
 
@@ -749,8 +749,8 @@ namespace ClosedXML.Excel
             var table = this.Worksheet.Tables.FirstOrDefault(t => t.AsRange().Contains(this));
             if (table == null) return XLTableCellType.None;
 
-            if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(this.Address.RowNumber)) return XLTableCellType.Header;
-            if (table.ShowTotalsRow && table.TotalsRow().RowNumber().Equals(this.Address.RowNumber)) return XLTableCellType.Total;
+            if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(this._rowNumber)) return XLTableCellType.Header;
+            if (table.ShowTotalsRow && table.TotalsRow().RowNumber().Equals(this._rowNumber)) return XLTableCellType.Total;
 
             return XLTableCellType.Data;
         }
@@ -764,8 +764,8 @@ namespace ClosedXML.Excel
         {
             if (data != null && !(data is String))
             {
-                var rowNumber = Address.RowNumber;
-                var columnNumber = Address.ColumnNumber;
+                var rowNumber = _rowNumber;
+                var columnNumber = _columnNumber;
 
                 var maxColumnNumber = 0;
                 var maxRowNumber = 0;
@@ -783,9 +783,9 @@ namespace ClosedXML.Excel
                     var itemType = m.GetType();
 
                     if (transpose)
-                        rowNumber = Address.RowNumber;
+                        rowNumber = _rowNumber;
                     else
-                        columnNumber = Address.ColumnNumber;
+                        columnNumber = _columnNumber;
 
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                     {
@@ -889,8 +889,8 @@ namespace ClosedXML.Excel
 
                 ClearMerged();
                 return _worksheet.Range(
-                    Address.RowNumber,
-                    Address.ColumnNumber,
+                    _rowNumber,
+                    _columnNumber,
                     maxRowNumber - 1,
                     maxColumnNumber - 1);
             }
@@ -1248,11 +1248,11 @@ namespace ClosedXML.Excel
                 if (_style == null)
                 {
                     XLRow row;
-                    if (Worksheet.Internals.RowsCollection.TryGetValue(Address.RowNumber, out row) && !row.Style.Equals(Worksheet.Style))
+                    if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out row) && !row.Style.Equals(Worksheet.Style))
                         return false;
 
                     XLColumn column;
-                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(Address.ColumnNumber, out column) && !column.Style.Equals(Worksheet.Style))
+                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out column) && !column.Style.Equals(Worksheet.Style))
                         return false;
                 }
             }
@@ -1266,12 +1266,12 @@ namespace ClosedXML.Excel
 
         public IXLColumn WorksheetColumn()
         {
-            return Worksheet.Column(Address.ColumnNumber);
+            return Worksheet.Column(_columnNumber);
         }
 
         public IXLRow WorksheetRow()
         {
-            return Worksheet.Row(Address.RowNumber);
+            return Worksheet.Row(_rowNumber);
         }
 
         public IXLCell CopyTo(IXLCell target)
@@ -1773,7 +1773,7 @@ namespace ClosedXML.Excel
                 {
                     var maxRows = asRange.RowCount();
                     var maxColumns = asRange.ColumnCount();
-                    using (var rng = Worksheet.Range(Address.RowNumber, Address.ColumnNumber, maxRows, maxColumns))
+                    using (var rng = Worksheet.Range(_rowNumber, _columnNumber, maxRows, maxColumns))
                         rng.Clear();
                 }
 
@@ -1782,19 +1782,19 @@ namespace ClosedXML.Excel
                 foreach (var sourceCell in asRange.CellsUsed(true))
                 {
                     Worksheet.Cell(
-                        Address.RowNumber + sourceCell.Address.RowNumber - minRow,
-                        Address.ColumnNumber + sourceCell.Address.ColumnNumber - minColumn
+                        _rowNumber + sourceCell.Address.RowNumber - minRow,
+                        _columnNumber + sourceCell.Address.ColumnNumber - minColumn
                         ).CopyFromInternal(sourceCell as XLCell, true);
                 }
 
                 var rangesToMerge = (from mergedRange in (asRange.Worksheet).Internals.MergedRanges
                                      where asRange.Contains(mergedRange)
                                      let initialRo =
-                                         Address.RowNumber +
+                                         _rowNumber +
                                          (mergedRange.RangeAddress.FirstAddress.RowNumber -
                                           asRange.RangeAddress.FirstAddress.RowNumber)
                                      let initialCo =
-                                         Address.ColumnNumber +
+                                         _columnNumber +
                                          (mergedRange.RangeAddress.FirstAddress.ColumnNumber -
                                           asRange.RangeAddress.FirstAddress.ColumnNumber)
                                      select
@@ -1829,7 +1829,7 @@ namespace ClosedXML.Excel
             int cCnt = minCo - fromRange.RangeAddress.FirstAddress.ColumnNumber + 1;
             rCnt = Math.Min(rCnt, fromRange.RowCount());
             cCnt = Math.Min(cCnt, fromRange.ColumnCount());
-            var toRange = Worksheet.Range(this, Worksheet.Cell(Address.RowNumber + rCnt - 1, Address.ColumnNumber + cCnt - 1));
+            var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
             var formats = srcSheet.ConditionalFormats.Where(f => f.Range.Intersects(fromRange));
             foreach (var cf in formats.ToList())
             {
@@ -2073,7 +2073,7 @@ namespace ClosedXML.Excel
         {
             string columnToReturn;
             if (columnPart == "C")
-                columnToReturn = XLHelper.GetColumnLetterFromNumber(Address.ColumnNumber + columnsToShift);
+                columnToReturn = XLHelper.GetColumnLetterFromNumber(_columnNumber + columnsToShift);
             else
             {
                 var bIndex = columnPart.IndexOf("[");
@@ -2081,14 +2081,14 @@ namespace ClosedXML.Excel
                 if (bIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        Address.ColumnNumber +
+                        _columnNumber +
                         Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
                         );
                 }
                 else if (mIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        Address.ColumnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
+                        _columnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
                         );
                 }
                 else
@@ -2106,14 +2106,14 @@ namespace ClosedXML.Excel
         {
             string rowToReturn;
             if (rowPart == "R")
-                rowToReturn = (Address.RowNumber + rowsToShift).ToString();
+                rowToReturn = (_rowNumber + rowsToShift).ToString();
             else
             {
                 var bIndex = rowPart.IndexOf("[");
                 if (bIndex >= 0)
                 {
                     rowToReturn =
-                        (Address.RowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) +
+                        (_rowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) +
                          rowsToShift).ToString();
                 }
                 else
@@ -2160,7 +2160,7 @@ namespace ClosedXML.Excel
         {
             string rowPart;
             rowNumber += rowsToShift;
-            var rowDiff = rowNumber - Address.RowNumber;
+            var rowDiff = rowNumber - _rowNumber;
             if (rowDiff != 0 || fixedRow)
                 rowPart = fixedRow ? String.Format("R{0}", rowNumber) : String.Format("R[{0}]", rowDiff);
             else
@@ -2173,7 +2173,7 @@ namespace ClosedXML.Excel
         {
             string columnPart;
             columnNumber += columnsToShift;
-            var columnDiff = columnNumber - Address.ColumnNumber;
+            var columnDiff = columnNumber - _columnNumber;
             if (columnDiff != 0 || fixedColumn)
                 columnPart = fixedColumn ? String.Format("C{0}", columnNumber) : String.Format("C[{0}]", columnDiff);
             else
@@ -2709,7 +2709,7 @@ namespace ClosedXML.Excel
 
         private XLCell CellShift(Int32 rowsToShift, Int32 columnsToShift)
         {
-            return Worksheet.Cell(Address.RowNumber + rowsToShift, Address.ColumnNumber + columnsToShift);
+            return Worksheet.Cell(_rowNumber + rowsToShift, _columnNumber + columnsToShift);
         }
 
         #region Nested type: FormulaConversionType
