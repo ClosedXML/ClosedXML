@@ -5473,49 +5473,77 @@ namespace ClosedXML.Excel
             {
                 var filterColumn = new FilterColumn { ColumnId = (UInt32)kp.Key - 1 };
                 var xlFilterColumn = xlAutoFilter.Column(kp.Key);
-                var filterType = xlFilterColumn.FilterType;
-                if (filterType == XLFilterType.Custom)
+
+                switch (xlFilterColumn.FilterType)
                 {
-                    var customFilters = new CustomFilters();
-                    foreach (var filter in kp.Value)
-                    {
-                        var customFilter = new CustomFilter { Val = filter.Value.ToString() };
+                    case XLFilterType.Custom:
+                        var customFilters = new CustomFilters();
+                        foreach (var filter in kp.Value)
+                        {
+                            var customFilter = new CustomFilter { Val = filter.Value.ToString() };
 
-                        if (filter.Operator != XLFilterOperator.Equal)
-                            customFilter.Operator = filter.Operator.ToOpenXml();
+                            if (filter.Operator != XLFilterOperator.Equal)
+                                customFilter.Operator = filter.Operator.ToOpenXml();
 
-                        if (filter.Connector == XLConnector.And)
-                            customFilters.And = true;
+                            if (filter.Connector == XLConnector.And)
+                                customFilters.And = true;
 
-                        customFilters.Append(customFilter);
-                    }
-                    filterColumn.Append(customFilters);
-                }
-                else if (filterType == XLFilterType.TopBottom)
-                {
-                    var top101 = new Top10 { Val = (double)xlFilterColumn.TopBottomValue };
-                    if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
-                        top101.Percent = true;
-                    if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
-                        top101.Top = false;
+                            customFilters.Append(customFilter);
+                        }
+                        filterColumn.Append(customFilters);
+                        break;
 
-                    filterColumn.Append(top101);
-                }
-                else if (filterType == XLFilterType.Dynamic)
-                {
-                    var dynamicFilter = new DynamicFilter
-                    { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
-                    filterColumn.Append(dynamicFilter);
-                }
-                else
-                {
-                    var filters = new Filters();
-                    foreach (var filter in kp.Value)
-                    {
-                        filters.Append(new Filter { Val = filter.Value.ToString() });
-                    }
+                    case XLFilterType.TopBottom:
 
-                    filterColumn.Append(filters);
+                        var top101 = new Top10 { Val = (double)xlFilterColumn.TopBottomValue };
+                        if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
+                            top101.Percent = true;
+                        if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
+                            top101.Top = false;
+
+                        filterColumn.Append(top101);
+                        break;
+                    case XLFilterType.Dynamic:
+
+                        var dynamicFilter = new DynamicFilter
+                        { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
+                        filterColumn.Append(dynamicFilter);
+                        break;
+                    case XLFilterType.DateTimeGrouping:
+                        var dateTimeGroupFilters = new Filters();
+                        foreach (var filter in kp.Value)
+                        {
+                            if (filter.Value is DateTime)
+                            {
+                                var d = (DateTime)filter.Value;
+                                var dgi = new DateGroupItem
+                                {
+                                    Year = (UInt16)d.Year,
+                                    DateTimeGrouping = filter.DateTimeGrouping.ToOpenXml()
+                                };
+
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Month) dgi.Month = (UInt16)d.Month;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Day) dgi.Day = (UInt16)d.Day;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Hour) dgi.Hour = (UInt16)d.Hour;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Minute) dgi.Minute = (UInt16)d.Minute;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Second) dgi.Second = (UInt16)d.Second;
+
+                                dateTimeGroupFilters.Append(dgi);
+                            }
+                        }
+                        filterColumn.Append(dateTimeGroupFilters);
+                        break;
+
+                    default:
+                        var filters = new Filters();
+                        foreach (var filter in kp.Value)
+                        {
+                            filters.Append(new Filter { Val = filter.Value.ToString() });
+                        }
+
+                        filterColumn.Append(filters);
+                        break;
+
                 }
                 autoFilter.Append(filterColumn);
             }

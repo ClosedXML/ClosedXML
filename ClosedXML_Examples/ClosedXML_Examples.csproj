@@ -69,6 +69,7 @@
     <Compile Include="..\ClosedXML\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="AutoFilters\DateTimeGroupAutoFilter.cs" />
     <Compile Include="AutoFilters\DynamicAutoFilter.cs" />
     <Compile Include="AutoFilters\TopBottomAutoFilter.cs" />
     <Compile Include="AutoFilters\CustomAutoFilter.cs" />

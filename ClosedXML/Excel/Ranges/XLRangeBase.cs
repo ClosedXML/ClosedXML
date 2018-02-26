@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace ClosedXML.Excel
 {
@@ -1612,7 +1613,7 @@ namespace ClosedXML.Excel
 
             bool shiftLeftBoundary = (columnsShifted > 0 && thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber) ||
                                      (columnsShifted < 0 && thisRangeAddress.FirstAddress.ColumnNumber >  shiftedRange.RangeAddress.FirstAddress.ColumnNumber);
-            
+
             bool shiftRightBoundary = thisRangeAddress.LastAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber;
 
             int newLeftBoundary = thisRangeAddress.FirstAddress.ColumnNumber;
@@ -1783,40 +1784,42 @@ namespace ClosedXML.Excel
             get { return _sortColumns ?? (_sortColumns = new XLSortElements()); }
         }
 
+        private String DefaultSortString()
+        {
+            var sb = new StringBuilder();
+            Int32 maxColumn = ColumnCount();
+            if (maxColumn == XLHelper.MaxColumnNumber)
+                maxColumn = LastCellUsed(true).Address.ColumnNumber;
+            for (int i = 1; i <= maxColumn; i++)
+            {
+                if (sb.Length > 0)
+                    sb.Append(',');
+
+                sb.Append(i);
+            }
+
+            return sb.ToString();
+
+        }
+
         public IXLRangeBase Sort()
         {
             if (!SortColumns.Any())
             {
-                String columnsToSortBy = String.Empty;
-                Int32 maxColumn = ColumnCount();
-                if (maxColumn == XLHelper.MaxColumnNumber)
-                    maxColumn = LastCellUsed(true).Address.ColumnNumber;
-                for (int i = 1; i <= maxColumn; i++)
-                {
-                    columnsToSortBy += i + ",";
-                }
-                columnsToSortBy = columnsToSortBy.Substring(0, columnsToSortBy.Length - 1);
-                return Sort(columnsToSortBy);
+                return Sort(DefaultSortString());
             }
 
             SortRangeRows();
             return this;
         }
 
+
         public IXLRangeBase Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
             SortColumns.Clear();
             if (String.IsNullOrWhiteSpace(columnsToSortBy))
             {
-                columnsToSortBy = String.Empty;
-                Int32 maxColumn = ColumnCount();
-                if (maxColumn == XLHelper.MaxColumnNumber)
-                    maxColumn = LastCellUsed(true).Address.ColumnNumber;
-                for (int i = 1; i <= maxColumn; i++)
-                {
-                    columnsToSortBy += i + ",";
-                }
-                columnsToSortBy = columnsToSortBy.Substring(0, columnsToSortBy.Length - 1);
+                columnsToSortBy = DefaultSortString();
             }
 
             foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
@@ -1905,6 +1908,7 @@ namespace ClosedXML.Excel
 
             while (n > begPoint && RowQuick(pivot).CompareTo(RowQuick(n), SortColumns) <= 0)
                 n--;
+
             while (m < n)
             {
                 SwapRows(m, n);
@@ -1915,8 +1919,10 @@ namespace ClosedXML.Excel
                 while (n > begPoint && RowQuick(pivot).CompareTo(RowQuick(n), SortColumns) <= 0)
                     n--;
             }
+
             if (pivot != n)
                 SwapRows(n, pivot);
+
             return n;
         }
 
