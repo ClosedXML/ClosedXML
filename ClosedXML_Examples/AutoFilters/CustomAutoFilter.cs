@@ -126,7 +126,7 @@ namespace ClosedXML_Examples
                 workbook.Worksheet(singleColumnMixed).AutoFilter.Sort(1, XLSortOrder.Descending);
                 #endregion
 
-                #region Multi Column 
+                #region Multi Column
                 workbook.Worksheet(multiColumn).AutoFilter.Column(3).EqualTo("E");
                 workbook.Worksheet(multiColumn).AutoFilter.Sort(3, XLSortOrder.Descending);
                 #endregion

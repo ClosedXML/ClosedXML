@@ -1838,7 +1838,7 @@ namespace ClosedXML.Excel
                     XLConnector connector = filterColumn.CustomFilters.And != null && filterColumn.CustomFilters.And.Value ? XLConnector.And : XLConnector.Or;
 
                     Boolean isText = false;
-                    foreach (CustomFilter filter in filterColumn.CustomFilters)
+                    foreach (var filter in filterColumn.CustomFilters.OfType<CustomFilter>())
                     {
                         Double dTest;
                         String val = filter.Val.Value;
@@ -1849,7 +1849,7 @@ namespace ClosedXML.Excel
                         }
                     }
 
-                    foreach (CustomFilter filter in filterColumn.CustomFilters)
+                    foreach (var filter in filterColumn.CustomFilters.OfType<CustomFilter>())
                     {
                         var xlFilter = new XLFilter { Value = filter.Val.Value, Connector = connector };
                         if (isText)
@@ -1890,12 +1890,19 @@ namespace ClosedXML.Excel
                 }
                 else if (filterColumn.Filters != null)
                 {
+                    if (filterColumn.Filters.Elements().All(element => element is Filter))
+                        autoFilter.Column(column).FilterType = XLFilterType.Regular;
+                    else if (filterColumn.Filters.Elements().All(element => element is DateGroupItem))
+                        autoFilter.Column(column).FilterType = XLFilterType.DateTimeGrouping;
+                    else
+                        throw new NotSupportedException(String.Format("Mixing regular filters and date group filters in a single autofilter column is not supported. Column {0} of {1}", column, autoFilter.Range.ToString()));
+
                     var filterList = new List<XLFilter>();
-                    autoFilter.Column(column).FilterType = XLFilterType.Regular;
+
                     autoFilter.Filters.Add((int)filterColumn.ColumnId.Value + 1, filterList);
 
                     Boolean isText = false;
-                    foreach (Filter filter in filterColumn.Filters.OfType<Filter>())
+                    foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
                         Double dTest;
                         String val = filter.Val.Value;
@@ -1906,7 +1913,7 @@ namespace ClosedXML.Excel
                         }
                     }
 
-                    foreach (Filter filter in filterColumn.Filters.OfType<Filter>())
+                    foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
                         var xlFilter = new XLFilter { Connector = XLConnector.Or, Operator = XLFilterOperator.Equal };
 
@@ -1924,6 +1931,84 @@ namespace ClosedXML.Excel
 
                         xlFilter.Condition = condition;
                         filterList.Add(xlFilter);
+                    }
+
+                    foreach (var dateGroupItem in filterColumn.Filters.OfType<DateGroupItem>())
+                    {
+                        bool valid = true;
+
+                        if (!(dateGroupItem.DateTimeGrouping?.HasValue ?? false))
+                            continue;
+
+                        var xlDateGroupFilter = new XLFilter
+                        {
+                            Connector = XLConnector.Or,
+                            Operator = XLFilterOperator.Equal,
+                            DateTimeGrouping = dateGroupItem.DateTimeGrouping?.Value.ToClosedXml() ?? XLDateTimeGrouping.Year
+                        };
+
+                        int year = 1900;
+                        int month = 1;
+                        int day = 1;
+                        int hour = 0;
+                        int minute = 0;
+                        int second = 0;
+
+                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Year)
+                        {
+                            if (dateGroupItem?.Year?.HasValue ?? false)
+                                year = (int)dateGroupItem.Year?.Value;
+                            else
+                                valid &= false;
+                        }
+
+                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Month)
+                        {
+                            if (dateGroupItem?.Month?.HasValue ?? false)
+                                month = (int)dateGroupItem.Month?.Value;
+                            else
+                                valid &= false;
+                        }
+
+                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Day)
+                        {
+                            if (dateGroupItem?.Day?.HasValue ?? false)
+                                day = (int)dateGroupItem.Day?.Value;
+                            else
+                                valid &= false;
+                        }
+
+                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Hour)
+                        {
+                            if (dateGroupItem?.Hour?.HasValue ?? false)
+                                hour = (int)dateGroupItem.Hour?.Value;
+                            else
+                                valid &= false;
+                        }
+
+                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Minute)
+                        {
+                            if (dateGroupItem?.Minute?.HasValue ?? false)
+                                minute = (int)dateGroupItem.Minute?.Value;
+                            else
+                                valid &= false;
+                        }
+
+                        if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Second)
+                        {
+                            if (dateGroupItem?.Second?.HasValue ?? false)
+                                second = (int)dateGroupItem.Second?.Value;
+                            else
+                                valid &= false;
+                        }
+
+                        var date = new DateTime(year, month, day, hour, minute, second);
+                        xlDateGroupFilter.Value = date;
+
+                        xlDateGroupFilter.Condition = date2 => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, xlDateGroupFilter.DateTimeGrouping);
+
+                        if (valid)
+                            filterList.Add(xlDateGroupFilter);
                     }
                 }
                 else if (filterColumn.Top10 != null)

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -16,7 +15,7 @@ namespace ClosedXML.Excel
 
         #region IXLFilteredColumn Members
 
-        public IXLFilteredColumn AddFilter<T>(T value) where T: IComparable<T>
+        public IXLFilteredColumn AddFilter<T>(T value) where T : IComparable<T>
         {
             Func<Object, Boolean> condition;
             Boolean isText;
@@ -32,12 +31,12 @@ namespace ClosedXML.Excel
             }
 
             _autoFilter.Filters[_column].Add(new XLFilter
-                                                 {
-                                                     Value = value,
-                                                     Condition = condition,
-                                                     Operator = XLFilterOperator.Equal,
-                                                     Connector = XLConnector.Or
-                                                 });
+            {
+                Value = value,
+                Condition = condition,
+                Operator = XLFilterOperator.Equal,
+                Connector = XLConnector.Or
+            });
 
             using (var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount()))
             {
@@ -56,6 +55,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        #endregion
+        #endregion IXLFilteredColumn Members
     }
 }

@@ -252,6 +252,7 @@
     <EmbeddedResource Include="Resource\Examples\AutoFilter\DynamicAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\AutoFilter\RegularAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\AutoFilter\CustomAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\DateTimeGroupAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Comments\AddingComments.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowHigh.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowMidHigh.xlsx" />
