@@ -3680,6 +3680,15 @@ namespace ClosedXML.Excel
             if (b.DiagonalDown != null)
                 nb.DiagonalDown = b.DiagonalDown.Value;
 
+            if (b.DiagonalBorder != null)
+            {
+                if (b.DiagonalBorder.Style != null)
+                    nb.DiagonalBorder = b.DiagonalBorder.Style.Value.ToClosedXml();
+                var bColor = GetColor(b.DiagonalBorder.Color);
+                if (bColor.HasValue)
+                    nb.DiagonalBorderColor = bColor;
+            }
+
             if (b.LeftBorder != null)
             {
                 if (b.LeftBorder.Style != null)
