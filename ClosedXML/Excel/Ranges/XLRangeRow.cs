@@ -262,7 +262,7 @@ namespace ClosedXML.Excel
                                 break;
 
                             case XLDataType.Number:
-                                comparison = Double.Parse(thisCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).CompareTo(Double.Parse(otherCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture));
+                                comparison = thisCell.GetDouble().CompareTo(otherCell.GetDouble());
                                 break;
 
                             case XLDataType.Boolean:
