@@ -1928,7 +1928,7 @@ namespace ClosedXML.Excel
 
         private void SortingRangeRows(int beg, int end)
         {
-            if (end == beg)
+            if (beg == end)
                 return;
             int pivot = SortRangeRows(beg, end);
             if (pivot > beg)

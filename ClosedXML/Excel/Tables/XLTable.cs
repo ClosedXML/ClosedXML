@@ -501,19 +501,21 @@ namespace ClosedXML.Excel
                 else
                 {
                     coString = coPairTrimmed;
-                    order = "ASC";
+                    order = sortOrder == XLSortOrder.Ascending ? "ASC" : "DESC";
                 }
 
                 Int32 co;
                 if (!Int32.TryParse(coString, out co))
                     co = Field(coString).Index + 1;
 
+                if (toSortBy.Length > 0)
+                    toSortBy.Append(',');
+
                 toSortBy.Append(co);
-                toSortBy.Append(" ");
+                toSortBy.Append(' ');
                 toSortBy.Append(order);
-                toSortBy.Append(",");
             }
-            return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1), sortOrder, matchCase, ignoreBlanks);
+            return DataRange.Sort(toSortBy.ToString(), sortOrder, matchCase, ignoreBlanks);
         }
 
         public new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
