@@ -4,112 +4,144 @@ namespace ClosedXML.Excel
 {
     internal class XLNumberFormat : IXLNumberFormat
     {
-        #region IXLNumberFormat Members
-
-        public bool Equals(IXLNumberFormatBase other)
+        #region Static members
+        internal static XLNumberFormatKey GenerateKey(IXLNumberFormat defaultNumberFormat)
         {
-            return
-                _numberFormatId == other.NumberFormatId
-                && _format == other.Format
-                ;
+            if (defaultNumberFormat == null)
+                return XLNumberFormatValue.Default.Key;
+
+            if (defaultNumberFormat is XLNumberFormat)
+                return (defaultNumberFormat as XLNumberFormat).Key;
+
+            return new XLNumberFormatKey
+            {
+                NumberFormatId = defaultNumberFormat.NumberFormatId,
+                Format = defaultNumberFormat.Format
+            };
+        }
+        #endregion Static members
+
+
+        #region Properties
+
+        private readonly XLStyle _style;
+
+        private XLNumberFormatValue _value;
+
+        internal XLNumberFormatKey Key
+        {
+            get { return _value.Key; }
+            private set { _value = XLNumberFormatValue.FromKey(value); }
         }
 
         #endregion
 
-        private void SetStyleChanged()
+        #region Constructors
+        /// <summary>
+        /// Create an instance of XLNumberFormat initializing it with the specified value.
+        /// </summary>
+        /// <param name="style">Style to attach the new instance to.</param>
+        /// <param name="value">Style value to use.</param>
+        public XLNumberFormat(XLStyle style, XLNumberFormatValue value)
         {
-            if (_container != null) _container.StyleChanged = true;
+            _style = style ?? XLStyle.CreateEmptyStyle();
+            _value = value;
         }
 
-        public override bool Equals(object obj)
+        public XLNumberFormat(XLStyle style, XLNumberFormatKey key) : this(style, XLNumberFormatValue.FromKey(key))
         {
-            return Equals((IXLNumberFormatBase)obj);
         }
 
-        public override int GetHashCode()
+        public XLNumberFormat(XLStyle style = null, IXLNumberFormat d = null) : this(style, GenerateKey(d))
         {
-            return NumberFormatId
-                   ^ Format.GetHashCode();
         }
+        #endregion Constructors
 
-        #region Properties
-
-        private readonly IXLStylized _container;
-        private String _format = String.Empty;
-
-        private Int32 _numberFormatId;
-
+        #region IXLNumberFormat Members
         public Int32 NumberFormatId
         {
-            get { return _numberFormatId; }
+            get { return Key.NumberFormatId; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.NumberFormat.NumberFormatId = value);
-                else
+                Modify(k =>
                 {
-                    _numberFormatId = value;
-                    _format = String.Empty;
-                }
+                    k.Format = XLNumberFormatValue.Default.Format;
+                    k.NumberFormatId = value;
+                    return k;
+                });
             }
         }
 
         public String Format
         {
-            get { return _format; }
+            get { return Key.Format; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.NumberFormat.Format = value);
-                else
+                Modify(k =>
                 {
-                    _format = value;
-                    _numberFormatId = -1;
-                }
+                    k.Format = value;
+                    if (string.IsNullOrWhiteSpace(k.Format))
+                        k.NumberFormatId = XLNumberFormatValue.Default.NumberFormatId;
+                    else
+                        k.NumberFormatId = -1;
+                    return k;
+                });
             }
         }
 
         public IXLStyle SetNumberFormatId(Int32 value)
         {
             NumberFormatId = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetFormat(String value)
         {
             Format = value;
-            return _container.Style;
+            return _style;
         }
 
-        #endregion
+        #endregion IXLNumberFormat Members
 
-        #region Constructors
-
-        public XLNumberFormat()
-            : this(null, XLWorkbook.DefaultStyle.NumberFormat)
+        private void Modify(Func<XLNumberFormatKey, XLNumberFormatKey> modification)
         {
+            Key = modification(Key);
+
+            _style.Modify(styleKey =>
+            {
+                var numberFormat = styleKey.NumberFormat;
+                styleKey.NumberFormat = modification(numberFormat);
+                return styleKey;
+            });
         }
-
-
-        public XLNumberFormat(IXLStylized container, IXLNumberFormat defaultNumberFormat)
-        {
-            _container = container;
-            if (defaultNumberFormat == null) return;
-            _numberFormatId = defaultNumberFormat.NumberFormatId;
-            _format = defaultNumberFormat.Format;
-        }
-
-        #endregion
 
         #region Overridden
 
         public override string ToString()
         {
-            return _numberFormatId + "-" + _format;
+            return NumberFormatId + "-" + Format;
         }
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IXLNumberFormatBase);
+        }
+
+        public bool Equals(IXLNumberFormatBase other)
+        {
+            var otherN = other as XLNumberFormat;
+            if (otherN == null)
+                return false;
+
+            return Key == otherN.Key;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 416600561;
+            hashCode = hashCode * -1521134295 + Key.GetHashCode();
+            return hashCode;
+        }
         #endregion
     }
 }

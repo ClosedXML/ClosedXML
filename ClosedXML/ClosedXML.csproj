@@ -129,6 +129,7 @@
     <Compile Include="Excel\Style\XLProtectionKey.cs" />
     <Compile Include="Excel\Style\XLStyleValue.cs" />
     <Compile Include="Excel\Style\XLStyleKey.cs" />
+    <Compile Include="Excel\Style\XLStylizedBase.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
     <Compile Include="Excel\XLConstants.cs" />
     <Compile Include="Excel\IXLWorkbook.cs" />

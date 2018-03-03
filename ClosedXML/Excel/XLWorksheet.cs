@@ -40,7 +40,8 @@ namespace ClosedXML.Excel
             : base(
                 new XLRangeAddress(
                     new XLAddress(null, XLHelper.MinRowNumber, XLHelper.MinColumnNumber, false, false),
-                    new XLAddress(null, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber, false, false)))
+                    new XLAddress(null, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber, false, false)),
+                workbook.Style.Value)
         {
             EventTrackingEnabled = workbook.EventTracking == XLEventTracking.Enabled;
 
@@ -63,7 +64,6 @@ namespace ClosedXML.Excel
             Protection = new XLSheetProtection();
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();
-            SetStyle(workbook.Style);
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
                                                  new XLRowsCollection(), new XLRanges());
             PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
@@ -103,20 +103,21 @@ namespace ClosedXML.Excel
         {
             get
             {
-                UpdatingStyle = true;
                 yield return GetStyle();
                 foreach (XLCell c in Internals.CellsCollection.GetCells())
                     yield return c.Style;
-                UpdatingStyle = false;
             }
         }
 
-        public override Boolean UpdatingStyle { get; set; }
-
-        public override IXLStyle InnerStyle
+        protected override IEnumerable<XLStylizedBase> Children
         {
-            get { return GetStyle(); }
-            set { SetStyle(value); }
+            get
+            {
+                foreach (var col in ColumnsUsed(false).OfType<XLColumn>())
+                    yield return col;
+                foreach (var row in RowsUsed(false).OfType<XLRow>())
+                    yield return row;
+            }
         }
 
         internal Boolean RowHeightChanged { get; set; }
@@ -132,20 +133,6 @@ namespace ClosedXML.Excel
         #region IXLWorksheet Members
 
         public XLWorkbook Workbook { get; private set; }
-
-        public override IXLStyle Style
-        {
-            get
-            {
-                return GetStyle();
-            }
-            set
-            {
-                SetStyle(value);
-                foreach (XLCell cell in Internals.CellsCollection.GetCells())
-                    cell.Style = value;
-            }
-        }
 
         public Double ColumnWidth
         {
@@ -578,7 +565,7 @@ namespace ClosedXML.Excel
             targetSheet.ColumnWidthChanged = ColumnWidthChanged;
             targetSheet.RowHeight = RowHeight;
             targetSheet.RowHeightChanged = RowHeightChanged;
-            targetSheet.SetStyle(Style);
+            targetSheet.InnerStyle = InnerStyle;
             targetSheet.PageSetup = new XLPageSetup((XLPageSetup)PageSetup, targetSheet);
             (targetSheet.PageSetup.Header as XLHeaderFooter).Changed = true;
             (targetSheet.PageSetup.Footer as XLHeaderFooter).Changed = true;
@@ -1079,11 +1066,6 @@ namespace ClosedXML.Excel
 
         #endregion Outlines
 
-        public HashSet<Int32> GetStyleIds()
-        {
-            return Internals.CellsCollection.GetStyleIds(GetStyleId());
-        }
-
         public XLRow FirstRowUsed()
         {
             return FirstRowUsed(false);
@@ -1163,17 +1145,17 @@ namespace ClosedXML.Excel
                 throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}",
                                                                  XLHelper.MaxColumnNumber));
 
-            Int32 thisStyleId = GetStyleId();
+            var thisStyle = Style;
             if (!Internals.ColumnsCollection.ContainsKey(column))
             {
                 // This is a new row so we're going to reference all
                 // cells in this row to preserve their formatting
                 Internals.RowsCollection.Keys.ForEach(r => Cell(r, column));
                 Internals.ColumnsCollection.Add(column,
-                                                new XLColumn(column, new XLColumnParameters(this, thisStyleId, false)));
+                                                new XLColumn(column, new XLColumnParameters(this, thisStyle, false)));
             }
 
-            return new XLColumn(column, new XLColumnParameters(this, thisStyleId, true));
+            return new XLColumn(column, new XLColumnParameters(this, thisStyle, true));
         }
 
         public IXLColumn Column(String column)
@@ -1420,10 +1402,10 @@ namespace ClosedXML.Excel
                 throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
                                                                  XLHelper.MaxRowNumber));
 
-            Int32 styleId;
+            IXLStyle style;
             XLRow rowToUse;
             if (Internals.RowsCollection.TryGetValue(row, out rowToUse))
-                styleId = rowToUse.GetStyleId();
+                style = rowToUse.Style;
             else
             {
                 if (pingCells)
@@ -1439,11 +1421,11 @@ namespace ClosedXML.Excel
 
                     usedColumns.ForEach(c => Cell(row, c));
                 }
-                styleId = GetStyleId();
-                Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, styleId, false)));
+                style = Style;
+                Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, style, false)));
             }
 
-            return new XLRow(row, new XLRowParameters(this, styleId));
+            return new XLRow(row, new XLRowParameters(this, style));
         }
 
         private IXLRange GetRangeForSort()

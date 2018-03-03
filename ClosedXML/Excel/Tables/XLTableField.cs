@@ -160,7 +160,7 @@ namespace ClosedXML.Excel
             var styles = this.Column
                 .Cells()
                 .Skip(this.table.ShowHeaderRow ? 1 : 0)
-                .Select(c => c.Style);
+                .Select(c => c.Style.Value);
 
             if (this.table.ShowTotalsRow)
                 styles = styles.Take(styles.Count() - 1);

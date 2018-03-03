@@ -5,7 +5,7 @@ using ClosedXML.Utils;
 
 namespace ClosedXML.Excel
 {
-    internal class XLConditionalFormat : IXLConditionalFormat, IXLStylized
+    internal class XLConditionalFormat : XLStylizedBase, IXLConditionalFormat, IXLStylized
     {
         private sealed class FullEqualityComparer : IEqualityComparer<IXLConditionalFormat>
         {
@@ -34,12 +34,11 @@ namespace ClosedXML.Excel
                 var xxFormulas = xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)x.Range.FirstCell()).GetFormulaR1C1(f.Value));
                 var yyFormulas = yy.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)y.Range.FirstCell()).GetFormulaR1C1(f.Value));
 
-                var xStyle = xx._style ?? xx.Range.Worksheet.Workbook.GetStyleById(xx._styleCacheId);
-                var yStyle = yy._style ?? yy.Range.Worksheet.Workbook.GetStyleById(yy._styleCacheId);
+                var xStyle = xx.StyleValue;
+                var yStyle = yy.StyleValue;
 
                 return Equals(xStyle, yStyle)
                     && xx.CopyDefaultModify == yy.CopyDefaultModify
-                    && xx.UpdatingStyle == yy.UpdatingStyle
                     && xx.ConditionalFormatType == yy.ConditionalFormatType
                     && xx.TimePeriod == yy.TimePeriod
                     && xx.IconSetStyle == yy.IconSetStyle
@@ -61,16 +60,15 @@ namespace ClosedXML.Excel
             public int GetHashCode(IXLConditionalFormat obj)
             {
                 var xx = (XLConditionalFormat)obj;
-                var xStyle = xx._style ?? xx.Range.Worksheet.Workbook.GetStyleById(xx._styleCacheId);
+                var xStyle = obj.Style.Value;
                 var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value)
                     .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Range.FirstCell()).GetFormulaR1C1(f.Value)));
 
                 unchecked
                 {
                     var hashCode = xStyle.GetHashCode();
-                    hashCode = (hashCode * 397) ^ xx._styleCacheId;
+                    hashCode = (hashCode * 397) ^ xx.StyleValue.GetHashCode();
                     hashCode = (hashCode * 397) ^ xx.CopyDefaultModify.GetHashCode();
-                    hashCode = (hashCode * 397) ^ xx.UpdatingStyle.GetHashCode();
                     hashCode = (hashCode * 397) ^ xValues.GetHashCode();
                     hashCode = (hashCode * 397) ^ (xx.Colors != null ? xx.Colors.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (xx.ContentTypes != null ? xx.ContentTypes.GetHashCode() : 0);
@@ -103,11 +101,10 @@ namespace ClosedXML.Excel
             get { return NoRangeComparerInstance; }
         }
 
-        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
+        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false) : base(XLStyle.Default.Value)
         {
             Id = Guid.NewGuid();
             Range = range;
-            Style = new XLStyle(this, range.Worksheet.Style);
             Values = new XLDictionary<XLFormula>();
             Colors = new XLDictionary<XLColor>();
             ContentTypes = new XLDictionary<XLCFContentType>();
@@ -116,11 +113,10 @@ namespace ClosedXML.Excel
 
         }
 
-        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange)
+        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange) : base(XLStyle.Default.Value)
         {
             Range = targetRange;
             Id = Guid.NewGuid();
-            Style = new XLStyle(this, conditionalFormat.Style);
             Values = new XLDictionary<XLFormula>(conditionalFormat.Values);
             Colors = new XLDictionary<XLColor>(conditionalFormat.Colors);
             ContentTypes = new XLDictionary<XLCFContentType>(conditionalFormat.ContentTypes);
@@ -143,45 +139,25 @@ namespace ClosedXML.Excel
 
         public Guid Id { get; internal set; }
         public Boolean CopyDefaultModify { get; set; }
-        private IXLStyle _style;
-        private Int32 _styleCacheId;
-        public IXLStyle Style { get { return GetStyle(); } set { SetStyle(value); } }
-        private IXLStyle GetStyle()
-        {
-            //return _style;
-            if (_style != null)
-                return _style;
 
-            return _style = new XLStyle(this, Range.Worksheet.Workbook.GetStyleById(_styleCacheId), CopyDefaultModify);
-        }
-        private void SetStyle(IXLStyle styleToUse)
-        {
-            //_style = new XLStyle(this, styleToUse);
-            _styleCacheId = Range.Worksheet.Workbook.GetStyleId(styleToUse);
-            _style = null;
-            StyleChanged = false;
-        }
-
-        public IEnumerable<IXLStyle> Styles
+        public override IEnumerable<IXLStyle> Styles
         {
             get
             {
-                UpdatingStyle = true;
                 yield return Style;
-                UpdatingStyle = false;
             }
         }
 
-        public bool UpdatingStyle { get; set; }
-
-        public IXLStyle InnerStyle { get; set; }
-
-        public IXLRanges RangesUsed
+        protected override IEnumerable<XLStylizedBase> Children
+        {
+            get { yield break; }
+        }
+        
+        public override IXLRanges RangesUsed
         {
             get { return new XLRanges(); }
         }
 
-        public bool StyleChanged { get; set; }
         public XLDictionary<XLFormula> Values { get; private set; }
         public XLDictionary<XLColor> Colors { get; private set; }
         public XLDictionary<XLCFContentType> ContentTypes { get; private set; }

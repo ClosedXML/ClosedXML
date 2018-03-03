@@ -6,17 +6,15 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLColumns : IXLColumns, IXLStylized
+    internal class XLColumns : XLStylizedBase, IXLColumns, IXLStylized
     {
-        public Boolean StyleChanged { get; set; }
         private readonly List<XLColumn> _columns = new List<XLColumn>();
         private readonly XLWorksheet _worksheet;
-        internal IXLStyle style;
 
         public XLColumns(XLWorksheet worksheet)
+            : base(XLStyle.Default.Value)
         {
             _worksheet = worksheet;
-            style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
         #region IXLColumns Members
@@ -29,23 +27,6 @@ namespace ClosedXML.Excel
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public IXLStyle Style
-        {
-            get { return style; }
-            set
-            {
-                style = new XLStyle(this, value);
-
-                if (_worksheet != null)
-                    _worksheet.Style = value;
-                else
-                {
-                    foreach (XLColumn column in _columns)
-                        column.Style = value;
-                }
-            }
         }
 
         public Double Width
@@ -217,12 +198,11 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        public IEnumerable<IXLStyle> Styles
+        public override IEnumerable<IXLStyle> Styles
         {
             get
             {
-                UpdatingStyle = true;
-                yield return style;
+                yield return Style;
                 if (_worksheet != null)
                     yield return _worksheet.Style;
                 else
@@ -232,19 +212,24 @@ namespace ClosedXML.Excel
                         yield return s;
                     }
                 }
-                UpdatingStyle = false;
             }
         }
 
-        public Boolean UpdatingStyle { get; set; }
-
-        public IXLStyle InnerStyle
+        protected override IEnumerable<XLStylizedBase> Children
         {
-            get { return style; }
-            set { style = new XLStyle(this, value); }
+            get
+            {
+                if (_worksheet != null)
+                    yield return _worksheet;
+                else
+                {
+                    foreach (XLColumn column in _columns)
+                        yield return column;
+                }
+            }
         }
 
-        public IXLRanges RangesUsed
+        public override IXLRanges RangesUsed
         {
             get
             {

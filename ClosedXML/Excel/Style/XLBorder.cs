@@ -1,65 +1,78 @@
 using System;
 using System.Text;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections.Generic;
-
     internal class XLBorder : IXLBorder
     {
-        private readonly IXLStylized _container;
-        private XLBorderStyleValues _bottomBorder;
-        private XLColor _bottomBorderColor;
-        private XLBorderStyleValues _diagonalBorder;
-        private XLColor _diagonalBorderColor;
-        private Boolean _diagonalDown;
-        private Boolean _diagonalUp;
-        private XLBorderStyleValues _leftBorder;
-        private XLColor _leftBorderColor;
-        private XLBorderStyleValues _rightBorder;
-        private XLColor _rightBorderColor;
-        private XLBorderStyleValues _topBorder;
-        private XLColor _topBorderColor;
-
-        public XLBorder() : this(null, XLWorkbook.DefaultStyle.Border)
+        #region Static members
+        internal static XLBorderKey GenerateKey(IXLBorder defaultBorder)
         {
+            XLBorderKey key;
+            if (defaultBorder == null)
+            {
+                key = XLBorderValue.Default.Key;
+            }
+            else if (defaultBorder is XLBorder)
+            {
+                key = (defaultBorder as XLBorder).Key;
+            }
+            else
+            {
+                key = new XLBorderKey
+                {
+                    LeftBorder = defaultBorder.LeftBorder,
+                    LeftBorderColor = defaultBorder.LeftBorderColor.Key,
+                    RightBorder = defaultBorder.RightBorder,
+                    RightBorderColor = defaultBorder.RightBorderColor.Key,
+                    TopBorder = defaultBorder.TopBorder,
+                    TopBorderColor = defaultBorder.TopBorderColor.Key,
+                    BottomBorder = defaultBorder.BottomBorder,
+                    BottomBorderColor = defaultBorder.BottomBorderColor.Key,
+                    DiagonalBorder = defaultBorder.DiagonalBorder,
+                    DiagonalBorderColor = defaultBorder.DiagonalBorderColor.Key,
+                    DiagonalUp = defaultBorder.DiagonalUp,
+                    DiagonalDown = defaultBorder.DiagonalDown,
+                };
+            }
+            return key;
+        }
+        #endregion Static members
+
+        private readonly XLStyle _style;
+
+        private readonly IXLStylized _container;
+
+        private XLBorderValue _value;
+
+        internal XLBorderKey Key {
+            get { return _value.Key; }
+            private set { _value = XLBorderValue.FromKey(value); }
         }
 
-        public XLBorder(IXLStylized container, IXLBorder defaultBorder, Boolean useDefaultModify = true)
+        #region Constructors
+        /// <summary>
+        /// Create an instance of XLBorder initializing it with the specified value.
+        /// </summary>
+        /// <param name="style">Style to attach the new instance to.</param>
+        /// <param name="value">Style value to use.</param>
+        public XLBorder(IXLStylized container, XLStyle style, XLBorderValue value)
         {
             _container = container;
-            if (defaultBorder == null) return;
-
-            _leftBorder = defaultBorder.LeftBorder;
-            _leftBorderColor = defaultBorder.LeftBorderColor;
-            _rightBorder = defaultBorder.RightBorder;
-            _rightBorderColor = defaultBorder.RightBorderColor;
-            _topBorder = defaultBorder.TopBorder;
-            _topBorderColor = defaultBorder.TopBorderColor;
-            _bottomBorder = defaultBorder.BottomBorder;
-            _bottomBorderColor = defaultBorder.BottomBorderColor;
-            _diagonalBorder = defaultBorder.DiagonalBorder;
-            _diagonalBorderColor = defaultBorder.DiagonalBorderColor;
-            _diagonalUp = defaultBorder.DiagonalUp;
-            _diagonalDown = defaultBorder.DiagonalDown;
-
-            if (useDefaultModify)
-            {
-                var d = defaultBorder as XLBorder;
-                BottomBorderColorModified = d.BottomBorderColorModified;
-                BottomBorderModified = d.BottomBorderModified;
-                DiagonalBorderColorModified = d.DiagonalBorderColorModified;
-                DiagonalBorderModified = d.DiagonalBorderModified;
-                DiagonalDownModified = d.DiagonalDownModified;
-                DiagonalUpModified = d.DiagonalUpModified;
-                LeftBorderColorModified = d.LeftBorderColorModified;
-                LeftBorderModified = d.LeftBorderModified;
-                RightBorderColorModified = d.RightBorderColorModified;
-                RightBorderModified = d.RightBorderModified;
-                TopBorderColorModified = d.TopBorderColorModified;
-                TopBorderModified = d.TopBorderModified;
-            }
+            _style = style ?? _container.Style as XLStyle ?? XLStyle.CreateEmptyStyle();
+            _value = value;
         }
+
+        public XLBorder(IXLStylized container, XLStyle style, XLBorderKey key) : this(container, style, XLBorderValue.FromKey(key))
+        {
+        }
+
+        public XLBorder(IXLStylized container, XLStyle style = null, IXLBorder d = null) : this(container, style, GenerateKey(d))
+        {
+        }
+        #endregion Constructors
 
         #region IXLBorder Members
 
@@ -67,7 +80,7 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null || _container.UpdatingStyle) return;
+                if (_container == null) return;
 
                 if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
@@ -94,7 +107,7 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null || _container.UpdatingStyle) return;
+                if (_container == null) return;
 
                 if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
@@ -120,18 +133,16 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null || _container.UpdatingStyle) return;
+                if (_container == null) return;
 
                 var wsContainer = _container as XLWorksheet;
                 if (wsContainer != null)
                 {
                     //wsContainer.CellsUsed().Style.Border.SetOutsideBorder(value);
-                    //wsContainer.UpdatingStyle = true;
                     wsContainer.Style.Border.SetTopBorder(value);
                     wsContainer.Style.Border.SetBottomBorder(value);
                     wsContainer.Style.Border.SetLeftBorder(value);
                     wsContainer.Style.Border.SetRightBorder(value);
-                    //wsContainer.UpdatingStyle = false;
                 }
                 else
                 {
@@ -177,18 +188,16 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null || _container.UpdatingStyle) return;
+                if (_container == null) return;
 
                 var wsContainer = _container as XLWorksheet;
                 if (wsContainer != null)
                 {
                     //wsContainer.CellsUsed().Style.Border.SetOutsideBorderColor(value);
-                    //wsContainer.UpdatingStyle = true;
                     wsContainer.Style.Border.SetTopBorderColor(value);
                     wsContainer.Style.Border.SetBottomBorderColor(value);
                     wsContainer.Style.Border.SetLeftBorderColor(value);
                     wsContainer.Style.Border.SetRightBorderColor(value);
-                    //wsContainer.UpdatingStyle = false;
                 }
                 else
                 {
@@ -237,227 +246,106 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean LeftBorderModified;
         public XLBorderStyleValues LeftBorder
         {
-            get { return _leftBorder; }
-            set
-            {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.LeftBorder = value);
-                else
-                {
-                    _leftBorder = value;
-                    LeftBorderModified = true;
-                }
-            }
+            get { return Key.LeftBorder; }
+            set { Modify(k => { k.LeftBorder = value; return k; }); }
         }
 
-        public Boolean LeftBorderColorModified;
         public XLColor LeftBorderColor
         {
-            get { return _leftBorderColor; }
+            get { return XLColor.FromKey(Key.LeftBorderColor); }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.LeftBorderColor = value);
-                else
-                {
-                    _leftBorderColor = value;
-                    LeftBorderColorModified = true;
-                }
+                if (value == null)
+                    throw new ArgumentNullException("Color cannot be null");
+
+                Modify(k => { k.LeftBorderColor = value.Key; return k; });
             }
         }
 
-        public Boolean RightBorderModified;
         public XLBorderStyleValues RightBorder
         {
-            get { return _rightBorder; }
-            set
-            {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.RightBorder = value);
-                else
-                {
-                    _rightBorder = value;
-                    RightBorderModified = true;
-                }
-            }
+            get { return Key.RightBorder; }
+            set { Modify(k => { k.RightBorder = value; return k; }); }
         }
 
-        public Boolean RightBorderColorModified;
         public XLColor RightBorderColor
         {
-            get { return _rightBorderColor; }
+            get { return XLColor.FromKey(Key.RightBorderColor); }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.RightBorderColor = value);
-                else
-                {
-                    _rightBorderColor = value;
-                    RightBorderColorModified = true;
-                }
+                if (value == null)
+                    throw new ArgumentNullException("Color cannot be null");
+
+                Modify(k => { k.RightBorderColor = value.Key; return k; });
             }
         }
 
-        public Boolean TopBorderModified;
         public XLBorderStyleValues TopBorder
         {
-            get { return _topBorder; }
-            set
-            {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.TopBorder = value);
-                else
-                {
-                    _topBorder = value;
-                    TopBorderModified = true;
-                }
-            }
+            get { return Key.TopBorder; }
+            set { Modify(k => { k.TopBorder = value; return k; }); }
         }
 
-        public Boolean TopBorderColorModified;
         public XLColor TopBorderColor
         {
-            get { return _topBorderColor; }
+            get { return XLColor.FromKey(Key.TopBorderColor); }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.TopBorderColor = value);
-                else
-                {
-                    _topBorderColor = value;
-                    TopBorderColorModified = true;
-                }
+                if (value == null)
+                    throw new ArgumentNullException("Color cannot be null");
+
+                Modify(k => { k.TopBorderColor = value.Key; return k; });
             }
         }
 
-        public Boolean BottomBorderModified;
         public XLBorderStyleValues BottomBorder
         {
-            get { return _bottomBorder; }
-            set
-            {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.BottomBorder = value);
-                else
-                {
-                    _bottomBorder = value;
-                    BottomBorderModified = true;
-                }
-            }
+            get { return Key.BottomBorder; }
+            set { Modify(k => { k.BottomBorder = value; return k; }); }
         }
 
-        public Boolean BottomBorderColorModified;
         public XLColor BottomBorderColor
         {
-            get { return _bottomBorderColor; }
+            get { return XLColor.FromKey(Key.BottomBorderColor); }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.BottomBorderColor = value);
-                else
-                {
-                    _bottomBorderColor = value;
-                    BottomBorderColorModified = true;
-                }
+                if (value == null)
+                    throw new ArgumentNullException("Color cannot be null");
+
+                Modify(k => { k.BottomBorderColor = value.Key; return k; });
             }
         }
 
-        public Boolean DiagonalBorderModified;
         public XLBorderStyleValues DiagonalBorder
         {
-            get { return _diagonalBorder; }
-            set
-            {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.DiagonalBorder = value);
-                else
-                {
-                    _diagonalBorder = value;
-                    DiagonalBorderModified = true;
-                }
-            }
+            get { return Key.DiagonalBorder; }
+            set { Modify(k => { k.DiagonalBorder = value; return k; }); }
         }
 
-        public Boolean DiagonalBorderColorModified;
         public XLColor DiagonalBorderColor
         {
-            get { return _diagonalBorderColor; }
+            get { return XLColor.FromKey(Key.DiagonalBorderColor); }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.DiagonalBorderColor = value);
-                else
-                {
-                    _diagonalBorderColor = value;
-                    DiagonalBorderColorModified = true;
-                }
+                if (value == null)
+                    throw new ArgumentNullException("Color cannot be null");
+
+                Modify(k => { k.DiagonalBorderColor = value.Key; return k; });
             }
         }
 
-        public Boolean DiagonalUpModified;
         public Boolean DiagonalUp
         {
-            get { return _diagonalUp; }
-            set
-            {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.DiagonalUp = value);
-                else
-                {
-                    _diagonalUp = value;
-                    DiagonalUpModified = true;
-                }
-            }
+            get { return Key.DiagonalUp; }
+            set { Modify(k => { k.DiagonalUp = value; return k; }); }
         }
 
-        public Boolean DiagonalDownModified;
         public Boolean DiagonalDown
         {
-            get { return _diagonalDown; }
-            set
-            {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Border.DiagonalDown = value);
-                else
-                {
-                    _diagonalDown = value;
-                    DiagonalDownModified = true;
-                }
-            }
-        }
-
-        public bool Equals(IXLBorder other)
-        {
-            var otherB = other as XLBorder;
-            return
-                _leftBorder == otherB._leftBorder
-                && _leftBorderColor.Equals(otherB._leftBorderColor)
-                && _rightBorder == otherB._rightBorder
-                && _rightBorderColor.Equals(otherB._rightBorderColor)
-                && _topBorder == otherB._topBorder
-                && _topBorderColor.Equals(otherB._topBorderColor)
-                && _bottomBorder == otherB._bottomBorder
-                && _bottomBorderColor.Equals(otherB._bottomBorderColor)
-                && _diagonalBorder == otherB._diagonalBorder
-                && _diagonalBorderColor.Equals(otherB._diagonalBorderColor)
-                && _diagonalUp == otherB._diagonalUp
-                && _diagonalDown == otherB._diagonalDown
-                ;
+            get { return Key.DiagonalDown; }
+            set { Modify(k => { k.DiagonalDown = value; return k; }); }
         }
 
         public IXLStyle SetOutsideBorder(XLBorderStyleValues value)
@@ -570,11 +458,19 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        private void SetStyleChanged()
+        private void Modify(Func<XLBorderKey, XLBorderKey> modification)
         {
-            if (_container != null) _container.StyleChanged = true;
+            Key = modification(Key);
+
+            _style.Modify(styleKey =>
+            {
+                var border = styleKey.Border;
+                styleKey.Border = modification(border);
+                return styleKey;
+            });
         }
 
+        #region Overridden
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -606,23 +502,24 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            return Equals((XLBorder)obj);
+            return Equals(obj as XLBorder);
+        }
+
+        public bool Equals(IXLBorder other)
+        {
+            var otherB = other as XLBorder;
+            if (otherB == null)
+                return false;
+
+            return Key == otherB.Key;
         }
 
         public override int GetHashCode()
         {
-            return (Int32)LeftBorder
-                   ^ LeftBorderColor.GetHashCode()
-                   ^ (Int32)RightBorder
-                   ^ RightBorderColor.GetHashCode()
-                   ^ (Int32)TopBorder
-                   ^ TopBorderColor.GetHashCode()
-                   ^ (Int32)BottomBorder
-                   ^ BottomBorderColor.GetHashCode()
-                   ^ (Int32)DiagonalBorder
-                   ^ DiagonalBorderColor.GetHashCode()
-                   ^ DiagonalUp.GetHashCode()
-                   ^ DiagonalDown.GetHashCode();
+            var hashCode = 416600561;
+            hashCode = hashCode * -1521134295 + Key.GetHashCode();
+            return hashCode;
         }
+        #endregion Overridden
     }
 }

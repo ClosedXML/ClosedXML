@@ -12,22 +12,22 @@ namespace ClosedXML.Excel
         {
             public SaveContext()
             {
-                DifferentialFormats = new Dictionary<IXLStyle, int>();
+                DifferentialFormats = new Dictionary<XLStyleKey, int>();
                 PivotTables = new Dictionary<Guid, PivotTableInfo>();
                 RelIdGenerator = new RelIdGenerator();
-                SharedFonts = new Dictionary<IXLFont, FontInfo>();
+                SharedFonts = new Dictionary<XLFontValue, FontInfo>();
                 SharedNumberFormats = new Dictionary<int, NumberFormatInfo>();
-                SharedStyles = new Dictionary<Int32, StyleInfo>();
+                SharedStyles = new Dictionary<XLStyleKey, StyleInfo>();
                 TableId = 0;
                 TableNames = new HashSet<String>();
             }
 
-            public Dictionary<IXLStyle, Int32> DifferentialFormats { get; private set; }
+            public Dictionary<XLStyleKey, Int32> DifferentialFormats { get; private set; }
             public IDictionary<Guid, PivotTableInfo> PivotTables { get; private set; }
             public RelIdGenerator RelIdGenerator { get; private set; }
-            public Dictionary<IXLFont, FontInfo> SharedFonts { get; private set; }
+            public Dictionary<XLFontValue, FontInfo> SharedFonts { get; private set; }
             public Dictionary<Int32, NumberFormatInfo> SharedNumberFormats { get; private set; }
-            public Dictionary<Int32, StyleInfo> SharedStyles { get; private set; }
+            public Dictionary<XLStyleKey, StyleInfo> SharedStyles { get; private set; }
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
         }
@@ -96,7 +96,7 @@ namespace ClosedXML.Excel
 
         internal struct FontInfo
         {
-            public XLFont Font;
+            public XLFontValue Font;
             public UInt32 FontId;
         };
 
@@ -106,7 +106,7 @@ namespace ClosedXML.Excel
 
         internal struct FillInfo
         {
-            public XLFill Fill;
+            public XLFillValue Fill;
             public UInt32 FillId;
         }
 
@@ -116,7 +116,7 @@ namespace ClosedXML.Excel
 
         internal struct BorderInfo
         {
-            public XLBorder Border;
+            public XLBorderValue Border;
             public UInt32 BorderId;
         }
 
@@ -126,7 +126,7 @@ namespace ClosedXML.Excel
 
         internal struct NumberFormatInfo
         {
-            public IXLNumberFormatBase NumberFormat;
+            public XLNumberFormatValue NumberFormat;
             public Int32 NumberFormatId;
         }
 
@@ -140,7 +140,7 @@ namespace ClosedXML.Excel
             public UInt32 FillId;
             public UInt32 FontId;
             public Int32 NumberFormatId;
-            public IXLStyle Style;
+            public XLStyleValue Style;
             public UInt32 StyleId;
         }
 

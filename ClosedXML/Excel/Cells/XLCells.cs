@@ -7,23 +7,21 @@ namespace ClosedXML.Excel
 {
     using System.Linq;
 
-    internal class XLCells : IXLCells, IXLStylized, IEnumerable<XLCell>
+    internal class XLCells : XLStylizedBase, IXLCells, IXLStylized, IEnumerable<XLCell>
     {
-        public Boolean StyleChanged { get; set; }
         #region Fields
 
         private readonly bool _includeFormats;
         private readonly List<XLRangeAddress> _rangeAddresses = new List<XLRangeAddress>();
         private readonly bool _usedCellsOnly;
-        private IXLStyle _style;
         private readonly Func<IXLCell, Boolean> _predicate;
         #endregion
 
         #region Constructor
 
         public XLCells(bool usedCellsOnly, bool includeFormats, Func<IXLCell, Boolean> predicate = null)
+            :base(XLStyle.Default.Value)
         {
-            _style = new XLStyle(this, XLWorkbook.DefaultStyle);
             _usedCellsOnly = usedCellsOnly;
             _includeFormats = includeFormats;
             _predicate = predicate;
@@ -169,16 +167,6 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public IXLStyle Style
-        {
-            get { return _style; }
-            set
-            {
-                _style = new XLStyle(this, value);
-                this.ForEach<XLCell>(c => c.Style = _style);
-            }
-        }
-
         public Object Value
         {
             set { this.ForEach<XLCell>(c => c.Value = value); }
@@ -219,28 +207,17 @@ namespace ClosedXML.Excel
         #endregion
 
         #region IXLStylized Members
-
-        public IEnumerable<IXLStyle> Styles
+        public override IEnumerable<IXLStyle> Styles
         {
             get
             {
-                UpdatingStyle = true;
-                yield return _style;
+                yield return Style;
                 foreach (XLCell c in this)
                     yield return c.Style;
-                UpdatingStyle = false;
             }
         }
 
-        public Boolean UpdatingStyle { get; set; }
-
-        public IXLStyle InnerStyle
-        {
-            get { return _style; }
-            set { _style = new XLStyle(this, value); }
-        }
-
-        public IXLRanges RangesUsed
+        public override IXLRanges RangesUsed
         {
             get
             {

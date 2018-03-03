@@ -144,33 +144,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal HashSet<Int32> GetStyleIds(Int32 initial)
-        {
-            HashSet<Int32> ids = new HashSet<int>();
-            ids.Add(initial);
-            foreach (var row in rowsCollection.Values)
-            {
-                foreach (var cell in row.Values)
-                {
-                    Int32? id = null;
-
-                    if (cell.StyleChanged)
-                        id = cell.GetStyleId();
-                    else if (cell.StyleCacheId() != cell.Worksheet.GetStyleId())
-                    {
-                        id = cell.GetStyleId();
-                    }
-
-                    if (id.HasValue && !ids.Contains(id.Value))
-                    {
-                        ids.Add(id.Value);
-                    }
-                }
-            }
-            return ids;
-        }
-
-
         internal IEnumerable<XLCell> GetCellsUsed(Int32 rowStart, Int32 columnStart,
                                     Int32 rowEnd, Int32 columnEnd,
                                     Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)

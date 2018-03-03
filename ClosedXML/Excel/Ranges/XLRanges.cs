@@ -6,14 +6,12 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLRanges : IXLRanges, IXLStylized
+    internal class XLRanges : XLStylizedBase, IXLRanges, IXLStylized
     {
         private readonly List<XLRange> _ranges = new List<XLRange>();
-        private IXLStyle _style;
 
-        public XLRanges()
+        public XLRanges() : base(XLWorkbook.DefaultStyle.Value)
         {
-            _style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
         #region IXLRanges Members
@@ -59,17 +57,6 @@ namespace ClosedXML.Excel
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public IXLStyle Style
-        {
-            get { return _style; }
-            set
-            {
-                _style = new XLStyle(this, value);
-                foreach (XLRange rng in _ranges)
-                    rng.Style = value;
-            }
         }
 
         public Boolean Contains(IXLCell cell)
@@ -175,14 +162,11 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        public Boolean StyleChanged { get; set; }
-
-        public IEnumerable<IXLStyle> Styles
+        public override IEnumerable<IXLStyle> Styles
         {
             get
             {
-                UpdatingStyle = true;
-                yield return _style;
+                yield return Style;
                 foreach (XLRange rng in _ranges)
                 {
                     yield return rng.Style;
@@ -193,19 +177,19 @@ namespace ClosedXML.Excel
                         rng.RangeAddress.LastAddress.ColumnNumber))
                         yield return r.Style;
                 }
-                UpdatingStyle = false;
             }
         }
 
-        public Boolean UpdatingStyle { get; set; }
-
-        public IXLStyle InnerStyle
+        protected override IEnumerable<XLStylizedBase> Children
         {
-            get { return _style; }
-            set { _style = new XLStyle(this, value); }
+            get
+            {
+                foreach (XLRange rng in _ranges)
+                    yield return rng;
+            }
         }
 
-        public IXLRanges RangesUsed
+        public override IXLRanges RangesUsed
         {
             get { return this; }
         }

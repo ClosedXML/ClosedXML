@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
         Top
     }
 
-    public interface IXLAlignment: IEquatable<IXLAlignment>
+    public interface IXLAlignment : IEquatable<IXLAlignment>
     {
         /// <summary>
         /// Gets or sets the cell's horizontal alignment.

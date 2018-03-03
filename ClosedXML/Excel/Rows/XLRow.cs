@@ -21,7 +21,10 @@ namespace ClosedXML.Excel
         public XLRow(Int32 row, XLRowParameters xlRowParameters)
             : base(new XLRangeAddress(new XLAddress(xlRowParameters.Worksheet, row, 1, false, false),
                                       new XLAddress(xlRowParameters.Worksheet, row, XLHelper.MaxColumnNumber, false,
-                                                    false)))
+                                                    false)),
+                  xlRowParameters.IsReference ? xlRowParameters.Worksheet.Internals.RowsCollection[row].StyleValue
+                                              : xlRowParameters.DefaultStyle.Value
+                  )
         {
             SetRowNumber(row);
 
@@ -29,16 +32,14 @@ namespace ClosedXML.Excel
             if (IsReference)
                 SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
             else
-            {
-                SetStyle(xlRowParameters.DefaultStyleId);
                 _height = xlRowParameters.Worksheet.RowHeight;
-            }
         }
 
         public XLRow(XLRow row)
             : base(new XLRangeAddress(new XLAddress(row.Worksheet, row.RowNumber(), 1, false, false),
                                       new XLAddress(row.Worksheet, row.RowNumber(), XLHelper.MaxColumnNumber, false,
-                                                    false)))
+                                                    false)),
+                  row.StyleValue)
         {
             _height = row._height;
             IsReference = row.IsReference;
@@ -49,7 +50,6 @@ namespace ClosedXML.Excel
             _isHidden = row._isHidden;
             _outlineLevel = row._outlineLevel;
             HeightChanged = row.HeightChanged;
-            SetStyle(row.GetStyleId());
         }
 
         #endregion Constructor
@@ -60,35 +60,50 @@ namespace ClosedXML.Excel
         {
             get
             {
-                UpdatingStyle = true;
-
-                yield return Style;
+                if (IsReference)
+                    yield return Worksheet.Internals.RowsCollection[RowNumber()].Style;
+                else
+                    yield return Style;
 
                 int row = RowNumber();
 
                 foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
                     yield return cell.Style;
-
-                UpdatingStyle = false;
             }
         }
-
-        public override Boolean UpdatingStyle { get; set; }
-
-        public override IXLStyle InnerStyle
+        
+        protected override IEnumerable<XLStylizedBase> Children
         {
             get
             {
-                return IsReference
-                           ? Worksheet.Internals.RowsCollection[RowNumber()].InnerStyle
-                           : GetStyle();
-            }
-            set
-            {
+                int row = RowNumber();
                 if (IsReference)
-                    Worksheet.Internals.RowsCollection[RowNumber()].InnerStyle = value;
+                    yield return Worksheet.Internals.RowsCollection[row];
                 else
-                    SetStyle(value);
+                {
+                    Int32 minColumn = 1;
+                    Int32 maxColumn = 0;
+                    if (Worksheet.Internals.CellsCollection.RowsUsed.ContainsKey(row))
+                    {
+                        minColumn = Worksheet.Internals.CellsCollection.MinColumnInRow(row);
+                        maxColumn = Worksheet.Internals.CellsCollection.MaxColumnInRow(row);
+                    }
+
+                    if (Worksheet.Internals.ColumnsCollection.Count > 0)
+                    {
+                        Int32 minInCollection = Worksheet.Internals.ColumnsCollection.Keys.Min();
+                        Int32 maxInCollection = Worksheet.Internals.ColumnsCollection.Keys.Max();
+                        if (minInCollection < minColumn)
+                            minColumn = minInCollection;
+                        if (maxInCollection > maxColumn)
+                            maxColumn = maxInCollection;
+                    }
+                    if (minColumn > 0 && maxColumn > 0)
+                    {
+                        for (Int32 co = minColumn; co <= maxColumn; co++)
+                            yield return Worksheet.Cell(row, co);
+                    }
+                }
             }
         }
 
@@ -183,7 +198,7 @@ namespace ClosedXML.Excel
             {
                 var internalRow = Worksheet.Internals.RowsCollection[newRow.RowNumber()];
                 internalRow._height = Height;
-                internalRow.SetStyle(Style);
+                internalRow.InnerStyle = InnerStyle;
                 internalRow._collapsed = Collapsed;
                 internalRow._isHidden = IsHidden;
                 internalRow._outlineLevel = OutlineLevel;
@@ -392,46 +407,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IXLStyle Style
-        {
-            get
-            {
-                return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Style : GetStyle();
-            }
-            set
-            {
-                if (IsReference)
-                    Worksheet.Internals.RowsCollection[RowNumber()].Style = value;
-                else
-                {
-                    SetStyle(value);
-
-                    Int32 minColumn = 1;
-                    Int32 maxColumn = 0;
-                    int row = RowNumber();
-                    if (Worksheet.Internals.CellsCollection.RowsUsed.ContainsKey(row))
-                    {
-                        minColumn = Worksheet.Internals.CellsCollection.MinColumnInRow(row);
-                        maxColumn = Worksheet.Internals.CellsCollection.MaxColumnInRow(row);
-                    }
-
-                    if (Worksheet.Internals.ColumnsCollection.Count > 0)
-                    {
-                        Int32 minInCollection = Worksheet.Internals.ColumnsCollection.Keys.Min();
-                        Int32 maxInCollection = Worksheet.Internals.ColumnsCollection.Keys.Max();
-                        if (minInCollection < minColumn)
-                            minColumn = minInCollection;
-                        if (maxInCollection > maxColumn)
-                            maxColumn = maxInCollection;
-                    }
-                    if (minColumn > 0 && maxColumn > 0)
-                    {
-                        for (Int32 co = minColumn; co <= maxColumn; co++)
-                            Worksheet.Cell(row, co).Style = value;
-                    }
-                }
-            }
-        }
 
         public Int32 OutlineLevel
         {
@@ -648,7 +623,7 @@ namespace ClosedXML.Excel
                 Worksheet.Internals.RowsCollection[RowNumber()].SetStyleNoColumns(value);
             else
             {
-                SetStyle(value);
+                Style = value;
 
                 int row = RowNumber();
                 foreach (XLCell c in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
@@ -716,7 +691,7 @@ namespace ClosedXML.Excel
 
         public override Boolean IsEmpty(Boolean includeFormats)
         {
-            if (includeFormats && !Style.Equals(Worksheet.Style))
+            if (includeFormats && !StyleValue.Equals(Worksheet.StyleValue))
                 return false;
 
             return base.IsEmpty(includeFormats);

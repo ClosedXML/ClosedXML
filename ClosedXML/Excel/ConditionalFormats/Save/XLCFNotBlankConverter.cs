@@ -9,8 +9,8 @@ namespace ClosedXML.Excel
         {
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
 
-            if (!cf.Style.Equals(XLWorkbook.DefaultStyle))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cf.Style];
+            if (!cf.Style.Value.Equals(XLWorkbook.DefaultStyle.Value))
+                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cf.Style.Value.Key];
 
             var formula = new Formula { Text = "LEN(TRIM(" + cf.Range.RangeAddress.FirstAddress.ToStringRelative(false) + "))>0" };
 
