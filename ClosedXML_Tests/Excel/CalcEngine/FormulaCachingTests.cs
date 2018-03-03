@@ -252,7 +252,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 a2.FormulaA1 = "=A1*10";
                 a3.FormulaA1 = "=A2*10";
                 a4.FormulaA1 = "=A3*10";
-                a1.FormulaA1 = "=SUM(A2:A4)";
+                a1.FormulaA1 = "A2+A3+A4";
 
                 var getValueA1 = new TestDelegate(() => { var v = a1.Value; });
                 var getValueA2 = new TestDelegate(() => { var v = a2.Value; });

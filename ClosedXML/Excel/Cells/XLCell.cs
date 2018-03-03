@@ -373,6 +373,9 @@ namespace ClosedXML.Excel
             if (string.IsNullOrEmpty(fA1))
                 return null;
 
+            if (IsEvaluating)
+                throw new InvalidOperationException("Circular Reference");
+
             if (fA1[0] == '{')
                 fA1 = fA1.Substring(1, fA1.Length - 2);
 
@@ -383,8 +386,6 @@ namespace ClosedXML.Excel
                 sName = fA1.Substring(0, fA1.IndexOf('!'));
                 if (sName[0] == '\'')
                     sName = sName.Substring(1, sName.Length - 2);
-                    if (IsEvaluating)
-                        throw new InvalidOperationException("Circular Reference");
 
                 cAddress = fA1.Substring(fA1.IndexOf('!') + 1);
             }
@@ -406,31 +407,33 @@ namespace ClosedXML.Excel
                     return referenceCell.Value;
             }
 
-                    object retVal;
-                    try
-                    {
-                        IsEvaluating = true;
+            object retVal;
+            try
+            {
+                IsEvaluating = true;
 
-                        if (_worksheet
-                                .Workbook
-                                .WorksheetsInternal
-                                .Any<XLWorksheet>(w => String.Compare(w.Name, sName, true) == 0)
-                            && XLHelper.IsValidA1Address(cAddress))
-                        {
-                            var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                            if (referenceCell.IsEmpty(false))
-                                return 0;
-                            else
-                                return referenceCell.Value;
-                        }
+                if (_worksheet
+                        .Workbook
+                        .WorksheetsInternal
+                        .Any<XLWorksheet>(w => String.Compare(w.Name, sName, true) == 0)
+                    && XLHelper.IsValidA1Address(cAddress))
+                {
+                    var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                    if (referenceCell.IsEmpty(false))
+                        return 0;
+                    else
+                        return referenceCell.Value;
+                }
 
-                        retVal = Worksheet.Evaluate(fA1);
-                    }
-                    finally
-                    {
-                        IsEvaluating = false;
-                    }
+                retVal = Worksheet.Evaluate(fA1);
 
+            }
+            finally
+            {
+                IsEvaluating = false;
+            }
+
+            var retValEnumerable = retVal as IEnumerable;
             if (retValEnumerable != null && !(retVal is String))
                 return retValEnumerable.Cast<object>().First();
 
@@ -2380,7 +2383,7 @@ namespace ClosedXML.Excel
 
         internal void ShiftFormulaRows(XLRange shiftedRange, int rowsShifted)
         {
-            _formulaA1 = ShiftFormulaRows(FormulaA1, Worksheet, shiftedRange, rowsShifted);
+            FormulaA1 = ShiftFormulaRows(FormulaA1, Worksheet, shiftedRange, rowsShifted);
         }
 
         internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
@@ -2529,7 +2532,7 @@ namespace ClosedXML.Excel
 
         internal void ShiftFormulaColumns(XLRange shiftedRange, int columnsShifted)
         {
-            _formulaA1 = ShiftFormulaColumns(FormulaA1, Worksheet, shiftedRange, columnsShifted);
+            FormulaA1 = ShiftFormulaColumns(FormulaA1, Worksheet, shiftedRange, columnsShifted);
         }
 
         internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,

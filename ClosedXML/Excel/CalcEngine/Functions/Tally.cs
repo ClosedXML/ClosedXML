@@ -88,7 +88,11 @@ namespace ClosedXML.Excel.CalcEngine
             foreach (var value in _list)
             {
                 if (value is double)
+                {
                     yield return (double)value;
+                    continue;
+                }
+
                 double tmp;
                 var vEnumerable = value as IEnumerable;
                 if (vEnumerable == null || vEnumerable is string)

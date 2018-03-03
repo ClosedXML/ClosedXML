@@ -119,27 +119,6 @@ namespace ClosedXML.Excel
 
         public XLEventTracking EventTracking { get; set; }
 
-<<<<<<< HEAD
-        #region Nested Type: XLLoadSource
-=======
-        internal Int32 GetStyleId(IXLStyle style)
-        {
-            Int32 cached;
-            if (_stylesByStyle.TryGetValue(style, out cached))
-                return cached;
-
-            var count = _stylesByStyle.Count;
-            var styleToUse = new XLStyle(null, style);
-            _stylesByStyle.Add(styleToUse, count);
-            _stylesById.Add(count, styleToUse);
-            return count;
-        }
-
-        internal IXLStyle GetStyleById(Int32 id)
-        {
-            return _stylesById[id];
-        }
-
         /// <summary>
         /// Counter increasing at workbook data change. Serves to determine if the cell formula
         /// has to be recalculated.
@@ -155,19 +134,7 @@ namespace ClosedXML.Excel
             RecalculationCounter++;
         }
 
-        /// <summary>
-        /// Check if the formula of the particular cell have to be re-evaluated.
-        /// </summary>
-        /// <param name="cellLastRecalculation">Value of <see cref="RecalculationCounter"/> that the cell had
-        /// at the moment of the previous evaluation.</param>
-        /// <returns>True if the cell should be re-evaluated, false otherwise.</returns>
-        internal bool NeedRecalculate(long cellLastRecalculation)
-        {
-            return RecalculationCounter != cellLastRecalculation;
-        }
-
         #region  Nested Type : XLLoadSource
->>>>>>> 8743ecd2... Implemented support of storing cell calculated values
 
         private enum XLLoadSource
         {
