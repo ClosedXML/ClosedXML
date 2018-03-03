@@ -2020,6 +2020,16 @@ namespace ClosedXML.Excel
                 {
                     xlpf.CustomName = field.CustomName;
                     xlpf.SortType = field.SortType;
+                    xlpf.SubtotalCaption = field.SubtotalCaption;
+                    xlpf.IncludeNewItemsInFilter = field.IncludeNewItemsInFilter;
+                    xlpf.Outline = field.Outline;
+                    xlpf.Compact = field.Compact;
+                    xlpf.SubtotalsAtTop = field.SubtotalsAtTop;
+                    xlpf.RepeatItemLabels = field.RepeatItemLabels;
+                    xlpf.InsertBlankLines = field.InsertBlankLines;
+                    xlpf.ShowBlankItems = field.ShowBlankItems;
+                    xlpf.InsertPageBreaks = field.InsertPageBreaks;
+                    xlpf.Collapsed = field.Collapsed;
                     xlpf.Subtotals.AddRange(field.Subtotals);
                 }
 
@@ -2303,12 +2313,29 @@ namespace ClosedXML.Excel
             {
                 var ptfi = pti.Fields[xlpf.SourceName];
                 IXLPivotField labelOrFilterField = null;
-                var pf = new PivotField { ShowAll = false, Name = xlpf.CustomName };
-
+                var pf = new PivotField
+                {
+                    Name = xlpf.CustomName,
+                    IncludeNewItemsInFilter = OpenXmlHelper.GetBooleanValue(xlpf.IncludeNewItemsInFilter, false),
+                    InsertBlankRow = OpenXmlHelper.GetBooleanValue(xlpf.InsertBlankLines, false),
+                    ShowAll = OpenXmlHelper.GetBooleanValue(xlpf.ShowBlankItems, true),
+                    InsertPageBreak = OpenXmlHelper.GetBooleanValue(xlpf.InsertPageBreaks, false),
+                    AllDrilled = OpenXmlHelper.GetBooleanValue(xlpf.Collapsed, false),
+                };
+                if (!string.IsNullOrWhiteSpace(xlpf.SubtotalCaption))
+                {
+                    pf.SubtotalCaption = xlpf.SubtotalCaption;
+                }
+                    
                 if (pt.ClassicPivotTableLayout)
                 {
                     pf.Outline = false;
                     pf.Compact = false;
+                }
+                else
+                {
+                    pf.Outline = OpenXmlHelper.GetBooleanValue(xlpf.Outline, true);
+                    pf.Compact = OpenXmlHelper.GetBooleanValue(xlpf.Compact, true);
                 }
 
                 if (xlpf.SortType != XLPivotSortType.Default)
@@ -2328,9 +2355,13 @@ namespace ClosedXML.Excel
                         break;
 
                     case XLPivotSubtotals.AtTop:
-                        pf.DefaultSubtotal = true;
-                        pf.SubtotalTop = true;
+                        // at top is by default
                         break;
+                }
+
+                if (xlpf.SubtotalsAtTop.HasValue)
+                {
+                    pf.SubtotalTop = OpenXmlHelper.GetBooleanValue(xlpf.SubtotalsAtTop.Value, true);
                 }
 
                 if (pt.RowLabels.Contains(xlpf.SourceName))
@@ -2501,6 +2532,24 @@ namespace ClosedXML.Excel
                     fieldItems.Count = Convert.ToUInt32(fieldItems.Count());
                     pf.AppendChild(fieldItems);
                 }
+
+                #region Excel 2010 Features
+                if (xlpf.RepeatItemLabels)
+                {
+                    var pivotFieldExtensionList = new PivotFieldExtensionList();
+                    pivotFieldExtensionList.RemoveNamespaceDeclaration("x");
+                    var pivotFieldExtension = new PivotFieldExtension { Uri = "{2946ED86-A175-432a-8AC1-64E0C546D7DE}" };
+                    pivotFieldExtension.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+
+                    var pivotField2 = new DocumentFormat.OpenXml.Office2010.Excel.PivotField { FillDownLabels = true };
+
+                    pivotFieldExtension.AppendChild(pivotField2);
+
+                    pivotFieldExtensionList.AppendChild(pivotFieldExtension);
+                    pf.AppendChild(pivotFieldExtensionList);
+                }
+                #endregion Excel 2010 Features
+
                 pivotFields.AppendChild(pf);
             }
 
