@@ -47,7 +47,7 @@ namespace ClosedXML_Tests.Excel
             worksheet.Cell(2, 2).SetValue("Text");
             var cf = worksheet.Cell(2, 2).AddConditionalFormat();
             var style = cf.WhenNotBlank();
-            style
+            style = style
                 .Border.SetOutsideBorder(XLBorderStyleValues.Thick)
                 .Border.SetOutsideBorderColor(XLColor.Blue);
 
