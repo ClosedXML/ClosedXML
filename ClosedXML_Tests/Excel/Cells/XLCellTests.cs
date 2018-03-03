@@ -510,5 +510,71 @@ namespace ClosedXML_Tests
                 Assert.AreEqual("E8:J13", ws.Cell("J13").CurrentRegion.RangeAddress.ToString());
             }
         }
+
+        // https://github.com/ClosedXML/ClosedXML/issues/630
+        [Test]
+        public void ConsiderEmptyValueAsNumericInSumFormula()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.Cell("A1").SetValue("Empty");
+                ws.Cell("A2").SetValue("Numeric");
+                ws.Cell("A3").SetValue("Copy of numeric");
+
+                ws.Cell("B2").SetFormulaA1("=B1");
+                ws.Cell("B3").SetFormulaA1("=B2");
+
+                ws.Cell("C2").SetFormulaA1("=SUM(C1)");
+                ws.Cell("C3").SetFormulaA1("=C2");
+
+                object b1 = ws.Cell("B1").Value;
+                object b2 = ws.Cell("B2").Value;
+                object b3 = ws.Cell("B3").Value;
+
+                Assert.AreEqual("", b1);
+                Assert.AreEqual(0, b2);
+                Assert.AreEqual(0, b3);
+
+                object c1 = ws.Cell("C1").Value;
+                object c2 = ws.Cell("C2").Value;
+                object c3 = ws.Cell("C3").Value;
+
+                Assert.AreEqual("", c1);
+                Assert.AreEqual(0, c2);
+                Assert.AreEqual(0, c3);
+            }
+        }
+
+        [Test]
+        public void SetFormulaA1AffectsR1C1()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var cell = ws.Cell(1, 1);
+                cell.FormulaR1C1 = "R[1]C";
+
+                cell.FormulaA1 = "B2";
+
+                Assert.AreEqual("R[1]C[1]", cell.FormulaR1C1);
+            }
+        }
+
+        [Test]
+        public void SetFormulaR1C1AffectsA1()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var cell = ws.Cell(1, 1);
+                cell.FormulaA1 = "A2";
+
+                cell.FormulaR1C1 = "R[1]C[1]";
+
+                Assert.AreEqual("B2", cell.FormulaA1);
+            }
+        }
     }
 }

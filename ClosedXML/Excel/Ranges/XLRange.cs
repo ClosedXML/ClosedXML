@@ -355,12 +355,12 @@ namespace ClosedXML.Excel
 
         #endregion IXLRange Members
 
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        internal void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
             ShiftColumns(RangeAddress, range, columnsShifted);
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        internal void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             ShiftRows(RangeAddress, range, rowsShifted);
         }

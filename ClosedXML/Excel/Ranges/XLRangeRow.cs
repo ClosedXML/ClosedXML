@@ -2,7 +2,6 @@ namespace ClosedXML.Excel
 {
     using System;
     using System.Linq;
-	
 
     internal class XLRangeRow : XLRangeBase, IXLRangeRow
     {
@@ -21,9 +20,8 @@ namespace ClosedXML.Excel
             SetStyle(rangeParameters.DefaultStyle);
         }
 
-        #endregion
+        #endregion Constructor
 
-        
         public XLRangeParameters RangeParameters { get; private set; }
 
         #region IXLRangeRow Members
@@ -185,7 +183,7 @@ namespace ClosedXML.Excel
             return Worksheet.Row(RangeAddress.FirstAddress.RowNumber);
         }
 
-        #endregion
+        #endregion IXLRangeRow Members
 
         private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
@@ -247,16 +245,33 @@ namespace ClosedXML.Excel
                 {
                     if (thisCell.DataType == otherCell.DataType)
                     {
-                        if (thisCell.DataType == XLDataType.Text)
+                        switch (thisCell.DataType)
                         {
-                            comparison = e.MatchCase
-                                             ? thisCell.InnerText.CompareTo(otherCell.InnerText)
-                                             : String.Compare(thisCell.InnerText, otherCell.InnerText, true);
+                            case XLDataType.Text:
+                                comparison = e.MatchCase
+                                                 ? thisCell.InnerText.CompareTo(otherCell.InnerText)
+                                                 : String.Compare(thisCell.InnerText, otherCell.InnerText, true);
+                                break;
+
+                            case XLDataType.TimeSpan:
+                                comparison = thisCell.GetTimeSpan().CompareTo(otherCell.GetTimeSpan());
+                                break;
+
+                            case XLDataType.DateTime:
+                                comparison = thisCell.GetDateTime().CompareTo(otherCell.GetDateTime());
+                                break;
+
+                            case XLDataType.Number:
+                                comparison = thisCell.GetDouble().CompareTo(otherCell.GetDouble());
+                                break;
+
+                            case XLDataType.Boolean:
+                                comparison = thisCell.GetBoolean().CompareTo(otherCell.GetBoolean());
+                                break;
+
+                            default:
+                                throw new NotImplementedException();
                         }
-                        else if (thisCell.DataType == XLDataType.TimeSpan)
-                            comparison = thisCell.GetTimeSpan().CompareTo(otherCell.GetTimeSpan());
-                        else
-                            comparison = Double.Parse(thisCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).CompareTo(Double.Parse(otherCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture));
                     }
                     else if (e.MatchCase)
                         comparison = String.Compare(thisCell.GetString(), otherCell.GetString(), true);
@@ -265,7 +280,7 @@ namespace ClosedXML.Excel
                 }
 
                 if (comparison != 0)
-                    return e.SortOrder == XLSortOrder.Ascending ? comparison : comparison * -1;
+                    return e.SortOrder == XLSortOrder.Ascending ? comparison : -comparison;
             }
 
             return 0;
@@ -280,7 +295,7 @@ namespace ClosedXML.Excel
                 RangeAddress.FirstAddress.ColumnNumber,
                 rowNum,
                 RangeAddress.LastAddress.ColumnNumber);
-                
+
             var result = range.FirstRow();
             range.Dispose();
 
@@ -309,7 +324,7 @@ namespace ClosedXML.Excel
             return RowShift(step * -1);
         }
 
-        #endregion
+        #endregion XLRangeRow Above
 
         #region XLRangeRow Below
 
@@ -333,7 +348,7 @@ namespace ClosedXML.Excel
             return RowShift(step);
         }
 
-        #endregion
+        #endregion XLRangeRow Below
 
         public new IXLRangeRow Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
         {
@@ -345,6 +360,5 @@ namespace ClosedXML.Excel
         {
             return Row(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
         }
-
     }
 }

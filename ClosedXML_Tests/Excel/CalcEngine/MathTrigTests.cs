@@ -1128,6 +1128,54 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             }
         }
 
+        [Test]
+        public void SumIf_ReturnsCorrectValues_WhenCalledOnFullColumn()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Data");
+                var data = new object[]
+                {
+                    new { Id = "A", Value = 2},
+                    new { Id = "B", Value = 3},
+                    new { Id = "C", Value = 2},
+                    new { Id = "A", Value = 1},
+                    new { Id = "B", Value = 4}
+                };
+                ws.Cell("A1").InsertTable(data);
+                var formula = "=SUMIF(A:A,\"=A\",B:B)";
+                var value = ws.Evaluate(formula);
+                Assert.AreEqual(3, value);
+            }
+        }
+
+        [Test]
+        public void SumIf_ReturnsCorrectValues_WhenFormulaBelongToSameRange()
+        {
+
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Data");
+                var data = new object[]
+                {
+                    new { Id = "A", Value = 2},
+                    new { Id = "B", Value = 3},
+                    new { Id = "C", Value = 2},
+                    new { Id = "A", Value = 1},
+                    new { Id = "B", Value = 4},
+                    
+                };
+                ws.Cell("A1").InsertTable(data);
+                ws.Cell("A7").SetValue("Sum A");
+                // SUMIF formula 
+                var formula = "=SUMIF(A:A,\"=A\",B:B)";
+                ws.Cell("B7").SetFormulaA1(formula);
+                var value = ws.Cell("B7").Value;
+                Assert.AreEqual(3, value);
+            }
+        }
+
+
         /// <summary>
         /// refers to Example 1 to SumIf from the Excel documentation.
         /// As SumIfs should behave the same if called with three parameters, we can take that example here again.
@@ -1270,6 +1318,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
 
                 Assert.Throws<NoValueAvailableException>(() => ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
+
+                // Blank cells and cells with text should be treated as zeros
+                ws.Range("A1:A5").Clear();
+                Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+
+                ws.Range("A1:A5").SetValue("asdf");
+                Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
             }
         }
 

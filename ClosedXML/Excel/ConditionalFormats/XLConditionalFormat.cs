@@ -38,17 +38,17 @@ namespace ClosedXML.Excel
                 var yStyle = yy._style ?? yy.Range.Worksheet.Workbook.GetStyleById(yy._styleCacheId);
 
                 return Equals(xStyle, yStyle)
-                    && xx.CopyDefaultModify == yy.CopyDefaultModify 
+                    && xx.CopyDefaultModify == yy.CopyDefaultModify
                     && xx.UpdatingStyle == yy.UpdatingStyle
-                    && xx.ConditionalFormatType == yy.ConditionalFormatType 
-                    && xx.TimePeriod == yy.TimePeriod 
-                    && xx.IconSetStyle == yy.IconSetStyle 
-                    && xx.Operator == yy.Operator 
-                    && xx.Bottom == yy.Bottom 
-                    && xx.Percent == yy.Percent 
-                    && xx.ReverseIconOrder == yy.ReverseIconOrder 
-                    && xx.StopIfTrueInternal == yy.StopIfTrueInternal
-                    && xx.ShowIconOnly == yy.ShowIconOnly 
+                    && xx.ConditionalFormatType == yy.ConditionalFormatType
+                    && xx.TimePeriod == yy.TimePeriod
+                    && xx.IconSetStyle == yy.IconSetStyle
+                    && xx.Operator == yy.Operator
+                    && xx.Bottom == yy.Bottom
+                    && xx.Percent == yy.Percent
+                    && xx.ReverseIconOrder == yy.ReverseIconOrder
+                    && xx.StopIfTrue == yy.StopIfTrue
+                    && xx.ShowIconOnly == yy.ShowIconOnly
                     && xx.ShowBarOnly == yy.ShowBarOnly
                     && _listComparer.Equals(xxValues, yyValues)
                     && _listComparer.Equals(xxFormulas, yyFormulas)
@@ -85,7 +85,7 @@ namespace ClosedXML.Excel
                     hashCode = (hashCode * 397) ^ xx.ReverseIconOrder.GetHashCode();
                     hashCode = (hashCode * 397) ^ xx.ShowIconOnly.GetHashCode();
                     hashCode = (hashCode * 397) ^ xx.ShowBarOnly.GetHashCode();
-                    hashCode = (hashCode * 397) ^ xx.StopIfTrueInternal.GetHashCode();
+                    hashCode = (hashCode * 397) ^ xx.StopIfTrue.GetHashCode();
                     return hashCode;
                 }
             }
@@ -136,7 +136,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = conditionalFormat.ReverseIconOrder;
             ShowIconOnly = conditionalFormat.ShowIconOnly;
             ShowBarOnly = conditionalFormat.ShowBarOnly;
-            StopIfTrueInternal = OpenXmlHelper.GetBooleanValueAsBool(conditionalFormat.StopIfTrueInternal, true);
+            StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(conditionalFormat.StopIfTrue, true);
 
 
         }
@@ -197,12 +197,16 @@ namespace ClosedXML.Excel
         public Boolean ReverseIconOrder { get; set; }
         public Boolean ShowIconOnly { get; set; }
         public Boolean ShowBarOnly { get; set; }
+        public Boolean StopIfTrue { get; set; }
 
-        internal bool StopIfTrueInternal { get; set; }
-
-        public IXLConditionalFormat StopIfTrue(bool value = true)
+        public IXLConditionalFormat SetStopIfTrue()
         {
-            StopIfTrueInternal = value;
+            return SetStopIfTrue(true);
+        }
+
+            public IXLConditionalFormat SetStopIfTrue(bool value)
+        {
+            this.StopIfTrue = value;
             return this;
         }
 
@@ -218,7 +222,7 @@ namespace ClosedXML.Excel
             ReverseIconOrder = other.ReverseIconOrder;
             ShowIconOnly = other.ShowIconOnly;
             ShowBarOnly = other.ShowBarOnly;
-            StopIfTrueInternal = ((XLConditionalFormat)other).StopIfTrueInternal;
+            StopIfTrue = other.StopIfTrue;
 
             Values.Clear();
             other.Values.ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));

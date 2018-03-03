@@ -382,7 +382,13 @@ namespace ClosedXML.Excel
                         w => String.Compare(w.Name, sName, true) == 0)
                         && XLHelper.IsValidA1Address(cAddress)
                         )
-                        return _worksheet.Workbook.Worksheet(sName).Cell(cAddress).Value;
+                    {
+                        var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                        if (referenceCell.IsEmpty(false))
+                            return 0;
+                        else
+                            return referenceCell.Value;
+                    }
 
                     var retVal = Worksheet.Evaluate(fA1);
                     var retValEnumerable = retVal as IEnumerable;
@@ -641,7 +647,7 @@ namespace ClosedXML.Excel
                             foreach (var mi in members)
                             {
                                 if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                    _worksheet.SetValue((mi as PropertyInfo).GetValue(null), ro, co);
+                                    _worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), ro, co);
                                 else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
                                     _worksheet.SetValue((mi as FieldInfo).GetValue(null), ro, co);
                                 else
@@ -836,7 +842,7 @@ namespace ClosedXML.Excel
                         foreach (var mi in members)
                         {
                             if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                _worksheet.SetValue((mi as PropertyInfo).GetValue(null), rowNumber, columnNumber);
+                                _worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), rowNumber, columnNumber);
                             else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
                                 _worksheet.SetValue((mi as FieldInfo).GetValue(null), rowNumber, columnNumber);
                             else
@@ -959,9 +965,17 @@ namespace ClosedXML.Excel
                     }
                     else if (value == XLDataType.Number)
                     {
+                        var v = _cellValue;
                         double dTest;
-                        if (Double.TryParse(_cellValue, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out dTest))
-                            _cellValue = dTest.ToInvariantString();
+                        double factor = 1.0;
+                        if (v.EndsWith("%"))
+                        {
+                            v = v.Substring(0, v.Length - 1);
+                            factor = 1 / 100.0;
+                        }
+
+                        if (Double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out dTest))
+                            _cellValue = (dTest * factor).ToInvariantString();
                         else
                         {
                             throw new ArgumentException(
@@ -1074,6 +1088,8 @@ namespace ClosedXML.Excel
             set
             {
                 _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
+
+                _formulaA1 = null;
             }
         }
 
@@ -1875,7 +1891,7 @@ namespace ClosedXML.Excel
             else if (value is DateTime)
                 val = ((DateTime)value).ToString("o");
             else if (value.IsNumber())
-                val = Convert.ToDecimal(value).ToInvariantString();
+                val = value.ToInvariantString();
             else
                 val = value.ToString();
             _richText = null;
@@ -2194,7 +2210,7 @@ namespace ClosedXML.Excel
                 }
                 Worksheet.EventTrackingEnabled = eventTracking;
             }
-            
+
             return this;
         }
 
@@ -2310,7 +2326,7 @@ namespace ClosedXML.Excel
                                             row2 = (XLHelper.TrimRowNumber(Int32.Parse(row2String) + rowsShifted)).ToInvariantString();
 
                                         sb.Append(useSheetName
-                                                      ? String.Format("{0}!{1}:{2}", sheetName.WrapSheetNameInQuotesIfRequired(), row1, row2)
+                                                      ? String.Format("{0}!{1}:{2}", sheetName.EscapeSheetName(), row1, row2)
                                                       : String.Format("{0}:{1}", row1, row2));
                                     }
                                     else if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
@@ -2321,7 +2337,7 @@ namespace ClosedXML.Excel
                                             if (useSheetName)
                                             {
                                                 sb.Append(String.Format("{0}!{1}:{2}",
-                                                                        sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                        sheetName.EscapeSheetName(),
                                                                         new XLAddress(worksheetInAction,
                                                                                       XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
                                                                                       matchRange.RangeAddress.
@@ -2365,7 +2381,7 @@ namespace ClosedXML.Excel
                                             if (useSheetName)
                                             {
                                                 sb.Append(String.Format("{0}!{1}",
-                                                                        sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                        sheetName.EscapeSheetName(),
                                                                         new XLAddress(worksheetInAction,
                                                                                       XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
                                                                                       matchRange.RangeAddress.
@@ -2394,7 +2410,7 @@ namespace ClosedXML.Excel
                                         if (useSheetName)
                                         {
                                             sb.Append(String.Format("{0}!{1}:{2}",
-                                                                    sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                    sheetName.EscapeSheetName(),
                                                                     matchRange.RangeAddress.FirstAddress,
                                                                     new XLAddress(worksheetInAction,
                                                                                   XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
@@ -2535,7 +2551,7 @@ namespace ClosedXML.Excel
                                         }
 
                                         sb.Append(useSheetName
-                                                      ? String.Format("{0}!{1}:{2}", sheetName.WrapSheetNameInQuotesIfRequired(), column1, column2)
+                                                      ? String.Format("{0}!{1}:{2}", sheetName.EscapeSheetName(), column1, column2)
                                                       : String.Format("{0}:{1}", column1, column2));
                                     }
                                     else if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
@@ -2546,7 +2562,7 @@ namespace ClosedXML.Excel
                                             if (useSheetName)
                                             {
                                                 sb.Append(String.Format("{0}!{1}:{2}",
-                                                                        sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                        sheetName.EscapeSheetName(),
                                                                         new XLAddress(worksheetInAction,
                                                                                       matchRange.RangeAddress.
                                                                                           FirstAddress.RowNumber,
@@ -2590,7 +2606,7 @@ namespace ClosedXML.Excel
                                             if (useSheetName)
                                             {
                                                 sb.Append(String.Format("{0}!{1}",
-                                                                        sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                        sheetName.EscapeSheetName(),
                                                                         new XLAddress(worksheetInAction,
                                                                                       matchRange.RangeAddress.
                                                                                           FirstAddress.RowNumber,
@@ -2619,7 +2635,7 @@ namespace ClosedXML.Excel
                                         if (useSheetName)
                                         {
                                             sb.Append(String.Format("{0}!{1}:{2}",
-                                                                    sheetName.WrapSheetNameInQuotesIfRequired(),
+                                                                    sheetName.EscapeSheetName(),
                                                                     matchRange.RangeAddress.FirstAddress,
                                                                     new XLAddress(worksheetInAction,
                                                                                   matchRange.RangeAddress.

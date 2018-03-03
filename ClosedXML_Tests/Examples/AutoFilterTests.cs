@@ -29,5 +29,11 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<TopBottomAutoFilter>(@"AutoFilter\TopBottomAutoFilter.xlsx");
         }
+
+        [Test]
+        public void DateTimeGroupAutoFilter()
+        {
+            TestHelper.RunTestExample<DateTimeGroupAutoFilter>(@"AutoFilter\DateTimeGroupAutoFilter.xlsx");
+        }
     }
 }

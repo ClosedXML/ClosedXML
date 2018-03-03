@@ -329,7 +329,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             // get parameters
             var range = p[0] as IEnumerable;                            // range of values to match the criteria against
-            var sumRange = p.Count < 3 ? range : p[2] as IEnumerable;   // range of values to sum up
+            var sumRange = p.Count < 3 ?
+                p[0] as XObjectExpression :
+                p[2] as XObjectExpression;   // range of values to sum up
             var criteria = p[1].Evaluate();                             // the criteria to evaluate
 
             // build list of values in range and sumRange
@@ -338,10 +340,10 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 rangeValues.Add(value);
             }
-            var sumRangeValues = new List<object>();
-            foreach (var value in sumRange)
+            var sumRangeValues = new List<IXLCell>();
+            foreach (var cell in ((CellRangeReference)sumRange.Value).Range.Cells())
             {
-                sumRangeValues.Add(value);
+                sumRangeValues.Add(cell);
             }
 
             // compute total
@@ -351,7 +353,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (CalcEngineHelpers.ValueSatisfiesCriteria(rangeValues[i], criteria, ce))
                 {
-                    tally.AddValue(sumRangeValues[i]);
+                    tally.AddValue(sumRangeValues[i].Value);
                 }
             }
 
@@ -380,7 +382,7 @@ namespace ClosedXML.Excel.CalcEngine
             for(int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
                 var criterion = p[criteriaPair * 2 + 1].Evaluate();
-                var criteriaRange = p[(criteriaPair + 1) * 2] as IEnumerable;   
+                var criteriaRange = p[(criteriaPair + 1) * 2] as IEnumerable;
                 var criteriaRangeValues = new List<object>();
                 foreach (var value in criteriaRange)
                 {
@@ -437,7 +439,19 @@ namespace ClosedXML.Excel.CalcEngine
 
             var values = p
                 .Cast<IEnumerable>()
-                .Select(range => range.Cast<double>().ToList());
+                .Select(range =>
+                {
+                    var results = new List<double>();
+                    foreach (var c in range)
+                    {
+                        if (c.IsNumber())
+                            results.Add(c.CastTo<double>());
+                        else
+                            results.Add(0.0);
+                    }
+                    return results;
+                })
+                .ToArray();
 
             return Enumerable.Range(0, counts.Single())
                 .Aggregate(0d, (t, i) =>
@@ -660,7 +674,7 @@ namespace ClosedXML.Excel.CalcEngine
             var num = Math.Floor((double)input);
             double fact = 1.0;
 
-            
+
             if (num < 0)
                 throw new NumberException();
 

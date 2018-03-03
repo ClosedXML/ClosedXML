@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ClosedXML_Examples</RootNamespace>
     <AssemblyName>ClosedXML_Examples</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -35,6 +35,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ClosedXML_Examples.Program</StartupObject>
@@ -68,6 +69,7 @@
     <Compile Include="..\ClosedXML\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="AutoFilters\DateTimeGroupAutoFilter.cs" />
     <Compile Include="AutoFilters\DynamicAutoFilter.cs" />
     <Compile Include="AutoFilters\TopBottomAutoFilter.cs" />
     <Compile Include="AutoFilters\CustomAutoFilter.cs" />

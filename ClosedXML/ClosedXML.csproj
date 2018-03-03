@@ -10,10 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ClosedXML</RootNamespace>
     <AssemblyName>ClosedXML</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +22,6 @@
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DefineConstants Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">NET4;TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>1591</NoWarn>
@@ -33,12 +33,12 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DefineConstants Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">NET4;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\ClosedXML.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -70,6 +70,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Excel\AutoFilters\XLDateTimeGroupFilteredColumn.cs" />
     <Compile Include="Excel\CalcEngine\Exceptions\CalcEngineException.cs" />
     <Compile Include="Excel\CalcEngine\Exceptions\CellReferenceException.cs" />
     <Compile Include="Excel\CalcEngine\Exceptions\CellValueException.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Excel\ConditionalFormats\Save\XLCFBaseConverter.cs" />
     <Compile Include="Excel\ConditionalFormats\Save\XLCFConvertersExtension.cs" />
     <Compile Include="Excel\ConditionalFormats\Save\XLCFDataBarConverterExtension.cs" />
+    <Compile Include="Excel\ConditionalFormats\Save\XLCFDatesOccuringConverter.cs" />
     <Compile Include="Excel\Drawings\IXLPictures.cs" />
     <Compile Include="Excel\Drawings\PictureEnums.cs" />
     <Compile Include="Excel\Drawings\XLPicture.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\OpenXmlPartContainerExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Utils\ColorStringParser.cs" />
     <Compile Include="Utils\GraphicsUtils.cs" />
     <Compile Include="Utils\OpenXmlHelper.cs" />
     <Compile Include="Utils\XmlEncoder.cs" />

@@ -77,6 +77,9 @@ namespace ClosedXML_Examples.Misc
             ws.Cell(++ro, co).Value = "Double Number:";
             ws.Cell(ro, co + 1).Value = 123.45d;
 
+            ws.Cell(++ro, co).Value = "Large Double Number:";
+            ws.Cell(ro, co + 1).Value = 9.999E307d;
+
             ro++;
 
             ws.Cell(++ro, co).Value = "Explicit Text:";
@@ -145,6 +148,11 @@ namespace ClosedXML_Examples.Misc
 
             ws.Cell(++ro, co).Value = "Text to Number:";
             ws.Cell(ro, co + 1).Value = "'123.45";
+            ws.Cell(ro, co + 1).DataType = XLDataType.Number;
+
+            ws.Cell(++ro, co).Value = "Percentage Text to Number:";
+            ws.Cell(ro, co + 1).Value = "'55.12%";
+            ws.Cell(ro, co + 1).Style.NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.PercentPrecision2);
             ws.Cell(ro, co + 1).DataType = XLDataType.Number;
 
             ws.Cell(++ro, co).Value = "@ format to Number:";

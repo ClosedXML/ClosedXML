@@ -498,7 +498,10 @@ namespace ClosedXML.Excel
             else if (_loadSource == XLLoadSource.File)
             {
                 if (String.Compare(_originalFile.Trim(), file.Trim(), true) != 0)
+                {
                     File.Copy(_originalFile, file, true);
+                    File.SetAttributes(file, FileAttributes.Normal);
+                }
 
                 CreatePackage(file, GetSpreadsheetDocumentType(file), options);
             }
@@ -988,7 +991,17 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return _originalFile ?? String.Format("XLWorkbook({0})", _originalStream.ToString());
+            switch (_loadSource)
+            {
+                case XLLoadSource.New:
+                    return "XLWorkbook(new)";
+                case XLLoadSource.File:
+                    return String.Format("XLWorkbook({0})", _originalFile);
+                case XLLoadSource.Stream:
+                    return String.Format("XLWorkbook({0})", _originalStream.ToString());
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

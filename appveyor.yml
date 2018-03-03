@@ -1,4 +1,4 @@
-version: 0.8.{build}
+version: 0.92.{build}
 branches:
   # whitelist
   only:
@@ -28,7 +28,7 @@ assembly_info:
 platform: Any CPU
 
 build:
-  parallel: true                                            # enable MSBuild parallel builds
+  parallel: true               # enable MSBuild parallel builds
   project: ClosedXML.sln       # path to Visual Studio solution or project
   verbosity: minimal
 

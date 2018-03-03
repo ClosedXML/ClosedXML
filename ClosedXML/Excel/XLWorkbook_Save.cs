@@ -731,7 +731,7 @@ namespace ClosedXML.Excel
                     var definedNameText = worksheet.PageSetup.PrintAreas.Aggregate(String.Empty,
                         (current, printArea) =>
                             current +
-                            ("'" + worksheetName + "'!" +
+                            (worksheetName.EscapeSheetName() + "!" +
                              printArea.RangeAddress.
                                  FirstAddress.ToStringFixed(
                                      XLReferenceStyle.A1) +
@@ -750,7 +750,7 @@ namespace ClosedXML.Excel
                     {
                         Name = "_xlnm._FilterDatabase",
                         LocalSheetId = sheetId,
-                        Text = "'" + worksheet.Name + "'!" +
+                        Text = worksheet.Name.EscapeSheetName() + "!" +
                                worksheet.AutoFilter.Range.RangeAddress.FirstAddress.ToStringFixed(
                                    XLReferenceStyle.A1) +
                                ":" +
@@ -782,14 +782,14 @@ namespace ClosedXML.Excel
                 var definedNameTextColumn = String.Empty;
                 if (worksheet.PageSetup.FirstRowToRepeatAtTop > 0)
                 {
-                    definedNameTextRow = "'" + worksheet.Name + "'!" + worksheet.PageSetup.FirstRowToRepeatAtTop
+                    definedNameTextRow = worksheet.Name.EscapeSheetName() + "!" + worksheet.PageSetup.FirstRowToRepeatAtTop
                                          + ":" + worksheet.PageSetup.LastRowToRepeatAtTop;
                 }
                 if (worksheet.PageSetup.FirstColumnToRepeatAtLeft > 0)
                 {
                     var minColumn = worksheet.PageSetup.FirstColumnToRepeatAtLeft;
                     var maxColumn = worksheet.PageSetup.LastColumnToRepeatAtLeft;
-                    definedNameTextColumn = "'" + worksheet.Name + "'!" +
+                    definedNameTextColumn = worksheet.Name.EscapeSheetName() + "!" +
                                             XLHelper.GetColumnLetterFromNumber(minColumn)
                                             + ":" + XLHelper.GetColumnLetterFromNumber(maxColumn);
                 }
@@ -2043,7 +2043,6 @@ namespace ClosedXML.Excel
                 var containsBlank = source.CellsUsed(true, cell => cell.Address.ColumnNumber == columnNumber
                                                                && cell.Address.RowNumber > source.FirstRow().RowNumber()
                                                                && cell.IsEmpty()).Any();
-
 
                 if (types.Length == 1 && types.Single() == XLDataType.Number)
                 {
@@ -3730,6 +3729,15 @@ namespace ClosedXML.Excel
             if (b.DiagonalDown != null)
                 nb.DiagonalDown = b.DiagonalDown.Value;
 
+            if (b.DiagonalBorder != null)
+            {
+                if (b.DiagonalBorder.Style != null)
+                    nb.DiagonalBorder = b.DiagonalBorder.Style.Value.ToClosedXml();
+                var bColor = GetColor(b.DiagonalBorder.Color);
+                if (bColor.HasValue)
+                    nb.DiagonalBorderColor = bColor;
+            }
+
             if (b.LeftBorder != null)
             {
                 if (b.LeftBorder.Style != null)
@@ -4327,30 +4335,57 @@ namespace ClosedXML.Excel
             pane.HorizontalSplit = hSplit;
             pane.VerticalSplit = ySplit;
 
+            pane.ActivePane = (ySplit == 0 ? PaneValues.TopRight : 0)
+                              | (hSplit == 0 ? PaneValues.BottomLeft : 0);
+
             pane.TopLeftCell = XLHelper.GetColumnLetterFromNumber(xlWorksheet.SheetView.SplitColumn + 1)
                                + (xlWorksheet.SheetView.SplitRow + 1);
 
             if (hSplit == 0 && ySplit == 0)
+            {
+                pane = null;
                 sheetView.RemoveAllChildren<Pane>();
+            }
+            else
+                sheetView.TopLeftCell = null;
 
             if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
             {
                 sheetView.RemoveAllChildren<Selection>();
 
                 var firstSelection = xlWorksheet.SelectedRanges.FirstOrDefault();
-                var selection = new Selection();
-                if (xlWorksheet.ActiveCell != null)
-                    selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
-                else if (firstSelection != null)
-                    selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
 
-                var seqRef = new List<String> { selection.ActiveCell.Value };
-                seqRef.AddRange(xlWorksheet.SelectedRanges
-                    .Select(range => range.RangeAddress.ToStringRelative(false)));
+                Action<Selection> populateSelection = (Selection selection) =>
+                {
+                    if (xlWorksheet.ActiveCell != null)
+                        selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
+                    else if (firstSelection != null)
+                        selection.ActiveCell = firstSelection.RangeAddress.FirstAddress.ToStringRelative(false);
 
-                selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
+                    var seqRef = new List<String> { selection.ActiveCell.Value };
+                    seqRef.AddRange(xlWorksheet.SelectedRanges
+                        .Select(range =>
+                        {
+                            if (range.RangeAddress.FirstAddress.Equals(range.RangeAddress.LastAddress))
+                                return range.RangeAddress.FirstAddress.ToStringRelative(false);
+                            else
+                                return range.RangeAddress.ToStringRelative(false);
+                        }));
 
-                sheetView.Append(selection);
+                    selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
+
+                    sheetView.Append(selection);
+                };
+
+                populateSelection(new Selection());
+                // If a pane exists, we need to set the active pane too
+                if (pane != null)
+                {
+                    populateSelection(new Selection()
+                    {
+                        Pane = pane.ActivePane
+                    });
+                }
             }
 
             if (xlWorksheet.SheetView.ZoomScale == 100)
@@ -4818,6 +4853,7 @@ namespace ClosedXML.Excel
                 sheetProtection.AutoFilter = OpenXmlHelper.GetBooleanValue(!protection.AutoFilter, true);
                 sheetProtection.PivotTables = OpenXmlHelper.GetBooleanValue(!protection.PivotTables, true);
                 sheetProtection.Sort = OpenXmlHelper.GetBooleanValue(!protection.Sort, true);
+                sheetProtection.Objects = OpenXmlHelper.GetBooleanValue(!protection.Objects, true);
                 sheetProtection.SelectLockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectLockedCells, false);
                 sheetProtection.SelectUnlockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectUnlockedCells, false);
             }
@@ -5211,21 +5247,35 @@ namespace ClosedXML.Excel
 
             #region RowBreaks
 
-            if (!worksheetPart.Worksheet.Elements<RowBreaks>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.RowBreaks);
-                worksheetPart.Worksheet.InsertAfter(new RowBreaks(), previousElement);
-            }
-
-            var rowBreaks = worksheetPart.Worksheet.Elements<RowBreaks>().First();
-
             var rowBreakCount = xlWorksheet.PageSetup.RowBreaks.Count;
             if (rowBreakCount > 0)
             {
+                if (!worksheetPart.Worksheet.Elements<RowBreaks>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.RowBreaks);
+                    worksheetPart.Worksheet.InsertAfter(new RowBreaks(), previousElement);
+                }
+
+                var rowBreaks = worksheetPart.Worksheet.Elements<RowBreaks>().First();
+
+                var existingBreaks = rowBreaks.ChildElements.OfType<Break>();
+                var rowBreaksToDelete = existingBreaks
+                    .Where(rb => !rb.Id.HasValue ||
+                                 !xlWorksheet.PageSetup.RowBreaks.Contains((int)rb.Id.Value))
+                    .ToList();
+
+                foreach (var rb in rowBreaksToDelete)
+                {
+                    rowBreaks.RemoveChild(rb);
+                }
+
+                var rowBreaksToAdd = xlWorksheet.PageSetup.RowBreaks
+                    .Where(xlRb => !existingBreaks.Any(rb => rb.Id.HasValue && rb.Id.Value == xlRb));
+
                 rowBreaks.Count = (UInt32)rowBreakCount;
                 rowBreaks.ManualBreakCount = (UInt32)rowBreakCount;
                 var lastRowNum = (UInt32)xlWorksheet.RangeAddress.LastAddress.RowNumber;
-                foreach (var break1 in xlWorksheet.PageSetup.RowBreaks.Select(rb => new Break
+                foreach (var break1 in rowBreaksToAdd.Select(rb => new Break
                 {
                     Id = (UInt32)rb,
                     Max = lastRowNum,
@@ -5244,21 +5294,35 @@ namespace ClosedXML.Excel
 
             #region ColumnBreaks
 
-            if (!worksheetPart.Worksheet.Elements<ColumnBreaks>().Any())
-            {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ColumnBreaks);
-                worksheetPart.Worksheet.InsertAfter(new ColumnBreaks(), previousElement);
-            }
-
-            var columnBreaks = worksheetPart.Worksheet.Elements<ColumnBreaks>().First();
-
             var columnBreakCount = xlWorksheet.PageSetup.ColumnBreaks.Count;
             if (columnBreakCount > 0)
             {
+                if (!worksheetPart.Worksheet.Elements<ColumnBreaks>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ColumnBreaks);
+                    worksheetPart.Worksheet.InsertAfter(new ColumnBreaks(), previousElement);
+                }
+
+                var columnBreaks = worksheetPart.Worksheet.Elements<ColumnBreaks>().First();
+
+                var existingBreaks = columnBreaks.ChildElements.OfType<Break>();
+                var columnBreaksToDelete = existingBreaks
+                    .Where(cb => !cb.Id.HasValue ||
+                                 !xlWorksheet.PageSetup.ColumnBreaks.Contains((int)cb.Id.Value))
+                    .ToList();
+
+                foreach (var rb in columnBreaksToDelete)
+                {
+                    columnBreaks.RemoveChild(rb);
+                }
+
+                var columnBreaksToAdd = xlWorksheet.PageSetup.ColumnBreaks
+                    .Where(xlCb => !existingBreaks.Any(cb => cb.Id.HasValue && cb.Id.Value == xlCb));
+
                 columnBreaks.Count = (UInt32)columnBreakCount;
                 columnBreaks.ManualBreakCount = (UInt32)columnBreakCount;
                 var maxColumnNumber = (UInt32)xlWorksheet.RangeAddress.LastAddress.ColumnNumber;
-                foreach (var break1 in xlWorksheet.PageSetup.ColumnBreaks.Select(cb => new Break
+                foreach (var break1 in columnBreaksToAdd.Select(cb => new Break
                 {
                     Id = (UInt32)cb,
                     Max = maxColumnNumber,
@@ -5296,6 +5360,16 @@ namespace ClosedXML.Excel
 
             #region Drawings
 
+            if (worksheetPart.DrawingsPart != null)
+            {
+                var xlPictures = xlWorksheet.Pictures as Drawings.XLPictures;
+                foreach (var removedPicture in xlPictures.Deleted)
+                {
+                    worksheetPart.DrawingsPart.DeletePart(removedPicture);
+                }
+                xlPictures.Deleted.Clear();
+            }
+
             foreach (var pic in xlWorksheet.Pictures)
             {
                 AddPictureAnchor(worksheetPart, pic, context);
@@ -5310,6 +5384,14 @@ namespace ClosedXML.Excel
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
                 worksheetPart.Worksheet.InsertBefore(worksheetDrawing, tableParts);
             }
+
+            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null)
+            {
+                var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
+                worksheetPart.Worksheet.RemoveChild<Drawing>(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
+                worksheetPart.DeletePart(worksheetPart.DrawingsPart);
+            }
+
 
             #endregion Drawings
 
@@ -5449,49 +5531,77 @@ namespace ClosedXML.Excel
             {
                 var filterColumn = new FilterColumn { ColumnId = (UInt32)kp.Key - 1 };
                 var xlFilterColumn = xlAutoFilter.Column(kp.Key);
-                var filterType = xlFilterColumn.FilterType;
-                if (filterType == XLFilterType.Custom)
+
+                switch (xlFilterColumn.FilterType)
                 {
-                    var customFilters = new CustomFilters();
-                    foreach (var filter in kp.Value)
-                    {
-                        var customFilter = new CustomFilter { Val = filter.Value.ToString() };
+                    case XLFilterType.Custom:
+                        var customFilters = new CustomFilters();
+                        foreach (var filter in kp.Value)
+                        {
+                            var customFilter = new CustomFilter { Val = filter.Value.ToString() };
 
-                        if (filter.Operator != XLFilterOperator.Equal)
-                            customFilter.Operator = filter.Operator.ToOpenXml();
+                            if (filter.Operator != XLFilterOperator.Equal)
+                                customFilter.Operator = filter.Operator.ToOpenXml();
 
-                        if (filter.Connector == XLConnector.And)
-                            customFilters.And = true;
+                            if (filter.Connector == XLConnector.And)
+                                customFilters.And = true;
 
-                        customFilters.Append(customFilter);
-                    }
-                    filterColumn.Append(customFilters);
-                }
-                else if (filterType == XLFilterType.TopBottom)
-                {
-                    var top101 = new Top10 { Val = (double)xlFilterColumn.TopBottomValue };
-                    if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
-                        top101.Percent = true;
-                    if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
-                        top101.Top = false;
+                            customFilters.Append(customFilter);
+                        }
+                        filterColumn.Append(customFilters);
+                        break;
 
-                    filterColumn.Append(top101);
-                }
-                else if (filterType == XLFilterType.Dynamic)
-                {
-                    var dynamicFilter = new DynamicFilter
-                    { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
-                    filterColumn.Append(dynamicFilter);
-                }
-                else
-                {
-                    var filters = new Filters();
-                    foreach (var filter in kp.Value)
-                    {
-                        filters.Append(new Filter { Val = filter.Value.ToString() });
-                    }
+                    case XLFilterType.TopBottom:
 
-                    filterColumn.Append(filters);
+                        var top101 = new Top10 { Val = (double)xlFilterColumn.TopBottomValue };
+                        if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
+                            top101.Percent = true;
+                        if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
+                            top101.Top = false;
+
+                        filterColumn.Append(top101);
+                        break;
+                    case XLFilterType.Dynamic:
+
+                        var dynamicFilter = new DynamicFilter
+                        { Type = xlFilterColumn.DynamicType.ToOpenXml(), Val = xlFilterColumn.DynamicValue };
+                        filterColumn.Append(dynamicFilter);
+                        break;
+                    case XLFilterType.DateTimeGrouping:
+                        var dateTimeGroupFilters = new Filters();
+                        foreach (var filter in kp.Value)
+                        {
+                            if (filter.Value is DateTime)
+                            {
+                                var d = (DateTime)filter.Value;
+                                var dgi = new DateGroupItem
+                                {
+                                    Year = (UInt16)d.Year,
+                                    DateTimeGrouping = filter.DateTimeGrouping.ToOpenXml()
+                                };
+
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Month) dgi.Month = (UInt16)d.Month;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Day) dgi.Day = (UInt16)d.Day;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Hour) dgi.Hour = (UInt16)d.Hour;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Minute) dgi.Minute = (UInt16)d.Minute;
+                                if (filter.DateTimeGrouping >= XLDateTimeGrouping.Second) dgi.Second = (UInt16)d.Second;
+
+                                dateTimeGroupFilters.Append(dgi);
+                            }
+                        }
+                        filterColumn.Append(dateTimeGroupFilters);
+                        break;
+
+                    default:
+                        var filters = new Filters();
+                        foreach (var filter in kp.Value)
+                        {
+                            filters.Append(new Filter { Val = filter.Value.ToString() });
+                        }
+
+                        filterColumn.Append(filters);
+                        break;
+
                 }
                 autoFilter.Append(filterColumn);
             }

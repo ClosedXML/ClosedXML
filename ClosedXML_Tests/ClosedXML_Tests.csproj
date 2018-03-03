@@ -36,6 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -251,6 +252,7 @@
     <EmbeddedResource Include="Resource\Examples\AutoFilter\DynamicAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\AutoFilter\RegularAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\AutoFilter\CustomAutoFilter.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\AutoFilter\DateTimeGroupAutoFilter.xlsx" />
     <EmbeddedResource Include="Resource\Examples\Comments\AddingComments.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowHigh.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFColorScaleLowMidHigh.xlsx" />
@@ -302,6 +304,9 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDataBarNegative.xlsx" />
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFStopIfTrue.xlsx" />
     <EmbeddedResource Include="Resource\Misc\InvalidPrintArea.xlsx" />
+    <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDatesOccurring.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\LoadImageWithoutTransform2D.xlsx" />
+    <EmbeddedResource Include="Resource\Misc\EscapedApostrophe.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />

@@ -7,7 +7,12 @@ namespace ClosedXML.Excel
     {
         public static ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority)
         {
-            return new ConditionalFormattingRule { Type = cf.ConditionalFormatType.ToOpenXml(), Priority = priority, StopIfTrue = OpenXmlHelper.GetBooleanValue(((XLConditionalFormat)cf).StopIfTrueInternal, false) };
+            return new ConditionalFormattingRule
+            {
+                Type = cf.ConditionalFormatType.ToOpenXml(),
+                Priority = priority,
+                StopIfTrue = OpenXmlHelper.GetBooleanValue(cf.StopIfTrue, false)
+            };
         }
     }
 }

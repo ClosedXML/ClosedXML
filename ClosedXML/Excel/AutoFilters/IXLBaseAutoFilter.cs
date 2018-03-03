@@ -2,7 +2,7 @@ using System;
 
 namespace ClosedXML.Excel
 {
-    public enum XLFilterType { Regular, Custom, TopBottom, Dynamic }
+    public enum XLFilterType { Regular, Custom, TopBottom, Dynamic, DateTimeGrouping }
 
     public enum XLFilterDynamicType { AboveAverage, BelowAverage }
 
