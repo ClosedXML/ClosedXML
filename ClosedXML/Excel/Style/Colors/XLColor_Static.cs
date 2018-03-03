@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Caching;
 using ClosedXML.Utils;
 using System;
 using System.Collections.Generic;
@@ -7,21 +8,23 @@ namespace ClosedXML.Excel
 {
     public partial class XLColor
     {
+        private static readonly XLColorRepository Repository = new XLColorRepository(key => new XLColor(key));
+
         private static readonly Dictionary<Color, XLColor> ByColor = new Dictionary<Color, XLColor>();
         private static readonly Object ByColorLock = new Object();
 
+        internal static XLColor FromKey(XLColorKey key)
+        {
+            return Repository.GetOrCreate(key);
+        }
+
         public static XLColor FromColor(Color color)
         {
-            XLColor ret;
-            lock (ByColorLock)
+            return FromKey(new XLColorKey
             {
-                if (!ByColor.TryGetValue(color, out ret))
-                {
-                    ret = new XLColor(color);
-                    ByColor.Add(color, ret);
-                }
-            }
-            return ret;
+                ColorType = XLColorType.Color,
+                Color = color
+            });
         }
 
         public static XLColor FromArgb(Int32 argb)
@@ -54,67 +57,33 @@ namespace ClosedXML.Excel
             return FromColor(ColorStringParser.ParseFromHtml(htmlColor));
         }
 
-        private static readonly Dictionary<Int32, XLColor> ByIndex = new Dictionary<Int32, XLColor>();
-        private static readonly Object ByIndexLock = new Object();
 
         public static XLColor FromIndex(Int32 index)
         {
-            XLColor ret;
-            lock (ByIndexLock)
+            return FromKey(new XLColorKey
             {
-                if (!ByIndex.TryGetValue(index, out ret))
-                {
-                    ret = new XLColor(index);
-                    ByIndex.Add(index, ret);
-                }
-            }
-            return ret;
+                ColorType = XLColorType.Indexed,
+                Indexed = index
+            });
         }
-
-        private static readonly Dictionary<XLThemeColor, XLColor> ByTheme = new Dictionary<XLThemeColor, XLColor>();
-        private static readonly Object ByThemeLock = new Object();
 
         public static XLColor FromTheme(XLThemeColor themeColor)
         {
-            XLColor ret;
-            lock (ByThemeLock)
+            return FromKey(new XLColorKey
             {
-                if (!ByTheme.TryGetValue(themeColor, out ret))
-                {
-                    ret = new XLColor(themeColor);
-                    ByTheme.Add(themeColor, ret);
-                }
-            }
-            return ret;
+                ColorType = XLColorType.Theme,
+                ThemeColor = themeColor
+            });
         }
-
-        private static readonly Dictionary<XLThemeColor, Dictionary<Double, XLColor>> ByThemeTint = new Dictionary<XLThemeColor, Dictionary<double, XLColor>>();
-        private static readonly Object ByThemeTintLock = new Object();
 
         public static XLColor FromTheme(XLThemeColor themeColor, Double themeTint)
         {
-            XLColor ret;
-            lock (ByThemeTintLock)
+            return FromKey(new XLColorKey
             {
-                Dictionary<Double, XLColor> themeTints;
-                if (ByThemeTint.TryGetValue(themeColor, out themeTints))
-                {
-                    if (!themeTints.TryGetValue(themeTint, out ret))
-                    {
-                        ret = new XLColor(themeColor, themeTint);
-                        themeTints.Add(themeTint, ret);
-                    }
-                }
-                else
-                {
-                    themeTints = new Dictionary<double, XLColor>();
-                    ret = new XLColor(themeColor, themeTint);
-                    themeTints.Add(themeTint, ret);
-
-                    ByThemeTint.Add(themeColor, themeTints);
-                }
-            }
-            return ret;
+                ColorType = XLColorType.Theme,
+                ThemeColor = themeColor,
+                ThemeTint = themeTint
+            });
         }
 
         private static Dictionary<Int32, XLColor> _indexedColors;

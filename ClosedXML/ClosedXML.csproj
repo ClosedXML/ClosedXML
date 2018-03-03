@@ -71,6 +71,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Excel\AutoFilters\XLDateTimeGroupFilteredColumn.cs" />
+    <Compile Include="Excel\Caching\IXLRepository.cs" />
+    <Compile Include="Excel\Caching\XLAlignmentRepository.cs" />
+    <Compile Include="Excel\Caching\XLBorderRepository.cs" />
+    <Compile Include="Excel\Caching\XLColorRepository.cs" />
+    <Compile Include="Excel\Caching\XLFillRepository.cs" />
+    <Compile Include="Excel\Caching\XLFontRepository.cs" />
+    <Compile Include="Excel\Caching\XLNumberFormatRepository.cs" />
+    <Compile Include="Excel\Caching\XLProtectionRepository.cs" />
+    <Compile Include="Excel\Caching\XLRepositoryBase.cs" />
+    <Compile Include="Excel\Caching\XLStyleRepository.cs" />
+    <Compile Include="Excel\Caching\XLWorkbookElementRepositoryBase.cs" />
     <Compile Include="Excel\CalcEngine\Exceptions\CalcEngineException.cs" />
     <Compile Include="Excel\CalcEngine\Exceptions\CellReferenceException.cs" />
     <Compile Include="Excel\CalcEngine\Exceptions\CellValueException.cs" />
@@ -103,6 +114,21 @@
     <Compile Include="Excel\Misc\XLReentrantEnumerableSet.cs" />
     <Compile Include="Excel\SaveOptions.cs" />
     <Compile Include="Excel\Style\XLPredefinedFormat.cs" />
+    <Compile Include="Excel\Style\XLAlignmentValue.cs" />
+    <Compile Include="Excel\Style\XLAlignmentKey.cs" />
+    <Compile Include="Excel\Style\XLBorderValue.cs" />
+    <Compile Include="Excel\Style\XLBorderKey.cs" />
+    <Compile Include="Excel\Style\XLColorKey.cs" />
+    <Compile Include="Excel\Style\XLFillValue.cs" />
+    <Compile Include="Excel\Style\XLFillKey.cs" />
+    <Compile Include="Excel\Style\XLFontValue.cs" />
+    <Compile Include="Excel\Style\XLFontKey.cs" />
+    <Compile Include="Excel\Style\XLNumberFormatValue.cs" />
+    <Compile Include="Excel\Style\XLNumberFormatKey.cs" />
+    <Compile Include="Excel\Style\XLProtectionValue.cs" />
+    <Compile Include="Excel\Style\XLProtectionKey.cs" />
+    <Compile Include="Excel\Style\XLStyleValue.cs" />
+    <Compile Include="Excel\Style\XLStyleKey.cs" />
     <Compile Include="Excel\Tables\XLTableTheme.cs" />
     <Compile Include="Excel\XLConstants.cs" />
     <Compile Include="Excel\IXLWorkbook.cs" />

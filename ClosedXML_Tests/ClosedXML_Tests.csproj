@@ -80,6 +80,7 @@
     <Compile Include="Examples\StylesTests.cs" />
     <Compile Include="Examples\TablesTests.cs" />
     <Compile Include="ExcelDocsComparerTests.cs" />
+    <Compile Include="Excel\Caching\SampleRepositoryTests.cs" />
     <Compile Include="Excel\CalcEngine\CalcEngineExceptionTests.cs" />
     <Compile Include="Excel\CalcEngine\InformationTests.cs" />
     <Compile Include="Excel\CalcEngine\LogicalTests.cs" />
