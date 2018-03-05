@@ -98,9 +98,9 @@ namespace ClosedXML.Excel
             if (Cell == null) return;
             Worksheet.Hyperlinks.Delete(Cell.Address);
             if (Cell.Style.Font.FontColor.Equals(XLColor.FromTheme(XLThemeColor.Hyperlink)))
-                Cell.Style.Font.FontColor = Worksheet.Style.Font.FontColor;
+                Cell.Style.Font.FontColor = Worksheet.StyleValue.Font.FontColor;
 
-            Cell.Style.Font.Underline = Worksheet.Style.Font.Underline;
+            Cell.Style.Font.Underline = Worksheet.StyleValue.Font.Underline;
         }
     }
 }

@@ -188,7 +188,7 @@ namespace ClosedXML.Excel
 
         public void CopyFrom(IXLConditionalFormat other)
         {
-            Style = other.Style;
+            InnerStyle = other.Style;
             ConditionalFormatType = other.ConditionalFormatType;
             TimePeriod = other.TimePeriod;
             IconSetStyle = other.IconSetStyle;

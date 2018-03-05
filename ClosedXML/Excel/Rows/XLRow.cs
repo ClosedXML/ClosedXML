@@ -304,7 +304,7 @@ namespace ClosedXML.Excel
             foreach (XLCell c in from XLCell c in Row(startColumn, endColumn).CellsUsed() where !c.IsMerged() select c)
             {
                 Double thisHeight;
-                Int32 textRotation = c.Style.Alignment.TextRotation;
+                Int32 textRotation = c.StyleValue.Alignment.TextRotation;
                 if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
                 {
                     var kpList = new List<KeyValuePair<IXLFontBase, string>>();
@@ -518,7 +518,7 @@ namespace ClosedXML.Excel
             row.Clear();
             var newRow = (XLRow)row;
             newRow._height = _height;
-            newRow.Style = GetStyle();
+            newRow.InnerStyle = GetStyle();
 
             using (var asRange = AsRange())
                 asRange.CopyTo(row).Dispose();
@@ -623,11 +623,11 @@ namespace ClosedXML.Excel
                 Worksheet.Internals.RowsCollection[RowNumber()].SetStyleNoColumns(value);
             else
             {
-                Style = value;
+                InnerStyle = value;
 
                 int row = RowNumber();
                 foreach (XLCell c in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
-                    c.Style = value;
+                    c.InnerStyle = value;
             }
         }
 

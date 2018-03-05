@@ -10,9 +10,9 @@ namespace ClosedXML.Excel
             String val = GetQuoted(cf.Values[1]);
 
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
-
-            if (!cf.Style.Value.Equals(XLWorkbook.DefaultStyle.Value))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cf.Style.Value.Key];
+            var cfStyle = cf.Style.Value;
+            if (!cfStyle.Equals(XLWorkbook.DefaultStyle.Value))
+                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle.Key];
 
             conditionalFormattingRule.Operator = cf.Operator.ToOpenXml();
 

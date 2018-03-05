@@ -291,9 +291,9 @@ namespace ClosedXML.Excel
             foreach (XLCell c in Column(startRow, endRow).CellsUsed())
             {
                 if (c.IsMerged()) continue;
-
+                var cellStyle = c.Style;
                 Double thisWidthMax = 0;
-                Int32 textRotation = c.Style.Alignment.TextRotation;
+                Int32 textRotation = c.StyleValue.Alignment.TextRotation;
                 if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
                 {
                     var kpList = new List<KeyValuePair<IXLFontBase, string>>();
@@ -326,7 +326,7 @@ namespace ClosedXML.Excel
                             String s = arr[i];
                             if (i < arrCount - 1)
                                 s += Environment.NewLine;
-                            kpList.Add(new KeyValuePair<IXLFontBase, String>(c.Style.Font, s));
+                            kpList.Add(new KeyValuePair<IXLFontBase, String>(cellStyle.Font, s));
                         }
                     }
 
@@ -429,7 +429,7 @@ namespace ClosedXML.Excel
                     #endregion
                 }
                 else
-                    thisWidthMax = c.Style.Font.GetWidth(c.GetFormattedString(), fontCache);
+                    thisWidthMax = cellStyle.Font.GetWidth(c.GetFormattedString(), fontCache);
 
                 if (autoFilterRows.Contains(c.Address.RowNumber))
                     thisWidthMax += 2.7148; // Allow room for arrow icon in autofilter
@@ -588,7 +588,7 @@ namespace ClosedXML.Excel
             column.Clear();
             var newColumn = (XLColumn)column;
             newColumn._width = _width;
-            newColumn.Style = GetStyle();
+            newColumn.InnerStyle = InnerStyle;
 
             using (var asRange = AsRange())
                 asRange.CopyTo(column).Dispose();

@@ -23,9 +23,9 @@ namespace ClosedXML.Excel
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
-
-            if (!cf.Style.Value.Equals(XLWorkbook.DefaultStyle))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cf.Style.Value.Key];
+            var cfStyle = cf.Style.Value;
+            if (!cfStyle.Equals(XLWorkbook.DefaultStyle))
+                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle.Key];
 
             conditionalFormattingRule.TimePeriod = cf.TimePeriod.ToOpenXml();
 

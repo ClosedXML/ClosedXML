@@ -1131,10 +1131,10 @@ namespace ClosedXML.Excel
 
                 if (SettingHyperlink) return;
 
-                if (GetStyleForRead().Font.FontColor.Equals(_worksheet.Style.Font.FontColor))
+                if (GetStyleForRead().Font.FontColor.Equals(_worksheet.StyleValue.Font.FontColor))
                     Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
 
-                if (GetStyleForRead().Font.Underline == _worksheet.Style.Font.Underline)
+                if (GetStyleForRead().Font.Underline == _worksheet.StyleValue.Font.Underline)
                     Style.Font.Underline = XLFontUnderlineValues.Single;
             }
         }
@@ -2165,7 +2165,7 @@ namespace ClosedXML.Excel
         {
             CopyValuesFrom(otherCell);
 
-            Style = otherCell.Style;
+            InnerStyle = otherCell.InnerStyle;
 
             if (copyDataValidations)
             {

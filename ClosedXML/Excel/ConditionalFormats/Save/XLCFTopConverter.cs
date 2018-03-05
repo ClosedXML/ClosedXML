@@ -9,9 +9,9 @@ namespace ClosedXML.Excel
         {
             UInt32 val = UInt32.Parse(cf.Values[1].Value);
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
-
-            if (!cf.Style.Value.Equals(XLWorkbook.DefaultStyle.Value))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cf.Style.Value.Key];
+            var cfStyle = cf.Style.Value;
+            if (!cfStyle.Equals(XLWorkbook.DefaultStyle.Value))
+                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle.Key];
 
             conditionalFormattingRule.Percent = cf.Percent;
             conditionalFormattingRule.Rank = val;

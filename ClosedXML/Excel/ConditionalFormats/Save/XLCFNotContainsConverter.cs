@@ -9,9 +9,9 @@ namespace ClosedXML.Excel
         {
             String val = cf.Values[1].Value;
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
-
-            if (!cf.Style.Value.Equals(XLWorkbook.DefaultStyle))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cf.Style.Value.Key];
+            var cfStyle = cf.Style.Value;
+            if (!cfStyle.Equals(XLWorkbook.DefaultStyle))
+                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle.Key];
 
             conditionalFormattingRule.Operator = ConditionalFormattingOperatorValues.NotContains;
             conditionalFormattingRule.Text = val;
