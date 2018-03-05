@@ -16,9 +16,8 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             SetFormat1(ws.Range("A1:A1").AddConditionalFormat());
             var wb2 = new XLWorkbook();
             XLWorksheet ws2 = (XLWorksheet)wb2.Worksheets.Add("Sheet2");
-            Assert.That(ws2.Styles.Count(), Is.EqualTo(1)); //Standard style
-            ws.Range("A1:A1").CopyTo(ws2.FirstCell());
-            Assert.That(ws2.Styles.Count(), Is.EqualTo(2)); //Added blue style
+            ws2.FirstCell().CopyFrom(ws.FirstCell());
+            Assert.That(ws2.ConditionalFormats.First().Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Blue)); //Added blue style
 
         }
 
