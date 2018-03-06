@@ -2243,7 +2243,7 @@ namespace ClosedXML.Excel
             var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(source)).ToList();
             foreach (var cf in conditionalFormats)
             {
-                var c = new XLConditionalFormat(cf as XLConditionalFormat) { Range = AsRange() };
+                var c = new XLConditionalFormat(cf as XLConditionalFormat, AsRange());
                 var oldValues = c.Values.Values.ToList();
                 c.Values.Clear();
                 foreach (var v in oldValues)

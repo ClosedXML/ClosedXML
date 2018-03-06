@@ -116,10 +116,10 @@ namespace ClosedXML.Excel
 
         }
 
-        public XLConditionalFormat(XLConditionalFormat conditionalFormat)
+        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange)
         {
+            Range = targetRange;
             Id = Guid.NewGuid();
-            Range = conditionalFormat.Range;
             Style = new XLStyle(this, conditionalFormat.Style);
             Values = new XLDictionary<XLFormula>(conditionalFormat.Values);
             Colors = new XLDictionary<XLColor>(conditionalFormat.Colors);
