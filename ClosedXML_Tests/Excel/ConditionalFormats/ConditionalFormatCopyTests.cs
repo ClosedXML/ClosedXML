@@ -11,19 +11,16 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         public void StylesAreCreatedDuringCopy()
         {
             var wb = new XLWorkbook();
-            XLWorksheet ws = (XLWorksheet)wb.Worksheets.Add("Sheet");
+            var ws = wb.Worksheets.Add("Sheet");
+            var format = ws.Range("A1:A1").AddConditionalFormat();
+            format.WhenEquals("=" + format.Range.FirstCell().CellRight(4).Address.ToStringRelative()).Fill
+                  .SetBackgroundColor(XLColor.Blue);
 
-            SetFormat1(ws.Range("A1:A1").AddConditionalFormat());
             var wb2 = new XLWorkbook();
-            XLWorksheet ws2 = (XLWorksheet)wb2.Worksheets.Add("Sheet2");
+            var ws2 = wb2.Worksheets.Add("Sheet2");
             ws2.FirstCell().CopyFrom(ws.FirstCell());
             Assert.That(ws2.ConditionalFormats.First().Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Blue)); //Added blue style
 
-        }
-
-        private static void SetFormat1(IXLConditionalFormat format)
-        {
-            format.WhenEquals("=" + format.Range.FirstCell().CellRight(4).Address.ToStringRelative()).Fill.SetBackgroundColor(XLColor.Blue);
         }
     }
 }
