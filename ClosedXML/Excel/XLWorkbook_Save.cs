@@ -2884,7 +2884,10 @@ namespace ClosedXML.Excel
             if (drawingsPart.HasPartWithId(pic.RelId))
                 imagePart = drawingsPart.GetPartById(pic.RelId) as ImagePart;
             else
-                imagePart = drawingsPart.AddImagePart(pic.Format.ToOpenXml(), context.RelIdGenerator.GetNext(RelType.Workbook));
+            {
+                pic.RelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                imagePart = drawingsPart.AddImagePart(pic.Format.ToOpenXml(), pic.RelId);
+            }
 
             using (var stream = new MemoryStream())
             {
