@@ -17,11 +17,10 @@ namespace ClosedXML.Excel.Drawings
 
         IXLPicture Add(Stream stream, XLPictureFormat format, String name);
 
-#if _NETFRAMEWORK_
         IXLPicture Add(Bitmap bitmap);
 
         IXLPicture Add(Bitmap bitmap, String name);
-#endif
+
         IXLPicture Add(String imageFile);
 
         IXLPicture Add(String imageFile, String name);

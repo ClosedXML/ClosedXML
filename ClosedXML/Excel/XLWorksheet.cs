@@ -1585,7 +1585,6 @@ namespace ClosedXML.Excel
             return Pictures.Add(stream, format, name);
         }
 
-#if _NETFRAMEWORK_
         public IXLPicture AddPicture(Bitmap bitmap)
         {
             return Pictures.Add(bitmap);
@@ -1595,7 +1594,6 @@ namespace ClosedXML.Excel
         {
             return Pictures.Add(bitmap, name);
         }
-#endif
 
         public IXLPicture AddPicture(string imageFile)
         {

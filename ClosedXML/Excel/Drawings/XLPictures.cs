@@ -56,7 +56,6 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
-#if _NETFRAMEWORK_
         public IXLPicture Add(Bitmap bitmap)
         {
             var picture = new XLPicture(_worksheet, bitmap);
@@ -71,7 +70,6 @@ namespace ClosedXML.Excel.Drawings
             picture.Name = name;
             return picture;
         }
-#endif
 
         public IXLPicture Add(string imageFile)
         {

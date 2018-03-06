@@ -444,11 +444,9 @@ namespace ClosedXML.Excel
 
         IXLPicture AddPicture(Stream stream, XLPictureFormat format, String name);
 
-#if _NETFRAMEWORK_
         IXLPicture AddPicture(Bitmap bitmap);
 
         IXLPicture AddPicture(Bitmap bitmap, String name);
-#endif
 
         IXLPicture AddPicture(String imageFile);
 
