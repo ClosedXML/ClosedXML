@@ -1,20 +1,20 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.Drawings;
 using ClosedXML_Tests.Utils;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClosedXML_Tests.Excel.Saving
 {
     [TestFixture]
     public class SavingTests
     {
-
         [Test]
         public void CanSuccessfullySaveFileMultipleTimes()
         {
@@ -164,7 +164,6 @@ namespace ClosedXML_Tests.Excel.Saving
             }
         }
 
-
         [Test]
         public void CannotSaveAsOverwriteExistingReadOnlyFile()
         {
@@ -220,6 +219,28 @@ namespace ClosedXML_Tests.Excel.Saving
                     Assert.AreEqual(1, ws.PageSetup.ColumnBreaks.Count);
                     Assert.AreEqual(1, ws.PageSetup.RowBreaks.Count);
                 }
+            }
+        }
+
+        [Test]
+        public void CanSaveFileWithPictureAndComment()
+        {
+            using (var ms = new MemoryStream())
+            using (var wb = new XLWorkbook())
+            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+            using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("D4").Value = "Hello world.";
+
+                ws.AddPicture(bitmap, "MyPicture")
+                    .WithPlacement(XLPicturePlacement.FreeFloating)
+                    .MoveTo(50, 50)
+                    .WithSize(200, 200);
+
+                ws.Cell("D4").Comment.SetVisible().AddText("This is a comment");
+
+                wb.SaveAs(ms);
             }
         }
     }
