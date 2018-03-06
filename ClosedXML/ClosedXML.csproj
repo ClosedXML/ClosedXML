@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/ClosedXML/ClosedXML</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <NoWarn>$(NoWarn);NU1605</NoWarn>
+    <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
     <DocumentationFile>$(PublishDir)\ClosedXML.xml</DocumentationFile>
   </PropertyGroup>
 
