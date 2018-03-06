@@ -67,7 +67,8 @@ namespace ClosedXML.Excel
 
         private readonly XLWorksheet _worksheet;
 
-        internal string _cellValue = String.Empty;
+
+        internal string _cellValue = null;
 
         private XLComment _comment;
         internal XLDataType _dataType;
