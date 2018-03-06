@@ -5383,12 +5383,13 @@ namespace ClosedXML.Excel
                 var worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
                 worksheetPart.Worksheet.InsertBefore(worksheetDrawing, tableParts);
+                cm.SetElement(XLWSContentManager.XLWSContents.Drawing, worksheetPart.Worksheet.Elements<Drawing>().First());
             }
 
             if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null)
             {
                 var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
-                worksheetPart.Worksheet.RemoveChild<Drawing>(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
+                worksheetPart.Worksheet.RemoveChild(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
                 worksheetPart.DeletePart(worksheetPart.DrawingsPart);
             }
 
@@ -5400,14 +5401,16 @@ namespace ClosedXML.Excel
             if (xlWorksheet.LegacyDrawingIsNew)
             {
                 worksheetPart.Worksheet.RemoveAllChildren<LegacyDrawing>();
+
+                if (!String.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
                 {
-                    if (!String.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
-                    {
-                        var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
-                        worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
-                            previousElement);
-                    }
+                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
+                    worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
+                        previousElement);
+
+                    cm.SetElement(XLWSContentManager.XLWSContents.LegacyDrawing, worksheetPart.Worksheet.Elements<LegacyDrawing>().First());
                 }
+
             }
 
             #endregion LegacyDrawing
