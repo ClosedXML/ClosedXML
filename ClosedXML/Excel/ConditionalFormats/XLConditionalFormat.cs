@@ -113,7 +113,7 @@ namespace ClosedXML.Excel
 
         }
 
-        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange) : base(XLStyle.Default.Value)
+        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange) : base(conditionalFormat.StyleValue)
         {
             Range = targetRange;
             Id = Guid.NewGuid();
