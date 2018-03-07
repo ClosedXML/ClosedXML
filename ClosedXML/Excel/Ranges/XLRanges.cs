@@ -205,7 +205,13 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var other = (XLRanges)obj;
+            return Equals(obj as XLRanges);
+        }
+
+        public bool Equals(XLRanges other)
+        {
+            if (other == null)
+                return false;
 
             return _ranges.Count == other._ranges.Count &&
                    _ranges.Select(thisRange => Enumerable.Contains(other._ranges, thisRange)).All(foundOne => foundOne);

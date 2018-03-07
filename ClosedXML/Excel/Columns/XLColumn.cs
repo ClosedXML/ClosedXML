@@ -288,12 +288,15 @@ namespace ClosedXML.Excel
                     && !autoFilterRows.Contains(t.AutoFilter.Range.FirstRow().RowNumber()))
                 .Select(t => t.AutoFilter.Range.FirstRow().RowNumber()));
 
+            IXLStyle cellStyle = null;
             foreach (XLCell c in Column(startRow, endRow).CellsUsed())
             {
                 if (c.IsMerged()) continue;
-                var cellStyle = c.Style;
+                if (cellStyle == null || cellStyle.Value != c.StyleValue)
+                    cellStyle = c.Style;
+
                 Double thisWidthMax = 0;
-                Int32 textRotation = c.StyleValue.Alignment.TextRotation;
+                Int32 textRotation = cellStyle.Alignment.TextRotation;
                 if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
                 {
                     var kpList = new List<KeyValuePair<IXLFontBase, string>>();

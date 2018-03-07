@@ -84,10 +84,14 @@ namespace ClosedXML.Excel
 
                 if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
-                    _container.Style.Border.SetTopBorder(value);
-                    _container.Style.Border.SetBottomBorder(value);
-                    _container.Style.Border.SetLeftBorder(value);
-                    _container.Style.Border.SetRightBorder(value);
+                    Modify(k =>
+                    {
+                        k.TopBorder = value;
+                        k.BottomBorder = value;
+                        k.LeftBorder = value;
+                        k.RightBorder = value;
+                        return k;
+                    });
                 }
                 else
                 {
@@ -111,10 +115,14 @@ namespace ClosedXML.Excel
 
                 if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
-                    _container.Style.Border.SetTopBorderColor(value);
-                    _container.Style.Border.SetBottomBorderColor(value);
-                    _container.Style.Border.SetLeftBorderColor(value);
-                    _container.Style.Border.SetRightBorderColor(value);
+                    Modify(k =>
+                    {
+                        k.TopBorderColor = value.Key;
+                        k.BottomBorderColor = value.Key;
+                        k.LeftBorderColor = value.Key;
+                        k.RightBorderColor = value.Key;
+                        return k;
+                    });
                 }
                 else
                 {
@@ -138,11 +146,14 @@ namespace ClosedXML.Excel
                 var wsContainer = _container as XLWorksheet;
                 if (wsContainer != null)
                 {
-                    //wsContainer.CellsUsed().Style.Border.SetOutsideBorder(value);
-                    wsContainer.Style.Border.SetTopBorder(value);
-                    wsContainer.Style.Border.SetBottomBorder(value);
-                    wsContainer.Style.Border.SetLeftBorder(value);
-                    wsContainer.Style.Border.SetRightBorder(value);
+                    Modify(k =>
+                    {
+                        k.TopBorder = value;
+                        k.BottomBorder = value;
+                        k.LeftBorder = value;
+                        k.RightBorder = value;
+                        return k;
+                    });
                 }
                 else
                 {
@@ -193,11 +204,14 @@ namespace ClosedXML.Excel
                 var wsContainer = _container as XLWorksheet;
                 if (wsContainer != null)
                 {
-                    //wsContainer.CellsUsed().Style.Border.SetOutsideBorderColor(value);
-                    wsContainer.Style.Border.SetTopBorderColor(value);
-                    wsContainer.Style.Border.SetBottomBorderColor(value);
-                    wsContainer.Style.Border.SetLeftBorderColor(value);
-                    wsContainer.Style.Border.SetRightBorderColor(value);
+                    Modify(k =>
+                    {
+                        k.TopBorderColor = value.Key;
+                        k.BottomBorderColor = value.Key;
+                        k.LeftBorderColor = value.Key;
+                        k.RightBorderColor = value.Key;
+                        return k;
+                    });
                 }
                 else
                 {

@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace ClosedXML.Excel
 {
@@ -39,13 +43,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Get a collection of stylized entities which current entity's style changes should be propagated to.
         /// </summary>
-        protected virtual IEnumerable<XLStylizedBase> Children 
-        {
-            get
-            {
-                return RangesUsed.OfType<XLStylizedBase>();
-            }
-        }
+        protected abstract IEnumerable<XLStylizedBase> Children { get; }
 
         public abstract IXLRanges RangesUsed { get; }
 
@@ -76,6 +74,38 @@ namespace ClosedXML.Excel
                 Children.ForEach(child => child.SetStyle(StyleValue, true));
             }
         }
+
+        private static ReferenceEqualityComparer<XLStyleValue> _comparer = new ReferenceEqualityComparer<XLStyleValue>();
+
+        public void ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
+        {
+            var children = GetChildrenRecursively(this);
+            var allChildren = children.GroupBy(child => child.StyleValue, _comparer);
+
+            foreach (var group in allChildren)
+            {
+                var styleKey = modification(group.Key.Key);
+                var styleValue = XLStyleValue.FromKey(styleKey);
+                foreach (var child in group)
+                {
+                    child.StyleValue = styleValue;
+                }
+            }
+        }
+
+        private IEnumerable<XLStylizedBase> GetChildrenRecursively(XLStylizedBase parent)
+        {
+            return new List<XLStylizedBase> { parent }
+                   .Union(parent.Children.Where(child => child != parent).SelectMany(child => GetChildrenRecursively(child)));
+        }
         #endregion Private methods
+
+        #region Nested classes
+        public sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T> where T: class
+        {
+            public bool Equals(T x, T y) => ReferenceEquals(x, y);
+            public int GetHashCode(T obj) => RuntimeHelpers.GetHashCode(obj);
+        }
+        #endregion
     }
 }

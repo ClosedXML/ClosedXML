@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -80,14 +81,7 @@ namespace ClosedXML.Excel
 
             if (_container != null)
             {
-                _container.InnerStyle = new XLStyle(_container, Key);
-
-                _container.Styles.OfType<XLStyle>()
-                    .Where(s => s._container != _container)
-                    .ForEach(style =>
-                    {
-                        style.Modify(modification);
-                    });
+                _container.ModifyStyle(modification);
             }
         }
 

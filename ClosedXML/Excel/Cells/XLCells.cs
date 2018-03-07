@@ -217,6 +217,15 @@ namespace ClosedXML.Excel
             }
         }
 
+        protected override IEnumerable<XLStylizedBase> Children
+        {
+            get
+            {
+                foreach (XLCell c in this)
+                    yield return c;
+            }
+        }
+
         public override IXLRanges RangesUsed
         {
             get

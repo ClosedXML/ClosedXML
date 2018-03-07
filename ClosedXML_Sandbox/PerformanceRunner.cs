@@ -40,6 +40,35 @@ namespace ClosedXML_Sandbox
             EmulateSave(workbook);
         }
 
+        public static void RunInsertTableWithStyles ()
+        {
+            var rows = new List<OneRow>();
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                var row = GenerateRow<OneRow>();
+                rows.Add(row);
+            }
+
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet 1");
+            worksheet.Cell(1, 1).InsertTable(rows);
+
+            CreateMergedCell(worksheet);
+
+            worksheet.Columns().AdjustToContents();
+
+            worksheet.Range(worksheet.FirstCellUsed().Address, worksheet.LastCellUsed().Address)
+                .Style
+                .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+                .Border.SetOutsideBorder(XLBorderStyleValues.Thick)
+                .Fill.SetBackgroundColor(XLColor.Red)
+                .Font.SetFontColor(XLColor.Blue)
+                .NumberFormat.SetFormat("0.00")
+                .Protection.SetLocked(false);
+
+            EmulateSave(workbook);
+        }
         public static void OpenTestFile()
         {
             using (var wb = new XLWorkbook("test.xlsx"))

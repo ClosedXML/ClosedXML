@@ -14,5 +14,7 @@ namespace ClosedXML.Excel
         /// Immutable style
         /// </summary>
         XLStyleValue StyleValue { get; }
+
+        void ModifyStyle(Func<XLStyleKey, XLStyleKey> modification);
     }
 }

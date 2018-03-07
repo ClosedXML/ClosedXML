@@ -23,5 +23,16 @@ namespace ClosedXML.Excel
         {
             get { return _container.RangesUsed; }
         }
+
+        protected override IEnumerable<XLStylizedBase> Children
+        {
+            get
+            {
+                if (_container is XLStylizedBase)
+                    yield return _container as XLStylizedBase;
+
+                yield break;
+            }
+        }
     }
 }

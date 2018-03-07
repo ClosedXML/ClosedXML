@@ -20,5 +20,10 @@ namespace ClosedXML.Excel
         {
             get { return new XLRanges(); }
         }
+
+        protected override IEnumerable<XLStylizedBase> Children
+        {
+            get { yield break; }
+        }
     }
 }
