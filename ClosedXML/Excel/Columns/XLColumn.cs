@@ -83,30 +83,8 @@ namespace ClosedXML.Excel
                     yield return Worksheet.Internals.ColumnsCollection[column];
                 else
                 {
-                    Int32 minRow = 1;
-                    Int32 maxRow = 0;
-
-                    if (Worksheet.Internals.CellsCollection.ColumnsUsed.ContainsKey(column))
-                    {
-                        minRow = Worksheet.Internals.CellsCollection.MinRowInColumn(column);
-                        maxRow = Worksheet.Internals.CellsCollection.MaxRowInColumn(column);
-                    }
-
-                    if (Worksheet.Internals.RowsCollection.Count > 0)
-                    {
-                        Int32 minInCollection = Worksheet.Internals.RowsCollection.Keys.Min();
-                        Int32 maxInCollection = Worksheet.Internals.RowsCollection.Keys.Max();
-                        if (minInCollection < minRow)
-                            minRow = minInCollection;
-                        if (maxInCollection > maxRow)
-                            maxRow = maxInCollection;
-                    }
-
-                    if (minRow > 0 && maxRow > 0)
-                    {
-                        for (Int32 ro = minRow; ro <= maxRow; ro++)
-                            yield return Worksheet.Cell(ro, column);
-                    }
+                    foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
+                        yield return cell;
                 }
             }
         }

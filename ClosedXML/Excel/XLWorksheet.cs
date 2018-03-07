@@ -113,9 +113,9 @@ namespace ClosedXML.Excel
         {
             get
             {
-                foreach (var col in ColumnsUsed(false).OfType<XLColumn>())
+                foreach (var col in ColumnsUsed(true).OfType<XLColumn>())
                     yield return col;
-                foreach (var row in RowsUsed(false).OfType<XLRow>())
+                foreach (var row in RowsUsed(true).OfType<XLRow>())
                     yield return row;
             }
         }
