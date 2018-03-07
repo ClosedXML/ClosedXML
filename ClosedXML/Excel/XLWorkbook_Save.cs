@@ -3577,7 +3577,7 @@ namespace ClosedXML.Excel
                 && f.NumberFormatId != null && styleInfo.NumberFormatId == f.NumberFormatId
                 && f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo)
                 && f.ApplyBorder != null && f.ApplyBorder == ApplyBorder(styleInfo)
-                && AlignmentsAreEqual(f.Alignment, styleInfo.Style.Alignment)
+                && (f.Alignment == null || AlignmentsAreEqual(f.Alignment, styleInfo.Style.Alignment))
                 && ProtectionsAreEqual(f.Protection, styleInfo.Style.Protection)
                 ;
         }
