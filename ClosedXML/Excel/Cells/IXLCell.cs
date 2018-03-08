@@ -30,6 +30,16 @@ namespace ClosedXML.Excel
         /// </value>
         Object Value { get; set; }
 
+        /// <summary>
+        /// Gets the cell's value. See <see cref="IXLCell.Value"/> (get) for more informations.
+        /// <para>ClosedXML will limit maximum recursive calls.</para>
+        /// <para>>An exception will be thrown when the limit is exceeded.</para>
+        /// </summary>
+        /// <param name="maximumRecursiveDepth">Recursive call limit</param>
+        /// <param name="resursiveCallCounter">Actual recursive call count</param>
+        /// <exception cref="StackOverflowException"></exception>
+        Object GetValue(int maximumRecursiveDepth, int resursiveCallCounter = 0);
+
         /// <summary>Gets this cell's address, relative to the worksheet.</summary>
         /// <value>The cell's address.</value>
         IXLAddress Address { get; }
