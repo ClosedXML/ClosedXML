@@ -1,12 +1,10 @@
 using System;
-using System.ComponentModel;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
     internal class XLDataValidation : IXLDataValidation
     {
-        public XLDataValidation()
+        private XLDataValidation()
         {
             Ranges = new XLRanges();
             Initialize();

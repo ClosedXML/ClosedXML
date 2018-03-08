@@ -31,7 +31,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
 
             ws.Cell("B1").SetValue("Cell below has Validation with a title.");
             cell = ws.Cell("B2");
-            cell.SetDataValidation().List(ws.Range("$E$1:$E$4"));
+            cell.DataValidation.List(ws.Range("$E$1:$E$4"));
             cell.DataValidation.InputTitle = "Title for B2";
 
             Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
@@ -206,6 +206,44 @@ namespace ClosedXML_Tests.Excel.DataValidations
             Assert.AreEqual(1, ws.DataValidations.Count());
             Assert.AreEqual(1, ws.DataValidations.First().Ranges.Count);
             Assert.AreEqual(expectedAddress, ws.DataValidations.First().Ranges.First().RangeAddress.ToString());
+        }
+
+        [Test]
+        public void DataValidationClearSplitsRange()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("DataValidation");
+                var validation = ws.Range("A1:C3").SetDataValidation();
+                validation.WholeNumber.Between(0, 100);
+
+                //Act
+                ws.Cell("B2").Clear(XLClearOptions.ContentsAndFormats);
+
+                //Assert
+                Assert.IsFalse(ws.Cell("B2").HasDataValidation);
+                Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2").All(c => c.HasDataValidation));
+            }
+        }
+
+        [Test]
+        public void NewDataValidationSplitsRange()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("DataValidation");
+                var validation = ws.Range("A1:C3").SetDataValidation();
+                validation.WholeNumber.Between(10, 100);
+
+                //Act
+                ws.Cell("B2").NewDataValidation.WholeNumber.Between(-100, -0);
+
+                //Assert
+                Assert.AreEqual("-100", ws.Cell("B2").DataValidation.MinValue);
+                Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2").All(c => c.HasDataValidation));
+                Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2")
+                                .All(c => c.DataValidation.MinValue == "10"));
+            }
         }
     }
 }

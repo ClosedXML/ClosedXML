@@ -116,20 +116,28 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Get the data validation rule containing current range or create a new one if no rule was defined for range.
+        /// </summary>
         public IXLDataValidation DataValidation
         {
             get
             {
-                foreach (var xlDataValidation in Worksheet.DataValidations)
-                {
-                    foreach (var range in xlDataValidation.Ranges)
-                    {
-                        if (range.ToString() == ToString())
-                            return xlDataValidation;
-                    }
-                }
-                return null;
+                return SetDataValidation();
             }
+        }
+
+        private IXLDataValidation GetDataValidation()
+        {
+            foreach (var xlDataValidation in Worksheet.DataValidations)
+            {
+                foreach (var range in xlDataValidation.Ranges)
+                {
+                    if (range.ToString() == ToString())
+                        return xlDataValidation;
+                }
+            }
+            return null;
         }
 
         #region IXLRangeBase Members
@@ -1957,6 +1965,9 @@ namespace ClosedXML.Excel
 
         public IXLDataValidation SetDataValidation()
         {
+            var existingValidation = GetDataValidation();
+            if (existingValidation != null) return existingValidation;
+
             IXLDataValidation dataValidationToCopy = null;
             var dvEmpty = new List<IXLDataValidation>();
             foreach (IXLDataValidation dv in Worksheet.DataValidations)

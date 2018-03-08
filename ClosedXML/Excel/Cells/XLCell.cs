@@ -149,19 +149,14 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Get the data validation rule containing current cell or create a new one if no rule was defined for cell.
+        /// </summary>
         public IXLDataValidation DataValidation
         {
             get
             {
-                foreach (var xlDataValidation in Worksheet.DataValidations)
-                {
-                    foreach (var range in xlDataValidation.Ranges)
-                    {
-                        if (range.Contains(this))
-                            return xlDataValidation;
-                    }
-                }
-                return null;
+                return SetDataValidation();
             }
         }
 
@@ -1041,7 +1036,10 @@ namespace ClosedXML.Excel
                 if (clearOptions == XLClearOptions.Formats || clearOptions == XLClearOptions.ContentsAndFormats)
                 {
                     if (HasDataValidation)
-                        DataValidation.Clear();
+                    {
+                        var validation = NewDataValidation;
+                        Worksheet.DataValidations.Delete(validation);
+                    }
 
                     SetStyle(Worksheet.Style);
                 }
@@ -1301,18 +1299,38 @@ namespace ClosedXML.Excel
 
         public Boolean HasDataValidation
         {
-            get { return DataValidation != null; }
+            get { return GetDataValidation() != null; }
+        }
+
+        /// <summary>
+        /// Get the data validation rule containing current cell.
+        /// </summary>
+        /// <returns>The data validation rule applying to the current cell or null if there is no such rule.</returns>
+        private IXLDataValidation GetDataValidation()
+        {
+            foreach (var xlDataValidation in Worksheet.DataValidations)
+            {
+                foreach (var range in xlDataValidation.Ranges)
+                {
+                    if (range.Contains(this))
+                        return xlDataValidation;
+                }
+            }
+            return null;
         }
 
         public IXLDataValidation SetDataValidation()
         {
-            if (DataValidation != null)
-                return DataValidation;
-
-            using (var range = this.AsRange())
-                Worksheet.DataValidations.Add(new XLDataValidation(range));
-
-            return DataValidation;
+            var validation = GetDataValidation();
+            if (validation == null)
+            {
+                using (var range = this.AsRange())
+                {
+                    validation = new XLDataValidation(range);
+                    Worksheet.DataValidations.Add(validation);
+                }
+            }
+            return validation;
         }
 
         public void Select()
