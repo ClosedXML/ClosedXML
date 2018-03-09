@@ -628,7 +628,7 @@ namespace ClosedXML.Excel
                 targetSheet.NamedRanges.Add(nr.Name, ranges);
             }
 
-            foreach (XLTable t in Tables.Cast<XLTable>())
+            foreach (var t in Tables.Cast<XLTable>())
             {
                 String tableName = t.Name;
                 var table = targetSheet.Tables.Any(tt => tt.Name == tableName)
@@ -1577,6 +1577,7 @@ namespace ClosedXML.Excel
         {
             return Pictures.Add(imageFile, name);
         }
+
         public override Boolean IsEntireRow()
         {
             return true;
@@ -1596,6 +1597,5 @@ namespace ClosedXML.Excel
             else
                 this.Cell(ro, co).SetValue(value);
         }
-
     }
 }

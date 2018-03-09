@@ -170,14 +170,14 @@ namespace ClosedXML.Excel
 
             var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
             Int32 position = 0;
-            foreach (Sheet dSheet in sheets.OfType<Sheet>())
+            foreach (var dSheet in sheets.OfType<Sheet>())
             {
                 position++;
                 var sharedFormulasR1C1 = new Dictionary<UInt32, String>();
 
-                var wsPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
+                var worksheetPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
 
-                if (wsPart == null)
+                if (worksheetPart == null)
                 {
                     UnsupportedSheets.Add(new UnsupportedSheet { SheetId = dSheet.SheetId.Value, Position = position });
                     continue;
@@ -195,7 +195,7 @@ namespace ClosedXML.Excel
                 var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
                 PageSetupProperties pageSetupProperties = null;
 
-                using (var reader = OpenXmlReader.Create(wsPart))
+                using (var reader = OpenXmlReader.Create(worksheetPart))
                 {
                     Type[] ignoredElements = new Type[]
                     {
@@ -253,7 +253,7 @@ namespace ClosedXML.Excel
                         else if (reader.ElementType == typeof(ConditionalFormatting))
                             LoadConditionalFormatting((ConditionalFormatting)reader.LoadCurrentElement(), ws, differentialFormats);
                         else if (reader.ElementType == typeof(Hyperlinks))
-                            LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), wsPart, ws);
+                            LoadHyperlinks((Hyperlinks)reader.LoadCurrentElement(), worksheetPart, ws);
                         else if (reader.ElementType == typeof(PrintOptions))
                             LoadPrintOptions((PrintOptions)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(PageMargins))
@@ -278,15 +278,19 @@ namespace ClosedXML.Excel
 
                 #region LoadTables
 
-                foreach (var tablePart in wsPart.TableDefinitionParts)
+                foreach (var tableDefinitionPart in worksheetPart.TableDefinitionParts)
                 {
-                    var dTable = tablePart.Table;
+                    var relId = worksheetPart.GetIdOfPart(tableDefinitionPart);
+                    var dTable = tableDefinitionPart.Table;
+
                     String reference = dTable.Reference.Value;
                     String tableName = dTable?.Name ?? dTable.DisplayName ?? string.Empty;
                     if (String.IsNullOrWhiteSpace(tableName))
                         throw new InvalidDataException("The table name is missing.");
 
-                    XLTable xlTable = ws.Range(reference).CreateTable(tableName, false) as XLTable;
+                    var xlTable = ws.Range(reference).CreateTable(tableName, false) as XLTable;
+                    xlTable.RelId = relId;
+
                     if (dTable.HeaderRowCount != null && dTable.HeaderRowCount == 0)
                     {
                         xlTable._showHeaderRow = false;
@@ -358,18 +362,18 @@ namespace ClosedXML.Excel
 
                 #endregion
 
-                LoadDrawings(wsPart, ws);
+                LoadDrawings(worksheetPart, ws);
 
                 #region LoadComments
 
-                if (wsPart.WorksheetCommentsPart != null)
+                if (worksheetPart.WorksheetCommentsPart != null)
                 {
-                    var root = wsPart.WorksheetCommentsPart.Comments;
+                    var root = worksheetPart.WorksheetCommentsPart.Comments;
                     var authors = root.GetFirstChild<Authors>().ChildElements;
                     var comments = root.GetFirstChild<CommentList>().ChildElements;
 
                     // **** MAYBE FUTURE SHAPE SIZE SUPPORT
-                    XDocument xdoc = GetCommentVmlFile(wsPart);
+                    XDocument xdoc = GetCommentVmlFile(worksheetPart);
 
                     foreach (Comment c in comments)
                     {
@@ -438,15 +442,15 @@ namespace ClosedXML.Excel
             #region Pivot tables
 
             // Delay loading of pivot tables until all sheets have been loaded
-            foreach (Sheet dSheet in sheets.OfType<Sheet>())
+            foreach (var dSheet in sheets.OfType<Sheet>())
             {
-                var wsPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
+                var worksheetPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
 
-                if (wsPart != null)
+                if (worksheetPart != null)
                 {
                     var ws = (XLWorksheet)WorksheetsInternal.Worksheet(dSheet.Name);
 
-                    foreach (var pivotTablePart in wsPart.PivotTableParts)
+                    foreach (var pivotTablePart in worksheetPart.PivotTableParts)
                     {
                         var pivotTableCacheDefinitionPart = pivotTablePart.PivotTableCacheDefinitionPart;
                         var pivotTableDefinition = pivotTablePart.PivotTableDefinition;
@@ -489,7 +493,7 @@ namespace ClosedXML.Excel
                             if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.RowHeaderCaption ?? String.Empty)))
                                 pt.SetRowHeaderCaption(StringValue.ToString(pivotTableDefinition.RowHeaderCaption));
 
-                            pt.RelId = wsPart.GetIdOfPart(pivotTablePart);
+                            pt.RelId = worksheetPart.GetIdOfPart(pivotTablePart);
                             pt.CacheDefinitionRelId = pivotTablePart.GetIdOfPart(pivotTableCacheDefinitionPart);
                             pt.WorkbookCacheRelId = dSpreadsheet.WorkbookPart.GetIdOfPart(pivotTableCacheDefinitionPart);
 
@@ -545,7 +549,7 @@ namespace ClosedXML.Excel
                             var pivotTableStyle = pivotTableDefinition.GetFirstChild<PivotTableStyle>();
                             if (pivotTableStyle != null)
                             {
-                                pt.Theme = (XLPivotTableTheme) Enum.Parse(typeof(XLPivotTableTheme), pivotTableStyle.Name);
+                                pt.Theme = (XLPivotTableTheme)Enum.Parse(typeof(XLPivotTableTheme), pivotTableStyle.Name);
                                 pt.ShowRowHeaders = pivotTableStyle.ShowRowHeaders;
                                 pt.ShowColumnHeaders = pivotTableStyle.ShowColumnHeaders;
                                 pt.ShowRowStripes = pivotTableStyle.ShowRowStripes;
@@ -586,7 +590,7 @@ namespace ClosedXML.Excel
 
                                             if (pivotField != null)
                                             {
-												LoadFieldOptions(pf, pivotField);
+                                                LoadFieldOptions(pf, pivotField);
                                                 LoadSubtotals(pf, pivotField);
 
                                                 if (pf.SortType != null)
@@ -623,7 +627,7 @@ namespace ClosedXML.Excel
 
                                         if (pivotField != null)
                                         {
-											LoadFieldOptions(pf, pivotField);
+                                            LoadFieldOptions(pf, pivotField);
                                             LoadSubtotals(pf, pivotField);
 
                                             if (pf.SortType != null)
@@ -1557,7 +1561,6 @@ namespace ClosedXML.Excel
                 nf.NumberFormatId = (Int32)nfSource.NumberFormatId.Value;
             else if (nfSource.FormatCode != null)
                 nf.Format = nfSource.FormatCode.Value;
-
         }
 
         private void LoadBorder(Border borderSource, IXLBorder border)
