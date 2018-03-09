@@ -309,10 +309,10 @@ namespace ClosedXML.Excel
                 }
 
                 // Remove any orphaned references - maybe more types?
-                foreach (var orphan in worksheetPart.Worksheet.OfType<LegacyDrawing>().Where(lg => !worksheetPart.Parts.Any(p => p.RelationshipId == lg.Id)))
+                foreach (var orphan in worksheetPart.Worksheet.OfType<LegacyDrawing>().Where(lg => worksheetPart.Parts.All(p => p.RelationshipId != lg.Id)))
                     worksheetPart.Worksheet.RemoveChild(orphan);
 
-                foreach (var orphan in worksheetPart.Worksheet.OfType<Drawing>().Where(d => !worksheetPart.Parts.Any(p => p.RelationshipId == d.Id)))
+                foreach (var orphan in worksheetPart.Worksheet.OfType<Drawing>().Where(d => worksheetPart.Parts.All(p => p.RelationshipId != d.Id)))
                     worksheetPart.Worksheet.RemoveChild(orphan);
             }
 
@@ -668,7 +668,7 @@ namespace ClosedXML.Excel
                         rId = xlSheet.RelId;
                 }
 
-                if (!workbook.Sheets.Cast<Sheet>().Any(s => s.Id == rId))
+                if (workbook.Sheets.Cast<Sheet>().All(s => s.Id != rId))
                 {
                     var newSheet = new Sheet
                     {
@@ -2606,7 +2606,7 @@ namespace ClosedXML.Excel
                 pivotTableDefinition.AppendChild(rowItems);
             }
 
-            if (!pt.ColumnLabels.Any(cl => cl.CustomName != XLConstants.PivotTableValuesSentinalLabel))
+            if (pt.ColumnLabels.All(cl => cl.CustomName == XLConstants.PivotTableValuesSentinalLabel))
             {
                 for (int i = 0; i < pt.Values.Count(); i++)
                 {
@@ -4987,7 +4987,7 @@ namespace ClosedXML.Excel
             }
 
             var exlst = from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && c.Colors.Count > 1 && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c;
-            if (exlst != null && exlst.Count() > 0)
+            if (exlst != null && exlst.Any())
             {
                 if (!worksheetPart.Worksheet.Elements<WorksheetExtensionList>().Any())
                 {
