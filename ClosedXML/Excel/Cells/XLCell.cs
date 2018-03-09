@@ -149,27 +149,14 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLDataValidation DataValidation
+        /// <summary>
+        /// Get the data validation rule containing current cell or create a new one if no rule was defined for cell.
+        /// </summary>
+        public IXLDataValidation DataValidation
         {
             get
             {
-                using (var asRange = AsRange())
-                {
-                    var dv = asRange.DataValidation; // Call the data validation to break it into pieces
-                    foreach (var d in Worksheet.DataValidations)
-                    {
-                        var rs = d.Ranges;
-                        if (rs.Count == 1)
-                        {
-                            var r = rs.Single();
-                            var ra1 = r.RangeAddress.ToStringRelative();
-                            var ra2 = asRange.RangeAddress.ToStringRelative();
-                            if (ra1.Equals(ra2))
-                                return d as XLDataValidation;
-                        }
-                    }
-                }
-                return null;
+                return SetDataValidation();
             }
         }
 
@@ -1049,7 +1036,10 @@ namespace ClosedXML.Excel
                 if (clearOptions == XLClearOptions.Formats || clearOptions == XLClearOptions.ContentsAndFormats)
                 {
                     if (HasDataValidation)
-                        DataValidation.Clear();
+                    {
+                        var validation = NewDataValidation;
+                        Worksheet.DataValidations.Delete(validation);
+                    }
 
                     SetStyle(Worksheet.Style);
                 }
@@ -1309,19 +1299,38 @@ namespace ClosedXML.Excel
 
         public Boolean HasDataValidation
         {
-            get
+            get { return GetDataValidation() != null; }
+        }
+
+        /// <summary>
+        /// Get the data validation rule containing current cell.
+        /// </summary>
+        /// <returns>The data validation rule applying to the current cell or null if there is no such rule.</returns>
+        private IXLDataValidation GetDataValidation()
+        {
+            foreach (var xlDataValidation in Worksheet.DataValidations)
             {
-                using (var asRange = AsRange())
-                    return Worksheet.DataValidations.Any(dv =>
-                    {
-                        using (var rngs = dv.Ranges) return dv.IsDirty() && rngs.Contains(asRange);
-                    });
+                foreach (var range in xlDataValidation.Ranges)
+                {
+                    if (range.Contains(this))
+                        return xlDataValidation;
+                }
             }
+            return null;
         }
 
         public IXLDataValidation SetDataValidation()
         {
-            return DataValidation;
+            var validation = GetDataValidation();
+            if (validation == null)
+            {
+                using (var range = this.AsRange())
+                {
+                    validation = new XLDataValidation(range);
+                    Worksheet.DataValidations.Add(validation);
+                }
+            }
+            return validation;
         }
 
         public void Select()
@@ -2264,9 +2273,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        internal void CopyDataValidation(XLCell otherCell, XLDataValidation otherDv)
+        internal void CopyDataValidation(XLCell otherCell, IXLDataValidation otherDv)
         {
-            var thisDv = DataValidation;
+            var thisDv = SetDataValidation() as XLDataValidation;
             thisDv.CopyFrom(otherDv);
             thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
             thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));
