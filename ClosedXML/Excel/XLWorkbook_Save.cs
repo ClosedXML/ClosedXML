@@ -4642,6 +4642,13 @@ namespace ClosedXML.Excel
                 xlWorksheet.Internals.CellsCollection.deleted.Remove(r.Key);
             }
 
+            var tableTotalCells = new HashSet<IXLAddress>(
+                xlWorksheet.Tables
+                .Where(table => table.ShowTotalsRow)
+                .SelectMany(table =>
+                    table.TotalsRow().CellsUsed())
+                .Select(cell => cell.Address));
+
             var distinctRows = xlWorksheet.Internals.CellsCollection.RowsCollection.Keys.Union(xlWorksheet.Internals.RowsCollection.Keys);
             var noRows = !sheetData.Elements<Row>().Any();
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
@@ -4787,7 +4794,7 @@ namespace ClosedXML.Excel
 
                                 cell.CellValue = null;
                             }
-                            else if (xlCell.TableCellType() == XLTableCellType.Total)
+                            else if (tableTotalCells.Contains(xlCell.Address))
                             {
                                 var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
                                 field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
