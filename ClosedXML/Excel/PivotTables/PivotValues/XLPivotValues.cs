@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLPivotValues: IXLPivotValues
+    internal class XLPivotValues : IXLPivotValues
     {
         private readonly Dictionary<String, IXLPivotValue> _pivotValues = new Dictionary<string, IXLPivotValue>();
 
@@ -30,6 +29,7 @@ namespace ClosedXML.Excel
         {
             return Add(sourceName, sourceName);
         }
+
         public IXLPivotValue Add(String sourceName, String customName)
         {
             if (sourceName != XLConstants.PivotTableValuesSentinalLabel && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName, StringComparer.OrdinalIgnoreCase))
@@ -48,6 +48,7 @@ namespace ClosedXML.Excel
         {
             _pivotValues.Clear();
         }
+
         public void Remove(String sourceName)
         {
             _pivotValues.Remove(sourceName);
