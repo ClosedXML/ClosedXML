@@ -59,11 +59,18 @@ namespace ClosedXML.Excel
 
         public IXLFilterColumn Column(String column)
         {
-            return Column(XLHelper.GetColumnNumberFromLetter(column));
+            var columnNumber = XLHelper.GetColumnNumberFromLetter(column);
+            if (columnNumber < 1 || columnNumber > XLHelper.MaxColumnNumber)
+                throw new ArgumentOutOfRangeException(nameof(column), "Column '" + column + "' is outside the allowed column range.");
+
+            return Column(columnNumber);
         }
 
         public IXLFilterColumn Column(Int32 column)
         {
+            if (column < 1 || column > XLHelper.MaxColumnNumber)
+                throw new ArgumentOutOfRangeException(nameof(column), "Column " + column + " is outside the allowed column range.");
+
             XLFilterColumn filterColumn;
             if (!_columns.TryGetValue(column, out filterColumn))
             {
@@ -97,7 +104,7 @@ namespace ClosedXML.Excel
         public XLAutoFilter Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase, Boolean ignoreBlanks)
         {
             if (!Enabled)
-                throw new ApplicationException("Filter has not been enabled.");
+                throw new InvalidOperationException("Filter has not been enabled.");
 
             var ws = Range.Worksheet as XLWorksheet;
             ws.SuspendEvents();
@@ -108,6 +115,7 @@ namespace ClosedXML.Excel
             SortOrder = sortOrder;
             SortColumn = columnToSortBy;
 
+            // Recalculate shown / hidden rows
             if (Enabled)
             {
                 using (var rows = Range.Rows(2, Range.RowCount()))
@@ -116,20 +124,29 @@ namespace ClosedXML.Excel
                         row.WorksheetRow().Unhide();
                 }
 
-                foreach (KeyValuePair<int, List<XLFilter>> kp in Filters)
+                foreach (var kp in Filters)
                 {
                     Boolean firstFilter = true;
                     foreach (XLFilter filter in kp.Value)
                     {
-                        Boolean isText = filter.Value is String;
+                        var condition = filter.Condition;
+                        var isText = filter.Value is String;
+                        var isDateTime = filter.Value is DateTime;
+
                         using (var rows = Range.Rows(2, Range.RowCount()))
                         {
                             foreach (IXLRangeRow row in rows)
                             {
-                                Boolean match = isText
-                                                    ? filter.Condition(row.Cell(kp.Key).GetString())
-                                                    : row.Cell(kp.Key).DataType == XLDataType.Number &&
-                                                      filter.Condition(row.Cell(kp.Key).GetDouble());
+                                //TODO : clean up filter matching - it's done in different place
+                                Boolean match;
+
+                                if (isText)
+                                    match = condition(row.Cell(kp.Key).GetFormattedString());
+                                else if (isDateTime)
+                                    match = row.Cell(kp.Key).DataType == XLDataType.DateTime && condition(row.Cell(kp.Key).GetDateTime());
+                                else
+                                    match = row.Cell(kp.Key).DataType == XLDataType.Number && condition(row.Cell(kp.Key).GetDouble());
+
                                 if (firstFilter)
                                 {
                                     if (match)

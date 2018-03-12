@@ -24,12 +24,14 @@ namespace ClosedXML.Excel
     {
         String SourceName { get; }
         String CustomName { get; set; }
+        String SubtotalCaption { get; set; }
 
         List<XLSubtotalFunction> Subtotals { get; }
         Boolean IncludeNewItemsInFilter { get; set; }
 
-        XLPivotLayout Layout { get; set; }
-        Boolean SubtotalsAtTop { get; set; }
+        Boolean Outline { get; set; }
+        Boolean Compact { get; set; }
+        Boolean? SubtotalsAtTop { get; set; }
         Boolean RepeatItemLabels { get; set; }
         Boolean InsertBlankLines  { get; set; }
         Boolean ShowBlankItems { get; set; }
@@ -38,6 +40,7 @@ namespace ClosedXML.Excel
         XLPivotSortType SortType { get; set; }
 
         IXLPivotField SetCustomName(String value);
+        IXLPivotField SetSubtotalCaption(String value);
 
         IXLPivotField AddSubtotal(XLSubtotalFunction value);
         IXLPivotField SetIncludeNewItemsInFilter(); IXLPivotField SetIncludeNewItemsInFilter(Boolean value);

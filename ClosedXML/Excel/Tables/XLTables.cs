@@ -6,9 +6,16 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    public class XLTables : IXLTables
+    internal class XLTables : IXLTables
     {
-        private readonly Dictionary<String, IXLTable> _tables = new Dictionary<String, IXLTable>();
+        private readonly Dictionary<String, IXLTable> _tables;
+        internal ICollection<String> Deleted { get; private set; }
+
+        public XLTables()
+        {
+            _tables = new Dictionary<String, IXLTable>();
+            Deleted = new HashSet<String>();
+        }
 
         #region IXLTables Members
 
@@ -37,7 +44,7 @@ namespace ClosedXML.Excel
             return _tables[name];
         }
 
-        #endregion
+        #endregion IXLTables Members
 
         public IXLTables Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
         {
@@ -47,11 +54,18 @@ namespace ClosedXML.Excel
 
         public void Remove(Int32 index)
         {
-            _tables.Remove(_tables.ElementAt(index).Key);
+            this.Remove(_tables.ElementAt(index).Key);
         }
+
         public void Remove(String name)
         {
+            if (!_tables.ContainsKey(name))
+                throw new ArgumentOutOfRangeException(nameof(name), $"Unable to delete table because the table name {name} could not be found.");
+
+            var table = _tables[name] as XLTable;
             _tables.Remove(name);
+
+            if (table.RelId != null) Deleted.Add(table.RelId);
         }
     }
 }

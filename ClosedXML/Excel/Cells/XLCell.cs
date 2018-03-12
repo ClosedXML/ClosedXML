@@ -105,7 +105,27 @@ namespace ClosedXML.Excel
             get { return _worksheet; }
         }
 
-        public XLAddress Address { get; internal set; }
+        private int _rowNumber;
+        private int _columnNumber;
+        private bool _fixedRow;
+        private bool _fixedCol;
+
+        public XLAddress Address
+        {
+            get
+            {
+                return new XLAddress(_worksheet, _rowNumber, _columnNumber, _fixedRow, _fixedCol);
+            }
+            internal set
+            {
+                if (value == null)
+                    return;
+                _rowNumber = value.RowNumber;
+                _columnNumber = value.ColumnNumber;
+                _fixedRow = value.FixedRow;
+                _fixedCol = value.FixedColumn;
+            }
+        }
 
         public string InnerText
         {
@@ -129,27 +149,14 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLDataValidation DataValidation
+        /// <summary>
+        /// Get the data validation rule containing current cell or create a new one if no rule was defined for cell.
+        /// </summary>
+        public IXLDataValidation DataValidation
         {
             get
             {
-                using (var asRange = AsRange())
-                {
-                    var dv = asRange.DataValidation; // Call the data validation to break it into pieces
-                    foreach (var d in Worksheet.DataValidations)
-                    {
-                        var rs = d.Ranges;
-                        if (rs.Count == 1)
-                        {
-                            var r = rs.Single();
-                            var ra1 = r.RangeAddress.ToStringRelative();
-                            var ra2 = asRange.RangeAddress.ToStringRelative();
-                            if (ra1.Equals(ra2))
-                                return d as XLDataValidation;
-                        }
-                    }
-                }
-                return null;
+                return SetDataValidation();
             }
         }
 
@@ -324,7 +331,6 @@ namespace ClosedXML.Excel
 
             if (_dataType == XLDataType.Boolean)
                 return (cValue != "0").ToExcelFormat(format);
-
             else if (_dataType == XLDataType.TimeSpan || _dataType == XLDataType.DateTime || IsDateFormat())
             {
                 double dTest;
@@ -336,7 +342,6 @@ namespace ClosedXML.Excel
 
                 return cValue;
             }
-
             else if (_dataType == XLDataType.Number)
             {
                 double dTest;
@@ -347,7 +352,6 @@ namespace ClosedXML.Excel
 
                 return cValue;
             }
-
             else
             return cValue;
         }
@@ -476,8 +480,8 @@ namespace ClosedXML.Excel
 
             if (data != null && !(data is String))
             {
-                var ro = Address.RowNumber + 1;
-                var fRo = Address.RowNumber;
+                var ro = _rowNumber + 1;
+                var fRo = _rowNumber;
                 var hasTitles = false;
                 var maxCo = 0;
                 var isDataTable = false;
@@ -487,15 +491,15 @@ namespace ClosedXML.Excel
                 if (!data.Any())
                 {
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
-                        maxCo = Address.ColumnNumber + 1;
+                        maxCo = _columnNumber + 1;
                     else
-                        maxCo = Address.ColumnNumber + itemType.GetFields().Length + itemType.GetProperties().Length;
+                        maxCo = _columnNumber + itemType.GetFields().Length + itemType.GetProperties().Length;
                 }
                 else if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                 {
                     foreach (object o in data)
                     {
-                        var co = Address.ColumnNumber;
+                        var co = _columnNumber;
 
                         if (!hasTitles)
                         {
@@ -505,7 +509,7 @@ namespace ClosedXML.Excel
 
                             _worksheet.SetValue(fieldName, fRo, co);
                             hasTitles = true;
-                            co = Address.ColumnNumber;
+                            co = _columnNumber;
                         }
 
                         _worksheet.SetValue(o, ro, co);
@@ -559,7 +563,7 @@ namespace ClosedXML.Excel
                             accessor = accessorCache[type];
                         }
 
-                        var co = Address.ColumnNumber;
+                        var co = _columnNumber;
 
                         if (itemType.IsArray)
                         {
@@ -586,7 +590,7 @@ namespace ClosedXML.Excel
                                     co++;
                                 }
 
-                                co = Address.ColumnNumber;
+                                co = _columnNumber;
                                 hasTitles = true;
                             }
 
@@ -612,7 +616,7 @@ namespace ClosedXML.Excel
                                     co++;
                                 }
 
-                                co = Address.ColumnNumber;
+                                co = _columnNumber;
                                 hasTitles = true;
                             }
 
@@ -640,7 +644,7 @@ namespace ClosedXML.Excel
                                     co++;
                                 }
 
-                                co = Address.ColumnNumber;
+                                co = _columnNumber;
                                 hasTitles = true;
                             }
 
@@ -666,8 +670,8 @@ namespace ClosedXML.Excel
 
                 ClearMerged();
                 var range = _worksheet.Range(
-                    Address.RowNumber,
-                    Address.ColumnNumber,
+                    _rowNumber,
+                    _columnNumber,
                     ro - 1,
                     maxCo - 1);
 
@@ -703,8 +707,8 @@ namespace ClosedXML.Excel
                 throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
 
             if (data.Rows.Cast<DataRow>().Any()) return InsertTable(data.Rows.Cast<DataRow>(), tableName, createTable);
-            var ro = Address.RowNumber;
-            var co = Address.ColumnNumber;
+            var ro = _rowNumber;
+            var co = _columnNumber;
 
             foreach (DataColumn col in data.Columns)
             {
@@ -714,8 +718,8 @@ namespace ClosedXML.Excel
 
             ClearMerged();
             var range = _worksheet.Range(
-                Address.RowNumber,
-                Address.ColumnNumber,
+                _rowNumber,
+                _columnNumber,
                 ro,
                 co - 1);
 
@@ -729,8 +733,8 @@ namespace ClosedXML.Excel
             var table = this.Worksheet.Tables.FirstOrDefault(t => t.AsRange().Contains(this));
             if (table == null) return XLTableCellType.None;
 
-            if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(this.Address.RowNumber)) return XLTableCellType.Header;
-            if (table.ShowTotalsRow && table.TotalsRow().RowNumber().Equals(this.Address.RowNumber)) return XLTableCellType.Total;
+            if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(this._rowNumber)) return XLTableCellType.Header;
+            if (table.ShowTotalsRow && table.TotalsRow().RowNumber().Equals(this._rowNumber)) return XLTableCellType.Total;
 
             return XLTableCellType.Data;
         }
@@ -744,8 +748,8 @@ namespace ClosedXML.Excel
         {
             if (data != null && !(data is String))
             {
-                var rowNumber = Address.RowNumber;
-                var columnNumber = Address.ColumnNumber;
+                var rowNumber = _rowNumber;
+                var columnNumber = _columnNumber;
 
                 var maxColumnNumber = 0;
                 var maxRowNumber = 0;
@@ -763,9 +767,9 @@ namespace ClosedXML.Excel
                     var itemType = m.GetType();
 
                     if (transpose)
-                        rowNumber = Address.RowNumber;
+                        rowNumber = _rowNumber;
                     else
-                        columnNumber = Address.ColumnNumber;
+                        columnNumber = _columnNumber;
 
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                     {
@@ -869,8 +873,8 @@ namespace ClosedXML.Excel
 
                 ClearMerged();
                 return _worksheet.Range(
-                    Address.RowNumber,
-                    Address.ColumnNumber,
+                    _rowNumber,
+                    _columnNumber,
                     maxRowNumber - 1,
                     maxColumnNumber - 1);
             }
@@ -1029,7 +1033,10 @@ namespace ClosedXML.Excel
                 if (clearOptions == XLClearOptions.Formats || clearOptions == XLClearOptions.ContentsAndFormats)
                 {
                     if (HasDataValidation)
-                        DataValidation.Clear();
+                    {
+                        var validation = NewDataValidation;
+                        Worksheet.DataValidations.Delete(validation);
+                    }
 
                     SetStyle(Worksheet.Style);
                 }
@@ -1228,11 +1235,11 @@ namespace ClosedXML.Excel
                 if (_style == null)
                 {
                     XLRow row;
-                    if (Worksheet.Internals.RowsCollection.TryGetValue(Address.RowNumber, out row) && !row.Style.Equals(Worksheet.Style))
+                    if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out row) && !row.Style.Equals(Worksheet.Style))
                         return false;
 
                     XLColumn column;
-                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(Address.ColumnNumber, out column) && !column.Style.Equals(Worksheet.Style))
+                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out column) && !column.Style.Equals(Worksheet.Style))
                         return false;
                 }
             }
@@ -1246,12 +1253,12 @@ namespace ClosedXML.Excel
 
         public IXLColumn WorksheetColumn()
         {
-            return Worksheet.Column(Address.ColumnNumber);
+            return Worksheet.Column(_columnNumber);
         }
 
         public IXLRow WorksheetRow()
         {
-            return Worksheet.Row(Address.RowNumber);
+            return Worksheet.Row(_rowNumber);
         }
 
         public IXLCell CopyTo(IXLCell target)
@@ -1289,19 +1296,38 @@ namespace ClosedXML.Excel
 
         public Boolean HasDataValidation
         {
-            get
+            get { return GetDataValidation() != null; }
+        }
+
+        /// <summary>
+        /// Get the data validation rule containing current cell.
+        /// </summary>
+        /// <returns>The data validation rule applying to the current cell or null if there is no such rule.</returns>
+        private IXLDataValidation GetDataValidation()
+        {
+            foreach (var xlDataValidation in Worksheet.DataValidations)
             {
-                using (var asRange = AsRange())
-                    return Worksheet.DataValidations.Any(dv =>
-                    {
-                        using (var rngs = dv.Ranges) return dv.IsDirty() && rngs.Contains(asRange);
-                    });
+                foreach (var range in xlDataValidation.Ranges)
+                {
+                    if (range.Contains(this))
+                        return xlDataValidation;
+                }
             }
+            return null;
         }
 
         public IXLDataValidation SetDataValidation()
         {
-            return DataValidation;
+            var validation = GetDataValidation();
+            if (validation == null)
+            {
+                using (var range = this.AsRange())
+                {
+                    validation = new XLDataValidation(range);
+                    Worksheet.DataValidations.Add(validation);
+                }
+            }
+            return validation;
         }
 
         public void Select()
@@ -1753,7 +1779,7 @@ namespace ClosedXML.Excel
                 {
                     var maxRows = asRange.RowCount();
                     var maxColumns = asRange.ColumnCount();
-                    using (var rng = Worksheet.Range(Address.RowNumber, Address.ColumnNumber, maxRows, maxColumns))
+                    using (var rng = Worksheet.Range(_rowNumber, _columnNumber, maxRows, maxColumns))
                         rng.Clear();
                 }
 
@@ -1762,19 +1788,19 @@ namespace ClosedXML.Excel
                 foreach (var sourceCell in asRange.CellsUsed(true))
                 {
                     Worksheet.Cell(
-                        Address.RowNumber + sourceCell.Address.RowNumber - minRow,
-                        Address.ColumnNumber + sourceCell.Address.ColumnNumber - minColumn
+                        _rowNumber + sourceCell.Address.RowNumber - minRow,
+                        _columnNumber + sourceCell.Address.ColumnNumber - minColumn
                         ).CopyFromInternal(sourceCell as XLCell, true);
                 }
 
                 var rangesToMerge = (from mergedRange in (asRange.Worksheet).Internals.MergedRanges
                                      where asRange.Contains(mergedRange)
                                      let initialRo =
-                                         Address.RowNumber +
+                                         _rowNumber +
                                          (mergedRange.RangeAddress.FirstAddress.RowNumber -
                                           asRange.RangeAddress.FirstAddress.RowNumber)
                                      let initialCo =
-                                         Address.ColumnNumber +
+                                         _columnNumber +
                                          (mergedRange.RangeAddress.FirstAddress.ColumnNumber -
                                           asRange.RangeAddress.FirstAddress.ColumnNumber)
                                      select
@@ -1809,23 +1835,23 @@ namespace ClosedXML.Excel
             int cCnt = minCo - fromRange.RangeAddress.FirstAddress.ColumnNumber + 1;
             rCnt = Math.Min(rCnt, fromRange.RowCount());
             cCnt = Math.Min(cCnt, fromRange.ColumnCount());
-            var toRange = Worksheet.Range(this, Worksheet.Cell(Address.RowNumber + rCnt - 1, Address.ColumnNumber + cCnt - 1));
+            var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
             var formats = srcSheet.ConditionalFormats.Where(f => f.Range.Intersects(fromRange));
             foreach (var cf in formats.ToList())
             {
                 var fmtRange = Relative(Intersection(cf.Range, fromRange), fromRange, toRange);
-                var c = new XLConditionalFormat((XLRange) fmtRange, true);
+                var c = new XLConditionalFormat((XLRange)fmtRange, true);
                 c.CopyFrom(cf);
                 foreach (var v in c.Values.ToList())
                 {
                     var f = v.Value.Value;
                     if (v.Value.IsFormula)
                     {
-                        var r1c1 = ((XLCell) cf.Range.FirstCell()).GetFormulaR1C1(f);
+                        var r1c1 = ((XLCell)cf.Range.FirstCell()).GetFormulaR1C1(f);
                         f = ((XLCell)fmtRange.FirstCell()).GetFormulaA1(r1c1);
                     }
 
-                    c.Values[v.Key] = new XLFormula {_value = f, IsFormula = v.Value.IsFormula};
+                    c.Values[v.Key] = new XLFormula { _value = f, IsFormula = v.Value.IsFormula };
                 }
 
                 _worksheet.ConditionalFormats.Add(c);
@@ -2053,7 +2079,7 @@ namespace ClosedXML.Excel
         {
             string columnToReturn;
             if (columnPart == "C")
-                columnToReturn = XLHelper.GetColumnLetterFromNumber(Address.ColumnNumber + columnsToShift);
+                columnToReturn = XLHelper.GetColumnLetterFromNumber(_columnNumber + columnsToShift);
             else
             {
                 var bIndex = columnPart.IndexOf("[");
@@ -2061,14 +2087,14 @@ namespace ClosedXML.Excel
                 if (bIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        Address.ColumnNumber +
+                        _columnNumber +
                         Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
                         );
                 }
                 else if (mIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        Address.ColumnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
+                        _columnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
                         );
                 }
                 else
@@ -2086,14 +2112,14 @@ namespace ClosedXML.Excel
         {
             string rowToReturn;
             if (rowPart == "R")
-                rowToReturn = (Address.RowNumber + rowsToShift).ToString();
+                rowToReturn = (_rowNumber + rowsToShift).ToString();
             else
             {
                 var bIndex = rowPart.IndexOf("[");
                 if (bIndex >= 0)
                 {
                     rowToReturn =
-                        (Address.RowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) +
+                        (_rowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) +
                          rowsToShift).ToString();
                 }
                 else
@@ -2140,9 +2166,9 @@ namespace ClosedXML.Excel
         {
             string rowPart;
             rowNumber += rowsToShift;
-            var rowDiff = rowNumber - Address.RowNumber;
+            var rowDiff = rowNumber - _rowNumber;
             if (rowDiff != 0 || fixedRow)
-                rowPart = fixedRow ? String.Format("R{0}", rowNumber) : String.Format("R[{0}]", rowDiff);
+                rowPart = fixedRow ? "R" + rowNumber : "R[" + rowDiff + "]";
             else
                 rowPart = "R";
 
@@ -2153,9 +2179,9 @@ namespace ClosedXML.Excel
         {
             string columnPart;
             columnNumber += columnsToShift;
-            var columnDiff = columnNumber - Address.ColumnNumber;
+            var columnDiff = columnNumber - _columnNumber;
             if (columnDiff != 0 || fixedColumn)
-                columnPart = fixedColumn ? String.Format("C{0}", columnNumber) : String.Format("C[{0}]", columnDiff);
+                columnPart = fixedColumn ? "C" + columnNumber : "C[" + columnDiff + "]";
             else
                 columnPart = "C";
 
@@ -2223,7 +2249,7 @@ namespace ClosedXML.Excel
             var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(source)).ToList();
             foreach (var cf in conditionalFormats)
             {
-                var c = new XLConditionalFormat(cf as XLConditionalFormat) { Range = AsRange() };
+                var c = new XLConditionalFormat(cf as XLConditionalFormat, AsRange());
                 var oldValues = c.Values.Values.ToList();
                 c.Values.Clear();
                 foreach (var v in oldValues)
@@ -2244,9 +2270,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        internal void CopyDataValidation(XLCell otherCell, XLDataValidation otherDv)
+        internal void CopyDataValidation(XLCell otherCell, IXLDataValidation otherDv)
         {
-            var thisDv = DataValidation;
+            var thisDv = SetDataValidation() as XLDataValidation;
             thisDv.CopyFrom(otherDv);
             thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
             thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));
@@ -2263,7 +2289,7 @@ namespace ClosedXML.Excel
         {
             if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
-            var value = formulaA1; // ">" + formulaA1 + "<";
+            var value = formulaA1;
 
             var regex = A1SimpleRegex;
 
@@ -2302,6 +2328,12 @@ namespace ClosedXML.Excel
                                     && shiftedRange.RangeAddress.FirstAddress.ColumnNumber <= matchRange.RangeAddress.FirstAddress.ColumnNumber
                                     && shiftedRange.RangeAddress.LastAddress.ColumnNumber >= matchRange.RangeAddress.LastAddress.ColumnNumber)
                                 {
+                                    if (useSheetName)
+                                    {
+                                        sb.Append(sheetName.EscapeSheetName());
+                                        sb.Append('!');
+                                    }
+
                                     if (A1RowRegex.IsMatch(rangeAddress))
                                     {
                                         var rows = rangeAddress.Split(':');
@@ -2325,115 +2357,53 @@ namespace ClosedXML.Excel
                                         else
                                             row2 = (XLHelper.TrimRowNumber(Int32.Parse(row2String) + rowsShifted)).ToInvariantString();
 
-                                        sb.Append(useSheetName
-                                                      ? String.Format("{0}!{1}:{2}", sheetName.EscapeSheetName(), row1, row2)
-                                                      : String.Format("{0}:{1}", row1, row2));
+                                        sb.Append(row1);
+                                        sb.Append(':');
+                                        sb.Append(row2);
                                     }
                                     else if (shiftedRange.RangeAddress.FirstAddress.RowNumber <=
                                              matchRange.RangeAddress.FirstAddress.RowNumber)
                                     {
                                         if (rangeAddress.Contains(':'))
                                         {
-                                            if (useSheetName)
-                                            {
-                                                sb.Append(String.Format("{0}!{1}:{2}",
-                                                                        sheetName.EscapeSheetName(),
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn),
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedColumn)));
-                                            }
-                                            else
-                                            {
-                                                sb.Append(String.Format("{0}:{1}",
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn),
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedColumn)));
-                                            }
+                                            sb.Append(
+                                                new XLAddress(
+                                                    worksheetInAction,
+                                                    XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
+                                                    matchRange.RangeAddress.FirstAddress.ColumnLetter,
+                                                    matchRange.RangeAddress.FirstAddress.FixedRow,
+                                                    matchRange.RangeAddress.FirstAddress.FixedColumn));
+                                            sb.Append(':');
+                                            sb.Append(
+                                                new XLAddress(
+                                                    worksheetInAction,
+                                                    XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
+                                                    matchRange.RangeAddress.LastAddress.ColumnLetter,
+                                                    matchRange.RangeAddress.LastAddress.FixedRow,
+                                                    matchRange.RangeAddress.LastAddress.FixedColumn));
                                         }
                                         else
                                         {
-                                            if (useSheetName)
-                                            {
-                                                sb.Append(String.Format("{0}!{1}",
-                                                                        sheetName.EscapeSheetName(),
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn)));
-                                            }
-                                            else
-                                            {
-                                                sb.Append(String.Format("{0}",
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.ColumnLetter,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn)));
-                                            }
+                                            sb.Append(
+                                                new XLAddress(
+                                                    worksheetInAction,
+                                                    XLHelper.TrimRowNumber(matchRange.RangeAddress.FirstAddress.RowNumber + rowsShifted),
+                                                    matchRange.RangeAddress.FirstAddress.ColumnLetter,
+                                                    matchRange.RangeAddress.FirstAddress.FixedRow,
+                                                    matchRange.RangeAddress.FirstAddress.FixedColumn));
                                         }
                                     }
                                     else
                                     {
-                                        if (useSheetName)
-                                        {
-                                            sb.Append(String.Format("{0}!{1}:{2}",
-                                                                    sheetName.EscapeSheetName(),
-                                                                    matchRange.RangeAddress.FirstAddress,
-                                                                    new XLAddress(worksheetInAction,
-                                                                                  XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.ColumnLetter,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.FixedRow,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.FixedColumn)));
-                                        }
-                                        else
-                                        {
-                                            sb.Append(String.Format("{0}:{1}",
-                                                                    matchRange.RangeAddress.FirstAddress,
-                                                                    new XLAddress(worksheetInAction,
-                                                                                  XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.ColumnLetter,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.FixedRow,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.FixedColumn)));
-                                        }
+                                        sb.Append(matchRange.RangeAddress.FirstAddress);
+                                        sb.Append(':');
+                                        sb.Append(
+                                            new XLAddress(
+                                                worksheetInAction,
+                                                XLHelper.TrimRowNumber(matchRange.RangeAddress.LastAddress.RowNumber + rowsShifted),
+                                                matchRange.RangeAddress.LastAddress.ColumnLetter,
+                                                matchRange.RangeAddress.LastAddress.FixedRow,
+                                                matchRange.RangeAddress.LastAddress.FixedColumn));
                                     }
                                 }
                                 else
@@ -2448,6 +2418,7 @@ namespace ClosedXML.Excel
                 }
                 else
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
+
                 lastIndex = matchIndex + matchString.Length;
             }
 
@@ -2455,9 +2426,6 @@ namespace ClosedXML.Excel
                 sb.Append(value.Substring(lastIndex));
 
             return sb.ToString();
-
-            //string retVal = sb.ToString();
-            //return retVal.Substring(1, retVal.Length - 2);
         }
 
         internal void ShiftFormulaColumns(XLRange shiftedRange, int columnsShifted)
@@ -2470,7 +2438,7 @@ namespace ClosedXML.Excel
         {
             if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
-            var value = formulaA1; // ">" + formulaA1 + "<";
+            var value = formulaA1;
 
             var regex = A1SimpleRegex;
 
@@ -2513,6 +2481,12 @@ namespace ClosedXML.Excel
                                     shiftedRange.RangeAddress.LastAddress.RowNumber >=
                                     matchRange.RangeAddress.LastAddress.RowNumber)
                                 {
+                                    if (useSheetName)
+                                    {
+                                        sb.Append(sheetName.EscapeSheetName());
+                                        sb.Append('!');
+                                    }
+
                                     if (A1ColumnRegex.IsMatch(rangeAddress))
                                     {
                                         var columns = rangeAddress.Split(':');
@@ -2550,115 +2524,53 @@ namespace ClosedXML.Excel
                                                     columnsShifted, true);
                                         }
 
-                                        sb.Append(useSheetName
-                                                      ? String.Format("{0}!{1}:{2}", sheetName.EscapeSheetName(), column1, column2)
-                                                      : String.Format("{0}:{1}", column1, column2));
+                                        sb.Append(column1);
+                                        sb.Append(':');
+                                        sb.Append(column2);
                                     }
                                     else if (shiftedRange.RangeAddress.FirstAddress.ColumnNumber <=
                                              matchRange.RangeAddress.FirstAddress.ColumnNumber)
                                     {
                                         if (rangeAddress.Contains(':'))
                                         {
-                                            if (useSheetName)
-                                            {
-                                                sb.Append(String.Format("{0}!{1}:{2}",
-                                                                        sheetName.EscapeSheetName(),
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber,
-                                                                                      XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn),
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.RowNumber,
-                                                                                      XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedColumn)));
-                                            }
-                                            else
-                                            {
-                                                sb.Append(String.Format("{0}:{1}",
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber,
-                                                                                      XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn),
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.RowNumber,
-                                                                                      XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          LastAddress.FixedColumn)));
-                                            }
+                                            sb.Append(
+                                                new XLAddress(
+                                                    worksheetInAction,
+                                                    matchRange.RangeAddress.FirstAddress.RowNumber,
+                                                    XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
+                                                    matchRange.RangeAddress.FirstAddress.FixedRow,
+                                                    matchRange.RangeAddress.FirstAddress.FixedColumn));
+                                            sb.Append(':');
+                                            sb.Append(
+                                                new XLAddress(
+                                                    worksheetInAction,
+                                                    matchRange.RangeAddress.LastAddress.RowNumber,
+                                                    XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
+                                                    matchRange.RangeAddress.LastAddress.FixedRow,
+                                                    matchRange.RangeAddress.LastAddress.FixedColumn));
                                         }
                                         else
                                         {
-                                            if (useSheetName)
-                                            {
-                                                sb.Append(String.Format("{0}!{1}",
-                                                                        sheetName.EscapeSheetName(),
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber,
-                                                                                      XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn)));
-                                            }
-                                            else
-                                            {
-                                                sb.Append(String.Format("{0}",
-                                                                        new XLAddress(worksheetInAction,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.RowNumber,
-                                                                                      XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedRow,
-                                                                                      matchRange.RangeAddress.
-                                                                                          FirstAddress.FixedColumn)));
-                                            }
+                                            sb.Append(
+                                                new XLAddress(
+                                                    worksheetInAction,
+                                                    matchRange.RangeAddress.FirstAddress.RowNumber,
+                                                    XLHelper.TrimColumnNumber(matchRange.RangeAddress.FirstAddress.ColumnNumber + columnsShifted),
+                                                    matchRange.RangeAddress.FirstAddress.FixedRow,
+                                                    matchRange.RangeAddress.FirstAddress.FixedColumn));
                                         }
                                     }
                                     else
                                     {
-                                        if (useSheetName)
-                                        {
-                                            sb.Append(String.Format("{0}!{1}:{2}",
-                                                                    sheetName.EscapeSheetName(),
-                                                                    matchRange.RangeAddress.FirstAddress,
-                                                                    new XLAddress(worksheetInAction,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.RowNumber,
-                                                                                  XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.FixedRow,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.FixedColumn)));
-                                        }
-                                        else
-                                        {
-                                            sb.Append(String.Format("{0}:{1}",
-                                                                    matchRange.RangeAddress.FirstAddress,
-                                                                    new XLAddress(worksheetInAction,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.RowNumber,
-                                                                                  XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.FixedRow,
-                                                                                  matchRange.RangeAddress.
-                                                                                      LastAddress.FixedColumn)));
-                                        }
+                                        sb.Append(matchRange.RangeAddress.FirstAddress);
+                                        sb.Append(':');
+                                        sb.Append(
+                                            new XLAddress(
+                                                worksheetInAction,
+                                                matchRange.RangeAddress.LastAddress.RowNumber,
+                                                XLHelper.TrimColumnNumber(matchRange.RangeAddress.LastAddress.ColumnNumber + columnsShifted),
+                                                matchRange.RangeAddress.LastAddress.FixedRow,
+                                                matchRange.RangeAddress.LastAddress.FixedColumn));
                                     }
                                 }
                                 else
@@ -2680,16 +2592,11 @@ namespace ClosedXML.Excel
                 sb.Append(value.Substring(lastIndex));
 
             return sb.ToString();
-
-            //string retVal = sb.ToString();
-            //return retVal.Substring(1, retVal.Length - 2);
         }
-
-        // --
 
         private XLCell CellShift(Int32 rowsToShift, Int32 columnsToShift)
         {
-            return Worksheet.Cell(Address.RowNumber + rowsToShift, Address.ColumnNumber + columnsToShift);
+            return Worksheet.Cell(_rowNumber + rowsToShift, _columnNumber + columnsToShift);
         }
 
         #region Nested type: FormulaConversionType

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace ClosedXML.Extensions
 {
@@ -9,9 +8,9 @@ namespace ClosedXML.Extensions
         {
             if (sheetName.Contains("'") ||
                 sheetName.Contains(" "))
-                return string.Format("'{0}'", sheetName.Replace("'", "''"));
-
-            return sheetName;
+                return string.Concat('\'', sheetName.Replace("'", "''"), '\'');
+            else
+                return sheetName;
         }
 
         internal static string UnescapeSheetName(this String sheetName)

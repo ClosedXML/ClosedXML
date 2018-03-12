@@ -144,5 +144,75 @@ namespace ClosedXML_Tests
                 }
             }
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void PivotFieldOptionsSaveTest(bool withDefaults)
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("PastrySalesData");
+                var table = ws.Table("PastrySalesData");
+
+                var dataRange = ws.Range(ws.Range(1, 1, 1, 3).FirstCell(), table.DataRange.LastCell());
+
+                var ptSheet = wb.Worksheets.Add("pvtFieldOptionsTest");
+                var pt = ptSheet.PivotTables.AddNew("pvtFieldOptionsTest", ptSheet.Cell(1, 1), dataRange);
+
+                var field = pt.RowLabels.Add("Name")
+                    .SetSubtotalCaption("Test caption")
+                    .SetCustomName("Test name");
+                SetFieldOptions(field, withDefaults);
+
+                pt.ColumnLabels.Add("Month");
+                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+                //wb.SaveAs(".\\pivot.xlsx.zip", true);
+                
+                using (var ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms, true);
+
+                    ms.Position = 0;
+
+                    using (var wbassert = new XLWorkbook(ms))
+                    {
+                        var wsassert = wbassert.Worksheet("pvtFieldOptionsTest");
+                        var ptassert = wsassert.PivotTable("pvtFieldOptionsTest");
+                        var pfassert = ptassert.RowLabels.Get("Name");
+                        Assert.AreNotEqual(null, pfassert, "name save failure");
+                        Assert.AreEqual("Test caption", pfassert.SubtotalCaption, "SubtotalCaption save failure");
+                        Assert.AreEqual("Test name", pfassert.CustomName, "CustomName save failure");
+                        AssertFieldOptions(pfassert, withDefaults);
+                    }
+                }
+            }
+        }
+
+        private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
+        {
+            field.SubtotalsAtTop = !withDefaults;
+            field.ShowBlankItems = !withDefaults;
+            field.Outline = !withDefaults;
+            field.Compact = !withDefaults;
+            field.Collapsed = withDefaults;
+            field.InsertBlankLines = withDefaults;
+            field.RepeatItemLabels = withDefaults;
+            field.InsertPageBreaks = withDefaults;
+            field.IncludeNewItemsInFilter = withDefaults;
+        }
+
+        private static void AssertFieldOptions(IXLPivotField field, bool withDefaults)
+        {
+            Assert.AreEqual(!withDefaults, field.SubtotalsAtTop, "SubtotalsAtTop save failure");
+            Assert.AreEqual(!withDefaults, field.ShowBlankItems, "ShowBlankItems save failure");
+            Assert.AreEqual(!withDefaults, field.Outline, "Outline save failure");
+            Assert.AreEqual(!withDefaults, field.Compact, "Compact save failure");
+            Assert.AreEqual(withDefaults, field.Collapsed, "Collapsed save failure");
+            Assert.AreEqual(withDefaults, field.InsertBlankLines, "InsertBlankLines save failure");
+            Assert.AreEqual(withDefaults, field.RepeatItemLabels, "RepeatItemLabels save failure");
+            Assert.AreEqual(withDefaults, field.InsertPageBreaks, "InsertPageBreaks save failure");
+            Assert.AreEqual(withDefaults, field.IncludeNewItemsInFilter, "IncludeNewItemsInFilter save failure");
+        }
     }
 }

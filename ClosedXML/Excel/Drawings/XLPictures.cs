@@ -17,7 +17,7 @@ namespace ClosedXML.Excel.Drawings
         public XLPictures(XLWorksheet worksheet)
         {
             _worksheet = worksheet;
-             Deleted = new HashSet<String>();
+            Deleted = new HashSet<String>();
         }
 
         public int Count

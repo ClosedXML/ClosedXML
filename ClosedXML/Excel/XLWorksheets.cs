@@ -14,16 +14,16 @@ namespace ClosedXML.Excel
 
         private readonly XLWorkbook _workbook;
         private readonly Dictionary<String, XLWorksheet> _worksheets = new Dictionary<String, XLWorksheet>();
+        internal ICollection<String> Deleted { get; private set; }
 
         #endregion Constructor
-
-        public HashSet<String> Deleted = new HashSet<String>();
 
         #region Constructor
 
         public XLWorksheets(XLWorkbook workbook)
         {
             _workbook = workbook;
+            Deleted = new HashSet<String>();
         }
 
         #endregion Constructor

@@ -4,18 +4,25 @@ namespace ClosedXML.Excel
 {
     internal class XLDataValidation : IXLDataValidation
     {
-        public XLDataValidation(IXLRanges ranges)
+        private XLDataValidation()
         {
-            
             Ranges = new XLRanges();
-            ranges.ForEach(r=>
-                               {
-                                   var newR =
-                                       new XLRange(new XLRangeParameters(r.RangeAddress as XLRangeAddress,
-                                                                         r.Worksheet.Style) {IgnoreEvents = true});
-                                   (Ranges as XLRanges).Add(newR);
-                               } );
             Initialize();
+        }
+
+        public XLDataValidation(IXLRange range)
+            :this()
+        {
+            Ranges.Add(new XLRange(new XLRangeParameters(range.RangeAddress as XLRangeAddress, range.Worksheet.Style)));
+        }
+
+        public XLDataValidation(IXLRanges ranges)
+            :this()
+        {
+            ranges.ForEach(range =>
+            {
+                Ranges.Add(new XLRange(new XLRangeParameters(range.RangeAddress as XLRangeAddress, range.Worksheet.Style)));
+            });
         }
 
         private void Initialize()

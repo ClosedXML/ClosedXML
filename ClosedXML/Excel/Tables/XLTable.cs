@@ -27,8 +27,8 @@ namespace ClosedXML.Excel
             Int32 id = 1;
             while (true)
             {
-                string tableName = String.Format("Table{0}", id);
-                if (!Worksheet.Tables.Any(t => t.Name == tableName))
+                string tableName = String.Concat("Table", id);
+                if (Worksheet.Tables.All(t => t.Name != tableName))
                 {
                     Name = tableName;
                     AddToTables(range, addToTables);
@@ -119,7 +119,7 @@ namespace ClosedXML.Excel
                 Int32 colCount = ColumnCount();
                 for (Int32 i = 1; i <= colCount; i++)
                 {
-                    if (!_fieldNames.Values.Any(f => f.Index == i - 1))
+                    if (_fieldNames.Values.All(f => f.Index != i - 1))
                     {
                         var name = "Column" + i;
 
@@ -501,19 +501,21 @@ namespace ClosedXML.Excel
                 else
                 {
                     coString = coPairTrimmed;
-                    order = "ASC";
+                    order = sortOrder == XLSortOrder.Ascending ? "ASC" : "DESC";
                 }
 
                 Int32 co;
                 if (!Int32.TryParse(coString, out co))
                     co = Field(coString).Index + 1;
 
+                if (toSortBy.Length > 0)
+                    toSortBy.Append(',');
+
                 toSortBy.Append(co);
-                toSortBy.Append(" ");
+                toSortBy.Append(' ');
                 toSortBy.Append(order);
-                toSortBy.Append(",");
             }
-            return DataRange.Sort(toSortBy.ToString(0, toSortBy.Length - 1), sortOrder, matchCase, ignoreBlanks);
+            return DataRange.Sort(toSortBy.ToString(), sortOrder, matchCase, ignoreBlanks);
         }
 
         public new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)

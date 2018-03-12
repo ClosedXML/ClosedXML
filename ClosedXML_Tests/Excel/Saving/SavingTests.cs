@@ -1,28 +1,20 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.Drawings;
+using ClosedXML_Tests.Utils;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClosedXML_Tests.Excel.Saving
 {
     [TestFixture]
     public class SavingTests
     {
-        private string _tempFolder;
-        private List<string> _tempFiles;
-
-        [SetUp]
-        public void Setup()
-        {
-            _tempFolder = Path.GetTempPath();
-            _tempFiles = new List<string>();
-        }
-
         [Test]
         public void CanSaveEmptyFile()
         {
@@ -129,77 +121,90 @@ namespace ClosedXML_Tests.Excel.Saving
         [Test]
         public void CanSaveAsCopyReadOnlyFile()
         {
-            // Arrange
-            string id = Guid.NewGuid().ToString();
-            string original = string.Format("{0}original{1}.xlsx", _tempFolder, id);
-            string copy = string.Format("{0}copy_of_{1}.xlsx", _tempFolder, id);
-
-            using (var wb = new XLWorkbook())
+            using (var original = new TemporaryFile())
             {
-                var sheet = wb.Worksheets.Add("TestSheet");
-                wb.SaveAs(original);
-                _tempFiles.Add(original);
-            }
-            System.IO.File.SetAttributes(original, FileAttributes.ReadOnly);
+                try
+                {
+                    using (var copy = new TemporaryFile())
+                    {
+                        // Arrange
+                        using (var wb = new XLWorkbook())
+                        {
+                            var sheet = wb.Worksheets.Add("TestSheet");
+                            wb.SaveAs(original.Path);
+                        }
+                        File.SetAttributes(original.Path, FileAttributes.ReadOnly);
 
-            // Act
-            using (var wb = new XLWorkbook(original))
-            {
-                wb.SaveAs(copy);
-                _tempFiles.Add(copy);
-            }
+                        // Act
+                        using (var wb = new XLWorkbook(original.Path))
+                        {
+                            wb.SaveAs(copy.Path);
+                        }
 
-            // Assert
-            Assert.IsTrue(System.IO.File.Exists(copy));
-            Assert.IsFalse(System.IO.File.GetAttributes(copy).HasFlag(FileAttributes.ReadOnly));
+                        // Assert
+                        Assert.IsTrue(File.Exists(copy.Path));
+                        Assert.IsFalse(File.GetAttributes(copy.Path).HasFlag(FileAttributes.ReadOnly));
+                    }
+                }
+                finally
+                {
+                    // Tear down
+                    File.SetAttributes(original.Path, FileAttributes.Normal);
+                }
+            }
         }
 
         [Test]
         public void CanSaveAsOverwriteExistingFile()
         {
-            // Arrange
-            string id = Guid.NewGuid().ToString();
-            string existing = string.Format("{0}existing{1}.xlsx", _tempFolder, id);
-
-            System.IO.File.WriteAllText(existing, "");
-            _tempFiles.Add(existing);
-
-            // Act
-            using (var wb = new XLWorkbook())
+            using (var existing = new TemporaryFile())
             {
-                var sheet = wb.Worksheets.Add("TestSheet");
-                wb.SaveAs(existing);
+                // Arrange
+                File.WriteAllText(existing.Path, "");
+
+                // Act
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.Worksheets.Add("TestSheet");
+                    wb.SaveAs(existing.Path);
+                }
+
+                // Assert
+                Assert.IsTrue(File.Exists(existing.Path));
+                Assert.Greater(new FileInfo(existing.Path).Length, 0);
             }
-
-            // Assert
-            Assert.IsTrue(System.IO.File.Exists(existing));
-            Assert.Greater(new System.IO.FileInfo(existing).Length, 0);
         }
-
 
         [Test]
         public void CannotSaveAsOverwriteExistingReadOnlyFile()
         {
-            // Arrange
-            string id = Guid.NewGuid().ToString();
-            string existing = string.Format("{0}existing{1}.xlsx", _tempFolder, id);
-
-            System.IO.File.WriteAllText(existing, "");
-            _tempFiles.Add(existing);
-            System.IO.File.SetAttributes(existing, FileAttributes.ReadOnly);
-
-            // Act
-            TestDelegate saveAs = () =>
+            using (var existing = new TemporaryFile())
             {
-                using (var wb = new XLWorkbook())
+                try
                 {
-                    var sheet = wb.Worksheets.Add("TestSheet");
-                    wb.SaveAs(existing);
-                }
-            };
+                    // Arrange
+                    File.WriteAllText(existing.Path, "");
+                    File.SetAttributes(existing.Path, FileAttributes.ReadOnly);
 
-            // Assert
-            Assert.Throws(typeof(UnauthorizedAccessException), saveAs);
+                    // Act
+                    TestDelegate saveAs = () =>
+                    {
+                        using (var wb = new XLWorkbook())
+                        {
+                            var sheet = wb.Worksheets.Add("TestSheet");
+                            wb.SaveAs(existing.Path);
+                        }
+                    };
+
+                    // Assert
+                    Assert.Throws(typeof(UnauthorizedAccessException), saveAs);
+                }
+                finally
+                {
+                    // Tear down
+                    File.SetAttributes(existing.Path, FileAttributes.Normal);
+                }
+            }
         }
 
         [Test]
@@ -228,20 +233,26 @@ namespace ClosedXML_Tests.Excel.Saving
             }
         }
 
-
-        [TearDown]
-        public void DeleteTempFiles()
+        [Test]
+        public void CanSaveFileWithPictureAndComment()
         {
-            foreach (var fileName in _tempFiles)
+            using (var ms = new MemoryStream())
+            using (var wb = new XLWorkbook())
+            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+            using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
             {
-                try
-                {
-                    System.IO.File.Delete(fileName);
-                }
-                catch
-                { }
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("D4").Value = "Hello world.";
+
+                ws.AddPicture(bitmap, "MyPicture")
+                    .WithPlacement(XLPicturePlacement.FreeFloating)
+                    .MoveTo(50, 50)
+                    .WithSize(200, 200);
+
+                ws.Cell("D4").Comment.SetVisible().AddText("This is a comment");
+
+                wb.SaveAs(ms);
             }
-            _tempFiles.Clear();
         }
     }
 }

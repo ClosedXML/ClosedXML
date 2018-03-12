@@ -601,6 +601,21 @@ namespace ClosedXML.Excel
             }
         }
 
+        public static DateTimeGroupingValues ToOpenXml(this XLDateTimeGrouping value)
+        {
+            switch (value)
+            {
+                case XLDateTimeGrouping.Year: return DateTimeGroupingValues.Year;
+                case XLDateTimeGrouping.Month: return DateTimeGroupingValues.Month;
+                case XLDateTimeGrouping.Day: return DateTimeGroupingValues.Day;
+                case XLDateTimeGrouping.Hour: return DateTimeGroupingValues.Hour;
+                case XLDateTimeGrouping.Minute: return DateTimeGroupingValues.Minute;
+                case XLDateTimeGrouping.Second: return DateTimeGroupingValues.Second;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
+            }
+        }
         public static SheetViewValues ToOpenXml(this XLSheetViewOptions value)
         {
             switch (value)
@@ -1351,6 +1366,22 @@ namespace ClosedXML.Excel
             {
                 case DynamicFilterValues.AboveAverage: return XLFilterDynamicType.AboveAverage;
                 case DynamicFilterValues.BelowAverage: return XLFilterDynamicType.BelowAverage;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
+            }
+        }
+
+        public static XLDateTimeGrouping ToClosedXml(this DateTimeGroupingValues value)
+        {
+            switch (value)
+            {
+                case DateTimeGroupingValues.Year: return XLDateTimeGrouping.Year;
+                case DateTimeGroupingValues.Month: return XLDateTimeGrouping.Month;
+                case DateTimeGroupingValues.Day: return XLDateTimeGrouping.Day;
+                case DateTimeGroupingValues.Hour: return XLDateTimeGrouping.Hour;
+                case DateTimeGroupingValues.Minute: return XLDateTimeGrouping.Minute;
+                case DateTimeGroupingValues.Second: return XLDateTimeGrouping.Second;
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
