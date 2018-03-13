@@ -3443,7 +3443,11 @@ namespace ClosedXML.Excel
             SaveContext context)
         {
             var differentialFormat = new DifferentialFormat();
-            differentialFormat.Append(GetNewFont(new FontInfo { Font = cf.Style.Font as XLFont }, false));
+
+            var diffFont = GetNewFont(new FontInfo { Font = cf.Style.Font as XLFont }, false);
+            if (diffFont?.HasChildren ?? false)
+                differentialFormat.Append(diffFont);
+
             if (!String.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
             {
                 var numberFormat = new NumberingFormat
@@ -3453,8 +3457,14 @@ namespace ClosedXML.Excel
                 };
                 differentialFormat.Append(numberFormat);
             }
-            differentialFormat.Append(GetNewFill(new FillInfo { Fill = cf.Style.Fill as XLFill }, differentialFillFormat: true, ignoreMod: false));
-            differentialFormat.Append(GetNewBorder(new BorderInfo { Border = cf.Style.Border as XLBorder }, false));
+
+            var diffFill = GetNewFill(new FillInfo { Fill = cf.Style.Fill as XLFill }, differentialFillFormat: true, ignoreMod: false);
+            if (diffFill?.HasChildren ?? false)
+                differentialFormat.Append(diffFill);
+
+            var diffBorder = GetNewBorder(new BorderInfo { Border = cf.Style.Border as XLBorder }, false);
+            if (diffBorder?.HasChildren ?? false)
+                differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);
 
@@ -3465,7 +3475,11 @@ namespace ClosedXML.Excel
             SaveContext context)
         {
             var differentialFormat = new DifferentialFormat();
-            differentialFormat.Append(GetNewFont(new FontInfo { Font = style.Font as XLFont }, false));
+
+            var diffFont = GetNewFont(new FontInfo { Font = style.Font as XLFont }, false);
+            if (diffFont?.HasChildren ?? false)
+                differentialFormat.Append(diffFont);
+
             if (!String.IsNullOrWhiteSpace(style.NumberFormat.Format) || style.NumberFormat.NumberFormatId != 0)
             {
                 var numberFormat = new NumberingFormat();
@@ -3489,8 +3503,14 @@ namespace ClosedXML.Excel
 
                 differentialFormat.Append(numberFormat);
             }
-            differentialFormat.Append(GetNewFill(new FillInfo { Fill = style.Fill as XLFill }, differentialFillFormat: true, ignoreMod: false));
-            differentialFormat.Append(GetNewBorder(new BorderInfo { Border = style.Border as XLBorder }, false));
+
+            var diffFill = GetNewFill(new FillInfo { Fill = style.Fill as XLFill }, differentialFillFormat: true, ignoreMod: false);
+            if (diffFill?.HasChildren ?? false)
+                differentialFormat.Append(diffFill);
+
+            var diffBorder = GetNewBorder(new BorderInfo { Border = style.Border as XLBorder }, false);
+            if (diffBorder?.HasChildren ?? false)
+                differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);
 
