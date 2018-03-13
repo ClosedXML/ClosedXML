@@ -82,16 +82,22 @@ namespace ClosedXML.Excel
         #endregion Fields
 
         #region Constructor
-        public XLCell(XLWorksheet worksheet, XLAddress address, IXLStyle style)
-            : base(style.Value)
+
+        internal XLCell(XLWorksheet worksheet, XLAddress address, XLStyleValue styleValue)
+            : base(styleValue)
         {
             Address = address;
             ShareString = true;
             _worksheet = worksheet;
         }
 
+        public XLCell(XLWorksheet worksheet, XLAddress address, IXLStyle style)
+            : this(worksheet, address, style.Value)
+        {
+        }
+
         public XLCell(XLWorksheet worksheet, XLAddress address)
-            : this(worksheet, address, XLStyle.Default)
+            : this(worksheet, address, XLStyle.Default.Value)
         {
         }
 

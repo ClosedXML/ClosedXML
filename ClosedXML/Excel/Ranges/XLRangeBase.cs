@@ -752,11 +752,9 @@ namespace ClosedXML.Excel
                                  cellAddressInRange.FixedRow,
                                  cellAddressInRange.FixedColumn);
 
-            XLCell newCell;
-
             // If the default style for this range base is empty, but the worksheet
             // has a default style, use the worksheet's default style
-            newCell = new XLCell(Worksheet, absoluteAddress, new XLStyle(this, styleValue.Key));
+            XLCell newCell = new XLCell(Worksheet, absoluteAddress, styleValue);
 
             Worksheet.Internals.CellsCollection.Add(absRow, absColumn, newCell);
             return newCell;
@@ -1039,7 +1037,7 @@ namespace ClosedXML.Excel
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co) ??
                                           Worksheet.Cell(oldKey);
 
-                            var newCell = new XLCell(Worksheet, newKey, oldCell.Style);
+                            var newCell = new XLCell(Worksheet, newKey, oldCell.StyleValue);
                             newCell.CopyValuesFrom(oldCell);
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
@@ -1062,7 +1060,7 @@ namespace ClosedXML.Excel
                 {
                     int newColumn = c.Address.ColumnNumber + numberOfColumns;
                     var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
-                    var newCell = new XLCell(Worksheet, newKey, c.Style);
+                    var newCell = new XLCell(Worksheet, newKey, c.StyleValue);
                     newCell.CopyValuesFrom(c);
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
@@ -1263,7 +1261,7 @@ namespace ClosedXML.Excel
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
                             if (oldCell != null)
                             {
-                                var newCell = new XLCell(Worksheet, newKey, oldCell.Style);
+                                var newCell = new XLCell(Worksheet, newKey, oldCell.StyleValue);
                                 newCell.CopyValuesFrom(oldCell);
                                 newCell.FormulaA1 = oldCell.FormulaA1;
                                 cellsToInsert.Add(newKey, newCell);
@@ -1287,7 +1285,7 @@ namespace ClosedXML.Excel
                 {
                     int newRow = c.Address.RowNumber + numberOfRows;
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
-                    var newCell = new XLCell(Worksheet, newKey, c.Style);
+                    var newCell = new XLCell(Worksheet, newKey, c.StyleValue);
                     newCell.CopyValuesFrom(c);
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
@@ -1428,7 +1426,7 @@ namespace ClosedXML.Excel
                 var newKey = new XLAddress(Worksheet, c.Address.RowNumber - rowModifier,
                                            c.Address.ColumnNumber - columnModifier,
                                            false, false);
-                var newCell = new XLCell(Worksheet, newKey, c.Style);
+                var newCell = new XLCell(Worksheet, newKey, c.StyleValue);
                 newCell.CopyValuesFrom(c);
                 newCell.FormulaA1 = c.FormulaA1;
                 cellsToDelete.Add(c.Address);
