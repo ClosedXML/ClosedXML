@@ -1006,5 +1006,21 @@ namespace ClosedXML.Excel
                     throw new NotImplementedException();
             }
         }
+
+        public void SuspendEvents()
+        {
+            foreach (var ws in WorksheetsInternal)
+            {
+                ws.SuspendEvents();
+            }
+        }
+
+        public void ResumeEvents()
+        {
+            foreach (var ws in WorksheetsInternal)
+            {
+                ws.ResumeEvents();
+            }
+        }
     }
 }
