@@ -3446,7 +3446,11 @@ namespace ClosedXML.Excel
             SaveContext context)
         {
             var differentialFormat = new DifferentialFormat();
-            differentialFormat.Append(GetNewFont(new FontInfo { Font = style.Font }, false));
+
+            var diffFont = GetNewFont(new FontInfo {Font = style.Font}, false);
+            if (diffFont.HasChildren)
+                differentialFormat.Append(diffFont);
+
             if (!String.IsNullOrWhiteSpace(style.NumberFormat.Format) || style.NumberFormat.NumberFormatId != 0)
             {
                 var numberFormat = new NumberingFormat();
@@ -3470,8 +3474,14 @@ namespace ClosedXML.Excel
 
                 differentialFormat.Append(numberFormat);
             }
-            differentialFormat.Append(GetNewFill(new FillInfo { Fill = style.Fill }, differentialFillFormat: true, ignoreMod: false));
-            differentialFormat.Append(GetNewBorder(new BorderInfo { Border = style.Border }, false));
+
+            var diffFill = GetNewFill(new FillInfo {Fill = style.Fill}, differentialFillFormat: true, ignoreMod: false);
+            if (diffFill.HasChildren)
+                differentialFormat.Append(diffFill);
+
+            var diffBorder = GetNewBorder(new BorderInfo {Border = style.Border}, false);
+            if (diffBorder.HasChildren)
+                differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);
 
