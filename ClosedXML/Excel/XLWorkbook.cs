@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
         Simple = 1,
     }
 
-    public partial class XLWorkbook: IXLWorkbook
+    public partial class XLWorkbook : IXLWorkbook
     {
         #region Static
         public static IXLStyle DefaultStyle
@@ -65,14 +65,14 @@ namespace ClosedXML.Excel
                     Scale = 100,
                     PaperSize = XLPaperSize.LetterPaper,
                     Margins = new XLMargins
-                {
-                    Top = 0.75,
-                    Bottom = 0.5,
-                    Left = 0.75,
-                    Right = 0.75,
-                    Header = 0.5,
-                    Footer = 0.75
-                },
+                    {
+                        Top = 0.75,
+                        Bottom = 0.5,
+                        Left = 0.75,
+                        Right = 0.75,
+                        Header = 0.5,
+                        Footer = 0.75
+                    },
                     ScaleHFWithDocument = true,
                     AlignHFWithMargins = true,
                     PrintErrorValue = XLPrintErrorValues.Displayed,
@@ -111,7 +111,7 @@ namespace ClosedXML.Excel
 
         public XLEventTracking EventTracking { get; set; }
 
-        #region  Nested Type: XLLoadSource
+        #region Nested Type: XLLoadSource
 
         private enum XLLoadSource
         {
@@ -467,7 +467,7 @@ namespace ClosedXML.Excel
 
         private void checkForWorksheetsPresent()
         {
-            if (Worksheets.Count() == 0)
+            if (!Worksheets.Any())
                 throw new InvalidOperationException("Workbooks need at least one worksheet.");
         }
 
@@ -625,7 +625,7 @@ namespace ClosedXML.Excel
             }
         }
 
-#region Fields
+        #region Fields
 
         private XLLoadSource _loadSource = XLLoadSource.New;
         private String _originalFile;
@@ -633,13 +633,13 @@ namespace ClosedXML.Excel
 
         #endregion Fields
 
-#region Constructor
+        #region Constructor
 
         /// <summary>
         ///   Creates a new Excel workbook.
         /// </summary>
         public XLWorkbook()
-            :this(XLEventTracking.Enabled)
+            : this(XLEventTracking.Enabled)
         {
         }
 
@@ -700,7 +700,7 @@ namespace ClosedXML.Excel
         ///   Opens an existing workbook from a stream.
         /// </summary>
         /// <param name = "stream">The stream to open.</param>
-        public XLWorkbook(Stream stream):this(stream, XLEventTracking.Enabled)
+        public XLWorkbook(Stream stream) : this(stream, XLEventTracking.Enabled)
         {
         }
 
@@ -714,7 +714,7 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-#region Nested type: UnsupportedSheet
+        #region Nested type: UnsupportedSheet
 
         internal sealed class UnsupportedSheet
         {
@@ -916,12 +916,31 @@ namespace ClosedXML.Excel
             {
                 case XLLoadSource.New:
                     return "XLWorkbook(new)";
+
                 case XLLoadSource.File:
                     return String.Format("XLWorkbook({0})", _originalFile);
+
                 case XLLoadSource.Stream:
                     return String.Format("XLWorkbook({0})", _originalStream.ToString());
+
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        public void SuspendEvents()
+        {
+            foreach (var ws in WorksheetsInternal)
+            {
+                ws.SuspendEvents();
+            }
+        }
+
+        public void ResumeEvents()
+        {
+            foreach (var ws in WorksheetsInternal)
+            {
+                ws.ResumeEvents();
             }
         }
     }

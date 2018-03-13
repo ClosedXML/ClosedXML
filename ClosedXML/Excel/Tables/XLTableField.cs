@@ -27,7 +27,8 @@ namespace ClosedXML.Excel
             {
                 if (_column == null)
                 {
-                    _column = this.table.AsRange().Column(this.Index + 1);
+                    using (var range = this.table.AsRange())
+                        _column = range.Column(this.Index + 1);
                 }
                 return _column;
             }

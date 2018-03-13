@@ -91,6 +91,7 @@
     <Compile Include="Excel\Comments\CommentsTests.cs" />
     <Compile Include="Excel\ConditionalFormats\ConditionalFormatCopyTests.cs" />
     <Compile Include="Excel\ConditionalFormats\ConditionalFormatsConsolidateTests.cs" />
+    <Compile Include="Excel\ConditionalFormats\ConditionalFormatShiftTests.cs" />
     <Compile Include="Excel\ImageHandling\PictureTests.cs" />
     <Compile Include="Excel\Misc\HyperlinkTests.cs" />
     <Compile Include="Excel\Misc\SearchTests.cs" />
