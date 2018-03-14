@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Collections;
 using System.Collections.Generic;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -117,23 +118,18 @@ namespace ClosedXML.Excel.CalcEngine
         static object CountBlank(List<Expression> p)
         {
             var cnt = 0.0;
-            foreach (Expression e in p)
+
+            if (p == null || p.Count != 1 ||
+                (p[0] as XObjectExpression)?.Value as CellRangeReference == null)
+                throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
+
+            var e = p[0] as XObjectExpression;
+            foreach (var value in e)
             {
-                var ienum = e as IEnumerable;
-                if (ienum != null)
-                {
-                    foreach (var value in ienum)
-                    {
-                        if (IsBlank(value))
-                            cnt++;
-                    }
-                }
-                else
-                {
-                    if (IsBlank(e.Evaluate()))
-                        cnt++;
-                }
+                if (IsBlank(value))
+                    cnt++;
             }
+
             return cnt;
         }
 
