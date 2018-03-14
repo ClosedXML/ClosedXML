@@ -1257,12 +1257,6 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        private struct DataValidationToCopy
-        {
-            public XLAddress SourceAddress;
-            public XLDataValidation DataValidation;
-        }
-
         public void InsertRowsAboveVoid(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)
         {
             InsertRowsAboveInternal(onlyUsedCells, numberOfRows, formatFromAbove, nullReturn: true);
