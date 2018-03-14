@@ -1,6 +1,7 @@
 using ClosedXML.Excel.Misc;
 using ClosedXML.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -283,6 +284,17 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed()
         {
             return Cells(true);
+        }
+
+        public IEnumerable CellValues()
+        {
+            for (int ro = RangeAddress.FirstAddress.RowNumber; ro <= RangeAddress.LastAddress.RowNumber; ro++)
+            {
+                for (int co = RangeAddress.FirstAddress.ColumnNumber; co <= RangeAddress.LastAddress.ColumnNumber; co++)
+                {
+                    yield return Worksheet.GetCellValue(ro, co);
+                }
+            }
         }
 
         public IXLRange Merge()

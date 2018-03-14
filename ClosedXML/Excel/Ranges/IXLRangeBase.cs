@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Globalization;
 
 namespace ClosedXML.Excel
@@ -92,6 +93,11 @@ namespace ClosedXML.Excel
         IXLCells CellsUsed(Func<IXLCell, Boolean> predicate);
 
         IXLCells CellsUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate);
+
+        /// <summary>
+        /// Returns the collection of cell values not initializing empty cells.
+        /// </summary>
+        IEnumerable CellValues();
 
         /// <summary>
         /// Searches the cells' contents for a given piece of text
