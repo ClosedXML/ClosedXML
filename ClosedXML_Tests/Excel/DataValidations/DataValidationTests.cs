@@ -1,12 +1,9 @@
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System.Linq;
 
 namespace ClosedXML_Tests.Excel.DataValidations
 {
-    /// <summary>
-    ///     Summary description for UnitTest1
-    /// </summary>
     [TestFixture]
     public class DataValidationTests
     {
@@ -23,7 +20,6 @@ namespace ClosedXML_Tests.Excel.DataValidations
             cell.SetValue("Value 3");
             cell = cell.CellBelow();
             cell.SetValue("Value 4");
-            cell = cell.CellBelow();
 
             ws.Cell("A1").SetValue("Cell below has Validation Only.");
             cell = ws.Cell("A2");
@@ -34,19 +30,18 @@ namespace ClosedXML_Tests.Excel.DataValidations
             cell.DataValidation.List(ws.Range("$E$1:$E$4"));
             cell.DataValidation.InputTitle = "Title for B2";
 
-            Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
-            Assert.AreEqual(cell.DataValidation.Value, "'Data Validation Issue'!$E$1:$E$4");
-            Assert.AreEqual(cell.DataValidation.InputTitle, "Title for B2");
-
+            Assert.AreEqual(XLAllowedValues.List, cell.DataValidation.AllowedValues);
+            Assert.AreEqual("'Data Validation Issue'!$E$1:$E$4", cell.DataValidation.Value);
+            Assert.AreEqual("Title for B2", cell.DataValidation.InputTitle);
 
             ws.Cell("C1").SetValue("Cell below has Validation with a message.");
             cell = ws.Cell("C2");
             cell.DataValidation.List(ws.Range("$E$1:$E$4"));
             cell.DataValidation.InputMessage = "Message for C2";
 
-            Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
-            Assert.AreEqual(cell.DataValidation.Value, "'Data Validation Issue'!$E$1:$E$4");
-            Assert.AreEqual(cell.DataValidation.InputMessage, "Message for C2");
+            Assert.AreEqual(XLAllowedValues.List, cell.DataValidation.AllowedValues);
+            Assert.AreEqual("'Data Validation Issue'!$E$1:$E$4", cell.DataValidation.Value);
+            Assert.AreEqual("Message for C2", cell.DataValidation.InputMessage);
 
             ws.Cell("D1").SetValue("Cell below has Validation with title and message.");
             cell = ws.Cell("D2");
@@ -54,10 +49,10 @@ namespace ClosedXML_Tests.Excel.DataValidations
             cell.DataValidation.InputTitle = "Title for D2";
             cell.DataValidation.InputMessage = "Message for D2";
 
-            Assert.AreEqual(cell.DataValidation.AllowedValues, XLAllowedValues.List);
-            Assert.AreEqual(cell.DataValidation.Value, "'Data Validation Issue'!$E$1:$E$4");
-            Assert.AreEqual(cell.DataValidation.InputTitle, "Title for D2");
-            Assert.AreEqual(cell.DataValidation.InputMessage, "Message for D2");
+            Assert.AreEqual(XLAllowedValues.List, cell.DataValidation.AllowedValues);
+            Assert.AreEqual("'Data Validation Issue'!$E$1:$E$4", cell.DataValidation.Value);
+            Assert.AreEqual("Title for D2", cell.DataValidation.InputTitle);
+            Assert.AreEqual("Message for D2", cell.DataValidation.InputMessage);
         }
 
         [Test]
