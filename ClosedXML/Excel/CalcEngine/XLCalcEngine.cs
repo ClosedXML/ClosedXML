@@ -82,7 +82,10 @@ namespace ClosedXML.Excel.CalcEngine
         // ** IEnumerable
         public IEnumerator GetEnumerator()
         {
-            return _range.Cells().Select(GetValue).GetEnumerator();
+            var maxRow = Math.Min(_range.RangeAddress.LastAddress.RowNumber, _range.Worksheet.LastCellUsed().Address.RowNumber);
+            var maxCol = Math.Min(_range.RangeAddress.LastAddress.ColumnNumber, _range.Worksheet.LastCellUsed().Address.ColumnNumber);
+            using (var trimmedRange = _range.Worksheet.Range(_range.FirstCell().Address, new XLAddress(maxRow, maxCol, false, false)))
+                return trimmedRange.Cells().Select(GetValue).GetEnumerator();
         }
 
         private Boolean _evaluating;

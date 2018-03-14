@@ -176,7 +176,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 ws.Cell(4, 3).Value = "Yes";
                 ws.Cell(4, 4).Value = "Yes";
 
-                Assert.AreEqual(expectedOutcome, (int)ws.Evaluate(formula));
+                Assert.AreEqual(expectedOutcome, ws.Evaluate(formula));
             }
         }
 
@@ -327,6 +327,32 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             value = workbook.Evaluate(@"=VARP(Data!H:H)").CastTo<double>();
             Assert.AreEqual(2189.430863, value, tolerance);
+        }
+
+        [Test]
+        [TestCase("SUM(H:J)",  20501.15d, Description = "SUM columns")]
+        [TestCase("SUM(4:5)", 85366.12d, Description = "SUM rows")]
+        [TestCase("COUNT(G:I,G:G,H:I)", 258d, Description = "COUNT overlapping columns")]
+        [TestCase("COUNT(6:8,6:6,7:8)", 30d, Description = "COUNT overlapping rows")]
+        [TestCase("COUNTBLANK(H:J)", 3145640d, Description = "COUNTBLANK columns")]
+        [TestCase("COUNTBLANK(7:9)", 49128d, Description = "COUNTBLANK rows")]
+        [TestCase("COUNT(1:1048576)", 215d, Description = "COUNT worksheet")]
+        [TestCase("COUNTBLANK(1:1048576)", 17179868832d, Description = "COUNTBLANK worksheet")]
+        public void TallySkipsEmptyCells(string formulaA1, double expectedResult)
+        {
+            using (var wb = SetupWorkbook())
+            {
+                var ws = wb.Worksheets.First();
+                //Let's pre-initialize cells we need so they didn't affect the result
+                ws.Range("A1:J45").Style.Fill.BackgroundColor = XLColor.Amber;
+                int initialCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                var actualResult = (double)ws.Evaluate(formulaA1);
+                int cellsCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                Assert.AreEqual(expectedResult, actualResult, tolerance);
+                Assert.AreEqual(initialCount, cellsCount);
+            }
         }
 
         private XLWorkbook SetupWorkbook()
