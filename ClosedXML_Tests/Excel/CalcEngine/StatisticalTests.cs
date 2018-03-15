@@ -330,14 +330,17 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
-        [TestCase("SUM(H:J)",  20501.15d, Description = "SUM columns")]
-        [TestCase("SUM(4:5)", 85366.12d, Description = "SUM rows")]
         [TestCase("COUNT(G:I,G:G,H:I)", 258d, Description = "COUNT overlapping columns")]
         [TestCase("COUNT(6:8,6:6,7:8)", 30d, Description = "COUNT overlapping rows")]
         [TestCase("COUNTBLANK(H:J)", 3145640d, Description = "COUNTBLANK columns")]
         [TestCase("COUNTBLANK(7:9)", 49128d, Description = "COUNTBLANK rows")]
         [TestCase("COUNT(1:1048576)", 216d, Description = "COUNT worksheet")]
         [TestCase("COUNTBLANK(1:1048576)", 17179868831d, Description = "COUNTBLANK worksheet")]
+        [TestCase("SUM(H:J)", 20501.15d, Description = "SUM columns")]
+        [TestCase("SUM(4:5)", 85366.12d, Description = "SUM rows")]
+        [TestCase("SUMIF(G:G,50,H:H)", 24.98d, Description = "SUMIF columns")]
+        [TestCase("SUMIF(G23:G52,\"\",H3:H32)", 53.24d, Description = "SUMIF ranges")]
+        [TestCase("SUMIFS(H:H,G:G,50,I:I,\">900\")", 19.99d, Description = "SUMIFS columns")]
         public void TallySkipsEmptyCells(string formulaA1, double expectedResult)
         {
             using (var wb = SetupWorkbook())
