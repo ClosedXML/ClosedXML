@@ -6,6 +6,7 @@ namespace ClosedXML.Excel
     internal class XLFont : IXLFont
     {
         #region Static members
+
         internal static XLFontKey GenerateKey(IXLFontBase defaultFont)
         {
             if (defaultFont == null)
@@ -34,7 +35,9 @@ namespace ClosedXML.Excel
                 };
             }
         }
+
         #endregion Static members
+
         private readonly XLStyle _style;
 
         private XLFontValue _value;
@@ -46,6 +49,7 @@ namespace ClosedXML.Excel
         }
 
         #region Constructors
+
         /// <summary>
         /// Create an instance of XLFont initializing it with the specified value.
         /// </summary>
@@ -64,6 +68,7 @@ namespace ClosedXML.Excel
         public XLFont(XLStyle style = null, IXLFont d = null) : this(style, GenerateKey(d))
         {
         }
+
         #endregion Constructors
 
         private void Modify(Func<XLFontKey, XLFontKey> modification)
@@ -142,7 +147,7 @@ namespace ClosedXML.Excel
                 Modify(k => { k.FontSize = value; return k; });
             }
         }
-        
+
         public XLColor FontColor
         {
             get { return XLColor.FromKey(Key.FontColor); }
@@ -276,7 +281,8 @@ namespace ClosedXML.Excel
             FontCharSet = value;
             return _style;
         }
-        #endregion
+
+        #endregion IXLFont Members
 
         #region Overridden
 
@@ -325,6 +331,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + Key.GetHashCode();
             return hashCode;
         }
+
         #endregion Overridden
     }
 }

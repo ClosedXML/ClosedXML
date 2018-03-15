@@ -5,16 +5,27 @@ namespace ClosedXML.Excel
     public struct XLBorderKey : IEquatable<XLBorderKey>
     {
         public XLBorderStyleValues LeftBorder { get; set; }
+
         public XLColorKey LeftBorderColor { get; set; }
+
         public XLBorderStyleValues RightBorder { get; set; }
+
         public XLColorKey RightBorderColor { get; set; }
+
         public XLBorderStyleValues TopBorder { get; set; }
+
         public XLColorKey TopBorderColor { get; set; }
+
         public XLBorderStyleValues BottomBorder { get; set; }
+
         public XLColorKey BottomBorderColor { get; set; }
+
         public XLBorderStyleValues DiagonalBorder { get; set; }
+
         public XLColorKey DiagonalBorderColor { get; set; }
+
         public bool DiagonalUp { get; set; }
+
         public bool DiagonalDown { get; set; }
 
         public override int GetHashCode()
@@ -37,19 +48,19 @@ namespace ClosedXML.Excel
 
         public bool Equals(XLBorderKey other)
         {
-            return 
-               LeftBorder          == other.LeftBorder
-            && LeftBorderColor     == other.LeftBorderColor
-            && RightBorder         == other.RightBorder
-            && RightBorderColor    == other.RightBorderColor
-            && TopBorder           == other.TopBorder
-            && TopBorderColor      == other.TopBorderColor
-            && BottomBorder        == other.BottomBorder
-            && BottomBorderColor   == other.BottomBorderColor
-            && DiagonalBorder      == other.DiagonalBorder
+            return
+               LeftBorder == other.LeftBorder
+            && LeftBorderColor == other.LeftBorderColor
+            && RightBorder == other.RightBorder
+            && RightBorderColor == other.RightBorderColor
+            && TopBorder == other.TopBorder
+            && TopBorderColor == other.TopBorderColor
+            && BottomBorder == other.BottomBorder
+            && BottomBorderColor == other.BottomBorderColor
+            && DiagonalBorder == other.DiagonalBorder
             && DiagonalBorderColor == other.DiagonalBorderColor
-            && DiagonalUp          == other.DiagonalUp
-            && DiagonalDown        == other.DiagonalDown;
+            && DiagonalUp == other.DiagonalUp
+            && DiagonalDown == other.DiagonalDown;
         }
 
         public override bool Equals(object obj)
@@ -60,7 +71,7 @@ namespace ClosedXML.Excel
         }
 
         public static bool operator ==(XLBorderKey left, XLBorderKey right) => left.Equals(right);
-        public static bool operator !=(XLBorderKey left, XLBorderKey right) => !(left.Equals(right));
 
+        public static bool operator !=(XLBorderKey left, XLBorderKey right) => !(left.Equals(right));
     }
 }

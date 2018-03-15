@@ -5,29 +5,38 @@ namespace ClosedXML.Excel
     public struct XLAlignmentKey : IEquatable<XLAlignmentKey>
     {
         public XLAlignmentHorizontalValues Horizontal { get; set; }
+
         public XLAlignmentVerticalValues Vertical { get; set; }
+
         public int Indent { get; set; }
+
         public bool JustifyLastLine { get; set; }
+
         public XLAlignmentReadingOrderValues ReadingOrder { get; set; }
+
         public int RelativeIndent { get; set; }
+
         public bool ShrinkToFit { get; set; }
+
         public int TextRotation { get; set; }
+
         public bool WrapText { get; set; }
+
         public bool TopToBottom { get; set; }
 
         public bool Equals(XLAlignmentKey other)
         {
             return
-                Horizontal      == other.Horizontal
-             && Vertical        == other.Vertical
-             && Indent          == other.Indent
+                Horizontal == other.Horizontal
+             && Vertical == other.Vertical
+             && Indent == other.Indent
              && JustifyLastLine == other.JustifyLastLine
-             && ReadingOrder    == other.ReadingOrder
-             && RelativeIndent  == other.RelativeIndent
-             && ShrinkToFit     == other.ShrinkToFit
-             && TextRotation    == other.TextRotation
-             && WrapText        == other.WrapText
-             && TopToBottom     == other.TopToBottom;
+             && ReadingOrder == other.ReadingOrder
+             && RelativeIndent == other.RelativeIndent
+             && ShrinkToFit == other.ShrinkToFit
+             && TextRotation == other.TextRotation
+             && WrapText == other.WrapText
+             && TopToBottom == other.TopToBottom;
         }
 
         public override bool Equals(object obj)
@@ -54,6 +63,7 @@ namespace ClosedXML.Excel
         }
 
         public static bool operator ==(XLAlignmentKey left, XLAlignmentKey right) => left.Equals(right);
+
         public static bool operator !=(XLAlignmentKey left, XLAlignmentKey right) => !(left.Equals(right));
     }
 }

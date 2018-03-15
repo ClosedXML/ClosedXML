@@ -170,6 +170,7 @@ namespace ClosedXML.Excel
         }
 
         private static IDictionary<int, string> _formatCodes;
+
         internal static IDictionary<int, string> FormatCodes
         {
             get

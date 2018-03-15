@@ -5,7 +5,9 @@ namespace ClosedXML.Excel
     public struct XLFillKey : IEquatable<XLFillKey>
     {
         public XLColorKey BackgroundColor { get; set; }
+
         public XLColorKey PatternColor { get; set; }
+
         public XLFillPatternValues PatternType { get; set; }
 
         public override int GetHashCode()
@@ -21,8 +23,8 @@ namespace ClosedXML.Excel
         {
             return
                 BackgroundColor == other.BackgroundColor
-             && PatternColor    == other.PatternColor
-             && PatternType     == other.PatternType;
+             && PatternColor == other.PatternColor
+             && PatternType == other.PatternType;
         }
 
         public override bool Equals(object obj)
@@ -33,6 +35,7 @@ namespace ClosedXML.Excel
         }
 
         public static bool operator ==(XLFillKey left, XLFillKey right) => left.Equals(right);
+
         public static bool operator !=(XLFillKey left, XLFillKey right) => !(left.Equals(right));
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 namespace ClosedXML.Excel
 {
@@ -13,6 +11,7 @@ namespace ClosedXML.Excel
     public abstract class XLStylizedBase : IXLStylized
     {
         #region Properties
+
         /// <summary>
         /// Read-only style property.
         /// </summary>
@@ -48,6 +47,7 @@ namespace ClosedXML.Excel
         public abstract IXLRanges RangesUsed { get; }
 
         public abstract IEnumerable<IXLStyle> Styles { get; }
+
         #endregion Properties
 
         public XLStylizedBase(XLStyleValue styleValue)
@@ -56,6 +56,7 @@ namespace ClosedXML.Excel
         }
 
         #region Private methods
+
         private void SetStyle(IXLStyle value, bool propagate = false)
         {
             SetStyle(XLStyleValue.FromKey(XLStyle.GenerateKey(value)), propagate);
@@ -98,14 +99,18 @@ namespace ClosedXML.Excel
             return new List<XLStylizedBase> { parent }
                    .Union(parent.Children.Where(child => child != parent).SelectMany(child => GetChildrenRecursively(child)));
         }
+
         #endregion Private methods
 
         #region Nested classes
-        public sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T> where T: class
+
+        public sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T> where T : class
         {
             public bool Equals(T x, T y) => ReferenceEquals(x, y);
+
             public int GetHashCode(T obj) => RuntimeHelpers.GetHashCode(obj);
         }
-        #endregion
+
+        #endregion Nested classes
     }
 }

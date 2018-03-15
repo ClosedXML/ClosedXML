@@ -5,6 +5,7 @@ namespace ClosedXML.Excel
     internal class XLProtection : IXLProtection
     {
         #region Static members
+
         internal static XLProtectionKey GenerateKey(IXLProtection defaultProtection)
         {
             if (defaultProtection == null)
@@ -18,9 +19,11 @@ namespace ClosedXML.Excel
                 Hidden = defaultProtection.Hidden
             };
         }
+
         #endregion Static members
 
         #region Properties
+
         private readonly XLStyle _style;
 
         private XLProtectionValue _value;
@@ -30,10 +33,11 @@ namespace ClosedXML.Excel
             get { return _value.Key; }
             private set { _value = XLProtectionValue.FromKey(value); }
         }
+
         #endregion Properties
 
-
         #region Constructors
+
         /// <summary>
         /// Create an instance of XLProtection initializing it with the specified value.
         /// </summary>
@@ -52,10 +56,11 @@ namespace ClosedXML.Excel
         public XLProtection(XLStyle style = null, IXLProtection d = null) : this(style, GenerateKey(d))
         {
         }
+
         #endregion Constructors
 
-
         #region IXLProtection Members
+
         public Boolean Locked
         {
             get { return Key.Locked; }
@@ -73,7 +78,6 @@ namespace ClosedXML.Excel
                 Modify(k => { k.Hidden = value; return k; });
             }
         }
-
 
         public IXLStyle SetLocked()
         {
@@ -99,7 +103,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        #endregion
+        #endregion IXLProtection Members
 
         private void Modify(Func<XLProtectionKey, XLProtectionKey> modification)
         {
@@ -143,6 +147,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + Key.GetHashCode();
             return hashCode;
         }
+
         #endregion Overridden
     }
 }

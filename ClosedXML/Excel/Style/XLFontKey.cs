@@ -5,30 +5,40 @@ namespace ClosedXML.Excel
     public struct XLFontKey : IEquatable<XLFontKey>
     {
         public bool Bold { get; set; }
+
         public bool Italic { get; set; }
+
         public XLFontUnderlineValues Underline { get; set; }
+
         public bool Strikethrough { get; set; }
+
         public XLFontVerticalTextAlignmentValues VerticalAlignment { get; set; }
+
         public bool Shadow { get; set; }
+
         public double FontSize { get; set; }
+
         public XLColorKey FontColor { get; set; }
+
         public string FontName { get; set; }
+
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
+
         public XLFontCharSet FontCharSet { get; set; }
 
         public bool Equals(XLFontKey other)
         {
             return
-                Bold                 == other.Bold
-             && Italic               == other.Italic
-             && Underline            == other.Underline
-             && Strikethrough        == other.Strikethrough
-             && VerticalAlignment    == other.VerticalAlignment
-             && Shadow               == other.Shadow
-             && FontSize             == other.FontSize
-             && FontColor            == other.FontColor
-             && FontFamilyNumbering  == other.FontFamilyNumbering
-             && FontCharSet          == other.FontCharSet
+                Bold == other.Bold
+             && Italic == other.Italic
+             && Underline == other.Underline
+             && Strikethrough == other.Strikethrough
+             && VerticalAlignment == other.VerticalAlignment
+             && Shadow == other.Shadow
+             && FontSize == other.FontSize
+             && FontColor == other.FontColor
+             && FontFamilyNumbering == other.FontFamilyNumbering
+             && FontCharSet == other.FontCharSet
              && string.Equals(FontName, other.FontName, StringComparison.InvariantCultureIgnoreCase);
         }
 
@@ -57,6 +67,7 @@ namespace ClosedXML.Excel
         }
 
         public static bool operator ==(XLFontKey left, XLFontKey right) => left.Equals(right);
+
         public static bool operator !=(XLFontKey left, XLFontKey right) => !(left.Equals(right));
     }
 }

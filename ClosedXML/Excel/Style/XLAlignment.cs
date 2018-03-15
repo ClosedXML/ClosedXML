@@ -10,6 +10,7 @@ namespace ClosedXML.Excel
     internal class XLAlignment : IXLAlignment
     {
         #region Static members
+
         internal static XLAlignmentKey GenerateKey(IXLAlignment d)
         {
             XLAlignmentKey key;
@@ -38,6 +39,7 @@ namespace ClosedXML.Excel
             }
             return key;
         }
+
         #endregion Static members
 
         #region Properties
@@ -50,9 +52,11 @@ namespace ClosedXML.Excel
             get { return _value.Key; }
             private set { _value = XLAlignmentValue.FromKey(value); }
         }
+
         #endregion Properties
 
         #region Constructors
+
         /// <summary>
         /// Create an instance of XLAlignment initializing it with the specified value.
         /// </summary>
@@ -63,7 +67,7 @@ namespace ClosedXML.Excel
             _style = style ?? XLStyle.CreateEmptyStyle();
             _value = value;
         }
-        
+
         public XLAlignment(XLStyle style, XLAlignmentKey key) : this(style, XLAlignmentValue.FromKey(key))
         {
         }
@@ -71,15 +75,16 @@ namespace ClosedXML.Excel
         public XLAlignment(XLStyle style = null, IXLAlignment d = null) : this(style, GenerateKey(d))
         {
         }
-        #endregion Constructors
 
+        #endregion Constructors
 
         #region IXLAlignment Members
 
         public XLAlignmentHorizontalValues Horizontal
         {
             get { return Key.Horizontal; }
-            set {
+            set
+            {
                 Boolean updateIndent = !(
                                                value == XLAlignmentHorizontalValues.Left
                                             || value == XLAlignmentHorizontalValues.Right
@@ -149,14 +154,14 @@ namespace ClosedXML.Excel
         public Int32 TextRotation
         {
             get { return Key.TextRotation; }
-            set {
+            set
+            {
                 Int32 rotation = value;
 
                 if (rotation != 255 && (rotation < -90 || rotation > 180))
                     throw new ArgumentException("TextRotation must be between -90 and 180 degrees, or 255.");
 
                 Modify(k => { k.TextRotation = rotation; return k; });
-
             }
         }
 
@@ -271,6 +276,7 @@ namespace ClosedXML.Excel
         }
 
         #region Overridden
+
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -299,7 +305,7 @@ namespace ClosedXML.Excel
         {
             return Equals(obj as XLAlignment);
         }
-        
+
         public bool Equals(IXLAlignment other)
         {
             var otherA = other as XLAlignment;
@@ -315,6 +321,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + Key.GetHashCode();
             return hashCode;
         }
+
         #endregion Overridden
     }
 }

@@ -25,16 +25,26 @@ namespace ClosedXML.Excel
         });
 
         public XLAlignmentKey Key { get; private set; }
-        public XLAlignmentHorizontalValues Horizontal {get { return Key.Horizontal;  } }
-        public XLAlignmentVerticalValues Vertical {get { return Key.Vertical;  } }
-        public int Indent {get { return Key.Indent;  } }
-        public bool JustifyLastLine {get { return Key.JustifyLastLine;  } }
-        public XLAlignmentReadingOrderValues ReadingOrder {get { return Key.ReadingOrder;  } }
-        public int RelativeIndent {get { return Key.RelativeIndent;  } }
-        public bool ShrinkToFit {get { return Key.ShrinkToFit;  } }
-        public int TextRotation {get { return Key.TextRotation;  } }
-        public bool WrapText {get { return Key.WrapText;  } }
-        public bool TopToBottom {get { return Key.TopToBottom;  } }
+
+        public XLAlignmentHorizontalValues Horizontal { get { return Key.Horizontal; } }
+
+        public XLAlignmentVerticalValues Vertical { get { return Key.Vertical; } }
+
+        public int Indent { get { return Key.Indent; } }
+
+        public bool JustifyLastLine { get { return Key.JustifyLastLine; } }
+
+        public XLAlignmentReadingOrderValues ReadingOrder { get { return Key.ReadingOrder; } }
+
+        public int RelativeIndent { get { return Key.RelativeIndent; } }
+
+        public bool ShrinkToFit { get { return Key.ShrinkToFit; } }
+
+        public int TextRotation { get { return Key.TextRotation; } }
+
+        public bool WrapText { get { return Key.WrapText; } }
+
+        public bool TopToBottom { get { return Key.TopToBottom; } }
 
         private XLAlignmentValue(XLAlignmentKey key)
         {

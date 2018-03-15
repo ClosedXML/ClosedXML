@@ -28,23 +28,35 @@ namespace ClosedXML.Excel
         });
 
         public XLBorderKey Key { get; private set; }
-        public XLBorderStyleValues LeftBorder {get { return Key.LeftBorder;  } }
+
+        public XLBorderStyleValues LeftBorder { get { return Key.LeftBorder; } }
+
         public XLColor LeftBorderColor { get; private set; }
-        public XLBorderStyleValues RightBorder {get { return Key.RightBorder;  } }
+
+        public XLBorderStyleValues RightBorder { get { return Key.RightBorder; } }
+
         public XLColor RightBorderColor { get; private set; }
-        public XLBorderStyleValues TopBorder {get { return Key.TopBorder;  } }
+
+        public XLBorderStyleValues TopBorder { get { return Key.TopBorder; } }
+
         public XLColor TopBorderColor { get; private set; }
-        public XLBorderStyleValues BottomBorder {get { return Key.BottomBorder;  } }
+
+        public XLBorderStyleValues BottomBorder { get { return Key.BottomBorder; } }
+
         public XLColor BottomBorderColor { get; private set; }
-        public XLBorderStyleValues DiagonalBorder {get { return Key.DiagonalBorder;  } }
+
+        public XLBorderStyleValues DiagonalBorder { get { return Key.DiagonalBorder; } }
+
         public XLColor DiagonalBorderColor { get; private set; }
-        public bool DiagonalUp {get { return Key.DiagonalUp;  } }
-        public bool DiagonalDown {get { return Key.DiagonalDown;  } }
+
+        public bool DiagonalUp { get { return Key.DiagonalUp; } }
+
+        public bool DiagonalDown { get { return Key.DiagonalDown; } }
 
         private XLBorderValue(XLBorderKey key)
         {
             Key = key;
-            
+
             LeftBorderColor = XLColor.FromKey(Key.LeftBorderColor);
             RightBorderColor = XLColor.FromKey(Key.RightBorderColor);
             TopBorderColor = XLColor.FromKey(Key.TopBorderColor);

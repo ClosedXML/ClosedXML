@@ -27,22 +27,33 @@ namespace ClosedXML.Excel
         });
 
         public XLFontKey Key { get; private set; }
-        public bool Bold {get { return  Key.Bold;  } }
-        public bool Italic {get { return Key.Italic;  } }
-        public XLFontUnderlineValues Underline {get { return Key.Underline;  } }
-        public bool Strikethrough {get { return Key.Strikethrough;  } }
-        public XLFontVerticalTextAlignmentValues VerticalAlignment {get { return Key.VerticalAlignment;  } }
-        public bool Shadow {get { return Key.Shadow;  } }
-        public double FontSize {get { return Key.FontSize;  } }
+
+        public bool Bold { get { return Key.Bold; } }
+
+        public bool Italic { get { return Key.Italic; } }
+
+        public XLFontUnderlineValues Underline { get { return Key.Underline; } }
+
+        public bool Strikethrough { get { return Key.Strikethrough; } }
+
+        public XLFontVerticalTextAlignmentValues VerticalAlignment { get { return Key.VerticalAlignment; } }
+
+        public bool Shadow { get { return Key.Shadow; } }
+
+        public double FontSize { get { return Key.FontSize; } }
+
         public XLColor FontColor { get; private set; }
-        public string FontName {get { return Key.FontName;  } }
-        public XLFontFamilyNumberingValues FontFamilyNumbering {get { return Key.FontFamilyNumbering;  } }
-        public XLFontCharSet FontCharSet {get { return Key.FontCharSet;  } }
+
+        public string FontName { get { return Key.FontName; } }
+
+        public XLFontFamilyNumberingValues FontFamilyNumbering { get { return Key.FontFamilyNumbering; } }
+
+        public XLFontCharSet FontCharSet { get { return Key.FontCharSet; } }
 
         private XLFontValue(XLFontKey key)
         {
             Key = key;
-            
+
             FontColor = XLColor.FromKey(Key.FontColor);
         }
 

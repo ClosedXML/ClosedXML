@@ -18,8 +18,10 @@ namespace ClosedXML.Excel
         });
 
         public XLProtectionKey Key { get; private set; }
-        public bool Locked {get { return Key.Locked;  } }
-        public bool Hidden {get { return Key.Hidden;  } }
+
+        public bool Locked { get { return Key.Locked; } }
+
+        public bool Hidden { get { return Key.Hidden; } }
 
         private XLProtectionValue(XLProtectionKey key)
         {

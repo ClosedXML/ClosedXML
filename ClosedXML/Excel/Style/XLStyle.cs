@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace ClosedXML.Excel
@@ -8,6 +6,7 @@ namespace ClosedXML.Excel
     internal class XLStyle : IXLStyle
     {
         #region Static members
+
         public static XLStyle Default { get { return new XLStyle(XLStyleValue.Default); } }
 
         internal static XLStyleKey GenerateKey(IXLStyle initialStyle)
@@ -32,9 +31,11 @@ namespace ClosedXML.Excel
         {
             return new XLStyle(new XLStylizedEmpty(null));
         }
+
         #endregion Static members
 
         #region properties
+
         private readonly IXLStylized _container;
 
         public XLStyleValue Value { get; private set; }
@@ -47,9 +48,11 @@ namespace ClosedXML.Excel
                 Value = XLStyleValue.FromKey(value);
             }
         }
-        #endregion Properties
+
+        #endregion properties
 
         #region constructors
+
         public XLStyle(IXLStylized container, IXLStyle initialStyle = null, Boolean useDefaultModify = true) : this(container, GenerateKey(initialStyle))
         {
         }
@@ -72,8 +75,8 @@ namespace ClosedXML.Excel
             _container = null;
             Value = value;
         }
-        #endregion Constructors
 
+        #endregion constructors
 
         internal void Modify(Func<XLStyleKey, XLStyleKey> modification)
         {
@@ -86,6 +89,7 @@ namespace ClosedXML.Excel
         }
 
         #region IXLStyle members
+
         public IXLFont Font
         {
             get { return new XLFont(this, Value.Font); }
@@ -144,9 +148,11 @@ namespace ClosedXML.Excel
         {
             get { return NumberFormat; }
         }
+
         #endregion IXLStyle members
 
         #region Overridden
+
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -187,6 +193,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + Key.GetHashCode();
             return hashCode;
         }
-        #endregion
+
+        #endregion Overridden
     }
 }

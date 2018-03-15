@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace ClosedXML.Excel
@@ -36,7 +35,7 @@ namespace ClosedXML.Excel
         /// We'll return normal black when index 81 is found.
         /// </summary>
         private const Int32 TOOLTIPCOLORINDEX = 81;
-        
+
         public Boolean HasValue { get; private set; }
 
         public XLColorType ColorType
@@ -99,7 +98,7 @@ namespace ClosedXML.Excel
                 if (ColorType == XLColorType.Indexed)
                     throw new InvalidOperationException("Cannot extract theme tint from an indexed color.");
 
-                return Color.A/255.0;
+                return Color.A / 255.0;
             }
         }
 
@@ -110,11 +109,11 @@ namespace ClosedXML.Excel
             return Key == other.Key;
         }
 
-        #endregion
+        #endregion IEquatable<XLColor> Members
 
         public override bool Equals(object obj)
         {
-            return Equals((XLColor) obj);
+            return Equals((XLColor)obj);
         }
 
         public override int GetHashCode()

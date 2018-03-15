@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    internal class XLStylizedContainer: XLStylizedBase, IXLStylized
+    internal class XLStylizedContainer : XLStylizedBase, IXLStylized
     {
         protected readonly IXLStylized _container;
 

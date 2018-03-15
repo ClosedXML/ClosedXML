@@ -5,6 +5,7 @@ namespace ClosedXML.Excel
     public struct XLNumberFormatKey : IEquatable<XLNumberFormatKey>
     {
         public int NumberFormatId { get; set; }
+
         public string Format { get; set; }
 
         public override int GetHashCode()
@@ -28,8 +29,9 @@ namespace ClosedXML.Excel
                 return Equals((XLNumberFormatKey)obj);
             return base.Equals(obj);
         }
-        
+
         public static bool operator ==(XLNumberFormatKey left, XLNumberFormatKey right) => left.Equals(right);
+
         public static bool operator !=(XLNumberFormatKey left, XLNumberFormatKey right) => !(left.Equals(right));
     }
 }

@@ -5,6 +5,7 @@ namespace ClosedXML.Excel
     internal class XLNumberFormat : IXLNumberFormat
     {
         #region Static members
+
         internal static XLNumberFormatKey GenerateKey(IXLNumberFormat defaultNumberFormat)
         {
             if (defaultNumberFormat == null)
@@ -19,8 +20,8 @@ namespace ClosedXML.Excel
                 Format = defaultNumberFormat.Format
             };
         }
-        #endregion Static members
 
+        #endregion Static members
 
         #region Properties
 
@@ -34,9 +35,10 @@ namespace ClosedXML.Excel
             private set { _value = XLNumberFormatValue.FromKey(value); }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Constructors
+
         /// <summary>
         /// Create an instance of XLNumberFormat initializing it with the specified value.
         /// </summary>
@@ -55,9 +57,11 @@ namespace ClosedXML.Excel
         public XLNumberFormat(XLStyle style = null, IXLNumberFormat d = null) : this(style, GenerateKey(d))
         {
         }
+
         #endregion Constructors
 
         #region IXLNumberFormat Members
+
         public Int32 NumberFormatId
         {
             get { return Key.NumberFormatId; }
@@ -142,6 +146,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + Key.GetHashCode();
             return hashCode;
         }
-        #endregion
+
+        #endregion Overridden
     }
 }

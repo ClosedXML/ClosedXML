@@ -1,5 +1,4 @@
-﻿
-using ClosedXML.Excel.Caching;
+﻿using ClosedXML.Excel.Caching;
 
 namespace ClosedXML.Excel
 {
@@ -20,9 +19,13 @@ namespace ClosedXML.Excel
         });
 
         public XLFillKey Key { get; private set; }
+
         public XLColor BackgroundColor { get; private set; }
+
         public XLColor PatternColor { get; private set; }
-        public XLFillPatternValues PatternType {get { return Key.PatternType;  } }
+
+        public XLFillPatternValues PatternType { get { return Key.PatternType; } }
+
         private XLFillValue(XLFillKey key)
         {
             Key = key;

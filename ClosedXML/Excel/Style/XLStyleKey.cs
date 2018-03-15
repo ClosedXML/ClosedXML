@@ -30,12 +30,12 @@ namespace ClosedXML.Excel
 
         public bool Equals(XLStyleKey other)
         {
-            return Alignment    == other.Alignment &&
-                   Border       == other.Border &&
-                   Fill         == other.Fill &&
-                   Font         == other.Font &&
+            return Alignment == other.Alignment &&
+                   Border == other.Border &&
+                   Fill == other.Fill &&
+                   Font == other.Font &&
                    NumberFormat == other.NumberFormat &&
-                   Protection   == other.Protection;
+                   Protection == other.Protection;
         }
 
         public override bool Equals(object obj)
@@ -44,7 +44,9 @@ namespace ClosedXML.Excel
                 return Equals((XLStyleKey)obj);
             return base.Equals(obj);
         }
+
         public static bool operator ==(XLStyleKey left, XLStyleKey right) => left.Equals(right);
+
         public static bool operator !=(XLStyleKey left, XLStyleKey right) => !(left.Equals(right));
     }
 }

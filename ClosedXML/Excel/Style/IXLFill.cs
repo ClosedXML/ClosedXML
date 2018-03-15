@@ -28,7 +28,9 @@ namespace ClosedXML.Excel
     public interface IXLFill : IEquatable<IXLFill>
     {
         XLColor BackgroundColor { get; set; }
+
         XLColor PatternColor { get; set; }
+
         XLFillPatternValues PatternType { get; set; }
 
         IXLStyle SetBackgroundColor(XLColor value);

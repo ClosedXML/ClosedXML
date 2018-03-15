@@ -6,8 +6,11 @@ namespace ClosedXML.Excel
     internal interface IXLStylized
     {
         IXLStyle Style { get; set; }
+
         IEnumerable<IXLStyle> Styles { get; }
+
         IXLStyle InnerStyle { get; set; }
+
         IXLRanges RangesUsed { get; }
 
         /// <summary>

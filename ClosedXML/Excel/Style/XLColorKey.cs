@@ -5,11 +5,15 @@ namespace ClosedXML.Excel
     public struct XLColorKey : IEquatable<XLColorKey>
     {
         public XLColorType ColorType { get; set; }
+
         public System.Drawing.Color Color { get; set; }
+
         public int Indexed { get; set; }
+
         public XLThemeColor ThemeColor { get; set; }
+
         public double ThemeTint { get; set; }
-        
+
         public override int GetHashCode()
         {
             var hashCode = -331517974;
@@ -51,6 +55,7 @@ namespace ClosedXML.Excel
         }
 
         public static bool operator ==(XLColorKey left, XLColorKey right) => left.Equals(right);
+
         public static bool operator !=(XLColorKey left, XLColorKey right) => !(left.Equals(right));
     }
 }

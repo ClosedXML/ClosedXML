@@ -21,13 +21,18 @@ namespace ClosedXML.Excel
             Protection = XLProtectionValue.Default.Key
         });
 
-
         public XLStyleKey Key { get; private set; }
+
         public XLAlignmentValue Alignment { get; private set; }
+
         public XLBorderValue Border { get; private set; }
+
         public XLFillValue Fill { get; private set; }
+
         public XLFontValue Font { get; private set; }
+
         public XLNumberFormatValue NumberFormat { get; private set; }
+
         public XLProtectionValue Protection { get; private set; }
 
         internal XLStyleValue(XLStyleKey key)

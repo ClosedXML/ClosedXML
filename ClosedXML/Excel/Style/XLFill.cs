@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -7,6 +6,7 @@ namespace ClosedXML.Excel
     internal class XLFill : IXLFill
     {
         #region static members
+
         internal static XLFillKey GenerateKey(IXLFill defaultFill)
         {
             XLFillKey key;
@@ -33,6 +33,7 @@ namespace ClosedXML.Excel
         #endregion static members
 
         #region Properties
+
         private readonly XLStyle _style;
 
         private XLFillValue _value;
@@ -46,6 +47,7 @@ namespace ClosedXML.Excel
         #endregion Properties
 
         #region Constructors
+
         /// <summary>
         /// Create an instance of XLFill initializing it with the specified value.
         /// </summary>
@@ -64,6 +66,7 @@ namespace ClosedXML.Excel
         public XLFill(XLStyle style = null, IXLFill d = null) : this(style, GenerateKey(d))
         {
         }
+
         #endregion Constructors
 
         private void Modify(Func<XLFillKey, XLFillKey> modification)
@@ -140,6 +143,7 @@ namespace ClosedXML.Excel
             PatternType = value;
             return _style;
         }
+
         #endregion IXLFill Members
 
         #region Overridden
@@ -179,6 +183,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + Key.GetHashCode();
             return hashCode;
         }
+
         #endregion Overridden
     }
 }
