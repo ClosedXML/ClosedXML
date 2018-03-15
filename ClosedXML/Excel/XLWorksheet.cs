@@ -1581,7 +1581,11 @@ namespace ClosedXML.Excel
                 !Internals.CellsCollection.Contains(ro, co))
                 return string.Empty;
 
-            return Worksheet.Internals.CellsCollection.GetCell(ro, co).Value;
+            var cell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
+            if (cell.IsEvaluating)
+                return string.Empty;
+
+            return cell.Value;
         }
     }
 }
