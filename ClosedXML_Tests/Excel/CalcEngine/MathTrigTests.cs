@@ -702,7 +702,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr(@"CSC(0)"));
         }
 
-
         [TestCase("FF", 16, 255)]
         [TestCase("111", 2, 7)]
         [TestCase("zap", 36, 45745)]
@@ -1152,7 +1151,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void SumIf_ReturnsCorrectValues_WhenFormulaBelongToSameRange()
         {
-
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Data");
@@ -1163,11 +1161,10 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                     new { Id = "C", Value = 2},
                     new { Id = "A", Value = 1},
                     new { Id = "B", Value = 4},
-                    
                 };
                 ws.Cell("A1").InsertTable(data);
                 ws.Cell("A7").SetValue("Sum A");
-                // SUMIF formula 
+                // SUMIF formula
                 var formula = "=SUMIF(A:A,\"=A\",B:B)";
                 ws.Cell("B7").SetFormulaA1(formula);
                 var value = ws.Cell("B7").Value;
@@ -1175,17 +1172,16 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             }
         }
 
-
         /// <summary>
         /// refers to Example 1 to SumIf from the Excel documentation.
-        /// As SumIfs should behave the same if called with three parameters, we can take that example here again.
+        /// As SumIfs should behave the same if called with three parameters, but in a different order
         /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&amp;rs=en-US&amp;ad=US"/>
         /// </summary>
         /// <param name="expectedOutcome"></param>
         /// <param name="formula"></param>
-        [TestCase(63000, "SUMIFS(B1:B4, \">160000\", A1:A4)")]
-        [TestCase(21000, "SUMIFS(B1:B4, 300000, A1:A4)")]
-        [TestCase(28000, "SUMIFS(B1:B4, \">\" &C1, A1:A4)")]
+        [TestCase(63000, "SUMIFS(B1:B4, A1:A4, \">160000\")")]
+        [TestCase(21000, "SUMIFS(B1:B4, A1:A4, 300000)")]
+        [TestCase(28000, "SUMIFS(B1:B4, A1:A4, \">\" &C1)")]
         public void SumIfs_ReturnsCorrectValues_ReferenceExampleForSumIf1FromMicrosoft(int expectedOutcome, string formula)
         {
             using (var wb = new XLWorkbook())
@@ -1213,13 +1209,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         /// As SumIfs should behave the same if called with three parameters, we can take that example here again.
         /// <see cref="https://support.office.com/en-us/article/SUMIF-function-169b8c99-c05c-4483-a712-1697a653039b?ui=en-US&amp;rs=en-US&amp;ad=US"/>
         /// </summary>
-        /// <param name="expectedOutcome"></param>
+        /// <param name="expectedResult"></param>
         /// <param name="formula"></param>
-        [TestCase(2000, "SUMIFS(C2:C7, \"Fruits\", A2:A7)")]
-        [TestCase(12000, "SUMIFS(C2:C7, \"Vegetables\", A2:A7)")]
-        [TestCase(4300, "SUMIFS(C2:C7, \"*es\", B2:B7)")]
-        [TestCase(400, "SUMIFS(C2:C7, \"\", A2:A7)")]
-        public void SumIfs_ReturnsCorrectValues_ReferenceExample2FromMicrosoft(int expectedOutcome, string formula)
+        [TestCase(2000, "SUMIFS(C2:C7, A2:A7, \"Fruits\")")]
+        [TestCase(12000, "SUMIFS(C2:C7, A2:A7, \"Vegetables\")")]
+        [TestCase(4300, "SUMIFS(C2:C7, B2:B7, \"*es\")")]
+        [TestCase(400, "SUMIFS(C2:C7, A2:A7, \"\")")]
+        public void SumIfs_ReturnsCorrectValues_ReferenceExample2FromMicrosoft(int expectedResult, string formula)
         {
             using (var wb = new XLWorkbook())
             {
@@ -1249,7 +1245,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
                 ws.Cell(1, 3).Value = 300000;
 
-                Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
+                var actualResult = ws.Evaluate(formula).CastTo<double>();
+                Assert.AreEqual(expectedResult, actualResult);
             }
         }
 
@@ -1260,7 +1257,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(20, "=SUMIFS(A2:A9, B2:B9, \"=A*\", C2:C9, \"Tom\")")]
         [TestCase(30, "=SUMIFS(A2:A9, B2:B9, \"<>Bananas\", C2:C9, \"Tom\")")]
         public void SumIfs_ReturnsCorrectValues_ReferenceExampleFromMicrosoft(
-            int result,
+            int expectedResult,
             string formula)
         {
             using (var wb = new XLWorkbook())
@@ -1268,40 +1265,52 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 wb.ReferenceStyle = XLReferenceStyle.A1;
                 var ws = wb.AddWorksheet("Sheet1");
 
-                ws.Cell(1, 1).Value = 5;
-                ws.Cell(1, 2).Value = "Apples";
-                ws.Cell(1, 3).Value = "Tom";
+                var row = 2;
 
-                ws.Cell(2, 1).Value = 4;
-                ws.Cell(2, 2).Value = "Apples";
-                ws.Cell(2, 3).Value = "Sarah";
+                ws.Cell(row, 1).Value = 5;
+                ws.Cell(row, 2).Value = "Apples";
+                ws.Cell(row, 3).Value = "Tom";
+                row++;
 
-                ws.Cell(3, 1).Value = 15;
-                ws.Cell(3, 2).Value = "Artichokes";
-                ws.Cell(3, 3).Value = "Tom";
+                ws.Cell(row, 1).Value = 4;
+                ws.Cell(row, 2).Value = "Apples";
+                ws.Cell(row, 3).Value = "Sarah";
+                row++;
 
-                ws.Cell(4, 1).Value = 3;
-                ws.Cell(4, 2).Value = "Artichokes";
-                ws.Cell(4, 3).Value = "Sarah";
+                ws.Cell(row, 1).Value = 15;
+                ws.Cell(row, 2).Value = "Artichokes";
+                ws.Cell(row, 3).Value = "Tom";
+                row++;
 
-                ws.Cell(5, 1).Value = 22;
-                ws.Cell(5, 2).Value = "Bananas";
-                ws.Cell(5, 3).Value = "Tom";
+                ws.Cell(row, 1).Value = 3;
+                ws.Cell(row, 2).Value = "Artichokes";
+                ws.Cell(row, 3).Value = "Sarah";
+                row++;
 
-                ws.Cell(6, 1).Value = 12;
-                ws.Cell(6, 2).Value = "Bananas";
-                ws.Cell(6, 3).Value = "Sarah";
+                ws.Cell(row, 1).Value = 22;
+                ws.Cell(row, 2).Value = "Bananas";
+                ws.Cell(row, 3).Value = "Tom";
+                row++;
 
-                ws.Cell(7, 1).Value = 10;
-                ws.Cell(7, 2).Value = "Carrots";
-                ws.Cell(7, 3).Value = "Tom";
+                ws.Cell(row, 1).Value = 12;
+                ws.Cell(row, 2).Value = "Bananas";
+                ws.Cell(row, 3).Value = "Sarah";
+                row++;
 
-                ws.Cell(8, 1).Value = 33;
-                ws.Cell(8, 2).Value = "Carrots";
-                ws.Cell(8, 3).Value = "Sarah";
+                ws.Cell(row, 1).Value = 10;
+                ws.Cell(row, 2).Value = "Carrots";
+                ws.Cell(row, 3).Value = "Tom";
+                row++;
+
+                ws.Cell(row, 1).Value = 33;
+                ws.Cell(row, 2).Value = "Carrots";
+                ws.Cell(row, 3).Value = "Sarah";
+
+                var actualResult = ws.Evaluate(formula).CastTo<Double>();
+
+                Assert.AreEqual(expectedResult, actualResult, tolerance);
             }
         }
-
 
         [Test]
         public void SumProduct()
@@ -1356,7 +1365,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             var actual = XLWorkbook.EvaluateExpr(string.Format(@"INT({0})", input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expected, actual);
-
         }
     }
 }
