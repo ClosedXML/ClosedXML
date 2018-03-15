@@ -1,13 +1,13 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
 namespace ClosedXML.Excel
 {
     internal class XLBorder : IXLBorder
     {
         #region Static members
+
         internal static XLBorderKey GenerateKey(IXLBorder defaultBorder)
         {
             XLBorderKey key;
@@ -39,6 +39,7 @@ namespace ClosedXML.Excel
             }
             return key;
         }
+
         #endregion Static members
 
         private readonly XLStyle _style;
@@ -47,15 +48,18 @@ namespace ClosedXML.Excel
 
         private XLBorderValue _value;
 
-        internal XLBorderKey Key {
+        internal XLBorderKey Key
+        {
             get { return _value.Key; }
             private set { _value = XLBorderValue.FromKey(value); }
         }
 
         #region Constructors
+
         /// <summary>
         /// Create an instance of XLBorder initializing it with the specified value.
         /// </summary>
+        /// <param name="container">Container the border is applied to.</param>
         /// <param name="style">Style to attach the new instance to.</param>
         /// <param name="value">Style value to use.</param>
         public XLBorder(IXLStylized container, XLStyle style, XLBorderValue value)
@@ -72,6 +76,7 @@ namespace ClosedXML.Excel
         public XLBorder(IXLStylized container, XLStyle style = null, IXLBorder d = null) : this(container, style, GenerateKey(d))
         {
         }
+
         #endregion Constructors
 
         #region IXLBorder Members
@@ -105,7 +110,6 @@ namespace ClosedXML.Excel
                 }
             }
         }
-
 
         public XLColor OutsideBorderColor
         {
@@ -470,7 +474,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        #endregion
+        #endregion IXLBorder Members
 
         private void Modify(Func<XLBorderKey, XLBorderKey> modification)
         {
@@ -485,6 +489,7 @@ namespace ClosedXML.Excel
         }
 
         #region Overridden
+
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -534,6 +539,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + Key.GetHashCode();
             return hashCode;
         }
+
         #endregion Overridden
     }
 }
