@@ -2,6 +2,8 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
 {
@@ -72,8 +74,15 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTBLANK(D43:D49)").CastTo<int>();
             Assert.AreEqual(4, value);
 
-            value = workbook.Evaluate(@"=COUNTBLANK(E3:E45)").CastTo<int>();
+            value = ws.Evaluate(@"=COUNTBLANK(E3:E45)").CastTo<int>();
             Assert.AreEqual(0, value);
+
+            value = ws.Evaluate(@"=COUNTBLANK(A1)").CastTo<int>();
+            Assert.AreEqual(1, value);
+
+            Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=COUNTBLANK(E3:E45)"));
+            Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK()"));
+            Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK(A3:A45,E3:E45)"));
         }
 
         [Test]
