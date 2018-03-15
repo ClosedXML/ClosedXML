@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -349,10 +350,11 @@ namespace ClosedXML.Excel.CalcEngine
             // compute total
             var ce = new CalcEngine();
             var tally = new Tally();
+            var cachedRegexes = new Dictionary<string, Regex>();
             for (var i = 0; i < Math.Max(rangeValues.Count, sumRangeValues.Count); i++)
             {
                 var targetValue = i < rangeValues.Count ? rangeValues[i] : string.Empty;
-                if (CalcEngineHelpers.ValueSatisfiesCriteria(targetValue, criteria, ce))
+                if (CalcEngineHelpers.ValueSatisfiesCriteria(targetValue, criteria, ce, cachedRegexes))
                 {
                     var value = i < sumRangeValues.Count ? sumRangeValues[i] : 0d;
                     tally.AddValue(value);
@@ -396,6 +398,7 @@ namespace ClosedXML.Excel.CalcEngine
                     criteriaRangeValues);
             }
 
+            var cachedRegexes = new Dictionary<string, Regex>();
             for (var i = 0; i < sumRangeValues.Count; i++)
             {
                 bool shouldUseValue = true;
@@ -405,7 +408,8 @@ namespace ClosedXML.Excel.CalcEngine
                     if (!CalcEngineHelpers.ValueSatisfiesCriteria(
                         i < criteriaPair.Item2.Count ? criteriaPair.Item2[i] : string.Empty,
                         criteriaPair.Item1,
-                        ce))
+                        ce,
+                        cachedRegexes))
                     {
                         shouldUseValue = false;
                         break; // we're done with the inner loop as we can't ever get true again.

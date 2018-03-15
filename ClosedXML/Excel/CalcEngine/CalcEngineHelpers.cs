@@ -23,7 +23,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return patternReplacements;
             });
 
-        internal static bool ValueSatisfiesCriteria(object value, object criteria, CalcEngine ce)
+        internal static bool ValueSatisfiesCriteria(object value, object criteria, CalcEngine ce, IDictionary<string, Regex> cachedRegexes)
         {
             // safety...
             if (value == null)
@@ -41,6 +41,11 @@ namespace ClosedXML.Excel.CalcEngine
 
             // convert criteria to string
             var cs = criteria as string;
+
+            Regex regex = null;
+            if (cachedRegexes.ContainsKey(cs))
+                regex = cachedRegexes[cs];
+
             if (cs != null)
             {
                 if (value is string && (value as string).Trim() == "")
@@ -54,20 +59,31 @@ namespace ClosedXML.Excel.CalcEngine
                     || cs[0] == '<'
                     || cs[0] == '>')
                 {
-                    // build expression
-                    var expression = string.Format("{0}{1}", value, cs);
+                    if (regex == null)
+                    {
+                        // add quotes if necessary
+                        var pattern = @"([\w\s]+)(\W+)(\w+)";
+                        regex = new Regex(pattern, RegexOptions.Compiled);
+                        cachedRegexes.Add(cs, regex);
+                    }
 
-                    // add quotes if necessary
-                    var pattern = @"([\w\s]+)(\W+)(\w+)";
-                    var m = Regex.Match(expression, pattern);
+                    // build expression
+                    var expression = value + cs;
+                    var m = regex.Match(expression);
+
                     if (m.Groups.Count == 4
                         && (!double.TryParse(m.Groups[1].Value, out double d) ||
                             !double.TryParse(m.Groups[3].Value, out d)))
                     {
-                        expression = string.Format("\"{0}\"{1}\"{2}\"",
-                                                   m.Groups[1].Value,
-                                                   m.Groups[2].Value,
-                                                   m.Groups[3].Value);
+                        expression = string.Concat(
+                            '"',
+                            m.Groups[1].Value,
+                            '"',
+                            m.Groups[2].Value,
+                            '"',
+                            m.Groups[3].Value,
+                            '"'
+                        );
                     }
 
                     // evaluate
@@ -77,18 +93,24 @@ namespace ClosedXML.Excel.CalcEngine
                 // if criteria is a regular expression, use regex
                 if (cs.IndexOfAny(new[] { '*', '?' }) > -1)
                 {
-                    if (cs[0] == '=') cs = cs.Substring(1);
+                    if (regex == null)
+                    {
+                        if (cs[0] == '=') cs = cs.Substring(1);
+                        var pattern = Regex.Replace(
+                            cs,
+                            "(" + String.Join(
+                                    "|",
+                                    patternReplacements.Value.Values.Select(t => t.Item1))
+                            + ")",
+                            m => patternReplacements.Value[m.Value].Item2);
 
-                    var pattern = Regex.Replace(
-                        cs,
-                        "(" + String.Join(
-                                "|",
-                                patternReplacements.Value.Values.Select(t => t.Item1))
-                        + ")",
-                        m => patternReplacements.Value[m.Value].Item2);
-                    pattern = $"^{pattern}$";
+                        pattern = $"^{pattern}$";
 
-                    return Regex.IsMatch(value.ToString(), pattern, RegexOptions.IgnoreCase);
+                        regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                        cachedRegexes.Add(criteria as string, regex);
+                    }
+
+                    return regex.IsMatch(value.ToString());
                 }
 
                 // straight string comparison

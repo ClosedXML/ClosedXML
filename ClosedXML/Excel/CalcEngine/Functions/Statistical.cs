@@ -2,6 +2,7 @@ using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -143,15 +144,16 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 long totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
                 var criteria = (string)p[1].Evaluate();
+                var cachedRegexes = new Dictionary<string, Regex>();
                 foreach (var value in ienum)
                 {
-                    if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
+                    if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce, cachedRegexes))
                         cnt++;
                     processedCount++;
                 }
 
                 // Add count of empty cells outside the used range if they match criteria
-                if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce))
+                if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce, cachedRegexes))
                     cnt += (totalCount - processedCount);
             }
 
@@ -188,10 +190,12 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             long processedCount = 0;
+            var cachedRegexes = new Dictionary<string, Regex>();
             for (var i = 0; i < criteriaRanges[0].Item2.Count; i++)
             {
                 if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
-                                                       criteriaPair.Item2[i], criteriaPair.Item1, ce)))
+                                                       criteriaPair.Item2[i], criteriaPair.Item1, ce,
+                                                       cachedRegexes)))
                     count++;
 
                 processedCount++;
@@ -199,7 +203,8 @@ namespace ClosedXML.Excel.CalcEngine
 
             // Add count of empty cells outside the used range if they match criteria
             if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
-                                                   string.Empty, criteriaPair.Item1, ce)))
+                                                   string.Empty, criteriaPair.Item1, ce,
+                                                   cachedRegexes)))
             {
                 count += (totalCount - processedCount);
             }

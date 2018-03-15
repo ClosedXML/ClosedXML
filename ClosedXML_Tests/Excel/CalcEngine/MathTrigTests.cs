@@ -1256,6 +1256,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         /// </summary>
         [TestCase(20, "=SUMIFS(A2:A9, B2:B9, \"=A*\", C2:C9, \"Tom\")")]
         [TestCase(30, "=SUMIFS(A2:A9, B2:B9, \"<>Bananas\", C2:C9, \"Tom\")")]
+        [TestCase(20, "=SUMIFS(A:A, B:B, \"=A*\", C:C, \"Tom\")")]
+        [TestCase(30, "=SUMIFS(A:A, B:B, \"<>Bananas\", C:C, \"Tom\")")]
         public void SumIfs_ReturnsCorrectValues_ReferenceExampleFromMicrosoft(
             int expectedResult,
             string formula)
