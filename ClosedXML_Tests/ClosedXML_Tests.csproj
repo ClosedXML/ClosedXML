@@ -88,6 +88,7 @@
     <Compile Include="Excel\CalcEngine\MathTrigTests.cs" />
     <Compile Include="Excel\CalcEngine\StatisticalTests.cs" />
     <Compile Include="Excel\CalcEngine\TextTests.cs" />
+    <Compile Include="Excel\Clearing\ClearingTests.cs" />
     <Compile Include="Excel\Comments\CommentsTests.cs" />
     <Compile Include="Excel\ConditionalFormats\ConditionalFormatCopyTests.cs" />
     <Compile Include="Excel\ConditionalFormats\ConditionalFormatsConsolidateTests.cs" />

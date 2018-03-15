@@ -997,7 +997,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLCell Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLCell Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             return Clear(clearOptions, false);
         }
@@ -1017,24 +1017,33 @@ namespace ClosedXML.Excel
             }
             else
             {
-                if (clearOptions == XLClearOptions.Contents || clearOptions == XLClearOptions.ContentsAndFormats)
+                if (clearOptions.HasFlag(XLClearOptions.Contents))
                 {
                     Hyperlink = null;
                     _richText = null;
-                    //_comment = null;
                     _cellValue = String.Empty;
                     FormulaA1 = String.Empty;
                 }
 
-                if (clearOptions == XLClearOptions.Formats || clearOptions == XLClearOptions.ContentsAndFormats)
-                {
-                    if (HasDataValidation)
-                    {
-                        var validation = NewDataValidation;
-                        Worksheet.DataValidations.Delete(validation);
-                    }
+                if (clearOptions.HasFlag(XLClearOptions.DataType))
+                    _dataType = XLDataType.Text;
 
+                if (clearOptions.HasFlag(XLClearOptions.NormalFormats))
                     SetStyle(Worksheet.Style);
+
+                if (clearOptions.HasFlag(XLClearOptions.ConditionalFormats))
+                {
+                    using (var r = this.AsRange())
+                        r.RemoveConditionalFormatting();
+                }
+
+                if (clearOptions.HasFlag(XLClearOptions.Comments))
+                    _comment = null;
+
+                if (clearOptions.HasFlag(XLClearOptions.DataValidation) && HasDataValidation)
+                {
+                    var validation = NewDataValidation;
+                    Worksheet.DataValidations.Delete(validation);
                 }
             }
 
@@ -1679,7 +1688,7 @@ namespace ClosedXML.Excel
 
         public void DeleteComment()
         {
-            _comment = null;
+            Clear(XLClearOptions.Comments);
         }
 
         private bool IsDateFormat()

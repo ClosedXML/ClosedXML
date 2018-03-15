@@ -313,13 +313,15 @@ namespace ClosedXML.Excel
             return asRange;
         }
 
-        public IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
-            var includeFormats = clearOptions == XLClearOptions.Formats ||
-                                 clearOptions == XLClearOptions.ContentsAndFormats;
+            var includeFormats = clearOptions.HasFlag(XLClearOptions.NormalFormats) ||
+                                 clearOptions.HasFlag(XLClearOptions.ConditionalFormats);
+
             foreach (var cell in CellsUsed(includeFormats))
             {
-                (cell as XLCell).Clear(clearOptions, true);
+                // We'll clear the conditional formatting later down.
+                (cell as XLCell).Clear(clearOptions & ~XLClearOptions.ConditionalFormats, true);
             }
 
             if (includeFormats)
@@ -327,16 +329,69 @@ namespace ClosedXML.Excel
                 ClearMerged();
             }
 
-            if (clearOptions == XLClearOptions.ContentsAndFormats)
+            if (clearOptions.HasFlag(XLClearOptions.ConditionalFormats))
+                RemoveConditionalFormatting();
+
+            if (clearOptions == XLClearOptions.All)
             {
                 Worksheet.Internals.CellsCollection.RemoveAll(
                     RangeAddress.FirstAddress.RowNumber,
                     RangeAddress.FirstAddress.ColumnNumber,
                     RangeAddress.LastAddress.RowNumber,
                     RangeAddress.LastAddress.ColumnNumber
-                    );
+                );
             }
             return this;
+        }
+
+        internal void RemoveConditionalFormatting()
+        {
+            var mf = RangeAddress.FirstAddress;
+            var ml = RangeAddress.LastAddress;
+            foreach (var format in Worksheet.ConditionalFormats.Where(x => x.Range.Intersects(this)).ToList())
+            {
+                var f = format.Range.RangeAddress.FirstAddress;
+                var l = format.Range.RangeAddress.LastAddress;
+                bool byWidth = false, byHeight = false;
+                XLRange rng1 = null, rng2 = null;
+                if (mf.ColumnNumber <= f.ColumnNumber && ml.ColumnNumber >= l.ColumnNumber)
+                {
+                    if (mf.RowNumber.Between(f.RowNumber, l.RowNumber) || ml.RowNumber.Between(f.RowNumber, l.RowNumber))
+                    {
+                        if (mf.RowNumber > f.RowNumber)
+                            rng1 = Worksheet.Range(f.RowNumber, f.ColumnNumber, mf.RowNumber - 1, l.ColumnNumber);
+                        if (ml.RowNumber < l.RowNumber)
+                            rng2 = Worksheet.Range(ml.RowNumber + 1, f.ColumnNumber, l.RowNumber, l.ColumnNumber);
+                    }
+                    byWidth = true;
+                }
+
+                if (mf.RowNumber <= f.RowNumber && ml.RowNumber >= l.RowNumber)
+                {
+                    if (mf.ColumnNumber.Between(f.ColumnNumber, l.ColumnNumber) || ml.ColumnNumber.Between(f.ColumnNumber, l.ColumnNumber))
+                    {
+                        if (mf.ColumnNumber > f.ColumnNumber)
+                            rng1 = Worksheet.Range(f.RowNumber, f.ColumnNumber, l.RowNumber, mf.ColumnNumber - 1);
+                        if (ml.ColumnNumber < l.ColumnNumber)
+                            rng2 = Worksheet.Range(f.RowNumber, ml.ColumnNumber + 1, l.RowNumber, l.ColumnNumber);
+                    }
+                    byHeight = true;
+                }
+
+                if (rng1 != null)
+                {
+                    format.Range = rng1;
+                }
+                if (rng2 != null)
+                {
+                    //TODO: reflect the formula for a new range
+                    if (rng1 == null)
+                        format.Range = rng2;
+                    else
+                        ((XLConditionalFormat)rng2.AddConditionalFormat()).CopyFrom(format);
+                }
+                if (byWidth && byHeight) Worksheet.ConditionalFormats.Remove(x => x == format);
+            }
         }
 
         public void DeleteComments()
@@ -1210,12 +1265,6 @@ namespace ClosedXML.Excel
                                   RangeAddress.LastAddress.FixedColumn));
             }
             return retVal;
-        }
-
-        private struct DataValidationToCopy
-        {
-            public XLAddress SourceAddress;
-            public XLDataValidation DataValidation;
         }
 
         public void InsertRowsAboveVoid(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove = true)

@@ -8,8 +8,9 @@ namespace ClosedXML.Excel
     internal class XLTableRows : XLStylizedBase, IXLTableRows, IXLStylized
     {
         private readonly List<XLTableRow> _ranges = new List<XLTableRow>();
-        
+  
         public XLTableRows(IXLStyle defaultStyle) : base(defaultStyle.Value)
+
         {
         }
 
@@ -53,11 +54,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         #region IXLTableRows Members
 
-        public IXLTableRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLTableRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             _ranges.ForEach(r => r.Clear(clearOptions));
             return this;
@@ -104,7 +105,7 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        #endregion
+        #endregion IXLTableRows Members
 
         public void Select()
         {

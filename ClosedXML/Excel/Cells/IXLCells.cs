@@ -34,7 +34,7 @@ namespace ClosedXML.Excel
         /// Clears the contents of these cells.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        IXLCells Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        IXLCells Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         /// <summary>
         /// Delete the comments of these cells.

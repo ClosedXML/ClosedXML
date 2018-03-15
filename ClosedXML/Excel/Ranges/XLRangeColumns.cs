@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
 
         #region IXLRangeColumns Members
 
-        public IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             _ranges.ForEach(c => c.Clear(clearOptions));
             return this;
@@ -76,7 +76,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        #endregion
+        #endregion IXLRangeColumns Members
 
         #region IXLStylized Members
         
@@ -117,7 +117,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         public void Dispose()
         {

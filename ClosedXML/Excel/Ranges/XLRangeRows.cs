@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
 
         #region IXLRangeRows Members
 
-        public IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             _ranges.ForEach(c => c.Clear(clearOptions));
             return this;
@@ -36,7 +36,7 @@ namespace ClosedXML.Excel
         public IEnumerator<IXLRangeRow> GetEnumerator()
         {
             return _ranges.Cast<IXLRangeRow>()
-                          .OrderBy(r=>r.Worksheet.Position)
+                          .OrderBy(r => r.Worksheet.Position)
                           .ThenBy(r => r.RowNumber())
                           .GetEnumerator();
         }
@@ -76,7 +76,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        #endregion
+        #endregion IXLRangeRows Members
 
         #region IXLStylized Members
 
@@ -118,7 +118,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         public void Dispose()
         {
@@ -131,6 +131,5 @@ namespace ClosedXML.Excel
             foreach (var range in this)
                 range.Select();
         }
-
     }
 }

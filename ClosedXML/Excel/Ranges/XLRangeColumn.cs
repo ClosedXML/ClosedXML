@@ -370,7 +370,7 @@ namespace ClosedXML.Excel
                 return asRange.CreateTable(name);
         }
 
-        public new IXLRangeColumn Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public new IXLRangeColumn Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             base.Clear(clearOptions);
             return this;

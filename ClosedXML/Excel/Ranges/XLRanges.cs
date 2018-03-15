@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
 
         #region IXLRanges Members
 
-        public IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             _ranges.ForEach(c => c.Clear(clearOptions));
             return this;
@@ -136,7 +136,7 @@ namespace ClosedXML.Excel
             _ranges.ForEach(r => r.Dispose());
         }
 
-        #endregion
+        #endregion IXLRanges Members
 
         #region IXLStylized Members
 
@@ -172,7 +172,7 @@ namespace ClosedXML.Excel
             get { return this; }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         public override string ToString()
         {

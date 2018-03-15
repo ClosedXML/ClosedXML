@@ -427,6 +427,43 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CanClearDateTimeCellValue()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet1");
+                    var c = ws.FirstCell();
+                    c.SetValue(new DateTime(2017, 10, 08));
+                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                    Assert.AreEqual(new DateTime(2017, 10, 08), c.Value);
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    var c = ws.FirstCell();
+                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                    Assert.AreEqual(new DateTime(2017, 10, 08), c.Value);
+
+                    c.Clear();
+                    wb.Save();
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    var c = ws.FirstCell();
+                    Assert.AreEqual(XLDataType.Text, c.DataType);
+                    Assert.True(c.IsEmpty());
+                }
+            }
+        }
+
+        [Test]
         public void CurrentRegion()
         {
             // Partially based on sample in https://github.com/ClosedXML/ClosedXML/issues/120
