@@ -401,7 +401,7 @@ namespace ClosedXML.Excel.CalcEngine
                 foreach (var criteriaPair in criteriaRanges)
                 {
                     if (!CalcEngineHelpers.ValueSatisfiesCriteria(
-                        (i < criteriaPair.Item2.Count ? criteriaPair.Item2[i] : string.Empty),
+                        criteriaPair.Item2[i],
                         criteriaPair.Item1,
                         ce))
                     {

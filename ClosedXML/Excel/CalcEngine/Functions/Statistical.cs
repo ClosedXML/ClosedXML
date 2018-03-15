@@ -1,6 +1,5 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -119,62 +118,19 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object CountBlank(List<Expression> p)
         {
-            long totalCount = 0;
+            if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
+                throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
+
+            var e = p[0] as XObjectExpression;
+            long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
             long nonBlankCount = 0;
-            foreach (Expression e in p)
+            foreach (var value in e)
             {
-                if (e is XObjectExpression)
-                {
-                    var objExpr = e as XObjectExpression;
-
-                    if (objExpr.Value is CellRangeReference)
-                    {
-                        var range = (objExpr.Value as CellRangeReference).Range;
-                        totalCount = (long)(range.LastColumn().ColumnNumber() - range.FirstColumn().ColumnNumber() + 1) *
-                                     (long)(range.LastRow().RowNumber() - range.FirstRow().RowNumber() + 1);
-                    }
-                }
-                else
-                    throw new NotImplementedException(e.GetType().ToString());
-
-                var ienum = e as IEnumerable;
-                if (ienum != null)
-                {
-                    foreach (var value in ienum)
-                    {
-                        if (!IsBlank(value))
-                            nonBlankCount++;
-                    }
-                }
-                else
-                {
-                    if (!IsBlank(e.Evaluate()))
-                        nonBlankCount++;
-                }
+                if (!CalcEngineHelpers.ValueIsBlank(value))
+                    nonBlankCount++;
             }
+
             return 0d + totalCount - nonBlankCount;
-        }
-
-        internal static bool IsBlank(object value)
-        {
-            return
-                value == null ||
-                value is string && ((string)value).Length == 0;
-        }
-
-        /// <summary>
-        /// Get total count of cells in the specified range without initalizing them all
-        /// (which might cause serious performance issues on column-wide calculations).
-        /// </summary>
-        /// <param name="rangeExpression">Expression referring to the cell range.</param>
-        /// <returns>Total number of cells in the range.</returns>
-        internal static long GetTotalCellsCount(XObjectExpression rangeExpression)
-        {
-            var range = ((rangeExpression)?.Value as CellRangeReference)?.Range;
-            if (range == null)
-                return 0;
-            return (long)(range.LastColumn().ColumnNumber() - range.FirstColumn().ColumnNumber() + 1) *
-                   (long)(range.LastRow().RowNumber() - range.FirstRow().RowNumber() + 1);
         }
 
         private static object CountIf(List<Expression> p)
@@ -185,7 +141,7 @@ namespace ClosedXML.Excel.CalcEngine
             var ienum = p[0] as XObjectExpression;
             if (ienum != null)
             {
-                long totalCount = GetTotalCellsCount(ienum);
+                long totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
                 var criteria = (string)p[1].Evaluate();
                 foreach (var value in ienum)
                 {
@@ -194,7 +150,7 @@ namespace ClosedXML.Excel.CalcEngine
                     processedCount++;
                 }
 
-                //Add count of empty cells outside the used range if they match criteria
+                // Add count of empty cells outside the used range if they match criteria
                 if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce))
                     cnt += (totalCount - processedCount);
             }
@@ -228,33 +184,20 @@ namespace ClosedXML.Excel.CalcEngine
                     criteriaRangeValues);
 
                 if (totalCount == 0)
-                    totalCount = GetTotalCellsCount(criteriaRange);
+                    totalCount = CalcEngineHelpers.GetTotalCellsCount(criteriaRange);
             }
 
             long processedCount = 0;
             for (var i = 0; i < criteriaRanges[0].Item2.Count; i++)
             {
-                bool shouldUseValue = true;
-
-                foreach (var criteriaPair in criteriaRanges)
-                {
-                    if (!CalcEngineHelpers.ValueSatisfiesCriteria(
-                        criteriaPair.Item2[i],
-                        criteriaPair.Item1,
-                        ce))
-                    {
-                        shouldUseValue = false;
-                        break; // we're done with the inner loop as we can't ever get true again.
-                    }
-                }
-
-                if (shouldUseValue)
+                if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
+                                                       criteriaPair.Item2[i], criteriaPair.Item1, ce)))
                     count++;
 
                 processedCount++;
             }
 
-            // If empty values match to specified criteria add a number of cells outside the used range to the totals
+            // Add count of empty cells outside the used range if they match criteria
             if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
                                                    string.Empty, criteriaPair.Item1, ce)))
             {
