@@ -261,7 +261,7 @@ namespace ClosedXML_Tests.Excel
 
             var row = new XLRow(-1, new XLRowParameters(ws, 0, false));
 
-            Assert.IsTrue(row.RangeAddress.IsInvalid);
+            Assert.IsFalse(row.RangeAddress.IsValid);
         }
     }
 }

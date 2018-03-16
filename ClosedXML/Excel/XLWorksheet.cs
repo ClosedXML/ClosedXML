@@ -1231,7 +1231,7 @@ namespace ClosedXML.Excel
                                      cfAddress.LastAddress.RowNumber,
                                      cfAddress.LastAddress.ColumnNumber + columnsShifted);
                 }
-                if (cf.Range.RangeAddress.IsInvalid ||
+                if (!cf.Range.RangeAddress.IsValid ||
                     cf.Range.RangeAddress.FirstAddress.ColumnNumber > cf.Range.RangeAddress.LastAddress.ColumnNumber)
                     ConditionalFormats.Remove(f => f == cf);
             }
@@ -1305,7 +1305,7 @@ namespace ClosedXML.Excel
                                      cfAddress.LastAddress.RowNumber + rowsShifted,
                                      cfAddress.LastAddress.ColumnNumber);
                 }
-                if (cf.Range.RangeAddress.IsInvalid ||
+                if (!cf.Range.RangeAddress.IsValid ||
                     cf.Range.RangeAddress.FirstAddress.RowNumber > cf.Range.RangeAddress.LastAddress.RowNumber)
                     ConditionalFormats.Remove(f => f == cf);
             }

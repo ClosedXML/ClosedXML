@@ -443,7 +443,7 @@ namespace ClosedXML.Excel
 
         public bool Intersects(IXLRangeBase range)
         {
-            if (range.RangeAddress.IsInvalid || RangeAddress.IsInvalid)
+            if (!range.RangeAddress.IsValid || !RangeAddress.IsValid)
                 return false;
             var ma = range.RangeAddress;
             var ra = RangeAddress;
@@ -1564,7 +1564,7 @@ namespace ClosedXML.Excel
 
         protected void ShiftColumns(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int columnsShifted)
         {
-            if (thisRangeAddress.IsInvalid || shiftedRange.RangeAddress.IsInvalid) return;
+            if (!thisRangeAddress.IsValid || !shiftedRange.RangeAddress.IsValid) return;
 
             bool allRowsAreCovered = thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber &&
                                      thisRangeAddress.LastAddress.RowNumber <= shiftedRange.RangeAddress.LastAddress.RowNumber;
@@ -1594,7 +1594,7 @@ namespace ClosedXML.Excel
 
             if (destroyedByShift)
             {
-                thisRangeAddress.IsInvalid = true;
+                (thisRangeAddress as XLRangeAddress).IsValid = false;
                 return;
             }
 
@@ -1615,7 +1615,7 @@ namespace ClosedXML.Excel
 
         protected void ShiftRows(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int rowsShifted)
         {
-            if (thisRangeAddress.IsInvalid || shiftedRange.RangeAddress.IsInvalid) return;
+            if (!thisRangeAddress.IsValid || !shiftedRange.RangeAddress.IsValid) return;
 
             bool allColumnsAreCovered = thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber &&
                                         thisRangeAddress.LastAddress.ColumnNumber <= shiftedRange.RangeAddress.LastAddress.ColumnNumber;
@@ -1645,7 +1645,7 @@ namespace ClosedXML.Excel
 
             if (destroyedByShift)
             {
-                thisRangeAddress.IsInvalid = true;
+                (thisRangeAddress as XLRangeAddress).IsValid = false;
                 return;
             }
 

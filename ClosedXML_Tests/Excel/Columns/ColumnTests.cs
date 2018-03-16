@@ -244,7 +244,7 @@ namespace ClosedXML_Tests.Excel
 
             var column = new XLColumn(-1, new XLColumnParameters(ws, 0, false));
 
-            Assert.IsTrue(column.RangeAddress.IsInvalid);
+            Assert.IsFalse(column.RangeAddress.IsValid);
         }
     }
 }
