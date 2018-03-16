@@ -663,16 +663,19 @@ namespace ClosedXML.Excel
 
         private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            if (range.RangeAddress.FirstAddress.ColumnNumber <= ColumnNumber())
+            if (!range.RangeAddress.IsInvalid &&
+                !RangeAddress.IsInvalid &&
+                range.RangeAddress.FirstAddress.ColumnNumber <= ColumnNumber())
                 SetColumnNumber(ColumnNumber() + columnsShifted);
         }
 
         private void SetColumnNumber(int column)
         {
             if (column <= 0)
-                RangeAddress.IsInvalid = false;
+                RangeAddress.IsInvalid = true;
             else
             {
+                RangeAddress.IsInvalid = false;
                 RangeAddress.FirstAddress = new XLAddress(Worksheet,
                                                           1,
                                                           column,

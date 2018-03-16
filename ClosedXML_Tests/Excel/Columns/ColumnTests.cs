@@ -237,5 +237,14 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(2, lastCoUsed);
         }
 
+        [Test]
+        public void NegativeColumnNumberIsInvalid()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1") as XLWorksheet;
+
+            var column = new XLColumn(-1, new XLColumnParameters(ws, 0, false));
+
+            Assert.IsTrue(column.RangeAddress.IsInvalid);
+        }
     }
 }

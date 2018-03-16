@@ -597,16 +597,19 @@ namespace ClosedXML.Excel
 
         private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-            if (range.RangeAddress.FirstAddress.RowNumber <= RowNumber())
+            if (!range.RangeAddress.IsInvalid &&
+                !RangeAddress.IsInvalid &&
+                range.RangeAddress.FirstAddress.RowNumber <= RowNumber())
                 SetRowNumber(RowNumber() + rowsShifted);
         }
 
         private void SetRowNumber(Int32 row)
         {
             if (row <= 0)
-                RangeAddress.IsInvalid = false;
+                RangeAddress.IsInvalid = true;
             else
             {
+                RangeAddress.IsInvalid = false;
                 RangeAddress.FirstAddress = new XLAddress(Worksheet, row, 1, RangeAddress.FirstAddress.FixedRow,
                                                           RangeAddress.FirstAddress.FixedColumn);
                 RangeAddress.LastAddress = new XLAddress(Worksheet,
