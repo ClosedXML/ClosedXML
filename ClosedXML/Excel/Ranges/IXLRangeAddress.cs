@@ -13,12 +13,12 @@ namespace ClosedXML.Excel
         IXLAddress FirstAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this range is invalid.
+        /// Gets or sets a value indicating whether this range is valid.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is invalid; otherwise, <c>false</c>.
+        /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
         /// </value>
-        Boolean IsInvalid { get; set; }
+        Boolean IsValid { get; }
 
         /// <summary>
         /// Gets or sets the last address in the range.

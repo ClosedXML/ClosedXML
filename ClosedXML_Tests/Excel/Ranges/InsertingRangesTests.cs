@@ -139,7 +139,7 @@ namespace ClosedXML_Tests
 
                 thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
 
-                Assert.IsFalse(thisRange.RangeAddress.IsInvalid);
+                Assert.IsTrue(thisRange.RangeAddress.IsValid);
                 Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
             }
         }
@@ -157,7 +157,7 @@ namespace ClosedXML_Tests
 
                 thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
 
-                Assert.IsTrue(thisRange.RangeAddress.IsInvalid);
+                Assert.IsFalse(thisRange.RangeAddress.IsValid);
             }
         }
 
@@ -192,7 +192,7 @@ namespace ClosedXML_Tests
 
                 thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
 
-                Assert.IsFalse(thisRange.RangeAddress.IsInvalid);
+                Assert.IsTrue(thisRange.RangeAddress.IsValid);
                 Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
             }
         }
@@ -209,7 +209,7 @@ namespace ClosedXML_Tests
 
                 thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
 
-                Assert.IsTrue(thisRange.RangeAddress.IsInvalid);
+                Assert.IsFalse(thisRange.RangeAddress.IsValid);
             }
         }
     }
