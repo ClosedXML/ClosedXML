@@ -356,6 +356,11 @@ namespace ClosedXML.Excel
                 return cValue;
         }
 
+        /// <summary>
+        /// Flag showing that the cell is in formula evaluation state.
+        /// </summary>
+        internal bool IsEvaluating { get; private set; }
+
         public object Value
         {
             get
@@ -394,7 +399,17 @@ namespace ClosedXML.Excel
                             return referenceCell.Value;
                     }
 
-                    var retVal = Worksheet.Evaluate(fA1);
+                    object retVal;
+                    try
+                    {
+                        IsEvaluating = true;
+                        retVal = Worksheet.Evaluate(fA1);
+                    }
+                    finally
+                    {
+                        IsEvaluating = false;
+                    }
+
                     var retValEnumerable = retVal as IEnumerable;
 
                     if (retValEnumerable != null && !(retVal is String))

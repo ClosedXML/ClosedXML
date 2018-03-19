@@ -90,9 +90,9 @@ namespace ClosedXML.Excel.CalcEngine
         // ** implementation
         private object GetValue(IXLCell cell)
         {
-            if (_evaluating)
+            if (_evaluating || (cell as XLCell).IsEvaluating)
             {
-                throw new InvalidOperationException("Circular Reference");
+                throw new InvalidOperationException($"Circular Reference occured during evaluation. Cell: {cell.Address.ToString(XLReferenceStyle.Default, true)}");
             }
             try
             {
