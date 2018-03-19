@@ -356,6 +356,11 @@ namespace ClosedXML.Excel
                 return cValue;
         }
 
+        /// <summary>
+        /// Flag showing that the cell is in formula evaluation state.
+        /// </summary>
+        internal bool IsEvaluating { get; private set; }
+
         public object Value
         {
             get
@@ -363,6 +368,9 @@ namespace ClosedXML.Excel
                 var fA1 = FormulaA1;
                 if (!String.IsNullOrWhiteSpace(fA1))
                 {
+                    if (IsEvaluating)
+                        throw new InvalidOperationException("Circular Reference");
+
                     if (fA1[0] == '{')
                         fA1 = fA1.Substring(1, fA1.Length - 2);
 
@@ -394,7 +402,17 @@ namespace ClosedXML.Excel
                             return referenceCell.Value;
                     }
 
-                    var retVal = Worksheet.Evaluate(fA1);
+                    object retVal;
+                    try
+                    {
+                        IsEvaluating = true;
+                        retVal = Worksheet.Evaluate(fA1);
+                    }
+                    finally
+                    {
+                        IsEvaluating = false;
+                    }
+
                     var retValEnumerable = retVal as IEnumerable;
 
                     if (retValEnumerable != null && !(retVal is String))
