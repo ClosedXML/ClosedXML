@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -53,6 +54,29 @@ namespace ClosedXML.Excel
                       RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture
                 );
 
+        private static readonly string[] letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+
+        private static readonly string[] allLetters;
+        private static readonly Dictionary<string, int> letterIndexes;
+
+        static XLHelper()
+        {
+            allLetters = new string[XLHelper.MaxColumnNumber];
+            letterIndexes = new Dictionary<string, int>(XLHelper.MaxColumnNumber, StringComparer.Create(ParseCulture, true));
+            for (int i = 0; i < XLHelper.MaxColumnNumber; i++)
+            {
+                string letter;
+                if (i < 26)
+                    letter = letters[i];
+                else if (i < 26 * 27)
+                    letter = letters[i / 26 - 1] + letters[i % 26];
+                else
+                    letter = letters[i / 26 / 26 - 1] + letters[(i / 26 - 1) % 26] + letters[i % 26];
+                allLetters[i] = letter;
+                letterIndexes.Add(letter, i + 1);
+            }
+        }
+
         /// <summary>
         /// Gets the column number of a given column letter.
         /// </summary>
@@ -71,18 +95,12 @@ namespace ClosedXML.Excel
                 return retVal;
             }
 
-            int sum = 0;
+            if (letterIndexes.TryGetValue(columnLetter, out retVal))
+                return retVal;
 
-            for (int i = 0; i < columnLetter.Length; i++)
-            {
-                sum *= 26;
-                sum += (columnLetter[i] - 'A' + 1);
-            }
-
-            return sum;
+            throw new ArgumentOutOfRangeException(columnLetter + " is not recognized as a column letter");
         }
 
-        private static readonly string[] letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
         /// <summary>
         /// Gets the column letter of a given column number.
@@ -93,15 +111,8 @@ namespace ClosedXML.Excel
         public static string GetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
         {
             if (trimToAllowed) columnNumber = TrimColumnNumber(columnNumber);
-
-            columnNumber--; // Adjust for start on column 1
-            if (columnNumber <= 25)
-            {
-                return letters[columnNumber];
-            }
-            var firstPart = (columnNumber) / 26;
-            var remainder = ((columnNumber) % 26) + 1;
-            return GetColumnLetterFromNumber(firstPart) + GetColumnLetterFromNumber(remainder);
+            // Adjust for start on column 1
+            return allLetters[columnNumber - 1];
         }
 
         internal static int TrimColumnNumber(int columnNumber)
