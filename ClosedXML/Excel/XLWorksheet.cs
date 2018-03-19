@@ -49,8 +49,10 @@ namespace ClosedXML.Excel
             RangeShiftedColumns = new XLReentrantEnumerableSet<XLCallbackAction>();
 
             RangeAddress.Worksheet = this;
-            RangeAddress.FirstAddress.Worksheet = this;
-            RangeAddress.LastAddress.Worksheet = this;
+            RangeAddress.FirstAddress = new XLAddress(this, RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber,
+                                                            RangeAddress.FirstAddress.FixedRow, RangeAddress.FirstAddress.FixedColumn);
+            RangeAddress.LastAddress = new XLAddress(this, RangeAddress.LastAddress.RowNumber, RangeAddress.LastAddress.ColumnNumber,
+                                                           RangeAddress.LastAddress.FixedRow, RangeAddress.LastAddress.FixedColumn);
 
             Pictures = new XLPictures(this);
             NamedRanges = new XLNamedRanges(this);

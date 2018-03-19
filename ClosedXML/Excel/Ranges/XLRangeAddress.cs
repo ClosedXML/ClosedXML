@@ -26,8 +26,8 @@ namespace ClosedXML.Excel
         public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress)
         {
             Worksheet = firstAddress.Worksheet;
-            FirstAddress = XLAddress.Create(firstAddress);
-            LastAddress = XLAddress.Create(lastAddress);
+            FirstAddress = firstAddress;
+            LastAddress = lastAddress;
         }
 
         public XLRangeAddress(XLWorksheet worksheet, String rangeAddress)
@@ -113,14 +113,26 @@ namespace ClosedXML.Excel
         {
             [DebuggerStepThrough]
             get { return FirstAddress; }
-            set { FirstAddress = value as XLAddress; }
+            set
+            {
+                if (value is XLAddress)
+                    FirstAddress = (XLAddress)value;
+                else
+                    FirstAddress = new XLAddress(value.RowNumber, value.ColumnNumber, value.FixedRow, value.FixedColumn);
+            }
         }
 
         IXLAddress IXLRangeAddress.LastAddress
         {
             [DebuggerStepThrough]
             get { return LastAddress; }
-            set { LastAddress = value as XLAddress; }
+            set
+            {
+                if (value is XLAddress)
+                    LastAddress = (XLAddress)value;
+                else
+                    LastAddress = new XLAddress(value.RowNumber, value.ColumnNumber, value.FixedRow, value.FixedColumn);
+            }
         }
 
         public bool IsValid { get; set; } = true;

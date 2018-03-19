@@ -863,8 +863,8 @@ namespace ClosedXML.Excel
 
         public XLRange Range(IXLCell firstCell, IXLCell lastCell)
         {
-            var newFirstCellAddress = firstCell.Address as XLAddress;
-            var newLastCellAddress = lastCell.Address as XLAddress;
+            var newFirstCellAddress = (XLAddress)firstCell.Address;
+            var newLastCellAddress = (XLAddress)lastCell.Address;
 
             return GetRange(newFirstCellAddress, newLastCellAddress);
         }
@@ -908,7 +908,7 @@ namespace ClosedXML.Excel
 
         public XLRange Range(IXLAddress firstCellAddress, IXLAddress lastCellAddress)
         {
-            var rangeAddress = new XLRangeAddress(firstCellAddress as XLAddress, lastCellAddress as XLAddress);
+            var rangeAddress = new XLRangeAddress((XLAddress)firstCellAddress, (XLAddress)lastCellAddress);
             return Range(rangeAddress);
         }
 
@@ -1428,7 +1428,7 @@ namespace ClosedXML.Excel
 
         public Boolean Contains(IXLCell cell)
         {
-            return Contains(cell.Address as XLAddress);
+            return Contains((XLAddress)cell.Address);
         }
 
         public bool Contains(XLAddress first, XLAddress last)
