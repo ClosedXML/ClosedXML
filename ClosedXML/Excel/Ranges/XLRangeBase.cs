@@ -286,6 +286,9 @@ namespace ClosedXML.Excel
             return Cells(true);
         }
 
+        /// <summary>
+        /// Return the collection of cell values not initializing empty cells.
+        /// </summary>
         public IEnumerable CellValues()
         {
             for (int ro = RangeAddress.FirstAddress.RowNumber; ro <= RangeAddress.LastAddress.RowNumber; ro++)
