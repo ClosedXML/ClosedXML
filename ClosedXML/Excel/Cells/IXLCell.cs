@@ -319,6 +319,8 @@ namespace ClosedXML.Excel
 
         Boolean IsMerged();
 
+        IXLRange MergedRange();
+
         Boolean IsEmpty();
 
         Boolean IsEmpty(Boolean includeFormats);

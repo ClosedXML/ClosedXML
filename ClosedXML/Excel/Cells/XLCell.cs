@@ -1239,6 +1239,11 @@ namespace ClosedXML.Excel
             return Worksheet.Internals.MergedRanges.Contains(this);
         }
 
+        public IXLRange MergedRange()
+        {
+            return Worksheet.Internals.MergedRanges.FirstOrDefault(r => r.Contains(this));
+        }
+
         public Boolean IsEmpty()
         {
             return IsEmpty(false);
