@@ -15,6 +15,8 @@ namespace ClosedXML.Excel
 
         private XLSortElements _sortRows;
         private XLSortElements _sortColumns;
+        private XLCell _firstCell;
+        private XLCell _lastCell;
 
         #endregion Fields
         
@@ -33,7 +35,9 @@ namespace ClosedXML.Excel
         {
             Id = ++IdCounter;
 
-            RangeAddress = new XLRangeAddress(rangeAddress);
+            rangeAddress = rangeAddress.Normalize();
+            _firstCell = rangeAddress.Worksheet.Cell(rangeAddress.FirstAddress);
+            _lastCell = rangeAddress.Worksheet.Cell(rangeAddress.LastAddress);
         }
 
         #endregion Constructor
@@ -62,12 +66,9 @@ namespace ClosedXML.Excel
 
         #region Public properties
 
-        private XLRangeAddress _rangeAddress;
-
         public XLRangeAddress RangeAddress
         {
-            get { return _rangeAddress; }
-            protected set { _rangeAddress = value; }
+            get { return new XLRangeAddress(_firstCell.Address, _lastCell.Address); }
         }
 
         public XLWorksheet Worksheet
@@ -1006,6 +1007,7 @@ namespace ClosedXML.Excel
             // Adjust the range
             if (expandRange)
             {
+                _lastCell = Worksheet.Cell()
                 RangeAddress = new XLRangeAddress(
                     new XLAddress(Worksheet,
                                   RangeAddress.FirstAddress.RowNumber,

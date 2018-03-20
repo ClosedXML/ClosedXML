@@ -14,21 +14,16 @@ namespace ClosedXML.Excel
                 Int32 newColumnNum = ro + columnsToShift;
                 if (newColumnNum <= XLHelper.MaxColumnNumber)
                 {
-                    var newColumn = new XLColumn(columnToMove)
-                                        {
-                                            RangeAddress =
-                                            {
-                                                FirstAddress = new XLAddress(1, newColumnNum, false, false),
-                                                LastAddress =
-                                                    new XLAddress(XLHelper.MaxRowNumber, newColumnNum, false, false)
-                                            }
-                                        };
-                                        
-                    _dictionary.Add(newColumnNum, newColumn);
+                    var newColumn = new XLColumn(columnToMove, new XLRangeAddress
+                                            (
+                                                new XLAddress(1, newColumnNum, false, false),
+                                                new XLAddress(XLHelper.MaxRowNumber, newColumnNum, false, false)
+                                            ));
+
+                    _dictionary.Add(newColumnNum, newColumn);s
                 }
                 _dictionary.Remove(ro);
             }
-
         }
 
         private readonly Dictionary<Int32, XLColumn> _dictionary = new Dictionary<Int32, XLColumn>();

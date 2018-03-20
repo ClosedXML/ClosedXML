@@ -1,11 +1,12 @@
 using ClosedXML.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLRangeAddress : IXLRangeAddress
+    internal struct XLRangeAddress : IXLRangeAddress, IEquatable<XLRangeAddress>
     {
         #region Private fields
 
@@ -19,18 +20,14 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
-        public XLRangeAddress(XLRangeAddress rangeAddress) : this(rangeAddress.FirstAddress, rangeAddress.LastAddress)
-        {
-        }
-
-        public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress)
+        public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress) : this()
         {
             Worksheet = firstAddress.Worksheet;
-            FirstAddress = firstAddress;
-            LastAddress = lastAddress;
+            _firstAddress = firstAddress;
+            _lastAddress = lastAddress;
         }
 
-        public XLRangeAddress(XLWorksheet worksheet, String rangeAddress)
+        public XLRangeAddress(XLWorksheet worksheet, String rangeAddress) : this()
         {
             string addressToUse = rangeAddress.Contains("!")
                                       ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
@@ -52,8 +49,8 @@ namespace ClosedXML.Excel
 
             if (XLHelper.IsValidA1Address(firstPart))
             {
-                FirstAddress = XLAddress.Create(worksheet, firstPart);
-                LastAddress = XLAddress.Create(worksheet, secondPart);
+                _firstAddress = XLAddress.Create(worksheet, firstPart);
+                _lastAddress = XLAddress.Create(worksheet, secondPart);
             }
             else
             {
@@ -61,13 +58,13 @@ namespace ClosedXML.Excel
                 secondPart = secondPart.Replace("$", String.Empty);
                 if (char.IsDigit(firstPart[0]))
                 {
-                    FirstAddress = XLAddress.Create(worksheet, "A" + firstPart);
-                    LastAddress = XLAddress.Create(worksheet, XLHelper.MaxColumnLetter + secondPart);
+                    _firstAddress = XLAddress.Create(worksheet, "A" + firstPart);
+                    _lastAddress = XLAddress.Create(worksheet, XLHelper.MaxColumnLetter + secondPart);
                 }
                 else
                 {
-                    FirstAddress = XLAddress.Create(worksheet, firstPart + "1");
-                    LastAddress = XLAddress.Create(worksheet, secondPart + XLHelper.MaxRowNumber.ToInvariantString());
+                    _firstAddress = XLAddress.Create(worksheet, firstPart + "1");
+                    _lastAddress = XLAddress.Create(worksheet, secondPart + XLHelper.MaxRowNumber.ToInvariantString());
                 }
             }
 
@@ -89,7 +86,6 @@ namespace ClosedXML.Excel
 
                 return _firstAddress;
             }
-            set { _firstAddress = value; }
         }
 
         public XLAddress LastAddress
@@ -97,11 +93,10 @@ namespace ClosedXML.Excel
             get
             {
                 if (!IsValid)
-                    throw new InvalidOperationException("Range is an invalid state.");
+                    throw new InvalidOperationException("Range is invalid.");
 
                 return _lastAddress;
             }
-            set { _lastAddress = value; }
         }
 
         IXLWorksheet IXLRangeAddress.Worksheet
@@ -113,33 +108,74 @@ namespace ClosedXML.Excel
         {
             [DebuggerStepThrough]
             get { return FirstAddress; }
-            set
-            {
-                if (value is XLAddress)
-                    FirstAddress = (XLAddress)value;
-                else
-                    FirstAddress = new XLAddress(value.RowNumber, value.ColumnNumber, value.FixedRow, value.FixedColumn);
-            }
         }
 
         IXLAddress IXLRangeAddress.LastAddress
         {
             [DebuggerStepThrough]
             get { return LastAddress; }
-            set
-            {
-                if (value is XLAddress)
-                    LastAddress = (XLAddress)value;
-                else
-                    LastAddress = new XLAddress(value.RowNumber, value.ColumnNumber, value.FixedRow, value.FixedColumn);
-            }
         }
 
-        public bool IsValid { get; set; } = true;
+        public bool IsValid
+        {
+            get
+            {
+                throw new NotImplementedException("IsValid");
+            }
+        }
 
         #endregion Public properties
 
         #region Public methods
+
+        /// <summary>
+        /// Lead a range address to a normal form - when <see cref="FirstAddress"/> points to the top-left address and
+        /// <see cref="LastAddress"/> points to the bottom-right address.
+        /// </summary>
+        /// <returns></returns>
+        public XLRangeAddress Normalize()
+        {
+            if (FirstAddress.RowNumber <= LastAddress.RowNumber &&
+                FirstAddress.ColumnNumber <= LastAddress.ColumnNumber)
+                return this;
+
+            int firstRow, firstColumn, lastRow, lastColumn;
+            bool firstRowFixed, firstColumnFixed, lastRowFixed, lastColumnFixed;
+
+            if (FirstAddress.RowNumber <= LastAddress.RowNumber)
+            {
+                firstRow = FirstAddress.RowNumber;
+                firstRowFixed = FirstAddress.FixedRow;
+                lastRow = LastAddress.RowNumber;
+                lastRowFixed = LastAddress.FixedRow;
+            }
+            else
+            {
+                firstRow = LastAddress.RowNumber;
+                firstRowFixed = LastAddress.FixedRow;
+                lastRow = FirstAddress.RowNumber;
+                lastRowFixed = FirstAddress.FixedRow;
+            }
+
+            if (FirstAddress.ColumnNumber <= LastAddress.ColumnNumber)
+            {
+                firstColumn = FirstAddress.ColumnNumber;
+                firstColumnFixed = FirstAddress.FixedColumn;
+                lastColumn = LastAddress.ColumnNumber;
+                lastColumnFixed = LastAddress.FixedColumn;
+            }
+            else
+            {
+                firstColumn = LastAddress.ColumnNumber;
+                firstColumnFixed = LastAddress.FixedColumn;
+                lastColumn = FirstAddress.ColumnNumber;
+                lastColumnFixed = FirstAddress.FixedColumn;
+            }
+
+            return new XLRangeAddress(
+                new XLAddress(FirstAddress.Worksheet, firstRow, firstColumn, firstRowFixed, firstColumnFixed),
+                new XLAddress(LastAddress.Worksheet, lastRow, lastColumn, lastRowFixed, lastColumnFixed));
+        }
 
         public String ToStringRelative()
         {
@@ -203,20 +239,31 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var other = obj as XLRangeAddress;
-            if (other == null)
+            if (!(obj is XLRangeAddress))
+            {
                 return false;
-            return Worksheet.Equals(other.Worksheet)
-                   && FirstAddress.Equals(other.FirstAddress)
-                   && LastAddress.Equals(other.LastAddress);
+            }
+
+            var address = (XLRangeAddress)obj;
+            return _firstAddress.Equals(address._firstAddress) &&
+                   _lastAddress.Equals(address._lastAddress) &&
+                   EqualityComparer<XLWorksheet>.Default.Equals(Worksheet, address.Worksheet);
         }
 
         public override int GetHashCode()
         {
-            return
-                Worksheet.GetHashCode()
-                ^ FirstAddress.GetHashCode()
-                ^ LastAddress.GetHashCode();
+            var hashCode = -778064135;
+            hashCode = hashCode * -1521134295 + _firstAddress.GetHashCode();
+            hashCode = hashCode * -1521134295 + _lastAddress.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<XLWorksheet>.Default.GetHashCode(Worksheet);
+            return hashCode;
+        }
+
+        public bool Equals(XLRangeAddress other)
+        {
+            return ReferenceEquals(Worksheet, other.Worksheet) &&
+                   _firstAddress == other._firstAddress &&
+                   _lastAddress == other._lastAddress;
         }
 
         #endregion Public methods

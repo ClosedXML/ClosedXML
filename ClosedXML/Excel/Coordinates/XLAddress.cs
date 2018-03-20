@@ -319,24 +319,9 @@ namespace ClosedXML.Excel
             return x == y;
         }
 
-        public Int32 GetHashCode(IXLAddress obj)
-        {
-            return obj.GetHashCode();
-        }
-
         public new Boolean Equals(object x, object y)
         {
             return x == y;
-        }
-
-        public Int32 GetHashCode(object obj)
-        {
-            return (obj).GetHashCode();
-        }
-
-        public override int GetHashCode()
-        {
-            return _rowNumber ^ _columnNumber;
         }
 
         #endregion IEqualityComparer<XLCellAddress> Members
@@ -351,6 +336,7 @@ namespace ClosedXML.Excel
             return _rowNumber == other.RowNumber &&
                    _columnNumber == other.ColumnNumber;
         }
+
         public bool Equals(XLAddress other)
         {
             return _rowNumber == other._rowNumber &&
@@ -360,6 +346,21 @@ namespace ClosedXML.Excel
         public override Boolean Equals(Object other)
         {
             return Equals(other as IXLAddress);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 2122234362;
+            hashCode = hashCode * -1521134295 + _fixedRow.GetHashCode();
+            hashCode = hashCode * -1521134295 + _fixedColumn.GetHashCode();
+            hashCode = hashCode * -1521134295 + _rowNumber.GetHashCode();
+            hashCode = hashCode * -1521134295 + _columnNumber.GetHashCode();
+            return hashCode;
+        }
+
+        public int GetHashCode(IXLAddress obj)
+        {
+            return ((XLAddress)obj).GetHashCode();
         }
 
         #endregion IEquatable<XLCellAddress> Members
