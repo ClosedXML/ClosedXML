@@ -368,6 +368,9 @@ namespace ClosedXML.Excel
                 var fA1 = FormulaA1;
                 if (!String.IsNullOrWhiteSpace(fA1))
                 {
+                    if (IsEvaluating)
+                        throw new InvalidOperationException("Circular Reference");
+
                     if (fA1[0] == '{')
                         fA1 = fA1.Substring(1, fA1.Length - 2);
 

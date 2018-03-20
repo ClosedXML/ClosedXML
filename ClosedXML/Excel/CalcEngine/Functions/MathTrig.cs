@@ -340,20 +340,22 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 rangeValues.Add(value);
             }
-            var sumRangeValues = new List<IXLCell>();
-            foreach (var cell in ((CellRangeReference)sumRange.Value).Range.Cells())
+            var sumRangeValues = new List<object>();
+            foreach (var value in sumRange)
             {
-                sumRangeValues.Add(cell);
+                sumRangeValues.Add(value);
             }
 
             // compute total
             var ce = new CalcEngine();
             var tally = new Tally();
-            for (var i = 0; i < Math.Min(rangeValues.Count, sumRangeValues.Count); i++)
+            for (var i = 0; i < Math.Max(rangeValues.Count, sumRangeValues.Count); i++)
             {
-                if (CalcEngineHelpers.ValueSatisfiesCriteria(rangeValues[i], criteria, ce))
+                var targetValue = i < rangeValues.Count ? rangeValues[i] : string.Empty;
+                if (CalcEngineHelpers.ValueSatisfiesCriteria(targetValue, criteria, ce))
                 {
-                    tally.AddValue(sumRangeValues[i].Value);
+                    var value = i < sumRangeValues.Count ? sumRangeValues[i] : 0d;
+                    tally.AddValue(value);
                 }
             }
 
@@ -401,7 +403,7 @@ namespace ClosedXML.Excel.CalcEngine
                 foreach (var criteriaPair in criteriaRanges)
                 {
                     if (!CalcEngineHelpers.ValueSatisfiesCriteria(
-                        criteriaPair.Item2[i],
+                        i < criteriaPair.Item2.Count ? criteriaPair.Item2[i] : string.Empty,
                         criteriaPair.Item1,
                         ce))
                     {
