@@ -390,22 +390,24 @@ namespace ClosedXML.Excel
                         cAddress = fA1;
                     }
 
-                    if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
-                        w => String.Compare(w.Name, sName, true) == 0)
-                        && XLHelper.IsValidA1Address(cAddress)
-                        )
-                    {
-                        var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                        if (referenceCell.IsEmpty(false))
-                            return 0;
-                        else
-                            return referenceCell.Value;
-                    }
-
                     object retVal;
                     try
                     {
                         IsEvaluating = true;
+
+                        if (_worksheet
+                                .Workbook
+                                .WorksheetsInternal
+                                .Any<XLWorksheet>(w => String.Compare(w.Name, sName, true) == 0)
+                            && XLHelper.IsValidA1Address(cAddress))
+                        {
+                            var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                            if (referenceCell.IsEmpty(false))
+                                return 0;
+                            else
+                                return referenceCell.Value;
+                        }
+
                         retVal = Worksheet.Evaluate(fA1);
                     }
                     finally

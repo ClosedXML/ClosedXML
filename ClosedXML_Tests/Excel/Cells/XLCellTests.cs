@@ -637,5 +637,15 @@ namespace ClosedXML_Tests
                 });
             }
         }
+
+        public void FormulaWithCircularReferenceFails2()
+        {
+            var cell = new XLWorkbook().Worksheets.Add("Sheet1").FirstCell();
+            cell.FormulaA1 = "A1";
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var _ = cell.Value;
+            });
+        }
     }
 }
