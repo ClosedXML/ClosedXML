@@ -110,6 +110,11 @@ namespace ClosedXML_Tests
             Assert.AreEqual(2, ws.MergedRanges.Count);
             Assert.AreEqual("A1:B2", ws.MergedRanges.First().RangeAddress.ToStringRelative());
             Assert.AreEqual("D2:E2", ws.MergedRanges.Last().RangeAddress.ToStringRelative());
+
+            Assert.AreEqual("A1:B2", ws.Cell("A2").MergedRange().RangeAddress.ToStringRelative());
+            Assert.AreEqual("D2:E2", ws.Cell("D2").MergedRange().RangeAddress.ToStringRelative());
+
+            Assert.AreEqual(null, ws.Cell("Z10").MergedRange());
         }
 
         [Test]
