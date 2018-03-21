@@ -568,19 +568,14 @@ namespace ClosedXML.Excel
 
         private void SetRowNumber(Int32 row)
         {
-            if (row <= 0)
-                RangeAddress.IsValid = false;
-            else
-            {
-                RangeAddress.IsValid = true;
-                RangeAddress.FirstAddress = new XLAddress(Worksheet, row, 1, RangeAddress.FirstAddress.FixedRow,
-                                                          RangeAddress.FirstAddress.FixedColumn);
-                RangeAddress.LastAddress = new XLAddress(Worksheet,
-                                                         row,
-                                                         XLHelper.MaxColumnNumber,
-                                                         RangeAddress.LastAddress.FixedRow,
-                                                         RangeAddress.LastAddress.FixedColumn);
-            }
+            RangeAddress = new XLRangeAddress(
+                new XLAddress(Worksheet, row, 1, RangeAddress.FirstAddress.FixedRow,
+                              RangeAddress.FirstAddress.FixedColumn),
+                new XLAddress(Worksheet,
+                              row,
+                              XLHelper.MaxColumnNumber,
+                              RangeAddress.LastAddress.FixedRow,
+                              RangeAddress.LastAddress.FixedColumn));
         }
 
         public override XLRange Range(String rangeAddressStr)

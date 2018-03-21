@@ -186,12 +186,12 @@ namespace ClosedXML.Excel
 
         private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            ShiftColumns(RangeAddress, range, columnsShifted);
+            RangeAddress = (XLRangeAddress)ShiftColumns(RangeAddress, range, columnsShifted);
         }
 
         private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-            ShiftRows(RangeAddress, range, rowsShifted);
+            RangeAddress = (XLRangeAddress)ShiftRows(RangeAddress, range, rowsShifted);
         }
 
         public IXLRange Range(int firstColumn, int lastColumn)

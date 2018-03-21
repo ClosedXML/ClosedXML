@@ -81,9 +81,8 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (!IsValid)
-                    throw new InvalidOperationException("Range is invalid.");
-
+                //if (!IsValid)
+                //    throw new InvalidOperationException("Range is invalid.");
                 return _firstAddress;
             }
         }
@@ -92,9 +91,8 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (!IsValid)
-                    throw new InvalidOperationException("Range is invalid.");
-
+                //if (!IsValid)
+                //    throw new InvalidOperationException("Range is invalid.");
                 return _lastAddress;
             }
         }

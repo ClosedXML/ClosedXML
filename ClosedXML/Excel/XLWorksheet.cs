@@ -30,6 +30,10 @@ namespace ClosedXML.Excel
         private Boolean _tabActive;
         internal Boolean EventTrackingEnabled;
 
+        /// <summary>
+        /// Fake address to be used everywhere the invalid address is needed.
+        /// </summary>
+        internal readonly XLAddress InvalidAddress;
         #endregion Fields
 
         #region Constructor
@@ -44,6 +48,7 @@ namespace ClosedXML.Excel
             EventTrackingEnabled = workbook.EventTracking == XLEventTracking.Enabled;
 
             Workbook = workbook;
+            InvalidAddress = new XLAddress(this, 0, 0, false, false);
 
             RangeShiftedRows = new XLReentrantEnumerableSet<XLCallbackAction>();
             RangeShiftedColumns = new XLReentrantEnumerableSet<XLCallbackAction>();

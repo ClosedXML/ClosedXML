@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
         {
             Id = ++IdCounter;
 
-            RangeAddress = new XLRangeAddress(rangeAddress);
+            RangeAddress = rangeAddress;
         }
 
         #endregion Constructor
@@ -60,6 +60,9 @@ namespace ClosedXML.Excel
             RangeAddress.Worksheet.RangeShiftedColumns.Add(_shiftedColumnsAction);
         }
 
+        protected virtual void OnRangeAddressChanged()
+        { }
+
         #region Public properties
 
         private XLRangeAddress _rangeAddress;
@@ -67,7 +70,11 @@ namespace ClosedXML.Excel
         public XLRangeAddress RangeAddress
         {
             get { return _rangeAddress; }
-            protected set { _rangeAddress = value; }
+            protected set
+            {
+                _rangeAddress = value;
+                OnRangeAddressChanged();
+            }
         }
 
         public XLWorksheet Worksheet
@@ -1541,15 +1548,15 @@ namespace ClosedXML.Excel
                 RangeAddress.LastAddress);
         }
 
-        protected void ShiftColumns(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int columnsShifted)
+        protected IXLRangeAddress ShiftColumns(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int columnsShifted)
         {
-            if (!thisRangeAddress.IsValid || !shiftedRange.RangeAddress.IsValid) return;
+            if (!thisRangeAddress.IsValid || !shiftedRange.RangeAddress.IsValid) return thisRangeAddress;
 
             bool allRowsAreCovered = thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber &&
                                      thisRangeAddress.LastAddress.RowNumber <= shiftedRange.RangeAddress.LastAddress.RowNumber;
 
             if (!allRowsAreCovered)
-                return;
+                return thisRangeAddress;
 
             bool shiftLeftBoundary = (columnsShifted > 0 && thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber) ||
                                      (columnsShifted < 0 && thisRangeAddress.FirstAddress.ColumnNumber > shiftedRange.RangeAddress.FirstAddress.ColumnNumber);
@@ -1571,36 +1578,41 @@ namespace ClosedXML.Excel
 
             bool destroyedByShift = newRightBoundary < newLeftBoundary;
 
+            var firstAddress = (XLAddress)thisRangeAddress.FirstAddress;
+            var lastAddress =  (XLAddress)thisRangeAddress.LastAddress;
+
             if (destroyedByShift)
             {
-                (thisRangeAddress as XLRangeAddress).IsValid = false;
-                return;
+                firstAddress = Worksheet.InvalidAddress;
+                lastAddress = Worksheet.InvalidAddress;
             }
 
             if (shiftLeftBoundary)
-                thisRangeAddress.FirstAddress = new XLAddress(Worksheet,
-                                                              thisRangeAddress.FirstAddress.RowNumber,
-                                                              newLeftBoundary,
-                                                              thisRangeAddress.FirstAddress.FixedRow,
-                                                              thisRangeAddress.FirstAddress.FixedColumn);
+                firstAddress = new XLAddress(Worksheet,
+                                             thisRangeAddress.FirstAddress.RowNumber,
+                                             newLeftBoundary,
+                                             thisRangeAddress.FirstAddress.FixedRow,
+                                             thisRangeAddress.FirstAddress.FixedColumn);
 
             if (shiftRightBoundary)
-                thisRangeAddress.LastAddress = new XLAddress(Worksheet,
-                                                             thisRangeAddress.LastAddress.RowNumber,
-                                                             newRightBoundary,
-                                                             thisRangeAddress.LastAddress.FixedRow,
-                                                             thisRangeAddress.LastAddress.FixedColumn);
+                lastAddress = new XLAddress(Worksheet,
+                                            thisRangeAddress.LastAddress.RowNumber,
+                                            newRightBoundary,
+                                            thisRangeAddress.LastAddress.FixedRow,
+                                            thisRangeAddress.LastAddress.FixedColumn);
+
+            return new XLRangeAddress(firstAddress, lastAddress);
         }
 
-        protected void ShiftRows(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int rowsShifted)
+        protected IXLRangeAddress ShiftRows(IXLRangeAddress thisRangeAddress, XLRange shiftedRange, int rowsShifted)
         {
-            if (!thisRangeAddress.IsValid || !shiftedRange.RangeAddress.IsValid) return;
+            if (!thisRangeAddress.IsValid || !shiftedRange.RangeAddress.IsValid) return thisRangeAddress;
 
             bool allColumnsAreCovered = thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber &&
                                         thisRangeAddress.LastAddress.ColumnNumber <= shiftedRange.RangeAddress.LastAddress.ColumnNumber;
 
             if (!allColumnsAreCovered)
-                return;
+                return thisRangeAddress;
 
             bool shiftTopBoundary = (rowsShifted > 0 && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber) ||
                                     (rowsShifted < 0 && thisRangeAddress.FirstAddress.RowNumber > shiftedRange.RangeAddress.FirstAddress.RowNumber);
@@ -1622,25 +1634,30 @@ namespace ClosedXML.Excel
 
             bool destroyedByShift = newBottomBoundary < newTopBoundary;
 
+            var firstAddress = (XLAddress)thisRangeAddress.FirstAddress;
+            var lastAddress = (XLAddress)thisRangeAddress.LastAddress;
+
             if (destroyedByShift)
             {
-                (thisRangeAddress as XLRangeAddress).IsValid = false;
-                return;
+                firstAddress = Worksheet.InvalidAddress;
+                lastAddress = Worksheet.InvalidAddress;
             }
 
             if (shiftTopBoundary)
-                thisRangeAddress.FirstAddress = new XLAddress(Worksheet,
-                                                              newTopBoundary,
-                                                              thisRangeAddress.FirstAddress.ColumnNumber,
-                                                              thisRangeAddress.FirstAddress.FixedRow,
-                                                              thisRangeAddress.FirstAddress.FixedColumn);
+                firstAddress = new XLAddress(Worksheet,
+                                             newTopBoundary,
+                                             thisRangeAddress.FirstAddress.ColumnNumber,
+                                             thisRangeAddress.FirstAddress.FixedRow,
+                                             thisRangeAddress.FirstAddress.FixedColumn);
 
             if (shiftBottomBoundary)
-                thisRangeAddress.LastAddress = new XLAddress(Worksheet,
-                                                             newBottomBoundary,
-                                                             thisRangeAddress.LastAddress.ColumnNumber,
-                                                             thisRangeAddress.LastAddress.FixedRow,
-                                                             thisRangeAddress.LastAddress.FixedColumn);
+                lastAddress = new XLAddress(Worksheet,
+                                            newBottomBoundary,
+                                            thisRangeAddress.LastAddress.ColumnNumber,
+                                            thisRangeAddress.LastAddress.FixedRow,
+                                            thisRangeAddress.LastAddress.FixedColumn);
+
+            return new XLRangeAddress(firstAddress, lastAddress);
         }
 
         public IXLRange RangeUsed()

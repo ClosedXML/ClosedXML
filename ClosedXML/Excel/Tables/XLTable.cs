@@ -402,7 +402,7 @@ namespace ClosedXML.Excel
                 this.TotalsRow().AsRange().Delete(XLShiftDeletedCells.ShiftCellsUp);
             }
 
-            this.RangeAddress = range.RangeAddress as XLRangeAddress;
+            this.RangeAddress = (XLRangeAddress)range.RangeAddress;
             RescanFieldNames();
 
             if (this.ShowTotalsRow)
@@ -657,10 +657,12 @@ namespace ClosedXML.Excel
                     }
 
                     headersRow.Clear();
-                    RangeAddress.FirstAddress = new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + 1,
-                                          RangeAddress.FirstAddress.ColumnNumber,
-                                          RangeAddress.FirstAddress.FixedRow,
-                                          RangeAddress.FirstAddress.FixedColumn);
+                    RangeAddress = new XLRangeAddress(
+                        new XLAddress(Worksheet, RangeAddress.FirstAddress.RowNumber + 1,
+                                      RangeAddress.FirstAddress.ColumnNumber,
+                                      RangeAddress.FirstAddress.FixedRow,
+                                      RangeAddress.FirstAddress.FixedColumn),
+                        RangeAddress.LastAddress);
                 }
                 else
                 {
@@ -676,11 +678,13 @@ namespace ClosedXML.Excel
                         if (firstRow.IsEmpty(true))
                         {
                             rangeRow = firstRow;
-                            RangeAddress.FirstAddress = new XLAddress(Worksheet,
-                                  RangeAddress.FirstAddress.RowNumber - 1,
-                                  RangeAddress.FirstAddress.ColumnNumber,
-                                  RangeAddress.FirstAddress.FixedRow,
-                                  RangeAddress.FirstAddress.FixedColumn);
+                            RangeAddress = new XLRangeAddress(
+                                new XLAddress(Worksheet,
+                                              RangeAddress.FirstAddress.RowNumber - 1,
+                                              RangeAddress.FirstAddress.ColumnNumber,
+                                              RangeAddress.FirstAddress.FixedRow,
+                                              RangeAddress.FirstAddress.FixedColumn),
+                                RangeAddress.LastAddress);
                         }
                         else
                         {
@@ -689,15 +693,15 @@ namespace ClosedXML.Excel
 
                             rangeRow = firstRow.InsertRowsBelow(1, false).First();
 
-                            RangeAddress.FirstAddress = new XLAddress(Worksheet, fAddress.RowNumber,
-                                                                      fAddress.ColumnNumber,
-                                                                      fAddress.FixedRow,
-                                                                      fAddress.FixedColumn);
-
-                            RangeAddress.LastAddress = new XLAddress(Worksheet, lAddress.RowNumber + 1,
-                                                                     lAddress.ColumnNumber,
-                                                                     lAddress.FixedRow,
-                                                                     lAddress.FixedColumn);
+                            RangeAddress = new XLRangeAddress(
+                                new XLAddress(Worksheet, fAddress.RowNumber,
+                                                         fAddress.ColumnNumber,
+                                                         fAddress.FixedRow,
+                                                         fAddress.FixedColumn),
+                                new XLAddress(Worksheet, lAddress.RowNumber + 1,
+                                                         lAddress.ColumnNumber,
+                                                         lAddress.FixedRow,
+                                                         lAddress.FixedColumn));
                         }
 
                         Int32 co = 1;
@@ -728,10 +732,12 @@ namespace ClosedXML.Excel
 
         public void ExpandTableRows(Int32 rows)
         {
-            RangeAddress.LastAddress = new XLAddress(Worksheet, RangeAddress.LastAddress.RowNumber + rows,
-                                                     RangeAddress.LastAddress.ColumnNumber,
-                                                     RangeAddress.LastAddress.FixedRow,
-                                                     RangeAddress.LastAddress.FixedColumn);
+            RangeAddress = new XLRangeAddress(
+                RangeAddress.FirstAddress,
+                new XLAddress(Worksheet, RangeAddress.LastAddress.RowNumber + rows,
+                                         RangeAddress.LastAddress.ColumnNumber,
+                                         RangeAddress.LastAddress.FixedRow,
+                                         RangeAddress.LastAddress.FixedColumn));
         }
 
         public override XLRangeColumn Column(int columnNumber)

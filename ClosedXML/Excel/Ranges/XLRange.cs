@@ -218,11 +218,14 @@ namespace ClosedXML.Excel
             MoveOrClearForTranspose(transposeOption, rowCount, columnCount);
             TransposeMerged(squareSide);
             TransposeRange(squareSide);
-            RangeAddress.LastAddress = new XLAddress(Worksheet,
-                                                     firstCell.Address.RowNumber + columnCount - 1,
-                                                     firstCell.Address.ColumnNumber + rowCount - 1,
-                                                     RangeAddress.LastAddress.FixedRow,
-                                                     RangeAddress.LastAddress.FixedColumn);
+            RangeAddress = new XLRangeAddress(
+                RangeAddress.FirstAddress,
+                new XLAddress(Worksheet,
+                              firstCell.Address.RowNumber + columnCount - 1,
+                              firstCell.Address.ColumnNumber + rowCount - 1,
+                              RangeAddress.LastAddress.FixedRow,
+                              RangeAddress.LastAddress.FixedColumn));
+
             if (rowCount > columnCount)
             {
                 var rng = Worksheet.Range(
@@ -355,12 +358,12 @@ namespace ClosedXML.Excel
 
         internal void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            ShiftColumns(RangeAddress, range, columnsShifted);
+            RangeAddress = (XLRangeAddress)ShiftColumns(RangeAddress, range, columnsShifted);
         }
 
         internal void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-            ShiftRows(RangeAddress, range, rowsShifted);
+            RangeAddress = (XLRangeAddress)ShiftRows(RangeAddress, range, rowsShifted);
         }
 
         IXLRangeColumn IXLRange.FirstColumn(Func<IXLRangeColumn, Boolean> predicate)
@@ -760,9 +763,11 @@ namespace ClosedXML.Excel
                 RangeAddress.FirstAddress.RowNumber + squareSide - 1,
                 RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
 
-            foreach (IXLRange merge in Worksheet.Internals.MergedRanges.Where(Contains))
+            foreach (XLRange merge in Worksheet.Internals.MergedRanges.Where(Contains))
             {
-                merge.RangeAddress.LastAddress = rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address;
+                merge.RangeAddress = new XLRangeAddress(
+                    merge.RangeAddress.FirstAddress,
+                    rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address);
             }
         }
 

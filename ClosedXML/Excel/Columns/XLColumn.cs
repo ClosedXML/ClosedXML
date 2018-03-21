@@ -638,22 +638,17 @@ namespace ClosedXML.Excel
 
         private void SetColumnNumber(int column)
         {
-            if (column <= 0)
-                RangeAddress.IsValid = false;
-            else
-            {
-                RangeAddress.IsValid = true;
-                RangeAddress.FirstAddress = new XLAddress(Worksheet,
-                                                          1,
-                                                          column,
-                                                          RangeAddress.FirstAddress.FixedRow,
-                                                          RangeAddress.FirstAddress.FixedColumn);
-                RangeAddress.LastAddress = new XLAddress(Worksheet,
-                                                         XLHelper.MaxRowNumber,
-                                                         column,
-                                                         RangeAddress.LastAddress.FixedRow,
-                                                         RangeAddress.LastAddress.FixedColumn);
-            }
+            RangeAddress = new XLRangeAddress(
+                new XLAddress(Worksheet,
+                              1,
+                              column,
+                              RangeAddress.FirstAddress.FixedRow,
+                              RangeAddress.FirstAddress.FixedColumn),
+                new XLAddress(Worksheet,
+                              XLHelper.MaxRowNumber,
+                              column,
+                              RangeAddress.LastAddress.FixedRow,
+                              RangeAddress.LastAddress.FixedColumn));
         }
 
         public override XLRange Range(String rangeAddressStr)

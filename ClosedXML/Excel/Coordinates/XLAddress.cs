@@ -7,12 +7,6 @@ namespace ClosedXML.Excel
     internal struct XLAddress : IXLAddress, IEquatable<XLAddress>
     {
         #region Static
-
-        /// <summary>
-        /// Fake address to be used everywhere the invalid address is needed.
-        /// </summary>
-        internal static readonly XLAddress InvalidAddress = new XLAddress();
-
         /// <summary>
         /// Create address without worksheet. For calculation only!
         /// </summary>
