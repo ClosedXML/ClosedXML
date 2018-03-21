@@ -120,7 +120,8 @@ namespace ClosedXML.Excel
         {
             get
             {
-                throw new NotImplementedException("IsValid");
+                return _firstAddress.IsValid &&
+                       _lastAddress.IsValid;
             }
         }
 

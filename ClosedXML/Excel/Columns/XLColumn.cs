@@ -38,8 +38,12 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLColumn(XLColumn column)
-            : base(
+        public XLColumn(XLColumn column) : this(column, column.ColumnNumber())
+        {
+        }
+
+        internal XLColumn(XLColumn column, int newColumnNumber)
+        : base(
                 new XLRangeAddress(new XLAddress(column.Worksheet, 1, column.ColumnNumber(), false, false),
                                    new XLAddress(column.Worksheet, XLHelper.MaxRowNumber, column.ColumnNumber(),
                                                  false, false)),
@@ -52,6 +56,8 @@ namespace ClosedXML.Excel
             _collapsed = column._collapsed;
             _isHidden = column._isHidden;
             _outlineLevel = column._outlineLevel;
+            if (newColumnNumber != column.ColumnNumber())
+                SetColumnNumber(newColumnNumber);
         }
 
         #endregion Constructor

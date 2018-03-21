@@ -35,7 +35,11 @@ namespace ClosedXML.Excel
                 _height = xlRowParameters.Worksheet.RowHeight;
         }
 
-        public XLRow(XLRow row)
+        public XLRow(XLRow row) : this(row, row.RowNumber())
+        {
+        }
+
+        internal XLRow(XLRow row, int newRowNumber)
             : base(new XLRangeAddress(new XLAddress(row.Worksheet, row.RowNumber(), 1, false, false),
                                       new XLAddress(row.Worksheet, row.RowNumber(), XLHelper.MaxColumnNumber, false,
                                                     false)),
@@ -50,6 +54,9 @@ namespace ClosedXML.Excel
             _isHidden = row._isHidden;
             _outlineLevel = row._outlineLevel;
             HeightChanged = row.HeightChanged;
+
+            if (newRowNumber != row.RowNumber())
+                SetRowNumber(newRowNumber);
         }
 
         #endregion Constructor

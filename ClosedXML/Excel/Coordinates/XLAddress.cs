@@ -9,6 +9,11 @@ namespace ClosedXML.Excel
         #region Static
 
         /// <summary>
+        /// Fake address to be used everywhere the invalid address is needed.
+        /// </summary>
+        internal static readonly XLAddress InvalidAddress = new XLAddress();
+
+        /// <summary>
         /// Create address without worksheet. For calculation only!
         /// </summary>
         /// <param name="cellAddressString"></param>
@@ -430,5 +435,14 @@ namespace ClosedXML.Excel
         }
 
         public String UniqueId { get { return RowNumber.ToString("0000000") + ColumnNumber.ToString("00000"); } }
+
+        public bool IsValid
+        {
+            get
+            {
+                return 0 < RowNumber && RowNumber <= XLHelper.MaxRowNumber &&
+                       0 < ColumnNumber && ColumnNumber <= XLHelper.MaxColumnNumber;
+            }
+        }
     }
 }

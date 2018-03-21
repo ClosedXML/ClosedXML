@@ -66,7 +66,7 @@ namespace ClosedXML_Tests
 
             var normalizedAddress = rangeAddress.Normalize();
 
-            Assert.ReferenceEquals(ws, rangeAddress.Worksheet);
+            Assert.AreSame(ws, rangeAddress.Worksheet);
             Assert.AreEqual(expectedAddress, normalizedAddress.ToString());
         }
     }

@@ -14,13 +14,8 @@ namespace ClosedXML.Excel
                 Int32 newColumnNum = ro + columnsToShift;
                 if (newColumnNum <= XLHelper.MaxColumnNumber)
                 {
-                    var newColumn = new XLColumn(columnToMove, new XLRangeAddress
-                                            (
-                                                new XLAddress(1, newColumnNum, false, false),
-                                                new XLAddress(XLHelper.MaxRowNumber, newColumnNum, false, false)
-                                            ));
-
-                    _dictionary.Add(newColumnNum, newColumn);s
+                    var newColumn = new XLColumn(columnToMove, newColumnNum);
+                    _dictionary.Add(newColumnNum, newColumn);
                 }
                 _dictionary.Remove(ro);
             }

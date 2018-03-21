@@ -132,15 +132,7 @@ namespace ClosedXML.Excel
                 Int32 newRowNum = ro + rowsToShift;
                 if (newRowNum <= XLHelper.MaxRowNumber)
                 {
-                    var newRow = new XLRow(rowToMove)
-                                     {
-                                         RangeAddress =
-                                             {
-                                                 FirstAddress = new XLAddress(newRowNum, 1, false, false),
-                                                 LastAddress =
-                                                     new XLAddress(newRowNum, XLHelper.MaxColumnNumber, false, false)
-                                             }
-                                     };
+                    var newRow = new XLRow(rowToMove, newRowNum);
                     _dictionary.Add(newRowNum, newRow);
                 }
                 _dictionary.Remove(ro);
