@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
         /// Clears the contents of this table.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        new IXLTable Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         IXLTableField Field(string fieldName);
 

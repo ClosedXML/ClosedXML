@@ -267,5 +267,50 @@ namespace ClosedXML_Tests.Excel
                 workbook.SaveAs(tf2.Path);
             }
         }
+
+        /// <summary>
+        /// Excel escapes symbol ' in worksheet title so we have to process this correctly.
+        /// </summary>
+        [Test]
+        public void CanOpenWorksheetWithEscapedApostrophe()
+        {
+            string title = "";
+            TestDelegate openWorkbook = () =>
+            {
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\EscapedApostrophe.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheets.First();
+                    title = ws.Name;
+                }
+            };
+
+            Assert.DoesNotThrow(openWorkbook);
+            Assert.AreEqual("L'E", title);
+        }
+
+        [Test]
+        public void CanRoundTripSheetProtectionForObjects()
+        {
+            using (var book = new XLWorkbook())
+            {
+                var sheet = book.AddWorksheet("TestSheet");
+                sheet.Protect()
+                    .SetObjects(true)
+                    .SetScenarios(true);
+
+                using (var xlStream = new MemoryStream())
+                {
+                    book.SaveAs(xlStream);
+
+                    using (var persistedBook = new XLWorkbook(xlStream))
+                    {
+                        var persistedSheet = persistedBook.Worksheets.Worksheet(1);
+
+                        Assert.AreEqual(sheet.Protection.Objects, persistedSheet.Protection.Objects);
+                    }
+                }
+            }
+        }
     }
 }

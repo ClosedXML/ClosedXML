@@ -441,6 +441,41 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void CanDeleteTable()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet1");
+                    ws.FirstCell().InsertTable(l);
+                    //wb.SaveAs(ms);
+
+                    wb.SaveAs(@"c:\temp\deletetable1.xlsx");
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(@"c:\temp\deletetable1.xlsx"))
+                {
+                    var ws = wb.Worksheets.First();
+                    var table = ws.Tables.First();
+
+                    ws.Tables.Remove(table.Name);
+                    Assert.AreEqual(0, ws.Tables.Count());
+                    //wb.Save();
+                    wb.SaveAs(@"c:\temp\deletetable2.xlsx");
+                }
+            }
+        }
+
+        [Test]
         public void CanDeleteTableField()
         {
             var l = new List<TestObjectWithAttributes>()

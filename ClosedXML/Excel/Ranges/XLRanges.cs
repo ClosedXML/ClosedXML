@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
 
         #region IXLRanges Members
 
-        public IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             _ranges.ForEach(c => c.Clear(clearOptions));
             return this;
@@ -82,31 +82,9 @@ namespace ClosedXML.Excel
             return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Contains(range));
         }
 
-        public IXLDataValidation DataValidation
+        public IEnumerable<IXLDataValidation> DataValidation
         {
-            get
-            {
-                foreach (XLRange range in _ranges)
-                {
-                    foreach (IXLDataValidation dv in range.Worksheet.DataValidations)
-                    {
-                        foreach (IXLRange dvRange in dv.Ranges.Where(dvRange => dvRange.Intersects(range)))
-                        {
-                            dv.Ranges.Remove(dvRange);
-                            foreach (IXLCell c in dvRange.Cells().Where(c => !range.Contains(c.Address.ToString())))
-                            {
-                                var r = c.AsRange();
-                                r.Dispose();
-                                dv.Ranges.Add(r);
-                            }
-                        }
-                    }
-                }
-                var dataValidation = new XLDataValidation(this);
-
-                _ranges.First().Worksheet.DataValidations.Add(dataValidation);
-                return dataValidation;
-            }
+            get { return _ranges.Select(range => range.DataValidation).Where(dv => dv != null); }
         }
 
         public IXLRanges AddToNamed(String rangeName)
@@ -171,7 +149,7 @@ namespace ClosedXML.Excel
             _ranges.ForEach(r => r.Dispose());
         }
 
-        #endregion
+        #endregion IXLRanges Members
 
         #region IXLStylized Members
 
@@ -210,7 +188,7 @@ namespace ClosedXML.Excel
             get { return this; }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         public override string ToString()
         {
@@ -234,7 +212,26 @@ namespace ClosedXML.Excel
 
         public IXLDataValidation SetDataValidation()
         {
-            return DataValidation;
+            foreach (XLRange range in _ranges)
+            {
+                foreach (IXLDataValidation dv in range.Worksheet.DataValidations)
+                {
+                    foreach (IXLRange dvRange in dv.Ranges.Where(dvRange => dvRange.Intersects(range)))
+                    {
+                        dv.Ranges.Remove(dvRange);
+                        foreach (IXLCell c in dvRange.Cells().Where(c => !range.Contains(c.Address.ToString())))
+                        {
+                            var r = c.AsRange();
+                            r.Dispose();
+                            dv.Ranges.Add(r);
+                        }
+                    }
+                }
+            }
+            var dataValidation = new XLDataValidation(this);
+
+            _ranges.First().Worksheet.DataValidations.Add(dataValidation);
+            return dataValidation;
         }
 
         public void Select()

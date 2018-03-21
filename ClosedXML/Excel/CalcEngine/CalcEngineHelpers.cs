@@ -44,17 +44,22 @@ namespace ClosedXML.Excel.CalcEngine
             var cs = criteria as string;
             if (cs != null)
             {
+                if (value is string && (value as string).Trim() == "")
+                    return cs == "";
+
                 if (cs == "")
                     return cs.Equals(value);
 
                 // if criteria is an expression (e.g. ">20"), use calc engine
-                if (cs[0] == '=' || cs[0] == '<' || cs[0] == '>')
+                if ((cs[0] == '=' && cs.IndexOfAny(new[] { '*', '?' }) < 0)
+                    || cs[0] == '<'
+                    || cs[0] == '>')
                 {
                     // build expression
                     var expression = string.Format("{0}{1}", value, cs);
 
                     // add quotes if necessary
-                    var pattern = @"(\w+)(\W+)(\w+)";
+                    var pattern = @"([\w\s]+)(\W+)(\w+)";
                     var m = Regex.Match(expression, pattern);
                     if (m.Groups.Count == 4)
                     {
@@ -76,6 +81,8 @@ namespace ClosedXML.Excel.CalcEngine
                 // if criteria is a regular expression, use regex
                 if (cs.IndexOfAny(new[] { '*', '?' }) > -1)
                 {
+                    if (cs[0] == '=') cs = cs.Substring(1);
+
                     var pattern = Regex.Replace(
                         cs,
                         "(" + String.Join(

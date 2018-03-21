@@ -1,19 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClosedXML.Extensions
 {
     internal static class StringExtensions
     {
-        internal static String WrapSheetNameInQuotesIfRequired(this String sheetName)
+        internal static string EscapeSheetName(this String sheetName)
         {
-            if (sheetName.Contains(' '))
-                return "'" + sheetName + "'";
+            if (sheetName.Contains("'") ||
+                sheetName.Contains(" "))
+                return string.Concat('\'', sheetName.Replace("'", "''"), '\'');
             else
                 return sheetName;
+        }
+
+        internal static string UnescapeSheetName(this String sheetName)
+        {
+            return sheetName
+                .Trim('\'')
+                .Replace("''", "'");
         }
 
         internal static String HashPassword(this String password)
@@ -33,6 +37,5 @@ namespace ClosedXML.Extensions
             hash ^= pLength;
             return hash.ToString("X");
         }
-
     }
 }
