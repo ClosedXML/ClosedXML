@@ -20,12 +20,7 @@ namespace ClosedXML.Excel
         #region Constructor
 
         public XLColumn(Int32 column, XLColumnParameters xlColumnParameters)
-            : base(
-                new XLRangeAddress(new XLAddress(xlColumnParameters.Worksheet, 1, column, false, false),
-                                   new XLAddress(xlColumnParameters.Worksheet, XLHelper.MaxRowNumber, column, false,
-                                                 false)),
-                xlColumnParameters.IsReference ? xlColumnParameters.Worksheet.Internals.ColumnsCollection[column].StyleValue
-                                               : (xlColumnParameters.DefaultStyle as XLStyle).Value)
+            : base(XLRangeAddress.EntireColumn(xlColumnParameters.Worksheet, column))
         {
             SetColumnNumber(column);
 
@@ -43,11 +38,7 @@ namespace ClosedXML.Excel
         }
 
         internal XLColumn(XLColumn column, int newColumnNumber)
-        : base(
-                new XLRangeAddress(new XLAddress(column.Worksheet, 1, column.ColumnNumber(), false, false),
-                                   new XLAddress(column.Worksheet, XLHelper.MaxRowNumber, column.ColumnNumber(),
-                                                 false, false)),
-                column.StyleValue)
+            : base(XLRangeAddress.EntireColumn(column.Worksheet, column.ColumnNumber()))
         {
             _width = column._width;
             IsReference = column.IsReference;

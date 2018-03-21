@@ -8,6 +8,24 @@ namespace ClosedXML.Excel
 {
     internal struct XLRangeAddress : IXLRangeAddress, IEquatable<XLRangeAddress>
     {
+        #region Static members
+
+        public static XLRangeAddress EntireColumn(XLWorksheet worksheet, int column)
+        {
+            return new XLRangeAddress(
+                new XLAddress(worksheet, 1, column, false, false),
+                new XLAddress(worksheet, XLHelper.MaxRowNumber, column, false, false));
+        }
+
+        public static XLRangeAddress EntireRow(XLWorksheet worksheet, int row)
+        {
+            return new XLRangeAddress(
+                new XLAddress(worksheet, row, 1, false, false),
+                new XLAddress(worksheet, row, XLHelper.MaxColumnNumber, false, false));
+        }
+
+        #endregion Static members
+
         #region Private fields
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

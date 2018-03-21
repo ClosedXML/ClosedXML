@@ -19,12 +19,7 @@ namespace ClosedXML.Excel
         #region Constructor
 
         public XLRow(Int32 row, XLRowParameters xlRowParameters)
-            : base(new XLRangeAddress(new XLAddress(xlRowParameters.Worksheet, row, 1, false, false),
-                                      new XLAddress(xlRowParameters.Worksheet, row, XLHelper.MaxColumnNumber, false,
-                                                    false)),
-                  xlRowParameters.IsReference ? xlRowParameters.Worksheet.Internals.RowsCollection[row].StyleValue
-                                              : (xlRowParameters.DefaultStyle as XLStyle).Value
-                  )
+            : base(XLRangeAddress.EntireRow(xlRowParameters.Worksheet, row))
         {
             SetRowNumber(row);
 
@@ -40,10 +35,7 @@ namespace ClosedXML.Excel
         }
 
         internal XLRow(XLRow row, int newRowNumber)
-            : base(new XLRangeAddress(new XLAddress(row.Worksheet, row.RowNumber(), 1, false, false),
-                                      new XLAddress(row.Worksheet, row.RowNumber(), XLHelper.MaxColumnNumber, false,
-                                                    false)),
-                  row.StyleValue)
+            : base(XLRangeAddress.EntireRow(row.Worksheet, row.RowNumber()))
         {
             _height = row._height;
             IsReference = row.IsReference;
