@@ -284,5 +284,18 @@ namespace ClosedXML.Excel
         }
 
         #endregion Public methods
+
+        #region Operators
+
+        public static bool operator ==(XLRangeAddress left, XLRangeAddress right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(XLRangeAddress left, XLRangeAddress right)
+        {
+            return !(left == right);
+        }
+        #endregion
     }
 }

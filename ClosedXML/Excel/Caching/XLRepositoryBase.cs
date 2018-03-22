@@ -81,11 +81,7 @@ namespace ClosedXML.Excel.Caching
             }
         }
 
-        /// <summary>
-        /// Create a new entity using specified key and put it into the repository or
-        /// return the existing entity ith this key.
-        /// </summary>
-        public Tvalue GetOrCreate(Tkey key)
+        public virtual Tvalue GetOrCreate(Tkey key) //DEBUG
         {
             if (_storage.TryGetValue(key, out WeakReference cachedReference))
             {
@@ -102,6 +98,15 @@ namespace ClosedXML.Excel.Caching
 
             var value = _createNew(key);
             return Store(key, value);
+        }
+
+        public Tvalue Replace(Tkey oldKey, Tkey newKey)
+        {
+            WeakReference cachedReference;
+            _storage.TryRemove(oldKey, out cachedReference);
+            _storage.TryAdd(newKey, cachedReference);
+
+            return GetOrCreate(newKey);
         }
 
         public override void Clear()

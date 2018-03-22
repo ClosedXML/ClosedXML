@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using ClosedXML.Excel.Caching;
 
 namespace ClosedXML.Excel
 {
@@ -22,6 +23,7 @@ namespace ClosedXML.Excel
 
         private readonly Dictionary<Int32, Int32> _columnOutlineCount = new Dictionary<Int32, Int32>();
         private readonly Dictionary<Int32, Int32> _rowOutlineCount = new Dictionary<Int32, Int32>();
+        private readonly XLRangeRepository _rangeRepository;
         internal Int32 ZOrder = 1;
         private String _name;
         internal Int32 _position;
@@ -58,6 +60,11 @@ namespace ClosedXML.Excel
             var lastAddress = new XLAddress(this, RangeAddress.LastAddress.RowNumber, RangeAddress.LastAddress.ColumnNumber,
                                                   RangeAddress.LastAddress.FixedRow, RangeAddress.LastAddress.FixedColumn);
             RangeAddress = new XLRangeAddress(firstAddress, lastAddress);
+            _rangeRepository = new XLRangeRepository(workbook, rangeAddress =>
+            {
+                var xlRangeParameters = new XLRangeParameters(rangeAddress, Style);
+                return new XLRange(xlRangeParameters);
+            });
 
             Pictures = new XLPictures(this);
             NamedRanges = new XLNamedRanges(this);
@@ -981,10 +988,12 @@ namespace ClosedXML.Excel
                 AutoFilter.Dispose();
 
             Internals.Dispose();
-
+            
             SelectedRanges?.Dispose();
             DataValidations?.Dispose();
             this.Pictures.ForEach(p => p.Dispose());
+
+            _rangeRepository.Clear();
 
             base.Dispose();
         }
@@ -1611,6 +1620,22 @@ namespace ClosedXML.Excel
                 return string.Empty;
 
             return cell.Value;
+        }
+
+        public XLRange GetOrCreateRange(XLRangeParameters xlRangeParameters)
+        {
+            var range = _rangeRepository.GetOrCreate(xlRangeParameters.RangeAddress);
+            if (xlRangeParameters.DefaultStyle != null && range.StyleValue == StyleValue)
+                range.InnerStyle = xlRangeParameters.DefaultStyle;
+
+            return range;
+        }
+
+        protected override void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
+        {
+            if (_rangeRepository == null)
+                return;
+            _rangeRepository.Replace(oldAddress, newAddress);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
         {
             Id = ++IdCounter;
 
-            RangeAddress = rangeAddress;
+            _rangeAddress = rangeAddress;
         }
 
         #endregion Constructor
@@ -60,8 +60,10 @@ namespace ClosedXML.Excel
             RangeAddress.Worksheet.RangeShiftedColumns.Add(_shiftedColumnsAction);
         }
 
-        protected virtual void OnRangeAddressChanged()
-        { }
+        protected virtual void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
+        {
+            Worksheet.OnRangeAddressChanged(oldAddress, newAddress);
+        }
 
         #region Public properties
 
@@ -72,8 +74,12 @@ namespace ClosedXML.Excel
             get { return _rangeAddress; }
             protected set
             {
-                _rangeAddress = value;
-                OnRangeAddressChanged();
+                if (_rangeAddress != value)
+                {
+                    var oldAddress = _rangeAddress;
+                    _rangeAddress = value;
+                    OnRangeAddressChanged(oldAddress, _rangeAddress);
+                }
             }
         }
 
@@ -898,7 +904,7 @@ namespace ClosedXML.Excel
                 || newFirstCellAddress.ColumnNumber < RangeAddress.FirstAddress.ColumnNumber
                 || newFirstCellAddress.ColumnNumber > RangeAddress.LastAddress.ColumnNumber
                 || newLastCellAddress.ColumnNumber > RangeAddress.LastAddress.ColumnNumber
-                )
+            )
             {
                 throw new ArgumentOutOfRangeException(String.Format(
                     "The cells {0} and {1} are outside the range '{2}'.",
@@ -907,7 +913,12 @@ namespace ClosedXML.Excel
                     ToString()));
             }
 
-            return new XLRange(xlRangeParameters);
+            if (newFirstCellAddress.Worksheet != null)
+                return newFirstCellAddress.Worksheet.GetOrCreateRange(xlRangeParameters);
+            else if (Worksheet != null)
+                return Worksheet.GetOrCreateRange(xlRangeParameters);
+            else
+                return new XLRange(xlRangeParameters);
         }
 
         public XLRange Range(String firstCellAddress, String lastCellAddress)
@@ -1464,6 +1475,8 @@ namespace ClosedXML.Excel
         {
             int numberOfRows = RowCount();
             int numberOfColumns = ColumnCount();
+
+            if (!RangeAddress.IsValid) return;
             IXLRange shiftedRangeFormula = Worksheet.Range(
                 RangeAddress.FirstAddress.RowNumber,
                 RangeAddress.FirstAddress.ColumnNumber,
