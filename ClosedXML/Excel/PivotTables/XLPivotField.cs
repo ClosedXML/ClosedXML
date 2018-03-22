@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace ClosedXML.Excel
 {
     [DebuggerDisplay("{SourceName}")]
-    public class XLPivotField : IXLPivotField
+    internal class XLPivotField : IXLPivotField
     {
         public XLPivotField(string sourceName)
         {
