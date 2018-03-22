@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLRow> GetEnumerator()
         {
-            return _rows.Cast<IXLRow>().OrderBy(r=>r.RowNumber()).GetEnumerator();
+            return _rows.Cast<IXLRow>().OrderBy(r => r.RowNumber()).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -121,7 +121,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-
         public void Hide()
         {
             _rows.ForEach(r => r.Hide());
@@ -209,7 +208,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        #endregion
+        #endregion IXLRows Members
 
         #region IXLStylized Members
 
@@ -250,14 +249,14 @@ namespace ClosedXML.Excel
             }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         public void Add(XLRow row)
         {
             _rows.Add(row);
         }
 
-        public IXLRows Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             _rows.ForEach(c => c.Clear(clearOptions));
             return this;

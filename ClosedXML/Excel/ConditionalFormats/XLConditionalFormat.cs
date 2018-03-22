@@ -142,6 +142,7 @@ namespace ClosedXML.Excel
         }
 
         public Guid Id { get; internal set; }
+        internal Int32 OriginalPriority { get; set; }
         public Boolean CopyDefaultModify { get; set; }
         private IXLStyle _style;
         private Int32 _styleCacheId;

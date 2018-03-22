@@ -90,7 +90,7 @@ namespace ClosedXML_Tests
                 throw new ArgumentNullException("dest");
             }
 
-            #endregion
+            #endregion Check
 
             if (dest.PartExists(uri))
             {
@@ -131,7 +131,7 @@ namespace ClosedXML_Tests
                 throw new ArgumentNullException("serializeAction");
             }
 
-            #endregion
+            #endregion Check
 
             if (package.PartExists(descriptor.Uri))
             {
@@ -161,7 +161,7 @@ namespace ClosedXML_Tests
                 throw new ArgumentNullException("serializeAction");
             }
 
-            #endregion
+            #endregion Check
 
             if (package.PartExists(descriptor.Uri))
             {
@@ -191,7 +191,7 @@ namespace ClosedXML_Tests
                 throw new ArgumentNullException("deserializeFunc");
             }
 
-            #endregion
+            #endregion Check
 
             if (!package.PartExists(uri))
             {
@@ -221,7 +221,7 @@ namespace ClosedXML_Tests
                 throw new ArgumentNullException("deserializeAction");
             }
 
-            #endregion
+            #endregion Check
 
             if (!package.PartExists(uri))
             {
@@ -251,7 +251,7 @@ namespace ClosedXML_Tests
                 throw new ArgumentNullException("deserializeAction");
             }
 
-            #endregion
+            #endregion Check
 
             if (!package.PartExists(uri))
             {
@@ -302,7 +302,7 @@ namespace ClosedXML_Tests
                 throw new ArgumentNullException("right");
             }
 
-            #endregion
+            #endregion Check
 
             excludeMethod = excludeMethod ?? (uri => false);
             PackagePartCollection leftParts = left.GetParts();
@@ -362,7 +362,10 @@ namespace ClosedXML_Tests
                         leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
                         rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
 
-                    if (!StreamHelper.Compare(leftMemoryStream, rightMemoryStream, stripColumnWidthsFromSheet))
+                    var tuple1 = new Tuple<Uri, Stream>(pair.Uri, leftMemoryStream);
+                    var tuple2 = new Tuple<Uri, Stream>(pair.Uri, rightMemoryStream);
+
+                    if (!StreamHelper.Compare(tuple1, tuple2, stripColumnWidthsFromSheet))
                     {
                         pair.Status = CompareStatus.NonEqual;
                         if (compareToFirstDifference)
@@ -396,11 +399,16 @@ namespace ClosedXML_Tests
         {
             #region Private fields
 
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly CompressionOption _compressOption;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly string _contentType;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly Uri _uri;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private readonly CompressionOption _compressOption;
 
-            #endregion
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private readonly string _contentType;
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private readonly Uri _uri;
+
+            #endregion Private fields
 
             #region Constructor
 
@@ -423,33 +431,36 @@ namespace ClosedXML_Tests
                     throw new ArgumentNullException("contentType");
                 }
 
-                #endregion
+                #endregion Check
 
                 _uri = uri;
                 _contentType = contentType;
                 _compressOption = compressOption;
             }
 
-            #endregion
+            #endregion Constructor
 
             #region Public properties
 
             public Uri Uri
             {
-                [DebuggerStepThrough] get { return _uri; }
+                [DebuggerStepThrough]
+                get { return _uri; }
             }
 
             public string ContentType
             {
-                [DebuggerStepThrough] get { return _contentType; }
+                [DebuggerStepThrough]
+                get { return _contentType; }
             }
 
             public CompressionOption CompressOption
             {
-                [DebuggerStepThrough] get { return _compressOption; }
+                [DebuggerStepThrough]
+                get { return _compressOption; }
             }
 
-            #endregion
+            #endregion Public properties
 
             #region Public methods
 
@@ -458,10 +469,10 @@ namespace ClosedXML_Tests
                 return string.Format("Uri:{0} ContentType: {1}, Compression: {2}", _uri, _contentType, _compressOption);
             }
 
-            #endregion
+            #endregion Public methods
         }
 
-        #endregion
+        #endregion Nested type: PackagePartDescriptor
 
         #region Nested type: CompareStatus
 
@@ -473,7 +484,7 @@ namespace ClosedXML_Tests
             NonEqual
         }
 
-        #endregion
+        #endregion Nested type: CompareStatus
 
         #region Nested type: PartPair
 
@@ -481,10 +492,13 @@ namespace ClosedXML_Tests
         {
             #region Private fields
 
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private readonly Uri _uri;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)] private CompareStatus _status;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private readonly Uri _uri;
 
-            #endregion
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private CompareStatus _status;
+
+            #endregion Private fields
 
             #region Constructor
 
@@ -494,25 +508,28 @@ namespace ClosedXML_Tests
                 _status = status;
             }
 
-            #endregion
+            #endregion Constructor
 
             #region Public properties
 
             public Uri Uri
             {
-                [DebuggerStepThrough] get { return _uri; }
+                [DebuggerStepThrough]
+                get { return _uri; }
             }
 
             public CompareStatus Status
             {
-                [DebuggerStepThrough] get { return _status; }
-                [DebuggerStepThrough] set { _status = value; }
+                [DebuggerStepThrough]
+                get { return _status; }
+                [DebuggerStepThrough]
+                set { _status = value; }
             }
 
-            #endregion
+            #endregion Public properties
         }
 
-        #endregion
+        #endregion Nested type: PartPair
 
         //--
     }

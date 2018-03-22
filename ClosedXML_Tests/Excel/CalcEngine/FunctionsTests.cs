@@ -379,7 +379,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             actual = XLWorkbook.EvaluateExpr("Round(-50.55, -2)");
             Assert.AreEqual(-100.0, actual);
-            
+
             actual = XLWorkbook.EvaluateExpr("ROUND(59 * 0.535, 2)"); // (59 * 0.535) = 31.565
             Assert.AreEqual(31.57, actual);
 
@@ -571,6 +571,22 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             fCell.FormulaA1 = "sum(A1:A2)";
 
             Assert.AreEqual(3.0, fCell.Value);
+        }
+
+        [Test]
+        public void SumDateTimeAndNumber()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").Value = 1;
+                ws.Cell("A2").Value = new DateTime(2018, 1, 1);
+                Assert.AreEqual(43102, ws.Evaluate("SUM(A1:A2)"));
+
+                ws.Cell("A1").Value = 2;
+                ws.Cell("A2").FormulaA1 = "DATE(2018,1,1)";
+                Assert.AreEqual(43103, ws.Evaluate("SUM(A1:A2)"));
+            }
         }
 
         [Test]

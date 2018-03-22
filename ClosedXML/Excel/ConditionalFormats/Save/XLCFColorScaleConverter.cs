@@ -24,7 +24,22 @@ namespace ClosedXML.Excel
 
             for (Int32 i = 1; i <= cf.Colors.Count; i++)
             {
-                Color color = new Color { Rgb = cf.Colors[i].Color.ToHex() };
+                var xlColor = cf.Colors[i];
+                var color = new Color();
+                switch (xlColor.ColorType)
+                {
+                    case XLColorType.Color:
+                        color.Rgb = xlColor.Color.ToHex();
+                        break;
+                    case XLColorType.Theme:
+                        color.Theme = System.Convert.ToUInt32(xlColor.ThemeColor);
+                        break;
+
+                    case XLColorType.Indexed:
+                        color.Indexed = System.Convert.ToUInt32(xlColor.Indexed);
+                        break;
+                }
+
                 colorScale.Append(color);
             }
 

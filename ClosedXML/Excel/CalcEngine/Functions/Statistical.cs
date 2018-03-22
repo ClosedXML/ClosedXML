@@ -1,7 +1,7 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
-using System.Net;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -96,68 +96,65 @@ namespace ClosedXML.Excel.CalcEngine
             //ZTEST	Returns the one-tailed probability-value of a z-test
         }
 
-
-
-        static object Average(List<Expression> p)
+        private static object Average(List<Expression> p)
         {
             return GetTally(p, true).Average();
         }
-        static object AverageA(List<Expression> p)
+
+        private static object AverageA(List<Expression> p)
         {
             return GetTally(p, false).Average();
         }
-        static object Count(List<Expression> p)
+
+        private static object Count(List<Expression> p)
         {
             return GetTally(p, true).Count();
         }
-        static object CountA(List<Expression> p)
+
+        private static object CountA(List<Expression> p)
         {
             return GetTally(p, false).Count();
         }
-        static object CountBlank(List<Expression> p)
+
+        private static object CountBlank(List<Expression> p)
         {
-            var cnt = 0.0;
-            foreach (Expression e in p)
+            if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
+                throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
+
+            var e = p[0] as XObjectExpression;
+            long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
+            long nonBlankCount = 0;
+            foreach (var value in e)
             {
-                var ienum = e as IEnumerable;
-                if (ienum != null)
-                {
-                    foreach (var value in ienum)
-                    {
-                        if (IsBlank(value))
-                            cnt++;
-                    }
-                }
-                else
-                {
-                    if (IsBlank(e.Evaluate()))
-                        cnt++;
-                }
+                if (!CalcEngineHelpers.ValueIsBlank(value))
+                    nonBlankCount++;
             }
-            return cnt;
+
+            return 0d + totalCount - nonBlankCount;
         }
 
-        internal static bool IsBlank(object value)
-        {
-            return
-                value == null ||
-                value is string && ((string)value).Length == 0;
-        }
-
-        static object CountIf(List<Expression> p)
+        private static object CountIf(List<Expression> p)
         {
             CalcEngine ce = new CalcEngine();
             var cnt = 0.0;
-            var ienum = p[0] as IEnumerable;
+            long processedCount = 0;
+            var ienum = p[0] as XObjectExpression;
             if (ienum != null)
             {
+                long totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
                 var criteria = (string)p[1].Evaluate();
                 foreach (var value in ienum)
                 {
                     if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
                         cnt++;
+                    processedCount++;
                 }
+
+                // Add count of empty cells outside the used range if they match criteria
+                if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce))
+                    cnt += (totalCount - processedCount);
             }
+
             return cnt;
         }
 
@@ -165,15 +162,16 @@ namespace ClosedXML.Excel.CalcEngine
         {
             // get parameters
             var ce = new CalcEngine();
-            int count = 0;
+            long count = 0;
 
             int numberOfCriteria = p.Count / 2;
 
+            long totalCount = 0;
             // prepare criteria-parameters:
             var criteriaRanges = new Tuple<object, List<object>>[numberOfCriteria];
             for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
-                var criteriaRange = p[criteriaPair * 2] as IEnumerable;
+                var criteriaRange = p[criteriaPair * 2] as XObjectExpression;
                 var criterion = p[(criteriaPair * 2) + 1].Evaluate();
                 var criteriaRangeValues = new List<object>();
                 foreach (var value in criteriaRange)
@@ -184,85 +182,94 @@ namespace ClosedXML.Excel.CalcEngine
                 criteriaRanges[criteriaPair] = new Tuple<object, List<object>>(
                     criterion,
                     criteriaRangeValues);
+
+                if (totalCount == 0)
+                    totalCount = CalcEngineHelpers.GetTotalCellsCount(criteriaRange);
             }
 
+            long processedCount = 0;
             for (var i = 0; i < criteriaRanges[0].Item2.Count; i++)
             {
-                bool shouldUseValue = true;
-
-                foreach (var criteriaPair in criteriaRanges)
-                {
-                    if (!CalcEngineHelpers.ValueSatisfiesCriteria(
-                        criteriaPair.Item2[i],
-                        criteriaPair.Item1,
-                        ce))
-                    {
-                        shouldUseValue = false;
-                        break; // we're done with the inner loop as we can't ever get true again.
-                    }
-                }
-
-                if (shouldUseValue)
+                if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
+                                                       criteriaPair.Item2[i], criteriaPair.Item1, ce)))
                     count++;
+
+                processedCount++;
+            }
+
+            // Add count of empty cells outside the used range if they match criteria
+            if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
+                                                   string.Empty, criteriaPair.Item1, ce)))
+            {
+                count += (totalCount - processedCount);
             }
 
             // done
             return count;
         }
 
-        static object Max(List<Expression> p)
+        private static object Max(List<Expression> p)
         {
             return GetTally(p, true).Max();
         }
 
-        static object MaxA(List<Expression> p)
+        private static object MaxA(List<Expression> p)
         {
             return GetTally(p, false).Max();
         }
 
-        static object Min(List<Expression> p)
+        private static object Min(List<Expression> p)
         {
             return GetTally(p, true).Min();
         }
-        static object MinA(List<Expression> p)
+
+        private static object MinA(List<Expression> p)
         {
             return GetTally(p, false).Min();
         }
-        static object StDev(List<Expression> p)
+
+        private static object StDev(List<Expression> p)
         {
             return GetTally(p, true).Std();
         }
-        static object StDevA(List<Expression> p)
+
+        private static object StDevA(List<Expression> p)
         {
             return GetTally(p, false).Std();
         }
-        static object StDevP(List<Expression> p)
+
+        private static object StDevP(List<Expression> p)
         {
             return GetTally(p, true).StdP();
         }
-        static object StDevPA(List<Expression> p)
+
+        private static object StDevPA(List<Expression> p)
         {
             return GetTally(p, false).StdP();
         }
-        static object Var(List<Expression> p)
+
+        private static object Var(List<Expression> p)
         {
             return GetTally(p, true).Var();
         }
-        static object VarA(List<Expression> p)
+
+        private static object VarA(List<Expression> p)
         {
             return GetTally(p, false).Var();
         }
-        static object VarP(List<Expression> p)
+
+        private static object VarP(List<Expression> p)
         {
             return GetTally(p, true).VarP();
         }
-        static object VarPA(List<Expression> p)
+
+        private static object VarPA(List<Expression> p)
         {
             return GetTally(p, false).VarP();
         }
 
         // utility for tallying statistics
-        static Tally GetTally(List<Expression> p, bool numbersOnly)
+        private static Tally GetTally(List<Expression> p, bool numbersOnly)
         {
             return new Tally(p, numbersOnly);
         }

@@ -2,6 +2,8 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
 {
@@ -72,8 +74,15 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTBLANK(D43:D49)").CastTo<int>();
             Assert.AreEqual(4, value);
 
-            value = workbook.Evaluate(@"=COUNTBLANK(E3:E45)").CastTo<int>();
+            value = ws.Evaluate(@"=COUNTBLANK(E3:E45)").CastTo<int>();
             Assert.AreEqual(0, value);
+
+            value = ws.Evaluate(@"=COUNTBLANK(A1)").CastTo<int>();
+            Assert.AreEqual(1, value);
+
+            Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=COUNTBLANK(E3:E45)"));
+            Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK()"));
+            Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK(A3:A45,E3:E45)"));
         }
 
         [Test]
@@ -167,7 +176,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 ws.Cell(4, 3).Value = "Yes";
                 ws.Cell(4, 4).Value = "Yes";
 
-                Assert.AreEqual(expectedOutcome, (int)ws.Evaluate(formula));
+                Assert.AreEqual(expectedOutcome, ws.Evaluate(formula));
             }
         }
 
@@ -318,6 +327,36 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             value = workbook.Evaluate(@"=VARP(Data!H:H)").CastTo<double>();
             Assert.AreEqual(2189.430863, value, tolerance);
+        }
+
+        [Test]
+        [TestCase("COUNT(G:I,G:G,H:I)", 258d, Description = "COUNT overlapping columns")]
+        [TestCase("COUNT(6:8,6:6,7:8)", 30d, Description = "COUNT overlapping rows")]
+        [TestCase("COUNTBLANK(H:J)", 3145640d, Description = "COUNTBLANK columns")]
+        [TestCase("COUNTBLANK(7:9)", 49128d, Description = "COUNTBLANK rows")]
+        [TestCase("COUNT(1:1048576)", 216d, Description = "COUNT worksheet")]
+        [TestCase("COUNTBLANK(1:1048576)", 17179868831d, Description = "COUNTBLANK worksheet")]
+        [TestCase("SUM(H:J)", 20501.15d, Description = "SUM columns")]
+        [TestCase("SUM(4:5)", 85366.12d, Description = "SUM rows")]
+        [TestCase("SUMIF(G:G,50,H:H)", 24.98d, Description = "SUMIF columns")]
+        [TestCase("SUMIF(G23:G52,\"\",H3:H32)", 53.24d, Description = "SUMIF ranges")]
+        [TestCase("SUMIFS(H:H,G:G,50,I:I,\">900\")", 19.99d, Description = "SUMIFS columns")]
+        public void TallySkipsEmptyCells(string formulaA1, double expectedResult)
+        {
+            using (var wb = SetupWorkbook())
+            {
+                var ws = wb.Worksheets.First();
+                //Let's pre-initialize cells we need so they didn't affect the result
+                ws.Range("A1:J45").Style.Fill.BackgroundColor = XLColor.Amber;
+                ws.Cell("ZZ1000").Value = 1;
+                int initialCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                var actualResult = (double)ws.Evaluate(formulaA1);
+                int cellsCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                Assert.AreEqual(expectedResult, actualResult, tolerance);
+                Assert.AreEqual(initialCount, cellsCount);
+            }
         }
 
         private XLWorkbook SetupWorkbook()

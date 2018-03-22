@@ -175,7 +175,7 @@ namespace ClosedXML.Excel
 
         public static Boolean IsValidRangeAddress(IXLRangeAddress rangeAddress)
         {
-            return !rangeAddress.IsInvalid
+            return rangeAddress.IsValid
                    && rangeAddress.FirstAddress.RowNumber >= 1 && rangeAddress.LastAddress.RowNumber <= MaxRowNumber
                    && rangeAddress.FirstAddress.ColumnNumber >= 1 && rangeAddress.LastAddress.ColumnNumber <= MaxColumnNumber
                    && rangeAddress.FirstAddress.RowNumber <= rangeAddress.LastAddress.RowNumber

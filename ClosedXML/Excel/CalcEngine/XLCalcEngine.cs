@@ -82,7 +82,10 @@ namespace ClosedXML.Excel.CalcEngine
         // ** IEnumerable
         public IEnumerator GetEnumerator()
         {
-            return _range.Cells().Select(GetValue).GetEnumerator();
+            var maxRow = Math.Min(_range.RangeAddress.LastAddress.RowNumber, _range.Worksheet.LastCellUsed().Address.RowNumber);
+            var maxCol = Math.Min(_range.RangeAddress.LastAddress.ColumnNumber, _range.Worksheet.LastCellUsed().Address.ColumnNumber);
+            using (var trimmedRange = (XLRangeBase)_range.Worksheet.Range(_range.FirstCell().Address, new XLAddress(maxRow, maxCol, false, false)))
+                return trimmedRange.CellValues().GetEnumerator();
         }
 
         private Boolean _evaluating;
@@ -90,9 +93,9 @@ namespace ClosedXML.Excel.CalcEngine
         // ** implementation
         private object GetValue(IXLCell cell)
         {
-            if (_evaluating)
+            if (_evaluating || (cell as XLCell).IsEvaluating)
             {
-                throw new InvalidOperationException("Circular Reference");
+                throw new InvalidOperationException($"Circular Reference occured during evaluation. Cell: {cell.Address.ToString(XLReferenceStyle.Default, true)}");
             }
             try
             {

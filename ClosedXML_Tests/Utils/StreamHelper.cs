@@ -114,36 +114,39 @@ namespace ClosedXML_Tests
         /// <param name="other"></param>
         /// /// <param name="stripColumnWidths"></param>
         /// <returns></returns>
-        public static bool Compare(Stream one, Stream other, bool stripColumnWidths)
+        public static bool Compare(Tuple<Uri, Stream> tuple1, Tuple<Uri, Stream> tuple2, bool stripColumnWidths)
         {
             #region Check
 
-            if (one == null)
+            if (tuple1 == null || tuple1.Item1 == null || tuple1.Item2 == null)
             {
                 throw new ArgumentNullException("one");
             }
-            if (other == null)
+            if (tuple2 == null || tuple2.Item1 == null || tuple2.Item2 == null)
             {
                 throw new ArgumentNullException("other");
             }
-            if (one.Position != 0)
+            if (tuple1.Item2.Position != 0)
             {
                 throw new ArgumentException("Must be in position 0", "one");
             }
-            if (other.Position != 0)
+            if (tuple1.Item2.Position != 0)
             {
                 throw new ArgumentException("Must be in position 0", "other");
             }
 
             #endregion Check
 
-            var stringOne = new StreamReader(one).ReadToEnd().RemoveIgnoredParts(stripColumnWidths, ignoreGuids: true);
-            var stringOther = new StreamReader(other).ReadToEnd().RemoveIgnoredParts(stripColumnWidths, ignoreGuids: true);
+            var stringOne = new StreamReader(tuple1.Item2).ReadToEnd().RemoveIgnoredParts(tuple1.Item1, stripColumnWidths, ignoreGuids: true);
+            var stringOther = new StreamReader(tuple2.Item2).ReadToEnd().RemoveIgnoredParts(tuple2.Item1, stripColumnWidths, ignoreGuids: true);
             return stringOne == stringOther;
         }
 
-        private static string RemoveIgnoredParts(this string s, Boolean ignoreColumnWidths, Boolean ignoreGuids)
+        private static string RemoveIgnoredParts(this string s, Uri uri, Boolean ignoreColumnWidths, Boolean ignoreGuids)
         {
+            foreach (var pair in uriSpecificIgnores.Where(p => p.Key.Equals(uri.OriginalString)))
+                s = pair.Value.Replace(s, "");
+
             if (ignoreColumnWidths)
                 s = RemoveColumnWidths(s);
 
@@ -152,6 +155,12 @@ namespace ClosedXML_Tests
 
             return s;
         }
+
+        private static IEnumerable<KeyValuePair<string, Regex>> uriSpecificIgnores = new List<KeyValuePair<string, Regex>>()
+        {
+            // Remove dcterms elements
+            new KeyValuePair<string, Regex>("/docProps/core.xml", new Regex(@"<dcterms:(\w+).*?<\/dcterms:\1>", RegexOptions.Compiled))
+        };
 
         private static Regex columnRegex = new Regex("<x:col.*?width=\"\\d+(\\.\\d+)?\".*?\\/>", RegexOptions.Compiled);
         private static Regex widthRegex = new Regex("width=\"\\d+(\\.\\d+)?\"\\s+", RegexOptions.Compiled);

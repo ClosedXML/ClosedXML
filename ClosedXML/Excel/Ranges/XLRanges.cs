@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
 
         #region IXLRanges Members
 
-        public IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             _ranges.ForEach(c => c.Clear(clearOptions));
             return this;
@@ -74,12 +74,12 @@ namespace ClosedXML.Excel
 
         public Boolean Contains(IXLCell cell)
         {
-            return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Contains(cell));
+            return _ranges.Any(r => r.RangeAddress.IsValid && r.Contains(cell));
         }
 
         public Boolean Contains(IXLRange range)
         {
-            return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Contains(range));
+            return _ranges.Any(r => r.RangeAddress.IsValid && r.Contains(range));
         }
 
         public IEnumerable<IXLDataValidation> DataValidation
@@ -149,7 +149,7 @@ namespace ClosedXML.Excel
             _ranges.ForEach(r => r.Dispose());
         }
 
-        #endregion
+        #endregion IXLRanges Members
 
         #region IXLStylized Members
 
@@ -188,7 +188,7 @@ namespace ClosedXML.Excel
             get { return this; }
         }
 
-        #endregion
+        #endregion IXLStylized Members
 
         public override string ToString()
         {

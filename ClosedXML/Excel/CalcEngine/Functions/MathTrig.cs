@@ -340,20 +340,22 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 rangeValues.Add(value);
             }
-            var sumRangeValues = new List<IXLCell>();
-            foreach (var cell in ((CellRangeReference)sumRange.Value).Range.Cells())
+            var sumRangeValues = new List<object>();
+            foreach (var value in sumRange)
             {
-                sumRangeValues.Add(cell);
+                sumRangeValues.Add(value);
             }
 
             // compute total
             var ce = new CalcEngine();
             var tally = new Tally();
-            for (var i = 0; i < Math.Min(rangeValues.Count, sumRangeValues.Count); i++)
+            for (var i = 0; i < Math.Max(rangeValues.Count, sumRangeValues.Count); i++)
             {
-                if (CalcEngineHelpers.ValueSatisfiesCriteria(rangeValues[i], criteria, ce))
+                var targetValue = i < rangeValues.Count ? rangeValues[i] : string.Empty;
+                if (CalcEngineHelpers.ValueSatisfiesCriteria(targetValue, criteria, ce))
                 {
-                    tally.AddValue(sumRangeValues[i].Value);
+                    var value = i < sumRangeValues.Count ? sumRangeValues[i] : 0d;
+                    tally.AddValue(value);
                 }
             }
 
@@ -378,18 +380,18 @@ namespace ClosedXML.Excel.CalcEngine
             int numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
 
             // prepare criteria-parameters:
-            var criteriaRanges = new Tuple<object, List<object>>[numberOfCriteria];
-            for(int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
+            var criteriaRanges = new Tuple<object, IList<object>>[numberOfCriteria];
+            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
-                var criterion = p[criteriaPair * 2 + 1].Evaluate();
-                var criteriaRange = p[(criteriaPair + 1) * 2] as IEnumerable;
-                var criteriaRangeValues = new List<object>();
-                foreach (var value in criteriaRange)
-                {
-                    criteriaRangeValues.Add(value);
-                }
+                var criteriaRange = p[criteriaPair * 2 + 1] as IEnumerable;
 
-                criteriaRanges[criteriaPair] = new Tuple<object, List<object>>(
+                if (criteriaRange == null)
+                    throw new CellReferenceException($"Expected parameter {criteriaPair * 2 + 2} to be a range");
+
+                var criterion = p[criteriaPair * 2 + 2].Evaluate();
+                var criteriaRangeValues = criteriaRange.Cast<Object>().ToList();
+
+                criteriaRanges[criteriaPair] = new Tuple<object, IList<object>>(
                     criterion,
                     criteriaRangeValues);
             }
@@ -398,10 +400,10 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 bool shouldUseValue = true;
 
-                foreach(var criteriaPair in criteriaRanges)
+                foreach (var criteriaPair in criteriaRanges)
                 {
                     if (!CalcEngineHelpers.ValueSatisfiesCriteria(
-                        criteriaPair.Item2[i],
+                        i < criteriaPair.Item2.Count ? criteriaPair.Item2[i] : string.Empty,
                         criteriaPair.Item1,
                         ce))
                     {
@@ -630,7 +632,6 @@ namespace ClosedXML.Excel.CalcEngine
             else
                 throw new NumberException();
 
-
             n = (int)p[0];
             k = (int)p[1];
 
@@ -670,10 +671,8 @@ namespace ClosedXML.Excel.CalcEngine
             if (!(input is long || input is int || input is byte || input is double || input is float))
                 throw new CellValueException();
 
-
             var num = Math.Floor((double)input);
             double fact = 1.0;
-
 
             if (num < 0)
                 throw new NumberException();

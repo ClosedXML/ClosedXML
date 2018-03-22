@@ -4,8 +4,6 @@ namespace ClosedXML.Excel
 {
     public interface IXLRow : IXLRangeBase
     {
-        
-
         /// <summary>
         /// Gets or sets the height of this row.
         /// </summary>
@@ -50,6 +48,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="startColumn">The column to start calculating the row height.</param>
         IXLRow AdjustToContents(Int32 startColumn);
+
         /// <summary>
         /// Adjusts the height of the row based on its contents, starting from the startColumn and ending at endColumn.
         /// </summary>
@@ -57,9 +56,10 @@ namespace ClosedXML.Excel
         /// <param name="endColumn">The column to end calculating the row height.</param>
         IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn);
 
-
         IXLRow AdjustToContents(Double minHeight, Double maxHeight);
+
         IXLRow AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight);
+
         IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight);
 
         /// <summary>Hides this row.</summary>
@@ -113,7 +113,6 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRow Ungroup();
 
-
         /// <summary>
         /// Adds this row to the previous outline level (decrements the outline level for this row by 1).
         /// </summary>
@@ -143,12 +142,14 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="cellsInRow">The row's cells to return.</param>
         new IXLCells Cells(String cellsInRow);
+
         /// <summary>
         /// Returns the specified group of cells.
         /// </summary>
         /// <param name="firstColumn">The first column in the group of cells to return.</param>
         /// <param name="lastColumn">The last column in the group of cells to return.</param>
         IXLCells Cells(Int32 firstColumn, Int32 lastColumn);
+
         /// <summary>
         /// Returns the specified group of cells.
         /// </summary>
@@ -162,14 +163,19 @@ namespace ClosedXML.Excel
         Int32 CellCount();
 
         IXLRangeRow CopyTo(IXLCell cell);
+
         IXLRangeRow CopyTo(IXLRangeBase range);
+
         IXLRow CopyTo(IXLRow row);
 
         IXLRow Sort();
+
         IXLRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
 
         IXLRangeRow Row(Int32 start, Int32 end);
+
         IXLRangeRow Row(IXLCell start, IXLCell end);
+
         IXLRangeRows Rows(String columns);
 
         /// <summary>
@@ -180,15 +186,18 @@ namespace ClosedXML.Excel
         IXLRow SetDataType(XLDataType dataType);
 
         IXLRow RowAbove();
+
         IXLRow RowAbove(Int32 step);
+
         IXLRow RowBelow();
+
         IXLRow RowBelow(Int32 step);
 
         /// <summary>
         /// Clears the contents of this row.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        new IXLRow Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        new IXLRow Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         IXLRangeRow RowUsed(Boolean includeFormats = false);
     }

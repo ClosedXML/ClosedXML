@@ -1231,7 +1231,7 @@ namespace ClosedXML.Excel
                                      cfAddress.LastAddress.RowNumber,
                                      cfAddress.LastAddress.ColumnNumber + columnsShifted);
                 }
-                if (cf.Range.RangeAddress.IsInvalid ||
+                if (!cf.Range.RangeAddress.IsValid ||
                     cf.Range.RangeAddress.FirstAddress.ColumnNumber > cf.Range.RangeAddress.LastAddress.ColumnNumber)
                     ConditionalFormats.Remove(f => f == cf);
             }
@@ -1305,7 +1305,7 @@ namespace ClosedXML.Excel
                                      cfAddress.LastAddress.RowNumber + rowsShifted,
                                      cfAddress.LastAddress.ColumnNumber);
                 }
-                if (cf.Range.RangeAddress.IsInvalid ||
+                if (!cf.Range.RangeAddress.IsValid ||
                     cf.Range.RangeAddress.FirstAddress.RowNumber > cf.Range.RangeAddress.LastAddress.RowNumber)
                     ConditionalFormats.Remove(f => f == cf);
             }
@@ -1566,6 +1566,26 @@ namespace ClosedXML.Excel
                 this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
             else
                 this.Cell(ro, co).SetValue(value);
+        }
+
+        /// <summary>
+        /// Get a cell value not initializing it if it has not been initialized yet.
+        /// </summary>
+        /// <param name="ro">Row number</param>
+        /// <param name="co">Column number</param>
+        /// <returns>Current value of the specified cell. Empty string for non-initialized cells.</returns>
+        internal object GetCellValue(int ro, int co)
+        {
+            if (Internals.CellsCollection.MaxRowUsed < ro ||
+                Internals.CellsCollection.MaxColumnUsed < co ||
+                !Internals.CellsCollection.Contains(ro, co))
+                return string.Empty;
+
+            var cell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
+            if (cell.IsEvaluating)
+                return string.Empty;
+
+            return cell.Value;
         }
     }
 }

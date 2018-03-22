@@ -13,7 +13,6 @@ namespace ClosedXML.Excel.CalcEngine
 
         private double[] _numericValues;
 
-
         public Tally()
             : this(false)
         { }
@@ -81,10 +80,10 @@ namespace ClosedXML.Excel.CalcEngine
             if (numbersOnly)
                 return NumericValuesInternal().Length;
             else
-                return _list.Count(o => !Statistical.IsBlank(o));
+                return _list.Count(o => !CalcEngineHelpers.ValueIsBlank(o));
         }
 
-        IEnumerable<double> NumericValuesEnumerable()
+        private IEnumerable<double> NumericValuesEnumerable()
         {
             foreach (var value in _list)
             {
@@ -92,14 +91,14 @@ namespace ClosedXML.Excel.CalcEngine
                 var vEnumerable = value as IEnumerable;
                 if (vEnumerable == null)
                 {
-                    if (double.TryParse(value.ToString(), out tmp))
+                    if (TryParseToDouble(value, out tmp))
                         yield return tmp;
                 }
                 else
                 {
                     foreach (var v in vEnumerable)
                     {
-                        if (double.TryParse(v.ToString(), out tmp))
+                        if (TryParseToDouble(v, out tmp))
                             yield return tmp;
                         break;
                     }
@@ -107,7 +106,25 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        double[] NumericValuesInternal()
+        private bool TryParseToDouble(object value, out double d)
+        {
+            if (value.IsNumber())
+            {
+                d = Convert.ToDouble(value);
+                return true;
+            }
+            else if (value is DateTime)
+            {
+                d = Convert.ToDouble(((DateTime)value).ToOADate());
+                return true;
+            }
+            else
+            {
+                return double.TryParse(value.ToString(), out d);
+            }
+        }
+
+        private double[] NumericValuesInternal()
             => LazyInitializer.EnsureInitialized(ref _numericValues, () => NumericValuesEnumerable().ToArray());
 
         public IEnumerable<double> NumericValues()
@@ -144,7 +161,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public double Range() => Max() - Min();
 
-        static double Sum2(IEnumerable<double> nums)
+        private static double Sum2(IEnumerable<double> nums)
         {
             return nums.Sum(d => d * d);
         }

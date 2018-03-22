@@ -4,7 +4,6 @@ namespace ClosedXML.Excel
 {
     public interface IXLColumn : IXLRangeBase
     {
-
         /// <summary>
         /// Gets or sets the width of this column.
         /// </summary>
@@ -66,11 +65,13 @@ namespace ClosedXML.Excel
         /// Adjusts the width of the column based on its contents.
         /// </summary>
         IXLColumn AdjustToContents();
+
         /// <summary>
         /// Adjusts the width of the column based on its contents, starting from the startRow.
         /// </summary>
         /// <param name="startRow">The row to start calculating the column width.</param>
         IXLColumn AdjustToContents(Int32 startRow);
+
         /// <summary>
         /// Adjusts the width of the column based on its contents, starting from the startRow and ending at endRow.
         /// </summary>
@@ -79,7 +80,9 @@ namespace ClosedXML.Excel
         IXLColumn AdjustToContents(Int32 startRow, Int32 endRow);
 
         IXLColumn AdjustToContents(Double minWidth, Double maxWidth);
+
         IXLColumn AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth);
+
         IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth);
 
         /// <summary>
@@ -152,13 +155,17 @@ namespace ClosedXML.Excel
         Int32 CellCount();
 
         IXLRangeColumn CopyTo(IXLCell cell);
+
         IXLRangeColumn CopyTo(IXLRangeBase range);
+
         IXLColumn CopyTo(IXLColumn column);
 
         IXLColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
 
         IXLRangeColumn Column(Int32 start, Int32 end);
+
         IXLRangeColumn Column(IXLCell start, IXLCell end);
+
         IXLRangeColumns Columns(String columns);
 
         /// <summary>
@@ -169,17 +176,19 @@ namespace ClosedXML.Excel
         IXLColumn SetDataType(XLDataType dataType);
 
         IXLColumn ColumnLeft();
+
         IXLColumn ColumnLeft(Int32 step);
+
         IXLColumn ColumnRight();
+
         IXLColumn ColumnRight(Int32 step);
 
         /// <summary>
         /// Clears the contents of this column.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
-        new IXLColumn Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats);
+        new IXLColumn Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         IXLRangeColumn ColumnUsed(Boolean includeFormats = false);
-
     }
 }

@@ -427,6 +427,43 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CanClearDateTimeCellValue()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet1");
+                    var c = ws.FirstCell();
+                    c.SetValue(new DateTime(2017, 10, 08));
+                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                    Assert.AreEqual(new DateTime(2017, 10, 08), c.Value);
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    var c = ws.FirstCell();
+                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                    Assert.AreEqual(new DateTime(2017, 10, 08), c.Value);
+
+                    c.Clear();
+                    wb.Save();
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    var c = ws.FirstCell();
+                    Assert.AreEqual(XLDataType.Text, c.DataType);
+                    Assert.True(c.IsEmpty());
+                }
+            }
+        }
+
+        [Test]
         public void CurrentRegion()
         {
             // Partially based on sample in https://github.com/ClosedXML/ClosedXML/issues/120
@@ -487,6 +524,7 @@ namespace ClosedXML_Tests
                 {
                     Assert.AreEqual("B1:E3", c.CurrentRegion.RangeAddress.ToString());
                 }
+
                 Assert.AreEqual("B1:E4", ws.Cell("E4").CurrentRegion.RangeAddress.ToString());
 
                 //// SECOND REGION
@@ -494,6 +532,7 @@ namespace ClosedXML_Tests
                 {
                     Assert.AreEqual("F1:H4", c.CurrentRegion.RangeAddress.ToString());
                 }
+
                 Assert.AreEqual("F1:H5", ws.Cell("F5").CurrentRegion.RangeAddress.ToString());
 
                 //// DIAGONAL
@@ -575,6 +614,38 @@ namespace ClosedXML_Tests
 
                 Assert.AreEqual("B2", cell.FormulaA1);
             }
+        }
+
+        [Test]
+        public void FormulaWithCircularReferenceFails()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var A1 = ws.Cell("A1");
+                var A2 = ws.Cell("A2");
+                A1.FormulaA1 = "A2 + 1";
+                A2.FormulaA1 = "A1 + 1";
+
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    var _ = A1.Value;
+                });
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    var _ = A2.Value;
+                });
+            }
+        }
+
+        public void FormulaWithCircularReferenceFails2()
+        {
+            var cell = new XLWorkbook().Worksheets.Add("Sheet1").FirstCell();
+            cell.FormulaA1 = "A1";
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var _ = cell.Value;
+            });
         }
     }
 }

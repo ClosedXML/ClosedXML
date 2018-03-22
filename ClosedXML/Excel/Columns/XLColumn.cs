@@ -138,7 +138,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public new IXLColumn Clear(XLClearOptions clearOptions = XLClearOptions.ContentsAndFormats)
+        public new IXLColumn Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
             base.Clear(clearOptions);
             return this;
@@ -664,16 +664,19 @@ namespace ClosedXML.Excel
 
         private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            if (range.RangeAddress.FirstAddress.ColumnNumber <= ColumnNumber())
+            if (range.RangeAddress.IsValid &&
+                RangeAddress.IsValid &&
+                range.RangeAddress.FirstAddress.ColumnNumber <= ColumnNumber())
                 SetColumnNumber(ColumnNumber() + columnsShifted);
         }
 
         private void SetColumnNumber(int column)
         {
             if (column <= 0)
-                RangeAddress.IsInvalid = false;
+                RangeAddress.IsValid = false;
             else
             {
+                RangeAddress.IsValid = true;
                 RangeAddress.FirstAddress = new XLAddress(Worksheet,
                                                           1,
                                                           column,
