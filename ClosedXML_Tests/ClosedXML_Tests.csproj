@@ -310,6 +310,8 @@
     <EmbeddedResource Include="Resource\Examples\ConditionalFormatting\CFDatesOccurring.xlsx" />
     <EmbeddedResource Include="Resource\Misc\LoadImageWithoutTransform2D.xlsx" />
     <EmbeddedResource Include="Resource\Misc\EscapedApostrophe.xlsx" />
+    <EmbeddedResource Include="Resource\StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx" />
+    <EmbeddedResource Include="Resource\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource\Images\ImageHandling.png" />
