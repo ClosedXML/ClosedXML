@@ -241,7 +241,7 @@ namespace ClosedXML_Tests.Excel
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet1") as XLWorksheet;
 
-            var column = new XLColumn(-1, new XLColumnParameters(ws, XLStyle.Default, false));
+            var column = new XLColumn(ws, -1);
 
             Assert.IsFalse(column.RangeAddress.IsValid);
         }

@@ -9,25 +9,20 @@ namespace ClosedXML.Excel
     {
         #region Private fields
 
-        private Boolean _collapsed;
         private Double _height;
-        private Boolean _isHidden;
         private Int32 _outlineLevel;
 
         #endregion Private fields
 
         #region Constructor
 
-        public XLRow(Int32 row, XLRowParameters xlRowParameters)
-            : base(XLRangeAddress.EntireRow(xlRowParameters.Worksheet, row))
+        public XLRow(XLWorksheet worksheet, Int32 row)
+            : base(XLRangeAddress.EntireRow(worksheet, row), worksheet.StyleValue)
         {
             SetRowNumber(row);
 
-            IsReference = xlRowParameters.IsReference;
-            if (IsReference)
-                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
-            else
-                _height = xlRowParameters.Worksheet.RowHeight;
+            //SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
+            _height = worksheet.RowHeight;
         }
 
         public XLRow(XLRow row) : this(row, row.RowNumber())
@@ -35,15 +30,14 @@ namespace ClosedXML.Excel
         }
 
         internal XLRow(XLRow row, int newRowNumber)
-            : base(XLRangeAddress.EntireRow(row.Worksheet, row.RowNumber()))
+            : base(XLRangeAddress.EntireRow(row.Worksheet, row.RowNumber()), row.StyleValue)
         {
             _height = row._height;
-            IsReference = row.IsReference;
-            if (IsReference)
-                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
 
-            _collapsed = row._collapsed;
-            _isHidden = row._isHidden;
+            //SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
+
+            Collapsed = row.Collapsed;
+            IsHidden = row.IsHidden;
             _outlineLevel = row._outlineLevel;
             HeightChanged = row.HeightChanged;
 
@@ -53,16 +47,16 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        public Boolean IsReference { get; private set; }
+        public override XLRangeType RangeType
+        {
+            get { return XLRangeType.Row; }
+        }
 
         public override IEnumerable<IXLStyle> Styles
         {
             get
             {
-                if (IsReference)
-                    yield return Worksheet.Internals.RowsCollection[RowNumber()].Style;
-                else
-                    yield return Style;
+                yield return Style;
 
                 int row = RowNumber();
 
@@ -76,58 +70,30 @@ namespace ClosedXML.Excel
             get
             {
                 int row = RowNumber();
-                if (IsReference)
-                    yield return Worksheet.Internals.RowsCollection[row];
-                else
-                {
-                    foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
-                        yield return cell;
-                }
+                
+                foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
+                    yield return cell;
+                
             }
         }
 
-        public Boolean Collapsed
-        {
-            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Collapsed : _collapsed; }
-            set
-            {
-                if (IsReference)
-                    Worksheet.Internals.RowsCollection[RowNumber()].Collapsed = value;
-                else
-                    _collapsed = value;
-            }
-        }
+        public Boolean Collapsed { get; set; }
 
         #region IXLRow Members
 
-        private Boolean _loading;
-
-        public Boolean Loading
-        {
-            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Loading : _loading; }
-            set
-            {
-                if (IsReference)
-                    Worksheet.Internals.RowsCollection[RowNumber()].Loading = value;
-                else
-                    _loading = value;
-            }
-        }
+        public Boolean Loading { get; set; }
 
         public Boolean HeightChanged { get; private set; }
 
         public Double Height
         {
-            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].Height : _height; }
+            get { return _height; }
             set
             {
                 if (!Loading)
                     HeightChanged = true;
 
-                if (IsReference)
-                    Worksheet.Internals.RowsCollection[RowNumber()].Height = value;
-                else
-                    _height = value;
+                _height = value;
             }
         }
 
@@ -178,8 +144,8 @@ namespace ClosedXML.Excel
                 var internalRow = Worksheet.Internals.RowsCollection[newRow.RowNumber()];
                 internalRow._height = Height;
                 internalRow.InnerStyle = InnerStyle;
-                internalRow._collapsed = Collapsed;
-                internalRow._isHidden = IsHidden;
+                internalRow.Collapsed = Collapsed;
+                internalRow.IsHidden = IsHidden;
                 internalRow._outlineLevel = OutlineLevel;
             }
         }
@@ -375,35 +341,19 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Boolean IsHidden
-        {
-            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].IsHidden : _isHidden; }
-            set
-            {
-                if (IsReference)
-                    Worksheet.Internals.RowsCollection[RowNumber()].IsHidden = value;
-                else
-                    _isHidden = value;
-            }
-        }
-
+        public Boolean IsHidden { get; set; }
 
         public Int32 OutlineLevel
         {
-            get { return IsReference ? Worksheet.Internals.RowsCollection[RowNumber()].OutlineLevel : _outlineLevel; }
+            get { return _outlineLevel; }
             set
             {
                 if (value < 0 || value > 8)
                     throw new ArgumentOutOfRangeException("value", "Outline level must be between 0 and 8.");
 
-                if (IsReference)
-                    Worksheet.Internals.RowsCollection[RowNumber()].OutlineLevel = value;
-                else
-                {
-                    Worksheet.IncrementColumnOutline(value);
-                    Worksheet.DecrementColumnOutline(_outlineLevel);
-                    _outlineLevel = value;
-                }
+                Worksheet.IncrementColumnOutline(value);
+                Worksheet.DecrementColumnOutline(_outlineLevel);
+                _outlineLevel = value;
             }
         }
 
@@ -597,16 +547,11 @@ namespace ClosedXML.Excel
 
         internal void SetStyleNoColumns(IXLStyle value)
         {
-            if (IsReference)
-                Worksheet.Internals.RowsCollection[RowNumber()].SetStyleNoColumns(value);
-            else
-            {
-                InnerStyle = value;
+            InnerStyle = value;
 
-                int row = RowNumber();
-                foreach (XLCell c in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
-                    c.InnerStyle = value;
-            }
+            int row = RowNumber();
+            foreach (XLCell c in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
+                c.InnerStyle = value;
         }
 
         private XLRow RowShift(Int32 rowsToShift)

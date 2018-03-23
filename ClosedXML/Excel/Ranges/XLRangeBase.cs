@@ -42,27 +42,27 @@ namespace ClosedXML.Excel
 
         protected void SubscribeToShiftedRows(Action<XLRange, Int32> action)
         {
-            if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
-
-            _shiftedRowsAction = new XLCallbackAction(action);
-
-            RangeAddress.Worksheet.RangeShiftedRows.Add(_shiftedRowsAction);
+            //if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
+            //
+            //_shiftedRowsAction = new XLCallbackAction(action);
+            //
+            //RangeAddress.Worksheet.RangeShiftedRows.Add(_shiftedRowsAction);
         }
 
         private XLCallbackAction _shiftedColumnsAction;
 
         protected void SubscribeToShiftedColumns(Action<XLRange, Int32> action)
         {
-            if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
-
-            _shiftedColumnsAction = new XLCallbackAction(action);
-
-            RangeAddress.Worksheet.RangeShiftedColumns.Add(_shiftedColumnsAction);
+            //if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
+            //
+            //_shiftedColumnsAction = new XLCallbackAction(action);
+            //
+            //RangeAddress.Worksheet.RangeShiftedColumns.Add(_shiftedColumnsAction);
         }
 
         protected virtual void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
-            Worksheet.OnRangeAddressChanged(oldAddress, newAddress);
+            Worksheet.RellocateRange(RangeType, oldAddress, newAddress);
         }
 
         #region Public properties
@@ -884,6 +884,8 @@ namespace ClosedXML.Excel
             var rangeAddress = new XLRangeAddress(Worksheet, rangeAddressStr);
             return Range(rangeAddress);
         }
+
+        public abstract XLRangeType RangeType { get; }
 
         public XLRange Range(IXLCell firstCell, IXLCell lastCell)
         {

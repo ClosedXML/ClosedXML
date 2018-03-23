@@ -8,29 +8,19 @@ namespace ClosedXML.Excel
     internal class XLColumn : XLRangeBase, IXLColumn
     {
         #region Private fields
-
-        private bool _collapsed;
-        private bool _isHidden;
         private int _outlineLevel;
-
-        private Double _width;
 
         #endregion Private fields
 
         #region Constructor
 
-        public XLColumn(Int32 column, XLColumnParameters xlColumnParameters)
-            : base(XLRangeAddress.EntireColumn(xlColumnParameters.Worksheet, column))
+        public XLColumn(XLWorksheet worksheet, Int32 column)
+            : base(XLRangeAddress.EntireColumn(worksheet, column), worksheet.StyleValue)
         {
             SetColumnNumber(column);
 
-            IsReference = xlColumnParameters.IsReference;
-            if (IsReference)
-                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-            else
-            {
-                _width = xlColumnParameters.Worksheet.ColumnWidth;
-            }
+            //SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+            Width = worksheet.ColumnWidth;
         }
 
         public XLColumn(XLColumn column) : this(column, column.ColumnNumber())
@@ -40,12 +30,10 @@ namespace ClosedXML.Excel
         internal XLColumn(XLColumn column, int newColumnNumber)
             : base(XLRangeAddress.EntireColumn(column.Worksheet, column.ColumnNumber()))
         {
-            _width = column._width;
-            IsReference = column.IsReference;
-            if (IsReference)
-                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-            _collapsed = column._collapsed;
-            _isHidden = column._isHidden;
+            Width = column.Width;
+            //SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
+            Collapsed = column.Collapsed;
+            IsHidden = column.IsHidden;
             _outlineLevel = column._outlineLevel;
             if (newColumnNumber != column.ColumnNumber())
                 SetColumnNumber(newColumnNumber);
@@ -53,16 +41,16 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        public Boolean IsReference { get; private set; }
+        public override XLRangeType RangeType
+        {
+            get { return XLRangeType.Column; }
+        }
 
         public override IEnumerable<IXLStyle> Styles
         {
             get
             {
-                if (IsReference)
-                    yield return Worksheet.Internals.ColumnsCollection[ColumnNumber()].Style;
-                else
-                    yield return Style;
+                yield return Style;
 
                 int column = ColumnNumber();
 
@@ -76,41 +64,17 @@ namespace ClosedXML.Excel
             get
             {
                 int column = ColumnNumber();
-                if (IsReference)
-                    yield return Worksheet.Internals.ColumnsCollection[column];
-                else
-                {
-                    foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
-                        yield return cell;
-                }
+                foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
+                    yield return cell;
             }
         }
 
-        public Boolean Collapsed
-        {
-            get { return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Collapsed : _collapsed; }
-            set
-            {
-                if (IsReference)
-                    Worksheet.Internals.ColumnsCollection[ColumnNumber()].Collapsed = value;
-                else
-                    _collapsed = value;
-            }
-        }
+        public Boolean Collapsed { get; set; }
+        
 
         #region IXLColumn Members
 
-        public Double Width
-        {
-            get { return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].Width : _width; }
-            set
-            {
-                if (IsReference)
-                    Worksheet.Internals.ColumnsCollection[ColumnNumber()].Width = value;
-                else
-                    _width = value;
-            }
-        }
+        public Double Width { get; set; }
 
         public void Delete()
         {
@@ -215,10 +179,10 @@ namespace ClosedXML.Excel
             foreach (var newColumn in newColumns)
             {
                 var internalColumn = Worksheet.Internals.ColumnsCollection[newColumn.ColumnNumber()];
-                internalColumn._width = Width;
+                internalColumn.Width = Width;
                 internalColumn.InnerStyle = InnerStyle;
-                internalColumn._collapsed = Collapsed;
-                internalColumn._isHidden = IsHidden;
+                internalColumn.Collapsed = Collapsed;
+                internalColumn.IsHidden = IsHidden;
                 internalColumn._outlineLevel = OutlineLevel;
             }
         }
@@ -447,34 +411,19 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Boolean IsHidden
-        {
-            get { return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].IsHidden : _isHidden; }
-            set
-            {
-                if (IsReference)
-                    Worksheet.Internals.ColumnsCollection[ColumnNumber()].IsHidden = value;
-                else
-                    _isHidden = value;
-            }
-        }
+        public Boolean IsHidden { get; set; }
 
         public Int32 OutlineLevel
         {
-            get { return IsReference ? Worksheet.Internals.ColumnsCollection[ColumnNumber()].OutlineLevel : _outlineLevel; }
+            get { return _outlineLevel; }
             set
             {
                 if (value < 0 || value > 8)
                     throw new ArgumentOutOfRangeException("value", "Outline level must be between 0 and 8.");
 
-                if (IsReference)
-                    Worksheet.Internals.ColumnsCollection[ColumnNumber()].OutlineLevel = value;
-                else
-                {
-                    Worksheet.IncrementColumnOutline(value);
-                    Worksheet.DecrementColumnOutline(_outlineLevel);
-                    _outlineLevel = value;
-                }
+                Worksheet.IncrementColumnOutline(value);
+                Worksheet.DecrementColumnOutline(_outlineLevel);
+                _outlineLevel = value;
             }
         }
 
@@ -563,7 +512,7 @@ namespace ClosedXML.Excel
         {
             column.Clear();
             var newColumn = (XLColumn)column;
-            newColumn._width = _width;
+            newColumn.Width = Width;
             newColumn.InnerStyle = InnerStyle;
 
             using (var asRange = AsRange())
@@ -613,7 +562,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLColumn Members
-
+        
         public override XLRange AsRange()
         {
             return Range(1, 1, XLHelper.MaxRowNumber, 1);

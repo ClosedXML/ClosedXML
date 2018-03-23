@@ -187,6 +187,11 @@ namespace ClosedXML.Excel
 
         #endregion IXLRangeColumn Members
 
+        public override XLRangeType RangeType
+        {
+            get { return XLRangeType.RangeColumn; }
+        }
+
         public XLCell Cell(int row)
         {
             return Cell(row, 1);

@@ -51,6 +51,11 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
+        public override XLRangeType RangeType
+        {
+            get { return XLRangeType.Table; }
+        }
+
         private IXLRangeAddress _lastRangeAddress;
         private Dictionary<String, IXLTableField> _fieldNames = null;
 
@@ -197,6 +202,11 @@ namespace ClosedXML.Excel
         public new IXLBaseAutoFilter SetAutoFilter()
         {
             return AutoFilter;
+        }
+
+        protected override void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
+        {
+            //Do nothing for table
         }
 
         #region IXLTable Members

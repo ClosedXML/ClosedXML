@@ -23,6 +23,7 @@ namespace ClosedXML.Excel
 
         private readonly Dictionary<Int32, Int32> _columnOutlineCount = new Dictionary<Int32, Int32>();
         private readonly Dictionary<Int32, Int32> _rowOutlineCount = new Dictionary<Int32, Int32>();
+        private readonly XLRangeFactory _rangeFactory;
         private readonly XLRangeRepository _rangeRepository;
         internal Int32 ZOrder = 1;
         private String _name;
@@ -60,11 +61,8 @@ namespace ClosedXML.Excel
             var lastAddress = new XLAddress(this, RangeAddress.LastAddress.RowNumber, RangeAddress.LastAddress.ColumnNumber,
                                                   RangeAddress.LastAddress.FixedRow, RangeAddress.LastAddress.FixedColumn);
             RangeAddress = new XLRangeAddress(firstAddress, lastAddress);
-            _rangeRepository = new XLRangeRepository(workbook, rangeAddress =>
-            {
-                var xlRangeParameters = new XLRangeParameters(rangeAddress, Style);
-                return new XLRange(xlRangeParameters);
-            });
+            _rangeFactory = new XLRangeFactory(this);
+            _rangeRepository = new XLRangeRepository(workbook, _rangeFactory.Create);
 
             Pictures = new XLPictures(this);
             NamedRanges = new XLNamedRanges(this);
@@ -103,6 +101,11 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
+        public override XLRangeType RangeType
+        {
+            get { return XLRangeType.Worksheet; }
+        }
+
         //private IXLStyle _style;
         private const String InvalidNameChars = @":\/?*[]";
 
@@ -110,6 +113,11 @@ namespace ClosedXML.Excel
         public Boolean LegacyDrawingIsNew;
         private Double _columnWidth;
         public XLWorksheetInternals Internals { get; private set; }
+
+        public XLRangeFactory RangeFactory
+        {
+            get { return _rangeFactory; }
+        }
 
         public override IEnumerable<IXLStyle> Styles
         {
@@ -1126,23 +1134,27 @@ namespace ClosedXML.Excel
             return Row(row, true);
         }
 
-        public XLColumn Column(Int32 column)
+        public XLColumn Column(Int32 columnNumber)
         {
-            if (column <= 0 || column > XLHelper.MaxColumnNumber)
+            if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber)
                 throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}",
                                                                  XLHelper.MaxColumnNumber));
 
-            var thisStyle = Style;
-            if (!Internals.ColumnsCollection.ContainsKey(column))
+            XLColumn column;
+            if (Internals.ColumnsCollection.TryGetValue(columnNumber, out column))
+                return column;
+            else
             {
-                // This is a new row so we're going to reference all
-                // cells in this row to preserve their formatting
-                Internals.RowsCollection.Keys.ForEach(r => Cell(r, column));
-                Internals.ColumnsCollection.Add(column,
-                                                new XLColumn(column, new XLColumnParameters(this, thisStyle, false)));
+                // This is a new column so we're going to reference all
+                // cells in this column to preserve their formatting
+                Internals.RowsCollection.Keys.ForEach(r => Cell(r, columnNumber));
+
+                column = RangeFactory.CreateColumn(columnNumber);
+                _rangeRepository.Store(new XLRangeKey(XLRangeType.Column, column.RangeAddress), column);
+                Internals.ColumnsCollection.Add(columnNumber, column);
             }
 
-            return new XLColumn(column, new XLColumnParameters(this, thisStyle, true));
+            return column;
         }
 
         public IXLColumn Column(String column)
@@ -1384,15 +1396,15 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLRow Row(Int32 row, Boolean pingCells)
+        public XLRow Row(Int32 rowNumber, Boolean pingCells)
         {
-            if (row <= 0 || row > XLHelper.MaxRowNumber)
+            if (rowNumber <= 0 || rowNumber > XLHelper.MaxRowNumber)
                 throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
                                                                  XLHelper.MaxRowNumber));
 
-            IXLStyle style;
-            if (Internals.RowsCollection.TryGetValue(row, out XLRow rowToUse))
-                style = rowToUse.Style;
+            XLRow row;
+            if (Internals.RowsCollection.TryGetValue(rowNumber, out row))
+                return row;
             else
             {
                 if (pingCells)
@@ -1403,16 +1415,18 @@ namespace ClosedXML.Excel
                     var usedColumns = from c in Internals.ColumnsCollection
                                       join dc in Internals.CellsCollection.ColumnsUsed.Keys
                                           on c.Key equals dc
-                                      where !Internals.CellsCollection.Contains(row, dc)
+                                      where !Internals.CellsCollection.Contains(rowNumber, dc)
                                       select dc;
 
-                    usedColumns.ForEach(c => Cell(row, c));
+                    usedColumns.ForEach(c => Cell(rowNumber, c));
                 }
-                style = Style;
-                Internals.RowsCollection.Add(row, new XLRow(row, new XLRowParameters(this, style, false)));
+
+                row = RangeFactory.CreateRow(rowNumber);
+                _rangeRepository.Store(new XLRangeKey(XLRangeType.Row, row.RangeAddress), row);
+                Internals.RowsCollection.Add(rowNumber, row);
             }
 
-            return new XLRow(row, new XLRowParameters(this, style));
+            return row;
         }
 
         private IXLRange GetRangeForSort()
@@ -1624,18 +1638,25 @@ namespace ClosedXML.Excel
 
         public XLRange GetOrCreateRange(XLRangeParameters xlRangeParameters)
         {
-            var range = _rangeRepository.GetOrCreate(xlRangeParameters.RangeAddress);
+            var range = _rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.Range, xlRangeParameters.RangeAddress));
             if (xlRangeParameters.DefaultStyle != null && range.StyleValue == StyleValue)
                 range.InnerStyle = xlRangeParameters.DefaultStyle;
 
-            return range;
+            return range as XLRange;
         }
 
         protected override void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
+        }
+
+        public void RellocateRange(XLRangeType rangeType, XLRangeAddress oldAddress, XLRangeAddress newAddress)
+        {
             if (_rangeRepository == null)
                 return;
-            _rangeRepository.Replace(oldAddress, newAddress);
+
+            _rangeRepository.Replace(new XLRangeKey(rangeType, oldAddress),
+                                     new XLRangeKey(rangeType, newAddress));
         }
+
     }
 }

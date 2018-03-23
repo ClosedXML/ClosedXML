@@ -49,6 +49,7 @@ namespace ClosedXML.Excel.Caching
             return false;
         }
 
+
         /// <summary>
         /// Put the entity into the repository under the specified key if no other entity with
         /// the same key is presented.
@@ -58,7 +59,7 @@ namespace ClosedXML.Excel.Caching
         /// <returns>Entity that is stored in the repository under the specified key
         /// (it can be either the <paramref name="value"/> or another entity that has been added to
         /// the repository before.)</returns>
-        public Tvalue Store(Tkey key, Tvalue value)
+        public virtual Tvalue Store(Tkey key, Tvalue value) //DEBUG
         {
             if (value == null)
                 return null;
@@ -104,9 +105,13 @@ namespace ClosedXML.Excel.Caching
         {
             WeakReference cachedReference;
             _storage.TryRemove(oldKey, out cachedReference);
-            _storage.TryAdd(newKey, cachedReference);
+            if (cachedReference != null)
+            {
+                _storage.TryAdd(newKey, cachedReference);
+                return GetOrCreate(newKey);
+            }
 
-            return GetOrCreate(newKey);
+            return null;
         }
 
         public override void Clear()

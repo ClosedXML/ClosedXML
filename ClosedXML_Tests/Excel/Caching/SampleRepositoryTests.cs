@@ -161,6 +161,23 @@ namespace ClosedXML_Tests.Excel.Caching
             });
         }
 
+        [Test]
+        public void ReplaceNonExistingKeyInRepository()
+        {
+            int key1 = 100;
+            int key2 = 200;
+            int key3 = 300;
+            var entity = new SampleEntity(key1);
+            var sampleRepository = this.CreateSampleRepository();
+            sampleRepository.Store(key1, entity);
+
+            sampleRepository.Replace(key2, key3);
+            var all = sampleRepository.ToList();
+
+            Assert.AreEqual(1, all.Count);
+            Assert.AreSame(entity, all.First());
+        }
+
         private SampleRepository CreateSampleRepository()
         {
             return new SampleRepository();

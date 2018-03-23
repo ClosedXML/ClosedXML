@@ -25,6 +25,11 @@ namespace ClosedXML.Excel
 
         public XLRangeParameters RangeParameters { get; private set; }
 
+        public override XLRangeType RangeType
+        {
+            get { return XLRangeType.Range; }
+        }
+
         #region IXLRange Members
 
         IXLRangeRow IXLRange.Row(Int32 row)
