@@ -1,6 +1,6 @@
-using System.IO;
 using ClosedXML_Examples;
 using NUnit.Framework;
+using System.IO;
 
 namespace ClosedXML_Tests
 {
@@ -17,11 +17,7 @@ namespace ClosedXML_Tests
                 new BasicTable().Create(left);
                 new BasicTable().Create(right);
                 string message;
-#if _NETFRAMEWORK_
-                Assert.IsTrue(ExcelDocsComparer.Compare(left, right, TestHelper.IsRunningOnUnix, out message));
-#else
-                Assert.IsTrue(ExcelDocsComparer.Compare(left, right, true, out message));
-#endif                
+                Assert.IsTrue(ExcelDocsComparer.Compare(left, right, out message));
             }
             finally
             {
@@ -47,11 +43,7 @@ namespace ClosedXML_Tests
                 new HelloWorld().Create(right);
 
                 string message;
-#if _NETFRAMEWORK_                
-                Assert.IsFalse(ExcelDocsComparer.Compare(left, right, TestHelper.IsRunningOnUnix, out message));
-#else                
-                Assert.IsFalse(ExcelDocsComparer.Compare(left, right, true, out message));
-#endif                
+                Assert.IsFalse(ExcelDocsComparer.Compare(left, right, out message));
             }
             finally
             {

@@ -1,4 +1,3 @@
-using ClosedXML_Tests.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -274,9 +273,9 @@ namespace ClosedXML_Tests
         /// <param name="excludeMethod"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static bool Compare(Package left, Package right, bool compareToFirstDifference, bool stripColumnWidths, out string message)
+        public static bool Compare(Package left, Package right, bool compareToFirstDifference, out string message)
         {
-            return Compare(left, right, compareToFirstDifference, null, stripColumnWidths, out message);
+            return Compare(left, right, compareToFirstDifference, null, out message);
         }
 
         /// <summary>
@@ -289,7 +288,7 @@ namespace ClosedXML_Tests
         /// <param name="message"></param>
         /// <returns></returns>
         public static bool Compare(Package left, Package right, bool compareToFirstDifference,
-            Func<Uri, bool> excludeMethod, bool stripColumnWidths, out string message)
+            Func<Uri, bool> excludeMethod, out string message)
         {
             #region Check
 
@@ -358,7 +357,7 @@ namespace ClosedXML_Tests
                     leftMemoryStream.Seek(0, SeekOrigin.Begin);
                     rightMemoryStream.Seek(0, SeekOrigin.Begin);
 
-                    bool stripColumnWidthsFromSheet = stripColumnWidths &&
+                    bool stripColumnWidthsFromSheet = TestHelper.StripColumnWidths &&
                         leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
                         rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
 
