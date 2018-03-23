@@ -455,22 +455,19 @@ namespace ClosedXML_Tests.Excel
                 {
                     var ws = wb.AddWorksheet("Sheet1");
                     ws.FirstCell().InsertTable(l);
-                    //wb.SaveAs(ms);
-
-                    wb.SaveAs(@"c:\temp\deletetable1.xlsx");
+                    wb.SaveAs(ms);
                 }
 
                 ms.Seek(0, SeekOrigin.Begin);
 
-                using (var wb = new XLWorkbook(@"c:\temp\deletetable1.xlsx"))
+                using (var wb = new XLWorkbook(ms))
                 {
                     var ws = wb.Worksheets.First();
                     var table = ws.Tables.First();
 
                     ws.Tables.Remove(table.Name);
                     Assert.AreEqual(0, ws.Tables.Count());
-                    //wb.Save();
-                    wb.SaveAs(@"c:\temp\deletetable2.xlsx");
+                    wb.Save();
                 }
             }
         }
