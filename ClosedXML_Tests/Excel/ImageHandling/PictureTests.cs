@@ -1,6 +1,5 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
-using ClosedXML_Tests.Utils;
 using NUnit.Framework;
 using System;
 using System.Drawing;
@@ -13,7 +12,6 @@ namespace ClosedXML_Tests
     [TestFixture]
     public class PictureTests
     {
-#if _NETFRAMEWORK_
         [Test]
         public void CanAddPictureFromBitmap()
         {
@@ -35,7 +33,6 @@ namespace ClosedXML_Tests
                 }
             }
         }
-#endif
 
         [Test]
         public void CanAddPictureFromStream()
@@ -274,7 +271,6 @@ namespace ClosedXML_Tests
                     Assert.AreEqual(originalCount - 2, ws.Pictures.Count);
                 }
             }
-        
         }
 
         [Test]
