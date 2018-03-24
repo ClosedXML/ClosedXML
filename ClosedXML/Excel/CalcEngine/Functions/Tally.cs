@@ -80,7 +80,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (numbersOnly)
                 return NumericValuesInternal().Length;
             else
-                return _list.Count(o => !Statistical.IsBlank(o));
+                return _list.Count(o => !CalcEngineHelpers.ValueIsBlank(o));
         }
 
         private IEnumerable<double> NumericValuesEnumerable()

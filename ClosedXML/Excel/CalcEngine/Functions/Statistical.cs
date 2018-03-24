@@ -1,7 +1,7 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -121,38 +121,40 @@ namespace ClosedXML.Excel.CalcEngine
             if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
                 throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
 
-            var cnt = 0.0;
             var e = p[0] as XObjectExpression;
+            long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
+            long nonBlankCount = 0;
             foreach (var value in e)
             {
-                if (IsBlank(value))
-                    cnt++;
+                if (!CalcEngineHelpers.ValueIsBlank(value))
+                    nonBlankCount++;
             }
 
-            return cnt;
-        }
-
-        internal static bool IsBlank(object value)
-        {
-            return
-                value == null ||
-                value is string && ((string)value).Length == 0;
+            return 0d + totalCount - nonBlankCount;
         }
 
         private static object CountIf(List<Expression> p)
         {
             CalcEngine ce = new CalcEngine();
             var cnt = 0.0;
-            var ienum = p[0] as IEnumerable;
+            long processedCount = 0;
+            var ienum = p[0] as XObjectExpression;
             if (ienum != null)
             {
+                long totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
                 var criteria = (string)p[1].Evaluate();
                 foreach (var value in ienum)
                 {
                     if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
                         cnt++;
+                    processedCount++;
                 }
+
+                // Add count of empty cells outside the used range if they match criteria
+                if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce))
+                    cnt += (totalCount - processedCount);
             }
+
             return cnt;
         }
 
@@ -160,15 +162,16 @@ namespace ClosedXML.Excel.CalcEngine
         {
             // get parameters
             var ce = new CalcEngine();
-            int count = 0;
+            long count = 0;
 
             int numberOfCriteria = p.Count / 2;
 
+            long totalCount = 0;
             // prepare criteria-parameters:
             var criteriaRanges = new Tuple<object, List<object>>[numberOfCriteria];
             for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
-                var criteriaRange = p[criteriaPair * 2] as IEnumerable;
+                var criteriaRange = p[criteriaPair * 2] as XObjectExpression;
                 var criterion = p[(criteriaPair * 2) + 1].Evaluate();
                 var criteriaRangeValues = new List<object>();
                 foreach (var value in criteriaRange)
@@ -179,26 +182,26 @@ namespace ClosedXML.Excel.CalcEngine
                 criteriaRanges[criteriaPair] = new Tuple<object, List<object>>(
                     criterion,
                     criteriaRangeValues);
+
+                if (totalCount == 0)
+                    totalCount = CalcEngineHelpers.GetTotalCellsCount(criteriaRange);
             }
 
+            long processedCount = 0;
             for (var i = 0; i < criteriaRanges[0].Item2.Count; i++)
             {
-                bool shouldUseValue = true;
-
-                foreach (var criteriaPair in criteriaRanges)
-                {
-                    if (!CalcEngineHelpers.ValueSatisfiesCriteria(
-                        criteriaPair.Item2[i],
-                        criteriaPair.Item1,
-                        ce))
-                    {
-                        shouldUseValue = false;
-                        break; // we're done with the inner loop as we can't ever get true again.
-                    }
-                }
-
-                if (shouldUseValue)
+                if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
+                                                       criteriaPair.Item2[i], criteriaPair.Item1, ce)))
                     count++;
+
+                processedCount++;
+            }
+
+            // Add count of empty cells outside the used range if they match criteria
+            if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
+                                                   string.Empty, criteriaPair.Item1, ce)))
+            {
+                count += (totalCount - processedCount);
             }
 
             // done

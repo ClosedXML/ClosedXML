@@ -125,7 +125,7 @@ namespace ClosedXML_Tests
                 }
             }
         }
-        
+
         [Test]
         [TestCase("A1:A4")]
         [TestCase("A1:B4")]
@@ -152,7 +152,7 @@ namespace ClosedXML_Tests
                     range.InsertColumnsBefore(1);
 
                     //Assert
-                    Assert.IsFalse(ws.AutoFilter.Range.RangeAddress.IsInvalid);
+                    Assert.IsTrue(ws.AutoFilter.Range.RangeAddress.IsValid);
                 }
             }
         }

@@ -359,6 +359,11 @@ namespace ClosedXML.Excel
                 return cValue;
         }
 
+        /// <summary>
+        /// Flag showing that the cell is in formula evaluation state.
+        /// </summary>
+        internal bool IsEvaluating { get; private set; }
+
         public object Value
         {
             get
@@ -366,6 +371,9 @@ namespace ClosedXML.Excel
                 var fA1 = FormulaA1;
                 if (!String.IsNullOrWhiteSpace(fA1))
                 {
+                    if (IsEvaluating)
+                        throw new InvalidOperationException("Circular Reference");
+
                     if (fA1[0] == '{')
                         fA1 = fA1.Substring(1, fA1.Length - 2);
 
@@ -385,19 +393,31 @@ namespace ClosedXML.Excel
                         cAddress = fA1;
                     }
 
-                    if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
-                        w => String.Compare(w.Name, sName, true) == 0)
-                        && XLHelper.IsValidA1Address(cAddress)
-                        )
+                    object retVal;
+                    try
                     {
-                        var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                        if (referenceCell.IsEmpty(false))
-                            return 0;
-                        else
-                            return referenceCell.Value;
+                        IsEvaluating = true;
+
+                        if (_worksheet
+                                .Workbook
+                                .WorksheetsInternal
+                                .Any<XLWorksheet>(w => String.Compare(w.Name, sName, true) == 0)
+                            && XLHelper.IsValidA1Address(cAddress))
+                        {
+                            var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                            if (referenceCell.IsEmpty(false))
+                                return 0;
+                            else
+                                return referenceCell.Value;
+                        }
+
+                        retVal = Worksheet.Evaluate(fA1);
+                    }
+                    finally
+                    {
+                        IsEvaluating = false;
                     }
 
-                    var retVal = Worksheet.Evaluate(fA1);
                     var retValEnumerable = retVal as IEnumerable;
 
                     if (retValEnumerable != null && !(retVal is String))
@@ -1215,6 +1235,11 @@ namespace ClosedXML.Excel
         public Boolean IsMerged()
         {
             return Worksheet.Internals.MergedRanges.Contains(this);
+        }
+
+        public IXLRange MergedRange()
+        {
+            return Worksheet.Internals.MergedRanges.FirstOrDefault(r => r.Contains(this));
         }
 
         public Boolean IsEmpty()

@@ -22,16 +22,17 @@ namespace ClosedXML_Tests
         {
             get
             {
-                return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                return Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Generated");
             }
         }
 
         public const string ActualTestResultPostFix = "";
-        public static readonly string TestsExampleOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
+        public static readonly string ExampleTestsOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
+        public static readonly string OtherTestsOutputDirectory = Path.Combine(TestsOutputDirectory, "Other");
 
         private const bool CompareWithResources = true;
 
-        private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resource.Examples.");
+        private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resource.");
 
         public static void SaveWorkbook(XLWorkbook workbook, params string[] fileNameParts)
         {
@@ -59,7 +60,7 @@ namespace ClosedXML_Tests
 
             var example = new T();
             string[] pathParts = filePartName.Split(new char[] { '\\' });
-            string filePath1 = Path.Combine(new List<string>() { TestsExampleOutputDirectory }.Concat(pathParts).ToArray());
+            string filePath1 = Path.Combine(new List<string>() { ExampleTestsOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
@@ -76,9 +77,46 @@ namespace ClosedXML_Tests
                 wb.SaveAs(filePath2, true, evaluateFormulae);
 
             if (CompareWithResources)
-
             {
-                string resourcePath = filePartName.Replace('\\', '.').TrimStart('.');
+                string resourcePath = "Examples." + filePartName.Replace('\\', '.').TrimStart('.');
+                using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
+                using (var streamActual = File.OpenRead(filePath2))
+                {
+                    string message;
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
+                    var formattedMessage =
+                        String.Format(
+                            "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
+                            filePath2, resourcePath, message);
+
+                    Assert.IsTrue(success, formattedMessage);
+                }
+            }
+        }
+
+        public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false)
+        {
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
+            string[] pathParts = referenceResource.Split(new char[] { '\\' });
+            string filePath1 = Path.Combine(new List<string>() { OtherTestsOutputDirectory }.Concat(pathParts).ToArray());
+
+            var extension = Path.GetExtension(filePath1);
+            var directory = Path.GetDirectoryName(filePath1);
+
+            var fileName = Path.GetFileNameWithoutExtension(filePath1);
+            fileName += ActualTestResultPostFix;
+            fileName = Path.ChangeExtension(fileName, extension);
+
+            filePath1 = Path.Combine(directory, "z" + fileName);
+            var filePath2 = Path.Combine(directory, fileName);
+
+            using (var wb = workbookGenerator.Invoke())
+                wb.SaveAs(filePath2, true, evaluateFormulae);
+
+            if (CompareWithResources)
+            {
+                string resourcePath = referenceResource.Replace('\\', '.').TrimStart('.');
                 using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {

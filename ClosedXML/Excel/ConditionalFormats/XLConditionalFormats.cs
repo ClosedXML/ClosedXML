@@ -110,5 +110,15 @@ namespace ClosedXML.Excel
             _conditionalFormats.ForEach(cf => cf.Range.Dispose());
             _conditionalFormats.Clear();
         }
+
+        /// <summary>
+        /// Reorders the according to original priority. Done during load process
+        /// </summary>
+        public void ReorderAccordingToOriginalPriority()
+        {
+            var reorderedFormats = _conditionalFormats.OrderBy(cf => (cf as XLConditionalFormat).OriginalPriority).ToList();
+            _conditionalFormats.Clear();
+            _conditionalFormats.AddRange(reorderedFormats);
+        }
     }
 }
