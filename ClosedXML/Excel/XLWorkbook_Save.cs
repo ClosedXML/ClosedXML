@@ -3430,7 +3430,7 @@ namespace ClosedXML.Excel
         {
             var differentialFormat = new DifferentialFormat();
 
-            var diffFont = GetNewFont(new FontInfo { Font = cf.Style.Font as XLFont }, false);
+            var diffFont = GetNewFont(new FontInfo { Font = cf.Style.Value.Font }, false);
             if (diffFont?.HasChildren ?? false)
                 differentialFormat.Append(diffFont);
 
@@ -3462,7 +3462,7 @@ namespace ClosedXML.Excel
         {
             var differentialFormat = new DifferentialFormat();
 
-            var diffFont = GetNewFont(new FontInfo { Font = style.Font as XLFont }, false);
+            var diffFont = GetNewFont(new FontInfo { Font = style.Font }, false);
             if (diffFont?.HasChildren ?? false)
                 differentialFormat.Append(diffFont);
 
