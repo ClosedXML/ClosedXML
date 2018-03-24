@@ -32,35 +32,47 @@ namespace ClosedXML.Excel
         {
             var hashCode = -198124310;
             hashCode = hashCode * -1521134295 + LeftBorder.GetHashCode();
-            hashCode = hashCode * -1521134295 + LeftBorderColor.GetHashCode();
             hashCode = hashCode * -1521134295 + RightBorder.GetHashCode();
-            hashCode = hashCode * -1521134295 + RightBorderColor.GetHashCode();
             hashCode = hashCode * -1521134295 + TopBorder.GetHashCode();
-            hashCode = hashCode * -1521134295 + TopBorderColor.GetHashCode();
             hashCode = hashCode * -1521134295 + BottomBorder.GetHashCode();
-            hashCode = hashCode * -1521134295 + BottomBorderColor.GetHashCode();
             hashCode = hashCode * -1521134295 + DiagonalBorder.GetHashCode();
-            hashCode = hashCode * -1521134295 + DiagonalBorderColor.GetHashCode();
             hashCode = hashCode * -1521134295 + DiagonalUp.GetHashCode();
             hashCode = hashCode * -1521134295 + DiagonalDown.GetHashCode();
+
+            if (LeftBorder != XLBorderStyleValues.None)
+                hashCode = hashCode * -1521134295 + LeftBorderColor.GetHashCode();
+            if (RightBorder != XLBorderStyleValues.None)
+                hashCode = hashCode * -1521134295 + RightBorderColor.GetHashCode();
+            if (TopBorder != XLBorderStyleValues.None)
+                hashCode = hashCode * -1521134295 + TopBorderColor.GetHashCode();
+            if (BottomBorder != XLBorderStyleValues.None)
+                hashCode = hashCode * -1521134295 + BottomBorderColor.GetHashCode();
+            if (DiagonalBorder != XLBorderStyleValues.None)
+                hashCode = hashCode * -1521134295 + DiagonalBorderColor.GetHashCode();
+
             return hashCode;
         }
 
         public bool Equals(XLBorderKey other)
         {
             return
-               LeftBorder == other.LeftBorder
-            && LeftBorderColor == other.LeftBorderColor
-            && RightBorder == other.RightBorder
-            && RightBorderColor == other.RightBorderColor
-            && TopBorder == other.TopBorder
-            && TopBorderColor == other.TopBorderColor
-            && BottomBorder == other.BottomBorder
-            && BottomBorderColor == other.BottomBorderColor
-            && DiagonalBorder == other.DiagonalBorder
-            && DiagonalBorderColor == other.DiagonalBorderColor
-            && DiagonalUp == other.DiagonalUp
-            && DiagonalDown == other.DiagonalDown;
+                   AreEquivalent(LeftBorder, LeftBorderColor, other.LeftBorder, other.LeftBorderColor)
+                && AreEquivalent(RightBorder, RightBorderColor, other.RightBorder, other.RightBorderColor)
+                && AreEquivalent(TopBorder, TopBorderColor, other.TopBorder, other.TopBorderColor)
+                && AreEquivalent(BottomBorder, BottomBorderColor, other.BottomBorder, other.BottomBorderColor)
+                && AreEquivalent(DiagonalBorder, DiagonalBorderColor, other.DiagonalBorder, other.DiagonalBorderColor)
+                && DiagonalUp == other.DiagonalUp
+                && DiagonalDown == other.DiagonalDown;
+        }
+
+        private bool AreEquivalent(
+            XLBorderStyleValues borderStyle1, XLColorKey color1,
+            XLBorderStyleValues borderStyle2, XLColorKey color2)
+        {
+            return (borderStyle1 == XLBorderStyleValues.None &&
+                    borderStyle2 == XLBorderStyleValues.None) ||
+                   borderStyle1 == borderStyle2 &&
+                   color1 == color2;
         }
 
         public override bool Equals(object obj)

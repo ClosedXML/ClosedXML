@@ -22,6 +22,7 @@ namespace ClosedXML.Excel
         public bool Equals(XLFillKey other)
         {
             return
+                (PatternType == XLFillPatternValues.None && other.PatternType == XLFillPatternValues.None) ||
                 BackgroundColor == other.BackgroundColor
              && PatternColor == other.PatternColor
              && PatternType == other.PatternType;
