@@ -123,6 +123,25 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
         }
 
+
+        [Test]
+        public void ConsolidatePreservesPriorities()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
+
+            SetFormat1(ws.Range("A1:A5").AddConditionalFormat());
+            SetFormat2(ws.Range("A1:A5").AddConditionalFormat());
+            SetFormat2(ws.Range("A6:A10").AddConditionalFormat());
+            SetFormat1(ws.Range("A6:A10").AddConditionalFormat());
+
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
+
+            Assert.AreEqual(3, ws.ConditionalFormats.Count());
+            Assert.AreEqual(ws.ConditionalFormats.First().Style.Value, ws.ConditionalFormats.Last().Style.Value);
+            Assert.AreNotEqual(ws.ConditionalFormats.First().Style.Value, ws.ConditionalFormats.ElementAt(1).Style.Value);
+        }
+
         private static void SetFormat1(IXLConditionalFormat format)
         {
             format.WhenEquals("="+format.Range.FirstCell().CellRight(4).Address.ToStringRelative()).Fill.SetBackgroundColor(XLColor.Blue);
