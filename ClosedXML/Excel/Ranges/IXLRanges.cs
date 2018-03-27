@@ -19,6 +19,12 @@ namespace ClosedXML.Excel
         /// <param name="range">The range to remove from this group.</param>
         void Remove(IXLRange range);
 
+        /// <summary>
+        /// Removes all ranges from the collection optionally disposing them.
+        /// </summary>
+        /// <param name="dispose"></param>
+        void RemoveAll(bool dispose = true);
+
         Int32 Count { get; }
 
         Boolean Contains(IXLRange range);
