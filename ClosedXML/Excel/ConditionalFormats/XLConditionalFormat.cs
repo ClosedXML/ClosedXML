@@ -176,7 +176,15 @@ namespace ClosedXML.Excel
         public XLDictionary<XLCFContentType> ContentTypes { get; private set; }
         public XLDictionary<XLCFIconSetOperator> IconSetOperators { get; private set; }
 
-        public IXLRange Range { get; set; }
+        public IXLRange Range
+        {
+            get { return Ranges.SingleOrDefault(); }
+            set
+            {
+                Ranges.RemoveAll();
+                Ranges.Add(value);
+            }
+        }
         public IXLRanges Ranges { get; private set; }
         public XLConditionalFormatType ConditionalFormatType { get; set; }
         public XLTimePeriod TimePeriod { get; set; }
