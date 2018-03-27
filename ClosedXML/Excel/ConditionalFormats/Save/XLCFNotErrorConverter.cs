@@ -1,5 +1,6 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -12,7 +13,7 @@ namespace ClosedXML.Excel
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
                 conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle.Key];
 
-            var formula = new Formula { Text = "NOT(ISERROR(" + cf.Range.RangeAddress.FirstAddress.ToStringRelative(false) + "))" };
+            var formula = new Formula { Text = "NOT(ISERROR(" + cf.Ranges.First().RangeAddress.FirstAddress.ToStringRelative(false) + "))" };
 
             conditionalFormattingRule.Append(formula);
 

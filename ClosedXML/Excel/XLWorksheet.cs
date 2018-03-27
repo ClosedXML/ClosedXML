@@ -1200,23 +1200,37 @@ namespace ClosedXML.Excel
 
             foreach (var cf in ConditionalFormats.ToList())
             {
-                var cfAddress = cf.Range.RangeAddress;
-                if (cf.Range.Intersects(model))
+                var cfRanges = cf.Ranges.ToList();
+                cf.Ranges.Clear();
+
+                foreach (var cfRange in cfRanges)
                 {
-                    cf.Range = Range(cfAddress.FirstAddress.RowNumber,
-                                     cfAddress.FirstAddress.ColumnNumber,
-                                     cfAddress.LastAddress.RowNumber,
-                                     cfAddress.LastAddress.ColumnNumber + columnsShifted);
+                    var cfAddress = cfRange.RangeAddress;
+                    IXLRange newRange;
+                    if (cfRange.Intersects(model))
+                    {
+                        newRange = Range(cfAddress.FirstAddress.RowNumber,
+                                         cfAddress.FirstAddress.ColumnNumber,
+                                         cfAddress.LastAddress.RowNumber,
+                                         cfAddress.LastAddress.ColumnNumber + columnsShifted);
+                    }
+                    else if (cfAddress.FirstAddress.ColumnNumber >= firstCol)
+                    {
+                        newRange = Range(cfAddress.FirstAddress.RowNumber,
+                                         Math.Max(cfAddress.FirstAddress.ColumnNumber + columnsShifted, firstCol),
+                                         cfAddress.LastAddress.RowNumber,
+                                         cfAddress.LastAddress.ColumnNumber + columnsShifted);
+                    }
+                    else
+                        newRange = cfRange;
+
+                    if (newRange.RangeAddress.IsValid &&
+                        newRange.RangeAddress.FirstAddress.ColumnNumber <=
+                        newRange.RangeAddress.LastAddress.ColumnNumber)
+                        cf.Ranges.Add(newRange);
                 }
-                else if (cfAddress.FirstAddress.ColumnNumber >= firstCol)
-                {
-                    cf.Range = Range(cfAddress.FirstAddress.RowNumber,
-                                     Math.Max(cfAddress.FirstAddress.ColumnNumber + columnsShifted, firstCol),
-                                     cfAddress.LastAddress.RowNumber,
-                                     cfAddress.LastAddress.ColumnNumber + columnsShifted);
-                }
-                if (!cf.Range.RangeAddress.IsValid ||
-                    cf.Range.RangeAddress.FirstAddress.ColumnNumber > cf.Range.RangeAddress.LastAddress.ColumnNumber)
+
+                if (!cf.Ranges.Any())
                     ConditionalFormats.Remove(f => f == cf);
             }
 
@@ -1272,25 +1286,39 @@ namespace ClosedXML.Excel
             int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
             var model = Row(rowNum).AsRange();
 
+
             foreach (var cf in ConditionalFormats.ToList())
             {
-                var cfAddress = cf.Range.RangeAddress;
-                if (cf.Range.Intersects(model))
+                var cfRanges = cf.Ranges.ToList();
+                cf.Ranges.Clear();
+
+                foreach (var cfRange in cfRanges)
                 {
-                    cf.Range = Range(cfAddress.FirstAddress.RowNumber,
-                                     cfAddress.FirstAddress.ColumnNumber,
-                                     cfAddress.LastAddress.RowNumber + rowsShifted,
-                                     cfAddress.LastAddress.ColumnNumber);
+                    var cfAddress = cfRange.RangeAddress;
+                    IXLRange newRange;
+                    if (cfRange.Intersects(model))
+                    {
+                        newRange = Range(cfAddress.FirstAddress.RowNumber,
+                                         cfAddress.FirstAddress.ColumnNumber,
+                                         cfAddress.LastAddress.RowNumber + rowsShifted,
+                                         cfAddress.LastAddress.ColumnNumber);
+                    }
+                    else if (cfAddress.FirstAddress.RowNumber >= firstRow)
+                    {
+                        newRange = Range(Math.Max(cfAddress.FirstAddress.RowNumber + rowsShifted, firstRow),
+                                         cfAddress.FirstAddress.ColumnNumber,
+                                         cfAddress.LastAddress.RowNumber + rowsShifted,
+                                         cfAddress.LastAddress.ColumnNumber);
+                    }
+                    else
+                        newRange = cfRange;
+
+                    if (newRange.RangeAddress.IsValid &&
+                        newRange.RangeAddress.FirstAddress.RowNumber <= newRange.RangeAddress.LastAddress.RowNumber)
+                        cf.Ranges.Add(newRange);
                 }
-                else if (cfAddress.FirstAddress.RowNumber >= firstRow)
-                {
-                    cf.Range = Range(Math.Max(cfAddress.FirstAddress.RowNumber + rowsShifted, firstRow),
-                                     cfAddress.FirstAddress.ColumnNumber,
-                                     cfAddress.LastAddress.RowNumber + rowsShifted,
-                                     cfAddress.LastAddress.ColumnNumber);
-                }
-                if (!cf.Range.RangeAddress.IsValid ||
-                    cf.Range.RangeAddress.FirstAddress.RowNumber > cf.Range.RangeAddress.LastAddress.RowNumber)
+
+                if (!cf.Ranges.Any())
                     ConditionalFormats.Remove(f => f == cf);
             }
 

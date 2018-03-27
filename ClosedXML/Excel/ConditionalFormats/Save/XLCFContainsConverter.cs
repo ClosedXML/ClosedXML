@@ -1,5 +1,6 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -16,7 +17,7 @@ namespace ClosedXML.Excel
             conditionalFormattingRule.Operator = ConditionalFormattingOperatorValues.ContainsText;
             conditionalFormattingRule.Text = val;
 
-            var formula = new Formula { Text = "NOT(ISERROR(SEARCH(\"" + val + "\"," + cf.Range.RangeAddress.FirstAddress.ToStringRelative(false) + ")))" };
+            var formula = new Formula { Text = "NOT(ISERROR(SEARCH(\"" + val + "\"," + cf.Ranges.First().RangeAddress.FirstAddress.ToStringRelative(false) + ")))" };
 
             conditionalFormattingRule.Append(formula);
 

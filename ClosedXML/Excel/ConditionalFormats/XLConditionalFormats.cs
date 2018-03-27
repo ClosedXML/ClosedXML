@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
 
         public void Remove(Predicate<IXLConditionalFormat> predicate)
         {
-            _conditionalFormats.Where(cf=>predicate(cf)).ForEach(cf=>cf.Range.Dispose());
+            _conditionalFormats.Where(cf => predicate(cf)).SelectMany(cf => cf.Ranges).ForEach(range => range.Dispose());
             _conditionalFormats.RemoveAll(predicate);
         }
 
@@ -50,6 +50,8 @@ namespace ClosedXML.Excel
         /// </summary>
         internal void Consolidate()
         {
+//TODO Consolidate
+/*
             var formats = _conditionalFormats
                 .OrderByDescending(x => x.Range.RangeAddress.FirstAddress.RowNumber)
                 .ThenByDescending(x => x.Range.RangeAddress.FirstAddress.ColumnNumber);
@@ -95,19 +97,19 @@ namespace ClosedXML.Excel
                     _conditionalFormats.Remove(item);
                     orderedFormats.Remove(item);
                 }
-            }
+            }*/
         }
-
+/*
         private static void Merge(IXLConditionalFormat format, IXLConditionalFormat item)
         {
             foreach (var v in format.Values.ToList())
                 format.Values[v.Key] = item.Values[v.Key];
             format.Range.RangeAddress.FirstAddress = item.Range.RangeAddress.FirstAddress;
         }
-
+*/
         public void RemoveAll()
         {
-            _conditionalFormats.ForEach(cf => cf.Range.Dispose());
+            _conditionalFormats.SelectMany(cf => cf.Ranges).ForEach(range => range.Dispose());
             _conditionalFormats.Clear();
         }
 

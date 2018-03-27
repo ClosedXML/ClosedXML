@@ -5021,7 +5021,7 @@ namespace ClosedXML.Excel
 
                 foreach (var cfGroup in conditionalFormats
                     .GroupBy(
-                        c => c.Range.RangeAddress.ToStringRelative(false),
+                        c => string.Join(" ", c.Ranges.Select(r => r.RangeAddress.ToStringRelative(false))),
                         c => c,
                         (key, g) => new { RangeId = key, CfList = g.ToList() }
                     )
@@ -5068,7 +5068,7 @@ namespace ClosedXML.Excel
 
                 foreach (var cfGroup in exlst
                     .GroupBy(
-                        c => c.Range.RangeAddress.ToStringRelative(false),
+                        c => string.Join(" ", c.Ranges.Select(r => r.RangeAddress.ToStringRelative(false))),
                         c => c,
                         (key, g) => new { RangeId = key, CfList = g.ToList<IXLConditionalFormat>() }
                         )

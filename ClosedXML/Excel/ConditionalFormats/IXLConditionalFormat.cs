@@ -140,8 +140,9 @@ namespace ClosedXML.Excel
         Boolean ShowIconOnly { get; }
         Boolean ShowBarOnly { get; }
         Boolean StopIfTrue { get; }
+        [Obsolete("Use Ranges instead")]
         IXLRange Range { get; set; }
-
+        IXLRanges Ranges { get; }
         XLDictionary<XLFormula> Values { get; }
         XLDictionary<XLColor> Colors { get; }
         XLDictionary<XLCFContentType> ContentTypes { get; }
