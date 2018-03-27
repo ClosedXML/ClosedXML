@@ -1201,7 +1201,7 @@ namespace ClosedXML.Excel
             foreach (var cf in ConditionalFormats.ToList())
             {
                 var cfRanges = cf.Ranges.ToList();
-                cf.Ranges.Clear();
+                cf.Ranges.RemoveAll();
 
                 foreach (var cfRange in cfRanges)
                 {
@@ -1290,7 +1290,7 @@ namespace ClosedXML.Excel
             foreach (var cf in ConditionalFormats.ToList())
             {
                 var cfRanges = cf.Ranges.ToList();
-                cf.Ranges.Clear();
+                cf.Ranges.RemoveAll();
 
                 foreach (var cfRange in cfRanges)
                 {

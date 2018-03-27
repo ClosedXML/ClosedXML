@@ -366,8 +366,7 @@ namespace ClosedXML.Excel
             foreach (var format in Worksheet.ConditionalFormats.Where(x => x.Ranges.Any(r => r.Intersects(this))).ToList())
             {
                 var cfRanges = format.Ranges.ToList();
-                while (format.Ranges.Any())
-                    format.Ranges.Remove(format.Ranges.First());
+                format.Ranges.RemoveAll();
 
                 foreach (var cfRange in cfRanges)
                 {
