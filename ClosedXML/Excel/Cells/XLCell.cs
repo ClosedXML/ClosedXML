@@ -2243,7 +2243,6 @@ namespace ClosedXML.Excel
             var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Ranges.Any(range => range.Contains(source))).ToList();
             foreach (var cf in conditionalFormats)
             {
-                //TODO Add tests for both cases
                 if (source.Worksheet == Worksheet)
                 {
                     if (!cf.Ranges.Any(range => range.Contains(this)))
