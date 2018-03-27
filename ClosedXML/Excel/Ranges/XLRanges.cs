@@ -47,6 +47,14 @@ namespace ClosedXML.Excel
             _ranges.RemoveAll(r => r.ToString() == range.ToString());
         }
 
+        public void RemoveAll(bool dispose = true)
+        {
+            Count = 0;
+            if (dispose)
+                _ranges.ForEach(r => r.Dispose());
+            _ranges.Clear();
+        }
+
         public int Count { get; private set; }
 
         public IEnumerator<IXLRange> GetEnumerator()
