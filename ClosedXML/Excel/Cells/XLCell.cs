@@ -1837,17 +1837,7 @@ namespace ClosedXML.Excel
 
                 var c = new XLConditionalFormat(fmtRanges, true);
                 c.CopyFrom(cf);
-                foreach (var v in c.Values.ToList())
-                {
-                    var f = v.Value.Value;
-                    if (v.Value.IsFormula)
-                    {
-                        var r1c1 = ((XLCell)cf.Ranges.First().FirstCell()).GetFormulaR1C1(f);
-                        f = ((XLCell)fmtRanges.First().FirstCell()).GetFormulaA1(r1c1);
-                    }
-
-                    c.Values[v.Key] = new XLFormula { _value = f, IsFormula = v.Value.IsFormula };
-                }
+                c.AdjustFormulas((XLCell) cf.Ranges.First().FirstCell(), (XLCell)fmtRanges.First().FirstCell());
 
                 _worksheet.ConditionalFormats.Add(c);
             }
