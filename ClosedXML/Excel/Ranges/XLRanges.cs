@@ -250,5 +250,11 @@ namespace ClosedXML.Excel
             foreach (var range in this)
                 range.Select();
         }
+
+        public IXLRanges Consolidate()
+        {
+            var engine = new XLRangeConsolidationEngine(this);
+            return engine.Consolidate();
+        }
     }
 }
