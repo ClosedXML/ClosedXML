@@ -72,9 +72,15 @@ namespace ClosedXML.Excel
                     i++;
                 } while (!stop);
 
+                var baseCell = item.Ranges.First().FirstCell() as XLCell;
+
                 var consRanges = ranges.Consolidate();
                 item.Ranges.RemoveAll();
                 consRanges.ForEach(r => item.Ranges.Add(r));
+
+                var targetCell = item.Ranges.First().FirstCell() as XLCell;
+                (item as XLConditionalFormat).AdjustFormulas(baseCell, targetCell);
+
                 _conditionalFormats.Add(item);
 
                 similarFormats.ForEach(cf => formats.Remove(cf));

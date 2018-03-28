@@ -91,6 +91,19 @@ namespace ClosedXML.Excel
             }
         }
 
+        internal void AdjustFormulas(XLCell baseCell, XLCell targetCell)
+        {
+            var keys = Values.Keys;
+            foreach (var key in keys)
+            {
+                if (Values[key] == null || !Values[key].IsFormula)
+                    continue;
+
+                var r1c1 = baseCell.GetFormulaR1C1(Values[key].Value);
+                Values[key].Value = targetCell.GetFormulaA1(r1c1);
+            }
+        }
+
         private static readonly IEqualityComparer<IXLConditionalFormat> FullComparerInstance = new FullEqualityComparer(true);
         public static IEqualityComparer<IXLConditionalFormat> FullComparer
         {

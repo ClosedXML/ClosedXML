@@ -1992,7 +1992,7 @@ namespace ClosedXML.Excel
             return GetFormula(value, FormulaConversionType.A1ToR1C1, 0, 0);
         }
 
-        private string GetFormulaA1(string value)
+        internal string GetFormulaA1(string value)
         {
             return GetFormula(value, FormulaConversionType.R1C1ToA1, 0, 0);
         }
