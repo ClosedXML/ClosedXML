@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -39,7 +40,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             var format = ws.ConditionalFormats.First();
-            Assert.AreEqual("B2:D3", format.Range.RangeAddress.ToStringRelative());
+            Assert.AreEqual("B2:D3", format.Ranges.First().RangeAddress.ToStringRelative());
             Assert.AreEqual("F2", format.Values.Values.First().Value);
         }
 
@@ -95,21 +96,6 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         }
 
         [Test]
-        public void DifferentRangesNoConsolidateTest()
-        {
-            var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
-            
-            SetFormat1(ws.Range("B7:C7").AddConditionalFormat());
-            SetFormat1(ws.Range("B8:B8").AddConditionalFormat());
-            SetFormat1(ws.Range("B9:C9").AddConditionalFormat());
-
-            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
-
-            Assert.AreEqual(3, ws.ConditionalFormats.Count());
-        }
-
-        [Test]
         public void DifferentFormatNoConsolidateTest()
         {
             var wb = new XLWorkbook();
@@ -122,7 +108,6 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
 
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
         }
-
 
         [Test]
         public void ConsolidatePreservesPriorities()
