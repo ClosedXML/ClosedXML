@@ -5115,6 +5115,8 @@ namespace ClosedXML.Excel
                 var dataValidations = worksheetPart.Worksheet.Elements<DataValidations>().First();
                 cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, dataValidations);
                 dataValidations.RemoveAllChildren<DataValidation>();
+                xlWorksheet.DataValidations.Consolidate();
+
                 foreach (var dv in xlWorksheet.DataValidations)
                 {
                     var sequence = dv.Ranges.Aggregate(String.Empty, (current, r) => current + (r.RangeAddress + " "));
