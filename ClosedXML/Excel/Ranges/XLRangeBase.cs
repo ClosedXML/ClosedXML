@@ -413,6 +413,9 @@ namespace ClosedXML.Excel
                         //TODO: reflect the formula for a new range
                         format.Ranges.Add(rng2);
                     }
+
+                    if (!byWidth && !byHeight)
+                        format.Ranges.Add(cfRange); // Not split, preserve original
                 }
                 if (!format.Ranges.Any())
                     Worksheet.ConditionalFormats.Remove(x => x == format);

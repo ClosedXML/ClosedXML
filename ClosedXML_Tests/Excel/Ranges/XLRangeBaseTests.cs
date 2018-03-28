@@ -385,7 +385,8 @@ namespace ClosedXML_Tests
             ws.Range("C2:D3").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
-            Assert.AreEqual("C3:G4", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
+            Assert.AreEqual(1, ws.ConditionalFormats.Single().Ranges.Count);
+            Assert.AreEqual("C3:G4", ws.ConditionalFormats.Single().Ranges.Single().RangeAddress.ToStringRelative());
         }
 
         [Test]
