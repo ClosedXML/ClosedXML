@@ -361,12 +361,12 @@ namespace ClosedXML.Excel
 
         #endregion IXLRange Members
 
-        internal void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
             RangeAddress = (XLRangeAddress)ShiftColumns(RangeAddress, range, columnsShifted);
         }
 
-        internal void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             RangeAddress = (XLRangeAddress)ShiftRows(RangeAddress, range, rowsShifted);
         }
@@ -702,8 +702,7 @@ namespace ClosedXML.Excel
                                                 RangeAddress.LastAddress.ColumnNumber,
                                                 false,
                                                 false);
-            return new XLRangeRow(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), false);
+            return Worksheet.RangeRow(new XLRangeAddress(firstCellAddress, lastCellAddress));
         }
 
         public virtual XLRangeColumn Column(Int32 columnNumber)
@@ -721,8 +720,7 @@ namespace ClosedXML.Excel
                                                 RangeAddress.FirstAddress.ColumnNumber + columnNumber - 1,
                                                 false,
                                                 false);
-            return new XLRangeColumn(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), false);
+            return Worksheet.RangeColumn(new XLRangeAddress(firstCellAddress, lastCellAddress));
         }
 
         public virtual XLRangeColumn Column(String columnLetter)

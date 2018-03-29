@@ -71,15 +71,7 @@ namespace ClosedXML.Excel
                 asRange.Delete(XLShiftDeletedCells.ShiftCellsLeft);
             }
 
-            Worksheet.Internals.ColumnsCollection.Remove(columnNumber);
-            var columnsToMove = new List<Int32>();
-            columnsToMove.AddRange(
-                Worksheet.Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key));
-            foreach (int column in columnsToMove.OrderBy(c => c))
-            {
-                Worksheet.Internals.ColumnsCollection.Add(column - 1, Worksheet.Internals.ColumnsCollection[column]);
-                Worksheet.Internals.ColumnsCollection.Remove(column);
-            }
+            Worksheet.DeleteColumn(columnNumber);
         }
 
         public new IXLColumn Clear(XLClearOptions clearOptions = XLClearOptions.All)
@@ -555,12 +547,17 @@ namespace ClosedXML.Excel
             return Range(1, 1, XLHelper.MaxRowNumber, 1);
         }
 
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
             if (range.RangeAddress.IsValid &&
                 RangeAddress.IsValid &&
                 range.RangeAddress.FirstAddress.ColumnNumber <= ColumnNumber())
                 SetColumnNumber(ColumnNumber() + columnsShifted);
+        }
+
+        internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        {
+            //do nothing
         }
 
         internal void SetColumnNumber(int column)

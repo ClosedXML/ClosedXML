@@ -2,6 +2,7 @@
 
 namespace ClosedXML.Excel
 {
+    [System.Diagnostics.DebuggerDisplay("{RangeType} {RangeAddress}")]
     internal struct XLRangeKey : IEquatable<XLRangeKey>
     {
         public XLRangeType RangeType { get; private set; }

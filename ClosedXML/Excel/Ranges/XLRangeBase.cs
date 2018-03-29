@@ -885,6 +885,10 @@ namespace ClosedXML.Excel
             return Range(rangeAddress);
         }
 
+        internal abstract void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted);
+
+        internal abstract void WorksheetRangeShiftedRows(XLRange range, int rowsShifted);
+
         public abstract XLRangeType RangeType { get; }
 
         public XLRange Range(IXLCell firstCell, IXLCell lastCell)
@@ -1987,8 +1991,7 @@ namespace ClosedXML.Excel
                                                 RangeAddress.FirstAddress.ColumnNumber + column - 1,
                                                 false,
                                                 false);
-            return new XLRangeColumn(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), true);
+            return Worksheet.RangeColumn(new XLRangeAddress(firstCellAddress, lastCellAddress));
         }
 
         public XLRangeRow RowQuick(Int32 row)
@@ -2003,8 +2006,8 @@ namespace ClosedXML.Excel
                                                 RangeAddress.LastAddress.ColumnNumber,
                                                 false,
                                                 false);
-            return new XLRangeRow(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), true);
+
+            return Worksheet.RangeRow(new XLRangeAddress(firstCellAddress, lastCellAddress));
         }
 
         public void Dispose()

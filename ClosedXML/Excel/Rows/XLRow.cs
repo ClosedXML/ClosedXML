@@ -92,14 +92,7 @@ namespace ClosedXML.Excel
             using (var asRange = AsRange())
                 asRange.Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-            Worksheet.Internals.RowsCollection.Remove(rowNumber);
-            var rowsToMove = new List<Int32>();
-            rowsToMove.AddRange(Worksheet.Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key));
-            foreach (int row in rowsToMove.OrderBy(r => r))
-            {
-                Worksheet.Internals.RowsCollection.Add(row - 1, Worksheet.Internals.RowsCollection[row]);
-                Worksheet.Internals.RowsCollection.Remove(row);
-            }
+            Worksheet.DeleteRow(rowNumber);
         }
 
         public new IXLRows InsertRowsBelow(Int32 numberOfRows)
@@ -483,7 +476,12 @@ namespace ClosedXML.Excel
             return Range(1, 1, 1, XLHelper.MaxColumnNumber);
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        {
+            //do nothing
+        }
+
+        internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             if (range.RangeAddress.IsValid &&
                 RangeAddress.IsValid &&

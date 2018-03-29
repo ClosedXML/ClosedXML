@@ -7,16 +7,13 @@ namespace ClosedXML.Excel
     {
         #region Constructor
 
-        public XLRangeRow(XLRangeParameters rangeParameters, bool quickLoad)
+        /// <summary>
+        /// The direct contructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
+        /// </summary>
+        public XLRangeRow(XLRangeParameters rangeParameters)
             : base(rangeParameters.RangeAddress, (rangeParameters.DefaultStyle as XLStyle).Value)
         {
             RangeParameters = rangeParameters;
-            if (quickLoad) return;
-            if (!RangeParameters.IgnoreEvents)
-            {
-                SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-            }
         }
 
         #endregion Constructor
@@ -188,12 +185,12 @@ namespace ClosedXML.Excel
             get { return XLRangeType.RangeRow; }
         }
 
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
             RangeAddress = (XLRangeAddress)ShiftColumns(RangeAddress, range, columnsShifted);
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             RangeAddress = (XLRangeAddress)ShiftRows(RangeAddress, range, rowsShifted);
         }

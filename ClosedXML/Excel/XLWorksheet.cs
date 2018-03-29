@@ -1175,7 +1175,7 @@ namespace ClosedXML.Excel
             Internals.RowsCollection.Clear();
         }
 
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
             var newMerge = new XLRanges();
             foreach (IXLRange rngMerged in Internals.MergedRanges)
@@ -1264,7 +1264,7 @@ namespace ClosedXML.Excel
             model.Dispose();
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             var newMerge = new XLRanges();
             foreach (IXLRange rngMerged in Internals.MergedRanges)
@@ -1376,23 +1376,17 @@ namespace ClosedXML.Excel
 
         public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
         {
-            if (RangeShiftedRows != null)
+            foreach (var storedRange in _rangeRepository)
             {
-                foreach (var item in RangeShiftedRows)
-                {
-                    item.Action(range, rowsShifted);
-                }
+                storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
             }
         }
 
         public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
         {
-            if (RangeShiftedColumns != null)
+            foreach (var storedRange in _rangeRepository)
             {
-                foreach (var item in RangeShiftedColumns)
-                {
-                    item.Action(range, columnsShifted);
-                }
+                storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
             }
         }
 
@@ -1428,7 +1422,7 @@ namespace ClosedXML.Excel
 
             return row;
         }
-
+        
         private IXLRange GetRangeForSort()
         {
             var range = RangeUsed();
@@ -1645,6 +1639,38 @@ namespace ClosedXML.Excel
             return range as XLRange;
         }
 
+        /// <summary>
+        /// Get a range row from the shared repository or create a new one.
+        /// </summary>
+        /// <param name="address">Address of range row.</param>
+        /// <param name="defaultStyle">Style to apply. If null the worksheet's style is applied.</param>
+        /// <returns>Range row with the specified address.</returns>
+        public XLRangeRow RangeRow(XLRangeAddress address, IXLStyle defaultStyle = null)
+        {
+            var rangeRow = (XLRangeRow)_rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.RangeRow, address));
+
+            if (defaultStyle != null && rangeRow.StyleValue == StyleValue)
+                rangeRow.InnerStyle = defaultStyle;
+
+            return rangeRow;
+        }
+
+        /// <summary>
+        /// Get a range column from the shared repository or create a new one.
+        /// </summary>
+        /// <param name="address">Address of range column.</param>
+        /// <param name="defaultStyle">Style to apply. If null the worksheet's style is applied.</param>
+        /// <returns>Range column with the specified address.</returns>
+        public XLRangeColumn RangeColumn(XLRangeAddress address, IXLStyle defaultStyle = null)
+        {
+            var rangeColumn = (XLRangeColumn)_rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.RangeColumn, address));
+
+            if (defaultStyle != null && rangeColumn.StyleValue == StyleValue)
+                rangeColumn.InnerStyle = defaultStyle;
+
+            return rangeColumn;
+        }
+
         protected override void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
         }
@@ -1658,5 +1684,40 @@ namespace ClosedXML.Excel
                                      new XLRangeKey(rangeType, newAddress));
         }
 
+        internal void DeleteColumn(int columnNumber)
+        {
+            Internals.ColumnsCollection.Remove(columnNumber);
+
+
+            var columnsToMove = new List<Int32>();
+            columnsToMove.AddRange(
+                Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key));
+            foreach (int column in columnsToMove.OrderBy(c => c))
+            {
+                Internals.ColumnsCollection.Add(column - 1, Internals.ColumnsCollection[column]);
+                Internals.ColumnsCollection.Remove(column);
+
+                _rangeRepository.Remove(new XLRangeKey(XLRangeType.Column,
+                    XLRangeAddress.EntireColumn(this, column)));
+                Internals.ColumnsCollection[column - 1].SetColumnNumber(column - 1);
+            }
+        }
+
+        internal void DeleteRow(int rowNumber)
+        {
+            Internals.RowsCollection.Remove(rowNumber);
+
+            var rowsToMove = new List<Int32>();
+            rowsToMove.AddRange(Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key));
+            foreach (int row in rowsToMove.OrderBy(r => r))
+            {
+                Internals.RowsCollection.Add(row - 1, Worksheet.Internals.RowsCollection[row]);
+                Internals.RowsCollection.Remove(row);
+
+                _rangeRepository.Remove(new XLRangeKey(XLRangeType.Row,
+                    XLRangeAddress.EntireRow(this, row)));
+                Internals.RowsCollection[row - 1].SetRowNumber(row - 1);
+            }
+        }
     }
 }

@@ -114,6 +114,12 @@ namespace ClosedXML.Excel.Caching
             return null;
         }
 
+        public void Remove(Tkey key)
+        {
+            WeakReference _;
+            _storage.TryRemove(key, out _);
+        }
+
         public override void Clear()
         {
             _storage.Clear();

@@ -40,9 +40,11 @@ namespace ClosedXML.Excel
                     break;
 
                 case XLRangeType.RangeColumn:
-                //break;
+                    return CreateRangeColumn(key.RangeAddress);
+                    break;
                 case XLRangeType.RangeRow:
-                //break;
+                    return CreateRangeRow(key.RangeAddress);
+                    break;
                 case XLRangeType.Table:
                 //break;
                 case XLRangeType.Worksheet:
@@ -52,21 +54,33 @@ namespace ClosedXML.Excel
                     break;
             }
         }
-
-        public XLColumn CreateColumn(int columnNumber)
-        {
-            return new XLColumn(Worksheet, columnNumber);
-        }
-
+        
         public XLRange CreateRange(XLRangeAddress rangeAddress)
         {
             var xlRangeParameters = new XLRangeParameters(rangeAddress, Worksheet.Style);
             return new XLRange(xlRangeParameters);
         }
+        
+        public XLColumn CreateColumn(int columnNumber)
+        {
+            return new XLColumn(Worksheet, columnNumber);
+        }
 
         public XLRow CreateRow(int rowNumber)
         {
             return new XLRow(Worksheet, rowNumber);
+        }
+        
+        public XLRangeColumn CreateRangeColumn(XLRangeAddress rangeAddress)
+        {
+            var xlRangeParameters = new XLRangeParameters(rangeAddress, Worksheet.Style);
+            return new XLRangeColumn(xlRangeParameters);
+        }
+
+        public XLRangeRow CreateRangeRow(XLRangeAddress rangeAddress)
+        {
+            var xlRangeParameters = new XLRangeParameters(rangeAddress, Worksheet.Style);
+            return new XLRangeRow(xlRangeParameters);
         }
 
         #endregion Methods
