@@ -122,20 +122,20 @@ namespace ClosedXML.Excel
             return _dictionary.GetEnumerator();
         }
 
-        #endregion
+        #endregion IDictionary<int,XLRow> Members
 
         public void ShiftRowsDown(Int32 startingRow, Int32 rowsToShift)
         {
             foreach (int ro in _dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
             {
                 var rowToMove = _dictionary[ro];
+                _dictionary.Remove(ro);
                 Int32 newRowNum = ro + rowsToShift;
                 if (newRowNum <= XLHelper.MaxRowNumber)
                 {
-                    var newRow = new XLRow(rowToMove, newRowNum);
-                    _dictionary.Add(newRowNum, newRow);
+                    rowToMove.SetRowNumber(newRowNum);
+                    _dictionary.Add(newRowNum, rowToMove);
                 }
-                _dictionary.Remove(ro);
             }
         }
 
@@ -151,7 +151,7 @@ namespace ClosedXML.Excel
 
         public void Dispose()
         {
-            _dictionary.Values.ForEach(r=>r.Dispose());
+            _dictionary.Values.ForEach(r => r.Dispose());
         }
     }
 }

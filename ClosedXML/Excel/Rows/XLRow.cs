@@ -16,6 +16,9 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
+        /// <summary>
+        /// The direct contructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
+        /// </summary>
         public XLRow(XLWorksheet worksheet, Int32 row)
             : base(XLRangeAddress.EntireRow(worksheet, row), worksheet.StyleValue)
         {
@@ -23,26 +26,6 @@ namespace ClosedXML.Excel
 
             //SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
             _height = worksheet.RowHeight;
-        }
-
-        public XLRow(XLRow row) : this(row, row.RowNumber())
-        {
-        }
-
-        internal XLRow(XLRow row, int newRowNumber)
-            : base(XLRangeAddress.EntireRow(row.Worksheet, row.RowNumber()), row.StyleValue)
-        {
-            _height = row._height;
-
-            //SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
-
-            Collapsed = row.Collapsed;
-            IsHidden = row.IsHidden;
-            _outlineLevel = row._outlineLevel;
-            HeightChanged = row.HeightChanged;
-
-            if (newRowNumber != row.RowNumber())
-                SetRowNumber(newRowNumber);
         }
 
         #endregion Constructor
@@ -508,7 +491,7 @@ namespace ClosedXML.Excel
                 SetRowNumber(RowNumber() + rowsShifted);
         }
 
-        private void SetRowNumber(Int32 row)
+        internal void SetRowNumber(Int32 row)
         {
             RangeAddress = new XLRangeAddress(
                 new XLAddress(Worksheet, row, 1, RangeAddress.FirstAddress.FixedRow,

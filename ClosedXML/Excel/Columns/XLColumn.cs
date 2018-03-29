@@ -14,6 +14,9 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
+        /// <summary>
+        /// The direct contructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
+        /// </summary>
         public XLColumn(XLWorksheet worksheet, Int32 column)
             : base(XLRangeAddress.EntireColumn(worksheet, column), worksheet.StyleValue)
         {
@@ -21,22 +24,6 @@ namespace ClosedXML.Excel
 
             //SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             Width = worksheet.ColumnWidth;
-        }
-
-        public XLColumn(XLColumn column) : this(column, column.ColumnNumber())
-        {
-        }
-
-        internal XLColumn(XLColumn column, int newColumnNumber)
-            : base(XLRangeAddress.EntireColumn(column.Worksheet, column.ColumnNumber()))
-        {
-            Width = column.Width;
-            //SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-            Collapsed = column.Collapsed;
-            IsHidden = column.IsHidden;
-            _outlineLevel = column._outlineLevel;
-            if (newColumnNumber != column.ColumnNumber())
-                SetColumnNumber(newColumnNumber);
         }
 
         #endregion Constructor
@@ -576,7 +563,7 @@ namespace ClosedXML.Excel
                 SetColumnNumber(ColumnNumber() + columnsShifted);
         }
 
-        private void SetColumnNumber(int column)
+        internal void SetColumnNumber(int column)
         {
             RangeAddress = new XLRangeAddress(
                 new XLAddress(Worksheet,
