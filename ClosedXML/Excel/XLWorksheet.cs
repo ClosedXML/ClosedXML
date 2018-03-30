@@ -1376,17 +1376,39 @@ namespace ClosedXML.Excel
 
         public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
         {
-            foreach (var storedRange in _rangeRepository)
+            try
             {
-                storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
+                SuspendEvents();
+                var rangesToShift = _rangeRepository.ToList();
+                foreach (var storedRange in rangesToShift)
+                {
+                    if (!ReferenceEquals(range, storedRange))
+                        storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
+                }
+                range.WorksheetRangeShiftedRows(range, rowsShifted);
+            }
+            finally
+            {
+                ResumeEvents();
             }
         }
 
         public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
         {
-            foreach (var storedRange in _rangeRepository)
+            try
             {
-                storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
+                SuspendEvents();
+                var rangesToShift = _rangeRepository.ToList();
+                foreach (var storedRange in rangesToShift)
+                {
+                    if (!ReferenceEquals(range, storedRange))
+                        storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
+                }
+                range.WorksheetRangeShiftedColumns(range, columnsShifted);
+            }
+            finally
+            {
+                ResumeEvents();
             }
         }
 
@@ -1719,5 +1741,11 @@ namespace ClosedXML.Excel
                 Internals.RowsCollection[row - 1].SetRowNumber(row - 1);
             }
         }
+
+        internal void DeleteRange(XLRangeAddress rangeAddress)
+        {
+            _rangeRepository.Remove(new XLRangeKey(XLRangeType.Range, rangeAddress));
+        }
+
     }
 }

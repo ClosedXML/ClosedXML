@@ -483,10 +483,13 @@ namespace ClosedXML.Excel
 
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
+            return; // rows are shifted by themselves
+            /*
             if (range.RangeAddress.IsValid &&
                 RangeAddress.IsValid &&
                 range.RangeAddress.FirstAddress.RowNumber <= RowNumber())
                 SetRowNumber(RowNumber() + rowsShifted);
+                */
         }
 
         internal void SetRowNumber(Int32 row)

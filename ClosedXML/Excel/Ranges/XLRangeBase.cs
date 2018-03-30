@@ -1483,6 +1483,7 @@ namespace ClosedXML.Excel
             int numberOfColumns = ColumnCount();
 
             if (!RangeAddress.IsValid) return;
+
             IXLRange shiftedRangeFormula = Worksheet.Range(
                 RangeAddress.FirstAddress.RowNumber,
                 RangeAddress.FirstAddress.ColumnNumber,
@@ -1555,6 +1556,7 @@ namespace ClosedXML.Excel
                 else
                     Worksheet.NotifyRangeShiftedColumns(shiftedRange, columnModifier * -1);
             }
+            Worksheet.DeleteRange(RangeAddress);
         }
 
         public override string ToString()
@@ -1604,6 +1606,7 @@ namespace ClosedXML.Excel
             {
                 firstAddress = Worksheet.InvalidAddress;
                 lastAddress = Worksheet.InvalidAddress;
+                Worksheet.DeleteRange(RangeAddress);
             }
 
             if (shiftLeftBoundary)
@@ -1660,6 +1663,7 @@ namespace ClosedXML.Excel
             {
                 firstAddress = Worksheet.InvalidAddress;
                 lastAddress = Worksheet.InvalidAddress;
+                Worksheet.DeleteRange(RangeAddress);
             }
 
             if (shiftTopBoundary)

@@ -549,10 +549,11 @@ namespace ClosedXML.Excel
 
         internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            if (range.RangeAddress.IsValid &&
+            return; // Columns are shifted by themselves
+            /*if (range.RangeAddress.IsValid &&
                 RangeAddress.IsValid &&
                 range.RangeAddress.FirstAddress.ColumnNumber <= ColumnNumber())
-                SetColumnNumber(ColumnNumber() + columnsShifted);
+                SetColumnNumber(ColumnNumber() + columnsShifted);*/
         }
 
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
