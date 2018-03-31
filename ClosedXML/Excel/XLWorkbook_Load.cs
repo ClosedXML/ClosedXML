@@ -797,9 +797,13 @@ namespace ClosedXML.Excel
                 pivotField.AddSubtotal(XLSubtotalFunction.Sum);
             if (pf.ApplyVarianceInSubtotal != null)
                 pivotField.AddSubtotal(XLSubtotalFunction.Variance);
-            var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
-            if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
-                pivotField.SetCollapsed();
+
+            if (pf.Items?.Any() ?? false)
+            {
+                var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
+                if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
+                    pivotField.SetCollapsed();
+            }
         }
 
         private void LoadDrawings(WorksheetPart wsPart, IXLWorksheet ws)
