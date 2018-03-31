@@ -153,6 +153,7 @@ namespace ClosedXML.Excel
             public XLDataType DataType;
             public Boolean MixedDataType;
             public IEnumerable<Object> DistinctValues;
+            public Boolean IsTotallyBlankField;
         }
 
         internal struct PivotTableInfo
