@@ -1996,14 +1996,13 @@ namespace ClosedXML.Excel
                 else
                 {
                     var workbookCacheRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    pt.WorkbookCacheRelId = workbookCacheRelId;
                     pivotCache = new PivotCache { CacheId = cacheId++, Id = workbookCacheRelId };
+                    pivotCaches.AppendChild(pivotCache);
                     pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(workbookCacheRelId);
                 }
 
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt, context);
-
-                if (String.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
-                    pivotCaches.AppendChild(pivotCache);
 
                 PivotTablePart pivotTablePart;
                 if (String.IsNullOrWhiteSpace(pt.RelId))
