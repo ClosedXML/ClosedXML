@@ -1380,8 +1380,11 @@ namespace ClosedXML.Excel
             {
                 SuspendEvents();
                 var rangesToShift = _rangeRepository.ToList();
+
+                WorksheetRangeShiftedRows(range, rowsShifted);
                 foreach (var storedRange in rangesToShift)
                 {
+                    var addr = storedRange.RangeAddress;
                     if (!ReferenceEquals(range, storedRange))
                         storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
                 }
@@ -1399,8 +1402,11 @@ namespace ClosedXML.Excel
             {
                 SuspendEvents();
                 var rangesToShift = _rangeRepository.ToList();
+
+                WorksheetRangeShiftedColumns(range, columnsShifted);
                 foreach (var storedRange in rangesToShift)
                 {
+                    var addr = storedRange.RangeAddress;
                     if (!ReferenceEquals(range, storedRange))
                         storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
                 }
