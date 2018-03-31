@@ -590,8 +590,6 @@ namespace ClosedXML.Excel
             (targetSheet.PageSetup.Footer as XLHeaderFooter).Changed = true;
             targetSheet.Outline = new XLOutline(Outline);
             targetSheet.SheetView = new XLSheetView(SheetView);
-            Internals.MergedRanges.ForEach(
-                kp => targetSheet.Internals.MergedRanges.Add(targetSheet.Range(kp.RangeAddress.ToString())));
 
             foreach (var picture in Pictures)
             {
