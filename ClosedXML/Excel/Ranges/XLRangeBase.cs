@@ -1,4 +1,3 @@
-using ClosedXML.Excel.Misc;
 using ClosedXML.Extensions;
 using System;
 using System.Collections;
@@ -37,28 +36,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion Constructor
-
-        private XLCallbackAction _shiftedRowsAction;
-
-        protected void SubscribeToShiftedRows(Action<XLRange, Int32> action)
-        {
-            //if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
-            //
-            //_shiftedRowsAction = new XLCallbackAction(action);
-            //
-            //RangeAddress.Worksheet.RangeShiftedRows.Add(_shiftedRowsAction);
-        }
-
-        private XLCallbackAction _shiftedColumnsAction;
-
-        protected void SubscribeToShiftedColumns(Action<XLRange, Int32> action)
-        {
-            //if (Worksheet == null || !Worksheet.EventTrackingEnabled) return;
-            //
-            //_shiftedColumnsAction = new XLCallbackAction(action);
-            //
-            //RangeAddress.Worksheet.RangeShiftedColumns.Add(_shiftedColumnsAction);
-        }
 
         protected virtual void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
@@ -2010,17 +1987,7 @@ namespace ClosedXML.Excel
 
         public void Dispose()
         {
-            if (_shiftedRowsAction != null)
-            {
-                RangeAddress.Worksheet.RangeShiftedRows.Remove(_shiftedRowsAction);
-                _shiftedRowsAction = null;
-            }
-
-            if (_shiftedColumnsAction != null)
-            {
-                RangeAddress.Worksheet.RangeShiftedColumns.Remove(_shiftedColumnsAction);
-                _shiftedColumnsAction = null;
-            }
+            // Dispose does nothing but left for not breaking the existing code
         }
 
         public IXLDataValidation SetDataValidation()

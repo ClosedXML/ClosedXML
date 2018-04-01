@@ -59,7 +59,7 @@ namespace ClosedXML.Excel.Caching
         /// <returns>Entity that is stored in the repository under the specified key
         /// (it can be either the <paramref name="value"/> or another entity that has been added to
         /// the repository before.)</returns>
-        public virtual Tvalue Store(Tkey key, Tvalue value) //DEBUG
+        public Tvalue Store(Tkey key, Tvalue value)
         {
             if (value == null)
                 return null;
@@ -82,7 +82,7 @@ namespace ClosedXML.Excel.Caching
             }
         }
 
-        public virtual Tvalue GetOrCreate(Tkey key) //DEBUG
+        public Tvalue GetOrCreate(Tkey key)
         {
             if (_storage.TryGetValue(key, out WeakReference cachedReference))
             {

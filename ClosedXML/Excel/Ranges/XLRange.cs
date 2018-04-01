@@ -11,12 +11,6 @@ namespace ClosedXML.Excel
         public XLRange(XLRangeParameters xlRangeParameters)
             : base(xlRangeParameters.RangeAddress, (xlRangeParameters.DefaultStyle as XLStyle).Value)
         {
-            if (!xlRangeParameters.IgnoreEvents)
-            {
-                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
-                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-                //xlRangeParameters.IgnoreEvents = true;
-            }
         }
 
         #endregion Constructor

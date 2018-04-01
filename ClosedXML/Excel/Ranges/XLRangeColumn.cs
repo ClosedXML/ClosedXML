@@ -13,15 +13,6 @@ namespace ClosedXML.Excel
         public XLRangeColumn(XLRangeParameters rangeParameters)
             : base(rangeParameters.RangeAddress, (rangeParameters.DefaultStyle as XLStyle).Value)
         {
-            //SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-            //SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-        }
-
-        //TODO remove?
-        public XLRangeColumn(XLRangeParameters rangeParameters, IXLTable table)
-            : this(rangeParameters)
-        {
-            this.Table = table;
         }
 
         #endregion Constructor

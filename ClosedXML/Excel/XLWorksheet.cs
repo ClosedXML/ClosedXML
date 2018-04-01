@@ -1,6 +1,5 @@
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;
-using ClosedXML.Excel.Misc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,13 +11,6 @@ namespace ClosedXML.Excel
 {
     internal class XLWorksheet : XLRangeBase, IXLWorksheet
     {
-        #region Events
-
-        public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedRows;
-        public XLReentrantEnumerableSet<XLCallbackAction> RangeShiftedColumns;
-
-        #endregion Events
-
         #region Fields
 
         private readonly Dictionary<Int32, Int32> _columnOutlineCount = new Dictionary<Int32, Int32>();
@@ -53,9 +45,6 @@ namespace ClosedXML.Excel
             Workbook = workbook;
             InvalidAddress = new XLAddress(this, 0, 0, false, false);
 
-            RangeShiftedRows = new XLReentrantEnumerableSet<XLCallbackAction>();
-            RangeShiftedColumns = new XLReentrantEnumerableSet<XLCallbackAction>();
-
             var firstAddress = new XLAddress(this, RangeAddress.FirstAddress.RowNumber, RangeAddress.FirstAddress.ColumnNumber,
                                                    RangeAddress.FirstAddress.FixedRow, RangeAddress.FirstAddress.FixedColumn);
             var lastAddress = new XLAddress(this, RangeAddress.LastAddress.RowNumber, RangeAddress.LastAddress.ColumnNumber,
@@ -82,8 +71,6 @@ namespace ClosedXML.Excel
             _rowHeight = workbook.RowHeight;
             RowHeightChanged = Math.Abs(workbook.RowHeight - XLWorkbook.DefaultRowHeight) > XLHelper.Epsilon;
             Name = sheetName;
-            SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-            SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             Charts = new XLCharts();
             ShowFormulas = workbook.ShowFormulas;
             ShowGridLines = workbook.ShowGridLines;
@@ -1146,7 +1133,6 @@ namespace ClosedXML.Excel
                 Internals.RowsCollection.Keys.ForEach(r => Cell(r, columnNumber));
 
                 column = RangeFactory.CreateColumn(columnNumber);
-                _rangeRepository.Store(new XLRangeKey(XLRangeType.Column, column.RangeAddress), column);
                 Internals.ColumnsCollection.Add(columnNumber, column);
             }
 
@@ -1440,7 +1426,6 @@ namespace ClosedXML.Excel
                 }
 
                 row = RangeFactory.CreateRow(rowNumber);
-                _rangeRepository.Store(new XLRangeKey(XLRangeType.Row, row.RangeAddress), row);
                 Internals.RowsCollection.Add(rowNumber, row);
             }
 
@@ -1757,7 +1742,6 @@ namespace ClosedXML.Excel
         {
             Internals.ColumnsCollection.Remove(columnNumber);
 
-
             var columnsToMove = new List<Int32>();
             columnsToMove.AddRange(
                 Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key));
@@ -1766,8 +1750,6 @@ namespace ClosedXML.Excel
                 Internals.ColumnsCollection.Add(column - 1, Internals.ColumnsCollection[column]);
                 Internals.ColumnsCollection.Remove(column);
 
-                _rangeRepository.Remove(new XLRangeKey(XLRangeType.Column,
-                    XLRangeAddress.EntireColumn(this, column)));
                 Internals.ColumnsCollection[column - 1].SetColumnNumber(column - 1);
             }
         }
@@ -1783,8 +1765,6 @@ namespace ClosedXML.Excel
                 Internals.RowsCollection.Add(row - 1, Worksheet.Internals.RowsCollection[row]);
                 Internals.RowsCollection.Remove(row);
 
-                _rangeRepository.Remove(new XLRangeKey(XLRangeType.Row,
-                    XLRangeAddress.EntireRow(this, row)));
                 Internals.RowsCollection[row - 1].SetRowNumber(row - 1);
             }
         }

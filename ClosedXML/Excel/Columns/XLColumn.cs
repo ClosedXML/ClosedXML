@@ -22,7 +22,6 @@ namespace ClosedXML.Excel
         {
             SetColumnNumber(column);
 
-            //SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             Width = worksheet.ColumnWidth;
         }
 
@@ -549,11 +548,7 @@ namespace ClosedXML.Excel
 
         internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            return; // Columns are shifted by themselves
-            /*if (range.RangeAddress.IsValid &&
-                RangeAddress.IsValid &&
-                range.RangeAddress.FirstAddress.ColumnNumber <= ColumnNumber())
-                SetColumnNumber(ColumnNumber() + columnsShifted);*/
+            return; // Columns are shifted by XLColumnCollection
         }
 
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
