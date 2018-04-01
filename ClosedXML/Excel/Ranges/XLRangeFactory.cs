@@ -29,24 +29,16 @@ namespace ClosedXML.Excel
             {
                 case XLRangeType.Range:
                     return CreateRange(key.RangeAddress);
-                    break;
-
                 case XLRangeType.Column:
                     return CreateColumn(key.RangeAddress.FirstAddress.ColumnNumber);
-                    break;
-
                 case XLRangeType.Row:
                     return CreateColumn(key.RangeAddress.FirstAddress.RowNumber);
-                    break;
-
                 case XLRangeType.RangeColumn:
                     return CreateRangeColumn(key.RangeAddress);
-                    break;
                 case XLRangeType.RangeRow:
                     return CreateRangeRow(key.RangeAddress);
-                    break;
                 case XLRangeType.Table:
-                //break;
+                    return CreateTable(key.RangeAddress);
                 case XLRangeType.Worksheet:
                 //break;
                 default:
@@ -83,6 +75,10 @@ namespace ClosedXML.Excel
             return new XLRangeRow(xlRangeParameters);
         }
 
+        public XLTable CreateTable(XLRangeAddress rangeAddress)
+        {
+            return new XLTable(new XLRangeParameters(rangeAddress, Worksheet.Style));
+        }
         #endregion Methods
     }
 }

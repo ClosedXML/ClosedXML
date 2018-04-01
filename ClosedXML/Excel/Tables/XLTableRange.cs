@@ -8,7 +8,8 @@ namespace ClosedXML.Excel
     {
         private readonly XLTable _table;
         private readonly XLRange _range;
-        public XLTableRange(XLRange range, XLTable table):base(range.RangeParameters)
+        public XLTableRange(XLRange range, XLTable table)
+            : base(new XLRangeParameters(range.RangeAddress, range.Style))
         {
             _table = table;
             _range = range;

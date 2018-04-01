@@ -635,9 +635,7 @@ namespace ClosedXML.Excel
             foreach (var t in Tables.Cast<XLTable>())
             {
                 String tableName = t.Name;
-                var table = targetSheet.Tables.Any(tt => tt.Name == tableName)
-                                ? new XLTable(targetSheet.Range(t.RangeAddress.ToString()), true)
-                                : new XLTable(targetSheet.Range(t.RangeAddress.ToString()), tableName, true);
+                var table = (XLTable)targetSheet.Table(targetSheet.Range(t.RangeAddress.ToString()), tableName, true);
 
                 table.RelId = t.RelId;
                 table.EmphasizeFirstColumn = t.EmphasizeFirstColumn;
@@ -1448,7 +1446,52 @@ namespace ClosedXML.Excel
 
             return row;
         }
-        
+
+        public IXLTable Table(XLRange range, Boolean addToTables, Boolean setAutofilter = true)
+        {
+            return Table(range, GetNewTableName("Table"), addToTables, setAutofilter);
+        }
+
+        public IXLTable Table(XLRange range, String name, Boolean addToTables, Boolean setAutofilter = true)
+        {
+            XLRangeAddress rangeAddress;
+            if (range.Rows().Count() == 1)
+            {
+                rangeAddress = new XLRangeAddress(range.FirstCell().Address, range.LastCell().CellBelow().Address);
+                range.InsertRowsBelow(1);
+            }
+            else
+                rangeAddress = range.RangeAddress;
+
+            var table = (XLTable) _rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.Table, rangeAddress));
+
+            if (table.Name != name)
+                table.Name = name;
+
+            if (addToTables && !Tables.Contains(table))
+            {
+                Tables.Add(table);
+            }
+
+            if (setAutofilter && !table.ShowAutoFilter)
+                table.InitializeAutoFilter();
+
+            return table;
+        }
+
+        private string GetNewTableName(string baseName)
+        {
+            var i = 1;
+            string tableName;
+            do
+            {
+                tableName = baseName + i.ToString();
+                i++;
+            } while (Tables.Any(t => t.Name == tableName));
+
+            return tableName;
+        }
+
         private IXLRange GetRangeForSort()
         {
             var range = RangeUsed();

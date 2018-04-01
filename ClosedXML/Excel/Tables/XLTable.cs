@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -10,7 +11,6 @@ namespace ClosedXML.Excel
     internal class XLTable : XLRange, IXLTable
     {
         #region Private fields
-
         private string _name;
         internal bool _showTotalsRow;
         internal HashSet<String> _uniqueNames;
@@ -19,8 +19,11 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
-        public XLTable(XLRange range, Boolean addToTables, Boolean setAutofilter = true)
-            : base(new XLRangeParameters(range.RangeAddress, range.Style))
+        /// <summary>
+        /// The direct contructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
+        /// </summary>
+        public XLTable(XLRangeParameters xlRangeParameters)
+            : base(xlRangeParameters)
         {
             CheckRangeNotInTable(range);
             InitializeValues(setAutofilter);
@@ -599,20 +602,17 @@ namespace ClosedXML.Excel
             ShowAutoFilter = true;
         }
 
-        private void AddToTables(XLRange range, Boolean addToTables)
+        internal void OnAddedToTables()
         {
-            if (!addToTables) return;
-
             _uniqueNames = new HashSet<string>();
             Int32 co = 1;
-            foreach (IXLCell c in range.Row(1).Cells())
+            foreach (IXLCell c in Row(1).Cells())
             {
                 if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                     c.Value = GetUniqueName("Column", co, true);
                 _uniqueNames.Add(c.GetString());
                 co++;
             }
-            Worksheet.Tables.Add(this);
         }
 
         private String GetUniqueName(String originalName, Int32 initialOffset, Boolean enforceOffset)
@@ -699,19 +699,13 @@ namespace ClosedXML.Excel
                         else
                         {
                             var fAddress = RangeAddress.FirstAddress;
-                            var lAddress = RangeAddress.LastAddress;
+                            //var lAddress = RangeAddress.LastAddress;
 
                             rangeRow = firstRow.InsertRowsBelow(1, false).First();
 
                             RangeAddress = new XLRangeAddress(
-                                new XLAddress(Worksheet, fAddress.RowNumber,
-                                                         fAddress.ColumnNumber,
-                                                         fAddress.FixedRow,
-                                                         fAddress.FixedColumn),
-                                new XLAddress(Worksheet, lAddress.RowNumber + 1,
-                                                         lAddress.ColumnNumber,
-                                                         lAddress.FixedRow,
-                                                         lAddress.FixedColumn));
+                                fAddress,
+                                RangeAddress.LastAddress);
                         }
 
                         Int32 co = 1;

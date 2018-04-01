@@ -11,8 +11,6 @@ namespace ClosedXML.Excel
         public XLRange(XLRangeParameters xlRangeParameters)
             : base(xlRangeParameters.RangeAddress, (xlRangeParameters.DefaultStyle as XLStyle).Value)
         {
-            RangeParameters = new XLRangeParameters(xlRangeParameters.RangeAddress, xlRangeParameters.DefaultStyle);
-
             if (!xlRangeParameters.IgnoreEvents)
             {
                 SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
@@ -22,8 +20,6 @@ namespace ClosedXML.Excel
         }
 
         #endregion Constructor
-
-        public XLRangeParameters RangeParameters { get; private set; }
 
         public override XLRangeType RangeType
         {
@@ -266,12 +262,12 @@ namespace ClosedXML.Excel
 
         public IXLTable AsTable()
         {
-            return new XLTable(this, false);
+            return Worksheet.Table(this, false);
         }
 
         public IXLTable AsTable(String name)
         {
-            return new XLTable(this, name, false);
+            return Worksheet.Table(this, name, false);
         }
 
         IXLTable IXLRange.CreateTable()
@@ -281,7 +277,7 @@ namespace ClosedXML.Excel
 
         public XLTable CreateTable()
         {
-            return new XLTable(this, true, true);
+            return (XLTable)Worksheet.Table(this, true, true);
         }
 
         IXLTable IXLRange.CreateTable(String name)
@@ -291,12 +287,12 @@ namespace ClosedXML.Excel
 
         public XLTable CreateTable(String name)
         {
-            return new XLTable(this, name, true, true);
+            return (XLTable)Worksheet.Table(this, name, true, true);
         }
 
         public IXLTable CreateTable(String name, Boolean setAutofilter)
         {
-            return new XLTable(this, name, true, setAutofilter);
+            return Worksheet.Table(this, name, true, setAutofilter);
         }
 
         public new IXLRange CopyTo(IXLCell target)

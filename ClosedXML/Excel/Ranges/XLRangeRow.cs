@@ -13,12 +13,9 @@ namespace ClosedXML.Excel
         public XLRangeRow(XLRangeParameters rangeParameters)
             : base(rangeParameters.RangeAddress, (rangeParameters.DefaultStyle as XLStyle).Value)
         {
-            RangeParameters = rangeParameters;
         }
 
         #endregion Constructor
-
-        public XLRangeParameters RangeParameters { get; private set; }
 
         #region IXLRangeRow Members
 
