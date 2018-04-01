@@ -89,8 +89,8 @@ namespace ClosedXML_Tests.Excel
                     .CellBelow().SetValue("X");
                 ws.Range("A1").CreateTable();
 
-                Assert.AreEqual(ws.Cell("A2").GetString(), String.Empty);
-                Assert.AreEqual(ws.Cell("A3").GetString(), "X");
+                Assert.AreEqual(String.Empty, ws.Cell("A2").GetString());
+                Assert.AreEqual("X", ws.Cell("A3").GetString());
             }
         }
 
