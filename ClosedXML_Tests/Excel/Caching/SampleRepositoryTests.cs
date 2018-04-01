@@ -148,15 +148,15 @@ namespace ClosedXML_Tests.Excel.Caching
         [Test]
         public void ConcurrentReplaceKeyInRepository()
         {
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = new EditableRepository();
             int[] keys = Enumerable.Range(0, 1000).ToArray();
             keys.ForEach(key => sampleRepository.GetOrCreate(key));
 
             Parallel.ForEach(keys, key =>
             {
                 var val1 = sampleRepository.Replace(key, key + 2000);
+                val1.Key = key + 2000;
                 var val2 = sampleRepository.GetOrCreate(key + 2000);
-                Assert.AreEqual(key, val1.Key);
                 Assert.AreSame(val1, val2);
             });
         }
@@ -198,6 +198,27 @@ namespace ClosedXML_Tests.Excel.Caching
             public int Key { get; private set; }
 
             public SampleEntity(int key)
+            {
+                Key = key;
+            }
+        }
+
+
+        /// <summary>
+        /// Class under testing
+        /// </summary>
+        internal class EditableRepository : XLRepositoryBase<int, EditableEntity>
+        {
+            public EditableRepository() : base(key => new EditableEntity(key))
+            {
+            }
+        }
+
+        public class EditableEntity
+        {
+            public int Key { get; set; }
+
+            public EditableEntity(int key)
             {
                 Key = key;
             }
