@@ -333,13 +333,17 @@ namespace ClosedXML.Excel
                 return false;
 
             return _rowNumber == other.RowNumber &&
-                   _columnNumber == other.ColumnNumber;
+                   _columnNumber == other.ColumnNumber &&
+                   _fixedRow == other.FixedRow &&
+                   _fixedColumn == other.FixedColumn;
         }
 
         public bool Equals(XLAddress other)
         {
             return _rowNumber == other._rowNumber &&
-                   _columnNumber == other._columnNumber;
+                   _columnNumber == other._columnNumber &&
+                   _fixedRow == other._fixedRow &&
+                   _fixedColumn == other._fixedColumn;
         }
 
         public override Boolean Equals(Object other)

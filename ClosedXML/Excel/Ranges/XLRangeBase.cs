@@ -955,17 +955,11 @@ namespace ClosedXML.Excel
                                  rangeAddress.FirstAddress.FixedRow,
                                  rangeAddress.FirstAddress.FixedColumn);
 
-            newFirstCellAddress.FixedRow = rangeAddress.FirstAddress.FixedRow;
-            newFirstCellAddress.FixedColumn = rangeAddress.FirstAddress.FixedColumn;
-
             var newLastCellAddress = new XLAddress((XLWorksheet)rangeAddress.LastAddress.Worksheet,
                                 rangeAddress.LastAddress.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
                                 rangeAddress.LastAddress.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
                                 rangeAddress.LastAddress.FixedRow,
                                 rangeAddress.LastAddress.FixedColumn);
-
-            newLastCellAddress.FixedRow = rangeAddress.LastAddress.FixedRow;
-            newLastCellAddress.FixedColumn = rangeAddress.LastAddress.FixedColumn;
 
             return GetRange(newFirstCellAddress, newLastCellAddress);
         }
