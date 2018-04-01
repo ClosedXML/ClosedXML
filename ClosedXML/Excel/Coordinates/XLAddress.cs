@@ -167,13 +167,11 @@ namespace ClosedXML.Excel
         public bool FixedRow
         {
             get { return _fixedRow; }
-            set { _fixedRow = value; }
         }
 
         public bool FixedColumn
         {
             get { return _fixedColumn; }
-            set { _fixedColumn = value; }
         }
 
         /// <summary>
