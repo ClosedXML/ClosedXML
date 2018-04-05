@@ -415,13 +415,30 @@ namespace ClosedXML_Tests
             ranges.Add(ws.Range("B1:B2"));
             var rangesCopy = ranges.ToList();
 
-            ranges.RemoveAll(false);
+            ranges.RemoveAll(null, false);
             ws.FirstColumn().InsertColumnsBefore(1);
 
             Assert.AreEqual(0, ranges.Count);
             // if ranges were not disposed they addresses should change
             Assert.AreEqual("B1:B2", rangesCopy.First().RangeAddress.ToString());
             Assert.AreEqual("C1:C2", rangesCopy.Last().RangeAddress.ToString());
+        }
+
+
+        [Test]
+        public void RangesRemoveAllByCriteria()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var ranges = new XLRanges();
+            ranges.Add(ws.Range("A1:A2"));
+            ranges.Add(ws.Range("B1:B3"));
+            ranges.Add(ws.Range("C1:C4"));
+            var otherRange = ws.Range("A3:D3");
+
+            ranges.RemoveAll(r => r.Intersects(otherRange));
+
+            Assert.AreEqual(1, ranges.Count);
+            Assert.AreEqual("A1:A2", ranges.Single().RangeAddress.ToString());
         }
     }
 }
