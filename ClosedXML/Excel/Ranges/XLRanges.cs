@@ -47,12 +47,25 @@ namespace ClosedXML.Excel
             _ranges.RemoveAll(r => r.ToString() == range.ToString());
         }
 
-        public void RemoveAll(bool dispose = true)
+        /// <summary>
+        /// Removes ranges matching the criteria from the collection, optionally releasing their event handlers.
+        /// </summary>
+        /// <param name="match">Criteria to filter ranges. Only those ranges that satisfy the criteria will be removed.
+        /// Null means the entire collection should be cleared.</param>
+        /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from 
+        /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
+        public void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true)
         {
-            Count = 0;
-            if (dispose)
-                _ranges.ForEach(r => r.Dispose());
-            _ranges.Clear();
+            match = match ?? (_ => true);
+
+            if (releaseEventHandlers)
+            {
+                _ranges
+                    .Where(r => match(r))
+                    .ForEach(r => r.Dispose());
+            }
+
+            Count -= _ranges.RemoveAll(match);
         }
 
         public int Count { get; private set; }
