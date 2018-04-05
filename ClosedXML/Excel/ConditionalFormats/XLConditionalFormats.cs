@@ -43,7 +43,8 @@ namespace ClosedXML.Excel
             {
                 var item = formats.First();
 
-                var ranges = item.Ranges;
+                var rangesToJoin = item.Ranges;
+                var skippedRanges = new XLRanges();
                 Func<IXLConditionalFormat, bool> IsSameFormat = f =>
                     f != item && f.Ranges.First().Worksheet.Position == item.Ranges.First().Worksheet.Position &&
                     XLConditionalFormat.NoRangeComparer.Equals(f, item);
@@ -57,16 +58,22 @@ namespace ClosedXML.Excel
                     if (!stop)
                     {
                         var nextFormat = formats[i];
-                        if (IsSameFormat(nextFormat))
+
+                        var intersectsSkipped =
+                            skippedRanges.Any(left => nextFormat.Ranges.Any(right => left.Intersects(right)));
+
+                        if (IsSameFormat(nextFormat) && !intersectsSkipped)
                         {
                             similarFormats.Add(nextFormat);
-                            nextFormat.Ranges.ForEach(r => ranges.Add(r));
+                            nextFormat.Ranges.ForEach(r => rangesToJoin.Add(r));
                         }
-                        else if (ranges.Any(left => nextFormat.Ranges.Any(right => left.Intersects(right))))
+                        else if (rangesToJoin.Any(left => nextFormat.Ranges.Any(right => left.Intersects(right))) ||
+                                 intersectsSkipped)
                         {
                             // if we reached the rule intersecting any of captured ranges stop for not breaking the priorities
                             stop = true;
                         }
+                        nextFormat.Ranges.ForEach(r => skippedRanges.Add(r));
                     }
 
                     i++;
@@ -74,7 +81,7 @@ namespace ClosedXML.Excel
 
                 var baseCell = item.Ranges.First().FirstCell() as XLCell;
 
-                var consRanges = ranges.Consolidate();
+                var consRanges = rangesToJoin.Consolidate();
                 item.Ranges.RemoveAll();
                 consRanges.ForEach(r => item.Ranges.Add(r));
 
