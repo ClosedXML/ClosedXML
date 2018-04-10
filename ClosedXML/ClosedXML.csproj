@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net40;net46</TargetFrameworks>
-    <Version>0.9</Version>
+    <Version>0.92.0</Version>
     <Authors>Manuel de Leon, Amir Ghezelbash, Francois Botha</Authors>
     <Company />
     <Product />

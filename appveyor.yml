@@ -1,4 +1,4 @@
-version: 0.92.{build}
+version: 0.92.0.{build}
 
 os: Visual Studio 2017
 image: Visual Studio 2017
@@ -12,12 +12,14 @@ branches:
   except:
     - gh-pages
 
-assembly_info:
+dotnet_csproj:
   patch: true
-  file: AssemblyInfo.*
-  assembly_version: "{version}"
-  assembly_file_version: "{version}"
-  assembly_informational_version: "{version}"
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
 
 # platform: Any CPU
 configuration : Release
