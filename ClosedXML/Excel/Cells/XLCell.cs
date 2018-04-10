@@ -353,7 +353,7 @@ namespace ClosedXML.Excel
                 return cValue;
             }
             else
-                return cValue;
+            return cValue;
         }
 
         /// <summary>
@@ -366,7 +366,7 @@ namespace ClosedXML.Excel
             get
             {
                 var fA1 = FormulaA1;
-                if (!String.IsNullOrWhiteSpace(fA1))
+                if (!XLHelper.IsNullOrWhiteSpace(fA1))
                 {
                     if (IsEvaluating)
                         throw new InvalidOperationException("Circular Reference");
@@ -524,7 +524,7 @@ namespace ClosedXML.Excel
                         if (!hasTitles)
                         {
                             var fieldName = XLColumnAttribute.GetHeader(itemType);
-                            if (String.IsNullOrWhiteSpace(fieldName))
+                            if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                 fieldName = itemType.Name;
 
                             _worksheet.SetValue(fieldName, fRo, co);
@@ -602,7 +602,7 @@ namespace ClosedXML.Excel
                             if (!hasTitles)
                             {
                                 foreach (var fieldName in from DataColumn column in row.Table.Columns
-                                                          select String.IsNullOrWhiteSpace(column.Caption)
+                                                          select XLHelper.IsNullOrWhiteSpace(column.Caption)
                                                                      ? column.ColumnName
                                                                      : column.Caption)
                                 {
@@ -655,7 +655,7 @@ namespace ClosedXML.Excel
                                     if (!(mi is IEnumerable))
                                     {
                                         var fieldName = XLColumnAttribute.GetHeader(mi);
-                                        if (String.IsNullOrWhiteSpace(fieldName))
+                                        if (XLHelper.IsNullOrWhiteSpace(fieldName))
                                             fieldName = mi.Name;
 
                                         _worksheet.SetValue(fieldName, fRo, co);
@@ -1083,9 +1083,9 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaA1))
+                if (XLHelper.IsNullOrWhiteSpace(_formulaA1))
                 {
-                    if (!String.IsNullOrWhiteSpace(_formulaR1C1))
+                    if (!XLHelper.IsNullOrWhiteSpace(_formulaR1C1))
                     {
                         _formulaA1 = GetFormulaA1(_formulaR1C1);
                         return FormulaA1;
@@ -1105,7 +1105,7 @@ namespace ClosedXML.Excel
 
             set
             {
-                _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
+                _formulaA1 = XLHelper.IsNullOrWhiteSpace(value) ? null : value;
 
                 _formulaR1C1 = null;
             }
@@ -1115,7 +1115,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaR1C1))
+                if (XLHelper.IsNullOrWhiteSpace(_formulaR1C1))
                     _formulaR1C1 = GetFormulaR1C1(FormulaA1);
 
                 return _formulaR1C1;
@@ -1123,7 +1123,7 @@ namespace ClosedXML.Excel
 
             set
             {
-                _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
+                _formulaR1C1 = XLHelper.IsNullOrWhiteSpace(value) ? null : value;
 
                 _formulaA1 = null;
             }
@@ -1763,7 +1763,7 @@ namespace ClosedXML.Excel
         {
             var style = GetStyleForRead();
             return _dataType == XLDataType.Number
-                   && String.IsNullOrWhiteSpace(style.NumberFormat.Format)
+                   && XLHelper.IsNullOrWhiteSpace(style.NumberFormat.Format)
                    && ((style.NumberFormat.NumberFormatId >= 14
                         && style.NumberFormat.NumberFormatId <= 22)
                        || (style.NumberFormat.NumberFormatId >= 45
@@ -1774,7 +1774,7 @@ namespace ClosedXML.Excel
         {
             var format = String.Empty;
             var style = GetStyleForRead();
-            if (String.IsNullOrWhiteSpace(style.NumberFormat.Format))
+            if (XLHelper.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
                 var formatCodes = XLPredefinedFormat.FormatCodes;
                 if (formatCodes.ContainsKey(style.NumberFormat.NumberFormatId))
@@ -2039,7 +2039,7 @@ namespace ClosedXML.Excel
         private string GetFormula(string strValue, FormulaConversionType conversionType, int rowsToShift,
                                   int columnsToShift)
         {
-            if (String.IsNullOrWhiteSpace(strValue))
+            if (XLHelper.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
 
             var value = ">" + strValue + "<";
@@ -2321,7 +2321,7 @@ namespace ClosedXML.Excel
         internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                 int rowsShifted)
         {
-            if (String.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
             var value = formulaA1;
 
@@ -2470,7 +2470,7 @@ namespace ClosedXML.Excel
         internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                    int columnsShifted)
         {
-            if (String.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (XLHelper.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
 
             var value = formulaA1;
 
@@ -2739,7 +2739,7 @@ namespace ClosedXML.Excel
 
         #endregion XLCell Right
 
-        public Boolean HasFormula { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
+        public Boolean HasFormula { get { return !XLHelper.IsNullOrWhiteSpace(FormulaA1); } }
 
         public Boolean HasArrayFormula { get { return FormulaA1.StartsWith("{"); } }
 

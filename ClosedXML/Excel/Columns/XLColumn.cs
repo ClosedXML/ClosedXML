@@ -297,6 +297,7 @@ namespace ClosedXML.Excel
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
             var fontCache = new Dictionary<IXLFontBase, Font>();
+
             Double colMaxWidth = minWidth;
 
             List<Int32> autoFilterRows = new List<Int32>();

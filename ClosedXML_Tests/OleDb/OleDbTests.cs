@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿#if !APPVEYOR && _NETFRAMEWORK_
+using ClosedXML.Excel;
 using ClosedXML_Tests.Utils;
 using NUnit.Framework;
 using System;
@@ -13,7 +14,6 @@ namespace ClosedXML_Tests.OleDb
     [TestFixture]
     public class OleDbTests
     {
-#if !APPVEYOR
         [Test]
         public void TestOleDbValues()
         {
@@ -78,7 +78,6 @@ namespace ClosedXML_Tests.OleDb
                 }
             }
         }
-#endif
 
         private string CreateTestFile()
         {
@@ -118,3 +117,4 @@ namespace ClosedXML_Tests.OleDb
         }
     }
 }
+#endif

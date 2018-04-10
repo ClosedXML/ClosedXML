@@ -235,12 +235,12 @@ namespace ClosedXML.Excel
 
             // Ensure all RelId's have been added to the context
             context.RelIdGenerator.AddValues(workbookPart.Parts.Select(p => p.RelationshipId), RelType.Workbook);
-            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !String.IsNullOrWhiteSpace(ws.RelId)).Select(ws => ws.RelId), RelType.Workbook);
-            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !String.IsNullOrWhiteSpace(ws.LegacyDrawingId)).Select(ws => ws.LegacyDrawingId), RelType.Workbook);
+            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !XLHelper.IsNullOrWhiteSpace(ws.RelId)).Select(ws => ws.RelId), RelType.Workbook);
+            context.RelIdGenerator.AddValues(WorksheetsInternal.Cast<XLWorksheet>().Where(ws => !XLHelper.IsNullOrWhiteSpace(ws.LegacyDrawingId)).Select(ws => ws.LegacyDrawingId), RelType.Workbook);
             context.RelIdGenerator.AddValues(WorksheetsInternal
                 .Cast<XLWorksheet>()
                 .SelectMany(ws => ws.Tables.Cast<XLTable>())
-                .Where(t => !String.IsNullOrWhiteSpace(t.RelId))
+                .Where(t => !XLHelper.IsNullOrWhiteSpace(t.RelId))
                 .Select(t => t.RelId), RelType.Workbook);
 
             var extendedFilePropertiesPart = document.ExtendedFilePropertiesPart ??
@@ -292,7 +292,7 @@ namespace ClosedXML.Excel
                     var vmlDrawingPart = worksheetPart.VmlDrawingParts.FirstOrDefault();
                     if (vmlDrawingPart == null)
                     {
-                        if (String.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
+                        if (XLHelper.IsNullOrWhiteSpace(worksheet.LegacyDrawingId))
                         {
                             worksheet.LegacyDrawingId = context.RelIdGenerator.GetNext(RelType.Workbook);
                             worksheet.LegacyDrawingIsNew = true;
@@ -358,7 +358,8 @@ namespace ClosedXML.Excel
             // Only delete the VmlDrawingParts for comments.
             if (vmlDrawingPart != null)
             {
-                var xdoc = XDocumentExtensions.Load(vmlDrawingPart.GetStream(FileMode.Open));
+                var vmlStream = vmlDrawingPart.GetStream(FileMode.Open);
+                var xdoc = XDocumentExtensions.Load(vmlStream);
                 //xdoc.Root.Elements().Where(e => e.Name.LocalName == "shapelayout").Remove();
                 xdoc.Root.Elements().Where(
                     e => e.Name.LocalName == "shapetype" && (string)e.Attribute("id") == @"_x0000_t202").Remove();
@@ -388,6 +389,7 @@ namespace ClosedXML.Excel
                     legacyParts.ForEach(p => vmlDrawingPartNew.AddPart(p, vmlDrawingPart.GetIdOfPart(p)));
                 }
 
+                vmlStream.Close();
                 worksheetPart.DeletePart(vmlDrawingPart);
 
                 if (hasNewPart && rId != worksheetPart.GetIdOfPart(vmlDrawingPartNew))
@@ -508,7 +510,7 @@ namespace ClosedXML.Excel
 
             if (Properties.Manager != null)
             {
-                if (!String.IsNullOrWhiteSpace(Properties.Manager))
+                if (!XLHelper.IsNullOrWhiteSpace(Properties.Manager))
                 {
                     if (properties.Manager == null)
                         properties.Manager = new Manager();
@@ -521,7 +523,7 @@ namespace ClosedXML.Excel
 
             if (Properties.Company == null) return;
 
-            if (!String.IsNullOrWhiteSpace(Properties.Company))
+            if (!XLHelper.IsNullOrWhiteSpace(Properties.Company))
             {
                 if (properties.Company == null)
                     properties.Company = new Company();
@@ -651,7 +653,7 @@ namespace ClosedXML.Excel
             foreach (var xlSheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
                 string rId;
-                if (xlSheet.SheetId == 0 && String.IsNullOrWhiteSpace(xlSheet.RelId))
+                if (xlSheet.SheetId == 0 && XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
                 {
                     rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
@@ -663,7 +665,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    if (String.IsNullOrWhiteSpace(xlSheet.RelId))
+                    if (XLHelper.IsNullOrWhiteSpace(xlSheet.RelId))
                     {
                         rId = String.Concat("rId", xlSheet.SheetId);
                         context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
@@ -810,7 +812,7 @@ namespace ClosedXML.Excel
                     if (!nr.Visible)
                         definedName.Hidden = BooleanValue.FromBoolean(true);
 
-                    if (!String.IsNullOrWhiteSpace(nr.Comment))
+                    if (!XLHelper.IsNullOrWhiteSpace(nr.Comment))
                         definedName.Comment = nr.Comment;
                     definedNames.AppendChild(definedName);
                 }
@@ -864,7 +866,7 @@ namespace ClosedXML.Excel
                 if (!nr.Visible)
                     definedName.Hidden = BooleanValue.FromBoolean(true);
 
-                if (!String.IsNullOrWhiteSpace(nr.Comment))
+                if (!XLHelper.IsNullOrWhiteSpace(nr.Comment))
                     definedName.Comment = nr.Comment;
                 definedNames.AppendChild(definedName);
             }
@@ -910,7 +912,7 @@ namespace ClosedXML.Excel
                             w.Internals.CellsCollection.GetCells(
                                 c => ((c.DataType == XLDataType.Text && c.ShareString) || c.HasRichText)
                                      && (c as XLCell).InnerText.Length > 0
-                                     && String.IsNullOrWhiteSpace(c.FormulaA1)
+                                     && XLHelper.IsNullOrWhiteSpace(c.FormulaA1)
                                 )))
             {
                 c.DataType = XLDataType.Text;
@@ -1061,7 +1063,7 @@ namespace ClosedXML.Excel
                 var cellsWithoutFormulas = new HashSet<String>();
                 foreach (var c in worksheet.Internals.CellsCollection.GetCells())
                 {
-                    if (String.IsNullOrWhiteSpace(c.FormulaA1))
+                    if (XLHelper.IsNullOrWhiteSpace(c.FormulaA1))
                         cellsWithoutFormulas.Add(c.Address.ToStringRelative());
                     else
                     {
@@ -1803,6 +1805,20 @@ namespace ClosedXML.Excel
             var modified = Properties.Modified == DateTime.MinValue ? DateTime.Now : Properties.Modified;
             document.PackageProperties.Created = created;
             document.PackageProperties.Modified = modified;
+
+#if true // Workaround: https://github.com/OfficeDev/Open-XML-SDK/issues/235
+
+            if (Properties.LastModifiedBy == null) document.PackageProperties.LastModifiedBy = "";
+            if (Properties.Author == null) document.PackageProperties.Creator = "";
+            if (Properties.Title == null) document.PackageProperties.Title = "";
+            if (Properties.Subject == null) document.PackageProperties.Subject = "";
+            if (Properties.Category == null) document.PackageProperties.Category = "";
+            if (Properties.Keywords == null) document.PackageProperties.Keywords = "";
+            if (Properties.Comments == null) document.PackageProperties.Description = "";
+            if (Properties.Status == null) document.PackageProperties.ContentStatus = "";
+
+#endif
+
             document.PackageProperties.LastModifiedBy = Properties.LastModifiedBy;
 
             document.PackageProperties.Creator = Properties.Author;
@@ -1891,7 +1907,7 @@ namespace ClosedXML.Excel
                     while (formula.StartsWith("=") && formula.Length > 1)
                         formula = formula.Substring(1);
 
-                    if (!String.IsNullOrWhiteSpace(formula))
+                    if (!XLHelper.IsNullOrWhiteSpace(formula))
                     {
                         tableColumn.CalculatedColumnFormula = new CalculatedColumnFormula
                         {
@@ -1912,7 +1928,7 @@ namespace ClosedXML.Excel
                             tableColumn.TotalsRowFormula = new TotalsRowFormula(xlField.TotalsRowFormulaA1);
                     }
 
-                    if (!String.IsNullOrWhiteSpace(xlField.TotalsRowLabel))
+                    if (!XLHelper.IsNullOrWhiteSpace(xlField.TotalsRowLabel))
                         tableColumn.TotalsRowLabel = xlField.TotalsRowLabel;
                 }
                 tableColumns.AppendChild(tableColumn);
@@ -1975,7 +1991,7 @@ namespace ClosedXML.Excel
 
                 PivotCache pivotCache;
                 PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart;
-                if (!String.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
+                if (!XLHelper.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
                 {
                     pivotCache = pivotCaches.Cast<PivotCache>().Single(pc => pc.Id.Value == pt.WorkbookCacheRelId);
                     pivotTableCacheDefinitionPart = workbookPart.GetPartById(pt.WorkbookCacheRelId) as PivotTableCacheDefinitionPart;
@@ -1989,18 +2005,18 @@ namespace ClosedXML.Excel
 
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt, context);
 
-                if (String.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
+                if (XLHelper.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
                     pivotCaches.AppendChild(pivotCache);
 
                 PivotTablePart pivotTablePart;
-                if (String.IsNullOrWhiteSpace(pt.RelId))
+                if (XLHelper.IsNullOrWhiteSpace(pt.RelId))
                     pivotTablePart = worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
                 else
                     pivotTablePart = worksheetPart.GetPartById(pt.RelId) as PivotTablePart;
 
                 GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId, context);
 
-                if (String.IsNullOrWhiteSpace(pt.RelId))
+                if (XLHelper.IsNullOrWhiteSpace(pt.RelId))
                     pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
             }
         }
@@ -2124,8 +2140,8 @@ namespace ClosedXML.Excel
                     ptfi.DataType = XLDataType.DateTime;
                     ptfi.MixedDataType = false;
                     ptfi.DistinctValues = fieldValueCells
-                        .Select(cell => cell.GetDateTime())
-                        .Distinct()
+                            .Select(cell => cell.GetDateTime())
+                            .Distinct()
                         .Cast<object>()
                         .ToArray();
 
@@ -2193,7 +2209,7 @@ namespace ClosedXML.Excel
 
             var pivotCacheRecords = new PivotCacheRecords();
             pivotCacheRecords.AddNamespaceDeclaration("r",
-                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
             pivotTableCacheRecordsPart.PivotCacheRecords = pivotCacheRecords;
 
             context.PivotTables.Add(pti.Guid, pti);
@@ -2775,9 +2791,10 @@ namespace ClosedXML.Excel
             SaveContext context)
         {
             var ms = new MemoryStream();
-            CopyStream(vmlDrawingPart.GetStream(FileMode.OpenOrCreate), ms);
+            var stream = vmlDrawingPart.GetStream(FileMode.OpenOrCreate);
+            CopyStream(stream, ms);
             ms.Position = 0;
-            var writer = new XmlTextWriter(vmlDrawingPart.GetStream(FileMode.Create), Encoding.UTF8);
+            var writer = new XmlTextWriter(stream, Encoding.UTF8);
 
             writer.WriteStartElement("xml");
 
@@ -2864,7 +2881,7 @@ namespace ClosedXML.Excel
                 StrokeWeight = String.Concat(c.Comment.Style.ColorsAndLines.LineWeight.ToInvariantString(), "pt"),
                 InsetMode = c.Comment.Style.Margins.Automatic ? InsetMarginValues.Auto : InsetMarginValues.Custom
             };
-            if (!String.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
+            if (!XLHelper.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
                 shape.Alternate = c.Comment.Style.Web.AlternateText;
 
             return shape;
@@ -2955,41 +2972,42 @@ namespace ClosedXML.Excel
             {
                 case Drawings.XLPicturePlacement.FreeFloating:
                     var absoluteAnchor = new Xdr.AbsoluteAnchor(
-                        new Xdr.Position
-                        {
-                            X = ConvertToEnglishMetricUnits(pic.Left, GraphicsUtils.Graphics.DpiX),
-                            Y = ConvertToEnglishMetricUnits(pic.Top, GraphicsUtils.Graphics.DpiY)
-                        },
-                        new Xdr.Extent
-                        {
-                            Cx = extentsCx,
-                            Cy = extentsCy
-                        },
-                        new Xdr.Picture(
-                            new Xdr.NonVisualPictureProperties(
+                    new Xdr.Position
+                    {
+                        X = ConvertToEnglishMetricUnits(pic.Left, GraphicsUtils.Graphics.DpiX),
+                        Y = ConvertToEnglishMetricUnits(pic.Top, GraphicsUtils.Graphics.DpiY)
+                    },
+                    new Xdr.Extent
+                    {
+                        Cx = extentsCx,
+                        Cy = extentsCy
+                    },
+                    new Xdr.Picture(
+                        new Xdr.NonVisualPictureProperties(
                                 new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
                                 new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
-                            ),
-                            new Xdr.BlipFill(
-                                new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
-                                new Stretch(new FillRectangle())
-                            ),
-                            new Xdr.ShapeProperties(
-                                new Transform2D(
-                                    new Offset { X = 0, Y = 0 },
-                                    new Extents { Cx = extentsCx, Cy = extentsCy }
-                                ),
-                                new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
-                            )
                         ),
-                        new Xdr.ClientData()
-                    );
+                        new Xdr.BlipFill(
+                            new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                            new Stretch(new FillRectangle())
+                        ),
+                        new Xdr.ShapeProperties(
+                            new Transform2D(
+                                new Offset { X = 0, Y = 0 },
+                                new Extents { Cx = extentsCx, Cy = extentsCy }
+                            ),
+                            new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
+                        )
+                    ),
+                    new Xdr.ClientData()
+                );
 
                     worksheetDrawing.Append(absoluteAnchor);
                     break;
 
                 case Drawings.XLPicturePlacement.MoveAndSize:
                     var moveAndSizeFromMarker = pic.Markers[Drawings.XLMarkerPosition.TopLeft];
+                    if (moveAndSizeFromMarker == null) moveAndSizeFromMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1").Address);
                     fMark = new Xdr.FromMarker
                     {
                         ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.Address.ColumnNumber - 1).ToString()),
@@ -2999,6 +3017,7 @@ namespace ClosedXML.Excel
                     };
 
                     var moveAndSizeToMarker = pic.Markers[Drawings.XLMarkerPosition.BottomRight];
+                    if (moveAndSizeToMarker == null) moveAndSizeToMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1").Address, new System.Drawing.Point(picture.Width, picture.Height));
                     tMark = new Xdr.ToMarker
                     {
                         ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.Address.ColumnNumber - 1).ToString()),
@@ -3035,6 +3054,7 @@ namespace ClosedXML.Excel
 
                 case Drawings.XLPicturePlacement.Move:
                     var moveFromMarker = pic.Markers[Drawings.XLMarkerPosition.TopLeft];
+                    if (moveFromMarker == null) moveFromMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1").Address);
                     fMark = new Xdr.FromMarker
                     {
                         ColumnId = new Xdr.ColumnId((moveFromMarker.Address.ColumnNumber - 1).ToString()),
@@ -3461,7 +3481,7 @@ namespace ClosedXML.Excel
             if (diffFont?.HasChildren ?? false)
                 differentialFormat.Append(diffFont);
 
-            if (!String.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
+            if (!XLHelper.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
             {
                 var numberFormat = new NumberingFormat
                 {
@@ -3493,7 +3513,7 @@ namespace ClosedXML.Excel
             if (diffFont?.HasChildren ?? false)
                 differentialFormat.Append(diffFont);
 
-            if (!String.IsNullOrWhiteSpace(style.NumberFormat.Format) || style.NumberFormat.NumberFormatId != 0)
+            if (!XLHelper.IsNullOrWhiteSpace(style.NumberFormat.Format) || style.NumberFormat.NumberFormatId != 0)
             {
                 var numberFormat = new NumberingFormat();
 
@@ -4242,7 +4262,7 @@ namespace ClosedXML.Excel
         {
             var newXLNumberFormat = new XLNumberFormat();
 
-            if (nf.FormatCode != null && !String.IsNullOrWhiteSpace(nf.FormatCode.Value))
+            if (nf.FormatCode != null && !XLHelper.IsNullOrWhiteSpace(nf.FormatCode.Value))
                 newXLNumberFormat.Format = nf.FormatCode.Value;
             else if (nf.NumberFormatId != null)
                 newXLNumberFormat.NumberFormatId = (Int32)nf.NumberFormatId.Value;
@@ -4438,13 +4458,13 @@ namespace ClosedXML.Excel
 
                     var seqRef = new List<String> { selection.ActiveCell.Value };
                     seqRef.AddRange(xlWorksheet.SelectedRanges
-                        .Select(range =>
-                        {
-                            if (range.RangeAddress.FirstAddress.Equals(range.RangeAddress.LastAddress))
-                                return range.RangeAddress.FirstAddress.ToStringRelative(false);
-                            else
-                                return range.RangeAddress.ToStringRelative(false);
-                        }));
+                            .Select(range =>
+                            {
+                                if (range.RangeAddress.FirstAddress.Equals(range.RangeAddress.LastAddress))
+                                    return range.RangeAddress.FirstAddress.ToStringRelative(false);
+                                else
+                                    return range.RangeAddress.ToStringRelative(false);
+                            }));
 
                     selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
 
@@ -4838,7 +4858,7 @@ namespace ClosedXML.Excel
                                 var table = xlWorksheet.Tables.First(t => t.AsRange().Contains(xlCell));
                                 field = table.Fields.First(f => f.Column.ColumnNumber() == xlCell.Address.ColumnNumber) as XLTableField;
 
-                                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                                if (!XLHelper.IsNullOrWhiteSpace(field.TotalsRowLabel))
                                 {
                                     cell.DataType = XLWorkbook.CvSharedString;
                                 }
@@ -4921,7 +4941,7 @@ namespace ClosedXML.Excel
 
                 var protection = xlWorksheet.Protection;
                 sheetProtection.Sheet = protection.Protected;
-                if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
+                if (!XLHelper.IsNullOrWhiteSpace(protection.PasswordHash))
                     sheetProtection.Password = protection.PasswordHash;
                 sheetProtection.FormatCells = OpenXmlHelper.GetBooleanValue(!protection.FormatCells, true);
                 sheetProtection.FormatColumns = OpenXmlHelper.GetBooleanValue(!protection.FormatColumns, true);
@@ -5176,7 +5196,7 @@ namespace ClosedXML.Excel
                             Display = hl.Cell.GetFormattedString()
                         };
                     }
-                    if (!String.IsNullOrWhiteSpace(hl.Tooltip))
+                    if (!XLHelper.IsNullOrWhiteSpace(hl.Tooltip))
                         hyperlink.Tooltip = hl.Tooltip;
                     hyperlinks.AppendChild(hyperlink);
                 }
@@ -5503,7 +5523,7 @@ namespace ClosedXML.Excel
         {
             if (field != null)
             {
-                if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
+                if (!XLHelper.IsNullOrWhiteSpace(field.TotalsRowLabel))
                 {
                     var cellValue = new CellValue();
                     cellValue.Text = xlCell.SharedStringId.ToString();
@@ -5569,7 +5589,7 @@ namespace ClosedXML.Excel
             }
             else if (dataType == XLDataType.DateTime || dataType == XLDataType.Number)
             {
-                if (!String.IsNullOrWhiteSpace(xlCell.InnerText))
+                if (!XLHelper.IsNullOrWhiteSpace(xlCell.InnerText))
                 {
                     var cellValue = new CellValue();
                     var d = Double.Parse(xlCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture);

@@ -2,9 +2,7 @@ using System;
 
 namespace ClosedXML.Excel
 {
-
-
-    public interface IXLFontBase
+     public interface IXLFontBase
     {
         Boolean Bold { get; set; }
         Boolean Italic { get; set; }

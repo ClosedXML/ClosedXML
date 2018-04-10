@@ -7,6 +7,7 @@ namespace ClosedXML.Utils
     {
         [ThreadStatic]
         private static Graphics threadLocalGraphics;
+
         internal static Graphics Graphics
         {
             get

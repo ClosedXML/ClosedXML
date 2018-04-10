@@ -1,18 +1,17 @@
 version: 0.92.{build}
-branches:
-  # whitelist
-  only:
-    - develop
 
-  # blacklist
-  except:
-    - gh-pages
-# Build worker image (VM template)
-image: Visual Studio 2015
+os: Visual Studio 2017
+image: Visual Studio 2017
+
 environment:
   AppVeyor: APPVEYOR
 
-# enable patching of AssemblyInfo.* files
+branches:
+  only:
+    - develop
+  except:
+    - gh-pages
+
 assembly_info:
   patch: true
   file: AssemblyInfo.*
@@ -20,24 +19,27 @@ assembly_info:
   assembly_file_version: "{version}"
   assembly_informational_version: "{version}"
 
-#---------------------------------#
-#       build configuration       #
-#---------------------------------#
-
-# build platform, i.e. x86, x64, Any CPU. This setting is optional.
-platform: Any CPU
-
-build:
-  parallel: true               # enable MSBuild parallel builds
-  project: ClosedXML.sln       # path to Visual Studio solution or project
-  verbosity: minimal
-
+# platform: Any CPU
 configuration : Release
 
-#Restore
+build:
+  parallel: true
+  project: ClosedXML.sln
+  verbosity: minimal
+
 before_build:
+  - ps: if (Test-Path 'C:\Tools\NuGet43') { $nugetDir = 'C:\Tools\NuGet43' } else { $nugetDir = 'C:\Tools\NuGet' }
+  - ps: (New-Object Net.WebClient).DownloadFile('https://dist.nuget.org/win-x86-commandline/v4.3.0/nuget.exe', "$nugetDir\NuGet.exe")
+  - cmd: nuget update -self
   - nuget restore
 
 artifacts:
-  - path: ClosedXML/bin/Release/ClosedXML.dll
-  - path: ClosedXML/bin/Release/ClosedXML.xml
+  - path: ClosedXML/bin/Release/netstandard2.0/ClosedXML.dll
+  - path: ClosedXML/bin/Release/net40/ClosedXML.dll
+  - path: ClosedXML/bin/Release/net46/ClosedXML.dll
+
+test:
+  assemblies:
+    - ClosedXML_Tests/bin/Release/netcoreapp2.0/ClosedXML_Tests.dll
+    - ClosedXML_Tests/bin/Release/net40/ClosedXML_Tests.dll
+    - ClosedXML_Tests/bin/Release/net46/ClosedXML_Tests.dll

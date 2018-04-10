@@ -35,6 +35,27 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CanAddPictureFromStream()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                {
+                    var picture = ws.AddPicture(resourceStream, "MyPicture")
+                        .WithPlacement(XLPicturePlacement.FreeFloating)
+                        .MoveTo(50, 50)
+                        .WithSize(200, 200);
+
+                    Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
+                    Assert.AreEqual(200, picture.Width);
+                    Assert.AreEqual(200, picture.Height);
+                }
+            }
+        }
+
+        [Test]
         public void CanAddPictureFromFile()
         {
             using (var wb = new XLWorkbook())
@@ -77,9 +98,8 @@ namespace ClosedXML_Tests
                 var ws = wb.AddWorksheet("Sheet1");
 
                 using (var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
-                using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
                 {
-                    var pic = ws.AddPicture(bitmap, "MyPicture")
+                    var pic = ws.AddPicture(resourceStream, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
                         .MoveTo(50, 50);
 
@@ -251,7 +271,6 @@ namespace ClosedXML_Tests
                     Assert.AreEqual(originalCount - 2, ws.Pictures.Count);
                 }
             }
-        
         }
 
         [Test]

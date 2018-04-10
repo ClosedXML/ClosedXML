@@ -14,9 +14,9 @@ namespace ClosedXML.Excel.Drawings
         Tiff = 3,
         Icon = 4,
         Pcx = 5,
-        Jpeg = 6,
-        Emf = 7,
-        Wmf = 8
+        Jpeg = 6
+        //Emf = 7,
+        //Wmf = 8
     }
 
     public enum XLPicturePlacement

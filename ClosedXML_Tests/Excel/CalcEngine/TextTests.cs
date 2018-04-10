@@ -11,7 +11,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     [TestFixture]
     public class TextTests
     {
-        [OneTimeSetUp]
+        [SetUp]
         public void Init()
         {
             // Make sure tests run on a deterministic culture

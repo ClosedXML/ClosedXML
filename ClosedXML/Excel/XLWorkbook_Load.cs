@@ -1,5 +1,3 @@
-#region
-
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -17,18 +15,12 @@ using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
-#endregion
-
 namespace ClosedXML.Excel
 {
-    #region
-
     using Ap;
     using Drawings;
     using Op;
     using System.Drawing;
-
-    #endregion
 
     public partial class XLWorkbook
     {
@@ -287,7 +279,7 @@ namespace ClosedXML.Excel
 
                     String reference = dTable.Reference.Value;
                     String tableName = dTable?.Name ?? dTable.DisplayName ?? string.Empty;
-                    if (String.IsNullOrWhiteSpace(tableName))
+                    if (XLHelper.IsNullOrWhiteSpace(tableName))
                         throw new InvalidDataException("The table name is missing.");
 
                     var xlTable = ws.Range(reference).CreateTable(tableName, false) as XLTable;
@@ -362,7 +354,7 @@ namespace ClosedXML.Excel
                         xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
                 }
 
-                #endregion
+                #endregion LoadTables
 
                 LoadDrawings(worksheetPart, ws);
 
@@ -418,7 +410,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                #endregion
+                #endregion LoadComments
             }
 
             var workbook = dSpreadsheet.WorkbookPart.Workbook;
@@ -489,10 +481,10 @@ namespace ClosedXML.Excel
                         {
                             var pt = ws.PivotTables.AddNew(pivotTableDefinition.Name, target, source) as XLPivotTable;
 
-                            if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
+                            if (!XLHelper.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
                                 pt.SetColumnHeaderCaption(StringValue.ToString(pivotTableDefinition.ColumnHeaderCaption));
 
-                            if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.RowHeaderCaption ?? String.Empty)))
+                            if (!XLHelper.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.RowHeaderCaption ?? String.Empty)))
                                 pt.SetRowHeaderCaption(StringValue.ToString(pivotTableDefinition.RowHeaderCaption));
 
                             pt.RelId = worksheetPart.GetIdOfPart(pivotTablePart);
@@ -760,7 +752,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            #endregion
+            #endregion Pivot tables
         }
 
         private static void LoadFieldOptions(PivotField pf, IXLPivotField pivotField)
@@ -825,10 +817,12 @@ namespace ClosedXML.Excel
 
                     var imagePart = drawingsPart.GetPartById(imgId);
                     using (var stream = imagePart.GetStream())
+                    using (var ms = new MemoryStream())
                     {
+                        stream.CopyTo(ms);
                         var vsdp = GetPropertiesFromAnchor(anchor);
 
-                        var picture = (ws as XLWorksheet).AddPicture(stream, vsdp.Name, Convert.ToInt32(vsdp.Id.Value)) as XLPicture;
+                        var picture = (ws as XLWorksheet).AddPicture(ms, vsdp.Name, Convert.ToInt32(vsdp.Id.Value)) as XLPicture;
                         picture.RelId = imgId;
 
                         Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
@@ -940,7 +934,7 @@ namespace ClosedXML.Excel
             return shape;
         }
 
-        #endregion
+        #endregion Comment Helpers
 
         private String GetTableColumnName(string name)
         {
@@ -1384,7 +1378,7 @@ namespace ClosedXML.Excel
             {
                 if (cell.CellFormula.SharedIndex != null)
                     xlCell.FormulaR1C1 = sharedFormulasR1C1[cell.CellFormula.SharedIndex.Value];
-                else if (!String.IsNullOrWhiteSpace(cell.CellFormula.Text))
+                else if (!XLHelper.IsNullOrWhiteSpace(cell.CellFormula.Text))
                 {
                     String formula;
                     if (cell.CellFormula.FormulaType != null && cell.CellFormula.FormulaType == CellFormulaValues.Array)
@@ -1429,7 +1423,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.SharedString)
                 {
-                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                     {
                         var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture)];
                         ParseCellValue(sharedString, xlCell);
@@ -1441,7 +1435,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
-                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                     xlCell._dataType = XLDataType.DateTime;
                 }
@@ -1453,7 +1447,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
-                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
 
                     if (s == null)
@@ -1471,7 +1465,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                    if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
 
                     if (s.NumberingFormats != null &&
@@ -1542,7 +1536,7 @@ namespace ClosedXML.Excel
                 LoadFont(pp, xlCell.RichText.Phonetics);
             }
 
-            #endregion
+            #endregion Load PhoneticProperties
 
             #region Load Phonetic Runs
 
@@ -1552,7 +1546,7 @@ namespace ClosedXML.Excel
                                               (Int32)pr.EndingBaseIndex.Value);
             }
 
-            #endregion
+            #endregion Load Phonetic Runs
         }
 
         private void LoadNumberFormat(NumberingFormat nfSource, IXLNumberFormat nf)
@@ -1793,7 +1787,7 @@ namespace ClosedXML.Excel
                 return XLDataType.Text;
             else
             {
-                if (!String.IsNullOrWhiteSpace(numberFormat.Format))
+                if (!XLHelper.IsNullOrWhiteSpace(numberFormat.Format))
                 {
                     var dataType = GetDataTypeFromFormat(numberFormat.Format);
                     return dataType.HasValue ? dataType.Value : XLDataType.Number;
@@ -1873,7 +1867,7 @@ namespace ClosedXML.Excel
                         {
                             case XLFilterOperator.Equal:
                                 if (isText)
-                                    condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                                    condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                                 else
                                     condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
                                 break;
@@ -1884,7 +1878,7 @@ namespace ClosedXML.Excel
                             case XLFilterOperator.LessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) < 0; break;
                             case XLFilterOperator.NotEqual:
                                 if (isText)
-                                    condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                                    condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                                 else
                                     condition = o => (o as IComparable).CompareTo(xlFilter.Value) != 0;
                                 break;
@@ -1927,7 +1921,7 @@ namespace ClosedXML.Excel
                         if (isText)
                         {
                             xlFilter.Value = filter.Val.Value;
-                            condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                            condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                         }
                         else
                         {
@@ -2094,7 +2088,7 @@ namespace ClosedXML.Excel
             foreach (DataValidation dvs in dataValidations.Elements<DataValidation>())
             {
                 String txt = dvs.SequenceOfReferences.InnerText;
-                if (String.IsNullOrWhiteSpace(txt)) continue;
+                if (XLHelper.IsNullOrWhiteSpace(txt)) continue;
                 foreach (var rangeAddress in txt.Split(' '))
                 {
                     using (var range = ws.Range(rangeAddress))
@@ -2150,7 +2144,7 @@ namespace ClosedXML.Excel
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
                         conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
 
-                    if (fr.Text != null && !String.IsNullOrWhiteSpace(fr.Text))
+                    if (fr.Text != null && !XLHelper.IsNullOrWhiteSpace(fr.Text))
                         conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
 
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
@@ -2182,8 +2176,8 @@ namespace ClosedXML.Excel
                             conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
 
                         var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
-                        if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
-                            conditionalFormat.Id = Guid.Parse(id.Text.Substring(1, id.Text.Length - 2));
+                        if (id != null && id.Text != null && !XLHelper.IsNullOrWhiteSpace(id.Text))
+                            conditionalFormat.Id = new Guid(id.Text.Substring(1, id.Text.Length - 2));
 
                         ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
                     }

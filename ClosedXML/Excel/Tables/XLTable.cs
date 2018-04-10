@@ -96,7 +96,7 @@ namespace ClosedXML.Excel
                         continue;
                     }
 
-                    if (String.IsNullOrWhiteSpace(name))
+                    if (XLHelper.IsNullOrWhiteSpace(name))
                     {
                         name = GetUniqueName("Column", cellPos + 1, true);
                         cell.SetValue(name);
@@ -347,7 +347,7 @@ namespace ClosedXML.Excel
                 var co = 1;
                 foreach (var c in firstRow.Cells())
                 {
-                    if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                    if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                         c.Value = GetUniqueName("Column", co, true);
 
                     var header = c.GetString();
@@ -393,7 +393,7 @@ namespace ClosedXML.Excel
                     {
                         f.UpdateUnderlyingCellFormula();
                         var c = this.TotalsRow().Cell(f.Index + 1);
-                        if (!String.IsNullOrWhiteSpace(f.TotalsRowLabel))
+                        if (!XLHelper.IsNullOrWhiteSpace(f.TotalsRowLabel))
                         {
                             c.DataType = XLDataType.Text;
 
@@ -566,7 +566,7 @@ namespace ClosedXML.Excel
             Int32 co = 1;
             foreach (IXLCell c in range.Row(1).Cells())
             {
-                if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                     c.Value = GetUniqueName("Column", co, true);
                 _uniqueNames.Add(c.GetString());
                 co++;
@@ -619,7 +619,7 @@ namespace ClosedXML.Excel
                     Int32 co = 1;
                     foreach (IXLCell c in headersRow.Cells())
                     {
-                        if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                        if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                             c.Value = GetUniqueName("Column", co, true);
                         _uniqueNames.Add(c.GetString());
                         co++;

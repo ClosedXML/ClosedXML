@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClosedXML.Excel
 {
@@ -19,6 +15,7 @@ namespace ClosedXML.Excel
             this.EvaluateFormulasBeforeSaving = false;
             this.GenerateCalculationChain = true;
         }
+
         public Boolean ValidatePackage;
         public Boolean EvaluateFormulasBeforeSaving;
         public Boolean GenerateCalculationChain;
