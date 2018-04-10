@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net40;net46</TargetFrameworks>
+    <Version>0.92.0</Version>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
   </PropertyGroup>
