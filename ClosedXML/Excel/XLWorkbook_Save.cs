@@ -104,7 +104,7 @@ namespace ClosedXML.Excel
 
             if (errors.Any())
             {
-                var message = string.Join("\r\n", errors.Select(e => string.Format("{0} in {1}", e.Description, e.Path.XPath)).ToArray());
+                var message = string.Join("\r\n", errors.Select(e => string.Format("Part {0}, Path {1}: {2}", e.Part.Uri, e.Path.XPath, e.Description)).ToArray());
                 throw new ApplicationException(message);
             }
             return true;
@@ -3095,14 +3095,22 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static void RebasePictureIds(WorksheetPart worksheetPart)
+        // Still not fully implemented for all shapes
+        private static void RebaseShapeIds(WorksheetPart worksheetPart)
         {
-            for (var i = 0; i < worksheetPart.DrawingsPart.WorksheetDrawing.ChildElements.Count; i++)
+            var worksheetDrawing = worksheetPart.DrawingsPart.WorksheetDrawing;
+            for (var i = 0; i < worksheetDrawing.ChildElements.Count; i++)
             {
-                var anchor = worksheetPart.DrawingsPart.WorksheetDrawing.ElementAt(i);
+                var anchor = worksheetDrawing.ElementAt(i);
                 var props = GetPropertiesFromAnchor(anchor);
                 if (props != null)
-                    props.Id = Convert.ToUInt32(i + 1);
+                {
+                    var offset = 1;
+                    while (worksheetDrawing.Descendants<NonVisualDrawingProperties>().Any(p => p.Id == Convert.ToUInt32(i + offset)))
+                        offset++;
+
+                    props.Id = Convert.ToUInt32(i + offset);
+                }
             }
         }
 
@@ -5457,7 +5465,7 @@ namespace ClosedXML.Excel
             }
 
             if (xlWorksheet.Pictures.Any())
-                RebasePictureIds(worksheetPart);
+                RebaseShapeIds(worksheetPart);
 
             var tableParts = worksheetPart.Worksheet.Elements<TableParts>().First();
             if (xlWorksheet.Pictures.Any() && !worksheetPart.Worksheet.OfType<Drawing>().Any())
