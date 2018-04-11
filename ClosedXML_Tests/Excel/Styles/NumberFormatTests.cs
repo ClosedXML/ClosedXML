@@ -27,7 +27,7 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual("yy-MM-dd", ws.Cell("A5").Style.DateFormat.Format);
 
                 ws.Row(1).Style.NumberFormat.Format = "yy-MM-dd";
-                ws.Cell("A1").InsertData(table.AsEnumerable(), true);
+                ws.Cell("A1").InsertData(table.Rows, true);
                 Assert.AreEqual("yy-MM-dd", ws.Cell("E1").Style.DateFormat.Format);
             }
         }

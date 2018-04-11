@@ -1,8 +1,7 @@
+using ClosedXML.Excel;
 using System;
 using System.Linq;
 using System.Reflection;
-using ClosedXML;
-using ClosedXML.Excel;
 
 namespace ClosedXML.Attributes
 {

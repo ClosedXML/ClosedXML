@@ -1,6 +1,3 @@
-using ClosedXML.Excel;
-using System.Drawing;
-
 namespace ClosedXML.Excel
 {
     public interface IXLTheme

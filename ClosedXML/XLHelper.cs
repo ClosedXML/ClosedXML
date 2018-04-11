@@ -1,12 +1,11 @@
 using System;
+using System.Drawing;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
 {
-    using System.Drawing;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-
     /// <summary>
     /// 	Common methods
     /// </summary>
@@ -19,7 +18,8 @@ namespace ClosedXML.Excel
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
-        private const Int32 TwoT26 = 26 * 26;
+        private const Int32 TwoT26 = 26*26;
+
         internal static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(200, 200));
         internal static readonly Double DpiX = Graphic.DpiX;
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
@@ -225,6 +225,19 @@ namespace ClosedXML.Excel
 
             return rows;
         }
+
+#if false
+// Not using this anymore, but keeping it around for in case we bring back .NET3.5 support.
+        public static bool IsNullOrWhiteSpace(string value)
+        {
+#if _NET35_
+            if (value == null) return true;
+            return value.All(c => char.IsWhiteSpace(c));
+#else
+            return String.IsNullOrWhiteSpace(value);
+#endif
+        }
+#endif
 
         private static readonly Regex A1RegexRelative = new Regex(
       @"(?<=\W)(?<one>\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1

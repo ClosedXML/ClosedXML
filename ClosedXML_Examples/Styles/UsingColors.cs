@@ -61,12 +61,6 @@ namespace ClosedXML_Examples.Styles
 
             ro++;
 
-            // FromKnownColor(KnownColor knownColor)
-            ws.Cell(++ro, 1).Style.Fill.BackgroundColor = XLColor.FromKnownColor(KnownColor.Plum);
-            ws.Cell(ro, 2).Value = "XLColor.FromKnownColor(KnownColor.Plum)";
-
-            ro++;
-
             // FromName(String colorName)
             ws.Cell(++ro, 1).Style.Fill.BackgroundColor = XLColor.FromName("PowderBlue");
             ws.Cell(ro, 2).Value = "XLColor.FromName(\"PowderBlue\")";

@@ -273,9 +273,9 @@ namespace ClosedXML_Tests
         /// <param name="excludeMethod"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static bool Compare(Package left, Package right, bool compareToFirstDifference, bool stripColumnWidths, out string message)
+        public static bool Compare(Package left, Package right, bool compareToFirstDifference, out string message)
         {
-            return Compare(left, right, compareToFirstDifference, null, stripColumnWidths, out message);
+            return Compare(left, right, compareToFirstDifference, null, out message);
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace ClosedXML_Tests
         /// <param name="message"></param>
         /// <returns></returns>
         public static bool Compare(Package left, Package right, bool compareToFirstDifference,
-            Func<Uri, bool> excludeMethod, bool stripColumnWidths, out string message)
+            Func<Uri, bool> excludeMethod, out string message)
         {
             #region Check
 
@@ -346,15 +346,23 @@ namespace ClosedXML_Tests
                 }
                 var leftPart = left.GetPart(pair.Uri);
                 var rightPart = right.GetPart(pair.Uri);
-                using (Stream oneStream = leftPart.GetStream(FileMode.Open, FileAccess.Read))
-                using (Stream otherStream = rightPart.GetStream(FileMode.Open, FileAccess.Read))
+                using (Stream leftPackagePartStream = leftPart.GetStream(FileMode.Open, FileAccess.Read))
+                using (Stream rightPackagePartStream = rightPart.GetStream(FileMode.Open, FileAccess.Read))
+                using (var leftMemoryStream = new MemoryStream())
+                using (var rightMemoryStream = new MemoryStream())
                 {
-                    bool stripColumnWidthsFromSheet = stripColumnWidths &&
+                    leftPackagePartStream.CopyTo(leftMemoryStream);
+                    rightPackagePartStream.CopyTo(rightMemoryStream);
+
+                    leftMemoryStream.Seek(0, SeekOrigin.Begin);
+                    rightMemoryStream.Seek(0, SeekOrigin.Begin);
+
+                    bool stripColumnWidthsFromSheet = TestHelper.StripColumnWidths &&
                         leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
                         rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
 
-                    var tuple1 = new Tuple<Uri, Stream>(pair.Uri, oneStream);
-                    var tuple2 = new Tuple<Uri, Stream>(pair.Uri, otherStream);
+                    var tuple1 = new Tuple<Uri, Stream>(pair.Uri, leftMemoryStream);
+                    var tuple2 = new Tuple<Uri, Stream>(pair.Uri, rightMemoryStream);
 
                     if (!StreamHelper.Compare(tuple1, tuple2, stripColumnWidthsFromSheet))
                     {

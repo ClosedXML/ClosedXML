@@ -1579,7 +1579,6 @@ namespace ClosedXML.Excel
             get { yield break; }
         }
 
-
         public override IXLRanges RangesUsed
         {
             get
@@ -1694,6 +1693,7 @@ namespace ClosedXML.Excel
         }
 
         #region Styles
+
         private XLStyleValue GetStyleForRead()
         {
             return StyleValue;

@@ -1,5 +1,3 @@
-#region
-
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -17,18 +15,12 @@ using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
-#endregion
-
 namespace ClosedXML.Excel
 {
-    #region
-
     using Ap;
     using Drawings;
     using Op;
     using System.Drawing;
-
-    #endregion
 
     public partial class XLWorkbook
     {
@@ -362,7 +354,7 @@ namespace ClosedXML.Excel
                         xlTable.AutoFilter.Range = xlTable.Worksheet.Range(xlTable.RangeAddress);
                 }
 
-                #endregion
+                #endregion LoadTables
 
                 LoadDrawings(worksheetPart, ws);
 
@@ -418,7 +410,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                #endregion
+                #endregion LoadComments
             }
 
             var workbook = dSpreadsheet.WorkbookPart.Workbook;
@@ -760,7 +752,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            #endregion
+            #endregion Pivot tables
         }
 
         private static void LoadFieldOptions(PivotField pf, IXLPivotField pivotField)
@@ -825,10 +817,12 @@ namespace ClosedXML.Excel
 
                     var imagePart = drawingsPart.GetPartById(imgId);
                     using (var stream = imagePart.GetStream())
+                    using (var ms = new MemoryStream())
                     {
+                        stream.CopyTo(ms);
                         var vsdp = GetPropertiesFromAnchor(anchor);
 
-                        var picture = (ws as XLWorksheet).AddPicture(stream, vsdp.Name, Convert.ToInt32(vsdp.Id.Value)) as XLPicture;
+                        var picture = (ws as XLWorksheet).AddPicture(ms, vsdp.Name, Convert.ToInt32(vsdp.Id.Value)) as XLPicture;
                         picture.RelId = imgId;
 
                         Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
@@ -940,7 +934,7 @@ namespace ClosedXML.Excel
             return shape;
         }
 
-        #endregion
+        #endregion Comment Helpers
 
         private String GetTableColumnName(string name)
         {
@@ -1544,7 +1538,7 @@ namespace ClosedXML.Excel
                 LoadFont(pp, xlCell.RichText.Phonetics);
             }
 
-            #endregion
+            #endregion Load PhoneticProperties
 
             #region Load Phonetic Runs
 
@@ -1554,7 +1548,7 @@ namespace ClosedXML.Excel
                                               (Int32)pr.EndingBaseIndex.Value);
             }
 
-            #endregion
+            #endregion Load Phonetic Runs
         }
 
         private void LoadNumberFormat(NumberingFormat nfSource, IXLNumberFormat nf)
@@ -1875,7 +1869,7 @@ namespace ClosedXML.Excel
                         {
                             case XLFilterOperator.Equal:
                                 if (isText)
-                                    condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                                    condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                                 else
                                     condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
                                 break;
@@ -1886,7 +1880,7 @@ namespace ClosedXML.Excel
                             case XLFilterOperator.LessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) < 0; break;
                             case XLFilterOperator.NotEqual:
                                 if (isText)
-                                    condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                                    condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                                 else
                                     condition = o => (o as IComparable).CompareTo(xlFilter.Value) != 0;
                                 break;
@@ -1929,7 +1923,7 @@ namespace ClosedXML.Excel
                         if (isText)
                         {
                             xlFilter.Value = filter.Val.Value;
-                            condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                            condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
                         }
                         else
                         {
@@ -2185,7 +2179,7 @@ namespace ClosedXML.Excel
 
                         var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
                         if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
-                            conditionalFormat.Id = Guid.Parse(id.Text.Substring(1, id.Text.Length - 2));
+                            conditionalFormat.Id = new Guid(id.Text.Substring(1, id.Text.Length - 2));
 
                         ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
                     }

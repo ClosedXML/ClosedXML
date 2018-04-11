@@ -555,6 +555,41 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void TableRenameTests()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var table1 = ws.FirstCell().InsertTable(l);
+                var table2 = ws.Cell("A10").InsertTable(l);
+
+                Assert.AreEqual("Table1", table1.Name);
+                Assert.AreEqual("Table2", table2.Name);
+
+                table1.Name = "table1";
+                Assert.AreEqual("table1", table1.Name);
+
+                Assert.Throws<ArgumentException>(() => table1.Name = "");
+                Assert.Throws<ArgumentException>(() => table1.Name = "R");
+                Assert.Throws<ArgumentException>(() => table1.Name = "C");
+                Assert.Throws<ArgumentException>(() => table1.Name = "r");
+                Assert.Throws<ArgumentException>(() => table1.Name = "c");
+
+                Assert.Throws<ArgumentException>(() => table1.Name = "123");
+                Assert.Throws<ArgumentException>(() => table1.Name = new String('A', 256));
+
+                Assert.Throws<ArgumentException>(() => table1.Name = "Table2");
+                Assert.Throws<ArgumentException>(() => table1.Name = "TABLE2");
+            }
+        }
+
+        [Test]
         public void CanResizeTable()
         {
             using (var wb = new XLWorkbook())
@@ -689,6 +724,42 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(XLTableCellType.Data, table.HeadersRow().Cell(1).CellBelow().TableCellType());
                 Assert.AreEqual(XLTableCellType.Total, table.TotalsRow().Cell(1).TableCellType());
                 Assert.AreEqual(XLTableCellType.None, ws.Cell("Z100").TableCellType());
+            }
+        }
+
+        [Test]
+        public void TotalsFunctionsOfHeadersWithWeirdCharacters()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().InsertTable(l, false);
+
+                // Give the headings weird names (i.e. spaces, hashes, single quotes
+                ws.Cell("A1").Value = "ABCD    ";
+                ws.Cell("B1").Value = "   #BCD";
+                ws.Cell("C1").Value = "   as'df   ";
+                ws.Cell("D1").Value = "Normal";
+
+                var table = ws.RangeUsed().CreateTable();
+                Assert.IsNotNull(table);
+
+                table.ShowTotalsRow = true;
+                table.Field(0).TotalsRowFunction = XLTotalsRowFunction.Count;
+                table.Field(1).TotalsRowFunction = XLTotalsRowFunction.Count;
+                table.Field(2).TotalsRowFunction = XLTotalsRowFunction.Sum;
+                table.Field(3).TotalsRowFunction = XLTotalsRowFunction.Sum;
+
+                Assert.AreEqual("SUBTOTAL(103,Table1[[ABCD    ]])", table.Field(0).TotalsRowFormulaA1);
+                Assert.AreEqual("SUBTOTAL(103,Table1[[   '#BCD]])", table.Field(1).TotalsRowFormulaA1);
+                Assert.AreEqual("SUBTOTAL(109,Table1[[   as''df   ]])", table.Field(2).TotalsRowFormulaA1);
+                Assert.AreEqual("SUBTOTAL(109,[Normal])", table.Field(3).TotalsRowFormulaA1);
             }
         }
 

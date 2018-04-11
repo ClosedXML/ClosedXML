@@ -147,6 +147,9 @@ namespace ClosedXML_Tests
             foreach (var pair in uriSpecificIgnores.Where(p => p.Key.Equals(uri.OriginalString)))
                 s = pair.Value.Replace(s, "");
 
+            // Collapse empty xml elements
+            s = emptyXmlElementRegex.Replace(s, "<$1 />");
+
             if (ignoreColumnWidths)
                 s = RemoveColumnWidths(s);
 
@@ -162,6 +165,7 @@ namespace ClosedXML_Tests
             new KeyValuePair<string, Regex>("/docProps/core.xml", new Regex(@"<dcterms:(\w+).*?<\/dcterms:\1>", RegexOptions.Compiled))
         };
 
+        private static Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
         private static Regex columnRegex = new Regex("<x:col.*?width=\"\\d+(\\.\\d+)?\".*?\\/>", RegexOptions.Compiled);
         private static Regex widthRegex = new Regex("width=\"\\d+(\\.\\d+)?\"\\s+", RegexOptions.Compiled);
 

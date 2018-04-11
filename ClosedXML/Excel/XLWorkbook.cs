@@ -434,7 +434,6 @@ namespace ClosedXML.Excel
                 {
                     CopyStream(_originalStream, fileStream);
                     CreatePackage(fileStream, false, _spreadsheetDocumentType, options);
-                    fileStream.Close();
                 }
             }
 
@@ -527,7 +526,6 @@ namespace ClosedXML.Excel
                 using (var fileStream = new FileStream(_originalFile, FileMode.Open, FileAccess.Read))
                 {
                     CopyStream(fileStream, stream);
-                    fileStream.Close();
                 }
                 CreatePackage(stream, false, _spreadsheetDocumentType, options);
             }
