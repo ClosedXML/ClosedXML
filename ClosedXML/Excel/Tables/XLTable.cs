@@ -22,13 +22,14 @@ namespace ClosedXML.Excel
         public XLTable(XLRange range, Boolean addToTables, Boolean setAutofilter = true)
             : base(new XLRangeParameters(range.RangeAddress, range.Style))
         {
+            CheckRangeNotInTable(range);
             InitializeValues(setAutofilter);
 
             Int32 id = 1;
             while (true)
             {
                 string tableName = String.Concat("Table", id);
-                if (Worksheet.Tables.All(t => t.Name != tableName))
+                if (!Worksheet.Tables.Any(t => t.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase)))
                 {
                     Name = tableName;
                     AddToTables(range, addToTables);
@@ -41,6 +42,7 @@ namespace ClosedXML.Excel
         public XLTable(XLRange range, String name, Boolean addToTables, Boolean setAutofilter = true)
             : base(new XLRangeParameters(range.RangeAddress, range.Style))
         {
+            CheckRangeNotInTable(range);
             InitializeValues(setAutofilter);
 
             Name = name;
@@ -857,6 +859,13 @@ namespace ClosedXML.Excel
             }
 
             return table;
+        }
+
+        private static void CheckRangeNotInTable(XLRange range)
+        {
+            var overlappingTables = range.Worksheet.Tables.Where(t => t.RangeUsed().Intersects(range));
+            if (overlappingTables.Any())
+                throw new ArgumentException(nameof(range), $"The range {range.RangeAddress.ToStringRelative(true)} is already part of table '{overlappingTables.First().Name}'");
         }
     }
 }
