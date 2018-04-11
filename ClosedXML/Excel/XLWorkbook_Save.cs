@@ -3399,7 +3399,7 @@ namespace ClosedXML.Excel
                 workbookStylesPart.Stylesheet.DifferentialFormats = new DifferentialFormats();
 
             var differentialFormats = workbookStylesPart.Stylesheet.DifferentialFormats;
-
+            differentialFormats.RemoveAllChildren();
             FillDifferentialFormatsCollection(differentialFormats, context.DifferentialFormats);
 
             foreach (var ws in Worksheets)
@@ -3647,8 +3647,10 @@ namespace ClosedXML.Excel
                 && f.FillId != null && styleInfo.FillId == f.FillId
                 && f.FontId != null && styleInfo.FontId == f.FontId
                 && f.NumberFormatId != null && styleInfo.NumberFormatId == f.NumberFormatId
-                && f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo)
-                && f.ApplyBorder != null && f.ApplyBorder == ApplyBorder(styleInfo)
+                && (f.ApplyFill == null  && styleInfo.Style.Fill == XLFillValue.Default || 
+                    f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo))
+                && (f.ApplyBorder == null && styleInfo.Style.Border == XLBorderValue.Default ||
+                    f.ApplyBorder != null && f.ApplyBorder == ApplyBorder(styleInfo))
                 && (f.Alignment == null || AlignmentsAreEqual(f.Alignment, styleInfo.Style.Alignment))
                 && ProtectionsAreEqual(f.Protection, styleInfo.Style.Protection)
                 ;
@@ -3656,7 +3658,7 @@ namespace ClosedXML.Excel
 
         private static bool ProtectionsAreEqual(Protection protection, XLProtectionValue xlProtection)
         {
-            var p = new XLProtectionKey();
+            var p = XLProtectionValue.Default.Key;
             if (protection != null)
             {
                 if (protection.Locked != null)
@@ -3671,7 +3673,7 @@ namespace ClosedXML.Excel
         {
             if (alignment != null)
             {
-                var a = new XLAlignmentKey();
+                var a = XLAlignmentValue.Default.Key;
                 if (alignment.Indent != null)
                     a.Indent = (Int32)alignment.Indent.Value;
 
@@ -3802,7 +3804,7 @@ namespace ClosedXML.Excel
 
         private bool BordersAreEqual(Border b, XLBorderValue xlBorder)
         {
-            var nb = new XLBorderKey();
+            var nb = XLBorderValue.Default.Key;
             if (b.DiagonalUp != null)
                 nb.DiagonalUp = b.DiagonalUp.Value;
 
