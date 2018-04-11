@@ -117,7 +117,7 @@ namespace ClosedXML.Excel
         public static bool IsValidColumn(string column)
         {
             var length = column.Length;
-            if (XLHelper.IsNullOrWhiteSpace(column) || length > 3)
+            if (String.IsNullOrWhiteSpace(column) || length > 3)
                 return false;
 
             var theColumn = column.ToUpper();
@@ -153,7 +153,7 @@ namespace ClosedXML.Excel
 
         public static bool IsValidA1Address(string address)
         {
-            if (XLHelper.IsNullOrWhiteSpace(address))
+            if (String.IsNullOrWhiteSpace(address))
                 return false;
 
             address = address.Replace("$", "");
@@ -226,7 +226,8 @@ namespace ClosedXML.Excel
             return rows;
         }
 
-
+#if false
+// Not using this anymore, but keeping it around for in case we bring back .NET3.5 support.
         public static bool IsNullOrWhiteSpace(string value)
         {
 #if _NET35_
@@ -236,6 +237,8 @@ namespace ClosedXML.Excel
             return String.IsNullOrWhiteSpace(value);
 #endif
         }
+#endif
+
         private static readonly Regex A1RegexRelative = new Regex(
       @"(?<=\W)(?<one>\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
     + @"|(?<=\W)(?<two>\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
