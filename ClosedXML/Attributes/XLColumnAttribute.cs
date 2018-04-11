@@ -1,8 +1,7 @@
+using ClosedXML.Excel;
 using System;
 using System.Linq;
 using System.Reflection;
-using ClosedXML;
-using ClosedXML.Excel;
 
 namespace ClosedXML.Attributes
 {
@@ -23,7 +22,7 @@ namespace ClosedXML.Attributes
         {
             var attribute = GetXLColumnAttribute(mi);
             if (attribute == null) return null;
-            return String.IsNullOrWhiteSpace(attribute.Header) ? null : attribute.Header;
+            return XLHelper.IsNullOrWhiteSpace(attribute.Header) ? null : attribute.Header;
         }
 
         internal static Int32 GetOrder(MemberInfo mi)

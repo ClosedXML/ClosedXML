@@ -43,6 +43,8 @@ namespace ClosedXML_Tests
         // the columns widths after AdjustToContents() will
         // cause the tests to fail.
         // Therefore we ignore the width attribute when running on Unix
+        public static bool StripColumnWidths { get { return IsRunningOnUnix; } }
+
         public static bool IsRunningOnUnix
         {
             get
@@ -83,7 +85,7 @@ namespace ClosedXML_Tests
                 using (var streamActual = File.OpenRead(filePath2))
                 {
                     string message;
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);
                     var formattedMessage =
                         String.Format(
                             "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
@@ -108,7 +110,6 @@ namespace ClosedXML_Tests
             fileName += ActualTestResultPostFix;
             fileName = Path.ChangeExtension(fileName, extension);
 
-            filePath1 = Path.Combine(directory, "z" + fileName);
             var filePath2 = Path.Combine(directory, fileName);
 
             using (var wb = workbookGenerator.Invoke())
@@ -121,7 +122,7 @@ namespace ClosedXML_Tests
                 using (var streamActual = File.OpenRead(filePath2))
                 {
                     string message;
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, TestHelper.IsRunningOnUnix, out message);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);
                     var formattedMessage =
                         String.Format(
                             "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",

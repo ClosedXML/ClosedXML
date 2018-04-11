@@ -12,7 +12,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
     [TestFixture]
     public class DateAndTimeTests
     {
-        [OneTimeSetUp]
+        [SetUp]
         public void SetCultureInfo()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");

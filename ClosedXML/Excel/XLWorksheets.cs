@@ -130,7 +130,7 @@ namespace ClosedXML.Excel
                     "Can't delete the worksheet because there are multiple worksheets associated with that index.");
 
             var ws = _worksheets.Values.Single(w => w.Position == position);
-            if (!String.IsNullOrWhiteSpace(ws.RelId) && !Deleted.Contains(ws.RelId))
+            if (!XLHelper.IsNullOrWhiteSpace(ws.RelId) && !Deleted.Contains(ws.RelId))
                 Deleted.Add(ws.RelId);
 
             _worksheets.RemoveAll(w => w.Position == position);
@@ -171,7 +171,7 @@ namespace ClosedXML.Excel
 
         public void Rename(String oldSheetName, String newSheetName)
         {
-            if (String.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName.ToLowerInvariant())) return;
+            if (XLHelper.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName.ToLowerInvariant())) return;
 
             if (!oldSheetName.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)
                 && _worksheets.Any(ws1 => ws1.Key.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)))

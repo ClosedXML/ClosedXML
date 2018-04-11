@@ -101,7 +101,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 _evaluating = true;
                 var f = cell.FormulaA1;
-                if (String.IsNullOrWhiteSpace(f))
+                if (XLHelper.IsNullOrWhiteSpace(f))
                     return cell.Value;
                 else
                     return new XLCalcEngine(cell.Worksheet).Evaluate(f);

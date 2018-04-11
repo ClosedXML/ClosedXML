@@ -1,7 +1,7 @@
-using System;
-using System.Linq;
 using ClosedXML.Extensions;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -25,9 +25,11 @@ namespace ClosedXML.Excel
                 case XLColorType.Color:
                     color.Rgb = cf.Colors[1].Color.ToHex();
                     break;
+
                 case XLColorType.Theme:
                     color.Theme = System.Convert.ToUInt32(cf.Colors[1].ThemeColor);
                     break;
+
                 case XLColorType.Indexed:
                     color.Indexed = System.Convert.ToUInt32(cf.Colors[1].Indexed);
                     break;
@@ -36,7 +38,6 @@ namespace ClosedXML.Excel
             dataBar.Append(conditionalFormatValueObject1);
             dataBar.Append(conditionalFormatValueObject2);
             dataBar.Append(color);
-
 
             conditionalFormattingRule.Append(dataBar);
 
