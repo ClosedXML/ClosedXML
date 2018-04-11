@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
                                    new XLAddress(xlColumnParameters.Worksheet, XLHelper.MaxRowNumber, column, false,
                                                  false)),
                 xlColumnParameters.IsReference ? xlColumnParameters.Worksheet.Internals.ColumnsCollection[column].StyleValue
-                                               : xlColumnParameters.DefaultStyle?.Value)
+                                               : xlColumnParameters.DefaultStyle.Value)
         {
             SetColumnNumber(column);
 

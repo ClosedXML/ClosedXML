@@ -2137,8 +2137,8 @@ namespace ClosedXML.Excel
                     ptfi.DataType = XLDataType.DateTime;
                     ptfi.MixedDataType = false;
                     ptfi.DistinctValues = fieldValueCells
-                            .Select(cell => cell.GetDateTime())
-                            .Distinct()
+                        .Select(cell => cell.GetDateTime())
+                        .Distinct()
                         .Cast<object>()
                         .ToArray();
 
@@ -2969,35 +2969,35 @@ namespace ClosedXML.Excel
             {
                 case Drawings.XLPicturePlacement.FreeFloating:
                     var absoluteAnchor = new Xdr.AbsoluteAnchor(
-                    new Xdr.Position
-                    {
-                        X = ConvertToEnglishMetricUnits(pic.Left, GraphicsUtils.Graphics.DpiX),
-                        Y = ConvertToEnglishMetricUnits(pic.Top, GraphicsUtils.Graphics.DpiY)
-                    },
-                    new Xdr.Extent
-                    {
-                        Cx = extentsCx,
-                        Cy = extentsCy
-                    },
-                    new Xdr.Picture(
-                        new Xdr.NonVisualPictureProperties(
-                                new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
-                                new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
-                        ),
-                        new Xdr.BlipFill(
-                            new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
-                            new Stretch(new FillRectangle())
-                        ),
-                        new Xdr.ShapeProperties(
-                            new Transform2D(
-                                new Offset { X = 0, Y = 0 },
-                                new Extents { Cx = extentsCx, Cy = extentsCy }
+                        new Xdr.Position
+                        {
+                            X = ConvertToEnglishMetricUnits(pic.Left, GraphicsUtils.Graphics.DpiX),
+                            Y = ConvertToEnglishMetricUnits(pic.Top, GraphicsUtils.Graphics.DpiY)
+                        },
+                        new Xdr.Extent
+                        {
+                            Cx = extentsCx,
+                            Cy = extentsCy
+                        },
+                        new Xdr.Picture(
+                            new Xdr.NonVisualPictureProperties(
+                                    new Xdr.NonVisualDrawingProperties { Id = nvpId, Name = pic.Name },
+                                    new Xdr.NonVisualPictureDrawingProperties(new PictureLocks { NoChangeAspect = true })
                             ),
-                            new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
-                        )
-                    ),
-                    new Xdr.ClientData()
-                );
+                            new Xdr.BlipFill(
+                                new Blip { Embed = drawingsPart.GetIdOfPart(imagePart), CompressionState = BlipCompressionValues.Print },
+                                new Stretch(new FillRectangle())
+                            ),
+                            new Xdr.ShapeProperties(
+                                new Transform2D(
+                                    new Offset { X = 0, Y = 0 },
+                                    new Extents { Cx = extentsCx, Cy = extentsCy }
+                                ),
+                                new PresetGeometry { Preset = ShapeTypeValues.Rectangle }
+                            )
+                        ),
+                        new Xdr.ClientData()
+                    );
 
                     worksheetDrawing.Append(absoluteAnchor);
                     break;
@@ -3280,13 +3280,12 @@ namespace ClosedXML.Excel
                     pivotTableNumberFormats.Add(ptnf);
             }
 
-            var alignments    = xlStyles.Select(s => s.Alignment).Distinct().ToList();
-            var borders       = xlStyles.Select(s => s.Border).Distinct().ToList();
-            var fonts         = xlStyles.Select(s => s.Font).Distinct().ToList();
-            var fills         = xlStyles.Select(s => s.Fill).Distinct().ToList();
+            var alignments = xlStyles.Select(s => s.Alignment).Distinct().ToList();
+            var borders = xlStyles.Select(s => s.Border).Distinct().ToList();
+            var fonts = xlStyles.Select(s => s.Font).Distinct().ToList();
+            var fills = xlStyles.Select(s => s.Fill).Distinct().ToList();
             var numberFormats = xlStyles.Select(s => s.NumberFormat).Distinct().ToList();
-            var protections   = xlStyles.Select(s => s.Protection).Distinct().ToList();
-
+            var protections = xlStyles.Select(s => s.Protection).Distinct().ToList();
 
             for (int i = 0; i < fonts.Count; i++)
             {
@@ -3645,7 +3644,7 @@ namespace ClosedXML.Excel
                 && f.FillId != null && styleInfo.FillId == f.FillId
                 && f.FontId != null && styleInfo.FontId == f.FontId
                 && f.NumberFormatId != null && styleInfo.NumberFormatId == f.NumberFormatId
-                && (f.ApplyFill == null  && styleInfo.Style.Fill == XLFillValue.Default || 
+                && (f.ApplyFill == null && styleInfo.Style.Fill == XLFillValue.Default ||
                     f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo))
                 && (f.ApplyBorder == null && styleInfo.Style.Border == XLBorderValue.Default ||
                     f.ApplyBorder != null && f.ApplyBorder == ApplyBorder(styleInfo))
@@ -3790,10 +3789,10 @@ namespace ClosedXML.Excel
                 var DiagonalBorder = new DiagonalBorder { Style = borderInfo.Border.DiagonalBorder.ToOpenXml() };
                 if (borderInfo.Border.DiagonalBorderColor != XLBorderValue.Default.DiagonalBorderColor || ignoreMod)
                     if (borderInfo.Border.DiagonalBorderColor != null)
-                {
-                    var DiagonalBorderColor = GetNewColor(borderInfo.Border.DiagonalBorderColor);
-                    DiagonalBorder.AppendChild(DiagonalBorderColor);
-                }
+                    {
+                        var DiagonalBorderColor = GetNewColor(borderInfo.Border.DiagonalBorderColor);
+                        DiagonalBorder.AppendChild(DiagonalBorderColor);
+                    }
                 border.AppendChild(DiagonalBorder);
             }
 
@@ -4445,13 +4444,14 @@ namespace ClosedXML.Excel
 
                     var seqRef = new List<String> { selection.ActiveCell.Value };
                     seqRef.AddRange(xlWorksheet.SelectedRanges
-                            .Select(range =>
-                            {
-                                if (range.RangeAddress.FirstAddress.Equals(range.RangeAddress.LastAddress))
-                                    return range.RangeAddress.FirstAddress.ToStringRelative(false);
-                                else
-                                    return range.RangeAddress.ToStringRelative(false);
-                            }));
+                        .Select(range =>
+                        {
+                            if (range.RangeAddress.FirstAddress.Equals(range.RangeAddress.LastAddress))
+                                return range.RangeAddress.FirstAddress.ToStringRelative(false);
+                            else
+                                return range.RangeAddress.ToStringRelative(false);
+                        })
+                    );
 
                     selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
 
