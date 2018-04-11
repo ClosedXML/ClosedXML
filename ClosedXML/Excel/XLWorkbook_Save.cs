@@ -3422,8 +3422,6 @@ namespace ClosedXML.Excel
             {
                 foreach (var cf in ws.ConditionalFormats)
                 {
-                    //var ie = context.DifferentialFormats.Keys.First().Equals(cf.Style);
-
                     if (!cf.Style.Equals(DefaultStyle) && !context.DifferentialFormats.ContainsKey(cf.Style))
                         AddConditionalDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, cf, context);
                 }
