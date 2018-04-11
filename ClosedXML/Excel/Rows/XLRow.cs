@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
                                       new XLAddress(xlRowParameters.Worksheet, row, XLHelper.MaxColumnNumber, false,
                                                     false)),
                   xlRowParameters.IsReference ? xlRowParameters.Worksheet.Internals.RowsCollection[row].StyleValue
-                                              : xlRowParameters.DefaultStyle.Value
+                                              : xlRowParameters.DefaultStyle?.Value
                   )
         {
             SetRowNumber(row);
@@ -71,7 +71,7 @@ namespace ClosedXML.Excel
                     yield return cell.Style;
             }
         }
-        
+
         protected override IEnumerable<XLStylizedBase> Children
         {
             get
@@ -552,16 +552,19 @@ namespace ClosedXML.Excel
 
         private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-            if (range.RangeAddress.FirstAddress.RowNumber <= RowNumber())
+            if (range.RangeAddress.IsValid &&
+                RangeAddress.IsValid &&
+                range.RangeAddress.FirstAddress.RowNumber <= RowNumber())
                 SetRowNumber(RowNumber() + rowsShifted);
         }
 
         private void SetRowNumber(Int32 row)
         {
             if (row <= 0)
-                RangeAddress.IsInvalid = false;
+                RangeAddress.IsValid = false;
             else
             {
+                RangeAddress.IsValid = true;
                 RangeAddress.FirstAddress = new XLAddress(Worksheet, row, 1, RangeAddress.FirstAddress.FixedRow,
                                                           RangeAddress.FirstAddress.FixedColumn);
                 RangeAddress.LastAddress = new XLAddress(Worksheet,

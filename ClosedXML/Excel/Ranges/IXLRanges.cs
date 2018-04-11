@@ -19,6 +19,15 @@ namespace ClosedXML.Excel
         /// <param name="range">The range to remove from this group.</param>
         void Remove(IXLRange range);
 
+        /// <summary>
+        /// Removes ranges matching the criteria from the collection, optionally releasing their event handlers.
+        /// </summary>
+        /// <param name="match">Criteria to filter ranges. Only those ranges that satisfy the criteria will be removed.
+        /// Null means the entire collection should be cleared.</param>
+        /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from 
+        /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
+        void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true);
+
         Int32 Count { get; }
 
         Boolean Contains(IXLRange range);

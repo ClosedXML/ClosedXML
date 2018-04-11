@@ -104,7 +104,7 @@ namespace ClosedXML.Excel
 
             if (errors.Any())
             {
-                var message = string.Join("\r\n", errors.Select(e => string.Format("{0} in {1}", e.Description, e.Path.XPath)).ToArray());
+                var message = string.Join("\r\n", errors.Select(e => string.Format("Part {0}, Path {1}: {2}", e.Part.Uri, e.Path.XPath, e.Description)).ToArray());
                 throw new ApplicationException(message);
             }
             return true;
@@ -3072,14 +3072,22 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static void RebasePictureIds(WorksheetPart worksheetPart)
+        // Still not fully implemented for all shapes
+        private static void RebaseShapeIds(WorksheetPart worksheetPart)
         {
-            for (var i = 0; i < worksheetPart.DrawingsPart.WorksheetDrawing.ChildElements.Count; i++)
+            var worksheetDrawing = worksheetPart.DrawingsPart.WorksheetDrawing;
+            for (var i = 0; i < worksheetDrawing.ChildElements.Count; i++)
             {
-                var anchor = worksheetPart.DrawingsPart.WorksheetDrawing.ElementAt(i);
+                var anchor = worksheetDrawing.ElementAt(i);
                 var props = GetPropertiesFromAnchor(anchor);
                 if (props != null)
-                    props.Id = Convert.ToUInt32(i + 1);
+                {
+                    var offset = 1;
+                    while (worksheetDrawing.Descendants<NonVisualDrawingProperties>().Any(p => p.Id == Convert.ToUInt32(i + offset)))
+                        offset++;
+
+                    props.Id = Convert.ToUInt32(i + offset);
+                }
             }
         }
 
@@ -3242,7 +3250,7 @@ namespace ClosedXML.Excel
                 {
                     xlStyles.Add(s);
                 }
-                
+
                 foreach (var s in worksheet.Internals.CellsCollection.GetCells().Select(c => c.StyleValue))
                 {
                     xlStyles.Add(s);
@@ -3258,7 +3266,7 @@ namespace ClosedXML.Excel
             var fills         = xlStyles.Select(s => s.Fill).Distinct().ToList();
             var numberFormats = xlStyles.Select(s => s.NumberFormat).Distinct().ToList();
             var protections   = xlStyles.Select(s => s.Protection).Distinct().ToList();
-            
+
 
             for (int i = 0; i < fonts.Count; i++)
             {
@@ -3360,6 +3368,11 @@ namespace ClosedXML.Excel
             AddDifferentialFormats(workbookStylesPart, context);
         }
 
+        /// <summary>
+        /// Populates the differential formats that are currently in the file to the SaveContext
+        /// </summary>
+        /// <param name="workbookStylesPart">The workbook styles part.</param>
+        /// <param name="context">The context.</param>
         private void AddDifferentialFormats(WorkbookStylesPart workbookStylesPart, SaveContext context)
         {
             if (workbookStylesPart.Stylesheet.DifferentialFormats == null)
@@ -3414,7 +3427,7 @@ namespace ClosedXML.Excel
                 LoadBorder(df.Border, emptyContainer.Style.Border);
                 LoadNumberFormat(df.NumberingFormat, emptyContainer.Style.NumberFormat);
                 LoadFill(df.Fill, emptyContainer.Style.Fill, differentialFillFormat: true);
-                
+
                 if (!dictionary.ContainsKey(emptyContainer.StyleValue.Key))
                     dictionary.Add(emptyContainer.StyleValue.Key, id++);
             }
@@ -3424,7 +3437,11 @@ namespace ClosedXML.Excel
             SaveContext context)
         {
             var differentialFormat = new DifferentialFormat();
-            differentialFormat.Append(GetNewFont(new FontInfo { Font = cf.Style.Value.Font }, false));
+
+            var diffFont = GetNewFont(new FontInfo { Font = cf.Style.Value.Font }, false);
+            if (diffFont?.HasChildren ?? false)
+                differentialFormat.Append(diffFont);
+
             if (!String.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
             {
                 var numberFormat = new NumberingFormat
@@ -3434,8 +3451,14 @@ namespace ClosedXML.Excel
                 };
                 differentialFormat.Append(numberFormat);
             }
-            differentialFormat.Append(GetNewFill(new FillInfo { Fill = cf.Style.Value.Fill }, differentialFillFormat: true, ignoreMod: false));
-            differentialFormat.Append(GetNewBorder(new BorderInfo { Border = cf.Style.Value.Border }, false));
+
+            var diffFill = GetNewFill(new FillInfo { Fill = cf.Style.Value.Fill }, differentialFillFormat: true, ignoreMod: false);
+            if (diffFill?.HasChildren ?? false)
+                differentialFormat.Append(diffFill);
+
+            var diffBorder = GetNewBorder(new BorderInfo { Border = cf.Style.Value.Border }, false);
+            if (diffBorder?.HasChildren ?? false)
+                differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);
 
@@ -3447,8 +3470,8 @@ namespace ClosedXML.Excel
         {
             var differentialFormat = new DifferentialFormat();
 
-            var diffFont = GetNewFont(new FontInfo {Font = style.Font}, false);
-            if (diffFont.HasChildren)
+            var diffFont = GetNewFont(new FontInfo { Font = style.Font }, false);
+            if (diffFont?.HasChildren ?? false)
                 differentialFormat.Append(diffFont);
 
             if (!String.IsNullOrWhiteSpace(style.NumberFormat.Format) || style.NumberFormat.NumberFormatId != 0)
@@ -3475,12 +3498,12 @@ namespace ClosedXML.Excel
                 differentialFormat.Append(numberFormat);
             }
 
-            var diffFill = GetNewFill(new FillInfo {Fill = style.Fill}, differentialFillFormat: true, ignoreMod: false);
-            if (diffFill.HasChildren)
+            var diffFill = GetNewFill(new FillInfo { Fill = style.Fill }, differentialFillFormat: true, ignoreMod: false);
+            if (diffFill?.HasChildren ?? false)
                 differentialFormat.Append(diffFill);
 
-            var diffBorder = GetNewBorder(new BorderInfo {Border = style.Border}, false);
-            if (diffBorder.HasChildren)
+            var diffBorder = GetNewBorder(new BorderInfo { Border = style.Border }, false);
+            if (diffBorder?.HasChildren ?? false)
                 differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);
@@ -3891,7 +3914,9 @@ namespace ClosedXML.Excel
                                 break;
 
                             case XLColorType.Indexed:
-                                backgroundColor.Indexed = (UInt32)fillInfo.Fill.BackgroundColor.Indexed;
+                                // 64 is 'transparent' and should be ignored for differential formats
+                                if (fillInfo.Fill.BackgroundColor.Indexed != 64)
+                                    backgroundColor.Indexed = (UInt32)fillInfo.Fill.BackgroundColor.Indexed;
                                 break;
 
                             case XLColorType.Theme:
@@ -4043,7 +4068,7 @@ namespace ClosedXML.Excel
             var verticalAlignment = fontInfo.Font.VerticalAlignment != XLFontValue.Default.VerticalAlignment || ignoreMod
                 ? new VerticalTextAlignment { Val = fontInfo.Font.VerticalAlignment.ToOpenXml() }
                 : null;
-                
+
             var shadow = (fontInfo.Font.Shadow != XLFontValue.Default.Shadow || ignoreMod) && fontInfo.Font.Shadow ? new Shadow() : null;
             var fontSize = fontInfo.Font.FontSize != XLFontValue.Default.FontSize || ignoreMod
                 ? new FontSize { Val = fontInfo.Font.FontSize }
@@ -4969,8 +4994,9 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
                 var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
 
-                var priority = 1; // priority is 1 origin in Microsoft Excel
-                foreach (var cfGroup in xlWorksheet.ConditionalFormats
+                var conditionalFormats = xlWorksheet.ConditionalFormats.ToList(); // Required for IndexOf method
+
+                foreach (var cfGroup in conditionalFormats
                     .GroupBy(
                         c => c.Range.RangeAddress.ToStringRelative(false),
                         c => c,
@@ -4985,8 +5011,8 @@ namespace ClosedXML.Excel
                     };
                     foreach (var cf in cfGroup.CfList)
                     {
+                        var priority = conditionalFormats.IndexOf(cf) + 1;
                         conditionalFormatting.Append(XLCFConverters.Convert(cf, priority, context));
-                        priority++;
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
@@ -5406,7 +5432,7 @@ namespace ClosedXML.Excel
             }
 
             if (xlWorksheet.Pictures.Any())
-                RebasePictureIds(worksheetPart);
+                RebaseShapeIds(worksheetPart);
 
             var tableParts = worksheetPart.Worksheet.Elements<TableParts>().First();
             if (xlWorksheet.Pictures.Any() && !worksheetPart.Worksheet.OfType<Drawing>().Any())

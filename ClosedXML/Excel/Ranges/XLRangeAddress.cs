@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (IsInvalid)
+                if (!IsValid)
                     throw new InvalidOperationException("Range is invalid.");
 
                 return _firstAddress;
@@ -96,7 +96,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (IsInvalid)
+                if (!IsValid)
                     throw new InvalidOperationException("Range is an invalid state.");
 
                 return _lastAddress;
@@ -123,7 +123,7 @@ namespace ClosedXML.Excel
             set { LastAddress = value as XLAddress; }
         }
 
-        public bool IsInvalid { get; set; }
+        public bool IsValid { get; set; } = true;
 
         #endregion Public properties
 

@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System.IO;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -12,30 +13,30 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void BackgroundColorSetsPattern()
         {
-            var fill = new XLFill {BackgroundColor = XLColor.Blue};
+            var fill = new XLFill { BackgroundColor = XLColor.Blue };
             Assert.AreEqual(XLFillPatternValues.Solid, fill.PatternType);
         }
 
         [Test]
         public void BackgroundNoColorSetsPatternNone()
         {
-            var fill = new XLFill {BackgroundColor = XLColor.NoColor};
+            var fill = new XLFill { BackgroundColor = XLColor.NoColor };
             Assert.AreEqual(XLFillPatternValues.None, fill.PatternType);
         }
 
         [Test]
         public void BackgroundPatternEqualCheck()
         {
-            var fill1 = new XLFill {BackgroundColor = XLColor.Blue};
-            var fill2 = new XLFill {BackgroundColor = XLColor.Blue};
+            var fill1 = new XLFill { BackgroundColor = XLColor.Blue };
+            var fill2 = new XLFill { BackgroundColor = XLColor.Blue };
             Assert.IsTrue(fill1.Equals(fill2));
         }
 
         [Test]
         public void BackgroundPatternNotEqualCheck()
         {
-            var fill1 = new XLFill {BackgroundColor = XLColor.Blue};
-            var fill2 = new XLFill {BackgroundColor = XLColor.Red};
+            var fill1 = new XLFill { BackgroundColor = XLColor.Blue };
+            var fill2 = new XLFill { BackgroundColor = XLColor.Red };
             Assert.IsFalse(fill1.Equals(fill2));
         }
 
@@ -60,6 +61,21 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(style.Border.TopBorderColor, XLColor.Blue);
             Assert.AreEqual(style.Border.LeftBorderColor, XLColor.Blue);
             Assert.AreEqual(style.Border.RightBorderColor, XLColor.Blue);
+        }
+
+        [Test]
+        public void LoadAndSaveTransparentBackgroundFill()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    wb.SaveAs(ms);
+                    return wb;
+                }, @"StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
+            }
         }
     }
 }

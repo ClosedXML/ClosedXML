@@ -45,6 +45,27 @@ namespace ClosedXML.Excel
             _ranges.RemoveAll(r => r.ToString() == range.ToString());
         }
 
+        /// <summary>
+        /// Removes ranges matching the criteria from the collection, optionally releasing their event handlers.
+        /// </summary>
+        /// <param name="match">Criteria to filter ranges. Only those ranges that satisfy the criteria will be removed.
+        /// Null means the entire collection should be cleared.</param>
+        /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from 
+        /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
+        public void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true)
+        {
+            match = match ?? (_ => true);
+
+            if (releaseEventHandlers)
+            {
+                _ranges
+                    .Where(r => match(r))
+                    .ForEach(r => r.Dispose());
+            }
+
+            Count -= _ranges.RemoveAll(match);
+        }
+
         public int Count { get; private set; }
 
         public IEnumerator<IXLRange> GetEnumerator()
@@ -61,12 +82,12 @@ namespace ClosedXML.Excel
 
         public Boolean Contains(IXLCell cell)
         {
-            return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Contains(cell));
+            return _ranges.Any(r => r.RangeAddress.IsValid && r.Contains(cell));
         }
 
         public Boolean Contains(IXLRange range)
         {
-            return _ranges.Any(r => !r.RangeAddress.IsInvalid && r.Contains(range));
+            return _ranges.Any(r => r.RangeAddress.IsValid && r.Contains(range));
         }
 
         public IEnumerable<IXLDataValidation> DataValidation

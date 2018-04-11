@@ -253,5 +253,15 @@ namespace ClosedXML_Tests.Excel
             ws.Rows(1, 2).Group();
             ws.Rows(1, 2).Ungroup(true);
         }
+
+        [Test]
+        public void NegativeRowNumberIsInvalid()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1") as XLWorksheet;
+
+            var row = new XLRow(-1, new XLRowParameters(ws, null, false));
+
+            Assert.IsFalse(row.RangeAddress.IsValid);
+        }
     }
 }
