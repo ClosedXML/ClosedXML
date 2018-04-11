@@ -96,7 +96,7 @@ namespace ClosedXML.Excel
                         continue;
                     }
 
-                    if (XLHelper.IsNullOrWhiteSpace(name))
+                    if (String.IsNullOrWhiteSpace(name))
                     {
                         name = GetUniqueName("Column", cellPos + 1, true);
                         cell.SetValue(name);
@@ -219,13 +219,39 @@ namespace ClosedXML.Excel
             get { return _name; }
             set
             {
-                if (Worksheet.Tables.Any(t => t.Name == value))
-                {
-                    throw new ArgumentException(String.Format("This worksheet already contains a table named '{0}'",
-                                                              value));
-                }
+                if (_name == value) return;
+
+                // Validation rules for table names
+                var oldname = _name ?? string.Empty;
+
+                if (String.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException($"The table name '{value}' is invalid");
+
+                // Table names are case insensitive
+                if (!oldname.Equals(value, StringComparison.OrdinalIgnoreCase)
+                    && Worksheet.Tables.Any(t => t.Name.Equals(value, StringComparison.OrdinalIgnoreCase)))
+                    throw new ArgumentException($"This worksheet already contains a table named '{value}'");
+
+                if (value[0] != '_' && !char.IsLetter(value[0]))
+                    throw new ArgumentException($"The table name '{value}' does not begin with a letter or an underscore");
+
+                if (value.Length > 255)
+                    throw new ArgumentException("The table name is more than 255 characters");
+
+                if (new[] { 'C', 'R' }.Any(c => value.ToUpper().Equals(c.ToString())))
+                    throw new ArgumentException($"The table name '{value}' is invalid");
 
                 _name = value;
+
+                // Some totals row formula depend on the table name. Update them.
+                if (_fieldNames?.Any() ?? false)
+                    this.Fields.ForEach(f => (f as XLTableField).UpdateTableFieldTotalsRowFormula());
+
+                if (!String.IsNullOrWhiteSpace(oldname))
+                {
+                    Worksheet.Tables.Add(this);
+                    Worksheet.Tables.Remove(oldname);
+                }
             }
         }
 
@@ -337,6 +363,8 @@ namespace ClosedXML.Excel
 
             var existingHeaders = this.FieldNames.Keys;
             var newHeaders = new HashSet<string>();
+
+            // Force evaluation of f.Column field
             var tempArray = this.Fields.Select(f => f.Column).ToArray();
 
             var firstRow = range.Row(1);
@@ -347,7 +375,7 @@ namespace ClosedXML.Excel
                 var co = 1;
                 foreach (var c in firstRow.Cells())
                 {
-                    if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                    if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                         c.Value = GetUniqueName("Column", co, true);
 
                     var header = c.GetString();
@@ -391,9 +419,9 @@ namespace ClosedXML.Excel
                 {
                     foreach (var f in this._fieldNames.Values.Cast<XLTableField>())
                     {
-                        f.UpdateUnderlyingCellFormula();
+                        f.UpdateTableFieldTotalsRowFormula();
                         var c = this.TotalsRow().Cell(f.Index + 1);
-                        if (!XLHelper.IsNullOrWhiteSpace(f.TotalsRowLabel))
+                        if (!String.IsNullOrWhiteSpace(f.TotalsRowLabel))
                         {
                             c.DataType = XLDataType.Text;
 
@@ -566,7 +594,7 @@ namespace ClosedXML.Excel
             Int32 co = 1;
             foreach (IXLCell c in range.Row(1).Cells())
             {
-                if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                     c.Value = GetUniqueName("Column", co, true);
                 _uniqueNames.Add(c.GetString());
                 co++;
@@ -619,7 +647,7 @@ namespace ClosedXML.Excel
                     Int32 co = 1;
                     foreach (IXLCell c in headersRow.Cells())
                     {
-                        if (XLHelper.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                        if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                             c.Value = GetUniqueName("Column", co, true);
                         _uniqueNames.Add(c.GetString());
                         co++;

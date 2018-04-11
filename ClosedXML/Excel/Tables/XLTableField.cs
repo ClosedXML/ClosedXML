@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -89,7 +90,7 @@ namespace ClosedXML.Excel
             set
             {
                 totalsRowFunction = value;
-                UpdateUnderlyingCellFormula();
+                UpdateTableFieldTotalsRowFormula();
             }
         }
 
@@ -173,25 +174,37 @@ namespace ClosedXML.Excel
             return distinctStyles.Count() == 1;
         }
 
-        internal void UpdateUnderlyingCellFormula()
+        private static IEnumerable<String> QuotedTableFieldCharacters = new[] { "'", "#" };
+
+        internal void UpdateTableFieldTotalsRowFormula()
         {
             if (TotalsRowFunction != XLTotalsRowFunction.None && TotalsRowFunction != XLTotalsRowFunction.Custom)
             {
                 var cell = table.TotalsRow().Cell(Index + 1);
-                String formula = String.Empty;
+                var formulaCode = String.Empty;
                 switch (TotalsRowFunction)
                 {
-                    case XLTotalsRowFunction.Sum: formula = "109"; break;
-                    case XLTotalsRowFunction.Minimum: formula = "105"; break;
-                    case XLTotalsRowFunction.Maximum: formula = "104"; break;
-                    case XLTotalsRowFunction.Average: formula = "101"; break;
-                    case XLTotalsRowFunction.Count: formula = "103"; break;
-                    case XLTotalsRowFunction.CountNumbers: formula = "102"; break;
-                    case XLTotalsRowFunction.StandardDeviation: formula = "107"; break;
-                    case XLTotalsRowFunction.Variance: formula = "110"; break;
+                    case XLTotalsRowFunction.Sum: formulaCode = "109"; break;
+                    case XLTotalsRowFunction.Minimum: formulaCode = "105"; break;
+                    case XLTotalsRowFunction.Maximum: formulaCode = "104"; break;
+                    case XLTotalsRowFunction.Average: formulaCode = "101"; break;
+                    case XLTotalsRowFunction.Count: formulaCode = "103"; break;
+                    case XLTotalsRowFunction.CountNumbers: formulaCode = "102"; break;
+                    case XLTotalsRowFunction.StandardDeviation: formulaCode = "107"; break;
+                    case XLTotalsRowFunction.Variance: formulaCode = "110"; break;
                 }
 
-                cell.FormulaA1 = "SUBTOTAL(" + formula + ",[" + Name + "])";
+                var modifiedName = Name;
+                QuotedTableFieldCharacters.ForEach(c => modifiedName = modifiedName.Replace(c, "'" + c));
+
+                if (modifiedName.StartsWith(" ") || modifiedName.EndsWith(" "))
+                {
+                    modifiedName = "[" + modifiedName + "]";
+                }
+
+                var prependTableName = modifiedName.Contains(" ");
+
+                cell.FormulaA1 = $"SUBTOTAL({formulaCode},{(prependTableName ? table.Name : string.Empty)}[{modifiedName}])";
                 var lastCell = table.LastRow().Cell(Index + 1);
                 if (lastCell.DataType != XLDataType.Text)
                 {

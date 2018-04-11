@@ -279,7 +279,7 @@ namespace ClosedXML.Excel
 
                     String reference = dTable.Reference.Value;
                     String tableName = dTable?.Name ?? dTable.DisplayName ?? string.Empty;
-                    if (XLHelper.IsNullOrWhiteSpace(tableName))
+                    if (String.IsNullOrWhiteSpace(tableName))
                         throw new InvalidDataException("The table name is missing.");
 
                     var xlTable = ws.Range(reference).CreateTable(tableName, false) as XLTable;
@@ -481,10 +481,10 @@ namespace ClosedXML.Excel
                         {
                             var pt = ws.PivotTables.AddNew(pivotTableDefinition.Name, target, source) as XLPivotTable;
 
-                            if (!XLHelper.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
+                            if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
                                 pt.SetColumnHeaderCaption(StringValue.ToString(pivotTableDefinition.ColumnHeaderCaption));
 
-                            if (!XLHelper.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.RowHeaderCaption ?? String.Empty)))
+                            if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.RowHeaderCaption ?? String.Empty)))
                                 pt.SetRowHeaderCaption(StringValue.ToString(pivotTableDefinition.RowHeaderCaption));
 
                             pt.RelId = worksheetPart.GetIdOfPart(pivotTablePart);
@@ -1377,7 +1377,7 @@ namespace ClosedXML.Excel
             {
                 if (cell.CellFormula.SharedIndex != null)
                     xlCell.FormulaR1C1 = sharedFormulasR1C1[cell.CellFormula.SharedIndex.Value];
-                else if (!XLHelper.IsNullOrWhiteSpace(cell.CellFormula.Text))
+                else if (!String.IsNullOrWhiteSpace(cell.CellFormula.Text))
                 {
                     String formula;
                     if (cell.CellFormula.FormulaType != null && cell.CellFormula.FormulaType == CellFormulaValues.Array)
@@ -1422,7 +1422,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.SharedString)
                 {
-                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                     {
                         var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture)];
                         ParseCellValue(sharedString, xlCell);
@@ -1434,7 +1434,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
-                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
                     xlCell._dataType = XLDataType.DateTime;
                 }
@@ -1446,7 +1446,7 @@ namespace ClosedXML.Excel
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
-                    if (cell.CellValue != null && !XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
 
                     if (s == null)
@@ -1464,7 +1464,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
-                    if (!XLHelper.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
 
                     if (s.NumberingFormats != null &&
@@ -1789,7 +1789,7 @@ namespace ClosedXML.Excel
                 return XLDataType.Text;
             else
             {
-                if (!XLHelper.IsNullOrWhiteSpace(numberFormat.Format))
+                if (!String.IsNullOrWhiteSpace(numberFormat.Format))
                 {
                     var dataType = GetDataTypeFromFormat(numberFormat.Format);
                     return dataType.HasValue ? dataType.Value : XLDataType.Number;
@@ -2090,7 +2090,7 @@ namespace ClosedXML.Excel
             foreach (DataValidation dvs in dataValidations.Elements<DataValidation>())
             {
                 String txt = dvs.SequenceOfReferences.InnerText;
-                if (XLHelper.IsNullOrWhiteSpace(txt)) continue;
+                if (String.IsNullOrWhiteSpace(txt)) continue;
                 foreach (var rangeAddress in txt.Split(' '))
                 {
                     using (var range = ws.Range(rangeAddress))
@@ -2146,7 +2146,7 @@ namespace ClosedXML.Excel
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
                         conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
 
-                    if (fr.Text != null && !XLHelper.IsNullOrWhiteSpace(fr.Text))
+                    if (fr.Text != null && !String.IsNullOrWhiteSpace(fr.Text))
                         conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
 
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
@@ -2178,7 +2178,7 @@ namespace ClosedXML.Excel
                             conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
 
                         var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
-                        if (id != null && id.Text != null && !XLHelper.IsNullOrWhiteSpace(id.Text))
+                        if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
                             conditionalFormat.Id = new Guid(id.Text.Substring(1, id.Text.Length - 2));
 
                         ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
