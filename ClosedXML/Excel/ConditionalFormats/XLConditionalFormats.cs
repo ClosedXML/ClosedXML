@@ -48,6 +48,14 @@ namespace ClosedXML.Excel
                 Func<IXLConditionalFormat, bool> IsSameFormat = f =>
                     f != item && f.Ranges.First().Worksheet.Position == item.Ranges.First().Worksheet.Position &&
                     XLConditionalFormat.NoRangeComparer.Equals(f, item);
+
+                //Get the top left corner of the rectangle covering all the ranges
+                var baseAddress = new XLAddress(
+                    item.Ranges.Select(r => r.RangeAddress.FirstAddress.RowNumber).Min(),
+                    item.Ranges.Select(r => r.RangeAddress.FirstAddress.ColumnNumber).Min(),
+                    false, false);
+                var baseCell = item.Ranges.First().Worksheet.Cell(baseAddress) as XLCell;
+
                 int i = 1;
                 bool stop = false;
                 List<IXLConditionalFormat> similarFormats = new List<IXLConditionalFormat>();
@@ -78,8 +86,6 @@ namespace ClosedXML.Excel
 
                     i++;
                 } while (!stop);
-
-                var baseCell = item.Ranges.First().FirstCell() as XLCell;
 
                 var consRanges = rangesToJoin.Consolidate();
                 item.Ranges.RemoveAll();

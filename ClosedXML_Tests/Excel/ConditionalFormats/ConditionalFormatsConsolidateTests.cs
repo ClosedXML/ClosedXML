@@ -150,6 +150,28 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             Assert.AreEqual("A2:A8", ws.ConditionalFormats.ElementAt(2).Ranges.Single().RangeAddress.ToString());
         }
 
+
+        [Test]
+        public void ConsolidateShiftsFormulaRelativelyToTopMostCell()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
+
+            var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>();
+            var cf = new XLConditionalFormat(ranges);
+            cf.Values.Add(new XLFormula("=A3=$D3"));
+            cf.Style.Fill.SetBackgroundColor(XLColor.Red);
+            ws.ConditionalFormats.Add(cf);
+
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
+
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            Assert.AreEqual(ws.ConditionalFormats.Single().Style.Value, cf.Style.Value);
+            Assert.AreEqual("A3:C8", ws.ConditionalFormats.Single().Ranges.Single().RangeAddress.ToString());
+            Assert.IsTrue(ws.ConditionalFormats.Single().Values.Single().Value.IsFormula);
+            Assert.AreEqual("A3=$D3", ws.ConditionalFormats.Single().Values.Single().Value.Value);
+        }
+
         private static void SetFormat1(IXLConditionalFormat format)
         {
             format.WhenEquals("="+format.Range.FirstCell().CellRight(4).Address.ToStringRelative()).Fill.SetBackgroundColor(XLColor.Blue);
