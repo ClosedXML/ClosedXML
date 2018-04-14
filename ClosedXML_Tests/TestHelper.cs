@@ -28,7 +28,6 @@ namespace ClosedXML_Tests
 
         public const string ActualTestResultPostFix = "";
         public static readonly string ExampleTestsOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
-        public static readonly string OtherTestsOutputDirectory = Path.Combine(TestsOutputDirectory, "Other");
 
         private const bool CompareWithResources = true;
 
@@ -101,7 +100,7 @@ namespace ClosedXML_Tests
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
             string[] pathParts = referenceResource.Split(new char[] { '\\' });
-            string filePath1 = Path.Combine(new List<string>() { OtherTestsOutputDirectory }.Concat(pathParts).ToArray());
+            string filePath1 = Path.Combine(new List<string>() { TestsOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
