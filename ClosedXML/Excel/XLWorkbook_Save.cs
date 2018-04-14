@@ -5475,7 +5475,9 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWSContentManager.XLWSContents.Drawing, worksheetPart.Worksheet.Elements<Drawing>().First());
             }
 
-            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null)
+            // Instead of saving a file with an empty Drawings.xml file, rather remove the .xml file
+            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null
+                && !worksheetPart.DrawingsPart.Parts.Any())
             {
                 var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
                 worksheetPart.Worksheet.RemoveChild(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
