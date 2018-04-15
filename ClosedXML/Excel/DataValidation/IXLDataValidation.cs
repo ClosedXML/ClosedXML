@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
     public enum XLErrorStyle { Stop, Warning, Information }
     public enum XLAllowedValues { AnyValue, WholeNumber, Decimal, Date, Time, TextLength, List, Custom }
     public enum XLOperator { EqualTo, NotEqualTo, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan, Between, NotBetween }
-    public interface IXLDataValidation
+    public interface IXLDataValidation : IDisposable
     {
         IXLRanges Ranges { get; set; }
         //void Delete();

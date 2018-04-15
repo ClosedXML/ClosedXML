@@ -197,5 +197,10 @@ namespace ClosedXML.Excel
         {
             Initialize();
         }
+
+        public void Dispose()
+        {
+            Ranges?.Dispose();
+        }
     }
 }

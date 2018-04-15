@@ -50,5 +50,10 @@ namespace ClosedXML.Excel
         {
             _dataValidations.RemoveAll(dv => dv.Ranges.Contains(range));
         }
+
+        public void Dispose()
+        {
+            _dataValidations.ForEach(dv => dv.Dispose());
+        }
     }
 }

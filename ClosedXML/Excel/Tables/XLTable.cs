@@ -562,6 +562,8 @@ namespace ClosedXML.Excel
             if (AutoFilter != null)
                 AutoFilter.Dispose();
 
+            Fields?.ForEach(field => field.Dispose());
+
             base.Dispose();
         }
 

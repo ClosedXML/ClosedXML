@@ -989,6 +989,8 @@ namespace ClosedXML.Excel
 
             Internals.Dispose();
 
+            SelectedRanges?.Dispose();
+            DataValidations?.Dispose();
             this.Pictures.ForEach(p => p.Dispose());
 
             base.Dispose();
