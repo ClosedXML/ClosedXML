@@ -220,8 +220,9 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var other = (XLRanges)obj;
-
+            var other = obj as XLRanges;
+            if (other == null)
+                return false;
             return _ranges.Count == other._ranges.Count &&
                    _ranges.Select(thisRange => Enumerable.Contains(other._ranges, thisRange)).All(foundOne => foundOne);
         }
