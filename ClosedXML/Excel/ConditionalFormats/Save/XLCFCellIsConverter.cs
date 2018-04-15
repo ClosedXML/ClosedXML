@@ -16,11 +16,7 @@ namespace ClosedXML.Excel
 
             conditionalFormattingRule.Operator = cf.Operator.ToOpenXml();
 
-            var formula = new Formula();
-            if (cf.Operator == XLCFOperator.Equal || cf.Operator == XLCFOperator.NotEqual)
-                formula.Text = val;
-            else
-                formula.Text = val;
+            var formula = new Formula(val);
             conditionalFormattingRule.Append(formula);
 
             if (cf.Operator == XLCFOperator.Between || cf.Operator == XLCFOperator.NotBetween)

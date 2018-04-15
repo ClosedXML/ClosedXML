@@ -170,12 +170,12 @@ namespace ClosedXML.Excel
             get { return _name; }
             set
             {
+                if (String.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Worksheet names cannot be empty");
+
                 if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
                     throw new ArgumentException("Worksheet names cannot contain any of the following characters: " +
                                                 InvalidNameChars);
-
-                if (String.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Worksheet names cannot be empty");
 
                 if (value.Length > 31)
                     throw new ArgumentException("Worksheet names cannot be more than 31 characters");

@@ -278,7 +278,7 @@ namespace ClosedXML.Excel
                     var dTable = tableDefinitionPart.Table;
 
                     String reference = dTable.Reference.Value;
-                    String tableName = dTable?.Name ?? dTable.DisplayName ?? string.Empty;
+                    String tableName = dTable.Name ?? dTable.DisplayName ?? string.Empty;
                     if (String.IsNullOrWhiteSpace(tableName))
                         throw new InvalidDataException("The table name is missing.");
 
@@ -324,7 +324,7 @@ namespace ClosedXML.Excel
                     if (dTable.AutoFilter != null)
                     {
                         xlTable.ShowAutoFilter = true;
-                        LoadAutoFilterColumns(dTable.AutoFilter, (xlTable as XLTable).AutoFilter);
+                        LoadAutoFilterColumns(dTable.AutoFilter, xlTable.AutoFilter);
                     }
                     else
                         xlTable.ShowAutoFilter = false;
@@ -374,7 +374,7 @@ namespace ClosedXML.Excel
                         // find cell by reference
                         var cell = ws.Cell(c.Reference);
 
-                        XLComment xlComment = cell.Comment as XLComment;
+                        var xlComment = cell.Comment;
                         xlComment.Author = authors[(int)c.AuthorId.Value].InnerText;
                         //xlComment.ShapeId = (Int32)c.ShapeId.Value;
                         //ShapeIdManager.Add(xlComment.ShapeId);
@@ -384,7 +384,7 @@ namespace ClosedXML.Excel
                         {
                             var runProperties = run.RunProperties;
                             String text = run.Text.InnerText.FixNewLines();
-                            var rt = cell.Comment.AddText(text);
+                            var rt = xlComment.AddText(text);
                             LoadFont(runProperties, rt);
                         }
 
@@ -477,7 +477,7 @@ namespace ClosedXML.Excel
                                 continue;
                         }
 
-                        if (target != null && source != null)
+                        if (source != null)
                         {
                             var pt = ws.PivotTables.AddNew(pivotTableDefinition.Name, target, source) as XLPivotTable;
 
@@ -908,7 +908,7 @@ namespace ClosedXML.Excel
                 xdoc = XDocumentExtensions.Load(vmlPart.GetStream(FileMode.Open));
 
                 //Probe for comments
-                if (xdoc.Root == null) continue;
+                if (xdoc?.Root == null) continue;
                 var shape = GetCommentShape(xdoc);
                 if (shape != null) break;
             }
@@ -1361,12 +1361,9 @@ namespace ClosedXML.Excel
                 else
                     formula = cell.CellFormula.Text;
 
-                if (cell.CellFormula.Reference != null)
-                {
-                    // Parent cell of shared formulas
-                    // Child cells will use this shared index to set its R1C1 style formula
-                    xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
-                }
+                // Parent cell of shared formulas
+                // Child cells will use this shared index to set its R1C1 style formula
+                xlCell.FormulaReference = ws.Range(cell.CellFormula.Reference.Value).RangeAddress;
 
                 xlCell.FormulaA1 = formula;
                 sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
@@ -1956,7 +1953,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Year)
                         {
-                            if (dateGroupItem?.Year?.HasValue ?? false)
+                            if (dateGroupItem.Year?.HasValue ?? false)
                                 year = (int)dateGroupItem.Year?.Value;
                             else
                                 valid &= false;
@@ -1964,7 +1961,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Month)
                         {
-                            if (dateGroupItem?.Month?.HasValue ?? false)
+                            if (dateGroupItem.Month?.HasValue ?? false)
                                 month = (int)dateGroupItem.Month?.Value;
                             else
                                 valid &= false;
@@ -1972,7 +1969,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Day)
                         {
-                            if (dateGroupItem?.Day?.HasValue ?? false)
+                            if (dateGroupItem.Day?.HasValue ?? false)
                                 day = (int)dateGroupItem.Day?.Value;
                             else
                                 valid &= false;
@@ -1980,7 +1977,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Hour)
                         {
-                            if (dateGroupItem?.Hour?.HasValue ?? false)
+                            if (dateGroupItem.Hour?.HasValue ?? false)
                                 hour = (int)dateGroupItem.Hour?.Value;
                             else
                                 valid &= false;
@@ -1988,7 +1985,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Minute)
                         {
-                            if (dateGroupItem?.Minute?.HasValue ?? false)
+                            if (dateGroupItem.Minute?.HasValue ?? false)
                                 minute = (int)dateGroupItem.Minute?.Value;
                             else
                                 valid &= false;
@@ -1996,7 +1993,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Second)
                         {
-                            if (dateGroupItem?.Second?.HasValue ?? false)
+                            if (dateGroupItem.Second?.HasValue ?? false)
                                 second = (int)dateGroupItem.Second?.Value;
                             else
                                 valid &= false;
@@ -2144,7 +2141,7 @@ namespace ClosedXML.Excel
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
                         conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
 
-                    if (fr.Text != null && !String.IsNullOrWhiteSpace(fr.Text))
+                    if (!String.IsNullOrWhiteSpace(fr.Text))
                         conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
 
                     if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)

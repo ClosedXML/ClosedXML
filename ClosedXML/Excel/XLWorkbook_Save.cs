@@ -1069,6 +1069,9 @@ namespace ClosedXML.Excel
                     {
                         if (c.HasArrayFormula)
                         {
+                            if (c.FormulaReference == null)
+                                c.FormulaReference = c.AsRange().RangeAddress;
+
                             if (c.FormulaReference.FirstAddress.Equals(c.Address))
                             {
                                 var cc = new CalculationCell
@@ -1076,9 +1079,6 @@ namespace ClosedXML.Excel
                                     CellReference = c.Address.ToString(),
                                     SheetId = worksheet.SheetId
                                 };
-
-                                if (c.FormulaReference == null)
-                                    c.FormulaReference = c.AsRange().RangeAddress;
 
                                 cc.Array = true;
                                 calculationChain.AppendChild(cc);
@@ -2498,8 +2498,9 @@ namespace ClosedXML.Excel
                         if (labelOrFilterField != null && labelOrFilterField.Collapsed)
                             item.HideDetails = BooleanValue.FromBoolean(false);
 
-                        if (labelOrFilterField.SelectedValues.Count > 1
-                                 && !labelOrFilterField.SelectedValues.Contains(value))
+                        if (labelOrFilterField != null &&
+                            labelOrFilterField.SelectedValues.Count > 1 &&
+                            !labelOrFilterField.SelectedValues.Contains(value))
                             item.Hidden = BooleanValue.FromBoolean(true);
 
                         fieldItems.AppendChild(item);
@@ -3476,7 +3477,7 @@ namespace ClosedXML.Excel
             var differentialFormat = new DifferentialFormat();
 
             var diffFont = GetNewFont(new FontInfo { Font = cf.Style.Font as XLFont }, false);
-            if (diffFont?.HasChildren ?? false)
+            if (diffFont.HasChildren)
                 differentialFormat.Append(diffFont);
 
             if (!String.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
@@ -3490,11 +3491,11 @@ namespace ClosedXML.Excel
             }
 
             var diffFill = GetNewFill(new FillInfo { Fill = cf.Style.Fill as XLFill }, differentialFillFormat: true, ignoreMod: false);
-            if (diffFill?.HasChildren ?? false)
+            if (diffFill.HasChildren)
                 differentialFormat.Append(diffFill);
 
             var diffBorder = GetNewBorder(new BorderInfo { Border = cf.Style.Border as XLBorder }, false);
-            if (diffBorder?.HasChildren ?? false)
+            if (diffBorder.HasChildren)
                 differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);
@@ -3508,7 +3509,7 @@ namespace ClosedXML.Excel
             var differentialFormat = new DifferentialFormat();
 
             var diffFont = GetNewFont(new FontInfo { Font = style.Font as XLFont }, false);
-            if (diffFont?.HasChildren ?? false)
+            if (diffFont.HasChildren)
                 differentialFormat.Append(diffFont);
 
             if (!String.IsNullOrWhiteSpace(style.NumberFormat.Format) || style.NumberFormat.NumberFormatId != 0)
@@ -3536,11 +3537,11 @@ namespace ClosedXML.Excel
             }
 
             var diffFill = GetNewFill(new FillInfo { Fill = style.Fill as XLFill }, differentialFillFormat: true, ignoreMod: false);
-            if (diffFill?.HasChildren ?? false)
+            if (diffFill.HasChildren)
                 differentialFormat.Append(diffFill);
 
             var diffBorder = GetNewBorder(new BorderInfo { Border = style.Border as XLBorder }, false);
-            if (diffBorder?.HasChildren ?? false)
+            if (diffBorder.HasChildren)
                 differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);

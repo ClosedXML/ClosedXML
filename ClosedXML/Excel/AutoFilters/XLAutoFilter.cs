@@ -116,62 +116,59 @@ namespace ClosedXML.Excel
             SortColumn = columnToSortBy;
 
             // Recalculate shown / hidden rows
-            if (Enabled)
-            {
                 using (var rows = Range.Rows(2, Range.RowCount()))
                 {
                     foreach (IXLRangeRow row in rows)
                         row.WorksheetRow().Unhide();
                 }
 
-                foreach (var kp in Filters)
+            foreach (var kp in Filters)
+            {
+                Boolean firstFilter = true;
+                foreach (XLFilter filter in kp.Value)
                 {
-                    Boolean firstFilter = true;
-                    foreach (XLFilter filter in kp.Value)
+                    var condition = filter.Condition;
+                    var isText = filter.Value is String;
+                    var isDateTime = filter.Value is DateTime;
+
+                    using (var rows = Range.Rows(2, Range.RowCount()))
                     {
-                        var condition = filter.Condition;
-                        var isText = filter.Value is String;
-                        var isDateTime = filter.Value is DateTime;
-
-                        using (var rows = Range.Rows(2, Range.RowCount()))
+                        foreach (IXLRangeRow row in rows)
                         {
-                            foreach (IXLRangeRow row in rows)
+                            //TODO : clean up filter matching - it's done in different place
+                            Boolean match;
+
+                            if (isText)
+                                match = condition(row.Cell(kp.Key).GetFormattedString());
+                            else if (isDateTime)
+                                match = row.Cell(kp.Key).DataType == XLDataType.DateTime && condition(row.Cell(kp.Key).GetDateTime());
+                            else
+                                match = row.Cell(kp.Key).DataType == XLDataType.Number && condition(row.Cell(kp.Key).GetDouble());
+
+                            if (firstFilter)
                             {
-                                //TODO : clean up filter matching - it's done in different place
-                                Boolean match;
-
-                                if (isText)
-                                    match = condition(row.Cell(kp.Key).GetFormattedString());
-                                else if (isDateTime)
-                                    match = row.Cell(kp.Key).DataType == XLDataType.DateTime && condition(row.Cell(kp.Key).GetDateTime());
+                                if (match)
+                                    row.WorksheetRow().Unhide();
                                 else
-                                    match = row.Cell(kp.Key).DataType == XLDataType.Number && condition(row.Cell(kp.Key).GetDouble());
-
-                                if (firstFilter)
-                                {
-                                    if (match)
-                                        row.WorksheetRow().Unhide();
-                                    else
-                                        row.WorksheetRow().Hide();
-                                }
-                                else
-                                {
-                                    if (filter.Connector == XLConnector.And)
-                                    {
-                                        if (!row.WorksheetRow().IsHidden)
-                                        {
-                                            if (match)
-                                                row.WorksheetRow().Unhide();
-                                            else
-                                                row.WorksheetRow().Hide();
-                                        }
-                                    }
-                                    else if (match)
-                                        row.WorksheetRow().Unhide();
-                                }
+                                    row.WorksheetRow().Hide();
                             }
-                            firstFilter = false;
+                            else
+                            {
+                                if (filter.Connector == XLConnector.And)
+                                {
+                                    if (!row.WorksheetRow().IsHidden)
+                                    {
+                                        if (match)
+                                            row.WorksheetRow().Unhide();
+                                        else
+                                            row.WorksheetRow().Hide();
+                                    }
+                                }
+                                else if (match)
+                                    row.WorksheetRow().Unhide();
+                            }
                         }
+                        firstFilter = false;
                     }
                 }
             }
