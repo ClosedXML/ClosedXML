@@ -89,7 +89,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 double tmp;
                 var vEnumerable = value as IEnumerable;
-                if (vEnumerable == null)
+                if (vEnumerable == null || vEnumerable is string)
                 {
                     if (TryParseToDouble(value, out tmp))
                         yield return tmp;
@@ -100,7 +100,6 @@ namespace ClosedXML.Excel.CalcEngine
                     {
                         if (TryParseToDouble(v, out tmp))
                             yield return tmp;
-                        break;
                     }
                 }
             }
