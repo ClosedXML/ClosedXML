@@ -484,7 +484,7 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet ExpandColumns()
         {
-            Enumerable.Range(1, 8).ForEach(i => ExpandRows(i));
+            Enumerable.Range(1, 8).ForEach(i => ExpandColumns(i));
             return this;
         }
 
