@@ -116,11 +116,11 @@ namespace ClosedXML.Excel
             SortColumn = columnToSortBy;
 
             // Recalculate shown / hidden rows
-                using (var rows = Range.Rows(2, Range.RowCount()))
-                {
-                    foreach (IXLRangeRow row in rows)
-                        row.WorksheetRow().Unhide();
-                }
+            using (var rows = Range.Rows(2, Range.RowCount()))
+            {
+                foreach (IXLRangeRow row in rows)
+                    row.WorksheetRow().Unhide();
+            }
 
             foreach (var kp in Filters)
             {

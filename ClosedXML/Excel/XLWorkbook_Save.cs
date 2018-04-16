@@ -3477,7 +3477,7 @@ namespace ClosedXML.Excel
             var differentialFormat = new DifferentialFormat();
 
             var diffFont = GetNewFont(new FontInfo { Font = cf.Style.Font as XLFont }, false);
-            if (diffFont.HasChildren)
+            if (diffFont?.HasChildren ?? false)
                 differentialFormat.Append(diffFont);
 
             if (!String.IsNullOrWhiteSpace(cf.Style.NumberFormat.Format))
@@ -3491,11 +3491,11 @@ namespace ClosedXML.Excel
             }
 
             var diffFill = GetNewFill(new FillInfo { Fill = cf.Style.Fill as XLFill }, differentialFillFormat: true, ignoreMod: false);
-            if (diffFill.HasChildren)
+            if (diffFill?.HasChildren ?? false)
                 differentialFormat.Append(diffFill);
 
             var diffBorder = GetNewBorder(new BorderInfo { Border = cf.Style.Border as XLBorder }, false);
-            if (diffBorder.HasChildren)
+            if (diffBorder?.HasChildren ?? false)
                 differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);
@@ -3509,7 +3509,7 @@ namespace ClosedXML.Excel
             var differentialFormat = new DifferentialFormat();
 
             var diffFont = GetNewFont(new FontInfo { Font = style.Font as XLFont }, false);
-            if (diffFont.HasChildren)
+            if (diffFont?.HasChildren ?? false)
                 differentialFormat.Append(diffFont);
 
             if (!String.IsNullOrWhiteSpace(style.NumberFormat.Format) || style.NumberFormat.NumberFormatId != 0)
@@ -3537,11 +3537,11 @@ namespace ClosedXML.Excel
             }
 
             var diffFill = GetNewFill(new FillInfo { Fill = style.Fill as XLFill }, differentialFillFormat: true, ignoreMod: false);
-            if (diffFill.HasChildren)
+            if (diffFill?.HasChildren ?? false)
                 differentialFormat.Append(diffFill);
 
             var diffBorder = GetNewBorder(new BorderInfo { Border = style.Border as XLBorder }, false);
-            if (diffBorder.HasChildren)
+            if (diffBorder?.HasChildren ?? false)
                 differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);

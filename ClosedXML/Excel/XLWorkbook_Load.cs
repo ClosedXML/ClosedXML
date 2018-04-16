@@ -477,7 +477,7 @@ namespace ClosedXML.Excel
                                 continue;
                         }
 
-                        if (source != null)
+                        if (target != null && source != null)
                         {
                             var pt = ws.PivotTables.AddNew(pivotTableDefinition.Name, target, source) as XLPivotTable;
 
@@ -1953,7 +1953,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Year)
                         {
-                            if (dateGroupItem.Year?.HasValue ?? false)
+                            if (dateGroupItem?.Year?.HasValue ?? false)
                                 year = (int)dateGroupItem.Year?.Value;
                             else
                                 valid &= false;
@@ -1961,7 +1961,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Month)
                         {
-                            if (dateGroupItem.Month?.HasValue ?? false)
+                            if (dateGroupItem?.Month?.HasValue ?? false)
                                 month = (int)dateGroupItem.Month?.Value;
                             else
                                 valid &= false;
@@ -1969,7 +1969,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Day)
                         {
-                            if (dateGroupItem.Day?.HasValue ?? false)
+                            if (dateGroupItem?.Day?.HasValue ?? false)
                                 day = (int)dateGroupItem.Day?.Value;
                             else
                                 valid &= false;
@@ -1977,7 +1977,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Hour)
                         {
-                            if (dateGroupItem.Hour?.HasValue ?? false)
+                            if (dateGroupItem?.Hour?.HasValue ?? false)
                                 hour = (int)dateGroupItem.Hour?.Value;
                             else
                                 valid &= false;
@@ -1985,7 +1985,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Minute)
                         {
-                            if (dateGroupItem.Minute?.HasValue ?? false)
+                            if (dateGroupItem?.Minute?.HasValue ?? false)
                                 minute = (int)dateGroupItem.Minute?.Value;
                             else
                                 valid &= false;
@@ -1993,7 +1993,7 @@ namespace ClosedXML.Excel
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Second)
                         {
-                            if (dateGroupItem.Second?.HasValue ?? false)
+                            if (dateGroupItem?.Second?.HasValue ?? false)
                                 second = (int)dateGroupItem.Second?.Value;
                             else
                                 valid &= false;
