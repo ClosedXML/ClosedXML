@@ -213,5 +213,10 @@ namespace ClosedXML.Excel
                 }
             }
         }
+
+        public void Dispose()
+        {
+            _column.Dispose();
+        }
     }
 }

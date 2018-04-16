@@ -191,7 +191,9 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var other = (XLRangeAddress)obj;
+            var other = obj as XLRangeAddress;
+            if (other == null)
+                return false;
             return Worksheet.Equals(other.Worksheet)
                    && FirstAddress.Equals(other.FirstAddress)
                    && LastAddress.Equals(other.LastAddress);

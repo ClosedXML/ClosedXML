@@ -116,8 +116,10 @@ namespace ClosedXML.Excel
 
         public static bool IsValidColumn(string column)
         {
+            if (String.IsNullOrWhiteSpace(column))
+                return false;
             var length = column.Length;
-            if (String.IsNullOrWhiteSpace(column) || length > 3)
+            if (length > 3)
                 return false;
 
             var theColumn = column.ToUpper();
