@@ -5548,7 +5548,7 @@ namespace ClosedXML.Excel
                 var cellValue = new CellValue();
                 try
                 {
-                    cellValue.Text = xlCell.Value.ToString();
+                    cellValue.Text = xlCell.Value.ToInvariantString();
                     openXmlCell.DataType = new EnumValue<CellValues>(CellValues.String);
                 }
                 catch

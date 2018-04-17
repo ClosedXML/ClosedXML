@@ -452,7 +452,7 @@ namespace ClosedXML.Excel
             if (RecalculationNeeded || force)
             {
                 ValueCalculated = RecalculateFormula(FormulaA1);
-                EvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
+                EvaluatedAt = DateTime.UtcNow;
                 RecalculationNeeded = false;
             }
             return ValueCalculated;
@@ -1148,7 +1148,7 @@ namespace ClosedXML.Excel
             set
             {
                 Worksheet.Workbook.NotifyRecalculationNeeded();
-                EditedAtVersion = Worksheet.Workbook.RecalculationCounter;
+                ModifiedAt = DateTime.UtcNow;
 
                 _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
@@ -1169,7 +1169,7 @@ namespace ClosedXML.Excel
             set
             {
                 Worksheet.Workbook.NotifyRecalculationNeeded();
-                EditedAtVersion = Worksheet.Workbook.RecalculationCounter;
+                ModifiedAt = DateTime.UtcNow;
 
                 _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
@@ -1264,13 +1264,13 @@ namespace ClosedXML.Excel
                 if (String.IsNullOrWhiteSpace(_formulaA1) && String.IsNullOrEmpty(_formulaR1C1))
                     return false;
 
-                if (NeedRecalculateEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
+                if (NeedRecalculateEvaluatedAt >= Worksheet.Workbook.LastModifiedAt)
                     return _recalculationNeededLastValue;
 
-                bool res = EvaluatedAtVersion < EditedAtVersion ||                                          // the cell itself was modified
-                           GetAffectingCells().Any(cell => cell.EditedAtVersion > EvaluatedAtVersion ||     // the affecting cell was modified after this one was evaluated
-                                                           cell.EvaluatedAtVersion > EvaluatedAtVersion ||  // the affecting cell was evaluated after this one (normally this should not happen)
-                                                           cell.RecalculationNeeded);                       // the affecting cell needs recalculation (recursion to walk through dependencies)
+                bool res = EvaluatedAt < ModifiedAt ||                                        // the cell itself was modified
+                           GetAffectingCells().Any(cell => cell.ModifiedAt > EvaluatedAt ||   // the affecting cell was modified after this one was evaluated
+                                                           cell.EvaluatedAt > EvaluatedAt ||  // the affecting cell was evaluated after this one (normally this should not happen)
+                                                           cell.RecalculationNeeded);         // the affecting cell needs recalculation (recursion to walk through dependencies)
 
                 RecalculationNeeded = res;
                 return res;
@@ -1278,7 +1278,7 @@ namespace ClosedXML.Excel
             private set
             {
                 _recalculationNeededLastValue = value;
-                NeedRecalculateEvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
+                NeedRecalculateEvaluatedAt = DateTime.UtcNow;
             }
         }
 
@@ -1288,24 +1288,23 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
-        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of cell last modification.
-        /// If this value is greater than <see cref="EvaluatedAtVersion"/> then cell needs re-evaluation, as well as all dependent cells do.
+        /// Date and time of cell's last modification (only value and formula are taken into account).
+        /// If this value is greater than <see cref="EvaluatedAt"/> then cell needs re-evaluation, as well as all dependent cells do.
         /// </summary>
-        internal long EditedAtVersion { get; private set; }
+        internal DateTime ModifiedAt { get; private set; }
 
         /// <summary>
-        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of cell formula evaluation.
-        /// If this value equals to <see cref="XLWorkbook.RecalculationCounter"/> it indicates that <see cref="ValueCalculated"/> stores
-        /// correct value and no re-evaluation has to be performed.
+        /// Date and time of cell's formula last evaluation. If this value is greater of equal to <see cref="XLWorkbook.LastModifiedAt"/>
+        /// it indicates that <see cref="ValueCalculated"/> stores correct value and no re-evaluation has to be performed.
         /// </summary>
-        internal long EvaluatedAtVersion { get; private set; }
+        internal DateTime EvaluatedAt { get; private set; }
 
         /// <summary>
-        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of determining whether the cell
-        /// needs re-evaluation (due to it has been edited or some of the affecting cells has). If thie value equals to <see cref="XLWorkbook.RecalculationCounter"/>
-        /// it indicates that <see cref="_recalculationNeededLastValue"/> stores correct value and no check has to be performed.
+        /// Date and time of last determining whether the cell needs re-evaluation (due to it has been edited or some of the affecting cells has).
+        /// If thie value is greater or equal to <see cref="XLWorkbook.LastModifiedAt"/> it indicates that <see cref="_recalculationNeededLastValue"/>
+        /// stores correct value and no check has to be performed.
         /// </summary>
-        internal long NeedRecalculateEvaluatedAtVersion { get; private set; }
+        internal DateTime NeedRecalculateEvaluatedAt { get; private set; }
 
         public object ValueCalculated { get; private set; }
 

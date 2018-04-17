@@ -120,10 +120,10 @@ namespace ClosedXML.Excel
         public XLEventTracking EventTracking { get; set; }
 
         /// <summary>
-        /// Counter increasing at workbook data change. Serves to determine if the cell formula
-        /// has to be recalculated.
+        /// Date and time when the workbook data was modified (only formulas and cell values are taken
+        /// into account).
         /// </summary>
-        internal long RecalculationCounter { get; private set; }
+        internal DateTime LastModifiedAt { get; private set; }
 
         /// <summary>
         /// Notify that workbook data has been changed which means that cached formula values
@@ -131,7 +131,7 @@ namespace ClosedXML.Excel
         /// </summary>
         internal void NotifyRecalculationNeeded()
         {
-            RecalculationCounter++;
+            LastModifiedAt = DateTime.UtcNow;
         }
 
         #region  Nested Type : XLLoadSource

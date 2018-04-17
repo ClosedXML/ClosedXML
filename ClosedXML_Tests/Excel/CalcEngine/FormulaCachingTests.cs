@@ -16,7 +16,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 var sheet = wb.Worksheets.Add("TestSheet");
                 var cell = sheet.Cell(1, 1);
 
-                Assert.AreEqual(0, wb.RecalculationCounter);
+                Assert.AreEqual(0, wb.LastModifiedAt);
                 Assert.IsFalse(cell.RecalculationNeeded);
             }
         }
@@ -30,7 +30,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 var cell = sheet.Cell(1, 1);
                 cell.Value = "1234567";
 
-                Assert.Greater(wb.RecalculationCounter, 0);
+                Assert.Greater(wb.LastModifiedAt, 0);
             }
         }
 
