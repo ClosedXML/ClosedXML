@@ -62,6 +62,15 @@ namespace ClosedXML.Excel
             return hashCode;
         }
 
+        public override string ToString()
+        {
+            return
+                $"{Horizontal} {Vertical} {ReadingOrder} Indent: {Indent} RelativeIndent: {RelativeIndent} TextRotation: {TextRotation} " +
+                (WrapText ? "WrapText" : "") +
+                (JustifyLastLine ? "JustifyLastLine" : "") +
+                (TopToBottom ? "TopToBottom" : "");
+        }
+
         public static bool operator ==(XLAlignmentKey left, XLAlignmentKey right) => left.Equals(right);
 
         public static bool operator !=(XLAlignmentKey left, XLAlignmentKey right) => !(left.Equals(right));

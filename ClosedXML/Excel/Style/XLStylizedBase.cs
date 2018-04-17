@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
 
         #endregion Properties
 
-        public XLStylizedBase(XLStyleValue styleValue)
+        protected XLStylizedBase(XLStyleValue styleValue)
         {
             StyleValue = styleValue;
         }
@@ -80,10 +80,10 @@ namespace ClosedXML.Excel
 
         public void ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
         {
-            var children = GetChildrenRecursively(this);
-            var allChildren = children.GroupBy(child => child.StyleValue, _comparer);
+            var children = GetChildrenRecursively(this)
+                .GroupBy(child => child.StyleValue, _comparer);
 
-            foreach (var group in allChildren)
+            foreach (var group in children)
             {
                 var styleKey = modification(group.Key.Key);
                 var styleValue = XLStyleValue.FromKey(styleKey);

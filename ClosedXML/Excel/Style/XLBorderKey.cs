@@ -82,6 +82,14 @@ namespace ClosedXML.Excel
             return base.Equals(obj);
         }
 
+        public override string ToString()
+        {
+            return $"{LeftBorder} {LeftBorderColor} {RightBorder} {RightBorderColor} {TopBorder} {TopBorderColor} " +
+                   $"{BottomBorder} {BottomBorderColor} {DiagonalBorder} {DiagonalBorderColor} " +
+                   (DiagonalUp ? "DiagonalUp" : "") +
+                   (DiagonalDown ? "DiagonalDown" : "");
+        }
+
         public static bool operator ==(XLBorderKey left, XLBorderKey right) => left.Equals(right);
 
         public static bool operator !=(XLBorderKey left, XLBorderKey right) => !(left.Equals(right));

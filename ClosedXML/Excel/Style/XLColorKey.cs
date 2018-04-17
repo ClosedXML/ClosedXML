@@ -54,6 +54,21 @@ namespace ClosedXML.Excel
             return base.Equals(obj);
         }
 
+        public override string ToString()
+        {
+            switch (ColorType)
+            {
+                case XLColorType.Color:
+                    return Color.ToString();
+                case XLColorType.Theme:
+                    return $"{ThemeColor} ({ThemeTint})";
+                case XLColorType.Indexed:
+                    return $"Indexed: {Indexed}";
+                default:
+                    return base.ToString();
+            }
+        }
+
         public static bool operator ==(XLColorKey left, XLColorKey right) => left.Equals(right);
 
         public static bool operator !=(XLColorKey left, XLColorKey right) => !(left.Equals(right));

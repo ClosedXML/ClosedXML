@@ -38,6 +38,19 @@ namespace ClosedXML.Excel
                    Protection == other.Protection;
         }
 
+        public override string ToString()
+        {
+            return
+                this == XLStyle.Default.Key ? "Default" : 
+                string.Format("Alignment: {0} Border: {1} Fill: {2} Font: {3} NumberFormat: {4} Protection: {5}",
+                    Alignment == XLStyle.Default.Key.Alignment ? "Default" : Alignment.ToString(),
+                    Border == XLStyle.Default.Key.Border ? "Default" : Border.ToString(),
+                    Fill == XLStyle.Default.Key.Fill ? "Default" : Fill.ToString(),
+                    Font == XLStyle.Default.Key.Font ? "Default" : Font.ToString(),
+                    NumberFormat == XLStyle.Default.Key.NumberFormat ? "Default" : NumberFormat.ToString(),
+                    Protection == XLStyle.Default.Key.Protection ? "Default" : Protection.ToString());
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is XLStyleKey)

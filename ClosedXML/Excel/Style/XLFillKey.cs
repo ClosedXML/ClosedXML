@@ -35,6 +35,11 @@ namespace ClosedXML.Excel
             return base.Equals(obj);
         }
 
+        public override string ToString()
+        {
+            return $"{PatternType} {BackgroundColor}/{PatternColor}";
+        }
+
         public static bool operator ==(XLFillKey left, XLFillKey right) => left.Equals(right);
 
         public static bool operator !=(XLFillKey left, XLFillKey right) => !(left.Equals(right));

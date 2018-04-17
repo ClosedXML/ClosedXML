@@ -20,11 +20,11 @@ namespace ClosedXML.Excel.Caching
 
         private readonly ConcurrentDictionary<Tkey, WeakReference> _storage;
         private readonly Func<Tkey, Tvalue> _createNew;
-        public XLRepositoryBase(Func<Tkey, Tvalue> createNew) : this(createNew, EqualityComparer<Tkey>.Default)
+        protected XLRepositoryBase(Func<Tkey, Tvalue> createNew) : this(createNew, EqualityComparer<Tkey>.Default)
         {
         }
 
-        public XLRepositoryBase(Func<Tkey, Tvalue> createNew, IEqualityComparer<Tkey> comparer)
+        protected XLRepositoryBase(Func<Tkey, Tvalue> createNew, IEqualityComparer<Tkey> comparer)
         {
             _storage = new ConcurrentDictionary<Tkey, WeakReference>(CONCURRENCY_LEVEL, INITIAL_CAPACITY, comparer);
             _createNew = createNew;

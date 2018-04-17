@@ -66,6 +66,14 @@ namespace ClosedXML.Excel
             return hashCode;
         }
 
+        public override string ToString()
+        {
+            return $"{FontName} {FontSize}pt {FontColor} " +
+                   (Bold ? "Bold" : "") + (Italic ? "Italic" : "") + (Strikethrough ? "Strikethrough" : "") +
+                   (Underline == XLFontUnderlineValues.None ? "" : Underline.ToString()) +
+                   $"{FontFamilyNumbering} {FontCharSet}";
+        }
+
         public static bool operator ==(XLFontKey left, XLFontKey right) => left.Equals(right);
 
         public static bool operator !=(XLFontKey left, XLFontKey right) => !(left.Equals(right));

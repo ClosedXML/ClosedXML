@@ -30,6 +30,11 @@ namespace ClosedXML.Excel
             return base.Equals(obj);
         }
 
+        public override string ToString()
+        {
+            return (Locked ? "Locked" : "") + (Hidden ? "Hidden" : "");
+        }
+
         public static bool operator ==(XLProtectionKey left, XLProtectionKey right) => left.Equals(right);
 
         public static bool operator !=(XLProtectionKey left, XLProtectionKey right) => !(left.Equals(right));

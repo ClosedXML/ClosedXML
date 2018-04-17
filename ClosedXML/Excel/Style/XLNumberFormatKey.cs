@@ -30,6 +30,11 @@ namespace ClosedXML.Excel
             return base.Equals(obj);
         }
 
+        public override string ToString()
+        {
+            return $"{Format}/{NumberFormatId}";
+        }
+
         public static bool operator ==(XLNumberFormatKey left, XLNumberFormatKey right) => left.Equals(right);
 
         public static bool operator !=(XLNumberFormatKey left, XLNumberFormatKey right) => !(left.Equals(right));
