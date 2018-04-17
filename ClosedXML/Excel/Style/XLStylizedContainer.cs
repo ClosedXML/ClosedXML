@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     {
         protected readonly IXLStylized _container;
 
-        public XLStylizedContainer(IXLStyle style, IXLStylized container) : base(style.Value)
+        public XLStylizedContainer(IXLStyle style, IXLStylized container) : base((style as XLStyle).Value)
         {
             _container = container;
         }

@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public struct XLStyleKey : IEquatable<XLStyleKey>
+    internal struct XLStyleKey : IEquatable<XLStyleKey>
     {
         public XLAlignmentKey Alignment { get; set; }
 

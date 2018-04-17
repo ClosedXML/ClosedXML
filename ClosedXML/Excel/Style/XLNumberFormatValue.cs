@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public sealed class XLNumberFormatValue
+    internal sealed class XLNumberFormatValue
     {
         private static readonly XLNumberFormatRepository Repository = new XLNumberFormatRepository(key => new XLNumberFormatValue(key));
 

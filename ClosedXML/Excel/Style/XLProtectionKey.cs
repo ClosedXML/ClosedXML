@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public struct XLProtectionKey : IEquatable<XLProtectionKey>
+    internal struct XLProtectionKey : IEquatable<XLProtectionKey>
     {
         public bool Locked { get; set; }
 

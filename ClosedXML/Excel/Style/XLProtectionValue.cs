@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public sealed class XLProtectionValue
+    internal sealed class XLProtectionValue
     {
         private static readonly XLProtectionRepository Repository = new XLProtectionRepository(key => new XLProtectionValue(key));
 

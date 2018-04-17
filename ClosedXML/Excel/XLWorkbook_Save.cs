@@ -1883,12 +1883,12 @@ namespace ClosedXML.Excel
                 // https://github.com/ClosedXML/ClosedXML/issues/513
                 if (xlField.IsConsistentStyle())
                 {
-                    var style = xlField.Column.Cells()
+                    var style = (xlField.Column.Cells()
                         .Skip(xlTable.ShowHeaderRow ? 1 : 0)
                         .First()
-                        .Style.Value;
+                        .Style as XLStyle).Value;
 
-                    if (!DefaultStyle.Value.Equals(style) && context.DifferentialFormats.ContainsKey(style.Key))
+                    if (!DefaultStyleValue.Equals(style) && context.DifferentialFormats.ContainsKey(style.Key))
                         tableColumn.DataFormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[style.Key]));
                 }
                 else
@@ -3211,7 +3211,7 @@ namespace ClosedXML.Excel
 
         private void GenerateWorkbookStylesPartContent(WorkbookStylesPart workbookStylesPart, SaveContext context)
         {
-            var defaultStyle = DefaultStyle.Value;
+            var defaultStyle = DefaultStyleValue;
 
             if (!context.SharedFonts.ContainsKey(defaultStyle.Font))
                 context.SharedFonts.Add(defaultStyle.Font, new FontInfo { FontId = 0, Font = defaultStyle.Font });
@@ -3406,7 +3406,8 @@ namespace ClosedXML.Excel
             {
                 foreach (var cf in ws.ConditionalFormats)
                 {
-                    if (!cf.Style.Value.Equals(DefaultStyle.Value) && !context.DifferentialFormats.ContainsKey(cf.Style.Value.Key))
+                    var styleValue = (cf.Style as XLStyle).Value;
+                    if (!styleValue.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(styleValue.Key))
                         AddConditionalDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, cf, context);
                 }
 
@@ -3414,12 +3415,12 @@ namespace ClosedXML.Excel
                 {
                     if (tf.IsConsistentStyle())
                     {
-                        var style = tf.Column.Cells()
+                        var style = (tf.Column.Cells()
                             .Skip(tf.Table.ShowHeaderRow ? 1 : 0)
                             .First()
-                            .Style.Value;
+                            .Style as XLStyle).Value;
 
-                        if (!style.Equals(DefaultStyle.Value) && !context.DifferentialFormats.ContainsKey(style.Key))
+                        if (!style.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(style.Key))
                             AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, style, context);
                     }
                 }
@@ -3455,8 +3456,9 @@ namespace ClosedXML.Excel
             SaveContext context)
         {
             var differentialFormat = new DifferentialFormat();
+            var styleValue = (cf.Style as XLStyle).Value;
 
-            var diffFont = GetNewFont(new FontInfo { Font = cf.Style.Value.Font }, false);
+            var diffFont = GetNewFont(new FontInfo { Font = styleValue.Font }, false);
             if (diffFont?.HasChildren ?? false)
                 differentialFormat.Append(diffFont);
 
@@ -3470,17 +3472,17 @@ namespace ClosedXML.Excel
                 differentialFormat.Append(numberFormat);
             }
 
-            var diffFill = GetNewFill(new FillInfo { Fill = cf.Style.Value.Fill }, differentialFillFormat: true, ignoreMod: false);
+            var diffFill = GetNewFill(new FillInfo { Fill = styleValue.Fill }, differentialFillFormat: true, ignoreMod: false);
             if (diffFill?.HasChildren ?? false)
                 differentialFormat.Append(diffFill);
 
-            var diffBorder = GetNewBorder(new BorderInfo { Border = cf.Style.Value.Border }, false);
+            var diffBorder = GetNewBorder(new BorderInfo { Border = styleValue.Border }, false);
             if (diffBorder?.HasChildren ?? false)
                 differentialFormat.Append(diffBorder);
 
             differentialFormats.Append(differentialFormat);
 
-            context.DifferentialFormats.Add(cf.Style.Value.Key, differentialFormats.Count() - 1);
+            context.DifferentialFormats.Add(styleValue.Key, differentialFormats.Count() - 1);
         }
 
         private static void AddStyleAsDifferentialFormat(DifferentialFormats differentialFormats, XLStyleValue style,
@@ -4641,7 +4643,7 @@ namespace ClosedXML.Excel
                         maxInColumnsCollection = (Int32)col.Max.Value;
                 }
 
-                if (maxInColumnsCollection < XLHelper.MaxColumnNumber && !xlWorksheet.StyleValue.Equals(DefaultStyle.Value))
+                if (maxInColumnsCollection < XLHelper.MaxColumnNumber && !xlWorksheet.StyleValue.Equals(DefaultStyleValue))
                 {
                     var column = new Column
                     {

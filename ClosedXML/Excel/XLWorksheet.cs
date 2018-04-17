@@ -39,7 +39,7 @@ namespace ClosedXML.Excel
                 new XLRangeAddress(
                     new XLAddress(null, XLHelper.MinRowNumber, XLHelper.MinColumnNumber, false, false),
                     new XLAddress(null, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber, false, false)),
-                workbook.Style.Value)
+                (workbook.Style as XLStyle).Value)
         {
             EventTrackingEnabled = workbook.EventTracking == XLEventTracking.Enabled;
 

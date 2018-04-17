@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public struct XLNumberFormatKey : IEquatable<XLNumberFormatKey>
+    internal struct XLNumberFormatKey : IEquatable<XLNumberFormatKey>
     {
         public int NumberFormatId { get; set; }
 

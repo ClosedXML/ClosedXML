@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
         #region Constructor
 
         public XLRange(XLRangeParameters xlRangeParameters)
-            : base(xlRangeParameters.RangeAddress, xlRangeParameters.DefaultStyle.Value)
+            : base(xlRangeParameters.RangeAddress, (xlRangeParameters.DefaultStyle as XLStyle).Value)
         {
             RangeParameters = new XLRangeParameters(xlRangeParameters.RangeAddress, xlRangeParameters.DefaultStyle);
 
@@ -245,7 +245,7 @@ namespace ClosedXML.Excel
 
             foreach (IXLCell c in Range(1, 1, columnCount, rowCount).Cells())
             {
-                var border = c.Style.Value.Border;
+                var border = (c.Style as XLStyle).Value.Border;
                 c.Style.Border.TopBorder = border.LeftBorder;
                 c.Style.Border.TopBorderColor = border.LeftBorderColor;
                 c.Style.Border.LeftBorder = border.TopBorder;

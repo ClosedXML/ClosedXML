@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
         private readonly List<XLRow> _rows = new List<XLRow>();
         private readonly XLWorksheet _worksheet;
 
-        public XLRows(XLWorksheet worksheet) : base(XLWorkbook.DefaultStyle.Value)
+        public XLRows(XLWorksheet worksheet) : base(XLWorkbook.DefaultStyleValue)
         {
             _worksheet = worksheet;
         }

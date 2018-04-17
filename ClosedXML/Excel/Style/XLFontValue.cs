@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public sealed class XLFontValue
+    internal sealed class XLFontValue
     {
         private static readonly XLFontRepository Repository = new XLFontRepository(key => new XLFontValue(key));
 

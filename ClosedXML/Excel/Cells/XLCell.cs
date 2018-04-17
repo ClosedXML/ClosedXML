@@ -92,7 +92,7 @@ namespace ClosedXML.Excel
         }
 
         public XLCell(XLWorksheet worksheet, XLAddress address, IXLStyle style)
-            : this(worksheet, address, style.Value)
+            : this(worksheet, address, (style as XLStyle).Value)
         {
         }
 

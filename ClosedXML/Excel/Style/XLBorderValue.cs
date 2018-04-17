@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public class XLBorderValue
+    internal class XLBorderValue
     {
         private static readonly XLBorderRepository Repository = new XLBorderRepository(key => new XLBorderValue(key));
 

@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public class XLStyleValue
+    internal class XLStyleValue
     {
         private static readonly XLStyleRepository Repository = new XLStyleRepository(key => new XLStyleValue(key));
 

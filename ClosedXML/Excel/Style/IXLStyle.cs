@@ -17,7 +17,5 @@ namespace ClosedXML.Excel
         IXLNumberFormat DateFormat { get; }
 
         IXLProtection Protection { get; set; }
-
-        XLStyleValue Value { get; }
     }
 }

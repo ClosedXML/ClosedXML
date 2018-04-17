@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
     {
         private readonly List<XLRange> _ranges = new List<XLRange>();
 
-        public XLRanges() : base(XLWorkbook.DefaultStyle.Value)
+        public XLRanges() : base(XLWorkbook.DefaultStyleValue)
         {
         }
 

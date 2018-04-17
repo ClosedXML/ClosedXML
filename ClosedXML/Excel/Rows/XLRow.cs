@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
                                       new XLAddress(xlRowParameters.Worksheet, row, XLHelper.MaxColumnNumber, false,
                                                     false)),
                   xlRowParameters.IsReference ? xlRowParameters.Worksheet.Internals.RowsCollection[row].StyleValue
-                                              : xlRowParameters.DefaultStyle.Value
+                                              : (xlRowParameters.DefaultStyle as XLStyle).Value
                   )
         {
             SetRowNumber(row);

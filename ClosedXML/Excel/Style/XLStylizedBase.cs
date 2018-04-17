@@ -8,14 +8,18 @@ namespace ClosedXML.Excel
     /// <summary>
     /// Base class for any workbook element that has or may have a style.
     /// </summary>
-    public abstract class XLStylizedBase : IXLStylized
+    internal abstract class XLStylizedBase : IXLStylized
     {
         #region Properties
 
         /// <summary>
         /// Read-only style property.
         /// </summary>
-        public XLStyleValue StyleValue { get; private set; }
+        internal XLStyleValue StyleValue { get; private set; }
+        XLStyleValue IXLStylized.StyleValue
+        {
+            get { return StyleValue; }
+        }
 
         /// <summary>
         /// Editable style of the workbook element. Modification of this property DOES affect styles of child objects as well - they will
@@ -78,7 +82,7 @@ namespace ClosedXML.Excel
 
         private static ReferenceEqualityComparer<XLStyleValue> _comparer = new ReferenceEqualityComparer<XLStyleValue>();
 
-        public void ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
+        void IXLStylized.ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
         {
             var children = GetChildrenRecursively(this)
                 .GroupBy(child => child.StyleValue, _comparer);

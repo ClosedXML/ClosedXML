@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
         #region Constructor
 
         public XLRangeRow(XLRangeParameters rangeParameters, bool quickLoad)
-            : base(rangeParameters.RangeAddress, rangeParameters.DefaultStyle.Value)
+            : base(rangeParameters.RangeAddress, (rangeParameters.DefaultStyle as XLStyle).Value)
         {
             RangeParameters = rangeParameters;
             if (quickLoad) return;

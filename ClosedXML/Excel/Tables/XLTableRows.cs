@@ -9,8 +9,7 @@ namespace ClosedXML.Excel
     {
         private readonly List<XLTableRow> _ranges = new List<XLTableRow>();
   
-        public XLTableRows(IXLStyle defaultStyle) : base(defaultStyle.Value)
-
+        public XLTableRows(IXLStyle defaultStyle) : base((defaultStyle as XLStyle).Value)
         {
         }
 

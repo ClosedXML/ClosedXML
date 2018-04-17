@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
 
         private readonly IXLStylized _container;
 
-        public XLStyleValue Value { get; private set; }
+        internal XLStyleValue Value { get; private set; }
 
         internal XLStyleKey Key
         {

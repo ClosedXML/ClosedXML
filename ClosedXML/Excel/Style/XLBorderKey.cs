@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public struct XLBorderKey : IEquatable<XLBorderKey>
+    internal struct XLBorderKey : IEquatable<XLBorderKey>
     {
         public XLBorderStyleValues LeftBorder { get; set; }
 

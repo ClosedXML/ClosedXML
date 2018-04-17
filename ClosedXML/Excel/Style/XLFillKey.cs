@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public struct XLFillKey : IEquatable<XLFillKey>
+    internal struct XLFillKey : IEquatable<XLFillKey>
     {
         public XLColorKey BackgroundColor { get; set; }
 

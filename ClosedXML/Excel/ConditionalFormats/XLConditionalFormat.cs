@@ -60,7 +60,7 @@ namespace ClosedXML.Excel
             public int GetHashCode(IXLConditionalFormat obj)
             {
                 var xx = (XLConditionalFormat)obj;
-                var xStyle = obj.Style.Value;
+                var xStyle = (obj.Style as XLStyle).Value;
                 var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value)
                     .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Range.FirstCell()).GetFormulaR1C1(f.Value)));
 

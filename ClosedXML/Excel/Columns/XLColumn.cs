@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
                                    new XLAddress(xlColumnParameters.Worksheet, XLHelper.MaxRowNumber, column, false,
                                                  false)),
                 xlColumnParameters.IsReference ? xlColumnParameters.Worksheet.Internals.ColumnsCollection[column].StyleValue
-                                               : xlColumnParameters.DefaultStyle.Value)
+                                               : (xlColumnParameters.DefaultStyle as XLStyle).Value)
         {
             SetColumnNumber(column);
 
@@ -267,12 +267,12 @@ namespace ClosedXML.Excel
                     && !autoFilterRows.Contains(t.AutoFilter.Range.FirstRow().RowNumber()))
                 .Select(t => t.AutoFilter.Range.FirstRow().RowNumber()));
 
-            IXLStyle cellStyle = null;
-            foreach (XLCell c in Column(startRow, endRow).CellsUsed())
+            XLStyle cellStyle = null;
+            foreach (var c in Column(startRow, endRow).CellsUsed().Cast<XLCell>())
             {
                 if (c.IsMerged()) continue;
                 if (cellStyle == null || cellStyle.Value != c.StyleValue)
-                    cellStyle = c.Style;
+                    cellStyle = c.Style as XLStyle;
 
                 Double thisWidthMax = 0;
                 Int32 textRotation = cellStyle.Alignment.TextRotation;

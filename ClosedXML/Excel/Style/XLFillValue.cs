@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    public sealed class XLFillValue
+    internal sealed class XLFillValue
     {
         private static readonly XLFillRepository Repository = new XLFillRepository(key => new XLFillValue(key));
 

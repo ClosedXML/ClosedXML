@@ -2582,7 +2582,7 @@ namespace ClosedXML.Excel
                 {
                     LoadFill(fill, xlStylized.InnerStyle.Fill, differentialFillFormat: false);
                 }
-                xlStyle.Fill = xlStylized.InnerStyle.Value.Key.Fill;
+                xlStyle.Fill = (xlStylized.InnerStyle as XLStyle).Value.Key.Fill;
             }
 
             var alignment = cellFormat.Alignment;
