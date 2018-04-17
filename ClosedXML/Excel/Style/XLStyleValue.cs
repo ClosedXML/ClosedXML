@@ -60,5 +60,21 @@ namespace ClosedXML.Excel
         {
             return -280332839 + Key.GetHashCode();
         }
+
+        public static bool operator ==(XLStyleValue left, XLStyleValue right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+            if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
+                return true;
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                return false;
+            return left.Key.Equals(right.Key);
+        }
+
+        public static bool operator !=(XLStyleValue left, XLStyleValue right)
+        {
+            return !(left == right);
+        }
     }
 }
