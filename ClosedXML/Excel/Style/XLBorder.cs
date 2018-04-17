@@ -276,7 +276,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("Color cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Color cannot be null");
 
                 Modify(k => { k.LeftBorderColor = value.Key; return k; });
             }
@@ -294,7 +294,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("Color cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Color cannot be null");
 
                 Modify(k => { k.RightBorderColor = value.Key; return k; });
             }
@@ -312,7 +312,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("Color cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Color cannot be null");
 
                 Modify(k => { k.TopBorderColor = value.Key; return k; });
             }
@@ -330,7 +330,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("Color cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Color cannot be null");
 
                 Modify(k => { k.BottomBorderColor = value.Key; return k; });
             }
@@ -348,7 +348,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("Color cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Color cannot be null");
 
                 Modify(k => { k.DiagonalBorderColor = value.Key; return k; });
             }

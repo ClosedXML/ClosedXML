@@ -89,7 +89,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("Color cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Color cannot be null");
 
                 // 4 ways of determining an "empty" color
                 if (new XLFillPatternValues[] { XLFillPatternValues.None, XLFillPatternValues.Solid }.Contains(PatternType)
@@ -111,7 +111,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("Color cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Color cannot be null");
 
                 Modify(k => { k.PatternColor = value.Key; return k; });
             }

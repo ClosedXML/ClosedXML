@@ -154,7 +154,7 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("Color cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Color cannot be null");
                 Modify(k => { k.FontColor = value.Key; return k; });
             }
         }
