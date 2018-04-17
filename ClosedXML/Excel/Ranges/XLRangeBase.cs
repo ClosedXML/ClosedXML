@@ -9,45 +9,18 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal abstract class XLRangeBase : IXLRangeBase, IXLStylized
+    internal abstract class XLRangeBase : XLStylizedBase, IXLRangeBase, IXLStylized
     {
-        public Boolean StyleChanged { get; set; }
-
         #region Fields
 
-        private IXLStyle _style;
         private XLSortElements _sortRows;
         private XLSortElements _sortColumns;
 
         #endregion Fields
-
-        private Int32 _styleCacheId;
-
-        protected void SetStyle(IXLStyle styleToUse)
-        {
-            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
-            _style = null;
-            StyleChanged = false;
-        }
-
-        protected void SetStyle(Int32 styleId)
-        {
-            _styleCacheId = styleId;
-            _style = null;
-            StyleChanged = false;
-        }
-
-        public Int32 GetStyleId()
-        {
-            if (StyleChanged)
-                SetStyle(Style);
-
-            return _styleCacheId;
-        }
-
+        
         protected IXLStyle GetStyle()
         {
-            return _style ?? (_style = new XLStyle(this, Worksheet.Workbook.GetStyleById(_styleCacheId)));
+            return Style;
         }
 
         #region Constructor
@@ -55,7 +28,8 @@ namespace ClosedXML.Excel
         private static Int32 IdCounter = 0;
         private readonly Int32 Id;
 
-        protected XLRangeBase(XLRangeAddress rangeAddress)
+        protected XLRangeBase(XLRangeAddress rangeAddress, XLStyleValue styleValue)
+            : base(styleValue)
         {
             Id = ++IdCounter;
 
@@ -209,7 +183,7 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        public IXLRanges RangesUsed
+        public override IXLRanges RangesUsed
         {
             get
             {
@@ -218,6 +192,23 @@ namespace ClosedXML.Excel
             }
         }
 
+        protected override IEnumerable<XLStylizedBase> Children
+        {
+            get
+            {
+                foreach (var cell in Cells().OfType<XLCell>())
+                    yield return cell;
+            }
+        }
+
+        public override IEnumerable<IXLStyle> Styles
+        {
+            get
+            {
+                foreach (IXLCell cell in Cells())
+                    yield return cell.Style;
+            }
+        }
         #endregion IXLStylized Members
 
         #endregion Public properties
@@ -471,12 +462,6 @@ namespace ClosedXML.Excel
                     );
         }
 
-        public virtual IXLStyle Style
-        {
-            get { return GetStyle(); }
-            set { Cells().ForEach(c => c.Style = value); }
-        }
-
         IXLRange IXLRangeBase.AsRange()
         {
             return AsRange();
@@ -548,30 +533,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLRangeBase Members
-
-        #region IXLStylized Members
-
-        public virtual IEnumerable<IXLStyle> Styles
-        {
-            get
-            {
-                UpdatingStyle = true;
-                foreach (IXLCell cell in Cells())
-                    yield return cell.Style;
-                UpdatingStyle = false;
-            }
-        }
-
-        public virtual Boolean UpdatingStyle { get; set; }
-
-        public virtual IXLStyle InnerStyle
-        {
-            get { return GetStyle(); }
-            set { SetStyle(value); }
-        }
-
-        #endregion IXLStylized Members
-
+        
         public IXLCells Search(String searchText, CompareOptions compareOptions = CompareOptions.Ordinal, Boolean searchFormulae = false)
         {
             var culture = CultureInfo.CurrentCulture;
@@ -841,19 +803,18 @@ namespace ClosedXML.Excel
             if (cell != null)
                 return cell;
 
-            Int32 styleId = GetStyleId();
-            Int32 worksheetStyleId = Worksheet.GetStyleId();
+            var styleValue = this.StyleValue;
 
-            if (styleId == worksheetStyleId)
+            if (styleValue == Worksheet.StyleValue)
             {
                 XLRow row;
                 XLColumn column;
                 if (Worksheet.Internals.RowsCollection.TryGetValue(absRow, out row)
-                    && row.GetStyleId() != worksheetStyleId)
-                    styleId = row.GetStyleId();
+                    && row.StyleValue != Worksheet.StyleValue)
+                    styleValue = row.StyleValue;
                 else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absColumn, out column)
-                    && column.GetStyleId() != worksheetStyleId)
-                    styleId = column.GetStyleId();
+                    && column.StyleValue != Worksheet.StyleValue)
+                    styleValue = column.StyleValue;
             }
             var absoluteAddress = new XLAddress(this.Worksheet,
                                  absRow,
@@ -861,15 +822,9 @@ namespace ClosedXML.Excel
                                  cellAddressInRange.FixedRow,
                                  cellAddressInRange.FixedColumn);
 
-            Int32 newCellStyleId = styleId;
-
-            XLCell newCell;
             // If the default style for this range base is empty, but the worksheet
             // has a default style, use the worksheet's default style
-            if (styleId == 0 && worksheetStyleId != 0 || styleId == worksheetStyleId)
-                newCell = new XLCell(Worksheet, absoluteAddress);
-            else
-                newCell = new XLCell(Worksheet, absoluteAddress, newCellStyleId);
+            XLCell newCell = new XLCell(Worksheet, absoluteAddress, styleValue);
 
             Worksheet.Internals.CellsCollection.Add(absRow, absColumn, newCell);
             return newCell;
@@ -1152,7 +1107,7 @@ namespace ClosedXML.Excel
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co) ??
                                           Worksheet.Cell(oldKey);
 
-                            var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
+                            var newCell = new XLCell(Worksheet, newKey, oldCell.StyleValue);
                             newCell.CopyValuesFrom(oldCell);
                             newCell.FormulaA1 = oldCell.FormulaA1;
                             cellsToInsert.Add(newKey, newCell);
@@ -1175,7 +1130,7 @@ namespace ClosedXML.Excel
                 {
                     int newColumn = c.Address.ColumnNumber + numberOfColumns;
                     var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
-                    var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
+                    var newCell = new XLCell(Worksheet, newKey, c.StyleValue);
                     newCell.CopyValuesFrom(c);
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
@@ -1370,7 +1325,7 @@ namespace ClosedXML.Excel
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
                             if (oldCell != null)
                             {
-                                var newCell = new XLCell(Worksheet, newKey, oldCell.GetStyleId());
+                                var newCell = new XLCell(Worksheet, newKey, oldCell.StyleValue);
                                 newCell.CopyValuesFrom(oldCell);
                                 newCell.FormulaA1 = oldCell.FormulaA1;
                                 cellsToInsert.Add(newKey, newCell);
@@ -1394,7 +1349,7 @@ namespace ClosedXML.Excel
                 {
                     int newRow = c.Address.RowNumber + numberOfRows;
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
-                    var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
+                    var newCell = new XLCell(Worksheet, newKey, c.StyleValue);
                     newCell.CopyValuesFrom(c);
                     newCell.FormulaA1 = c.FormulaA1;
                     cellsToInsert.Add(newKey, newCell);
@@ -1535,7 +1490,7 @@ namespace ClosedXML.Excel
                 var newKey = new XLAddress(Worksheet, c.Address.RowNumber - rowModifier,
                                            c.Address.ColumnNumber - columnModifier,
                                            false, false);
-                var newCell = new XLCell(Worksheet, newKey, c.GetStyleId());
+                var newCell = new XLCell(Worksheet, newKey, c.StyleValue);
                 newCell.CopyValuesFrom(c);
                 newCell.FormulaA1 = c.FormulaA1;
                 cellsToDelete.Add(c.Address);

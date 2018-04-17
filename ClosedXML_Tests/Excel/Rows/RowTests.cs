@@ -259,7 +259,7 @@ namespace ClosedXML_Tests.Excel
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet1") as XLWorksheet;
 
-            var row = new XLRow(-1, new XLRowParameters(ws, 0, false));
+            var row = new XLRow(-1, new XLRowParameters(ws, XLStyle.Default, false));
 
             Assert.IsFalse(row.RangeAddress.IsValid);
         }

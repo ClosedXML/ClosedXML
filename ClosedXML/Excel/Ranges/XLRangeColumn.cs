@@ -8,13 +8,12 @@ namespace ClosedXML.Excel
         #region Constructor
 
         public XLRangeColumn(XLRangeParameters rangeParameters, bool quickLoad)
-            : base(rangeParameters.RangeAddress)
+            : base(rangeParameters.RangeAddress, (rangeParameters.DefaultStyle as XLStyle).Value)
         {
             if (quickLoad) return;
 
             SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
             SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-            SetStyle(rangeParameters.DefaultStyle);
         }
 
         public XLRangeColumn(XLRangeParameters rangeParameters, bool quickLoad, IXLTable table)

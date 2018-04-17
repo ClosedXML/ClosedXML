@@ -5,55 +5,153 @@ namespace ClosedXML.Excel
 {
     internal class XLStyle : IXLStyle
     {
-        public XLStyle(IXLStylized container, IXLStyle initialStyle = null, Boolean useDefaultModify = true)
-        {
-            if (initialStyle != null)
-            {
-                Font = new XLFont(container, initialStyle.Font, useDefaultModify);
-                Alignment = new XLAlignment(container, initialStyle.Alignment);
-                Border = new XLBorder(container, initialStyle.Border, useDefaultModify);
-                Fill = new XLFill(container, initialStyle.Fill, useDefaultModify);
-                NumberFormat = new XLNumberFormat(container, initialStyle.NumberFormat);
-                Protection = new XLProtection(container, initialStyle.Protection);
-            }
-            else
-            {
-                Font = new XLFont(container, null);
-                Alignment = new XLAlignment(container);
-                Border = new XLBorder(container, null);
-                Fill = new XLFill(container);
-                NumberFormat = new XLNumberFormat(container, null);
-                Protection = new XLProtection(container);
-            }
+        #region Static members
 
-            DateFormat = NumberFormat;
+        public static XLStyle Default { get { return new XLStyle(XLStyleValue.Default); } }
+
+        internal static XLStyleKey GenerateKey(IXLStyle initialStyle)
+        {
+            if (initialStyle == null)
+                return Default.Key;
+            if (initialStyle is XLStyle)
+                return (initialStyle as XLStyle).Key;
+
+            return new XLStyleKey
+            {
+                Font = XLFont.GenerateKey(initialStyle.Font),
+                Alignment = XLAlignment.GenerateKey(initialStyle.Alignment),
+                Border = XLBorder.GenerateKey(initialStyle.Border),
+                Fill = XLFill.GenerateKey(initialStyle.Fill),
+                NumberFormat = XLNumberFormat.GenerateKey(initialStyle.NumberFormat),
+                Protection = XLProtection.GenerateKey(initialStyle.Protection)
+            };
         }
 
-        public IXLFont Font { get; set; }
-
-        public IXLAlignment Alignment { get; set; }
-
-        public IXLBorder Border { get; set; }
-
-        public IXLFill Fill { get; set; }
-
-        private IXLNumberFormat numberFormat;
-        public IXLNumberFormat NumberFormat
+        internal static XLStyle CreateEmptyStyle()
         {
-            get
+            return new XLStyle(new XLStylizedEmpty(null));
+        }
+
+        #endregion Static members
+
+        #region properties
+
+        private readonly IXLStylized _container;
+
+        internal XLStyleValue Value { get; private set; }
+
+        internal XLStyleKey Key
+        {
+            get { return Value.Key; }
+            private set
             {
-                return numberFormat;
+                Value = XLStyleValue.FromKey(value);
             }
+        }
+
+        #endregion properties
+
+        #region constructors
+
+        public XLStyle(IXLStylized container, IXLStyle initialStyle = null, Boolean useDefaultModify = true) : this(container, GenerateKey(initialStyle))
+        {
+        }
+
+        public XLStyle(IXLStylized container, XLStyleKey key) : this(container, XLStyleValue.FromKey(key))
+        {
+        }
+
+        internal XLStyle(IXLStylized container, XLStyleValue value)
+        {
+            _container = container ?? new XLStylizedEmpty(XLStyle.Default);
+            Value = value;
+        }
+
+        /// <summary>
+        /// To initialize XLStyle.Default only
+        /// </summary>
+        private XLStyle(XLStyleValue value)
+        {
+            _container = null;
+            Value = value;
+        }
+
+        #endregion constructors
+
+        internal void Modify(Func<XLStyleKey, XLStyleKey> modification)
+        {
+            Key = modification(Key);
+
+            if (_container != null)
+            {
+                _container.ModifyStyle(modification);
+            }
+        }
+
+        #region IXLStyle members
+
+        public IXLFont Font
+        {
+            get { return new XLFont(this, Value.Font); }
             set
             {
-                numberFormat = value;
-                DateFormat = numberFormat;
+                Modify(k => { k.Font = XLFont.GenerateKey(value); return k; });
             }
         }
 
-        public IXLProtection Protection { get; set; }
+        public IXLAlignment Alignment
+        {
+            get { return new XLAlignment(this, Value.Alignment); }
+            set
+            {
+                Modify(k => { k.Alignment = XLAlignment.GenerateKey(value); return k; });
+            }
+        }
 
-        public IXLNumberFormat DateFormat { get; private set; }
+        public IXLBorder Border
+        {
+            get { return new XLBorder(_container, this, Value.Border); }
+            set
+            {
+                Modify(k => { k.Border = XLBorder.GenerateKey(value); return k; });
+            }
+        }
+
+        public IXLFill Fill
+        {
+            get { return new XLFill(this, Value.Fill); }
+            set
+            {
+                Modify(k => { k.Fill = XLFill.GenerateKey(value); return k; });
+            }
+        }
+
+        public IXLNumberFormat NumberFormat
+        {
+            get { return new XLNumberFormat(this, Value.NumberFormat); }
+            set
+            {
+                Modify(k => { k.NumberFormat = XLNumberFormat.GenerateKey(value); return k; });
+            }
+        }
+
+        public IXLProtection Protection
+        {
+            get { return new XLProtection(this, Value.Protection); }
+            set
+            {
+                Modify(k => { k.Protection = XLProtection.GenerateKey(value); return k; });
+            }
+        }
+
+        public IXLNumberFormat DateFormat
+        {
+            get { return NumberFormat; }
+        }
+
+        #endregion IXLStyle members
+
+        #region Overridden
 
         public override string ToString()
         {
@@ -75,29 +173,27 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLStyle other)
         {
-            return
-                Font.Equals(other.Font)
-            &&  Fill.Equals(other.Fill)
-            &&  Border.Equals(other.Border)
-            &&  NumberFormat.Equals(other.NumberFormat)
-            &&  Alignment.Equals(other.Alignment)
-            &&  Protection.Equals(other.Protection)
-            ;
+            var otherS = other as XLStyle;
+
+            if (otherS == null)
+                return false;
+
+            return Key == otherS.Key &&
+                   _container == otherS._container;
         }
 
         public override bool Equals(object obj)
         {
-            return Equals((XLStyle)obj);
+            return Equals(obj as XLStyle);
         }
 
         public override int GetHashCode()
         {
-            return Font.GetHashCode()
-                ^ Fill.GetHashCode()
-                ^ Border.GetHashCode()
-                ^ NumberFormat.GetHashCode()
-                ^ Alignment.GetHashCode()
-                ^ Protection.GetHashCode();
+            var hashCode = 416600561;
+            hashCode = hashCode * -1521134295 + Key.GetHashCode();
+            return hashCode;
         }
+
+        #endregion Overridden
     }
 }

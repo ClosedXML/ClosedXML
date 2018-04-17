@@ -6,17 +6,14 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLRows : IXLRows, IXLStylized
+    internal class XLRows : XLStylizedBase, IXLRows, IXLStylized
     {
-        public Boolean StyleChanged { get; set; }
         private readonly List<XLRow> _rows = new List<XLRow>();
         private readonly XLWorksheet _worksheet;
-        internal IXLStyle style;
 
-        public XLRows(XLWorksheet worksheet)
+        public XLRows(XLWorksheet worksheet) : base(XLWorkbook.DefaultStyleValue)
         {
             _worksheet = worksheet;
-            style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
         #region IXLRows Members
@@ -29,23 +26,6 @@ namespace ClosedXML.Excel
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public IXLStyle Style
-        {
-            get { return style; }
-            set
-            {
-                style = new XLStyle(this, value);
-
-                if (_worksheet != null)
-                    _worksheet.Style = value;
-                else
-                {
-                    foreach (XLRow row in _rows)
-                        row.Style = value;
-                }
-            }
         }
 
         public double Height
@@ -211,13 +191,25 @@ namespace ClosedXML.Excel
         #endregion IXLRows Members
 
         #region IXLStylized Members
-
-        public IEnumerable<IXLStyle> Styles
+        protected override IEnumerable<XLStylizedBase> Children
         {
             get
             {
-                UpdatingStyle = true;
-                yield return style;
+                if (_worksheet != null)
+                    yield return _worksheet;
+                else
+                {
+                    foreach (XLRow row in _rows)
+                        yield return row;
+                }
+            }
+        }
+
+        public override IEnumerable<IXLStyle> Styles
+        {
+            get
+            {
+                yield return Style;
                 if (_worksheet != null)
                     yield return _worksheet.Style;
                 else
@@ -227,19 +219,10 @@ namespace ClosedXML.Excel
                         yield return s;
                     }
                 }
-                UpdatingStyle = false;
             }
         }
-
-        public Boolean UpdatingStyle { get; set; }
-
-        public IXLStyle InnerStyle
-        {
-            get { return style; }
-            set { style = new XLStyle(this, value); }
-        }
-
-        public IXLRanges RangesUsed
+        
+        public override IXLRanges RangesUsed
         {
             get
             {

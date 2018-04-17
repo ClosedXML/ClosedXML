@@ -162,14 +162,14 @@ namespace ClosedXML.Excel
             var styles = this.Column
                 .Cells()
                 .Skip(this.table.ShowHeaderRow ? 1 : 0)
-                .Select(c => c.Style);
+                .OfType<XLCell>()
+                .Select(c => c.StyleValue);
 
             if (this.table.ShowTotalsRow)
                 styles = styles.Take(styles.Count() - 1);
 
             var distinctStyles = styles
-                .GroupBy(f => f)
-                .Select(g => new { Key = g.Key, Count = g.Count() });
+                .Distinct();
 
             return distinctStyles.Count() == 1;
         }

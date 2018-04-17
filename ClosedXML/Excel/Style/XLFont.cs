@@ -5,379 +5,286 @@ namespace ClosedXML.Excel
 {
     internal class XLFont : IXLFont
     {
-        private readonly IXLStylized _container;
-        private Boolean _bold;
-        private XLColor _fontColor;
-        private XLFontFamilyNumberingValues _fontFamilyNumbering;
-        private XLFontCharSet _fontCharSet;
-        private String _fontName;
-        private Double _fontSize;
-        private Boolean _italic;
-        private Boolean _shadow;
-        private Boolean _strikethrough;
-        private XLFontUnderlineValues _underline;
-        private XLFontVerticalTextAlignmentValues _verticalAlignment;
+        #region Static members
 
-        public XLFont()
-            : this(null, XLWorkbook.DefaultStyle.Font)
+        internal static XLFontKey GenerateKey(IXLFontBase defaultFont)
+        {
+            if (defaultFont == null)
+            {
+                return XLFontValue.Default.Key;
+            }
+            else if (defaultFont is XLFont)
+            {
+                return (defaultFont as XLFont).Key;
+            }
+            else
+            {
+                return new XLFontKey
+                {
+                    Bold = defaultFont.Bold,
+                    Italic = defaultFont.Italic,
+                    Underline = defaultFont.Underline,
+                    Strikethrough = defaultFont.Strikethrough,
+                    VerticalAlignment = defaultFont.VerticalAlignment,
+                    Shadow = defaultFont.Shadow,
+                    FontSize = defaultFont.FontSize,
+                    FontColor = defaultFont.FontColor.Key,
+                    FontName = defaultFont.FontName,
+                    FontFamilyNumbering = defaultFont.FontFamilyNumbering,
+                    FontCharSet = defaultFont.FontCharSet
+                };
+            }
+        }
+
+        #endregion Static members
+
+        private readonly XLStyle _style;
+
+        private XLFontValue _value;
+
+        internal XLFontKey Key
+        {
+            get { return _value.Key; }
+            private set { _value = XLFontValue.FromKey(value); }
+        }
+
+        #region Constructors
+
+        /// <summary>
+        /// Create an instance of XLFont initializing it with the specified value.
+        /// </summary>
+        /// <param name="style">Style to attach the new instance to.</param>
+        /// <param name="value">Style value to use.</param>
+        public XLFont(XLStyle style, XLFontValue value)
+        {
+            _style = style ?? XLStyle.CreateEmptyStyle();
+            _value = value;
+        }
+
+        public XLFont(XLStyle style, XLFontKey key) : this(style, XLFontValue.FromKey(key))
         {
         }
 
-        public XLFont(IXLStylized container, IXLFontBase defaultFont, Boolean useDefaultModify = true)
+        public XLFont(XLStyle style = null, IXLFont d = null) : this(style, GenerateKey(d))
         {
-            _container = container;
-            if (defaultFont == null) return;
+        }
 
-            _bold = defaultFont.Bold;
-            _italic = defaultFont.Italic;
-            _underline = defaultFont.Underline;
-            _strikethrough = defaultFont.Strikethrough;
-            _verticalAlignment = defaultFont.VerticalAlignment;
-            _shadow = defaultFont.Shadow;
-            _fontSize = defaultFont.FontSize;
-            _fontColor = defaultFont.FontColor;
-            _fontName = defaultFont.FontName;
-            _fontFamilyNumbering = defaultFont.FontFamilyNumbering;
-            _fontCharSet = defaultFont.FontCharSet;
+        #endregion Constructors
 
-            if (useDefaultModify)
+        private void Modify(Func<XLFontKey, XLFontKey> modification)
+        {
+            Key = modification(Key);
+
+            _style.Modify(styleKey =>
             {
-                var d = defaultFont as XLFont;
-                if (d == null) return;
-                BoldModified = d.BoldModified;
-                ItalicModified = d.ItalicModified;
-                UnderlineModified = d.UnderlineModified;
-                StrikethroughModified = d.StrikethroughModified;
-                VerticalAlignmentModified = d.VerticalAlignmentModified;
-                ShadowModified = d.ShadowModified;
-                FontSizeModified = d.FontSizeModified;
-                FontColorModified = d.FontColorModified;
-                FontNameModified = d.FontNameModified;
-                FontFamilyNumberingModified = d.FontFamilyNumberingModified;
-                FontCharSetModified = d.FontCharSetModified;
-            }
+                var font = styleKey.Font;
+                styleKey.Font = modification(font);
+                return styleKey;
+            });
         }
 
         #region IXLFont Members
 
-        public Boolean BoldModified { get; set; }
         public Boolean Bold
         {
-            get { return _bold; }
+            get { return Key.Bold; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.Bold = value);
-                else
-                {
-                    _bold = value;
-                    BoldModified = true;
-                }
+                Modify(k => { k.Bold = value; return k; });
             }
         }
 
-        public Boolean ItalicModified { get; set; }
         public Boolean Italic
         {
-            get { return _italic; }
+            get { return Key.Italic; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.Italic = value);
-                else
-                {
-                    _italic = value;
-                    ItalicModified = true;
-                }
+                Modify(k => { k.Italic = value; return k; });
             }
         }
 
-        public Boolean UnderlineModified { get; set; }
         public XLFontUnderlineValues Underline
         {
-            get { return _underline; }
+            get { return Key.Underline; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.Underline = value);
-                else
-                {
-                    _underline = value;
-                    UnderlineModified = true;
-                }
-
+                Modify(k => { k.Underline = value; return k; });
             }
         }
 
-        public Boolean StrikethroughModified { get; set; }
         public Boolean Strikethrough
         {
-            get { return _strikethrough; }
+            get { return Key.Strikethrough; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.Strikethrough = value);
-                else
-                {
-                    _strikethrough = value;
-                    StrikethroughModified = true;
-                }
+                Modify(k => { k.Strikethrough = value; return k; });
             }
         }
 
-        public Boolean VerticalAlignmentModified { get; set; }
         public XLFontVerticalTextAlignmentValues VerticalAlignment
         {
-            get { return _verticalAlignment; }
+            get { return Key.VerticalAlignment; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.VerticalAlignment = value);
-                else
-                {
-                    _verticalAlignment = value;
-                    VerticalAlignmentModified = true;
-                }
+                Modify(k => { k.VerticalAlignment = value; return k; });
             }
         }
 
-        public Boolean ShadowModified { get; set; }
         public Boolean Shadow
         {
-            get { return _shadow; }
+            get { return Key.Shadow; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.Shadow = value);
-                else
-                {
-                    _shadow = value;
-                    ShadowModified = true;
-                }
+                Modify(k => { k.Shadow = value; return k; });
             }
         }
 
-        public Boolean FontSizeModified { get; set; }
         public Double FontSize
         {
-            get { return _fontSize; }
+            get { return Key.FontSize; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.FontSize = value);
-                else
-                {
-                    _fontSize = value;
-                    FontSizeModified = true;
-                }
+                Modify(k => { k.FontSize = value; return k; });
             }
         }
 
-        private Boolean _fontColorModified;
-        public Boolean FontColorModified
-        {
-            get { return _fontColorModified; }
-            set
-            {
-                _fontColorModified = value;
-            }
-        }
         public XLColor FontColor
         {
-            get { return _fontColor; }
+            get { return XLColor.FromKey(Key.FontColor); }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.FontColor = value);
-                else
-                {
-                    _fontColor = value;
-                    FontColorModified = true;
-                }
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                Modify(k => { k.FontColor = value.Key; return k; });
             }
         }
 
-        public Boolean FontNameModified { get; set; }
         public String FontName
         {
-            get { return _fontName; }
+            get { return Key.FontName; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.FontName = value);
-                else
-                {
-                    _fontName = value;
-                    FontNameModified = true;
-                }
+                Modify(k => { k.FontName = value; return k; });
             }
         }
 
-        public Boolean FontFamilyNumberingModified { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering
         {
-            get { return _fontFamilyNumbering; }
+            get { return Key.FontFamilyNumbering; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.FontFamilyNumbering = value);
-                else
-                {
-                    _fontFamilyNumbering = value;
-                    FontFamilyNumberingModified = true;
-                }
+                Modify(k => { k.FontFamilyNumbering = value; return k; });
             }
         }
 
-        public Boolean FontCharSetModified { get; set; }
         public XLFontCharSet FontCharSet
         {
-            get { return _fontCharSet; }
+            get { return Key.FontCharSet; }
             set
             {
-                SetStyleChanged();
-                if (_container != null && !_container.UpdatingStyle)
-                    _container.Styles.ForEach(s => s.Font.FontCharSet = value);
-                else
-                {
-                    _fontCharSet = value;
-                    FontCharSetModified = true;
-                }
+                Modify(k => { k.FontCharSet = value; return k; });
             }
         }
 
         public IXLStyle SetBold()
         {
             Bold = true;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetBold(Boolean value)
         {
             Bold = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetItalic()
         {
             Italic = true;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetItalic(Boolean value)
         {
             Italic = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetUnderline()
         {
             Underline = XLFontUnderlineValues.Single;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetUnderline(XLFontUnderlineValues value)
         {
             Underline = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetStrikethrough()
         {
             Strikethrough = true;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetStrikethrough(Boolean value)
         {
             Strikethrough = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetVerticalAlignment(XLFontVerticalTextAlignmentValues value)
         {
             VerticalAlignment = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetShadow()
         {
             Shadow = true;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetShadow(Boolean value)
         {
             Shadow = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetFontSize(Double value)
         {
             FontSize = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetFontColor(XLColor value)
         {
             FontColor = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetFontName(String value)
         {
             FontName = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetFontFamilyNumbering(XLFontFamilyNumberingValues value)
         {
             FontFamilyNumbering = value;
-            return _container.Style;
+            return _style;
         }
 
         public IXLStyle SetFontCharSet(XLFontCharSet value)
         {
             FontCharSet = value;
-            return _container.Style;
+            return _style;
         }
 
-        public Boolean Equals(IXLFont other)
-        {
-            var otherF = other as XLFont;
-            if (otherF == null)
-                return false;
+        #endregion IXLFont Members
 
-            return
-                _bold == otherF._bold
-                && _italic == otherF._italic
-                && _underline == otherF._underline
-                && _strikethrough == otherF._strikethrough
-                && _verticalAlignment == otherF._verticalAlignment
-                && _shadow == otherF._shadow
-                && _fontSize == otherF._fontSize
-                && _fontColor.Equals(otherF._fontColor)
-                && _fontName == otherF._fontName
-                && _fontFamilyNumbering == otherF._fontFamilyNumbering
-                ;
-        }
-
-        #endregion
-
-        private void SetStyleChanged()
-        {
-            if (_container != null) _container.StyleChanged = true;
-        }
+        #region Overridden
 
         public override string ToString()
         {
@@ -406,21 +313,25 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            return Equals((XLFont)obj);
+            return Equals(obj as XLFont);
+        }
+
+        public Boolean Equals(IXLFont other)
+        {
+            var otherF = other as XLFont;
+            if (otherF == null)
+                return false;
+
+            return Key == otherF.Key;
         }
 
         public override int GetHashCode()
         {
-            return Bold.GetHashCode()
-                   ^ Italic.GetHashCode()
-                   ^ (Int32)Underline
-                   ^ Strikethrough.GetHashCode()
-                   ^ (Int32)VerticalAlignment
-                   ^ Shadow.GetHashCode()
-                   ^ FontSize.GetHashCode()
-                   ^ FontColor.GetHashCode()
-                   ^ FontName.GetHashCode()
-                   ^ (Int32)FontFamilyNumbering;
+            var hashCode = 416600561;
+            hashCode = hashCode * -1521134295 + Key.GetHashCode();
+            return hashCode;
         }
+
+        #endregion Overridden
     }
 }

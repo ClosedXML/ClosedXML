@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
     using ClosedXML.Extensions;
 
     [DebuggerDisplay("{Address}")]
-    internal class XLCell : IXLCell, IXLStylized
+    internal class XLCell : XLStylizedBase, IXLCell, IXLStylized
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
 
@@ -73,29 +73,32 @@ namespace ClosedXML.Excel
         internal XLDataType _dataType;
         private XLHyperlink _hyperlink;
         private XLRichText _richText;
-        private Int32? _styleCacheId;
 
         public bool SettingHyperlink;
         public int SharedStringId;
         private string _formulaA1;
         private string _formulaR1C1;
-        private IXLStyle _style;
 
         #endregion Fields
 
         #region Constructor
 
-        public XLCell(XLWorksheet worksheet, XLAddress address, Int32 styleId)
-            : this(worksheet, address)
-        {
-            SetStyle(styleId);
-        }
-
-        public XLCell(XLWorksheet worksheet, XLAddress address)
+        internal XLCell(XLWorksheet worksheet, XLAddress address, XLStyleValue styleValue)
+            : base(styleValue)
         {
             Address = address;
             ShareString = true;
             _worksheet = worksheet;
+        }
+
+        public XLCell(XLWorksheet worksheet, XLAddress address, IXLStyle style)
+            : this(worksheet, address, (style as XLStyle).Value)
+        {
+        }
+
+        public XLCell(XLWorksheet worksheet, XLAddress address)
+            : this(worksheet, address, XLStyle.Default.Value)
+        {
         }
 
         #endregion Constructor
@@ -227,7 +230,7 @@ namespace ClosedXML.Excel
             {
                 _cellValue = value.ToString();
                 _dataType = XLDataType.Text;
-                if (_cellValue.Contains(Environment.NewLine) && !GetStyleForRead().Alignment.WrapText)
+                if (_cellValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
             }
             else if (value is TimeSpan)
@@ -353,7 +356,7 @@ namespace ClosedXML.Excel
                 return cValue;
             }
             else
-            return cValue;
+                return cValue;
         }
 
         /// <summary>
@@ -907,13 +910,6 @@ namespace ClosedXML.Excel
             return InsertData(dataTable.Rows);
         }
 
-        public IXLStyle Style
-        {
-            get { return GetStyle(); }
-
-            set { SetStyle(value); }
-        }
-
         public IXLCell SetDataType(XLDataType dataType)
         {
             DataType = dataType;
@@ -1157,10 +1153,10 @@ namespace ClosedXML.Excel
 
                 if (SettingHyperlink) return;
 
-                if (GetStyleForRead().Font.FontColor.Equals(_worksheet.Style.Font.FontColor))
+                if (GetStyleForRead().Font.FontColor.Equals(_worksheet.StyleValue.Font.FontColor))
                     Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
 
-                if (GetStyleForRead().Font.Underline == _worksheet.Style.Font.Underline)
+                if (GetStyleForRead().Font.Underline == _worksheet.StyleValue.Font.Underline)
                     Style.Font.Underline = XLFontUnderlineValues.Single;
             }
         }
@@ -1213,8 +1209,8 @@ namespace ClosedXML.Excel
                 {
                     var style = GetStyleForRead();
                     _richText = _cellValue.Length == 0
-                                    ? new XLRichText(style.Font)
-                                    : new XLRichText(GetFormattedString(), style.Font);
+                                    ? new XLRichText(new XLFont(Style as XLStyle, style.Font))
+                                    : new XLRichText(GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
                 }
 
                 return _richText;
@@ -1263,17 +1259,17 @@ namespace ClosedXML.Excel
 
             if (includeNormalFormats)
             {
-                if (!Style.Equals(Worksheet.Style) || IsMerged() || HasComment || HasDataValidation)
+                if (!StyleValue.Equals(Worksheet.StyleValue) || IsMerged() || HasComment || HasDataValidation)
                     return false;
 
-                if (_style == null)
+                if (StyleValue.Equals(Worksheet.StyleValue))
                 {
                     XLRow row;
-                    if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out row) && !row.Style.Equals(Worksheet.Style))
+                    if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out row) && !row.StyleValue.Equals(Worksheet.StyleValue))
                         return false;
 
                     XLColumn column;
-                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out column) && !column.Style.Equals(Worksheet.Style))
+                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out column) && !column.StyleValue.Equals(Worksheet.StyleValue))
                         return false;
                 }
             }
@@ -1570,27 +1566,20 @@ namespace ClosedXML.Excel
 
         #region IXLStylized Members
 
-        public Boolean StyleChanged { get; set; }
-
-        public IEnumerable<IXLStyle> Styles
+        public override IEnumerable<IXLStyle> Styles
         {
             get
             {
-                UpdatingStyle = true;
                 yield return Style;
-                UpdatingStyle = false;
             }
         }
 
-        public bool UpdatingStyle { get; set; }
-
-        public IXLStyle InnerStyle
+        protected override IEnumerable<XLStylizedBase> Children
         {
-            get { return Style; }
-            set { Style = value; }
+            get { yield break; }
         }
 
-        public IXLRanges RangesUsed
+        public override IXLRanges RangesUsed
         {
             get
             {
@@ -1705,51 +1694,19 @@ namespace ClosedXML.Excel
 
         #region Styles
 
-        private IXLStyle GetStyle()
+        private XLStyleValue GetStyleForRead()
         {
-            if (_style != null)
-                return _style;
-
-            return _style = new XLStyle(this, Worksheet.Workbook.GetStyleById(StyleCacheId()));
-        }
-
-        private IXLStyle GetStyleForRead()
-        {
-            return Worksheet.Workbook.GetStyleById(GetStyleId());
-        }
-
-        public Int32 GetStyleId()
-        {
-            if (StyleChanged)
-                SetStyle(Style);
-
-            return StyleCacheId();
+            return StyleValue;
         }
 
         private void SetStyle(IXLStyle styleToUse)
         {
-            _styleCacheId = Worksheet.Workbook.GetStyleId(styleToUse);
-            _style = null;
-            StyleChanged = false;
-        }
-
-        private void SetStyle(Int32 styleId)
-        {
-            _styleCacheId = styleId;
-            _style = null;
-            StyleChanged = false;
-        }
-
-        public Int32 StyleCacheId()
-        {
-            if (!_styleCacheId.HasValue)
-                _styleCacheId = Worksheet.GetStyleId();
-            return _styleCacheId.Value;
+            Style = styleToUse;
         }
 
         public Boolean IsDefaultWorksheetStyle()
         {
-            return !_styleCacheId.HasValue && !StyleChanged || GetStyleId() == Worksheet.GetStyleId();
+            return StyleValue == Worksheet.StyleValue;
         }
 
         #endregion Styles
@@ -2254,8 +2211,7 @@ namespace ClosedXML.Excel
         {
             CopyValuesFrom(otherCell);
 
-            if (otherCell._styleCacheId.HasValue)
-                SetStyle(otherCell._style ?? otherCell.Worksheet.Workbook.GetStyleById(otherCell._styleCacheId.Value));
+            InnerStyle = otherCell.InnerStyle;
 
             if (copyDataValidations)
             {

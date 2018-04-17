@@ -6,15 +6,12 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLRangeColumns : IXLRangeColumns, IXLStylized
+    internal class XLRangeColumns : XLStylizedBase, IXLRangeColumns, IXLStylized
     {
-        public Boolean StyleChanged { get; set; }
         private readonly List<XLRangeColumn> _ranges = new List<XLRangeColumn>();
-        private IXLStyle _style;
 
-        public XLRangeColumns()
+        public XLRangeColumns() : base(XLWorkbook.DefaultStyleValue)
         {
-            _style = new XLStyle(this, XLWorkbook.DefaultStyle);
         }
 
         #region IXLRangeColumns Members
@@ -47,16 +44,6 @@ namespace ClosedXML.Excel
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public IXLStyle Style
-        {
-            get { return _style; }
-            set
-            {
-                _style = new XLStyle(this, value);
-                _ranges.ForEach(r => r.Style = value);
-            }
         }
 
         public IXLCells Cells()
@@ -92,13 +79,12 @@ namespace ClosedXML.Excel
         #endregion IXLRangeColumns Members
 
         #region IXLStylized Members
-
-        public IEnumerable<IXLStyle> Styles
+        
+        public override IEnumerable<IXLStyle> Styles
         {
             get
             {
-                UpdatingStyle = true;
-                yield return _style;
+                yield return Style;
                 foreach (XLRangeColumn rng in _ranges)
                 {
                     yield return rng.Style;
@@ -109,19 +95,19 @@ namespace ClosedXML.Excel
                         rng.RangeAddress.LastAddress.ColumnNumber))
                         yield return r.Style;
                 }
-                UpdatingStyle = false;
             }
         }
 
-        public Boolean UpdatingStyle { get; set; }
-
-        public IXLStyle InnerStyle
+        protected override IEnumerable<XLStylizedBase> Children
         {
-            get { return _style; }
-            set { _style = new XLStyle(this, value); }
+            get
+            {
+                foreach (var range in _ranges)
+                    yield return range;
+            }
         }
 
-        public IXLRanges RangesUsed
+        public override IXLRanges RangesUsed
         {
             get
             {

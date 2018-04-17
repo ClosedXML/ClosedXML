@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
         #region Constructor
 
         public XLRangeRow(XLRangeParameters rangeParameters, bool quickLoad)
-            : base(rangeParameters.RangeAddress)
+            : base(rangeParameters.RangeAddress, (rangeParameters.DefaultStyle as XLStyle).Value)
         {
             RangeParameters = rangeParameters;
             if (quickLoad) return;
@@ -17,7 +17,6 @@ namespace ClosedXML.Excel
                 SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
                 SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
             }
-            SetStyle(rangeParameters.DefaultStyle);
         }
 
         #endregion Constructor

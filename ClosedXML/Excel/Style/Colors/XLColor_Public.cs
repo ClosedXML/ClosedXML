@@ -36,34 +36,27 @@ namespace ClosedXML.Excel
         /// </summary>
         private const Int32 TOOLTIPCOLORINDEX = 81;
 
-        private readonly XLColorType _colorType;
-        private int _hashCode;
-        private readonly Int32 _indexed;
-        private readonly XLThemeColor _themeColor;
-        private readonly Double _themeTint;
-
-        private Color _color;
         public Boolean HasValue { get; private set; }
 
         public XLColorType ColorType
         {
-            get { return _colorType; }
+            get { return Key.ColorType; }
         }
 
         public Color Color
         {
             get
             {
-                if (_colorType == XLColorType.Theme)
+                if (ColorType == XLColorType.Theme)
                     throw new InvalidOperationException("Cannot convert theme color to Color.");
 
-                if (_colorType == XLColorType.Indexed)
-                    if (_indexed == TOOLTIPCOLORINDEX)
+                if (ColorType == XLColorType.Indexed)
+                    if (Indexed == TOOLTIPCOLORINDEX)
                         return Color.FromArgb(255, Color.Black);
                     else
-                        return IndexedColors[_indexed].Color;
+                        return IndexedColors[Indexed].Color;
 
-                return _color;
+                return Key.Color;
             }
         }
 
@@ -75,7 +68,7 @@ namespace ClosedXML.Excel
                     throw new InvalidOperationException("Cannot convert theme color to indexed color.");
 
                 if (ColorType == XLColorType.Indexed)
-                    return _indexed;
+                    return Key.Indexed;
 
                 throw new InvalidOperationException("Cannot convert Color to indexed color.");
             }
@@ -86,7 +79,7 @@ namespace ClosedXML.Excel
             get
             {
                 if (ColorType == XLColorType.Theme)
-                    return _themeColor;
+                    return Key.ThemeColor;
 
                 if (ColorType == XLColorType.Indexed)
                     throw new InvalidOperationException("Cannot convert indexed color to theme color.");
@@ -100,12 +93,12 @@ namespace ClosedXML.Excel
             get
             {
                 if (ColorType == XLColorType.Theme)
-                    return _themeTint;
+                    return Key.ThemeTint;
 
                 if (ColorType == XLColorType.Indexed)
                     throw new InvalidOperationException("Cannot extract theme tint from an indexed color.");
 
-                return _color.A / 255.0;
+                return Color.A / 255.0;
             }
         }
 
@@ -113,23 +106,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(XLColor other)
         {
-            if (_colorType == other._colorType)
-            {
-                if (_colorType == XLColorType.Color)
-                {
-                    // .NET Color.Equals() will return false for Color.FromArgb(255, 255, 255, 255) == Color.White
-                    // Therefore we compare the ToArgb() values
-                    return _color.ToArgb() == other._color.ToArgb();
-                }
-                if (_colorType == XLColorType.Theme)
-                {
-                    return _themeColor == other._themeColor
-                           && Math.Abs(_themeTint - other._themeTint) < XLHelper.Epsilon;
-                }
-                return _indexed == other._indexed;
-            }
-
-            return false;
+            return Key == other.Key;
         }
 
         #endregion IEquatable<XLColor> Members
@@ -141,28 +118,21 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
-            if (_hashCode == 0)
-            {
-                if (_colorType == XLColorType.Color)
-                    _hashCode = _color.GetHashCode();
-                else if (_colorType == XLColorType.Theme)
-                    _hashCode = _themeColor.GetHashCode() ^ _themeTint.GetHashCode();
-                else
-                    _hashCode = _indexed;
-            }
-
-            return _hashCode;
+            var hashCode = 229333804;
+            hashCode = hashCode * -1521134295 + HasValue.GetHashCode();
+            hashCode = hashCode * -1521134295 + Key.GetHashCode();
+            return hashCode;
         }
 
         public override string ToString()
         {
-            if (_colorType == XLColorType.Color)
+            if (ColorType == XLColorType.Color)
                 return Color.ToHex();
 
-            if (_colorType == XLColorType.Theme)
-                return String.Format("Color Theme: {0}, Tint: {1}", _themeColor.ToString(), _themeTint.ToString());
+            if (ColorType == XLColorType.Theme)
+                return String.Format("Color Theme: {0}, Tint: {1}", ThemeColor.ToString(), ThemeTint.ToString());
 
-            return "Color Index: " + _indexed;
+            return "Color Index: " + Indexed;
         }
 
         public static Boolean operator ==(XLColor left, XLColor right)
