@@ -31,17 +31,34 @@ namespace ClosedXML.Excel.Caching
             _createNew = createNew;
         }
 
-        public bool ContainsKey(Tkey key)
+        /// <summary>
+        /// Check if the specified key is presented in the repository.
+        /// </summary>
+        /// <param name="key">Key to look for.</param>
+        /// <param name="value">Value from the repository stored under specified key or null if key does
+        /// not exist or the entry under this key has already bee GCed.</param>
+        /// <returns>True if entry exists and alive, false otherwise.</returns>
+        public bool ContainsKey(Tkey key, out Tvalue value)
         {
             WeakReference cachedReference;
             if (_storage.TryGetValue(key, out cachedReference))
             {
-                var storedValue = cachedReference.Target as Tvalue;
-                return (storedValue != null);
+                value = cachedReference.Target as Tvalue;
+                return (value != null);
             }
+            value = null;
             return false;
         }
 
+        /// <summary>
+        /// Put the entity into the repository under the specified key if no other entity with
+        /// the same key is presented.
+        /// </summary>
+        /// <param name="key">Key to identify the entity.</param>
+        /// <param name="value">Entity to store.</param>
+        /// <returns>Entity that is stored in the repository under the specified key
+        /// (it can be either the <paramref name="value"/> or another entity that has been added to
+        /// the repository before.)</returns>
         public Tvalue Store(Tkey key, Tvalue value)
         {
             if (value == null)
@@ -65,6 +82,10 @@ namespace ClosedXML.Excel.Caching
             }
         }
 
+        /// <summary>
+        /// Create a new entity using specified key and put it into the repository or
+        /// return the existing entity ith this key.
+        /// </summary>
         public Tvalue GetOrCreate(Tkey key)
         {
             WeakReference cachedReference;
