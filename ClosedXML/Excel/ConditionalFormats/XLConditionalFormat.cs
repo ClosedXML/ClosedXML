@@ -118,7 +118,7 @@ namespace ClosedXML.Excel
 
         #region Constructors
 
-        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
+        private XLConditionalFormat(XLStyleValue style)
             : base(XLStyle.Default.Value)
         {
             Id = Guid.NewGuid();
@@ -127,24 +127,25 @@ namespace ClosedXML.Excel
             Colors = new XLDictionary<XLColor>();
             ContentTypes = new XLDictionary<XLCFContentType>();
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
-
         }
 
-        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false) : this(XLStyle.Default.Value)
+        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
+            : this(XLStyle.Default.Value)
         {
             if (range != null)
                 Ranges.Add(range);
             CopyDefaultModify = copyDefaultModify;
         }
 
-        public XLConditionalFormat(IEnumerable<XLRange> ranges, Boolean copyDefaultModify = false) : this(XLStyle.Default.Value)
+        public XLConditionalFormat(IEnumerable<XLRange> ranges, Boolean copyDefaultModify = false)
+            : this(XLStyle.Default.Value)
         {
             ranges?.ForEach(range => Ranges.Add(range));
             CopyDefaultModify = copyDefaultModify;
         }
 
         public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange)
-            : base(conditionalFormat.StyleValue)
+            : this(conditionalFormat.StyleValue)
         {
             if (targetRange != null)
                 Ranges.Add(targetRange);
