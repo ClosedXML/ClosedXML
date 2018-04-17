@@ -16,21 +16,21 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 var sheet = wb.Worksheets.Add("TestSheet");
                 var cell = sheet.Cell(1, 1);
 
-                Assert.AreEqual(0, wb.LastModifiedAt);
                 Assert.IsFalse(cell.RecalculationNeeded);
             }
         }
 
         [Test]
-        public void EditCellCausesCounterIncreasing()
+        public void EditCellCausesLastModifiedChanged()
         {
             using (var wb = new XLWorkbook())
             {
+                var oldValue = wb.LastModifiedAt;
                 var sheet = wb.Worksheets.Add("TestSheet");
                 var cell = sheet.Cell(1, 1);
                 cell.Value = "1234567";
 
-                Assert.Greater(wb.LastModifiedAt, 0);
+                Assert.Greater(wb.LastModifiedAt, oldValue);
             }
         }
 
