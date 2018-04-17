@@ -929,7 +929,7 @@ namespace ClosedXML.Excel
                     _richText = null;
                 }
 
-                if (_cellValue.Length > 0)
+                if (!string.IsNullOrEmpty(_cellValue))
                 {
                     if (value == XLDataType.Boolean)
                     {
@@ -1617,8 +1617,8 @@ namespace ClosedXML.Excel
                     var cell = cells.First();
                     var field = table.Fields.First(f => f.Column.ColumnNumber() == cell.WorksheetColumn().ColumnNumber());
                     field.TotalsRowFunction = XLTotalsRowFunction.None;
-                    field.TotalsRowLabel = value.ToString();
-                    this._cellValue = value.ToString();
+                    _cellValue = value.ToString();
+                    field.TotalsRowLabel = _cellValue;
                     this.DataType = XLDataType.Text;
                     return true;
                 }

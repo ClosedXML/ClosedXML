@@ -66,7 +66,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void LoadAndSaveTransparentBackgroundFill()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx")))
             using (var ms = new MemoryStream())
             {
                 TestHelper.CreateAndCompare(() =>
@@ -74,7 +74,7 @@ namespace ClosedXML_Tests.Excel
                     var wb = new XLWorkbook(stream);
                     wb.SaveAs(ms);
                     return wb;
-                }, @"StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
+                }, @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
             }
         }
     }

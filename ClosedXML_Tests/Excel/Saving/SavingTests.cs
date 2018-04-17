@@ -254,5 +254,38 @@ namespace ClosedXML_Tests.Excel.Saving
                 wb.SaveAs(ms);
             }
         }
+
+        [Test]
+        public void PreserveChartsWhenSaving()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Charts\PreserveCharts\inputfile.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    wb.SaveAs(ms);
+                    return wb;
+                }, @"Other\Charts\PreserveCharts\outputfile.xlsx");
+            }
+        }
+
+        [Test]
+        public void DeletingAllPicturesRemovesDrawingPart()
+        {
+            TestHelper.CreateAndCompare(() =>
+            {
+                var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx"));
+                var wb = new XLWorkbook(stream);
+                foreach (var ws in wb.Worksheets)
+                {
+                    var pictureNames = ws.Pictures.Select(pic => pic.Name).ToArray();
+                    foreach (var name in pictureNames)
+                        ws.Pictures.Delete(name);
+                }
+
+                return wb;
+            }, @"Other\Drawings\NoDrawings\outputfile.xlsx");
+        }
     }
 }

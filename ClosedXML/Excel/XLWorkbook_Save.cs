@@ -1066,6 +1066,9 @@ namespace ClosedXML.Excel
                     {
                         if (c.HasArrayFormula)
                         {
+                            if (c.FormulaReference == null)
+                                c.FormulaReference = c.AsRange().RangeAddress;
+
                             if (c.FormulaReference.FirstAddress.Equals(c.Address))
                             {
                                 var cc = new CalculationCell
@@ -1073,9 +1076,6 @@ namespace ClosedXML.Excel
                                     CellReference = c.Address.ToString(),
                                     SheetId = worksheet.SheetId
                                 };
-
-                                if (c.FormulaReference == null)
-                                    c.FormulaReference = c.AsRange().RangeAddress;
 
                                 cc.Array = true;
                                 calculationChain.AppendChild(cc);
@@ -2495,8 +2495,9 @@ namespace ClosedXML.Excel
                         if (labelOrFilterField != null && labelOrFilterField.Collapsed)
                             item.HideDetails = BooleanValue.FromBoolean(false);
 
-                        if (labelOrFilterField.SelectedValues.Count > 1
-                                 && !labelOrFilterField.SelectedValues.Contains(value))
+                        if (labelOrFilterField != null &&
+                            labelOrFilterField.SelectedValues.Count > 1 &&
+                            !labelOrFilterField.SelectedValues.Contains(value))
                             item.Hidden = BooleanValue.FromBoolean(true);
 
                         fieldItems.AppendChild(item);
@@ -5463,7 +5464,9 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWSContentManager.XLWSContents.Drawing, worksheetPart.Worksheet.Elements<Drawing>().First());
             }
 
-            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null)
+            // Instead of saving a file with an empty Drawings.xml file, rather remove the .xml file
+            if (!xlWorksheet.Pictures.Any() && worksheetPart.DrawingsPart != null
+                && !worksheetPart.DrawingsPart.Parts.Any())
             {
                 var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
                 worksheetPart.Worksheet.RemoveChild(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));

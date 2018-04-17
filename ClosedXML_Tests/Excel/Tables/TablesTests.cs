@@ -763,6 +763,24 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void CannotCreateDuplicateTablesOverSameRange()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().InsertTable(l);
+                Assert.Throws<ArgumentException>(() => ws.RangeUsed().CreateTable());
+            }
+
+        }
+
         //TODO: Delete table (not underlying range)
     }
 }

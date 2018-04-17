@@ -331,7 +331,7 @@ namespace ClosedXML.Excel
                         else
                         {
                             Double rotation;
-                            if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                            if (textRotation == 90 || textRotation == 180)
                                 rotation = 90;
                             else
                                 rotation = textRotation % 90;

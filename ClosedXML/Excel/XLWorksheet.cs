@@ -157,12 +157,12 @@ namespace ClosedXML.Excel
             get { return _name; }
             set
             {
+                if (String.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Worksheet names cannot be empty");
+
                 if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
                     throw new ArgumentException("Worksheet names cannot contain any of the following characters: " +
                                                 InvalidNameChars);
-
-                if (String.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Worksheet names cannot be empty");
 
                 if (value.Length > 31)
                     throw new ArgumentException("Worksheet names cannot be more than 31 characters");
@@ -471,7 +471,7 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet ExpandColumns()
         {
-            Enumerable.Range(1, 8).ForEach(i => ExpandRows(i));
+            Enumerable.Range(1, 8).ForEach(i => ExpandColumns(i));
             return this;
         }
 
@@ -976,6 +976,8 @@ namespace ClosedXML.Excel
 
             Internals.Dispose();
 
+            SelectedRanges?.Dispose();
+            DataValidations?.Dispose();
             this.Pictures.ForEach(p => p.Dispose());
 
             base.Dispose();

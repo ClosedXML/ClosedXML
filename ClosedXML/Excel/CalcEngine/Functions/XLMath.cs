@@ -91,11 +91,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public static Boolean IsEven(Int32 value)
         {
-            return Math.Abs(value % 2) < XLHelper.Epsilon;
+            return Math.Abs(value % 2) == 0;
         }
         public static Boolean IsOdd(Int32 value)
         {
-            return Math.Abs(value % 2) > XLHelper.Epsilon;
+            return Math.Abs(value % 2) != 0;
         }
 
         public static string ToRoman(int number)
