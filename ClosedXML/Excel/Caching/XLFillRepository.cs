@@ -5,14 +5,18 @@ namespace ClosedXML.Excel.Caching
 {
     internal sealed class XLFillRepository : XLRepositoryBase<XLFillKey, XLFillValue>
     {
-        #region constructors
-        public XLFillRepository(Func<XLFillKey, XLFillValue> createNew) : base(createNew)
+        #region Constructors
+
+        public XLFillRepository(Func<XLFillKey, XLFillValue> createNew)
+            : base(createNew)
         {
         }
 
-        public XLFillRepository(Func<XLFillKey, XLFillValue> createNew, IEqualityComparer<XLFillKey> comparer) : base(createNew, comparer)
+        public XLFillRepository(Func<XLFillKey, XLFillValue> createNew, IEqualityComparer<XLFillKey> comparer)
+            : base(createNew, comparer)
         {
         }
-        #endregion
+
+        #endregion Constructors
     }
 }

@@ -12,11 +12,13 @@ namespace ClosedXML.Excel.Caching
     {
         public XLWorkbook Workbook { get; private set; }
 
-        public XLWorkbookElementRepositoryBase(XLWorkbook workbook, Func<Tkey, Tvalue> createNew) : this(workbook, createNew, EqualityComparer<Tkey>.Default)
+        public XLWorkbookElementRepositoryBase(XLWorkbook workbook, Func<Tkey, Tvalue> createNew)
+            : this(workbook, createNew, EqualityComparer<Tkey>.Default)
         {
         }
 
-        public XLWorkbookElementRepositoryBase(XLWorkbook workbook, Func<Tkey, Tvalue> createNew, IEqualityComparer<Tkey> сomparer) : base(createNew, сomparer)
+        public XLWorkbookElementRepositoryBase(XLWorkbook workbook, Func<Tkey, Tvalue> createNew, IEqualityComparer<Tkey> сomparer)
+            : base(createNew, сomparer)
         {
             Workbook = workbook;
         }

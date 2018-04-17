@@ -5,14 +5,18 @@ namespace ClosedXML.Excel.Caching
 {
     internal sealed class XLFontRepository : XLRepositoryBase<XLFontKey, XLFontValue>
     {
-        #region constructors
-        public XLFontRepository(Func<XLFontKey, XLFontValue> createNew) : base(createNew)
+        #region Constructors
+
+        public XLFontRepository(Func<XLFontKey, XLFontValue> createNew)
+            : base(createNew)
         {
         }
 
-        public XLFontRepository(Func<XLFontKey, XLFontValue> createNew, IEqualityComparer<XLFontKey> comparer) : base(createNew, comparer)
+        public XLFontRepository(Func<XLFontKey, XLFontValue> createNew, IEqualityComparer<XLFontKey> comparer)
+            : base(createNew, comparer)
         {
         }
-        #endregion
+
+        #endregion Constructors
     }
 }

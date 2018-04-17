@@ -101,7 +101,8 @@ namespace ClosedXML.Excel
             get { return NoRangeComparerInstance; }
         }
 
-        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false) : base(XLStyle.Default.Value)
+        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
+            : base(XLStyle.Default.Value)
         {
             Id = Guid.NewGuid();
             Range = range;
@@ -113,7 +114,8 @@ namespace ClosedXML.Excel
 
         }
 
-        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange) : base(conditionalFormat.StyleValue)
+        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange)
+            : base(conditionalFormat.StyleValue)
         {
             Range = targetRange;
             Id = Guid.NewGuid();

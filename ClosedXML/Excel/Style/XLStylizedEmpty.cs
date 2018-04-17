@@ -4,7 +4,8 @@ namespace ClosedXML.Excel
 {
     internal class XLStylizedEmpty : XLStylizedBase, IXLStylized
     {
-        public XLStylizedEmpty(IXLStyle defaultStyle) : base((defaultStyle as XLStyle)?.Value ?? XLStyle.Default.Value)
+        public XLStylizedEmpty(IXLStyle defaultStyle)
+            : base((defaultStyle as XLStyle)?.Value ?? XLStyle.Default.Value)
         {
         }
 
