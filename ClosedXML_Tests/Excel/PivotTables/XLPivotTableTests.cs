@@ -286,7 +286,7 @@ namespace ClosedXML_Tests
                     }
 
                     return wb;
-                }, @"PivotTableReferenceFiles\BlankPivotTableField\BlankPivotTableField.xlsx");
+                }, @"Other\PivotTableReferenceFiles\BlankPivotTableField\BlankPivotTableField.xlsx");
             }
         }
 
