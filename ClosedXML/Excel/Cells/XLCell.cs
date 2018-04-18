@@ -218,57 +218,127 @@ namespace ClosedXML.Excel
             }
 
             var style = GetStyleForRead();
+            Boolean parsed;
+            string parsedValue;
+
+            // For SetValue<T> we set the cell value directly to the parameter
+            // as opposed to the other SetValue(object value) where we parse the string and try to decude the value
             if (value is String || value is char)
             {
-                _cellValue = value.ToString();
+                parsedValue = value.ToInvariantString();
                 _dataType = XLDataType.Text;
-                if (_cellValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
-            }
-            else if (value is TimeSpan)
-            {
-                _cellValue = value.ToString();
-                _dataType = XLDataType.TimeSpan;
-                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                    Style.NumberFormat.NumberFormatId = 46;
-            }
-            else if (value is DateTime)
-            {
-                _dataType = XLDataType.DateTime;
-                var dtTest = (DateTime)Convert.ChangeType(value, typeof(DateTime));
-                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                    Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
 
-                _cellValue = dtTest.ToOADate().ToInvariantString();
-            }
-            else if (value.GetType().IsNumber())
-            {
-                if ((value is double || value is float) && (Double.IsNaN((Double)Convert.ChangeType(value, typeof(Double)))
-                    || Double.IsInfinity((Double)Convert.ChangeType(value, typeof(Double)))))
-                {
-                    _cellValue = value.ToString();
-                    _dataType = XLDataType.Text;
-                }
-                else
-                {
-                    _dataType = XLDataType.Number;
-                    _cellValue = ((Double)Convert.ChangeType(value, typeof(Double))).ToInvariantString();
-                }
-            }
-            else if (value is Boolean)
-            {
-                _dataType = XLDataType.Boolean;
-                _cellValue = (Boolean)Convert.ChangeType(value, typeof(Boolean)) ? "1" : "0";
+                parsed = true;
             }
             else
             {
-                _cellValue = Convert.ToString(value);
-                _dataType = XLDataType.Text;
+                var tuple = SetKnownTypedValue(value, style);
+                parsedValue = tuple.Item1;
+                parsed = tuple.Item2;
             }
+
+            // If parsing was unsuccessful, we throw an ArgumentException
+            // because we are using SetValue<T> (typed).
+            // Only in SetValue(object value) to we try to fall back to a value of a different type
+            if (!parsed)
+                throw new ArgumentException($"Unable to set cell value to {value.ToInvariantString()}");
+
+            SetInternalCellValueString(parsedValue, validate: true, parseToCachedValue: false);
 
             CachedValue = null;
 
             return this;
+        }
+
+        // TODO: Replace with (string, bool) ValueTuple later
+        private Tuple<string, bool> SetKnownTypedValue<T>(T value, XLStyleValue style)
+        {
+            string parsedValue;
+            bool parsed;
+            if (value is DateTime d && d >= BaseDate)
+            {
+                parsedValue = d.ToOADate().ToInvariantString();
+                parsed = true;
+                SetDateTimeFormat(style, d.Date == d);
+            }
+            else if (value is TimeSpan ts)
+            {
+                parsedValue = ts.TotalDays.ToInvariantString();
+                parsed = true;
+                SetTimeSpanFormat(style);
+            }
+            else if (value is Boolean b)
+            {
+                parsedValue = b ? "1" : "0";
+                _dataType = XLDataType.Boolean;
+                parsed = true;
+            }
+            else if (value.IsNumber())
+            {
+                if (
+                       (value is double d1 && (double.IsNaN(d1) || double.IsInfinity(d1)))
+                    || (value is float f && (float.IsNaN(f) || float.IsInfinity(f)))
+                   )
+                {
+                    parsedValue = value.ToString();
+                    _dataType = XLDataType.Text;
+                    parsed = parsedValue.Length == 0;
+                }
+                else
+                {
+                    parsedValue = value.ToInvariantString();
+                    _dataType = XLDataType.Number;
+                }
+                parsed = true;
+            }
+            else
+            {
+                // Here we specifically don't use invariant string, as we want to use the current culture to convert to string
+                parsedValue = value.ToString();
+                _dataType = XLDataType.Text;
+                parsed = parsedValue.Length == 0;
+            }
+
+            return new Tuple<string, bool>(parsedValue, parsed);
+        }
+
+        private string DeduceCellValueByParsing(string value, XLStyleValue style)
+        {
+            if (value[0] == '\'')
+            {
+                value = value.Substring(1, value.Length - 1);
+
+                _dataType = XLDataType.Text;
+                if (value.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                    Style.Alignment.WrapText = true;
+            }
+            else if (value.Trim() != "NaN" && Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double _))
+                _dataType = XLDataType.Number;
+            else if (TimeSpan.TryParse(value, out TimeSpan ts))
+            {
+                value = ts.ToInvariantString();
+                SetTimeSpanFormat(style);
+            }
+            else if (DateTime.TryParse(value, out DateTime dt) && dt >= BaseDate)
+            {
+                value = dt.ToOADate().ToInvariantString();
+                SetDateTimeFormat(style, dt.Date == dt);
+            }
+            else if (Boolean.TryParse(value, out Boolean b))
+            {
+                value = b ? "1" : "0";
+                _dataType = XLDataType.Boolean;
+            }
+            else
+            {
+                _dataType = XLDataType.Text;
+                if (value.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                    Style.Alignment.WrapText = true;
+            }
+
+            return value;
         }
 
         public T GetValue<T>()
@@ -434,12 +504,18 @@ namespace ClosedXML.Excel
 
         internal void SetInternalCellValueString(String cellValue)
         {
-            SetInternalCellValueString(cellValue, this.HasFormula);
+            SetInternalCellValueString(cellValue, validate: false, parseToCachedValue: this.HasFormula);
         }
 
-        private void SetInternalCellValueString(String cellValue, Boolean parseToCachedValue)
+        private void SetInternalCellValueString(String cellValue, Boolean validate, Boolean parseToCachedValue)
         {
+            if (validate)
+            {
+                if (cellValue.Length > 32767) throw new ArgumentOutOfRangeException(nameof(cellValue), "Cells can hold a maximum of 32,767 characters.");
+            }
+
             this._cellValue = cellValue;
+
             if (parseToCachedValue)
                 CachedValue = ParseCellValueFromString();
         }
@@ -560,7 +636,7 @@ namespace ClosedXML.Excel
 
                 CachedValue = null;
 
-                if (_cellValue.Length > 32767) throw new ArgumentException("Cells can hold only 32,767 characters.");
+                if (_cellValue.Length > 32767) throw new ArgumentOutOfRangeException(nameof(value), "Cells can hold only 32,767 characters.");
             }
         }
 
@@ -1723,10 +1799,10 @@ namespace ClosedXML.Excel
         {
             foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
             {
-                var cells = table.HeadersRow().CellsUsed(c => c.Address.Equals(this.Address));
-                if (cells.Any())
+                var cell = table.HeadersRow().CellsUsed(c => c.Address.Equals(this.Address)).FirstOrDefault();
+                if (cell != null)
                 {
-                    var oldName = cells.First().GetString();
+                    var oldName = cell.GetString();
                     var field = table.Field(oldName);
                     field.Name = value.ToString();
                     return true;
@@ -1740,13 +1816,14 @@ namespace ClosedXML.Excel
         {
             foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
             {
-                var cells = table.TotalsRow().Cells(c => c.Address.Equals(this.Address));
-                if (cells.Any())
+                var cell = table.TotalsRow().Cells(c => c.Address.Equals(this.Address)).FirstOrDefault();
+                if (cell != null)
                 {
-                    var cell = cells.First();
                     var field = table.Fields.First(f => f.Column.ColumnNumber() == cell.WorksheetColumn().ColumnNumber());
                     field.TotalsRowFunction = XLTotalsRowFunction.None;
-                    _cellValue = value.ToString();
+
+                    SetInternalCellValueString(value.ToInvariantString(), validate: true, parseToCachedValue: false);
+
                     field.TotalsRowLabel = _cellValue;
                     this.DataType = XLDataType.Text;
                     return true;
@@ -2021,85 +2098,69 @@ namespace ClosedXML.Excel
 
         private void SetValue(object value)
         {
-            FormulaA1 = String.Empty;
-            string val;
             if (value == null)
-                val = string.Empty;
-            else if (value is DateTime)
-                val = ((DateTime)value).ToString("o");
-            else if (value.IsNumber())
-                val = value.ToInvariantString();
-            else
-                val = value.ToString();
+            {
+                this.Clear(XLClearOptions.Contents);
+                return;
+            }
+
+            FormulaA1 = String.Empty;
             _richText = null;
-            if (val.Length == 0)
+
+            var style = GetStyleForRead();
+            Boolean parsed = false;
+            string parsedValue = string.Empty;
+
+            ////
+            // Try easy parsing first. If that doesn't work, we'll have to ToString it and parse it slowly
+
+            // When number format starts with @, we treat any value as text - no parsing required
+            // This doesn't happen in the SetValue<T>() version
+            if (style.NumberFormat.Format == "@")
+            {
+                parsedValue = value.ToInvariantString();
+
                 _dataType = XLDataType.Text;
+                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                    Style.Alignment.WrapText = true;
+
+                parsed = true;
+            }
             else
             {
-                var style = GetStyleForRead();
-                if (style.NumberFormat.Format == "@")
-                {
-                    _dataType = XLDataType.Text;
-                    if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
-                        Style.Alignment.WrapText = true;
-                }
-                else if (val[0] == '\'')
-                {
-                    val = val.Substring(1, val.Length - 1);
-                    _dataType = XLDataType.Text;
-                    if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
-                        Style.Alignment.WrapText = true;
-                }
-                // TODO: sort out the double TimeSpan parsing
-                else if (value is TimeSpan || (!Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d1) && TimeSpan.TryParse(val, out TimeSpan tsTest)))
-                {
-                    if (!(value is TimeSpan) && TimeSpan.TryParse(val, out tsTest))
-                        val = BaseDate.Add(tsTest).ToOADate().ToInvariantString();
-                    else
-                        val = BaseDate.Add((TimeSpan)value).ToOADate().ToInvariantString();
-
-                    _dataType = XLDataType.TimeSpan;
-                    if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                        Style.NumberFormat.NumberFormatId = 46;
-                }
-                else if (val.Trim() != "NaN" && Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d2))
-                    _dataType = XLDataType.Number;
-                else if (DateTime.TryParse(val, out DateTime dtTest) && dtTest >= BaseDate)
-                {
-                    _dataType = XLDataType.DateTime;
-
-                    if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                        Style.NumberFormat.NumberFormatId = dtTest.Date == dtTest ? 14 : 22;
-                    {
-                        DateTime forMillis;
-                        if (value is DateTime && (forMillis = (DateTime)value).Millisecond > 0)
-                        {
-                            val = forMillis.ToOADate().ToInvariantString();
-                        }
-                        else
-                        {
-                            val = dtTest.ToOADate().ToInvariantString();
-                        }
-                    }
-                }
-                else if (Boolean.TryParse(val, out Boolean bTest))
-                {
-                    _dataType = XLDataType.Boolean;
-                    val = bTest ? "1" : "0";
-                }
-                else
-                {
-                    _dataType = XLDataType.Text;
-                    if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
-                        Style.Alignment.WrapText = true;
-                }
+                var tuple = SetKnownTypedValue(value, style);
+                parsedValue = tuple.Item1;
+                parsed = tuple.Item2;
             }
-            if (val.Length > 32767) throw new ArgumentException("Cells can only hold 32,767 characters.");
 
-            if (SetTableHeaderValue(val)) return;
-            if (SetTableTotalsRowLabel(val)) return;
+            ////
+            if (!parsed)
+            {
+                // We'll have to parse it slowly :-(
+                parsedValue = DeduceCellValueByParsing(parsedValue.ToString(), style);
+            }
 
-            _cellValue = val;
+            if (SetTableHeaderValue(parsedValue)) return;
+            if (SetTableTotalsRowLabel(parsedValue)) return;
+
+            SetInternalCellValueString(parsedValue, validate: true, parseToCachedValue: false);
+            CachedValue = null;
+        }
+
+        private void SetDateTimeFormat(XLStyleValue style, Boolean onlyDatePart)
+        {
+            _dataType = XLDataType.DateTime;
+
+            if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                Style.NumberFormat.NumberFormatId = onlyDatePart ? 14 : 22;
+        }
+
+        private void SetTimeSpanFormat(XLStyleValue style)
+        {
+            _dataType = XLDataType.TimeSpan;
+
+            if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                Style.NumberFormat.NumberFormatId = 46;
         }
 
         internal string GetFormulaR1C1(string value)

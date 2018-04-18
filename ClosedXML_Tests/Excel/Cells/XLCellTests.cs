@@ -59,8 +59,13 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell("A1");
             var doubleList = new List<Double> { 1.0 / 0.0 };
 
+            cell.Value = 5;
             cell.Value = doubleList;
-            Assert.AreNotEqual(XLDataType.Number, cell.DataType);
+            Assert.AreEqual(XLDataType.Text, cell.DataType);
+            Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.PositiveInfinitySymbol, cell.Value);
+
+            cell.Value = 5;
+            Assert.Throws<ArgumentException>(() => cell.SetValue(doubleList));
         }
 
         [Test]
@@ -70,8 +75,13 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell("A1");
             var doubleList = new List<Double> { 0.0 / 0.0 };
 
+            cell.Value = 5;
             cell.Value = doubleList;
-            Assert.AreNotEqual(XLDataType.Number, cell.DataType);
+            Assert.AreEqual(XLDataType.Text, cell.DataType);
+            Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.NaNSymbol, cell.Value);
+
+            cell.Value = 5;
+            Assert.Throws<ArgumentException>(() => cell.SetValue(doubleList));
         }
 
         [Test]
@@ -332,25 +342,37 @@ namespace ClosedXML_Tests
         [Test]
         public void ValueSetToEmptyString()
         {
+            string expected = String.Empty;
+
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.Value = new DateTime(2000, 1, 2);
             cell.Value = String.Empty;
-            string actual = cell.GetString();
-            string expected = String.Empty;
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, cell.GetString());
+            Assert.AreEqual(expected, cell.Value);
+
+            cell.Value = new DateTime(2000, 1, 2);
+            cell.SetValue(string.Empty);
+            Assert.AreEqual(expected, cell.GetString());
+            Assert.AreEqual(expected, cell.Value);
         }
 
         [Test]
         public void ValueSetToNull()
         {
+            string expected = String.Empty;
+
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.Value = new DateTime(2000, 1, 2);
             cell.Value = null;
-            string actual = cell.GetString();
-            string expected = String.Empty;
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, cell.GetString());
+            Assert.AreEqual(expected, cell.Value);
+
+            cell.Value = new DateTime(2000, 1, 2);
+            cell.SetValue(null as string);
+            Assert.AreEqual(expected, cell.GetString());
+            Assert.AreEqual(expected, cell.Value);
         }
 
         [Test]
@@ -367,6 +389,114 @@ namespace ClosedXML_Tests
             cell.Value = expected;
             var actual = (DateTime)cell.Value;
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void SetStringCellValues()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var cell = ws.FirstCell();
+
+                object expected;
+
+                var date = new DateTime(2018, 4, 18);
+                expected = date.ToInvariantString();
+                cell.Value = expected;
+                Assert.AreEqual(XLDataType.DateTime, cell.DataType);
+                Assert.AreEqual(date, cell.Value);
+
+                var b = true;
+                expected = b.ToInvariantString();
+                cell.Value = expected;
+                Assert.AreEqual(XLDataType.Boolean, cell.DataType);
+                Assert.AreEqual(b, cell.Value);
+
+                var ts = new TimeSpan(8, 12, 4);
+                expected = ts.ToInvariantString();
+                cell.Value = expected;
+                Assert.AreEqual(XLDataType.TimeSpan, cell.DataType);
+                Assert.AreEqual(ts, cell.Value);
+            }
+        }
+
+        [Test]
+        public void SetStringValueTooLong()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.FirstCell().Value = new DateTime(2018, 5, 15);
+
+                ws.FirstCell().SetValue(new String('A', 32767));
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().Value = new String('A', 32768));
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().SetValue(new String('A', 32768)));
+            }
+        }
+
+        [Test]
+        public void SetDateOutOfRange()
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-ZA");
+
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.FirstCell().Value = 5;
+
+                var date = XLCell.BaseDate.AddDays(-1);
+                ws.FirstCell().Value = date;
+
+                // Should default to string representation using current culture's date format
+                Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+                Assert.AreEqual(date.ToString(), ws.FirstCell().Value);
+
+                Assert.Throws<ArgumentException>(() => ws.FirstCell().SetValue(XLCell.BaseDate.AddDays(-1)));
+            }
+        }
+
+        [Test]
+        public void SetCellValueWipesFormulas()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.FirstCell().FormulaA1 = "=TODAY()";
+                ws.FirstCell().Value = "hello world";
+                Assert.IsFalse(ws.FirstCell().HasFormula);
+
+                ws.FirstCell().FormulaA1 = "=TODAY()";
+                ws.FirstCell().SetValue("hello world");
+                Assert.IsFalse(ws.FirstCell().HasFormula);
+            }
+        }
+
+        [Test]
+        public void CellValueLineWrapping()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.FirstCell().Value = "hello world";
+                Assert.IsFalse(ws.FirstCell().Style.Alignment.WrapText);
+
+                ws.FirstCell().Value = "hello\r\nworld";
+                Assert.IsTrue(ws.FirstCell().Style.Alignment.WrapText);
+
+                ws.FirstCell().Style.Alignment.WrapText = false;
+
+                ws.FirstCell().SetValue("hello world");
+                Assert.IsFalse(ws.FirstCell().Style.Alignment.WrapText);
+
+                ws.FirstCell().SetValue("hello\r\nworld");
+                Assert.IsTrue(ws.FirstCell().Style.Alignment.WrapText);
+            }
         }
 
         [Test]
