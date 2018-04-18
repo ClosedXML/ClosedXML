@@ -322,8 +322,7 @@ namespace ClosedXML_Tests
                 {
                     continue;
                 }
-                PartPair pair;
-                if (pairs.TryGetValue(part.Uri, out pair))
+                if (pairs.TryGetValue(part.Uri, out PartPair pair))
                 {
                     pair.Status = CompareStatus.Equal;
                 }

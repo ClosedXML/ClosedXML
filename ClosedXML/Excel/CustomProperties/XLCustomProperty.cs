@@ -33,14 +33,13 @@ namespace ClosedXML.Excel
         {
             get
             {
-                Double dTest;
                 if (Value is DateTime)
                     return XLCustomPropertyType.Date;
                 
                 if (Value is Boolean)
                     return XLCustomPropertyType.Boolean;
                 
-                if (Double.TryParse(Value.ToString(), out dTest))
+                if (Double.TryParse(Value.ToString(), out Double dTest))
                     return XLCustomPropertyType.Number;
                 
                 return XLCustomPropertyType.Text;

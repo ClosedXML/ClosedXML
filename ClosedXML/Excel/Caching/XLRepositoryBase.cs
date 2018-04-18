@@ -40,8 +40,7 @@ namespace ClosedXML.Excel.Caching
         /// <returns>True if entry exists and alive, false otherwise.</returns>
         public bool ContainsKey(Tkey key, out Tvalue value)
         {
-            WeakReference cachedReference;
-            if (_storage.TryGetValue(key, out cachedReference))
+            if (_storage.TryGetValue(key, out WeakReference cachedReference))
             {
                 value = cachedReference.Target as Tvalue;
                 return (value != null);
@@ -88,8 +87,7 @@ namespace ClosedXML.Excel.Caching
         /// </summary>
         public Tvalue GetOrCreate(Tkey key)
         {
-            WeakReference cachedReference;
-            if (_storage.TryGetValue(key, out cachedReference))
+            if (_storage.TryGetValue(key, out WeakReference cachedReference))
             {
                 var storedValue = cachedReference.Target as Tvalue;
                 if (storedValue != null)
@@ -98,11 +96,10 @@ namespace ClosedXML.Excel.Caching
                 }
                 else
                 {
-                    WeakReference _;
-                    _storage.TryRemove(key, out _);
+                    _storage.TryRemove(key, out WeakReference _);
                 }
             }
-            
+
             var value = _createNew(key);
             return Store(key, value);
         }
@@ -123,8 +120,7 @@ namespace ClosedXML.Excel.Caching
                     var val = pair.Value.Target as Tvalue;
                     if (val == null)
                     {
-                        WeakReference _;
-                        _storage.TryRemove(pair.Key, out _);
+                        _storage.TryRemove(pair.Key, out WeakReference _);
                     }
                     return val;
                 })

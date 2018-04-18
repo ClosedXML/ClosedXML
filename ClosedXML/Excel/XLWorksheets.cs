@@ -47,8 +47,7 @@ namespace ClosedXML.Excel
 
         public bool TryGetWorksheet(string sheetName, out IXLWorksheet worksheet)
         {
-            XLWorksheet w;
-            if (_worksheets.TryGetValue(sheetName.UnescapeSheetName().ToLowerInvariant(), out w))
+            if (_worksheets.TryGetValue(sheetName.UnescapeSheetName().ToLowerInvariant(), out XLWorksheet w))
             {
                 worksheet = w;
                 return true;
@@ -61,9 +60,7 @@ namespace ClosedXML.Excel
         {
             sheetName = sheetName.UnescapeSheetName();
 
-            XLWorksheet w;
-
-            if (_worksheets.TryGetValue(sheetName.ToLowerInvariant(), out w))
+            if (_worksheets.TryGetValue(sheetName.ToLowerInvariant(), out XLWorksheet w))
                 return w;
 
             var wss = _worksheets.Where(ws => string.Equals(ws.Key, sheetName, StringComparison.OrdinalIgnoreCase));

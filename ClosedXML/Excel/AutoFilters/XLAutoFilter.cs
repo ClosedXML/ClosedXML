@@ -71,8 +71,7 @@ namespace ClosedXML.Excel
             if (column < 1 || column > XLHelper.MaxColumnNumber)
                 throw new ArgumentOutOfRangeException(nameof(column), "Column " + column + " is outside the allowed column range.");
 
-            XLFilterColumn filterColumn;
-            if (!_columns.TryGetValue(column, out filterColumn))
+            if (!_columns.TryGetValue(column, out XLFilterColumn filterColumn))
             {
                 filterColumn = new XLFilterColumn(this, column);
                 _columns.Add(column, filterColumn);

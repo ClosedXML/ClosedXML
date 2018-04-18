@@ -126,9 +126,7 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Picture(string pictureName)
         {
-            IXLPicture p;
-
-            if (TryGetPicture(pictureName, out p))
+            if (TryGetPicture(pictureName, out IXLPicture p))
                 return p;
 
             throw new ArgumentException($"There isn't a picture named '{pictureName}'.");

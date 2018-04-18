@@ -829,11 +829,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Roman(List<Expression> p)
         {
-            Int32 intTemp;
-            Boolean boolTemp;
             if (p.Count == 1
-                || (Boolean.TryParse(p[1]._token.Value.ToString(), out boolTemp) && boolTemp)
-                || (Int32.TryParse(p[1]._token.Value.ToString(), out intTemp) && intTemp == 1))
+                || (Boolean.TryParse(p[1]._token.Value.ToString(), out bool boolTemp) && boolTemp)
+                || (Int32.TryParse(p[1]._token.Value.ToString(), out int intTemp) && intTemp == 1))
                 return XLMath.ToRoman((int)p[0]);
 
             throw new ArgumentException("Can only support classic roman types.");
@@ -880,8 +878,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Sec(List<Expression> p)
         {
-            double number;
-            if (double.TryParse(p[0], out number))
+            if (double.TryParse(p[0], out double number))
                 return 1.0 / Math.Cos(number);
             else
                 throw new CellValueException();

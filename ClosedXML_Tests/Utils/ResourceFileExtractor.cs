@@ -22,10 +22,9 @@ namespace ClosedXML_Tests
         {
             get
             {
-                ResourceFileExtractor _return;
                 Assembly _assembly = Assembly.GetCallingAssembly();
                 string _key = _assembly.GetName().FullName;
-                if (!ms_defaultExtractors.TryGetValue(_key, out _return))
+                if (!ms_defaultExtractors.TryGetValue(_key, out ResourceFileExtractor _return))
                 {
                     lock (ms_defaultExtractors)
                     {

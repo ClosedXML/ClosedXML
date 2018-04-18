@@ -44,8 +44,7 @@ namespace ClosedXML.Excel.CalcEngine
                     throw new ArgumentOutOfRangeException(referencedSheetNames.Last(), "Cross worksheet references may references no more than 1 other worksheet");
                 else
                 {
-                    IXLWorksheet worksheet;
-                    if (!_wb.TryGetWorksheet(referencedSheetNames.Single(), out worksheet))
+                    if (!_wb.TryGetWorksheet(referencedSheetNames.Single(), out IXLWorksheet worksheet))
                         throw new ArgumentOutOfRangeException(referencedSheetNames.Single(), "The required worksheet cannot be found");
 
                     identifier = identifier.ToLower().Replace(string.Format("{0}!", worksheet.Name.ToLower()), "");

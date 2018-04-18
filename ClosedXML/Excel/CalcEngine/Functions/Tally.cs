@@ -87,18 +87,17 @@ namespace ClosedXML.Excel.CalcEngine
         {
             foreach (var value in _list)
             {
-                double tmp;
                 var vEnumerable = value as IEnumerable;
                 if (vEnumerable == null || vEnumerable is string)
                 {
-                    if (TryParseToDouble(value, out tmp))
+                    if (TryParseToDouble(value, out double tmp))
                         yield return tmp;
                 }
                 else
                 {
                     foreach (var v in vEnumerable)
                     {
-                        if (TryParseToDouble(v, out tmp))
+                        if (TryParseToDouble(v, out double tmp))
                             yield return tmp;
                     }
                 }
