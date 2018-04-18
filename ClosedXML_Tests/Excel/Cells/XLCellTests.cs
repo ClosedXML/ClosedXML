@@ -186,9 +186,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_Boolean_Bad()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            Boolean outValue;
             IXLCell cell = ws.Cell("A1").SetValue("ABC");
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out bool outValue);
             Assert.IsFalse(success);
         }
 
@@ -196,9 +195,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_Boolean_False()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            Boolean outValue;
             IXLCell cell = ws.Cell("A1").SetValue(false);
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out bool outValue);
             Assert.IsTrue(success);
             Assert.IsFalse(outValue);
         }
@@ -207,9 +205,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_Boolean_Good()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            Boolean outValue;
             IXLCell cell = ws.Cell("A1").SetValue("True");
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out bool outValue);
             Assert.IsTrue(success);
             Assert.IsTrue(outValue);
         }
@@ -218,9 +215,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_Boolean_True()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            Boolean outValue;
             IXLCell cell = ws.Cell("A1").SetValue(true);
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out bool outValue);
             Assert.IsTrue(success);
             Assert.IsTrue(outValue);
         }
@@ -229,9 +225,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_DateTime_BadString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            DateTime outValue;
             var date = "ABC";
-            bool success = ws.Cell("A1").SetValue(date).TryGetValue(out outValue);
+            bool success = ws.Cell("A1").SetValue(date).TryGetValue(out DateTime outValue);
             Assert.IsFalse(success);
         }
 
@@ -239,10 +234,9 @@ namespace ClosedXML_Tests
         public void TryGetValue_DateTime_BadString2()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            DateTime outValue;
             var date = 5545454;
             ws.FirstCell().SetValue(date).DataType = XLDataType.DateTime;
-            bool success = ws.FirstCell().TryGetValue(out outValue);
+            bool success = ws.FirstCell().TryGetValue(out DateTime outValue);
             Assert.IsFalse(success);
         }
 
@@ -250,9 +244,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_RichText_Bad()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText outValue;
             IXLCell cell = ws.Cell("A1").SetValue("Anything");
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out IXLRichText outValue);
             Assert.IsTrue(success);
             Assert.AreEqual(cell.RichText, outValue);
             Assert.AreEqual("Anything", outValue.ToString());
@@ -262,10 +255,9 @@ namespace ClosedXML_Tests
         public void TryGetValue_RichText_Good()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText outValue;
             IXLCell cell = ws.Cell("A1");
             cell.RichText.AddText("Anything");
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out IXLRichText outValue);
             Assert.IsTrue(success);
             Assert.AreEqual(cell.RichText, outValue);
         }
@@ -274,9 +266,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_TimeSpan_BadString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            TimeSpan outValue;
             string timeSpan = "ABC";
-            bool success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out outValue);
+            bool success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out TimeSpan outValue);
             Assert.IsFalse(success);
         }
 
@@ -284,9 +275,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_TimeSpan_Good()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            TimeSpan outValue;
             var timeSpan = new TimeSpan(1, 1, 1);
-            bool success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out outValue);
+            bool success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out TimeSpan outValue);
             Assert.IsTrue(success);
             Assert.AreEqual(timeSpan, outValue);
         }
@@ -295,9 +285,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_TimeSpan_GoodString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            TimeSpan outValue;
             var timeSpan = new TimeSpan(1, 1, 1);
-            bool success = ws.Cell("A1").SetValue(timeSpan.ToString()).TryGetValue(out outValue);
+            bool success = ws.Cell("A1").SetValue(timeSpan.ToString()).TryGetValue(out TimeSpan outValue);
             Assert.IsTrue(success);
             Assert.AreEqual(timeSpan, outValue);
         }
@@ -306,9 +295,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_sbyte_Bad()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            sbyte outValue;
             IXLCell cell = ws.Cell("A1").SetValue(255);
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out sbyte outValue);
             Assert.IsFalse(success);
         }
 
@@ -316,9 +304,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_sbyte_Bad2()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            sbyte outValue;
             IXLCell cell = ws.Cell("A1").SetValue("255");
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out sbyte outValue);
             Assert.IsFalse(success);
         }
 
@@ -326,9 +313,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_sbyte_Good()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            sbyte outValue;
             IXLCell cell = ws.Cell("A1").SetValue(5);
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out sbyte outValue);
             Assert.IsTrue(success);
             Assert.AreEqual(5, outValue);
         }
@@ -337,9 +323,8 @@ namespace ClosedXML_Tests
         public void TryGetValue_sbyte_Good2()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            sbyte outValue;
             IXLCell cell = ws.Cell("A1").SetValue("5");
-            bool success = cell.TryGetValue(out outValue);
+            bool success = cell.TryGetValue(out sbyte outValue);
             Assert.IsTrue(success);
             Assert.AreEqual(5, outValue);
         }
