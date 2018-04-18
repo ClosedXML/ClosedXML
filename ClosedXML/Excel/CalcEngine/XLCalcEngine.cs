@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,6 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         private IList<IXLRange> _cellRanges;
+
         /// <summary>
         /// Get a collection of cell ranges included into the expression. Order is not preserved.
         /// </summary>
@@ -109,122 +109,6 @@ namespace ClosedXML.Excel.CalcEngine
             if (_cellRanges != null)
                 _cellRanges.Add(res.Range);
             return res;
-        }
-
-        //TODO Make a separate internal class?
-        private class XLRangeAddressComparer : IEqualityComparer<IXLRangeAddress>
-        {
-            private bool _ignoreFixed;
-            private XLAddressComparer _addressComparer;
-            public XLRangeAddressComparer(bool ignoreFixed)
-            {
-                _ignoreFixed = ignoreFixed;
-                _addressComparer = new XLAddressComparer(_ignoreFixed);
-            }
-
-            public bool Equals(IXLRangeAddress x, IXLRangeAddress y)
-            {
-                return (x == null && y == null) ||
-                    (x != null && y != null &&
-                    _addressComparer.Equals(x.FirstAddress, y.FirstAddress) &&
-                    _addressComparer.Equals(x.LastAddress, y.LastAddress));
-            }
-
-            public int GetHashCode(IXLRangeAddress obj)
-            {
-                return new
-                {
-                    FirstHash = _addressComparer.GetHashCode(obj.FirstAddress),
-                    LastHash = _addressComparer.GetHashCode(obj.LastAddress),
-                }.GetHashCode();
-            }
-        }
-
-        //TODO Make a separate internal class?
-        private class XLAddressComparer : IEqualityComparer<IXLAddress>
-        {
-            private bool _ignoreFixed;
-            public XLAddressComparer(bool ignoreFixed)
-            {
-                _ignoreFixed = ignoreFixed;
-            }
-
-            public bool Equals(IXLAddress x, IXLAddress y)
-            {
-                return (x == null && y == null) ||
-                    (x != null && y != null &&
-                    string.Equals(x.Worksheet.Name, y.Worksheet.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                    x.ColumnNumber == y.ColumnNumber &&
-                    x.RowNumber == y.RowNumber &&
-                    (_ignoreFixed || x.FixedColumn == y.FixedColumn &&
-                                     x.FixedRow == y.FixedRow));
-            }
-
-            public int GetHashCode(IXLAddress obj)
-            {
-                return new {
-                    WorksheetName = obj.Worksheet.Name.ToUpperInvariant(),
-                    obj.ColumnNumber,
-                    obj.RowNumber,
-                    FixedColumn = (_ignoreFixed ? false : obj.FixedColumn),
-                    FixedRow = (_ignoreFixed ? false : obj.FixedRow)
-                }.GetHashCode();
-            }
-        }
-    }
-
-    internal class CellRangeReference : IValueObject, IEnumerable
-    {
-        private IXLRange _range;
-        private XLCalcEngine _ce;
-
-        public CellRangeReference(IXLRange range, XLCalcEngine ce)
-        {
-            _range = range;
-            _ce = ce;
-        }
-
-        public IXLRange Range { get { return _range; } }
-
-        // ** IValueObject
-        public object GetValue()
-        {
-            return GetValue(_range.FirstCell());
-        }
-
-        // ** IEnumerable
-        public IEnumerator GetEnumerator()
-        {
-            var maxRow = Math.Min(_range.RangeAddress.LastAddress.RowNumber, _range.Worksheet.LastCellUsed().Address.RowNumber);
-            var maxCol = Math.Min(_range.RangeAddress.LastAddress.ColumnNumber, _range.Worksheet.LastCellUsed().Address.ColumnNumber);
-            using (var trimmedRange = (XLRangeBase)_range.Worksheet.Range(_range.FirstCell().Address, new XLAddress(maxRow, maxCol, false, false)))
-                return trimmedRange.CellValues().GetEnumerator();
-        }
-
-        private Boolean _evaluating;
-
-        // ** implementation
-        private object GetValue(IXLCell cell)
-        {
-            if (_evaluating || (cell as XLCell).IsEvaluating)
-            {
-                throw new InvalidOperationException($"Circular Reference occured during evaluation. Cell: {cell.Address.ToString(XLReferenceStyle.Default, true)}");
-            }
-            try
-            {
-                _evaluating = true;
-                var f = cell.FormulaA1;
-                if (String.IsNullOrWhiteSpace(f))
-                    return cell.Value;
-                else
-                {
-                    return (cell as XLCell).Evaluate();
-                }
-            }
-            finally
-            {
-                _evaluating = false;
-            }
         }
     }
 }

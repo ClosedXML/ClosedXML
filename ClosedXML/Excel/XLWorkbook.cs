@@ -129,7 +129,7 @@ namespace ClosedXML.Excel
         /// Notify that workbook data has been changed which means that cached formula values
         /// need to be re-evaluated.
         /// </summary>
-        internal void NotifyRecalculationNeeded()
+        internal void InvalidateFormulas()
         {
             RecalculationCounter++;
         }
@@ -851,7 +851,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public void RecalculateAllFormulas()
         {
-            NotifyRecalculationNeeded();
+            InvalidateFormulas();
             Worksheets.ForEach(sheet => sheet.RecalculateAllFormulas());
         }
 

@@ -17,7 +17,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 var cell = sheet.Cell(1, 1);
 
                 Assert.AreEqual(0, wb.RecalculationCounter);
-                Assert.IsFalse(cell.RecalculationNeeded);
+                Assert.IsFalse(cell.NeedsRecalculation);
             }
         }
 
@@ -43,7 +43,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 var cell = sheet.Cell(1, 1);
                 cell.Value = "1234567";
 
-                Assert.IsFalse(cell.RecalculationNeeded);
+                Assert.IsFalse(cell.NeedsRecalculation);
             }
         }
 
@@ -56,11 +56,11 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 var cell = sheet.Cell(1, 1);
                 var dependentCell = sheet.Cell(2, 1);
                 dependentCell.FormulaA1 = "=A1";
-                dependentCell.Evaluate();
+                var _ = dependentCell.Value;
 
                 cell.Value = "1234567";
 
-                Assert.IsTrue(dependentCell.RecalculationNeeded);
+                Assert.IsTrue(dependentCell.NeedsRecalculation);
             }
         }
 
@@ -168,12 +168,12 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 var res = a4.Value;
 
                 Assert.AreEqual(15 + 150 + 1500, res);
-                Assert.IsFalse(a4.RecalculationNeeded);
-                Assert.IsFalse(a3.RecalculationNeeded);
-                Assert.IsFalse(a2.RecalculationNeeded);
-                Assert.AreEqual(150, a2.ValueCalculated);
-                Assert.AreEqual(1500, a3.ValueCalculated);
-                Assert.AreEqual(15 + 150 + 1500, a4.ValueCalculated);
+                Assert.IsFalse(a4.NeedsRecalculation);
+                Assert.IsFalse(a3.NeedsRecalculation);
+                Assert.IsFalse(a2.NeedsRecalculation);
+                Assert.AreEqual(150, a2.CachedValue);
+                Assert.AreEqual(1500, a3.CachedValue);
+                Assert.AreEqual(15 + 150 + 1500, a4.CachedValue);
             }
         }
 
@@ -227,7 +227,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 var allCells = sheet.CellsUsed();
 
                 sheet.Cell(changedCell).Value = 100;
-                var modifiedCells = allCells.Where(cell => cell.RecalculationNeeded);
+                var modifiedCells = allCells.Where(cell => cell.NeedsRecalculation);
 
                 Assert.AreEqual(affectedCells.Length, modifiedCells.Count());
                 foreach (var cellAddress in affectedCells)
@@ -281,13 +281,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 a2.FormulaA1 = "=A1*10";
                 a3.FormulaA1 = "=A2*10";
                 a4.FormulaA1 = "=A3*10";
-                a4.Evaluate();
+                var _ = a4.Value;
                 a1.FormulaA1 = "=SUM(A2:A4)";
 
-                var recalcNeededA1 = a1.RecalculationNeeded;
-                var recalcNeededA2 = a2.RecalculationNeeded;
-                var recalcNeededA3 = a3.RecalculationNeeded;
-                var recalcNeededA4 = a4.RecalculationNeeded;
+                var recalcNeededA1 = a1.NeedsRecalculation;
+                var recalcNeededA2 = a2.NeedsRecalculation;
+                var recalcNeededA3 = a3.NeedsRecalculation;
+                var recalcNeededA4 = a4.NeedsRecalculation;
 
                 Assert.IsTrue(recalcNeededA1);
                 Assert.IsTrue(recalcNeededA2);

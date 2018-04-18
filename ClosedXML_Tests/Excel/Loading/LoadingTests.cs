@@ -340,7 +340,7 @@ namespace ClosedXML_Tests.Excel
                 {
                     var ws = book2.Worksheet(1);
                     var storedValueA2 = ws.Cell("A2").ValueCached;
-                    Assert.IsTrue(ws.Cell("A2").RecalculationNeeded);
+                    Assert.IsTrue(ws.Cell("A2").NeedsRecalculation);
                     Assert.AreEqual(expectedValue, storedValueA2);
                 }
             }

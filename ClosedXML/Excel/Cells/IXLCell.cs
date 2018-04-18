@@ -313,27 +313,25 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Textual representation of cell calculated value (as it is saved to a workbook or read from it)
         /// </summary>
+        [Obsolete("Use CachedValue instead")]
         String ValueCached { get; }
 
         /// <summary>
         /// Calculated value of cell formula. Is used for decreasing number of computations perfromed.
-        /// May hold invalid value when <see cref="RecalculationNeeded"/> flag is True.
+        /// May hold invalid value when <see cref="NeedsRecalculation"/> flag is True.
         /// </summary>
-        Object ValueCalculated { get; }
+        Object CachedValue { get; }
 
         /// <summary>
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
         /// </summary>
-        Boolean RecalculationNeeded { get; }
+        Boolean NeedsRecalculation { get; }
 
         /// <summary>
-        /// Perform an evaluation of cell formula. If cell does not contain formula nothing happens, if cell does not need
-        /// recalculation (<see cref="RecalculationNeeded"/> is False) nothing happens either, unless <paramref name="force"/> flag is specified.
-        /// Otherwise recalculation is perfomed, result value is preserved in <see cref="ValueCalculated"/> and returned.
+        /// Invalidate <see cref="CachedValue"/> so the formula will be re-evaluated next time <see cref="Value"/> is accessed.
+        /// If cell does not contain formula nothing happens.
         /// </summary>
-        /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
-        /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
-        object Evaluate(bool force = false);
+        void InvalidateFormula();
 
         IXLRichText RichText { get; }
         Boolean HasRichText { get; }

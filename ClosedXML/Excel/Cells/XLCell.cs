@@ -440,22 +440,29 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
+        public void InvalidateFormula()
+        {
+            NeedsRecalculation = true;
+            Worksheet.Workbook.InvalidateFormulas();
+            ModifiedAtVersion = Worksheet.Workbook.RecalculationCounter;
+        }
+
         /// <summary>
         /// Perform an evaluation of cell formula. If cell does not contain formula nothing happens, if cell does not need
-        /// recalculation (<see cref="RecalculationNeeded"/> is False) nothing happens either, unless <paramref name="force"/> flag is specified.
-        /// Otherwise recalculation is perfomed, result value is preserved in <see cref="ValueCalculated"/> and returned.
+        /// recalculation (<see cref="NeedsRecalculation"/> is False) nothing happens either, unless <paramref name="force"/> flag is specified.
+        /// Otherwise recalculation is perfomed, result value is preserved in <see cref="CachedValue"/> and returned.
         /// </summary>
         /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
         public object Evaluate(bool force = false)
         {
-            if (RecalculationNeeded || force)
+            if (NeedsRecalculation || force)
             {
-                ValueCalculated = RecalculateFormula(FormulaA1);
+                CachedValue = RecalculateFormula(FormulaA1);
                 EvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
-                RecalculationNeeded = false;
+                NeedsRecalculation = false;
             }
-            return ValueCalculated;
+            return CachedValue;
         }
 
         private object StringToCellDataType(string cellValue)
@@ -1147,8 +1154,7 @@ namespace ClosedXML.Excel
 
             set
             {
-                Worksheet.Workbook.NotifyRecalculationNeeded();
-                EditedAtVersion = Worksheet.Workbook.RecalculationCounter;
+                InvalidateFormula();
 
                 _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
@@ -1168,8 +1174,7 @@ namespace ClosedXML.Excel
 
             set
             {
-                Worksheet.Workbook.NotifyRecalculationNeeded();
-                EditedAtVersion = Worksheet.Workbook.RecalculationCounter;
+                InvalidateFormula();
 
                 _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
@@ -1257,28 +1262,28 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
         /// </summary>
-        public bool RecalculationNeeded
+        public bool NeedsRecalculation
         {
             get
             {
                 if (String.IsNullOrWhiteSpace(_formulaA1) && String.IsNullOrEmpty(_formulaR1C1))
                     return false;
 
-                if (NeedRecalculateEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
+                if (NeedsRecalculationEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
                     return _recalculationNeededLastValue;
 
-                bool res = EvaluatedAtVersion < EditedAtVersion ||                                          // the cell itself was modified
-                           GetAffectingCells().Any(cell => cell.EditedAtVersion > EvaluatedAtVersion ||     // the affecting cell was modified after this one was evaluated
-                                                           cell.EvaluatedAtVersion > EvaluatedAtVersion ||  // the affecting cell was evaluated after this one (normally this should not happen)
-                                                           cell.RecalculationNeeded);                       // the affecting cell needs recalculation (recursion to walk through dependencies)
+                bool res = EvaluatedAtVersion < ModifiedAtVersion ||                                       // the cell itself was modified
+                           GetAffectingCells().Any(cell => cell.ModifiedAtVersion > EvaluatedAtVersion ||  // the affecting cell was modified after this one was evaluated
+                                                           cell.EvaluatedAtVersion > EvaluatedAtVersion || // the affecting cell was evaluated after this one (normally this should not happen)
+                                                           cell.NeedsRecalculation);                       // the affecting cell needs recalculation (recursion to walk through dependencies)
 
-                RecalculationNeeded = res;
+                NeedsRecalculation = res;
                 return res;
             }
             private set
             {
                 _recalculationNeededLastValue = value;
-                NeedRecalculateEvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
+                NeedsRecalculationEvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
             }
         }
 
@@ -1291,26 +1296,26 @@ namespace ClosedXML.Excel
         /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of cell last modification.
         /// If this value is greater than <see cref="EvaluatedAtVersion"/> then cell needs re-evaluation, as well as all dependent cells do.
         /// </summary>
-        internal long EditedAtVersion { get; private set; }
+        private long ModifiedAtVersion { get; set; }
 
         /// <summary>
         /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of cell formula evaluation.
-        /// If this value equals to <see cref="XLWorkbook.RecalculationCounter"/> it indicates that <see cref="ValueCalculated"/> stores
+        /// If this value equals to <see cref="XLWorkbook.RecalculationCounter"/> it indicates that <see cref="CachedValue"/> stores
         /// correct value and no re-evaluation has to be performed.
         /// </summary>
-        internal long EvaluatedAtVersion { get; private set; }
+        private long EvaluatedAtVersion { get; set; }
 
         /// <summary>
         /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of determining whether the cell
         /// needs re-evaluation (due to it has been edited or some of the affecting cells has). If thie value equals to <see cref="XLWorkbook.RecalculationCounter"/>
         /// it indicates that <see cref="_recalculationNeededLastValue"/> stores correct value and no check has to be performed.
         /// </summary>
-        internal long NeedRecalculateEvaluatedAtVersion { get; private set; }
+        private long NeedsRecalculationEvaluatedAtVersion { get; set; }
 
-        public object ValueCalculated { get; private set; }
+        public object CachedValue { get; private set; }
 
 
-
+        [Obsolete("Use CachedValue instead")]
         public string ValueCached { get; internal set; }
 
         public IXLRichText RichText

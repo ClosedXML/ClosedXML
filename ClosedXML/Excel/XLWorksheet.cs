@@ -1480,7 +1480,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public void RecalculateAllFormulas()
         {
-            CellsUsed().ForEach(cell => cell.Evaluate(true));
+            CellsUsed().Cast<XLCell>().ForEach(cell => cell.Evaluate(true));
         }
 
         public String Author { get; set; }

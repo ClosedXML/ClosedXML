@@ -4841,17 +4841,17 @@ namespace ClosedXML.Excel
                                     cell.CellFormula.Text = formula;
                                 }
 
-                                if (!evaluateFormulae || xlCell.ValueCalculated == null || xlCell.RecalculationNeeded)
+                                if (!evaluateFormulae || xlCell.CachedValue == null || xlCell.NeedsRecalculation)
                                     cell.CellValue = null;
                                 else
                                 {
                                     string valueCalculated;
-                                    if (xlCell.ValueCalculated is int)
-                                        valueCalculated = ((int)xlCell.ValueCalculated).ToInvariantString();
-                                    else if (xlCell.ValueCalculated is double)
-                                        valueCalculated = ((double)xlCell.ValueCalculated).ToInvariantString();
+                                    if (xlCell.CachedValue is int)
+                                        valueCalculated = ((int)xlCell.CachedValue).ToInvariantString();
+                                    else if (xlCell.CachedValue is double)
+                                        valueCalculated = ((double)xlCell.CachedValue).ToInvariantString();
                                     else
-                                        valueCalculated = xlCell.ValueCalculated.ToString();
+                                        valueCalculated = xlCell.CachedValue.ToString();
                                     
                                     cell.CellValue = new CellValue(valueCalculated);
                                 }
