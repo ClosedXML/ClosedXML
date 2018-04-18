@@ -534,8 +534,7 @@ namespace ClosedXML.Excel
                     order = sortOrder == XLSortOrder.Ascending ? "ASC" : "DESC";
                 }
 
-                Int32 co;
-                if (!Int32.TryParse(coString, out co))
+                if (!Int32.TryParse(coString, out Int32 co))
                     co = Field(coString).Index + 1;
 
                 if (toSortBy.Length > 0)

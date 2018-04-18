@@ -2118,8 +2118,7 @@ namespace ClosedXML.Excel
                                 .Cast<object>()
                                 .ToArray();
 
-                        int val;
-                        var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out val));
+                        var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out int val));
                         if (allInteger) sharedItems.ContainsInteger = true;
 
                         pti.Fields.Add(xlpf.SourceName, ptfi);
@@ -2779,8 +2778,7 @@ namespace ClosedXML.Excel
                 var comment = new Comment { Reference = c.Address.ToStringRelative() };
                 var authorName = c.Comment.Author;
 
-                Int32 authorId;
-                if (!authorsDict.TryGetValue(authorName, out authorId))
+                if (!authorsDict.TryGetValue(authorName, out int authorId))
                 {
                     authorId = authorsDict.Count;
                     authorsDict.Add(authorName, authorId);

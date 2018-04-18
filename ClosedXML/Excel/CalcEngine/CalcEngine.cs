@@ -264,7 +264,6 @@ namespace ClosedXML.Excel.CalcEngine
             ["#NUM!"] = ErrorExpression.ExpressionErrorType.NumberInvalid
         };
 
-
         // build/get static token table
         private Dictionary<object, Token> GetSymbolTable()
         {
@@ -404,7 +403,6 @@ namespace ClosedXML.Excel.CalcEngine
         {
             string id;
             Expression x = null;
-            FunctionDefinition fnDef = null;
 
             switch (_token.Type)
             {
@@ -420,7 +418,7 @@ namespace ClosedXML.Excel.CalcEngine
                     id = (string)_token.Value;
 
                     // look for functions
-                    if (_fnTbl.TryGetValue(id, out fnDef))
+                    if (_fnTbl.TryGetValue(id, out FunctionDefinition fnDef))
                     {
                         var p = GetParameters();
                         var pCnt = p == null ? 0 : p.Count;
@@ -550,21 +548,19 @@ namespace ClosedXML.Excel.CalcEngine
                     }
 
                     // look up single-char tokens on table
-                    Token tk;
-                    if (_tkTbl.TryGetValue(c, out tk))
+                    if (_tkTbl.TryGetValue(c, out Token tk))
                     {
                         // save token we found
                         _token = tk;
                         _ptr++;
 
                         // look for double-char tokens (special case)
-                        if (_ptr < _len && (c == '>' || c == '<'))
+                        if (_ptr < _len
+                            && (c == '>' || c == '<')
+                            && _tkTbl.TryGetValue(_expr.Substring(_ptr - 1, 2), out tk))
                         {
-                            if (_tkTbl.TryGetValue(_expr.Substring(_ptr - 1, 2), out tk))
-                            {
-                                _token = tk;
-                                _ptr++;
-                            }
+                            _token = tk;
+                            _ptr++;
                         }
 
                         // found token on the table
@@ -680,7 +676,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // parse #REF! (and other errors) in formula
-            if (c == '#' && ErrorMap.Any(pair => _len > _ptr+pair.Key.Length && _expr.Substring(_ptr, pair.Key.Length).Equals(pair.Key, StringComparison.OrdinalIgnoreCase)))
+            if (c == '#' && ErrorMap.Any(pair => _len > _ptr + pair.Key.Length && _expr.Substring(_ptr, pair.Key.Length).Equals(pair.Key, StringComparison.OrdinalIgnoreCase)))
             {
                 var errorPair = ErrorMap.Single(pair => _len > _ptr + pair.Key.Length && _expr.Substring(_ptr, pair.Key.Length).Equals(pair.Key, StringComparison.OrdinalIgnoreCase));
                 _ptr += errorPair.Key.Length;

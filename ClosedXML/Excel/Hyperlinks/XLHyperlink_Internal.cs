@@ -27,8 +27,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                Uri uri;
-                if(Uri.TryCreate(address, UriKind.Absolute, out uri))
+                if (Uri.TryCreate(address, UriKind.Absolute, out Uri uri))
                 {
                     _externalAddress = uri;
                     IsExternal = true;

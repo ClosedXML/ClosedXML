@@ -31,8 +31,7 @@ namespace ClosedXML.Excel
         private String GetQuoted(XLFormula formula)
         {
             String value = formula.Value;
-            Double num;
-            if ((!Double.TryParse(value, out num) && !formula.IsFormula) && value[0] != '\"' && !value.EndsWith("\""))
+            if ((!Double.TryParse(value, out double num) && !formula.IsFormula) && value[0] != '\"' && !value.EndsWith("\""))
                 return String.Format("\"{0}\"", value.Replace("\"", "\"\""));
 
             return value;

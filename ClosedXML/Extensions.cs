@@ -251,8 +251,7 @@ namespace ClosedXML.Excel
 
         private static Font GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
         {
-            Font font;
-            if (!fontCache.TryGetValue(fontBase, out font))
+            if (!fontCache.TryGetValue(fontBase, out Font font))
             {
                 font = new Font(fontBase.FontName, (float)fontBase.FontSize, GetFontStyle(fontBase));
                 fontCache.Add(fontBase, font);

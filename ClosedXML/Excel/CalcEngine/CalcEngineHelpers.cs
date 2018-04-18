@@ -36,8 +36,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (value is Double)
                     return (double)value == (double)criteria;
-                Double dValue;
-                return Double.TryParse(value.ToString(), out dValue) && dValue == (double)criteria;
+                return Double.TryParse(value.ToString(), out double dValue) && dValue == (double)criteria;
             }
 
             // convert criteria to string
@@ -61,17 +60,14 @@ namespace ClosedXML.Excel.CalcEngine
                     // add quotes if necessary
                     var pattern = @"([\w\s]+)(\W+)(\w+)";
                     var m = Regex.Match(expression, pattern);
-                    if (m.Groups.Count == 4)
+                    if (m.Groups.Count == 4
+                        && (!double.TryParse(m.Groups[1].Value, out double d) ||
+                            !double.TryParse(m.Groups[3].Value, out d)))
                     {
-                        double d;
-                        if (!double.TryParse(m.Groups[1].Value, out d) ||
-                            !double.TryParse(m.Groups[3].Value, out d))
-                        {
-                            expression = string.Format("\"{0}\"{1}\"{2}\"",
-                                                       m.Groups[1].Value,
-                                                       m.Groups[2].Value,
-                                                       m.Groups[3].Value);
-                        }
+                        expression = string.Format("\"{0}\"{1}\"{2}\"",
+                                                   m.Groups[1].Value,
+                                                   m.Groups[2].Value,
+                                                   m.Groups[3].Value);
                     }
 
                     // evaluate

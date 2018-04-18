@@ -83,8 +83,7 @@ namespace ClosedXML.Excel
         public void SetColumnsToRepeatAtLeft(String range)
         {
             var arrRange = range.Replace("$", "").Split(':');
-            Int32 iTest;
-            if (Int32.TryParse(arrRange[0], out iTest))
+            if (Int32.TryParse(arrRange[0], out int iTest))
                 SetColumnsToRepeatAtLeft(Int32.Parse(arrRange[0]), Int32.Parse(arrRange[1]));
             else
                 SetColumnsToRepeatAtLeft(arrRange[0], arrRange[1]);

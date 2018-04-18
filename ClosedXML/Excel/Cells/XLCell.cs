@@ -336,8 +336,7 @@ namespace ClosedXML.Excel
                 return (cValue != "0").ToExcelFormat(format);
             else if (_dataType == XLDataType.TimeSpan || _dataType == XLDataType.DateTime || IsDateFormat())
             {
-                double dTest;
-                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest)
+                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double dTest)
                     && dTest.IsValidOADateNumber())
                 {
                     return DateTime.FromOADate(dTest).ToExcelFormat(format);
@@ -347,8 +346,7 @@ namespace ClosedXML.Excel
             }
             else if (_dataType == XLDataType.Number)
             {
-                double dTest;
-                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
+                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double dTest))
                 {
                     return dTest.ToExcelFormat(format);
                 }
@@ -431,27 +429,21 @@ namespace ClosedXML.Excel
                 if (_dataType == XLDataType.Boolean)
                     return cellValue != "0";
 
-                if (_dataType == XLDataType.DateTime)
-                {
-                    Double d;
-                    if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d)
-                        && d.IsValidOADateNumber())
-                        return DateTime.FromOADate(d);
-                }
+                if (_dataType == XLDataType.DateTime
+                    && Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d)
+                    && d.IsValidOADateNumber())
 
-                if (_dataType == XLDataType.Number)
-                {
-                    Double d;
-                    if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d))
-                        return d;
-                }
+                    return DateTime.FromOADate(d);
 
-                if (_dataType == XLDataType.TimeSpan)
-                {
-                    TimeSpan t;
-                    if (TimeSpan.TryParse(cellValue, out t))
-                        return t;
-                }
+                if (_dataType == XLDataType.Number
+                    && double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double n))
+
+                    return n;
+
+                if (_dataType == XLDataType.TimeSpan
+                    && TimeSpan.TryParse(cellValue, out TimeSpan t))
+
+                    return t;
 
                 return cellValue;
             }
@@ -933,19 +925,16 @@ namespace ClosedXML.Excel
                 {
                     if (value == XLDataType.Boolean)
                     {
-                        bool bTest;
-                        if (Boolean.TryParse(_cellValue, out bTest))
+                        if (Boolean.TryParse(_cellValue, out Boolean bTest))
                             _cellValue = bTest ? "1" : "0";
                         else
                             _cellValue = _cellValue == "0" || String.IsNullOrEmpty(_cellValue) ? "0" : "1";
                     }
                     else if (value == XLDataType.DateTime)
                     {
-                        DateTime dtTest;
-                        double dblTest;
-                        if (DateTime.TryParse(_cellValue, out dtTest))
+                        if (DateTime.TryParse(_cellValue, out DateTime dtTest))
                             _cellValue = dtTest.ToOADate().ToInvariantString();
-                        else if (Double.TryParse(_cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out dblTest))
+                        else if (Double.TryParse(_cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double dblTest))
                             _cellValue = dblTest.ToInvariantString();
                         else
                         {
@@ -960,8 +949,7 @@ namespace ClosedXML.Excel
                     }
                     else if (value == XLDataType.TimeSpan)
                     {
-                        TimeSpan tsTest;
-                        if (TimeSpan.TryParse(_cellValue, out tsTest))
+                        if (TimeSpan.TryParse(_cellValue, out TimeSpan tsTest))
                         {
                             _cellValue = tsTest.ToString();
                             var style = GetStyleForRead();
@@ -986,7 +974,6 @@ namespace ClosedXML.Excel
                     else if (value == XLDataType.Number)
                     {
                         var v = _cellValue;
-                        double dTest;
                         double factor = 1.0;
                         if (v.EndsWith("%"))
                         {
@@ -994,7 +981,7 @@ namespace ClosedXML.Excel
                             factor = 1 / 100.0;
                         }
 
-                        if (Double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out dTest))
+                        if (Double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out Double dTest))
                             _cellValue = (dTest * factor).ToInvariantString();
                         else
                         {
@@ -1264,12 +1251,10 @@ namespace ClosedXML.Excel
 
                 if (StyleValue.Equals(Worksheet.StyleValue))
                 {
-                    XLRow row;
-                    if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out row) && !row.StyleValue.Equals(Worksheet.StyleValue))
+                    if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out XLRow row) && !row.StyleValue.Equals(Worksheet.StyleValue))
                         return false;
 
-                    XLColumn column;
-                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out column) && !column.StyleValue.Equals(Worksheet.StyleValue))
+                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out XLColumn column) && !column.StyleValue.Equals(Worksheet.StyleValue))
                         return false;
                 }
             }
@@ -1412,8 +1397,7 @@ namespace ClosedXML.Excel
                 return true;
             }
 
-            bool b;
-            if (TryGetTimeSpanValue(out value, currValue, out b)) return b;
+            if (TryGetTimeSpanValue(out value, currValue, out Boolean b)) return b;
 
             if (TryGetRichStringValue(out value)) return true;
 
@@ -1533,8 +1517,7 @@ namespace ClosedXML.Excel
         {
             if (typeof(T) == typeof(Boolean))
             {
-                Boolean tmp;
-                if (Boolean.TryParse(currValue.ToString(), out tmp))
+                if (Boolean.TryParse(currValue.ToString(), out Boolean tmp))
                 {
                     value = (T)Convert.ChangeType(tmp, typeof(T));
                     {
@@ -1550,8 +1533,7 @@ namespace ClosedXML.Excel
 
         private static Boolean TryGetBasicValue<T, U>(out T value, String currValue, Func<U> func)
         {
-            U tmp;
-            if (func(currValue, out tmp))
+            if (func(currValue, out U tmp))
             {
                 value = (T)Convert.ChangeType(tmp, typeof(T));
                 {
@@ -1916,10 +1898,6 @@ namespace ClosedXML.Excel
                 _dataType = XLDataType.Text;
             else
             {
-                double dTest;
-                DateTime dtTest;
-                bool bTest;
-                TimeSpan tsTest;
                 var style = GetStyleForRead();
                 if (style.NumberFormat.Format == "@")
                 {
@@ -1934,7 +1912,8 @@ namespace ClosedXML.Excel
                     if (val.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                         Style.Alignment.WrapText = true;
                 }
-                else if (value is TimeSpan || (!Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest) && TimeSpan.TryParse(val, out tsTest)))
+                // TODO: sort out the double TimeSpan parsing
+                else if (value is TimeSpan || (!Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d1) && TimeSpan.TryParse(val, out TimeSpan tsTest)))
                 {
                     if (!(value is TimeSpan) && TimeSpan.TryParse(val, out tsTest))
                         val = tsTest.ToString();
@@ -1943,9 +1922,9 @@ namespace ClosedXML.Excel
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
                         Style.NumberFormat.NumberFormatId = 46;
                 }
-                else if (val.Trim() != "NaN" && Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out dTest))
+                else if (val.Trim() != "NaN" && Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d2))
                     _dataType = XLDataType.Number;
-                else if (DateTime.TryParse(val, out dtTest) && dtTest >= BaseDate)
+                else if (DateTime.TryParse(val, out DateTime dtTest) && dtTest >= BaseDate)
                 {
                     _dataType = XLDataType.DateTime;
 
@@ -1963,7 +1942,7 @@ namespace ClosedXML.Excel
                         }
                     }
                 }
-                else if (Boolean.TryParse(val, out bTest))
+                else if (Boolean.TryParse(val, out Boolean bTest))
                 {
                     _dataType = XLDataType.Boolean;
                     val = bTest ? "1" : "0";
@@ -2127,8 +2106,7 @@ namespace ClosedXML.Excel
                 var parts = a1Address.Split(':');
                 var p1 = parts[0];
                 var p2 = parts[1];
-                int row1;
-                if (Int32.TryParse(p1.Replace("$", string.Empty), out row1))
+                if (Int32.TryParse(p1.Replace("$", string.Empty), out Int32 row1))
                 {
                     var row2 = Int32.Parse(p2.Replace("$", string.Empty));
                     var leftPart = GetR1C1Row(row1, p1.Contains('$'), rowsToShift);

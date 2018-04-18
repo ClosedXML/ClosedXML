@@ -29,8 +29,7 @@ namespace ClosedXML.Excel.CalcEngine
             get
             {
                 Expression x;
-                WeakReference wr;
-                if (_dct.TryGetValue(expression, out wr) && wr.IsAlive)
+                if (_dct.TryGetValue(expression, out WeakReference wr) && wr.IsAlive)
                 {
                     x = wr.Target as Expression;
                 }

@@ -807,12 +807,10 @@ namespace ClosedXML.Excel
 
             if (styleValue == Worksheet.StyleValue)
             {
-                XLRow row;
-                XLColumn column;
-                if (Worksheet.Internals.RowsCollection.TryGetValue(absRow, out row)
+                if (Worksheet.Internals.RowsCollection.TryGetValue(absRow, out XLRow row)
                     && row.StyleValue != Worksheet.StyleValue)
                     styleValue = row.StyleValue;
-                else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absColumn, out column)
+                else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absColumn, out XLColumn column)
                     && column.StyleValue != Worksheet.StyleValue)
                     styleValue = column.StyleValue;
             }
@@ -954,16 +952,14 @@ namespace ClosedXML.Excel
 
         protected String FixColumnAddress(String address)
         {
-            Int32 test;
-            if (Int32.TryParse(address, out test))
+            if (Int32.TryParse(address, out Int32 test))
                 return "A" + address;
             return address;
         }
 
         protected String FixRowAddress(String address)
         {
-            Int32 test;
-            if (Int32.TryParse(address, out test))
+            if (Int32.TryParse(address, out Int32 test))
                 return XLHelper.GetColumnLetterFromNumber(test) + "1";
             return address;
         }
@@ -1767,8 +1763,7 @@ namespace ClosedXML.Excel
                     order = sortOrder == XLSortOrder.Ascending ? "ASC" : "DESC";
                 }
 
-                Int32 co;
-                if (!Int32.TryParse(coString, out co))
+                if (!Int32.TryParse(coString, out Int32 co))
                     co = XLHelper.GetColumnNumberFromLetter(coString);
 
                 SortColumns.Add(co, String.Compare(order, "ASC", true) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending, ignoreBlanks, matchCase);

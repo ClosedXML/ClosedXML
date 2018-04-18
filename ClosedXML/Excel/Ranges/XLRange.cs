@@ -93,8 +93,7 @@ namespace ClosedXML.Excel
                     lastColumn = tPair;
                 }
 
-                Int32 tmp;
-                if (Int32.TryParse(firstColumn, out tmp))
+                if (Int32.TryParse(firstColumn, out Int32 tmp))
                 {
                     foreach (IXLRangeColumn col in Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)))
                         retVal.Add(col);
