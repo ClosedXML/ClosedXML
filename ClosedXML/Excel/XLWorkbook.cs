@@ -119,7 +119,22 @@ namespace ClosedXML.Excel
 
         public XLEventTracking EventTracking { get; set; }
 
-        #region Nested Type: XLLoadSource
+        /// <summary>
+        /// Date and time when the workbook data was modified (only formulas and cell values are taken
+        /// into account).
+        /// </summary>
+        internal DateTime LastModifiedAt { get; private set; }
+
+        /// <summary>
+        /// Notify that workbook data has been changed which means that cached formula values
+        /// need to be re-evaluated.
+        /// </summary>
+        internal void NotifyRecalculationNeeded()
+        {
+            LastModifiedAt = DateTime.UtcNow;
+        }
+
+        #region  Nested Type : XLLoadSource
 
         private enum XLLoadSource
         {
@@ -829,6 +844,15 @@ namespace ClosedXML.Excel
         public Object Evaluate(String expression)
         {
             return CalcEngine.Evaluate(expression);
+        }
+
+        /// <summary>
+        /// Force recalculation of all cell formulas.
+        /// </summary>
+        public void RecalculateAllFormulas()
+        {
+            NotifyRecalculationNeeded();
+            Worksheets.ForEach(sheet => sheet.RecalculateAllFormulas());
         }
 
         private static XLCalcEngine _calcEngineExpr;

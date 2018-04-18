@@ -64,7 +64,6 @@ namespace ClosedXML.Excel
         private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_", RegexOptions.Compiled);
 
         #region Fields
-
         private readonly XLWorksheet _worksheet;
 
         internal string _cellValue = String.Empty;
@@ -364,96 +363,143 @@ namespace ClosedXML.Excel
         /// </summary>
         internal bool IsEvaluating { get; private set; }
 
+        /// <summary>
+        /// Calculate a value of the specified formula.
+        /// </summary>
+        /// <param name="fA1">Cell formula to evaluate.</param>
+        /// <returns>Null if formula is empty or null, calculated value otherwise.</returns>
+        private object RecalculateFormula(string fA1)
+        {
+            if (string.IsNullOrEmpty(fA1))
+                return null;
+
+            if (IsEvaluating)
+                throw new InvalidOperationException("Circular Reference");
+
+            if (fA1[0] == '{')
+                fA1 = fA1.Substring(1, fA1.Length - 2);
+
+            string sName;
+            string cAddress;
+            if (fA1.Contains('!'))
+            {
+                sName = fA1.Substring(0, fA1.IndexOf('!'));
+                if (sName[0] == '\'')
+                    sName = sName.Substring(1, sName.Length - 2);
+
+                cAddress = fA1.Substring(fA1.IndexOf('!') + 1);
+            }
+            else
+            {
+                sName = Worksheet.Name;
+                cAddress = fA1;
+            }
+
+            if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
+                w => String.Compare(w.Name, sName, true) == 0)
+                && XLHelper.IsValidA1Address(cAddress)
+                )
+            {
+                var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                if (referenceCell.IsEmpty(false))
+                    return 0;
+                else
+                    return referenceCell.Value;
+            }
+
+            object retVal;
+            try
+            {
+                IsEvaluating = true;
+
+                if (_worksheet
+                        .Workbook
+                        .WorksheetsInternal
+                        .Any<XLWorksheet>(w => String.Compare(w.Name, sName, true) == 0)
+                    && XLHelper.IsValidA1Address(cAddress))
+                {
+                    var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                    if (referenceCell.IsEmpty(false))
+                        return 0;
+                    else
+                        return referenceCell.Value;
+                }
+
+                retVal = Worksheet.Evaluate(fA1);
+
+            }
+            finally
+            {
+                IsEvaluating = false;
+            }
+
+            var retValEnumerable = retVal as IEnumerable;
+            if (retValEnumerable != null && !(retVal is String))
+                return retValEnumerable.Cast<object>().First();
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// Perform an evaluation of cell formula. If cell does not contain formula nothing happens, if cell does not need
+        /// recalculation (<see cref="RecalculationNeeded"/> is False) nothing happens either, unless <paramref name="force"/> flag is specified.
+        /// Otherwise recalculation is perfomed, result value is preserved in <see cref="ValueCalculated"/> and returned.
+        /// </summary>
+        /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
+        /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
+        public object Evaluate(bool force = false)
+        {
+            if (RecalculationNeeded || force)
+            {
+                ValueCalculated = RecalculateFormula(FormulaA1);
+                EvaluatedAt = DateTime.UtcNow;
+                RecalculationNeeded = false;
+            }
+            return ValueCalculated;
+        }
+
+        private object StringToCellDataType(string cellValue)
+        {
+            if (_dataType == XLDataType.Boolean)
+                return cellValue != "0";
+
+            if (_dataType == XLDataType.DateTime)
+            {
+                Double d;
+                if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d)
+                    && d.IsValidOADateNumber())
+                    return DateTime.FromOADate(d);
+            }
+
+            if (_dataType == XLDataType.Number)
+            {
+                Double d;
+                if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d))
+                    return d;
+            }
+
+            if (_dataType == XLDataType.TimeSpan)
+            {
+                TimeSpan t;
+                if (TimeSpan.TryParse(cellValue, out t))
+                    return t;
+            }
+
+            return cellValue;
+        }
+
         public object Value
         {
             get
             {
-                var fA1 = FormulaA1;
-                if (!String.IsNullOrWhiteSpace(fA1))
+                if (!String.IsNullOrWhiteSpace(_formulaA1) ||
+                    !String.IsNullOrEmpty(_formulaR1C1))
                 {
-                    if (IsEvaluating)
-                        throw new InvalidOperationException("Circular Reference");
-
-                    if (fA1[0] == '{')
-                        fA1 = fA1.Substring(1, fA1.Length - 2);
-
-                    string sName;
-                    string cAddress;
-                    if (fA1.Contains('!'))
-                    {
-                        sName = fA1.Substring(0, fA1.IndexOf('!'));
-                        if (sName[0] == '\'')
-                            sName = sName.Substring(1, sName.Length - 2);
-
-                        cAddress = fA1.Substring(fA1.IndexOf('!') + 1);
-                    }
-                    else
-                    {
-                        sName = Worksheet.Name;
-                        cAddress = fA1;
-                    }
-
-                    object retVal;
-                    try
-                    {
-                        IsEvaluating = true;
-
-                        if (_worksheet
-                                .Workbook
-                                .WorksheetsInternal
-                                .Any<XLWorksheet>(w => String.Compare(w.Name, sName, true) == 0)
-                            && XLHelper.IsValidA1Address(cAddress))
-                        {
-                            var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                            if (referenceCell.IsEmpty(false))
-                                return 0;
-                            else
-                                return referenceCell.Value;
-                        }
-
-                        retVal = Worksheet.Evaluate(fA1);
-                    }
-                    finally
-                    {
-                        IsEvaluating = false;
-                    }
-
-                    var retValEnumerable = retVal as IEnumerable;
-
-                    if (retValEnumerable != null && !(retVal is String))
-                        return retValEnumerable.Cast<object>().First();
-
-                    return retVal;
+                    return Evaluate();
                 }
 
                 var cellValue = HasRichText ? _richText.ToString() : _cellValue;
-
-                if (_dataType == XLDataType.Boolean)
-                    return cellValue != "0";
-
-                if (_dataType == XLDataType.DateTime)
-                {
-                    Double d;
-                    if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d)
-                        && d.IsValidOADateNumber())
-                        return DateTime.FromOADate(d);
-                }
-
-                if (_dataType == XLDataType.Number)
-                {
-                    Double d;
-                    if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out d))
-                        return d;
-                }
-
-                if (_dataType == XLDataType.TimeSpan)
-                {
-                    TimeSpan t;
-                    if (TimeSpan.TryParse(cellValue, out t))
-                        return t;
-                }
-
-                return cellValue;
+                return StringToCellDataType(cellValue);
             }
 
             set
@@ -1101,6 +1147,9 @@ namespace ClosedXML.Excel
 
             set
             {
+                Worksheet.Workbook.NotifyRecalculationNeeded();
+                ModifiedAt = DateTime.UtcNow;
+
                 _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
                 _formulaR1C1 = null;
@@ -1119,6 +1168,9 @@ namespace ClosedXML.Excel
 
             set
             {
+                Worksheet.Workbook.NotifyRecalculationNeeded();
+                ModifiedAt = DateTime.UtcNow;
+
                 _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
                 _formulaA1 = null;
@@ -1198,6 +1250,65 @@ namespace ClosedXML.Excel
             AsRange().AddToNamed(rangeName, scope, comment);
             return this;
         }
+
+
+        private bool _recalculationNeededLastValue;
+
+        /// <summary>
+        /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
+        /// </summary>
+        public bool RecalculationNeeded
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(_formulaA1) && String.IsNullOrEmpty(_formulaR1C1))
+                    return false;
+
+                if (NeedRecalculateEvaluatedAt >= Worksheet.Workbook.LastModifiedAt)
+                    return _recalculationNeededLastValue;
+
+                bool res = EvaluatedAt < ModifiedAt ||                                        // the cell itself was modified
+                           GetAffectingCells().Any(cell => cell.ModifiedAt > EvaluatedAt ||   // the affecting cell was modified after this one was evaluated
+                                                           cell.EvaluatedAt > EvaluatedAt ||  // the affecting cell was evaluated after this one (normally this should not happen)
+                                                           cell.RecalculationNeeded);         // the affecting cell needs recalculation (recursion to walk through dependencies)
+
+                RecalculationNeeded = res;
+                return res;
+            }
+            private set
+            {
+                _recalculationNeededLastValue = value;
+                NeedRecalculateEvaluatedAt = DateTime.UtcNow;
+            }
+        }
+
+        private IEnumerable<XLCell> GetAffectingCells()
+        {
+            return Worksheet.CalcEngine.GetAffectingCells(_formulaA1).Cast<XLCell>();
+        }
+
+        /// <summary>
+        /// Date and time of cell's last modification (only value and formula are taken into account).
+        /// If this value is greater than <see cref="EvaluatedAt"/> then cell needs re-evaluation, as well as all dependent cells do.
+        /// </summary>
+        internal DateTime ModifiedAt { get; private set; }
+
+        /// <summary>
+        /// Date and time of cell's formula last evaluation. If this value is greater of equal to <see cref="XLWorkbook.LastModifiedAt"/>
+        /// it indicates that <see cref="ValueCalculated"/> stores correct value and no re-evaluation has to be performed.
+        /// </summary>
+        internal DateTime EvaluatedAt { get; private set; }
+
+        /// <summary>
+        /// Date and time of last determining whether the cell needs re-evaluation (due to it has been edited or some of the affecting cells has).
+        /// If thie value is greater or equal to <see cref="XLWorkbook.LastModifiedAt"/> it indicates that <see cref="_recalculationNeededLastValue"/>
+        /// stores correct value and no check has to be performed.
+        /// </summary>
+        internal DateTime NeedRecalculateEvaluatedAt { get; private set; }
+
+        public object ValueCalculated { get; private set; }
+
+
 
         public string ValueCached { get; internal set; }
 
@@ -2271,7 +2382,7 @@ namespace ClosedXML.Excel
 
         internal void ShiftFormulaRows(XLRange shiftedRange, int rowsShifted)
         {
-            _formulaA1 = ShiftFormulaRows(FormulaA1, Worksheet, shiftedRange, rowsShifted);
+            FormulaA1 = ShiftFormulaRows(FormulaA1, Worksheet, shiftedRange, rowsShifted);
         }
 
         internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
@@ -2420,7 +2531,7 @@ namespace ClosedXML.Excel
 
         internal void ShiftFormulaColumns(XLRange shiftedRange, int columnsShifted)
         {
-            _formulaA1 = ShiftFormulaColumns(FormulaA1, Worksheet, shiftedRange, columnsShifted);
+            FormulaA1 = ShiftFormulaColumns(FormulaA1, Worksheet, shiftedRange, columnsShifted);
         }
 
         internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
