@@ -47,8 +47,7 @@ namespace ClosedXML.Excel
 
             _autoFilter.Enabled = true;
 
-            List<XLFilter> filterList;
-            if (_autoFilter.Filters.TryGetValue(_column, out filterList))
+            if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
                 filterList.Add(
                     new XLFilter
                     {
@@ -396,8 +395,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                List<XLFilter> filterList;
-                if (_autoFilter.Filters.TryGetValue(_column, out filterList))
+                if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
                     filterList.Add(new XLFilter
                     {
                         Value = value,

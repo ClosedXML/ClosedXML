@@ -306,8 +306,7 @@ namespace ClosedXML.Excel
                     lastColumn = tPair;
                 }
 
-                Int32 tmp;
-                if (Int32.TryParse(firstColumn, out tmp))
+                if (Int32.TryParse(firstColumn, out int tmp))
                 {
                     foreach (IXLColumn col in Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)))
                         retVal.Add((XLColumn)col);
@@ -1350,8 +1349,7 @@ namespace ClosedXML.Excel
                                                                  XLHelper.MaxRowNumber));
 
             IXLStyle style;
-            XLRow rowToUse;
-            if (Internals.RowsCollection.TryGetValue(row, out rowToUse))
+            if (Internals.RowsCollection.TryGetValue(row, out XLRow rowToUse))
                 style = rowToUse.Style;
             else
             {

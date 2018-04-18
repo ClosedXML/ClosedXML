@@ -797,9 +797,13 @@ namespace ClosedXML.Excel
                 pivotField.AddSubtotal(XLSubtotalFunction.Sum);
             if (pf.ApplyVarianceInSubtotal != null)
                 pivotField.AddSubtotal(XLSubtotalFunction.Variance);
-            var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
-            if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
-                pivotField.SetCollapsed();
+
+            if (pf.Items?.Any() ?? false)
+            {
+                var items = pf.Items.OfType<Item>().Where(i => i.Index != null && i.Index.HasValue);
+                if (!items.Any(i => i.HideDetails == null || BooleanValue.ToBoolean(i.HideDetails)))
+                    pivotField.SetCollapsed();
+            }
         }
 
         private void LoadDrawings(WorksheetPart wsPart, IXLWorksheet ws)
@@ -1223,8 +1227,7 @@ namespace ClosedXML.Excel
                         }
                         else
                         {
-                            string sheetName, sheetArea;
-                            ParseReference(area, out sheetName, out sheetArea);
+                            ParseReference(area, out String sheetName, out String sheetArea);
                             if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!") || sheetArea.Length == 0 || sheetName.Length == 0))
                                 WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                         }
@@ -1293,8 +1296,7 @@ namespace ClosedXML.Excel
 
         private void SetColumnsOrRowsToRepeat(string area)
         {
-            string sheetName, sheetArea;
-            ParseReference(area, out sheetName, out sheetArea);
+            ParseReference(area, out String sheetName, out String sheetArea);
             if (sheetArea.Equals("#REF")) return;
             if (IsColReference(sheetArea))
                 WorksheetsInternal.Worksheet(sheetName).PageSetup.SetColumnsToRepeatAtLeft(sheetArea);
@@ -1839,9 +1841,8 @@ namespace ClosedXML.Excel
                     Boolean isText = false;
                     foreach (var filter in filterColumn.CustomFilters.OfType<CustomFilter>())
                     {
-                        Double dTest;
                         String val = filter.Val.Value;
-                        if (!Double.TryParse(val, out dTest))
+                        if (!Double.TryParse(val, out Double dTest))
                         {
                             isText = true;
                             break;
@@ -1903,9 +1904,8 @@ namespace ClosedXML.Excel
                     Boolean isText = false;
                     foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
-                        Double dTest;
                         String val = filter.Val.Value;
-                        if (!Double.TryParse(val, out dTest))
+                        if (!Double.TryParse(val, out Double dTest))
                         {
                             isText = true;
                             break;

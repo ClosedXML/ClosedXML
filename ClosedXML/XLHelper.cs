@@ -158,8 +158,7 @@ namespace ClosedXML.Excel
 
         public static bool IsValidRow(string rowString)
         {
-            Int32 row;
-            if (Int32.TryParse(rowString, out row))
+            if (Int32.TryParse(rowString, out int row))
                 return row > 0 && row <= MaxRowNumber;
             return false;
         }

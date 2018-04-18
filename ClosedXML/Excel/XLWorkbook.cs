@@ -332,8 +332,7 @@ namespace ClosedXML.Excel
                 var first = split[0];
                 var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
                 var name = split[1];
-                IXLWorksheet ws;
-                if (TryGetWorksheet(wsName, out ws))
+                if (TryGetWorksheet(wsName, out IXLWorksheet ws))
                 {
                     var range = ws.NamedRange(name);
                     return range ?? NamedRange(name);
@@ -766,11 +765,7 @@ namespace ClosedXML.Excel
             if (namedRange != null)
                 return namedRange.Ranges.FirstOrDefault();
             else
-            {
-                IXLWorksheet ws;
-                var r = RangeFromFullAddress(range, out ws);
-                return r;
-            }
+                return RangeFromFullAddress(range, out IXLWorksheet ws);
         }
 
         public IXLRanges Ranges(String ranges)

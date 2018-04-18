@@ -1996,14 +1996,13 @@ namespace ClosedXML.Excel
                 else
                 {
                     var workbookCacheRelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    pt.WorkbookCacheRelId = workbookCacheRelId;
                     pivotCache = new PivotCache { CacheId = cacheId++, Id = workbookCacheRelId };
+                    pivotCaches.AppendChild(pivotCache);
                     pivotTableCacheDefinitionPart = workbookPart.AddNewPart<PivotTableCacheDefinitionPart>(workbookCacheRelId);
                 }
 
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt, context);
-
-                if (String.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
-                    pivotCaches.AppendChild(pivotCache);
 
                 PivotTablePart pivotTablePart;
                 if (String.IsNullOrWhiteSpace(pt.RelId))
@@ -2084,7 +2083,10 @@ namespace ClosedXML.Excel
 
                 var sharedItems = new SharedItems();
 
-                var ptfi = new PivotTableFieldInfo();
+                var ptfi = new PivotTableFieldInfo
+                {
+                    IsTotallyBlankField = false
+                };
 
                 var fieldValueCells = source.CellsUsed(cell => cell.Address.ColumnNumber == columnNumber
                                                            && cell.Address.RowNumber > source.FirstRow().RowNumber());
@@ -2093,74 +2095,81 @@ namespace ClosedXML.Excel
                                                                && cell.Address.RowNumber > source.FirstRow().RowNumber()
                                                                && cell.IsEmpty()).Any();
 
-                if (types.Length == 1 && types.Single() == XLDataType.Number)
+                // For a totally blank column, we need to check that all cells in column are unused
+                if (!fieldValueCells.Any())
                 {
-                    sharedItems.ContainsSemiMixedTypes = false;
-                    sharedItems.ContainsString = false;
-                    sharedItems.ContainsNumber = true;
+                    ptfi.IsTotallyBlankField = true;
+                    containsBlank = true;
+                }
 
-                    ptfi.DataType = XLDataType.Number;
-                    ptfi.MixedDataType = false;
-                    ptfi.DistinctValues = fieldValueCells
-                            .Select(cell => cell.GetDouble())
+                if (types.Any())
+                {
+                    if (types.Length == 1 && types.Single() == XLDataType.Number)
+                    {
+                        sharedItems.ContainsSemiMixedTypes = false;
+                        sharedItems.ContainsString = false;
+                        sharedItems.ContainsNumber = true;
+
+                        ptfi.DataType = XLDataType.Number;
+                        ptfi.MixedDataType = false;
+                        ptfi.DistinctValues = fieldValueCells
+                                .Select(cell => cell.GetDouble())
+                                .Distinct()
+                                .Cast<object>()
+                                .ToArray();
+
+                        var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out int val));
+                        if (allInteger) sharedItems.ContainsInteger = true;
+
+                        pti.Fields.Add(xlpf.SourceName, ptfi);
+
+                        // Output items only for row / column / filter fields
+                        if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
+                            || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
+                            || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
+                        {
+                            foreach (var value in ptfi.DistinctValues)
+                                sharedItems.AppendChild(new NumberItem { Val = (double)value });
+
+                            if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                        }
+
+                        sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
+                        sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
+                    }
+                    else if (types.Length == 1 && types.Single() == XLDataType.DateTime)
+                    {
+                        sharedItems.ContainsSemiMixedTypes = false;
+                        sharedItems.ContainsNonDate = false;
+                        sharedItems.ContainsString = false;
+                        sharedItems.ContainsDate = true;
+
+                        ptfi.DataType = XLDataType.DateTime;
+                        ptfi.MixedDataType = false;
+                        ptfi.DistinctValues = fieldValueCells
+                            .Select(cell => cell.GetDateTime())
                             .Distinct()
                             .Cast<object>()
                             .ToArray();
 
-                    int val;
-                    var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out val));
-                    if (allInteger) sharedItems.ContainsInteger = true;
+                        pti.Fields.Add(xlpf.SourceName, ptfi);
 
-                    pti.Fields.Add(xlpf.SourceName, ptfi);
+                        // Output items only for row / column / filter fields
+                        if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
+                            || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
+                            || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
+                        {
+                            foreach (var value in ptfi.DistinctValues)
+                                sharedItems.AppendChild(new DateTimeItem { Val = (DateTime)value });
 
-                    // Output items only for row / column / filter fields
-                    if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
-                        || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
-                        || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
-                    {
-                        foreach (var value in ptfi.DistinctValues)
-                            sharedItems.AppendChild(new NumberItem { Val = (double)value });
+                            if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                        }
 
-                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                        sharedItems.MinDate = (DateTime)ptfi.DistinctValues.Min();
+                        sharedItems.MaxDate = (DateTime)ptfi.DistinctValues.Max();
                     }
+                    else
 
-                    sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
-                    sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
-                }
-                else if (types.Length == 1 && types.Single() == XLDataType.DateTime)
-                {
-                    sharedItems.ContainsSemiMixedTypes = false;
-                    sharedItems.ContainsNonDate = false;
-                    sharedItems.ContainsString = false;
-                    sharedItems.ContainsDate = true;
-
-                    ptfi.DataType = XLDataType.DateTime;
-                    ptfi.MixedDataType = false;
-                    ptfi.DistinctValues = fieldValueCells
-                        .Select(cell => cell.GetDateTime())
-                        .Distinct()
-                        .Cast<object>()
-                        .ToArray();
-
-                    pti.Fields.Add(xlpf.SourceName, ptfi);
-
-                    // Output items only for row / column / filter fields
-                    if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
-                        || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
-                        || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
-                    {
-                        foreach (var value in ptfi.DistinctValues)
-                            sharedItems.AppendChild(new DateTimeItem { Val = (DateTime)value });
-
-                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
-                    }
-
-                    sharedItems.MinDate = (DateTime)ptfi.DistinctValues.Min();
-                    sharedItems.MaxDate = (DateTime)ptfi.DistinctValues.Max();
-                }
-                else
-                {
-                    if (types.Any())
                     {
                         ptfi.DataType = types.First();
                         ptfi.MixedDataType = types.Length > 1;
@@ -2187,7 +2196,10 @@ namespace ClosedXML.Excel
                 }
 
                 if (containsBlank) sharedItems.ContainsBlank = true;
-                if (ptfi.DistinctValues.Any())
+
+                if (ptfi.IsTotallyBlankField)
+                    pti.Fields.Add(xlpf.SourceName, ptfi);
+                else if (ptfi.DistinctValues?.Any() ?? false)
                     sharedItems.Count = Convert.ToUInt32(ptfi.DistinctValues.Count());
 
                 var cacheField = new CacheField { Name = xlpf.SourceName };
@@ -2317,11 +2329,16 @@ namespace ClosedXML.Excel
                     var f = new Field { Index = pt.Fields.IndexOf(xlpf) };
                     rowFields.AppendChild(f);
 
-                    for (var i = 0; i < ptfi.DistinctValues.Count(); i++)
+                    if (ptfi.IsTotallyBlankField)
+                        rowItems.AppendChild(new RowItem());
+                    else
                     {
-                        var rowItem = new RowItem();
-                        rowItem.AppendChild(new MemberPropertyIndex { Val = i });
-                        rowItems.AppendChild(rowItem);
+                        for (var i = 0; i < ptfi.DistinctValues.Count(); i++)
+                        {
+                            var rowItem = new RowItem();
+                            rowItem.AppendChild(new MemberPropertyIndex { Val = i });
+                            rowItems.AppendChild(rowItem);
+                        }
                     }
 
                     var rowItemTotal = new RowItem { ItemType = ItemValues.Grand };
@@ -2333,11 +2350,16 @@ namespace ClosedXML.Excel
                     var f = new Field { Index = pt.Fields.IndexOf(xlpf) };
                     columnFields.AppendChild(f);
 
-                    for (var i = 0; i < ptfi.DistinctValues.Count(); i++)
+                    if (ptfi.IsTotallyBlankField)
+                        columnItems.AppendChild(new RowItem());
+                    else
                     {
-                        var rowItem = new RowItem();
-                        rowItem.AppendChild(new MemberPropertyIndex { Val = i });
-                        columnItems.AppendChild(rowItem);
+                        for (var i = 0; i < ptfi.DistinctValues.Count(); i++)
+                        {
+                            var rowItem = new RowItem();
+                            rowItem.AppendChild(new MemberPropertyIndex { Val = i });
+                            columnItems.AppendChild(rowItem);
+                        }
                     }
 
                     var rowItemTotal = new RowItem { ItemType = ItemValues.Grand };
@@ -2482,7 +2504,8 @@ namespace ClosedXML.Excel
                 var fieldItems = new Items();
 
                 // Output items only for row / column / filter fields
-                if (ptfi.DistinctValues.Any()
+                if (!ptfi.IsTotallyBlankField &&
+                    ptfi.DistinctValues.Any()
                     && (pt.RowLabels.Contains(xlpf.SourceName)
                         || pt.ColumnLabels.Contains(xlpf.SourceName)
                         || pt.ReportFilters.Contains(xlpf.SourceName)))
@@ -2755,8 +2778,7 @@ namespace ClosedXML.Excel
                 var comment = new Comment { Reference = c.Address.ToStringRelative() };
                 var authorName = c.Comment.Author;
 
-                Int32 authorId;
-                if (!authorsDict.TryGetValue(authorName, out authorId))
+                if (!authorsDict.TryGetValue(authorName, out int authorId))
                 {
                     authorId = authorsDict.Count;
                     authorsDict.Add(authorName, authorId);

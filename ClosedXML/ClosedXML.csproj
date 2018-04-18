@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net40;net46</TargetFrameworks>
+    <LangVersion>7.2</LangVersion>
     <Version>0.93.0</Version>
     <Authors>Manuel de Leon, Amir Ghezelbash, Francois Botha</Authors>
     <Company />

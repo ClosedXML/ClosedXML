@@ -83,8 +83,7 @@ namespace ClosedXML_Tests
                 using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
-                    string message;
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
                     var formattedMessage =
                         String.Format(
                             "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
@@ -120,8 +119,7 @@ namespace ClosedXML_Tests
                 using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
-                    string message;
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out message);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
                     var formattedMessage =
                         String.Format(
                             "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",

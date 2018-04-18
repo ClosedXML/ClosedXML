@@ -170,8 +170,8 @@ namespace ClosedXML_Tests
         {
             using (var wb = new XLWorkbook())
             {
-                var ws1 = wb.AddWorksheet("Sheet1");
-                var ws2 = wb.AddWorksheet("Sheet2");
+                wb.AddWorksheet("Sheet1");
+                wb.AddWorksheet("Sheet2");
 
                 IXLWorksheet ws;
                 Assert.IsTrue(wb.Worksheets.TryGetWorksheet("Sheet1", out ws));
