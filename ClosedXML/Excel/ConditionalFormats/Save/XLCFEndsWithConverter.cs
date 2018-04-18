@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ClosedXML.Excel
@@ -17,7 +16,7 @@ namespace ClosedXML.Excel
             conditionalFormattingRule.Operator = ConditionalFormattingOperatorValues.EndsWith;
             conditionalFormattingRule.Text = val;
 
-            var formula = new Formula { Text = "RIGHT(" + cf.Ranges.First().RangeAddress.FirstAddress.ToStringRelative(false) + "," + val.Length.ToString() + ")=\"" + val + "\"" };
+            var formula = new Formula { Text = "RIGHT(" + cf.Range.RangeAddress.FirstAddress.ToStringRelative(false) + "," + val.Length.ToString() + ")=\"" + val + "\"" };
 
             conditionalFormattingRule.Append(formula);
 

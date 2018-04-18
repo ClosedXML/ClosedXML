@@ -140,7 +140,9 @@ namespace ClosedXML.Excel
         Boolean ShowIconOnly { get; }
         Boolean ShowBarOnly { get; }
         Boolean StopIfTrue { get; }
-        [Obsolete("Use Ranges instead")]
+        /// <summary>
+        /// The first of the <see cref="Ranges"/>.
+        /// </summary>
         IXLRange Range { get; set; }
         IXLRanges Ranges { get; }
         XLDictionary<XLFormula> Values { get; }

@@ -1,6 +1,5 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -13,7 +12,7 @@ namespace ClosedXML.Excel
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
                 conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle.Key];
 
-            var formula = new Formula { Text = "LEN(TRIM(" + cf.Ranges.First().RangeAddress.FirstAddress.ToStringRelative(false) + "))>0" };
+            var formula = new Formula { Text = "LEN(TRIM(" + cf.Range.RangeAddress.FirstAddress.ToStringRelative(false) + "))>0" };
 
             conditionalFormattingRule.Append(formula);
 

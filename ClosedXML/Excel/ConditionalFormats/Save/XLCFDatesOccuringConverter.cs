@@ -1,7 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -30,7 +29,7 @@ namespace ClosedXML.Excel
 
             conditionalFormattingRule.TimePeriod = cf.TimePeriod.ToOpenXml();
 
-            var address = cf.Ranges.First().RangeAddress.FirstAddress.ToStringRelative(false);
+            var address = cf.Range.RangeAddress.FirstAddress.ToStringRelative(false);
             var formula = new Formula { Text = String.Format(formulaTemplates[cf.TimePeriod], address) };
 
             conditionalFormattingRule.Append(formula);

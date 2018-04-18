@@ -192,7 +192,7 @@ namespace ClosedXML.Excel
 
         public IXLRange Range
         {
-            get { return Ranges.SingleOrDefault(); }
+            get { return Ranges.FirstOrDefault(); }
             set
             {
                 Ranges.RemoveAll();
