@@ -279,8 +279,7 @@ namespace ClosedXML.Excel
 
         public T GetValue<T>()
         {
-            T retVal;
-            if (TryGetValue(out retVal))
+            if (TryGetValue(out T retVal))
                 return retVal;
 
             throw new FormatException("Cannot convert cell value to " + typeof(T));
