@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -39,7 +40,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
             var format = ws.ConditionalFormats.First();
-            Assert.AreEqual("B2:D3", format.Range.RangeAddress.ToStringRelative());
+            Assert.AreEqual("B2:D3", format.Ranges.First().RangeAddress.ToStringRelative());
             Assert.AreEqual("F2", format.Values.Values.First().Value);
         }
 
@@ -95,21 +96,6 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         }
 
         [Test]
-        public void DifferentRangesNoConsolidateTest()
-        {
-            var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
-            
-            SetFormat1(ws.Range("B7:C7").AddConditionalFormat());
-            SetFormat1(ws.Range("B8:B8").AddConditionalFormat());
-            SetFormat1(ws.Range("B9:C9").AddConditionalFormat());
-
-            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
-
-            Assert.AreEqual(3, ws.ConditionalFormats.Count());
-        }
-
-        [Test]
         public void DifferentFormatNoConsolidateTest()
         {
             var wb = new XLWorkbook();
@@ -121,6 +107,69 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
 
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
+        }
+
+        [Test]
+        public void ConsolidatePreservesPriorities()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
+
+            SetFormat1(ws.Range("A1:A5").AddConditionalFormat());
+            SetFormat2(ws.Range("A1:A5").AddConditionalFormat());
+            SetFormat2(ws.Range("A6:A10").AddConditionalFormat());
+            SetFormat1(ws.Range("A6:A10").AddConditionalFormat());
+
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
+
+            Assert.AreEqual(3, ws.ConditionalFormats.Count());
+            Assert.AreEqual((ws.ConditionalFormats.First().Style as XLStyle).Value, (ws.ConditionalFormats.Last().Style as XLStyle).Value);
+            Assert.AreNotEqual((ws.ConditionalFormats.First().Style as XLStyle).Value, (ws.ConditionalFormats.ElementAt(1).Style as XLStyle).Value);
+        }
+
+
+        [Test]
+        public void ConsolidatePreservesPriorities2()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
+
+            SetFormat1(ws.Range("A1:A1").AddConditionalFormat());
+            SetFormat2(ws.Range("A2:A3").AddConditionalFormat());
+            SetFormat1(ws.Range("A2:A6").AddConditionalFormat());
+            SetFormat1(ws.Range("A7:A8").AddConditionalFormat());
+
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
+
+            Assert.AreEqual(3, ws.ConditionalFormats.Count());
+            Assert.AreEqual((ws.ConditionalFormats.First().Style as XLStyle).Value, (ws.ConditionalFormats.Last().Style as XLStyle).Value);
+            Assert.AreNotEqual((ws.ConditionalFormats.First().Style as XLStyle).Value, (ws.ConditionalFormats.ElementAt(1).Style as XLStyle).Value);
+            Assert.IsTrue(ws.ConditionalFormats.All(cf => cf.Ranges.Count == 1), "Number of ranges in consolidated conditional formats is expected to be 1");
+            Assert.AreEqual("A1:A1", ws.ConditionalFormats.ElementAt(0).Ranges.Single().RangeAddress.ToString());
+            Assert.AreEqual("A2:A3", ws.ConditionalFormats.ElementAt(1).Ranges.Single().RangeAddress.ToString());
+            Assert.AreEqual("A2:A8", ws.ConditionalFormats.ElementAt(2).Ranges.Single().RangeAddress.ToString());
+        }
+
+
+        [Test]
+        public void ConsolidateShiftsFormulaRelativelyToTopMostCell()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
+
+            var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>();
+            var cf = new XLConditionalFormat(ranges);
+            cf.Values.Add(new XLFormula("=A3=$D3"));
+            cf.Style.Fill.SetBackgroundColor(XLColor.Red);
+            ws.ConditionalFormats.Add(cf);
+
+            ((XLConditionalFormats)ws.ConditionalFormats).Consolidate();
+
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            Assert.AreEqual((ws.ConditionalFormats.Single().Style as XLStyle).Value, (cf.Style as XLStyle).Value);
+            Assert.AreEqual("A3:C8", ws.ConditionalFormats.Single().Ranges.Single().RangeAddress.ToString());
+            Assert.IsTrue(ws.ConditionalFormats.Single().Values.Single().Value.IsFormula);
+            Assert.AreEqual("A3=$D3", ws.ConditionalFormats.Single().Values.Single().Value.Value);
         }
 
         private static void SetFormat1(IXLConditionalFormat format)

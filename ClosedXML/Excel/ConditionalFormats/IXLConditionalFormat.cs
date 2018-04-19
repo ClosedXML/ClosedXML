@@ -140,8 +140,11 @@ namespace ClosedXML.Excel
         Boolean ShowIconOnly { get; }
         Boolean ShowBarOnly { get; }
         Boolean StopIfTrue { get; }
+        /// <summary>
+        /// The first of the <see cref="Ranges"/>.
+        /// </summary>
         IXLRange Range { get; set; }
-
+        IXLRanges Ranges { get; }
         XLDictionary<XLFormula> Values { get; }
         XLDictionary<XLColor> Colors { get; }
         XLDictionary<XLCFContentType> ContentTypes { get; }

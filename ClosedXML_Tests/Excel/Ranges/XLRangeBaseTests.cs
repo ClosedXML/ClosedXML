@@ -350,9 +350,9 @@ namespace ClosedXML_Tests
             ws.Range("C3:D7").AddConditionalFormat();
             ws.Range("C5:E5").Clear(XLClearOptions.ConditionalFormats);
 
-            Assert.AreEqual(2, ws.ConditionalFormats.Count());
-            Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "C3:D4"));
-            Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "C6:D7"));
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            Assert.AreEqual("C3:D4", ws.ConditionalFormats.First().Ranges.First().RangeAddress.ToStringRelative());
+            Assert.AreEqual("C6:D7", ws.ConditionalFormats.First().Ranges.Last().RangeAddress.ToStringRelative());
         }
 
         [Test]
@@ -362,9 +362,9 @@ namespace ClosedXML_Tests
             ws.Range("C3:G4").AddConditionalFormat();
             ws.Range("E2:E4").Clear(XLClearOptions.ConditionalFormats);
 
-            Assert.AreEqual(2, ws.ConditionalFormats.Count());
-            Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "C3:D4"));
-            Assert.IsTrue(ws.ConditionalFormats.Any(x => x.Range.RangeAddress.ToStringRelative() == "F3:G4"));
+            Assert.AreEqual(1, ws.ConditionalFormats.Count());
+            Assert.AreEqual("C3:D4", ws.ConditionalFormats.First().Ranges.First().RangeAddress.ToStringRelative());
+            Assert.AreEqual("F3:G4", ws.ConditionalFormats.First().Ranges.Last().RangeAddress.ToStringRelative());
         }
 
         [Test]
@@ -385,7 +385,8 @@ namespace ClosedXML_Tests
             ws.Range("C2:D3").Clear(XLClearOptions.ConditionalFormats);
 
             Assert.AreEqual(1, ws.ConditionalFormats.Count());
-            Assert.AreEqual("C3:G4", ws.ConditionalFormats.Single().Range.RangeAddress.ToStringRelative());
+            Assert.AreEqual(1, ws.ConditionalFormats.Single().Ranges.Count);
+            Assert.AreEqual("C3:G4", ws.ConditionalFormats.Single().Ranges.Single().RangeAddress.ToStringRelative());
         }
 
         [Test]

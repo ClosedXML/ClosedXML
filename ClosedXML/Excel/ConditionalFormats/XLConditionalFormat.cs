@@ -31,8 +31,8 @@ namespace ClosedXML.Excel
 
                 var xxValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v=>v.Value);
                 var yyValues = yy.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
-                var xxFormulas = xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)x.Range.FirstCell()).GetFormulaR1C1(f.Value));
-                var yyFormulas = yy.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)y.Range.FirstCell()).GetFormulaR1C1(f.Value));
+                var xxFormulas = x.Ranges.Any() ? xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)x.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
+                var yyFormulas = y.Ranges.Any() ? yy.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)y.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
 
                 var xStyle = xx.StyleValue;
                 var yStyle = yy.StyleValue;
@@ -54,15 +54,17 @@ namespace ClosedXML.Excel
                     && _colorsComparer.Equals(xx.Colors, yy.Colors)
                     && _contentsTypeComparer.Equals(xx.ContentTypes, yy.ContentTypes)
                     && _iconSetTypeComparer.Equals(xx.IconSetOperators, yy.IconSetOperators)
-                    && (!_compareRange || Equals(xx.Range.RangeAddress, yy.Range.RangeAddress)) ;
+                    && (!_compareRange || XLRanges.Equals(xx.Ranges, yy.Ranges));
             }
 
             public int GetHashCode(IXLConditionalFormat obj)
             {
                 var xx = (XLConditionalFormat)obj;
                 var xStyle = (obj.Style as XLStyle).Value;
-                var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value)
-                    .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Range.FirstCell()).GetFormulaR1C1(f.Value)));
+                var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
+                if (obj.Ranges.Any())
+                    xValues = xValues
+                    .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)));
 
                 unchecked
                 {
@@ -73,7 +75,7 @@ namespace ClosedXML.Excel
                     hashCode = (hashCode * 397) ^ (xx.Colors != null ? xx.Colors.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (xx.ContentTypes != null ? xx.ContentTypes.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (xx.IconSetOperators != null ? xx.IconSetOperators.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (_compareRange && xx.Range != null ? xx.Range.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (_compareRange && xx.Ranges != null ? xx.Ranges.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (int)xx.ConditionalFormatType;
                     hashCode = (hashCode * 397) ^ (int)xx.TimePeriod;
                     hashCode = (hashCode * 397) ^ (int)xx.IconSetStyle;
@@ -89,6 +91,19 @@ namespace ClosedXML.Excel
             }
         }
 
+        internal void AdjustFormulas(XLCell baseCell, XLCell targetCell)
+        {
+            var keys = Values.Keys.ToList();
+            foreach (var key in keys)
+            {
+                if (Values[key] == null || !Values[key].IsFormula)
+                    continue;
+
+                var r1c1 = baseCell.GetFormulaR1C1(Values[key].Value);
+                Values[key] = new XLFormula { _value = targetCell.GetFormulaA1(r1c1), IsFormula = true };
+            }
+        }
+
         private static readonly IEqualityComparer<IXLConditionalFormat> FullComparerInstance = new FullEqualityComparer(true);
         public static IEqualityComparer<IXLConditionalFormat> FullComparer
         {
@@ -101,29 +116,39 @@ namespace ClosedXML.Excel
             get { return NoRangeComparerInstance; }
         }
 
-        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
+        #region Constructors
+
+        private XLConditionalFormat(XLStyleValue style)
             : base(XLStyle.Default.Value)
         {
             Id = Guid.NewGuid();
-            Range = range;
+            Ranges = new XLRanges();
             Values = new XLDictionary<XLFormula>();
             Colors = new XLDictionary<XLColor>();
             ContentTypes = new XLDictionary<XLCFContentType>();
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
-            CopyDefaultModify = copyDefaultModify;
+        }
 
+        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
+            : this(XLStyle.Default.Value)
+        {
+            if (range != null)
+                Ranges.Add(range);
+            CopyDefaultModify = copyDefaultModify;
+        }
+
+        public XLConditionalFormat(IEnumerable<XLRange> ranges, Boolean copyDefaultModify = false)
+            : this(XLStyle.Default.Value)
+        {
+            ranges?.ForEach(range => Ranges.Add(range));
+            CopyDefaultModify = copyDefaultModify;
         }
 
         public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange)
-            : base(conditionalFormat.StyleValue)
+            : this(conditionalFormat.StyleValue)
         {
-            Range = targetRange;
-            Id = Guid.NewGuid();
-            Values = new XLDictionary<XLFormula>(conditionalFormat.Values);
-            Colors = new XLDictionary<XLColor>(conditionalFormat.Colors);
-            ContentTypes = new XLDictionary<XLCFContentType>(conditionalFormat.ContentTypes);
-            IconSetOperators = new XLDictionary<XLCFIconSetOperator>(conditionalFormat.IconSetOperators);
-
+            if (targetRange != null)
+                Ranges.Add(targetRange);
 
             ConditionalFormatType = conditionalFormat.ConditionalFormatType;
             TimePeriod = conditionalFormat.TimePeriod;
@@ -135,9 +160,8 @@ namespace ClosedXML.Excel
             ShowIconOnly = conditionalFormat.ShowIconOnly;
             ShowBarOnly = conditionalFormat.ShowBarOnly;
             StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(conditionalFormat.StopIfTrue, true);
-
-
         }
+        #endregion Constructors
 
         public Guid Id { get; internal set; }
         internal Int32 OriginalPriority { get; set; }
@@ -166,7 +190,16 @@ namespace ClosedXML.Excel
         public XLDictionary<XLCFContentType> ContentTypes { get; private set; }
         public XLDictionary<XLCFIconSetOperator> IconSetOperators { get; private set; }
 
-        public IXLRange Range { get; set; }
+        public IXLRange Range
+        {
+            get { return Ranges.FirstOrDefault(); }
+            set
+            {
+                Ranges.RemoveAll();
+                Ranges.Add(value);
+            }
+        }
+        public IXLRanges Ranges { get; private set; }
         public XLConditionalFormatType ConditionalFormatType { get; set; }
         public XLTimePeriod TimePeriod { get; set; }
         public XLIconSetStyle IconSetStyle { get; set; }

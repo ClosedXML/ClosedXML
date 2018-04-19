@@ -2115,100 +2115,103 @@ namespace ClosedXML.Excel
         /// Loads the conditional formatting.
         /// </summary>
         // https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.conditionalformattingrule%28v=office.15%29.aspx?f=255&MSPPError=-2147217396
-        private void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws, Dictionary<Int32, DifferentialFormat> differentialFormats)
+        private void LoadConditionalFormatting(ConditionalFormatting conditionalFormatting, XLWorksheet ws,
+            Dictionary<Int32, DifferentialFormat> differentialFormats)
         {
             if (conditionalFormatting == null) return;
 
-            foreach (var sor in conditionalFormatting.SequenceOfReferences.Items)
+            foreach (var fr in conditionalFormatting.Elements<ConditionalFormattingRule>())
             {
-                foreach (var fr in conditionalFormatting.Elements<ConditionalFormattingRule>())
+                var ranges = conditionalFormatting.SequenceOfReferences.Items
+                    .Select(sor => ws.Range(sor.Value));
+                var conditionalFormat = new XLConditionalFormat(ranges);
+
+                conditionalFormat.StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
+
+                if (fr.FormatId != null)
                 {
-                    var conditionalFormat = new XLConditionalFormat(ws.Range(sor.Value));
+                    LoadFont(differentialFormats[(Int32) fr.FormatId.Value].Font, conditionalFormat.Style.Font);
+                    LoadFill(differentialFormats[(Int32) fr.FormatId.Value].Fill, conditionalFormat.Style.Fill,
+                        differentialFillFormat: true);
+                    LoadBorder(differentialFormats[(Int32) fr.FormatId.Value].Border, conditionalFormat.Style.Border);
+                    LoadNumberFormat(differentialFormats[(Int32) fr.FormatId.Value].NumberingFormat,
+                        conditionalFormat.Style.NumberFormat);
+                }
 
-                    conditionalFormat.StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
+                // The conditional formatting type is compulsory. If it doesn't exist, skip the entire rule.
+                if (fr.Type == null) continue;
+                conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
+                conditionalFormat.OriginalPriority = fr.Priority?.Value ?? Int32.MaxValue;
 
-                    if (fr.FormatId != null)
-                    {
-                        LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
-                        LoadFill(differentialFormats[(Int32)fr.FormatId.Value].Fill, conditionalFormat.Style.Fill, differentialFillFormat: true);
-                        LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
-                        LoadNumberFormat(differentialFormats[(Int32)fr.FormatId.Value].NumberingFormat, conditionalFormat.Style.NumberFormat);
-                    }
-
-                    // The conditional formatting type is compulsory. If it doesn't exist, skip the entire rule.
-                    if (fr.Type == null) continue;
-                    conditionalFormat.ConditionalFormatType = fr.Type.Value.ToClosedXml();
-                    conditionalFormat.OriginalPriority = fr.Priority?.Value ?? Int32.MaxValue;
-
-                    if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
-                        conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
+                if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
+                    conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
 
                     if (!String.IsNullOrWhiteSpace(fr.Text))
                         conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
 
-                    if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
-                    {
-                        if (fr.Percent != null)
-                            conditionalFormat.Percent = fr.Percent.Value;
-                        if (fr.Bottom != null)
-                            conditionalFormat.Bottom = fr.Bottom.Value;
-                        if (fr.Rank != null)
-                            conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
-                    }
-                    else if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.TimePeriod)
-                    {
-                        if (fr.TimePeriod != null)
-                            conditionalFormat.TimePeriod = fr.TimePeriod.Value.ToClosedXml();
-                        else
-                            conditionalFormat.TimePeriod = XLTimePeriod.Yesterday;
-                    }
+                if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
+                {
+                    if (fr.Percent != null)
+                        conditionalFormat.Percent = fr.Percent.Value;
+                    if (fr.Bottom != null)
+                        conditionalFormat.Bottom = fr.Bottom.Value;
+                    if (fr.Rank != null)
+                        conditionalFormat.Values.Add(GetFormula(fr.Rank.Value.ToString()));
+                }
+                else if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.TimePeriod)
+                {
+                    if (fr.TimePeriod != null)
+                        conditionalFormat.TimePeriod = fr.TimePeriod.Value.ToClosedXml();
+                    else
+                        conditionalFormat.TimePeriod = XLTimePeriod.Yesterday;
+                }
 
-                    if (fr.Elements<ColorScale>().Any())
-                    {
-                        var colorScale = fr.Elements<ColorScale>().First();
-                        ExtractConditionalFormatValueObjects(conditionalFormat, colorScale);
-                    }
-                    else if (fr.Elements<DataBar>().Any())
-                    {
-                        var dataBar = fr.Elements<DataBar>().First();
-                        if (dataBar.ShowValue != null)
-                            conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
+                if (fr.Elements<ColorScale>().Any())
+                {
+                    var colorScale = fr.Elements<ColorScale>().First();
+                    ExtractConditionalFormatValueObjects(conditionalFormat, colorScale);
+                }
+                else if (fr.Elements<DataBar>().Any())
+                {
+                    var dataBar = fr.Elements<DataBar>().First();
+                    if (dataBar.ShowValue != null)
+                        conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
 
                         var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
                         if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
                             conditionalFormat.Id = new Guid(id.Text.Substring(1, id.Text.Length - 2));
 
-                        ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
-                    }
-                    else if (fr.Elements<IconSet>().Any())
-                    {
-                        var iconSet = fr.Elements<IconSet>().First();
-                        if (iconSet.ShowValue != null)
-                            conditionalFormat.ShowIconOnly = !iconSet.ShowValue.Value;
-                        if (iconSet.Reverse != null)
-                            conditionalFormat.ReverseIconOrder = iconSet.Reverse.Value;
+                    ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
+                }
+                else if (fr.Elements<IconSet>().Any())
+                {
+                    var iconSet = fr.Elements<IconSet>().First();
+                    if (iconSet.ShowValue != null)
+                        conditionalFormat.ShowIconOnly = !iconSet.ShowValue.Value;
+                    if (iconSet.Reverse != null)
+                        conditionalFormat.ReverseIconOrder = iconSet.Reverse.Value;
 
-                        if (iconSet.IconSetValue != null)
-                            conditionalFormat.IconSetStyle = iconSet.IconSetValue.Value.ToClosedXml();
-                        else
-                            conditionalFormat.IconSetStyle = XLIconSetStyle.ThreeTrafficLights1;
-
-                        ExtractConditionalFormatValueObjects(conditionalFormat, iconSet);
-                    }
+                    if (iconSet.IconSetValue != null)
+                        conditionalFormat.IconSetStyle = iconSet.IconSetValue.Value.ToClosedXml();
                     else
+                        conditionalFormat.IconSetStyle = XLIconSetStyle.ThreeTrafficLights1;
+
+                    ExtractConditionalFormatValueObjects(conditionalFormat, iconSet);
+                }
+                else
+                {
+                    foreach (var formula in fr.Elements<Formula>())
                     {
-                        foreach (var formula in fr.Elements<Formula>())
-                        {
-                            if (formula.Text != null
-                                && (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs
+                        if (formula.Text != null
+                            && (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs
                                 || conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Expression))
-                            {
-                                conditionalFormat.Values.Add(GetFormula(formula.Text));
-                            }
+                        {
+                            conditionalFormat.Values.Add(GetFormula(formula.Text));
                         }
                     }
-                    ws.ConditionalFormats.Add(conditionalFormat);
                 }
+
+                ws.ConditionalFormats.Add(conditionalFormat);
             }
         }
 

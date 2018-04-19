@@ -1372,7 +1372,7 @@ namespace ClosedXML.Excel
             }
 
             if (includeConditionalFormats
-                && Worksheet.ConditionalFormats.Any(cf => cf.Range.Contains(this)))
+                && Worksheet.ConditionalFormats.SelectMany(cf => cf.Ranges).Any(range => range.Contains(this)))
                 return false;
 
             return true;
@@ -1907,13 +1907,13 @@ namespace ClosedXML.Excel
             var srcSheet = fromRange.Worksheet;
             int minRo = fromRange.RangeAddress.FirstAddress.RowNumber;
             int minCo = fromRange.RangeAddress.FirstAddress.ColumnNumber;
-            if (srcSheet.ConditionalFormats.Any(r => r.Range.Intersects(fromRange)))
+            if (srcSheet.ConditionalFormats.Any(r => r.Ranges.Any(range => range.Intersects(fromRange))))
             {
-                var fs = srcSheet.ConditionalFormats.Where(r => r.Range.Intersects(fromRange)).ToArray();
+                var fs = srcSheet.ConditionalFormats.SelectMany(cf => cf.Ranges).Where(range => range.Intersects(fromRange)).ToArray();
                 if (fs.Any())
                 {
-                    minRo = fs.Max(r => r.Range.RangeAddress.LastAddress.RowNumber);
-                    minCo = fs.Max(r => r.Range.RangeAddress.LastAddress.ColumnNumber);
+                    minRo = fs.Max(r => r.RangeAddress.LastAddress.RowNumber);
+                    minCo = fs.Max(r => r.RangeAddress.LastAddress.ColumnNumber);
                 }
             }
             int rCnt = minRo - fromRange.RangeAddress.FirstAddress.RowNumber + 1;
@@ -1921,23 +1921,17 @@ namespace ClosedXML.Excel
             rCnt = Math.Min(rCnt, fromRange.RowCount());
             cCnt = Math.Min(cCnt, fromRange.ColumnCount());
             var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
-            var formats = srcSheet.ConditionalFormats.Where(f => f.Range.Intersects(fromRange));
+            var formats = srcSheet.ConditionalFormats.Where(f => f.Ranges.Any(range => range.Intersects(fromRange)));
             foreach (var cf in formats.ToList())
             {
-                var fmtRange = Relative(Intersection(cf.Range, fromRange), fromRange, toRange);
-                var c = new XLConditionalFormat((XLRange)fmtRange, true);
-                c.CopyFrom(cf);
-                foreach (var v in c.Values.ToList())
-                {
-                    var f = v.Value.Value;
-                    if (v.Value.IsFormula)
-                    {
-                        var r1c1 = ((XLCell)cf.Range.FirstCell()).GetFormulaR1C1(f);
-                        f = ((XLCell)fmtRange.FirstCell()).GetFormulaA1(r1c1);
-                    }
+                var fmtRanges = cf.Ranges
+                    .Where(r => r.Intersects(fromRange))
+                    .Select(r => Relative(Intersection(r, fromRange), fromRange, toRange) as XLRange)
+                    .ToList();
 
-                    c.Values[v.Key] = new XLFormula { _value = f, IsFormula = v.Value.IsFormula };
-                }
+                var c = new XLConditionalFormat(fmtRanges, true);
+                c.CopyFrom(cf);
+                c.AdjustFormulas((XLCell) cf.Ranges.First().FirstCell(), (XLCell)fmtRanges.First().FirstCell());
 
                 _worksheet.ConditionalFormats.Add(c);
             }
@@ -2079,7 +2073,7 @@ namespace ClosedXML.Excel
             return GetFormula(value, FormulaConversionType.A1ToR1C1, 0, 0);
         }
 
-        private string GetFormulaA1(string value)
+        internal string GetFormulaA1(string value)
         {
             return GetFormula(value, FormulaConversionType.R1C1ToA1, 0, 0);
         }
@@ -2326,25 +2320,20 @@ namespace ClosedXML.Excel
 
             CopyFromInternal(source, copyDataValidations);
 
-            var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Range.Contains(source)).ToList();
+            var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Ranges.Any(range => range.Contains(source))).ToList();
             foreach (var cf in conditionalFormats)
             {
-                var c = new XLConditionalFormat(cf as XLConditionalFormat, AsRange());
-                var oldValues = c.Values.Values.ToList();
-                c.Values.Clear();
-                foreach (var v in oldValues)
+                if (source.Worksheet == Worksheet)
                 {
-                    var f = v.Value;
-                    if (v.IsFormula)
+                    if (!cf.Ranges.Any(range => range.Contains(this)))
                     {
-                        var r1c1 = source.GetFormulaR1C1(f);
-                        f = GetFormulaA1(r1c1);
+                        cf.Ranges.Add(this);
                     }
-
-                    c.Values.Add(new XLFormula { _value = f, IsFormula = v.IsFormula });
                 }
-
-                _worksheet.ConditionalFormats.Add(c);
+                else
+                {
+                    CopyConditionalFormatsFrom(source.AsRange());
+                }
             }
 
             return this;

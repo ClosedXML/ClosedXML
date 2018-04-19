@@ -5056,7 +5056,7 @@ namespace ClosedXML.Excel
 
                 foreach (var cfGroup in conditionalFormats
                     .GroupBy(
-                        c => c.Range.RangeAddress.ToStringRelative(false),
+                        c => string.Join(" ", c.Ranges.Select(r => r.RangeAddress.ToStringRelative(false))),
                         c => c,
                         (key, g) => new { RangeId = key, CfList = g.ToList() }
                     )
@@ -5103,7 +5103,7 @@ namespace ClosedXML.Excel
 
                 foreach (var cfGroup in exlst
                     .GroupBy(
-                        c => c.Range.RangeAddress.ToStringRelative(false),
+                        c => string.Join(" ", c.Ranges.Select(r => r.RangeAddress.ToStringRelative(false))),
                         c => c,
                         (key, g) => new { RangeId = key, CfList = g.ToList<IXLConditionalFormat>() }
                         )
@@ -5150,6 +5150,8 @@ namespace ClosedXML.Excel
                 var dataValidations = worksheetPart.Worksheet.Elements<DataValidations>().First();
                 cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, dataValidations);
                 dataValidations.RemoveAllChildren<DataValidation>();
+                xlWorksheet.DataValidations.Consolidate();
+
                 foreach (var dv in xlWorksheet.DataValidations)
                 {
                     var sequence = dv.Ranges.Aggregate(String.Empty, (current, r) => current + (r.RangeAddress + " "));
