@@ -160,7 +160,6 @@ namespace ClosedXML_Tests.Excel.Saving
                     sheet.Cell("A3").FormulaA1 = "TEXT(A2, \"# ###\")";
                     var options = new SaveOptions { EvaluateFormulasBeforeSaving = true };
 
-                    book1.SaveAs(@"c:\temp\formulas.xlsx", options);
                     book1.SaveAs(ms, options);
                 }
                 ms.Position = 0;

@@ -306,57 +306,21 @@ namespace ClosedXML.Excel
 
         public string GetFormattedString()
         {
-            String cValue;
-            if (HasFormula)
-            {
-                try
-                {
-                    cValue = GetString();
-                }
-                catch
-                {
-                    cValue = String.Empty;
-                }
-            }
-            else
-            {
-                cValue = _cellValue;
-            }
-
             var format = GetFormat();
-
-            if (_dataType == XLDataType.Boolean)
-                return (cValue != "0").ToExcelFormat(format);
-            else if (_dataType == XLDataType.TimeSpan)
+            try
             {
-                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double dTest))
-                {
-                    return TimeSpan.FromDays(dTest).ToExcelFormat(format);
-                }
-
-                return cValue;
+                return Value.ToExcelFormat(format);
             }
-            else if (_dataType == XLDataType.DateTime || IsDateFormat())
+            catch { }
+
+            try
             {
-                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double dTest)
-                    && dTest.IsValidOADateNumber())
-                {
-                    return DateTime.FromOADate(dTest).ToExcelFormat(format);
-                }
-
-                return cValue;
+                return CachedValue.ToExcelFormat(format);
             }
-            else if (_dataType == XLDataType.Number)
-            {
-                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double dTest))
-                {
-                    return dTest.ToExcelFormat(format);
-                }
+            catch { }
 
-                return cValue;
-            }
-            else
-                return cValue;
+            return _cellValue;
+
         }
 
         /// <summary>
