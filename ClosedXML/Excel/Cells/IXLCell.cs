@@ -310,7 +310,28 @@ namespace ClosedXML.Excel
 
         IXLCell CopyTo(String target);
 
+        /// <summary>
+        /// Textual representation of cell calculated value (as it is saved to a workbook or read from it)
+        /// </summary>
+        [Obsolete("Use CachedValue instead")]
         String ValueCached { get; }
+
+        /// <summary>
+        /// Calculated value of cell formula. Is used for decreasing number of computations perfromed.
+        /// May hold invalid value when <see cref="NeedsRecalculation"/> flag is True.
+        /// </summary>
+        Object CachedValue { get; }
+
+        /// <summary>
+        /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
+        /// </summary>
+        Boolean NeedsRecalculation { get; }
+
+        /// <summary>
+        /// Invalidate <see cref="CachedValue"/> so the formula will be re-evaluated next time <see cref="Value"/> is accessed.
+        /// If cell does not contain formula nothing happens.
+        /// </summary>
+        void InvalidateFormula();
 
         IXLRichText RichText { get; }
         Boolean HasRichText { get; }

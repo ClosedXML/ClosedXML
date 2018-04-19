@@ -119,7 +119,22 @@ namespace ClosedXML.Excel
 
         public XLEventTracking EventTracking { get; set; }
 
-        #region Nested Type: XLLoadSource
+        /// <summary>
+        /// Counter increasing at workbook data change. Serves to determine if the cell formula
+        /// has to be recalculated.
+        /// </summary>
+        internal long RecalculationCounter { get; private set; }
+
+        /// <summary>
+        /// Notify that workbook data has been changed which means that cached formula values
+        /// need to be re-evaluated.
+        /// </summary>
+        internal void InvalidateFormulas()
+        {
+            RecalculationCounter++;
+        }
+
+        #region  Nested Type : XLLoadSource
 
         private enum XLLoadSource
         {
@@ -824,6 +839,15 @@ namespace ClosedXML.Excel
         public Object Evaluate(String expression)
         {
             return CalcEngine.Evaluate(expression);
+        }
+
+        /// <summary>
+        /// Force recalculation of all cell formulas.
+        /// </summary>
+        public void RecalculateAllFormulas()
+        {
+            InvalidateFormulas();
+            Worksheets.ForEach(sheet => sheet.RecalculateAllFormulas());
         }
 
         private static XLCalcEngine _calcEngineExpr;

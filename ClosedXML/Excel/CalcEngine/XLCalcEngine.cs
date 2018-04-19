@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -23,6 +23,48 @@ namespace ClosedXML.Excel.CalcEngine
             _ws = ws;
         }
 
+        private IList<IXLRange> _cellRanges;
+
+        /// <summary>
+        /// Get a collection of cell ranges included into the expression. Order is not preserved.
+        /// </summary>
+        /// <param name="expression">Formula to parse.</param>
+        /// <returns>Collection of ranges included into the expression.</returns>
+        public IEnumerable<IXLRange> GetPrecedentRanges(string expression)
+        {
+            _cellRanges = new List<IXLRange>();
+            Parse(expression);
+            var ranges = _cellRanges;
+            _cellRanges = null;
+            var visitedRanges = new HashSet<IXLRangeAddress>(new XLRangeAddressComparer(true));
+            foreach (var range in ranges)
+            {
+                if (!visitedRanges.Contains(range.RangeAddress))
+                {
+                    visitedRanges.Add(range.RangeAddress);
+                    yield return range;
+                }
+            }
+        }
+
+        public IEnumerable<IXLCell> GetPrecedentCells(string expression)
+        {
+            if (!String.IsNullOrWhiteSpace(expression))
+            {
+                var ranges = GetPrecedentRanges(expression);
+                var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));
+                var cells = ranges.SelectMany(range => range.Cells()).Distinct();
+                foreach (var cell in cells)
+                {
+                    if (!visitedCells.Contains(cell.Address))
+                    {
+                        visitedCells.Add(cell.Address);
+                        yield return cell;
+                    }
+                }
+            }
+        }
+
         public override object GetExternalObject(string identifier)
         {
             if (identifier.Contains("!") && _wb != null)
@@ -39,7 +81,7 @@ namespace ClosedXML.Excel.CalcEngine
                     .Distinct();
 
                 if (!referencedSheetNames.Any())
-                    return new CellRangeReference(_ws.Range(identifier), this);
+                    return GetCellRangeReference(_ws.Range(identifier));
                 else if (referencedSheetNames.Count() > 1)
                     throw new ArgumentOutOfRangeException(referencedSheetNames.Last(), "Cross worksheet references may references no more than 1 other worksheet");
                 else
@@ -49,66 +91,20 @@ namespace ClosedXML.Excel.CalcEngine
 
                     identifier = identifier.ToLower().Replace(string.Format("{0}!", worksheet.Name.ToLower()), "");
 
-                    return new CellRangeReference(worksheet.Range(identifier), this);
+                    return GetCellRangeReference(worksheet.Range(identifier));
                 }
             }
             else if (_ws != null)
-                return new CellRangeReference(_ws.Range(identifier), this);
+                return GetCellRangeReference(_ws.Range(identifier));
             else
                 return identifier;
         }
-    }
 
-    internal class CellRangeReference : IValueObject, IEnumerable
-    {
-        private IXLRange _range;
-        private XLCalcEngine _ce;
-
-        public CellRangeReference(IXLRange range, XLCalcEngine ce)
+        private CellRangeReference GetCellRangeReference(IXLRange range)
         {
-            _range = range;
-            _ce = ce;
-        }
-
-        public IXLRange Range { get { return _range; } }
-
-        // ** IValueObject
-        public object GetValue()
-        {
-            return GetValue(_range.FirstCell());
-        }
-
-        // ** IEnumerable
-        public IEnumerator GetEnumerator()
-        {
-            var maxRow = Math.Min(_range.RangeAddress.LastAddress.RowNumber, _range.Worksheet.LastCellUsed().Address.RowNumber);
-            var maxCol = Math.Min(_range.RangeAddress.LastAddress.ColumnNumber, _range.Worksheet.LastCellUsed().Address.ColumnNumber);
-            using (var trimmedRange = (XLRangeBase)_range.Worksheet.Range(_range.FirstCell().Address, new XLAddress(maxRow, maxCol, false, false)))
-                return trimmedRange.CellValues().GetEnumerator();
-        }
-
-        private Boolean _evaluating;
-
-        // ** implementation
-        private object GetValue(IXLCell cell)
-        {
-            if (_evaluating || (cell as XLCell).IsEvaluating)
-            {
-                throw new InvalidOperationException($"Circular Reference occured during evaluation. Cell: {cell.Address.ToString(XLReferenceStyle.Default, true)}");
-            }
-            try
-            {
-                _evaluating = true;
-                var f = cell.FormulaA1;
-                if (String.IsNullOrWhiteSpace(f))
-                    return cell.Value;
-                else
-                    return new XLCalcEngine(cell.Worksheet).Evaluate(f);
-            }
-            finally
-            {
-                _evaluating = false;
-            }
+            var res = new CellRangeReference(range, this);
+            _cellRanges?.Add(res.Range);
+            return res;
         }
     }
 }

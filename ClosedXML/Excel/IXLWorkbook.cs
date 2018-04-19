@@ -140,6 +140,11 @@ namespace ClosedXML.Excel
 
         Object Evaluate(String expression);
 
+        /// <summary>
+        /// Force recalculation of all cell formulas.
+        /// </summary>
+        void RecalculateAllFormulas();
+
         IXLCells FindCells(Func<IXLCell, Boolean> predicate);
 
         IXLColumns FindColumns(Func<IXLColumn, Boolean> predicate);

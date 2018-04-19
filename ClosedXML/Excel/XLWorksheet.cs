@@ -1463,7 +1463,7 @@ namespace ClosedXML.Excel
 
         private XLCalcEngine _calcEngine;
 
-        private XLCalcEngine CalcEngine
+        internal XLCalcEngine CalcEngine
         {
             get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
         }
@@ -1471,6 +1471,14 @@ namespace ClosedXML.Excel
         public Object Evaluate(String expression)
         {
             return CalcEngine.Evaluate(expression);
+        }
+
+        /// <summary>
+        /// Force recalculation of all cell formulas.
+        /// </summary>
+        public void RecalculateAllFormulas()
+        {
+            CellsUsed().Cast<XLCell>().ForEach(cell => cell.Evaluate(true));
         }
 
         public String Author { get; set; }

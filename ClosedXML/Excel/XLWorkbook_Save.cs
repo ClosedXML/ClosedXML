@@ -4863,7 +4863,20 @@ namespace ClosedXML.Excel
                                     cell.CellFormula.Text = formula;
                                 }
 
-                                cell.CellValue = null;
+                                if (!evaluateFormulae || xlCell.CachedValue == null || xlCell.NeedsRecalculation)
+                                    cell.CellValue = null;
+                                else
+                                {
+                                    string valueCalculated;
+                                    if (xlCell.CachedValue is int)
+                                        valueCalculated = ((int)xlCell.CachedValue).ToInvariantString();
+                                    else if (xlCell.CachedValue is double)
+                                        valueCalculated = ((double)xlCell.CachedValue).ToInvariantString();
+                                    else
+                                        valueCalculated = xlCell.CachedValue.ToString();
+                                    
+                                    cell.CellValue = new CellValue(valueCalculated);
+                                }
                             }
                             else if (tableTotalCells.Contains(xlCell.Address))
                             {

@@ -135,5 +135,35 @@ namespace ClosedXML_Sandbox
 
             return row;
         }
+        
+        public static void PerformHeavyCalculation()
+        {
+            int rows = 200;
+            int columns = 200;
+            using (var wb = new XLWorkbook())
+            {
+                var sheet = wb.Worksheets.Add("TestSheet");
+                var lastColumnLetter = sheet.Column(columns).ColumnLetter();
+                for (int i = 1; i <= rows; i++)
+                {
+                    for (int j = 1; j <= columns; j++)
+                    {
+                        if (i == 1)
+                        {
+                            sheet.Cell(i, j).FormulaA1 = string.Format("=ROUND({0}*SIN({0}),2)", j);
+                        }
+                        else
+                        {
+                            sheet.Cell(i, j).FormulaA1 = string.Format("=SUM({0}$1:{0}{1})/SUM($A{1}:${2}{1})",
+                                sheet.Column(j).ColumnLetter(), i - 1, lastColumnLetter); // i.e. for K8 there will be =SUM(K$1:K7)/SUM($A7:$GR7)
+                        }
+                    }
+                }
+
+                var cells = sheet.CellsUsed();
+                var sum1 = cells.Sum(cell => (double)cell.Value);
+                Console.WriteLine("Total sum: {0:N2}", sum1);
+            }
+        }
     }
 }

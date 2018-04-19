@@ -16,6 +16,10 @@ namespace ClosedXML_Sandbox
             Console.WriteLine("Running {0}", nameof(PerformanceRunner.RunInsertTable));
             PerformanceRunner.TimeAction(PerformanceRunner.RunInsertTable);
             Console.WriteLine();
+
+            Console.WriteLine("Running {0}", nameof(PerformanceRunner.PerformHeavyCalculation));
+            PerformanceRunner.TimeAction(PerformanceRunner.PerformHeavyCalculation);
+            Console.WriteLine();
 #endif
 
             Console.WriteLine("Press any key to continue");
