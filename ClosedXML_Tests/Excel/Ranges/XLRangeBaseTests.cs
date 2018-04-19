@@ -389,7 +389,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual("C3:G4", ws.ConditionalFormats.Single().Ranges.Single().RangeAddress.ToStringRelative());
         }
 
-        [Test]
+        [Test, Ignore("Disposing now does not affect range shifting")]
         public void RangesRemoveAllWithDispose()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");

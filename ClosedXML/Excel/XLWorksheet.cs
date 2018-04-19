@@ -1439,6 +1439,7 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(XLRange range, String name, Boolean addToTables, Boolean setAutofilter = true)
         {
+            CheckRangeNotInTable(range);
             XLRangeAddress rangeAddress;
             if (range.Rows().Count() == 1)
             {
@@ -1462,6 +1463,12 @@ namespace ClosedXML.Excel
                 table.InitializeAutoFilter();
 
             return table;
+        }
+        private void CheckRangeNotInTable(XLRange range)
+        {
+            var overlappingTables = Tables.Where(t => t.RangeUsed().Intersects(range));
+            if (overlappingTables.Any())
+                throw new ArgumentException(nameof(range), $"The range {range.RangeAddress.ToStringRelative(true)} is already part of table '{overlappingTables.First().Name}'");
         }
 
         private string GetNewTableName(string baseName)

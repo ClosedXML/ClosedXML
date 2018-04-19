@@ -134,8 +134,8 @@ namespace ClosedXML_Tests.Excel.Caching
 
             // Act
             sampleRepository.Replace(key1, key2);
-            bool containsOld = sampleRepository.ContainsKey(key1);
-            bool containsNew = sampleRepository.ContainsKey(key2);
+            bool containsOld = sampleRepository.ContainsKey(key1, out var _);
+            bool containsNew = sampleRepository.ContainsKey(key2, out var _);
             var storedEntity2 = sampleRepository.GetOrCreate(key2);
 
             // Assert
