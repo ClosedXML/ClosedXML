@@ -64,6 +64,7 @@ namespace ClosedXML.Excel
         private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_", RegexOptions.Compiled);
 
         #region Fields
+
         private readonly XLWorksheet _worksheet;
 
         internal string _cellValue = String.Empty;
@@ -424,7 +425,6 @@ namespace ClosedXML.Excel
                 }
 
                 retVal = Worksheet.Evaluate(fA1);
-
             }
             finally
             {
@@ -454,7 +454,7 @@ namespace ClosedXML.Excel
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
         public object Evaluate(bool force = false)
         {
-            if (NeedsRecalculation || force)
+            if (force || NeedsRecalculation)
             {
                 CachedValue = RecalculateFormula(FormulaA1);
                 EvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
@@ -1241,7 +1241,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-
         private bool _recalculationNeededLastValue;
 
         /// <summary>
@@ -1274,7 +1273,7 @@ namespace ClosedXML.Excel
 
         private IEnumerable<XLCell> GetAffectingCells()
         {
-            return Worksheet.CalcEngine.GetAffectingCells(_formulaA1).Cast<XLCell>();
+            return Worksheet.CalcEngine.GetPrecedentCells(_formulaA1).Cast<XLCell>();
         }
 
         /// <summary>
@@ -1298,7 +1297,6 @@ namespace ClosedXML.Excel
         private long NeedsRecalculationEvaluatedAtVersion { get; set; }
 
         public object CachedValue { get; private set; }
-
 
         [Obsolete("Use CachedValue instead")]
         public string ValueCached { get; internal set; }

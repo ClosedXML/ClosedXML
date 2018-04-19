@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="expression">Formula to parse.</param>
         /// <returns>Collection of ranges included into the expression.</returns>
-        public IEnumerable<IXLRange> GetAffectingRanges(string expression)
+        public IEnumerable<IXLRange> GetPrecedentRanges(string expression)
         {
             _cellRanges = new List<IXLRange>();
             Parse(expression);
@@ -47,13 +47,11 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public IEnumerable<IXLCell> GetAffectingCells(string expression)
+        public IEnumerable<IXLCell> GetPrecedentCells(string expression)
         {
-            if (String.IsNullOrWhiteSpace(expression) && String.IsNullOrEmpty(expression))
-                yield break;
-            else
+            if (!String.IsNullOrWhiteSpace(expression))
             {
-                var ranges = GetAffectingRanges(expression);
+                var ranges = GetPrecedentRanges(expression);
                 var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));
                 var cells = ranges.SelectMany(range => range.Cells()).Distinct();
                 foreach (var cell in cells)
@@ -105,8 +103,7 @@ namespace ClosedXML.Excel.CalcEngine
         private CellRangeReference GetCellRangeReference(IXLRange range)
         {
             var res = new CellRangeReference(range, this);
-            if (_cellRanges != null)
-                _cellRanges.Add(res.Range);
+            _cellRanges?.Add(res.Range);
             return res;
         }
     }
