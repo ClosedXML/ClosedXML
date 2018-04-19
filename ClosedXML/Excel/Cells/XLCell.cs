@@ -65,8 +65,6 @@ namespace ClosedXML.Excel
 
         #region Fields
 
-        private readonly XLWorksheet _worksheet;
-
         internal string _cellValue = String.Empty;
 
         private XLComment _comment;
@@ -88,7 +86,7 @@ namespace ClosedXML.Excel
         {
             Address = address;
             ShareString = true;
-            _worksheet = worksheet;
+            Worksheet = worksheet;
         }
 
         public XLCell(XLWorksheet worksheet, XLAddress address, IXLStyle style)
@@ -103,10 +101,7 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        public XLWorksheet Worksheet
-        {
-            get { return _worksheet; }
-        }
+        public XLWorksheet Worksheet { get; private set; }
 
         private int _rowNumber;
         private int _columnNumber;
@@ -117,7 +112,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                return new XLAddress(_worksheet, _rowNumber, _columnNumber, _fixedRow, _fixedCol);
+                return new XLAddress(Worksheet, _rowNumber, _columnNumber, _fixedRow, _fixedCol);
             }
             internal set
             {
@@ -392,12 +387,12 @@ namespace ClosedXML.Excel
                 cAddress = fA1;
             }
 
-            if (_worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
+            if (Worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
                 w => String.Compare(w.Name, sName, true) == 0)
                 && XLHelper.IsValidA1Address(cAddress)
                 )
             {
-                var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
                 if (referenceCell.IsEmpty(false))
                     return 0;
                 else
@@ -409,13 +404,13 @@ namespace ClosedXML.Excel
             {
                 IsEvaluating = true;
 
-                if (_worksheet
+                if (Worksheet
                         .Workbook
                         .WorksheetsInternal
                         .Any<XLWorksheet>(w => String.Compare(w.Name, sName, true) == 0)
                     && XLHelper.IsValidA1Address(cAddress))
                 {
-                    var referenceCell = _worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                    var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
                     if (referenceCell.IsEmpty(false))
                         return 0;
                     else
@@ -577,12 +572,12 @@ namespace ClosedXML.Excel
                             if (String.IsNullOrWhiteSpace(fieldName))
                                 fieldName = itemType.Name;
 
-                            _worksheet.SetValue(fieldName, fRo, co);
+                            Worksheet.SetValue(fieldName, fRo, co);
                             hasTitles = true;
                             co = _columnNumber;
                         }
 
-                        _worksheet.SetValue(o, ro, co);
+                        Worksheet.SetValue(o, ro, co);
                         co++;
 
                         if (co > maxCo)
@@ -639,7 +634,7 @@ namespace ClosedXML.Excel
                         {
                             foreach (var item in (m as Array))
                             {
-                                _worksheet.SetValue(item, ro, co);
+                                Worksheet.SetValue(item, ro, co);
                                 co++;
                             }
                         }
@@ -656,7 +651,7 @@ namespace ClosedXML.Excel
                                                                      ? column.ColumnName
                                                                      : column.Caption)
                                 {
-                                    _worksheet.SetValue(fieldName, fRo, co);
+                                    Worksheet.SetValue(fieldName, fRo, co);
                                     co++;
                                 }
 
@@ -666,7 +661,7 @@ namespace ClosedXML.Excel
 
                             foreach (var item in row.ItemArray)
                             {
-                                _worksheet.SetValue(item, ro, co);
+                                Worksheet.SetValue(item, ro, co);
                                 co++;
                             }
                         }
@@ -682,7 +677,7 @@ namespace ClosedXML.Excel
                             {
                                 for (var i = 0; i < fieldCount; i++)
                                 {
-                                    _worksheet.SetValue(record.GetName(i), fRo, co);
+                                    Worksheet.SetValue(record.GetName(i), fRo, co);
                                     co++;
                                 }
 
@@ -692,7 +687,7 @@ namespace ClosedXML.Excel
 
                             for (var i = 0; i < fieldCount; i++)
                             {
-                                _worksheet.SetValue(record[i], ro, co);
+                                Worksheet.SetValue(record[i], ro, co);
                                 co++;
                             }
                         }
@@ -708,7 +703,7 @@ namespace ClosedXML.Excel
                                         if (String.IsNullOrWhiteSpace(fieldName))
                                             fieldName = mi.Name;
 
-                                        _worksheet.SetValue(fieldName, fRo, co);
+                                        Worksheet.SetValue(fieldName, fRo, co);
                                     }
 
                                     co++;
@@ -721,11 +716,11 @@ namespace ClosedXML.Excel
                             foreach (var mi in members)
                             {
                                 if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                    _worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), ro, co);
+                                    Worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), ro, co);
                                 else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
-                                    _worksheet.SetValue((mi as FieldInfo).GetValue(null), ro, co);
+                                    Worksheet.SetValue((mi as FieldInfo).GetValue(null), ro, co);
                                 else
-                                    _worksheet.SetValue(accessor[m, mi.Name], ro, co);
+                                    Worksheet.SetValue(accessor[m, mi.Name], ro, co);
 
                                 co++;
                             }
@@ -739,7 +734,7 @@ namespace ClosedXML.Excel
                 }
 
                 ClearMerged();
-                var range = _worksheet.Range(
+                var range = Worksheet.Range(
                     _rowNumber,
                     _columnNumber,
                     ro - 1,
@@ -782,12 +777,12 @@ namespace ClosedXML.Excel
 
             foreach (DataColumn col in data.Columns)
             {
-                _worksheet.SetValue(col.ColumnName, ro, co);
+                Worksheet.SetValue(col.ColumnName, ro, co);
                 co++;
             }
 
             ClearMerged();
-            var range = _worksheet.Range(
+            var range = Worksheet.Range(
                 _rowNumber,
                 _columnNumber,
                 ro,
@@ -843,7 +838,7 @@ namespace ClosedXML.Excel
 
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                     {
-                        _worksheet.SetValue(m, rowNumber, columnNumber);
+                        Worksheet.SetValue(m, rowNumber, columnNumber);
 
                         if (transpose)
                             rowNumber++;
@@ -854,7 +849,7 @@ namespace ClosedXML.Excel
                     {
                         foreach (var item in (Array)m)
                         {
-                            _worksheet.SetValue(item, rowNumber, columnNumber);
+                            Worksheet.SetValue(item, rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -869,7 +864,7 @@ namespace ClosedXML.Excel
 
                         foreach (var item in (m as DataRow).ItemArray)
                         {
-                            _worksheet.SetValue(item, rowNumber, columnNumber);
+                            Worksheet.SetValue(item, rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -887,7 +882,7 @@ namespace ClosedXML.Excel
                         var fieldCount = record.FieldCount;
                         for (var i = 0; i < fieldCount; i++)
                         {
-                            _worksheet.SetValue(record[i], rowNumber, columnNumber);
+                            Worksheet.SetValue(record[i], rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -916,11 +911,11 @@ namespace ClosedXML.Excel
                         foreach (var mi in members)
                         {
                             if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                _worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), rowNumber, columnNumber);
+                                Worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), rowNumber, columnNumber);
                             else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
-                                _worksheet.SetValue((mi as FieldInfo).GetValue(null), rowNumber, columnNumber);
+                                Worksheet.SetValue((mi as FieldInfo).GetValue(null), rowNumber, columnNumber);
                             else
-                                _worksheet.SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
+                                Worksheet.SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
 
                             if (transpose)
                                 rowNumber++;
@@ -942,7 +937,7 @@ namespace ClosedXML.Excel
                 }
 
                 ClearMerged();
-                return _worksheet.Range(
+                return Worksheet.Range(
                     _rowNumber,
                     _columnNumber,
                     maxRowNumber - 1,
@@ -1115,7 +1110,7 @@ namespace ClosedXML.Excel
 
         public void Delete(XLShiftDeletedCells shiftDeleteCells)
         {
-            _worksheet.Range(Address, Address).Delete(shiftDeleteCells);
+            Worksheet.Range(Address, Address).Delete(shiftDeleteCells);
         }
 
         public string FormulaA1
@@ -1186,24 +1181,24 @@ namespace ClosedXML.Excel
 
             set
             {
-                if (_worksheet.Hyperlinks.Any(hl => Address.Equals(hl.Cell.Address)))
-                    _worksheet.Hyperlinks.Delete(Address);
+                if (Worksheet.Hyperlinks.Any(hl => Address.Equals(hl.Cell.Address)))
+                    Worksheet.Hyperlinks.Delete(Address);
 
                 _hyperlink = value;
 
                 if (_hyperlink == null) return;
 
-                _hyperlink.Worksheet = _worksheet;
+                _hyperlink.Worksheet = Worksheet;
                 _hyperlink.Cell = this;
 
-                _worksheet.Hyperlinks.Add(_hyperlink);
+                Worksheet.Hyperlinks.Add(_hyperlink);
 
                 if (SettingHyperlink) return;
 
-                if (GetStyleForRead().Font.FontColor.Equals(_worksheet.StyleValue.Font.FontColor))
+                if (GetStyleForRead().Font.FontColor.Equals(Worksheet.StyleValue.Font.FontColor))
                     Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
 
-                if (GetStyleForRead().Font.Underline == _worksheet.StyleValue.Font.Underline)
+                if (GetStyleForRead().Font.Underline == Worksheet.StyleValue.Font.Underline)
                     Style.Font.Underline = XLFontUnderlineValues.Single;
             }
         }
@@ -1803,7 +1798,7 @@ namespace ClosedXML.Excel
 
         public XLRange AsRange()
         {
-            return _worksheet.Range(Address, Address);
+            return Worksheet.Range(Address, Address);
         }
 
         #region Styles
@@ -1952,7 +1947,7 @@ namespace ClosedXML.Excel
                 c.CopyFrom(cf);
                 c.AdjustFormulas((XLCell)cf.Ranges.First().FirstCell(), (XLCell)fmtRanges.First().FirstCell());
 
-                _worksheet.ConditionalFormats.Add(c);
+                Worksheet.ConditionalFormats.Add(c);
             }
         }
 
@@ -2253,7 +2248,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var address = XLAddress.Create(_worksheet, a1Address);
+            var address = XLAddress.Create(Worksheet, a1Address);
 
             var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, rowsToShift);
             var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, columnsToShift);
