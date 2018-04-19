@@ -65,10 +65,10 @@ namespace ClosedXML.Excel
 
         #region Fields
 
-        internal string _cellValue = String.Empty;
+        private string _cellValue = String.Empty;
 
         private XLComment _comment;
-        internal XLDataType _dataType;
+        private XLDataType _dataType;
         private XLHyperlink _hyperlink;
         private XLRichText _richText;
 
@@ -276,7 +276,7 @@ namespace ClosedXML.Excel
             if (TryGetValue(out T retVal))
                 return retVal;
 
-            throw new FormatException("Cannot convert cell value to " + typeof(T));
+            throw new FormatException($"Cannot convert {this.Address.ToStringRelative(true)}'s value to " + typeof(T));
         }
 
         public string GetString()
@@ -307,7 +307,7 @@ namespace ClosedXML.Excel
         public string GetFormattedString()
         {
             String cValue;
-            if (FormulaA1.Length > 0)
+            if (HasFormula)
             {
                 try
                 {
@@ -327,7 +327,16 @@ namespace ClosedXML.Excel
 
             if (_dataType == XLDataType.Boolean)
                 return (cValue != "0").ToExcelFormat(format);
-            else if (_dataType == XLDataType.TimeSpan || _dataType == XLDataType.DateTime || IsDateFormat())
+            else if (_dataType == XLDataType.TimeSpan)
+            {
+                if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double dTest))
+                {
+                    return TimeSpan.FromDays(dTest).ToExcelFormat(format);
+                }
+
+                return cValue;
+            }
+            else if (_dataType == XLDataType.DateTime || IsDateFormat())
             {
                 if (Double.TryParse(cValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double dTest)
                     && dTest.IsValidOADateNumber())
@@ -460,25 +469,94 @@ namespace ClosedXML.Excel
             return CachedValue;
         }
 
-        private object StringToCellDataType(string cellValue)
+        internal void SetInternalCellValueString(String cellValue)
         {
-            if (_dataType == XLDataType.Boolean)
-                return cellValue != "0";
+            SetInternalCellValueString(cellValue, this.HasFormula);
+        }
 
-            if (_dataType == XLDataType.DateTime
-                && Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d)
-                && d.IsValidOADateNumber())
+        private void SetInternalCellValueString(String cellValue, Boolean parseToCachedValue)
+        {
+            this._cellValue = cellValue;
+            if (parseToCachedValue)
+                CachedValue = ParseCellValueFromString();
+        }
 
-                return DateTime.FromOADate(d);
+        internal void SetDataTypeFast(XLDataType dataType)
+        {
+            this._dataType = dataType;
+        }
 
-            if (_dataType == XLDataType.Number
-                && double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double n))
+        private Object ParseCellValueFromString()
+        {
+            return ParseCellValueFromString(_cellValue, _dataType, out String error);
+        }
 
-                return n;
+        private Object ParseCellValueFromString(String cellValue, XLDataType dataType, out String error)
+        {
+            error = "";
+            if ("" == cellValue)
+                return "";
 
-            if (_dataType == XLDataType.TimeSpan
-                && TimeSpan.TryParse(cellValue, out TimeSpan t))
-                return t;
+            if (dataType == XLDataType.Boolean)
+            {
+                if (bool.TryParse(cellValue, out Boolean b))
+                    return b;
+                else if (cellValue == "0")
+                    return false;
+                else if (cellValue == "1")
+                    return true;
+                else
+                    return !string.IsNullOrEmpty(cellValue);
+            }
+
+            if (dataType == XLDataType.DateTime)
+            {
+                if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d))
+                {
+                    if (d.IsValidOADateNumber())
+                        return DateTime.FromOADate(d);
+                    else
+                        return d;
+                }
+                else if (DateTime.TryParse(cellValue, out DateTime dt))
+                    return dt;
+                else
+                {
+                    error = string.Format("Cannot set data type to DateTime because '{0}' is not recognized as a date.", cellValue);
+                    return null;
+                }
+            }
+            if (dataType == XLDataType.Number)
+            {
+                var v = cellValue;
+                Double factor = 1.0;
+                if (v.EndsWith("%"))
+                {
+                    v = v.Substring(0, v.Length - 1);
+                    factor = 1 / 100.0;
+                }
+
+                if (Double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out Double d))
+                    return d * factor;
+                else
+                {
+                    error = string.Format("Cannot set data type to Number because '{0}' is not recognized as a number.", cellValue);
+                    return null;
+                }
+            }
+
+            if (dataType == XLDataType.TimeSpan)
+            {
+                if (TimeSpan.TryParse(cellValue, out TimeSpan ts))
+                    return ts;
+                else if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d))
+                    return TimeSpan.FromDays(d);
+                else
+                {
+                    error = string.Format("Cannot set data type to TimeSpan because '{0}' is not recognized as a TimeSpan.", cellValue);
+                    return null;
+                }
+            }
 
             return cellValue;
         }
@@ -494,7 +572,11 @@ namespace ClosedXML.Excel
                 }
 
                 var cellValue = HasRichText ? _richText.ToString() : _cellValue;
-                return StringToCellDataType(cellValue);
+                var parsedValue = ParseCellValueFromString(cellValue, _dataType, out String error);
+                if ("" == error)
+                    return parsedValue;
+                else
+                    throw new ArgumentException(error);
             }
             set
             {
@@ -973,87 +1055,62 @@ namespace ClosedXML.Excel
 
                 if (!string.IsNullOrEmpty(_cellValue))
                 {
-                    if (value == XLDataType.Boolean)
+                    // If we're converting the DataType to Text, there are some quirky rules currently
+                    if (value == XLDataType.Text)
                     {
-                        if (Boolean.TryParse(_cellValue, out Boolean bTest))
-                            _cellValue = bTest ? "1" : "0";
-                        else
-                            _cellValue = _cellValue == "0" || String.IsNullOrEmpty(_cellValue) ? "0" : "1";
-                    }
-                    else if (value == XLDataType.DateTime)
-                    {
-                        if (DateTime.TryParse(_cellValue, out DateTime dtTest))
-                            _cellValue = dtTest.ToOADate().ToInvariantString();
-                        else if (Double.TryParse(_cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double dblTest))
-                            _cellValue = dblTest.ToInvariantString();
-                        else
+                        var v = Value;
+                        switch (v)
                         {
-                            throw new ArgumentException(
-                                string.Format(
-                                    "Cannot set data type to DateTime because '{0}' is not recognized as a date.",
-                                    _cellValue));
-                        }
-                        var style = GetStyleForRead();
-                        if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                            Style.NumberFormat.NumberFormatId = _cellValue.Contains('.') ? 22 : 14;
-                    }
-                    else if (value == XLDataType.TimeSpan)
-                    {
-                        if (TimeSpan.TryParse(_cellValue, out TimeSpan tsTest))
-                        {
-                            _cellValue = tsTest.ToString();
-                            var style = GetStyleForRead();
-                            if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
-                                Style.NumberFormat.NumberFormatId = 46;
-                        }
-                        else
-                        {
-                            try
-                            {
-                                _cellValue = (DateTime.FromOADate(Double.Parse(_cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture)) - BaseDate).ToString();
-                            }
-                            catch
-                            {
-                                throw new ArgumentException(
-                                    string.Format(
-                                        "Cannot set data type to TimeSpan because '{0}' is not recognized as a TimeSpan.",
-                                        _cellValue));
-                            }
-                        }
-                    }
-                    else if (value == XLDataType.Number)
-                    {
-                        var v = _cellValue;
-                        double factor = 1.0;
-                        if (v.EndsWith("%"))
-                        {
-                            v = v.Substring(0, v.Length - 1);
-                            factor = 1 / 100.0;
-                        }
+                            case DateTime d:
+                                _cellValue = d.ToOADate().ToInvariantString();
+                                break;
 
-                        if (Double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out Double dTest))
-                            _cellValue = (dTest * factor).ToInvariantString();
-                        else
-                        {
-                            throw new ArgumentException(
-                                string.Format(
-                                    "Cannot set data type to Number because '{0}' is not recognized as a number.",
-                                    _cellValue));
+                            case TimeSpan ts:
+                                _cellValue = ts.TotalDays.ToInvariantString();
+                                break;
+
+                            case Boolean b:
+                                _cellValue = b ? "True" : "False";
+                                break;
+
+                            default:
+                                _cellValue = v.ToInvariantString();
+                                break;
                         }
                     }
                     else
                     {
-                        if (_dataType == XLDataType.Boolean)
-                            _cellValue = (_cellValue != "0").ToString();
-                        else if (_dataType == XLDataType.TimeSpan)
-                            _cellValue = BaseDate.Add(GetTimeSpan()).ToOADate().ToInvariantString();
+                        var v = ParseCellValueFromString(_cellValue, value, out String error);
+                        _cellValue = v?.ToInvariantString() ?? "";
+
+                        var style = GetStyleForRead();
+                        switch (v)
+                        {
+                            case DateTime d:
+                                _cellValue = d.ToOADate().ToInvariantString();
+
+                                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                                    Style.NumberFormat.NumberFormatId = _cellValue.Contains('.') ? 22 : 14;
+
+                                break;
+
+                            case TimeSpan ts:
+                                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                                    Style.NumberFormat.NumberFormatId = 46;
+
+                                break;
+
+                            case Boolean b:
+                                _cellValue = b ? "1" : "0";
+                                break;
+                        }
                     }
                 }
 
                 _dataType = value;
 
                 if (HasFormula)
-                    CachedValue = StringToCellDataType(_cellValue);
+                    CachedValue = ParseCellValueFromString();
                 else
                     CachedValue = null;
             }
@@ -2034,7 +2091,9 @@ namespace ClosedXML.Excel
                 else if (value is TimeSpan || (!Double.TryParse(val, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d1) && TimeSpan.TryParse(val, out TimeSpan tsTest)))
                 {
                     if (!(value is TimeSpan) && TimeSpan.TryParse(val, out tsTest))
-                        val = tsTest.ToString();
+                        val = BaseDate.Add(tsTest).ToOADate().ToInvariantString();
+                    else
+                        val = BaseDate.Add((TimeSpan)value).ToOADate().ToInvariantString();
 
                     _dataType = XLDataType.TimeSpan;
                     if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)

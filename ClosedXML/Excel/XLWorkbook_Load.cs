@@ -1354,7 +1354,7 @@ namespace ClosedXML.Excel
                 ApplyStyle(xlCell, styleIndex, s, fills, borders, fonts, numberingFormats);
             }
 
-            if (cell.CellFormula != null && cell.CellFormula.SharedIndex != null && cell.CellFormula.Reference != null)
+            if (cell.CellFormula?.SharedIndex != null && cell.CellFormula?.Reference != null)
             {
                 String formula;
                 if (cell.CellFormula.FormulaType != null && cell.CellFormula.FormulaType == CellFormulaValues.Array)
@@ -1369,8 +1369,31 @@ namespace ClosedXML.Excel
                 xlCell.FormulaA1 = formula;
                 sharedFormulasR1C1.Add(cell.CellFormula.SharedIndex.Value, xlCell.FormulaR1C1);
 
+                if (cell.DataType != null)
+                {
+                    switch (cell.DataType.Value)
+                    {
+                        case CellValues.Boolean:
+                            xlCell.SetDataTypeFast(XLDataType.Boolean);
+                            break;
+                        case CellValues.Number:
+                            xlCell.SetDataTypeFast(XLDataType.Number);
+                            break;
+                        case CellValues.Date:
+                            xlCell.SetDataTypeFast(XLDataType.DateTime);
+                            break;
+                        case CellValues.InlineString:
+                        case CellValues.SharedString:
+                            xlCell.SetDataTypeFast(XLDataType.Text);
+                            break;
+                    }
+                }
+
                 if (cell.CellValue != null)
+                {
                     xlCell.ValueCached = cell.CellValue.Text;
+                    xlCell.SetInternalCellValueString(cell.CellValue.Text);
+                }
             }
             else if (cell.CellFormula != null)
             {
@@ -1399,72 +1422,97 @@ namespace ClosedXML.Excel
                     }
                 }
 
+                if (cell.DataType != null)
+                {
+                    switch (cell.DataType.Value)
+                    {
+                        case CellValues.Boolean:
+                            xlCell.SetDataTypeFast(XLDataType.Boolean);
+                            break;
+                        case CellValues.Number:
+                            xlCell.SetDataTypeFast(XLDataType.Number);
+                            break;
+                        case CellValues.Date:
+                            xlCell.SetDataTypeFast(XLDataType.DateTime);
+                            break;
+                        case CellValues.InlineString:
+                        case CellValues.SharedString:
+                            xlCell.SetDataTypeFast(XLDataType.Text);
+                            break;
+                    }
+                }
+
                 if (cell.CellValue != null)
+                {
                     xlCell.ValueCached = cell.CellValue.Text;
+                    xlCell.SetInternalCellValueString(cell.CellValue.Text);
+                }
             }
             else if (cell.DataType != null)
             {
                 if (cell.DataType == CellValues.InlineString)
                 {
+                    xlCell.SetDataTypeFast(XLDataType.Text);
+                    xlCell.ShareString = false;
+
                     if (cell.InlineString != null)
                     {
                         if (cell.InlineString.Text != null)
-                            xlCell._cellValue = cell.InlineString.Text.Text.FixNewLines();
+                            xlCell.SetInternalCellValueString(cell.InlineString.Text.Text.FixNewLines());
                         else
                             ParseCellValue(cell.InlineString, xlCell);
                     }
                     else
-                        xlCell._cellValue = String.Empty;
-
-                    xlCell._dataType = XLDataType.Text;
-                    xlCell.ShareString = false;
+                        xlCell.SetInternalCellValueString(String.Empty);
                 }
                 else if (cell.DataType == CellValues.SharedString)
                 {
+                    xlCell.SetDataTypeFast(XLDataType.Text);
+
                     if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                     {
                         var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture)];
                         ParseCellValue(sharedString, xlCell);
                     }
                     else
-                        xlCell._cellValue = String.Empty;
-
-                    xlCell._dataType = XLDataType.Text;
+                        xlCell.SetInternalCellValueString(String.Empty);
                 }
                 else if (cell.DataType == CellValues.Date)
                 {
+                    xlCell.SetDataTypeFast(XLDataType.DateTime);
+
                     if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
-                    xlCell._dataType = XLDataType.DateTime;
+                        xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString());
                 }
                 else if (cell.DataType == CellValues.Boolean)
                 {
+                    xlCell.SetDataTypeFast(XLDataType.Boolean);
                     if (cell.CellValue != null)
-                        xlCell._cellValue = cell.CellValue.Text;
-                    xlCell._dataType = XLDataType.Boolean;
+                        xlCell.SetInternalCellValueString(cell.CellValue.Text);
                 }
                 else if (cell.DataType == CellValues.Number)
                 {
-                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString();
-
                     if (s == null)
-                        xlCell._dataType = XLDataType.Number;
+                        xlCell.SetDataTypeFast(XLDataType.Number);
                     else
                         xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
+
+                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
+                        xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString());
                 }
             }
             else if (cell.CellValue != null)
             {
                 if (s == null)
                 {
-                    xlCell._dataType = XLDataType.Number;
+                    xlCell.SetDataTypeFast(XLDataType.Number);
                 }
                 else
                 {
+                    xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                     var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                     if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell._cellValue = Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString();
+                        xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString());
 
                     if (s.NumberingFormats != null &&
                         s.NumberingFormats.Any(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId))
@@ -1477,8 +1525,6 @@ namespace ClosedXML.Excel
                     }
                     else
                         xlCell.Style.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
-
-                    xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
                 }
             }
 
@@ -1522,7 +1568,7 @@ namespace ClosedXML.Excel
             }
 
             if (!hasRuns)
-                xlCell._cellValue = XmlEncoder.DecodeString(element.Text.InnerText);
+                xlCell.SetInternalCellValueString(XmlEncoder.DecodeString(element.Text.InnerText));
 
             #region Load PhoneticProperties
 
@@ -2127,11 +2173,11 @@ namespace ClosedXML.Excel
 
                 if (fr.FormatId != null)
                 {
-                    LoadFont(differentialFormats[(Int32) fr.FormatId.Value].Font, conditionalFormat.Style.Font);
-                    LoadFill(differentialFormats[(Int32) fr.FormatId.Value].Fill, conditionalFormat.Style.Fill,
+                    LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
+                    LoadFill(differentialFormats[(Int32)fr.FormatId.Value].Fill, conditionalFormat.Style.Fill,
                         differentialFillFormat: true);
-                    LoadBorder(differentialFormats[(Int32) fr.FormatId.Value].Border, conditionalFormat.Style.Border);
-                    LoadNumberFormat(differentialFormats[(Int32) fr.FormatId.Value].NumberingFormat,
+                    LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
+                    LoadNumberFormat(differentialFormats[(Int32)fr.FormatId.Value].NumberingFormat,
                         conditionalFormat.Style.NumberFormat);
                 }
 
@@ -2143,8 +2189,8 @@ namespace ClosedXML.Excel
                 if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.CellIs && fr.Operator != null)
                     conditionalFormat.Operator = fr.Operator.Value.ToClosedXml();
 
-                    if (!String.IsNullOrWhiteSpace(fr.Text))
-                        conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
+                if (!String.IsNullOrWhiteSpace(fr.Text))
+                    conditionalFormat.Values.Add(GetFormula(fr.Text.Value));
 
                 if (conditionalFormat.ConditionalFormatType == XLConditionalFormatType.Top10)
                 {
@@ -2174,9 +2220,9 @@ namespace ClosedXML.Excel
                     if (dataBar.ShowValue != null)
                         conditionalFormat.ShowBarOnly = !dataBar.ShowValue.Value;
 
-                        var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
-                        if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
-                            conditionalFormat.Id = new Guid(id.Text.Substring(1, id.Text.Length - 2));
+                    var id = fr.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Id>().FirstOrDefault();
+                    if (id != null && id.Text != null && !String.IsNullOrWhiteSpace(id.Text))
+                        conditionalFormat.Id = new Guid(id.Text.Substring(1, id.Text.Length - 2));
 
                     ExtractConditionalFormatValueObjects(conditionalFormat, dataBar);
                 }

@@ -140,9 +140,9 @@ namespace ClosedXML_Tests.Excel.Saving
                 using (XLWorkbook book2 = new XLWorkbook(ms))
                 {
                     var ws = book2.Worksheet(1);
-                    var storedValue = ws.Cell("A2").ValueCached;
 
-                    Assert.IsNull(storedValue);
+                    Assert.IsNull(ws.Cell("A2").ValueCached);
+                    Assert.IsNull(ws.Cell("A2").CachedValue);
                 }
             }
         }
@@ -157,8 +157,10 @@ namespace ClosedXML_Tests.Excel.Saving
                     var sheet = book1.AddWorksheet("sheet1");
                     sheet.Cell("A1").Value = 123;
                     sheet.Cell("A2").FormulaA1 = "A1*10";
+                    sheet.Cell("A3").FormulaA1 = "TEXT(A2, \"# ###\")";
                     var options = new SaveOptions { EvaluateFormulasBeforeSaving = true };
 
+                    book1.SaveAs(@"c:\temp\formulas.xlsx", options);
                     book1.SaveAs(ms, options);
                 }
                 ms.Position = 0;
@@ -166,9 +168,12 @@ namespace ClosedXML_Tests.Excel.Saving
                 using (XLWorkbook book2 = new XLWorkbook(ms))
                 {
                     var ws = book2.Worksheet(1);
-                    var storedValue = ws.Cell("A2").ValueCached;
 
-                    Assert.AreEqual("1230", storedValue);
+                    Assert.AreEqual("1230", ws.Cell("A2").ValueCached);
+                    Assert.AreEqual(1230, ws.Cell("A2").CachedValue);
+
+                    Assert.AreEqual("1 230", ws.Cell("A3").ValueCached);
+                    Assert.AreEqual("1 230", ws.Cell("A3").CachedValue);
                 }
             }
         }
