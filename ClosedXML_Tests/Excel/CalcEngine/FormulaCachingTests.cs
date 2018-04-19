@@ -64,7 +64,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             }
         }
 
-
         [Test]
         public void EditFormulaA1InvalidatesDependentCells()
         {
@@ -89,7 +88,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             }
         }
 
-
         [Test]
         public void EditFormulaR1C1InvalidatesDependentCells()
         {
@@ -113,6 +111,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(15 + 30 + 300, res2);
             }
         }
+
         [Test]
         public void InsertRowInvalidatesValues()
         {
@@ -130,7 +129,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(5, res2);
             }
         }
-
 
         [Test]
         public void DeleteRowInvalidatesValues()
@@ -201,13 +199,12 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             }
         }
 
-
         [Test]
-        [TestCase("C4", new string[] {"C5"})]
+        [TestCase("C4", new string[] { "C5" })]
         [TestCase("D4", new string[] { })]
-        [TestCase("A1", new string[] {"A2", "A3", "A4", "C1", "C2", "C3", "C5" })]
-        [TestCase("B2", new string[] {"B3", "B4", "C2", "C3", "C5" })]
-        [TestCase("C2", new string[] {"C5" })]
+        [TestCase("A1", new string[] { "A2", "A3", "A4", "C1", "C2", "C3", "C5" })]
+        [TestCase("B2", new string[] { "B3", "B4", "C2", "C3", "C5" })]
+        [TestCase("C2", new string[] { "C5" })]
         public void EditingDoesNotAffectNonDependingCells(string changedCell, string[] affectedCells)
         {
             using (var wb = new XLWorkbook())
@@ -266,7 +263,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             }
         }
 
-
         [Test]
         public void CircularReferenceRecalculationNeededDoesNotFail()
         {
@@ -314,6 +310,27 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
                 Assert.AreEqual("TestValue", val1.ToString());
                 Assert.Throws(typeof(ArgumentOutOfRangeException), getValue);
+            }
+        }
+
+        [Test]
+        public void TestValueCellsCachedValue()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var sheet = wb.Worksheets.Add("TestSheet");
+                var cell = sheet.Cell(1, 1);
+
+                var date = new DateTime(2018, 4, 19); ;
+                cell.Value = date;
+
+                Assert.AreEqual(XLDataType.DateTime, cell.DataType);
+                Assert.AreEqual(date, cell.CachedValue);
+
+                cell.DataType = XLDataType.Number;
+
+                Assert.AreEqual(XLDataType.Number, cell.DataType);
+                Assert.AreEqual(date.ToOADate(), cell.CachedValue);
             }
         }
     }

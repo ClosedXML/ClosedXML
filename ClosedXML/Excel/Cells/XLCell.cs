@@ -271,6 +271,8 @@ namespace ClosedXML.Excel
                 _dataType = XLDataType.Text;
             }
 
+            CachedValue = null;
+
             return this;
         }
 
@@ -448,11 +450,15 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
-        public object Evaluate(bool force = false)
+        public Object Evaluate(Boolean force = false)
         {
             if (force || NeedsRecalculation)
             {
-                CachedValue = RecalculateFormula(FormulaA1);
+                if (HasFormula)
+                    CachedValue = RecalculateFormula(FormulaA1);
+                else
+                    CachedValue = null;
+
                 EvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
                 NeedsRecalculation = false;
             }
@@ -515,6 +521,8 @@ namespace ClosedXML.Excel
 
                 if (!SetRichText(value))
                     SetValue(value);
+
+                CachedValue = null;
 
                 if (_cellValue.Length > 32767) throw new ArgumentException("Cells can hold only 32,767 characters.");
             }
@@ -962,7 +970,7 @@ namespace ClosedXML.Excel
             {
                 if (_dataType == value) return;
 
-                if (_richText != null)
+                if (HasRichText)
                 {
                     _cellValue = _richText.ToString();
                     _richText = null;
@@ -1048,6 +1056,11 @@ namespace ClosedXML.Excel
                 }
 
                 _dataType = value;
+
+                if (HasFormula)
+                    CachedValue = StringToCellDataType(_cellValue);
+                else
+                    CachedValue = null;
             }
         }
 
@@ -1288,7 +1301,25 @@ namespace ClosedXML.Excel
         /// </summary>
         private long NeedsRecalculationEvaluatedAtVersion { get; set; }
 
-        public object CachedValue { get; private set; }
+        private Object cachedValue;
+
+        public Object CachedValue
+        {
+            get
+            {
+                if (!HasFormula && cachedValue == null)
+                    cachedValue = Value;
+
+                return cachedValue;
+            }
+            private set
+            {
+                if (value != null && !HasFormula)
+                    throw new InvalidOperationException("Cached values can be set only for cells with formulas");
+
+                cachedValue = value;
+            }
+        }
 
         [Obsolete("Use CachedValue instead")]
         public string ValueCached { get; internal set; }
