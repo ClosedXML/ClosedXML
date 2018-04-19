@@ -113,7 +113,6 @@ namespace ClosedXML_Tests.Excel
                     Assert.AreEqual(new DateTime(2017, 10, 27, 21, 0, 0), c.GetDateTime());
                     wb.SaveAs(ms);
                 }
-
             }
         }
 
@@ -346,14 +345,14 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
-        [TestCase("A1*10", "1230")]
-        [TestCase("A1/10", "12.3")]
-        [TestCase("A1&\" cells\"", "123 cells")]
-        [TestCase("A1&\"000\"", "123000")]
-        [TestCase("ISNUMBER(A1)", "True")]
-        [TestCase("ISBLANK(A1)", "False")]
-        [TestCase("DATE(2018,1,28)", "43128")]
-        public void LoadFormulaCachedValue(string formula, object expectedValue)
+        [TestCase("A1*10", "1230", 1230)]
+        [TestCase("A1/10", "12.3", 12.3)]
+        [TestCase("A1&\" cells\"", "123 cells", "123 cells")]
+        [TestCase("A1&\"000\"", "123000", "123000")]
+        [TestCase("ISNUMBER(A1)", "True", true)]
+        [TestCase("ISBLANK(A1)", "False", false)]
+        [TestCase("DATE(2018,1,28)", "43128", null)]
+        public void LoadFormulaCachedValue(string formula, object expectedValueCached, object expectedCachedValue)
         {
             using (var ms = new MemoryStream())
             {
@@ -371,9 +370,11 @@ namespace ClosedXML_Tests.Excel
                 using (XLWorkbook book2 = new XLWorkbook(ms))
                 {
                     var ws = book2.Worksheet(1);
-                    var storedValueA2 = ws.Cell("A2").ValueCached;
                     Assert.IsTrue(ws.Cell("A2").NeedsRecalculation);
-                    Assert.AreEqual(expectedValue, storedValueA2);
+                    Assert.AreEqual(expectedValueCached, ws.Cell("A2").ValueCached);
+
+                    if (expectedCachedValue != null)
+                        Assert.AreEqual(expectedCachedValue, ws.Cell("A2").CachedValue);
                 }
             }
         }

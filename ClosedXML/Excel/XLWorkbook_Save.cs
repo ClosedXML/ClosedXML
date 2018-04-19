@@ -5562,8 +5562,28 @@ namespace ClosedXML.Excel
                 var cellValue = new CellValue();
                 try
                 {
-                    cellValue.Text = xlCell.Value.ToInvariantString();
-                    openXmlCell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    var v = xlCell.Value;
+                    cellValue.Text = v.ToInvariantString();
+                    switch (v)
+                    {
+                        case String s:
+                            openXmlCell.DataType = new EnumValue<CellValues>(CellValues.String);
+                            break;
+                        case DateTime dt:
+                            openXmlCell.DataType = new EnumValue<CellValues>(CellValues.Date);
+                            break;
+
+                        case Boolean b:
+                            openXmlCell.DataType = new EnumValue<CellValues>(CellValues.Boolean);
+                            break;
+
+                        default:
+                            if (v.IsNumber())
+                                openXmlCell.DataType = new EnumValue<CellValues>(CellValues.Number);
+                            else
+                                openXmlCell.DataType = null;
+                            break;
+                    }
                 }
                 catch
                 {
