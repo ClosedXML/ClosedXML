@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using ClosedXML.Excel;
+using MoreLinq;
 
 namespace ClosedXML_Examples
 {
