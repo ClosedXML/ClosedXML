@@ -10,6 +10,8 @@ namespace ClosedXML.Excel
     {
         private readonly List<XLRange> _ranges = new List<XLRange>();
 
+        private HashSet<IXLAddress> _mergedCellAddresses;
+
         public XLRanges() : base(XLWorkbook.DefaultStyleValue)
         {
         }
@@ -50,7 +52,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="match">Criteria to filter ranges. Only those ranges that satisfy the criteria will be removed.
         /// Null means the entire collection should be cleared.</param>
-        /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from 
+        /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from
         /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
         public void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true)
         {
@@ -82,6 +84,9 @@ namespace ClosedXML.Excel
 
         public Boolean Contains(IXLCell cell)
         {
+            if (_mergedCellAddresses != null)
+                return _mergedCellAddresses.Contains(cell.Address);
+
             return _ranges.Any(r => r.RangeAddress.IsValid && r.Contains(cell));
         }
 
@@ -255,6 +260,16 @@ namespace ClosedXML.Excel
         {
             var engine = new XLRangeConsolidationEngine(this);
             return engine.Consolidate();
+        }
+
+        public void CalculateMergedCells()
+        {
+            _mergedCellAddresses = new HashSet<IXLAddress>(_ranges.Where(r => r.RangeAddress.IsValid).SelectMany(r => r.Cells().Select(c => c.Address)));
+        }
+
+        public void ResetMergedCells()
+        {
+            _mergedCellAddresses = null;
         }
     }
 }
