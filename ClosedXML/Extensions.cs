@@ -352,30 +352,44 @@ namespace ClosedXML.Excel
 
         public static string ToInvariantString(this object value)
         {
-            if (value is sbyte)
-                return ((sbyte)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is byte)
-                return ((byte)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is short)
-                return ((short)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is ushort)
-                return ((ushort)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is int)
-                return ((int)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is uint)
-                return ((uint)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is long)
-                return ((long)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is ulong)
-                return ((ulong)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is float)
-                return ((float)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is double)
-                return ((double)value).ToString(CultureInfo.InvariantCulture);
-            else if (value is decimal)
-                return ((decimal)value).ToString(CultureInfo.InvariantCulture);
-            else
-                return value.ToString();
+            switch (value)
+            {
+                case sbyte v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case byte v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case short v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case ushort v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case int v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case uint v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case long v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case ulong v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case float v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case double v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                case decimal v:
+                    return v.ToString(CultureInfo.InvariantCulture);
+
+                default:
+                    return value.ToString();
+            }
         }
     }
 }
