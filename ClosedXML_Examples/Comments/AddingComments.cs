@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ClosedXML.Excel;
 using System.IO;
+using MoreLinq;
 
 namespace ClosedXML_Examples 
 {

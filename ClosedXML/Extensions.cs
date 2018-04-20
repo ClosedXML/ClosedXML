@@ -15,7 +15,7 @@ using System.Xml.Linq;
 
 namespace ClosedXML.Excel
 {
-    public static class Extensions
+    internal static class Extensions
     {
         // Adds the .ForEach method to all IEnumerables
 
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class DictionaryExtensions
+    internal static class DictionaryExtensions
     {
         public static void RemoveAll<TKey, TValue>(this Dictionary<TKey, TValue> dic,
             Func<TValue, bool> predicate)
@@ -97,7 +97,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         private static readonly Regex RegexNewLine = new Regex(@"((?<!\r)\n|\r\n)", RegexOptions.Compiled);
 
@@ -134,7 +134,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class DateTimeExtensions
+    internal static class DateTimeExtensions
     {
         public static Double MaxOADate
         {
@@ -170,7 +170,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class IntegerExtensions
+    internal static class IntegerExtensions
     {
         public static String ToInvariantString(this Int32 value)
         {
@@ -183,7 +183,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class DecimalExtensions
+    internal static class DecimalExtensions
     {
         //All numbers are stored in XL files as invarient culture this is just a easy helper
         public static String ToInvariantString(this Decimal value)
@@ -197,7 +197,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class DoubleExtensions
+    internal static class DoubleExtensions
     {
         //All numbers are stored in XL files as invarient culture this is just a easy helper
         public static String ToInvariantString(this Double value)
@@ -211,7 +211,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class FontBaseExtensions
+    internal static class FontBaseExtensions
     {
         public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, Font> fontCache)
         {
@@ -270,7 +270,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class XDocumentExtensions
+    internal static class XDocumentExtensions
     {
         public static XDocument Load(Stream stream)
         {
@@ -281,7 +281,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class EnumerableExtensions
+    internal static class EnumerableExtensions
     {
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
@@ -295,7 +295,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class ListExtensions
+    internal static class ListExtensions
     {
         public static void RemoveAll<T>(this IList<T> list, Func<T, bool> predicate)
         {
@@ -307,7 +307,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class DoubleValueExtensions
+    internal static class DoubleValueExtensions
     {
         public static DoubleValue SaveRound(this DoubleValue value)
         {
@@ -315,7 +315,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class TypeExtensions
+    internal static class TypeExtensions
     {
         public static bool IsNumber(this Type type)
         {
@@ -333,7 +333,7 @@ namespace ClosedXML.Excel
         }
     }
 
-    public static class ObjectExtensions
+    internal static class ObjectExtensions
     {
         public static bool IsNumber(this object value)
         {
