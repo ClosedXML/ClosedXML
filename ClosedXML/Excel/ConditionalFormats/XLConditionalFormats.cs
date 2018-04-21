@@ -67,14 +67,14 @@ namespace ClosedXML.Excel
                         var nextFormat = formats[i];
 
                         var intersectsSkipped =
-                            skippedRanges.Any(left => nextFormat.Ranges.Any(right => left.Intersects(right)));
+                            skippedRanges.Any(left => nextFormat.Ranges.GetIntersectedRanges(left.RangeAddress).Any());
 
                         if (IsSameFormat(nextFormat) && !intersectsSkipped)
                         {
                             similarFormats.Add(nextFormat);
                             nextFormat.Ranges.ForEach(r => rangesToJoin.Add(r));
                         }
-                        else if (rangesToJoin.Any(left => nextFormat.Ranges.Any(right => left.Intersects(right))) ||
+                        else if (rangesToJoin.Any(left => nextFormat.Ranges.GetIntersectedRanges(left.RangeAddress).Any()) ||
                                  intersectsSkipped)
                         {
                             // if we reached the rule intersecting any of captured ranges stop for not breaking the priorities

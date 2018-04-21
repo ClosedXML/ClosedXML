@@ -8,6 +8,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
+
     internal abstract class XLRangeBase : XLStylizedBase, IXLRangeBase, IXLStylized
     {
         #region Fields
@@ -290,13 +291,10 @@ namespace ClosedXML.Excel
         {
             if (checkIntersect)
             {
-                var range = Worksheet.Range(RangeAddress);
-                foreach (var mergedRange in Worksheet.Internals.MergedRanges)
+                var intersectedMergedRanges = Worksheet.Internals.MergedRanges.GetIntersectedRanges(RangeAddress).ToList();
+                foreach (var intersectedMergedRange in intersectedMergedRanges)
                 {
-                    if (mergedRange.Intersects(range))
-                    {
-                        Worksheet.Internals.MergedRanges.Remove(mergedRange);
-                    }
+                    Worksheet.Internals.MergedRanges.Remove(intersectedMergedRange);
                 }
             }
 
@@ -350,7 +348,7 @@ namespace ClosedXML.Excel
         {
             var mf = RangeAddress.FirstAddress;
             var ml = RangeAddress.LastAddress;
-            foreach (var format in Worksheet.ConditionalFormats.Where(x => x.Ranges.Any(r => r.Intersects(this))).ToList())
+            foreach (var format in Worksheet.ConditionalFormats.Where(x => x.Ranges.GetIntersectedRanges(RangeAddress).Any()).ToList())
             {
                 var cfRanges = format.Ranges.ToList();
                 format.Ranges.RemoveAll();
@@ -452,13 +450,7 @@ namespace ClosedXML.Excel
                 return false;
             var ma = range.RangeAddress;
             var ra = RangeAddress;
-
-            return !( // See if the two ranges intersect...
-                    ma.FirstAddress.ColumnNumber > ra.LastAddress.ColumnNumber
-                    || ma.LastAddress.ColumnNumber < ra.FirstAddress.ColumnNumber
-                    || ma.FirstAddress.RowNumber > ra.LastAddress.RowNumber
-                    || ma.LastAddress.RowNumber < ra.FirstAddress.RowNumber
-                    );
+            return ra.Intersects(ma);
         }
 
         IXLRange IXLRangeBase.AsRange()
@@ -644,12 +636,11 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                if (Worksheet.MergedRanges.Any(r => r.Intersects(this)))
+                var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress).ToList();
+                if (intersectedRanges.Any())
                 {
-                    Int32 minRo =
-                        Worksheet.MergedRanges.Where(r => r.Intersects(this)).Min(r => r.RangeAddress.FirstAddress.RowNumber);
-                    Int32 minCo =
-                        Worksheet.MergedRanges.Where(r => r.Intersects(this)).Min(r => r.RangeAddress.FirstAddress.ColumnNumber);
+                    Int32 minRo = intersectedRanges.Min(r => r.RangeAddress.FirstAddress.RowNumber);
+                    Int32 minCo = intersectedRanges.Min(r => r.RangeAddress.FirstAddress.ColumnNumber);
 
                     return Worksheet.Cell(minRo, minCo);
                 }
@@ -735,12 +726,11 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                if (Worksheet.MergedRanges.Any(r => r.Intersects(this)))
+                var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress).ToList();
+                if (intersectedRanges.Any())
                 {
-                    Int32 minRo =
-                        Worksheet.MergedRanges.Where(r => r.Intersects(this)).Max(r => r.RangeAddress.LastAddress.RowNumber);
-                    Int32 minCo =
-                        Worksheet.MergedRanges.Where(r => r.Intersects(this)).Max(r => r.RangeAddress.LastAddress.ColumnNumber);
+                    Int32 minRo = intersectedRanges.Max(r => r.RangeAddress.LastAddress.RowNumber);
+                    Int32 minCo = intersectedRanges.Max(r => r.RangeAddress.LastAddress.ColumnNumber);
 
                     return Worksheet.Cell(minRo, minCo);
                 }
@@ -1401,7 +1391,7 @@ namespace ClosedXML.Excel
 
         private void ClearMerged()
         {
-            var mergeToDelete = Worksheet.Internals.MergedRanges.Where(Intersects).ToList();
+            var mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(RangeAddress).ToList();
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
 
@@ -1417,10 +1407,7 @@ namespace ClosedXML.Excel
 
         public bool Contains(XLAddress address)
         {
-            return RangeAddress.FirstAddress.RowNumber <= address.RowNumber &&
-                   address.RowNumber <= RangeAddress.LastAddress.RowNumber &&
-                   RangeAddress.FirstAddress.ColumnNumber <= address.ColumnNumber &&
-                   address.ColumnNumber <= RangeAddress.LastAddress.ColumnNumber;
+            return RangeAddress.Contains(in address);
         }
 
         public void Delete(XLShiftDeletedCells shiftDeleteCells)
@@ -1972,7 +1959,7 @@ namespace ClosedXML.Excel
             var dvEmpty = new List<IXLDataValidation>();
             foreach (IXLDataValidation dv in Worksheet.DataValidations)
             {
-                foreach (IXLRange dvRange in dv.Ranges.Where(dvRange => dvRange.Intersects(this)))
+                foreach (IXLRange dvRange in dv.Ranges.GetIntersectedRanges(RangeAddress).ToList())
                 {
                     if (dataValidationToCopy == null)
                         dataValidationToCopy = dv;

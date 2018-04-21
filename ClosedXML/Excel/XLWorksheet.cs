@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using ClosedXML.Excel.Ranges.Index;
 
 namespace ClosedXML.Excel
 {
@@ -17,6 +18,7 @@ namespace ClosedXML.Excel
         private readonly Dictionary<Int32, Int32> _rowOutlineCount = new Dictionary<Int32, Int32>();
         private readonly XLRangeFactory _rangeFactory;
         private readonly XLRangeRepository _rangeRepository;
+        private readonly List<IXLRangeIndex> _rangeIndices;
         internal Int32 ZOrder = 1;
         private String _name;
         internal Int32 _position;
@@ -52,6 +54,7 @@ namespace ClosedXML.Excel
             RangeAddress = new XLRangeAddress(firstAddress, lastAddress);
             _rangeFactory = new XLRangeFactory(this);
             _rangeRepository = new XLRangeRepository(workbook, _rangeFactory.Create);
+            _rangeIndices = new List<IXLRangeIndex>();
 
             Pictures = new XLPictures(this);
             NamedRanges = new XLNamedRanges(this);
@@ -978,11 +981,17 @@ namespace ClosedXML.Excel
             return ColumnsUsed(false, predicate);
         }
 
+        internal void RegisterRangeIndex(IXLRangeIndex rangeIndex)
+        {
+            _rangeIndices.Add(rangeIndex);
+        }
+
         public void Dispose()
         {
             Internals.Dispose();
             Pictures.ForEach(p => p.Dispose());
             _rangeRepository.Clear();
+            _rangeIndices.Clear();
         }
 
         #endregion IXLWorksheet Members
@@ -1153,10 +1162,11 @@ namespace ClosedXML.Excel
         {
             if (!range.IsEntireColumn())
             {
-                var model = Worksheet.Range(range.RangeAddress.FirstAddress,
+                var model = new XLRangeAddress(
+                    range.RangeAddress.FirstAddress,
                     new XLAddress(range.RangeAddress.LastAddress.RowNumber, XLHelper.MaxColumnNumber, false, false));
                 var rangesToSplit = Worksheet.MergedRanges
-                    .Where(mr => mr.Intersects(model)) // in #803 this must be optimized too
+                    .GetIntersectedRanges(model)
                     .Where(r => r.RangeAddress.FirstAddress.RowNumber < range.RangeAddress.FirstAddress.RowNumber ||
                                 r.RangeAddress.LastAddress.RowNumber > range.RangeAddress.LastAddress.RowNumber)
                     .ToList();
@@ -1234,10 +1244,11 @@ namespace ClosedXML.Excel
         {
             if (!range.IsEntireRow())
             {
-                var model = Worksheet.Range(range.RangeAddress.FirstAddress,
+                var model = new XLRangeAddress(
+                    range.RangeAddress.FirstAddress,
                     new XLAddress(XLHelper.MaxRowNumber, range.RangeAddress.LastAddress.ColumnNumber, false, false));
                 var rangesToSplit = Worksheet.MergedRanges
-                    .Where(mr => mr.Intersects(model)) // in #803 this must be optimized too
+                    .GetIntersectedRanges(model)
                     .Where(r => r.RangeAddress.FirstAddress.ColumnNumber < range.RangeAddress.FirstAddress.ColumnNumber ||
                                 r.RangeAddress.LastAddress.ColumnNumber > range.RangeAddress.LastAddress.ColumnNumber)
                     .ToList();
@@ -1715,8 +1726,14 @@ namespace ClosedXML.Excel
             if (_rangeRepository == null)
                 return;
 
-            _rangeRepository.Replace(new XLRangeKey(rangeType, oldAddress),
-                                     new XLRangeKey(rangeType, newAddress));
+            var range = _rangeRepository.Replace(new XLRangeKey(rangeType, oldAddress),
+                                                 new XLRangeKey(rangeType, newAddress));
+
+            foreach (var rangeIndex in _rangeIndices)
+            {
+                if (rangeIndex.Remove(range))
+                    rangeIndex.Add(range);
+            }
         }
 
         internal void DeleteColumn(int columnNumber)

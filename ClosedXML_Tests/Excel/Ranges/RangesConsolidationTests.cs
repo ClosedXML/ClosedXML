@@ -47,7 +47,11 @@ namespace ClosedXML_Tests.Excel.Ranges
             ranges.Add(ws.Column("F"));
             ranges.Add(ws.Column("E"));
 
-            var consRanges = ranges.Consolidate().ToList();
+            var consRanges = ranges.Consolidate()
+                .OrderBy(r => r.Worksheet.Name)
+                .ThenBy(r => r.RangeAddress.FirstAddress.RowNumber)
+                .ThenBy(r => r.RangeAddress.FirstAddress.ColumnNumber)
+                .ToList();
 
             Assert.AreEqual(3, consRanges.Count);
             Assert.AreEqual("D1:F1048576", consRanges[0].RangeAddress.ToString());
@@ -80,7 +84,11 @@ namespace ClosedXML_Tests.Excel.Ranges
             ranges.Add(ws1.Range("I9:I13"));
             ranges.Add(ws1.Range("C4:D5"));
             
-            var consRanges = ranges.Consolidate().ToList();
+            var consRanges = ranges.Consolidate()
+                .OrderBy(r => r.Worksheet.Name)
+                .ThenBy(r => r.RangeAddress.FirstAddress.RowNumber)
+                .ThenBy(r => r.RangeAddress.FirstAddress.ColumnNumber)
+                .ToList();
 
             Assert.AreEqual(9, consRanges.Count);
             Assert.AreEqual("Sheet1!$A$1:$E$9", consRanges[0].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));

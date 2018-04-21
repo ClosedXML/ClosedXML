@@ -1062,8 +1062,7 @@ namespace ClosedXML.Excel
             //Checking if called from range to avoid stack overflow
             if (!calledFromRange && IsMerged())
             {
-                var asRange = AsRange();
-                var firstOrDefault = Worksheet.Internals.MergedRanges.FirstOrDefault(asRange.Intersects);
+                var firstOrDefault = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).FirstOrDefault();
                 if (firstOrDefault != null)
                     firstOrDefault.Clear(clearOptions);
             }
@@ -1896,9 +1895,9 @@ namespace ClosedXML.Excel
             var srcSheet = fromRange.Worksheet;
             int minRo = fromRange.RangeAddress.FirstAddress.RowNumber;
             int minCo = fromRange.RangeAddress.FirstAddress.ColumnNumber;
-            if (srcSheet.ConditionalFormats.Any(r => r.Ranges.Any(range => range.Intersects(fromRange))))
+            if (srcSheet.ConditionalFormats.Any(r => r.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any()))
             {
-                var fs = srcSheet.ConditionalFormats.SelectMany(cf => cf.Ranges).Where(range => range.Intersects(fromRange)).ToArray();
+                var fs = srcSheet.ConditionalFormats.SelectMany(cf => cf.Ranges.GetIntersectedRanges(fromRange.RangeAddress)).ToArray();
                 if (fs.Any())
                 {
                     minRo = fs.Max(r => r.RangeAddress.LastAddress.RowNumber);
@@ -1910,11 +1909,11 @@ namespace ClosedXML.Excel
             rCnt = Math.Min(rCnt, fromRange.RowCount());
             cCnt = Math.Min(cCnt, fromRange.ColumnCount());
             var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
-            var formats = srcSheet.ConditionalFormats.Where(f => f.Ranges.Any(range => range.Intersects(fromRange)));
+            var formats = srcSheet.ConditionalFormats.Where(f => f.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any());
             foreach (var cf in formats.ToList())
             {
                 var fmtRanges = cf.Ranges
-                    .Where(r => r.Intersects(fromRange))
+                    .GetIntersectedRanges(fromRange.RangeAddress)
                     .Select(r => Relative(Intersection(r, fromRange), fromRange, toRange) as XLRange)
                     .ToList();
 
@@ -1969,8 +1968,7 @@ namespace ClosedXML.Excel
 
         private void ClearMerged()
         {
-            List<IXLRange> mergeToDelete = Worksheet.Internals.MergedRanges
-                .Where(merge => merge.Intersects(AsRange())).ToList();
+            List<IXLRange> mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).ToList();
 
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
