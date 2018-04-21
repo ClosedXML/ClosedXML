@@ -194,6 +194,36 @@ namespace ClosedXML.Excel
                     LastAddress.ToStringRelative());
         }
 
+        public bool Intersects(IXLRangeAddress otherAddress)
+        {
+            var xlOtherAddress = (XLRangeAddress) otherAddress;
+            return Intersects(in xlOtherAddress);
+        }
+
+        internal bool Intersects(in XLRangeAddress otherAddress)
+        {
+            return !( // See if the two ranges intersect...
+                       otherAddress.FirstAddress.ColumnNumber > LastAddress.ColumnNumber
+                    || otherAddress.LastAddress.ColumnNumber < FirstAddress.ColumnNumber
+                    || otherAddress.FirstAddress.RowNumber > LastAddress.RowNumber
+                    || otherAddress.LastAddress.RowNumber < FirstAddress.RowNumber
+                );
+        }
+
+        public bool Contains(IXLAddress address)
+        {
+            var xlAddress = (XLAddress)address;
+            return Contains(in xlAddress);
+        }
+
+        internal bool Contains(in XLAddress address)
+        {
+            return FirstAddress.RowNumber <= address.RowNumber &&
+                   address.RowNumber <= LastAddress.RowNumber &&
+                   FirstAddress.ColumnNumber <= address.ColumnNumber &&
+                   address.ColumnNumber <= LastAddress.ColumnNumber;
+        }
+
         public String ToStringFixed(XLReferenceStyle referenceStyle)
         {
             return ToStringFixed(referenceStyle, false);

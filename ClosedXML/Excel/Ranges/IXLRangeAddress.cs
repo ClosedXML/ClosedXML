@@ -43,5 +43,9 @@ namespace ClosedXML.Excel
         String ToStringRelative();
 
         String ToStringRelative(Boolean includeSheet);
+
+        bool Intersects(IXLRangeAddress otherAddress);
+
+        bool Contains(IXLAddress address);
     }
 }

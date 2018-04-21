@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClosedXML.Excel.Ranges.Index;
 
 namespace ClosedXML.Excel
 {
@@ -8,30 +9,43 @@ namespace ClosedXML.Excel
 
     internal class XLRanges : XLStylizedBase, IXLRanges, IXLStylized
     {
-        private readonly List<XLRange> _ranges = new List<XLRange>();
+        /// <summary>
+        /// Normally, XLRanges collection includes ranges from a single worksheet, but not necessarily.
+        /// </summary>
+        private readonly Dictionary<IXLWorksheet, IXLRangeIndex<XLRange>> _indexes;
+        private IEnumerable<XLRange> Ranges => _indexes.Values.SelectMany(index => index.GetAll()).ToList();
+
+
+        private IXLRangeIndex<XLRange> GetRangeIndex(IXLWorksheet worksheet)
+        {
+            if (!_indexes.ContainsKey(worksheet))
+                _indexes.Add(worksheet, new XLRangeIndex<XLRange>(worksheet));
+
+            return _indexes[worksheet];
+        }
 
         public XLRanges() : base(XLWorkbook.DefaultStyleValue)
         {
+            _indexes = new Dictionary<IXLWorksheet, IXLRangeIndex<XLRange>>();
         }
 
         #region IXLRanges Members
 
         public IXLRanges Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
-            _ranges.ForEach(c => c.Clear(clearOptions));
+            Ranges.ForEach(c => c.Clear(clearOptions));
             return this;
         }
 
         public void Add(XLRange range)
         {
-            Count++;
-            _ranges.Add(range);
+            if (GetRangeIndex(range.Worksheet).Add(range))
+                Count++;
         }
 
         public void Add(IXLRangeBase range)
         {
-            Count++;
-            _ranges.Add(range.AsRange() as XLRange);
+            Add(range.AsRange() as XLRange);
         }
 
         public void Add(IXLCell cell)
@@ -41,8 +55,8 @@ namespace ClosedXML.Excel
 
         public void Remove(IXLRange range)
         {
-            Count--;
-            _ranges.RemoveAll(r => r.ToString() == range.ToString());
+            if (GetRangeIndex(range.Worksheet).Remove(range))
+                Count--;
         }
 
         /// <summary>
@@ -54,7 +68,10 @@ namespace ClosedXML.Excel
         /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
         public void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true)
         {
-            Count -= _ranges.RemoveAll(match ?? (_ => true));
+            foreach (var index in _indexes.Values)
+            {
+                Count -= index.RemoveAll(match ?? (_ => true));
+            }
         }
 
         public int Count { get; private set; }
@@ -62,7 +79,7 @@ namespace ClosedXML.Excel
         public IEnumerator<IXLRange> GetEnumerator()
         {
             var retList = new List<IXLRange>();
-            retList.AddRange(_ranges.Where(r => XLHelper.IsValidRangeAddress(r.RangeAddress)).Cast<IXLRange>());
+            retList.AddRange(Ranges.Where(r => XLHelper.IsValidRangeAddress(r.RangeAddress)).Cast<IXLRange>());
             return retList.GetEnumerator();
         }
 
@@ -73,17 +90,50 @@ namespace ClosedXML.Excel
 
         public Boolean Contains(IXLCell cell)
         {
-            return _ranges.Any(r => r.RangeAddress.IsValid && r.Contains(cell));
+            return GetIntersectedRanges((XLAddress)cell.Address).Any();
         }
 
         public Boolean Contains(IXLRange range)
         {
-            return _ranges.Any(r => r.RangeAddress.IsValid && r.Contains(range));
+            return GetIntersectedRanges((XLRangeAddress)range.RangeAddress)
+                .Any(r => r.Contains(range));
+        }
+
+        /// <summary>
+        /// Filter ranges from a collection that intersect the specified address. Is much more efficient
+        /// that using Linq expression .Where().
+        /// </summary>
+        public IEnumerable<IXLRange> GetIntersectedRanges(IXLRangeAddress rangeAddress)
+        {
+            var xlRangeAddress = (XLRangeAddress)rangeAddress;
+            return GetIntersectedRanges(in xlRangeAddress);
+        }
+
+        internal IEnumerable<IXLRange> GetIntersectedRanges(in XLRangeAddress rangeAddress)
+        {
+            return GetRangeIndex(rangeAddress.Worksheet)
+                .GetIntersectedRanges(rangeAddress);
+        }
+
+        /// <summary>
+        /// Filter ranges from a collection that intersect the specified address. Is much more efficient
+        /// that using Linq expression .Where().
+        /// </summary>
+        public IEnumerable<IXLRange> GetIntersectedRanges(IXLAddress address)
+        {
+            var xlAddress = (XLAddress) address;
+            return GetIntersectedRanges(in xlAddress);
+        }
+
+        internal IEnumerable<IXLRange> GetIntersectedRanges(in XLAddress address)
+        {
+            return GetRangeIndex(address.Worksheet)
+                .GetIntersectedRanges(address);
         }
 
         public IEnumerable<IXLDataValidation> DataValidation
         {
-            get { return _ranges.Select(range => range.DataValidation).Where(dv => dv != null); }
+            get { return Ranges.Select(range => range.DataValidation).Where(dv => dv != null); }
         }
 
         public IXLRanges AddToNamed(String rangeName)
@@ -98,25 +148,25 @@ namespace ClosedXML.Excel
 
         public IXLRanges AddToNamed(String rangeName, XLScope scope, String comment)
         {
-            _ranges.ForEach(r => r.AddToNamed(rangeName, scope, comment));
+            Ranges.ForEach(r => r.AddToNamed(rangeName, scope, comment));
             return this;
         }
 
         public Object Value
         {
-            set { _ranges.ForEach(r => r.Value = value); }
+            set { Ranges.ForEach(r => r.Value = value); }
         }
 
         public IXLRanges SetValue<T>(T value)
         {
-            _ranges.ForEach(r => r.SetValue(value));
+            Ranges.ForEach(r => r.SetValue(value));
             return this;
         }
 
         public IXLCells Cells()
         {
             var cells = new XLCells(false, false);
-            foreach (XLRange container in _ranges)
+            foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -124,7 +174,7 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(true, false);
-            foreach (XLRange container in _ranges)
+            foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -132,14 +182,14 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed(Boolean includeFormats)
         {
             var cells = new XLCells(true, includeFormats);
-            foreach (XLRange container in _ranges)
+            foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;
         }
 
         public IXLRanges SetDataType(XLDataType dataType)
         {
-            _ranges.ForEach(c => c.DataType = dataType);
+            Ranges.ForEach(c => c.DataType = dataType);
             return this;
         }
 
@@ -152,7 +202,7 @@ namespace ClosedXML.Excel
             get
             {
                 yield return Style;
-                foreach (XLRange rng in _ranges)
+                foreach (XLRange rng in Ranges)
                 {
                     yield return rng.Style;
                     foreach (XLCell r in rng.Worksheet.Internals.CellsCollection.GetCells(
@@ -169,7 +219,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                foreach (XLRange rng in _ranges)
+                foreach (XLRange rng in Ranges)
                     yield return rng;
             }
         }
@@ -183,7 +233,7 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            String retVal = _ranges.Aggregate(String.Empty, (agg, r) => agg + (r.ToString() + ","));
+            String retVal = Ranges.Aggregate(String.Empty, (agg, r) => agg + (r.ToString() + ","));
             if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
             return retVal;
         }
@@ -198,22 +248,22 @@ namespace ClosedXML.Excel
             if (other == null)
                 return false;
 
-            return _ranges.Count == other._ranges.Count &&
-                   _ranges.Select(thisRange => Enumerable.Contains(other._ranges, thisRange)).All(foundOne => foundOne);
+            return Ranges.Count() == other.Ranges.Count() &&
+                   Ranges.Select(thisRange => Enumerable.Contains(other.Ranges, thisRange)).All(foundOne => foundOne);
         }
 
         public override int GetHashCode()
         {
-            return _ranges.Aggregate(0, (current, r) => current ^ r.GetHashCode());
+            return Ranges.Aggregate(0, (current, r) => current ^ r.GetHashCode());
         }
 
         public IXLDataValidation SetDataValidation()
         {
-            foreach (XLRange range in _ranges)
+            foreach (XLRange range in Ranges)
             {
                 foreach (IXLDataValidation dv in range.Worksheet.DataValidations)
                 {
-                    foreach (IXLRange dvRange in dv.Ranges.Where(dvRange => dvRange.Intersects(range)))
+                    foreach (IXLRange dvRange in dv.Ranges.GetIntersectedRanges(range.RangeAddress))
                     {
                         dv.Ranges.Remove(dvRange);
                         foreach (IXLCell c in dvRange.Cells().Where(c => !range.Contains(c.Address.ToString())))
@@ -225,7 +275,7 @@ namespace ClosedXML.Excel
             }
             var dataValidation = new XLDataValidation(this);
 
-            _ranges.First().Worksheet.DataValidations.Add(dataValidation);
+            Ranges.First().Worksheet.DataValidations.Add(dataValidation);
             return dataValidation;
         }
 
