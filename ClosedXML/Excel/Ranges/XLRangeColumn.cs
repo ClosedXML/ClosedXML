@@ -337,8 +337,7 @@ namespace ClosedXML.Excel
             if (IsTableColumn())
                 throw new InvalidOperationException("This column is already part of a table.");
 
-            using (var asRange = AsRange())
-                return asRange.AsTable();
+            return AsRange().AsTable();
         }
 
         public IXLTable AsTable(string name)
@@ -346,8 +345,7 @@ namespace ClosedXML.Excel
             if (IsTableColumn())
                 throw new InvalidOperationException("This column is already part of a table.");
 
-            using (var asRange = AsRange())
-                return asRange.AsTable(name);
+            return AsRange().AsTable(name);
         }
 
         public IXLTable CreateTable()
@@ -355,8 +353,7 @@ namespace ClosedXML.Excel
             if (IsTableColumn())
                 throw new InvalidOperationException("This column is already part of a table.");
 
-            using (var asRange = AsRange())
-                return asRange.CreateTable();
+            return AsRange().CreateTable();
         }
 
         public IXLTable CreateTable(string name)
@@ -364,8 +361,7 @@ namespace ClosedXML.Excel
             if (IsTableColumn())
                 throw new InvalidOperationException("This column is already part of a table.");
 
-            using (var asRange = AsRange())
-                return asRange.CreateTable(name);
+            return AsRange().CreateTable(name);
         }
 
         public new IXLRangeColumn Clear(XLClearOptions clearOptions = XLClearOptions.All)

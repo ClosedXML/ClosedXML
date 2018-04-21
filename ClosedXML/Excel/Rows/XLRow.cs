@@ -88,9 +88,7 @@ namespace ClosedXML.Excel
         public void Delete()
         {
             int rowNumber = RowNumber();
-            using (var asRange = AsRange())
-                asRange.Delete(XLShiftDeletedCells.ShiftCellsUp);
-
+            AsRange().Delete(XLShiftDeletedCells.ShiftCellsUp);
             Worksheet.DeleteRow(rowNumber);
         }
 
@@ -98,13 +96,9 @@ namespace ClosedXML.Excel
         {
             int rowNum = RowNumber();
             Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum + 1, numberOfRows);
-            using (var row = Worksheet.Row(rowNum))
-            {
-                using (var asRange = row.AsRange())
-                {
-                    asRange.InsertRowsBelowVoid(true, numberOfRows);
-                }
-            }
+            var asRange = Worksheet.Row(rowNum).AsRange();
+            asRange.InsertRowsBelowVoid(true, numberOfRows);
+
             var newRows = Worksheet.Rows(rowNum + 1, rowNum + numberOfRows);
 
             CopyRows(newRows);
@@ -130,20 +124,12 @@ namespace ClosedXML.Excel
             int rowNum = RowNumber();
             if (rowNum > 1)
             {
-                using (var row = Worksheet.Row(rowNum - 1))
-                {
-                    return row.InsertRowsBelow(numberOfRows);
-                }
+                return Worksheet.Row(rowNum - 1).InsertRowsBelow(numberOfRows);
             }
 
             Worksheet.Internals.RowsCollection.ShiftRowsDown(rowNum, numberOfRows);
-            using (var row = Worksheet.Row(rowNum))
-            {
-                using (var asRange = row.AsRange())
-                {
-                    asRange.InsertRowsAboveVoid(true, numberOfRows);
-                }
-            }
+            var asRange = Worksheet.Row(rowNum).AsRange();
+            asRange.InsertRowsAboveVoid(true, numberOfRows);
 
             return Worksheet.Rows(rowNum, rowNum + numberOfRows - 1);
         }
@@ -406,16 +392,14 @@ namespace ClosedXML.Excel
 
         IXLRangeRow IXLRow.CopyTo(IXLCell target)
         {
-            using (var asRange = AsRange())
-            using (var copy = asRange.CopyTo(target))
-                return copy.Row(1);
+            var copy = AsRange().CopyTo(target);
+            return copy.Row(1);
         }
 
         IXLRangeRow IXLRow.CopyTo(IXLRangeBase target)
         {
-            using (var asRange = AsRange())
-            using (var copy = asRange.CopyTo(target))
-                return copy.Row(1);
+            var copy = AsRange().CopyTo(target);
+            return copy.Row(1);
         }
 
         public IXLRow CopyTo(IXLRow row)
@@ -425,8 +409,7 @@ namespace ClosedXML.Excel
             newRow._height = _height;
             newRow.InnerStyle = GetStyle();
 
-            using (var asRange = AsRange())
-                asRange.CopyTo(row).Dispose();
+            AsRange().CopyTo(row);
 
             return newRow;
         }
@@ -446,8 +429,8 @@ namespace ClosedXML.Excel
             var retVal = new XLRangeRows();
             var rowPairs = rows.Split(',');
             foreach (string pair in rowPairs)
-                using (var asRange = AsRange())
-                    asRange.Rows(pair.Trim()).ForEach(retVal.Add);
+                AsRange().Rows(pair.Trim()).ForEach(retVal.Add);
+
             return retVal;
         }
 

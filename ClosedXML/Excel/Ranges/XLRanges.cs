@@ -54,16 +54,7 @@ namespace ClosedXML.Excel
         /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
         public void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true)
         {
-            match = match ?? (_ => true);
-
-            if (releaseEventHandlers)
-            {
-                _ranges
-                    .Where(r => match(r))
-                    .ForEach(r => r.Dispose());
-            }
-
-            Count -= _ranges.RemoveAll(match);
+            Count -= _ranges.RemoveAll(match ?? (_ => true));
         }
 
         public int Count { get; private set; }
@@ -152,11 +143,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public void Dispose()
-        {
-            _ranges.ForEach(r => r.Dispose());
-        }
-
         #endregion IXLRanges Members
 
         #region IXLStylized Members
@@ -232,9 +218,7 @@ namespace ClosedXML.Excel
                         dv.Ranges.Remove(dvRange);
                         foreach (IXLCell c in dvRange.Cells().Where(c => !range.Contains(c.Address.ToString())))
                         {
-                            var r = c.AsRange();
-                            r.Dispose();
-                            dv.Ranges.Add(r);
+                            dv.Ranges.Add(c.AsRange());
                         }
                     }
                 }

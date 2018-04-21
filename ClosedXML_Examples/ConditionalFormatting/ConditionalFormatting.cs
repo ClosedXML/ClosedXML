@@ -650,15 +650,13 @@ namespace ClosedXML_Examples
             var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
-            using (var range = ws.Range("A1:A10"))
-            {
-                range.AddConditionalFormat().WhenEquals("3")
-                    .Fill.SetBackgroundColor(XLColor.Blue);
-                range.AddConditionalFormat().WhenEquals("2")
-                    .Fill.SetBackgroundColor(XLColor.Green);
-                range.AddConditionalFormat().WhenEquals("1")
-                    .Fill.SetBackgroundColor(XLColor.Red);
-            }
+            var range = ws.Range("A1:A10");
+            range.AddConditionalFormat().WhenEquals("3")
+                .Fill.SetBackgroundColor(XLColor.Blue);
+            range.AddConditionalFormat().WhenEquals("2")
+                .Fill.SetBackgroundColor(XLColor.Green);
+            range.AddConditionalFormat().WhenEquals("1")
+                .Fill.SetBackgroundColor(XLColor.Red);
 
             workbook.SaveAs(filePath);
         }
@@ -695,24 +693,22 @@ namespace ClosedXML_Examples
             {
                 var ws = workbook.AddWorksheet("Sheet1");
 
-                using (var range = ws.Range("A1:A10"))
-                {
-                    range.AddConditionalFormat()
-                        .WhenDateIs(XLTimePeriod.Tomorrow)
-                        .Fill.SetBackgroundColor(XLColor.GrannySmithApple);
+                var range = ws.Range("A1:A10");
+                range.AddConditionalFormat()
+                    .WhenDateIs(XLTimePeriod.Tomorrow)
+                    .Fill.SetBackgroundColor(XLColor.GrannySmithApple);
 
-                    range.AddConditionalFormat()
-                        .WhenDateIs(XLTimePeriod.Yesterday)
-                        .Fill.SetBackgroundColor(XLColor.Orange);
+                range.AddConditionalFormat()
+                    .WhenDateIs(XLTimePeriod.Yesterday)
+                    .Fill.SetBackgroundColor(XLColor.Orange);
 
-                    range.AddConditionalFormat()
-                        .WhenDateIs(XLTimePeriod.InTheLast7Days)
-                        .Fill.SetBackgroundColor(XLColor.Blue);
+                range.AddConditionalFormat()
+                    .WhenDateIs(XLTimePeriod.InTheLast7Days)
+                    .Fill.SetBackgroundColor(XLColor.Blue);
 
-                    range.AddConditionalFormat()
-                        .WhenDateIs(XLTimePeriod.ThisMonth)
-                        .Fill.SetBackgroundColor(XLColor.Red);
-                }
+                range.AddConditionalFormat()
+                    .WhenDateIs(XLTimePeriod.ThisMonth)
+                    .Fill.SetBackgroundColor(XLColor.Red);
 
                 workbook.SaveAs(filePath);
             }

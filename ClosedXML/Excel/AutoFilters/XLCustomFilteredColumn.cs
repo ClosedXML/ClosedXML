@@ -111,32 +111,30 @@ namespace ClosedXML.Excel
         #endregion
 
         private void ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition)
-            where T: IComparable<T>
+            where T : IComparable<T>
         {
             _autoFilter.Filters[_column].Add(new XLFilter
-                                                 {
-                                                     Value = value,
-                                                     Operator = op,
-                                                     Connector = _connector,
-                                                     Condition = condition
-                                                 });
-            using (var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount()))
             {
-                foreach (IXLRangeRow row in rows)
+                Value = value,
+                Operator = op,
+                Connector = _connector,
+                Condition = condition
+            });
+            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
+            foreach (IXLRangeRow row in rows)
+            {
+                if (_connector == XLConnector.And)
                 {
-                    if (_connector == XLConnector.And)
+                    if (!row.WorksheetRow().IsHidden)
                     {
-                        if (!row.WorksheetRow().IsHidden)
-                        {
-                            if (condition(row.Cell(_column).GetValue<T>()))
-                                row.WorksheetRow().Unhide().Dispose();
-                            else
-                                row.WorksheetRow().Hide().Dispose();
-                        }
+                        if (condition(row.Cell(_column).GetValue<T>()))
+                            row.WorksheetRow().Unhide();
+                        else
+                            row.WorksheetRow().Hide();
                     }
-                    else if (condition(row.Cell(_column).GetValue<T>()))
-                        row.WorksheetRow().Unhide().Dispose();
                 }
+                else if (condition(row.Cell(_column).GetValue<T>()))
+                    row.WorksheetRow().Unhide();
             }
         }
     }

@@ -24,9 +24,9 @@ namespace ClosedXML.Excel
 
         public void Dispose()
         {
-            ColumnsCollection.Dispose();
-            RowsCollection.Dispose();
-            MergedRanges.Dispose();
+            ColumnsCollection.Clear();
+            RowsCollection.Clear();
+            MergedRanges.RemoveAll();
         }
     }
 }

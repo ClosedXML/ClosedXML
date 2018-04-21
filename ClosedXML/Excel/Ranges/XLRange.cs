@@ -46,8 +46,6 @@ namespace ClosedXML.Excel
                 var column = Column(c);
                 if (predicate == null || predicate(column))
                     retVal.Add(column);
-                else
-                    column.Dispose();
             }
             return retVal;
         }
@@ -161,8 +159,6 @@ namespace ClosedXML.Excel
                 var row = Row(r);
                 if (predicate == null || predicate(row))
                     retVal.Add(Row(r));
-                else
-                    row.Dispose();
             }
             return retVal;
         }
@@ -376,8 +372,6 @@ namespace ClosedXML.Excel
             {
                 var column = Column(c);
                 if (predicate(column)) return column;
-
-                column.Dispose();
             }
 
             return null;
@@ -398,8 +392,6 @@ namespace ClosedXML.Excel
             {
                 var column = Column(c);
                 if (predicate(column)) return column;
-
-                column.Dispose();
             }
 
             return null;
@@ -441,7 +433,6 @@ namespace ClosedXML.Excel
 
                 if (!column.IsEmpty(includeFormats) && predicate(column))
                     return column;
-                column.Dispose();
             }
             return null;
         }
@@ -482,7 +473,6 @@ namespace ClosedXML.Excel
 
                 if (!column.IsEmpty(includeFormats) && predicate(column))
                     return column;
-                column.Dispose();
             }
             return null;
         }
@@ -502,8 +492,6 @@ namespace ClosedXML.Excel
             {
                 var row = Row(ro);
                 if (predicate(row)) return row;
-
-                row.Dispose();
             }
 
             return null;
@@ -524,8 +512,6 @@ namespace ClosedXML.Excel
             {
                 var row = Row(ro);
                 if (predicate(row)) return row;
-
-                row.Dispose();
             }
 
             return null;
@@ -569,7 +555,6 @@ namespace ClosedXML.Excel
 
                 if (!row.IsEmpty(includeFormats) && predicate(row))
                     return row;
-                row.Dispose();
             }
             return null;
         }
@@ -610,7 +595,6 @@ namespace ClosedXML.Excel
 
                 if (!row.IsEmpty(includeFormats) && predicate(row))
                     return row;
-                row.Dispose();
             }
             return null;
         }
@@ -630,8 +614,6 @@ namespace ClosedXML.Excel
 
                 if (!row.IsEmpty(includeFormats) && (predicate == null || predicate(row)))
                     rows.Add(row);
-                else
-                    row.Dispose();
             }
             return rows;
         }
@@ -661,8 +643,6 @@ namespace ClosedXML.Excel
 
                 if (!column.IsEmpty(includeFormats) && (predicate == null || predicate(column)))
                     columns.Add(column);
-                else
-                    column.Dispose();
             }
             return columns;
         }
@@ -827,8 +807,6 @@ namespace ClosedXML.Excel
                 var column = Column(c);
                 if (predicate == null || predicate(column))
                     return column;
-                else
-                    column.Dispose();
             }
             return null;
         }
@@ -841,8 +819,6 @@ namespace ClosedXML.Excel
                 var row = Row(r);
                 if (predicate(row))
                     return row;
-                else
-                    row.Dispose();
             }
             return null;
         }

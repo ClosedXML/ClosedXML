@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLColumnsCollection : IDictionary<Int32, XLColumn>, IDisposable
+    internal class XLColumnsCollection : IDictionary<Int32, XLColumn>
     {
         public void ShiftColumnsRight(Int32 startingColumn, Int32 columnsToShift)
         {
@@ -113,11 +113,6 @@ namespace ClosedXML.Excel
         public void RemoveAll(Func<XLColumn, Boolean> predicate)
         {
             _dictionary.RemoveAll(predicate);
-        }
-
-        public void Dispose()
-        {
-            _dictionary.Values.ForEach(c=>c.Dispose());
         }
     }
 }

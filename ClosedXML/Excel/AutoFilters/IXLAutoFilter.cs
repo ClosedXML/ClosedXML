@@ -3,7 +3,7 @@ namespace ClosedXML.Excel
 {
     using System.Collections.Generic;
 
-    public interface IXLAutoFilter: IDisposable
+    public interface IXLAutoFilter
     {
         IXLFilterColumn Column(String column);
         IXLFilterColumn Column(Int32 column);

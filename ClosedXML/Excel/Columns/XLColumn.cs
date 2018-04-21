@@ -65,11 +65,7 @@ namespace ClosedXML.Excel
         public void Delete()
         {
             int columnNumber = ColumnNumber();
-            using (var asRange = AsRange())
-            {
-                asRange.Delete(XLShiftDeletedCells.ShiftCellsLeft);
-            }
-
+            Delete(XLShiftDeletedCells.ShiftCellsLeft);
             Worksheet.DeleteColumn(columnNumber);
         }
 
@@ -115,14 +111,7 @@ namespace ClosedXML.Excel
         {
             int columnNum = ColumnNumber();
             Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum + 1, numberOfColumns);
-            using (var column = Worksheet.Column(columnNum))
-            {
-                using (var asRange = column.AsRange())
-                {
-                    asRange.InsertColumnsAfterVoid(true, numberOfColumns);
-                }
-            }
-
+            Worksheet.Column(columnNum).InsertColumnsAfterVoid(true, numberOfColumns);
             var newColumns = Worksheet.Columns(columnNum + 1, columnNum + numberOfColumns);
             CopyColumns(newColumns);
             return newColumns;
@@ -133,21 +122,11 @@ namespace ClosedXML.Excel
             int columnNum = ColumnNumber();
             if (columnNum > 1)
             {
-                using (var column = Worksheet.Column(columnNum - 1))
-                {
-                    return column.InsertColumnsAfter(numberOfColumns);
-                }
+                return Worksheet.Column(columnNum - 1).InsertColumnsAfter(numberOfColumns);
             }
 
             Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum, numberOfColumns);
-
-            using (var column = Worksheet.Column(columnNum))
-            {
-                using (var asRange = column.AsRange())
-                {
-                    asRange.InsertColumnsBeforeVoid(true, numberOfColumns);
-                }
-            }
+            Worksheet.Column(columnNum).InsertColumnsBeforeVoid(true, numberOfColumns);
 
             return Worksheet.Columns(columnNum, columnNum + numberOfColumns - 1);
         }
@@ -474,16 +453,14 @@ namespace ClosedXML.Excel
 
         IXLRangeColumn IXLColumn.CopyTo(IXLCell target)
         {
-            using (var asRange = AsRange())
-            using (var copy = asRange.CopyTo(target))
-                return copy.Column(1);
+            var copy = AsRange().CopyTo(target);
+            return copy.Column(1);
         }
 
         IXLRangeColumn IXLColumn.CopyTo(IXLRangeBase target)
         {
-            using (var asRange = AsRange())
-            using (var copy = asRange.CopyTo(target))
-                return copy.Column(1);
+            var copy = AsRange().CopyTo(target);
+            return copy.Column(1);
         }
 
         public IXLColumn CopyTo(IXLColumn column)
@@ -493,8 +470,7 @@ namespace ClosedXML.Excel
             newColumn.Width = Width;
             newColumn.InnerStyle = InnerStyle;
 
-            using (var asRange = AsRange())
-                asRange.CopyTo(column).Dispose();
+            AsRange().CopyTo(column);
 
             return newColumn;
         }
@@ -514,8 +490,7 @@ namespace ClosedXML.Excel
             var retVal = new XLRangeColumns();
             var columnPairs = columns.Split(',');
             foreach (string pair in columnPairs)
-                using (var asRange = AsRange())
-                    asRange.Columns(pair.Trim()).ForEach(retVal.Add);
+                AsRange().Columns(pair.Trim()).ForEach(retVal.Add);
             return retVal;
         }
 

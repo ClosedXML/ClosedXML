@@ -293,10 +293,7 @@ namespace ClosedXML.Excel
                 rowNum,
                 RangeAddress.LastAddress.ColumnNumber);
 
-            var result = range.FirstRow();
-            range.Dispose();
-
-            return result;
+            return range.FirstRow();
         }
 
         #region XLRangeRow Above

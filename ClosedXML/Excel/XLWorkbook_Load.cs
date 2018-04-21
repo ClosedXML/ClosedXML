@@ -2090,23 +2090,21 @@ namespace ClosedXML.Excel
                 if (String.IsNullOrWhiteSpace(txt)) continue;
                 foreach (var rangeAddress in txt.Split(' '))
                 {
-                    using (var range = ws.Range(rangeAddress))
-                    {
-                        var dvt = range.SetDataValidation();
-                        if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
-                        if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;
-                        if (dvs.ShowErrorMessage != null) dvt.ShowErrorMessage = dvs.ShowErrorMessage;
-                        if (dvs.ShowInputMessage != null) dvt.ShowInputMessage = dvs.ShowInputMessage;
-                        if (dvs.PromptTitle != null) dvt.InputTitle = dvs.PromptTitle;
-                        if (dvs.Prompt != null) dvt.InputMessage = dvs.Prompt;
-                        if (dvs.ErrorTitle != null) dvt.ErrorTitle = dvs.ErrorTitle;
-                        if (dvs.Error != null) dvt.ErrorMessage = dvs.Error;
-                        if (dvs.ErrorStyle != null) dvt.ErrorStyle = dvs.ErrorStyle.Value.ToClosedXml();
-                        if (dvs.Type != null) dvt.AllowedValues = dvs.Type.Value.ToClosedXml();
-                        if (dvs.Operator != null) dvt.Operator = dvs.Operator.Value.ToClosedXml();
-                        if (dvs.Formula1 != null) dvt.MinValue = dvs.Formula1.Text;
-                        if (dvs.Formula2 != null) dvt.MaxValue = dvs.Formula2.Text;
-                    }
+                    var range = ws.Range(rangeAddress);
+                    var dvt = range.SetDataValidation();
+                    if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
+                    if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;
+                    if (dvs.ShowErrorMessage != null) dvt.ShowErrorMessage = dvs.ShowErrorMessage;
+                    if (dvs.ShowInputMessage != null) dvt.ShowInputMessage = dvs.ShowInputMessage;
+                    if (dvs.PromptTitle != null) dvt.InputTitle = dvs.PromptTitle;
+                    if (dvs.Prompt != null) dvt.InputMessage = dvs.Prompt;
+                    if (dvs.ErrorTitle != null) dvt.ErrorTitle = dvs.ErrorTitle;
+                    if (dvs.Error != null) dvt.ErrorMessage = dvs.Error;
+                    if (dvs.ErrorStyle != null) dvt.ErrorStyle = dvs.ErrorStyle.Value.ToClosedXml();
+                    if (dvs.Type != null) dvt.AllowedValues = dvs.Type.Value.ToClosedXml();
+                    if (dvs.Operator != null) dvt.Operator = dvs.Operator.Value.ToClosedXml();
+                    if (dvs.Formula1 != null) dvt.MinValue = dvs.Formula1.Text;
+                    if (dvs.Formula2 != null) dvt.MaxValue = dvs.Formula2.Text;
                 }
             }
         }

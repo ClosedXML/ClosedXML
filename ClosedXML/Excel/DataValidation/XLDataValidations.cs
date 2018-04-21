@@ -87,10 +87,5 @@ namespace ClosedXML.Excel
                 _dataValidations.Add(consRule);
             }
         }
-
-        public void Dispose()
-        {
-            _dataValidations.ForEach(dv => dv.Dispose());
-        }
     }
 }

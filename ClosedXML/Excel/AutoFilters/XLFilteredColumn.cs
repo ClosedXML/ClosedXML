@@ -38,18 +38,15 @@ namespace ClosedXML.Excel
                 Connector = XLConnector.Or
             });
 
-            using (var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount()))
+            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
+
+            foreach (IXLRangeRow row in rows)
             {
-                foreach (IXLRangeRow row in rows)
+                if ((isText && condition(row.Cell(_column).GetString())) ||
+                    (!isText && row.Cell(_column).DataType == XLDataType.Number &&
+                     condition(row.Cell(_column).GetValue<T>())))
                 {
-                    if ((isText && condition(row.Cell(_column).GetString())) || (
-                                                                                    !isText &&
-                                                                                    row.Cell(_column).DataType ==
-                                                                                    XLDataType.Number &&
-                                                                                    condition(
-                                                                                        row.Cell(_column).GetValue<T>()))
-                        )
-                        row.WorksheetRow().Unhide().Dispose();
+                    row.WorksheetRow().Unhide();
                 }
             }
             return this;

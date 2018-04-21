@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
-            Func<Object, Boolean> condition = date2 => IsMatch(date, (DateTime)date2, dateTimeGrouping);
+            Func<Object, Boolean> condition = date2 => IsMatch(date, (DateTime) date2, dateTimeGrouping);
 
             _autoFilter.Filters[_column].Add(new XLFilter
             {
@@ -31,14 +31,13 @@ namespace ClosedXML.Excel
                 DateTimeGrouping = dateTimeGrouping
             });
 
-            using (var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount()))
+            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
+            foreach (IXLRangeRow row in rows)
             {
-                foreach (IXLRangeRow row in rows)
-                {
-                    if (row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime()))
-                        row.WorksheetRow().Unhide().Dispose();
-                }
+                if (row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime()))
+                    row.WorksheetRow().Unhide();
             }
+
             return this;
         }
 

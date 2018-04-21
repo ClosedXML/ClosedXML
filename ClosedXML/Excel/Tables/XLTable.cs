@@ -175,13 +175,10 @@ namespace ClosedXML.Excel
         {
             get
             {
-                using (var asRange = ShowTotalsRow ? Range(1, 1, RowCount() - 1, ColumnCount()) : AsRange())
-                {
-                    if (_autoFilter == null)
-                        _autoFilter = new XLAutoFilter();
+                if (_autoFilter == null)
+                    _autoFilter = new XLAutoFilter();
 
-                    _autoFilter.Range = asRange;
-                }
+                _autoFilter.Range = ShowTotalsRow ? Range(1, 1, RowCount() - 1, ColumnCount()) : AsRange();
                 return _autoFilter;
             }
         }
@@ -555,16 +552,6 @@ namespace ClosedXML.Excel
             get { return AutoFilter; }
         }
 
-        public new void Dispose()
-        {
-            if (AutoFilter != null)
-                AutoFilter.Dispose();
-
-            Fields?.ForEach(field => field.Dispose());
-
-            base.Dispose();
-        }
-
         #endregion IXLTable Members
 
         private void InitializeValues(Boolean setAutofilter)
@@ -660,46 +647,44 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    using (var asRange = Worksheet.Range(
+                    var asRange = Worksheet.Range(
                         RangeAddress.FirstAddress.RowNumber - 1,
                         RangeAddress.FirstAddress.ColumnNumber,
                         RangeAddress.LastAddress.RowNumber,
-                        RangeAddress.LastAddress.ColumnNumber
-                        ))
-                    using (var firstRow = asRange.FirstRow())
+                        RangeAddress.LastAddress.ColumnNumber);
+                    var firstRow = asRange.FirstRow();
+                    IXLRangeRow rangeRow;
+                    if (firstRow.IsEmpty(true))
                     {
-                        IXLRangeRow rangeRow;
-                        if (firstRow.IsEmpty(true))
-                        {
-                            rangeRow = firstRow;
-                            RangeAddress = new XLRangeAddress(
-                                new XLAddress(Worksheet,
-                                              RangeAddress.FirstAddress.RowNumber - 1,
-                                              RangeAddress.FirstAddress.ColumnNumber,
-                                              RangeAddress.FirstAddress.FixedRow,
-                                              RangeAddress.FirstAddress.FixedColumn),
-                                RangeAddress.LastAddress);
-                        }
-                        else
-                        {
-                            var fAddress = RangeAddress.FirstAddress;
-                            //var lAddress = RangeAddress.LastAddress;
+                        rangeRow = firstRow;
+                        RangeAddress = new XLRangeAddress(
+                            new XLAddress(Worksheet,
+                                RangeAddress.FirstAddress.RowNumber - 1,
+                                RangeAddress.FirstAddress.ColumnNumber,
+                                RangeAddress.FirstAddress.FixedRow,
+                                RangeAddress.FirstAddress.FixedColumn),
+                            RangeAddress.LastAddress);
+                    }
+                    else
+                    {
+                        var fAddress = RangeAddress.FirstAddress;
+                        //var lAddress = RangeAddress.LastAddress;
 
-                            rangeRow = firstRow.InsertRowsBelow(1, false).First();
+                        rangeRow = firstRow.InsertRowsBelow(1, false).First();
 
-                            RangeAddress = new XLRangeAddress(
-                                fAddress,
-                                RangeAddress.LastAddress);
-                        }
+                        RangeAddress = new XLRangeAddress(
+                            fAddress,
+                            RangeAddress.LastAddress);
+                    }
 
-                        Int32 co = 1;
-                        foreach (var name in FieldNames.Values.Select(f => f.Name))
-                        {
-                            rangeRow.Cell(co).SetValue(name);
-                            co++;
-                        }
+                    Int32 co = 1;
+                    foreach (var name in FieldNames.Values.Select(f => f.Name))
+                    {
+                        rangeRow.Cell(co).SetValue(name);
+                        co++;
                     }
                 }
+
                 _showHeaderRow = value;
 
                 if (_showHeaderRow)
