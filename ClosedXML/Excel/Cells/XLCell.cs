@@ -1442,8 +1442,7 @@ namespace ClosedXML.Excel
             var validation = GetDataValidation();
             if (validation == null)
             {
-                var range = this.AsRange();
-                validation = new XLDataValidation(range);
+                validation = new XLDataValidation(AsRange());
                 Worksheet.DataValidations.Add(validation);
             }
             return validation;
