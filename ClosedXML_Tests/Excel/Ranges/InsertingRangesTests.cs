@@ -1,5 +1,6 @@
 using System.Linq;
 using ClosedXML.Excel;
+using ClosedXML.Excel.Misc;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests
@@ -137,7 +138,7 @@ namespace ClosedXML_Tests
                 var thisRange = ws.Range(thisRangeAddress) as XLRange;
                 var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
+                thisRange.WorksheetRangeShiftedColumns(thisRange, new RangeShiftedEventArgs(shiftedRange, shiftedColumns));
 
                 Assert.IsTrue(thisRange.RangeAddress.IsValid);
                 Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
@@ -155,7 +156,7 @@ namespace ClosedXML_Tests
                 var thisRange = ws.Range(thisRangeAddress) as XLRange;
                 var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
+                thisRange.WorksheetRangeShiftedColumns(thisRange, new RangeShiftedEventArgs( shiftedRange, shiftedColumns)); ;
 
                 Assert.IsFalse(thisRange.RangeAddress.IsValid);
             }
@@ -190,7 +191,7 @@ namespace ClosedXML_Tests
                 var thisRange = ws.Range(thisRangeAddress) as XLRange;
                 var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
+                thisRange.WorksheetRangeShiftedRows(thisRange, new RangeShiftedEventArgs(shiftedRange, shiftedRows));
 
                 Assert.IsTrue(thisRange.RangeAddress.IsValid);
                 Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
@@ -207,7 +208,7 @@ namespace ClosedXML_Tests
                 var thisRange = ws.Range(thisRangeAddress) as XLRange;
                 var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
+                thisRange.WorksheetRangeShiftedRows(thisRange, new RangeShiftedEventArgs(shiftedRange, shiftedRows));
 
                 Assert.IsFalse(thisRange.RangeAddress.IsValid);
             }
