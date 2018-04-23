@@ -623,6 +623,33 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void InvalidFormulaShiftProducesREF()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("Sheet1");
+                    ws.Cell("A1").Value = "ValueA1";
+                    ws.Cell("B2").FormulaA1 = "=A1";
+
+                    ws.Range("A2").Value = ws.Range("B2");
+                    var fA2 = ws.Cell("A2").FormulaA1;
+
+                    wb.SaveAs(ms);
+
+                    Assert.AreEqual("#REF!", fA2);
+                }
+
+                using (var wb2 = new XLWorkbook(ms))
+                {
+                    var fA2 = wb2.Worksheets.First().Cell("A2").FormulaA1;
+                    Assert.AreEqual("#REF!", fA2);
+                }
+            }
+        }
+
         public void FormulaWithCircularReferenceFails2()
         {
             var cell = new XLWorkbook().Worksheets.Add("Sheet1").FirstCell();
