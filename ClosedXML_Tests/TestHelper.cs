@@ -31,7 +31,7 @@ namespace ClosedXML_Tests
 
         private const bool CompareWithResources = true;
 
-        private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(null, ".Resource.");
+        private static readonly ResourceFileExtractor _extractor = new ResourceFileExtractor(".Resource.");
 
         public static void SaveWorkbook(XLWorkbook workbook, params string[] fileNameParts)
         {
@@ -80,7 +80,7 @@ namespace ClosedXML_Tests
             if (CompareWithResources)
             {
                 string resourcePath = "Examples." + filePartName.Replace('\\', '.').TrimStart('.');
-                using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
+                using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
                     var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
@@ -116,7 +116,7 @@ namespace ClosedXML_Tests
             if (CompareWithResources)
             {
                 string resourcePath = referenceResource.Replace('\\', '.').TrimStart('.');
-                using (var streamExpected = _extractor.ReadFileFromResToStream(resourcePath))
+                using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
                     var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
@@ -137,17 +137,21 @@ namespace ClosedXML_Tests
 
         public static Stream GetStreamFromResource(string resourcePath)
         {
-            var extractor = new ResourceFileExtractor(null, ".Resource.");
-            return extractor.ReadFileFromResToStream(resourcePath);
+            return _extractor.ReadFileFromResourceToStream(resourcePath);
         }
 
         public static void LoadFile(string filePartName)
         {
+            IXLWorkbook wb;
             using (var stream = GetStreamFromResource(GetResourcePath(filePartName)))
             {
-                var wb = new XLWorkbook(stream);
-                wb.Dispose();
+                Assert.DoesNotThrow(() => wb = new XLWorkbook(stream), "Unable to load resource {0}", filePartName);
             }
+        }
+
+        public static IEnumerable<String> ListResourceFiles(Func<String, Boolean> predicate = null)
+        {
+            return _extractor.GetFileNames(predicate);
         }
     }
 }
