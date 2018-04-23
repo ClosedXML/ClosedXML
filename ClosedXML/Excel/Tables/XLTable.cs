@@ -574,7 +574,7 @@ namespace ClosedXML.Excel
         {
             ShowRowStripes = true;
             _showHeaderRow = true;
-            Theme = XLTableTheme.TableStyleLight9;
+            Theme = XLTableTheme.TableStyleMedium2;
             if (setAutofilter)
                 InitializeAutoFilter();
 
