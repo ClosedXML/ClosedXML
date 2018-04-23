@@ -2072,36 +2072,43 @@ namespace ClosedXML.Excel
             if (String.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
 
-            var value = ">" + strValue + "<";
-
-            var regex = conversionType == FormulaConversionType.A1ToR1C1 ? A1Regex : R1C1Regex;
-
-            var sb = new StringBuilder();
-            var lastIndex = 0;
-
-            foreach (var match in regex.Matches(value).Cast<Match>())
+            try
             {
-                var matchString = match.Value;
-                var matchIndex = match.Index;
-                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
-                    && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
+                var value = ">" + strValue + "<";
+
+                var regex = conversionType == FormulaConversionType.A1ToR1C1 ? A1Regex : R1C1Regex;
+
+                var sb = new StringBuilder();
+                var lastIndex = 0;
+
+                foreach (var match in regex.Matches(value).Cast<Match>())
                 {
-                    // Check if the match is in between quotes
-                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
-                    sb.Append(conversionType == FormulaConversionType.A1ToR1C1
-                                  ? GetR1C1Address(matchString, rowsToShift, columnsToShift)
-                                  : GetA1Address(matchString, rowsToShift, columnsToShift));
+                    var matchString = match.Value;
+                    var matchIndex = match.Index;
+                    if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
+                        && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
+                    {
+                        // Check if the match is in between quotes
+                        sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
+                        sb.Append(conversionType == FormulaConversionType.A1ToR1C1
+                            ? GetR1C1Address(matchString, rowsToShift, columnsToShift)
+                            : GetA1Address(matchString, rowsToShift, columnsToShift));
+                    }
+                    else
+                        sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
+                    lastIndex = matchIndex + matchString.Length;
                 }
-                else
-                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
-                lastIndex = matchIndex + matchString.Length;
+
+                if (lastIndex < value.Length)
+                    sb.Append(value.Substring(lastIndex));
+
+                var retVal = sb.ToString();
+                return retVal.Substring(1, retVal.Length - 2);
             }
-
-            if (lastIndex < value.Length)
-                sb.Append(value.Substring(lastIndex));
-
-            var retVal = sb.ToString();
-            return retVal.Substring(1, retVal.Length - 2);
+            catch (IndexOutOfRangeException)
+            {
+                return "#REF!";
+            }
         }
 
         private string GetA1Address(string r1C1Address, int rowsToShift, int columnsToShift)
