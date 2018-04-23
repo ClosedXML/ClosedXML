@@ -45,6 +45,17 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void CanSuccessfullyLoadLOFiles()
+        {
+            var files = TestHelper.ListResourceFiles(s => s.Contains(".LO.")).ToArray();
+
+            foreach (var file in files)
+            {
+                TestHelper.LoadFile(file);
+            }
+        }
+
+        [Test]
         public void CanLoadAndManipulateFileWithEmptyTable()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\EmptyTable.xlsx")))
