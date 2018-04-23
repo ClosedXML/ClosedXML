@@ -12,11 +12,16 @@ namespace ClosedXML_Tests
     public sealed class ResourceFileExtractor
     {
         #region Static
+
         #region Private fields
+
         private static readonly Dictionary<string, ResourceFileExtractor> ms_defaultExtractors =
                 new Dictionary<string, ResourceFileExtractor>();
-        #endregion
+
+        #endregion Private fields
+
         #region Public properties
+
         /// <summary>Instance of resource extractor for executing assembly </summary>
         public static ResourceFileExtractor Instance
         {
@@ -38,19 +43,24 @@ namespace ClosedXML_Tests
                 return _return;
             }
         }
-        #endregion
-        #region Public methods
-        #endregion
-        #endregion
+
+        #endregion Public properties
+
+        #endregion Static
+
         #region Private fields
+
         private readonly Assembly m_assembly;
         private readonly ResourceFileExtractor m_baseExtractor;
         private readonly string m_assemblyName;
 
         private bool m_isStatic;
         private string m_resourceFilePath;
-        #endregion
+
+        #endregion Private fields
+
         #region Constructors
+
         /// <summary>
         /// Create instance
         /// </summary>
@@ -61,6 +71,7 @@ namespace ClosedXML_Tests
         {
             m_resourceFilePath = resourceFilePath;
         }
+
         /// <summary>
         /// Create instance
         /// </summary>
@@ -69,6 +80,7 @@ namespace ClosedXML_Tests
                 : this(Assembly.GetCallingAssembly(), baseExtractor)
         {
         }
+
         /// <summary>
         /// Create instance
         /// </summary>
@@ -77,6 +89,7 @@ namespace ClosedXML_Tests
                 : this(Assembly.GetCallingAssembly(), resourcePath)
         {
         }
+
         /// <summary>
         /// Instance constructor
         /// </summary>
@@ -87,6 +100,7 @@ namespace ClosedXML_Tests
         {
             m_resourceFilePath = resourcePath;
         }
+
         /// <summary>
         /// Instance constructor
         /// </summary>
@@ -94,14 +108,16 @@ namespace ClosedXML_Tests
                 : this(Assembly.GetCallingAssembly())
         {
         }
+
         /// <summary>
         /// Instance constructor
         /// </summary>
         /// <param name="assembly"></param>
         public ResourceFileExtractor(Assembly assembly)
-                : this(assembly ?? Assembly.GetCallingAssembly(), (ResourceFileExtractor) null)
+                : this(assembly ?? Assembly.GetCallingAssembly(), (ResourceFileExtractor)null)
         {
         }
+
         /// <summary>
         /// Instance constructor
         /// </summary>
@@ -111,6 +127,7 @@ namespace ClosedXML_Tests
                 : this(assembly ?? Assembly.GetCallingAssembly(), false, baseExtractor)
         {
         }
+
         /// <summary>
         /// Instance constructor
         /// </summary>
@@ -121,31 +138,39 @@ namespace ClosedXML_Tests
         private ResourceFileExtractor(Assembly assembly, bool isStatic, ResourceFileExtractor baseExtractor)
         {
             #region Check
+
             if (ReferenceEquals(assembly, null))
             {
                 throw new ArgumentNullException("assembly");
             }
-            #endregion
+
+            #endregion Check
+
             m_assembly = assembly;
             m_baseExtractor = baseExtractor;
             m_assemblyName = Assembly.GetName().Name;
             IsStatic = isStatic;
             m_resourceFilePath = ".Resources.";
         }
-        #endregion
+
+        #endregion Constructors
+
         #region Public properties
+
         /// <summary> Work assembly </summary>
         public Assembly Assembly
         {
             [DebuggerStepThrough]
             get { return m_assembly; }
         }
+
         /// <summary> Work assembly name </summary>
         public string AssemblyName
         {
             [DebuggerStepThrough]
             get { return m_assemblyName; }
         }
+
         /// <summary>
         /// Path to read resource files. Example: .Resources.Upgrades.
         /// </summary>
@@ -156,6 +181,7 @@ namespace ClosedXML_Tests
             [DebuggerStepThrough]
             set { m_resourceFilePath = value; }
         }
+
         public bool IsStatic
         {
             [DebuggerStepThrough]
@@ -163,6 +189,7 @@ namespace ClosedXML_Tests
             [DebuggerStepThrough]
             set { m_isStatic = value; }
         }
+
         public IEnumerable<string> GetFileNames()
         {
             string _path = AssemblyName + m_resourceFilePath;
@@ -174,8 +201,11 @@ namespace ClosedXML_Tests
                 }
             }
         }
-        #endregion
+
+        #endregion Public properties
+
         #region Public methods
+
         public string ReadFileFromRes(string fileName)
         {
             Stream _stream = ReadFileFromResToStream(fileName);
@@ -208,6 +238,7 @@ namespace ClosedXML_Tests
             ResourceFileExtractor _ext = new ResourceFileExtractor(Assembly, specificPath);
             return _ext.ReadFileFromRes(fileName);
         }
+
         /// <summary>
         /// Read file in current assembly by specific file name
         /// </summary>
@@ -218,20 +249,28 @@ namespace ClosedXML_Tests
         {
             string _nameResFile = AssemblyName + m_resourceFilePath + fileName;
             Stream _stream = Assembly.GetManifestResourceStream(_nameResFile);
+
             #region Not found
+
             if (ReferenceEquals(_stream, null))
             {
                 #region Get from base extractor
+
                 if (!ReferenceEquals(m_baseExtractor, null))
                 {
                     return m_baseExtractor.ReadFileFromResToStream(fileName);
                 }
-                #endregion
+
+                #endregion Get from base extractor
+
                 throw new ApplicationException("Can't find resource file " + _nameResFile);
             }
-            #endregion
+
+            #endregion Not found
+
             return _stream;
         }
-        #endregion
+
+        #endregion Public methods
     }
 }
