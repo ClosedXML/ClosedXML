@@ -36,6 +36,10 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("Sheet1!$C$3,Sheet1!$C$4:$D$4,Sheet2!$D$3:$D$4,Sheet1!$7:$8,Sheet1!$G:$H",
                 sheet1.NamedRanges.First().RefersTo);
             Assert.AreEqual("Sheet1!B2,Sheet2!A1", sheet2.NamedRanges.First().RefersTo);
+
+            wb.NamedRanges.ForEach(nr => Assert.AreEqual(XLNamedRangeScope.Workbook, nr.Scope));
+            sheet1.NamedRanges.ForEach(nr => Assert.AreEqual(XLNamedRangeScope.Worksheet, nr.Scope));
+            sheet2.NamedRanges.ForEach(nr => Assert.AreEqual(XLNamedRangeScope.Worksheet, nr.Scope));
         }
 
         [Test]
@@ -54,6 +58,7 @@ namespace ClosedXML_Tests.Excel
             Boolean result1 = wb.NamedRanges.TryGetValue("Sheet1!Name", out IXLNamedRange range1);
             Assert.IsTrue(result1);
             Assert.IsNotNull(range1);
+            Assert.AreEqual(XLNamedRangeScope.Worksheet, range1.Scope);
 
             Boolean result2 = wb.NamedRanges.TryGetValue("Sheet1!NameX", out IXLNamedRange range2);
             Assert.IsFalse(result2);

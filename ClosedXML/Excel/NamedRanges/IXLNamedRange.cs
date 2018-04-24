@@ -2,6 +2,12 @@ using System;
 
 namespace ClosedXML.Excel
 {
+    public enum XLNamedRangeScope
+    {
+        Worksheet,
+        Workbook
+    }
+
     public interface IXLNamedRange
     {
         /// <summary>
@@ -33,6 +39,11 @@ namespace ClosedXML.Excel
         ///   <c>true</c> if visible; otherwise, <c>false</c>.
         /// </value>
         Boolean Visible { get; set; }
+
+        /// <summary>
+        /// Gets the scope of this named range.
+        /// </summary>
+        XLNamedRangeScope Scope { get; }
 
         /// <summary>
         /// Adds the specified range to this named range.
