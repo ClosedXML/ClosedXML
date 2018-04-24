@@ -1152,26 +1152,20 @@ namespace ClosedXML.Excel
 
         internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            var newMerge = new XLRanges();
-            foreach (IXLRange rngMerged in Internals.MergedRanges)
+            if (!range.IsEntireColumn())
             {
-                if (range.RangeAddress.FirstAddress.ColumnNumber <= rngMerged.RangeAddress.FirstAddress.ColumnNumber
-                    && rngMerged.RangeAddress.FirstAddress.RowNumber >= range.RangeAddress.FirstAddress.RowNumber
-                    && rngMerged.RangeAddress.LastAddress.RowNumber <= range.RangeAddress.LastAddress.RowNumber)
+                var model = Worksheet.Range(range.RangeAddress.FirstAddress,
+                    new XLAddress(range.RangeAddress.LastAddress.RowNumber, XLHelper.MaxColumnNumber, false, false));
+                var rangesToSplit = Worksheet.MergedRanges
+                    .Where(mr => mr.Intersects(model)) // in #803 this must be optimized too
+                    .Where(r => r.RangeAddress.FirstAddress.RowNumber < range.RangeAddress.FirstAddress.RowNumber ||
+                                r.RangeAddress.LastAddress.RowNumber > range.RangeAddress.LastAddress.RowNumber)
+                    .ToList();
+                foreach (var rangeToSplit in rangesToSplit)
                 {
-                    var newRng = Range(
-                        rngMerged.RangeAddress.FirstAddress.RowNumber,
-                        rngMerged.RangeAddress.FirstAddress.ColumnNumber + columnsShifted,
-                        rngMerged.RangeAddress.LastAddress.RowNumber,
-                        rngMerged.RangeAddress.LastAddress.ColumnNumber + columnsShifted);
-                    newMerge.Add(newRng);
+                    Worksheet.MergedRanges.Remove(rangeToSplit);
                 }
-                else if (
-                    !(range.RangeAddress.FirstAddress.ColumnNumber <= rngMerged.RangeAddress.FirstAddress.ColumnNumber
-                      && range.RangeAddress.FirstAddress.RowNumber <= rngMerged.RangeAddress.LastAddress.RowNumber))
-                    newMerge.Add(rngMerged);
             }
-            Internals.MergedRanges = newMerge;
 
             Workbook.Worksheets.ForEach(ws => MoveNamedRangesColumns(range, columnsShifted, ws.NamedRanges));
             MoveNamedRangesColumns(range, columnsShifted, Workbook.NamedRanges);
@@ -1239,25 +1233,20 @@ namespace ClosedXML.Excel
 
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-            var newMerge = new XLRanges();
-            foreach (IXLRange rngMerged in Internals.MergedRanges)
+            if (!range.IsEntireRow())
             {
-                if (range.RangeAddress.FirstAddress.RowNumber <= rngMerged.RangeAddress.FirstAddress.RowNumber
-                    && rngMerged.RangeAddress.FirstAddress.ColumnNumber >= range.RangeAddress.FirstAddress.ColumnNumber
-                    && rngMerged.RangeAddress.LastAddress.ColumnNumber <= range.RangeAddress.LastAddress.ColumnNumber)
+                var model = Worksheet.Range(range.RangeAddress.FirstAddress,
+                    new XLAddress(XLHelper.MaxRowNumber, range.RangeAddress.LastAddress.ColumnNumber, false, false));
+                var rangesToSplit = Worksheet.MergedRanges
+                    .Where(mr => mr.Intersects(model)) // in #803 this must be optimized too
+                    .Where(r => r.RangeAddress.FirstAddress.ColumnNumber < range.RangeAddress.FirstAddress.ColumnNumber ||
+                                r.RangeAddress.LastAddress.ColumnNumber > range.RangeAddress.LastAddress.ColumnNumber)
+                    .ToList();
+                foreach (var rangeToSplit in rangesToSplit)
                 {
-                    var newRng = Range(
-                        rngMerged.RangeAddress.FirstAddress.RowNumber + rowsShifted,
-                        rngMerged.RangeAddress.FirstAddress.ColumnNumber,
-                        rngMerged.RangeAddress.LastAddress.RowNumber + rowsShifted,
-                        rngMerged.RangeAddress.LastAddress.ColumnNumber);
-                    newMerge.Add(newRng);
+                    Worksheet.MergedRanges.Remove(rangeToSplit);
                 }
-                else if (!(range.RangeAddress.FirstAddress.RowNumber <= rngMerged.RangeAddress.FirstAddress.RowNumber
-                           && range.RangeAddress.FirstAddress.ColumnNumber <= rngMerged.RangeAddress.LastAddress.ColumnNumber))
-                    newMerge.Add(rngMerged);
             }
-            Internals.MergedRanges = newMerge;
 
             Workbook.Worksheets.ForEach(ws => MoveNamedRangesRows(range, rowsShifted, ws.NamedRanges));
             MoveNamedRangesRows(range, rowsShifted, Workbook.NamedRanges);
