@@ -14,7 +14,6 @@ namespace ClosedXML.Excel.Drawings
     {
         private const String InvalidNameChars = @":\/?*[]";
         private static IDictionary<XLPictureFormat, ImageFormat> FormatMap;
-        private readonly IXLWorksheet _worksheet;
         private Int32 height;
         private Int32 id;
         private String name = string.Empty;
@@ -95,8 +94,7 @@ namespace ClosedXML.Excel.Drawings
 
         private XLPicture(IXLWorksheet worksheet)
         {
-            if (worksheet == null) throw new ArgumentNullException(nameof(worksheet));
-            this._worksheet = worksheet;
+            this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
             this.Placement = XLPicturePlacement.MoveAndSize;
             this.Markers = new Dictionary<XLMarkerPosition, IXLMarker>()
             {
@@ -121,7 +119,7 @@ namespace ClosedXML.Excel.Drawings
 
             private set
             {
-                if (!value.Worksheet.Equals(this._worksheet))
+                if (!value.Worksheet.Equals(this.Worksheet))
                     throw new ArgumentOutOfRangeException(nameof(value.Worksheet));
                 this.Markers[XLMarkerPosition.BottomRight] = new XLMarker(value);
             }
@@ -145,7 +143,7 @@ namespace ClosedXML.Excel.Drawings
             get { return id; }
             internal set
             {
-                if ((_worksheet.Pictures.FirstOrDefault(p => p.Id.Equals(value)) ?? this) != this)
+                if ((Worksheet.Pictures.FirstOrDefault(p => p.Id.Equals(value)) ?? this) != this)
                     throw new ArgumentException($"The picture ID '{value}' already exists.");
 
                 id = value;
@@ -162,7 +160,7 @@ namespace ClosedXML.Excel.Drawings
                 if (this.Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the left-hand offset, the placement should be FreeFloating");
 
-                Markers[XLMarkerPosition.TopLeft] = new XLMarker(_worksheet.Cell(1, 1).Address, new Point(value, this.Top));
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1).Address, new Point(value, this.Top));
             }
         }
 
@@ -173,7 +171,7 @@ namespace ClosedXML.Excel.Drawings
             {
                 if (name == value) return;
 
-                if ((_worksheet.Pictures.FirstOrDefault(p => p.Name.Equals(value, StringComparison.OrdinalIgnoreCase)) ?? this) != this)
+                if ((Worksheet.Pictures.FirstOrDefault(p => p.Name.Equals(value, StringComparison.OrdinalIgnoreCase)) ?? this) != this)
                     throw new ArgumentException($"The picture name '{value}' already exists.");
 
                 SetName(value);
@@ -194,7 +192,7 @@ namespace ClosedXML.Excel.Drawings
                 if (this.Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the top offset, the placement should be FreeFloating");
 
-                Markers[XLMarkerPosition.TopLeft] = new XLMarker(_worksheet.Cell(1, 1).Address, new Point(this.Left, value));
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1).Address, new Point(this.Left, value));
             }
         }
 
@@ -207,7 +205,7 @@ namespace ClosedXML.Excel.Drawings
 
             private set
             {
-                if (!value.Worksheet.Equals(this._worksheet))
+                if (!value.Worksheet.Equals(this.Worksheet))
                     throw new ArgumentOutOfRangeException(nameof(value.Worksheet));
 
                 this.Markers[XLMarkerPosition.TopLeft] = new XLMarker(value);
@@ -225,10 +223,7 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
-        public IXLWorksheet Worksheet
-        {
-            get { return _worksheet; }
-        }
+        public IXLWorksheet Worksheet { get; }
 
         internal IDictionary<XLMarkerPosition, IXLMarker> Markers { get; private set; }
 

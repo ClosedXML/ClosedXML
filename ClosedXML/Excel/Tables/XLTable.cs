@@ -234,7 +234,7 @@ namespace ClosedXML.Excel
                 if (_fieldNames?.Any() ?? false)
                     this.Fields.ForEach(f => (f as XLTableField).UpdateTableFieldTotalsRowFormula());
 
-                if (!String.IsNullOrWhiteSpace(oldname))
+                if (!String.IsNullOrWhiteSpace(oldname) && !String.Equals(oldname, _name, StringComparison.OrdinalIgnoreCase))
                 {
                     Worksheet.Tables.Add(this);
                     Worksheet.Tables.Remove(oldname);

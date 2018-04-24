@@ -6,7 +6,12 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotTables : IXLPivotTables
     {
-        private readonly Dictionary<String, XLPivotTable> _pivotTables = new Dictionary<string, XLPivotTable>();
+        private readonly Dictionary<String, XLPivotTable> _pivotTables = new Dictionary<string, XLPivotTable>(StringComparer.OrdinalIgnoreCase);
+
+        public XLPivotTables(IXLWorksheet worksheet)
+        {
+            this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
+        }
 
         public void Add(String name, IXLPivotTable pivotTable)
         {
@@ -15,9 +20,19 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable AddNew(string name, IXLCell target, IXLRange source)
         {
-            var pivotTable = new XLPivotTable { Name = name, TargetCell = target, SourceRange = source };
+            var pivotTable = new XLPivotTable(this.Worksheet)
+            {
+                Name = name,
+                TargetCell = target,
+                SourceRange = source
+            };
             _pivotTables.Add(name, pivotTable);
             return pivotTable;
+        }
+
+        public Boolean Contains(String name)
+        {
+            return _pivotTables.ContainsKey(name);
         }
 
         public void Delete(String name)
@@ -49,5 +64,7 @@ namespace ClosedXML.Excel
         {
             return PivotTable(name);
         }
+
+        public IXLWorksheet Worksheet { get; private set; }
     }
 }

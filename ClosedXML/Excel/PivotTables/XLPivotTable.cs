@@ -8,10 +8,12 @@ namespace ClosedXML.Excel
     [DebuggerDisplay("{Name}")]
     internal class XLPivotTable : IXLPivotTable
     {
+        private String _name;
         public Guid Guid { get; private set; }
 
-        public XLPivotTable()
+        public XLPivotTable(IXLWorksheet worksheet)
         {
+            this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
             this.Guid = Guid.NewGuid();
 
             Fields = new XLPivotFields(this);
@@ -42,7 +44,41 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable SetTheme(XLPivotTableTheme value) { Theme = value; return this; }
 
-        public String Name { get; set; }
+        public String Name
+        {
+            get { return _name; }
+            set
+            {
+                if (_name == value) return;
+
+                var oldname = _name ?? string.Empty;
+
+                if (String.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException($"The table name '{value}' is invalid");
+
+                // Table names are case insensitive
+                if (!oldname.Equals(value, StringComparison.OrdinalIgnoreCase)
+                    && Worksheet.Tables.Any(t => t.Name.Equals(value, StringComparison.OrdinalIgnoreCase)))
+                    throw new ArgumentException($"This worksheet already contains a table named '{value}'");
+
+                if (value[0] != '_' && !char.IsLetter(value[0]))
+                    throw new ArgumentException($"The table name '{value}' does not begin with a letter or an underscore");
+
+                if (value.Length > 255)
+                    throw new ArgumentException("The table name is more than 255 characters");
+
+                if (new[] { 'C', 'R' }.Any(c => value.ToUpper().Equals(c.ToString())))
+                    throw new ArgumentException($"The table name '{value}' is invalid");
+
+                _name = value;
+
+                if (!String.IsNullOrWhiteSpace(oldname) && !String.Equals(oldname, _name, StringComparison.OrdinalIgnoreCase))
+                {
+                    Worksheet.PivotTables.Delete(oldname);
+                    Worksheet.PivotTables.Add(_name, this);
+                }
+            }
+        }
 
         public IXLPivotTable SetName(String value) { Name = value; return this; }
 
@@ -323,7 +359,8 @@ namespace ClosedXML.Excel
             AllowMultipleFilters = true;	//	Multiple Field Filters
             SortFieldsAtoZ = false;	//	Default Sort Order
             UseCustomListsForSorting = true; //	Custom List AutoSort
-
         }
+
+        public IXLWorksheet Worksheet { get; }
     }
 }

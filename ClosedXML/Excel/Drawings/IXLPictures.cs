@@ -25,12 +25,14 @@ namespace ClosedXML.Excel.Drawings
 
         IXLPicture Add(String imageFile, String name);
 
+        bool Contains(String pictureName);
+
         void Delete(String pictureName);
 
         void Delete(IXLPicture picture);
 
         IXLPicture Picture(String pictureName);
 
-        bool TryGetPicture(string pictureName, out IXLPicture picture);
+        bool TryGetPicture(String pictureName, out IXLPicture picture);
     }
 }
