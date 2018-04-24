@@ -30,6 +30,15 @@ namespace ClosedXML.Excel
             return pivotTable;
         }
 
+        public IXLPivotTable AddNew(string name, IXLCell target, IXLTable table)
+        {
+            var dataRange = table.DataRange;
+            var header = table.HeadersRow();
+            var range = table.Worksheet.Range(header.FirstCell(), dataRange.LastCell());
+
+            return AddNew(name, target, range);
+        }
+
         public Boolean Contains(String name)
         {
             return _pivotTables.ContainsKey(name);
