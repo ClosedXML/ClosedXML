@@ -9,6 +9,8 @@ namespace ClosedXML.Excel
 
         IXLPivotTable AddNew(String name, IXLCell target, IXLRange source);
 
+        IXLPivotTable AddNew(String name, IXLCell target, IXLTable table);
+
         Boolean Contains(String name);
 
         void Delete(String name);
