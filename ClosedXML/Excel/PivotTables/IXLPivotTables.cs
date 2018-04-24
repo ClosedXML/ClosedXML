@@ -5,8 +5,6 @@ namespace ClosedXML.Excel
 {
     public interface IXLPivotTables : IEnumerable<IXLPivotTable>
     {
-        void Add(String name, IXLPivotTable pivotTable);
-
         IXLPivotTable AddNew(String name, IXLCell target, IXLRange source);
 
         IXLPivotTable AddNew(String name, IXLCell target, IXLTable table);
