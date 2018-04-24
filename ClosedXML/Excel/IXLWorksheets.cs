@@ -18,6 +18,8 @@ namespace ClosedXML.Excel
 
         void Add(DataSet dataSet);
 
+        Boolean Contains(String sheetName);
+
         void Delete(String sheetName);
 
         void Delete(Int32 position);

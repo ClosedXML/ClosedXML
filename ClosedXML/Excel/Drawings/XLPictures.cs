@@ -12,7 +12,6 @@ namespace ClosedXML.Excel.Drawings
     {
         private readonly List<XLPicture> _pictures = new List<XLPicture>();
         private readonly XLWorksheet _worksheet;
-        internal ICollection<String> Deleted { get; private set; }
 
         public XLPictures(XLWorksheet worksheet)
         {
@@ -25,6 +24,8 @@ namespace ClosedXML.Excel.Drawings
             [DebuggerStepThrough]
             get { return _pictures.Count; }
         }
+
+        internal ICollection<String> Deleted { get; private set; }
 
         public IXLPicture Add(Stream stream)
         {
@@ -87,6 +88,11 @@ namespace ClosedXML.Excel.Drawings
             var picture = Add(imageFile);
             picture.Name = name;
             return picture;
+        }
+
+        public bool Contains(string pictureName)
+        {
+            return _pictures.Any(p => string.Equals(p.Name, pictureName, StringComparison.OrdinalIgnoreCase));
         }
 
         public void Delete(IXLPicture picture)

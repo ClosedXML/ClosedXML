@@ -62,7 +62,7 @@ namespace ClosedXML.Excel
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations();
-            PivotTables = new XLPivotTables();
+            PivotTables = new XLPivotTables(this);
             Protection = new XLSheetProtection();
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();

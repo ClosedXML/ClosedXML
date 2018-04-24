@@ -9,15 +9,33 @@ namespace ClosedXML.Excel
     internal class XLTables : IXLTables
     {
         private readonly Dictionary<String, IXLTable> _tables;
-        internal ICollection<String> Deleted { get; private set; }
 
         public XLTables()
         {
-            _tables = new Dictionary<String, IXLTable>();
+            _tables = new Dictionary<String, IXLTable>(StringComparer.OrdinalIgnoreCase);
             Deleted = new HashSet<String>();
         }
 
+        internal ICollection<String> Deleted { get; private set; }
+
         #region IXLTables Members
+
+        public void Add(IXLTable table)
+        {
+            _tables.Add(table.Name, table);
+            (table as XLTable)?.OnAddedToTables();
+        }
+
+        public IXLTables Clear(XLClearOptions clearOptions = XLClearOptions.All)
+        {
+            _tables.Values.ForEach(t => t.Clear(clearOptions));
+            return this;
+        }
+
+        public Boolean Contains(String name)
+        {
+            return _tables.ContainsKey(name);
+        }
 
         public IEnumerator<IXLTable> GetEnumerator()
         {
@@ -27,30 +45,6 @@ namespace ClosedXML.Excel
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public void Add(IXLTable table)
-        {
-            _tables.Add(table.Name, table);
-            (table as XLTable)?.OnAddedToTables();
-        }
-
-        public IXLTable Table(Int32 index)
-        {
-            return _tables.ElementAt(index).Value;
-        }
-
-        public IXLTable Table(String name)
-        {
-            return _tables[name];
-        }
-
-        #endregion IXLTables Members
-
-        public IXLTables Clear(XLClearOptions clearOptions = XLClearOptions.All)
-        {
-            _tables.Values.ForEach(t => t.Clear(clearOptions));
-            return this;
         }
 
         public void Remove(Int32 index)
@@ -68,5 +62,17 @@ namespace ClosedXML.Excel
 
             if (table.RelId != null) Deleted.Add(table.RelId);
         }
+
+        public IXLTable Table(Int32 index)
+        {
+            return _tables.ElementAt(index).Value;
+        }
+
+        public IXLTable Table(String name)
+        {
+            return _tables[name];
+        }
+
+        #endregion IXLTables Members
     }
 }
