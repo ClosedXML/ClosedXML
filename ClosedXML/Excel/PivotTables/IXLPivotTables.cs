@@ -5,9 +5,15 @@ namespace ClosedXML.Excel
 {
     public interface IXLPivotTables : IEnumerable<IXLPivotTable>
     {
-        IXLPivotTable AddNew(String name, IXLCell target, IXLRange source);
+        IXLPivotTable Add(String name, IXLCell targetCell, IXLRange range);
 
-        IXLPivotTable AddNew(String name, IXLCell target, IXLTable table);
+        IXLPivotTable Add(String name, IXLCell targetCell, IXLTable table);
+
+        [Obsolete("Use Add instead")]
+        IXLPivotTable AddNew(String name, IXLCell targetCell, IXLRange range);
+
+        [Obsolete("Use Add instead")]
+        IXLPivotTable AddNew(String name, IXLCell targetCell, IXLTable table);
 
         Boolean Contains(String name);
 

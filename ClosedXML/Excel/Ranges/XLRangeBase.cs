@@ -1667,7 +1667,7 @@ namespace ClosedXML.Excel
 
         public XLPivotTable CreatePivotTable(IXLCell targetCell, String name)
         {
-            return (XLPivotTable)Worksheet.PivotTables.AddNew(name, targetCell, AsRange());
+            return (XLPivotTable)Worksheet.PivotTables.Add(name, targetCell, AsRange());
         }
 
         public IXLAutoFilter SetAutoFilter()

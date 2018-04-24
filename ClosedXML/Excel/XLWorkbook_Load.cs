@@ -479,7 +479,7 @@ namespace ClosedXML.Excel
 
                         if (target != null && source != null)
                         {
-                            var pt = ws.PivotTables.AddNew(pivotTableDefinition.Name, target, source) as XLPivotTable;
+                            var pt = ws.PivotTables.Add(pivotTableDefinition.Name, target, source) as XLPivotTable;
 
                             if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
                                 pt.SetColumnHeaderCaption(StringValue.ToString(pivotTableDefinition.ColumnHeaderCaption));

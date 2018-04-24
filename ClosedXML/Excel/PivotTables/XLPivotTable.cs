@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
                 if (!String.IsNullOrWhiteSpace(oldname) && !String.Equals(oldname, _name, StringComparison.OrdinalIgnoreCase))
                 {
                     Worksheet.PivotTables.Delete(oldname);
-                    Worksheet.PivotTables.Add(_name, this);
+                    (Worksheet.PivotTables as XLPivotTables).Add(_name, this);
                 }
             }
         }
