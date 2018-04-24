@@ -1650,19 +1650,9 @@ namespace ClosedXML.Excel
         //    return chart;
         //}
 
-        IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell)
-        {
-            return CreatePivotTable(targetCell);
-        }
-
         IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell, String name)
         {
             return CreatePivotTable(targetCell, name);
-        }
-
-        public XLPivotTable CreatePivotTable(IXLCell targetCell)
-        {
-            return CreatePivotTable(targetCell, Guid.NewGuid().ToString());
         }
 
         public XLPivotTable CreatePivotTable(IXLCell targetCell, String name)
