@@ -8,12 +8,6 @@ namespace ClosedXML.Excel
     {
         int Count { get; }
 
-        bool TryGetWorksheet(string sheetName, out IXLWorksheet worksheet);
-
-        IXLWorksheet Worksheet(String sheetName);
-
-        IXLWorksheet Worksheet(Int32 position);
-
         IXLWorksheet Add(String sheetName);
 
         IXLWorksheet Add(String sheetName, Int32 position);
@@ -27,5 +21,11 @@ namespace ClosedXML.Excel
         void Delete(String sheetName);
 
         void Delete(Int32 position);
+
+        bool TryGetWorksheet(string sheetName, out IXLWorksheet worksheet);
+
+        IXLWorksheet Worksheet(String sheetName);
+
+        IXLWorksheet Worksheet(Int32 position);
     }
 }
