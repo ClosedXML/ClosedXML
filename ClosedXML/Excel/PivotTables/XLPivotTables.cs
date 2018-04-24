@@ -13,30 +13,40 @@ namespace ClosedXML.Excel
             this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
         }
 
-        public void Add(String name, IXLPivotTable pivotTable)
+        internal void Add(String name, IXLPivotTable pivotTable)
         {
             _pivotTables.Add(name, (XLPivotTable)pivotTable);
         }
 
-        public IXLPivotTable AddNew(string name, IXLCell target, IXLRange source)
+        public IXLPivotTable Add(string name, IXLCell targetCell, IXLRange range)
         {
             var pivotTable = new XLPivotTable(this.Worksheet)
             {
                 Name = name,
-                TargetCell = target,
-                SourceRange = source
+                TargetCell = targetCell,
+                SourceRange = range
             };
             _pivotTables.Add(name, pivotTable);
             return pivotTable;
         }
 
-        public IXLPivotTable AddNew(string name, IXLCell target, IXLTable table)
+        public IXLPivotTable Add(string name, IXLCell targetCell, IXLTable table)
         {
             var dataRange = table.DataRange;
             var header = table.HeadersRow();
             var range = table.Worksheet.Range(header.FirstCell(), dataRange.LastCell());
 
-            return AddNew(name, target, range);
+            return Add(name, targetCell, range);
+        }
+
+        public IXLPivotTable AddNew(string name, IXLCell targetCell, IXLRange range)
+        {
+            return Add(name, targetCell, range);
+        }
+
+        public IXLPivotTable AddNew(string name, IXLCell targetCell, IXLTable table)
+        {
+            return Add(name, targetCell, table);
         }
 
         public Boolean Contains(String name)
