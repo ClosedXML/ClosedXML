@@ -255,8 +255,6 @@ namespace ClosedXML.Excel
 
         Boolean IsEntireColumn();
 
-        IXLPivotTable CreatePivotTable(IXLCell targetCell);
-
         IXLPivotTable CreatePivotTable(IXLCell targetCell, String name);
 
         //IXLChart CreateChart(Int32 firstRow, Int32 firstColumn, Int32 lastRow, Int32 lastColumn);
