@@ -53,6 +53,8 @@ namespace ClosedXML.Excel
 
         public Boolean Visible { get; set; }
 
+        public XLNamedRangeScope Scope { get { return _namedRanges.Scope; } }
+
         public IXLRanges Add(XLWorkbook workbook, String rangeAddress)
         {
             var ranges = new XLRanges();

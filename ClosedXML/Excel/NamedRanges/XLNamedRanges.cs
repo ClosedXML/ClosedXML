@@ -9,16 +9,19 @@ namespace ClosedXML.Excel
         private readonly Dictionary<String, IXLNamedRange> _namedRanges = new Dictionary<String, IXLNamedRange>();
         internal XLWorkbook Workbook { get; set; }
         internal XLWorksheet Worksheet { get; set; }
+        internal XLNamedRangeScope Scope { get; }
 
         public XLNamedRanges(XLWorksheet worksheet)
             : this(worksheet.Workbook)
         {
             Worksheet = worksheet;
+            Scope = XLNamedRangeScope.Worksheet;
         }
 
         public XLNamedRanges(XLWorkbook workbook)
         {
             Workbook = workbook;
+            Scope = XLNamedRangeScope.Workbook;
         }
 
         #region IXLNamedRanges Members
@@ -70,14 +73,20 @@ namespace ClosedXML.Excel
                 {
                     if (XLHelper.IsValidRangeAddress(rangeAddress))
                     {
-                        var range = Worksheet?.Range(rangeAddress) ?? Workbook.Range(rangeAddress);
+                        IXLRange range = null;
+                        if (Scope == XLNamedRangeScope.Worksheet)
+                            range = Worksheet.Range(rangeAddress);
+                        else if (Scope == XLNamedRangeScope.Workbook)
+                            range = Workbook.Range(rangeAddress);
+                        else
+                            throw new NotSupportedException($"Scope {Scope} is not supported");
 
                         if (range == null)
                             throw new ArgumentException(string.Format(
                                 "The range address '{0}' for the named range '{1}' is not a valid range.", rangeAddress,
                                 rangeName));
 
-                        if (Worksheet == null || !XLHelper.NamedRangeReferenceRegex.Match(range.ToString()).Success)
+                        if (Scope == XLNamedRangeScope.Workbook || !XLHelper.NamedRangeReferenceRegex.Match(range.ToString()).Success)
                             throw new ArgumentException(
                                 "For named ranges in the workbook scope, specify the sheet name in the reference.");
 
@@ -143,9 +152,7 @@ namespace ClosedXML.Excel
         {
             if (_namedRanges.TryGetValue(name, out range)) return true;
 
-            if (Worksheet != null)
-                range = Worksheet.NamedRange(name);
-            else
+            if (Scope == XLNamedRangeScope.Workbook)
                 range = Workbook.NamedRange(name);
 
             return range != null;
@@ -155,10 +162,10 @@ namespace ClosedXML.Excel
         {
             if (_namedRanges.ContainsKey(name)) return true;
 
-            if (Worksheet != null)
-                return Worksheet.NamedRange(name) != null;
-            else
+            if (Scope == XLNamedRangeScope.Workbook)
                 return Workbook.NamedRange(name) != null;
+            else
+                return false;
         }
     }
 }
