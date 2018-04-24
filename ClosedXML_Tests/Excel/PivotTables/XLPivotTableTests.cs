@@ -17,13 +17,8 @@ namespace ClosedXML_Tests
             {
                 var ws = wb.Worksheet("PastrySalesData");
                 var table = ws.Table("PastrySalesData");
-
-                var range = table.DataRange;
-                var header = ws.Range(1, 1, 1, 3);
-                var dataRange = ws.Range(header.FirstCell(), range.LastCell());
-
                 var ptSheet = wb.Worksheets.Add("BlankPivotTable");
-                var pt = ptSheet.PivotTables.AddNew("pvt", ptSheet.Cell(1, 1), dataRange);
+                ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table);
 
                 using (var ms = new MemoryStream())
                 {
@@ -40,13 +35,8 @@ namespace ClosedXML_Tests
             {
                 var ws = wb.Worksheet("PastrySalesData");
                 var table = ws.Table("PastrySalesData");
-
-                var range = table.DataRange;
-                var header = ws.Range(1, 1, 1, 3);
-                var dataRange = ws.Range(header.FirstCell(), range.LastCell());
-
                 var ptSheet = wb.Worksheets.Add("BlankPivotTable");
-                var pt = ptSheet.PivotTables.AddNew("pvtOptionsTest", ptSheet.Cell(1, 1), dataRange);
+                var pt = ptSheet.PivotTables.Add("pvtOptionsTest", ptSheet.Cell(1, 1), table);
 
                 pt.ColumnHeaderCaption = "clmn header";
                 pt.RowHeaderCaption = "row header";
@@ -157,10 +147,8 @@ namespace ClosedXML_Tests
                 var ws = wb.Worksheet("PastrySalesData");
                 var table = ws.Table("PastrySalesData");
 
-                var dataRange = ws.Range(ws.Range(1, 1, 1, 3).FirstCell(), table.DataRange.LastCell());
-
                 var ptSheet = wb.Worksheets.Add("pvtFieldOptionsTest");
-                var pt = ptSheet.PivotTables.AddNew("pvtFieldOptionsTest", ptSheet.Cell(1, 1), dataRange);
+                var pt = ptSheet.PivotTables.Add("pvtFieldOptionsTest", ptSheet.Cell(1, 1), table);
 
                 var field = pt.RowLabels.Add("Name")
                     .SetSubtotalCaption("Test caption")
@@ -247,13 +235,8 @@ namespace ClosedXML_Tests
 
                     var sheet = wb.Worksheets.Add("PastrySalesData");
                     // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
-                    var source = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
                     sheet.Columns().AdjustToContents();
-
-                    // Create a range that includes our table, including the header row
-                    var range = source.DataRange;
-                    var header = sheet.Range(1, 1, 1, 3);
-                    var dataRange = sheet.Range(header.FirstCell(), range.LastCell());
 
                     IXLWorksheet ptSheet;
                     IXLPivotTable pt;
@@ -264,7 +247,7 @@ namespace ClosedXML_Tests
                         ptSheet = wb.Worksheets.Add("pvt" + i);
 
                         // Create the pivot table, using the data from the "PastrySalesData" table
-                        pt = ptSheet.PivotTables.AddNew("pvt" + i, ptSheet.Cell(1, 1), dataRange);
+                        pt = ptSheet.PivotTables.Add("pvt" + i, ptSheet.Cell(1, 1), table);
 
                         if (i == 1 || i == 4)
                             pt.ColumnLabels.Add("Name");
