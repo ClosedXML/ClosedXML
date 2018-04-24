@@ -95,9 +95,29 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
             else if (_ws != null)
+            {
+                if (TryGetNamedRange(identifier, _ws, out IXLNamedRange namedRange))
+                {
+                    var references = (namedRange as XLNamedRange).RangeList.Select(r =>
+                        XLHelper.IsValidRangeAddress(r) 
+                            ? GetCellRangeReference(_ws.Workbook.Range(r))
+                            : new XLCalcEngine(_ws).Evaluate(r.ToString())
+                        );
+                    if (references.Count() == 1)
+                        return references.Single();
+                    return references;
+                }
+
                 return GetCellRangeReference(_ws.Range(identifier));
+            }
             else
                 return identifier;
+        }
+
+        private bool TryGetNamedRange(string identifier, IXLWorksheet worksheet, out IXLNamedRange namedRange)
+        {
+            return worksheet.NamedRanges.TryGetValue(identifier, out namedRange) ||
+                   worksheet.Workbook.NamedRanges.TryGetValue(identifier, out namedRange);
         }
 
         private CellRangeReference GetCellRangeReference(IXLRange range)
