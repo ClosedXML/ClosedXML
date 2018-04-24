@@ -26,23 +26,13 @@ namespace ClosedXML.Excel
 
         #endregion Static members
 
-        #region Private fields
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private XLAddress _firstAddress;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private XLAddress _lastAddress;
-
-        #endregion Private fields
-
         #region Constructor
 
         public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress) : this()
         {
             Worksheet = firstAddress.Worksheet;
-            _firstAddress = firstAddress;
-            _lastAddress = lastAddress;
+            FirstAddress = firstAddress;
+            LastAddress = lastAddress;
         }
 
         public XLRangeAddress(XLWorksheet worksheet, String rangeAddress) : this()
@@ -67,8 +57,8 @@ namespace ClosedXML.Excel
 
             if (XLHelper.IsValidA1Address(firstPart))
             {
-                _firstAddress = XLAddress.Create(worksheet, firstPart);
-                _lastAddress = XLAddress.Create(worksheet, secondPart);
+                FirstAddress = XLAddress.Create(worksheet, firstPart);
+                LastAddress = XLAddress.Create(worksheet, secondPart);
             }
             else
             {
@@ -76,13 +66,13 @@ namespace ClosedXML.Excel
                 secondPart = secondPart.Replace("$", String.Empty);
                 if (char.IsDigit(firstPart[0]))
                 {
-                    _firstAddress = XLAddress.Create(worksheet, "A" + firstPart);
-                    _lastAddress = XLAddress.Create(worksheet, XLHelper.MaxColumnLetter + secondPart);
+                    FirstAddress = XLAddress.Create(worksheet, "A" + firstPart);
+                    LastAddress = XLAddress.Create(worksheet, XLHelper.MaxColumnLetter + secondPart);
                 }
                 else
                 {
-                    _firstAddress = XLAddress.Create(worksheet, firstPart + "1");
-                    _lastAddress = XLAddress.Create(worksheet, secondPart + XLHelper.MaxRowNumber.ToInvariantString());
+                    FirstAddress = XLAddress.Create(worksheet, firstPart + "1");
+                    LastAddress = XLAddress.Create(worksheet, secondPart + XLHelper.MaxRowNumber.ToInvariantString());
                 }
             }
 
@@ -93,23 +83,11 @@ namespace ClosedXML.Excel
 
         #region Public properties
 
-        public XLWorksheet Worksheet { get; internal set; }
+        public XLWorksheet Worksheet { get; }
 
-        public XLAddress FirstAddress
-        {
-            get
-            {
-                return _firstAddress;
-            }
-        }
+        public XLAddress FirstAddress { get; }
 
-        public XLAddress LastAddress
-        {
-            get
-            {
-                return _lastAddress;
-            }
-        }
+        public XLAddress LastAddress { get; }
 
         IXLWorksheet IXLRangeAddress.Worksheet
         {
@@ -132,8 +110,8 @@ namespace ClosedXML.Excel
         {
             get
             {
-                return _firstAddress.IsValid &&
-                       _lastAddress.IsValid;
+                return FirstAddress.IsValid &&
+                       LastAddress.IsValid;
             }
         }
 
@@ -206,14 +184,14 @@ namespace ClosedXML.Excel
                 return String.Concat(
                     Worksheet.Name.EscapeSheetName(),
                     '!',
-                    _firstAddress.ToStringRelative(),
+                    FirstAddress.ToStringRelative(),
                     ':',
-                    _lastAddress.ToStringRelative());
+                    LastAddress.ToStringRelative());
             else
                 return string.Concat(
-                    _firstAddress.ToStringRelative(),
+                    FirstAddress.ToStringRelative(),
                     ":",
-                    _lastAddress.ToStringRelative());
+                    LastAddress.ToStringRelative());
         }
 
         public String ToStringFixed(XLReferenceStyle referenceStyle)
@@ -226,15 +204,15 @@ namespace ClosedXML.Excel
             if (includeSheet)
                 return String.Format("{0}!{1}:{2}",
                     Worksheet.Name.EscapeSheetName(),
-                    _firstAddress.ToStringFixed(referenceStyle),
-                    _lastAddress.ToStringFixed(referenceStyle));
+                    FirstAddress.ToStringFixed(referenceStyle),
+                    LastAddress.ToStringFixed(referenceStyle));
 
-            return _firstAddress.ToStringFixed(referenceStyle) + ":" + _lastAddress.ToStringFixed(referenceStyle);
+            return FirstAddress.ToStringFixed(referenceStyle) + ":" + LastAddress.ToStringFixed(referenceStyle);
         }
 
         public override string ToString()
         {
-            return String.Concat(_firstAddress, ':', _lastAddress);
+            return String.Concat(FirstAddress, ':', LastAddress);
         }
 
         public string ToString(XLReferenceStyle referenceStyle)
@@ -258,16 +236,16 @@ namespace ClosedXML.Excel
             }
 
             var address = (XLRangeAddress)obj;
-            return _firstAddress.Equals(address._firstAddress) &&
-                   _lastAddress.Equals(address._lastAddress) &&
+            return FirstAddress.Equals(address.FirstAddress) &&
+                   LastAddress.Equals(address.LastAddress) &&
                    EqualityComparer<XLWorksheet>.Default.Equals(Worksheet, address.Worksheet);
         }
 
         public override int GetHashCode()
         {
             var hashCode = -778064135;
-            hashCode = hashCode * -1521134295 + _firstAddress.GetHashCode();
-            hashCode = hashCode * -1521134295 + _lastAddress.GetHashCode();
+            hashCode = hashCode * -1521134295 + FirstAddress.GetHashCode();
+            hashCode = hashCode * -1521134295 + LastAddress.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<XLWorksheet>.Default.GetHashCode(Worksheet);
             return hashCode;
         }
@@ -275,8 +253,8 @@ namespace ClosedXML.Excel
         public bool Equals(XLRangeAddress other)
         {
             return ReferenceEquals(Worksheet, other.Worksheet) &&
-                   _firstAddress == other._firstAddress &&
-                   _lastAddress == other._lastAddress;
+                   FirstAddress == other.FirstAddress &&
+                   LastAddress == other.LastAddress;
         }
 
         #endregion Public methods

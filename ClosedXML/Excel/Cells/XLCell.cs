@@ -1854,8 +1854,7 @@ namespace ClosedXML.Excel
                 {
                     var maxRows = asRange.RowCount();
                     var maxColumns = asRange.ColumnCount();
-                    var rng = Worksheet.Range(_rowNumber, _columnNumber, maxRows, maxColumns);
-                    rng.Clear();
+                    Worksheet.Range(_rowNumber, _columnNumber, maxRows, maxColumns).Clear();
                 }
 
                 var minRow = asRange.RangeAddress.FirstAddress.RowNumber;
@@ -1970,9 +1969,8 @@ namespace ClosedXML.Excel
 
         private void ClearMerged()
         {
-            List<IXLRange> mergeToDelete;
-            var asRange = AsRange();
-            mergeToDelete = Worksheet.Internals.MergedRanges.Where(merge => merge.Intersects(asRange)).ToList();
+            List<IXLRange> mergeToDelete = Worksheet.Internals.MergedRanges
+                .Where(merge => merge.Intersects(AsRange())).ToList();
 
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }

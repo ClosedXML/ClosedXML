@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Caching;
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;
 using System;
@@ -5,7 +6,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using ClosedXML.Excel.Caching;
 
 namespace ClosedXML.Excel
 {
@@ -379,8 +379,8 @@ namespace ClosedXML.Excel
                     lastRow = tPair;
                 }
 
-                var xlRows = Rows(Int32.Parse(firstRow), Int32.Parse(lastRow));
-                xlRows.ForEach(row => retVal.Add((XLRow)row));
+                Rows(Int32.Parse(firstRow), Int32.Parse(lastRow))
+                    .ForEach(row => retVal.Add((XLRow)row));
             }
             return retVal;
         }
@@ -920,15 +920,14 @@ namespace ClosedXML.Excel
                 }
                 else if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))
                 {
-                    var xlRanges = NamedRange(rangeAddressStr).Ranges;
-                    xlRanges.ForEach(retVal.Add);
+                    NamedRange(rangeAddressStr).Ranges.ForEach(retVal.Add);
                 }
                 else
                 {
-                    var xlRanges = Workbook.NamedRanges.First(n =>
+                    Workbook.NamedRanges.First(n =>
                         String.Compare(n.Name, rangeAddressStr, true) == 0
-                        && n.Ranges.First().Worksheet == this).Ranges;
-                    xlRanges.ForEach(retVal.Add);
+                        && n.Ranges.First().Worksheet == this).Ranges
+                    .ForEach(retVal.Add);
                 }
             }
             return retVal;
@@ -1344,7 +1343,6 @@ namespace ClosedXML.Excel
                 WorksheetRangeShiftedRows(range, rowsShifted);
                 foreach (var storedRange in rangesToShift)
                 {
-                    var addr = storedRange.RangeAddress;
                     if (!ReferenceEquals(range, storedRange))
                         storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
                 }

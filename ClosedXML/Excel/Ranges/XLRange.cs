@@ -736,7 +736,7 @@ namespace ClosedXML.Excel
                 RangeAddress.FirstAddress.RowNumber + squareSide - 1,
                 RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
 
-            foreach (XLRange merge in Worksheet.Internals.MergedRanges.Where(Contains))
+            foreach (var merge in Worksheet.Internals.MergedRanges.Where(Contains).Cast<XLRange>())
             {
                 merge.RangeAddress = new XLRangeAddress(
                     merge.RangeAddress.FirstAddress,
