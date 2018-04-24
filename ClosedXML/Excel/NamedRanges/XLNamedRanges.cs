@@ -68,15 +68,20 @@ namespace ClosedXML.Excel
 
                 if (!match.Success)
                 {
-                    var range = Worksheet?.Range(rangeAddress) ?? Workbook.Range(rangeAddress);
-                    if (range == null)
-                        throw new ArgumentException(string.Format("The range address '{0}' for the named range '{1}' is not a valid range.", rangeAddress, rangeName));
-                    else
+                    if (XLHelper.IsValidRangeAddress(rangeAddress))
                     {
+                        var range = Worksheet?.Range(rangeAddress) ?? Workbook.Range(rangeAddress);
+
+                        if (range == null)
+                            throw new ArgumentException(string.Format(
+                                "The range address '{0}' for the named range '{1}' is not a valid range.", rangeAddress,
+                                rangeName));
+
                         if (Worksheet == null || !XLHelper.NamedRangeReferenceRegex.Match(range.ToString()).Success)
-                            throw new ArgumentException("For named ranges in the workbook scope, specify the sheet name in the reference.");
-                        else
-                            rangeAddress = Worksheet.Range(rangeAddress).ToString();
+                            throw new ArgumentException(
+                                "For named ranges in the workbook scope, specify the sheet name in the reference.");
+
+                        rangeAddress = Worksheet.Range(rangeAddress).ToString();
                     }
                 }
             }

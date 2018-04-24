@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace ClosedXML_Tests.Excel
@@ -162,10 +163,92 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(3, wsCopy.Cell("C2").Value);
                 Assert.AreEqual(104, wsCopy.Cell("C3").Value);
 
-                Assert.AreEqual("Sheet1!A1:A10", wb.NamedRange("wbNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
-                Assert.AreEqual("Copy!A3:A3", wsCopy.NamedRange("wsNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
-                Assert.AreEqual("Sheet2!A4:A4", wsCopy.NamedRange("wsNamedRangeAcrossSheets").Ranges.First().RangeAddress.ToStringRelative(true));
+                Assert.AreEqual("Sheet1!A1:A10",
+                    wb.NamedRange("wbNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
+                Assert.AreEqual("Copy!A3:A3",
+                    wsCopy.NamedRange("wsNamedRange").Ranges.First().RangeAddress.ToStringRelative(true));
+                Assert.AreEqual("Sheet2!A4:A4",
+                    wsCopy.NamedRange("wsNamedRangeAcrossSheets").Ranges.First().RangeAddress.ToStringRelative(true));
             }
+        }
+
+        [Test]
+        public void NamedRangeMayReferToExpression()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws1 = wb.AddWorksheet("Sheet1");
+                    wb.NamedRanges.Add("TEST", "=0.1");
+                    wb.NamedRanges.Add("TEST2", "=TEST*2");
+
+                    ws1.Cell(1, 1).FormulaA1 = "TEST";
+                    ws1.Cell(2, 1).FormulaA1 = "TEST*10";
+                    ws1.Cell(3, 1).FormulaA1 = "TEST2";
+                    ws1.Cell(4, 1).FormulaA1 = "TEST2*3";
+
+                    Assert.AreEqual(0.1, (double) ws1.Cell(1, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(1.0, (double) ws1.Cell(2, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.2, (double) ws1.Cell(3, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.6, (double) ws1.Cell(4, 1).Value, XLHelper.Epsilon);
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms)) 
+                {
+                    var ws1 = wb.Worksheets.First();
+
+                    Assert.AreEqual(0.1, (double) ws1.Cell(1, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(1.0, (double) ws1.Cell(2, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.2, (double) ws1.Cell(3, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.6, (double) ws1.Cell(4, 1).Value, XLHelper.Epsilon);
+                }
+            }
+        }
+
+        [Test]
+        public void CanEvaluateNamedMultiRange()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet("Sheet1");
+                ws1.Range("A1:C1").Value = 1;
+                ws1.Range("A3:C3").Value = 3;
+                wb.NamedRanges.Add("TEST", ws1.Ranges("A1:C1,A3:C3"));
+
+                ws1.Cell(2, 1).FormulaA1 = "=SUM(TEST)";
+
+                Assert.AreEqual(12.0, (double) ws1.Cell(2, 1).Value, XLHelper.Epsilon);
+            }
+        }
+
+        [Test]
+        public void CanGetNamedFromAnother()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            ws1.Cell("A1").SetValue(1).AddToNamed("value1");
+
+            Assert.AreEqual(1, wb.Cell("value1").GetValue<int>());
+            Assert.AreEqual(1, wb.Range("value1").FirstCell().GetValue<int>());
+
+            Assert.AreEqual(1, ws1.Cell("value1").GetValue<int>());
+            Assert.AreEqual(1, ws1.Range("value1").FirstCell().GetValue<int>());
+
+            var ws2 = wb.Worksheets.Add("Sheet2");
+
+            ws2.Cell("A1").SetFormulaA1("=value1").AddToNamed("value2");
+
+            Assert.AreEqual(1, wb.Cell("value2").GetValue<int>());
+            Assert.AreEqual(1, wb.Range("value2").FirstCell().GetValue<int>());
+
+            Assert.AreEqual(1, ws2.Cell("value1").GetValue<int>());
+            Assert.AreEqual(1, ws2.Range("value1").FirstCell().GetValue<int>());
+
+            Assert.AreEqual(1, ws2.Cell("value2").GetValue<int>());
+            Assert.AreEqual(1, ws2.Range("value2").FirstCell().GetValue<int>());
         }
     }
 }
