@@ -7,19 +7,12 @@ namespace ClosedXML.Excel
     {
         #region Constructor
 
-        public XLRangeColumn(XLRangeParameters rangeParameters, bool quickLoad)
+        /// <summary>
+        /// The direct contructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
+        /// </summary>
+        public XLRangeColumn(XLRangeParameters rangeParameters)
             : base(rangeParameters.RangeAddress, (rangeParameters.DefaultStyle as XLStyle).Value)
         {
-            if (quickLoad) return;
-
-            SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-            SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-        }
-
-        public XLRangeColumn(XLRangeParameters rangeParameters, bool quickLoad, IXLTable table)
-            : this(rangeParameters, quickLoad)
-        {
-            this.Table = table;
         }
 
         #endregion Constructor
@@ -187,19 +180,24 @@ namespace ClosedXML.Excel
 
         #endregion IXLRangeColumn Members
 
+        public override XLRangeType RangeType
+        {
+            get { return XLRangeType.RangeColumn; }
+        }
+
         public XLCell Cell(int row)
         {
             return Cell(row, 1);
         }
 
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            ShiftColumns(RangeAddress, range, columnsShifted);
+            RangeAddress = (XLRangeAddress)ShiftColumns(RangeAddress, range, columnsShifted);
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-            ShiftRows(RangeAddress, range, rowsShifted);
+            RangeAddress = (XLRangeAddress)ShiftRows(RangeAddress, range, rowsShifted);
         }
 
         public XLRange Range(int firstRow, int lastRow)
@@ -339,8 +337,7 @@ namespace ClosedXML.Excel
             if (IsTableColumn())
                 throw new InvalidOperationException("This column is already part of a table.");
 
-            using (var asRange = AsRange())
-                return asRange.AsTable();
+            return AsRange().AsTable();
         }
 
         public IXLTable AsTable(string name)
@@ -348,8 +345,7 @@ namespace ClosedXML.Excel
             if (IsTableColumn())
                 throw new InvalidOperationException("This column is already part of a table.");
 
-            using (var asRange = AsRange())
-                return asRange.AsTable(name);
+            return AsRange().AsTable(name);
         }
 
         public IXLTable CreateTable()
@@ -357,8 +353,7 @@ namespace ClosedXML.Excel
             if (IsTableColumn())
                 throw new InvalidOperationException("This column is already part of a table.");
 
-            using (var asRange = AsRange())
-                return asRange.CreateTable();
+            return AsRange().CreateTable();
         }
 
         public IXLTable CreateTable(string name)
@@ -366,8 +361,7 @@ namespace ClosedXML.Excel
             if (IsTableColumn())
                 throw new InvalidOperationException("This column is already part of a table.");
 
-            using (var asRange = AsRange())
-                return asRange.CreateTable(name);
+            return AsRange().CreateTable(name);
         }
 
         public new IXLRangeColumn Clear(XLClearOptions clearOptions = XLClearOptions.All)

@@ -7,7 +7,6 @@ namespace ClosedXML.Excel
     internal struct XLAddress : IXLAddress, IEquatable<XLAddress>
     {
         #region Static
-
         /// <summary>
         /// Create address without worksheet. For calculation only!
         /// </summary>
@@ -168,13 +167,11 @@ namespace ClosedXML.Excel
         public bool FixedRow
         {
             get { return _fixedRow; }
-            set { _fixedRow = value; }
         }
 
         public bool FixedColumn
         {
             get { return _fixedColumn; }
-            set { _fixedColumn = value; }
         }
 
         /// <summary>
@@ -319,24 +316,9 @@ namespace ClosedXML.Excel
             return x == y;
         }
 
-        public Int32 GetHashCode(IXLAddress obj)
-        {
-            return obj.GetHashCode();
-        }
-
         public new Boolean Equals(object x, object y)
         {
             return x == y;
-        }
-
-        public Int32 GetHashCode(object obj)
-        {
-            return (obj).GetHashCode();
-        }
-
-        public override int GetHashCode()
-        {
-            return _rowNumber ^ _columnNumber;
         }
 
         #endregion IEqualityComparer<XLCellAddress> Members
@@ -349,17 +331,37 @@ namespace ClosedXML.Excel
                 return false;
 
             return _rowNumber == other.RowNumber &&
-                   _columnNumber == other.ColumnNumber;
+                   _columnNumber == other.ColumnNumber &&
+                   _fixedRow == other.FixedRow &&
+                   _fixedColumn == other.FixedColumn;
         }
+
         public bool Equals(XLAddress other)
         {
             return _rowNumber == other._rowNumber &&
-                   _columnNumber == other._columnNumber;
+                   _columnNumber == other._columnNumber &&
+                   _fixedRow == other._fixedRow &&
+                   _fixedColumn == other._fixedColumn;
         }
 
         public override Boolean Equals(Object other)
         {
             return Equals(other as IXLAddress);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 2122234362;
+            hashCode = hashCode * -1521134295 + _fixedRow.GetHashCode();
+            hashCode = hashCode * -1521134295 + _fixedColumn.GetHashCode();
+            hashCode = hashCode * -1521134295 + _rowNumber.GetHashCode();
+            hashCode = hashCode * -1521134295 + _columnNumber.GetHashCode();
+            return hashCode;
+        }
+
+        public int GetHashCode(IXLAddress obj)
+        {
+            return ((XLAddress)obj).GetHashCode();
         }
 
         #endregion IEquatable<XLCellAddress> Members
@@ -429,5 +431,14 @@ namespace ClosedXML.Excel
         }
 
         public String UniqueId { get { return RowNumber.ToString("0000000") + ColumnNumber.ToString("00000"); } }
+
+        public bool IsValid
+        {
+            get
+            {
+                return 0 < RowNumber && RowNumber <= XLHelper.MaxRowNumber &&
+                       0 < ColumnNumber && ColumnNumber <= XLHelper.MaxColumnNumber;
+            }
+        }
     }
 }

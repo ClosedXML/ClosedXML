@@ -390,24 +390,6 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void RangesRemoveAllWithDispose()
-        {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
-            ranges.Add(ws.Range("A1:A2"));
-            ranges.Add(ws.Range("B1:B2"));
-            var rangesCopy = ranges.ToList();
-
-            ranges.RemoveAll();
-            ws.FirstColumn().InsertColumnsBefore(1);
-
-            Assert.AreEqual(0, ranges.Count);
-            // if ranges were disposed they addresses didn't change
-            Assert.AreEqual("A1:A2", rangesCopy.First().RangeAddress.ToString());
-            Assert.AreEqual("B1:B2", rangesCopy.Last().RangeAddress.ToString());
-        }
-
-        [Test]
         public void RangesRemoveAllWithoutDispose()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");

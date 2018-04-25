@@ -47,5 +47,27 @@ namespace ClosedXML_Tests
             Assert.AreEqual("'Sheet 1'!R1C1:R1C1", address.ToStringFixed(XLReferenceStyle.R1C1, true));
             Assert.AreEqual("'Sheet 1'!$A$1:$A$1", address.ToStringFixed(XLReferenceStyle.Default, true));
         }
+
+        [TestCase("B2:E5", "B2:E5")]
+        [TestCase("E5:B2", "B2:E5")]
+        [TestCase("B5:E2", "B2:E5")]
+        [TestCase("B2:E$5", "B2:E$5")]
+        [TestCase("B2:$E$5", "B2:$E$5")]
+        [TestCase("B$2:$E$5", "B$2:$E$5")]
+        [TestCase("$B$2:$E$5", "$B$2:$E$5")]
+        [TestCase("B5:E$2", "B$2:E5")]
+        [TestCase("$B$5:E2", "$B2:E$5")]
+        [TestCase("$B$5:E$2", "$B$2:E$5")]
+        [TestCase("$B$5:$E$2", "$B$2:$E$5")]
+        public void RangeAddressNormalizeTest(string inputAddress, string expectedAddress)
+        {
+            XLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1") as XLWorksheet;
+            var rangeAddress = new XLRangeAddress(ws, inputAddress);
+
+            var normalizedAddress = rangeAddress.Normalize();
+
+            Assert.AreSame(ws, rangeAddress.Worksheet);
+            Assert.AreEqual(expectedAddress, normalizedAddress.ToString());
+        }
     }
 }

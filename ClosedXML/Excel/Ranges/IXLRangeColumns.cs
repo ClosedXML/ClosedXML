@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLRangeColumns : IEnumerable<IXLRangeColumn>, IDisposable
+    public interface IXLRangeColumns : IEnumerable<IXLRangeColumn>
     {
         /// <summary>
         /// Adds a column range to this group.

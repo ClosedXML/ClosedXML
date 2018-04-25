@@ -1,36 +1,41 @@
 using ClosedXML.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLRangeAddress : IXLRangeAddress
+    internal struct XLRangeAddress : IXLRangeAddress, IEquatable<XLRangeAddress>
     {
-        #region Private fields
+        #region Static members
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private XLAddress _firstAddress;
+        public static XLRangeAddress EntireColumn(XLWorksheet worksheet, int column)
+        {
+            return new XLRangeAddress(
+                new XLAddress(worksheet, 1, column, false, false),
+                new XLAddress(worksheet, XLHelper.MaxRowNumber, column, false, false));
+        }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private XLAddress _lastAddress;
+        public static XLRangeAddress EntireRow(XLWorksheet worksheet, int row)
+        {
+            return new XLRangeAddress(
+                new XLAddress(worksheet, row, 1, false, false),
+                new XLAddress(worksheet, row, XLHelper.MaxColumnNumber, false, false));
+        }
 
-        #endregion Private fields
+        #endregion Static members
 
         #region Constructor
 
-        public XLRangeAddress(XLRangeAddress rangeAddress) : this(rangeAddress.FirstAddress, rangeAddress.LastAddress)
-        {
-        }
-
-        public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress)
+        public XLRangeAddress(XLAddress firstAddress, XLAddress lastAddress) : this()
         {
             Worksheet = firstAddress.Worksheet;
             FirstAddress = firstAddress;
             LastAddress = lastAddress;
         }
 
-        public XLRangeAddress(XLWorksheet worksheet, String rangeAddress)
+        public XLRangeAddress(XLWorksheet worksheet, String rangeAddress) : this()
         {
             string addressToUse = rangeAddress.Contains("!")
                                       ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
@@ -78,31 +83,11 @@ namespace ClosedXML.Excel
 
         #region Public properties
 
-        public XLWorksheet Worksheet { get; internal set; }
+        public XLWorksheet Worksheet { get; }
 
-        public XLAddress FirstAddress
-        {
-            get
-            {
-                if (!IsValid)
-                    throw new InvalidOperationException("Range is invalid.");
+        public XLAddress FirstAddress { get; }
 
-                return _firstAddress;
-            }
-            set { _firstAddress = value; }
-        }
-
-        public XLAddress LastAddress
-        {
-            get
-            {
-                if (!IsValid)
-                    throw new InvalidOperationException("Range is an invalid state.");
-
-                return _lastAddress;
-            }
-            set { _lastAddress = value; }
-        }
+        public XLAddress LastAddress { get; }
 
         IXLWorksheet IXLRangeAddress.Worksheet
         {
@@ -113,33 +98,75 @@ namespace ClosedXML.Excel
         {
             [DebuggerStepThrough]
             get { return FirstAddress; }
-            set
-            {
-                if (value is XLAddress)
-                    FirstAddress = (XLAddress)value;
-                else
-                    FirstAddress = new XLAddress(value.RowNumber, value.ColumnNumber, value.FixedRow, value.FixedColumn);
-            }
         }
 
         IXLAddress IXLRangeAddress.LastAddress
         {
             [DebuggerStepThrough]
             get { return LastAddress; }
-            set
-            {
-                if (value is XLAddress)
-                    LastAddress = (XLAddress)value;
-                else
-                    LastAddress = new XLAddress(value.RowNumber, value.ColumnNumber, value.FixedRow, value.FixedColumn);
-            }
         }
 
-        public bool IsValid { get; set; } = true;
+        public bool IsValid
+        {
+            get
+            {
+                return FirstAddress.IsValid &&
+                       LastAddress.IsValid;
+            }
+        }
 
         #endregion Public properties
 
         #region Public methods
+
+        /// <summary>
+        /// Lead a range address to a normal form - when <see cref="FirstAddress"/> points to the top-left address and
+        /// <see cref="LastAddress"/> points to the bottom-right address.
+        /// </summary>
+        /// <returns></returns>
+        public XLRangeAddress Normalize()
+        {
+            if (FirstAddress.RowNumber <= LastAddress.RowNumber &&
+                FirstAddress.ColumnNumber <= LastAddress.ColumnNumber)
+                return this;
+
+            int firstRow, firstColumn, lastRow, lastColumn;
+            bool firstRowFixed, firstColumnFixed, lastRowFixed, lastColumnFixed;
+
+            if (FirstAddress.RowNumber <= LastAddress.RowNumber)
+            {
+                firstRow = FirstAddress.RowNumber;
+                firstRowFixed = FirstAddress.FixedRow;
+                lastRow = LastAddress.RowNumber;
+                lastRowFixed = LastAddress.FixedRow;
+            }
+            else
+            {
+                firstRow = LastAddress.RowNumber;
+                firstRowFixed = LastAddress.FixedRow;
+                lastRow = FirstAddress.RowNumber;
+                lastRowFixed = FirstAddress.FixedRow;
+            }
+
+            if (FirstAddress.ColumnNumber <= LastAddress.ColumnNumber)
+            {
+                firstColumn = FirstAddress.ColumnNumber;
+                firstColumnFixed = FirstAddress.FixedColumn;
+                lastColumn = LastAddress.ColumnNumber;
+                lastColumnFixed = LastAddress.FixedColumn;
+            }
+            else
+            {
+                firstColumn = LastAddress.ColumnNumber;
+                firstColumnFixed = LastAddress.FixedColumn;
+                lastColumn = FirstAddress.ColumnNumber;
+                lastColumnFixed = FirstAddress.FixedColumn;
+            }
+
+            return new XLRangeAddress(
+                new XLAddress(FirstAddress.Worksheet, firstRow, firstColumn, firstRowFixed, firstColumnFixed),
+                new XLAddress(LastAddress.Worksheet, lastRow, lastColumn, lastRowFixed, lastColumnFixed));
+        }
 
         public String ToStringRelative()
         {
@@ -157,14 +184,14 @@ namespace ClosedXML.Excel
                 return String.Concat(
                     Worksheet.Name.EscapeSheetName(),
                     '!',
-                    _firstAddress.ToStringRelative(),
+                    FirstAddress.ToStringRelative(),
                     ':',
-                    _lastAddress.ToStringRelative());
+                    LastAddress.ToStringRelative());
             else
                 return string.Concat(
-                    _firstAddress.ToStringRelative(),
+                    FirstAddress.ToStringRelative(),
                     ":",
-                    _lastAddress.ToStringRelative());
+                    LastAddress.ToStringRelative());
         }
 
         public String ToStringFixed(XLReferenceStyle referenceStyle)
@@ -177,15 +204,15 @@ namespace ClosedXML.Excel
             if (includeSheet)
                 return String.Format("{0}!{1}:{2}",
                     Worksheet.Name.EscapeSheetName(),
-                    _firstAddress.ToStringFixed(referenceStyle),
-                    _lastAddress.ToStringFixed(referenceStyle));
+                    FirstAddress.ToStringFixed(referenceStyle),
+                    LastAddress.ToStringFixed(referenceStyle));
 
-            return _firstAddress.ToStringFixed(referenceStyle) + ":" + _lastAddress.ToStringFixed(referenceStyle);
+            return FirstAddress.ToStringFixed(referenceStyle) + ":" + LastAddress.ToStringFixed(referenceStyle);
         }
 
         public override string ToString()
         {
-            return String.Concat(_firstAddress, ':', _lastAddress);
+            return String.Concat(FirstAddress, ':', LastAddress);
         }
 
         public string ToString(XLReferenceStyle referenceStyle)
@@ -203,22 +230,46 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var other = obj as XLRangeAddress;
-            if (other == null)
+            if (!(obj is XLRangeAddress))
+            {
                 return false;
-            return Worksheet.Equals(other.Worksheet)
-                   && FirstAddress.Equals(other.FirstAddress)
-                   && LastAddress.Equals(other.LastAddress);
+            }
+
+            var address = (XLRangeAddress)obj;
+            return FirstAddress.Equals(address.FirstAddress) &&
+                   LastAddress.Equals(address.LastAddress) &&
+                   EqualityComparer<XLWorksheet>.Default.Equals(Worksheet, address.Worksheet);
         }
 
         public override int GetHashCode()
         {
-            return
-                Worksheet.GetHashCode()
-                ^ FirstAddress.GetHashCode()
-                ^ LastAddress.GetHashCode();
+            var hashCode = -778064135;
+            hashCode = hashCode * -1521134295 + FirstAddress.GetHashCode();
+            hashCode = hashCode * -1521134295 + LastAddress.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<XLWorksheet>.Default.GetHashCode(Worksheet);
+            return hashCode;
+        }
+
+        public bool Equals(XLRangeAddress other)
+        {
+            return ReferenceEquals(Worksheet, other.Worksheet) &&
+                   FirstAddress == other.FirstAddress &&
+                   LastAddress == other.LastAddress;
         }
 
         #endregion Public methods
+
+        #region Operators
+
+        public static bool operator ==(XLRangeAddress left, XLRangeAddress right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(XLRangeAddress left, XLRangeAddress right)
+        {
+            return !(left == right);
+        }
+        #endregion
     }
 }

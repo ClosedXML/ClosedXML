@@ -245,12 +245,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public void Dispose()
-        {
-            if (_rows != null)
-                _rows.ForEach(r => r.Dispose());
-        }
-
         public void Select()
         {
             foreach (var range in this)

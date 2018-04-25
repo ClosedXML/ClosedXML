@@ -28,8 +28,7 @@ namespace ClosedXML.Excel
             {
                 if (_column == null)
                 {
-                    using (var range = this.table.AsRange())
-                        _column = range.Column(this.Index + 1);
+                    _column = table.AsRange().Column(this.Index + 1);
                 }
                 return _column;
             }
@@ -212,11 +211,6 @@ namespace ClosedXML.Excel
                     cell.Style.NumberFormat = lastCell.Style.NumberFormat;
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            _column.Dispose();
         }
     }
 }

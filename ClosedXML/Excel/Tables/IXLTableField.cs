@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
         Custom
     }
 
-    public interface IXLTableField : IDisposable
+    public interface IXLTableField
     {
         /// <summary>
         /// Gets the corresponding column for this table field.

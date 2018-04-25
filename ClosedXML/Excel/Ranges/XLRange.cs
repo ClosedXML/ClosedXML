@@ -11,19 +11,14 @@ namespace ClosedXML.Excel
         public XLRange(XLRangeParameters xlRangeParameters)
             : base(xlRangeParameters.RangeAddress, (xlRangeParameters.DefaultStyle as XLStyle).Value)
         {
-            RangeParameters = new XLRangeParameters(xlRangeParameters.RangeAddress, xlRangeParameters.DefaultStyle);
-
-            if (!xlRangeParameters.IgnoreEvents)
-            {
-                SubscribeToShiftedRows((range, rowShifted) => this.WorksheetRangeShiftedRows(range, rowShifted));
-                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-                //xlRangeParameters.IgnoreEvents = true;
-            }
         }
 
         #endregion Constructor
 
-        public XLRangeParameters RangeParameters { get; private set; }
+        public override XLRangeType RangeType
+        {
+            get { return XLRangeType.Range; }
+        }
 
         #region IXLRange Members
 
@@ -51,8 +46,6 @@ namespace ClosedXML.Excel
                 var column = Column(c);
                 if (predicate == null || predicate(column))
                     retVal.Add(column);
-                else
-                    column.Dispose();
             }
             return retVal;
         }
@@ -166,8 +159,6 @@ namespace ClosedXML.Excel
                 var row = Row(r);
                 if (predicate == null || predicate(row))
                     retVal.Add(Row(r));
-                else
-                    row.Dispose();
             }
             return retVal;
         }
@@ -218,11 +209,14 @@ namespace ClosedXML.Excel
             MoveOrClearForTranspose(transposeOption, rowCount, columnCount);
             TransposeMerged(squareSide);
             TransposeRange(squareSide);
-            RangeAddress.LastAddress = new XLAddress(Worksheet,
-                                                     firstCell.Address.RowNumber + columnCount - 1,
-                                                     firstCell.Address.ColumnNumber + rowCount - 1,
-                                                     RangeAddress.LastAddress.FixedRow,
-                                                     RangeAddress.LastAddress.FixedColumn);
+            RangeAddress = new XLRangeAddress(
+                RangeAddress.FirstAddress,
+                new XLAddress(Worksheet,
+                              firstCell.Address.RowNumber + columnCount - 1,
+                              firstCell.Address.ColumnNumber + rowCount - 1,
+                              RangeAddress.LastAddress.FixedRow,
+                              RangeAddress.LastAddress.FixedColumn));
+
             if (rowCount > columnCount)
             {
                 var rng = Worksheet.Range(
@@ -258,12 +252,12 @@ namespace ClosedXML.Excel
 
         public IXLTable AsTable()
         {
-            return new XLTable(this, false);
+            return Worksheet.Table(this, false);
         }
 
         public IXLTable AsTable(String name)
         {
-            return new XLTable(this, name, false);
+            return Worksheet.Table(this, name, false);
         }
 
         IXLTable IXLRange.CreateTable()
@@ -273,7 +267,7 @@ namespace ClosedXML.Excel
 
         public XLTable CreateTable()
         {
-            return new XLTable(this, true, true);
+            return (XLTable)Worksheet.Table(this, true, true);
         }
 
         IXLTable IXLRange.CreateTable(String name)
@@ -283,12 +277,12 @@ namespace ClosedXML.Excel
 
         public XLTable CreateTable(String name)
         {
-            return new XLTable(this, name, true, true);
+            return (XLTable)Worksheet.Table(this, name, true, true);
         }
 
         public IXLTable CreateTable(String name, Boolean setAutofilter)
         {
-            return new XLTable(this, name, true, setAutofilter);
+            return Worksheet.Table(this, name, true, setAutofilter);
         }
 
         public new IXLRange CopyTo(IXLCell target)
@@ -353,14 +347,14 @@ namespace ClosedXML.Excel
 
         #endregion IXLRange Members
 
-        internal void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            ShiftColumns(RangeAddress, range, columnsShifted);
+            RangeAddress = (XLRangeAddress)ShiftColumns(RangeAddress, range, columnsShifted);
         }
 
-        internal void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
-            ShiftRows(RangeAddress, range, rowsShifted);
+            RangeAddress = (XLRangeAddress)ShiftRows(RangeAddress, range, rowsShifted);
         }
 
         IXLRangeColumn IXLRange.FirstColumn(Func<IXLRangeColumn, Boolean> predicate)
@@ -378,8 +372,6 @@ namespace ClosedXML.Excel
             {
                 var column = Column(c);
                 if (predicate(column)) return column;
-
-                column.Dispose();
             }
 
             return null;
@@ -400,8 +392,6 @@ namespace ClosedXML.Excel
             {
                 var column = Column(c);
                 if (predicate(column)) return column;
-
-                column.Dispose();
             }
 
             return null;
@@ -443,7 +433,6 @@ namespace ClosedXML.Excel
 
                 if (!column.IsEmpty(includeFormats) && predicate(column))
                     return column;
-                column.Dispose();
             }
             return null;
         }
@@ -484,7 +473,6 @@ namespace ClosedXML.Excel
 
                 if (!column.IsEmpty(includeFormats) && predicate(column))
                     return column;
-                column.Dispose();
             }
             return null;
         }
@@ -504,8 +492,6 @@ namespace ClosedXML.Excel
             {
                 var row = Row(ro);
                 if (predicate(row)) return row;
-
-                row.Dispose();
             }
 
             return null;
@@ -526,8 +512,6 @@ namespace ClosedXML.Excel
             {
                 var row = Row(ro);
                 if (predicate(row)) return row;
-
-                row.Dispose();
             }
 
             return null;
@@ -571,7 +555,6 @@ namespace ClosedXML.Excel
 
                 if (!row.IsEmpty(includeFormats) && predicate(row))
                     return row;
-                row.Dispose();
             }
             return null;
         }
@@ -612,7 +595,6 @@ namespace ClosedXML.Excel
 
                 if (!row.IsEmpty(includeFormats) && predicate(row))
                     return row;
-                row.Dispose();
             }
             return null;
         }
@@ -632,8 +614,6 @@ namespace ClosedXML.Excel
 
                 if (!row.IsEmpty(includeFormats) && (predicate == null || predicate(row)))
                     rows.Add(row);
-                else
-                    row.Dispose();
             }
             return rows;
         }
@@ -663,8 +643,6 @@ namespace ClosedXML.Excel
 
                 if (!column.IsEmpty(includeFormats) && (predicate == null || predicate(column)))
                     columns.Add(column);
-                else
-                    column.Dispose();
             }
             return columns;
         }
@@ -694,8 +672,7 @@ namespace ClosedXML.Excel
                                                 RangeAddress.LastAddress.ColumnNumber,
                                                 false,
                                                 false);
-            return new XLRangeRow(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), false);
+            return Worksheet.RangeRow(new XLRangeAddress(firstCellAddress, lastCellAddress));
         }
 
         public virtual XLRangeColumn Column(Int32 columnNumber)
@@ -713,8 +690,7 @@ namespace ClosedXML.Excel
                                                 RangeAddress.FirstAddress.ColumnNumber + columnNumber - 1,
                                                 false,
                                                 false);
-            return new XLRangeColumn(
-                new XLRangeParameters(new XLRangeAddress(firstCellAddress, lastCellAddress), Worksheet.Style), false);
+            return Worksheet.RangeColumn(new XLRangeAddress(firstCellAddress, lastCellAddress));
         }
 
         public virtual XLRangeColumn Column(String columnLetter)
@@ -760,9 +736,11 @@ namespace ClosedXML.Excel
                 RangeAddress.FirstAddress.RowNumber + squareSide - 1,
                 RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
 
-            foreach (IXLRange merge in Worksheet.Internals.MergedRanges.Where(Contains))
+            foreach (var merge in Worksheet.Internals.MergedRanges.Where(Contains).Cast<XLRange>())
             {
-                merge.RangeAddress.LastAddress = rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address;
+                merge.RangeAddress = new XLRangeAddress(
+                    merge.RangeAddress.FirstAddress,
+                    rngToTranspose.Cell(merge.ColumnCount(), merge.RowCount()).Address);
             }
         }
 
@@ -829,8 +807,6 @@ namespace ClosedXML.Excel
                 var column = Column(c);
                 if (predicate == null || predicate(column))
                     return column;
-                else
-                    column.Dispose();
             }
             return null;
         }
@@ -843,8 +819,6 @@ namespace ClosedXML.Excel
                 var row = Row(r);
                 if (predicate(row))
                     return row;
-                else
-                    row.Dispose();
             }
             return null;
         }

@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     public enum XLWorksheetVisibility { Visible, Hidden, VeryHidden }
 
-    public interface IXLWorksheet : IXLRangeBase
+    public interface IXLWorksheet : IXLRangeBase, IDisposable
     {
         /// <summary>
         /// Gets the workbook that contains this worksheet

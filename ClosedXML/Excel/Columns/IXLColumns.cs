@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLColumns : IEnumerable<IXLColumn>, IDisposable
+    public interface IXLColumns : IEnumerable<IXLColumn>
     {
         /// <summary>
         /// Sets the width of all columns.

@@ -8,7 +8,8 @@ namespace ClosedXML.Excel
     {
         private readonly XLTable _table;
         private readonly XLRange _range;
-        public XLTableRange(XLRange range, XLTable table):base(range.RangeParameters)
+        public XLTableRange(XLRange range, XLTable table)
+            : base(new XLRangeParameters(range.RangeAddress, range.Style))
         {
             _table = table;
             _range = range;
@@ -29,8 +30,6 @@ namespace ClosedXML.Excel
             {
                 var row = new XLTableRow(this, (_range.Row(ro)));
                 if (predicate(row)) return row;
-
-                row.Dispose();
             }
 
             return null;
@@ -62,7 +61,6 @@ namespace ClosedXML.Excel
 
                 if (!row.IsEmpty(includeFormats) && predicate(row))
                     return row;
-                row.Dispose();
             }
 
             return null;
@@ -84,8 +82,6 @@ namespace ClosedXML.Excel
             {
                 var row = new XLTableRow(this, (_range.Row(ro)));
                 if (predicate(row)) return row;
-
-                row.Dispose();
             }
             return null;
         }
@@ -116,7 +112,6 @@ namespace ClosedXML.Excel
 
                 if (!row.IsEmpty(includeFormats) && predicate(row))
                     return row;
-                row.Dispose();
             }
 
             return null;
@@ -147,8 +142,6 @@ namespace ClosedXML.Excel
                 var row = Row(r);
                 if (predicate == null || predicate(row))
                     retVal.Add(row);
-                else
-                    row.Dispose();
             }
             return retVal;
         }
@@ -203,8 +196,6 @@ namespace ClosedXML.Excel
 
                 if (!row.IsEmpty(includeFormats) && (predicate == null || predicate(row)))
                     rows.Add(row);
-                else
-                    row.Dispose();
             }
             return rows;
         }

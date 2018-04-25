@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
         Worksheet
     }
 
-    public interface IXLRangeBase : IDisposable
+    public interface IXLRangeBase
     {
         IXLWorksheet Worksheet { get; }
 

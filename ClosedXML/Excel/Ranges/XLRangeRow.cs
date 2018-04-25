@@ -7,21 +7,15 @@ namespace ClosedXML.Excel
     {
         #region Constructor
 
-        public XLRangeRow(XLRangeParameters rangeParameters, bool quickLoad)
+        /// <summary>
+        /// The direct contructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
+        /// </summary>
+        public XLRangeRow(XLRangeParameters rangeParameters)
             : base(rangeParameters.RangeAddress, (rangeParameters.DefaultStyle as XLStyle).Value)
         {
-            RangeParameters = rangeParameters;
-            if (quickLoad) return;
-            if (!RangeParameters.IgnoreEvents)
-            {
-                SubscribeToShiftedRows((range, rowsShifted) => this.WorksheetRangeShiftedRows(range, rowsShifted));
-                SubscribeToShiftedColumns((range, columnsShifted) => this.WorksheetRangeShiftedColumns(range, columnsShifted));
-            }
         }
 
         #endregion Constructor
-
-        public XLRangeParameters RangeParameters { get; private set; }
 
         #region IXLRangeRow Members
 
@@ -183,15 +177,19 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLRangeRow Members
-
-        private void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
+        public override XLRangeType RangeType
         {
-            ShiftColumns(RangeAddress, range, columnsShifted);
+            get { return XLRangeType.RangeRow; }
         }
 
-        private void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
-            ShiftRows(RangeAddress, range, rowsShifted);
+            RangeAddress = (XLRangeAddress)ShiftColumns(RangeAddress, range, columnsShifted);
+        }
+
+        internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
+        {
+            RangeAddress = (XLRangeAddress)ShiftRows(RangeAddress, range, rowsShifted);
         }
 
         public IXLRange Range(int firstColumn, int lastColumn)
@@ -295,10 +293,7 @@ namespace ClosedXML.Excel
                 rowNum,
                 RangeAddress.LastAddress.ColumnNumber);
 
-            var result = range.FirstRow();
-            range.Dispose();
-
-            return result;
+            return range.FirstRow();
         }
 
         #region XLRangeRow Above

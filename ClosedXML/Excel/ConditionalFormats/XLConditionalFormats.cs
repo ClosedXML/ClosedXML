@@ -25,7 +25,6 @@ namespace ClosedXML.Excel
 
         public void Remove(Predicate<IXLConditionalFormat> predicate)
         {
-            _conditionalFormats.Where(cf => predicate(cf)).SelectMany(cf => cf.Ranges).ForEach(range => range.Dispose());
             _conditionalFormats.RemoveAll(predicate);
         }
 
@@ -103,7 +102,6 @@ namespace ClosedXML.Excel
 
         public void RemoveAll()
         {
-            _conditionalFormats.SelectMany(cf => cf.Ranges).ForEach(range => range.Dispose());
             _conditionalFormats.Clear();
         }
 

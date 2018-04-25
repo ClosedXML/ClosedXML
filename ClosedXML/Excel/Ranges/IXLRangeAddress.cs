@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The first address.
         /// </value>
-        IXLAddress FirstAddress { get; set; }
+        IXLAddress FirstAddress { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this range is valid.
@@ -26,7 +26,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The last address.
         /// </value>
-        IXLAddress LastAddress { get; set; }
+        IXLAddress LastAddress { get; }
 
         IXLWorksheet Worksheet { get; }
 

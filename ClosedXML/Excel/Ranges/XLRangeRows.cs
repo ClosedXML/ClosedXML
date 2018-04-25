@@ -120,12 +120,6 @@ namespace ClosedXML.Excel
 
         #endregion IXLStylized Members
 
-        public void Dispose()
-        {
-            if (_ranges != null)
-                _ranges.ForEach(r => r.Dispose());
-        }
-
         public void Select()
         {
             foreach (var range in this)

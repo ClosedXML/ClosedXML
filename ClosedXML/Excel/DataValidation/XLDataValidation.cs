@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
         public XLDataValidation(IXLRange range)
             :this()
         {
-            Ranges.Add(new XLRange(new XLRangeParameters(range.RangeAddress as XLRangeAddress, range.Worksheet.Style)));
+            Ranges.Add(new XLRange(new XLRangeParameters((XLRangeAddress)range.RangeAddress, range.Worksheet.Style)));
         }
 
         public XLDataValidation(IXLRanges ranges)
@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
         {
             ranges.ForEach(range =>
             {
-                Ranges.Add(new XLRange(new XLRangeParameters(range.RangeAddress as XLRangeAddress, range.Worksheet.Style)));
+                Ranges.Add(new XLRange(new XLRangeParameters((XLRangeAddress)range.RangeAddress, range.Worksheet.Style)));
             });
         }
 
@@ -196,11 +196,6 @@ namespace ClosedXML.Excel
         public void Clear()
         {
             Initialize();
-        }
-
-        public void Dispose()
-        {
-            Ranges?.Dispose();
         }
     }
 }

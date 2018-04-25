@@ -4,31 +4,21 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLColumnsCollection : IDictionary<Int32, XLColumn>, IDisposable
+    internal class XLColumnsCollection : IDictionary<Int32, XLColumn>
     {
         public void ShiftColumnsRight(Int32 startingColumn, Int32 columnsToShift)
         {
-            foreach (var ro in _dictionary.Keys.Where(k => k >= startingColumn).OrderByDescending(k => k))
+            foreach (var co in _dictionary.Keys.Where(k => k >= startingColumn).OrderByDescending(k => k))
             {
-                var columnToMove = _dictionary[ro];
-                Int32 newColumnNum = ro + columnsToShift;
+                var columnToMove = _dictionary[co];
+                _dictionary.Remove(co);
+                Int32 newColumnNum = co + columnsToShift;
                 if (newColumnNum <= XLHelper.MaxColumnNumber)
                 {
-                    var newColumn = new XLColumn(columnToMove)
-                                        {
-                                            RangeAddress =
-                                            {
-                                                FirstAddress = new XLAddress(1, newColumnNum, false, false),
-                                                LastAddress =
-                                                    new XLAddress(XLHelper.MaxRowNumber, newColumnNum, false, false)
-                                            }
-                                        };
-                                        
-                    _dictionary.Add(newColumnNum, newColumn);
+                    columnToMove.SetColumnNumber(newColumnNum);
+                    _dictionary.Add(newColumnNum, columnToMove);
                 }
-                _dictionary.Remove(ro);
             }
-
         }
 
         private readonly Dictionary<Int32, XLColumn> _dictionary = new Dictionary<Int32, XLColumn>();
@@ -123,11 +113,6 @@ namespace ClosedXML.Excel
         public void RemoveAll(Func<XLColumn, Boolean> predicate)
         {
             _dictionary.RemoveAll(predicate);
-        }
-
-        public void Dispose()
-        {
-            _dictionary.Values.ForEach(c=>c.Dispose());
         }
     }
 }

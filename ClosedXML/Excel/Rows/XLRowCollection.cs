@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLRowsCollection : IDictionary<Int32, XLRow>, IDisposable
+    internal class XLRowsCollection : IDictionary<Int32, XLRow>
     {
         private readonly Dictionary<Int32, XLRow> _deleted = new Dictionary<Int32, XLRow>();
         private readonly Dictionary<Int32, XLRow> _dictionary = new Dictionary<Int32, XLRow>();
@@ -122,28 +122,20 @@ namespace ClosedXML.Excel
             return _dictionary.GetEnumerator();
         }
 
-        #endregion
+        #endregion IDictionary<int,XLRow> Members
 
         public void ShiftRowsDown(Int32 startingRow, Int32 rowsToShift)
         {
             foreach (int ro in _dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
             {
                 var rowToMove = _dictionary[ro];
+                _dictionary.Remove(ro);
                 Int32 newRowNum = ro + rowsToShift;
                 if (newRowNum <= XLHelper.MaxRowNumber)
                 {
-                    var newRow = new XLRow(rowToMove)
-                                     {
-                                         RangeAddress =
-                                             {
-                                                 FirstAddress = new XLAddress(newRowNum, 1, false, false),
-                                                 LastAddress =
-                                                     new XLAddress(newRowNum, XLHelper.MaxColumnNumber, false, false)
-                                             }
-                                     };
-                    _dictionary.Add(newRowNum, newRow);
+                    rowToMove.SetRowNumber(newRowNum);
+                    _dictionary.Add(newRowNum, rowToMove);
                 }
-                _dictionary.Remove(ro);
             }
         }
 
@@ -155,11 +147,6 @@ namespace ClosedXML.Excel
             }
 
             _dictionary.RemoveAll(predicate);
-        }
-
-        public void Dispose()
-        {
-            _dictionary.Values.ForEach(r=>r.Dispose());
         }
     }
 }

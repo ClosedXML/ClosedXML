@@ -32,6 +32,7 @@ namespace ClosedXML.Excel
         public void Add(IXLTable table)
         {
             _tables.Add(table.Name, table);
+            (table as XLTable)?.OnAddedToTables();
         }
 
         public IXLTable Table(Int32 index)

@@ -1,10 +1,10 @@
+using System;
+using ClosedXML.Excel;
 using ClosedXML.Excel.Caching;
 using NUnit.Framework;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace ClosedXML_Tests.Excel.Caching
 {
@@ -121,12 +121,66 @@ namespace ClosedXML_Tests.Excel.Caching
             Assert.NotNull(entities); // To protect them from GC
         }
 
+        [Test]
+        public void ReplaceKeyInRepository()
+        {
+            // Arrange
+            int key1 = 12345;
+            int key2 = 54321;
+            var entity = new SampleEntity(key1);
+            var sampleRepository = this.CreateSampleRepository();
+            var storedEntity1 = sampleRepository.Store(key1, entity);
+
+            // Act
+            sampleRepository.Replace(key1, key2);
+            bool containsOld = sampleRepository.ContainsKey(key1, out var _);
+            bool containsNew = sampleRepository.ContainsKey(key2, out var _);
+            var storedEntity2 = sampleRepository.GetOrCreate(key2);
+
+            // Assert
+            Assert.IsFalse(containsOld);
+            Assert.IsTrue(containsNew);
+            Assert.AreSame(entity, storedEntity1);
+            Assert.AreSame(entity, storedEntity2);
+        }
+
+        [Test]
+        public void ConcurrentReplaceKeyInRepository()
+        {
+            var sampleRepository = new EditableRepository();
+            int[] keys = Enumerable.Range(0, 1000).ToArray();
+            keys.ForEach(key => sampleRepository.GetOrCreate(key));
+
+            Parallel.ForEach(keys, key =>
+            {
+                var val1 = sampleRepository.Replace(key, key + 2000);
+                val1.Key = key + 2000;
+                var val2 = sampleRepository.GetOrCreate(key + 2000);
+                Assert.AreSame(val1, val2);
+            });
+        }
+
+        [Test]
+        public void ReplaceNonExistingKeyInRepository()
+        {
+            int key1 = 100;
+            int key2 = 200;
+            int key3 = 300;
+            var entity = new SampleEntity(key1);
+            var sampleRepository = this.CreateSampleRepository();
+            sampleRepository.Store(key1, entity);
+
+            sampleRepository.Replace(key2, key3);
+            var all = sampleRepository.ToList();
+
+            Assert.AreEqual(1, all.Count);
+            Assert.AreSame(entity, all.First());
+        }
 
         private SampleRepository CreateSampleRepository()
         {
             return new SampleRepository();
         }
-
 
         /// <summary>
         /// Class under testing
@@ -143,6 +197,27 @@ namespace ClosedXML_Tests.Excel.Caching
             public int Key { get; private set; }
 
             public SampleEntity(int key)
+            {
+                Key = key;
+            }
+        }
+
+
+        /// <summary>
+        /// Class under testing
+        /// </summary>
+        internal class EditableRepository : XLRepositoryBase<int, EditableEntity>
+        {
+            public EditableRepository() : base(key => new EditableEntity(key))
+            {
+            }
+        }
+
+        public class EditableEntity
+        {
+            public int Key { get; set; }
+
+            public EditableEntity(int key)
             {
                 Key = key;
             }
