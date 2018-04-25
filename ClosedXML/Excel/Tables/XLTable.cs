@@ -27,15 +27,6 @@ namespace ClosedXML.Excel
             InitializeValues(false);
         }
 
-        public XLTable(XLRange range, String name, Boolean addToTables, Boolean setAutofilter = true)
-            : base(new XLRangeParameters(range.RangeAddress, range.Style))
-        {
-            
-            InitializeValues(setAutofilter);
-
-            Name = name;
-        }
-
         #endregion Constructor
 
         public override XLRangeType RangeType

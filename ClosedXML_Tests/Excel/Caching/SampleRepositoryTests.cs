@@ -1,7 +1,9 @@
+using System;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Caching;
 using NUnit.Framework;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClosedXML_Tests.Excel.Caching
