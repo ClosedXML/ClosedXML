@@ -474,12 +474,16 @@ namespace ClosedXML.Excel
             switch (extension)
             {
                 case "xlsm":
-                case "xltm":
                     return SpreadsheetDocumentType.MacroEnabledWorkbook;
 
+                case "xltm":
+                    return SpreadsheetDocumentType.MacroEnabledTemplate;
+
                 case "xlsx":
-                case "xltx":
                     return SpreadsheetDocumentType.Workbook;
+
+                case "xltx":
+                    return SpreadsheetDocumentType.Template;
 
                 default:
                     throw new ArgumentException(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx', '.xslm', '.xltx' and '.xltm'.", extension));
