@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     internal class XLNamedRanges : IXLNamedRanges
     {
-        private readonly Dictionary<String, IXLNamedRange> _namedRanges = new Dictionary<String, IXLNamedRange>();
+        private readonly Dictionary<String, IXLNamedRange> _namedRanges = new Dictionary<String, IXLNamedRange>(StringComparer.OrdinalIgnoreCase);
         internal XLWorkbook Workbook { get; set; }
         internal XLWorksheet Worksheet { get; set; }
         internal XLNamedRangeScope Scope { get; }
@@ -109,6 +109,12 @@ namespace ClosedXML.Excel
         public IXLNamedRange Add(String rangeName, IXLRanges ranges, String comment)
         {
             var namedRange = new XLNamedRange(this, rangeName, ranges, comment);
+            _namedRanges.Add(rangeName, namedRange);
+            return namedRange;
+        }
+
+        public IXLNamedRange Add(String rangeName, IXLNamedRange namedRange)
+        {
             _namedRanges.Add(rangeName, namedRange);
             return namedRange;
         }
