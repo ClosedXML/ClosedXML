@@ -6,27 +6,57 @@ namespace ClosedXML.Excel
 {
     internal class XLNamedRange : IXLNamedRange
     {
+        private String _name;
         private readonly XLNamedRanges _namedRanges;
 
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, String range, String comment = null)
         {
+            _namedRanges = namedRanges;
             Visible = true;
             Name = rangeName;
             RangeList.Add(range);
             Comment = comment;
-            _namedRanges = namedRanges;
         }
 
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
         {
+            _namedRanges = namedRanges;
             Visible = true;
             Name = rangeName;
             ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
             Comment = comment;
-            _namedRanges = namedRanges;
         }
 
-        public String Name { get; set; }
+        public String Name
+        {
+            get { return _name; }
+            set
+            {
+                if (_name == value) return;
+
+                var oldname = _name ?? string.Empty;
+
+                var existingNames = _namedRanges.Select(nr => nr.Name).ToList();
+                if (_namedRanges.Scope == XLNamedRangeScope.Workbook)
+                    existingNames.AddRange(_namedRanges.Workbook.NamedRanges.Select(nr => nr.Name));
+
+                if (_namedRanges.Scope == XLNamedRangeScope.Worksheet)
+                    existingNames.AddRange(_namedRanges.Worksheet.NamedRanges.Select(nr => nr.Name));
+
+                existingNames = existingNames.Distinct().ToList();
+
+                if (!XLHelper.ValidateName("named range", value, oldname, existingNames, out String message))
+                    throw new ArgumentException(message, nameof(value));
+
+                _name = value;
+
+                if (!String.IsNullOrWhiteSpace(oldname) && !String.Equals(oldname, _name, StringComparison.OrdinalIgnoreCase))
+                {
+                    _namedRanges.Delete(oldname);
+                    _namedRanges.Add(_name, this);
+                }
+            }
+        }
 
         public IXLRanges Ranges
         {

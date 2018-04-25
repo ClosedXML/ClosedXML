@@ -193,22 +193,22 @@ namespace ClosedXML_Tests.Excel
                     ws1.Cell(3, 1).FormulaA1 = "TEST2";
                     ws1.Cell(4, 1).FormulaA1 = "TEST2*3";
 
-                    Assert.AreEqual(0.1, (double) ws1.Cell(1, 1).Value, XLHelper.Epsilon);
-                    Assert.AreEqual(1.0, (double) ws1.Cell(2, 1).Value, XLHelper.Epsilon);
-                    Assert.AreEqual(0.2, (double) ws1.Cell(3, 1).Value, XLHelper.Epsilon);
-                    Assert.AreEqual(0.6, (double) ws1.Cell(4, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.1, (double)ws1.Cell(1, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(1.0, (double)ws1.Cell(2, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.2, (double)ws1.Cell(3, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.6, (double)ws1.Cell(4, 1).Value, XLHelper.Epsilon);
 
                     wb.SaveAs(ms);
                 }
 
-                using (var wb = new XLWorkbook(ms)) 
+                using (var wb = new XLWorkbook(ms))
                 {
                     var ws1 = wb.Worksheets.First();
 
-                    Assert.AreEqual(0.1, (double) ws1.Cell(1, 1).Value, XLHelper.Epsilon);
-                    Assert.AreEqual(1.0, (double) ws1.Cell(2, 1).Value, XLHelper.Epsilon);
-                    Assert.AreEqual(0.2, (double) ws1.Cell(3, 1).Value, XLHelper.Epsilon);
-                    Assert.AreEqual(0.6, (double) ws1.Cell(4, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.1, (double)ws1.Cell(1, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(1.0, (double)ws1.Cell(2, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.2, (double)ws1.Cell(3, 1).Value, XLHelper.Epsilon);
+                    Assert.AreEqual(0.6, (double)ws1.Cell(4, 1).Value, XLHelper.Epsilon);
                 }
             }
         }
@@ -225,7 +225,7 @@ namespace ClosedXML_Tests.Excel
 
                 ws1.Cell(2, 1).FormulaA1 = "=SUM(TEST)";
 
-                Assert.AreEqual(12.0, (double) ws1.Cell(2, 1).Value, XLHelper.Epsilon);
+                Assert.AreEqual(12.0, (double)ws1.Cell(2, 1).Value, XLHelper.Epsilon);
             }
         }
 
@@ -254,6 +254,36 @@ namespace ClosedXML_Tests.Excel
 
             Assert.AreEqual(1, ws2.Cell("value2").GetValue<int>());
             Assert.AreEqual(1, ws2.Range("value2").FirstCell().GetValue<int>());
+        }
+
+        [Test]
+        public void CanRenameNamedRange()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet("Sheet1");
+                var nr1 = wb.NamedRanges.Add("TEST", "=0.1");
+
+                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST", out IXLNamedRange _));
+                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST1", out IXLNamedRange _));
+
+                nr1.Name = "TEST1";
+
+                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST", out IXLNamedRange _));
+                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST1", out IXLNamedRange _));
+
+                var nr2 = wb.NamedRanges.Add("TEST2", "=TEST1*2");
+
+                ws1.Cell(1, 1).FormulaA1 = "TEST1";
+                ws1.Cell(2, 1).FormulaA1 = "TEST1*10";
+                ws1.Cell(3, 1).FormulaA1 = "TEST2";
+                ws1.Cell(4, 1).FormulaA1 = "TEST2*3";
+
+                Assert.AreEqual(0.1, (double)ws1.Cell(1, 1).Value, XLHelper.Epsilon);
+                Assert.AreEqual(1.0, (double)ws1.Cell(2, 1).Value, XLHelper.Epsilon);
+                Assert.AreEqual(0.2, (double)ws1.Cell(3, 1).Value, XLHelper.Epsilon);
+                Assert.AreEqual(0.6, (double)ws1.Cell(4, 1).Value, XLHelper.Epsilon);
+            }
         }
     }
 }
