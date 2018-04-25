@@ -201,44 +201,6 @@ namespace ClosedXML.Excel
 
         public XLTableTheme Theme { get; set; }
 
-        private Boolean ValidateName(String newName, String oldName, out String message)
-        {
-            message = "";
-            if (String.IsNullOrWhiteSpace(newName))
-            {
-                message = $"The table name '{newName}' is invalid";
-                return false;
-            }
-
-            // Table names are case insensitive
-            if (!oldName.Equals(newName, StringComparison.OrdinalIgnoreCase)
-                && Worksheet.Tables.Any(t => t.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
-            {
-                message = $"This worksheet already contains a table named '{newName}'";
-                return false;
-            }
-
-            if (newName[0] != '_' && !char.IsLetter(newName[0]))
-            {
-                message = $"The table name '{newName}' does not begin with a letter or an underscore";
-                return false;
-            }
-
-            if (newName.Length > 255)
-            {
-                message = "The table name is more than 255 characters";
-                return false;
-            }
-
-            if (new[] { 'C', 'R' }.Any(c => newName.ToUpper().Equals(c.ToString())))
-            {
-                message = $"The table name '{newName}' is invalid";
-                return false;
-            }
-
-            return true;
-        }
-
         public String Name
         {
             get { return _name; }
@@ -249,7 +211,7 @@ namespace ClosedXML.Excel
                 // Validation rules for table names
                 var oldname = _name ?? string.Empty;
 
-                if (!ValidateName(value, oldname, out String message))
+                if (!XLHelper.ValidateName("table", value, oldname, Worksheet.Tables.Select(t => t.Name), out String message))
                     throw new ArgumentException(message, nameof(value));
 
                 _name = value;

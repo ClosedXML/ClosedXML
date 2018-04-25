@@ -1,6 +1,6 @@
 using System;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
-        private const Int32 TwoT26 = 26*26;
+        private const Int32 TwoT26 = 26 * 26;
 
         internal static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(200, 200));
         internal static readonly Double DpiX = Graphic.DpiX;
@@ -100,7 +100,6 @@ namespace ClosedXML.Excel
 
             throw new ArgumentOutOfRangeException(columnLetter + " is not recognized as a column letter");
         }
-
 
         /// <summary>
         /// Gets the column letter of a given column number.
@@ -319,6 +318,44 @@ namespace ClosedXML.Excel
         internal static bool IsValidOADateNumber(this double d)
         {
             return -657435 <= d && d < 2958466;
+        }
+
+        public static Boolean ValidateName(String objectType, String newName, String oldName, IEnumerable<String> existingNames, out String message)
+        {
+            message = "";
+            if (String.IsNullOrWhiteSpace(newName))
+            {
+                message = $"The {objectType} name '{newName}' is invalid";
+                return false;
+            }
+
+            // Table names are case insensitive
+            if (!oldName.Equals(newName, StringComparison.OrdinalIgnoreCase)
+                && existingNames.Contains(newName, StringComparer.OrdinalIgnoreCase))
+            {
+                message = $"There is already a {objectType} named '{newName}'";
+                return false;
+            }
+
+            if (newName[0] != '_' && !char.IsLetter(newName[0]))
+            {
+                message = $"The {objectType} name '{newName}' does not begin with a letter or an underscore";
+                return false;
+            }
+
+            if (newName.Length > 255)
+            {
+                message = $"The {objectType} name is more than 255 characters";
+                return false;
+            }
+
+            if (new[] { 'C', 'R' }.Any(c => newName.ToUpper().Equals(c.ToString())))
+            {
+                message = $"The {objectType} name '{newName}' is invalid";
+                return false;
+            }
+
+            return true;
         }
     }
 }
