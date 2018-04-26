@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace ClosedXML_Tests.Excel.Saving
 {
@@ -339,6 +341,28 @@ namespace ClosedXML_Tests.Excel.Saving
 
                 return wb;
             }, @"Other\Drawings\NoDrawings\outputfile.xlsx");
+        }
+
+        [Test]
+        [TestCase("xlsx", SpreadsheetDocumentType.Workbook)]
+        [TestCase("xlsm", SpreadsheetDocumentType.MacroEnabledWorkbook)]
+        [TestCase("xltx", SpreadsheetDocumentType.Template)]
+        [TestCase("xltm", SpreadsheetDocumentType.MacroEnabledTemplate)]
+        public void SavesAsProperSpreadsheetDocumentType(string extension, SpreadsheetDocumentType expectedType)
+        {
+            using (var tf = new TemporaryFile(Path.ChangeExtension(Path.GetTempFileName(), extension)))
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add("Sheet1");
+                    wb.SaveAs(tf.Path);
+                }
+
+                using (var package = SpreadsheetDocument.Open(tf.Path, false))
+                {
+                    Assert.AreEqual(expectedType, package.DocumentType);
+                }
+            }
         }
     }
 }
