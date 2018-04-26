@@ -1920,7 +1920,7 @@ namespace ClosedXML.Excel
 
                 var c = new XLConditionalFormat(fmtRanges, true);
                 c.CopyFrom(cf);
-                c.AdjustFormulas((XLCell) cf.Ranges.First().FirstCell(), (XLCell)fmtRanges.First().FirstCell());
+                c.AdjustFormulas((XLCell)cf.Ranges.First().FirstCell(), (XLCell)fmtRanges.First().FirstCell());
 
                 _worksheet.ConditionalFormats.Add(c);
             }
@@ -2072,43 +2072,36 @@ namespace ClosedXML.Excel
             if (String.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
 
-            try
+            var value = ">" + strValue + "<";
+
+            var regex = conversionType == FormulaConversionType.A1ToR1C1 ? A1Regex : R1C1Regex;
+
+            var sb = new StringBuilder();
+            var lastIndex = 0;
+
+            foreach (var match in regex.Matches(value).Cast<Match>())
             {
-                var value = ">" + strValue + "<";
-
-                var regex = conversionType == FormulaConversionType.A1ToR1C1 ? A1Regex : R1C1Regex;
-
-                var sb = new StringBuilder();
-                var lastIndex = 0;
-
-                foreach (var match in regex.Matches(value).Cast<Match>())
+                var matchString = match.Value;
+                var matchIndex = match.Index;
+                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
+                    && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
                 {
-                    var matchString = match.Value;
-                    var matchIndex = match.Index;
-                    if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
-                        && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
-                    {
-                        // Check if the match is in between quotes
-                        sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
-                        sb.Append(conversionType == FormulaConversionType.A1ToR1C1
-                            ? GetR1C1Address(matchString, rowsToShift, columnsToShift)
-                            : GetA1Address(matchString, rowsToShift, columnsToShift));
-                    }
-                    else
-                        sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
-                    lastIndex = matchIndex + matchString.Length;
+                    // Check if the match is in between quotes
+                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
+                    sb.Append(conversionType == FormulaConversionType.A1ToR1C1
+                        ? GetR1C1Address(matchString, rowsToShift, columnsToShift)
+                        : GetA1Address(matchString, rowsToShift, columnsToShift));
                 }
-
-                if (lastIndex < value.Length)
-                    sb.Append(value.Substring(lastIndex));
-
-                var retVal = sb.ToString();
-                return retVal.Substring(1, retVal.Length - 2);
+                else
+                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
+                lastIndex = matchIndex + matchString.Length;
             }
-            catch (IndexOutOfRangeException)
-            {
-                return "#REF!";
-            }
+
+            if (lastIndex < value.Length)
+                sb.Append(value.Substring(lastIndex));
+
+            var retVal = sb.ToString();
+            return retVal.Substring(1, retVal.Length - 2);
         }
 
         private string GetA1Address(string r1C1Address, int rowsToShift, int columnsToShift)
@@ -2136,14 +2129,21 @@ namespace ClosedXML.Excel
                 return leftPart + ":" + rightPart;
             }
 
-            var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
-            var rowToReturn = GetA1Row(rowPart, rowsToShift);
+            try
+            {
+                var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
+                var rowToReturn = GetA1Row(rowPart, rowsToShift);
 
-            var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
-            var columnToReturn = GetA1Column(columnPart, columnsToShift);
+                var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
+                var columnToReturn = GetA1Column(columnPart, columnsToShift);
 
-            var retAddress = columnToReturn + rowToReturn;
-            return retAddress;
+                var retAddress = columnToReturn + rowToReturn;
+                return retAddress;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return "#REF!";
+            }
         }
 
         private string GetA1Column(string columnPart, int columnsToShift)
