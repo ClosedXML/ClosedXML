@@ -1,6 +1,8 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using ClosedXML_Tests.Utils;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using NUnit.Framework;
 using System;
 using System.Drawing;
@@ -9,8 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
 
 namespace ClosedXML_Tests.Excel.Saving
 {
