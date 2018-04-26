@@ -631,21 +631,24 @@ namespace ClosedXML_Tests
                 using (var wb = new XLWorkbook())
                 {
                     var ws = wb.Worksheets.Add("Sheet1");
-                    ws.Cell("A1").Value = "ValueA1";
-                    ws.Cell("B2").FormulaA1 = "=A1";
+                    ws.Cell("A1").Value = 1;
+                    ws.Cell("B1").Value = 2;
+                    ws.Cell("B2").FormulaA1 = "=A1+B1";
+
+                    Assert.AreEqual(3, ws.Cell("B2").Value);
 
                     ws.Range("A2").Value = ws.Range("B2");
                     var fA2 = ws.Cell("A2").FormulaA1;
 
                     wb.SaveAs(ms);
 
-                    Assert.AreEqual("#REF!", fA2);
+                    Assert.AreEqual("#REF!+A1", fA2);
                 }
 
                 using (var wb2 = new XLWorkbook(ms))
                 {
                     var fA2 = wb2.Worksheets.First().Cell("A2").FormulaA1;
-                    Assert.AreEqual("#REF!", fA2);
+                    Assert.AreEqual("#REF!+A1", fA2);
                 }
             }
         }

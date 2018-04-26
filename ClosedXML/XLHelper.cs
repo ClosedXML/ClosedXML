@@ -111,6 +111,10 @@ namespace ClosedXML.Excel
         public static string GetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
         {
             if (trimToAllowed) columnNumber = TrimColumnNumber(columnNumber);
+
+            if (columnNumber <= 0 || columnNumber > allLetters.Length)
+                throw new ArgumentOutOfRangeException(nameof(columnNumber));
+
             // Adjust for start on column 1
             return allLetters[columnNumber - 1];
         }
