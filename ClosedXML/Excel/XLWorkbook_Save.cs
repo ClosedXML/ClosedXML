@@ -3115,23 +3115,14 @@ namespace ClosedXML.Excel
             }
         }
 
-        // Still not fully implemented for all shapes
-        private static void RebaseShapeIds(WorksheetPart worksheetPart)
+        private static void RebaseNonVisualDrawingPropertiesIds(WorksheetPart worksheetPart)
         {
             var worksheetDrawing = worksheetPart.DrawingsPart.WorksheetDrawing;
-            for (var i = 0; i < worksheetDrawing.ChildElements.Count; i++)
-            {
-                var anchor = worksheetDrawing.ElementAt(i);
-                var props = GetPropertiesFromAnchor(anchor);
-                if (props != null)
-                {
-                    var offset = 1;
-                    while (worksheetDrawing.Descendants<NonVisualDrawingProperties>().Any(p => p.Id == Convert.ToUInt32(i + offset)))
-                        offset++;
 
-                    props.Id = Convert.ToUInt32(i + offset);
-                }
-            }
+            var toRebase = worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>()
+                .ToList();
+
+            toRebase.ForEach(nvdpr => nvdpr.Id = Convert.ToUInt32(toRebase.IndexOf(nvdpr) + 1));
         }
 
         private static Vml.TextBox GetTextBox(IXLDrawingStyle ds)
@@ -5492,7 +5483,7 @@ namespace ClosedXML.Excel
             }
 
             if (xlWorksheet.Pictures.Any())
-                RebaseShapeIds(worksheetPart);
+                RebaseNonVisualDrawingPropertiesIds(worksheetPart);
 
             var tableParts = worksheetPart.Worksheet.Elements<TableParts>().First();
             if (xlWorksheet.Pictures.Any() && !worksheetPart.Worksheet.OfType<Drawing>().Any())
