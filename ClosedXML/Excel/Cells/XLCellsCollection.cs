@@ -212,22 +212,28 @@ namespace ClosedXML.Excel
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
+            int firstColumnUsed = finalColumn;
+            var found = false;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
                 if (rowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
                 {
-                    for (int co = columnStart; co <= finalColumn; co++)
+                    for (int co = columnStart; co <= firstColumnUsed; co++)
                     {
                         if (columnsCollection.TryGetValue(co, out XLCell cell)
                             && !cell.IsEmpty(includeFormats)
-                            && (predicate == null || predicate(cell)))
-
-                            return co;
+                            && (predicate == null || predicate(cell))
+                            && co <= firstColumnUsed)
+                        {
+                            firstColumnUsed = co;
+                            found = true;
+                            break;
+                        }
                     }
                 }
             }
 
-            return 0;
+            return found ? firstColumnUsed : 0;
         }
 
         public int LastRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
