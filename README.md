@@ -1,8 +1,8 @@
 # ClosedXML
-[![Build status](https://ci.appveyor.com/api/projects/status/wobbmnlbukxejjgb?svg=true)](https://ci.appveyor.com/project/Pyropace/ClosedXML/branch/develop/artifacts)
+[![Build status](https://ci.appveyor.com/api/projects/status/wobbmnlbukxejjgb?svg=true)](https://ci.appveyor.com/project/ClosedXML/ClosedXML/branch/develop/artifacts)
 [![Open Source Helpers](https://www.codetriage.com/closedxml/closedxml/badges/users.svg)](https://www.codetriage.com/closedxml/closedxml)
 
-[💾 Download unstable CI build](https://ci.appveyor.com/project/Pyropace/ClosedXML/branch/develop/artifacts)
+[💾 Download unstable CI build](https://ci.appveyor.com/project/ClosedXML/ClosedXML/branch/develop/artifacts)
 
 ClosedXML makes it easier for developers to create Excel 2007+ (.xlsx, .xlsm, etc) files. It provides a nice object oriented way to manipulate the files (similar to VBA) without dealing with the hassles of XML Documents. It can be used by any .NET language like C# and Visual Basic (VB).
 
