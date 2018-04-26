@@ -15,17 +15,33 @@ namespace ClosedXML.Excel
             var hashCode = 2043579837;
             hashCode = hashCode * -1521134295 + BackgroundColor.GetHashCode();
             hashCode = hashCode * -1521134295 + PatternColor.GetHashCode();
-            hashCode = hashCode * -1521134295 + PatternType.GetHashCode();
+
+            var patternType = PatternType;
+            if (BackgroundColor.ColorType == XLColorType.Indexed && BackgroundColor.Indexed == 64)
+                patternType = XLFillPatternValues.None;
+
+            hashCode = hashCode * -1521134295 + patternType.GetHashCode();
+
             return hashCode;
         }
 
         public bool Equals(XLFillKey other)
         {
-            return
-                (PatternType == XLFillPatternValues.None && other.PatternType == XLFillPatternValues.None) ||
-                BackgroundColor == other.BackgroundColor
-             && PatternColor == other.PatternColor
-             && PatternType == other.PatternType;
+            if (PatternType == XLFillPatternValues.None && other.PatternType == XLFillPatternValues.None)
+                return true;
+
+            var patternType1 = PatternType;
+            var patternType2 = other.PatternType;
+
+            if (BackgroundColor.ColorType == XLColorType.Indexed && BackgroundColor.Indexed == 64)
+                patternType1 = XLFillPatternValues.None;
+
+            if (other.BackgroundColor.ColorType == XLColorType.Indexed && other.BackgroundColor.Indexed == 64)
+                patternType2 = XLFillPatternValues.None;
+
+            return BackgroundColor == other.BackgroundColor
+                   && PatternColor == other.PatternColor
+                   && patternType1 == patternType2;
         }
 
         public override bool Equals(object obj)
