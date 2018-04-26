@@ -129,5 +129,21 @@ namespace ClosedXML_Tests.Excel.Ranges
             }
             Assert.AreEqual(15, i);
         }
+
+        [Test]
+        public void GetCellsUsedNonRectangular()
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var sheet = wb.AddWorksheet("page1");
+
+                sheet.Range("C1:E1").Value = "row1";
+                sheet.Range("A2:E2").Value = "row2";
+
+                var used = sheet.RangeUsed().RangeAddress.ToString(XLReferenceStyle.A1);
+
+                Assert.AreEqual("A1:E2", used);
+            }
+        }
     }
 }
