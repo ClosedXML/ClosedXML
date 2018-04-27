@@ -50,7 +50,6 @@ namespace ClosedXML_Tests.Excel
             // TODO: unpark all files
             var parkedForLater = new[]
             {
-                "Misc.LO.xlsx.formats.xlsx",
                 "Misc.LO.xlsx.pivot_table.shared-group-field.xlsx",
                 "Misc.LO.xlsx.pivot_table.shared-nested-dategroup.xlsx",
                 "Misc.LO.xlsx.pivottable_bool_field_filter.xlsx",
