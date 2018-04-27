@@ -60,11 +60,9 @@ namespace ClosedXML_Tests.Excel
                 "Misc.LO.xlsx.pivottable_string_field_filter.xlsx",
                 "Misc.LO.xlsx.pivottable_tabular_mode.xlsx",
                 "Misc.LO.xlsx.pivot_table_first_header_row.xlsx",
-                "Misc.LO.xlsx.tdf100709.xlsx",
                 "Misc.LO.xlsx.tdf89139_pivot_table.xlsx",
                 "Misc.LO.xlsx.universal-content-strict.xlsx",
                 "Misc.LO.xlsx.universal-content.xlsx",
-                "Misc.LO.xlsx.xf_default_values.xlsx"
             };
 
             var files = TestHelper.ListResourceFiles(s => s.Contains(".LO.") && !parkedForLater.Any(i => s.Contains(i))).ToArray();

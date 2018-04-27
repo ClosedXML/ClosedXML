@@ -10,7 +10,7 @@ namespace ClosedXML.Excel.Drawings
 {
     internal class XLPictures : IXLPictures, IEnumerable<XLPicture>
     {
-        private readonly List<XLPicture> _pictures = new List<XLPicture>();
+        private readonly Dictionary<string, IXLPicture> _pictures = new Dictionary<string, IXLPicture>(StringComparer.OrdinalIgnoreCase);
         private readonly XLWorksheet _worksheet;
 
         public XLPictures(XLWorksheet worksheet)
@@ -29,100 +29,100 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Add(Stream stream)
         {
-            var picture = new XLPicture(_worksheet, stream);
-            _pictures.Add(picture);
-            picture.Name = GetNextPictureName();
-            return picture;
+            return AddInternal(new XLPicture(_worksheet, stream));
         }
 
         public IXLPicture Add(Stream stream, string name)
         {
-            var picture = Add(stream);
-            picture.Name = name;
-            return picture;
+            return AddInternal(new XLPicture(_worksheet, stream), name);
         }
 
         public IXLPicture Add(Stream stream, XLPictureFormat format)
         {
-            var picture = new XLPicture(_worksheet, stream, format);
-            _pictures.Add(picture);
-            picture.Name = GetNextPictureName();
-            return picture;
+            return AddInternal(new XLPicture(_worksheet, stream, format));
         }
 
         public IXLPicture Add(Stream stream, XLPictureFormat format, string name)
         {
-            var picture = Add(stream, format);
-            picture.Name = name;
-            return picture;
+            return AddInternal(new XLPicture(_worksheet, stream, format), name);
         }
 
         public IXLPicture Add(Bitmap bitmap)
         {
-            var picture = new XLPicture(_worksheet, bitmap);
-            _pictures.Add(picture);
-            picture.Name = GetNextPictureName();
-            return picture;
+            return AddInternal(new XLPicture(_worksheet, bitmap));
         }
 
         public IXLPicture Add(Bitmap bitmap, string name)
         {
-            var picture = Add(bitmap);
-            picture.Name = name;
-            return picture;
+            return AddInternal(new XLPicture(_worksheet, bitmap), name);
         }
 
         public IXLPicture Add(string imageFile)
         {
-            using (var fs = File.Open(imageFile, FileMode.Open))
-            {
-                var picture = new XLPicture(_worksheet, fs);
-                _pictures.Add(picture);
-                picture.Name = GetNextPictureName();
-                return picture;
-            }
+            return Add(imageFile, null);
         }
 
         public IXLPicture Add(string imageFile, string name)
         {
-            var picture = Add(imageFile);
-            picture.Name = name;
+            using (var fs = File.Open(imageFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                return AddInternal(new XLPicture(_worksheet, fs), name);
+            }
+        }
+
+        internal IXLPicture Add(Stream stream, string name, int Id)
+        {
+            if (_pictures.ContainsKey(name))
+                name = GetNextPictureName();
+
+            var picture = Add(stream, name) as XLPicture;
+
+            if (!_worksheet.Pictures.Any(p => p.Id == Id))
+                picture.Id = Id; // Use the value from the file only if it is not used already
+
+            return picture;
+        }
+
+        private IXLPicture AddInternal(IXLPicture picture, string pictureName = null)
+        {
+            if (pictureName == null)
+                pictureName = GetNextPictureName();
+            picture.Name = pictureName;
+            _pictures.Add(pictureName, picture);
             return picture;
         }
 
         public bool Contains(string pictureName)
         {
-            return _pictures.Any(p => string.Equals(p.Name, pictureName, StringComparison.OrdinalIgnoreCase));
+            return _pictures.ContainsKey(pictureName);
         }
 
         public void Delete(IXLPicture picture)
         {
-            Delete(picture.Name);
+            _pictures.Remove(picture.Name);
+            
+            var relId = (picture as XLPicture)?.RelId;
+            if (!string.IsNullOrEmpty(relId))
+                Deleted.Add(relId);
+
+            picture.Dispose();
         }
 
         public void Delete(string pictureName)
         {
-            var picturesToDelete = _pictures
-                .Where(picture => picture.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-            foreach (var picture in picturesToDelete)
-            {
-                if (!string.IsNullOrEmpty(picture.RelId))
-                    Deleted.Add(picture.RelId);
-
-                _pictures.Remove(picture);
-            }
+            if (!_pictures.ContainsKey(pictureName))
+                throw new ArgumentOutOfRangeException($"Picture with name '{pictureName}' does not exist");
+            Delete(_pictures[pictureName]);
         }
 
         IEnumerator<IXLPicture> IEnumerable<IXLPicture>.GetEnumerator()
         {
-            return _pictures.Cast<IXLPicture>().GetEnumerator();
+            return _pictures.Values.GetEnumerator();
         }
 
         public IEnumerator<XLPicture> GetEnumerator()
         {
-            return ((IEnumerable<XLPicture>)_pictures).GetEnumerator();
+            return _pictures.Values.Cast<XLPicture>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -140,32 +140,34 @@ namespace ClosedXML.Excel.Drawings
 
         public bool TryGetPicture(string pictureName, out IXLPicture picture)
         {
-            var matches = _pictures.Where(p => p.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase));
-            if (matches.Any())
-            {
-                picture = matches.First();
-                return true;
-            }
-            picture = null;
-            return false;
-        }
-
-        internal IXLPicture Add(Stream stream, string name, int Id)
-        {
-            var picture = Add(stream) as XLPicture;
-            picture.SetName(name);
-            picture.Id = Id;
-            return picture;
+            return _pictures.TryGetValue(pictureName, out picture);
         }
 
         private String GetNextPictureName()
         {
-            var pictureNumber = this.Count;
-            while (_pictures.Any(p => p.Name == $"Picture {pictureNumber}"))
+            var pictureNumber = this.Count + 1;
+            while (_pictures.ContainsKey($"Picture {pictureNumber}"))
             {
                 pictureNumber++;
             }
             return $"Picture {pictureNumber}";
+        }
+
+        internal void Rename(string oldName, string newName)
+        {
+            if (string.Equals(oldName, newName, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            if (!_pictures.ContainsKey(oldName))
+                return;
+
+            var p = _pictures[oldName];
+
+            if (TryGetPicture(newName, out var otherPicture) && p != otherPicture)
+                throw new ArgumentException($"The picture name '{newName}' already exists.");
+
+            _pictures.Remove(oldName);
+            _pictures.Add(newName, p);
         }
     }
 }

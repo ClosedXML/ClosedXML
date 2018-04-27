@@ -171,10 +171,9 @@ namespace ClosedXML.Excel.Drawings
             {
                 if (name == value) return;
 
-                if ((Worksheet.Pictures.FirstOrDefault(p => p.Name.Equals(value, StringComparison.OrdinalIgnoreCase)) ?? this) != this)
-                    throw new ArgumentException($"The picture name '{value}' already exists.");
-
-                SetName(value);
+                ValidatePictureName(value);
+                (Worksheet.Pictures as XLPictures)?.Rename(name, value);
+                name = value;
             }
         }
 
@@ -326,18 +325,16 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
-        internal void SetName(string value)
+        internal void ValidatePictureName(string pictureName)
         {
-            if (String.IsNullOrWhiteSpace(value))
+            if (String.IsNullOrWhiteSpace(pictureName))
                 throw new ArgumentException("Picture names cannot be empty");
 
-            if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
+            if (pictureName.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
                 throw new ArgumentException($"Picture names cannot contain any of the following characters: {InvalidNameChars}");
 
-            if (value.Length > 31)
+            if (pictureName.Length > 31)
                 throw new ArgumentException("Picture names cannot be more than 31 characters");
-
-            name = value;
         }
 
         private static ImageFormat FromMimeType(string mimeType)

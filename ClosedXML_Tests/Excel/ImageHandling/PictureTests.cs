@@ -274,6 +274,19 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void DeleteNonExistingPictureThrows()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+
+                TestDelegate action = () => ws.Pictures.Delete("NonExisting");
+
+                Assert.Throws(typeof(ArgumentOutOfRangeException), action);
+            }
+        }
+
+        [Test]
         public void PictureRenameTests()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
@@ -327,6 +340,20 @@ namespace ClosedXML_Tests
                         .WithPlacement(XLPicturePlacement.FreeFloating)
                         .MoveTo(440, 300) as XLPicture;
                 }
+            }
+        }
+
+        [Test]
+        public void CanLoadFileWithDuplicatePictureIds()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath("Misc.LO.xlsx.xf_default_values.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+
+                Assert.AreEqual(2, ws.Pictures.Count);
+                Assert.AreEqual(1, ws.Pictures.First().Id);
+                Assert.AreEqual(2, ws.Pictures.Last().Id); //In the original file it has 1 too.
             }
         }
     }
