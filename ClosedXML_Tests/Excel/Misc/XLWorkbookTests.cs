@@ -87,6 +87,19 @@ namespace ClosedXML_Tests.Excel
             Assert.NotNull(c2);
         }
 
+        [TestCase("Sheet2!C1")]
+        [TestCase("Sheet1!ZZZ1")]
+        [TestCase("Sheet1!A")]
+        public void GetCellFromNonExistingFullAddress(string address)
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+
+            var c = wb.Cell(address);
+
+            Assert.IsNull(c);
+        }
+
         [Test]
         public void GetRangeFromFullAddress()
         {
@@ -98,6 +111,18 @@ namespace ClosedXML_Tests.Excel
 
             Assert.AreSame(r1, r2);
             Assert.NotNull(r2);
+        }
+
+        [TestCase("Sheet2!C1:D2")]
+        [TestCase("Sheet1!A")]
+        public void GetRangeFromNonExistingFullAddress(string rangeAddress)
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+
+            var r = wb.Range(rangeAddress);
+
+            Assert.IsNull(r);
         }
 
         [Test]
@@ -112,6 +137,20 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(2, r2.Count);
             Assert.AreSame(r1.First(), r2.First());
             Assert.AreSame(r1.Last(), r2.Last());
+        }
+
+
+        [TestCase("Sheet2!C1:D2,Sheet2!F1:G4")]
+        [TestCase("Sheet1!A,Sheet1!B")]
+        public void GetRangesFromNonExistingFullAddress(string rangesAddress)
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+
+            var r = wb.Ranges(rangesAddress);
+
+            Assert.NotNull(r);
+            Assert.False(r.Any());
         }
 
         [Test]
