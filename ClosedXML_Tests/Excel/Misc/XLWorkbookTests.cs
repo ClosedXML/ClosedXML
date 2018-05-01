@@ -75,6 +75,46 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void GetCellFromFullAddress()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var c1 = ws.Cell("C123");
+
+            var c2 = wb.Cell("Sheet1!C123");
+
+            Assert.AreSame(c1, c2);
+            Assert.NotNull(c2);
+        }
+
+        [Test]
+        public void GetRangeFromFullAddress()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var r1 = ws.Range("C123:D125");
+
+            var r2 = wb.Range("Sheet1!C123:D125");
+
+            Assert.AreSame(r1, r2);
+            Assert.NotNull(r2);
+        }
+
+        [Test]
+        public void GetRangesFromFullAddress()
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var r1 = ws.Ranges("A1:B2,C1:E3");
+
+            var r2 = wb.Ranges("Sheet1!A1:B2,Sheet1!C1:E3");
+
+            Assert.AreEqual(2, r2.Count);
+            Assert.AreSame(r1.First(), r2.First());
+            Assert.AreSame(r1.Last(), r2.Last());
+        }
+
+        [Test]
         public void NamedRange1()
         {
             var wb = new XLWorkbook();
