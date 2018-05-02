@@ -496,8 +496,8 @@ namespace ClosedXML.Excel
             var modifiedWorksheetsCount = modifiedWorksheets.Count;
             var modifiedNamedRangesCount = modifiedNamedRanges.Count;
 
-            InsertOnVtVector(vTVectorOne, "Worksheets", 0, modifiedWorksheetsCount.ToString());
-            InsertOnVtVector(vTVectorOne, "Named Ranges", 2, modifiedNamedRangesCount.ToString());
+            InsertOnVtVector(vTVectorOne, "Worksheets", 0, modifiedWorksheetsCount.ToInvariantString());
+            InsertOnVtVector(vTVectorOne, "Named Ranges", 2, modifiedNamedRangesCount.ToInvariantString());
 
             vTVectorTwo.Size = (UInt32)(modifiedNamedRangesCount + modifiedWorksheetsCount);
 
@@ -973,11 +973,12 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    if (newStrings.ContainsKey(c.Value.ToString()))
-                        c.SharedStringId = newStrings[c.Value.ToString()];
+                    var value = c.Value.ToInvariantString();                                        
+                    if (newStrings.ContainsKey(value))
+                        c.SharedStringId = newStrings[value];
                     else
                     {
-                        var s = c.Value.ToString();
+                        var s = value;
                         var sharedStringItem = new SharedStringItem();
                         var text = new Text { Text = XmlEncoder.EncodeString(s) };
                         if (!s.Trim().Equals(s))
@@ -987,7 +988,7 @@ namespace ClosedXML.Excel
                         sharedStringTablePart.SharedStringTable.Count += 1;
                         sharedStringTablePart.SharedStringTable.UniqueCount += 1;
 
-                        newStrings.Add(c.Value.ToString(), stringId);
+                        newStrings.Add(value, stringId);
                         c.SharedStringId = stringId;
 
                         stringId++;
@@ -2051,7 +2052,7 @@ namespace ClosedXML.Excel
             foreach (var c in source.Columns())
             {
                 var columnNumber = c.ColumnNumber();
-                var columnName = c.FirstCell().Value.ToString();
+                var columnName = c.FirstCell().Value.ToInvariantString();
 
                 XLPivotField xlpf;
                 if (pt.Fields.Contains(columnName))
@@ -2464,9 +2465,9 @@ namespace ClosedXML.Excel
                         if (ptfi.MixedDataType || ptfi.DataType == XLDataType.Text)
                         {
                             var values = ptfi.DistinctValues
-                                .Select(v => v.ToString().ToLower())
+                                .Select(v => v.ToInvariantString().ToLower())
                                 .ToList();
-                            var selectedValue = labelOrFilterField.SelectedValues.Single().ToString().ToLower();
+                            var selectedValue = labelOrFilterField.SelectedValues.Single().ToInvariantString().ToLower();
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
@@ -2680,7 +2681,7 @@ namespace ClosedXML.Excel
             foreach (var value in pt.Values)
             {
                 var sourceColumn =
-                    pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToString() == value.SourceName);
+                    pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.SourceName);
                 if (sourceColumn == null) continue;
 
                 UInt32 numberFormatId = 0;
@@ -2700,7 +2701,7 @@ namespace ClosedXML.Excel
 
                 if (!String.IsNullOrEmpty(value.BaseField))
                 {
-                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToString() == value.BaseField);
+                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.BaseField);
                     if (baseField != null)
                     {
                         df.BaseField = baseField.ColumnNumber() - 1;
@@ -2864,8 +2865,7 @@ namespace ClosedXML.Excel
             var fill = new Vml.Fill { Color2 = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2) };
             if (c.Comment.Style.ColorsAndLines.FillTransparency < 1)
                 fill.Opacity =
-                    Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.FillTransparency), 2).ToString(
-                        CultureInfo.InvariantCulture);
+                    Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.FillTransparency), 2).ToInvariantString();
             var stroke = GetStroke(c);
             var shape = new Vml.Shape(
                 fill,
@@ -2884,8 +2884,8 @@ namespace ClosedXML.Excel
                     new HorizontalTextAlignment(c.Comment.Style.Alignment.Horizontal.ToString().ToCamel()),
                     new Vml.Spreadsheet.VerticalTextAlignment(c.Comment.Style.Alignment.Vertical.ToString().ToCamel()),
                     new AutoFill("False"),
-                    new CommentRowTarget { Text = (rowNumber - 1).ToString() },
-                    new CommentColumnTarget { Text = (columnNumber - 1).ToString() },
+                    new CommentRowTarget { Text = (rowNumber - 1).ToInvariantString() },
+                    new CommentColumnTarget { Text = (columnNumber - 1).ToInvariantString() },
                     new Locked(c.Comment.Style.Protection.Locked ? "True" : "False"),
                     new LockText(c.Comment.Style.Protection.LockText ? "True" : "False"),
                     new Visible(c.Comment.Visible ? "True" : "False")
@@ -2922,8 +2922,7 @@ namespace ClosedXML.Excel
                 stroke.EndCap = Vml.StrokeEndCapValues.Round;
             if (c.Comment.Style.ColorsAndLines.LineTransparency < 1)
                 stroke.Opacity =
-                    Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.LineTransparency), 2).ToString(
-                        CultureInfo.InvariantCulture);
+                    Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.LineTransparency), 2).ToInvariantString();
             return stroke;
         }
 
@@ -3030,20 +3029,20 @@ namespace ClosedXML.Excel
                     if (moveAndSizeFromMarker == null) moveAndSizeFromMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1").Address);
                     fMark = new Xdr.FromMarker
                     {
-                        ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.Address.ColumnNumber - 1).ToString()),
-                        RowId = new Xdr.RowId((moveAndSizeFromMarker.Address.RowNumber - 1).ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToString())
+                        ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.Address.ColumnNumber - 1).ToInvariantString()),
+                        RowId = new Xdr.RowId((moveAndSizeFromMarker.Address.RowNumber - 1).ToInvariantString()),
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToInvariantString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToInvariantString())
                     };
 
                     var moveAndSizeToMarker = pic.Markers[Drawings.XLMarkerPosition.BottomRight];
                     if (moveAndSizeToMarker == null) moveAndSizeToMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1").Address, new System.Drawing.Point(picture.Width, picture.Height));
                     tMark = new Xdr.ToMarker
                     {
-                        ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.Address.ColumnNumber - 1).ToString()),
-                        RowId = new Xdr.RowId((moveAndSizeToMarker.Address.RowNumber - 1).ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToString())
+                        ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.Address.ColumnNumber - 1).ToInvariantString()),
+                        RowId = new Xdr.RowId((moveAndSizeToMarker.Address.RowNumber - 1).ToInvariantString()),
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToInvariantString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToInvariantString())
                     };
 
                     var twoCellAnchor = new Xdr.TwoCellAnchor(
@@ -3077,10 +3076,10 @@ namespace ClosedXML.Excel
                     if (moveFromMarker == null) moveFromMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1").Address);
                     fMark = new Xdr.FromMarker
                     {
-                        ColumnId = new Xdr.ColumnId((moveFromMarker.Address.ColumnNumber - 1).ToString()),
-                        RowId = new Xdr.RowId((moveFromMarker.Address.RowNumber - 1).ToString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToString())
+                        ColumnId = new Xdr.ColumnId((moveFromMarker.Address.ColumnNumber - 1).ToInvariantString()),
+                        RowId = new Xdr.RowId((moveFromMarker.Address.RowNumber - 1).ToInvariantString()),
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToInvariantString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToInvariantString())
                     };
 
                     var oneCellAnchor = new Xdr.OneCellAnchor(
@@ -3215,7 +3214,7 @@ namespace ClosedXML.Excel
             sb.Append("pt;");
 
             sb.Append("z-index:");
-            sb.Append(c.ZOrder.ToString());
+            sb.Append(c.ZOrder.ToInvariantString());
 
             return sb.ToString();
         }
@@ -5546,7 +5545,7 @@ namespace ClosedXML.Excel
                 if (!String.IsNullOrWhiteSpace(field.TotalsRowLabel))
                 {
                     var cellValue = new CellValue();
-                    cellValue.Text = xlCell.SharedStringId.ToString();
+                    cellValue.Text = xlCell.SharedStringId.ToInvariantString();
                     openXmlCell.DataType = CvSharedString;
                     openXmlCell.CellValue = cellValue;
                 }
@@ -5563,7 +5562,7 @@ namespace ClosedXML.Excel
                 var cellValue = new CellValue();
                 try
                 {
-                    cellValue.Text = xlCell.Value.ToString();
+                    cellValue.Text = xlCell.Value.ToInvariantString();
                     openXmlCell.DataType = new EnumValue<CellValues>(CellValues.String);
                 }
                 catch
@@ -5585,7 +5584,7 @@ namespace ClosedXML.Excel
                     if (xlCell.ShareString)
                     {
                         var cellValue = new CellValue();
-                        cellValue.Text = xlCell.SharedStringId.ToString();
+                        cellValue.Text = xlCell.SharedStringId.ToInvariantString();
                         openXmlCell.CellValue = cellValue;
                     }
                     else
@@ -5649,7 +5648,7 @@ namespace ClosedXML.Excel
                         var customFilters = new CustomFilters();
                         foreach (var filter in kp.Value)
                         {
-                            var customFilter = new CustomFilter { Val = filter.Value.ToString() };
+                            var customFilter = new CustomFilter { Val = filter.Value.ToInvariantString() };
 
                             if (filter.Operator != XLFilterOperator.Equal)
                                 customFilter.Operator = filter.Operator.ToOpenXml();
@@ -5709,7 +5708,7 @@ namespace ClosedXML.Excel
                         var filters = new Filters();
                         foreach (var filter in kp.Value)
                         {
-                            filters.Append(new Filter { Val = filter.Value.ToString() });
+                            filters.Append(new Filter { Val = filter.Value.ToInvariantString() });
                         }
 
                         filterColumn.Append(filters);
