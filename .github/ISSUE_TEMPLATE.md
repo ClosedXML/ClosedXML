@@ -4,7 +4,7 @@
 - [x] Bug
 - [ ] Feature
 
-If you are logging a possible bug, please test with [the latest development build](https://ci.appveyor.com/project/ClosedXML/ClosedXML/branch/develop/artifacts) first.
+If you are logging a possible bug or feature request, please test with [the latest development build](https://ci.appveyor.com/project/ClosedXML/ClosedXML/branch/develop/artifacts) first.
 
 **Version of ClosedXML**
 
