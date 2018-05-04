@@ -320,7 +320,6 @@ namespace ClosedXML.Excel
             catch { }
 
             return _cellValue;
-
         }
 
         /// <summary>
@@ -536,11 +535,7 @@ namespace ClosedXML.Excel
                 }
 
                 var cellValue = HasRichText ? _richText.ToString() : _cellValue;
-                var parsedValue = ParseCellValueFromString(cellValue, _dataType, out String error);
-                if ("" == error)
-                    return parsedValue;
-                else
-                    throw new ArgumentException(error);
+                return ParseCellValueFromString(cellValue, _dataType, out _);
             }
             set
             {
@@ -1045,6 +1040,10 @@ namespace ClosedXML.Excel
                     else
                     {
                         var v = ParseCellValueFromString(_cellValue, value, out String error);
+
+                        if (!String.IsNullOrWhiteSpace(error))
+                            throw new ArgumentException(error, nameof(value));
+
                         _cellValue = v?.ToInvariantString() ?? "";
 
                         var style = GetStyleForRead();
