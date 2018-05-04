@@ -364,5 +364,34 @@ namespace ClosedXML_Tests.Excel.Saving
                 }
             }
         }
+
+        [Test]
+        public void SaveCellValueWithLeadingQuotationMarkCorrectly()
+        {
+            var quotedFormulaValue = "'=IF(TRUE, 1, 0)";
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet1");
+                    var cell = ws.FirstCell();
+                    cell.SetValue(quotedFormulaValue);
+                    Assert.IsFalse(cell.HasFormula);
+                    Assert.AreEqual(quotedFormulaValue, cell.Value);
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    var cell = ws.FirstCell();
+                    Assert.IsFalse(cell.HasFormula);
+                    Assert.AreEqual(quotedFormulaValue, cell.Value);
+                }
+            }
+        }
     }
 }
