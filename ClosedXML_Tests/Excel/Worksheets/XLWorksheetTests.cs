@@ -296,5 +296,281 @@ namespace ClosedXML_Tests
             Assert.DoesNotThrow(saveAndOpenWorkbook);
             Assert.AreEqual(title, savedTitle);
         }
+
+        [Test]
+        public void CopyWorksheetPreservesContents()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Cell("A1").Value = "A1 value";
+                ws1.Cell("A2").Value = 100;
+                ws1.Cell("D4").Value = new DateTime(2018, 5, 1);
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual("A1 value", ws2.Cell("A1").Value);
+                Assert.AreEqual(100, ws2.Cell("A2").Value);
+                Assert.AreEqual(new DateTime(2018, 5, 1), ws2.Cell("D4").Value);
+            }
+        }
+
+        [Test]
+        public void CopyWorksheetPreservesFormulae()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Cell("A1").FormulaA1 = "10*10";
+                ws1.Cell("A2").FormulaA1 = "A1 * 2";
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual("10*10", ws2.Cell("A1").FormulaA1);
+                Assert.AreEqual("A1 * 2", ws2.Cell("A2").FormulaA1);
+            }
+        }
+        
+        [Test]
+        public void CopyWorksheetPreservesRowHeightsAfterSave()
+        {
+            using (var ms = new MemoryStream())
+            using (var wb1 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+                using (var wb2 = new XLWorkbook())
+                {
+                    ws1.RowHeight = 55;
+                    ws1.Row(2).Height = 0;
+                    ws1.Row(3).Height = 20;
+
+                    var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                    Assert.AreEqual(ws1.RowHeight, ws2.RowHeight);
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Assert.AreEqual(ws1.Row(i).Height, ws2.Row(i).Height);
+                    }
+
+                    wb2.SaveAs(ms);
+                }
+
+                using (var wb2 = new XLWorkbook(ms))
+                {
+                    var ws2 = wb2.Worksheets.First();
+
+                    Assert.AreEqual(ws1.RowHeight, ws2.RowHeight);
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Assert.AreEqual(ws1.Row(i).Height, ws2.Row(i).Height);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void CopyWorksheetPreservesColumnWidthsAfterSave()
+        {
+            using (var ms = new MemoryStream())
+            using (var wb1 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+                using (var wb2 = new XLWorkbook())
+                {
+                    ws1.ColumnWidth = 160;
+                    ws1.Column(2).Width = 0;
+                    ws1.Column(3).Width = 240;
+
+                    var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                    Assert.AreEqual(ws1.ColumnWidth, ws2.ColumnWidth);
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Assert.AreEqual(ws1.Column(i).Width, ws2.Column(i).Width);
+                    }
+
+                    wb2.SaveAs(ms);
+                }
+
+                using (var wb2 = new XLWorkbook(ms))
+                {
+                    var ws2 = wb2.Worksheets.First();
+
+                    Assert.AreEqual(ws1.ColumnWidth, ws2.ColumnWidth, 1);
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Assert.AreEqual(ws1.Column(i).Width, ws2.Column(i).Width, 1);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void CopyWorksheetPreservesMergedCells()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Range("A:A").Merge();
+                ws1.Range("B1:C2").Merge();
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual(ws1.MergedRanges.Count, ws2.MergedRanges.Count);
+                for (int i = 0; i < ws1.MergedRanges.Count; i++)
+                {
+                    Assert.AreEqual(ws1.MergedRanges.ElementAt(i).RangeAddress.ToString(),
+                                    ws2.MergedRanges.ElementAt(i).RangeAddress.ToString());
+                }
+            }
+        }
+
+        [Test]
+        public void CopyWorksheetAcrossWorkbooksPreservesNamedRanges()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Range("A1:A2").AddToNamed("GLOBAL", XLScope.Workbook);
+                ws1.Ranges("B1:B2,D1:D2").AddToNamed("LOCAL", XLScope.Worksheet);
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual(ws1.NamedRanges.Count(), ws2.NamedRanges.Count());
+                for (int i = 0; i < ws1.NamedRanges.Count(); i++)
+                {
+                    var nr1 = ws1.NamedRanges.ElementAt(i);
+                    var nr2 = ws2.NamedRanges.ElementAt(i);
+                    Assert.AreEqual(nr1.Ranges.ToString(), nr2.Ranges.ToString());
+                    Assert.AreEqual(nr1.Scope, nr2.Scope);
+                    Assert.AreEqual(nr1.Name, nr2.Name);
+                    Assert.AreEqual(nr1.Visible, nr2.Visible);
+                    Assert.AreEqual(nr1.Comment, nr2.Comment);
+                }
+            }
+        }
+
+
+        [Test]
+        public void CopyWorksheeInsideWorkbookMakesNamedRangesLocal()
+        {
+            using (var wb1 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Range("A1:A2").AddToNamed("GLOBAL", XLScope.Workbook);
+                ws1.Ranges("B1:B2,D1:D2").AddToNamed("LOCAL", XLScope.Worksheet);
+
+                var ws2 = ws1.CopyTo("Copy");
+
+                Assert.AreEqual(ws1.NamedRanges.Count(), ws2.NamedRanges.Count());
+                for (int i = 0; i < ws1.NamedRanges.Count(); i++)
+                {
+                    var nr1 = ws1.NamedRanges.ElementAt(i);
+                    var nr2 = ws2.NamedRanges.ElementAt(i);
+
+                    Assert.AreEqual(XLScope.Worksheet, nr2.Scope);
+
+                    Assert.AreEqual(nr1.Ranges.ToString(), nr2.Ranges.ToString());
+                    Assert.AreEqual(nr1.Name, nr2.Name);
+                    Assert.AreEqual(nr1.Visible, nr2.Visible);
+                    Assert.AreEqual(nr1.Comment, nr2.Comment);
+                }
+            }
+        }
+
+        [Test]
+        public void CopyWorksheetPreservesStyles()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                ws1.Range("A1:B2").Style.Font.FontSize = 25;
+                ws1.Cell("C3").Style.Fill.BackgroundColor = XLColor.Red;
+                ws1.Cell("C4").Style.Fill.BackgroundColor = XLColor.AliceBlue;
+                ws1.Cell("C4").Value = "Non empty";
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual(ws1.Style, ws2.Style, "Worksheet styles differ");
+                var cellsUsed = ws1.CellsUsed();
+                foreach (var cell in cellsUsed)
+                {
+                    Assert.AreEqual(cell.Style, ws2.Cell(cell.Address.ToString()).Style, $"Cell {cell.Address} styles differ");
+                }
+            }
+        }
+
+        [Test]
+        public void CopyWorksheetPreservesConditionalFormats()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Range("A:A").AddConditionalFormat()
+                    .WhenContains("0").Fill.SetBackgroundColor(XLColor.Red);
+                ws1.Range("B1:C2").AddConditionalFormat()
+                    .WhenEqualOrGreaterThan(100).Font.SetBold();
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual(ws1.ConditionalFormats.Count(), ws2.ConditionalFormats.Count());
+                for (int i = 0; i < ws1.ConditionalFormats.Count(); i++)
+                {
+                    Assert.AreEqual(ws1.ConditionalFormats.ElementAt(i).Ranges.ToString(),
+                                    ws2.ConditionalFormats.ElementAt(i).Ranges.ToString());
+                    Assert.AreEqual(ws1.ConditionalFormats.ElementAt(i).Style,
+                                    ws2.ConditionalFormats.ElementAt(i).Style);
+                    Assert.AreEqual(ws1.ConditionalFormats.ElementAt(i).Values.Single(),
+                                    ws2.ConditionalFormats.ElementAt(i).Values.Single());
+                }
+            }
+        }
+
+        [Test, Ignore("Muted until #836 is fixed")]
+        public void CopyWorksheetChangesAbsoluteReferencesInFormulae()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Cell("A1").FormulaA1 = "10*10";
+                ws1.Cell("A2").FormulaA1 = "Original!A1 * 3";
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual("Copy!A1 * 3", ws2.Cell("A2").FormulaA1);
+            }
+        }
+
+        [Test, Ignore("Muted until #836 is fixed")]
+        public void RenameWorksheetChangesAbsoluteReferencesInFormulae()
+        {
+            using (var wb1 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Cell("A1").FormulaA1 = "10*10";
+                ws1.Cell("A2").FormulaA1 = "Original!A1 * 3";
+
+                ws1.Name = "Renamed";
+
+                Assert.AreEqual("Renamed!A1 * 3", ws1.Cell("A2").FormulaA1);
+            }
+        }
     }
 }
