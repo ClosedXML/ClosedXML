@@ -79,14 +79,22 @@ namespace ClosedXML_Tests.Excel
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            IXLWorksheet ws2 = wb.AddWorksheet("O'Sheet 2");
             var c1 = ws.Cell("C123");
+            var c2 = ws2.Cell("B7");
 
-            var c2 = wb.Cell("Sheet1!C123");
+            var c1_full = wb.Cell("Sheet1!C123");
+            var c2_full = wb.Cell("'O'Sheet 2'!B7");
 
-            Assert.AreSame(c1, c2);
-            Assert.NotNull(c2);
+            Assert.AreSame(c1, c1_full);
+            Assert.AreSame(c2, c2_full);
+            Assert.NotNull(c1_full);
+            Assert.NotNull(c2_full);
         }
 
+        [TestCase("Sheet1")]
+        [TestCase("Sheet1!")]
+        [TestCase("Sheet2!")]
         [TestCase("Sheet2!C1")]
         [TestCase("Sheet1!ZZZ1")]
         [TestCase("Sheet1!A")]
