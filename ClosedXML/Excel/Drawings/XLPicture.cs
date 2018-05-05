@@ -326,6 +326,44 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
+        public IXLPicture CopyTo(IXLWorksheet targetSheet)
+        {
+            return CopyTo((XLWorksheet) targetSheet);
+        }
+
+        internal IXLPicture CopyTo(XLWorksheet targetSheet)
+        {
+            var newPicture = targetSheet.AddPicture(ImageStream, Format, Name)
+                .WithPlacement(XLPicturePlacement.FreeFloating)
+                .WithSize(Width, Height)
+                .WithPlacement(Placement);
+
+            switch (Placement)
+            {
+                case XLPicturePlacement.FreeFloating:
+                    newPicture.MoveTo(Left, Top);
+                    break;
+
+                case XLPicturePlacement.Move:
+                    var newAddress = new XLAddress(targetSheet, TopLeftCellAddress.RowNumber,
+                        TopLeftCellAddress.ColumnNumber, false, false);
+                    newPicture.MoveTo(newAddress, GetOffset(XLMarkerPosition.TopLeft));
+                    break;
+
+                case XLPicturePlacement.MoveAndSize:
+                    var newFromAddress = new XLAddress(targetSheet, TopLeftCellAddress.RowNumber,
+                        TopLeftCellAddress.ColumnNumber, false, false);
+                    var newToAddress = new XLAddress(targetSheet, BottomRightCellAddress.RowNumber,
+                        BottomRightCellAddress.ColumnNumber, false, false);
+
+                    newPicture.MoveTo(newFromAddress, GetOffset(XLMarkerPosition.TopLeft), newToAddress,
+                        GetOffset(XLMarkerPosition.BottomRight));
+                    break;
+            }
+
+            return newPicture;
+        }
+
         internal void SetName(string value)
         {
             if (String.IsNullOrWhiteSpace(value))

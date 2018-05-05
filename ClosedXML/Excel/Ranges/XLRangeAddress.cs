@@ -216,6 +216,13 @@ namespace ClosedXML.Excel
             return Contains(in xlAddress);
         }
 
+        public IXLRangeAddress WithoutWorksheet()
+        {
+            return new XLRangeAddress(
+                (XLAddress)FirstAddress.WithoutWorksheet(),
+                (XLAddress)LastAddress.WithoutWorksheet());
+        }
+
         internal bool Contains(in XLAddress address)
         {
             return FirstAddress.RowNumber <= address.RowNumber &&

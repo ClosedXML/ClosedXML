@@ -149,17 +149,7 @@ namespace ClosedXML.Excel
         {
             if (targetRange != null)
                 Ranges.Add(targetRange);
-
-            ConditionalFormatType = conditionalFormat.ConditionalFormatType;
-            TimePeriod = conditionalFormat.TimePeriod;
-            IconSetStyle = conditionalFormat.IconSetStyle;
-            Operator = conditionalFormat.Operator;
-            Bottom = conditionalFormat.Bottom;
-            Percent = conditionalFormat.Percent;
-            ReverseIconOrder = conditionalFormat.ReverseIconOrder;
-            ShowIconOnly = conditionalFormat.ShowIconOnly;
-            ShowBarOnly = conditionalFormat.ShowBarOnly;
-            StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(conditionalFormat.StopIfTrue, true);
+            CopyFrom(conditionalFormat);
         }
         #endregion Constructors
 
@@ -220,6 +210,19 @@ namespace ClosedXML.Excel
         {
             this.StopIfTrue = value;
             return this;
+        }
+
+        public IXLConditionalFormat CopyTo(IXLWorksheet targetSheet)
+        {
+            var targetRange = targetSheet.Range(Range.RangeAddress.WithoutWorksheet());
+            var newCf = new XLConditionalFormat(this, targetRange);
+            if (Ranges.Count > 1)
+            {
+                Ranges.Skip(1).ForEach(r => newCf.Ranges.Add(targetSheet.Range(r.RangeAddress)));
+            }
+
+            targetSheet.ConditionalFormats.Add(newCf);
+            return newCf;
         }
 
         public void CopyFrom(IXLConditionalFormat other)

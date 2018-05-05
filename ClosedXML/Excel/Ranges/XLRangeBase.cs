@@ -912,13 +912,16 @@ namespace ClosedXML.Excel
 
         public XLRange Range(IXLRangeAddress rangeAddress)
         {
-            var newFirstCellAddress = new XLAddress((XLWorksheet)rangeAddress.FirstAddress.Worksheet,
+            var ws = (XLWorksheet) rangeAddress.FirstAddress.Worksheet ??
+                     (XLWorksheet) rangeAddress.LastAddress.Worksheet ??
+                     Worksheet;
+            var newFirstCellAddress = new XLAddress(ws,
                                  rangeAddress.FirstAddress.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
                                  rangeAddress.FirstAddress.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
                                  rangeAddress.FirstAddress.FixedRow,
                                  rangeAddress.FirstAddress.FixedColumn);
 
-            var newLastCellAddress = new XLAddress((XLWorksheet)rangeAddress.LastAddress.Worksheet,
+            var newLastCellAddress = new XLAddress(ws,
                                 rangeAddress.LastAddress.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
                                 rangeAddress.LastAddress.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
                                 rangeAddress.LastAddress.FixedRow,

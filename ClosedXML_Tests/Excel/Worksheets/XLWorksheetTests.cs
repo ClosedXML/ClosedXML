@@ -542,20 +542,27 @@ namespace ClosedXML_Tests
 
                 ws1.Range("A:A").AddConditionalFormat()
                     .WhenContains("0").Fill.SetBackgroundColor(XLColor.Red);
-                ws1.Range("B1:C2").AddConditionalFormat()
-                    .WhenEqualOrGreaterThan(100).Font.SetBold();
+                var cf = ws1.Range("B1:C2").AddConditionalFormat();
+                cf.Ranges.Add(ws1.Range("D4:D5"));
+                cf.WhenEqualOrGreaterThan(100).Font.SetBold();
+                
 
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
                 Assert.AreEqual(ws1.ConditionalFormats.Count(), ws2.ConditionalFormats.Count());
                 for (int i = 0; i < ws1.ConditionalFormats.Count(); i++)
                 {
-                    Assert.AreEqual(ws1.ConditionalFormats.ElementAt(i).Ranges.ToString(),
-                                    ws2.ConditionalFormats.ElementAt(i).Ranges.ToString());
-                    Assert.AreEqual(ws1.ConditionalFormats.ElementAt(i).Style,
-                                    ws2.ConditionalFormats.ElementAt(i).Style);
-                    Assert.AreEqual(ws1.ConditionalFormats.ElementAt(i).Values.Single(),
-                                    ws2.ConditionalFormats.ElementAt(i).Values.Single());
+                    var original = ws1.ConditionalFormats.ElementAt(i);
+                    var copy = ws2.ConditionalFormats.ElementAt(i);
+                    Assert.AreEqual(original.Ranges.Count, copy.Ranges.Count);
+                    for (int j = 0; j < original.Ranges.Count; j++)
+                    {
+                        Assert.AreEqual(original.Ranges.ElementAt(j).RangeAddress.ToString(XLReferenceStyle.A1, false),
+                            copy.Ranges.ElementAt(j).RangeAddress.ToString(XLReferenceStyle.A1, false));
+                    }
+                    
+                    Assert.AreEqual((original.Style as XLStyle).Value, (copy.Style as XLStyle).Value);
+                    Assert.AreEqual(original.Values.Single().Value.Value, copy.Values.Single().Value.Value);
                 }
             }
         }

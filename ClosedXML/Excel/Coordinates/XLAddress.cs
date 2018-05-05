@@ -390,6 +390,11 @@ namespace ClosedXML.Excel
             return GetTrimmedAddress();
         }
 
+        public IXLAddress WithoutWorksheet()
+        {
+            return new XLAddress(RowNumber, ColumnNumber, FixedRow, FixedColumn);
+        }
+
         public String ToStringFixed(XLReferenceStyle referenceStyle)
         {
             return ToStringFixed(referenceStyle, false);

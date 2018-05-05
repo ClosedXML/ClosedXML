@@ -134,27 +134,44 @@ namespace ClosedXML.Excel
         IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
 
         XLConditionalFormatType ConditionalFormatType { get; }
+
         XLIconSetStyle IconSetStyle { get; }
+
         XLTimePeriod TimePeriod { get; }
+
         Boolean ReverseIconOrder { get; }
+
         Boolean ShowIconOnly { get; }
+
         Boolean ShowBarOnly { get; }
+
         Boolean StopIfTrue { get; }
+
         /// <summary>
         /// The first of the <see cref="Ranges"/>.
         /// </summary>
         IXLRange Range { get; set; }
+
         IXLRanges Ranges { get; }
+
         XLDictionary<XLFormula> Values { get; }
+
         XLDictionary<XLColor> Colors { get; }
+
         XLDictionary<XLCFContentType> ContentTypes { get; }
+
         XLDictionary<XLCFIconSetOperator> IconSetOperators { get; }
 
         XLCFOperator Operator { get; }
+
         Boolean Bottom { get; }
+
         Boolean Percent { get; }
 
         IXLConditionalFormat SetStopIfTrue();
+
         IXLConditionalFormat SetStopIfTrue(Boolean value);
+
+        IXLConditionalFormat CopyTo(IXLWorksheet targetSheet);
     }
 }

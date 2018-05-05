@@ -67,7 +67,6 @@ namespace ClosedXML.Excel
         /// <param name="ranges">The ranges to add.</param>
         IXLRanges Add(IXLRanges ranges);
 
-
         /// <summary>
         /// Deletes this named range (not the cells).
         /// </summary>
@@ -100,11 +99,14 @@ namespace ClosedXML.Excel
         /// <param name="ranges">The ranges to remove.</param>
         void Remove(IXLRanges ranges);
 
-
         IXLNamedRange SetRefersTo(String range);
+
         IXLNamedRange SetRefersTo(IXLRangeBase range);
+
         IXLNamedRange SetRefersTo(IXLRanges ranges);
 
         String RefersTo { get; set; }
+
+        IXLNamedRange CopyTo(IXLWorksheet targetSheet);
     }
 }
