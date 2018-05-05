@@ -340,9 +340,8 @@ namespace ClosedXML_Tests
         }
         
         [Test]
-        public void CopyWorksheetPreservesRowHeightsAfterSave()
+        public void CopyWorksheetPreservesRowHeights()
         {
-            using (var ms = new MemoryStream())
             using (var wb1 = new XLWorkbook())
             {
                 var ws1 = wb1.Worksheets.Add("Original");
@@ -359,27 +358,13 @@ namespace ClosedXML_Tests
                     {
                         Assert.AreEqual(ws1.Row(i).Height, ws2.Row(i).Height);
                     }
-
-                    wb2.SaveAs(ms);
-                }
-
-                using (var wb2 = new XLWorkbook(ms))
-                {
-                    var ws2 = wb2.Worksheets.First();
-
-                    Assert.AreEqual(ws1.RowHeight, ws2.RowHeight);
-                    for (int i = 1; i <= 3; i++)
-                    {
-                        Assert.AreEqual(ws1.Row(i).Height, ws2.Row(i).Height);
-                    }
                 }
             }
         }
 
         [Test]
-        public void CopyWorksheetPreservesColumnWidthsAfterSave()
+        public void CopyWorksheetPreservesColumnWidths()
         {
-            using (var ms = new MemoryStream())
             using (var wb1 = new XLWorkbook())
             {
                 var ws1 = wb1.Worksheets.Add("Original");
@@ -395,19 +380,6 @@ namespace ClosedXML_Tests
                     for (int i = 1; i <= 3; i++)
                     {
                         Assert.AreEqual(ws1.Column(i).Width, ws2.Column(i).Width);
-                    }
-
-                    wb2.SaveAs(ms);
-                }
-
-                using (var wb2 = new XLWorkbook(ms))
-                {
-                    var ws2 = wb2.Worksheets.First();
-
-                    Assert.AreEqual(ws1.ColumnWidth, ws2.ColumnWidth, 1);
-                    for (int i = 1; i <= 3; i++)
-                    {
-                        Assert.AreEqual(ws1.Column(i).Width, ws2.Column(i).Width, 1);
                     }
                 }
             }
