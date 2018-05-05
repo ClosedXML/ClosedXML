@@ -28,7 +28,8 @@ namespace ClosedXML_Tests
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
-            ws.FirstCell().AddConditionalFormat().WhenContains("1").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Range("A1:C3").AddConditionalFormat().WhenContains("1").Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Range("A1:C3").Value = 1;
             IXLWorksheet ws2 = ws.CopyTo("Sheet2");
             Assert.AreEqual(1, ws2.ConditionalFormats.Count());
         }
