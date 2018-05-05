@@ -393,5 +393,73 @@ namespace ClosedXML_Tests.Excel.Saving
                 }
             }
         }
+
+        [Test]
+        public void PreserveHeightOfEmptyRowsOnSaving()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet1");
+                    ws.RowHeight = 50;
+                    ws.Row(2).Height = 0;
+                    ws.Row(3).Height = 20;
+                    ws.Row(4).Height = 100;
+
+                    ws.CopyTo("Sheet2");
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    foreach (var sheetName in new []{"Sheet1", "Sheet2"})
+                    {
+                        var ws = wb.Worksheet(sheetName);
+
+                        Assert.AreEqual(50, ws.Row(1).Height);
+                        Assert.AreEqual(0, ws.Row(2).Height);
+                        Assert.AreEqual(20, ws.Row(3).Height);
+                        Assert.AreEqual(100, ws.Row(4).Height);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void PreserveWidthOfEmptyColumnsOnSaving()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet1");
+                    ws.Column(2).Width = 0;
+                    ws.Column(3).Width = 20;
+                    ws.Column(4).Width = 100;
+
+                    ws.CopyTo("Sheet2");
+                    wb.SaveAs(ms);
+                    wb.SaveAs(@"e:\ClosedXML\829_width.xlsx");
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    foreach (var sheetName in new[] {"Sheet1", "Sheet2"})
+                    {
+                        var ws = wb.Worksheet(sheetName);
+
+                        Assert.AreEqual(ws.ColumnWidth, ws.Column(1).Width);
+                        Assert.AreEqual(0, ws.Column(2).Width);
+                        Assert.AreEqual(20, ws.Column(3).Width);
+                        Assert.AreEqual(100, ws.Column(4).Width);
+                    }
+                }
+            }
+        }
     }
 }

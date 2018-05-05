@@ -407,6 +407,7 @@ namespace ClosedXML.Excel
             row.Clear();
             var newRow = (XLRow)row;
             newRow._height = _height;
+            newRow.HeightChanged = HeightChanged;
             newRow.InnerStyle = GetStyle();
 
             AsRange().CopyTo(row);
