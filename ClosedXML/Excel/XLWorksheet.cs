@@ -585,6 +585,7 @@ namespace ClosedXML.Excel
             NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
             Tables.ForEach(t => t.CopyTo(targetSheet));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
+            MergedRanges.ForEach(mr => targetSheet.Range(mr.RangeAddress.WithoutWorksheet()).Merge());
 
             if (AutoFilter.Enabled)
             {
