@@ -1,8 +1,11 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using ClosedXML.Excel.Drawings;
 
 namespace ClosedXML_Tests
 {
@@ -536,6 +539,104 @@ namespace ClosedXML_Tests
                                     ws2.ConditionalFormats.ElementAt(i).Style);
                     Assert.AreEqual(ws1.ConditionalFormats.ElementAt(i).Values.Single(),
                                     ws2.ConditionalFormats.ElementAt(i).Values.Single());
+                }
+            }
+        }
+
+        [Test]
+        public void CopyWorksheetPreservesDataValidation()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                var dv1 = ws1.Range("A:A").SetDataValidation();
+                dv1.WholeNumber.EqualTo(2);
+                dv1.ErrorStyle = XLErrorStyle.Warning;
+                dv1.ErrorTitle = "Number out of range";
+                dv1.ErrorMessage = "This cell only allows the number 2.";
+                
+                var dv2 = ws1.Ranges("B2:C3,D4:E5").SetDataValidation();
+                dv2.Decimal.GreaterThan(5);
+                dv2.ErrorStyle = XLErrorStyle.Stop;
+                dv2.ErrorTitle = "Decimal number out of range";
+                dv2.ErrorMessage = "This cell only allows decimals greater than 5.";
+
+                var dv3 = ws1.Cell("D1").SetDataValidation();
+                dv3.TextLength.EqualOrLessThan(10);
+                dv3.ErrorStyle = XLErrorStyle.Information;
+                dv3.ErrorTitle = "Text length out of range";
+                dv3.ErrorMessage = "You entered more than 10 characters.";
+                
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual(ws1.DataValidations.Count(), ws2.DataValidations.Count());
+                for (int i = 0; i < ws1.DataValidations.Count(); i++)
+                {
+                    var original = ws1.DataValidations.ElementAt(i);
+                    var copy = ws2.DataValidations.ElementAt(i);
+
+                    Assert.AreEqual(original.Ranges.ToString(), copy.Ranges.ToString());
+                    Assert.AreEqual(original.AllowedValues, copy.AllowedValues);
+                    Assert.AreEqual(original.Operator, copy.Operator);
+                    Assert.AreEqual(original.ErrorStyle, copy.ErrorStyle);
+                    Assert.AreEqual(original.ErrorTitle, copy.ErrorTitle);
+                    Assert.AreEqual(original.ErrorMessage, copy.ErrorMessage);
+                }
+            }
+        }
+
+        [Test]
+        public void CopyWorksheetPreservesPictures()
+        {
+            using (var ms = new MemoryStream())
+            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable))
+                .GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+            using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
+            using (var wb1 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                var picture = ws1.AddPicture(bitmap, "MyPicture")
+                    .WithPlacement(XLPicturePlacement.FreeFloating)
+                    .MoveTo(50, 50)
+                    .WithSize(200, 200);
+
+                using (var wb2 = new XLWorkbook())
+                {
+                    var ws2 = ws1.CopyTo(wb2, "Copy");
+                    AssertPicturesAreEqual(ws1, ws2);
+                    wb2.SaveAs(ms);
+                }
+
+                using (var wb2 = new XLWorkbook(ms))
+                {
+                    var ws2 = wb2.Worksheet("Copy");
+                    AssertPicturesAreEqual(ws1, ws2);
+                }
+            }
+
+            void AssertPicturesAreEqual(IXLWorksheet ws1, IXLWorksheet ws2)
+            {
+                Assert.AreEqual(ws1.Pictures.Count(), ws2.Pictures.Count());
+
+                for (int i = 0; i < ws1.Pictures.Count(); i++)
+                {
+                    var original = ws1.Pictures.ElementAt(i);
+                    var copy = ws2.Pictures.ElementAt(i);
+                    Assert.AreEqual(ws2, copy.Worksheet);
+
+                    Assert.AreEqual(original.Format, copy.Format);
+                    Assert.AreEqual(original.Height, copy.Height);
+                    Assert.AreEqual(original.Id, copy.Id);
+                    Assert.AreEqual(original.Left, copy.Left);
+                    Assert.AreEqual(original.Name, copy.Name);
+                    Assert.AreEqual(original.Placement, copy.Placement);
+                    Assert.AreEqual(original.Top, copy.Top);
+                    Assert.AreEqual(original.TopLeftCellAddress.ToString(), copy.TopLeftCellAddress.ToString());
+                    Assert.AreEqual(original.Width, copy.Width);
+                    Assert.AreEqual(original.ImageStream.ToArray(), copy.ImageStream.ToArray(), "Image streams differ");
                 }
             }
         }
