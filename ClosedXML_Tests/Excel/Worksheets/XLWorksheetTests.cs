@@ -493,8 +493,8 @@ namespace ClosedXML_Tests
         [Test]
         public void CopyWorksheetPreservesStyles()
         {
+            using (var ms = new MemoryStream())
             using (var wb1 = new XLWorkbook())
-            using (var wb2 = new XLWorkbook())
             {
                 var ws1 = wb1.Worksheets.Add("Original");
 
@@ -504,13 +504,30 @@ namespace ClosedXML_Tests
                 ws1.Cell("C4").Style.Fill.BackgroundColor = XLColor.AliceBlue;
                 ws1.Cell("C4").Value = "Non empty";
 
-                var ws2 = ws1.CopyTo(wb2, "Copy");
+                using (var wb2 = new XLWorkbook())
+                {
+                    var ws2 = ws1.CopyTo(wb2, "Copy");
+                    AssertStylesAreEqual(ws1, ws2);
+                    wb2.SaveAs(ms);
+                }
 
-                Assert.AreEqual(ws1.Style, ws2.Style, "Worksheet styles differ");
-                var cellsUsed = ws1.CellsUsed();
+                using (var wb2 = new XLWorkbook(ms))
+                {
+                    var ws2 = wb2.Worksheet("Copy");
+                    AssertStylesAreEqual(ws1, ws2);
+                }
+            }
+
+            void AssertStylesAreEqual(IXLWorksheet ws1, IXLWorksheet ws2)
+            {
+                Assert.AreEqual((ws1.Style as XLStyle).Value, (ws2.Style as XLStyle).Value,
+                    "Worksheet styles differ");
+                var cellsUsed = ws1.Range(ws1.FirstCell(), ws1.LastCellUsed()).Cells();
                 foreach (var cell in cellsUsed)
                 {
-                    Assert.AreEqual(cell.Style, ws2.Cell(cell.Address.ToString()).Style, $"Cell {cell.Address} styles differ");
+                    var style1 = (cell.Style as XLStyle).Value;
+                    var style2 = (ws2.Cell(cell.Address.ToString()).Style as XLStyle).Value;
+                    Assert.AreEqual(style1, style2, $"Cell {cell.Address} styles differ");
                 }
             }
         }
