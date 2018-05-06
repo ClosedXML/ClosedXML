@@ -580,12 +580,14 @@ namespace ClosedXML.Excel
             (targetSheet.PageSetup.Footer as XLHeaderFooter).Changed = true;
             targetSheet.Outline = new XLOutline(Outline);
             targetSheet.SheetView = new XLSheetView(SheetView);
+            targetSheet.SelectedRanges.RemoveAll();
 
             Pictures.ForEach(picture => picture.CopyTo(targetSheet));
             NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
             Tables.ForEach(t => t.CopyTo(targetSheet));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
             MergedRanges.ForEach(mr => targetSheet.Range(mr.RangeAddress.WithoutWorksheet()).Merge());
+            SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(sr.RangeAddress.WithoutWorksheet())));
 
             if (AutoFilter.Enabled)
             {

@@ -541,6 +541,60 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CopyWorksheetPreservesTables()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.Cell("A2").Value = "Name";
+                ws1.Cell("B2").Value = "Count";
+                ws1.Cell("A3").Value = "John Smith";
+                ws1.Cell("B3").Value = 50;
+                ws1.Cell("A4").Value = "Ivan Ivanov";
+                ws1.Cell("B4").Value = 40;
+                var table1 = ws1.Range("A2:B4").CreateTable("Test table 1");
+                table1
+                    .SetShowAutoFilter(true)
+                    .SetShowTotalsRow(true)
+                    .SetEmphasizeFirstColumn(true)
+                    .SetShowColumnStripes(true)
+                    .SetShowRowStripes(true);
+                table1.Theme = XLTableTheme.TableStyleDark8;
+                table1.Field(1).TotalsRowFunction = XLTotalsRowFunction.Sum;
+                
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual(ws1.Tables.Count(), ws2.Tables.Count());
+                for (int i = 0; i < ws1.Tables.Count(); i++)
+                {
+                    var original = ws1.Tables.ElementAt(i);
+                    var copy = ws2.Tables.ElementAt(i);
+                    Assert.AreEqual(original.RangeAddress.ToString(XLReferenceStyle.A1, false), copy.RangeAddress.ToString(XLReferenceStyle.A1, false));
+                    Assert.AreEqual(original.Fields.Count(), copy.Fields.Count());
+                    for (int j = 0; j < original.Fields.Count(); j++)
+                    {
+                        var originalField = original.Fields.ElementAt(j);
+                        var copyField = copy.Fields.ElementAt(j);
+                        Assert.AreEqual(originalField.Name, copyField.Name);
+                        Assert.AreEqual(originalField.TotalsRowFormulaA1, copyField.TotalsRowFormulaA1);
+                        Assert.AreEqual(originalField.TotalsRowFunction, copyField.TotalsRowFunction);
+                    }
+
+                    Assert.AreEqual(original.Name, copy.Name);
+                    Assert.AreEqual(original.ShowAutoFilter, copy.ShowAutoFilter);
+                    Assert.AreEqual(original.ShowColumnStripes, copy.ShowColumnStripes);
+                    Assert.AreEqual(original.ShowHeaderRow, copy.ShowHeaderRow);
+                    Assert.AreEqual(original.ShowRowStripes, copy.ShowRowStripes);
+                    Assert.AreEqual(original.ShowTotalsRow, copy.ShowTotalsRow);
+                    Assert.AreEqual((original.Style as XLStyle).Value, (copy.Style as XLStyle).Value);
+                    Assert.AreEqual(original.Theme, copy.Theme);
+                }
+            }
+        }
+
+        [Test]
         public void CopyWorksheetPreservesDataValidation()
         {
             using (var wb1 = new XLWorkbook())
@@ -634,6 +688,30 @@ namespace ClosedXML_Tests
                     Assert.AreEqual(original.TopLeftCellAddress.ToString(), copy.TopLeftCellAddress.ToString());
                     Assert.AreEqual(original.Width, copy.Width);
                     Assert.AreEqual(original.ImageStream.ToArray(), copy.ImageStream.ToArray(), "Image streams differ");
+                }
+            }
+        }
+
+        [Test]
+        public void CopyWorksheetPreservesSelectedRanges()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.SelectedRanges.RemoveAll();
+                ws1.SelectedRanges.Add(ws1.Range("E12:H20"));
+                ws1.SelectedRanges.Add(ws1.Range("B:B"));
+                ws1.SelectedRanges.Add(ws1.Range("3:6"));
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual(ws1.SelectedRanges.Count, ws2.SelectedRanges.Count);
+                for (int i = 0; i < ws1.SelectedRanges.Count; i++)
+                {
+                    Assert.AreEqual(ws1.SelectedRanges.ElementAt(i).RangeAddress.ToString(),
+                                    ws2.SelectedRanges.ElementAt(i).RangeAddress.ToString());
                 }
             }
         }
