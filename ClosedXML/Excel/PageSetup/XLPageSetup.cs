@@ -18,6 +18,12 @@ namespace ClosedXML.Excel
                 HorizontalDpi = defaultPageOptions.HorizontalDpi;
                 PageOrientation = defaultPageOptions.PageOrientation;
                 VerticalDpi = defaultPageOptions.VerticalDpi;
+                FirstRowToRepeatAtTop = defaultPageOptions.FirstRowToRepeatAtTop;
+                LastRowToRepeatAtTop = defaultPageOptions.LastRowToRepeatAtTop;
+                FirstColumnToRepeatAtLeft = defaultPageOptions.FirstColumnToRepeatAtLeft;
+                LastColumnToRepeatAtLeft = defaultPageOptions.LastColumnToRepeatAtLeft;
+                ShowComments = defaultPageOptions.ShowComments;
+
 
                 PaperSize = defaultPageOptions.PaperSize;
                 _pagesTall = defaultPageOptions.PagesTall;

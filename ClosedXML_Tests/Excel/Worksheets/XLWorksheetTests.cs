@@ -716,6 +716,75 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void CopyWorksheetPreservesPageSetup()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+
+                ws1.PageSetup.AddHorizontalPageBreak(15);
+                ws1.PageSetup.AddVerticalPageBreak(5);
+                ws1.PageSetup
+                    .SetBlackAndWhite()
+                    .SetCenterHorizontally()
+                    .SetCenterVertically()
+                    .SetFirstPageNumber(200)
+                    .SetPageOrientation(XLPageOrientation.Landscape)
+                    .SetPaperSize(XLPaperSize.A5Paper)
+                    .SetScale(89)
+                    .SetShowGridlines()
+                    .SetHorizontalDpi(200)
+                    .SetVerticalDpi(300)
+                    .SetPagesTall(5)
+                    .SetPagesWide(2)
+                    .SetColumnsToRepeatAtLeft(1, 3);
+                ws1.PageSetup.PrintAreas.Clear();
+                ws1.PageSetup.PrintAreas.Add("A1:Z200");
+                ws1.PageSetup.Margins.SetBottom(5).SetTop(6).SetLeft(7).SetRight(8).SetFooter(9).SetHeader(10);
+                ws1.PageSetup.Header.Left.AddText(XLHFPredefinedText.FullPath, XLHFOccurrence.AllPages);
+                ws1.PageSetup.Footer.Right.AddText(XLHFPredefinedText.PageNumber, XLHFOccurrence.OddPages);
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual(ws1.PageSetup.FirstRowToRepeatAtTop, ws2.PageSetup.FirstRowToRepeatAtTop);
+                Assert.AreEqual(ws1.PageSetup.LastRowToRepeatAtTop, ws2.PageSetup.LastRowToRepeatAtTop);
+                Assert.AreEqual(ws1.PageSetup.FirstColumnToRepeatAtLeft, ws2.PageSetup.FirstColumnToRepeatAtLeft);
+                Assert.AreEqual(ws1.PageSetup.LastColumnToRepeatAtLeft, ws2.PageSetup.LastColumnToRepeatAtLeft);
+                Assert.AreEqual(ws1.PageSetup.PageOrientation, ws2.PageSetup.PageOrientation);
+                Assert.AreEqual(ws1.PageSetup.PagesWide, ws2.PageSetup.PagesWide);
+                Assert.AreEqual(ws1.PageSetup.PagesTall, ws2.PageSetup.PagesTall);
+                Assert.AreEqual(ws1.PageSetup.Scale, ws2.PageSetup.Scale);
+                Assert.AreEqual(ws1.PageSetup.HorizontalDpi, ws2.PageSetup.HorizontalDpi);
+                Assert.AreEqual(ws1.PageSetup.VerticalDpi, ws2.PageSetup.VerticalDpi);
+                Assert.AreEqual(ws1.PageSetup.FirstPageNumber, ws2.PageSetup.FirstPageNumber);
+                Assert.AreEqual(ws1.PageSetup.CenterHorizontally, ws2.PageSetup.CenterHorizontally);
+                Assert.AreEqual(ws1.PageSetup.CenterVertically, ws2.PageSetup.CenterVertically);
+                Assert.AreEqual(ws1.PageSetup.PaperSize, ws2.PageSetup.PaperSize);
+                Assert.AreEqual(ws1.PageSetup.Margins.Bottom, ws2.PageSetup.Margins.Bottom);
+                Assert.AreEqual(ws1.PageSetup.Margins.Top, ws2.PageSetup.Margins.Top);
+                Assert.AreEqual(ws1.PageSetup.Margins.Left, ws2.PageSetup.Margins.Left);
+                Assert.AreEqual(ws1.PageSetup.Margins.Right, ws2.PageSetup.Margins.Right);
+                Assert.AreEqual(ws1.PageSetup.Margins.Footer, ws2.PageSetup.Margins.Footer);
+                Assert.AreEqual(ws1.PageSetup.Margins.Header, ws2.PageSetup.Margins.Header);
+                Assert.AreEqual(ws1.PageSetup.ScaleHFWithDocument, ws2.PageSetup.ScaleHFWithDocument);
+                Assert.AreEqual(ws1.PageSetup.AlignHFWithMargins, ws2.PageSetup.AlignHFWithMargins);
+                Assert.AreEqual(ws1.PageSetup.ShowGridlines, ws2.PageSetup.ShowGridlines);
+                Assert.AreEqual(ws1.PageSetup.ShowRowAndColumnHeadings, ws2.PageSetup.ShowRowAndColumnHeadings);
+                Assert.AreEqual(ws1.PageSetup.BlackAndWhite, ws2.PageSetup.BlackAndWhite);
+                Assert.AreEqual(ws1.PageSetup.DraftQuality, ws2.PageSetup.DraftQuality);
+                Assert.AreEqual(ws1.PageSetup.PageOrder, ws2.PageSetup.PageOrder);
+                Assert.AreEqual(ws1.PageSetup.ShowComments, ws2.PageSetup.ShowComments);
+                Assert.AreEqual(ws1.PageSetup.PrintErrorValue, ws2.PageSetup.PrintErrorValue);
+
+                Assert.AreEqual(ws1.PageSetup.PrintAreas.Count(), ws2.PageSetup.PrintAreas.Count());
+
+                Assert.AreEqual(ws1.PageSetup.Header.Left.GetText(XLHFOccurrence.AllPages), ws2.PageSetup.Header.Left.GetText(XLHFOccurrence.AllPages));
+                Assert.AreEqual(ws1.PageSetup.Footer.Right.GetText(XLHFOccurrence.OddPages), ws2.PageSetup.Footer.Right.GetText(XLHFOccurrence.OddPages));
+            }
+        }
+
         [Test, Ignore("Muted until #836 is fixed")]
         public void CopyWorksheetChangesAbsoluteReferencesInFormulae()
         {
