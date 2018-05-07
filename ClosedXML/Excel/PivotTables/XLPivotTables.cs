@@ -32,7 +32,14 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLTable table)
         {
-            return Add(name, targetCell, table.AsRange());
+            var pivotTable = new XLPivotTable(this.Worksheet)
+            {
+                Name = name,
+                TargetCell = targetCell,
+                SourceTable = table
+            };
+            _pivotTables.Add(name, pivotTable);
+            return pivotTable;
         }
 
         public IXLPivotTable AddNew(string name, IXLCell targetCell, IXLRange range)
