@@ -442,7 +442,6 @@ namespace ClosedXML_Tests.Excel.Saving
 
                     ws.CopyTo("Sheet2");
                     wb.SaveAs(ms);
-                    wb.SaveAs(@"e:\ClosedXML\829_width.xlsx");
                 }
 
                 ms.Seek(0, SeekOrigin.Begin);
