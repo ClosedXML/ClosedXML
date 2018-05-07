@@ -27,7 +27,30 @@ namespace ClosedXML.Excel
         }
 
         public IXLCell TargetCell { get; set; }
-        public IXLRange SourceRange { get; set; }
+
+        private IXLRange sourceRange;
+
+        public IXLRange SourceRange
+        {
+            get { return sourceRange; }
+            set
+            {
+                if (value is IXLTable)
+                    SourceType = XLPivotTableSourceType.Table;
+                else
+                    SourceType = XLPivotTableSourceType.Range;
+
+                sourceRange = value;
+            }
+        }
+
+        public IXLTable SourceTable
+        {
+            get { return SourceRange as IXLTable; }
+            set { SourceRange = value; }
+        }
+
+        public XLPivotTableSourceType SourceType { get; private set; }
 
         public IEnumerable<string> SourceRangeFieldsAvailable
         {

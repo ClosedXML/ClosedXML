@@ -456,30 +456,69 @@ namespace ClosedXML.Excel
                         }
 
                         IXLRange source = null;
-                        if (pivotTableCacheDefinitionPart.PivotCacheDefinition != null
-                            && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource != null
-                            && pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource != null)
+                        XLPivotTableSourceType sourceType = XLPivotTableSourceType.Range;
+                        if (pivotTableCacheDefinitionPart?.PivotCacheDefinition?.CacheSource?.WorksheetSource != null)
                         {
-                            // TODO: Implement other sources besides worksheetSource (e.g. Table source?)
+                            // TODO: Implement other sources besides worksheetSource
                             // But for now assume names and references point directly to a range
                             var wss = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheSource.WorksheetSource;
-                            string rangeAddress = string.Empty;
-                            if (wss.Name != null)
-                                rangeAddress = wss.Name.Value;
-                            else
+
+                            if (!String.IsNullOrEmpty(wss.Id))
                             {
-                                var sourceSheet = wss.Sheet == null ? ws : this.Worksheet(wss.Sheet.Value);
-                                rangeAddress = sourceSheet.Range(wss.Reference.Value).RangeAddress.ToStringRelative(true);
+                                var externalRelationship = pivotTableCacheDefinitionPart.ExternalRelationships.FirstOrDefault(er => er.Id.Equals(wss.Id));
+                                if (externalRelationship?.IsExternal ?? false)
+                                {
+                                    // We don't support external sources
+                                    continue;
+                                }
                             }
 
-                            source = this.Range(rangeAddress);
+                            if (wss.Name != null)
+                            {
+                                var table = ws
+                                    .Workbook
+                                    .Worksheets
+                                    .SelectMany(ws1 => ws1.Tables)
+                                    .FirstOrDefault(t => t.Name.Equals(wss.Name.Value));
+
+                                if (table != null)
+                                {
+                                    sourceType = XLPivotTableSourceType.Table;
+                                    source = table;
+                                }
+                                else
+                                {
+                                    sourceType = XLPivotTableSourceType.Range;
+                                    source = this.Range(wss.Name.Value);
+                                }
+                            }
+                            else
+                            {
+                                sourceType = XLPivotTableSourceType.Range;
+                                var sourceSheet = wss.Sheet == null ? ws : this.Worksheet(wss.Sheet.Value);
+                                source = this.Range(sourceSheet.Range(wss.Reference.Value).RangeAddress.ToStringRelative(includeSheet: true));
+                            }
+
                             if (source == null)
                                 continue;
                         }
 
                         if (target != null && source != null)
                         {
-                            var pt = ws.PivotTables.Add(pivotTableDefinition.Name, target, source) as XLPivotTable;
+                            XLPivotTable pt;
+                            switch (sourceType)
+                            {
+                                case XLPivotTableSourceType.Range:
+                                    pt = ws.PivotTables.Add(pivotTableDefinition.Name, target, source) as XLPivotTable;
+                                    break;
+
+                                case XLPivotTableSourceType.Table:
+                                    pt = ws.PivotTables.Add(pivotTableDefinition.Name, target, source as XLTable) as XLPivotTable;
+                                    break;
+
+                                default:
+                                    throw new NotSupportedException($"Pivot table source type {sourceType} is not supported.");
+                            }
 
                             if (!String.IsNullOrWhiteSpace(StringValue.ToString(pivotTableDefinition?.ColumnHeaderCaption ?? String.Empty)))
                                 pt.SetColumnHeaderCaption(StringValue.ToString(pivotTableDefinition.ColumnHeaderCaption));
@@ -1376,12 +1415,15 @@ namespace ClosedXML.Excel
                         case CellValues.Boolean:
                             xlCell.SetDataTypeFast(XLDataType.Boolean);
                             break;
+
                         case CellValues.Number:
                             xlCell.SetDataTypeFast(XLDataType.Number);
                             break;
+
                         case CellValues.Date:
                             xlCell.SetDataTypeFast(XLDataType.DateTime);
                             break;
+
                         case CellValues.InlineString:
                         case CellValues.SharedString:
                             xlCell.SetDataTypeFast(XLDataType.Text);
@@ -1429,12 +1471,15 @@ namespace ClosedXML.Excel
                         case CellValues.Boolean:
                             xlCell.SetDataTypeFast(XLDataType.Boolean);
                             break;
+
                         case CellValues.Number:
                             xlCell.SetDataTypeFast(XLDataType.Number);
                             break;
+
                         case CellValues.Date:
                             xlCell.SetDataTypeFast(XLDataType.DateTime);
                             break;
+
                         case CellValues.InlineString:
                         case CellValues.SharedString:
                             xlCell.SetDataTypeFast(XLDataType.Text);

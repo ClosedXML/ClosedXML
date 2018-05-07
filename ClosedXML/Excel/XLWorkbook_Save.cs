@@ -153,7 +153,7 @@ namespace ClosedXML.Excel
             {
                 PivotCacheDefinition pvtCacheDef = Item.PivotCacheDefinition;
                 //Check if this CacheSource is linked to SheetToDelete
-                if (pvtCacheDef.Descendants<CacheSource>().Any(s => s.WorksheetSource != null && s.WorksheetSource.Sheet == sheetName))
+                if (pvtCacheDef.Descendants<CacheSource>().Any(cacheSource => cacheSource.WorksheetSource?.Sheet == sheetName))
                 {
                     pvtTableCacheDefinitionPart.Add(Item, Item.ToString());
                 }
@@ -2045,7 +2045,27 @@ namespace ClosedXML.Excel
                 "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 
             var cacheSource = new CacheSource { Type = SourceValues.Worksheet };
-            cacheSource.AppendChild(new WorksheetSource { Name = source.ToString() });
+            var worksheetSource = new WorksheetSource();
+
+            switch (pt.SourceType)
+            {
+                case XLPivotTableSourceType.Range:
+                    worksheetSource.Name = null;
+                    worksheetSource.Reference = source.RangeAddress.ToStringRelative(includeSheet: false);
+                    worksheetSource.Sheet = source.RangeAddress.Worksheet.Name.EscapeSheetName();
+                    break;
+
+                case XLPivotTableSourceType.Table:
+                    worksheetSource.Name = pt.SourceTable.Name;
+                    worksheetSource.Reference = null;
+                    worksheetSource.Sheet = null;
+                    break;
+
+                default:
+                    throw new NotSupportedException($"Pivot table source type {pt.SourceType} is not supported.");
+            }
+
+            cacheSource.AppendChild(worksheetSource);
 
             var cacheFields = new CacheFields();
 

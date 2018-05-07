@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
 
 namespace ClosedXML.Excel
 {
+    [DebuggerDisplay("{Name}")]
     internal class XLTable : XLRange, IXLTable
     {
         #region Private fields
