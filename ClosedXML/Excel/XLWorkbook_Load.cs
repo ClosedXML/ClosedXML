@@ -1433,7 +1433,9 @@ namespace ClosedXML.Excel
 
                 if (cell.CellValue != null)
                 {
+#pragma warning disable 618
                     xlCell.ValueCached = cell.CellValue.Text;
+#pragma warning restore 618
                     xlCell.SetInternalCellValueString(cell.CellValue.Text);
                 }
             }
@@ -1489,7 +1491,9 @@ namespace ClosedXML.Excel
 
                 if (cell.CellValue != null)
                 {
+#pragma warning disable 618
                     xlCell.ValueCached = cell.CellValue.Text;
+#pragma warning restore 618
                     xlCell.SetInternalCellValueString(cell.CellValue.Text);
                 }
             }

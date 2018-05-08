@@ -46,10 +46,8 @@ namespace ClosedXML.Excel
                     return CreateTable(key.RangeAddress);
 
                 case XLRangeType.Worksheet:
-                //break;
                 default:
                     throw new NotImplementedException(key.RangeType.ToString());
-                    break;
             }
         }
 
