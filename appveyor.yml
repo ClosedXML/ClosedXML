@@ -35,10 +35,15 @@ before_build:
   - cmd: nuget update -self
   - nuget restore
 
+after_build:
+  - nuget pack ClosedXML\ClosedXML.nuspec -version "%APPVEYOR_BUILD_VERSION%" -OutputDirectory ClosedXML\bin\Release
+
 artifacts:
   - path: ClosedXML/bin/Release/netstandard2.0/ClosedXML.dll
   - path: ClosedXML/bin/Release/net40/ClosedXML.dll
   - path: ClosedXML/bin/Release/net46/ClosedXML.dll
+
+  - path: '**/bin/Release/**/*.nupkg'
 
 test:
   assemblies:
