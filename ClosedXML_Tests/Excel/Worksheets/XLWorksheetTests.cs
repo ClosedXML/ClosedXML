@@ -1,11 +1,11 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ClosedXML.Excel.Drawings;
 
 namespace ClosedXML_Tests
 {
@@ -338,7 +338,7 @@ namespace ClosedXML_Tests
                 Assert.AreEqual("A1 * 2", ws2.Cell("A2").FormulaA1);
             }
         }
-        
+
         [Test]
         public void CopyWorksheetPreservesRowHeights()
         {
@@ -434,7 +434,6 @@ namespace ClosedXML_Tests
             }
         }
 
-
         [Test]
         public void CopyWorksheeInsideWorkbookMakesNamedRangesLocal()
         {
@@ -518,7 +517,6 @@ namespace ClosedXML_Tests
                 var cf = ws1.Range("B1:C2").AddConditionalFormat();
                 cf.Ranges.Add(ws1.Range("D4:D5"));
                 cf.WhenEqualOrGreaterThan(100).Font.SetBold();
-                
 
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
@@ -533,7 +531,7 @@ namespace ClosedXML_Tests
                         Assert.AreEqual(original.Ranges.ElementAt(j).RangeAddress.ToString(XLReferenceStyle.A1, false),
                             copy.Ranges.ElementAt(j).RangeAddress.ToString(XLReferenceStyle.A1, false));
                     }
-                    
+
                     Assert.AreEqual((original.Style as XLStyle).Value, (copy.Style as XLStyle).Value);
                     Assert.AreEqual(original.Values.Single().Value.Value, copy.Values.Single().Value.Value);
                 }
@@ -563,7 +561,7 @@ namespace ClosedXML_Tests
                     .SetShowRowStripes(true);
                 table1.Theme = XLTableTheme.TableStyleDark8;
                 table1.Field(1).TotalsRowFunction = XLTotalsRowFunction.Sum;
-                
+
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
                 Assert.AreEqual(ws1.Tables.Count(), ws2.Tables.Count());
@@ -607,7 +605,7 @@ namespace ClosedXML_Tests
                 dv1.ErrorStyle = XLErrorStyle.Warning;
                 dv1.ErrorTitle = "Number out of range";
                 dv1.ErrorMessage = "This cell only allows the number 2.";
-                
+
                 var dv2 = ws1.Ranges("B2:C3,D4:E5").SetDataValidation();
                 dv2.Decimal.GreaterThan(5);
                 dv2.ErrorStyle = XLErrorStyle.Stop;
@@ -619,7 +617,7 @@ namespace ClosedXML_Tests
                 dv3.ErrorStyle = XLErrorStyle.Information;
                 dv3.ErrorTitle = "Text length out of range";
                 dv3.ErrorMessage = "You entered more than 10 characters.";
-                
+
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
                 Assert.AreEqual(ws1.DataValidations.Count(), ws2.DataValidations.Count());

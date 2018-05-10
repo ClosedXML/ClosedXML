@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ClosedXML.Utils;
 
 namespace ClosedXML.Excel
 {
@@ -22,14 +21,14 @@ namespace ClosedXML.Excel
 
             public bool Equals(IXLConditionalFormat x, IXLConditionalFormat y)
             {
-                var xx = (XLConditionalFormat) x;
-                var yy = (XLConditionalFormat) y;
+                var xx = (XLConditionalFormat)x;
+                var yy = (XLConditionalFormat)y;
                 if (ReferenceEquals(xx, yy)) return true;
                 if (ReferenceEquals(xx, null)) return false;
                 if (ReferenceEquals(yy, null)) return false;
                 if (xx.GetType() != yy.GetType()) return false;
 
-                var xxValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v=>v.Value);
+                var xxValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
                 var yyValues = yy.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
                 var xxFormulas = x.Ranges.Any() ? xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)x.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
                 var yyFormulas = y.Ranges.Any() ? yy.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)y.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
@@ -105,12 +104,14 @@ namespace ClosedXML.Excel
         }
 
         private static readonly IEqualityComparer<IXLConditionalFormat> FullComparerInstance = new FullEqualityComparer(true);
+
         public static IEqualityComparer<IXLConditionalFormat> FullComparer
         {
             get { return FullComparerInstance; }
         }
 
         private static readonly IEqualityComparer<IXLConditionalFormat> NoRangeComparerInstance = new FullEqualityComparer(false);
+
         public static IEqualityComparer<IXLConditionalFormat> NoRangeComparer
         {
             get { return NoRangeComparerInstance; }
@@ -145,16 +146,23 @@ namespace ClosedXML.Excel
         }
 
         public XLConditionalFormat(XLConditionalFormat conditionalFormat, IXLRange targetRange)
+            : this(conditionalFormat, new[] { targetRange })
+        {
+        }
+
+        public XLConditionalFormat(XLConditionalFormat conditionalFormat, IEnumerable<IXLRange> targetRanges)
             : this(conditionalFormat.StyleValue)
         {
-            if (targetRange != null)
-                Ranges.Add(targetRange);
+            targetRanges?.ForEach(range => Ranges.Add(range));
             CopyFrom(conditionalFormat);
         }
+
         #endregion Constructors
 
         public Guid Id { get; internal set; }
+
         internal Int32 OriginalPriority { get; set; }
+
         public Boolean CopyDefaultModify { get; set; }
 
         public override IEnumerable<IXLStyle> Styles
@@ -169,15 +177,18 @@ namespace ClosedXML.Excel
         {
             get { yield break; }
         }
-        
+
         public override IXLRanges RangesUsed
         {
             get { return new XLRanges(); }
         }
 
         public XLDictionary<XLFormula> Values { get; private set; }
+
         public XLDictionary<XLColor> Colors { get; private set; }
+
         public XLDictionary<XLCFContentType> ContentTypes { get; private set; }
+
         public XLDictionary<XLCFIconSetOperator> IconSetOperators { get; private set; }
 
         public IXLRange Range
@@ -189,16 +200,27 @@ namespace ClosedXML.Excel
                 Ranges.Add(value);
             }
         }
+
         public IXLRanges Ranges { get; private set; }
+
         public XLConditionalFormatType ConditionalFormatType { get; set; }
+
         public XLTimePeriod TimePeriod { get; set; }
+
         public XLIconSetStyle IconSetStyle { get; set; }
+
         public XLCFOperator Operator { get; set; }
+
         public Boolean Bottom { get; set; }
+
         public Boolean Percent { get; set; }
+
         public Boolean ReverseIconOrder { get; set; }
+
         public Boolean ShowIconOnly { get; set; }
+
         public Boolean ShowBarOnly { get; set; }
+
         public Boolean StopIfTrue { get; set; }
 
         public IXLConditionalFormat SetStopIfTrue()
@@ -206,21 +228,18 @@ namespace ClosedXML.Excel
             return SetStopIfTrue(true);
         }
 
-            public IXLConditionalFormat SetStopIfTrue(bool value)
+        public IXLConditionalFormat SetStopIfTrue(bool value)
         {
             this.StopIfTrue = value;
             return this;
         }
 
-        public IXLConditionalFormat CopyTo(IXLWorksheet targetSheet)
+        internal IXLConditionalFormat CopyTo(IXLWorksheet targetSheet)
         {
-            var targetRange = targetSheet.Range(Range.RangeAddress.WithoutWorksheet());
-            var newCf = new XLConditionalFormat(this, targetRange);
-            if (Ranges.Count > 1)
-            {
-                Ranges.Skip(1).ForEach(r => newCf.Ranges.Add(targetSheet.Range(r.RangeAddress)));
-            }
-
+            if (targetSheet == Range?.Worksheet)
+                throw new InvalidOperationException("Cannot copy conditional format to the worksheet it already belongs to.");
+            var targetRanges = Ranges.Select(r => targetSheet.Range(((XLRangeAddress)r.RangeAddress).WithoutWorksheet()));
+            var newCf = new XLConditionalFormat(this, targetRanges);
             targetSheet.ConditionalFormats.Add(newCf);
             return newCf;
         }
@@ -258,27 +277,32 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.IsBlank;
             return Style;
         }
+
         public IXLStyle WhenNotBlank()
         {
             ConditionalFormatType = XLConditionalFormatType.NotBlank;
             return Style;
         }
+
         public IXLStyle WhenIsError()
         {
             ConditionalFormatType = XLConditionalFormatType.IsError;
             return Style;
         }
+
         public IXLStyle WhenNotError()
         {
             ConditionalFormatType = XLConditionalFormatType.NotError;
             return Style;
         }
+
         public IXLStyle WhenDateIs(XLTimePeriod timePeriod)
         {
             TimePeriod = timePeriod;
             ConditionalFormatType = XLConditionalFormatType.TimePeriod;
             return Style;
         }
+
         public IXLStyle WhenContains(String value)
         {
             Values.Initialize(new XLFormula { Value = value });
@@ -286,6 +310,7 @@ namespace ClosedXML.Excel
             Operator = XLCFOperator.Contains;
             return Style;
         }
+
         public IXLStyle WhenNotContains(String value)
         {
             Values.Initialize(new XLFormula { Value = value });
@@ -293,6 +318,7 @@ namespace ClosedXML.Excel
             Operator = XLCFOperator.NotContains;
             return Style;
         }
+
         public IXLStyle WhenStartsWith(String value)
         {
             Values.Initialize(new XLFormula { Value = value });
@@ -300,6 +326,7 @@ namespace ClosedXML.Excel
             Operator = XLCFOperator.StartsWith;
             return Style;
         }
+
         public IXLStyle WhenEndsWith(String value)
         {
             Values.Initialize(new XLFormula { Value = value });
@@ -315,6 +342,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenNotEquals(String value)
         {
             Values.Initialize(new XLFormula { Value = value });
@@ -322,6 +350,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenGreaterThan(String value)
         {
             Values.Initialize(new XLFormula { Value = value });
@@ -329,6 +358,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenLessThan(String value)
         {
             Values.Initialize(new XLFormula { Value = value });
@@ -336,6 +366,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenEqualOrGreaterThan(String value)
         {
             Values.Initialize(new XLFormula { Value = value });
@@ -343,6 +374,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenEqualOrLessThan(String value)
         {
             Values.Initialize(new XLFormula { Value = value });
@@ -350,6 +382,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenBetween(String minValue, String maxValue)
         {
             Values.Initialize(new XLFormula { Value = minValue });
@@ -358,6 +391,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenNotBetween(String minValue, String maxValue)
         {
             Values.Initialize(new XLFormula { Value = minValue });
@@ -374,6 +408,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenNotEquals(Double value)
         {
             Values.Initialize(new XLFormula(value));
@@ -381,6 +416,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenGreaterThan(Double value)
         {
             Values.Initialize(new XLFormula(value));
@@ -388,6 +424,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenLessThan(Double value)
         {
             Values.Initialize(new XLFormula(value));
@@ -395,6 +432,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenEqualOrGreaterThan(Double value)
         {
             Values.Initialize(new XLFormula(value));
@@ -402,6 +440,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenEqualOrLessThan(Double value)
         {
             Values.Initialize(new XLFormula(value));
@@ -409,6 +448,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenBetween(Double minValue, Double maxValue)
         {
             Values.Initialize(new XLFormula(minValue));
@@ -417,6 +457,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.CellIs;
             return Style;
         }
+
         public IXLStyle WhenNotBetween(Double minValue, Double maxValue)
         {
             Values.Initialize(new XLFormula(minValue));
@@ -431,11 +472,13 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.IsDuplicate;
             return Style;
         }
+
         public IXLStyle WhenIsUnique()
         {
             ConditionalFormatType = XLConditionalFormatType.IsUnique;
             return Style;
         }
+
         public IXLStyle WhenIsTrue(String formula)
         {
             String f = formula.TrimStart()[0] == '=' ? formula : "=" + formula;
@@ -443,6 +486,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.Expression;
             return Style;
         }
+
         public IXLStyle WhenIsTop(Int32 value, XLTopBottomType topBottomType = XLTopBottomType.Items)
         {
             Values.Initialize(new XLFormula(value));
@@ -451,6 +495,7 @@ namespace ClosedXML.Excel
             Bottom = false;
             return Style;
         }
+
         public IXLStyle WhenIsBottom(Int32 value, XLTopBottomType topBottomType = XLTopBottomType.Items)
         {
             Values.Initialize(new XLFormula(value));
@@ -465,6 +510,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.ColorScale;
             return new XLCFColorScaleMin(this);
         }
+
         public IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false)
         {
             Colors.Initialize(color);
@@ -472,6 +518,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.DataBar;
             return new XLCFDataBarMin(this);
         }
+
         public IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false)
         {
             Colors.Initialize(positiveColor);
@@ -480,6 +527,7 @@ namespace ClosedXML.Excel
             ConditionalFormatType = XLConditionalFormatType.DataBar;
             return new XLCFDataBarMin(this);
         }
+
         public IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false)
         {
             IconSetOperators.Clear();
@@ -497,10 +545,12 @@ namespace ClosedXML.Excel
         IEqualityComparer<Dictionary<TKey, TValue>>
     {
         private readonly IEqualityComparer<TValue> _valueComparer;
+
         public DictionaryComparer(IEqualityComparer<TValue> valueComparer = null)
         {
             this._valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
         }
+
         public bool Equals(Dictionary<TKey, TValue> x, Dictionary<TKey, TValue> y)
         {
             if (x.Count != y.Count)
@@ -524,6 +574,7 @@ namespace ClosedXML.Excel
     internal class EnumerableComparer<T> : IEqualityComparer<IEnumerable<T>>
     {
         private readonly IEqualityComparer<T> _valueComparer;
+
         public EnumerableComparer(IEqualityComparer<T> valueComparer = null)
         {
             this._valueComparer = valueComparer ?? EqualityComparer<T>.Default;
@@ -547,4 +598,3 @@ namespace ClosedXML.Excel
         }
     }
 }
-

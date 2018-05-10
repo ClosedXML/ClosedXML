@@ -27,7 +27,5 @@ namespace ClosedXML.Excel
 
 
         String ToStringRelative(Boolean includeSheet);
-
-        IXLAddress WithoutWorksheet();
     }
 }

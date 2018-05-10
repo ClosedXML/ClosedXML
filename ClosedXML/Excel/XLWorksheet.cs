@@ -582,16 +582,16 @@ namespace ClosedXML.Excel
             targetSheet.SheetView = new XLSheetView(SheetView);
             targetSheet.SelectedRanges.RemoveAll();
 
-            Pictures.ForEach(picture => picture.CopyTo(targetSheet));
+            Pictures.Cast<XLPicture>().ForEach(picture => picture.CopyTo(targetSheet));
             NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
             Tables.ForEach(t => t.CopyTo(targetSheet));
-            ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
-            MergedRanges.ForEach(mr => targetSheet.Range(mr.RangeAddress.WithoutWorksheet()).Merge());
-            SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(sr.RangeAddress.WithoutWorksheet())));
+            ConditionalFormats.Cast<XLConditionalFormat>().ForEach(cf => cf.CopyTo(targetSheet));
+            MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
+            SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(((XLRangeAddress)sr.RangeAddress).WithoutWorksheet())));
 
             if (AutoFilter.Enabled)
             {
-                var range = targetSheet.Range(AutoFilter.Range.RangeAddress.WithoutWorksheet());
+                var range = targetSheet.Range(((XLRangeAddress)AutoFilter.Range.RangeAddress).WithoutWorksheet());
                 range.SetAutoFilter();
             }
 

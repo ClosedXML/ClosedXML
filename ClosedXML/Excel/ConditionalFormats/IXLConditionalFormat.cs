@@ -171,7 +171,5 @@ namespace ClosedXML.Excel
         IXLConditionalFormat SetStopIfTrue();
 
         IXLConditionalFormat SetStopIfTrue(Boolean value);
-
-        IXLConditionalFormat CopyTo(IXLWorksheet targetSheet);
     }
 }

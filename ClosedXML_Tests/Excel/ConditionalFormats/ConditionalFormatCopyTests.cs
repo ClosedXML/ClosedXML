@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
 
@@ -39,7 +40,6 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             Assert.AreEqual("B2:B2", ws.ConditionalFormats.First().Ranges.Last().RangeAddress.ToString());
         }
 
-
         [Test]
         public void CopyConditionalFormatSameRange()
         {
@@ -75,6 +75,40 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             Assert.AreEqual(1, ws2.ConditionalFormats.First().Ranges.Count);
             Assert.AreEqual("A1:A1", ws1.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
             Assert.AreEqual("B2:B2", ws2.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
+        }
+
+        [Test]
+        public void FullCopyConditionalFormatSameWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            var format = (XLConditionalFormat)ws1.Range("A1:A1").AddConditionalFormat();
+            format.WhenEquals("=" + format.Ranges.First().FirstCell().CellRight(4).Address.ToStringRelative()).Fill
+                .SetBackgroundColor(XLColor.Blue);
+
+            TestDelegate action = () => format.CopyTo(ws1);
+
+            Assert.Throws(typeof(InvalidOperationException), action);
+
+        }
+        [Test]
+        public void FullCopyConditionalFormatDifferentWorksheets()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            var format = (XLConditionalFormat)ws1.Range("A1:C3").AddConditionalFormat();
+            format.WhenEquals("=" + format.Ranges.First().FirstCell().CellRight(4).Address.ToStringRelative()).Fill
+                .SetBackgroundColor(XLColor.Blue);
+            var ws2 = wb.Worksheets.Add("Sheet2");
+
+            format.CopyTo(ws2);
+
+            Assert.AreEqual(1, ws1.ConditionalFormats.Count());
+            Assert.AreEqual(1, ws2.ConditionalFormats.Count());
+            Assert.AreEqual(1, ws1.ConditionalFormats.First().Ranges.Count);
+            Assert.AreEqual(1, ws2.ConditionalFormats.First().Ranges.Count);
+            Assert.AreEqual("Sheet1!A1:C3", ws1.ConditionalFormats.First().Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("Sheet2!A1:C3", ws2.ConditionalFormats.First().Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
         }
     }
 }

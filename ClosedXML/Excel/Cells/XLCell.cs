@@ -2308,7 +2308,7 @@ namespace ClosedXML.Excel
 
         public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
         {
-            return CopyFrom(otherCell, copyDataValidations, copyConditionalFormats : true);
+            return CopyFrom(otherCell, copyDataValidations, copyConditionalFormats: true);
         }
 
         public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations, bool copyConditionalFormats)

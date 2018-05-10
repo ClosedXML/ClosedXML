@@ -390,7 +390,7 @@ namespace ClosedXML.Excel
             return GetTrimmedAddress();
         }
 
-        public IXLAddress WithoutWorksheet()
+        internal XLAddress WithoutWorksheet()
         {
             return new XLAddress(RowNumber, ColumnNumber, FixedRow, FixedColumn);
         }

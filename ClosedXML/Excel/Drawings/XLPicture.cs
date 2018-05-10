@@ -326,11 +326,6 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
-        public IXLPicture CopyTo(IXLWorksheet targetSheet)
-        {
-            return CopyTo((XLWorksheet) targetSheet);
-        }
-
         internal IXLPicture CopyTo(XLWorksheet targetSheet)
         {
             var newPicture = targetSheet.AddPicture(ImageStream, Format, Name)

@@ -196,7 +196,7 @@ namespace ClosedXML.Excel
 
         public bool Intersects(IXLRangeAddress otherAddress)
         {
-            var xlOtherAddress = (XLRangeAddress) otherAddress;
+            var xlOtherAddress = (XLRangeAddress)otherAddress;
             return Intersects(in xlOtherAddress);
         }
 
@@ -216,11 +216,11 @@ namespace ClosedXML.Excel
             return Contains(in xlAddress);
         }
 
-        public IXLRangeAddress WithoutWorksheet()
+        internal IXLRangeAddress WithoutWorksheet()
         {
             return new XLRangeAddress(
-                (XLAddress)FirstAddress.WithoutWorksheet(),
-                (XLAddress)LastAddress.WithoutWorksheet());
+                FirstAddress.WithoutWorksheet(),
+                LastAddress.WithoutWorksheet());
         }
 
         internal bool Contains(in XLAddress address)
@@ -307,6 +307,7 @@ namespace ClosedXML.Excel
         {
             return !(left == right);
         }
-        #endregion
+
+        #endregion Operators
     }
 }

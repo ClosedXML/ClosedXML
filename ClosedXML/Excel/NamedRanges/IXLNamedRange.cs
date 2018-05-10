@@ -10,6 +10,16 @@ namespace ClosedXML.Excel
 
     public interface IXLNamedRange
     {
+        #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the comment for this named range.
+        /// </summary>
+        /// <value>
+        /// The comment for this named range.
+        /// </value>
+        String Comment { get; set; }
+
         /// <summary>
         /// Gets or sets the name of the range.
         /// </summary>
@@ -23,14 +33,12 @@ namespace ClosedXML.Excel
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
         IXLRanges Ranges { get; }
+        String RefersTo { get; set; }
 
         /// <summary>
-        /// Gets or sets the comment for this named range.
+        /// Gets the scope of this named range.
         /// </summary>
-        /// <value>
-        /// The comment for this named range.
-        /// </value>
-        String Comment { get; set; }
+        XLNamedRangeScope Scope { get; }
 
         /// <summary>
         /// Gets or sets the visibility of this named range.
@@ -40,10 +48,9 @@ namespace ClosedXML.Excel
         /// </value>
         Boolean Visible { get; set; }
 
-        /// <summary>
-        /// Gets the scope of this named range.
-        /// </summary>
-        XLNamedRangeScope Scope { get; }
+        #endregion Public Properties
+
+        #region Public Methods
 
         /// <summary>
         /// Adds the specified range to this named range.
@@ -68,16 +75,17 @@ namespace ClosedXML.Excel
         IXLRanges Add(IXLRanges ranges);
 
         /// <summary>
-        /// Deletes this named range (not the cells).
-        /// </summary>
-        void Delete();
-
-        /// <summary>
         /// Clears the list of ranges associated with this named range.
         /// <para>(it does not clear the cells)</para>
         /// </summary>
         void Clear();
 
+        IXLNamedRange CopyTo(IXLWorksheet targetSheet);
+
+        /// <summary>
+        /// Deletes this named range (not the cells).
+        /// </summary>
+        void Delete();
         /// <summary>
         /// Removes the specified range from this named range.
         /// <para>Note: A named range can point to multiple ranges.</para>
@@ -105,8 +113,6 @@ namespace ClosedXML.Excel
 
         IXLNamedRange SetRefersTo(IXLRanges ranges);
 
-        String RefersTo { get; set; }
-
-        IXLNamedRange CopyTo(IXLWorksheet targetSheet);
+        #endregion Public Methods
     }
 }

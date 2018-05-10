@@ -47,7 +47,5 @@ namespace ClosedXML.Excel
         bool Intersects(IXLRangeAddress otherAddress);
 
         bool Contains(IXLAddress address);
-
-        IXLRangeAddress WithoutWorksheet();
     }
 }
