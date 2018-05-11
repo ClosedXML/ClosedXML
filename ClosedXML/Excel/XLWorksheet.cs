@@ -567,7 +567,7 @@ namespace ClosedXML.Excel
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
             Internals.ColumnsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Column(kp.Key)));
             Internals.RowsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Row(kp.Key)));
-            Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, false));
+            Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, false, false));
             DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv)));
             targetSheet.Visibility = Visibility;
             targetSheet.ColumnWidth = ColumnWidth;
@@ -580,90 +580,18 @@ namespace ClosedXML.Excel
             (targetSheet.PageSetup.Footer as XLHeaderFooter).Changed = true;
             targetSheet.Outline = new XLOutline(Outline);
             targetSheet.SheetView = new XLSheetView(SheetView);
+            targetSheet.SelectedRanges.RemoveAll();
 
-            foreach (var picture in Pictures)
-            {
-                var newPic = targetSheet.AddPicture(picture.ImageStream, picture.Format, picture.Name)
-                    .WithPlacement(XLPicturePlacement.FreeFloating)
-                    .WithSize(picture.Width, picture.Height)
-                    .WithPlacement(picture.Placement);
-
-                switch (picture.Placement)
-                {
-                    case XLPicturePlacement.FreeFloating:
-                        newPic.MoveTo(picture.Left, picture.Top);
-                        break;
-
-                    case XLPicturePlacement.Move:
-                        var newAddress = new XLAddress(targetSheet, picture.TopLeftCellAddress.RowNumber,
-                            picture.TopLeftCellAddress.ColumnNumber, false, false);
-                        newPic.MoveTo(newAddress, picture.GetOffset(XLMarkerPosition.TopLeft));
-                        break;
-
-                    case XLPicturePlacement.MoveAndSize:
-                        var newFromAddress = new XLAddress(targetSheet, picture.TopLeftCellAddress.RowNumber,
-                            picture.TopLeftCellAddress.ColumnNumber, false, false);
-                        var newToAddress = new XLAddress(targetSheet, picture.BottomRightCellAddress.RowNumber,
-                            picture.BottomRightCellAddress.ColumnNumber, false, false);
-
-                        newPic.MoveTo(newFromAddress, picture.GetOffset(XLMarkerPosition.TopLeft), newToAddress,
-                            picture.GetOffset(XLMarkerPosition.BottomRight));
-                        break;
-                }
-            }
-
-            foreach (var nr in NamedRanges)
-            {
-                var ranges = new XLRanges();
-                foreach (var r in nr.Ranges)
-                {
-                    if (this == r.Worksheet)
-                        // Named ranges on the source worksheet have to point to the new destination sheet
-                        ranges.Add(targetSheet.Range(r.RangeAddress.FirstAddress.RowNumber,
-                            r.RangeAddress.FirstAddress.ColumnNumber, r.RangeAddress.LastAddress.RowNumber,
-                            r.RangeAddress.LastAddress.ColumnNumber));
-                    else
-                        ranges.Add(r);
-                }
-
-                targetSheet.NamedRanges.Add(nr.Name, ranges);
-            }
-
-            foreach (var t in Tables.Cast<XLTable>())
-            {
-                String tableName = t.Name;
-                var table = (XLTable)targetSheet.Table(targetSheet.Range(t.RangeAddress.ToString()), tableName, true);
-
-                table.RelId = t.RelId;
-                table.EmphasizeFirstColumn = t.EmphasizeFirstColumn;
-                table.EmphasizeLastColumn = t.EmphasizeLastColumn;
-                table.ShowRowStripes = t.ShowRowStripes;
-                table.ShowColumnStripes = t.ShowColumnStripes;
-                table.ShowAutoFilter = t.ShowAutoFilter;
-                table.Theme = t.Theme;
-                table._showTotalsRow = t.ShowTotalsRow;
-                table._uniqueNames.Clear();
-
-                t._uniqueNames.ForEach(n => table._uniqueNames.Add(n));
-                Int32 fieldCount = t.ColumnCount();
-                for (Int32 f = 0; f < fieldCount; f++)
-                {
-                    var tableField = table.Field(f) as XLTableField;
-                    var tField = t.Field(f) as XLTableField;
-                    tableField.Index = tField.Index;
-                    tableField.Name = tField.Name;
-                    tableField.totalsRowLabel = tField.totalsRowLabel;
-                    tableField.totalsRowFunction = tField.totalsRowFunction;
-                }
-            }
+            Pictures.ForEach(picture => picture.CopyTo(targetSheet));
+            NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
+            Tables.Cast<XLTable>().ForEach(t => t.CopyTo(targetSheet, false));
+            ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
+            MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
+            SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(((XLRangeAddress)sr.RangeAddress).WithoutWorksheet())));
 
             if (AutoFilter.Enabled)
             {
-                var range = targetSheet.Range(
-                    AutoFilter.Range.RangeAddress.FirstAddress.RowNumber,
-                    AutoFilter.Range.RangeAddress.FirstAddress.ColumnNumber,
-                    AutoFilter.Range.RangeAddress.LastAddress.RowNumber,
-                    AutoFilter.Range.RangeAddress.LastAddress.ColumnNumber);
+                var range = targetSheet.Range(((XLRangeAddress)AutoFilter.Range.RangeAddress).WithoutWorksheet());
                 range.SetAutoFilter();
             }
 

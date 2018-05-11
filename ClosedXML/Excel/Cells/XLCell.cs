@@ -2356,23 +2356,32 @@ namespace ClosedXML.Excel
 
         public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
         {
+            return CopyFrom(otherCell, copyDataValidations, copyConditionalFormats: true);
+        }
+
+        public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations, bool copyConditionalFormats)
+        {
             var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
 
             CopyFromInternal(source, copyDataValidations);
 
-            var conditionalFormats = source.Worksheet.ConditionalFormats.Where(c => c.Ranges.Any(range => range.Contains(source))).ToList();
-            foreach (var cf in conditionalFormats)
+            if (copyConditionalFormats)
             {
-                if (source.Worksheet == Worksheet)
+                var conditionalFormats = source.Worksheet.ConditionalFormats
+                    .Where(c => c.Ranges.Any(range => range.Contains(source))).ToList();
+                foreach (var cf in conditionalFormats)
                 {
-                    if (!cf.Ranges.Any(range => range.Contains(this)))
+                    if (source.Worksheet == Worksheet)
                     {
-                        cf.Ranges.Add(this);
+                        if (!cf.Ranges.Any(range => range.Contains(this)))
+                        {
+                            cf.Ranges.Add(this);
+                        }
                     }
-                }
-                else
-                {
-                    CopyConditionalFormatsFrom(source.AsRange());
+                    else
+                    {
+                        CopyConditionalFormatsFrom(source.AsRange());
+                    }
                 }
             }
 

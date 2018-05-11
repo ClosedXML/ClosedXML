@@ -129,5 +129,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <returns></returns>
         DataTable AsNativeDataTable();
+
+        IXLTable CopyTo(IXLWorksheet targetSheet);
     }
 }

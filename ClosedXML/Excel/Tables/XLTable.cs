@@ -819,5 +819,46 @@ namespace ClosedXML.Excel
 
             return table;
         }
+
+        public IXLTable CopyTo(IXLWorksheet targetSheet)
+        {
+            return CopyTo((XLWorksheet) targetSheet);
+        }
+
+        internal IXLTable CopyTo(XLWorksheet targetSheet, bool copyData = true)
+        {
+            if (targetSheet == Worksheet)
+                throw new InvalidOperationException("Cannot copy table to the worksheet it already belongs to.");
+
+            var targetRange = targetSheet.Range(RangeAddress.WithoutWorksheet());
+            if (copyData)
+                RangeUsed().CopyTo(targetRange);
+            else
+                HeadersRow().CopyTo(targetRange.FirstRow());
+
+            String tableName = Name;
+            var newTable = (XLTable)targetSheet.Table(targetRange, tableName, true);
+
+            newTable.RelId = RelId;
+            newTable.EmphasizeFirstColumn = EmphasizeFirstColumn;
+            newTable.EmphasizeLastColumn = EmphasizeLastColumn;
+            newTable.ShowRowStripes = ShowRowStripes;
+            newTable.ShowColumnStripes = ShowColumnStripes;
+            newTable.ShowAutoFilter = ShowAutoFilter;
+            newTable.Theme = Theme;
+            newTable._showTotalsRow = ShowTotalsRow;
+
+            Int32 fieldCount = ColumnCount();
+            for (Int32 f = 0; f < fieldCount; f++)
+            {
+                var tableField = newTable.Field(f) as XLTableField;
+                var tField = Field(f) as XLTableField;
+                tableField.Index = tField.Index;
+                tableField.Name = tField.Name;
+                tableField.totalsRowLabel = tField.totalsRowLabel;
+                tableField.totalsRowFunction = tField.totalsRowFunction;
+            }
+            return newTable;
+        }
     }
 }

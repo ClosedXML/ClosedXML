@@ -326,6 +326,67 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
+        /// <summary>
+        /// Create a copy of the picture on a different worksheet.
+        /// </summary>
+        /// <param name="targetSheet">The worksheet to which the picture will be copied.</param>
+        /// <returns>A created copy of the picture.</returns>
+        public IXLPicture CopyTo(IXLWorksheet targetSheet)
+        {
+            return CopyTo((XLWorksheet) targetSheet);
+        }
+
+        /// <summary>
+        /// Create a copy of the picture on the same worksheet.
+        /// </summary>
+        /// <returns>A created copy of the picture.</returns>
+        public IXLPicture Duplicate()
+        {
+            return CopyTo(Worksheet);
+        }
+
+        internal IXLPicture CopyTo(XLWorksheet targetSheet)
+        {
+            if (targetSheet == null)
+                targetSheet = Worksheet as XLWorksheet;
+
+            IXLPicture newPicture;
+            if (targetSheet == Worksheet)
+                newPicture = targetSheet.AddPicture(ImageStream, Format);
+            else
+                newPicture = targetSheet.AddPicture(ImageStream, Format, Name);
+
+            newPicture = newPicture
+                    .WithPlacement(XLPicturePlacement.FreeFloating)
+                    .WithSize(Width, Height)
+                    .WithPlacement(Placement);
+
+            switch (Placement)
+            {
+                case XLPicturePlacement.FreeFloating:
+                    newPicture.MoveTo(Left, Top);
+                    break;
+
+                case XLPicturePlacement.Move:
+                    var newAddress = new XLAddress(targetSheet, TopLeftCellAddress.RowNumber,
+                        TopLeftCellAddress.ColumnNumber, false, false);
+                    newPicture.MoveTo(newAddress, GetOffset(XLMarkerPosition.TopLeft));
+                    break;
+
+                case XLPicturePlacement.MoveAndSize:
+                    var newFromAddress = new XLAddress(targetSheet, TopLeftCellAddress.RowNumber,
+                        TopLeftCellAddress.ColumnNumber, false, false);
+                    var newToAddress = new XLAddress(targetSheet, BottomRightCellAddress.RowNumber,
+                        BottomRightCellAddress.ColumnNumber, false, false);
+
+                    newPicture.MoveTo(newFromAddress, GetOffset(XLMarkerPosition.TopLeft), newToAddress,
+                        GetOffset(XLMarkerPosition.BottomRight));
+                    break;
+            }
+
+            return newPicture;
+        }
+
         internal void SetName(string value)
         {
             if (String.IsNullOrWhiteSpace(value))

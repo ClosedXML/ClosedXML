@@ -149,6 +149,24 @@ namespace ClosedXML.Excel
             }
         }
 
+        public IXLNamedRange CopyTo(IXLWorksheet targetSheet)
+        {
+            if (targetSheet == _namedRanges.Worksheet)
+                throw new InvalidOperationException("Cannot copy named range to the worksheet it already belongs to.");
+
+            var ranges = new XLRanges();
+            foreach (var r in Ranges)
+            {
+                if (_namedRanges.Worksheet == r.Worksheet)
+                    // Named ranges on the source worksheet have to point to the new destination sheet
+                    ranges.Add(targetSheet.Range(((XLRangeAddress)r.RangeAddress).WithoutWorksheet()));
+                else
+                    ranges.Add(r);
+            }
+
+            return targetSheet.NamedRanges.Add(Name, ranges);
+        }
+
         internal IList<String> RangeList { get; set; } = new List<String>();
 
         public IXLNamedRange SetRefersTo(String range)
