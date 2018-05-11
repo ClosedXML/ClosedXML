@@ -9,10 +9,9 @@ namespace ClosedXML.Excel.Drawings
         IXLAddress BottomRightCellAddress { get; }
 
         /// <summary>
-        /// Create a copy of the picture.
+        /// Create a copy of the picture on a different worksheet.
         /// </summary>
-        /// <param name="targetSheet">A worksheet where put the copy to. When null the copy of the picture is created
-        /// on the same worksheet as the original and picture name is generated automatically.</param>
+        /// <param name="targetSheet">The worksheet to which the picture will be copied.</param>
         /// <returns>A created copy of the picture.</returns>
         IXLPicture CopyTo(IXLWorksheet targetSheet = null);
 
