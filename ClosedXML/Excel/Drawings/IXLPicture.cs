@@ -68,5 +68,7 @@ namespace ClosedXML.Excel.Drawings
         IXLPicture WithPlacement(XLPicturePlacement value);
 
         IXLPicture WithSize(Int32 width, Int32 height);
+
+        IXLPicture CopyTo(IXLWorksheet targetSheet);
     }
 }

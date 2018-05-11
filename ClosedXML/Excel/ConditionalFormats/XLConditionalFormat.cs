@@ -234,7 +234,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        internal IXLConditionalFormat CopyTo(IXLWorksheet targetSheet)
+        public IXLConditionalFormat CopyTo(IXLWorksheet targetSheet)
         {
             if (targetSheet == Range?.Worksheet)
                 throw new InvalidOperationException("Cannot copy conditional format to the worksheet it already belongs to.");
