@@ -285,5 +285,43 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(0.6, (double)ws1.Cell(4, 1).Value, XLHelper.Epsilon);
             }
         }
+
+        [Test]
+        public void CopyNamedRangeSameWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            ws1.Range("B2:E6").AddToNamed("Named range", XLScope.Worksheet);
+            var nr = ws1.NamedRange("Named range");
+
+            TestDelegate action = () => nr.CopyTo(ws1);
+
+            Assert.Throws(typeof(InvalidOperationException), action);
+        }
+
+        [Test]
+        public void CopyNamedRangeDifferentWorksheets()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            var ws2 = wb.Worksheets.Add("Sheet2");
+            var ranges = new XLRanges();
+            ranges.Add(ws1.Range("B2:E6"));
+            ranges.Add(ws2.Range("D1:E2"));
+            var original = ws1.NamedRanges.Add("Named range", ranges);
+
+            var copy = original.CopyTo(ws2);
+
+            Assert.AreEqual(1, ws1.NamedRanges.Count());
+            Assert.AreEqual(1, ws2.NamedRanges.Count());
+            Assert.AreEqual(2, original.Ranges.Count);
+            Assert.AreEqual(2, copy.Ranges.Count);
+            Assert.AreEqual(original.Name, copy.Name);
+            Assert.AreEqual(original.Scope, copy.Scope);
+            Assert.AreEqual("Sheet1!B2:E6", original.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("Sheet2!D1:E2", original.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("Sheet2!B2:E6", copy.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("Sheet2!D1:E2", copy.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));
+        }
     }
 }
