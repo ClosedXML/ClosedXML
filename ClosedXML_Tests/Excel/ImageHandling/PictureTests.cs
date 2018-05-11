@@ -344,7 +344,7 @@ namespace ClosedXML_Tests
                     .MoveTo(220, 155) as XLPicture;
             }
 
-            var copy = original.CopyTo()
+            var copy = original.Duplicate()
                 .MoveTo(300, 200) as XLPicture;
 
             Assert.AreEqual(2, ws1.Pictures.Count());

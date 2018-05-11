@@ -17,6 +17,12 @@ namespace ClosedXML.Excel.Drawings
         IXLPicture CopyTo(IXLWorksheet targetSheet = null);
 
         /// <summary>
+        /// Create a copy of the picture on the same worksheet.
+        /// </summary>
+        /// <returns>A created copy of the picture.</returns>
+        IXLPicture Duplicate();
+
+        /// <summary>
         /// Type of image. The supported formats are defined by OpenXML's ImagePartType.
         /// Default value is "jpeg"
         /// </summary>
