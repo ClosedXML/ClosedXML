@@ -823,10 +823,19 @@ namespace ClosedXML.Excel
             return CopyTo((XLWorksheet) targetSheet);
         }
 
-        internal IXLTable CopyTo(XLWorksheet targetSheet)
+        internal IXLTable CopyTo(XLWorksheet targetSheet, bool copyData = true)
         {
+            if (targetSheet == Worksheet)
+                throw new InvalidOperationException("Cannot copy table to the worksheet it already belongs to.");
+
+            var targetRange = targetSheet.Range(RangeAddress.WithoutWorksheet());
+            if (copyData)
+                RangeUsed().CopyTo(targetRange);
+            else
+                HeadersRow().CopyTo(targetRange.FirstRow());
+
             String tableName = Name;
-            var newTable = (XLTable)targetSheet.Table(targetSheet.Range(RangeAddress.ToString()), tableName, true);
+            var newTable = (XLTable)targetSheet.Table(targetRange, tableName, true);
 
             newTable.RelId = RelId;
             newTable.EmphasizeFirstColumn = EmphasizeFirstColumn;
@@ -836,9 +845,7 @@ namespace ClosedXML.Excel
             newTable.ShowAutoFilter = ShowAutoFilter;
             newTable.Theme = Theme;
             newTable._showTotalsRow = ShowTotalsRow;
-            newTable._uniqueNames.Clear();
 
-            _uniqueNames.ForEach(n => newTable._uniqueNames.Add(n));
             Int32 fieldCount = ColumnCount();
             for (Int32 f = 0; f < fieldCount; f++)
             {

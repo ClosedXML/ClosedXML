@@ -781,6 +781,137 @@ namespace ClosedXML_Tests.Excel
 
         }
 
+        [Test]
+        public void CopyTableSameWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+
+            var table = ws1.Range("A1:C2").AsTable();
+
+            TestDelegate action = () => table.CopyTo(ws1);
+
+            Assert.Throws(typeof(InvalidOperationException), action);
+
+        }
+
+        [Test]
+        public void CopyDetachedTableDifferentWorksheets()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            ws1.Cell("A1").Value = "Custom column 1";
+            ws1.Cell("B1").Value = "Custom column 2";
+            ws1.Cell("C1").Value = "Custom column 3";
+            ws1.Cell("A2").Value = "Value 1";
+            ws1.Cell("B2").Value = 123.45;
+            ws1.Cell("C2").Value = new DateTime(2018, 5, 10);
+            var original = ws1.Range("A1:C2").AsTable("Detached table");
+            var ws2 = wb.Worksheets.Add("Sheet2");
+
+            var copy = original.CopyTo(ws2);
+
+            Assert.AreEqual(0, ws1.Tables.Count()); // We did not add it
+            Assert.AreEqual(1, ws2.Tables.Count());
+
+            AssertTablesAreEqual(original, copy);
+
+            Assert.AreEqual("Sheet2!A1:C2", copy.RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("Custom column 1", ws2.Cell("A1").Value);
+            Assert.AreEqual("Custom column 2", ws2.Cell("B1").Value);
+            Assert.AreEqual("Custom column 3", ws2.Cell("C1").Value);
+            Assert.AreEqual("Value 1", ws2.Cell("A2").Value);
+            Assert.AreEqual(123.45, (double)ws2.Cell("B2").Value, XLHelper.Epsilon);
+            Assert.AreEqual(new DateTime(2018, 5, 10), ws2.Cell("C2").Value);
+        }
+
+        [Test]
+        public void CopyTableDifferentWorksheets()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            ws1.Cell("A1").Value = "Custom column 1";
+            ws1.Cell("B1").Value = "Custom column 2";
+            ws1.Cell("C1").Value = "Custom column 3";
+            ws1.Cell("A2").Value = "Value 1";
+            ws1.Cell("B2").Value = 123.45;
+            ws1.Cell("C2").Value = new DateTime(2018, 5, 10);
+            var original = ws1.Range("A1:C2").AsTable("Attached table");
+            ws1.Tables.Add(original);
+            var ws2 = wb.Worksheets.Add("Sheet2");
+
+            original.CopyTo(ws2);
+
+            Assert.AreEqual(1, ws1.Tables.Count());
+            Assert.AreEqual(1, ws2.Tables.Count());
+
+            var copy = ws2.Tables.First();
+
+            AssertTablesAreEqual(original, copy);
+
+            Assert.AreEqual("Sheet2!A1:C2", copy.RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("Custom column 1", ws2.Cell("A1").Value);
+            Assert.AreEqual("Custom column 2", ws2.Cell("B1").Value);
+            Assert.AreEqual("Custom column 3", ws2.Cell("C1").Value);
+            Assert.AreEqual("Value 1", ws2.Cell("A2").Value);
+            Assert.AreEqual(123.45, (double)ws2.Cell("B2").Value, XLHelper.Epsilon);
+            Assert.AreEqual(new DateTime(2018, 5, 10), ws2.Cell("C2").Value);
+        }
+
+        [Test]
+        public void CopyTableWithoutData()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            ws1.Cell("A1").Value = "Custom column 1";
+            ws1.Cell("B1").Value = "Custom column 2";
+            ws1.Cell("C1").Value = "Custom column 3";
+            ws1.Cell("A2").Value = "Value 1";
+            ws1.Cell("B2").Value = 123.45;
+            ws1.Cell("C2").Value = new DateTime(2018, 5, 10);
+            var original = ws1.Range("A1:C2").AsTable("Attached table");
+            ws1.Tables.Add(original);
+            var ws2 = wb.Worksheets.Add("Sheet2") as XLWorksheet;
+
+            var copy = (original as XLTable).CopyTo(ws2, false);
+
+            AssertTablesAreEqual(original, copy);
+
+            Assert.AreEqual("Sheet2!A1:C2", copy.RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("Custom column 1", ws2.Cell("A1").Value);
+            Assert.AreEqual("Custom column 2", ws2.Cell("B1").Value);
+            Assert.AreEqual("Custom column 3", ws2.Cell("C1").Value);
+            Assert.AreEqual("", ws2.Cell("A2").Value);
+            Assert.AreEqual("", ws2.Cell("B2").Value);
+            Assert.AreEqual("", ws2.Cell("C2").Value);
+        }
+
+        private void AssertTablesAreEqual(IXLTable table1, IXLTable table2)
+        {
+            Assert.AreEqual(table1.RangeAddress.ToString(XLReferenceStyle.A1, false), table2.RangeAddress.ToString(XLReferenceStyle.A1, false));
+            Assert.AreEqual(table1.Fields.Count(), table2.Fields.Count());
+            for (int j = 0; j < table1.Fields.Count(); j++)
+            {
+                var originalField = table1.Fields.ElementAt(j);
+                var copyField = table2.Fields.ElementAt(j);
+                Assert.AreEqual(originalField.Name, copyField.Name);
+                if (table1.ShowTotalsRow)
+                {
+                    Assert.AreEqual(originalField.TotalsRowFormulaA1, copyField.TotalsRowFormulaA1);
+                    Assert.AreEqual(originalField.TotalsRowFunction, copyField.TotalsRowFunction);
+                }
+            }
+
+            Assert.AreEqual(table1.Name, table2.Name);
+            Assert.AreEqual(table1.ShowAutoFilter, table2.ShowAutoFilter);
+            Assert.AreEqual(table1.ShowColumnStripes, table2.ShowColumnStripes);
+            Assert.AreEqual(table1.ShowHeaderRow, table2.ShowHeaderRow);
+            Assert.AreEqual(table1.ShowRowStripes, table2.ShowRowStripes);
+            Assert.AreEqual(table1.ShowTotalsRow, table2.ShowTotalsRow);
+            Assert.AreEqual((table1.Style as XLStyle).Value, (table2.Style as XLStyle).Value);
+            Assert.AreEqual(table1.Theme, table2.Theme);
+        }
+
         //TODO: Delete table (not underlying range)
     }
 }

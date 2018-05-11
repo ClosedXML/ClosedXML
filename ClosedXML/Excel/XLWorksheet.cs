@@ -584,7 +584,7 @@ namespace ClosedXML.Excel
 
             Pictures.Cast<XLPicture>().ForEach(picture => picture.CopyTo(targetSheet));
             NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
-            Tables.ForEach(t => t.CopyTo(targetSheet));
+            Tables.Cast<XLTable>().ForEach(t => t.CopyTo(targetSheet, false));
             ConditionalFormats.Cast<XLConditionalFormat>().ForEach(cf => cf.CopyTo(targetSheet));
             MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
             SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(((XLRangeAddress)sr.RangeAddress).WithoutWorksheet())));
