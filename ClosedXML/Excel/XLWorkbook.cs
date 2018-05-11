@@ -353,12 +353,24 @@ namespace ClosedXML.Excel
             if (!rangeAddress.Contains('!')) return null;
 
             var split = rangeAddress.Split('!');
-            var first = split[0];
-            var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
-            var localRange = split[1];
+            var wsName = split[0].UnescapeSheetName();
             if (TryGetWorksheet(wsName, out ws))
             {
-                return ws.Range(localRange);
+                return ws.Range(split[1]);
+            }
+            return null;
+        }
+
+        public IXLCell CellFromFullAddress(String cellAddress, out IXLWorksheet ws)
+        {
+            ws = null;
+            if (!cellAddress.Contains('!')) return null;
+
+            var split = cellAddress.Split('!');
+            var wsName = split[0].UnescapeSheetName();
+            if (TryGetWorksheet(wsName, out ws))
+            {
+                return ws.Cell(split[1]);
             }
             return null;
         }
@@ -752,10 +764,12 @@ namespace ClosedXML.Excel
         public IXLCell Cell(String namedCell)
         {
             var namedRange = NamedRange(namedCell);
-            if (namedRange == null) return null;
-            var range = namedRange.Ranges.FirstOrDefault();
-            if (range == null) return null;
-            return range.FirstCell();
+            if (namedRange != null)
+            {
+                return namedRange.Ranges?.FirstOrDefault()?.FirstCell();
+            }
+            else
+                return CellFromFullAddress(namedCell, out _);
         }
 
         public IXLCells Cells(String namedCells)
@@ -769,7 +783,7 @@ namespace ClosedXML.Excel
             if (namedRange != null)
                 return namedRange.Ranges.FirstOrDefault();
             else
-                return RangeFromFullAddress(range, out IXLWorksheet ws);
+                return RangeFromFullAddress(range, out _);
         }
 
         public IXLRanges Ranges(String ranges)
