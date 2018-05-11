@@ -326,17 +326,32 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
-        public IXLPicture CopyTo(IXLWorksheet targetSheet)
+        /// <summary>
+        /// Create a copy of the picture.
+        /// </summary>
+        /// <param name="targetSheet">A worksheet where put the copy to. When null the copy of the picture is created
+        /// on the same worksheet as the original and picture name is generated automatically.</param>
+        /// <returns>A created copy of the picture.</returns>
+        public IXLPicture CopyTo(IXLWorksheet targetSheet = null)
         {
             return CopyTo((XLWorksheet) targetSheet);
         }
 
         internal IXLPicture CopyTo(XLWorksheet targetSheet)
         {
-            var newPicture = targetSheet.AddPicture(ImageStream, Format, Name)
-                .WithPlacement(XLPicturePlacement.FreeFloating)
-                .WithSize(Width, Height)
-                .WithPlacement(Placement);
+            if (targetSheet == null)
+                targetSheet = Worksheet as XLWorksheet;
+
+            IXLPicture newPicture;
+            if (targetSheet == Worksheet)
+                newPicture = targetSheet.AddPicture(ImageStream, Format);
+            else
+                newPicture = targetSheet.AddPicture(ImageStream, Format, Name);
+
+            newPicture = newPicture
+                    .WithPlacement(XLPicturePlacement.FreeFloating)
+                    .WithSize(Width, Height)
+                    .WithPlacement(Placement);
 
             switch (Placement)
             {

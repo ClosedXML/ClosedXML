@@ -9,6 +9,14 @@ namespace ClosedXML.Excel.Drawings
         IXLAddress BottomRightCellAddress { get; }
 
         /// <summary>
+        /// Create a copy of the picture.
+        /// </summary>
+        /// <param name="targetSheet">A worksheet where put the copy to. When null the copy of the picture is created
+        /// on the same worksheet as the original and picture name is generated automatically.</param>
+        /// <returns>A created copy of the picture.</returns>
+        IXLPicture CopyTo(IXLWorksheet targetSheet = null);
+
+        /// <summary>
         /// Type of image. The supported formats are defined by OpenXML's ImagePartType.
         /// Default value is "jpeg"
         /// </summary>
@@ -68,7 +76,5 @@ namespace ClosedXML.Excel.Drawings
         IXLPicture WithPlacement(XLPicturePlacement value);
 
         IXLPicture WithSize(Int32 width, Int32 height);
-
-        IXLPicture CopyTo(IXLWorksheet targetSheet);
     }
 }
