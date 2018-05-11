@@ -13,7 +13,7 @@ namespace ClosedXML.Excel.Drawings
         /// </summary>
         /// <param name="targetSheet">The worksheet to which the picture will be copied.</param>
         /// <returns>A created copy of the picture.</returns>
-        IXLPicture CopyTo(IXLWorksheet targetSheet = null);
+        IXLPicture CopyTo(IXLWorksheet targetSheet);
 
         /// <summary>
         /// Create a copy of the picture on the same worksheet.
