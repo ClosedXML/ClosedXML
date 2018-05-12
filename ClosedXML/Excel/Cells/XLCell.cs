@@ -1453,7 +1453,11 @@ namespace ClosedXML.Excel
 
         public IXLRange MergedRange()
         {
-            return Worksheet.Internals.MergedRanges.FirstOrDefault(r => r.Contains(this));
+            return Worksheet
+                .Internals
+                .MergedRanges
+                .GetIntersectedRanges(this)
+                .FirstOrDefault();
         }
 
         public Boolean IsEmpty()
@@ -1547,15 +1551,9 @@ namespace ClosedXML.Excel
         /// <returns>The data validation rule applying to the current cell or null if there is no such rule.</returns>
         private IXLDataValidation GetDataValidation()
         {
-            foreach (var xlDataValidation in Worksheet.DataValidations)
-            {
-                foreach (var range in xlDataValidation.Ranges)
-                {
-                    if (range.Contains(this))
-                        return xlDataValidation;
-                }
-            }
-            return null;
+            return Worksheet
+                .DataValidations
+                .FirstOrDefault(dv => dv.Ranges.GetIntersectedRanges(this).Any());
         }
 
         public IXLDataValidation SetDataValidation()
@@ -2428,13 +2426,17 @@ namespace ClosedXML.Excel
 
             if (copyConditionalFormats)
             {
-                var conditionalFormats = source.Worksheet.ConditionalFormats
-                    .Where(c => c.Ranges.Any(range => range.Contains(source))).ToList();
+                var conditionalFormats = source
+                    .Worksheet
+                    .ConditionalFormats
+                    .Where(c => c.Ranges.GetIntersectedRanges(source).Any())
+                    .ToList();
+
                 foreach (var cf in conditionalFormats)
                 {
                     if (source.Worksheet == Worksheet)
                     {
-                        if (!cf.Ranges.Any(range => range.Contains(this)))
+                        if (!cf.Ranges.GetIntersectedRanges(this).Any())
                         {
                             cf.Ranges.Add(this);
                         }

@@ -44,6 +44,12 @@ namespace ClosedXML.Excel
         /// </summary>
         IEnumerable<IXLRange> GetIntersectedRanges(IXLAddress address);
 
+        /// <summary>
+        /// Filter ranges from a collection that intersect the specified cell. Is much more efficient
+        /// that using Linq expression .Where().
+        /// </summary>
+        IEnumerable<IXLRange> GetIntersectedRanges(IXLCell cell);
+
 
         IXLStyle Style { get; set; }
 

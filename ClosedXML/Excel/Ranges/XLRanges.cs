@@ -131,6 +131,11 @@ namespace ClosedXML.Excel
                 .GetIntersectedRanges(address);
         }
 
+        public IEnumerable<IXLRange> GetIntersectedRanges(IXLCell cell)
+        {
+            return GetIntersectedRanges(cell.Address);
+        }
+
         public IEnumerable<IXLDataValidation> DataValidation
         {
             get { return Ranges.Select(range => range.DataValidation).Where(dv => dv != null); }
