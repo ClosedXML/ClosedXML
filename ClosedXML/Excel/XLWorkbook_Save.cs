@@ -5613,6 +5613,8 @@ namespace ClosedXML.Excel
                 openXmlCell.CellValue = cellValue;
                 return;
             }
+            else
+                openXmlCell.CellValue = null;
 
             var dataType = xlCell.DataType;
             if (dataType == XLDataType.Text)
