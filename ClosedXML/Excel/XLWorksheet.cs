@@ -140,6 +140,8 @@ namespace ClosedXML.Excel
         public XLSheetProtection Protection { get; private set; }
         public XLAutoFilter AutoFilter { get; private set; }
 
+        public bool IsDeleted { get; private set; }
+
         #region IXLWorksheet Members
 
         public XLWorkbook Workbook { get; private set; }
@@ -524,6 +526,8 @@ namespace ClosedXML.Excel
 
         public void Delete()
         {
+            IsDeleted = true;
+            (Workbook.NamedRanges as XLNamedRanges).OnWorksheetDeleted(Name);
             Workbook.WorksheetsInternal.Delete(Name);
         }
 

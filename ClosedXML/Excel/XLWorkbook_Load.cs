@@ -1282,20 +1282,17 @@ namespace ClosedXML.Excel
                 {
                     string text = definedName.Text;
 
-                    if (!(text.Equals("#REF") || text.EndsWith("#REF!")))
+                    var localSheetId = definedName.LocalSheetId;
+                    var comment = definedName.Comment;
+                    if (localSheetId == null)
                     {
-                        var localSheetId = definedName.LocalSheetId;
-                        var comment = definedName.Comment;
-                        if (localSheetId == null)
-                        {
-                            if (NamedRanges.All(nr => nr.Name != name))
-                                (NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
-                        }
-                        else
-                        {
-                            if (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.All(nr => nr.Name != name))
-                                (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
-                        }
+                        if (NamedRanges.All(nr => nr.Name != name))
+                            (NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
+                    }
+                    else
+                    {
+                        if (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.All(nr => nr.Name != name))
+                            (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
                     }
                 }
             }

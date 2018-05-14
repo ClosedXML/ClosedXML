@@ -7,8 +7,11 @@ namespace ClosedXML.Excel
     internal class XLNamedRanges : IXLNamedRanges
     {
         private readonly Dictionary<String, IXLNamedRange> _namedRanges = new Dictionary<String, IXLNamedRange>(StringComparer.OrdinalIgnoreCase);
+
         internal XLWorkbook Workbook { get; set; }
+
         internal XLWorksheet Worksheet { get; set; }
+
         internal XLNamedRangeScope Scope { get; }
 
         public XLNamedRanges(XLWorksheet worksheet)
@@ -134,6 +137,22 @@ namespace ClosedXML.Excel
             _namedRanges.Clear();
         }
 
+        /// <summary>
+        /// Returns a subset of named ranges that do not have invalid references.
+        /// </summary>
+        public IEnumerable<IXLNamedRange> ValidNamedRanges()
+        {
+            return this.Where(nr => nr.IsValid);
+        }
+
+        /// <summary>
+        /// Returns a subset of named ranges that do have invalid references.
+        /// </summary>
+        public IEnumerable<IXLNamedRange> InvalidNamedRanges()
+        {
+            return this.Where(nr => !nr.IsValid);
+        }
+
         #endregion IXLNamedRanges Members
 
         #region IEnumerable<IXLNamedRange> Members
@@ -172,6 +191,13 @@ namespace ClosedXML.Excel
                 return Workbook.NamedRange(name) != null;
             else
                 return false;
+        }
+
+        internal void OnWorksheetDeleted(string worksheetName)
+        {
+            _namedRanges.Values
+                .Cast<XLNamedRange>()
+                .ForEach(nr => nr.OnWorksheetDeleted(worksheetName));
         }
     }
 }

@@ -204,6 +204,9 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
+            if (!IsValid)
+                return "#REF!";
+
             String retVal = ColumnLetter;
             if (_fixedColumn)
             {
@@ -225,7 +228,9 @@ namespace ClosedXML.Excel
         public string ToString(XLReferenceStyle referenceStyle, bool includeSheet)
         {
             string address;
-            if (referenceStyle == XLReferenceStyle.A1)
+            if (!IsValid)
+                address = "#REF!";
+            else if (referenceStyle == XLReferenceStyle.A1)
                 address = GetTrimmedAddress();
             else if (referenceStyle == XLReferenceStyle.R1C1
                      || HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
@@ -235,7 +240,7 @@ namespace ClosedXML.Excel
 
             if (includeSheet)
                 return String.Concat(
-                    Worksheet.Name.EscapeSheetName(),
+                    WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     '!',
                     address);
 
@@ -380,14 +385,16 @@ namespace ClosedXML.Excel
 
         public String ToStringRelative(Boolean includeSheet)
         {
+            var address = IsValid ? GetTrimmedAddress() : "#REF!";
+
             if (includeSheet)
                 return String.Concat(
-                    Worksheet.Name.EscapeSheetName(),
+                    WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     '!',
-                    GetTrimmedAddress()
+                    address
                 );
 
-            return GetTrimmedAddress();
+            return address;
         }
 
         internal XLAddress WithoutWorksheet()
@@ -412,23 +419,30 @@ namespace ClosedXML.Excel
 
             Debug.Assert(referenceStyle != XLReferenceStyle.Default);
 
-            switch (referenceStyle)
+            if (!IsValid)
             {
-                case XLReferenceStyle.A1:
-                    address = String.Concat('$', ColumnLetter, '$', _rowNumber.ToInvariantString());
-                    break;
+                address = "#REF!";
+            }
+            else
+            {
+                switch (referenceStyle)
+                {
+                    case XLReferenceStyle.A1:
+                        address = String.Concat('$', ColumnLetter, '$', _rowNumber.ToInvariantString());
+                        break;
 
-                case XLReferenceStyle.R1C1:
-                    address = String.Concat('R', _rowNumber.ToInvariantString(), 'C', ColumnNumber);
-                    break;
+                    case XLReferenceStyle.R1C1:
+                        address = String.Concat('R', _rowNumber.ToInvariantString(), 'C', ColumnNumber);
+                        break;
 
-                default:
-                    throw new NotImplementedException();
+                    default:
+                        throw new NotImplementedException();
+                }
             }
 
             if (includeSheet)
                 return String.Concat(
-                    Worksheet.Name.EscapeSheetName(),
+                    WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     '!',
                     address);
 
@@ -445,5 +459,7 @@ namespace ClosedXML.Excel
                        0 < ColumnNumber && ColumnNumber <= XLHelper.MaxColumnNumber;
             }
         }
+
+        private bool WorksheetIsDeleted => Worksheet?.IsDeleted == true;
     }
 }

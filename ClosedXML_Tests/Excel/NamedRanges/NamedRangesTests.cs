@@ -323,5 +323,246 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("Sheet2!B2:E6", copy.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
             Assert.AreEqual("Sheet2!D1:E2", copy.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));
         }
+
+        [Test]
+        public void NamedRangesBecomeInvalidOnWorksheetDeleting()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.Worksheets.Add("Sheet 1");
+                var ws2 = wb.Worksheets.Add("Sheet 2");
+                var ws3 = wb.Worksheets.Add("Sheet'3");
+
+                ws1.Range("A1:D1").AddToNamed("Named range 1", XLScope.Worksheet);
+                ws1.Range("A2:D2").AddToNamed("Named range 2", XLScope.Workbook);
+                ws2.Range("A3:D3").AddToNamed("Named range 3", XLScope.Worksheet);
+                ws2.Range("A4:D4").AddToNamed("Named range 4", XLScope.Workbook);
+                wb.NamedRanges.Add("Named range 5", new XLRanges
+                {
+                    ws1.Range("A5:D5"),
+                    ws3.Range("A5:D5")
+                });
+
+                ws2.Delete();
+                ws3.Delete();
+
+                Assert.AreEqual(1, ws1.NamedRanges.Count());
+                Assert.AreEqual("Named range 1", ws1.NamedRanges.First().Name);
+                Assert.AreEqual(XLNamedRangeScope.Worksheet, ws1.NamedRanges.First().Scope);
+                Assert.AreEqual("'Sheet 1'!$A$1:$D$1", ws1.NamedRanges.First().RefersTo);
+                Assert.AreEqual("'Sheet 1'!A1:D1", ws1.NamedRanges.First().Ranges.Single().RangeAddress.ToString(XLReferenceStyle.A1, true));
+
+                Assert.AreEqual(3, wb.NamedRanges.Count());
+
+                Assert.AreEqual("Named range 2", wb.NamedRanges.ElementAt(0).Name);
+                Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(0).Scope);
+                Assert.AreEqual("'Sheet 1'!$A$2:$D$2", wb.NamedRanges.ElementAt(0).RefersTo);
+                Assert.AreEqual("'Sheet 1'!A2:D2", wb.NamedRanges.ElementAt(0).Ranges.Single().RangeAddress.ToString(XLReferenceStyle.A1, true));
+
+                Assert.AreEqual("Named range 4", wb.NamedRanges.ElementAt(1).Name);
+                Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(1).Scope);
+                Assert.AreEqual("#REF!$A$4:$D$4", wb.NamedRanges.ElementAt(1).RefersTo);
+                Assert.IsFalse(wb.NamedRanges.ElementAt(1).Ranges.Any());
+
+                Assert.AreEqual("Named range 5", wb.NamedRanges.ElementAt(2).Name);
+                Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(2).Scope);
+                Assert.AreEqual("'Sheet 1'!$A$5:$D$5,#REF!$A$5:$D$5", wb.NamedRanges.ElementAt(2).RefersTo);
+                Assert.AreEqual(1, wb.NamedRanges.ElementAt(2).Ranges.Count);
+                Assert.AreEqual("'Sheet 1'!A5:D5", wb.NamedRanges.ElementAt(2).Ranges.Single().RangeAddress.ToString(XLReferenceStyle.A1, true));
+            }
+        }
+
+        [Test]
+        public void SavedNamedRangesBecomeInvalidOnWorksheetDeleting()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws1 = wb.Worksheets.Add("Sheet 1");
+                    var ws2 = wb.Worksheets.Add("Sheet2");
+                    var ws3 = wb.Worksheets.Add("Sheet'3");
+
+                    ws1.Range("A1:D1").AddToNamed("Named range 1", XLScope.Worksheet);
+                    ws1.Range("A2:D2").AddToNamed("Named range 2", XLScope.Workbook);
+                    ws2.Range("A3:D3").AddToNamed("Named range 3", XLScope.Worksheet);
+                    ws2.Range("A4:D4").AddToNamed("Named range 4", XLScope.Workbook);
+                    wb.NamedRanges.Add("Named range 5", new XLRanges
+                    {
+                        ws1.Range("A5:D5"),
+                        ws3.Range("A5:D5")
+                    });
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    wb.Worksheet("Sheet2").Delete();
+                    wb.Worksheet("Sheet'3").Delete();
+                    wb.Save();
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws1 = wb.Worksheet("Sheet 1");
+                    Assert.AreEqual(1, ws1.NamedRanges.Count());
+                    Assert.AreEqual("Named range 1", ws1.NamedRanges.First().Name);
+                    Assert.AreEqual(XLNamedRangeScope.Worksheet, ws1.NamedRanges.First().Scope);
+                    Assert.AreEqual("'Sheet 1'!$A$1:$D$1", ws1.NamedRanges.First().RefersTo);
+                    Assert.AreEqual("'Sheet 1'!A1:D1",
+                        ws1.NamedRanges.First().Ranges.Single().RangeAddress.ToString(XLReferenceStyle.A1, true));
+
+                    Assert.AreEqual(3, wb.NamedRanges.Count());
+
+                    Assert.AreEqual("Named range 2", wb.NamedRanges.ElementAt(0).Name);
+                    Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(0).Scope);
+                    Assert.AreEqual("'Sheet 1'!$A$2:$D$2", wb.NamedRanges.ElementAt(0).RefersTo);
+                    Assert.AreEqual("'Sheet 1'!A2:D2",
+                        wb.NamedRanges.ElementAt(0).Ranges.Single().RangeAddress.ToString(XLReferenceStyle.A1, true));
+
+                    Assert.AreEqual("Named range 4", wb.NamedRanges.ElementAt(1).Name);
+                    Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(1).Scope);
+                    Assert.AreEqual("#REF!$A$4:$D$4", wb.NamedRanges.ElementAt(1).RefersTo);
+                    Assert.IsFalse(wb.NamedRanges.ElementAt(1).Ranges.Any());
+
+                    Assert.AreEqual("Named range 5", wb.NamedRanges.ElementAt(2).Name);
+                    Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(2).Scope);
+                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5,#REF!$A$5:$D$5", wb.NamedRanges.ElementAt(2).RefersTo);
+                    Assert.AreEqual(1, wb.NamedRanges.ElementAt(2).Ranges.Count);
+                    Assert.AreEqual("'Sheet 1'!A5:D5",
+                        wb.NamedRanges.ElementAt(2).Ranges.Single().RangeAddress.ToString(XLReferenceStyle.A1, true));
+                }
+            }
+        }
+
+        [Test, Ignore("Muted until shifting is fixed (see #880)")]
+        public void NamedRangeBecomesInvalidOnRangeDeleting()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet 1");
+                ws.Range("A1:B2").AddToNamed("Simple", XLScope.Workbook);
+                wb.NamedRanges.Add("Compound", new XLRanges
+                {
+                    ws.Range("C1:D2"),
+                    ws.Range("A10:D15")
+                });
+
+                ws.Rows(1,5).Delete();
+
+                Assert.AreEqual(2, wb.NamedRanges.Count());
+                Assert.AreEqual(0, wb.NamedRanges.ValidNamedRanges().Count());
+                Assert.AreEqual("'Sheet 1'!#REF!", wb.NamedRanges.ElementAt(0).RefersTo);
+                Assert.AreEqual("'Sheet 1'!#REF!,'Sheet 1'!A5:D10", wb.NamedRanges.ElementAt(0).RefersTo);
+            }
+        }
+
+        [Test, Ignore("Muted until shifting is fixed (see #880)")]
+        public void NamedRangeBecomesInvalidOnRangeAndWorksheetDeleting()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.Worksheets.Add("Sheet 1");
+                var ws2 = wb.Worksheets.Add("Sheet 2");
+                ws1.Range("A1:B2").AddToNamed("Simple", XLScope.Workbook);
+                wb.NamedRanges.Add("Compound", new XLRanges
+                {
+                    ws1.Range("C1:D2"),
+                    ws2.Range("A10:D15")
+                });
+
+                ws1.Rows(1, 5).Delete();
+                ws1.Delete();
+
+                Assert.AreEqual(2, wb.NamedRanges.Count());
+                Assert.AreEqual(0, wb.NamedRanges.ValidNamedRanges().Count());
+                Assert.AreEqual("#REF!#REF!", wb.NamedRanges.ElementAt(0).RefersTo);
+                Assert.AreEqual("#REF!#REF!,'Sheet 2'!A10:D15", wb.NamedRanges.ElementAt(0).RefersTo);
+            }
+        }
+
+        [Test]
+        public void CanSaveAndLoadNamedRanges()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet1 = wb.Worksheets.Add("Sheet1");
+                    var sheet2 = wb.Worksheets.Add("Sheet2");
+
+                    wb.NamedRanges.Add("wbNamedRange",
+                        "Sheet1!$B$2,Sheet1!$B$3:$C$3,Sheet2!$D$3:$D$4,Sheet1!$6:$7,Sheet1!$F:$G");
+                    sheet1.NamedRanges.Add("sheet1NamedRange",
+                        "Sheet1!$B$2,Sheet1!$B$3:$C$3,Sheet2!$D$3:$D$4,Sheet1!$6:$7,Sheet1!$F:$G");
+                    sheet2.NamedRanges.Add("sheet2NamedRange", "Sheet1!A1,Sheet2!A1");
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var sheet1 = wb.Worksheet("Sheet1");
+                    var sheet2 = wb.Worksheet("Sheet2");
+
+                    Assert.AreEqual(1, wb.NamedRanges.Count());
+                    Assert.AreEqual("wbNamedRange", wb.NamedRanges.Single().Name);
+                    Assert.AreEqual("Sheet1!$B$2,Sheet1!$B$3:$C$3,Sheet2!$D$3:$D$4,Sheet1!$6:$7,Sheet1!$F:$G", wb.NamedRanges.Single().RefersTo);
+                    Assert.AreEqual(5, wb.NamedRanges.Single().Ranges.Count);
+
+                    Assert.AreEqual(1, sheet1.NamedRanges.Count());
+                    Assert.AreEqual("sheet1NamedRange", sheet1.NamedRanges.Single().Name);
+                    Assert.AreEqual("Sheet1!$B$2,Sheet1!$B$3:$C$3,Sheet2!$D$3:$D$4,Sheet1!$6:$7,Sheet1!$F:$G", sheet1.NamedRanges.Single().RefersTo);
+                    Assert.AreEqual(5, sheet1.NamedRanges.Single().Ranges.Count);
+
+                    Assert.AreEqual(1, sheet2.NamedRanges.Count());
+                    Assert.AreEqual("sheet2NamedRange", sheet2.NamedRanges.Single().Name);
+                    Assert.AreEqual("Sheet1!A1,Sheet2!A1", sheet2.NamedRanges.Single().RefersTo);
+                    Assert.AreEqual(2, sheet2.NamedRanges.Single().Ranges.Count);
+                }
+            }
+        }
+
+        [Test]
+        public void CanGetValidNamedRanges()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.Worksheets.Add("Sheet 1");
+                var ws2 = wb.Worksheets.Add("Sheet 2");
+                var ws3 = wb.Worksheets.Add("Sheet'3");
+
+                ws1.Range("A1:D1").AddToNamed("Named range 1", XLScope.Worksheet);
+                ws1.Range("A2:D2").AddToNamed("Named range 2", XLScope.Workbook);
+                ws2.Range("A3:D3").AddToNamed("Named range 3", XLScope.Worksheet);
+                ws2.Range("A4:D4").AddToNamed("Named range 4", XLScope.Workbook);
+                wb.NamedRanges.Add("Named range 5", new XLRanges
+                {
+                    ws1.Range("A5:D5"),
+                    ws3.Range("A5:D5")
+                });
+
+                ws2.Delete();
+                ws3.Delete();
+
+                var globalValidRanges = wb.NamedRanges.ValidNamedRanges();
+                var globalInvalidRanges = wb.NamedRanges.InvalidNamedRanges();
+                var localValidRanges = ws1.NamedRanges.ValidNamedRanges();
+                var localInvalidRanges = ws1.NamedRanges.InvalidNamedRanges();
+
+                Assert.AreEqual(1, globalValidRanges.Count());
+                Assert.AreEqual("Named range 2", globalValidRanges.First().Name);
+
+                Assert.AreEqual(2, globalInvalidRanges.Count());
+                Assert.AreEqual("Named range 4", globalInvalidRanges.First().Name);
+                Assert.AreEqual("Named range 5", globalInvalidRanges.Last().Name);
+
+                Assert.AreEqual(1, localValidRanges.Count());
+                Assert.AreEqual("Named range 1", localValidRanges.First().Name);
+
+                Assert.AreEqual(0, localInvalidRanges.Count());
+            }
+        }
     }
 }
