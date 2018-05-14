@@ -69,5 +69,144 @@ namespace ClosedXML_Tests
             Assert.AreSame(ws, rangeAddress.Worksheet);
             Assert.AreEqual(expectedAddress, normalizedAddress.ToString());
         }
+
+        [Test]
+        public void InvalidRangeAddressToStringTest()
+        {
+            var address = ProduceInvalidAddress();
+
+            Assert.AreEqual("#REF!", address.ToString());
+            Assert.AreEqual("#REF!", address.ToString(XLReferenceStyle.A1));
+            Assert.AreEqual("#REF!", address.ToString(XLReferenceStyle.Default));
+            Assert.AreEqual("'Sheet 1'!#REF!", address.ToString(XLReferenceStyle.R1C1));
+            Assert.AreEqual("'Sheet 1'!#REF!", address.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("'Sheet 1'!#REF!", address.ToString(XLReferenceStyle.Default, true));
+            Assert.AreEqual("'Sheet 1'!#REF!", address.ToString(XLReferenceStyle.R1C1, true));
+        }
+
+        [Test]
+        public void InvalidRangeAddressToStringFixedTest()
+        {
+            var address = ProduceInvalidAddress();
+
+            Assert.AreEqual("#REF!", address.ToStringFixed());
+            Assert.AreEqual("#REF!", address.ToStringFixed(XLReferenceStyle.A1));
+            Assert.AreEqual("#REF!", address.ToStringFixed(XLReferenceStyle.Default));
+            Assert.AreEqual("#REF!", address.ToStringFixed(XLReferenceStyle.R1C1));
+            Assert.AreEqual("'Sheet 1'!#REF!", address.ToStringFixed(XLReferenceStyle.A1, true));
+            Assert.AreEqual("'Sheet 1'!#REF!", address.ToStringFixed(XLReferenceStyle.Default, true));
+            Assert.AreEqual("'Sheet 1'!#REF!", address.ToStringFixed(XLReferenceStyle.R1C1, true));
+        }
+
+        [Test]
+        public void InvalidRangeAddressToStringRelativeTest()
+        {
+            var address = ProduceInvalidAddress();
+
+            Assert.AreEqual("#REF!", address.ToStringRelative());
+            Assert.AreEqual("'Sheet 1'!#REF!", address.ToStringRelative(true));
+        }
+
+        [Test]
+        public void RangeAddressOnDeletedWorksheetToStringTest()
+        {
+            var address = ProduceAddressOnDeletedWorksheet();
+
+            Assert.AreEqual("#REF!A1:B2", address.ToString());
+            Assert.AreEqual("#REF!A1:B2", address.ToString(XLReferenceStyle.A1));
+            Assert.AreEqual("#REF!A1:B2", address.ToString(XLReferenceStyle.Default));
+            Assert.AreEqual("#REF!R1C1:R2C2", address.ToString(XLReferenceStyle.R1C1));
+            Assert.AreEqual("#REF!A1:B2", address.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("#REF!A1:B2", address.ToString(XLReferenceStyle.Default, true));
+            Assert.AreEqual("#REF!R1C1:R2C2", address.ToString(XLReferenceStyle.R1C1, true));
+        }
+
+        [Test]
+        public void RangeAddressOnDeletedWorksheetToStringFixedTest()
+        {
+            var address = ProduceAddressOnDeletedWorksheet();
+
+            Assert.AreEqual("#REF!$A$1:$B$2", address.ToStringFixed());
+            Assert.AreEqual("#REF!$A$1:$B$2", address.ToStringFixed(XLReferenceStyle.A1));
+            Assert.AreEqual("#REF!$A$1:$B$2", address.ToStringFixed(XLReferenceStyle.Default));
+            Assert.AreEqual("#REF!R1C1:R2C2", address.ToStringFixed(XLReferenceStyle.R1C1));
+            Assert.AreEqual("#REF!$A$1:$B$2", address.ToStringFixed(XLReferenceStyle.A1, true));
+            Assert.AreEqual("#REF!$A$1:$B$2", address.ToStringFixed(XLReferenceStyle.Default, true));
+            Assert.AreEqual("#REF!R1C1:R2C2", address.ToStringFixed(XLReferenceStyle.R1C1, true));
+        }
+
+        [Test]
+        public void RangeAddressOnDeletedWorksheetToStringRelativeTest()
+        {
+            var address = ProduceAddressOnDeletedWorksheet();
+
+            Assert.AreEqual("#REF!A1:B2", address.ToStringRelative());
+            Assert.AreEqual("#REF!A1:B2", address.ToStringRelative(true));
+        }
+
+        [Test]
+        public void InvalidRangeAddressOnDeletedWorksheetToStringTest()
+        {
+            var address = ProduceInvalidAddressOnDeletedWorksheet();
+
+            Assert.AreEqual("#REF!#REF!", address.ToString());
+            Assert.AreEqual("#REF!#REF!", address.ToString(XLReferenceStyle.A1));
+            Assert.AreEqual("#REF!#REF!", address.ToString(XLReferenceStyle.Default));
+            Assert.AreEqual("#REF!#REF!", address.ToString(XLReferenceStyle.R1C1));
+            Assert.AreEqual("#REF!#REF!", address.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("#REF!#REF!", address.ToString(XLReferenceStyle.Default, true));
+            Assert.AreEqual("#REF!#REF!", address.ToString(XLReferenceStyle.R1C1, true));
+        }
+
+        [Test]
+        public void InvalidRangeAddressOnDeletedWorksheetToStringFixedTest()
+        {
+            var address = ProduceInvalidAddressOnDeletedWorksheet();
+
+            Assert.AreEqual("#REF!#REF!", address.ToStringFixed());
+            Assert.AreEqual("#REF!#REF!", address.ToStringFixed(XLReferenceStyle.A1));
+            Assert.AreEqual("#REF!#REF!", address.ToStringFixed(XLReferenceStyle.Default));
+            Assert.AreEqual("#REF!#REF!", address.ToStringFixed(XLReferenceStyle.R1C1));
+            Assert.AreEqual("#REF!#REF!", address.ToStringFixed(XLReferenceStyle.A1, true));
+            Assert.AreEqual("#REF!#REF!", address.ToStringFixed(XLReferenceStyle.Default, true));
+            Assert.AreEqual("#REF!#REF!", address.ToStringFixed(XLReferenceStyle.R1C1, true));
+        }
+
+        [Test]
+        public void InvalidRangeAddressOnDeletedWorksheetToStringRelativeTest()
+        {
+            var address = ProduceInvalidAddressOnDeletedWorksheet();
+
+            Assert.AreEqual("#REF!#REF!", address.ToStringRelative());
+            Assert.AreEqual("#REF!#REF!", address.ToStringRelative(true));
+        }
+        #region Private Methods
+
+        private IXLRangeAddress ProduceInvalidAddress()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1");
+            var range = ws.Range("A1:B2");
+
+            ws.Rows(1, 5).Delete();
+            return range.RangeAddress;
+        }
+
+        private IXLRangeAddress ProduceAddressOnDeletedWorksheet()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1");
+            var address = ws.Range("A1:B2").RangeAddress;
+
+            ws.Delete();
+            return address;
+        }
+
+        private IXLRangeAddress ProduceInvalidAddressOnDeletedWorksheet()
+        {
+            var address = ProduceInvalidAddress();
+            address.Worksheet.Delete();
+            return address;
+        }
+
+        #endregion Private Methods
     }
 }

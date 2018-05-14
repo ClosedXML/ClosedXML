@@ -21,6 +21,11 @@ namespace ClosedXML.Excel
         String Comment { get; set; }
 
         /// <summary>
+        /// Checks if the named range contains invalid references (#REF!).
+        /// </summary>
+        bool IsValid { get; }
+
+        /// <summary>
         /// Gets or sets the name of the range.
         /// </summary>
         /// <value>

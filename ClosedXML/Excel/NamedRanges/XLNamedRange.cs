@@ -1,3 +1,4 @@
+using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,22 +10,39 @@ namespace ClosedXML.Excel
         private String _name;
         private readonly XLNamedRanges _namedRanges;
 
+        internal XLWorkbook Workbook => _namedRanges.Workbook;
+
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, String range, String comment = null)
+            : this(namedRanges, rangeName, comment)
         {
-            _namedRanges = namedRanges;
-            Visible = true;
-            Name = rangeName;
             RangeList.Add(range);
-            Comment = comment;
         }
 
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
+            : this(namedRanges, rangeName, comment)
         {
-            _namedRanges = namedRanges;
+            ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
+        }
+
+        private XLNamedRange(XLNamedRanges namedRanges, String rangeName, String comment)
+        {
+            _namedRanges = namedRanges ?? throw new ArgumentNullException(nameof(namedRanges));
             Visible = true;
             Name = rangeName;
-            ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
             Comment = comment;
+        }
+
+        /// <summary>
+        /// Checks if the named range contains invalid references (#REF!).
+        /// </summary>
+        public bool IsValid
+        {
+            get
+            {
+                return RangeList.SelectMany(c => c.Split(',')).All(r =>
+                    !r.StartsWith("#REF!", StringComparison.OrdinalIgnoreCase) &&
+                    !r.EndsWith("#REF!", StringComparison.OrdinalIgnoreCase));
+            }
         }
 
         public String Name
@@ -67,11 +85,13 @@ namespace ClosedXML.Excel
                    from rangeAddress in RangeList.SelectMany(c => c.Split(',')).Where(s => s[0] != '"')
                    let match = XLHelper.NamedRangeReferenceRegex.Match(rangeAddress)
                    select
-                       match.Groups["Sheet"].Success
-                       ? _namedRanges.Workbook.WorksheetsInternal.Worksheet(match.Groups["Sheet"].Value).Range(match.Groups["Range"].Value) as IXLRangeBase
-                       : _namedRanges.Workbook.Worksheets.SelectMany(sheet => sheet.Tables).Single(table => table.Name == match.Groups["Table"].Value).DataRange.Column(match.Groups["Column"].Value))
+                       match.Groups["Sheet"].Success && Workbook.Worksheets.Contains(match.Groups["Sheet"].Value)
+                       ? Workbook.WorksheetsInternal.Worksheet(match.Groups["Sheet"].Value).Range(match.Groups["Range"].Value) as IXLRangeBase
+                       : Workbook.Worksheets.SelectMany(sheet => sheet.Tables).SingleOrDefault(table => table.Name == match.Groups["Table"].Value)?
+                               .DataRange?.Column(match.Groups["Column"].Value))
                 {
-                    ranges.Add(rangeToAdd);
+                    if (rangeToAdd != null)
+                        ranges.Add(rangeToAdd);
                 }
                 return ranges;
             }
@@ -187,6 +207,19 @@ namespace ClosedXML.Excel
             RangeList.Clear();
             ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
             return this;
+        }
+
+        internal void OnWorksheetDeleted(string worksheetName)
+        {
+            var escapedSheetName = worksheetName.EscapeSheetName();
+            RangeList = RangeList
+                .Select(
+                    rl => string.Join(",", rl
+                        .Split(',')
+                        .Select(r => r.StartsWith(escapedSheetName + "!", StringComparison.OrdinalIgnoreCase)
+                                     ? "#REF!" + r.Substring(escapedSheetName.Length + 1)
+                                     : r))
+                ).ToList();
         }
     }
 }

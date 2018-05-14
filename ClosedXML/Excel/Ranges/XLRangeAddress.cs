@@ -106,16 +106,12 @@ namespace ClosedXML.Excel
             get { return LastAddress; }
         }
 
-        public bool IsValid
-        {
-            get
-            {
-                return FirstAddress.IsValid &&
-                       LastAddress.IsValid;
-            }
-        }
+        public bool IsValid => FirstAddress.IsValid && LastAddress.IsValid;
+
+        private bool WorksheetIsDeleted => Worksheet?.IsDeleted == true;
 
         #endregion Public properties
+
 
         #region Public methods
 
@@ -168,32 +164,6 @@ namespace ClosedXML.Excel
                 new XLAddress(LastAddress.Worksheet, lastRow, lastColumn, lastRowFixed, lastColumnFixed));
         }
 
-        public String ToStringRelative()
-        {
-            return ToStringRelative(false);
-        }
-
-        public String ToStringFixed()
-        {
-            return ToStringFixed(XLReferenceStyle.A1);
-        }
-
-        public String ToStringRelative(Boolean includeSheet)
-        {
-            if (includeSheet)
-                return String.Concat(
-                    Worksheet.Name.EscapeSheetName(),
-                    '!',
-                    FirstAddress.ToStringRelative(),
-                    ':',
-                    LastAddress.ToStringRelative());
-            else
-                return string.Concat(
-                    FirstAddress.ToStringRelative(),
-                    ":",
-                    LastAddress.ToStringRelative());
-        }
-
         public bool Intersects(IXLRangeAddress otherAddress)
         {
             var xlOtherAddress = (XLRangeAddress)otherAddress;
@@ -231,6 +201,32 @@ namespace ClosedXML.Excel
                    address.ColumnNumber <= LastAddress.ColumnNumber;
         }
 
+        public String ToStringRelative()
+        {
+            return ToStringRelative(false);
+        }
+
+        public String ToStringFixed()
+        {
+            return ToStringFixed(XLReferenceStyle.A1);
+        }
+
+        public String ToStringRelative(Boolean includeSheet)
+        {
+            string address = IsValid
+                ? String.Concat(
+                    FirstAddress.ToStringRelative(), ":",
+                    LastAddress.ToStringRelative())
+                : "#REF!";
+
+            if (includeSheet || WorksheetIsDeleted)
+                return String.Concat(
+                    WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
+                    "!", address);
+
+            return address;
+        }
+
         public String ToStringFixed(XLReferenceStyle referenceStyle)
         {
             return ToStringFixed(referenceStyle, false);
@@ -238,18 +234,26 @@ namespace ClosedXML.Excel
 
         public String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet)
         {
-            if (includeSheet)
-                return String.Format("{0}!{1}:{2}",
-                    Worksheet.Name.EscapeSheetName(),
-                    FirstAddress.ToStringFixed(referenceStyle),
-                    LastAddress.ToStringFixed(referenceStyle));
+            string address = IsValid
+                ? String.Concat(
+                    FirstAddress.ToStringFixed(referenceStyle), ":",
+                    LastAddress.ToStringFixed(referenceStyle))
+                : "#REF!";
 
-            return FirstAddress.ToStringFixed(referenceStyle) + ":" + LastAddress.ToStringFixed(referenceStyle);
+            if (includeSheet || WorksheetIsDeleted)
+                return String.Concat(
+                    WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
+                    "!", address);
+
+            return address;
         }
 
         public override string ToString()
         {
-            return String.Concat(FirstAddress, ':', LastAddress);
+            string address = IsValid ? String.Concat(FirstAddress, ':', LastAddress) : "#REF!";
+
+            return String.Concat(WorksheetIsDeleted ? "#REF!" : "",
+                address);
         }
 
         public string ToString(XLReferenceStyle referenceStyle)

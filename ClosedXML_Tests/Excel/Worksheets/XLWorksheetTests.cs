@@ -815,5 +815,20 @@ namespace ClosedXML_Tests
                 Assert.AreEqual("Renamed!A1 * 3", ws1.Cell("A2").FormulaA1);
             }
         }
+
+        [Test]
+        public void RangesFromDeletedWorksheetContainREF()
+        {
+            using (var wb1 = new XLWorkbook())
+            {
+                wb1.Worksheets.Add("Sheet1");
+                var ws2 = wb1.Worksheets.Add("Sheet2");
+                var range = ws2.Range("A1:B2");
+
+                ws2.Delete();
+
+                Assert.AreEqual("#REF!A1:B2", range.RangeAddress.ToString());
+            }
+        }
     }
 }

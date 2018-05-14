@@ -80,5 +80,15 @@ namespace ClosedXML.Excel
         Boolean TryGetValue(String name, out IXLNamedRange range);
 
         Boolean Contains(String name);
+
+        /// <summary>
+        /// Returns a subset of named ranges that do not have invalid references.
+        /// </summary>
+        IEnumerable<IXLNamedRange> ValidNamedRanges();
+
+        /// <summary>
+        /// Returns a subset of named ranges that do have invalid references.
+        /// </summary>
+        IEnumerable<IXLNamedRange> InvalidNamedRanges();
     }
 }
