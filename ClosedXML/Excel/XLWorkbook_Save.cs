@@ -973,7 +973,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    var value = c.Value.ToInvariantString();                                        
+                    var value = c.Value.ToInvariantString();
                     if (newStrings.ContainsKey(value))
                         c.SharedStringId = newStrings[value];
                     else
@@ -4884,7 +4884,7 @@ namespace ClosedXML.Excel
                                         valueCalculated = ((double)xlCell.CachedValue).ToInvariantString();
                                     else
                                         valueCalculated = xlCell.CachedValue.ToString();
-                                    
+
                                     cell.CellValue = new CellValue(valueCalculated);
                                 }
                             }
@@ -5589,6 +5589,7 @@ namespace ClosedXML.Excel
                         case String s:
                             openXmlCell.DataType = new EnumValue<CellValues>(CellValues.String);
                             break;
+
                         case DateTime dt:
                             openXmlCell.DataType = new EnumValue<CellValues>(CellValues.Date);
                             break;
@@ -5644,8 +5645,7 @@ namespace ClosedXML.Excel
             {
                 var timeSpan = xlCell.GetTimeSpan();
                 var cellValue = new CellValue();
-                cellValue.Text =
-                    XLCell.BaseDate.Add(timeSpan).ToOADate().ToInvariantString();
+                cellValue.Text = timeSpan.TotalDays.ToInvariantString();
                 openXmlCell.CellValue = cellValue;
             }
             else if (dataType == XLDataType.DateTime || dataType == XLDataType.Number)
