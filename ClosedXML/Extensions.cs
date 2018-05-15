@@ -172,11 +172,6 @@ namespace ClosedXML.Excel
 
     internal static class IntegerExtensions
     {
-        public static String ToInvariantString(this Int32 value)
-        {
-            return value.ToString(CultureInfo.InvariantCulture.NumberFormat);
-        }
-
         public static bool Between(this int val, int from, int to)
         {
             return val >= from && val <= to;
@@ -185,12 +180,6 @@ namespace ClosedXML.Excel
 
     internal static class DecimalExtensions
     {
-        //All numbers are stored in XL files as invarient culture this is just a easy helper
-        public static String ToInvariantString(this Decimal value)
-        {
-            return value.ToString(CultureInfo.InvariantCulture);
-        }
-
         public static Decimal SaveRound(this Decimal value)
         {
             return Math.Round(value, 6);
@@ -199,12 +188,6 @@ namespace ClosedXML.Excel
 
     internal static class DoubleExtensions
     {
-        //All numbers are stored in XL files as invarient culture this is just a easy helper
-        public static String ToInvariantString(this Double value)
-        {
-            return value.ToString(CultureInfo.InvariantCulture);
-        }
-
         public static Double SaveRound(this Double value)
         {
             return Math.Round(value, 6);
@@ -386,6 +369,12 @@ namespace ClosedXML.Excel
 
                 case decimal v:
                     return v.ToString(CultureInfo.InvariantCulture);
+
+                case TimeSpan ts:
+                    return ts.ToString("c", CultureInfo.InvariantCulture);
+
+                case DateTime d:
+                    return d.ToString(CultureInfo.InvariantCulture);
 
                 default:
                     return value.ToString();
