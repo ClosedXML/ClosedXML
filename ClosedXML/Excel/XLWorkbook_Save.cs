@@ -2774,13 +2774,14 @@ namespace ClosedXML.Excel
 
             var pivotTableDefinitionExtensionList = new PivotTableDefinitionExtensionList();
 
-            var pivotTableDefinitionExtension = new PivotTableDefinitionExtension
-            { Uri = "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}" };
-            pivotTableDefinitionExtension.AddNamespaceDeclaration("x14",
-                "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+            var pivotTableDefinitionExtension = new PivotTableDefinitionExtension { Uri = "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}" };
+            pivotTableDefinitionExtension.AddNamespaceDeclaration("x14","http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
 
             var pivotTableDefinition2 = new DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition
-            { EnableEdit = pt.EnableCellEditing, HideValuesRow = !pt.ShowValuesRow };
+            {
+                EnableEdit = pt.EnableCellEditing,
+                HideValuesRow = !pt.ShowValuesRow
+            };
             pivotTableDefinition2.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
 
             pivotTableDefinitionExtension.AppendChild(pivotTableDefinition2);
