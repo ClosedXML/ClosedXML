@@ -452,8 +452,9 @@ namespace ClosedXML.Excel
                         var pivotTableDefinition = pivotTablePart.PivotTableDefinition;
 
                         var target = ws.FirstCell();
-                        if (pivotTableDefinition.Location != null && pivotTableDefinition.Location.Reference != null && pivotTableDefinition.Location.Reference.HasValue)
+                        if (pivotTableDefinition?.Location?.Reference?.HasValue ?? false)
                         {
+                            ws.Range(pivotTableDefinition.Location.Reference.Value).Clear(XLClearOptions.Contents);
                             target = ws.Range(pivotTableDefinition.Location.Reference.Value).FirstCell();
                         }
 
