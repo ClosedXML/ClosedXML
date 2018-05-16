@@ -1,6 +1,7 @@
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace ClosedXML_Tests
 {
@@ -211,6 +212,42 @@ namespace ClosedXML_Tests
 
                 Assert.IsFalse(thisRange.RangeAddress.IsValid);
             }
+        }
+
+        [Test]
+        public void InsertNegativeNumberOrColumnsFails()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var range = ws.FirstCell().AsRange();
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsAfter(-1));
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsBefore(-1));
+        }
+
+        [Test]
+        public void InsertTooLargeNumberOrColumnsFails()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var range = ws.FirstCell().AsRange();
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsAfter(16385));
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsBefore(16385));
+        }
+
+        [Test]
+        public void InsertNegativeNumberOrRowsFails()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var range = ws.FirstCell().AsRange();
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsAbove(-1));
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsBelow(-1));
+        }
+
+        [Test]
+        public void InsertTooLargeNumberOrRowsFails()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var range = ws.FirstCell().AsRange();
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsAbove(1048577));
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsBelow(1048577));
         }
     }
 }
