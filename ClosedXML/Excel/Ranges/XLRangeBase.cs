@@ -1072,6 +1072,10 @@ namespace ClosedXML.Excel
 
         private IXLRangeColumns InsertColumnsBeforeInternal(Boolean onlyUsedCells, Int32 numberOfColumns, Boolean formatFromLeft = true, Boolean nullReturn = false)
         {
+            if (numberOfColumns <= 0 || numberOfColumns > XLHelper.MaxColumnNumber)
+                throw new ArgumentOutOfRangeException(nameof(numberOfColumns),
+                    $"Number of columns to insert must be a positive number no more than {XLHelper.MaxColumnNumber}");
+
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {
                 foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !String.IsNullOrWhiteSpace(c.FormulaA1)))
@@ -1276,6 +1280,10 @@ namespace ClosedXML.Excel
 
         private IXLRangeRows InsertRowsAboveInternal(Boolean onlyUsedCells, Int32 numberOfRows, Boolean formatFromAbove, Boolean nullReturn)
         {
+            if (numberOfRows <= 0 || numberOfRows > XLHelper.MaxRowNumber)
+                throw new ArgumentOutOfRangeException(nameof(numberOfRows),
+                    $"Number of rows to insert must be a positive number no more than {XLHelper.MaxRowNumber}");
+
             var asRange = AsRange();
             foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
             {

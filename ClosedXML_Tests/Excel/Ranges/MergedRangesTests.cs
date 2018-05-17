@@ -121,9 +121,8 @@ namespace ClosedXML_Tests
             }
         }
 
-        [TestCase(-2)]
-        [TestCase(2)]
-        public void RangeShiftHorizontallyBreaksMerges(int columnShift)
+        [Test]
+        public void ShiftRangeRightBreaksMerges()
         {
             using (var wb = new XLWorkbook())
             {
@@ -135,7 +134,7 @@ namespace ClosedXML_Tests
                 ws.Range("H1:I2").Merge();
                 ws.Range("H5:I6").Merge();
 
-                ws.Range("D3:E4").InsertColumnsAfter(columnShift);
+                ws.Range("D3:E4").InsertColumnsAfter(2);
 
                 var mr = ws.MergedRanges.ToArray();
                 Assert.AreEqual(4, mr.Length);
@@ -146,9 +145,32 @@ namespace ClosedXML_Tests
             }
         }
 
-        [TestCase(-2)]
-        [TestCase(2)]
-        public void RangeShiftVerticallyBreaksMerges(int rowShift)
+        [Test]
+        public void ShiftRangeLeftBreaksMerges()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("MRShift");
+                ws.Range("B2:C3").Merge();
+                ws.Range("B4:C5").Merge();
+                ws.Range("F2:G3").Merge(); // to be broken
+                ws.Range("F4:G5").Merge(); // to be broken
+                ws.Range("H1:I2").Merge();
+                ws.Range("H5:I6").Merge();
+
+                ws.Range("D3:E4").Delete(XLShiftDeletedCells.ShiftCellsLeft);
+
+                var mr = ws.MergedRanges.ToArray();
+                Assert.AreEqual(4, mr.Length);
+                Assert.AreEqual("B2:C3", mr[0].RangeAddress.ToString());
+                Assert.AreEqual("B4:C5", mr[1].RangeAddress.ToString());
+                Assert.AreEqual("H1:I2", mr[2].RangeAddress.ToString());
+                Assert.AreEqual("H5:I6", mr[3].RangeAddress.ToString());
+            }
+        }
+
+        [Test]
+        public void RangeShiftDownBreaksMerges()
         {
             using (var wb = new XLWorkbook())
             {
@@ -160,7 +182,31 @@ namespace ClosedXML_Tests
                 ws.Range("A8:B9").Merge();
                 ws.Range("E8:F9").Merge();
 
-                ws.Range("C4:D5").InsertRowsBelow(rowShift);
+                ws.Range("C4:D5").InsertRowsBelow(2);
+
+                var mr = ws.MergedRanges.ToArray();
+                Assert.AreEqual(4, mr.Length);
+                Assert.AreEqual("B2:C3", mr[0].RangeAddress.ToString());
+                Assert.AreEqual("D2:E3", mr[1].RangeAddress.ToString());
+                Assert.AreEqual("A8:B9", mr[2].RangeAddress.ToString());
+                Assert.AreEqual("E8:F9", mr[3].RangeAddress.ToString());
+            }
+        }
+
+        [Test]
+        public void RangeShiftUpBreaksMerges()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("MRShift");
+                ws.Range("B2:C3").Merge();
+                ws.Range("D2:E3").Merge();
+                ws.Range("B6:C7").Merge(); // to be broken
+                ws.Range("D6:E7").Merge(); // to be broken
+                ws.Range("A8:B9").Merge();
+                ws.Range("E8:F9").Merge();
+
+                ws.Range("C4:D5").Delete(XLShiftDeletedCells.ShiftCellsUp);
 
                 var mr = ws.MergedRanges.ToArray();
                 Assert.AreEqual(4, mr.Length);
