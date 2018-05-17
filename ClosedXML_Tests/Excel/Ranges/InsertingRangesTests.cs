@@ -215,7 +215,16 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void InsertNegativeNumberOrColumnsFails()
+        public void InsertZeroColumnsFails()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var range = ws.FirstCell().AsRange();
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsAfter(0));
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsBefore(0));
+        }
+
+        [Test]
+        public void InsertNegativeNumberOfColumnsFails()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet1");
             var range = ws.FirstCell().AsRange();
@@ -224,7 +233,7 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void InsertTooLargeNumberOrColumnsFails()
+        public void InsertTooLargeNumberOfColumnsFails()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet1");
             var range = ws.FirstCell().AsRange();
@@ -233,7 +242,16 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void InsertNegativeNumberOrRowsFails()
+        public void InsertZeroRowsFails()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var range = ws.FirstCell().AsRange();
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsAbove(0));
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsBelow(0));
+        }
+
+        [Test]
+        public void InsertNegativeNumberOfRowsFails()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet1");
             var range = ws.FirstCell().AsRange();
