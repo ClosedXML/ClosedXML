@@ -2127,7 +2127,7 @@ namespace ClosedXML.Excel
                 {
                     if (types.Length == 1 && types.Single() == XLDataType.Number)
                     {
-                        sharedItems.ContainsSemiMixedTypes = false;
+                        sharedItems.ContainsSemiMixedTypes = containsBlank;
                         sharedItems.ContainsString = false;
                         sharedItems.ContainsNumber = true;
 
@@ -2160,7 +2160,7 @@ namespace ClosedXML.Excel
                     }
                     else if (types.Length == 1 && types.Single() == XLDataType.DateTime)
                     {
-                        sharedItems.ContainsSemiMixedTypes = false;
+                        sharedItems.ContainsSemiMixedTypes = containsBlank;
                         sharedItems.ContainsNonDate = false;
                         sharedItems.ContainsString = false;
                         sharedItems.ContainsDate = true;
