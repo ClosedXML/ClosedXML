@@ -169,9 +169,20 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static XLColor noColor = new XLColor();
+        internal static bool IsNullOrTransparent(XLColor color)
+        {
+            return color == null
+                || !color.HasValue
+                || IsTransparent(color.Key);
+        }
 
-        public static XLColor NoColor { get { return noColor; } }
+        internal static bool IsTransparent(in XLColorKey colorKey)
+        {
+            return colorKey == NoColor.Key
+                || (colorKey.ColorType == XLColorType.Indexed && colorKey.Indexed == 64);
+        }
+
+        public static XLColor NoColor { get; } = new XLColor();
 
         public static XLColor AliceBlue { get { return FromColor(Color.AliceBlue); } }
 

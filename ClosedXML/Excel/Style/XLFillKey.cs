@@ -13,35 +13,40 @@ namespace ClosedXML.Excel
         public override int GetHashCode()
         {
             var hashCode = 2043579837;
+
+            if (HasNoFill()) return hashCode;
+
+            hashCode = hashCode * -1521134295 + PatternType.GetHashCode();
             hashCode = hashCode * -1521134295 + BackgroundColor.GetHashCode();
+
+            if (HasNoForeground()) return hashCode;
+                
             hashCode = hashCode * -1521134295 + PatternColor.GetHashCode();
-
-            var patternType = PatternType;
-            if (BackgroundColor.ColorType == XLColorType.Indexed && BackgroundColor.Indexed == 64)
-                patternType = XLFillPatternValues.None;
-
-            hashCode = hashCode * -1521134295 + patternType.GetHashCode();
-
+            
             return hashCode;
         }
 
         public bool Equals(XLFillKey other)
         {
-            if (PatternType == XLFillPatternValues.None && other.PatternType == XLFillPatternValues.None)
+            if (HasNoFill() && other.HasNoFill())
                 return true;
 
-            var patternType1 = PatternType;
-            var patternType2 = other.PatternType;
-
-            if (BackgroundColor.ColorType == XLColorType.Indexed && BackgroundColor.Indexed == 64)
-                patternType1 = XLFillPatternValues.None;
-
-            if (other.BackgroundColor.ColorType == XLColorType.Indexed && other.BackgroundColor.Indexed == 64)
-                patternType2 = XLFillPatternValues.None;
-
             return BackgroundColor == other.BackgroundColor
-                   && PatternColor == other.PatternColor
-                   && patternType1 == patternType2;
+                   && PatternType == other.PatternType
+                   && (HasNoForeground() && other.HasNoForeground() ||
+                       PatternColor == other.PatternColor);
+        }
+
+        private bool HasNoFill()
+        {
+            return PatternType == XLFillPatternValues.None
+                || (PatternType == XLFillPatternValues.Solid && XLColor.IsTransparent(BackgroundColor));
+        }
+
+        private bool HasNoForeground()
+        {
+            return PatternType == XLFillPatternValues.Solid ||
+                   PatternType == XLFillPatternValues.None;
         }
 
         public override bool Equals(object obj)

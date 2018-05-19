@@ -30,14 +30,49 @@ namespace ClosedXML_Tests.Excel
             var fill1 = new XLFill { BackgroundColor = XLColor.Blue };
             var fill2 = new XLFill { BackgroundColor = XLColor.Blue };
             Assert.IsTrue(fill1.Equals(fill2));
+            Assert.AreEqual(fill1.GetHashCode(), fill2.GetHashCode());
         }
 
         [Test]
         public void BackgroundPatternNotEqualCheck()
         {
-            var fill1 = new XLFill { BackgroundColor = XLColor.Blue };
-            var fill2 = new XLFill { BackgroundColor = XLColor.Red };
+            var fill1 = new XLFill { PatternType = XLFillPatternValues.Solid, BackgroundColor = XLColor.Blue };
+            var fill2 = new XLFill { PatternType = XLFillPatternValues.Solid, BackgroundColor = XLColor.Red };
             Assert.IsFalse(fill1.Equals(fill2));
+            Assert.AreNotEqual(fill1.GetHashCode(), fill2.GetHashCode());
+        }
+
+        [Test]
+        public void FillsWithTransparentColorEqual()
+        {
+            var fill1 = new XLFill { BackgroundColor = XLColor.ElectricUltramarine, PatternType = XLFillPatternValues.None };
+            var fill2 = new XLFill { BackgroundColor = XLColor.EtonBlue, PatternType = XLFillPatternValues.None };
+            var fill3 = new XLFill { BackgroundColor = XLColor.FromIndex(64) };            
+
+            Assert.IsTrue(fill1.Equals(fill2));
+            Assert.IsTrue(fill1.Equals(fill3));
+            Assert.AreEqual(fill1.GetHashCode(), fill2.GetHashCode());
+            Assert.AreEqual(fill1.GetHashCode(), fill3.GetHashCode());
+        }
+
+        [Test]
+        public void SolidFillsWithDifferentPatternColorEqual()
+        {
+            var fill1 = new XLFill
+            {
+                PatternType = XLFillPatternValues.Solid,
+                BackgroundColor = XLColor.Red,
+                PatternColor = XLColor.Blue
+            };
+
+            var fill2 = new XLFill {
+                PatternType = XLFillPatternValues.Solid,
+                BackgroundColor = XLColor.Red,
+                PatternColor = XLColor.Green
+            };
+
+            Assert.IsTrue(fill1.Equals(fill2));
+            Assert.AreEqual(fill1.GetHashCode(), fill2.GetHashCode());
         }
 
         [Test]
