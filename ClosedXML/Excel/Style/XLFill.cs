@@ -91,17 +91,20 @@ namespace ClosedXML.Excel
                 if (value == null)
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
 
-                // 4 ways of determining an "empty" color
-                if (new XLFillPatternValues[] { XLFillPatternValues.None, XLFillPatternValues.Solid }.Contains(PatternType)
-                    && (BackgroundColor == null
-                    || !BackgroundColor.HasValue
-                    || BackgroundColor == XLColor.NoColor
-                    || BackgroundColor.ColorType == XLColorType.Indexed && BackgroundColor.Indexed == 64))
+                if ((PatternType == XLFillPatternValues.None ||
+                     PatternType == XLFillPatternValues.Solid)
+                    && XLColor.IsNullOrTransparent(BackgroundColor))
                 {
-                    PatternType = value.HasValue ? XLFillPatternValues.Solid : XLFillPatternValues.None;
+                    var patternType = value.HasValue ? XLFillPatternValues.Solid : XLFillPatternValues.None;
+                    Modify(k =>
+                    {
+                        k.BackgroundColor = value.Key;
+                        k.PatternType = patternType;
+                        return k;
+                    });
                 }
-
-                Modify(k => { k.BackgroundColor = value.Key; return k; });
+                else
+                    Modify(k => { k.BackgroundColor = value.Key; return k; });
             }
         }
 
