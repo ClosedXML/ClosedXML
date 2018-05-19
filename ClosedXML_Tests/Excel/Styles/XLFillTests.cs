@@ -47,12 +47,15 @@ namespace ClosedXML_Tests.Excel
         {
             var fill1 = new XLFill { BackgroundColor = XLColor.ElectricUltramarine, PatternType = XLFillPatternValues.None };
             var fill2 = new XLFill { BackgroundColor = XLColor.EtonBlue, PatternType = XLFillPatternValues.None };
-            var fill3 = new XLFill { BackgroundColor = XLColor.FromIndex(64) };            
+            var fill3 = new XLFill { BackgroundColor = XLColor.FromIndex(64) };
+            var fill4 = new XLFill { BackgroundColor = XLColor.NoColor };
 
             Assert.IsTrue(fill1.Equals(fill2));
             Assert.IsTrue(fill1.Equals(fill3));
+            Assert.IsTrue(fill1.Equals(fill4));
             Assert.AreEqual(fill1.GetHashCode(), fill2.GetHashCode());
             Assert.AreEqual(fill1.GetHashCode(), fill3.GetHashCode());
+            Assert.AreEqual(fill1.GetHashCode(), fill4.GetHashCode());
         }
 
         [Test]
