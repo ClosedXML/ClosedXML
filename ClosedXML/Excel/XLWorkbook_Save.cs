@@ -3982,7 +3982,7 @@ namespace ClosedXML.Excel
                                 break;
                         }
 
-                        if (backgroundColor.HasChildren)
+                        if (backgroundColor.HasAttributes)
                             patternFill.AppendChild(backgroundColor);
                     }
                     else
@@ -4012,7 +4012,7 @@ namespace ClosedXML.Excel
                                 break;
                         }
 
-                        if (foregroundColor.HasChildren)
+                        if (foregroundColor.HasAttributes)
                             patternFill.AppendChild(foregroundColor);
                     }
                     break;
@@ -4039,7 +4039,7 @@ namespace ClosedXML.Excel
                             break;
                     }
 
-                    if (foregroundColor.HasChildren)
+                    if (foregroundColor.HasAttributes)
                         patternFill.AppendChild(foregroundColor);
 
                     backgroundColor = new BackgroundColor();
@@ -4062,7 +4062,7 @@ namespace ClosedXML.Excel
                             break;
                     }
 
-                    if (backgroundColor.HasChildren)
+                    if (backgroundColor.HasAttributes)
                         patternFill.AppendChild(backgroundColor);
 
                     break;
@@ -4071,10 +4071,7 @@ namespace ClosedXML.Excel
             if (patternFill.HasChildren)
                 fill.AppendChild(patternFill);
 
-            if (fill.HasChildren)
-                return fill;
-            else
-                return null;
+            return fill;
         }
 
         private bool FillsAreEqual(Fill f, XLFillValue xlFill, Boolean fromDifferentialFormat)
