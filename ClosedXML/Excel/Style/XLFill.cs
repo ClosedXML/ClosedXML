@@ -125,7 +125,20 @@ namespace ClosedXML.Excel
             get { return Key.PatternType; }
             set
             {
-                Modify(k => { k.PatternType = value; return k; });
+                if (PatternType == XLFillPatternValues.None &&
+                    value != XLFillPatternValues.None)
+                {
+                    // If fill was empty and the pattern changes to non-empty we have to specify a background color too.
+                    // Otherwise the fill will be considered empty and pattern won't update (the cached empty fill will be used).
+                    Modify(k =>
+                    {
+                        k.BackgroundColor = XLColor.FromTheme(XLThemeColor.Text1).Key;
+                        k.PatternType = value;
+                        return k;
+                    });
+                }
+                else
+                    Modify(k => { k.PatternType = value; return k; });
             }
         }
 
