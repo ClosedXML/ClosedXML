@@ -184,6 +184,8 @@ namespace ClosedXML.Excel
                 if (dSheet.State != null)
                     ws.Visibility = dSheet.State.Value.ToClosedXml();
 
+                ApplyStyle(ws, 0, s, fills, borders, fonts, numberingFormats);
+
                 var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
                 PageSetupProperties pageSetupProperties = null;
 
