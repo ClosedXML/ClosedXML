@@ -378,5 +378,20 @@ namespace ClosedXML_Tests.Excel
                 }
             }
         }
+
+        [Test]
+        public void CanLoadWorksheetStyle()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\BaseColumnWidth.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+                
+                Assert.AreEqual(8, ws.Style.Font.FontSize);
+                Assert.AreEqual("Arial", ws.Style.Font.FontName);
+                Assert.AreEqual(8, ws.Cell("A1").Style.Font.FontSize);
+                Assert.AreEqual("Arial", ws.Cell("A1").Style.Font.FontName);
+            }
+        }
     }
 }
