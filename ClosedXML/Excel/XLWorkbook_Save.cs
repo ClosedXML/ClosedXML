@@ -4569,9 +4569,10 @@ namespace ClosedXML.Excel
 
             #region Columns
 
+            var worksheetStyleId = context.SharedStyles[xlWorksheet.StyleValue.Key].StyleId;
             if (xlWorksheet.Internals.CellsCollection.Count == 0 &&
                 xlWorksheet.Internals.ColumnsCollection.Count == 0
-                && xlWorksheet.Style.Equals(DefaultStyle))
+                && worksheetStyleId == 0)
                 worksheetPart.Worksheet.RemoveAllChildren<Columns>();
             else
             {
@@ -4600,7 +4601,6 @@ namespace ClosedXML.Excel
                     maxInColumnsCollection = 0;
                 }
 
-                var worksheetStyleId = context.SharedStyles[xlWorksheet.StyleValue.Key].StyleId;
                 if (minInColumnsCollection > 1)
                 {
                     UInt32Value min = 1;
@@ -4675,7 +4675,7 @@ namespace ClosedXML.Excel
                         maxInColumnsCollection = (Int32)col.Max.Value;
                 }
 
-                if (maxInColumnsCollection < XLHelper.MaxColumnNumber && !xlWorksheet.StyleValue.Equals(DefaultStyleValue))
+                if (maxInColumnsCollection < XLHelper.MaxColumnNumber && worksheetStyleId != 0)
                 {
                     var column = new Column
                     {
