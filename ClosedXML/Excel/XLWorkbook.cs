@@ -480,7 +480,7 @@ namespace ClosedXML.Excel
         {
             var extension = Path.GetExtension(filePath);
 
-            if (extension == null) throw new ArgumentException("Empty extension is not supported.");
+            if (string.IsNullOrEmpty(extension)) throw new ArgumentException("Empty extension is not supported.");
             extension = extension.Substring(1).ToLowerInvariant();
 
             switch (extension)
