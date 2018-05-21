@@ -146,7 +146,7 @@ namespace ClosedXML_Tests.Excel.Saving
                 }
             }
         }
-        
+
         [Test]
         public void SaveCachedValueWhenFlagIsTrue()
         {
@@ -370,6 +370,32 @@ namespace ClosedXML_Tests.Excel.Saving
         }
 
         [Test]
+        public void SaveAsWithNoExtensionFails()
+        {
+            using (var tf = new TemporaryFile("FileWithNoExtension"))
+            using (var wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add("Sheet1");
+                TestDelegate action = () => wb.SaveAs(tf.Path);
+
+                Assert.Throws<ArgumentException>(action);
+            }
+        }
+
+        [Test]
+        public void SaveAsWithUnsupportedExtensionFails()
+        {
+            using (var tf = new TemporaryFile("FileWithBadExtension.bad"))
+            using (var wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add("Sheet1");
+                TestDelegate action = () => wb.SaveAs(tf.Path);
+
+                Assert.Throws<ArgumentException>(action);
+            }
+        }
+
+        [Test]
         public void SaveCellValueWithLeadingQuotationMarkCorrectly()
         {
             var quotedFormulaValue = "'=IF(TRUE, 1, 0)";
@@ -419,7 +445,7 @@ namespace ClosedXML_Tests.Excel.Saving
 
                 using (var wb = new XLWorkbook(ms))
                 {
-                    foreach (var sheetName in new []{"Sheet1", "Sheet2"})
+                    foreach (var sheetName in new[] { "Sheet1", "Sheet2" })
                     {
                         var ws = wb.Worksheet(sheetName);
 
@@ -452,7 +478,7 @@ namespace ClosedXML_Tests.Excel.Saving
 
                 using (var wb = new XLWorkbook(ms))
                 {
-                    foreach (var sheetName in new[] {"Sheet1", "Sheet2"})
+                    foreach (var sheetName in new[] { "Sheet1", "Sheet2" })
                     {
                         var ws = wb.Worksheet(sheetName);
 
