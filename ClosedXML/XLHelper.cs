@@ -85,17 +85,13 @@ namespace ClosedXML.Excel
         {
             if (string.IsNullOrEmpty(columnLetter)) throw new ArgumentNullException("columnLetter");
 
-            int retVal;
-            columnLetter = columnLetter.ToUpper();
-
             //Extra check because we allow users to pass row col positions in as strings
             if (columnLetter[0] <= '9')
             {
-                retVal = Int32.Parse(columnLetter, XLHelper.NumberStyle, XLHelper.ParseCulture);
-                return retVal;
+                return Int32.Parse(columnLetter, XLHelper.NumberStyle, XLHelper.ParseCulture);
             }
 
-            if (letterIndexes.TryGetValue(columnLetter, out retVal))
+            if (letterIndexes.TryGetValue(columnLetter, out var retVal))
                 return retVal;
 
             throw new ArgumentOutOfRangeException(columnLetter + " is not recognized as a column letter");
