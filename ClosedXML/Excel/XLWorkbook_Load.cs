@@ -1544,7 +1544,7 @@ namespace ClosedXML.Excel
                     if (s == null)
                         xlCell.SetDataTypeFast(XLDataType.Number);
                     else
-                        xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
+                        xlCell.DataType = GetDataTypeFromCell(xlCell.StyleValue.NumberFormat);
 
                     if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString());
@@ -1558,7 +1558,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    xlCell.DataType = GetDataTypeFromCell(xlCell.Style.NumberFormat);
+                    xlCell.DataType = GetDataTypeFromCell(xlCell.StyleValue.NumberFormat);
                     var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
                     if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString());
@@ -1871,7 +1871,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static XLDataType GetDataTypeFromCell(IXLNumberFormat numberFormat)
+        private static XLDataType GetDataTypeFromCell(XLNumberFormatValue numberFormat)
         {
             var numberFormatId = numberFormat.NumberFormatId;
             if (numberFormatId == 46U)
