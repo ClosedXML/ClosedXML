@@ -61,9 +61,12 @@ namespace ClosedXML.Excel
 
         #region Private methods
 
-        private void SetStyle(IXLStyle value, bool propagate = false)
+        private void SetStyle(IXLStyle style, bool propagate = false)
         {
-            SetStyle(XLStyleValue.FromKey(XLStyle.GenerateKey(value)), propagate);
+            if (style is XLStyle xlStyle)
+                SetStyle(xlStyle.Value, propagate);
+            else
+                SetStyle(XLStyleValue.FromKey(XLStyle.GenerateKey(style)), propagate);
         }
 
         /// <summary>
