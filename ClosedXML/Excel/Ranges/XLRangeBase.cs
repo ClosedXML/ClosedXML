@@ -765,7 +765,7 @@ namespace ClosedXML.Excel
             return Cell(cellAddressInRange.RowNumber, cellAddressInRange.ColumnNumber);
         }
 
-        public XLCell Cell(XLAddress cellAddressInRange)
+        public XLCell Cell(in XLAddress cellAddressInRange)
         {
             Int32 absRow = cellAddressInRange.RowNumber + RangeAddress.FirstAddress.RowNumber - 1;
             Int32 absColumn = cellAddressInRange.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1;
