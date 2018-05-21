@@ -1440,11 +1440,6 @@ namespace ClosedXML.Excel
             return (XLCell)namedRanges?.Ranges?.FirstOrDefault()?.FirstCell();
         }
 
-        internal XLCell CellFast(String cellAddressInRange)
-        {
-            return Cell(XLAddress.Create(this, cellAddressInRange));
-        }
-
         public override XLRange Range(String rangeAddressStr)
         {
             if (XLHelper.IsValidRangeAddress(rangeAddressStr))
