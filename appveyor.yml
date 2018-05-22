@@ -6,23 +6,42 @@ image: Visual Studio 2017
 environment:
   AppVeyor: APPVEYOR
 
-branches:
-  only:
-    - develop
-  except:
-    - gh-pages
+init:
+
+- ps: >-
+    if ($env:APPVEYOR_REPO_TAG -eq 'true')
+    {
+      $env:fileVersion = $env:APPVEYOR_REPO_TAG_NAME -replace '(\d+)\.(\d+)\.(\d+)(-.+)?', '$1.$2.$3'
+      if ($env:fileVersion -eq $env:APPVEYOR_REPO_TAG_NAME) { $env:fileVersion = $($env:fileVersion + '.0') }
+      else { $env:fileVersion = $($env:fileVersion + '.' + $env:APPVEYOR_BUILD_NUMBER) }
+      $env:productVersion = $env:APPVEYOR_REPO_TAG_NAME
+    }
+    else
+    {
+      $env:fileVersion = $env:APPVEYOR_BUILD_VERSION -replace '(\d+)\.(\d+)\.([^.]+)\.(\d+)', '$1.$2.999.$4'
+      $env:productVersion = $env:fileVersion
+    }
+    
+    Update-AppveyorBuild -Version $env:fileVersion
+    
+    Write-Host $env:fileVersion $env:productVersion
+    
+    Write-Host $env:APPVEYOR_REPO_TAG $env:APPVEYOR_REPO_TAG_NAME
+
 
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '{version}'
-  package_version: '{version}'
-  assembly_version: '{version}'
-  file_version: '{version}'
-  informational_version: '{version}'
+  version: '$(productVersion)'
+  package_version: '$(productVersion)'
+  assembly_version: '$(fileVersion)'
+  file_version: '$(fileVersion)'
+  informational_version: '$(productVersion)'
 
 # platform: Any CPU
-configuration : Release
+configuration : 
+- Release
+- Release.Signed
 
 before_build:
   - cmd: nuget update -self
@@ -33,18 +52,7 @@ build:
   project: ClosedXML.sln
   verbosity: minimal
 
-after_build:
-  - nuget pack ClosedXML\ClosedXML.nuspec -version "%APPVEYOR_BUILD_VERSION%" -OutputDirectory ClosedXML\bin\Release
-
 artifacts:
-  - path: ClosedXML/bin/Release/netstandard2.0/ClosedXML.dll
-  - path: ClosedXML/bin/Release/net40/ClosedXML.dll
-  - path: ClosedXML/bin/Release/net46/ClosedXML.dll
+  - path: ClosedXML/bin/%CONFIGURATION%/*/ClosedXML.dll
+  - path: ClosedXML/bin/%CONFIGURATION%/*.nupkg
 
-  - path: '**/bin/Release/**/*.nupkg'
-
-test:
-  assemblies:
-    - ClosedXML_Tests/bin/Release/netcoreapp2.0/ClosedXML_Tests.dll
-    - ClosedXML_Tests/bin/Release/net40/ClosedXML_Tests.dll
-    - ClosedXML_Tests/bin/Release/net46/ClosedXML_Tests.dll
