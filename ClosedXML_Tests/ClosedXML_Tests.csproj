@@ -16,8 +16,9 @@
   <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
     <OutputPath>bin\Release.Signed\</OutputPath>
     <SignAssembly>true</SignAssembly>
+    <Optimize>true</Optimize>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <DefineConstants>$(DefineConstants);STRONGNAME</DefineConstants>
+    <DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
