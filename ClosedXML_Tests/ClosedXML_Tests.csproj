@@ -6,12 +6,18 @@
     <Version>0.93.0</Version>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
+    <Configurations>Debug;Release;Release.Signed</Configurations>
   </PropertyGroup>
 
   <PropertyGroup>
     <DefineConstants>$(AppVeyor)</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
+    <OutputPath>bin\Release.Signed\</OutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+    <DefineConstants>$(DefineConstants);STRONGNAME</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
