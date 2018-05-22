@@ -1,34 +1,17 @@
 ﻿<?xml version="1.0"?>
 <package>
   <metadata>
-    <id>ClosedXML</id>
+    <id>$id$</id>
     <version>$version$</version>
-    <title>ClosedXML</title>
-    <authors>Manuel De Leon,Francois Botha,Aleksei Pankratev</authors>
-    <owners>Manuel De Leon,Francois Botha,Aleksei Pankratev</owners>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
     <description>ClosedXML makes it easier for developers to create Excel 2007+ (.xlsx, .xlsm, etc) files. It provides a nice object oriented way to manipulate the files (similar to VBA) without dealing with the hassles of XML Documents. It can be used by any .NET language like C# and VisualBasic.NET.</description>
     <licenseUrl>https://github.com/ClosedXML/ClosedXML/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/ClosedXML/ClosedXML</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-
-    <dependencies>
-      <group targetFramework=".NETFramework4.0">
-        <dependency id="DocumentFormat.OpenXml" version="2.7.2" />
-        <dependency id="ExcelNumberFormat" version="1.0.3" />
-        <dependency id="FastMember.Signed" version="1.3.0" />
-      </group>
-      <group targetFramework=".NETFramework4.6">
-        <dependency id="DocumentFormat.OpenXml" version="2.7.2" />
-        <dependency id="ExcelNumberFormat" version="1.0.3" />
-        <dependency id="FastMember.Signed" version="1.3.0" />
-      </group>
-      <group targetFramework=".NETStandard2.0">
-        <dependency id="System.Drawing.Common" version="4.5.0-preview1-25914-04" />
-        <dependency id="DocumentFormat.OpenXml" version="2.7.2" />
-        <dependency id="ExcelNumberFormat" version="1.0.3" />
-        <dependency id="FastMember.Signed" version="1.3.0" />
-      </group>
-    </dependencies>
+    <copyright>@ClosedXML</copyright>
+    <tags>ClosedXML</tags>
   </metadata>
   <files>
     <file src="bin\Release\net40\ClosedXML.dll" target="lib\net40\ClosedXML.dll" />
