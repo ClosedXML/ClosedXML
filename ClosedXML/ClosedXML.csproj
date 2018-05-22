@@ -25,8 +25,9 @@
     <OutputPath>bin\Release.Signed\</OutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
+    <Optimize>true</Optimize>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <DefineConstants>$(DefineConstants);STRONGNAME</DefineConstants>
+    <DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
