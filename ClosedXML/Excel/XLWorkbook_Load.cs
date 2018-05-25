@@ -1429,6 +1429,7 @@ namespace ClosedXML.Excel
 
                         case CellValues.InlineString:
                         case CellValues.SharedString:
+                        case CellValues.String:
                             xlCell.SetDataTypeFast(XLDataType.Text);
                             break;
                     }
@@ -1487,6 +1488,7 @@ namespace ClosedXML.Excel
 
                         case CellValues.InlineString:
                         case CellValues.SharedString:
+                        case CellValues.String:
                             xlCell.SetDataTypeFast(XLDataType.Text);
                             break;
                     }
@@ -1526,6 +1528,15 @@ namespace ClosedXML.Excel
                         var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture)];
                         ParseCellValue(sharedString, xlCell);
                     }
+                    else
+                        xlCell.SetInternalCellValueString(String.Empty);
+                }
+                else if (cell.DataType == CellValues.String)
+                {
+                    xlCell.SetDataTypeFast(XLDataType.Text);
+
+                    if (!String.IsNullOrEmpty(cell.CellValue?.Text))
+                        xlCell.SetInternalCellValueString(cell.CellValue.Text);
                     else
                         xlCell.SetInternalCellValueString(String.Empty);
                 }

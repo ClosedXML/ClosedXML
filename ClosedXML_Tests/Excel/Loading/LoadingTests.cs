@@ -386,11 +386,23 @@ namespace ClosedXML_Tests.Excel
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet(1);
-                
+
                 Assert.AreEqual(8, ws.Style.Font.FontSize);
                 Assert.AreEqual("Arial", ws.Style.Font.FontName);
                 Assert.AreEqual(8, ws.Cell("A1").Style.Font.FontSize);
                 Assert.AreEqual("Arial", ws.Cell("A1").Style.Font.FontName);
+            }
+        }
+
+        [Test]
+        public void CanCorrectLoadWorkbookCellWithStringDataType()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\CellWithStringDataType.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var cellToCheck = wb.Worksheet(1).Cell("B2");
+                Assert.AreEqual(XLDataType.Text, cellToCheck.DataType);
+                Assert.AreEqual("String with String Data type", cellToCheck.Value);
             }
         }
     }
