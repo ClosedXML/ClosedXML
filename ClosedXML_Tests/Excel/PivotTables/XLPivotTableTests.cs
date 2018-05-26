@@ -218,7 +218,7 @@ namespace ClosedXML_Tests
                         new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
                         new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
                         new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
-                        new Pastry("Danish", 104, 394, -20.24, "", new DateTime(2017, 04, 24)),
+                        new Pastry("Danish", 104, 394, -20.24, "", null),
                         new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
                         new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
 
@@ -236,12 +236,13 @@ namespace ClosedXML_Tests
                     var sheet = wb.Worksheets.Add("PastrySalesData");
                     // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
                     var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     sheet.Columns().AdjustToContents();
 
                     IXLWorksheet ptSheet;
                     IXLPivotTable pt;
 
-                    for (var i = 1; i <= 4; i++)
+                    for (var i = 1; i <= 5; i++)
                     {
                         // Add a new sheet for our pivot table
                         ptSheet = wb.Worksheets.Add("pvt" + i);
@@ -249,7 +250,7 @@ namespace ClosedXML_Tests
                         // Create the pivot table, using the data from the "PastrySalesData" table
                         pt = ptSheet.PivotTables.Add("pvt" + i, ptSheet.Cell(1, 1), table);
 
-                        if (i == 1 || i == 4)
+                        if (i == 1 || i == 4 || i == 5)
                             pt.ColumnLabels.Add("Name");
                         else if (i == 2 || i == 3)
                             pt.RowLabels.Add("Name");
@@ -258,6 +259,8 @@ namespace ClosedXML_Tests
                             pt.RowLabels.Add("Month");
                         else if (i == 2 || i == 4)
                             pt.ColumnLabels.Add("Month");
+                        else if (i == 5)
+                            pt.RowLabels.Add("BakeDate");
 
                         // The values in our table will come from the "NumberOfOrders" field
                         // The default calculation setting is a total of each row/column
