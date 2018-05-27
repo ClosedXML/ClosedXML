@@ -56,3 +56,6 @@ artifacts:
   - path: ClosedXML/bin/%CONFIGURATION%/*/ClosedXML.dll
   - path: ClosedXML/bin/%CONFIGURATION%/*.nupkg
 
+nuget:
+  project_feed: true
+  disable_publish_on_pr: true
