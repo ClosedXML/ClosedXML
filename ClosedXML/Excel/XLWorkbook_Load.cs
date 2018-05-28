@@ -2174,7 +2174,18 @@ namespace ClosedXML.Excel
             if (sp == null) return;
 
             if (sp.Sheet != null) ws.Protection.Protected = sp.Sheet.Value;
-            if (sp.Password != null) ws.Protection.PasswordHash = sp.Password.Value;
+
+            var algorithmName = sp.AlgorithmName?.Value ?? string.Empty;
+            if (String.IsNullOrEmpty(algorithmName))
+            {
+                ws.Protection.PasswordHash = sp.Password?.Value ?? string.Empty;
+            }
+            else
+            {
+                var hashValue = sp.HashValue?.Value ?? string.Empty;
+                var saltValue = sp.SaltValue?.Value ?? string.Empty;
+                // Continue for now.
+            }
             if (sp.FormatCells != null) ws.Protection.FormatCells = !sp.FormatCells.Value;
             if (sp.FormatColumns != null) ws.Protection.FormatColumns = !sp.FormatColumns.Value;
             if (sp.FormatRows != null) ws.Protection.FormatRows = !sp.FormatRows.Value;
