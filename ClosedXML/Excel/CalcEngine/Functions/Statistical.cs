@@ -96,27 +96,27 @@ namespace ClosedXML.Excel.CalcEngine
             //ZTEST	Returns the one-tailed probability-value of a z-test
         }
 
-        private static object Average(List<Expression> p)
+        private static object Average(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, true).Average();
         }
 
-        private static object AverageA(List<Expression> p)
+        private static object AverageA(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, false).Average();
         }
 
-        private static object Count(List<Expression> p)
+        private static object Count(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, true).Count();
         }
 
-        private static object CountA(List<Expression> p)
+        private static object CountA(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, false).Count();
         }
 
-        private static object CountBlank(List<Expression> p)
+        private static object CountBlank(in CalculationContext ctx, List<Expression> p)
         {
             if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
                 throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
@@ -133,7 +133,7 @@ namespace ClosedXML.Excel.CalcEngine
             return 0d + totalCount - nonBlankCount;
         }
 
-        private static object CountIf(List<Expression> p)
+        private static object CountIf(in CalculationContext ctx, List<Expression> p)
         {
             CalcEngine ce = new CalcEngine();
             var cnt = 0.0;
@@ -158,7 +158,7 @@ namespace ClosedXML.Excel.CalcEngine
             return cnt;
         }
 
-        private static object CountIfs(List<Expression> p)
+        private static object CountIfs(in CalculationContext ctx, List<Expression> p)
         {
             // get parameters
             var ce = new CalcEngine();
@@ -208,62 +208,62 @@ namespace ClosedXML.Excel.CalcEngine
             return count;
         }
 
-        private static object Max(List<Expression> p)
+        private static object Max(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, true).Max();
         }
 
-        private static object MaxA(List<Expression> p)
+        private static object MaxA(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, false).Max();
         }
 
-        private static object Min(List<Expression> p)
+        private static object Min(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, true).Min();
         }
 
-        private static object MinA(List<Expression> p)
+        private static object MinA(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, false).Min();
         }
 
-        private static object StDev(List<Expression> p)
+        private static object StDev(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, true).Std();
         }
 
-        private static object StDevA(List<Expression> p)
+        private static object StDevA(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, false).Std();
         }
 
-        private static object StDevP(List<Expression> p)
+        private static object StDevP(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, true).StdP();
         }
 
-        private static object StDevPA(List<Expression> p)
+        private static object StDevPA(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, false).StdP();
         }
 
-        private static object Var(List<Expression> p)
+        private static object Var(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, true).Var();
         }
 
-        private static object VarA(List<Expression> p)
+        private static object VarA(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, false).Var();
         }
 
-        private static object VarP(List<Expression> p)
+        private static object VarP(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, true).VarP();
         }
 
-        private static object VarPA(List<Expression> p)
+        private static object VarPA(in CalculationContext ctx, List<Expression> p)
         {
             return GetTally(p, false).VarP();
         }

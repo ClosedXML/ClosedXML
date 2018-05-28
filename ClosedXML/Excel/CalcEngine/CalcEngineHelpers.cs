@@ -71,7 +71,8 @@ namespace ClosedXML.Excel.CalcEngine
                     }
 
                     // evaluate
-                    return (bool)ce.Evaluate(expression);
+                    var ctx = new CalculationContext();
+                    return (bool)ce.Evaluate(in ctx, expression);
                 }
 
                 // if criteria is a regular expression, use regex

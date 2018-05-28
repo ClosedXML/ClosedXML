@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 namespace ClosedXML.Excel
 {
     using Attributes;
+    using ClosedXML.Excel.CalcEngine;
     using ClosedXML.Extensions;
 
     [DebuggerDisplay("{Address}")]
@@ -459,7 +460,11 @@ namespace ClosedXML.Excel
                         return referenceCell.Value;
                 }
 
-                retVal = Worksheet.Evaluate(fA1);
+                var ctx = new CalculationContext()
+                {
+                    cell = this
+                };
+                retVal = Worksheet.Evaluate(in ctx, fA1);
             }
             finally
             {
@@ -1369,7 +1374,8 @@ namespace ClosedXML.Excel
 
         private IEnumerable<XLCell> GetAffectingCells()
         {
-            return Worksheet.CalcEngine.GetPrecedentCells(_formulaA1).Cast<XLCell>();
+            var ctx = new CalculationContext { cell = this };
+            return Worksheet.CalcEngine.GetPrecedentCells(ctx, _formulaA1).Cast<XLCell>();
         }
 
         /// <summary>

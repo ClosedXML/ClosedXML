@@ -1489,7 +1489,13 @@ namespace ClosedXML.Excel
 
         public Object Evaluate(String expression)
         {
-            return CalcEngine.Evaluate(expression);
+            var ctx = new CalculationContext();
+            return this.Evaluate(in ctx, expression);
+        }
+
+        public Object Evaluate(in CalculationContext ctx, String expression)
+        {
+            return CalcEngine.Evaluate(in ctx, expression);
         }
 
         /// <summary>

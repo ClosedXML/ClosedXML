@@ -91,6 +91,22 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Row()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").FormulaA1 = "ROW(A2)";
+                ws.Cell("B1").FormulaA1 = "ROW(A2:A3)";
+                ws.Cell("C1").FormulaA1 = "ROW()";
+
+                Assert.AreEqual(2, ws.Cell("A1").GetDouble());
+                Assert.AreEqual(2, ws.Cell("B1").GetDouble());
+                Assert.AreEqual(1, ws.Cell("C1").GetDouble());
+            }
+        }
+
+        [Test]
         public void Vlookup()
         {
             // Range lookup false

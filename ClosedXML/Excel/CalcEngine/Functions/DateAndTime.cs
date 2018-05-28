@@ -85,7 +85,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return businessDays;
         }
 
-        private static object Date(List<Expression> p)
+        private static object Date(in CalculationContext ctx, List<Expression> p)
         {
             var year = (int)p[0];
             var month = (int)p[1];
@@ -113,21 +113,21 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (int)Math.Floor(new DateTime(year, month, day).AddDays(daysAdjustment).ToOADate());
         }
 
-        private static object Datevalue(List<Expression> p)
+        private static object Datevalue(in CalculationContext ctx, List<Expression> p)
         {
             var date = (string)p[0];
 
             return (int)Math.Floor(DateTime.Parse(date).ToOADate());
         }
 
-        private static object Day(List<Expression> p)
+        private static object Day(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
 
             return date.Day;
         }
 
-        private static object Days(List<Expression> p)
+        private static object Days(in CalculationContext ctx, List<Expression> p)
         {
             Type type;
 
@@ -135,7 +135,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             type = p[0]._token.Value.GetType();
             if (type == typeof(string))
-                end_date = (int)Datevalue(new List<Expression>() { p[0] });
+                end_date = (int)Datevalue(in ctx, new List<Expression>() { p[0] });
             else
                 end_date = (int)p[0];
 
@@ -143,14 +143,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             type = p[1]._token.Value.GetType();
             if (type == typeof(string))
-                start_date = (int)Datevalue(new List<Expression>() { p[1] });
+                start_date = (int)Datevalue(in ctx, new List<Expression>() { p[1] });
             else
                 start_date = (int)p[1];
 
             return end_date - start_date;
         }
 
-        private static object Days360(List<Expression> p)
+        private static object Days360(in CalculationContext ctx, List<Expression> p)
         {
             var date1 = (DateTime)p[0];
             var date2 = (DateTime)p[1];
@@ -182,7 +182,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return 360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1);
         }
 
-        private static object Edate(List<Expression> p)
+        private static object Edate(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
             var mod = (int)p[1];
@@ -191,7 +191,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return retDate;
         }
 
-        private static object Eomonth(List<Expression> p)
+        private static object Eomonth(in CalculationContext ctx, List<Expression> p)
         {
             var start_date = (DateTime)p[0];
             var months = (int)p[1];
@@ -208,7 +208,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return daysInYears.Average();
         }
 
-        private static object Hour(List<Expression> p)
+        private static object Hour(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
 
@@ -216,7 +216,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         }
 
         // http://stackoverflow.com/questions/11154673/get-the-correct-week-number-of-a-given-date
-        private static object IsoWeekNum(List<Expression> p)
+        private static object IsoWeekNum(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
 
@@ -233,21 +233,21 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
 
-        private static object Minute(List<Expression> p)
+        private static object Minute(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
 
             return date.Minute;
         }
 
-        private static object Month(List<Expression> p)
+        private static object Month(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
 
             return date.Month;
         }
 
-        private static object Networkdays(List<Expression> p)
+        private static object Networkdays(in CalculationContext ctx, List<Expression> p)
         {
             var date1 = (DateTime)p[0];
             var date2 = (DateTime)p[1];
@@ -262,19 +262,19 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return BusinessDaysUntil(date1, date2, bankHolidays);
         }
 
-        private static object Now(List<Expression> p)
+        private static object Now(in CalculationContext ctx, List<Expression> p)
         {
             return DateTime.Now;
         }
 
-        private static object Second(List<Expression> p)
+        private static object Second(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
 
             return date.Second;
         }
 
-        private static object Time(List<Expression> p)
+        private static object Time(in CalculationContext ctx, List<Expression> p)
         {
             var hour = (int)p[0];
             var minute = (int)p[1];
@@ -283,19 +283,19 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return new TimeSpan(0, hour, minute, second);
         }
 
-        private static object Timevalue(List<Expression> p)
+        private static object Timevalue(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
 
             return (DateTime.MinValue + date.TimeOfDay).ToOADate();
         }
 
-        private static object Today(List<Expression> p)
+        private static object Today(in CalculationContext ctx, List<Expression> p)
         {
             return DateTime.Today;
         }
 
-        private static object Weekday(List<Expression> p)
+        private static object Weekday(in CalculationContext ctx, List<Expression> p)
         {
             var dayOfWeek = (int)((DateTime)p[0]).DayOfWeek;
             var retType = p.Count == 2 ? (int)p[1] : 1;
@@ -306,7 +306,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return dayOfWeek - 1;
         }
 
-        private static object Weeknum(List<Expression> p)
+        private static object Weeknum(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
             var retType = p.Count == 2 ? (int)p[1] : 1;
@@ -318,7 +318,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return val;
         }
 
-        private static object Workday(List<Expression> p)
+        private static object Workday(in CalculationContext ctx, List<Expression> p)
         {
             var startDate = (DateTime)p[0];
             var daysRequired = (int)p[1];
@@ -353,14 +353,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return Workday(startDate, testDate.AddDays(days), daysRequired, bankHolidays);
         }
 
-        private static object Year(List<Expression> p)
+        private static object Year(in CalculationContext ctx, List<Expression> p)
         {
             var date = (DateTime)p[0];
 
             return date.Year;
         }
 
-        private static object Yearfrac(List<Expression> p)
+        private static object Yearfrac(in CalculationContext ctx, List<Expression> p)
         {
             var date1 = (DateTime)p[0];
             var date2 = (DateTime)p[1];

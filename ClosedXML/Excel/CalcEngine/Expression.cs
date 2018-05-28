@@ -10,7 +10,18 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal abstract class ExpressionBase
     {
+        private CalculationContext _context;
+        protected ExpressionBase(in CalculationContext ctx)
+        {
+            _context = ctx;
+        }
+
         public abstract string LastParseItem { get; }
+
+        public ref CalculationContext CurrentContext
+        {
+            get => ref _context;
+        }
     }
 
     /// <summary>
@@ -37,17 +48,20 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** ctors
 
-        internal Expression()
+        internal Expression(in CalculationContext ctx)
+            : base(in ctx)
         {
             _token = new Token(null, TKID.ATOM, TKTYPE.IDENTIFIER);
         }
 
-        internal Expression(object value)
+        internal Expression(in CalculationContext ctx, object value)
+            : base(in ctx)
         {
             _token = new Token(value, TKID.ATOM, TKTYPE.LITERAL);
         }
 
-        internal Expression(Token tk)
+        internal Expression(in CalculationContext ctx, Token tk)
+            : base(in ctx)
         {
             _token = tk;
         }
@@ -59,6 +73,11 @@ namespace ClosedXML.Excel.CalcEngine
         #region ** object model
 
         public virtual object Evaluate()
+        {
+            return Evaluate(in this.CurrentContext);
+        }
+        
+        public virtual object Evaluate(in CalculationContext ctx)
         {
             if (_token.Type != TKTYPE.LITERAL)
             {
@@ -80,20 +99,20 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator string(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
+            if (x is ErrorExpression ee)
+                ee.ThrowApplicableException();
 
-            var v = x.Evaluate();
+            var v = x.Evaluate(in x.CurrentContext);
             return v == null ? string.Empty : v.ToString();
         }
 
         public static implicit operator double(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
+            if (x is ErrorExpression ee)
+                ee.ThrowApplicableException();
 
             // evaluate
-            var v = x.Evaluate();
+            var v = x.Evaluate(in x.CurrentContext);
 
             // handle doubles
             if (v is double)
@@ -131,11 +150,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator bool(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
+            if (x is ErrorExpression ee)
+                ee.ThrowApplicableException();
 
             // evaluate
-            var v = x.Evaluate();
+            var v = x.Evaluate(x.CurrentContext);
 
             // handle booleans
             if (v is bool)
@@ -161,11 +180,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator DateTime(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
+            if (x is ErrorExpression ee)
+                ee.ThrowApplicableException();
 
             // evaluate
-            var v = x.Evaluate();
+            var v = x.Evaluate(x.CurrentContext);
 
             // handle dates
             if (v is DateTime)
@@ -193,8 +212,8 @@ namespace ClosedXML.Excel.CalcEngine
         public int CompareTo(Expression other)
         {
             // get both values
-            var c1 = this.Evaluate() as IComparable;
-            var c2 = other.Evaluate() as IComparable;
+            var c1 = this.Evaluate(in this.CurrentContext) as IComparable;
+            var c2 = other.Evaluate(in other.CurrentContext) as IComparable;
 
             // handle nulls
             if (c1 == null && c2 == null)
@@ -255,13 +274,14 @@ namespace ClosedXML.Excel.CalcEngine
         private Expression _expr;
 
         // ** ctor
-        public UnaryExpression(Token tk, Expression expr) : base(tk)
+        public UnaryExpression(in CalculationContext ctx, Token tk, Expression expr)
+            : base(in ctx, tk)
         {
             _expr = expr;
         }
 
         // ** object model
-        override public object Evaluate()
+        override public object Evaluate(in CalculationContext ctx)
         {
             switch (_token.ID)
             {
@@ -278,7 +298,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             _expr = _expr.Optimize();
             return _expr._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
+                ? new Expression(in this.CurrentContext, this.Evaluate(in this.CurrentContext))
                 : this;
         }
 
@@ -299,14 +319,15 @@ namespace ClosedXML.Excel.CalcEngine
         private Expression _rgt;
 
         // ** ctor
-        public BinaryExpression(Token tk, Expression exprLeft, Expression exprRight) : base(tk)
+        public BinaryExpression(in CalculationContext ctx, Token tk, Expression exprLeft, Expression exprRight)
+            : base(in ctx, tk)
         {
             _lft = exprLeft;
             _rgt = exprRight;
         }
 
         // ** object model
-        override public object Evaluate()
+        override public object Evaluate(in CalculationContext ctx)
         {
             // handle comparisons
             if (_token.Type == TKTYPE.COMPARE)
@@ -366,7 +387,7 @@ namespace ClosedXML.Excel.CalcEngine
             _lft = _lft.Optimize();
             _rgt = _rgt.Optimize();
             return _lft._token.Type == TKTYPE.LITERAL && _rgt._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
+                ? new Expression(in this.CurrentContext, this.Evaluate(in this.CurrentContext))
                 : this;
         }
 
@@ -387,19 +408,21 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly List<Expression> _parms;
 
         // ** ctor
-        internal FunctionExpression()
+        internal FunctionExpression(in CalculationContext ctx)
+            : base(in ctx)
         { }
 
-        public FunctionExpression(FunctionDefinition function, List<Expression> parms)
+        public FunctionExpression(in CalculationContext ctx, FunctionDefinition function, List<Expression> parms)
+            : base(in ctx)
         {
             _fn = function;
             _parms = parms;
         }
 
         // ** object model
-        override public object Evaluate()
+        override public object Evaluate(in CalculationContext ctx)
         {
-            return _fn.Function(_parms);
+            return _fn.Function(in ctx, _parms);
         }
 
         public override Expression Optimize()
@@ -418,7 +441,7 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
             return allLits
-                ? new Expression(this.Evaluate())
+                ? new Expression(in this.CurrentContext, this.Evaluate(in this.CurrentContext))
                 : this;
         }
 
@@ -436,13 +459,14 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly Dictionary<string, object> _dct;
         private readonly string _name;
 
-        public VariableExpression(Dictionary<string, object> dct, string name)
+        public VariableExpression(in CalculationContext ctx, Dictionary<string, object> dct, string name)
+            : base(in ctx)
         {
             _dct = dct;
             _name = name;
         }
 
-        public override object Evaluate()
+        public override object Evaluate(in CalculationContext ctx)
         {
             return _dct[_name];
         }
@@ -463,7 +487,8 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly object _value;
 
         // ** ctor
-        internal XObjectExpression(object value)
+        internal XObjectExpression(in CalculationContext ctx, object value)
+            : base(in ctx)
         {
             _value = value;
         }
@@ -471,11 +496,10 @@ namespace ClosedXML.Excel.CalcEngine
         public object Value { get { return _value; } }
 
         // ** object model
-        public override object Evaluate()
+        public override object Evaluate(in CalculationContext ctx)
         {
             // use IValueObject if available
-            var iv = _value as IValueObject;
-            if (iv != null)
+            if (_value is IValueObject iv)
             {
                 return iv.GetValue();
             }
@@ -486,8 +510,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public IEnumerator GetEnumerator()
         {
-            if (_value is string)
-                return new [] {(string) _value}.GetEnumerator();
+            if (_value is string s)
+                return new[] { s }.GetEnumerator();
 
             return (_value as IEnumerable).GetEnumerator();
         }
@@ -503,7 +527,9 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class EmptyValueExpression : Expression
     {
-        internal EmptyValueExpression() { }
+        internal EmptyValueExpression(in CalculationContext ctx)
+        : base(in ctx)
+        { }
 
         public override string LastParseItem
         {
@@ -524,11 +550,11 @@ namespace ClosedXML.Excel.CalcEngine
             NumberInvalid
         }
 
-        internal ErrorExpression(ExpressionErrorType eet)
-            : base(new Token(eet, TKID.ATOM, TKTYPE.ERROR))
+        internal ErrorExpression(in CalculationContext ctx, ExpressionErrorType eet)
+            : base(in ctx, new Token(eet, TKID.ATOM, TKTYPE.ERROR))
         { }
 
-        public override object Evaluate()
+        public override object Evaluate(in CalculationContext ctx)
         {
             return this._token.Value;
         }

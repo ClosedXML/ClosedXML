@@ -6,6 +6,11 @@ using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
 {
+    internal struct CalculationContext
+    {
+        public IXLCell cell;
+    }
+
     /// <summary>
     /// CalcEngine parses strings and returns Expression objects that can
     /// be evaluated.
@@ -50,7 +55,7 @@ namespace ClosedXML.Excel.CalcEngine
             _tkTbl = GetSymbolTable();
             _fnTbl = GetFunctionTable();
             _vars = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            _cache = new ExpressionCache(this);
+            //_cache = new ExpressionCache(this);
             _optimize = true;
 #if DEBUG
             //this.Test();
@@ -68,7 +73,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="expression">String to parse.</param>
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
-        public Expression Parse(string expression)
+        public Expression Parse(in CalculationContext ctx, string expression)
         {
             // initialize
             _expr = expression;
@@ -84,7 +89,7 @@ namespace ClosedXML.Excel.CalcEngine
                 _ptr++;
 
             // parse the expression
-            var expr = ParseExpression();
+            var expr = ParseExpression(in ctx);
 
             // check for errors
             if (_token.ID == TKID.OPEN)
@@ -105,7 +110,8 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Evaluates a string.
         /// </summary>
-        /// <param name="expression">Expression to evaluate.</param>
+        /// <param name="expression">Epression to evaluate.</param>
+        /// <param name="ctx">The calculation context.</param>
         /// <returns>The value of the expression.</returns>
         /// <remarks>
         /// If you are going to evaluate the same expression several times,
@@ -113,12 +119,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-        public object Evaluate(string expression)
+        public object Evaluate(in CalculationContext ctx, string expression)
         {
             var x = _cache != null
                     ? _cache[expression]
-                    : Parse(expression);
-            return x.Evaluate();
+                    : Parse(in ctx, expression);
+            return x.Evaluate(in ctx);
         }
 
         /// <summary>
@@ -326,80 +332,80 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** private stuff
 
-        private Expression ParseExpression()
+        private Expression ParseExpression(in CalculationContext ctx)
         {
             GetToken();
-            return ParseCompare();
+            return ParseCompare(in ctx);
         }
 
-        private Expression ParseCompare()
+        private Expression ParseCompare(in CalculationContext ctx)
         {
-            var x = ParseAddSub();
+            var x = ParseAddSub(in ctx);
             while (_token.Type == TKTYPE.COMPARE)
             {
                 var t = _token;
                 GetToken();
-                var exprArg = ParseAddSub();
-                x = new BinaryExpression(t, x, exprArg);
+                var exprArg = ParseAddSub(in ctx);
+                x = new BinaryExpression(in ctx, t, x, exprArg);
             }
             return x;
         }
 
-        private Expression ParseAddSub()
+        private Expression ParseAddSub(in CalculationContext ctx)
         {
-            var x = ParseMulDiv();
+            var x = ParseMulDiv(in ctx);
             while (_token.Type == TKTYPE.ADDSUB)
             {
                 var t = _token;
                 GetToken();
-                var exprArg = ParseMulDiv();
-                x = new BinaryExpression(t, x, exprArg);
+                var exprArg = ParseMulDiv(in ctx);
+                x = new BinaryExpression(in ctx, t, x, exprArg);
             }
             return x;
         }
 
-        private Expression ParseMulDiv()
+        private Expression ParseMulDiv(in CalculationContext ctx)
         {
-            var x = ParsePower();
+            var x = ParsePower(in ctx);
             while (_token.Type == TKTYPE.MULDIV)
             {
                 var t = _token;
                 GetToken();
-                var a = ParsePower();
-                x = new BinaryExpression(t, x, a);
+                var a = ParsePower(in ctx);
+                x = new BinaryExpression(in ctx, t, x, a);
             }
             return x;
         }
 
-        private Expression ParsePower()
+        private Expression ParsePower(in CalculationContext ctx)
         {
-            var x = ParseUnary();
+            var x = ParseUnary(in ctx);
             while (_token.Type == TKTYPE.POWER)
             {
                 var t = _token;
                 GetToken();
-                var a = ParseUnary();
-                x = new BinaryExpression(t, x, a);
+                var a = ParseUnary(in ctx);
+                x = new BinaryExpression(in ctx, t, x, a);
             }
             return x;
         }
 
-        private Expression ParseUnary()
+        private Expression ParseUnary(in CalculationContext ctx)
         {
             // unary plus and minus
             if (_token.ID == TKID.ADD || _token.ID == TKID.SUB)
             {
                 var t = _token;
                 GetToken();
-                var a = ParseAtom();
-                return new UnaryExpression(t, a);
+                var a = ParseAtom(in ctx);
+                return new UnaryExpression(in ctx, t, a);
             }
 
             // not unary, return atom
-            return ParseAtom();
+            return ParseAtom(in ctx);
         }
 
-        private Expression ParseAtom()
+        private Expression ParseAtom(in CalculationContext ctx)
         {
             string id;
             Expression x = null;
@@ -408,7 +414,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 // literals
                 case TKTYPE.LITERAL:
-                    x = new Expression(_token);
+                    x = new Expression(in ctx, _token);
                     break;
 
                 // identifiers
@@ -420,7 +426,7 @@ namespace ClosedXML.Excel.CalcEngine
                     // look for functions
                     if (_fnTbl.TryGetValue(id, out FunctionDefinition fnDef))
                     {
-                        var p = GetParameters();
+                        var p = GetParameters(in ctx);
                         var pCnt = p == null ? 0 : p.Count;
                         if (fnDef.ParmMin != -1 && pCnt < fnDef.ParmMin)
                         {
@@ -430,14 +436,14 @@ namespace ClosedXML.Excel.CalcEngine
                         {
                             Throw(string.Format("Too many parameters for function '{0}'.Expected a minimum of {1} and a maximum of {2}.", id, fnDef.ParmMin, fnDef.ParmMax));
                         }
-                        x = new FunctionExpression(fnDef, p);
+                        x = new FunctionExpression(in ctx, fnDef, p);
                         break;
                     }
 
                     // look for simple variables (much faster than binding!)
                     if (_vars.ContainsKey(id))
                     {
-                        x = new VariableExpression(_vars, id);
+                        x = new VariableExpression(in ctx, _vars, id);
                         break;
                     }
 
@@ -445,7 +451,7 @@ namespace ClosedXML.Excel.CalcEngine
                     var xObj = GetExternalObject(id);
                     if (xObj != null)
                     {
-                        x = new XObjectExpression(xObj);
+                        x = new XObjectExpression(in ctx, xObj);
                         break;
                     }
 
@@ -459,12 +465,12 @@ namespace ClosedXML.Excel.CalcEngine
                     // but Excel allows omitted parameters so return empty value expression.
                     if (_token.ID != TKID.OPEN)
                     {
-                        return new EmptyValueExpression();
+                        return new EmptyValueExpression(in ctx);
                     }
 
                     // get expression
                     GetToken();
-                    x = ParseCompare();
+                    x = ParseCompare(in ctx);
 
                     // check that the parenthesis was closed
                     if (_token.ID != TKID.CLOSE)
@@ -475,7 +481,7 @@ namespace ClosedXML.Excel.CalcEngine
                     break;
 
                 case TKTYPE.ERROR:
-                    x = new ErrorExpression((ErrorExpression.ExpressionErrorType)_token.Value);
+                    x = new ErrorExpression(in ctx, (ErrorExpression.ExpressionErrorType)_token.Value);
                     break;
             }
 
@@ -736,7 +742,7 @@ namespace ClosedXML.Excel.CalcEngine
             return double.Parse(str, NumberStyles.Any, ci);
         }
 
-        private List<Expression> GetParameters() // e.g. myfun(a, b, c+2)
+        private List<Expression> GetParameters(in CalculationContext ctx) // e.g. myfun(a, b, c+2)
         {
             // check whether next token is a (,
             // restore state and bail if it's not
@@ -761,11 +767,11 @@ namespace ClosedXML.Excel.CalcEngine
 
             // get Parameters until we reach the end of the list
             var parms = new List<Expression>();
-            var expr = ParseExpression();
+            var expr = ParseExpression(in ctx);
             parms.Add(expr);
             while (_token.ID == TKID.COMMA)
             {
-                expr = ParseExpression();
+                expr = ParseExpression(in ctx);
                 parms.Add(expr);
             }
 
@@ -824,8 +830,8 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Delegate that represents CalcEngine functions.
     /// </summary>
-    /// <param name="parms">List of <see cref="Expression"/> objects that represent the
+    /// <param name="parameters">List of <see cref="Expression"/> objects that represent the
     /// parameters to be used in the function call.</param>
     /// <returns>The function result.</returns>
-    internal delegate object CalcEngineFunction(List<Expression> parms);
+    internal delegate object CalcEngineFunction(in CalculationContext context, List<Expression> parameters);
 }

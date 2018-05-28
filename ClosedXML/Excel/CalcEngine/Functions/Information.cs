@@ -38,7 +38,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             [ErrorExpression.ExpressionErrorType.NoValueAvailable] = 7
         };
 
-        static object ErrorType(List<Expression> p)
+        private static object ErrorType(in CalculationContext ctx, List<Expression> p)
         {
             var v = p[0].Evaluate();
 
@@ -48,7 +48,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 throw new NoValueAvailableException();
         }
 
-        static object IsBlank(List<Expression> p)
+        private static object IsBlank(in CalculationContext ctx, List<Expression> p)
         {
             var v = (string) p[0];
             var isBlank = string.IsNullOrEmpty(v);
@@ -56,13 +56,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             if (isBlank && p.Count > 1) {
                 var sublist = p.GetRange(1, p.Count);
-                isBlank = (bool)IsBlank(sublist);
+                isBlank = (bool)IsBlank(in ctx, sublist);
             }
 
             return isBlank;
         }
 
-        static object IsErr(List<Expression> p)
+        private static object IsErr(in CalculationContext ctx, List<Expression> p)
         {
             var v = p[0].Evaluate();
 
@@ -70,14 +70,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 && ((ErrorExpression.ExpressionErrorType)v) != ErrorExpression.ExpressionErrorType.NoValueAvailable;
         }
 
-        static object IsError(List<Expression> p)
+        private static object IsError(in CalculationContext ctx, List<Expression> p)
         {
             var v = p[0].Evaluate();
 
             return v is ErrorExpression.ExpressionErrorType;
         }
 
-        static object IsEven(List<Expression> p)
+        private static object IsEven(in CalculationContext ctx, List<Expression> p)
         {
             var v = p[0].Evaluate();
             if (v is double)
@@ -88,7 +88,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             throw new ArgumentException("Expression doesn't evaluate to double");
         }
 
-        static object IsLogical(List<Expression> p)
+        private static object IsLogical(in CalculationContext ctx, List<Expression> p)
         {
             var v = p[0].Evaluate();
             var isLogical = v is bool;
@@ -96,13 +96,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (isLogical && p.Count > 1)
             {
                 var sublist = p.GetRange(1, p.Count);
-                isLogical = (bool) IsLogical(sublist);
+                isLogical = (bool) IsLogical(in ctx, sublist);
             }
 
             return isLogical;
         }
 
-        static object IsNa(List<Expression> p)
+        private static object IsNa(in CalculationContext ctx, List<Expression> p)
         {
             var v = p[0].Evaluate();
 
@@ -110,12 +110,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 && ((ErrorExpression.ExpressionErrorType)v) == ErrorExpression.ExpressionErrorType.NoValueAvailable;
         }
 
-        static object IsNonText(List<Expression> p)
+        private static object IsNonText(in CalculationContext ctx, List<Expression> p)
         {
-            return !(bool) IsText(p);
+            return !(bool) IsText(in ctx, p);
         }
 
-        static object IsNumber(List<Expression> p)
+        private static object IsNumber(in CalculationContext ctx, List<Expression> p)
         {
             var v = p[0].Evaluate();
 
@@ -141,18 +141,18 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (isNumber && p.Count > 1)
             {
                 var sublist = p.GetRange(1, p.Count);
-                isNumber = (bool)IsNumber(sublist);
+                isNumber = (bool)IsNumber(in ctx, sublist);
             }
 
             return isNumber;
         }
 
-        static object IsOdd(List<Expression> p)
+        private static object IsOdd(in CalculationContext ctx, List<Expression> p)
         {
-            return !(bool) IsEven(p);
+            return !(bool) IsEven(in ctx, p);
         }
 
-        static object IsRef(List<Expression> p)
+        private static object IsRef(in CalculationContext ctx, List<Expression> p)
         {
             var oe = p[0] as XObjectExpression;
             if (oe == null)
@@ -163,46 +163,46 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return crr != null;
         }
 
-        static object IsText(List<Expression> p)
+        private static object IsText(in CalculationContext ctx, List<Expression> p)
         {
             //Evaluate Expressions
-            var isText = !(bool) IsBlank(p);
+            var isText = !(bool) IsBlank(in ctx, p);
             if (isText)
             {
-                isText = !(bool) IsNumber(p);
+                isText = !(bool) IsNumber(in ctx, p);
             }
             if (isText)
             {
-                isText = !(bool) IsLogical(p);
+                isText = !(bool) IsLogical(in ctx, p);
             }
             return isText;
         }
 
-        static object N(List<Expression> p)
+        private static object N(in CalculationContext ctx, List<Expression> p)
         {
             return (double) p[0];
         }
 
-        static object NA(List<Expression> p)
+        private static object NA(in CalculationContext ctx, List<Expression> p)
         {
             return ErrorExpression.ExpressionErrorType.NoValueAvailable;
         }
 
-        static object Type(List<Expression> p)
+        private static object Type(in CalculationContext ctx, List<Expression> p)
         {
-            if ((bool) IsNumber(p))
+            if ((bool) IsNumber(in ctx, p))
             {
                 return 1;
             }
-            if ((bool) IsText(p))
+            if ((bool) IsText(in ctx, p))
             {
                 return 2;
             }
-            if ((bool) IsLogical(p))
+            if ((bool) IsLogical(in ctx, p))
             {
                 return 4;
             }
-            if ((bool) IsError(p))
+            if ((bool) IsError(in ctx, p))
             {
                 return 16;
             }

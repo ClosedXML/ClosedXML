@@ -856,7 +856,8 @@ namespace ClosedXML.Excel
 
         public Object Evaluate(String expression)
         {
-            return CalcEngine.Evaluate(expression);
+            var ctx = new CalculationContext();
+            return CalcEngine.Evaluate(in ctx, expression);
         }
 
         /// <summary>
@@ -878,7 +879,8 @@ namespace ClosedXML.Excel
 
         public static Object EvaluateExpr(String expression)
         {
-            return CalcEngineExpr.Evaluate(expression);
+            var ctx = new CalculationContext();
+            return CalcEngineExpr.Evaluate(in ctx, expression);
         }
 
         public String Author { get; set; }

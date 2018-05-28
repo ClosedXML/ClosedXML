@@ -23,14 +23,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("LOOKUP", , Lookup); // Looks up values in a vector or array
             //ce.RegisterFunction("MATCH", , Match); // Looks up values in a reference or array
             //ce.RegisterFunction("OFFSET", , Offset); // Returns a reference offset from a given reference
-            //ce.RegisterFunction("ROW", , Row); // Returns the row number of a reference
+            ce.RegisterFunction("ROW", 0, 1, Row); // Returns the row number of a reference
             //ce.RegisterFunction("ROWS", , Rows); // Returns the number of rows in a reference
             //ce.RegisterFunction("RTD", , Rtd); // Retrieves real-time data from a program that supports COM automation
             //ce.RegisterFunction("TRANSPOSE", , Transpose); // Returns the transpose of an array
             ce.RegisterFunction("VLOOKUP", 3, 4, Vlookup); // Looks in the first column of an array and moves across the row to return the value of a cell
         }
 
-        private static object Hlookup(List<Expression> p)
+        private static object Hlookup(in CalculationContext ctx, List<Expression> p)
         {
             var lookup_value = p[0];
 
@@ -56,16 +56,21 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 throw new CellReferenceException("Row index has to be positive");
 
             IXLRangeColumn matching_column;
-            matching_column = range.FindColumn(c => !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) == 0);
+            matching_column = range.FindColumn(c =>
+            {
+                var ctx1 = new CalculationContext { cell = c.Cell(1) };
+                return !c.Cell(1).IsEmpty() && new Expression(in ctx1, c.Cell(1).Value).CompareTo(lookup_value) == 0;
+            });
             if (range_lookup && matching_column == null)
             {
                 var first_column = range.FirstColumn().ColumnNumber();
                 matching_column = range.FindColumn(c =>
                 {
                     var column_index_in_range = c.ColumnNumber() - first_column + 1;
-                    if (column_index_in_range < range.ColumnsUsed().Count() && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0 && !c.ColumnRight().Cell(1).IsEmpty() && new Expression(c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    var ctx1 = new CalculationContext { cell = c.Cell(1) };
+                    if (column_index_in_range < range.ColumnsUsed().Count() && !c.Cell(1).IsEmpty() && new Expression(ctx1, c.Cell(1).Value).CompareTo(lookup_value) <= 0 && !c.ColumnRight().Cell(1).IsEmpty() && new Expression(ctx1, c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
                         return true;
-                    else if (column_index_in_range == range.ColumnsUsed().Count() && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    else if (column_index_in_range == range.ColumnsUsed().Count() && !c.Cell(1).IsEmpty() && new Expression(ctx1, c.Cell(1).Value).CompareTo(lookup_value) <= 0)
                         return true;
                     else
                         return false;
@@ -80,14 +85,38 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 .Value;
         }
 
-        private static object Hyperlink(List<Expression> p)
+        private static object Hyperlink(in CalculationContext ctx, List<Expression> p)
         {
             String address = p[0];
             String toolTip = p.Count == 2 ? p[1] : String.Empty;
             return new XLHyperlink(address, toolTip);
         }
 
-        private static object Vlookup(List<Expression> p)
+        private static object Row(in CalculationContext ctx, List<Expression> p)
+        {
+            IXLCell cell;
+            if (p?.Any() ?? false)
+            {
+                if (!(p[0] is XObjectExpression x))
+                    throw new NoValueAvailableException("Parameter has to be a cell reference");
+
+                if (!(x.Value is CellRangeReference reference))
+                    throw new NoValueAvailableException("Parameter has to be a cell reference");
+
+                cell = reference.Range.FirstCell() as XLCell;
+            }
+            else
+            {
+                cell = ctx.cell;
+            }
+
+            if (cell == null)
+                throw new CellReferenceException("Invalid reference");
+
+            return cell.WorksheetRow().RowNumber();
+        }
+
+        private static object Vlookup(in CalculationContext ctx, List<Expression> p)
         {
             var lookup_value = p[0];
 
@@ -114,8 +143,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             IXLRangeRow matching_row;
             try
-            {
-                matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
+            {                
+                matching_row = range.FindRow(r =>
+                {
+                    var ctx1 = new CalculationContext { cell = r.Cell(1) };
+                    return !r.Cell(1).IsEmpty() && new Expression(in ctx1, r.Cell(1).Value).CompareTo(lookup_value) == 0;
+                });
             }
             catch (Exception ex)
             {
@@ -127,9 +160,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 matching_row = range.FindRow(r =>
                 {
                     var row_index_in_range = r.RowNumber() - first_row + 1;
-                    if (row_index_in_range < range.RowsUsed().Count() && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0 && !r.RowBelow().Cell(1).IsEmpty() && new Expression(r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    var ctx1 = new CalculationContext { cell = r.Cell(1) };
+                    if (row_index_in_range < range.RowsUsed().Count() && !r.Cell(1).IsEmpty() && new Expression(in ctx1, r.Cell(1).Value).CompareTo(lookup_value) <= 0 && !r.RowBelow().Cell(1).IsEmpty() && new Expression(in ctx1, r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
                         return true;
-                    else if (row_index_in_range == range.RowsUsed().Count() && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    else if (row_index_in_range == range.RowsUsed().Count() && !r.Cell(1).IsEmpty() && new Expression(in ctx1, r.Cell(1).Value).CompareTo(lookup_value) <= 0)
                         return true;
                     else
                         return false;

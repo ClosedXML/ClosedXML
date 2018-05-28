@@ -16,6 +16,7 @@ namespace ClosedXML.Excel.CalcEngine
         Dictionary<string, WeakReference> _dct;
         CalcEngine _ce;
         int _hitCount;
+        CalculationContext _ctx;
 
         public ExpressionCache(CalcEngine ce)
         {
@@ -43,7 +44,7 @@ namespace ClosedXML.Excel.CalcEngine
                     }
 
                     // store this expression
-                    x = _ce.Parse(expression);
+                    x = _ce.Parse(in _ctx, expression);
                     _dct[expression] = new WeakReference(x);
                 }
                 return x;

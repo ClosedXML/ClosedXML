@@ -89,12 +89,12 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("TRUNC", 1, Trunc);
         }
 
-        private static object Abs(List<Expression> p)
+        private static object Abs(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Abs(p[0]);
         }
 
-        private static object Acos(List<Expression> p)
+        private static object Acos(in CalculationContext ctx, List<Expression> p)
         {
             double input = p[0];
             if (Math.Abs(input) > 1)
@@ -103,7 +103,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Acos(p[0]);
         }
 
-        private static object Asin(List<Expression> p)
+        private static object Asin(in CalculationContext ctx, List<Expression> p)
         {
             double input = p[0];
             if (Math.Abs(input) > 1)
@@ -112,12 +112,12 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Asin(input);
         }
 
-        private static object Atan(List<Expression> p)
+        private static object Atan(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Atan(p[0]);
         }
 
-        private static object Atan2(List<Expression> p)
+        private static object Atan2(in CalculationContext ctx, List<Expression> p)
         {
             double x = p[0];
             double y = p[1];
@@ -127,22 +127,22 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Atan2(y, x);
         }
 
-        private static object Ceiling(List<Expression> p)
+        private static object Ceiling(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Ceiling(p[0]);
         }
 
-        private static object Cos(List<Expression> p)
+        private static object Cos(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Cos(p[0]);
         }
 
-        private static object Cosh(List<Expression> p)
+        private static object Cosh(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Cosh(p[0]);
         }
 
-        private static object Cot(List<Expression> p)
+        private static object Cot(in CalculationContext ctx, List<Expression> p)
         {
             var tan = (double)Math.Tan(p[0]);
 
@@ -152,7 +152,7 @@ namespace ClosedXML.Excel.CalcEngine
             return 1 / tan;
         }
 
-        private static object Coth(List<Expression> p)
+        private static object Coth(in CalculationContext ctx, List<Expression> p)
         {
             double input = p[0];
             if (input == 0)
@@ -161,7 +161,7 @@ namespace ClosedXML.Excel.CalcEngine
             return 1 / Math.Tanh(input);
         }
 
-        private static object Csc(List<Expression> p)
+        private static object Csc(in CalculationContext ctx, List<Expression> p)
         {
             double input = p[0];
             if (input == 0)
@@ -170,7 +170,7 @@ namespace ClosedXML.Excel.CalcEngine
             return 1 / Math.Sin(input);
         }
 
-        private static object Csch(List<Expression> p)
+        private static object Csch(in CalculationContext ctx, List<Expression> p)
         {
             if (Math.Abs((double)p[0].Evaluate()) < Double.Epsilon)
                 throw new DivisionByZeroException();
@@ -178,7 +178,7 @@ namespace ClosedXML.Excel.CalcEngine
             return 1 / Math.Sinh(p[0]);
         }
 
-        private static object Decimal(List<Expression> p)
+        private static object Decimal(in CalculationContext ctx, List<Expression> p)
         {
             string source = p[0];
             double radix = p[1];
@@ -212,12 +212,12 @@ namespace ClosedXML.Excel.CalcEngine
             return result;
         }
 
-        private static object Exp(List<Expression> p)
+        private static object Exp(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Exp(p[0]);
         }
 
-        private static object Floor(List<Expression> p)
+        private static object Floor(in CalculationContext ctx, List<Expression> p)
         {
             double number = p[0];
             double significance = 1;
@@ -237,7 +237,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return Math.Floor(number / significance) * significance;
         }
 
-        private static object FloorMath(List<Expression> p)
+        private static object FloorMath(in CalculationContext ctx, List<Expression> p)
         {
             double number = p[0];
             double significance = 1;
@@ -254,68 +254,68 @@ namespace ClosedXML.Excel.CalcEngine
                 return -Math.Floor(-number / Math.Abs(significance)) * Math.Abs(significance);
         }
 
-        private static object Int(List<Expression> p)
+        private static object Int(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Floor(p[0]);
         }
 
-        private static object Ln(List<Expression> p)
+        private static object Ln(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Log(p[0]);
         }
 
-        private static object Log(List<Expression> p)
+        private static object Log(in CalculationContext ctx, List<Expression> p)
         {
             var lbase = p.Count > 1 ? (double)p[1] : 10;
             return Math.Log(p[0], lbase);
         }
 
-        private static object Log10(List<Expression> p)
+        private static object Log10(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Log10(p[0]);
         }
 
-        private static object Pi(List<Expression> p)
+        private static object Pi(in CalculationContext ctx, List<Expression> p)
         {
             return Math.PI;
         }
 
-        private static object Power(List<Expression> p)
+        private static object Power(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Pow(p[0], p[1]);
         }
 
-        private static object Rand(List<Expression> p)
+        private static object Rand(in CalculationContext ctx, List<Expression> p)
         {
             return _rnd.NextDouble();
         }
 
-        private static object RandBetween(List<Expression> p)
+        private static object RandBetween(in CalculationContext ctx, List<Expression> p)
         {
             return _rnd.Next((int)(double)p[0], (int)(double)p[1]);
         }
 
-        private static object Sign(List<Expression> p)
+        private static object Sign(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Sign(p[0]);
         }
 
-        private static object Sin(List<Expression> p)
+        private static object Sin(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Sin(p[0]);
         }
 
-        private static object Sinh(List<Expression> p)
+        private static object Sinh(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Sinh(p[0]);
         }
 
-        private static object Sqrt(List<Expression> p)
+        private static object Sqrt(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Sqrt(p[0]);
         }
 
-        private static object Sum(List<Expression> p)
+        private static object Sum(in CalculationContext ctx, List<Expression> p)
         {
             var tally = new Tally();
             foreach (var e in p)
@@ -325,7 +325,7 @@ namespace ClosedXML.Excel.CalcEngine
             return tally.Sum();
         }
 
-        private static object SumIf(List<Expression> p)
+        private static object SumIf(in CalculationContext ctx, List<Expression> p)
         {
             // get parameters
             var range = p[0] as IEnumerable;                            // range of values to match the criteria against
@@ -363,7 +363,7 @@ namespace ClosedXML.Excel.CalcEngine
             return tally.Sum();
         }
 
-        private static object SumIfs(List<Expression> p)
+        private static object SumIfs(in CalculationContext ctx, List<Expression> p)
         {
             // get parameters
             var sumRange = p[0] as IEnumerable;
@@ -420,7 +420,7 @@ namespace ClosedXML.Excel.CalcEngine
             return tally.Sum();
         }
 
-        private static object SumProduct(List<Expression> p)
+        private static object SumProduct(in CalculationContext ctx, List<Expression> p)
         {
             // all parameters should be IEnumerable
             if (p.Any(param => !(param is IEnumerable)))
@@ -463,17 +463,17 @@ namespace ClosedXML.Excel.CalcEngine
                 );
         }
 
-        private static object Tan(List<Expression> p)
+        private static object Tan(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Tan(p[0]);
         }
 
-        private static object Tanh(List<Expression> p)
+        private static object Tanh(in CalculationContext ctx, List<Expression> p)
         {
             return Math.Tanh(p[0]);
         }
 
-        private static object Trunc(List<Expression> p)
+        private static object Trunc(in CalculationContext ctx, List<Expression> p)
         {
             return (double)(int)((double)p[0]);
         }
@@ -513,7 +513,7 @@ namespace ClosedXML.Excel.CalcEngine
             return (Math.Log(x + Math.Sqrt(x * x + 1.0)));
         }
 
-        private static object Acosh(List<Expression> p)
+        private static object Acosh(in CalculationContext ctx, List<Expression> p)
         {
             double number = p[0];
             if (number < 1)
@@ -522,7 +522,7 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.ACosh(p[0]);
         }
 
-        private static object Acot(List<Expression> p)
+        private static object Acot(in CalculationContext ctx, List<Expression> p)
         {
             double x = Math.Atan(1.0 / p[0]);
 
@@ -534,7 +534,7 @@ namespace ClosedXML.Excel.CalcEngine
             return x;
         }
 
-        private static object Acoth(List<Expression> p)
+        private static object Acoth(in CalculationContext ctx, List<Expression> p)
         {
             double number = p[0];
             if (Math.Abs(number) < 1)
@@ -543,7 +543,7 @@ namespace ClosedXML.Excel.CalcEngine
             return 0.5 * Math.Log((number + 1) / (number - 1));
         }
 
-        private static object Arabic(List<Expression> p)
+        private static object Arabic(in CalculationContext ctx, List<Expression> p)
         {
             string input = ((string)p[0]).Trim();
 
@@ -568,12 +568,12 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private static object Asinh(List<Expression> p)
+        private static object Asinh(in CalculationContext ctx, List<Expression> p)
         {
             return XLMath.ASinh(p[0]);
         }
 
-        private static object Atanh(List<Expression> p)
+        private static object Atanh(in CalculationContext ctx, List<Expression> p)
         {
             double input = p[0];
             if (Math.Abs(input) >= 1)
@@ -582,7 +582,7 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.ATanh(p[0]);
         }
 
-        private static object Base(List<Expression> p)
+        private static object Base(in CalculationContext ctx, List<Expression> p)
         {
             long number;
             int radix;
@@ -615,7 +615,7 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.ChangeBase(number, radix).PadLeft(minLength, '0');
         }
 
-        private static object Combin(List<Expression> p)
+        private static object Combin(in CalculationContext ctx, List<Expression> p)
         {
             Int32 n;
             Int32 k;
@@ -641,7 +641,7 @@ namespace ClosedXML.Excel.CalcEngine
             return XLMath.Combin(n, k);
         }
 
-        private static object CombinA(List<Expression> p)
+        private static object CombinA(in CalculationContext ctx, List<Expression> p)
         {
             Int32 number = (int)p[0]; // casting truncates towards 0 as specified
             Int32 chosen = (int)p[1];
@@ -659,12 +659,12 @@ namespace ClosedXML.Excel.CalcEngine
                 : (long)XLMath.Combin(n, k);
         }
 
-        private static object Degrees(List<Expression> p)
+        private static object Degrees(in CalculationContext ctx, List<Expression> p)
         {
             return p[0] * (180.0 / Math.PI);
         }
 
-        private static object Fact(List<Expression> p)
+        private static object Fact(in CalculationContext ctx, List<Expression> p)
         {
             var input = p[0].Evaluate();
 
@@ -683,7 +683,7 @@ namespace ClosedXML.Excel.CalcEngine
             return fact;
         }
 
-        private static object FactDouble(List<Expression> p)
+        private static object FactDouble(in CalculationContext ctx, List<Expression> p)
         {
             var input = p[0].Evaluate();
 
@@ -705,7 +705,7 @@ namespace ClosedXML.Excel.CalcEngine
             return fact;
         }
 
-        private static object Gcd(List<Expression> p)
+        private static object Gcd(in CalculationContext ctx, List<Expression> p)
         {
             return p.Select(v => (int)v).Aggregate(Gcd);
         }
@@ -715,7 +715,7 @@ namespace ClosedXML.Excel.CalcEngine
             return b == 0 ? a : Gcd(b, a % b);
         }
 
-        private static object Lcm(List<Expression> p)
+        private static object Lcm(in CalculationContext ctx, List<Expression> p)
         {
             return p.Select(v => (int)v).Aggregate(Lcm);
         }
@@ -726,7 +726,7 @@ namespace ClosedXML.Excel.CalcEngine
             return a * (b / Gcd(a, b));
         }
 
-        private static object Mod(List<Expression> p)
+        private static object Mod(in CalculationContext ctx, List<Expression> p)
         {
             double number = p[0];
             double divisor = p[1];
@@ -734,7 +734,7 @@ namespace ClosedXML.Excel.CalcEngine
             return number - Math.Floor(number / divisor) * divisor;
         }
 
-        private static object MRound(List<Expression> p)
+        private static object MRound(in CalculationContext ctx, List<Expression> p)
         {
             var n = (Decimal)(Double)p[0];
             var k = (Decimal)(Double)p[1];
@@ -748,7 +748,7 @@ namespace ClosedXML.Excel.CalcEngine
             return k * mult;
         }
 
-        private static object Multinomial(List<Expression> p)
+        private static object Multinomial(in CalculationContext ctx, List<Expression> p)
         {
             return Multinomial(p.Select(v => (double)v).ToList());
         }
@@ -792,21 +792,21 @@ namespace ClosedXML.Excel.CalcEngine
             return result;
         }
 
-        private static object Odd(List<Expression> p)
+        private static object Odd(in CalculationContext ctx, List<Expression> p)
         {
             var num = (int)Math.Ceiling(p[0]);
             var addValue = num >= 0 ? 1 : -1;
             return XLMath.IsOdd(num) ? num : num + addValue;
         }
 
-        private static object Even(List<Expression> p)
+        private static object Even(in CalculationContext ctx, List<Expression> p)
         {
             var num = (int)Math.Ceiling(p[0]);
             var addValue = num >= 0 ? 1 : -1;
             return XLMath.IsEven(num) ? num : num + addValue;
         }
 
-        private static object Product(List<Expression> p)
+        private static object Product(in CalculationContext ctx, List<Expression> p)
         {
             if (p.Count == 0) return 0;
             Double total = 1;
@@ -814,7 +814,7 @@ namespace ClosedXML.Excel.CalcEngine
             return total;
         }
 
-        private static object Quotient(List<Expression> p)
+        private static object Quotient(in CalculationContext ctx, List<Expression> p)
         {
             Double n = p[0];
             Double k = p[1];
@@ -822,12 +822,12 @@ namespace ClosedXML.Excel.CalcEngine
             return (int)(n / k);
         }
 
-        private static object Radians(List<Expression> p)
+        private static object Radians(in CalculationContext ctx, List<Expression> p)
         {
             return p[0] * Math.PI / 180.0;
         }
 
-        private static object Roman(List<Expression> p)
+        private static object Roman(in CalculationContext ctx, List<Expression> p)
         {
             if (p.Count == 1
                 || (Boolean.TryParse(p[1]._token.Value.ToString(), out bool boolTemp) && boolTemp)
@@ -837,7 +837,7 @@ namespace ClosedXML.Excel.CalcEngine
             throw new ArgumentException("Can only support classic roman types.");
         }
 
-        private static object Round(List<Expression> p)
+        private static object Round(in CalculationContext ctx, List<Expression> p)
         {
             var value = (Double)p[0];
             var digits = (Int32)(Double)p[1];
@@ -854,7 +854,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private static object RoundDown(List<Expression> p)
+        private static object RoundDown(in CalculationContext ctx, List<Expression> p)
         {
             var value = (Double)p[0];
             var digits = (Int32)(Double)p[1];
@@ -865,7 +865,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
         }
 
-        private static object RoundUp(List<Expression> p)
+        private static object RoundUp(in CalculationContext ctx, List<Expression> p)
         {
             var value = (Double)p[0];
             var digits = (Int32)(Double)p[1];
@@ -876,7 +876,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
         }
 
-        private static object Sec(List<Expression> p)
+        private static object Sec(in CalculationContext ctx, List<Expression> p)
         {
             if (double.TryParse(p[0], out double number))
                 return 1.0 / Math.Cos(number);
@@ -884,12 +884,12 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new CellValueException();
         }
 
-        private static object Sech(List<Expression> p)
+        private static object Sech(in CalculationContext ctx, List<Expression> p)
         {
             return 1.0 / Math.Cosh(p[0]);
         }
 
-        private static object SeriesSum(List<Expression> p)
+        private static object SeriesSum(in CalculationContext ctx, List<Expression> p)
         {
             var x = (Double)p[0];
             var n = (Double)p[1];
@@ -910,13 +910,13 @@ namespace ClosedXML.Excel.CalcEngine
             return total;
         }
 
-        private static object SqrtPi(List<Expression> p)
+        private static object SqrtPi(in CalculationContext ctx, List<Expression> p)
         {
             var num = (Double)p[0];
             return Math.Sqrt(Math.PI * num);
         }
 
-        private static object Subtotal(List<Expression> p)
+        private static object Subtotal(in CalculationContext ctx, List<Expression> p)
         {
             var fId = (int)(Double)p[0];
             var tally = new Tally(p.Skip(1));
@@ -961,13 +961,13 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private static object SumSq(List<Expression> p)
+        private static object SumSq(in CalculationContext ctx, List<Expression> p)
         {
             var t = new Tally(p);
             return t.NumericValues().Sum(v => Math.Pow(v, 2));
         }
 
-        private static object MMult(List<Expression> p)
+        private static object MMult(in CalculationContext ctx, List<Expression> p)
         {
             Double[,] A = GetArray(p[0]);
             Double[,] B = GetArray(p[1]);
@@ -1011,7 +1011,7 @@ namespace ClosedXML.Excel.CalcEngine
             return arr;
         }
 
-        private static object MDeterm(List<Expression> p)
+        private static object MDeterm(in CalculationContext ctx, List<Expression> p)
         {
             var arr = GetArray(p[0]);
             var m = new XLMatrix(arr);
@@ -1019,7 +1019,7 @@ namespace ClosedXML.Excel.CalcEngine
             return m.Determinant();
         }
 
-        private static object MInverse(List<Expression> p)
+        private static object MInverse(in CalculationContext ctx, List<Expression> p)
         {
             var arr = GetArray(p[0]);
             var m = new XLMatrix(arr);

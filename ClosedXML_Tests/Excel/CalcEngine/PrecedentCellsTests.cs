@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
@@ -19,7 +20,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                     var sheet2 = wb.AddWorksheet("Sheet2");
                     var formula = "=MAX(A2:E2)/COUNTBLANK(A2:E2)*MAX(B1:C3)+SUM(Sheet2!B1:C3)+SUM($A$2:$E$2)+A2+B$2+$C$2";
 
-                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(formula);
+                    var ctx = new CalculationContext();
+                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(ctx, formula);
 
                     Assert.AreEqual(6, ranges.Count());
                     Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "A2:E2"));
@@ -43,7 +45,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                     sheet1.NamedRanges.Add("NAMED_RANGE", sheet1.Range("A2:B3"));
                     var formula = "=SUM(NAMED_RANGE)";
 
-                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(formula);
+                    var ctx = new CalculationContext();
+                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(ctx, formula);
 
                     Assert.AreEqual(1, ranges.Count());
                     Assert.AreEqual("$A$2:$B$3", ranges.First().RangeAddress.ToString());
@@ -66,7 +69,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                     var expectedAtSheet2 = new string[]
                         { "B1", "C1", "B2", "C2", "B3", "C3" };
 
-                    var cells = sheet1.CalcEngine.GetPrecedentCells(formula);
+                    var ctx = new CalculationContext();
+                    var cells = sheet1.CalcEngine.GetPrecedentCells(ctx, formula);
 
                     Assert.AreEqual(15, cells.Count());
                     foreach (var address in expectedAtSheet1)

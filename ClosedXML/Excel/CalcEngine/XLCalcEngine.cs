@@ -30,10 +30,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="expression">Formula to parse.</param>
         /// <returns>Collection of ranges included into the expression.</returns>
-        public IEnumerable<IXLRange> GetPrecedentRanges(string expression)
+        public IEnumerable<IXLRange> GetPrecedentRanges(CalculationContext ctx, string expression)
         {
             _cellRanges = new List<IXLRange>();
-            Parse(expression);
+            Parse(in ctx, expression);
             var ranges = _cellRanges;
             _cellRanges = null;
             var visitedRanges = new HashSet<IXLRangeAddress>(new XLRangeAddressComparer(true));
@@ -47,11 +47,11 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public IEnumerable<IXLCell> GetPrecedentCells(string expression)
+        public IEnumerable<IXLCell> GetPrecedentCells(CalculationContext ctx, string expression)
         {
             if (!String.IsNullOrWhiteSpace(expression))
             {
-                var ranges = GetPrecedentRanges(expression);
+                var ranges = GetPrecedentRanges(ctx, expression);
                 var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));
                 var cells = ranges.SelectMany(range => range.Cells()).Distinct();
                 foreach (var cell in cells)
@@ -98,11 +98,17 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (TryGetNamedRange(identifier, _ws, out IXLNamedRange namedRange))
                 {
-                    var references = (namedRange as XLNamedRange).RangeList.Select(r =>
-                        XLHelper.IsValidRangeAddress(r) 
-                            ? GetCellRangeReference(_ws.Workbook.Range(r))
-                            : new XLCalcEngine(_ws).Evaluate(r.ToString())
-                        );
+                    var references = (namedRange as XLNamedRange).RangeList
+                        .Select(r =>
+                        {
+                            if (XLHelper.IsValidRangeAddress(r))
+                                return GetCellRangeReference(_ws.Workbook.Range(r));
+                            else
+                            {
+                                var ctx = new CalculationContext();
+                                return new XLCalcEngine(_ws).Evaluate(in ctx, r.ToString());
+                            }
+                        });
                     if (references.Count() == 1)
                         return references.Single();
                     return references;
