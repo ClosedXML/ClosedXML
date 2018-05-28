@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
             return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
         }
 
-        #endregion
+        #endregion IXLAutoFilter Members
 
         #region IXLBaseAutoFilter Members
 
@@ -74,7 +74,7 @@ namespace ClosedXML.Excel
             return filterColumn;
         }
 
-        #endregion
+        #endregion IXLBaseAutoFilter Members
 
         public XLAutoFilter Set(IXLRangeBase range)
         {
@@ -166,6 +166,14 @@ namespace ClosedXML.Excel
 
             ws.ResumeEvents();
             return this;
+        }
+
+        public IEnumerable<IXLRangeRow> VisibleRows
+        {
+            get
+            {
+                return Range.Rows(r => !r.WorksheetRow().IsHidden);
+            }
         }
     }
 }
