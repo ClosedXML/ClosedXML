@@ -5,6 +5,7 @@ namespace ClosedXML.Excel
 {
     public enum XLPivotTableTheme
     {
+        None,
         PivotStyleDark1,
         PivotStyleDark10,
         PivotStyleDark11,
