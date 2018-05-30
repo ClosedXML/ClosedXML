@@ -1568,11 +1568,22 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetValue<T>(out T value)
         {
-            var currValue = Value;
+            Object currValue;
+            try
+            {
+                currValue = Value;
+            }
+            catch
+            {
+                // May fail for formula evaluation
+                value = default;
+                return false;
+            }
+            
 
             if (currValue == null)
             {
-                value = default(T);
+                value = default;
                 return true;
             }
 

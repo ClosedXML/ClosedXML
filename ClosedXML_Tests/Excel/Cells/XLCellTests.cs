@@ -792,5 +792,23 @@ namespace ClosedXML_Tests
                 var _ = cell.Value;
             });
         }
+
+        [Test]
+        public void TryGetValueFormulaEvaluation()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var A1 = ws.Cell("A1");
+                var A2 = ws.Cell("A2");
+                var A3 = ws.Cell("A3");
+                A1.FormulaA1 = "A2 + 1";
+                A2.FormulaA1 = "A1 + 1";
+
+                Assert.IsFalse(A1.TryGetValue(out String _));
+                Assert.IsFalse(A2.TryGetValue(out String _));
+                Assert.IsTrue(A3.TryGetValue(out String _));
+            }
+        }
     }
 }
