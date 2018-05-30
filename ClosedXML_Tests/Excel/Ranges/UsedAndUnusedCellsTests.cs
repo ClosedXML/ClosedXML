@@ -145,5 +145,33 @@ namespace ClosedXML_Tests.Excel.Ranges
                 Assert.AreEqual("A1:E2", used);
             }
         }
+
+        [TestCase(true, "A1:D2", "A1")]
+        [TestCase(true, "A2:D2", "A2")]
+        [TestCase(true, "A1:D2", "A1", "B2")]
+        [TestCase(true, "B2:D3", "C3")]
+        [TestCase(true, "B2:F4", "F4")]
+        [TestCase(false, "A1:D2", "A1")]
+        [TestCase(false, "A2:D2", "A2")]
+        [TestCase(false, "A1:D2", "A1", "B2")]
+        [TestCase(false, "B2:D3", "C3")]
+        [TestCase(false, "B2:F4", "F4")]
+        public void RangeUsedIncludesMergedCells(bool includeFormatting, string expectedRange,
+            params string[] cellsWithValues)
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                foreach (var cellAddress in cellsWithValues)
+                {
+                    ws.Cell(cellAddress).Value = "Not empty";
+                }
+                ws.Range("B2:D2").Merge();
+
+                var actual = ws.RangeUsed(includeFormatting).RangeAddress;
+
+                Assert.AreEqual(expectedRange, actual.ToString());
+            }
+        }
     }
 }
