@@ -635,16 +635,19 @@ namespace ClosedXML.Excel
                         if (!cell.IsEmpty(true)) return cell;
                     }
                 }
+            }
 
-                var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
-                    .Where(r => predicate == null || predicate(r.FirstCell())).ToList();
-                if (intersectedRanges.Any())
-                {
-                    Int32 minRo = intersectedRanges.Min(r => r.RangeAddress.FirstAddress.RowNumber);
-                    Int32 minCo = intersectedRanges.Min(r => r.RangeAddress.FirstAddress.ColumnNumber);
+            var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
+                .Where(r => predicate == null || predicate(r.FirstCell())).ToList();
+            if (intersectedRanges.Any())
+            {
+                Int32 minRo = intersectedRanges.Min(r => r.RangeAddress.FirstAddress.RowNumber);
+                Int32 minCo = intersectedRanges.Min(r => r.RangeAddress.FirstAddress.ColumnNumber);
 
-                    return Worksheet.Cell(minRo, minCo);
-                }
+                if (0 < sp.Row && sp.Row < minRo) minRo = sp.Row;
+                if (0 < sp.Column && sp.Column < minCo) minCo = sp.Column;
+
+                return Worksheet.Cell(minRo, minCo);
             }
 
             if (sp.Row > 0)
@@ -726,16 +729,19 @@ namespace ClosedXML.Excel
                         if (!cell.IsEmpty(true)) return cell;
                     }
                 }
+            }
 
-                var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
-                    .Where(r => predicate == null || predicate(r.FirstCell())).ToList();
-                if (intersectedRanges.Any())
-                {
-                    Int32 minRo = intersectedRanges.Max(r => r.RangeAddress.LastAddress.RowNumber);
-                    Int32 minCo = intersectedRanges.Max(r => r.RangeAddress.LastAddress.ColumnNumber);
+            var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
+                .Where(r => predicate == null || predicate(r.FirstCell())).ToList();
+            if (intersectedRanges.Any())
+            {
+                Int32 maxRo = intersectedRanges.Max(r => r.RangeAddress.LastAddress.RowNumber);
+                Int32 maxCo = intersectedRanges.Max(r => r.RangeAddress.LastAddress.ColumnNumber);
 
-                    return Worksheet.Cell(minRo, minCo);
-                }
+                if (sp.Row > maxRo) maxRo = sp.Row;
+                if (sp.Column > maxCo) maxCo = sp.Column;
+
+                return Worksheet.Cell(maxRo, maxCo);
             }
 
             if (sp.Row > 0)
