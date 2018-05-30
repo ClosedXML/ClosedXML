@@ -276,6 +276,21 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void PivotTableWithNoneTheme()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\inputfile.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    wb.SaveAs(ms);
+                    return wb;
+                }, @"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\outputfile.xlsx");
+            }
+        }
+
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
         {
             field.SubtotalsAtTop = !withDefaults;
