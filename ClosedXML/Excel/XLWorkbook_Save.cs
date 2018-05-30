@@ -1,3 +1,4 @@
+using ClosedXML.Excel.ContentManagers;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -397,7 +398,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static void GenerateTables(XLWorksheet worksheet, WorksheetPart worksheetPart, SaveContext context, XLWSContentManager cm)
+        private static void GenerateTables(XLWorksheet worksheet, WorksheetPart worksheetPart, SaveContext context, XLWorksheetContentManager cm)
         {
             var tables = worksheet.Tables as XLTables;
 
@@ -408,11 +409,11 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.TableParts);
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.TableParts);
                 tableParts = new TableParts();
                 worksheetPart.Worksheet.InsertAfter(tableParts, previousElement);
             }
-            cm.SetElement(XLWSContentManager.XLWSContents.TableParts, tableParts);
+            cm.SetElement(XLWorksheetContents.TableParts, tableParts);
 
             foreach (var deletedTableRelId in tables.Deleted)
             {
@@ -4328,7 +4329,7 @@ namespace ClosedXML.Excel
 
             #endregion Worksheet
 
-            var cm = new XLWSContentManager(worksheetPart.Worksheet);
+            var cm = new XLWorksheetContentManager(worksheetPart.Worksheet);
 
             #region SheetProperties
 
@@ -4339,7 +4340,7 @@ namespace ClosedXML.Excel
                 ? GetTabColor(xlWorksheet.TabColor)
                 : null;
 
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetProperties, worksheetPart.Worksheet.SheetProperties);
+            cm.SetElement(XLWorksheetContents.SheetProperties, worksheetPart.Worksheet.SheetProperties);
 
             if (worksheetPart.Worksheet.SheetProperties.OutlineProperties == null)
                 worksheetPart.Worksheet.SheetProperties.OutlineProperties = new OutlineProperties();
@@ -4380,12 +4381,12 @@ namespace ClosedXML.Excel
             if (worksheetPart.Worksheet.SheetDimension == null)
                 worksheetPart.Worksheet.SheetDimension = new SheetDimension { Reference = sheetDimensionReference };
 
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetDimension, worksheetPart.Worksheet.SheetDimension);
+            cm.SetElement(XLWorksheetContents.SheetDimension, worksheetPart.Worksheet.SheetDimension);
 
             if (worksheetPart.Worksheet.SheetViews == null)
                 worksheetPart.Worksheet.SheetViews = new SheetViews();
 
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetViews, worksheetPart.Worksheet.SheetViews);
+            cm.SetElement(XLWorksheetContents.SheetViews, worksheetPart.Worksheet.SheetViews);
 
             var sheetView = (SheetView)worksheetPart.Worksheet.SheetViews.FirstOrDefault();
             if (sheetView == null)
@@ -4393,6 +4394,8 @@ namespace ClosedXML.Excel
                 sheetView = new SheetView { WorkbookViewId = 0U };
                 worksheetPart.Worksheet.SheetViews.AppendChild(sheetView);
             }
+
+            var svcm = new XLSheetViewContentManager(sheetView);
 
             if (xlWorksheet.TabSelected)
                 sheetView.TabSelected = true;
@@ -4453,8 +4456,10 @@ namespace ClosedXML.Excel
             if (pane == null)
             {
                 pane = new Pane();
-                sheetView.AppendChild(pane);
+                sheetView.InsertAt(pane, 0);
             }
+
+            svcm.SetElement(XLSheetViewContents.Pane, pane);
 
             pane.State = PaneStateValues.FrozenSplit;
             Double hSplit = xlWorksheet.SheetView.SplitColumn;
@@ -4473,6 +4478,7 @@ namespace ClosedXML.Excel
             {
                 pane = null;
                 sheetView.RemoveAllChildren<Pane>();
+                svcm.SetElement(XLSheetViewContents.Pane, null);
             }
             else
                 sheetView.TopLeftCell = null;
@@ -4480,6 +4486,7 @@ namespace ClosedXML.Excel
             if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
             {
                 sheetView.RemoveAllChildren<Selection>();
+                svcm.SetElement(XLSheetViewContents.Selection, null);
 
                 var firstSelection = xlWorksheet.SelectedRanges.FirstOrDefault();
 
@@ -4503,11 +4510,12 @@ namespace ClosedXML.Excel
 
                     selection.SequenceOfReferences = new ListValue<StringValue> { InnerText = String.Join(" ", seqRef.Distinct().ToArray()) };
 
-                    sheetView.Append(selection);
+                    sheetView.InsertAfter(selection, svcm.GetPreviousElementFor(XLSheetViewContents.Selection));
+                    svcm.SetElement(XLSheetViewContents.Selection, selection);
                 };
 
-                populateSelection(new Selection());
                 // If a pane exists, we need to set the active pane too
+                // Yes, this might lead to 2 Selection elements!
                 if (pane != null)
                 {
                     populateSelection(new Selection()
@@ -4515,6 +4523,7 @@ namespace ClosedXML.Excel
                         Pane = pane.ActivePane
                     });
                 }
+                populateSelection(new Selection());
             }
 
             if (xlWorksheet.SheetView.ZoomScale == 100)
@@ -4552,7 +4561,7 @@ namespace ClosedXML.Excel
             if (worksheetPart.Worksheet.SheetFormatProperties == null)
                 worksheetPart.Worksheet.SheetFormatProperties = new SheetFormatProperties();
 
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetFormatProperties,
+            cm.SetElement(XLWorksheetContents.SheetFormatProperties,
                 worksheetPart.Worksheet.SheetFormatProperties);
 
             worksheetPart.Worksheet.SheetFormatProperties.DefaultRowHeight = xlWorksheet.RowHeight.SaveRound();
@@ -4591,12 +4600,12 @@ namespace ClosedXML.Excel
             {
                 if (!worksheetPart.Worksheet.Elements<Columns>().Any())
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Columns);
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.Columns);
                     worksheetPart.Worksheet.InsertAfter(new Columns(), previousElement);
                 }
 
                 var columns = worksheetPart.Worksheet.Elements<Columns>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.Columns, columns);
+                cm.SetElement(XLWorksheetContents.Columns, columns);
 
                 var sheetColumnsByMin = columns.Elements<Column>().ToDictionary(c => c.Min.Value, c => c);
                 //Dictionary<UInt32, Column> sheetColumnsByMax = columns.Elements<Column>().ToDictionary(c => c.Max.Value, c => c);
@@ -4706,7 +4715,7 @@ namespace ClosedXML.Excel
                 if (!columns.Any())
                 {
                     worksheetPart.Worksheet.RemoveAllChildren<Columns>();
-                    cm.SetElement(XLWSContentManager.XLWSContents.Columns, null);
+                    cm.SetElement(XLWorksheetContents.Columns, null);
                 }
             }
 
@@ -4716,12 +4725,12 @@ namespace ClosedXML.Excel
 
             if (!worksheetPart.Worksheet.Elements<SheetData>().Any())
             {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.SheetData);
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.SheetData);
                 worksheetPart.Worksheet.InsertAfter(new SheetData(), previousElement);
             }
 
             var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.SheetData, sheetData);
+            cm.SetElement(XLWorksheetContents.SheetData, sheetData);
 
             var lastRow = 0;
             var existingSheetDataRows =
@@ -4980,12 +4989,12 @@ namespace ClosedXML.Excel
             {
                 if (!worksheetPart.Worksheet.Elements<SheetProtection>().Any())
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.SheetProtection);
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.SheetProtection);
                     worksheetPart.Worksheet.InsertAfter(new SheetProtection(), previousElement);
                 }
 
                 var sheetProtection = worksheetPart.Worksheet.Elements<SheetProtection>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, sheetProtection);
+                cm.SetElement(XLWorksheetContents.SheetProtection, sheetProtection);
 
                 var protection = xlWorksheet.Protection;
                 sheetProtection.Sheet = protection.Protected;
@@ -5009,7 +5018,7 @@ namespace ClosedXML.Excel
             else
             {
                 worksheetPart.Worksheet.RemoveAllChildren<SheetProtection>();
-                cm.SetElement(XLWSContentManager.XLWSContents.SheetProtection, null);
+                cm.SetElement(XLWorksheetContents.SheetProtection, null);
             }
 
             #endregion SheetProtection
@@ -5019,17 +5028,17 @@ namespace ClosedXML.Excel
             worksheetPart.Worksheet.RemoveAllChildren<AutoFilter>();
             if (xlWorksheet.AutoFilter.Enabled)
             {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.AutoFilter);
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.AutoFilter);
                 worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
 
                 var autoFilter = worksheetPart.Worksheet.Elements<AutoFilter>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, autoFilter);
+                cm.SetElement(XLWorksheetContents.AutoFilter, autoFilter);
 
                 PopulateAutoFilter(xlWorksheet.AutoFilter, autoFilter);
             }
             else
             {
-                cm.SetElement(XLWSContentManager.XLWSContents.AutoFilter, null);
+                cm.SetElement(XLWorksheetContents.AutoFilter, null);
             }
 
             #endregion AutoFilter
@@ -5040,12 +5049,12 @@ namespace ClosedXML.Excel
             {
                 if (!worksheetPart.Worksheet.Elements<MergeCells>().Any())
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.MergeCells);
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.MergeCells);
                     worksheetPart.Worksheet.InsertAfter(new MergeCells(), previousElement);
                 }
 
                 var mergeCells = worksheetPart.Worksheet.Elements<MergeCells>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.MergeCells, mergeCells);
+                cm.SetElement(XLWorksheetContents.MergeCells, mergeCells);
                 mergeCells.RemoveAllChildren<MergeCell>();
 
                 foreach (var mergeCell in (xlWorksheet).Internals.MergedRanges.Select(
@@ -5058,7 +5067,7 @@ namespace ClosedXML.Excel
             else
             {
                 worksheetPart.Worksheet.RemoveAllChildren<MergeCells>();
-                cm.SetElement(XLWSContentManager.XLWSContents.MergeCells, null);
+                cm.SetElement(XLWorksheetContents.MergeCells, null);
             }
 
             #endregion MergeCells
@@ -5068,12 +5077,12 @@ namespace ClosedXML.Excel
             if (!xlWorksheet.ConditionalFormats.Any())
             {
                 worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
-                cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, null);
+                cm.SetElement(XLWorksheetContents.ConditionalFormatting, null);
             }
             else
             {
                 worksheetPart.Worksheet.RemoveAllChildren<ConditionalFormatting>();
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ConditionalFormatting);
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.ConditionalFormatting);
 
                 var conditionalFormats = xlWorksheet.ConditionalFormats.ToList(); // Required for IndexOf method
 
@@ -5097,7 +5106,7 @@ namespace ClosedXML.Excel
                     }
                     worksheetPart.Worksheet.InsertAfter(conditionalFormatting, previousElement);
                     previousElement = conditionalFormatting;
-                    cm.SetElement(XLWSContentManager.XLWSContents.ConditionalFormatting, conditionalFormatting);
+                    cm.SetElement(XLWorksheetContents.ConditionalFormatting, conditionalFormatting);
                 }
             }
 
@@ -5106,12 +5115,12 @@ namespace ClosedXML.Excel
             {
                 if (!worksheetPart.Worksheet.Elements<WorksheetExtensionList>().Any())
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.WorksheetExtensionList);
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.WorksheetExtensionList);
                     worksheetPart.Worksheet.InsertAfter<WorksheetExtensionList>(new WorksheetExtensionList(), previousElement);
                 }
 
                 WorksheetExtensionList worksheetExtensionList = worksheetPart.Worksheet.Elements<WorksheetExtensionList>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.WorksheetExtensionList, worksheetExtensionList);
+                cm.SetElement(XLWorksheetContents.WorksheetExtensionList, worksheetExtensionList);
 
                 var conditionalFormattings = worksheetExtensionList.Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattings>().SingleOrDefault();
                 if (conditionalFormattings == null || !conditionalFormattings.Any())
@@ -5160,18 +5169,18 @@ namespace ClosedXML.Excel
             if (!xlWorksheet.DataValidations.Any(d => d.IsDirty()))
             {
                 worksheetPart.Worksheet.RemoveAllChildren<DataValidations>();
-                cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, null);
+                cm.SetElement(XLWorksheetContents.DataValidations, null);
             }
             else
             {
                 if (!worksheetPart.Worksheet.Elements<DataValidations>().Any())
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.DataValidations);
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.DataValidations);
                     worksheetPart.Worksheet.InsertAfter(new DataValidations(), previousElement);
                 }
 
                 var dataValidations = worksheetPart.Worksheet.Elements<DataValidations>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.DataValidations, dataValidations);
+                cm.SetElement(XLWorksheetContents.DataValidations, dataValidations);
                 dataValidations.RemoveAllChildren<DataValidation>();
                 xlWorksheet.DataValidations.Consolidate();
 
@@ -5215,18 +5224,18 @@ namespace ClosedXML.Excel
             if (!xlWorksheet.Hyperlinks.Any())
             {
                 worksheetPart.Worksheet.RemoveAllChildren<Hyperlinks>();
-                cm.SetElement(XLWSContentManager.XLWSContents.Hyperlinks, null);
+                cm.SetElement(XLWorksheetContents.Hyperlinks, null);
             }
             else
             {
                 if (!worksheetPart.Worksheet.Elements<Hyperlinks>().Any())
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.Hyperlinks);
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.Hyperlinks);
                     worksheetPart.Worksheet.InsertAfter(new Hyperlinks(), previousElement);
                 }
 
                 var hyperlinks = worksheetPart.Worksheet.Elements<Hyperlinks>().First();
-                cm.SetElement(XLWSContentManager.XLWSContents.Hyperlinks, hyperlinks);
+                cm.SetElement(XLWorksheetContents.Hyperlinks, hyperlinks);
                 hyperlinks.RemoveAllChildren<Hyperlink>();
                 foreach (var hl in xlWorksheet.Hyperlinks)
                 {
@@ -5258,12 +5267,12 @@ namespace ClosedXML.Excel
 
             if (!worksheetPart.Worksheet.Elements<PrintOptions>().Any())
             {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.PrintOptions);
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.PrintOptions);
                 worksheetPart.Worksheet.InsertAfter(new PrintOptions(), previousElement);
             }
 
             var printOptions = worksheetPart.Worksheet.Elements<PrintOptions>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.PrintOptions, printOptions);
+            cm.SetElement(XLWorksheetContents.PrintOptions, printOptions);
 
             printOptions.HorizontalCentered = xlWorksheet.PageSetup.CenterHorizontally;
             printOptions.VerticalCentered = xlWorksheet.PageSetup.CenterVertically;
@@ -5276,12 +5285,12 @@ namespace ClosedXML.Excel
 
             if (!worksheetPart.Worksheet.Elements<PageMargins>().Any())
             {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.PageMargins);
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.PageMargins);
                 worksheetPart.Worksheet.InsertAfter(new PageMargins(), previousElement);
             }
 
             var pageMargins = worksheetPart.Worksheet.Elements<PageMargins>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.PageMargins, pageMargins);
+            cm.SetElement(XLWorksheetContents.PageMargins, pageMargins);
             pageMargins.Left = xlWorksheet.PageSetup.Margins.Left;
             pageMargins.Right = xlWorksheet.PageSetup.Margins.Right;
             pageMargins.Top = xlWorksheet.PageSetup.Margins.Top;
@@ -5295,12 +5304,12 @@ namespace ClosedXML.Excel
 
             if (!worksheetPart.Worksheet.Elements<PageSetup>().Any())
             {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.PageSetup);
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.PageSetup);
                 worksheetPart.Worksheet.InsertAfter(new PageSetup(), previousElement);
             }
 
             var pageSetup = worksheetPart.Worksheet.Elements<PageSetup>().First();
-            cm.SetElement(XLWSContentManager.XLWSContents.PageSetup, pageSetup);
+            cm.SetElement(XLWorksheetContents.PageSetup, pageSetup);
 
             pageSetup.Orientation = xlWorksheet.PageSetup.PageOrientation.ToOpenXml();
             pageSetup.PaperSize = (UInt32)xlWorksheet.PageSetup.PaperSize;
@@ -5365,9 +5374,9 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.RemoveAllChildren<HeaderFooter>();
 
             {
-                var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.HeaderFooter);
+                var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.HeaderFooter);
                 worksheetPart.Worksheet.InsertAfter(headerFooter, previousElement);
-                cm.SetElement(XLWSContentManager.XLWSContents.HeaderFooter, headerFooter);
+                cm.SetElement(XLWorksheetContents.HeaderFooter, headerFooter);
             }
             if (((XLHeaderFooter)xlWorksheet.PageSetup.Header).Changed
                 || ((XLHeaderFooter)xlWorksheet.PageSetup.Footer).Changed)
@@ -5404,7 +5413,7 @@ namespace ClosedXML.Excel
             {
                 if (!worksheetPart.Worksheet.Elements<RowBreaks>().Any())
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.RowBreaks);
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.RowBreaks);
                     worksheetPart.Worksheet.InsertAfter(new RowBreaks(), previousElement);
                 }
 
@@ -5434,12 +5443,12 @@ namespace ClosedXML.Excel
                     ManualPageBreak = true
                 }))
                     rowBreaks.AppendChild(break1);
-                cm.SetElement(XLWSContentManager.XLWSContents.RowBreaks, rowBreaks);
+                cm.SetElement(XLWorksheetContents.RowBreaks, rowBreaks);
             }
             else
             {
                 worksheetPart.Worksheet.RemoveAllChildren<RowBreaks>();
-                cm.SetElement(XLWSContentManager.XLWSContents.RowBreaks, null);
+                cm.SetElement(XLWorksheetContents.RowBreaks, null);
             }
 
             #endregion RowBreaks
@@ -5451,7 +5460,7 @@ namespace ClosedXML.Excel
             {
                 if (!worksheetPart.Worksheet.Elements<ColumnBreaks>().Any())
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.ColumnBreaks);
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.ColumnBreaks);
                     worksheetPart.Worksheet.InsertAfter(new ColumnBreaks(), previousElement);
                 }
 
@@ -5481,12 +5490,12 @@ namespace ClosedXML.Excel
                     ManualPageBreak = true
                 }))
                     columnBreaks.AppendChild(break1);
-                cm.SetElement(XLWSContentManager.XLWSContents.ColumnBreaks, columnBreaks);
+                cm.SetElement(XLWorksheetContents.ColumnBreaks, columnBreaks);
             }
             else
             {
                 worksheetPart.Worksheet.RemoveAllChildren<ColumnBreaks>();
-                cm.SetElement(XLWSContentManager.XLWSContents.ColumnBreaks, null);
+                cm.SetElement(XLWorksheetContents.ColumnBreaks, null);
             }
 
             #endregion ColumnBreaks
@@ -5523,7 +5532,7 @@ namespace ClosedXML.Excel
                 var worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
                 worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
                 worksheetPart.Worksheet.InsertBefore(worksheetDrawing, tableParts);
-                cm.SetElement(XLWSContentManager.XLWSContents.Drawing, worksheetPart.Worksheet.Elements<Drawing>().First());
+                cm.SetElement(XLWorksheetContents.Drawing, worksheetPart.Worksheet.Elements<Drawing>().First());
             }
 
             // Instead of saving a file with an empty Drawings.xml file, rather remove the .xml file
@@ -5545,11 +5554,11 @@ namespace ClosedXML.Excel
 
                 if (!String.IsNullOrWhiteSpace(xlWorksheet.LegacyDrawingId))
                 {
-                    var previousElement = cm.GetPreviousElementFor(XLWSContentManager.XLWSContents.LegacyDrawing);
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.LegacyDrawing);
                     worksheetPart.Worksheet.InsertAfter(new LegacyDrawing { Id = xlWorksheet.LegacyDrawingId },
                         previousElement);
 
-                    cm.SetElement(XLWSContentManager.XLWSContents.LegacyDrawing, worksheetPart.Worksheet.Elements<LegacyDrawing>().First());
+                    cm.SetElement(XLWorksheetContents.LegacyDrawing, worksheetPart.Worksheet.Elements<LegacyDrawing>().First());
                 }
             }
 
