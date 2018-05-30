@@ -584,11 +584,15 @@ namespace ClosedXML.Excel
                             var pivotTableStyle = pivotTableDefinition.GetFirstChild<PivotTableStyle>();
                             if (pivotTableStyle != null)
                             {
-                                pt.Theme = (XLPivotTableTheme)Enum.Parse(typeof(XLPivotTableTheme), pivotTableStyle.Name);
-                                pt.ShowRowHeaders = pivotTableStyle.ShowRowHeaders;
-                                pt.ShowColumnHeaders = pivotTableStyle.ShowColumnHeaders;
-                                pt.ShowRowStripes = pivotTableStyle.ShowRowStripes;
-                                pt.ShowColumnStripes = pivotTableStyle.ShowColumnStripes;
+                                if (pivotTableStyle.Name != null)
+                                    pt.Theme = (XLPivotTableTheme)Enum.Parse(typeof(XLPivotTableTheme), pivotTableStyle.Name);
+                                else
+                                    pt.Theme = XLPivotTableTheme.None;
+
+                                pt.ShowRowHeaders = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowRowHeaders, false);
+                                pt.ShowColumnHeaders = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowColumnHeaders, false);
+                                pt.ShowRowStripes = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowRowStripes, false);
+                                pt.ShowColumnStripes = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowColumnStripes, false);
                             }
 
                             // Subtotal configuration

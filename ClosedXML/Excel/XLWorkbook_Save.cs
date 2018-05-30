@@ -2756,14 +2756,18 @@ namespace ClosedXML.Excel
                 pivotTableDefinition.AppendChild(dataFields);
             }
 
-            pivotTableDefinition.AppendChild(new PivotTableStyle
+            var pts = new PivotTableStyle
             {
-                Name = Enum.GetName(typeof(XLPivotTableTheme), pt.Theme),
                 ShowRowHeaders = pt.ShowRowHeaders,
                 ShowColumnHeaders = pt.ShowColumnHeaders,
                 ShowRowStripes = pt.ShowRowStripes,
                 ShowColumnStripes = pt.ShowColumnStripes
-            });
+            };
+
+            if (pt.Theme != XLPivotTableTheme.None)
+                pts.Name = Enum.GetName(typeof(XLPivotTableTheme), pt.Theme);
+
+            pivotTableDefinition.AppendChild(pts);
 
             #region Excel 2010 Features
 
