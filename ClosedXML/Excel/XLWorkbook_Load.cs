@@ -701,12 +701,11 @@ namespace ClosedXML.Excel
                                         if (df.Subtotal != null) pivotValue = pivotValue.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
                                         if (df.ShowDataAs != null)
                                         {
-                                            var calculation = pivotValue.Calculation;
-                                            calculation = df.ShowDataAs.Value.ToClosedXml();
+                                            var calculation = df.ShowDataAs.Value.ToClosedXml();
                                             pivotValue = pivotValue.SetCalculation(calculation);
                                         }
 
-                                        if (df.BaseField != null)
+                                        if (df.BaseField?.Value != null)
                                         {
                                             var col = pt.SourceRange.Column(df.BaseField.Value + 1);
 
@@ -716,7 +715,13 @@ namespace ClosedXML.Excel
                                                         .Distinct().ToList();
 
                                             pivotValue.BaseField = col.FirstCell().GetValue<string>();
-                                            if (df.BaseItem != null) pivotValue.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                            
+                                            if (df.BaseItem?.Value != null)
+                                            {
+                                                var bi = (int)df.BaseItem.Value;
+                                                if (bi.Between(0, items.Count - 1))
+                                                    pivotValue.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                            }
                                         }
                                     }
                                 }
