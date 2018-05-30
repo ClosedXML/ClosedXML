@@ -636,7 +636,8 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress).ToList();
+                var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
+                    .Where(r => predicate == null || predicate(r.FirstCell())).ToList();
                 if (intersectedRanges.Any())
                 {
                     Int32 minRo = intersectedRanges.Min(r => r.RangeAddress.FirstAddress.RowNumber);
@@ -726,7 +727,8 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress).ToList();
+                var intersectedRanges = Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
+                    .Where(r => predicate == null || predicate(r.FirstCell())).ToList();
                 if (intersectedRanges.Any())
                 {
                     Int32 minRo = intersectedRanges.Max(r => r.RangeAddress.LastAddress.RowNumber);
