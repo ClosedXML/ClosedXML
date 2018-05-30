@@ -173,5 +173,43 @@ namespace ClosedXML_Tests.Excel.Ranges
                 Assert.AreEqual(expectedRange, actual.ToString());
             }
         }
+
+        [Test]
+        public void LastCellUsedPredicateConsidersMergedRanges()
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;
+                ws.Cell("A2").Style.Fill.BackgroundColor = XLColor.Yellow;
+                ws.Cell("A3").Style.Fill.BackgroundColor = XLColor.Green;
+                ws.Range("A1:C1").Merge();
+                ws.Range("A2:C2").Merge();
+                ws.Range("A3:C3").Merge();
+
+                var actual = ws.LastCellUsed(true, c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
+
+                Assert.AreEqual("C2", actual.Address.ToString());
+            }
+        }
+
+        [Test]
+        public void FirstCellUsedPredicateConsidersMergedRanges()
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;
+                ws.Cell("A2").Style.Fill.BackgroundColor = XLColor.Yellow;
+                ws.Cell("A3").Style.Fill.BackgroundColor = XLColor.Green;
+                ws.Range("A1:C1").Merge();
+                ws.Range("A2:C2").Merge();
+                ws.Range("A3:C3").Merge();
+
+                var actual = ws.FirstCellUsed(true, c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
+
+                Assert.AreEqual("A2", actual.Address.ToString());
+            }
+        }
     }
 }
