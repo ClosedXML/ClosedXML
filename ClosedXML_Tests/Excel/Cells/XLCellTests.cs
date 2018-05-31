@@ -402,19 +402,19 @@ namespace ClosedXML_Tests
                 object expected;
 
                 var date = new DateTime(2018, 4, 18);
-                expected = date.ToInvariantString();
+                expected = date.ToString();
                 cell.Value = expected;
                 Assert.AreEqual(XLDataType.DateTime, cell.DataType);
                 Assert.AreEqual(date, cell.Value);
 
                 var b = true;
-                expected = b.ToInvariantString();
+                expected = b.ToString();
                 cell.Value = expected;
                 Assert.AreEqual(XLDataType.Boolean, cell.DataType);
                 Assert.AreEqual(b, cell.Value);
 
                 var ts = new TimeSpan(8, 12, 4);
-                expected = ts.ToInvariantString();
+                expected = ts.ToString();
                 cell.Value = expected;
                 Assert.AreEqual(XLDataType.TimeSpan, cell.DataType);
                 Assert.AreEqual(ts, cell.Value);
