@@ -1,3 +1,4 @@
+using ClosedXML.Exceptions;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -38,20 +39,41 @@ namespace ClosedXML.Excel
 
         private void LoadSheets(String fileName)
         {
-            using (var dSpreadsheet = SpreadsheetDocument.Open(fileName, false))
-                LoadSpreadsheetDocument(dSpreadsheet);
+            try
+            {
+                using (var dSpreadsheet = SpreadsheetDocument.Open(fileName, false))
+                    LoadSpreadsheetDocument(dSpreadsheet);
+            }
+            catch (Exception ex)
+            {
+                throw new XLLoadException($"Unable to parse the contents of the file '{fileName}'", ex);
+            }
         }
 
         private void LoadSheets(Stream stream)
         {
-            using (var dSpreadsheet = SpreadsheetDocument.Open(stream, false))
-                LoadSpreadsheetDocument(dSpreadsheet);
+            try
+            {
+                using (var dSpreadsheet = SpreadsheetDocument.Open(stream, false))
+                    LoadSpreadsheetDocument(dSpreadsheet);
+            }
+            catch (Exception ex)
+            {
+                throw new XLLoadException($"Unable to parse the stream's contents", ex);
+            }
         }
 
         private void LoadSheetsFromTemplate(String fileName)
         {
-            using (var dSpreadsheet = SpreadsheetDocument.CreateFromTemplate(fileName))
-                LoadSpreadsheetDocument(dSpreadsheet);
+            try
+            {
+                using (var dSpreadsheet = SpreadsheetDocument.CreateFromTemplate(fileName))
+                    LoadSpreadsheetDocument(dSpreadsheet);
+            }
+            catch (Exception ex)
+            {
+                throw new XLLoadException($"Unable to parse the contents of the file '{fileName}'", ex);
+            }
         }
 
         private void LoadSpreadsheetDocument(SpreadsheetDocument dSpreadsheet)
