@@ -644,8 +644,8 @@ namespace ClosedXML.Excel
                 Int32 minRo = intersectedRanges.Min(r => r.RangeAddress.FirstAddress.RowNumber);
                 Int32 minCo = intersectedRanges.Min(r => r.RangeAddress.FirstAddress.ColumnNumber);
 
-                if (0 < sp.Row && sp.Row < minRo) minRo = sp.Row;
-                if (0 < sp.Column && sp.Column < minCo) minCo = sp.Column;
+                if (sp.Row.Between(1, minRo - 1))  minRo = sp.Row;
+                if (sp.Column.Between(1, minCo - 1)) minCo = sp.Column;
 
                 return Worksheet.Cell(minRo, minCo);
             }
