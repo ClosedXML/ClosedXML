@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     public interface IXLPivotFormat
     {
-        IXLStyle Style { get; }
+        IXLStyle Style { get; set; }
         bool DataOnly { get; }
         bool LabelOnly { get; }
         bool Outline { get; }
