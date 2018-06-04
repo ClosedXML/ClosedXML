@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
     [DebuggerDisplay("{Name}")]
     internal class XLPivotTable : IXLPivotTable
     {
+        public IXLPivotFormatList PivotFormats { get; } = new XLPivotFormatList();
         private String _name;
         public Guid Guid { get; private set; }
 
