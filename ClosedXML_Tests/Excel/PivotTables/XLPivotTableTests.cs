@@ -3,6 +3,8 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ClosedXML_Tests
 {
@@ -173,6 +175,87 @@ namespace ClosedXML_Tests
                         Assert.AreEqual("Test caption", pfassert.SubtotalCaption, "SubtotalCaption save failure");
                         Assert.AreEqual("Test name", pfassert.CustomName, "CustomName save failure");
                         AssertFieldOptions(pfassert, withDefaults);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void PivotFieldFormatsTest()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("PastrySalesData");
+                var table = ws.Table("PastrySalesData");
+                var ptSheet = wb.Worksheets.Add("PivotFieldFormats");
+                var pt = ptSheet.PivotTables.Add("pvtFormats", ptSheet.Cell(1, 1), table);
+                pt.SetSubtotals(XLPivotSubtotals.AtBottom);
+                var clmn = pt.ColumnLabels.Add("Month");
+                var row = pt.RowLabels.Add("Name")
+                    .SetSubtotalCaption("Test caption")
+                    .SetCustomName("Test name")
+                    .AddSubtotal(XLSubtotalFunction.Sum);
+
+                var numberOfOrders = pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+                var quality = pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
+
+                pt.PivotFormats.Add(b => { b.ForSubtotal(row).Style.Fill.BackgroundColor = XLColor.Blue; });
+                pt.PivotFormats.Add(b => { b.ForLabel(clmn).Style.Fill.BackgroundColor = XLColor.Amber; });
+                pt.PivotFormats.Add(b => { b.ForHeader(clmn).Style.Font.FontColor = XLColor.Yellow; });
+                pt.PivotFormats.Add(b => { b.ForGrandRow().Style.Font.FontColor = XLColor.VenetianRed; });
+                pt.PivotFormats.Add(b => {
+                    b.ForData(row)
+                    .AndWith(clmn, v=>v.ToString() == "May")
+                    .ForValueField(numberOfOrders)
+                    .Style.Font.FontColor = XLColor.Green;
+                });
+
+                using (var ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms, true);
+
+                    ms.Position = 0;
+
+                    using (var wbassert = new XLWorkbook(ms))
+                    {
+                        var wsassert = wbassert.Worksheet("PivotFieldFormats");
+                        var ptassert = wsassert.PivotTable("pvtFormats");
+                        var formats = ptassert.PivotFormats.ToList();
+                        Assert.AreEqual(5, formats.Count, "PivotFormats, loaded count must be 5");
+
+                        // ForSubtotal
+                        Assert.AreEqual("Name", formats[0].FieldReferences.First().FieldName, "ForSubtotal field name must be 'Name'");
+                        Assert.AreEqual(true, formats[0].FieldReferences.First().DefaultSubtotal, "ForSubtotal field DefaultSubtotal must be true");
+
+                        // ForLabel
+                        Assert.AreEqual("Month", formats[1].FieldReferences.First().FieldName, "ForLabel field name must be 'Month'");
+                        Assert.AreEqual(-1, formats[1].FieldReferences.First().Value, "ForLabel field Value must be -1");
+                        Assert.AreEqual(false, formats[1].DataOnly, "ForLabel field DataOnly must be false");
+                        Assert.AreEqual(true, formats[1].LabelOnly, "ForLabel field LabelOnly must be true");
+
+                        // ForHeader
+                        Assert.AreEqual("Month", formats[2].FieldName, "ForHeader field name must be 'Month'");
+                        Assert.AreEqual(false, formats[2].DataOnly, "ForHeader field DataOnly must be false");
+                        Assert.AreEqual(true, formats[2].LabelOnly, "ForHeader field LabelOnly must be true");
+                        Assert.AreEqual(false, formats[2].Outline, "ForHeader field Outline must be false");
+                        Assert.AreEqual(PivotAreaValues.Button, formats[2].AreaType, "ForHeader field AreaType must be false");
+                        Assert.AreEqual(PivotTableAxisValues.AxisColumn, formats[2].Axis, "ForHeader field Axis must be false");
+
+                        // ForGrandRow
+                        Assert.AreEqual(PivotTableAxisValues.AxisRow, formats[3].Axis, "ForGrandRow field Axis must be AxisRow");
+                        Assert.AreEqual(true, formats[3].GrandRow, "ForGrandRow field GrandRow must be true");
+
+                        // ForData
+                        var refs = formats[4].FieldReferences.ToList();
+                        Assert.AreEqual(3, refs.Count, "ForData FieldReferences.Count must be 3");
+                        Assert.IsTrue(refs.Any(i=>i.FieldName == "Month"), "ForData FieldReferences must contains 'Month'");
+                        Assert.IsTrue(refs.Any(i=>i.FieldName == "Name"), "ForData FieldReferences must contains 'Name'");
+                        Assert.IsTrue(refs.Any(i=>i.FieldName == XLConstants.PivotTableValuesSentinalLabel), "ForData FieldReferences must contains '{{Values}}'");
+                        Assert.AreEqual(1, refs.First(i=>i.FieldName == "Month").Value, "ForData FieldReferences value must be 1 (May)");
+                        Assert.AreEqual(0, refs.First(i=>i.FieldName == XLConstants.PivotTableValuesSentinalLabel).Value, "ForData FieldReferences value must be 0");
+                        Assert.IsTrue(formats[4].DataOnly, "ForData field DataOnly must be true");
+                        Assert.IsFalse(formats[4].LabelOnly, "ForData field LabelOnly must be false");
                     }
                 }
             }
