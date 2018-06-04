@@ -616,6 +616,7 @@ namespace ClosedXML.Excel
                     throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
             }
         }
+
         public static SheetViewValues ToOpenXml(this XLSheetViewOptions value)
         {
             switch (value)
@@ -777,6 +778,39 @@ namespace ClosedXML.Excel
 
                 default:
                     throw new ArgumentOutOfRangeException("Not implemented value!");
+            }
+        }
+
+        public static PivotAreaValues ToOpenXml(this XLPivotAreaValues value)
+        {
+            switch (value)
+            {
+                case XLPivotAreaValues.None:
+                    return PivotAreaValues.None;
+
+                case XLPivotAreaValues.Normal:
+                    return PivotAreaValues.Normal;
+
+                case XLPivotAreaValues.Data:
+                    return PivotAreaValues.Data;
+
+                case XLPivotAreaValues.All:
+                    return PivotAreaValues.All;
+
+                case XLPivotAreaValues.Origin:
+                    return PivotAreaValues.Origin;
+
+                case XLPivotAreaValues.Button:
+                    return PivotAreaValues.Button;
+
+                case XLPivotAreaValues.TopRight:
+                    return PivotAreaValues.TopRight;
+
+                case XLPivotAreaValues.TopEnd:
+                    return PivotAreaValues.TopEnd;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "XLPivotAreaValues value not implemented");
             }
         }
 
@@ -1549,6 +1583,39 @@ namespace ClosedXML.Excel
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
+            }
+        }
+
+        public static XLPivotAreaValues ToClosedXml(this PivotAreaValues value)
+        {
+            switch (value)
+            {
+                case PivotAreaValues.None:
+                    return XLPivotAreaValues.None;
+
+                case PivotAreaValues.Normal:
+                    return XLPivotAreaValues.Normal;
+
+                case PivotAreaValues.Data:
+                    return XLPivotAreaValues.Data;
+
+                case PivotAreaValues.All:
+                    return XLPivotAreaValues.All;
+
+                case PivotAreaValues.Origin:
+                    return XLPivotAreaValues.Origin;
+
+                case PivotAreaValues.Button:
+                    return XLPivotAreaValues.Button;
+
+                case PivotAreaValues.TopRight:
+                    return XLPivotAreaValues.TopRight;
+
+                case PivotAreaValues.TopEnd:
+                    return XLPivotAreaValues.TopEnd;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "PivotAreaValues value not implemented");
             }
         }
 

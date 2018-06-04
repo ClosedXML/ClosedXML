@@ -1,19 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
     [DebuggerDisplay("{SourceName}")]
     internal class XLPivotField : IXLPivotField
     {
-        public XLPivotField(string sourceName)
+        private readonly IXLPivotTable _pivotTable;
+        public XLPivotField(IXLPivotTable pivotTable, string sourceName)
         {
+            this._pivotTable = pivotTable;
             SourceName = sourceName;
             Subtotals = new List<XLSubtotalFunction>();
             SelectedValues = new List<Object>();
             SortType = XLPivotSortType.Default;
             SetExcelDefaults();
+
+            StyleFormats = new XLPivotFieldStyleFormats(this);
         }
 
         public String SourceName { get; private set; }
@@ -91,6 +96,7 @@ namespace ClosedXML.Excel
         public IXLPivotField SetSort(XLPivotSortType value) { SortType = value; return this; }
 
         public IList<Object> SelectedValues { get; private set; }
+
         public IXLPivotField AddSelectedValue(Object value)
         {
             SelectedValues.Add(value);
@@ -109,5 +115,15 @@ namespace ClosedXML.Excel
             SubtotalsAtTop = true;
             Collapsed = false;
         }
+
+        public IXLPivotFieldStyleFormats StyleFormats { get; set; }
+
+        public Boolean IsOnRowAxis => _pivotTable.RowLabels.Contains(this.SourceName);
+
+        public Boolean IsOnColumnAxis => _pivotTable.ColumnLabels.Contains(this.SourceName);
+
+        public Boolean IsInFilterList => _pivotTable.ReportFilters.Contains(this.SourceName);
+
+        public Int32 Offset => _pivotTable.SourceRangeFieldsAvailable.ToList().IndexOf(this.SourceName);
     }
 }

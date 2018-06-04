@@ -63,6 +63,21 @@ namespace ClosedXML.Excel
         public IXLPivotFields RowLabels { get; private set; }
         public IXLPivotValues Values { get; private set; }
 
+        public IEnumerable<IXLPivotField> ImplementedFields
+        {
+            get
+            {
+                foreach (var pf in ReportFilters)
+                    yield return pf;
+
+                foreach (var pf in RowLabels)
+                    yield return pf;
+
+                foreach (var pf in ColumnLabels)
+                    yield return pf;
+            }
+        }
+
         public XLPivotTableTheme Theme { get; set; }
 
         public IXLPivotTable SetTheme(XLPivotTableTheme value) { Theme = value; return this; }
@@ -371,5 +386,27 @@ namespace ClosedXML.Excel
         }
 
         public IXLWorksheet Worksheet { get; }
+
+        public IXLPivotTableStyleFormats StyleFormats { get; } = new XLPivotTableStyleFormats();
+
+        public IEnumerable<IXLPivotStyleFormat> AllStyleFormats
+        {
+            get
+            {
+                foreach (var styleFormat in this.StyleFormats.RowGrandTotalFormats)
+                    yield return styleFormat;
+
+                foreach (var styleFormat in this.StyleFormats.ColumnGrandTotalFormats)
+                    yield return styleFormat;
+
+                foreach (var pivotField in ImplementedFields)
+                {
+                    yield return pivotField.StyleFormats.Subtotal;
+                    yield return pivotField.StyleFormats.Header;
+                    yield return pivotField.StyleFormats.Label;
+                    yield return pivotField.StyleFormats.DataValuesFormat;
+                }
+            }
+        }
     }
 }
