@@ -135,6 +135,7 @@ namespace ClosedXML.Excel
         XLPivotTableSourceType SourceType { get; }
 
         IEnumerable<String> SourceRangeFieldsAvailable { get; }
+        IXLPivotFormatList PivotFormats { get; }
 
         Boolean MergeAndCenterWithLabels { get; set; } // MergeItem
         Int32 RowLabelIndent { get; set; } // Indent
