@@ -2289,7 +2289,7 @@ namespace ClosedXML.Excel
 
         // Generates content of pivotTablePart
         private static void GeneratePivotTablePartContent(
-            PivotTablePart pivotTablePart, IXLPivotTable pt,
+            PivotTablePart pivotTablePart, XLPivotTable pt,
             uint cacheId, SaveContext context)
         {
             var pti = context.PivotTables[(pt as XLPivotTable).Guid];
@@ -2839,6 +2839,33 @@ namespace ClosedXML.Excel
 
             pivotTableDefinition.AppendChild(pts);
 
+            // Pivot formats
+            if (pivotTableDefinition.Formats == null)
+                pivotTableDefinition.Formats = new Formats();
+            else
+                pivotTableDefinition.Formats.RemoveAllChildren();
+
+            foreach (var styleFormat in pt.StyleFormats.RowGrandTotalFormats)
+                GeneratePivotTableFormat(isRow: true, (XLPivotStyleFormat)styleFormat, pivotTableDefinition, context);
+
+            foreach (var styleFormat in pt.StyleFormats.ColumnGrandTotalFormats)
+                GeneratePivotTableFormat(isRow: false, (XLPivotStyleFormat)styleFormat, pivotTableDefinition, context);
+
+            foreach (var pivotField in pt.ImplementedFields)
+            {
+                GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Header, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.Header, pivotTableDefinition, context);
+                GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Subtotal, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.Subtotal, pivotTableDefinition, context);
+                GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Label, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.Label, pivotTableDefinition, context);
+                GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Data, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.DataValuesFormat, pivotTableDefinition, context);
+            }
+
+            if (pivotTableDefinition.Formats.Any())
+            {
+                pivotTableDefinition.Formats.Count = new UInt32Value((uint)pivotTableDefinition.Formats.Count());
+            }
+            else
+                pivotTableDefinition.Formats = null;
+
             #region Excel 2010 Features
 
             var pivotTableDefinitionExtensionList = new PivotTableDefinitionExtensionList();
@@ -2861,6 +2888,162 @@ namespace ClosedXML.Excel
             #endregion Excel 2010 Features
 
             pivotTablePart.PivotTableDefinition = pivotTableDefinition;
+        }
+
+        private static void GeneratePivotTableFormat(Boolean isRow, XLPivotStyleFormat styleFormat, PivotTableDefinition pivotTableDefinition, SaveContext context)
+        {
+            if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Key))
+                return;
+
+            var format = new Format();
+
+            format.FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Key]));
+
+            var pivotArea = GenerateDefaultPivotArea(XLPivotStyleFormatTarget.GrandTotal);
+
+            pivotArea.LabelOnly = OpenXmlHelper.GetBooleanValue(styleFormat.AppliesTo == XLPivotStyleFormatElement.Label, false);
+            pivotArea.DataOnly = OpenXmlHelper.GetBooleanValue(styleFormat.AppliesTo == XLPivotStyleFormatElement.Data, true);
+
+            pivotArea.GrandColumn = OpenXmlHelper.GetBooleanValue(!isRow, false);
+            pivotArea.GrandRow = OpenXmlHelper.GetBooleanValue(isRow, false);
+            pivotArea.Axis = isRow ? PivotTableAxisValues.AxisRow : PivotTableAxisValues.AxisColumn;
+
+            format.PivotArea = pivotArea;
+
+            pivotTableDefinition.Formats.AppendChild(format);
+        }
+
+        private static void GeneratePivotFieldFormat(XLPivotStyleFormatTarget target, XLPivotTable pt, XLPivotField pivotField, XLPivotStyleFormat styleFormat, PivotTableDefinition pivotTableDefinition, SaveContext context)
+        {
+            if (target == XLPivotStyleFormatTarget.GrandTotal)
+                throw new ArgumentException($"Use {nameof(GeneratePivotTableFormat)} to populate grand total formats.");
+
+            if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Key))
+                return;
+
+            var format = new Format();
+
+            format.FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Key]));
+
+            var pivotArea = GenerateDefaultPivotArea(target);
+
+            pivotArea.LabelOnly = OpenXmlHelper.GetBooleanValue(styleFormat.AppliesTo == XLPivotStyleFormatElement.Label, false);
+            pivotArea.DataOnly = OpenXmlHelper.GetBooleanValue(styleFormat.AppliesTo == XLPivotStyleFormatElement.Data, true);
+
+            pivotArea.CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValue(styleFormat.CollapsedLevelsAreSubtotals, false);
+
+            if (target == XLPivotStyleFormatTarget.Header)
+            {
+                pivotArea.Field = pivotField.Offset;
+
+                if (pivotField.IsOnRowAxis)
+                    pivotArea.Axis = PivotTableAxisValues.AxisRow;
+                else if (pivotField.IsOnColumnAxis)
+                    pivotArea.Axis = PivotTableAxisValues.AxisColumn;
+                else if (pivotField.IsInFilterList)
+                    pivotArea.Axis = PivotTableAxisValues.AxisPage;
+                else
+                    throw new NotImplementedException();
+            }
+
+            //Ensure referenced pivot field is added to field references
+            if (new[]
+                {
+                    XLPivotStyleFormatTarget.Data, XLPivotStyleFormatTarget.Label, XLPivotStyleFormatTarget.Subtotal
+                }.Contains(target)
+                && !styleFormat.FieldReferences.OfType<PivotLabelFieldReference>().Select(fr => fr.PivotField).Contains(pivotField))
+            {
+                var fr = new PivotLabelFieldReference(pivotField);
+                fr.DefaultSubtotal = target == XLPivotStyleFormatTarget.Subtotal;
+                styleFormat.FieldReferences.Insert(0, fr);
+            }
+
+            if (pivotArea.PivotAreaReferences == null)
+                pivotArea.PivotAreaReferences = new PivotAreaReferences();
+            else
+                pivotArea.PivotAreaReferences.RemoveAllChildren();
+
+            foreach (var fr in styleFormat.FieldReferences)
+            {
+                GeneratePivotAreaReference(pt, pivotArea.PivotAreaReferences, fr, context);
+            }
+
+            if (pivotArea.PivotAreaReferences.Any())
+            {
+                pivotArea.PivotAreaReferences.Count = new UInt32Value((uint)pivotArea.PivotAreaReferences.Count());
+            }
+            else
+                pivotArea.PivotAreaReferences = null;
+
+            format.PivotArea = pivotArea;
+            pivotTableDefinition.Formats.AppendChild(format);
+        }
+
+        private static PivotArea GenerateDefaultPivotArea(XLPivotStyleFormatTarget target)
+        {
+            switch (target)
+            {
+                case XLPivotStyleFormatTarget.Header:
+                    return new PivotArea
+                    {
+                        Type = PivotAreaValues.Button,
+                        FieldPosition = 0,
+                        DataOnly = OpenXmlHelper.GetBooleanValue(false, true),
+                        LabelOnly = OpenXmlHelper.GetBooleanValue(true, false),
+                        Outline = OpenXmlHelper.GetBooleanValue(false, true),
+                    };
+
+                case XLPivotStyleFormatTarget.Subtotal:
+                    return new PivotArea
+                    {
+                        Type = PivotAreaValues.Normal,
+                        FieldPosition = 0,
+                    };
+
+                case XLPivotStyleFormatTarget.GrandTotal:
+                    return new PivotArea
+                    {
+                        Type = PivotAreaValues.Normal,
+                        FieldPosition = 0,
+                        DataOnly = OpenXmlHelper.GetBooleanValue(false, true),
+                        LabelOnly = OpenXmlHelper.GetBooleanValue(false, false),
+                    };
+
+                case XLPivotStyleFormatTarget.Label:
+                    return new PivotArea
+                    {
+                        Type = PivotAreaValues.Normal,
+                        FieldPosition = 0,
+                        DataOnly = OpenXmlHelper.GetBooleanValue(false, true),
+                        LabelOnly = OpenXmlHelper.GetBooleanValue(true, false),
+                    };
+
+                case XLPivotStyleFormatTarget.Data:
+                    return new PivotArea
+                    {
+                        Type = PivotAreaValues.Normal,
+                        FieldPosition = 0,
+                    };
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private static void GeneratePivotAreaReference(XLPivotTable pt, PivotAreaReferences pivotAreaReferences, AbstractPivotFieldReference fieldReference, SaveContext context)
+        {
+            var pivotAreaReference = new PivotAreaReference();
+
+            pivotAreaReference.DefaultSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.DefaultSubtotal, false);
+            pivotAreaReference.Field = fieldReference.GetFieldOffset();
+
+            var matchedOffsets = fieldReference.Match(context.PivotTables[pt.Guid], pt);
+            foreach (var o in matchedOffsets)
+            {
+                pivotAreaReference.AppendChild(new FieldItem { Val = UInt32Value.FromUInt32((uint)o) });
+            }
+
+            pivotAreaReferences.AppendChild(pivotAreaReference);
         }
 
         private static void GenerateWorksheetCommentsPartContent(WorksheetCommentsPart worksheetCommentsPart,
@@ -3531,6 +3714,16 @@ namespace ClosedXML.Excel
 
                         if (!style.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(style.Key))
                             AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, style, context);
+                    }
+                }
+
+                foreach (var pt in ws.PivotTables.Cast<XLPivotTable>())
+                {
+                    foreach (var styleFormat in pt.AllStyleFormats)
+                    {
+                        var xlStyle = (XLStyle)styleFormat.Style;
+                        if (!xlStyle.Value.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(xlStyle.Key))
+                            AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, xlStyle.Value, context);
                     }
                 }
             }

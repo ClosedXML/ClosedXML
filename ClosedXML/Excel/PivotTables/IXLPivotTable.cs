@@ -268,5 +268,7 @@ namespace ClosedXML.Excel
         IXLPivotTable SetInsertBlankLines(); IXLPivotTable SetInsertBlankLines(Boolean value);
 
         IXLWorksheet Worksheet { get; }
+
+        IXLPivotTableStyleFormats StyleFormats { get; }
     }
 }
