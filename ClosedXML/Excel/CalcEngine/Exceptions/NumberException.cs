@@ -9,17 +9,17 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// Corresponds to the #NUM! error in Excel
     /// </summary>
     /// <seealso cref="ClosedXML.Excel.CalcEngine.Exceptions.CalcEngineException" />
-    internal class NumberException : CalcEngineException
+    public class NumberException : CalcEngineException
     {
-        public NumberException()
+        internal NumberException()
             : base()
         { }
 
-        public NumberException(string message)
+        internal NumberException(string message)
             : base(message)
         { }
 
-        public NumberException(string message, Exception innerException)
+        internal NumberException(string message, Exception innerException)
             : base(message, innerException)
         { }
 
