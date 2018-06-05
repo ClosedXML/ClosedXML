@@ -9,17 +9,17 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// Corresponds to the #VALUE! error in Excel
     /// </summary>
     /// <seealso cref="ClosedXML.Excel.CalcEngine.Exceptions.CalcEngineException" />
-    internal class CellValueException : CalcEngineException
+    public class CellValueException : CalcEngineException
     {
-        public CellValueException()
+        internal CellValueException()
             : base()
         { }
 
-        public CellValueException(string message)
+        internal CellValueException(string message)
             : base(message)
         { }
 
-        public CellValueException(string message, Exception innerException)
+        internal CellValueException(string message, Exception innerException)
             : base(message, innerException)
         { }
     }

@@ -8,17 +8,17 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// Corresponds to the #DIV/0! error in Excel
     /// </summary>
     /// <seealso cref="System.DivideByZeroException" />
-    internal class DivisionByZeroException : CalcEngineException
+    public class DivisionByZeroException : CalcEngineException
     {
-        public DivisionByZeroException()
+        internal DivisionByZeroException()
             : base()
         { }
 
-        public DivisionByZeroException(string message)
+        internal DivisionByZeroException(string message)
             : base(message)
         { }
 
-        public DivisionByZeroException(string message, Exception innerException)
+        internal DivisionByZeroException(string message, Exception innerException)
             : base(message, innerException)
         { }
 

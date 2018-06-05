@@ -9,17 +9,17 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// Corresponds to the #N/A error in Excel.
     /// </summary>
     /// <seealso cref="System.ApplicationException" />
-    internal class NoValueAvailableException : CalcEngineException
+    public class NoValueAvailableException : CalcEngineException
     {
-        public NoValueAvailableException()
+        internal NoValueAvailableException()
             : base()
         { }
 
-        public NoValueAvailableException(string message)
+        internal NoValueAvailableException(string message)
             : base(message)
         { }
 
-        public NoValueAvailableException(string message, Exception innerException)
+        internal NoValueAvailableException(string message, Exception innerException)
             : base(message, innerException)
         { }
 

@@ -9,17 +9,17 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// Corresponds to the #NULL! error in Excel
     /// </summary>
     /// <seealso cref="ClosedXML.Excel.CalcEngine.Exceptions.CalcEngineException" />
-    internal class NullValueException : CalcEngineException
+    public class NullValueException : CalcEngineException
     {
-        public NullValueException()
+        internal NullValueException()
             : base()
         { }
 
-        public NullValueException(string message)
+        internal NullValueException(string message)
             : base(message)
         { }
 
-        public NullValueException(string message, Exception innerException)
+        internal NullValueException(string message, Exception innerException)
             : base(message, innerException)
         { }
 

@@ -9,17 +9,17 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// Corresponds to the #REF! error in Excel
     /// </summary>
     /// <seealso cref="ClosedXML.Excel.CalcEngine.Exceptions.CalcEngineException" />
-    internal class CellReferenceException : CalcEngineException
+    public class CellReferenceException : CalcEngineException
     {
-        public CellReferenceException()
+        internal CellReferenceException()
             : base()
         { }
 
-        public CellReferenceException(string message)
+        internal CellReferenceException(string message)
             : base(message)
         { }
 
-        public CellReferenceException(string message, Exception innerException)
+        internal CellReferenceException(string message, Exception innerException)
             : base(message, innerException)
         { }
 
