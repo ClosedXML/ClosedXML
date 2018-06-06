@@ -454,7 +454,7 @@ namespace ClosedXML.Excel
                         var target = ws.FirstCell();
                         if (pivotTableDefinition?.Location?.Reference?.HasValue ?? false)
                         {
-                            ws.Range(pivotTableDefinition.Location.Reference.Value).Clear(XLClearOptions.Contents);
+                            ws.Range(pivotTableDefinition.Location.Reference.Value).Clear(XLClearOptions.All);
                             target = ws.Range(pivotTableDefinition.Location.Reference.Value).FirstCell();
                         }
 
