@@ -2405,6 +2405,8 @@ namespace ClosedXML.Excel
                 }
             }
 
+            var orderedPageFields = new SortedDictionary<int, PageField>();
+
             foreach (var xlpf in pt.Fields.Cast<XLPivotField>())
             {
                 var ptfi = pti.Fields[xlpf.SourceName];
@@ -2473,6 +2475,7 @@ namespace ClosedXML.Excel
                 else if (pt.ReportFilters.Contains(xlpf.SourceName))
                 {
                     labelOrFilterField = pt.ReportFilters.Get(xlpf.SourceName);
+                    var sortOrderIndex = pt.ReportFilters.IndexOf(labelOrFilterField);
 
                     location.ColumnsPerPage = 1;
                     location.RowPageCount = 1;
@@ -2481,7 +2484,7 @@ namespace ClosedXML.Excel
                     var pageField = new PageField
                     {
                         Hierarchy = -1,
-                        Field = pt.Fields.IndexOf(xlpf)
+                        Field = pt.Fields.IndexOf(xlpf),
                     };
 
                     if (labelOrFilterField.SelectedValues.Count == 1)
@@ -2511,7 +2514,7 @@ namespace ClosedXML.Excel
                                 .ToList();
                             var selectedValue = Convert.ToDouble(labelOrFilterField.SelectedValues.Single());
                             if (values.Contains(selectedValue))
-                                pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));                            
+                                pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
                         else if (ptfi.DataType == XLDataType.Boolean)
                         {
@@ -2535,7 +2538,7 @@ namespace ClosedXML.Excel
                             throw new NotImplementedException();
                     }
 
-                    pageFields.AppendChild(pageField);
+                    orderedPageFields.Add(sortOrderIndex, pageField);
                 }
 
                 if ((labelOrFilterField?.SelectedValues?.Count ?? 0) > 1)
@@ -2715,6 +2718,7 @@ namespace ClosedXML.Excel
 
             if (pt.ReportFilters.Any())
             {
+                pageFields.Append(orderedPageFields.Values);
                 pageFields.Count = Convert.ToUInt32(pageFields.Count());
                 pivotTableDefinition.AppendChild(pageFields);
             }
@@ -2796,7 +2800,7 @@ namespace ClosedXML.Excel
             var pivotTableDefinitionExtensionList = new PivotTableDefinitionExtensionList();
 
             var pivotTableDefinitionExtension = new PivotTableDefinitionExtension { Uri = "{962EF5D1-5CA2-4c93-8EF4-DBF5C05439D2}" };
-            pivotTableDefinitionExtension.AddNamespaceDeclaration("x14","http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+            pivotTableDefinitionExtension.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
 
             var pivotTableDefinition2 = new DocumentFormat.OpenXml.Office2010.Excel.PivotTableDefinition
             {
