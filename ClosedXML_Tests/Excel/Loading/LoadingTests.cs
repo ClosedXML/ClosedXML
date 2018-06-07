@@ -36,7 +36,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\InvalidPrintArea.xlsx",
                 @"Misc\Date1904System.xlsx",
                 @"Misc\LoadImageWithoutTransform2D.xlsx",
-                @"Misc\PivotTableWithTableSource.xlsx"
+                @"Misc\PivotTableWithTableSource.xlsx",
+                @"Misc\TemplateWithTableSourcePivotTables.xlsx"
             };
 
             foreach (var file in files)

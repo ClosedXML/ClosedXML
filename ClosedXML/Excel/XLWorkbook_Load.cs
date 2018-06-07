@@ -720,7 +720,7 @@ namespace ClosedXML.Excel
                                                         .Distinct().ToList();
 
                                             pivotValue.BaseField = col.FirstCell().GetValue<string>();
-                                            
+
                                             if (df.BaseItem?.Value != null)
                                             {
                                                 var bi = (int)df.BaseItem.Value;
@@ -737,11 +737,11 @@ namespace ClosedXML.Excel
                             {
                                 foreach (var pageField in pivotTableDefinition.PageFields.Cast<PageField>())
                                 {
-                                    var pf = pivotTableDefinition.PivotFields.ElementAt((int)pageField.Field.Value) as PivotField;
+                                    var pf = pivotTableDefinition.PivotFields.ElementAt(pageField.Field.Value) as PivotField;
                                     if (pf == null)
                                         continue;
 
-                                    var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt((int)pageField.Field.Value) as CacheField;
+                                    var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(pageField.Field.Value) as CacheField;
 
                                     var filterName = pf.Name?.Value ?? cacheField.Name?.Value;
 
@@ -751,45 +751,51 @@ namespace ClosedXML.Excel
                                     else
                                         rf = pt.ReportFilters.Add(filterName);
 
+                                    var openXmlItems = new List<Item>();
                                     if ((pageField.Item?.HasValue ?? false)
                                         && pf.Items.Any() && cacheField.SharedItems.Any())
                                     {
-                                        var item = pf.Items.ElementAt(Convert.ToInt32(pageField.Item.Value)) as Item;
-                                        if (item == null)
+                                        if (!(pf.Items.ElementAt(Convert.ToInt32(pageField.Item.Value)) is Item item))
                                             continue;
 
-                                        var sharedItem = cacheField.SharedItems.ElementAt(Convert.ToInt32((uint)item.Index));
-                                        var numberItem = sharedItem as NumberItem;
-                                        var stringItem = sharedItem as StringItem;
-                                        var dateTimeItem = sharedItem as DateTimeItem;
-
-                                        if (numberItem != null)
-                                            rf.AddSelectedValue(Convert.ToDouble(numberItem.Val.Value));
-                                        else if (dateTimeItem != null)
-                                            rf.AddSelectedValue(Convert.ToDateTime(dateTimeItem.Val.Value));
-                                        else if (stringItem != null)
-                                            rf.AddSelectedValue(stringItem.Val.Value);
-                                        else
-                                            throw new NotImplementedException();
+                                        openXmlItems.Add(item);
                                     }
                                     else if (OpenXmlHelper.GetBooleanValueAsBool(pf.MultipleItemSelectionAllowed, false))
                                     {
-                                        foreach (var item in pf.Items.Cast<Item>())
-                                        {
-                                            if (item.Hidden == null || !BooleanValue.ToBoolean(item.Hidden))
-                                            {
-                                                var sharedItem = cacheField.SharedItems.ElementAt(Convert.ToInt32((uint)item.Index));
-                                                var numberItem = sharedItem as NumberItem;
-                                                var stringItem = sharedItem as StringItem;
-                                                var dateTimeItem = sharedItem as DateTimeItem;
+                                        openXmlItems.AddRange(pf.Items.Cast<Item>());
+                                    }
 
-                                                if (numberItem != null)
+                                    foreach (var item in openXmlItems)
+                                    {
+                                        if (!OpenXmlHelper.GetBooleanValueAsBool(item.Hidden, false)
+                                            && (item.Index?.HasValue ?? false))
+                                        {
+                                            var sharedItem = cacheField.SharedItems.ElementAt(Convert.ToInt32((uint)item.Index));
+                                            // https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.shareditems.aspx
+                                            switch (sharedItem)
+                                            {
+                                                case NumberItem numberItem:
                                                     rf.AddSelectedValue(Convert.ToDouble(numberItem.Val.Value));
-                                                else if (dateTimeItem != null)
+                                                    break;
+
+                                                case DateTimeItem dateTimeItem:
                                                     rf.AddSelectedValue(Convert.ToDateTime(dateTimeItem.Val.Value));
-                                                else if (stringItem != null)
+                                                    break;
+
+                                                case BooleanItem booleanItem:
+                                                    rf.AddSelectedValue(Convert.ToBoolean(booleanItem.Val.Value));
+                                                    break;
+
+                                                case StringItem stringItem:
                                                     rf.AddSelectedValue(stringItem.Val.Value);
-                                                else
+                                                    break;
+
+                                                case MissingItem missingItem:
+                                                case ErrorItem errorItem:
+                                                    // Ignore missing and error items
+                                                    break;
+
+                                                default:
                                                     throw new NotImplementedException();
                                             }
                                         }
