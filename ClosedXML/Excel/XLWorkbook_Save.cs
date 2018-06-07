@@ -2508,6 +2508,24 @@ namespace ClosedXML.Excel
                                 .ToList();
                             var selectedValue = Convert.ToDouble(labelOrFilterField.SelectedValues.Single());
                             if (values.Contains(selectedValue))
+                                pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));                            
+                        }
+                        else if (ptfi.DataType == XLDataType.Boolean)
+                        {
+                            var values = ptfi.DistinctValues
+                                .Select(v => Convert.ToBoolean(v))
+                                .ToList();
+                            var selectedValue = Convert.ToBoolean(labelOrFilterField.SelectedValues.Single());
+                            if (values.Contains(selectedValue))
+                                pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
+                        }
+                        else if (ptfi.DataType == XLDataType.TimeSpan)
+                        {
+                            var values = ptfi.DistinctValues
+                                .Cast<TimeSpan>()
+                                .ToList();
+                            var selectedValue = (TimeSpan)labelOrFilterField.SelectedValues.Single();
+                            if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
                         else
