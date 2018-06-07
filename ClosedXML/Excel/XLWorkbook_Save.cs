@@ -2135,10 +2135,11 @@ namespace ClosedXML.Excel
                         ptfi.DataType = XLDataType.Number;
                         ptfi.MixedDataType = false;
                         ptfi.DistinctValues = fieldValueCells
-                                .Select(cell => cell.GetDouble())
-                                .Distinct()
-                                .Cast<object>()
-                                .ToArray();
+                            .Where(cell => cell.TryGetValue(out Double _))
+                            .Select(cell => cell.CachedValue.CastTo<Double>())
+                            .Distinct()
+                            .Cast<object>()
+                            .ToArray();
 
                         var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out int val));
                         if (allInteger) sharedItems.ContainsInteger = true;
@@ -2169,7 +2170,8 @@ namespace ClosedXML.Excel
                         ptfi.DataType = XLDataType.DateTime;
                         ptfi.MixedDataType = false;
                         ptfi.DistinctValues = fieldValueCells
-                            .Select(cell => cell.GetDateTime())
+                            .Where(cell => cell.TryGetValue(out DateTime _))
+                            .Select(cell => cell.CachedValue.CastTo<DateTime>())
                             .Distinct()
                             .Cast<object>()
                             .ToArray();
@@ -2198,12 +2200,13 @@ namespace ClosedXML.Excel
 
                         if (!ptfi.MixedDataType && ptfi.DataType == XLDataType.Text)
                             ptfi.DistinctValues = fieldValueCells
-                                .Select(cell => cell.Value)
-                                .Cast<String>()
+                                .Where(cell => cell.TryGetValue(out String _))
+                                .Select(cell => cell.CachedValue.CastTo<String>())
                                 .Distinct(StringComparer.OrdinalIgnoreCase)
                                 .ToArray();
                         else
                             ptfi.DistinctValues = fieldValueCells
+                                .Where(cell => cell.TryGetValue(out String _))
                                 .Select(cell => cell.GetString())
                                 .Distinct(StringComparer.OrdinalIgnoreCase)
                                 .ToArray();
