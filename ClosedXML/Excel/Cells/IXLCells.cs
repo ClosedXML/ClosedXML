@@ -42,6 +42,11 @@ namespace ClosedXML.Excel
         void DeleteComments();
 
         /// <summary>
+        /// Delete the sparklines of these cells.
+        /// </summary>
+        void DeleteSparklines();
+
+        /// <summary>
         /// Sets the cells' formula with A1 references.
         /// </summary>
         /// <value>The formula with A1 references.</value>

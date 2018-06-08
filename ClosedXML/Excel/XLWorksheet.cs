@@ -67,6 +67,7 @@ namespace ClosedXML.Excel
             Protection = new XLSheetProtection();
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();
+            SparklineGroups = new XLSparklineGroups();
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
                                                  new XLRowsCollection(), new XLRanges());
             PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
@@ -593,6 +594,7 @@ namespace ClosedXML.Excel
             NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
             Tables.Cast<XLTable>().ForEach(t => t.CopyTo(targetSheet, false));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
+            SparklineGroups.CopyTo(targetSheet);
             MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
             SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(((XLRangeAddress)sr.RangeAddress).WithoutWorksheet())));
 
@@ -1175,6 +1177,12 @@ namespace ClosedXML.Excel
             }
         }
 
+        // TODO: Sparklines
+        private void ShiftSparklineColumns(XLRange range, int columnsShifted)
+        {
+            throw new NotImplementedException();
+        }
+
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             if (!range.IsEntireRow())
@@ -1254,6 +1262,12 @@ namespace ClosedXML.Excel
                 if (!cf.Ranges.Any())
                     ConditionalFormats.Remove(f => f == cf);
             }
+        }
+
+        // TODO: Sparklines
+        private void ShiftSparklineRows(XLRange range, int rowsShifted)
+        {
+            throw new NotImplementedException();
         }
 
         private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)
@@ -1478,6 +1492,8 @@ namespace ClosedXML.Excel
         public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }
 
         public IXLConditionalFormats ConditionalFormats { get; private set; }
+
+        public IXLSparklineGroups SparklineGroups { get; private set; }
 
         private Boolean _eventTracking;
 

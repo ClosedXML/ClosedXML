@@ -175,7 +175,7 @@ namespace ClosedXML.Excel
                 return _comment;
             }
         }
-
+        
         #region IXLCell Members
 
         IXLDataValidation IXLCell.DataValidation
@@ -1155,6 +1155,11 @@ namespace ClosedXML.Excel
                 if (clearOptions.HasFlag(XLClearOptions.Comments))
                     _comment = null;
 
+                if (clearOptions.HasFlag(XLClearOptions.Sparklines))
+                {
+                    Worksheet.SparklineGroups.Remove(this);
+                }
+
                 if (clearOptions.HasFlag(XLClearOptions.DataValidation) && HasDataValidation)
                 {
                     var validation = NewDataValidation;
@@ -1438,7 +1443,7 @@ namespace ClosedXML.Excel
 
             if (includeNormalFormats)
             {
-                if (!StyleValue.Equals(Worksheet.StyleValue) || IsMerged() || HasComment || HasDataValidation)
+                if (!StyleValue.Equals(Worksheet.StyleValue) || IsMerged() || HasComment || HasDataValidation || HasSparkline)
                     return false;
 
                 if (StyleValue.Equals(Worksheet.StyleValue))
@@ -1499,6 +1504,22 @@ namespace ClosedXML.Excel
         {
             FormulaR1C1 = formula;
             return this;
+        }
+
+        public Boolean HasSparkline
+        {
+            get { return GetSparkline() != null; }
+        }
+
+        /// <summary>
+        /// Get the sparkline assigned to the this cell
+        /// </summary>
+        /// <returns>The IXLSparkline applied to this cell or null if there is none.</returns>
+        private IXLSparkline GetSparkline()
+        {
+            return Worksheet
+                .SparklineGroups
+                .Find(this);
         }
 
         public Boolean HasDataValidation
@@ -1889,6 +1910,11 @@ namespace ClosedXML.Excel
         public void DeleteComment()
         {
             Clear(XLClearOptions.Comments);
+        }
+
+        public void DeleteSparkline()
+        {
+            Clear(XLClearOptions.Sparklines);
         }
 
         private bool IsDateFormat()
@@ -2348,6 +2374,13 @@ namespace ClosedXML.Excel
                 SettingHyperlink = true;
                 Hyperlink = new XLHyperlink(source.Hyperlink);
                 SettingHyperlink = false;
+            }
+
+            var sparkline = Worksheet.SparklineGroups.Find(this);
+
+            if (sparkline != null)
+            {
+                Worksheet.SparklineGroups.AddCopy(sparkline.SparklineGroup, this.Worksheet);
             }
         }
 

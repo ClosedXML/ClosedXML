@@ -194,6 +194,11 @@ namespace ClosedXML.Excel
             this.ForEach<XLCell>(c => c.DeleteComment());
         }
 
+        public void DeleteSparklines()
+        {
+            this.ForEach<XLCell>(c => c.DeleteSparkline());
+        }
+
         public String FormulaA1
         {
             set { this.ForEach<XLCell>(c => c.FormulaA1 = value); }

@@ -425,6 +425,8 @@ namespace ClosedXML.Excel
         IXLRanges MergedRanges { get; }
         IXLConditionalFormats ConditionalFormats { get; }
 
+        IXLSparklineGroups SparklineGroups { get; }
+
         IXLRanges SelectedRanges { get; }
         IXLCell ActiveCell { get; set; }
 

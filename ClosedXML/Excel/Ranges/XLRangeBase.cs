@@ -1454,6 +1454,8 @@ namespace ClosedXML.Excel
                     cell.ShiftFormulaColumns((XLRange)shiftedRangeFormula, numberOfColumns * -1);
             }
 
+            Cells().DeleteSparklines();
+
             // Range to shift...
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             //var cellsDataValidations = new Dictionary<XLAddress, DataValidationToCopy>();
@@ -1489,7 +1491,7 @@ namespace ClosedXML.Excel
 
                 if (canInsert)
                     cellsToInsert.Add(newKey, newCell);
-            }
+            }            
 
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(

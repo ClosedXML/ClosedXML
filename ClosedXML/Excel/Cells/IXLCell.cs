@@ -337,7 +337,7 @@ namespace ClosedXML.Excel
         IXLRichText RichText { get; }
         Boolean HasRichText { get; }
         IXLComment Comment { get; }
-        Boolean HasComment { get; }
+        Boolean HasComment { get; }        
 
         Boolean IsMerged();
 
@@ -367,6 +367,7 @@ namespace ClosedXML.Excel
 
         IXLRow WorksheetRow();
 
+        Boolean HasSparkline { get; }
         Boolean HasDataValidation { get; }
 
         IXLConditionalFormat AddConditionalFormat();

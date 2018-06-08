@@ -34,6 +34,7 @@ using GradientFill = DocumentFormat.OpenXml.Drawing.GradientFill;
 using GradientStop = DocumentFormat.OpenXml.Drawing.GradientStop;
 using Hyperlink = DocumentFormat.OpenXml.Spreadsheet.Hyperlink;
 using LeftBorder = DocumentFormat.OpenXml.Spreadsheet.LeftBorder;
+using OfficeExcel = DocumentFormat.OpenXml.Office.Excel;
 using Outline = DocumentFormat.OpenXml.Drawing.Outline;
 using Path = System.IO.Path;
 using PatternFill = DocumentFormat.OpenXml.Spreadsheet.PatternFill;
@@ -48,6 +49,7 @@ using Underline = DocumentFormat.OpenXml.Spreadsheet.Underline;
 using VerticalTextAlignment = DocumentFormat.OpenXml.Spreadsheet.VerticalTextAlignment;
 using Vml = DocumentFormat.OpenXml.Vml;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace ClosedXML.Excel
 {
@@ -5215,6 +5217,97 @@ namespace ClosedXML.Excel
             }
 
             #endregion Conditional Formatting
+
+            #region Sparklines
+
+            if (xlWorksheet.SparklineGroups.Any())
+            {
+                if (!worksheetPart.Worksheet.Elements<WorksheetExtensionList>().Any())
+                {
+                    var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.WorksheetExtensionList);
+                    worksheetPart.Worksheet.InsertAfter<WorksheetExtensionList>(new WorksheetExtensionList(), previousElement);
+                }
+
+                WorksheetExtensionList worksheetExtensionList = worksheetPart.Worksheet.Elements<WorksheetExtensionList>().First();
+                cm.SetElement(XLWorksheetContents.WorksheetExtensionList, worksheetExtensionList);
+
+                var sparklineGroups = worksheetExtensionList.Descendants<X14.SparklineGroups>().SingleOrDefault();
+
+                if (sparklineGroups == null || !sparklineGroups.Any())
+                {
+                    WorksheetExtension worksheetExtension1 = new WorksheetExtension() { Uri = "{05C60535-1F16-4fd2-B633-F4F36F0B64E0}" };
+                    worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+                    worksheetExtensionList.Append(worksheetExtension1);
+
+                    sparklineGroups = new X14.SparklineGroups();
+                    sparklineGroups.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
+                    worksheetExtension1.Append(sparklineGroups);
+                }
+
+                foreach (var slg in xlWorksheet.SparklineGroups)
+                {
+                    // Do not create an empty Sparkline group
+                    if (!slg.Any())
+                        continue;
+
+                    X14.SparklineGroup sparklineGroup = new X14.SparklineGroup();
+                    sparklineGroup.SetAttribute(new OpenXmlAttribute("xr2", "uid", "http://schemas.microsoft.com/office/spreadsheetml/2015/revision2", "{A98FF5F8-AE60-43B5-8001-AD89004F45D3}"));
+
+                    sparklineGroup.AxisColor = new X14.AxisColor() { Rgb = slg.AxisColor.Color.ToHex() };
+                    sparklineGroup.FirstMarkerColor = new X14.FirstMarkerColor() { Rgb = slg.FirstMarkerColor.Color.ToHex() };
+                    sparklineGroup.LastMarkerColor = new X14.LastMarkerColor() { Rgb = slg.LastMarkerColor.Color.ToHex() };
+                    sparklineGroup.HighMarkerColor = new X14.HighMarkerColor() { Rgb = slg.HighMarkerColor.Color.ToHex() };
+                    sparklineGroup.LowMarkerColor = new X14.LowMarkerColor() { Rgb = slg.LowMarkerColor.Color.ToHex() };
+                    sparklineGroup.SeriesColor = new X14.SeriesColor() { Rgb = slg.SeriesColor.Color.ToHex() };
+                    sparklineGroup.NegativeColor = new X14.NegativeColor() { Rgb = slg.NegativeColor.Color.ToHex() };
+                    sparklineGroup.MarkersColor = new X14.MarkersColor() { Rgb = slg.MarkersColor.Color.ToHex() };
+
+                    sparklineGroup.High = slg.High;
+                    sparklineGroup.Low = slg.Low;
+                    sparklineGroup.First = slg.First;
+                    sparklineGroup.Last = slg.Last;
+                    sparklineGroup.Negative = slg.Negative;
+                    sparklineGroup.Markers = slg.Markers;
+
+                    sparklineGroup.DisplayXAxis = slg.DisplayXAxis;
+                    sparklineGroup.DisplayHidden = slg.DisplayHidden;
+                    sparklineGroup.RightToLeft = slg.RightToLeft;
+
+                    sparklineGroup.LineWeight = slg.LineWeight;
+                    sparklineGroup.ManualMin = slg.ManualMin;
+                    sparklineGroup.ManualMax = slg.ManualMax;
+
+                    sparklineGroup.Type = slg.Type.ToOpenXml();
+                    sparklineGroup.DisplayEmptyCellsAs = slg.DisplayEmptyCellsAs.ToOpenXml();
+                    sparklineGroup.MinAxisType = slg.MinAxisType.ToOpenXml();
+                    sparklineGroup.MaxAxisType = slg.MaxAxisType.ToOpenXml();
+
+                    X14.Sparklines sparklines = new X14.Sparklines();
+
+                    foreach (var sl in slg)
+                    {
+                        X14.Sparkline sparkline = new X14.Sparkline();
+                        OfficeExcel.Formula formula = new OfficeExcel.Formula();
+                        formula.Text = sl.Formula.Value;
+                        OfficeExcel.ReferenceSequence referenceSequence = new OfficeExcel.ReferenceSequence();
+                        referenceSequence.Text = sl.Cell.Address.ToString();
+                        sparkline.Append(formula);
+                        sparkline.Append(referenceSequence);
+                        sparklines.Append(sparkline);
+                    }
+
+                    sparklineGroup.Append(sparklines);
+                    sparklineGroups.Append(sparklineGroup);
+                }
+
+                // if all Sparkline groups had no Sparklines, remove the entire SparklineGroup element
+                if (sparklineGroups.ChildElements.Count == 0)
+                {
+                    sparklineGroups.Remove();
+                }
+            }
+
+            #endregion Sparklines
 
             #region DataValidations
 
