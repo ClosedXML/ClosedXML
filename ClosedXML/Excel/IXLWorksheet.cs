@@ -64,7 +64,7 @@ namespace ClosedXML.Excel
         IXLRow FirstRowUsed(Boolean includeFormats);
 
         IXLRow FirstRowUsed(XLCellsUsedOptions options);
-        
+
         /// <summary>
         /// Gets the last row of the worksheet.
         /// </summary>
@@ -374,6 +374,7 @@ namespace ClosedXML.Excel
         IXLSheetProtection Unprotect(String password);
 
         IXLSortElements SortRows { get; }
+
         IXLSortElements SortColumns { get; }
 
         IXLRange Sort();
@@ -387,11 +388,17 @@ namespace ClosedXML.Excel
         //IXLCharts Charts { get; }
 
         Boolean ShowFormulas { get; set; }
+
         Boolean ShowGridLines { get; set; }
+
         Boolean ShowOutlineSymbols { get; set; }
+
         Boolean ShowRowColHeaders { get; set; }
+
         Boolean ShowRuler { get; set; }
+
         Boolean ShowWhiteSpace { get; set; }
+
         Boolean ShowZeros { get; set; }
 
         IXLWorksheet SetShowFormulas(); IXLWorksheet SetShowFormulas(Boolean value);
@@ -413,6 +420,7 @@ namespace ClosedXML.Excel
         IXLWorksheet SetTabColor(XLColor color);
 
         Boolean TabSelected { get; set; }
+
         Boolean TabActive { get; set; }
 
         IXLWorksheet SetTabSelected(); IXLWorksheet SetTabSelected(Boolean value);
@@ -444,9 +452,13 @@ namespace ClosedXML.Excel
         IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate);
 
         IXLRanges MergedRanges { get; }
+
         IXLConditionalFormats ConditionalFormats { get; }
 
+        IXLSparklineGroups SparklineGroups { get; }
+
         IXLRanges SelectedRanges { get; }
+
         IXLCell ActiveCell { get; set; }
 
         Object Evaluate(String expression);

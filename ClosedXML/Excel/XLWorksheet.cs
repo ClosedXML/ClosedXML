@@ -68,6 +68,7 @@ namespace ClosedXML.Excel
             Protection = new XLSheetProtection();
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();
+            SparklineGroups = new XLSparklineGroups(this);
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
                                                  new XLRowsCollection(), new XLRanges());
             PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);
@@ -104,6 +105,7 @@ namespace ClosedXML.Excel
         public string LegacyDrawingId;
         public Boolean LegacyDrawingIsNew;
         private Double _columnWidth;
+
         public XLWorksheetInternals Internals { get; private set; }
 
         public XLRangeFactory RangeFactory
@@ -144,11 +146,15 @@ namespace ClosedXML.Excel
         }
 
         internal Boolean RowHeightChanged { get; set; }
+
         internal Boolean ColumnWidthChanged { get; set; }
 
         public Int32 SheetId { get; set; }
+
         internal String RelId { get; set; }
+
         public XLDataValidations DataValidations { get; private set; }
+
         public IXLCharts Charts { get; private set; }
 
         public XLSheetProtection Protection
@@ -243,6 +249,7 @@ namespace ClosedXML.Excel
         }
 
         public IXLPageSetup PageSetup { get; private set; }
+
         public IXLOutline Outline { get; private set; }
 
         IXLRow IXLWorksheet.FirstRowUsed()
@@ -595,6 +602,7 @@ namespace ClosedXML.Excel
         }
 
         public IXLSheetView SheetView { get; private set; }
+
         public IXLTables Tables { get; private set; }
 
         public IXLTable Table(Int32 index)
@@ -646,6 +654,7 @@ namespace ClosedXML.Excel
             NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
             Tables.Cast<XLTable>().ForEach(t => t.CopyTo(targetSheet, false));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
+            SparklineGroups.CopyTo(targetSheet);
             MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
             SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(((XLRangeAddress)sr.RangeAddress).WithoutWorksheet())));
 
@@ -741,11 +750,17 @@ namespace ClosedXML.Excel
         }
 
         public Boolean ShowFormulas { get; set; }
+
         public Boolean ShowGridLines { get; set; }
+
         public Boolean ShowOutlineSymbols { get; set; }
+
         public Boolean ShowRowColHeaders { get; set; }
+
         public Boolean ShowRuler { get; set; }
+
         public Boolean ShowWhiteSpace { get; set; }
+
         public Boolean ShowZeros { get; set; }
 
         public IXLWorksheet SetShowFormulas()
@@ -1190,6 +1205,7 @@ namespace ClosedXML.Excel
             ShiftConditionalFormattingColumns(range, columnsShifted);
             ShiftDataValidationColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
+            RemoveInvalidSparklines();
         }
 
         private void ShiftPageBreaksColumns(XLRange range, int columnsShifted)
@@ -1318,6 +1334,7 @@ namespace ClosedXML.Excel
             MoveNamedRangesRows(range, rowsShifted, Workbook.NamedRanges);
             ShiftConditionalFormattingRows(range, rowsShifted);
             ShiftDataValidationRows(range, rowsShifted);
+            RemoveInvalidSparklines();
             ShiftPageBreaksRows(range, rowsShifted);
         }
 
@@ -1420,6 +1437,18 @@ namespace ClosedXML.Excel
 
                 if (!dv.Ranges.Any())
                     DataValidations.Delete(v => v == dv);
+            }
+        }
+
+        private void RemoveInvalidSparklines()
+        {
+            var invalidSparklines = SparklineGroups.SelectMany(g => g)
+                .Where(sl => !((XLAddress)sl.Location.Address).IsValid)
+                .ToList();
+
+            foreach (var sparkline in invalidSparklines)
+            {
+                Worksheet.SparklineGroups.Remove(sparkline.Location);
             }
         }
 
@@ -1655,6 +1684,8 @@ namespace ClosedXML.Excel
         public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }
 
         public IXLConditionalFormats ConditionalFormats { get; private set; }
+
+        public IXLSparklineGroups SparklineGroups { get; private set; }
 
         private Boolean _eventTracking;
 

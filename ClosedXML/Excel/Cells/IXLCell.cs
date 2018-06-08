@@ -263,9 +263,11 @@ namespace ClosedXML.Excel
         XLTableCellType TableCellType();
 
         XLHyperlink Hyperlink { get; set; }
+
         IXLWorksheet Worksheet { get; }
 
         IXLDataValidation DataValidation { get; }
+
         IXLDataValidation NewDataValidation { get; }
 
         IXLDataValidation SetDataValidation();
@@ -335,8 +337,11 @@ namespace ClosedXML.Excel
         void InvalidateFormula();
 
         IXLRichText RichText { get; }
+
         Boolean HasRichText { get; }
+
         IXLComment Comment { get; }
+
         Boolean HasComment { get; }
 
         Boolean IsMerged();
@@ -370,6 +375,10 @@ namespace ClosedXML.Excel
 
         IXLRow WorksheetRow();
 
+        Boolean HasSparkline { get; }
+
+        IXLSparkline Sparkline { get; }
+
         Boolean HasDataValidation { get; }
 
         IXLConditionalFormat AddConditionalFormat();
@@ -381,6 +390,7 @@ namespace ClosedXML.Excel
         IXLCell SetActive(Boolean value = true);
 
         Boolean HasFormula { get; }
+
         Boolean HasArrayFormula { get; }
 
         IXLRangeAddress FormulaReference { get; set; }

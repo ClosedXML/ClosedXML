@@ -1194,6 +1194,11 @@ namespace ClosedXML.Excel
                 if (clearOptions.HasFlag(XLClearOptions.Comments))
                     _comment = null;
 
+                if (clearOptions.HasFlag(XLClearOptions.Sparklines))
+                {
+                    AsRange().RemoveSparklines();
+                }
+
                 if (clearOptions.HasFlag(XLClearOptions.DataValidation) && HasDataValidation)
                 {
                     var validation = NewDataValidation;
@@ -1520,6 +1525,9 @@ namespace ClosedXML.Excel
                 && Worksheet.ConditionalFormats.SelectMany(cf => cf.Ranges).Any(range => range.Contains(this)))
                 return false;
 
+            if (options.HasFlag(XLCellsUsedOptions.Sparklines) && HasSparkline)
+                return false;
+
             return true;
         }
 
@@ -1565,6 +1573,11 @@ namespace ClosedXML.Excel
             FormulaR1C1 = formula;
             return this;
         }
+
+        public Boolean HasSparkline => Sparkline != null;
+
+        /// <summary> The sparkline assigned to the cell </summary>
+        public IXLSparkline Sparkline => Worksheet.SparklineGroups.GetSparkline(this);
 
         public Boolean HasDataValidation
         {
@@ -2005,6 +2018,11 @@ namespace ClosedXML.Excel
         public void DeleteComment()
         {
             Clear(XLClearOptions.Comments);
+        }
+
+        public void DeleteSparkline()
+        {
+            Clear(XLClearOptions.Sparklines);
         }
 
         private bool IsDateFormat()
@@ -2515,6 +2533,9 @@ namespace ClosedXML.Excel
             if (options.HasFlag(XLCellCopyOptions.Styles))
                 InnerStyle = otherCell.InnerStyle;
 
+            if (options.HasFlag(XLCellCopyOptions.Sparklines))
+                CopySparklineFrom(otherCell);
+
             if (options.HasFlag(XLCellCopyOptions.ConditionalFormats))
                 CopyConditionalFormatsFrom(otherCell);
 
@@ -2522,6 +2543,40 @@ namespace ClosedXML.Excel
                 CopyDataValidationFrom(otherCell);
 
             return this;
+        }
+
+        private void CopySparklineFrom(XLCell otherCell)
+        {
+            if (!otherCell.HasSparkline) return;
+
+            var sourceDataAddress = otherCell.Sparkline.SourceData.RangeAddress.ToString();
+            var shiftedRangeAddress = GetFormulaA1(otherCell.GetFormulaR1C1(sourceDataAddress));
+            var sourceDataWorksheet = otherCell.Worksheet == otherCell.Sparkline.SourceData.Worksheet
+                ? Worksheet
+                : otherCell.Sparkline.SourceData.Worksheet;
+            var sourceData = sourceDataWorksheet.Range(shiftedRangeAddress);
+
+            IXLSparklineGroup group;
+            if (otherCell.Worksheet == Worksheet)
+            {
+                group = otherCell.Sparkline.SparklineGroup;
+            }
+            else
+            {
+                group = Worksheet.SparklineGroups.Add(new XLSparklineGroup(Worksheet, otherCell.Sparkline.SparklineGroup));
+                if (otherCell.Sparkline.SparklineGroup.DateRange != null)
+                {
+                    var dateRangeWorksheet =
+                        otherCell.Worksheet == otherCell.Sparkline.SparklineGroup.DateRange.Worksheet
+                            ? Worksheet
+                            : otherCell.Sparkline.SparklineGroup.DateRange.Worksheet;
+                    var dateRangeAddress = otherCell.Sparkline.SparklineGroup.DateRange.RangeAddress.ToString();
+                    var shiftedDateRangeAddress = GetFormulaA1(otherCell.GetFormulaR1C1(dateRangeAddress));
+                    group.SetDateRange(dateRangeWorksheet.Range(shiftedDateRangeAddress));
+                }
+            }
+
+            group.Add(this, sourceData);
         }
 
         public IXLCell CopyFrom(IXLCell otherCell, XLCellCopyOptions options)

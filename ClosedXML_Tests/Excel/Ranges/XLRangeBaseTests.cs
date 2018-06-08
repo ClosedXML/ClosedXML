@@ -469,5 +469,21 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(expectedRanges[i], actualRanges[i]);
             }
         }
+
+        [Test]
+        public void ClearRangeRemovesSparklines()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.SparklineGroups.Add("B1:B3", "C1:E3");
+
+            ws.Range("B1:C1").Clear(XLClearOptions.All);
+            ws.Range("B2:C2").Clear(XLClearOptions.Sparklines);
+
+            Assert.AreEqual(1, ws.SparklineGroups.Single().Count());
+            Assert.IsFalse(ws.Cell("B1").HasSparkline);
+            Assert.IsFalse(ws.Cell("B2").HasSparkline);
+            Assert.IsTrue(ws.Cell("B3").HasSparkline);
+
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace ClosedXML.Excel
         private readonly Func<IXLCell, Boolean> _predicate;
         private readonly XLCellsUsedOptions _options;
         private bool _styleInitialized = false;
+
         #endregion Fields
 
         #region Constructor
@@ -194,6 +195,11 @@ namespace ClosedXML.Excel
         public void DeleteComments()
         {
             this.ForEach<XLCell>(c => c.DeleteComment());
+        }
+
+        public void DeleteSparklines()
+        {
+            this.ForEach<XLCell>(c => c.DeleteSparkline());
         }
 
         public String FormulaA1
