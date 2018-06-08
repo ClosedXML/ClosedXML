@@ -12,10 +12,11 @@ namespace ClosedXML.Excel
         Comments                = 1 << 4,
         DataValidation          = 1 << 5,
         MergedRanges            = 1 << 6,
+        Sparklines              = 1 << 7,
 
         AllFormats = NormalFormats | ConditionalFormats,
         AllContents = Contents | DataType | Comments,
-        All = Contents | DataType | NormalFormats | ConditionalFormats | Comments | DataValidation | MergedRanges
+        All = Contents | DataType | NormalFormats | ConditionalFormats | Comments | DataValidation | MergedRanges | Sparklines
     }
 
     internal static class XLClearOptionsExtensions

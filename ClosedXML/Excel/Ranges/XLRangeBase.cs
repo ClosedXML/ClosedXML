@@ -437,6 +437,9 @@ namespace ClosedXML.Excel
             if (clearOptions.HasFlag(XLClearOptions.MergedRanges))
                 ClearMerged();
 
+            if (clearOptions.HasFlag(XLClearOptions.Sparklines))
+                RemoveSparklines();
+
             if (clearOptions == XLClearOptions.All)
             {
                 Worksheet.Internals.CellsCollection.RemoveAll(
@@ -519,6 +522,12 @@ namespace ClosedXML.Excel
                 if (!format.Ranges.Any())
                     Worksheet.ConditionalFormats.Remove(x => x == format);
             }
+        }
+
+        internal void RemoveSparklines()
+        {
+            Worksheet.SparklineGroups.GetSparklines(this).ToList()
+                .ForEach(sl => Worksheet.SparklineGroups.Remove(sl.Location));
         }
 
         public void DeleteComments()
@@ -1577,6 +1586,8 @@ namespace ClosedXML.Excel
             int numberOfColumns = ColumnCount();
 
             if (!RangeAddress.IsValid) return;
+
+            Worksheet.SparklineGroups.Remove(this);
 
             IXLRange shiftedRangeFormula = Worksheet.Range(
                 RangeAddress.FirstAddress.RowNumber,

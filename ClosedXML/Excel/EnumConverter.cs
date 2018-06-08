@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using Vml = DocumentFormat.OpenXml.Vml;
+using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ClosedXML.Excel
@@ -814,6 +815,45 @@ namespace ClosedXML.Excel
             }
         }
 
+        public static X14.SparklineTypeValues ToOpenXml(this XLSparklineType value)
+        {
+            switch (value)
+            {
+                case XLSparklineType.Line: return X14.SparklineTypeValues.Line;
+                case XLSparklineType.Column: return X14.SparklineTypeValues.Column;
+                case XLSparklineType.Stacked: return X14.SparklineTypeValues.Stacked;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
+            }
+        }
+
+        public static X14.SparklineAxisMinMaxValues ToOpenXml(this XLSparklineAxisMinMax value)
+        {
+            switch (value)
+            {
+                case XLSparklineAxisMinMax.Automatic: return X14.SparklineAxisMinMaxValues.Individual;
+                case XLSparklineAxisMinMax.SameForAll: return X14.SparklineAxisMinMaxValues.Group;
+                case XLSparklineAxisMinMax.Custom: return X14.SparklineAxisMinMaxValues.Custom;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
+            }
+        }
+
+        public static X14.DisplayBlanksAsValues ToOpenXml(this XLDisplayBlanksAsValues value)
+        {
+            switch (value)
+            {
+                case XLDisplayBlanksAsValues.Interpolate: return X14.DisplayBlanksAsValues.Span;
+                case XLDisplayBlanksAsValues.NotPlotted: return X14.DisplayBlanksAsValues.Gap;
+                case XLDisplayBlanksAsValues.Zero: return X14.DisplayBlanksAsValues.Zero;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
+            }
+        }
+
         #endregion To OpenXml
 
         #region To ClosedXml
@@ -1616,6 +1656,45 @@ namespace ClosedXML.Excel
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), "PivotAreaValues value not implemented");
+            }
+        }
+
+        public static XLSparklineType ToClosedXml(this X14.SparklineTypeValues value)
+        {
+            switch (value)
+            {
+                case X14.SparklineTypeValues.Line: return XLSparklineType.Line;
+                case X14.SparklineTypeValues.Column: return XLSparklineType.Column;
+                case X14.SparklineTypeValues.Stacked: return XLSparklineType.Stacked;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
+            }
+        }
+
+        public static XLSparklineAxisMinMax ToClosedXml(this X14.SparklineAxisMinMaxValues value)
+        {
+            switch (value)
+            {
+                case X14.SparklineAxisMinMaxValues.Individual: return XLSparklineAxisMinMax.Automatic;
+                case X14.SparklineAxisMinMaxValues.Group: return XLSparklineAxisMinMax.SameForAll;
+                case X14.SparklineAxisMinMaxValues.Custom: return XLSparklineAxisMinMax.Custom;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
+            }
+        }
+
+        public static XLDisplayBlanksAsValues ToClosedXml(this X14.DisplayBlanksAsValues value)
+        {
+            switch (value)
+            {
+                case X14.DisplayBlanksAsValues.Span: return XLDisplayBlanksAsValues.Interpolate;
+                case X14.DisplayBlanksAsValues.Gap: return XLDisplayBlanksAsValues.NotPlotted;
+                case X14.DisplayBlanksAsValues.Zero: return XLDisplayBlanksAsValues.Zero;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "Not implemented value!");
             }
         }
 

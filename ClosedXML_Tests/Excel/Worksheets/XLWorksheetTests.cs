@@ -825,6 +825,68 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void CopyWorksheetPreservesSparklineGroups()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.Worksheets.Add("Original");
+                var original = ws1.SparklineGroups.Add("A1:A10", "D1:Z10")
+                    .SetDateRange(ws1.Range("D11:Z11"))
+                    .SetDisplayEmptyCellsAs(XLDisplayBlanksAsValues.Zero)
+                    .SetDisplayHidden(true)
+                    .SetLineWeight(1.5)
+                    .SetShowMarkers(XLSparklineMarkers.All)
+                    .SetStyle(XLSparklineTheme.Colorful3)
+                    .SetType(XLSparklineType.Column);
+
+                original.HorizontalAxis
+                    .SetColor(XLColor.Blue)
+                    .SetRightToLeft(true)
+                    .SetVisible(true);
+
+                original.VerticalAxis
+                    .SetManualMin(-100.0)
+                    .SetManualMax(100.0);
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual(1, ws2.SparklineGroups.Count());
+                var copy = ws2.SparklineGroups.Single();
+
+                Assert.AreEqual(original.Count(), copy.Count());
+                for (int i = 0; i < original.Count(); i++)
+                {
+                    Assert.AreSame(ws2, copy.ElementAt(i).Location.Worksheet);
+                    Assert.AreSame(ws2, copy.ElementAt(i).SourceData.Worksheet);
+                    Assert.AreEqual(original.ElementAt(i).Location.Address.ToString(), copy.ElementAt(i).Location.Address.ToString());
+                    Assert.AreEqual(original.ElementAt(i).SourceData.RangeAddress.ToString(), copy.ElementAt(i).SourceData.RangeAddress.ToString());
+                }
+
+                Assert.AreEqual(original.DateRange.RangeAddress.ToString(), copy.DateRange.RangeAddress.ToString());
+                Assert.AreSame(ws2, copy.DateRange.Worksheet);
+
+                Assert.AreEqual(original.DisplayEmptyCellsAs, copy.DisplayEmptyCellsAs);
+                Assert.AreEqual(original.DisplayHidden, copy.DisplayHidden);
+                Assert.AreEqual(original.LineWeight, copy.LineWeight, XLHelper.Epsilon);
+                Assert.AreEqual(original.ShowMarkers, copy.ShowMarkers);
+                Assert.AreEqual(original.Style, copy.Style);
+                Assert.AreNotSame(original.Style, copy.Style);
+                Assert.AreEqual(original.Type, copy.Type);
+
+                Assert.AreEqual(original.HorizontalAxis.Color, copy.HorizontalAxis.Color);
+                Assert.AreEqual(original.HorizontalAxis.DateAxis, copy.HorizontalAxis.DateAxis);
+                Assert.AreEqual(original.HorizontalAxis.IsVisible, copy.HorizontalAxis.IsVisible);
+                Assert.AreEqual(original.HorizontalAxis.RightToLeft, copy.HorizontalAxis.RightToLeft);
+
+                Assert.AreEqual(original.VerticalAxis.ManualMax, copy.VerticalAxis.ManualMax);
+                Assert.AreEqual(original.VerticalAxis.ManualMin, copy.VerticalAxis.ManualMin);
+                Assert.AreEqual(original.VerticalAxis.MaxAxisType, copy.VerticalAxis.MaxAxisType);
+                Assert.AreEqual(original.VerticalAxis.MinAxisType, copy.VerticalAxis.MinAxisType);
+            }
+        }
+
         [Test, Ignore("Muted until #836 is fixed")]
         public void CopyWorksheetChangesAbsoluteReferencesInFormulae()
         {
