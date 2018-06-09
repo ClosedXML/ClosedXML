@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -12,6 +13,7 @@ namespace ClosedXML.Excel
     internal class XLTable : XLRange, IXLTable
     {
         #region Private fields
+
         private string _name;
         internal bool _showTotalsRow;
         internal HashSet<String> _uniqueNames;
@@ -145,18 +147,19 @@ namespace ClosedXML.Excel
             {
                 XLRange range;
 
+                var firstDataRowNumber = 1;
+                var lastDataRowNumber = RowCount();
+
                 if (_showHeaderRow)
-                {
-                    range = _showTotalsRow
-                                ? Range(2, 1, RowCount() - 1, ColumnCount())
-                                : Range(2, 1, RowCount(), ColumnCount());
-                }
-                else
-                {
-                    range = _showTotalsRow
-                                ? Range(1, 1, RowCount() - 1, ColumnCount())
-                                : Range(1, 1, RowCount(), ColumnCount());
-                }
+                    firstDataRowNumber++;
+
+                if (_showTotalsRow)
+                    lastDataRowNumber--;
+
+                if (firstDataRowNumber > lastDataRowNumber)
+                    return null;
+
+                range = Range(firstDataRowNumber, 1, lastDataRowNumber, ColumnCount());
 
                 return new XLTableRange(range, this);
             }
@@ -822,7 +825,7 @@ namespace ClosedXML.Excel
 
         public IXLTable CopyTo(IXLWorksheet targetSheet)
         {
-            return CopyTo((XLWorksheet) targetSheet);
+            return CopyTo((XLWorksheet)targetSheet);
         }
 
         internal IXLTable CopyTo(XLWorksheet targetSheet, bool copyData = true)
@@ -860,5 +863,106 @@ namespace ClosedXML.Excel
             }
             return newTable;
         }
+
+        #region Append and replace data
+
+        public IXLRange AppendData(IEnumerable data)
+        {
+            return AppendData(data, false);
+        }
+
+        public IXLRange AppendData(IEnumerable data, bool transpose)
+        {
+            var castedData = data?.Cast<object>();
+            if (!(castedData?.Any() ?? false) || data is String)
+                return null;
+
+            var numberOfNewRows = castedData.Count();
+
+            var lastRowOfOldRange = this.DataRange.LastRow();
+            lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
+
+            return lastRowOfOldRange.RowBelow().FirstCell().InsertData(castedData, transpose);
+        }
+
+        public IXLRange AppendData(DataTable dataTable)
+        {
+            return AppendData(dataTable.Rows.Cast<DataRow>());
+        }
+
+        public IXLRange AppendData<T>(IEnumerable<T> data)
+        {
+            if (!(data?.Any() ?? false) || data is String)
+                return null;
+
+            var numberOfNewRows = data.Count();
+
+            if (numberOfNewRows == 0)
+                return null;
+
+            var lastRowOfOldRange = this.DataRange.LastRow();
+            lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
+
+            return lastRowOfOldRange.RowBelow().FirstCell().InsertData(data);
+        }
+
+        public IXLRange ReplaceData(IEnumerable data)
+        {
+            return ReplaceData(data, false);
+        }
+
+        public IXLRange ReplaceData(IEnumerable data, bool transpose)
+        {
+            var castedData = data?.Cast<object>();
+            if (!(castedData?.Any() ?? false) || data is String)
+                throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
+
+            var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
+            var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
+
+            // Resize table
+            var sizeDifference = castedData.Count() - this.DataRange.RowCount();
+            if (sizeDifference > 0)
+                this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
+            else if (sizeDifference < 0)
+                this.DataRange.Rows
+                (
+                    lastDataRowNumber + sizeDifference + 1 - firstDataRowNumber + 1,
+                    lastDataRowNumber - firstDataRowNumber + 1
+                )
+                .Delete();
+
+            return this.DataRange.FirstCell().InsertData(castedData, transpose);
+        }
+
+        public IXLRange ReplaceData(DataTable dataTable)
+        {
+            return ReplaceData(dataTable.Rows.Cast<DataRow>());
+        }
+
+        public IXLRange ReplaceData<T>(IEnumerable<T> data)
+        {
+            if (!(data?.Any() ?? false) || data is String)
+                throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
+
+            var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
+            var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
+
+            // Resize table
+            var sizeDifference = data.Count() - this.DataRange.RowCount();
+            if (sizeDifference > 0)
+                this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
+            else if (sizeDifference < 0)
+                this.DataRange.Rows
+                (
+                    lastDataRowNumber + sizeDifference + 1 - firstDataRowNumber + 1,
+                    lastDataRowNumber - firstDataRowNumber + 1
+                )
+                .Delete();
+
+            return this.DataRange.FirstCell().InsertData(data);
+        }
+
+        #endregion Append and replace data
     }
 }

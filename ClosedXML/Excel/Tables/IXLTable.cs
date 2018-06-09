@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 
@@ -32,7 +33,79 @@ namespace ClosedXML.Excel
         IXLRangeRow HeadersRow();
 
         /// <summary>
-        /// Resizes the table to the specified range.
+        /// Appends the IEnumerable data elements and returns the range of the new rows.
+        /// </summary>
+        /// <param name="data">The IEnumerable data.</param>
+        /// <returns>
+        /// The range of the new rows.
+        /// </returns>
+        IXLRange AppendData(IEnumerable data);
+
+        /// <summary>
+        /// Appends the IEnumerable data elements and returns the range of the new rows.
+        /// </summary>
+        /// <param name="data">The IEnumerable data.</param>
+        /// <param name="transpose">if set to <c>true</c> the data will be transposed before inserting.</param>
+        /// <returns>
+        /// The range of the new rows.
+        /// </returns>
+        IXLRange AppendData(IEnumerable data, Boolean transpose);
+
+        /// <summary>
+        /// Appends the data of a data table and returns the range of the new rows.
+        /// </summary>
+        /// <param name="dataTable">The data table.</param>
+        /// <returns>
+        /// The range of the new rows.
+        /// </returns>
+        IXLRange AppendData(DataTable dataTable);
+
+        /// <summary>
+        /// Appends the IEnumerable data elements and returns the range of the new rows.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">The table data.</param>
+        /// <returns>
+        /// The range of the new rows.
+        /// </returns>
+        IXLRange AppendData<T>(IEnumerable<T> data);
+
+        /// <summary>
+        /// Replaces the IEnumerable data elements and returns the table's data range.
+        /// </summary>
+        /// <param name="data">The IEnumerable data.</param>
+        /// <returns>The table's data range.</returns>
+        IXLRange ReplaceData(IEnumerable data);
+
+        /// <summary>
+        /// Replaces the IEnumerable data elements and returns the table's data range.
+        /// </summary>
+        /// <param name="data">The IEnumerable data.</param>
+        /// <param name="transpose">if set to <c>true</c> the data will be transposed before inserting.</param>
+        /// <returns>
+        /// The table's data range.
+        /// </returns>
+        IXLRange ReplaceData(IEnumerable data, Boolean transpose);
+
+        /// <summary>
+        /// Replaces the data from the records of a data table and returns the table's data range.
+        /// </summary>
+        /// <param name="dataTable">The data table.</param>
+        /// <returns>
+        /// The table's data range.
+        /// </returns>
+        IXLRange ReplaceData(DataTable dataTable);
+
+        /// <summary>
+        /// Replaces the IEnumerable data elements as a table and the table's data range.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">The table data.</param>
+        /// <returns>The table's data range.</returns>
+        IXLRange ReplaceData<T>(IEnumerable<T> data);
+
+        /// <summary>
+        /// Resizes the table to the specified range address.
         /// </summary>
         /// <param name="range">The new table range.</param>
         /// <returns></returns>
