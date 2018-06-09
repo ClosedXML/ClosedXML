@@ -112,6 +112,25 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void DataRange_returns_null_if_empty()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().SetValue("Categories")
+                    .CellBelow().SetValue("A")
+                    .CellBelow().SetValue("B")
+                    .CellBelow().SetValue("C");
+
+                IXLTable table = ws.RangeUsed().CreateTable();
+
+                ws.Rows("2:4").Delete();
+
+                Assert.IsNull(table.DataRange);
+            }
+        }
+
+        [Test]
         public void SavingLoadingTableWithNewLineInHeader()
         {
             using (var wb = new XLWorkbook())
