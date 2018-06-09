@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Linq;
 
@@ -31,25 +32,16 @@ namespace ClosedXML.Excel
         public Boolean Enabled { get; set; }
         public IXLRange Range { get; set; }
 
+        public Int32 SortColumn { get; set; }
+
+        public Boolean Sorted { get; set; }
+
+        public XLSortOrder SortOrder { get; set; }
+
         IXLBaseAutoFilter IXLBaseAutoFilter.Clear()
         {
             return Clear();
         }
-
-        IXLBaseAutoFilter IXLBaseAutoFilter.Set(IXLRangeBase range)
-        {
-            return Set(range);
-        }
-
-        IXLBaseAutoFilter IXLBaseAutoFilter.Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase,
-                                                 Boolean ignoreBlanks)
-        {
-            return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
-        }
-
-        public Boolean Sorted { get; set; }
-        public XLSortOrder SortOrder { get; set; }
-        public Int32 SortColumn { get; set; }
 
         public IXLFilterColumn Column(String column)
         {
@@ -74,13 +66,25 @@ namespace ClosedXML.Excel
             return filterColumn;
         }
 
+        IXLBaseAutoFilter IXLBaseAutoFilter.Set(IXLRangeBase range)
+        {
+            return Set(range);
+        }
+
+        IXLBaseAutoFilter IXLBaseAutoFilter.Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase,
+                                                 Boolean ignoreBlanks)
+        {
+            return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
+        }
+
         #endregion IXLBaseAutoFilter Members
 
-        public XLAutoFilter Set(IXLRangeBase range)
+        public IEnumerable<IXLRangeRow> VisibleRows
         {
-            Range = range.AsRange();
-            Enabled = true;
-            return this;
+            get
+            {
+                return Range.Rows(r => !r.WorksheetRow().IsHidden);
+            }
         }
 
         public XLAutoFilter Clear()
@@ -91,6 +95,13 @@ namespace ClosedXML.Excel
             Filters.Clear();
             foreach (IXLRangeRow row in Range.Rows().Where(r => r.RowNumber() > 1))
                 row.WorksheetRow().Unhide();
+            return this;
+        }
+
+        public XLAutoFilter Set(IXLRangeBase range)
+        {
+            Range = range.AsRange();
+            Enabled = true;
             return this;
         }
 
@@ -166,14 +177,6 @@ namespace ClosedXML.Excel
 
             ws.ResumeEvents();
             return this;
-        }
-
-        public IEnumerable<IXLRangeRow> VisibleRows
-        {
-            get
-            {
-                return Range.Rows(r => !r.WorksheetRow().IsHidden);
-            }
         }
     }
 }
