@@ -183,5 +183,34 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void ReapplyAutoFilter()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                using (var ws = wb.Worksheets.Add("Sheet1"))
+                {
+                    ws.Cell(3, 3).SetValue("Names")
+                        .CellBelow().SetValue("Manuel")
+                        .CellBelow().SetValue("Carlos")
+                        .CellBelow().SetValue("Dominic")
+                        .CellBelow().SetValue("Jose");
+
+                    var autoFilter = ws.RangeUsed()
+                        .SetAutoFilter();
+
+                    autoFilter.Column(1).AddFilter("Carlos");
+
+                    Assert.AreEqual(3, autoFilter.HiddenRows.Count());
+
+                    // Unhide the rows so that the table is out of sync with the filter
+                    autoFilter.HiddenRows.ForEach(r => r.WorksheetRow().Unhide());
+                    Assert.False(autoFilter.HiddenRows.Any());
+
+                    autoFilter.Reapply();
+                    Assert.AreEqual(3, autoFilter.HiddenRows.Count());
+                }
+            }
+        }
     }
 }
