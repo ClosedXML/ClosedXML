@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
 
         private XLTableRow RowShift(Int32 rowsToShift)
         {
-            return _tableRange.Row(RowNumber() + rowsToShift);
+            return _tableRange.Row(RowNumber() - _tableRange.FirstRow().RowNumber() + 1 + rowsToShift);
         }
 
         #region XLTableRow Above
