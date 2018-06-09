@@ -412,7 +412,7 @@ namespace ClosedXML.Excel
 
         IXLWorksheet SetRightToLeft(); IXLWorksheet SetRightToLeft(Boolean value);
 
-        IXLBaseAutoFilter AutoFilter { get; }
+        IXLAutoFilter AutoFilter { get; }
 
         IXLRows RowsUsed(Boolean includeFormats = false, Func<IXLRow, Boolean> predicate = null);
 

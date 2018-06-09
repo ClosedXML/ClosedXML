@@ -2158,7 +2158,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static void LoadAutoFilterSort(AutoFilter af, XLWorksheet ws, IXLBaseAutoFilter autoFilter)
+        private static void LoadAutoFilterSort(AutoFilter af, XLWorksheet ws, IXLAutoFilter autoFilter)
         {
             var sort = af.Elements<SortState>().FirstOrDefault();
             if (sort != null)

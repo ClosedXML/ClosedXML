@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     using System.Collections.Generic;
 
-    internal class XLAutoFilter : IXLBaseAutoFilter, IXLAutoFilter
+    internal class XLAutoFilter : IXLAutoFilter
     {
         private readonly Dictionary<Int32, XLFilterColumn> _columns = new Dictionary<int, XLFilterColumn>();
 
@@ -19,26 +19,14 @@ namespace ClosedXML.Excel
 
         #region IXLAutoFilter Members
 
-        IXLAutoFilter IXLAutoFilter.Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase,
-                                         Boolean ignoreBlanks)
-        {
-            return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
-        }
-
-        #endregion IXLAutoFilter Members
-
-        #region IXLBaseAutoFilter Members
-
         public Boolean Enabled { get; set; }
         public IXLRange Range { get; set; }
-
         public Int32 SortColumn { get; set; }
-
         public Boolean Sorted { get; set; }
-
         public XLSortOrder SortOrder { get; set; }
+        public IEnumerable<IXLRangeRow> VisibleRows { get => Range.Rows(r => !r.WorksheetRow().IsHidden); }
 
-        IXLBaseAutoFilter IXLBaseAutoFilter.Clear()
+        IXLAutoFilter IXLAutoFilter.Clear()
         {
             return Clear();
         }
@@ -66,26 +54,13 @@ namespace ClosedXML.Excel
             return filterColumn;
         }
 
-        IXLBaseAutoFilter IXLBaseAutoFilter.Set(IXLRangeBase range)
-        {
-            return Set(range);
-        }
-
-        IXLBaseAutoFilter IXLBaseAutoFilter.Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase,
-                                                 Boolean ignoreBlanks)
+        IXLAutoFilter IXLAutoFilter.Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase,
+                                                                                                         Boolean ignoreBlanks)
         {
             return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
         }
 
-        #endregion IXLBaseAutoFilter Members
-
-        public IEnumerable<IXLRangeRow> VisibleRows
-        {
-            get
-            {
-                return Range.Rows(r => !r.WorksheetRow().IsHidden);
-            }
-        }
+        #endregion IXLAutoFilter Members
 
         public XLAutoFilter Clear()
         {

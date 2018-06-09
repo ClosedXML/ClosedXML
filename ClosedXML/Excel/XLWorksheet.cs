@@ -870,7 +870,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        IXLBaseAutoFilter IXLWorksheet.AutoFilter
+        IXLAutoFilter IXLWorksheet.AutoFilter
         {
             get { return AutoFilter; }
         }
