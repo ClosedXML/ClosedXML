@@ -13,6 +13,7 @@ namespace ClosedXML.Excel
     public interface IXLAutoFilter
     {
         Boolean Enabled { get; set; }
+        IEnumerable<IXLRangeRow> HiddenRows { get; }
         IXLRange Range { get; set; }
         Int32 SortColumn { get; set; }
         Boolean Sorted { get; set; }

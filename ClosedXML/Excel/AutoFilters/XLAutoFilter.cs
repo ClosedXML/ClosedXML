@@ -20,6 +20,7 @@ namespace ClosedXML.Excel
         #region IXLAutoFilter Members
 
         public Boolean Enabled { get; set; }
+        public IEnumerable<IXLRangeRow> HiddenRows { get => Range.Rows(r => r.WorksheetRow().IsHidden); }
         public IXLRange Range { get; set; }
         public Int32 SortColumn { get; set; }
         public Boolean Sorted { get; set; }
