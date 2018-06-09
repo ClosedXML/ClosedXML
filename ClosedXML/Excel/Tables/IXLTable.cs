@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     public interface IXLTable : IXLRange
     {
-        IXLBaseAutoFilter AutoFilter { get; }
+        IXLAutoFilter AutoFilter { get; }
         IXLTableRange DataRange { get; }
         Boolean EmphasizeFirstColumn { get; set; }
         Boolean EmphasizeLastColumn { get; set; }
@@ -86,7 +86,7 @@ namespace ClosedXML.Excel
         /// <returns></returns>
         IXLTable Resize(int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn);
 
-        new IXLBaseAutoFilter SetAutoFilter();
+        new IXLAutoFilter SetAutoFilter();
 
         IXLTable SetEmphasizeFirstColumn();
 
