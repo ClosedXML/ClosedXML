@@ -858,8 +858,11 @@ namespace ClosedXML.Excel
                     maxCo - 1);
 
                 if (createTable)
+                    // Create a table and save it in the file
                     return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
-                return tableName == null ? range.AsTable() : range.AsTable(tableName);
+                else
+                    // Create a table, but keep it in memory. Saved file will contain only "raw" data and column headers
+                    return tableName == null ? range.AsTable() : range.AsTable(tableName);
             }
 
             return null;
@@ -905,9 +908,12 @@ namespace ClosedXML.Excel
                 ro,
                 co - 1);
 
-            if (createTable) return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
-
-            return tableName == null ? range.AsTable() : range.AsTable(tableName);
+            if (createTable)
+                // Create a table and save it in the file
+                return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
+            else
+                // Create a table, but keep it in memory. Saved file will contain only "raw" data and column headers
+                return tableName == null ? range.AsTable() : range.AsTable(tableName);
         }
 
         public XLTableCellType TableCellType()
@@ -959,7 +965,6 @@ namespace ClosedXML.Excel
                     else
                         rowNumber++;
                 }
-
 
                 void resetRecordPosition()
                 {
