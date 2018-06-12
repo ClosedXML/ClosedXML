@@ -314,6 +314,15 @@ namespace ClosedXML.Excel
                     || type == typeof(double)
                     || type == typeof(decimal);
         }
+
+        public static bool IsSimpleType(this Type type)
+        {
+            return type.IsPrimitive
+                || type == typeof(String)
+                || type == typeof(DateTime)
+                || type == typeof(TimeSpan)
+                || type.IsNumber();
+        }
     }
 
     internal static class ObjectExtensions

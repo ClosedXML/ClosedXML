@@ -786,12 +786,12 @@ namespace ClosedXML.Excel
 
             if (!data.Any())
             {
-                if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
+                if (itemType.IsSimpleType())
                     maximumColumnNumber = _columnNumber;
                 else
                     maximumColumnNumber = _columnNumber + itemType.GetFields().Length + itemType.GetProperties().Length - 1;
             }
-            else if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
+            else if (itemType.IsSimpleType())
             {
                 foreach (object o in data)
                 {
@@ -835,7 +835,7 @@ namespace ClosedXML.Excel
                 {
                     resetRecordPosition();
 
-                    if (m.GetType().IsPrimitive || m is String || m is DateTime || m is TimeSpan || m.IsNumber())
+                    if (m.GetType().IsSimpleType())
                     {
                         if (addHeadings && !hasHeadings)
                         {
