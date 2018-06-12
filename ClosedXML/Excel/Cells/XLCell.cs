@@ -944,23 +944,42 @@ namespace ClosedXML.Excel
                 IEnumerable<MemberInfo> members = null;
                 TypeAccessor accessor = null;
 
-                foreach (var m in data)
+                void incrementFieldPosition()
                 {
-                    var itemType = m.GetType();
+                    if (transpose)
+                        rowNumber++;
+                    else
+                        columnNumber++;
+                }
 
+                void incrementRecordPosition()
+                {
+                    if (transpose)
+                        columnNumber++;
+                    else
+                        rowNumber++;
+                }
+
+
+                void resetRecordPosition()
+                {
                     if (transpose)
                         rowNumber = _rowNumber;
                     else
                         columnNumber = _columnNumber;
+                }
+
+                foreach (var m in data)
+                {
+                    var itemType = m.GetType();
+
+                    resetRecordPosition();
 
                     if (itemType.IsPrimitive || itemType == typeof(String) || itemType == typeof(DateTime) || itemType.IsNumber())
                     {
                         Worksheet.SetValue(m, rowNumber, columnNumber);
 
-                        if (transpose)
-                            rowNumber++;
-                        else
-                            columnNumber++;
+                        incrementFieldPosition();
                     }
                     else if (itemType.IsArray)
                     {
@@ -968,10 +987,7 @@ namespace ClosedXML.Excel
                         {
                             Worksheet.SetValue(item, rowNumber, columnNumber);
 
-                            if (transpose)
-                                rowNumber++;
-                            else
-                                columnNumber++;
+                            incrementFieldPosition();
                         }
                     }
                     else if (isDataTable || m is DataRow)
@@ -983,10 +999,7 @@ namespace ClosedXML.Excel
                         {
                             Worksheet.SetValue(item, rowNumber, columnNumber);
 
-                            if (transpose)
-                                rowNumber++;
-                            else
-                                columnNumber++;
+                            incrementFieldPosition();
                         }
                     }
                     else if (isDataReader || m is IDataRecord)
@@ -1001,10 +1014,7 @@ namespace ClosedXML.Excel
                         {
                             Worksheet.SetValue(record[i], rowNumber, columnNumber);
 
-                            if (transpose)
-                                rowNumber++;
-                            else
-                                columnNumber++;
+                            incrementFieldPosition();
                         }
                     }
                     else
@@ -1034,17 +1044,11 @@ namespace ClosedXML.Excel
                             else
                                 Worksheet.SetValue(accessor[m, mi.Name], rowNumber, columnNumber);
 
-                            if (transpose)
-                                rowNumber++;
-                            else
-                                columnNumber++;
+                            incrementFieldPosition();
                         }
                     }
 
-                    if (transpose)
-                        columnNumber++;
-                    else
-                        rowNumber++;
+                    incrementRecordPosition();
 
                     if (columnNumber > maxColumnNumber)
                         maxColumnNumber = columnNumber;
