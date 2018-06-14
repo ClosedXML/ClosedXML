@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
+using ClosedXML.Exceptions;
 using ClosedXML_Tests.Utils;
 using NUnit.Framework;
 using System;
@@ -76,6 +77,16 @@ namespace ClosedXML_Tests.Excel
             {
                 TestHelper.LoadFile(file);
             }
+        }
+
+        [Test]
+        public void InvalidFileThrowsCustomException()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LO\xlsx\tdf100709.xlsx")))
+                Assert.Throws<XLLoadException>(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                });
         }
 
         [Test]
