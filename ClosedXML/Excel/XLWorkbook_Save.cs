@@ -5219,7 +5219,7 @@ namespace ClosedXML.Excel
             #endregion Conditional Formatting
 
             #region Sparklines
-
+            
             if (xlWorksheet.SparklineGroups.Any())
             {
                 if (!worksheetPart.Worksheet.Elements<WorksheetExtensionList>().Any())
@@ -5242,6 +5242,10 @@ namespace ClosedXML.Excel
                     sparklineGroups = new X14.SparklineGroups();
                     sparklineGroups.AddNamespaceDeclaration("xm", "http://schemas.microsoft.com/office/excel/2006/main");
                     worksheetExtension1.Append(sparklineGroups);
+                }
+                else
+                {
+                    sparklineGroups.RemoveAllChildren();
                 }
 
                 foreach (var slg in xlWorksheet.SparklineGroups)
@@ -5274,13 +5278,19 @@ namespace ClosedXML.Excel
                     sparklineGroup.RightToLeft = slg.RightToLeft;
 
                     sparklineGroup.LineWeight = slg.LineWeight;
-                    sparklineGroup.ManualMin = slg.ManualMin;
-                    sparklineGroup.ManualMax = slg.ManualMax;
 
                     sparklineGroup.Type = slg.Type.ToOpenXml();
                     sparklineGroup.DisplayEmptyCellsAs = slg.DisplayEmptyCellsAs.ToOpenXml();
+
                     sparklineGroup.MinAxisType = slg.MinAxisType.ToOpenXml();
+
+                    if (slg.MinAxisType == XLSparklineAxisMinMax.Custom)
+                        sparklineGroup.ManualMin = slg.ManualMin;
+
                     sparklineGroup.MaxAxisType = slg.MaxAxisType.ToOpenXml();
+
+                    if (slg.MaxAxisType == XLSparklineAxisMinMax.Custom)
+                        sparklineGroup.ManualMax = slg.ManualMax;                    
 
                     X14.Sparklines sparklines = new X14.Sparklines();
 

@@ -118,8 +118,6 @@ namespace ClosedXML_Examples
             slgRemoveCell.SeriesColor = XLColor.CarrotOrange;
             slgRemoveCell.AddSparkline(wsRemoveCell.Cell("F1"), wsRemoveCell.Range("A1:E1").RangeAddress.ToStringRelative(true));
 
-            wsRemoveCell.Cell("F1").Comment.AddText("Test");
-
             wsRemoveCell.Cell("F1").Delete(XLShiftDeletedCells.ShiftCellsLeft);
 
             workbook.SaveAs(filePath);

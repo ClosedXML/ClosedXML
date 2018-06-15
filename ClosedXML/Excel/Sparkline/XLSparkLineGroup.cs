@@ -11,14 +11,16 @@ namespace ClosedXML.Excel
         {
             this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
 
-            AxisColor = XLColor.FromHtml("FF000000");
+            AxisColor = XLColor.Black;
             SeriesColor = XLColor.FromHtml("FF376092");
             MarkersColor = XLColor.FromHtml("FFD00000");
-            HighMarkerColor = XLColor.FromHtml("FF000000");
-            LowMarkerColor = XLColor.FromHtml("FF000000");
-            FirstMarkerColor = XLColor.FromHtml("FF000000");
-            LastMarkerColor = XLColor.FromHtml("FF000000");
-            NegativeColor = XLColor.FromHtml("FF000000");
+            HighMarkerColor = XLColor.Black;
+            LowMarkerColor = XLColor.Black;
+            FirstMarkerColor = XLColor.Black;
+            LastMarkerColor = XLColor.Black;
+            NegativeColor = XLColor.Black;
+
+            LineWeight = 0.75d;
         }
 
         public XLSparklineGroup(IXLSparklineGroup sparklineGroup, IXLWorksheet worksheet)
@@ -171,15 +173,15 @@ namespace ClosedXML.Excel
             return this;
         }           
 
-        public Double ManualMin { get; set; }
-        public IXLSparklineGroup SetManualMin(Double manualMin)
+        public Double? ManualMin { get; set; }
+        public IXLSparklineGroup SetManualMin(Double? manualMin)
         {
             ManualMin = manualMin;
             return this;
         }
 
-        public Double ManualMax { get; set; }
-        public IXLSparklineGroup SetManualMax(Double manualMax)
+        public Double? ManualMax { get; set; }
+        public IXLSparklineGroup SetManualMax(Double? manualMax)
         {
             ManualMax = manualMax;
             return this;
@@ -234,14 +236,14 @@ namespace ClosedXML.Excel
 
         public void CopyFrom(IXLSparklineGroup sparklineGroup)
         {
-            AxisColor = XLColor.FromColor(sparklineGroup.AxisColor.Color);
-            SeriesColor = XLColor.FromColor(sparklineGroup.SeriesColor.Color);
-            MarkersColor = XLColor.FromColor(sparklineGroup.MarkersColor.Color);
-            HighMarkerColor = XLColor.FromColor(sparklineGroup.HighMarkerColor.Color);
-            LowMarkerColor = XLColor.FromColor(sparklineGroup.LowMarkerColor.Color);
-            FirstMarkerColor = XLColor.FromColor(sparklineGroup.FirstMarkerColor.Color);
-            LastMarkerColor = XLColor.FromColor(sparklineGroup.LastMarkerColor.Color);
-            NegativeColor = XLColor.FromColor(sparklineGroup.NegativeColor.Color);
+            AxisColor = sparklineGroup.AxisColor;
+            SeriesColor = sparklineGroup.SeriesColor;
+            MarkersColor = sparklineGroup.MarkersColor;
+            HighMarkerColor = sparklineGroup.HighMarkerColor;
+            LowMarkerColor = sparklineGroup.LowMarkerColor;
+            FirstMarkerColor = sparklineGroup.FirstMarkerColor;
+            LastMarkerColor = sparklineGroup.LastMarkerColor;
+            NegativeColor = sparklineGroup.NegativeColor;
 
             DateAxis = sparklineGroup.DateAxis;
             Markers = sparklineGroup.Markers;

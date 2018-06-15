@@ -175,7 +175,7 @@ namespace ClosedXML.Excel
                 return _comment;
             }
         }
-        
+
         #region IXLCell Members
 
         IXLDataValidation IXLCell.DataValidation

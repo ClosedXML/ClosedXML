@@ -45,8 +45,8 @@ namespace ClosedXML.Excel
         Boolean DisplayXAxis { get; set; }
         Boolean DisplayHidden { get; set; }
         Boolean RightToLeft { get; set; }
-        Double ManualMax { get; set; }
-        Double ManualMin { get; set; }
+        Double? ManualMax { get; set; }
+        Double? ManualMin { get; set; }
         Double LineWeight { get; set; }
 
         XLSparklineAxisMinMax MinAxisType { get; set; }
@@ -74,8 +74,8 @@ namespace ClosedXML.Excel
         IXLSparklineGroup SetDisplayXAxis(Boolean value);
         IXLSparklineGroup SetDisplayHidden(Boolean value);
 
-        IXLSparklineGroup SetManualMax(Double value);
-        IXLSparklineGroup SetManualMin(Double value);
+        IXLSparklineGroup SetManualMax(Double? value);
+        IXLSparklineGroup SetManualMin(Double? value);
         IXLSparklineGroup SetLineWeight(Double value);
 
         IXLSparklineGroup SetMinAxisType(XLSparklineAxisMinMax value);
