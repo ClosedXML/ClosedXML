@@ -26,6 +26,8 @@ namespace ClosedXML.Excel
 
     public interface IXLSparklineGroup : IEnumerable<IXLSparkline>
     {
+        String Name { get; set; }
+
         XLColor AxisColor { get; set; }
         XLColor FirstMarkerColor { get; set; }
         XLColor LastMarkerColor { get; set; }
@@ -87,6 +89,7 @@ namespace ClosedXML.Excel
         IXLSparkline AddSparkline(IXLCell cell);
         IXLSparkline AddSparkline(IXLCell cell, string formulaText);
         IXLSparkline AddSparkline(IXLCell cell, XLFormula formula);
+        IXLSparkline CopySparkline(IXLSparkline sparkline);
 
         void RemoveAll();
 
@@ -94,7 +97,7 @@ namespace ClosedXML.Excel
 
         void Remove(IXLSparkline sparkline);
 
-        void CopyTo(IXLWorksheet targetSheet);
+        IXLSparklineGroup CopyTo(IXLWorksheet targetSheet, String name = "");
 
         void CopyFrom(IXLSparklineGroup sparklineGroup);
 

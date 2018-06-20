@@ -7,10 +7,17 @@ namespace ClosedXML.Excel
 {
     internal class XLSparklineGroup : IXLSparklineGroup
     {
-        public XLSparklineGroup(IXLWorksheet worksheet)
+        /// <summary>
+        /// Add a new sparkline group to the specified worksheet
+        /// </summary>
+        /// <param name="name">A name for this sparkline group.</param>
+        /// <param name="targetWorksheet">The worksheet the sparkline group is being added to</param>
+        /// <returns>The new sparkline group added</returns>
+        public XLSparklineGroup(IXLWorksheet targetWorksheet, String name)
         {
-            this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
+            this.Worksheet = targetWorksheet ?? throw new ArgumentNullException(nameof(targetWorksheet));
 
+            Name = name;
             AxisColor = XLColor.Black;
             SeriesColor = XLColor.FromHtml("FF376092");
             MarkersColor = XLColor.FromHtml("FFD00000");
@@ -23,13 +30,27 @@ namespace ClosedXML.Excel
             LineWeight = 0.75d;
         }
 
-        public XLSparklineGroup(IXLSparklineGroup sparklineGroup, IXLWorksheet worksheet)
-            : this(worksheet)
-        {    
+        /// <summary>
+        /// Add a new sparkline group copied from an existing sparkline group to the specified worksheet
+        /// </summary>
+        /// <param name="name">A name for this sparkline group.</param>
+        /// <param name="sparklineGroup">The sparkline group to copy from</param>
+        /// <param name="targetWorksheet">The worksheet the sparkline group is being added to</param>
+        /// <returns>The new sparkline group added</returns>
+        public XLSparklineGroup(IXLSparklineGroup sparklineGroup, IXLWorksheet targetWorksheet, String name)
+        {            
+            this.Worksheet = targetWorksheet ?? throw new ArgumentNullException(nameof(targetWorksheet));
+            Name = name;
             CopyFrom(sparklineGroup);
         }
-
+        
         private readonly Dictionary<IXLCell, IXLSparkline> _sparklines = new Dictionary<IXLCell, IXLSparkline>();
+
+        /// <summary>
+        /// Add a sparkline to this group in the specified cell.
+        /// </summary>
+        /// <param name="cell">The cell to place the sparkline in</param>
+        /// <returns>The new sparkline added</returns>
         public IXLSparkline AddSparkline(IXLCell cell)
         {
             var sparkline = new XLSparkline(cell, this);
@@ -37,6 +58,12 @@ namespace ClosedXML.Excel
             return sparkline;
         }
 
+        /// <summary>
+        /// Add a sparkline to this group in the specified cell with a formula for the source range.
+        /// </summary>
+        /// <param name="cell">The cell to place the sparkline in</param>
+        /// <param name="formulaText">The text for the formula for the source range of the sparkline</param>
+        /// <returns>The new sparkline added</returns>
         public IXLSparkline AddSparkline(IXLCell cell, String formulaText)
         {
             var sparkline = new XLSparkline(cell, this, new XLFormula(formulaText));
@@ -44,10 +71,29 @@ namespace ClosedXML.Excel
             return sparkline;
         }
 
+        /// <summary>
+        /// Add a sparkline to this group in the specified cell with a formula for the source range.
+        /// </summary>
+        /// <param name="cell">The cell to place the sparkline in</param>
+        /// <param name="formula">The formula for the source range</param>
+        /// <returns>The new sparkline added</returns>
         public IXLSparkline AddSparkline(IXLCell cell, XLFormula formula)
         {
             var sparkline = new XLSparkline(cell, this, formula);
             _sparklines.Add(cell, sparkline);
+            return sparkline;
+        }
+
+        /// <summary>
+        /// Copy a sparkline to this sparkline group
+        /// </summary>
+        /// <param name="sparkline">The sparkline to copy from</param>
+        /// <returns>The new sparkline added</returns>
+        public IXLSparkline CopySparkline(IXLSparkline sparkline)
+        {
+            var cellToCopyTo = Worksheet.Cell(sparkline.Cell.Address);
+            var sparklineCopy = new XLSparkline(cellToCopyTo, this, sparkline.Formula);
+            _sparklines.Add(cellToCopyTo, sparkline);
             return sparkline;
         }
 
@@ -61,11 +107,19 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Remove all sparklines in the specified cell from this group
+        /// </summary>
+        /// <param name="cell">The cell to remove sparklines from</param>
         public void Remove(IXLCell cell)
         {
             _sparklines.Remove(cell);
         }
 
+        /// <summary>
+        /// Remove the sparkline from this group
+        /// </summary>
+        /// <param name="sparkline"></param>
         public void Remove(IXLSparkline sparkline)
         {
             foreach (var sl in _sparklines.Where(kvp => kvp.Value == sparkline).ToList())
@@ -74,10 +128,16 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Remove all sparklines from this group
+        /// </summary>
         public void RemoveAll()
         {
             _sparklines.Clear();
         }
+
+        public String Name { get; set; }
+        public IXLSparklineGroup SetName(String value) { Name = value; return this; }
 
         public XLColor AxisColor { get; set; }
         public IXLSparklineGroup SetAxisColor(XLColor value) { AxisColor = value; return this; }
@@ -222,18 +282,35 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        /// <summary>
+        /// The worksheet this sparkline group is associated with
+        /// </summary>
         public IXLWorksheet Worksheet { get; }
 
-        public void CopyTo(IXLWorksheet targetSheet)
+        /// <summary>
+        /// Copy this sparkline group to the specified worksheet
+        /// </summary>
+        /// <param name="targetSheet">The worksheet to copy this sparkline group to</param>
+        /// <param name="name">A name for this sparkline group, leave empty to assign the next available default name.</param>
+        public IXLSparklineGroup CopyTo(IXLWorksheet targetSheet, String name = "")
         {
-            var newSlg = targetSheet.SparklineGroups.AddCopy(this, targetSheet);
+            if (targetSheet == Worksheet)
+                return null;
+
+            var newSlg = targetSheet.SparklineGroups.AddCopy(this, targetSheet, name);
 
             foreach (var sl in this)
             {
                 newSlg.AddSparkline(targetSheet.Cell(sl.Cell.Address), targetSheet.Range(sl.Formula.Value).RangeAddress.ToStringRelative(true));
             }
+
+            return newSlg;
         }
 
+        /// <summary>
+        /// Copy the details from a specified sparkline group
+        /// </summary>
+        /// <param name="sparklineGroup">The sparkline group to copy from</param>
         public void CopyFrom(IXLSparklineGroup sparklineGroup)
         {
             AxisColor = sparklineGroup.AxisColor;

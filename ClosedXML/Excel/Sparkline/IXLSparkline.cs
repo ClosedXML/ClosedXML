@@ -9,11 +9,13 @@ namespace ClosedXML.Excel
     {        
         XLFormula Formula { get; set; }
         IXLCell Cell { get; set; }
-
+        
         IXLSparklineGroup SparklineGroup { get; }
 
         IXLSparkline SetFormula(XLFormula value);
         IXLSparkline SetCell(IXLCell value);
+
+        IXLRanges GetRanges();
     }
 }
 

@@ -332,6 +332,9 @@ namespace ClosedXML.Excel
             if (clearOptions.HasFlag(XLClearOptions.ConditionalFormats))
                 RemoveConditionalFormatting();
 
+            if (clearOptions.HasFlag(XLClearOptions.Sparklines))
+                RemoveSparklines();
+
             if (clearOptions == XLClearOptions.All)
             {
                 Worksheet.Internals.CellsCollection.RemoveAll(
@@ -405,6 +408,11 @@ namespace ClosedXML.Excel
                 if (!format.Ranges.Any())
                     Worksheet.ConditionalFormats.Remove(x => x == format);
             }
+        }
+
+        internal void RemoveSparklines()
+        {
+            Worksheet.SparklineGroups.FindSparklines(this).ForEach(sl => Worksheet.SparklineGroups.Remove(sl));            
         }
 
         public void DeleteComments()

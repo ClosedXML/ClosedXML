@@ -1,13 +1,14 @@
 ﻿using ClosedXML.Excel;
 using System;
 
-namespace ClosedXML_Examples
+namespace ClosedXML_Examples.Sparklines
 {
-    public class Sparklines : IXLExample
+    public class CopyingSparklines : IXLExample
     {
         public void Create(String filePath)
         {
             var workbook = new XLWorkbook();
+
             var ws = workbook.AddWorksheet("Sparklines");
 
             ws.Cell("A1").Value = "10";
@@ -62,7 +63,7 @@ namespace ClosedXML_Examples
             slg3.SeriesColor = XLColor.VividViolet;
             slg3.AddSparkline(ws.Cell("F7"), ws.Range("A7:E7").RangeAddress.ToStringRelative(true));
             slg3.AddSparkline(ws.Cell("F8"), ws.Range("A8:E8").RangeAddress.ToStringRelative(true));
-
+            
             //Copy worksheet and ensure the sparkline groups are copied
             ws.CopyTo("CopyWorksheet");
 
@@ -80,45 +81,13 @@ namespace ClosedXML_Examples
             wsCopySparklineGroup.Cell("C2").Value = "30";
             wsCopySparklineGroup.Cell("D2").Value = "10";
             wsCopySparklineGroup.Cell("E2").Value = "40";
-
+            
             slg.CopyTo(wsCopySparklineGroup);
 
-            // Create a worksheet and delete a SparklineGroup from it
-            var wsDelete = workbook.AddWorksheet("Delete");
+            //Create a worksheet and copy a range with sparklines to it
+            var wsCopyRangeWithSparklines = workbook.AddWorksheet("CopyRangeWithSparklines");
 
-            wsDelete.Cell("A1").Value = "10";
-            wsDelete.Cell("B1").Value = "20";
-            wsDelete.Cell("C1").Value = "30";
-            wsDelete.Cell("D1").Value = "40";
-            wsDelete.Cell("E1").Value = "50";
-
-            wsDelete.Cell("A2").Value = "50";
-            wsDelete.Cell("B2").Value = "20";
-            wsDelete.Cell("C2").Value = "30";
-            wsDelete.Cell("D2").Value = "10";
-            wsDelete.Cell("E2").Value = "40";
-
-            var slgDelete = wsDelete.SparklineGroups.Add(wsDelete);
-            slgDelete.SeriesColor = XLColor.CarrotOrange;
-            slgDelete.AddSparkline(wsDelete.Cell("F1"), wsDelete.Range("A1:E1").RangeAddress.ToStringRelative(true));
-            slgDelete.AddSparkline(wsDelete.Cell("F2"), wsDelete.Range("A2:E2").RangeAddress.ToStringRelative(true));
-
-            wsDelete.SparklineGroups.Remove(slgDelete);
-            
-            // Create a worksheet add a sparkline to a cell, remove the cell
-            var wsRemoveCell = workbook.AddWorksheet("RemoveCell");
-
-            wsRemoveCell.Cell("A1").Value = "10";
-            wsRemoveCell.Cell("B1").Value = "20";
-            wsRemoveCell.Cell("C1").Value = "30";
-            wsRemoveCell.Cell("D1").Value = "40";
-            wsRemoveCell.Cell("E1").Value = "50";
-
-            var slgRemoveCell = wsRemoveCell.SparklineGroups.Add(wsRemoveCell);
-            slgRemoveCell.SeriesColor = XLColor.CarrotOrange;
-            slgRemoveCell.AddSparkline(wsRemoveCell.Cell("F1"), wsRemoveCell.Range("A1:E1").RangeAddress.ToStringRelative(true));
-
-            wsRemoveCell.Cell("F1").Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            ws.Range("A1:F8").CopyTo(wsCopyRangeWithSparklines.Range("A1:F8"));
 
             workbook.SaveAs(filePath);
         }

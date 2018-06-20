@@ -1157,7 +1157,7 @@ namespace ClosedXML.Excel
 
                 if (clearOptions.HasFlag(XLClearOptions.Sparklines))
                 {
-                    Worksheet.SparklineGroups.Remove(this);
+                    AsRange().RemoveSparklines();
                 }
 
                 if (clearOptions.HasFlag(XLClearOptions.DataValidation) && HasDataValidation)
@@ -1519,7 +1519,7 @@ namespace ClosedXML.Excel
         {
             return Worksheet
                 .SparklineGroups
-                .Find(this);
+                .FindSparkline(this);
         }
 
         public Boolean HasDataValidation
@@ -2001,6 +2001,7 @@ namespace ClosedXML.Excel
                 rangesToMerge.ForEach(r => r.Merge(false));
 
                 CopyConditionalFormatsFrom(asRange);
+                CopySparklinesFrom(asRange);
 
                 return true;
             }
@@ -2040,6 +2041,19 @@ namespace ClosedXML.Excel
                 c.AdjustFormulas((XLCell)cf.Ranges.First().FirstCell(), (XLCell)fmtRanges.First().FirstCell());
 
                 Worksheet.ConditionalFormats.Add(c);
+            }
+        }
+
+        private void CopySparklinesFrom(XLRangeBase fromRange)
+        {
+            foreach (var sourceSparkline in fromRange.Worksheet.SparklineGroups.FindSparklines(fromRange))
+            {
+                var targetSparklineGroup = Worksheet.SparklineGroups.Find(sourceSparkline.SparklineGroup.Name);
+
+                if (targetSparklineGroup == null)
+                {
+                    targetSparklineGroup = sourceSparkline.SparklineGroup.CopyTo(Worksheet, sourceSparkline.SparklineGroup.Name);
+                }
             }
         }
 
@@ -2376,7 +2390,7 @@ namespace ClosedXML.Excel
                 SettingHyperlink = false;
             }
 
-            var sparkline = Worksheet.SparklineGroups.Find(this);
+            var sparkline = Worksheet.SparklineGroups.FindSparkline(this);
 
             if (sparkline != null)
             {
