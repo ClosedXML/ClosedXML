@@ -6,7 +6,8 @@
     <AssemblyName>ClosedXML</AssemblyName>
     <PackageId>ClosedXML</PackageId>
     <Version>0.94.0</Version>
-    <Authors>Manuel de Leon, Amir Ghezelbash, Francois Botha, Aleksei Pankratev</Authors>
+    <Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
+    <Owners>Francois Botha, Aleksei Pankratev</Owners>
     <Company />
     <Product>ClosedXML</Product>
     <PackageReleaseNotes>See https://github.com/ClosedXML/ClosedXML/releases/tag/$(productVersion)</PackageReleaseNotes>
