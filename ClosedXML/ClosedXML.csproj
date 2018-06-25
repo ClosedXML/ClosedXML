@@ -24,6 +24,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
+    <PackageId>ClosedXML.Signed</PackageId>
     <OutputPath>bin\Release.Signed\</OutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
