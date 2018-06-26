@@ -71,7 +71,7 @@ namespace ClosedXML.Excel
                 else if (i < 26 * 27)
                     letter = letters[i / 26 - 1] + letters[i % 26];
                 else
-                    letter = letters[i / 26 / 26 - 1] + letters[(i / 26 - 1) % 26] + letters[i % 26];
+                    letter = letters[(i - 26) / 26 / 26 - 1] + letters[(i / 26 - 1) % 26] + letters[i % 26];
                 allLetters[i] = letter;
                 letterIndexes.Add(letter, i + 1);
             }
