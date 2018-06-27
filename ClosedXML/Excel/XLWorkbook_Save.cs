@@ -1,4 +1,5 @@
 using ClosedXML.Excel.ContentManagers;
+using ClosedXML.Excel.Exceptions;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -407,6 +408,10 @@ namespace ClosedXML.Excel
         {
             var tables = worksheet.Tables as XLTables;
 
+            var emptyTable = tables.FirstOrDefault(t => t.DataRange == null);
+            if (emptyTable != null)
+                throw new EmptyTableException($"Table '{emptyTable.Name}' should have at least 1 row.");
+
             TableParts tableParts;
             if (worksheetPart.Worksheet.Elements<TableParts>().Any())
             {
@@ -434,7 +439,7 @@ namespace ClosedXML.Excel
 
             tables.Deleted.Clear();
 
-            foreach (var xlTable in worksheet.Tables.Cast<XLTable>())
+            foreach (var xlTable in tables.Cast<XLTable>())
             {
                 if (String.IsNullOrEmpty(xlTable.RelId))
                     xlTable.RelId = context.RelIdGenerator.GetNext(RelType.Workbook);
@@ -456,7 +461,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            tableParts.Count = (UInt32)worksheet.Tables.Count();
+            tableParts.Count = (UInt32)tables.Count();
         }
 
         private void GenerateExtendedFilePropertiesPartContent(ExtendedFilePropertiesPart extendedFilePropertiesPart)
