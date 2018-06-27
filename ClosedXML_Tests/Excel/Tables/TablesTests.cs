@@ -484,7 +484,9 @@ namespace ClosedXML_Tests.Excel
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
-                var table = ws.FirstCell().InsertTable(l);
+                var table = ws.Cell("B2").InsertTable(l);
+
+                Assert.AreEqual("B2:E4", table.RangeAddress.ToString());
 
                 table.Field("SomeFieldNotProperty").Delete();
 
@@ -495,6 +497,37 @@ namespace ClosedXML_Tests.Excel
 
                 Assert.AreEqual("UnOrderedColumn", table.Fields.Last().Name);
                 Assert.AreEqual(2, table.Fields.Last().Index);
+
+                Assert.AreEqual("B2:D4", table.RangeAddress.ToString());
+            }
+        }
+
+        [Test]
+        public void CanDeleteTableRows()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 },
+                new TestObjectWithAttributes() { Column1 = "e", Column2 = "f", MyField = 6, UnOrderedColumn = 555 },
+                new TestObjectWithAttributes() { Column1 = "g", Column2 = "h", MyField = 7, UnOrderedColumn = 333 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var table = ws.Cell("B2").InsertTable(l);
+
+                Assert.AreEqual("B2:E6", table.RangeAddress.ToString());
+
+                table.DataRange.Rows(3, 4).Delete();
+
+                Assert.AreEqual(2, table.DataRange.Rows().Count());
+
+                Assert.AreEqual("b", table.DataRange.FirstCell().Value);
+                Assert.AreEqual(777, table.DataRange.LastCell().Value);
+
+                Assert.AreEqual("B2:E4", table.RangeAddress.ToString());
             }
         }
 

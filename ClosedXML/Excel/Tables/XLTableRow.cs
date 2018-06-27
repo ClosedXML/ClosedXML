@@ -110,7 +110,6 @@ namespace ClosedXML.Excel
         public new void Delete()
         {
             Delete(XLShiftDeletedCells.ShiftCellsUp);
-            _tableRange.Table.ExpandTableRows(-1);
         }
     }
 }
