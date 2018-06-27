@@ -1,19 +1,20 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLTableRows : XLStylizedBase, IXLTableRows, IXLStylized
     {
         private readonly List<XLTableRow> _ranges = new List<XLTableRow>();
-  
+
         public XLTableRows(IXLStyle defaultStyle) : base((defaultStyle as XLStyle).Value)
         {
         }
 
         #region IXLStylized Members
+
         public override IEnumerable<IXLStyle> Styles
         {
             get
@@ -63,9 +64,15 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public void Add(IXLTableRow range)
+        public void Delete()
         {
-            _ranges.Add((XLTableRow)range);
+            _ranges.OrderByDescending(r => r.RowNumber()).ForEach(r => r.Delete());
+            _ranges.Clear();
+        }
+
+        public void Add(IXLTableRow tableRow)
+        {
+            _ranges.Add((XLTableRow)tableRow);
         }
 
         public IEnumerator<IXLTableRow> GetEnumerator()
