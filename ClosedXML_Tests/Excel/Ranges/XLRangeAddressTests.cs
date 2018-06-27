@@ -180,6 +180,31 @@ namespace ClosedXML_Tests
             Assert.AreEqual("#REF!#REF!", address.ToStringRelative());
             Assert.AreEqual("#REF!#REF!", address.ToStringRelative(true));
         }
+
+        [Test]
+        public void FullSpanAddressCannotChange()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var wsRange = ws.AsRange();
+                var row = ws.FirstRow().RowBelow(4).AsRange();
+                var column = ws.FirstColumn().ColumnRight(4).AsRange();
+
+                Assert.AreEqual("A1:XFD1048576", wsRange.RangeAddress.ToString());
+                Assert.AreEqual("A5:XFD5", row.RangeAddress.ToString());
+                Assert.AreEqual("E1:E1048576", column.RangeAddress.ToString());
+
+                ws.Columns("Y:Z").Delete();
+                ws.Rows("9:10").Delete();
+
+                Assert.AreEqual("A1:XFD1048576", wsRange.RangeAddress.ToString());
+                Assert.AreEqual("A5:XFD5", row.RangeAddress.ToString());
+                Assert.AreEqual("E1:E1048576", column.RangeAddress.ToString());
+            }
+        }
+
         #region Private Methods
 
         private IXLRangeAddress ProduceInvalidAddress()
