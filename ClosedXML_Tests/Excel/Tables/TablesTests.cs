@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Attributes;
 using ClosedXML.Excel;
+using ClosedXML.Excel.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -830,7 +831,6 @@ namespace ClosedXML_Tests.Excel
                 ws.FirstCell().InsertTable(l);
                 Assert.Throws<ArgumentException>(() => ws.RangeUsed().CreateTable());
             }
-
         }
 
         [Test]
@@ -844,7 +844,6 @@ namespace ClosedXML_Tests.Excel
             TestDelegate action = () => table.CopyTo(ws1);
 
             Assert.Throws(typeof(InvalidOperationException), action);
-
         }
 
         [Test]
@@ -936,6 +935,37 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("", ws2.Cell("A2").Value);
             Assert.AreEqual("", ws2.Cell("B2").Value);
             Assert.AreEqual("", ws2.Cell("C2").Value);
+        }
+
+        [Test]
+        public void SavingTableWithNullDataRangeThrowsException()
+        {
+            using (var ms = new MemoryStream())
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var data = Enumerable.Range(1, 10)
+                    .Select(i => new
+                    {
+                        Number = i,
+                        NumberString = String.Concat("Number", i.ToString())
+                    });
+
+                var table = ws.FirstCell()
+                    .InsertTable(data)
+                    .SetShowTotalsRow();
+
+                table.Fields.Last().TotalsRowFunction = XLTotalsRowFunction.Count;
+
+                table.DataRange.Rows()
+                    .OrderByDescending(r => r.RowNumber())
+                    .ToList()
+                    .ForEach(r => r.WorksheetRow().Delete());
+
+                Assert.IsNull(table.DataRange);
+                Assert.Throws<EmptyTableException>(() => wb.SaveAs(ms));
+            }
         }
 
         private void AssertTablesAreEqual(IXLTable table1, IXLTable table2)
