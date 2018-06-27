@@ -907,7 +907,7 @@ namespace ClosedXML.Excel
                         {
                             var oneCellAnchor = anchor as Xdr.OneCellAnchor;
                             var from = LoadMarker(ws, oneCellAnchor.FromMarker);
-                            picture.MoveTo(from.Address, from.Offset);
+                            picture.MoveTo(from.Cell, from.Offset);
                         }
                         else if (anchor is Xdr.TwoCellAnchor)
                         {
@@ -917,7 +917,7 @@ namespace ClosedXML.Excel
 
                             if (twoCellAnchor.EditAs == null || !twoCellAnchor.EditAs.HasValue || twoCellAnchor.EditAs.Value == Xdr.EditAsValues.TwoCell)
                             {
-                                picture.MoveTo(from.Address, from.Offset, to.Address, to.Offset);
+                                picture.MoveTo(from.Cell, from.Offset, to.Cell, to.Offset);
                             }
                             else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.Absolute)
                             {
@@ -932,7 +932,7 @@ namespace ClosedXML.Excel
                             }
                             else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.OneCell)
                             {
-                                picture.MoveTo(from.Address, from.Offset);
+                                picture.MoveTo(from.Cell, from.Offset);
                             }
                         }
                     }
@@ -945,12 +945,12 @@ namespace ClosedXML.Excel
             return Convert.ToInt32(emu * resolution / 914400);
         }
 
-        private static IXLMarker LoadMarker(IXLWorksheet ws, Xdr.MarkerType marker)
+        private static XLMarker LoadMarker(IXLWorksheet ws, Xdr.MarkerType marker)
         {
             var row = Math.Min(XLHelper.MaxRowNumber, Math.Max(1, Convert.ToInt32(marker.RowId.InnerText) + 1));
             var column = Math.Min(XLHelper.MaxColumnNumber, Math.Max(1, Convert.ToInt32(marker.ColumnId.InnerText) + 1));
             return new XLMarker(
-                ws.Cell(row, column).Address,
+                ws.Cell(row, column),
                 new Point(
                     ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.ColumnOffset.InnerText), GraphicsUtils.Graphics.DpiX),
                     ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.RowOffset.InnerText), GraphicsUtils.Graphics.DpiY)
