@@ -197,10 +197,10 @@ namespace ClosedXML_Tests
         public void XLMarkerTests()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            XLMarker firstMarker = new XLMarker(ws.Cell(1, 10).Address, new Point(100, 0));
+            XLMarker firstMarker = new XLMarker(ws.Cell(1, 10), new Point(100, 0));
 
-            Assert.AreEqual("J", firstMarker.Address.ColumnLetter);
-            Assert.AreEqual(1, firstMarker.Address.RowNumber);
+            Assert.AreEqual(10, firstMarker.ColumnNumber);
+            Assert.AreEqual(1, firstMarker.RowNumber);
             Assert.AreEqual(100, firstMarker.Offset.X);
             Assert.AreEqual(0, firstMarker.Offset.Y);
         }
@@ -352,7 +352,7 @@ namespace ClosedXML_Tests
             Assert.AreEqual(original.Format, copy.Format);
             Assert.AreEqual(original.Height, copy.Height);
             Assert.AreEqual(original.Placement, copy.Placement);
-            Assert.AreEqual(original.TopLeftCellAddress.ToString(), copy.TopLeftCellAddress.ToString());
+            Assert.AreEqual(original.TopLeftCell.ToString(), copy.TopLeftCell.ToString());
             Assert.AreEqual(original.Width, copy.Width);
             Assert.AreEqual(original.ImageStream.ToArray(), copy.ImageStream.ToArray(), "Image streams differ");
 
@@ -373,7 +373,6 @@ namespace ClosedXML_Tests
                 original = (ws1 as XLWorksheet).AddPicture(stream, "Picture 1", 2)
                     .WithPlacement(XLPicturePlacement.FreeFloating)
                     .MoveTo(220, 155) as XLPicture;
-
             }
             var ws2 = wb.Worksheets.Add("Sheet2");
 
@@ -390,11 +389,28 @@ namespace ClosedXML_Tests
             Assert.AreEqual(original.Name, copy.Name);
             Assert.AreEqual(original.Placement, copy.Placement);
             Assert.AreEqual(original.Top, copy.Top);
-            Assert.AreEqual(original.TopLeftCellAddress.ToString(), copy.TopLeftCellAddress.ToString());
+            Assert.AreEqual(original.TopLeftCell.ToString(), copy.TopLeftCell.ToString());
             Assert.AreEqual(original.Width, copy.Width);
             Assert.AreEqual(original.ImageStream.ToArray(), copy.ImageStream.ToArray(), "Image streams differ");
 
             Assert.AreNotEqual(original.Id, copy.Id);
+        }
+
+        [Test]
+        public void PictureShiftsWhenInsertingRows()
+        {
+            using (var wb = new XLWorkbook())
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.png"))
+            {
+                var ws = wb.Worksheets.Add("ImageShift");
+                var picture = ws.AddPicture(stream, XLPictureFormat.Png, "PngImage")
+                    .MoveTo(ws.Cell(5, 2))
+                    .WithPlacement(XLPicturePlacement.Move);
+
+                ws.Row(2).InsertRowsBelow(20);
+
+                Assert.AreEqual(25, picture.TopLeftCell.Address.RowNumber);
+            }
         }
     }
 }

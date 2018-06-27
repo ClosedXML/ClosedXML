@@ -683,7 +683,7 @@ namespace ClosedXML_Tests
                     Assert.AreEqual(original.Name, copy.Name);
                     Assert.AreEqual(original.Placement, copy.Placement);
                     Assert.AreEqual(original.Top, copy.Top);
-                    Assert.AreEqual(original.TopLeftCellAddress.ToString(), copy.TopLeftCellAddress.ToString());
+                    Assert.AreEqual(original.TopLeftCell.Address.ToString(), copy.TopLeftCell.Address.ToString());
                     Assert.AreEqual(original.Width, copy.Width);
                     Assert.AreEqual(original.ImageStream.ToArray(), copy.ImageStream.ToArray(), "Image streams differ");
                 }
