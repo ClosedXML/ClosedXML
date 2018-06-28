@@ -36,73 +36,85 @@ namespace ClosedXML.Excel
         /// Appends the IEnumerable data elements and returns the range of the new rows.
         /// </summary>
         /// <param name="data">The IEnumerable data.</param>
+        /// <param name="propagateExtraColumns">if set to <c>true</c> propagate extra columns' values and formulas.</param>
         /// <returns>
         /// The range of the new rows.
         /// </returns>
-        IXLRange AppendData(IEnumerable data);
+        IXLRange AppendData(IEnumerable data, Boolean propagateExtraColumns = false);
 
         /// <summary>
         /// Appends the IEnumerable data elements and returns the range of the new rows.
         /// </summary>
         /// <param name="data">The IEnumerable data.</param>
         /// <param name="transpose">if set to <c>true</c> the data will be transposed before inserting.</param>
+        /// <param name="propagateExtraColumns">if set to <c>true</c> propagate extra columns' values and formulas.</param>
         /// <returns>
         /// The range of the new rows.
         /// </returns>
-        IXLRange AppendData(IEnumerable data, Boolean transpose);
+        IXLRange AppendData(IEnumerable data, Boolean transpose, Boolean propagateExtraColumns = false);
 
         /// <summary>
         /// Appends the data of a data table and returns the range of the new rows.
         /// </summary>
         /// <param name="dataTable">The data table.</param>
+        /// <param name="propagateExtraColumns">if set to <c>true</c> propagate extra columns' values and formulas.</param>
         /// <returns>
         /// The range of the new rows.
         /// </returns>
-        IXLRange AppendData(DataTable dataTable);
+        IXLRange AppendData(DataTable dataTable, Boolean propagateExtraColumns = false);
 
         /// <summary>
         /// Appends the IEnumerable data elements and returns the range of the new rows.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data">The table data.</param>
+        /// <param name="propagateExtraColumns">if set to <c>true</c> propagate extra columns' values and formulas.</param>
         /// <returns>
         /// The range of the new rows.
         /// </returns>
-        IXLRange AppendData<T>(IEnumerable<T> data);
+        IXLRange AppendData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false);
 
         /// <summary>
         /// Replaces the IEnumerable data elements and returns the table's data range.
         /// </summary>
         /// <param name="data">The IEnumerable data.</param>
-        /// <returns>The table's data range.</returns>
-        IXLRange ReplaceData(IEnumerable data);
+        /// <param name="propagateExtraColumns">if set to <c>true</c> propagate extra columns' values and formulas.</param>
+        /// <returns>
+        /// The table's data range.
+        /// </returns>
+        IXLRange ReplaceData(IEnumerable data, Boolean propagateExtraColumns = false);
 
         /// <summary>
         /// Replaces the IEnumerable data elements and returns the table's data range.
         /// </summary>
         /// <param name="data">The IEnumerable data.</param>
         /// <param name="transpose">if set to <c>true</c> the data will be transposed before inserting.</param>
+        /// <param name="propagateExtraColumns">if set to <c>true</c> propagate extra columns' values and formulas.</param>
         /// <returns>
         /// The table's data range.
         /// </returns>
-        IXLRange ReplaceData(IEnumerable data, Boolean transpose);
+        IXLRange ReplaceData(IEnumerable data, Boolean transpose, Boolean propagateExtraColumns = false);
 
         /// <summary>
         /// Replaces the data from the records of a data table and returns the table's data range.
         /// </summary>
         /// <param name="dataTable">The data table.</param>
+        /// <param name="propagateExtraColumns">if set to <c>true</c> propagate extra columns' values and formulas.</param>
         /// <returns>
         /// The table's data range.
         /// </returns>
-        IXLRange ReplaceData(DataTable dataTable);
+        IXLRange ReplaceData(DataTable dataTable, Boolean propagateExtraColumns = false);
 
         /// <summary>
         /// Replaces the IEnumerable data elements as a table and the table's data range.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data">The table data.</param>
-        /// <returns>The table's data range.</returns>
-        IXLRange ReplaceData<T>(IEnumerable<T> data);
+        /// <param name="propagateExtraColumns">if set to <c>true</c> propagate extra columns' values and formulas.</param>
+        /// <returns>
+        /// The table's data range.
+        /// </returns>
+        IXLRange ReplaceData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false);
 
         /// <summary>
         /// Resizes the table to the specified range address.
