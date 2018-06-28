@@ -659,14 +659,15 @@ namespace ClosedXML.Excel
 
         public XLRangeRow Row(Int32 row)
         {
-            if (row <= 0 || row > XLHelper.MaxRowNumber)
-                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}", XLHelper.MaxRowNumber));
+            if (row <= 0 || row > XLHelper.MaxRowNumber + RangeAddress.FirstAddress.RowNumber - 1)
+                throw new ArgumentOutOfRangeException(nameof(row), String.Format("Row number must be between 1 and {0}", XLHelper.MaxRowNumber + RangeAddress.FirstAddress.RowNumber - 1));
 
             var firstCellAddress = new XLAddress(Worksheet,
                                                  RangeAddress.FirstAddress.RowNumber + row - 1,
                                                  RangeAddress.FirstAddress.ColumnNumber,
                                                  false,
                                                  false);
+
             var lastCellAddress = new XLAddress(Worksheet,
                                                 RangeAddress.FirstAddress.RowNumber + row - 1,
                                                 RangeAddress.LastAddress.ColumnNumber,
@@ -677,8 +678,8 @@ namespace ClosedXML.Excel
 
         public virtual XLRangeColumn Column(Int32 columnNumber)
         {
-            if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber)
-                throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}", XLHelper.MaxColumnNumber));
+            if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1)
+                throw new ArgumentOutOfRangeException(nameof(columnNumber), String.Format("Column number must be between 1 and {0}", XLHelper.MaxColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1));
 
             var firstCellAddress = new XLAddress(Worksheet,
                                                  RangeAddress.FirstAddress.RowNumber,

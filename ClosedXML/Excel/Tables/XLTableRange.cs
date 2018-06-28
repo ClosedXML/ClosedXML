@@ -123,10 +123,12 @@ namespace ClosedXML.Excel
         }
         public new XLTableRow Row(int row)
         {
-            if (row <= 0 || row > XLHelper.MaxRowNumber)
+            if (row <= 0 || row > XLHelper.MaxRowNumber + RangeAddress.FirstAddress.RowNumber - 1)
             {
-                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
-                                                                 XLHelper.MaxRowNumber));
+                throw new ArgumentOutOfRangeException(
+                    nameof(row),
+                    String.Format("Row number must be between 1 and {0}", XLHelper.MaxRowNumber + RangeAddress.FirstAddress.RowNumber - 1)
+                );
             }
 
             return new XLTableRow(this, base.Row(row));
@@ -150,8 +152,9 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLTableRows(Worksheet.Style);
 
-            for (int ro = firstRow; ro <= lastRow; ro++)
-                retVal.Add(Row(ro));
+            for (int rowNumber = firstRow; rowNumber <= lastRow; rowNumber++)
+                retVal.Add(Row(rowNumber));
+
             return retVal;
         }
 
