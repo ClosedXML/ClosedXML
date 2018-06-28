@@ -245,6 +245,9 @@ namespace ClosedXML.Excel
 
                 _showTotalsRow = value;
 
+                // Invalidate fields' columns
+                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+
                 if (_showTotalsRow)
                 {
                     AutoFilter.Range = Worksheet.Range(
@@ -668,6 +671,9 @@ namespace ClosedXML.Excel
                 }
 
                 _showHeaderRow = value;
+
+                // Invalidate fields' columns
+                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
                 if (_showHeaderRow)
                     HeadersRow().DataType = XLDataType.Text;

@@ -461,6 +461,47 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void TestFieldCellTypes()
+        {
+            var l = new List<TestObjectWithAttributes>()
+            {
+                new TestObjectWithAttributes() { Column1 = "a", Column2 = "b", MyField = 4, UnOrderedColumn = 999 },
+                new TestObjectWithAttributes() { Column1 = "c", Column2 = "d", MyField = 5, UnOrderedColumn = 777 }
+            };
+
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var table = ws.Cell("B2").InsertTable(l);
+
+                Assert.AreEqual(4, table.Fields.Count());
+
+                Assert.AreEqual("B2", table.Field(0).HeaderCell.Address.ToString());
+                Assert.AreEqual("C2", table.Field(1).HeaderCell.Address.ToString());
+                Assert.AreEqual("D2", table.Field(2).HeaderCell.Address.ToString());
+                Assert.AreEqual("E2", table.Field(3).HeaderCell.Address.ToString());
+
+                Assert.IsNull(table.Field(0).TotalsCell);
+                Assert.IsNull(table.Field(1).TotalsCell);
+                Assert.IsNull(table.Field(2).TotalsCell);
+                Assert.IsNull(table.Field(3).TotalsCell);
+
+                table.SetShowTotalsRow();
+
+                Assert.AreEqual("B5", table.Field(0).TotalsCell.Address.ToString());
+                Assert.AreEqual("C5", table.Field(1).TotalsCell.Address.ToString());
+                Assert.AreEqual("D5", table.Field(2).TotalsCell.Address.ToString());
+                Assert.AreEqual("E5", table.Field(3).TotalsCell.Address.ToString());
+
+                var field = table.Fields.Last();
+
+                Assert.AreEqual("E2:E5", field.Column.RangeAddress.ToString());
+                Assert.AreEqual("E3", field.DataCells.First().Address.ToString());
+                Assert.AreEqual("E4", field.DataCells.Last().Address.ToString());
+            }
+        }
+
+        [Test]
         public void CanDeleteTable()
         {
             var l = new List<TestObjectWithAttributes>()

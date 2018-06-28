@@ -20,11 +20,37 @@ namespace ClosedXML.Excel
     {
         /// <summary>
         /// Gets the corresponding column for this table field.
+        /// Includes the header and footer cells
         /// </summary>
         /// <value>
         /// The column.
         /// </value>
         IXLRangeColumn Column { get; }
+
+        /// <summary>
+        /// Gets the collection of data cells for this field
+        /// Excludes the header and footer cells
+        /// </summary>
+        /// <value>
+        /// The data cells
+        /// </value>
+        IXLCells DataCells { get; }
+
+        /// <summary>
+        /// Gets the footer cell for the table field.
+        /// </summary>
+        /// <value>
+        /// The footer cell.
+        /// </value>
+        IXLCell TotalsCell { get; }
+
+        /// <summary>
+        /// Gets the header cell for the table field.
+        /// </summary>
+        /// <value>
+        /// The header cell.
+        /// </value>
+        IXLCell HeaderCell { get; }
 
         /// <summary>
         /// Gets the index of the column (0-based).
