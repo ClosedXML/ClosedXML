@@ -2690,6 +2690,8 @@ namespace ClosedXML.Excel
 
             var xlStyle = XLStyle.Default.Key;
 
+            xlStyle.IncludeQuotePrefix = OpenXmlHelper.GetBooleanValueAsBool(cellFormat.QuotePrefix, false);
+
             if (cellFormat.ApplyProtection != null)
             {
                 var protection = cellFormat.Protection;

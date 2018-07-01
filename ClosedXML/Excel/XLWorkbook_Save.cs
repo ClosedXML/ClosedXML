@@ -3311,6 +3311,7 @@ namespace ClosedXML.Excel
                     FontId = 0,
                     FillId = 0,
                     BorderId = 0,
+                    IncludeQuotePrefix = false,
                     NumberFormatId = 0
                     //AlignmentId = 0
                 });
@@ -3417,7 +3418,8 @@ namespace ClosedXML.Excel
                             FontId = context.SharedFonts[xlStyle.Font].FontId,
                             FillId = allSharedFills[xlStyle.Fill].FillId,
                             BorderId = allSharedBorders[xlStyle.Border].BorderId,
-                            NumberFormatId = numberFormatId
+                            NumberFormatId = numberFormatId,
+                            IncludeQuotePrefix = xlStyle.IncludeQuotePrefix
                         });
             }
 
@@ -3685,6 +3687,7 @@ namespace ClosedXML.Excel
                 FontId = styleInfo.FontId,
                 FillId = styleInfo.FillId,
                 BorderId = styleInfo.BorderId,
+                QuotePrefix = OpenXmlHelper.GetBooleanValue(styleInfo.IncludeQuotePrefix, false),
                 ApplyNumberFormat = true,
                 ApplyAlignment = true,
                 ApplyFill = ApplyFill(styleInfo),
@@ -3710,6 +3713,7 @@ namespace ClosedXML.Excel
                 && f.FillId != null && styleInfo.FillId == f.FillId
                 && f.FontId != null && styleInfo.FontId == f.FontId
                 && f.NumberFormatId != null && styleInfo.NumberFormatId == f.NumberFormatId
+                && QuotePrefixesAreEqual(f.QuotePrefix, styleInfo.IncludeQuotePrefix)
                 && (f.ApplyFill == null && styleInfo.Style.Fill == XLFillValue.Default ||
                     f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo))
                 && (f.ApplyBorder == null && styleInfo.Style.Border == XLBorderValue.Default ||
@@ -3730,6 +3734,11 @@ namespace ClosedXML.Excel
                     p.Hidden = protection.Hidden.Value;
             }
             return p.Equals(xlProtection.Key);
+        }
+
+        private static bool QuotePrefixesAreEqual(BooleanValue quotePrefix, Boolean includeQuotePrefix)
+        {
+            return OpenXmlHelper.GetBooleanValueAsBool(quotePrefix, false) == includeQuotePrefix;
         }
 
         private static bool AlignmentsAreEqual(Alignment alignment, XLAlignmentValue xlAlignment)

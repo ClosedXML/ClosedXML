@@ -126,6 +126,21 @@ namespace ClosedXML.Excel
             }
         }
 
+        public Boolean IncludeQuotePrefix
+        {
+            get { return Value.IncludeQuotePrefix; }
+            set
+            {
+                Modify(k => { k.IncludeQuotePrefix = value; return k; });
+            }
+        }
+
+        public IXLStyle SetIncludeQuotePrefix(Boolean includeQuotePrefix = true)
+        {
+            IncludeQuotePrefix = includeQuotePrefix;
+            return this;
+        }
+
         public IXLNumberFormat NumberFormat
         {
             get { return new XLNumberFormat(this, Value.NumberFormat); }

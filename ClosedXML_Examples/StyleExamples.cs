@@ -61,6 +61,7 @@ namespace ClosedXML_Examples
             new StyleBorder().Create(Path.Combine(path, "styleBorder.xlsx"));
             new StyleAlignment().Create(Path.Combine(path, "styleAlignment.xlsx"));
             new StyleNumberFormat().Create(Path.Combine(path, "styleNumberFormat.xlsx"));
+            new StyleIncludeQuotePrefix().Create(Path.Combine(path, "styleIncludeQuotePrefix.xlsx"));
         }
 
         // Private
