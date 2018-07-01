@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel.Caching;
+using System;
 
 namespace ClosedXML.Excel
 {
@@ -17,6 +18,7 @@ namespace ClosedXML.Excel
             Border = XLBorderValue.Default.Key,
             Fill = XLFillValue.Default.Key,
             Font = XLFontValue.Default.Key,
+            IncludeQuotePrefix = false,
             NumberFormat = XLNumberFormatValue.Default.Key,
             Protection = XLProtectionValue.Default.Key
         });
@@ -31,6 +33,8 @@ namespace ClosedXML.Excel
 
         public XLFontValue Font { get; private set; }
 
+        public Boolean IncludeQuotePrefix { get; private set; }
+
         public XLNumberFormatValue NumberFormat { get; private set; }
 
         public XLProtectionValue Protection { get; private set; }
@@ -42,6 +46,7 @@ namespace ClosedXML.Excel
             Border = XLBorderValue.FromKey(Key.Border);
             Fill = XLFillValue.FromKey(Key.Fill);
             Font = XLFontValue.FromKey(Key.Font);
+            IncludeQuotePrefix = key.IncludeQuotePrefix;
             NumberFormat = XLNumberFormatValue.FromKey(Key.NumberFormat);
             Protection = XLProtectionValue.FromKey(Key.Protection);
         }

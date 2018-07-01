@@ -139,6 +139,7 @@ namespace ClosedXML.Excel
             public UInt32 BorderId;
             public UInt32 FillId;
             public UInt32 FontId;
+            public Boolean IncludeQuotePrefix;
             public Int32 NumberFormatId;
             public XLStyleValue Style;
             public UInt32 StyleId;
