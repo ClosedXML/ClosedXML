@@ -67,7 +67,7 @@ namespace ClosedXML.Excel
             Protection = new XLSheetProtection();
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();
-            SparklineGroups = new XLSparklineGroups();
+            SparklineGroups = new XLSparklineGroups(this);
             Internals = new XLWorksheetInternals(new XLCellsCollection(), new XLColumnsCollection(),
                                                  new XLRowsCollection(), new XLRanges());
             PageSetup = new XLPageSetup((XLPageSetup)workbook.PageOptions, this);

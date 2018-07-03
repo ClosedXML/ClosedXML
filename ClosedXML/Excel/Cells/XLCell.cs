@@ -1519,7 +1519,7 @@ namespace ClosedXML.Excel
         {
             return Worksheet
                 .SparklineGroups
-                .FindSparkline(this);
+                .GetSparkline(this);
         }
 
         public Boolean HasDataValidation
@@ -2046,7 +2046,8 @@ namespace ClosedXML.Excel
 
         private void CopySparklinesFrom(XLRangeBase fromRange)
         {
-            foreach (var sourceSparkline in fromRange.Worksheet.SparklineGroups.FindSparklines(fromRange))
+            //TODO Implement
+            /*foreach (var sourceSparkline in fromRange.Worksheet.SparklineGroups.GetSparklines(fromRange))
             {
                 var targetSparklineGroup = Worksheet.SparklineGroups.Find(sourceSparkline.SparklineGroup.Name);
 
@@ -2054,7 +2055,7 @@ namespace ClosedXML.Excel
                 {
                     targetSparklineGroup = sourceSparkline.SparklineGroup.CopyTo(Worksheet, sourceSparkline.SparklineGroup.Name);
                 }
-            }
+            }*/
         }
 
         private static IXLRangeBase Intersection(IXLRangeBase range, IXLRangeBase crop)
@@ -2390,12 +2391,13 @@ namespace ClosedXML.Excel
                 SettingHyperlink = false;
             }
 
-            var sparkline = Worksheet.SparklineGroups.FindSparkline(this);
+            var sparkline = Worksheet.SparklineGroups.GetSparkline(this);
 
-            if (sparkline != null)
-            {
-                Worksheet.SparklineGroups.AddCopy(sparkline.SparklineGroup, this.Worksheet);
-            }
+            //TODO Implement
+            //if (sparkline != null)
+            //{
+            //    Worksheet.SparklineGroups.AddCopy(sparkline.SparklineGroup, this.Worksheet);
+            //}
         }
 
         private IXLCell GetTargetCell(String target, XLWorksheet defaultWorksheet)

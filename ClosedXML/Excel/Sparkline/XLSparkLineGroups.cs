@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,45 +7,106 @@ namespace ClosedXML.Excel
 {
     internal class XLSparklineGroups : IXLSparklineGroups
     {
-        private readonly List<IXLSparklineGroup> _sparklineGroups = new List<IXLSparklineGroup>();
+        #region Public Properties
 
-        private String GetNextSparklineGroupName()
+        public IXLWorksheet Worksheet { get; }
+
+        #endregion Public Properties
+
+        #region Public Constructors
+
+        public XLSparklineGroups(IXLWorksheet worksheet)
         {
-            string sparklineGroupName = "SparklineGroup1";
-            int i = 1;
-            while(_sparklineGroups.FirstOrDefault(slg => slg.Name == sparklineGroupName) != null)
-            {
-                sparklineGroupName = "SparklineGroup" + i++.ToString();
-            }
+            Worksheet = worksheet;
+        }
 
-            return sparklineGroupName;
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        /// <summary>
+        /// Add empty sparkline group.
+        /// </summary>
+        internal IXLSparklineGroup Add()
+        {
+            return Add(new XLSparklineGroup(Worksheet));
         }
 
         /// <summary>
-        /// Add a new sparkline group to the specified worksheet
+        /// Add the sparkline group to the collection.
         /// </summary>
-        /// <param name="targetWorksheet">The worksheet the sparkline group is being added to</param>
-        /// <param name="name">A name for this sparkline group, leave empty to assign the next available default name.</param>
-        /// <returns>The new sparkline group added</returns>
-        public IXLSparklineGroup Add(IXLWorksheet targetWorksheet, String name = "")
+        /// <param name="sparklineGroup">The sparkline group to add to the collection</param>
+        /// <returns>The same sparkline group</returns>
+        public IXLSparklineGroup Add(IXLSparklineGroup sparklineGroup)
         {
-            var sparklineGroup = new XLSparklineGroup(targetWorksheet, (name == "") ? GetNextSparklineGroupName() : name);
-            _sparklineGroups.Add(sparklineGroup);            
+            if (sparklineGroup.Worksheet != Worksheet)
+                throw new ArgumentException("The specified sparkline group belongs to the different worksheet");
+
+            _sparklineGroups.Add(sparklineGroup);
             return sparklineGroup;
+        }
+
+        public IXLSparklineGroup Add(string locationAddress, string sourceDataAddress)
+        {
+            return Add(new XLSparklineGroup(Worksheet, locationAddress, sourceDataAddress));
+        }
+
+        public IXLSparklineGroup Add(IXLCell location, IXLRange sourceData)
+        {
+            return Add(new XLSparklineGroup(location, sourceData));
+        }
+
+        public IXLSparklineGroup Add(IXLRange locationRange, IXLRange sourceDataRange)
+        {
+            return Add(new XLSparklineGroup(locationRange, sourceDataRange));
         }
 
         /// <summary>
         /// Add a copy of an existing sparkline group to the specified worksheet
-        /// </summary>        
+        /// </summary>
         /// <param name="sparklineGroupToCopy">The sparkline group to copy</param>
         /// <param name="targetWorksheet">The worksheet the sparkline group is being added to</param>
-        /// <param name="name">A name for this sparkline group, leave empty to assign the next available default name.</param>
         /// <returns>The new sparkline group added</returns>
-        public IXLSparklineGroup AddCopy(IXLSparklineGroup sparklineGroupToCopy, IXLWorksheet targetWorksheet, String name = "")
+        public IXLSparklineGroup AddCopy(IXLSparklineGroup sparklineGroupToCopy, IXLWorksheet targetWorksheet)
         {
-            var sparklineGroup = new XLSparklineGroup(sparklineGroupToCopy, targetWorksheet, (name == "") ? GetNextSparklineGroupName() : name);
+            var sparklineGroup = new XLSparklineGroup(targetWorksheet, sparklineGroupToCopy);
             _sparklineGroups.Add(sparklineGroup);
             return sparklineGroup;
+        }
+
+        /// <summary>
+        /// Copy this sparkline group to a different worksheet
+        /// </summary>
+        /// <param name="targetSheet">The worksheet to copy the sparkline group to</param>
+        public void CopyTo(IXLWorksheet targetSheet)
+        {
+            foreach (var slg in this)
+            {
+                slg.CopyTo(targetSheet);
+            }
+        }
+
+        /// <summary>
+        /// Search for the first sparkline that is in the specified cell
+        /// </summary>
+        /// <param name="cell">The cell to find the sparkline for</param>
+        /// <returns>The sparkline in the cell or null if no sparklines are found</returns>
+        public IXLSparkline GetSparkline(IXLCell cell)
+        {
+            return _sparklineGroups
+                .Select(g => g.GetSparkline(cell))
+                .FirstOrDefault(s => s != null);
+        }
+
+        /// <summary>
+        /// Find all sparklines located in a given range
+        /// </summary>
+        /// <param name="searchRange">The range to search</param>
+        /// <returns>The sparkline in the cell or null if no sparklines are found</returns>
+        public IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase searchRange)
+        {
+            return _sparklineGroups
+                .SelectMany(g => g.GetSparklines(searchRange));
         }
 
         public IEnumerator<IXLSparklineGroup> GetEnumerator()
@@ -58,58 +120,20 @@ namespace ClosedXML.Excel
         }
 
         /// <summary>
-        /// Search for the first sparkline group with the specified name
-        /// </summary>
-        /// <param name="name">The name to search for</param>
-        /// <returns>The first sparkline group with the name or null if no sparkline groups exist with that name</returns>
-        public IXLSparklineGroup Find(String name)
-        {
-            return this.FirstOrDefault(slg => slg.Name == name);
-        }
-
-        /// <summary>
-        /// Search for the first sparkline that is in the specified cell
-        /// </summary>
-        /// <param name="cell">The cell to find the sparkline for</param>
-        /// <returns>The sparkline in the cell or null if no sparklines are found</returns>
-        public IXLSparkline FindSparkline(IXLCell cell)
-        {
-            foreach (var slg in _sparklineGroups)
-            {
-                if (slg.Any(sl => sl.Cell == cell))
-                    return slg.First(sl => sl.Cell == cell);
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Find all sparklines located in a given range
-        /// </summary>
-        /// <param name="searchRange">The range to search</param>
-        /// <returns>The sparkline in the cell or null if no sparklines are found</returns>
-        public List<IXLSparkline> FindSparklines(IXLRangeBase searchRange)
-        {
-            List<IXLSparkline> sparklines = new List<IXLSparkline>();
-
-            foreach (var slg in _sparklineGroups)
-            {
-                sparklines.AddRange(slg.Where(sl => sl.GetRanges().GetIntersectedRanges(searchRange.RangeAddress).Any()));
-            }
-
-            return sparklines;
-        }
-
-        /// <summary>
         /// Remove all sparklines in the specified cell
         /// </summary>
         /// <param name="cell">The cell to remove sparklines from</param>
         public void Remove(IXLCell cell)
         {
-            foreach (var slg in _sparklineGroups)
-            {
-                slg.Remove(cell);
-            }
+            _sparklineGroups
+                .AsParallel()
+                .ForEach(g => g.Remove(cell));
+        }
+
+        public void Remove(IXLRangeBase range)
+        {
+            range.CellsUsed()
+                .ForEach(Remove);
         }
 
         /// <summary>
@@ -127,10 +151,7 @@ namespace ClosedXML.Excel
         /// <param name="sparkline">The sparkline to remove</param>
         public void Remove(IXLSparkline sparkline)
         {
-            foreach (var slg in _sparklineGroups)
-            {
-                slg.Remove(sparkline);
-            }
+            _sparklineGroups.ForEach(slg => slg.Remove(sparkline));
         }
 
         /// <summary>
@@ -141,17 +162,12 @@ namespace ClosedXML.Excel
             _sparklineGroups.Clear();
         }
 
-        /// <summary>
-        /// Copy this sparkline group to a different worksheet
-        /// </summary>
-        /// <param name="targetSheet">The worksheet to copy the sparkline group to</param>
-        /// <param name="name">A name for this sparkline group, leave empty to assign the next available default name.</param>
-        public void CopyTo(IXLWorksheet targetSheet, String name = "")
-        {            
-            foreach (var slg in this)
-            {
-                slg.CopyTo(targetSheet, name);
-            }
-        }
+        #endregion Public Methods
+
+        #region Private Fields
+
+        private readonly List<IXLSparklineGroup> _sparklineGroups = new List<IXLSparklineGroup>();
+
+        #endregion Private Fields
     }
 }

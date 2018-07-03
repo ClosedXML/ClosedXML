@@ -27,10 +27,10 @@ namespace ClosedXML_Examples.Sparklines
             var slgDelete3 = wsDelete.SparklineGroups.Add(wsDelete);
             slgDelete3.AddSparkline(wsDelete.Cell("F5"), wsDelete.Range("A5:E5").RangeAddress.ToStringRelative(true));
             slgDelete3.AddSparkline(wsDelete.Cell("F6"), wsDelete.Range("A6:E6").RangeAddress.ToStringRelative(true));
-            
+
             wsDelete.Range("F5:F6").Clear();
 
             workbook.SaveAs(filePath);
         }
-    }    
+    }
 }

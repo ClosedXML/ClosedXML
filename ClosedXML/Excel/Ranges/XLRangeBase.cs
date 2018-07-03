@@ -412,7 +412,8 @@ namespace ClosedXML.Excel
 
         internal void RemoveSparklines()
         {
-            Worksheet.SparklineGroups.FindSparklines(this).ForEach(sl => Worksheet.SparklineGroups.Remove(sl));            
+            Worksheet.SparklineGroups.GetSparklines(this)
+                .ForEach(sl => Worksheet.SparklineGroups.Remove(sl.Location));
         }
 
         public void DeleteComments()

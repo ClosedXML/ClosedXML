@@ -5298,9 +5298,9 @@ namespace ClosedXML.Excel
                     {
                         X14.Sparkline sparkline = new X14.Sparkline();
                         OfficeExcel.Formula formula = new OfficeExcel.Formula();
-                        formula.Text = sl.Formula.Value;
+                        formula.Text = sl.SourceData.RangeAddress.ToString();
                         OfficeExcel.ReferenceSequence referenceSequence = new OfficeExcel.ReferenceSequence();
-                        referenceSequence.Text = sl.Cell.Address.ToString();
+                        referenceSequence.Text = sl.Location.Address.ToString();
                         sparkline.Append(formula);
                         sparkline.Append(referenceSequence);
                         sparklines.Append(sparkline);

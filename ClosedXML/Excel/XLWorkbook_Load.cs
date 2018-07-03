@@ -2375,7 +2375,7 @@ namespace ClosedXML.Excel
             {
                 foreach (var slg in sparklineGroups.Descendants<DocumentFormat.OpenXml.Office2010.Excel.SparklineGroup>())
                 {
-                    var sparklineGroup = ws.SparklineGroups.Add(ws);
+                    var sparklineGroup = (ws.SparklineGroups as XLSparklineGroups).Add();
 
                     if (slg.AxisColor != null) sparklineGroup.AxisColor = ExtractColor(slg.AxisColor.Rgb.Value);
                     if (slg.FirstMarkerColor != null) sparklineGroup.FirstMarkerColor = ExtractColor(slg.FirstMarkerColor.Rgb.Value);
@@ -2388,7 +2388,7 @@ namespace ClosedXML.Excel
 
                     if (slg.Markers != null) sparklineGroup.Markers = slg.Markers;
                     if (slg.High != null) sparklineGroup.High = slg.High;
-                    if (slg.Low != null) sparklineGroup.Low = slg.Low;                                        
+                    if (slg.Low != null) sparklineGroup.Low = slg.Low;
                     if (slg.First != null) sparklineGroup.Low = slg.First;
                     if (slg.Last != null) sparklineGroup.Low = slg.Last;
                     if (slg.Negative != null) sparklineGroup.Negative = slg.Negative;
@@ -2411,16 +2411,7 @@ namespace ClosedXML.Excel
                     {
                         foreach (var sl in sls.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Sparkline>())
                         {
-                            string referenceSequence = null;
-                            string formulaText = null;
-
-                            if (sl.ReferenceSequence != null) referenceSequence = sl.ReferenceSequence.Text;
-                            if (sl.Formula != null) formulaText = sl.Formula.Text;
-
-                            if(sl.ReferenceSequence != null)
-                            {
-                                sparklineGroup.AddSparkline(ws.Cell(sl.ReferenceSequence.Text), sl.Formula.Text);
-                            }                            
+                            sparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text);
                         }
                     }
                 }

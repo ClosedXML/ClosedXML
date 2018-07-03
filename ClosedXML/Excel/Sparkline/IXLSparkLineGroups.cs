@@ -1,28 +1,37 @@
-﻿using System;
+﻿// Keep this file CodeMaid organised and cleaned
+using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
     public interface IXLSparklineGroups : IEnumerable<IXLSparklineGroup>
     {
-        IXLSparklineGroup Add(IXLWorksheet targetWorksheet, String name = "");
+        #region Public Properties
 
-        IXLSparklineGroup AddCopy(IXLSparklineGroup sparklineGroupToCopy, IXLWorksheet targetWorksheet, String name = "");
+        IXLWorksheet Worksheet { get; }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
+        IXLSparklineGroup Add(IXLSparklineGroup sparklineGroup);
+        IXLSparklineGroup Add(string locationAddress, string sourceDataAddress);
+        IXLSparklineGroup Add(IXLCell location, IXLRange sourceData);
+        IXLSparklineGroup Add(IXLRange locationRange, IXLRange sourceDataRange);
+
+
+        void CopyTo(IXLWorksheet targetSheet);
+
+        IXLSparkline GetSparkline(IXLCell cell);
+        IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase rangeBase);
+
+        void Remove(IXLCell cell);
+        void Remove(IXLRangeBase range);
+        void Remove(IXLSparklineGroup sparklineGroup);
         void RemoveAll();
 
-        void Remove(IXLSparklineGroup sparklineGroup);
+        #endregion Public Methods
 
-        IXLSparklineGroup Find(String name);
-
-        List<IXLSparkline> FindSparklines(IXLRangeBase rangeBase);
-
-        IXLSparkline FindSparkline(IXLCell cell);
-        
-        void Remove(IXLCell cell);
-
-        void Remove(IXLSparkline sparkline);
-
-        void CopyTo(IXLWorksheet targetSheet, String name = "");
+        //IXLSparklineGroup AddCopy(IXLSparklineGroup sparklineGroupToCopy);
     }
 }

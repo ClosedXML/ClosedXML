@@ -1,21 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿// Keep this file CodeMaid organised and cleaned
 namespace ClosedXML.Excel
 {
     public interface IXLSparkline
-    {        
-        XLFormula Formula { get; set; }
-        IXLCell Cell { get; set; }
-        
+    {
+        #region Public Properties
+
+        IXLCell Location { get; set; }
+
+        IXLRange SourceData { get; set; }
+
         IXLSparklineGroup SparklineGroup { get; }
 
-        IXLSparkline SetFormula(XLFormula value);
-        IXLSparkline SetCell(IXLCell value);
+        #endregion Public Properties
 
-        IXLRanges GetRanges();
+        #region Public Methods
+
+        IXLSparkline SetLocation(IXLCell value);
+
+        IXLSparkline SetSourceData(IXLRange value);
+
+        #endregion Public Methods
     }
 }
-

@@ -1,4 +1,4 @@
-﻿using ClosedXML_Examples.Sparklines;
+﻿//using ClosedXML_Examples.Sparklines;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
@@ -6,6 +6,7 @@ namespace ClosedXML_Tests.Examples
     [TestFixture]
     public class SparklineTests
     {
+        /*
         [Test]
         public void AddingSparklines()
         {
@@ -29,6 +30,6 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<DeletingSparklinesHelp>(@"Sparklines\DeletingSparklinesHelp.xlsx");
         }
-
+        */
     }
 }

@@ -1,68 +1,57 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 
 namespace ClosedXML.Excel
 {
     internal class XLSparkline : IXLSparkline
-    {        
+    {
+        #region Public Properties
+
+        public IXLCell Location { get; set; }
+
+        public IXLRange SourceData { get; set; }
+
         public IXLSparklineGroup SparklineGroup { get; }
 
-        public XLFormula Formula { get; set; }
-        public IXLCell Cell { get; set; }
+        #endregion Public Properties
 
-        public IXLSparkline SetFormula(XLFormula value) { Formula = value; return this; }
-        public IXLSparkline SetCell (IXLCell value) { Cell = value; return this; }
+        #region Public Constructors
 
         /// <summary>
         /// Create a new sparkline
         /// </summary>
-        /// <param name="cell">The cell to place the sparkline in</param>
         /// <param name="sparklineGroup">The sparkline group to add the sparkline to</param>
-        public XLSparkline(IXLCell cell, IXLSparklineGroup sparklineGroup)
+        /// <param name="cell">The cell to place the sparkline in</param>
+        /// <param name="sourceData">The range the sparkline gets data from</param>
+        public XLSparkline(IXLSparklineGroup sparklineGroup, IXLCell cell, IXLRange sourceData)
         {
-            Cell = cell;
-            SparklineGroup = sparklineGroup;
-        }
+            if (sparklineGroup.Worksheet != cell.Worksheet)
+                throw new InvalidOperationException("Cell must belong to the same worksheet as the sparkline group");
 
-        /// <summary>
-        /// Create a new sparkline
-        /// </summary>
-        /// <param name="cell">The cell to place the sparkline in</param>
-        /// <param name="sparklineGroup">The sparkline group to add the sparkline to</param>
-        /// <param name="formula">The formula for the source range of the sparkline</param>
-        public XLSparkline(IXLCell cell, IXLSparklineGroup sparklineGroup, XLFormula formula)
-        {
-            Cell = cell;
             SparklineGroup = sparklineGroup;
-            Formula = formula;
+            Location = cell;
+            SourceData = sourceData;
         }
 
         /// <summary>
         /// Create a new sparkline
         /// </summary>
-        /// <param name="cell">The cell to place the sparkline in</param>
         /// <param name="sparklineGroup">The sparkline group to add the sparkline to</param>
-        /// <param name="formulaText">The text for the formula for the source range of the sparkline</param>
-        public XLSparkline(IXLCell cell, IXLSparklineGroup sparklineGroup, String formulaText)
+        /// <param name="cellAddress">The address of the cell to place the sparkline in</param>
+        /// <param name="sourceDataAddress">The address of the sparkline's source range</param>
+        public XLSparkline(IXLSparklineGroup sparklineGroup, string cellAddress, string sourceDataAddress)
+            : this(sparklineGroup, sparklineGroup.Worksheet.Cell(cellAddress), sparklineGroup.Worksheet.Range(sourceDataAddress))
         {
-            Cell = cell;
-            SparklineGroup = sparklineGroup;
-            Formula.Value = formulaText;
         }
 
-        /// <summary>
-        /// Returns the cell this sparkline is used in as an IXLRanges object
-        /// </summary>
-        /// <returns></returns>
-        public IXLRanges GetRanges()
-        {
-            IXLRanges ranges = new XLRanges();
+        #endregion Public Constructors
 
-            if (Cell != null)
-            {
-                ranges.Add(Cell);
-            }
+        #region Public Methods
 
-            return ranges;
-        }
+        public IXLSparkline SetLocation(IXLCell value) { Location = value; return this; }
+
+        public IXLSparkline SetSourceData(IXLRange value) { SourceData = value; return this; }
+
+        #endregion Public Methods
     }
 }

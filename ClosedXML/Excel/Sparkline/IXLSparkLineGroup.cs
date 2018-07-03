@@ -1,13 +1,14 @@
-﻿using System;
+﻿// Keep this file CodeMaid organised and cleaned
+using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public enum XLSparklineType
+    public enum XLDisplayBlanksAsValues
     {
-        Line = 0,
-        Column = 1,
-        Stacked = 2        
+        Span = 0,
+        Gap = 1,
+        Zero = 2
     }
 
     public enum XLSparklineAxisMinMax
@@ -17,90 +18,136 @@ namespace ClosedXML.Excel
         Custom = 2
     }
 
-    public enum XLDisplayBlanksAsValues
+    public enum XLSparklineType
     {
-        Span = 0,
-        Gap = 1,
-        Zero = 2        
+        Line = 0,
+        Column = 1,
+        Stacked = 2        
     }
-
     public interface IXLSparklineGroup : IEnumerable<IXLSparkline>
     {
-        String Name { get; set; }
+        #region Public Properties
 
         XLColor AxisColor { get; set; }
-        XLColor FirstMarkerColor { get; set; }
-        XLColor LastMarkerColor { get; set; }
-        XLColor HighMarkerColor { get; set; }
-        XLColor LowMarkerColor { get; set; }
-        XLColor SeriesColor { get; set; }
-        XLColor NegativeColor { get; set; }
-        XLColor MarkersColor { get; set; }
-
-        Boolean Markers { get; set; }
-        Boolean High { get; set; }
-        Boolean Low { get; set; }
-        Boolean First { get; set; }
-        Boolean Last { get; set; }
-        Boolean Negative { get; set; }
         Boolean DateAxis { get; set; }
-        Boolean DisplayXAxis { get; set; }
+
+        XLDisplayBlanksAsValues DisplayEmptyCellsAs { get; set; }
+
         Boolean DisplayHidden { get; set; }
-        Boolean RightToLeft { get; set; }
-        Double? ManualMax { get; set; }
-        Double? ManualMin { get; set; }
+
+        Boolean DisplayXAxis { get; set; }
+
+        Boolean First { get; set; }
+
+        XLColor FirstMarkerColor { get; set; }
+        Boolean High { get; set; }
+
+        XLColor HighMarkerColor { get; set; }
+
+        Boolean Last { get; set; }
+
+        XLColor LastMarkerColor { get; set; }
         Double LineWeight { get; set; }
 
+        Boolean Low { get; set; }
+
+        XLColor LowMarkerColor { get; set; }
+        Double? ManualMax { get; set; }
+
+        Double? ManualMin { get; set; }
+
+        Boolean Markers { get; set; }
+
+        XLColor MarkersColor { get; set; }
+
+        XLSparklineAxisMinMax MaxAxisType { get; set; }
+
         XLSparklineAxisMinMax MinAxisType { get; set; }
-        XLSparklineAxisMinMax MaxAxisType { get; set; }        
+
+        Boolean Negative { get; set; }
+
+        XLColor NegativeColor { get; set; }
+
+        Boolean RightToLeft { get; set; }
+
+        XLColor SeriesColor { get; set; }
 
         XLSparklineType Type { get; set; }
-        XLDisplayBlanksAsValues DisplayEmptyCellsAs { get; set; }
-        
-        IXLSparklineGroup SetAxisColor(XLColor value);
-        IXLSparklineGroup SetSeriesColor(XLColor value);
-        IXLSparklineGroup SetNegativeColor(XLColor value);
-        IXLSparklineGroup SetMarkersColor(XLColor value);
-        IXLSparklineGroup SetFirstMarkerColor(XLColor value);
-        IXLSparklineGroup SetLastMarkerColor(XLColor value);
-        IXLSparklineGroup SetHighMarkerColor(XLColor value);
-        IXLSparklineGroup SetLowMarkerColor(XLColor value);
-        
-        IXLSparklineGroup SetDateAxis(Boolean value);
-        IXLSparklineGroup SetMarkers(Boolean value);
-        IXLSparklineGroup SetHigh(Boolean value);
-        IXLSparklineGroup SetLow(Boolean value);
-        IXLSparklineGroup SetFirst(Boolean value);
-        IXLSparklineGroup SetLast(Boolean value);
-        IXLSparklineGroup SetNegative(Boolean value);
-        IXLSparklineGroup SetDisplayXAxis(Boolean value);
-        IXLSparklineGroup SetDisplayHidden(Boolean value);
 
-        IXLSparklineGroup SetManualMax(Double? value);
-        IXLSparklineGroup SetManualMin(Double? value);
-        IXLSparklineGroup SetLineWeight(Double value);
+        IXLWorksheet Worksheet { get; }
 
-        IXLSparklineGroup SetMinAxisType(XLSparklineAxisMinMax value);
-        IXLSparklineGroup SetMaxAxisType(XLSparklineAxisMinMax value);
+        #endregion Public Properties
 
-        IXLSparklineGroup SetType(XLSparklineType value);
-        IXLSparklineGroup SetDisplayEmptyCellsAs(XLDisplayBlanksAsValues value);
+        #region Public Methods
 
-        IXLSparkline AddSparkline(IXLCell cell);
-        IXLSparkline AddSparkline(IXLCell cell, string formulaText);
-        IXLSparkline AddSparkline(IXLCell cell, XLFormula formula);
-        IXLSparkline CopySparkline(IXLSparkline sparkline);
+        IXLSparkline Add(IXLCell location, IXLRange sourceData);
 
-        void RemoveAll();
+        IXLSparkline Add(string locationAddress, string sourceDataAddress);
+
+        IEnumerable<IXLSparkline> Add(IXLRange locationRange, IXLRange sourceDataRange);
+
+        void CopyFrom(IXLSparklineGroup sparklineGroup);
+
+        IXLSparklineGroup CopyTo(IXLWorksheet targetSheet);
+
+        IXLSparkline GetSparkline(IXLCell cell);
+
+        IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase searchRange);
 
         void Remove(IXLCell cell);
 
         void Remove(IXLSparkline sparkline);
 
-        IXLSparklineGroup CopyTo(IXLWorksheet targetSheet, String name = "");
+        void RemoveAll();
 
-        void CopyFrom(IXLSparklineGroup sparklineGroup);
+        IXLSparklineGroup SetAxisColor(XLColor value);
 
-        IXLWorksheet Worksheet { get; }
+        IXLSparklineGroup SetDateAxis(Boolean value);
+
+        IXLSparklineGroup SetDisplayEmptyCellsAs(XLDisplayBlanksAsValues value);
+
+        IXLSparklineGroup SetDisplayHidden(Boolean value);
+
+        IXLSparklineGroup SetDisplayXAxis(Boolean value);
+
+        IXLSparklineGroup SetFirst(Boolean value);
+
+        IXLSparklineGroup SetFirstMarkerColor(XLColor value);
+
+        IXLSparklineGroup SetHigh(Boolean value);
+
+        IXLSparklineGroup SetHighMarkerColor(XLColor value);
+
+        IXLSparklineGroup SetLast(Boolean value);
+
+        IXLSparklineGroup SetLastMarkerColor(XLColor value);
+
+        IXLSparklineGroup SetLineWeight(Double value);
+
+        IXLSparklineGroup SetLow(Boolean value);
+
+        IXLSparklineGroup SetLowMarkerColor(XLColor value);
+
+        IXLSparklineGroup SetManualMax(Double? value);
+
+        IXLSparklineGroup SetManualMin(Double? value);
+
+        IXLSparklineGroup SetMarkers(Boolean value);
+
+        IXLSparklineGroup SetMarkersColor(XLColor value);
+
+        IXLSparklineGroup SetMaxAxisType(XLSparklineAxisMinMax value);
+
+        IXLSparklineGroup SetMinAxisType(XLSparklineAxisMinMax value);
+
+        IXLSparklineGroup SetNegative(Boolean value);
+
+        IXLSparklineGroup SetNegativeColor(XLColor value);
+
+        IXLSparklineGroup SetSeriesColor(XLColor value);
+
+        IXLSparklineGroup SetType(XLSparklineType value);
+
+        #endregion Public Methods
     }
 }

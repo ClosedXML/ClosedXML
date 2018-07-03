@@ -23,10 +23,8 @@ namespace ClosedXML_Examples.Sparklines
             ws.Cell("D2").Value = "10";
             ws.Cell("E2").Value = "40";
 
-            var slg = ws.SparklineGroups.Add(ws);
+            var slg = ws.SparklineGroups.Add(ws.Range("F1:F2"), ws.Range("A1:E2"));
             slg.SeriesColor = XLColor.CarrotOrange;
-            slg.AddSparkline(ws.Cell("F1"), ws.Range("A1:E1").RangeAddress.ToStringRelative(true));
-            slg.AddSparkline(ws.Cell("F2"), ws.Range("A2:E2").RangeAddress.ToStringRelative(true));
 
             ws.Cell("A4").Value = "10";
             ws.Cell("B4").Value = "20";
@@ -40,11 +38,9 @@ namespace ClosedXML_Examples.Sparklines
             ws.Cell("D5").Value = "10";
             ws.Cell("E5").Value = "40";
 
-            var slg2 = ws.SparklineGroups.Add(ws);
+            var slg2 = ws.SparklineGroups.Add(ws.Range("F4:F5"), ws.Range("A4:E5"));
             slg2.Type = XLSparklineType.Column;
             slg2.SeriesColor = XLColor.Red;
-            slg2.AddSparkline(ws.Cell("F4"), ws.Range("A4:E4").RangeAddress.ToStringRelative(true));
-            slg2.AddSparkline(ws.Cell("F5"), ws.Range("A5:E5").RangeAddress.ToStringRelative(true));
 
             ws.Cell("A7").Value = "1";
             ws.Cell("B7").Value = "-1";
@@ -58,11 +54,9 @@ namespace ClosedXML_Examples.Sparklines
             ws.Cell("D8").Value = "1";
             ws.Cell("E8").Value = "-1";
 
-            var slg3 = ws.SparklineGroups.Add(ws);
+            var slg3 = ws.SparklineGroups.Add(ws.Range("F7:F8"), ws.Range("A7:E8"));
             slg3.Type = XLSparklineType.Stacked;
             slg3.SeriesColor = XLColor.VividViolet;
-            slg3.AddSparkline(ws.Cell("F7"), ws.Range("A7:E7").RangeAddress.ToStringRelative(true));
-            slg3.AddSparkline(ws.Cell("F8"), ws.Range("A8:E8").RangeAddress.ToStringRelative(true));
             
             //Copy worksheet and ensure the sparkline groups are copied
             ws.CopyTo("CopyWorksheet");

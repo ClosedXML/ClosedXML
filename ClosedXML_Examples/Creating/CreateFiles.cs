@@ -4,7 +4,7 @@ using ClosedXML_Examples.PageSetup;
 using ClosedXML_Examples.Ranges;
 using ClosedXML_Examples.Rows;
 using ClosedXML_Examples.Styles;
-using ClosedXML_Examples.Sparklines;
+//using ClosedXML_Examples.Sparklines;
 using ClosedXML_Examples.Tables;
 using System.IO;
 
@@ -94,11 +94,11 @@ namespace ClosedXML_Examples
             new AddingComments().Create(Path.Combine(path, "AddingComments.xlsx"));
             new PivotTables().Create(Path.Combine(path, "PivotTables.xlsx"));
             new SheetViews().Create(Path.Combine(path, "SheetViews.xlsx"));
-            new AddingSparklines().Create(Path.Combine(path, "AddingSparklines.xlsx"));
-            new DeletingSparklines().Create(Path.Combine(path, "DeletingSparklines.xlsx"));
-            new CopyingSparklines().Create(Path.Combine(path, "CopyingSparklines.xlsx"));
-            new ShiftingSparklines().Create(Path.Combine(path, "ShiftingSparklines.xlsx"));
-            new DeletingSparklinesHelp().Create(Path.Combine(path, "DeletingSparklinesHelp.xlsx"));
+            //new AddingSparklines().Create(Path.Combine(path, "AddingSparklines.xlsx"));
+            //new DeletingSparklines().Create(Path.Combine(path, "DeletingSparklines.xlsx"));
+            //new CopyingSparklines().Create(Path.Combine(path, "CopyingSparklines.xlsx"));
+            //new ShiftingSparklines().Create(Path.Combine(path, "ShiftingSparklines.xlsx"));
+            //new DeletingSparklinesHelp().Create(Path.Combine(path, "DeletingSparklinesHelp.xlsx"));
         }
     }
 }
