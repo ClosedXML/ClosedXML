@@ -122,7 +122,14 @@ namespace ClosedXML.Excel
             var singleRow = locationRange.RowCount() == 1;
             var singleColumn = locationRange.ColumnCount() == 1;
             var newSparklines = new List<IXLSparkline>();
-            if (singleRow)
+
+            if (singleRow && singleColumn)
+            {
+                if (sourceDataRange.RowCount() != 1 && sourceDataRange.ColumnCount() != 1)
+                    throw new ArgumentException("sourceDataRange must have either a single row or a single column");
+                newSparklines.Add(Add(locationRange.FirstCell(), sourceDataRange));
+            }
+            else if (singleRow)
             {
                 if (locationRange.ColumnCount() != sourceDataRange.ColumnCount())
                     throw new ArgumentException("locationRange and sourceDataRange must have the same width");
@@ -166,9 +173,9 @@ namespace ClosedXML.Excel
             return sparkline;
         }
 
-        public IXLSparkline Add(string locationAddress, string sourceDataAddress)
+        public IEnumerable<IXLSparkline> Add(string locationRangeAddress, string sourceDataAddress)
         {
-            return Add(Worksheet.Cell(locationAddress), Worksheet.Range(sourceDataAddress));
+            return Add(Worksheet.Range(locationRangeAddress), Worksheet.Range(sourceDataAddress));
         }
 
         /// <summary>

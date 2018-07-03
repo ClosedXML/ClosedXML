@@ -80,7 +80,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
         }
 
         [Test]
-        public void CannotAddSparklineForWhenRangesHaveDifferentWidths()
+        public void CannotAddSparklineWhenRangesHaveDifferentWidths()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
 
@@ -91,7 +91,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
         }
 
         [Test]
-        public void CannotAddSparklineForWhenRangesHaveDifferentHeights()
+        public void CannotAddSparklineWhenRangesHaveDifferentHeights()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
 
@@ -99,6 +99,17 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("locationRange and sourceDataRange must have the same height", message);
+        }
+
+        [Test]
+        public void CannotAddSparklineForCellWhenDataRangeIsNotLinear()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:A1"), ws.Range("B1:C4"));
+
+            var message = Assert.Throws<ArgumentException>(action).Message;
+            Assert.AreEqual("sourceDataRange must have either a single row or a single column", message);
         }
 
         [Test]
@@ -176,6 +187,40 @@ namespace ClosedXML_Tests.Excel.Sparklines
             Assert.IsFalse(ws.SparklineGroups.First().Any());
             Assert.AreEqual("A1", ws.SparklineGroups.Last().Single().Location.Address.ToString());
             Assert.AreEqual("B2:E2", ws.SparklineGroups.Last().Single().SourceData.RangeAddress.ToString());
+        }
+
+        [TestCase("A2", "B2:Z2")]
+        [TestCase("A50", "B50:Z50")]
+        [TestCase("A100", "B100:Z100")]
+        [TestCase("B1", "B2:B100")]
+        [TestCase("K1", "K2:K100")]
+        [TestCase("Z1", "Z2:Z100")]
+        public void CanGetSparklineForExistingCell(string cellAddress, string expectedSourceDataRange)
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A2:A100", "B2:Z100");
+            ws.SparklineGroups.Add("B1:Z1", "B2:Z100");
+
+            var sp = ws.SparklineGroups.GetSparkline(ws.Cell(cellAddress));
+            Assert.IsNotNull(sp);
+            Assert.AreEqual(cellAddress, sp.Location.Address.ToString());
+            Assert.AreEqual(expectedSourceDataRange, sp.SourceData.RangeAddress.ToString());
+        }
+
+        [TestCase("A1")]
+        [TestCase("B2")]
+        [TestCase("A101")]
+        [TestCase("AA1")]
+        public void CannotGetSparklineForNonExistingCell(string cellAddress)
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A2:A100", "B2:Z100");
+            ws.SparklineGroups.Add("B1:Z1", "B2:Z100");
+
+            var sp = ws.SparklineGroups.GetSparkline(ws.Cell(cellAddress));
+            Assert.IsNull(sp);
         }
     }
 }

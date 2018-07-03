@@ -82,9 +82,9 @@ namespace ClosedXML.Excel
 
         IXLSparkline Add(IXLCell location, IXLRange sourceData);
 
-        IXLSparkline Add(string locationAddress, string sourceDataAddress);
-
         IEnumerable<IXLSparkline> Add(IXLRange locationRange, IXLRange sourceDataRange);
+
+        IEnumerable<IXLSparkline> Add(string locationRangeAddress, string sourceDataAddress);
 
         void CopyFrom(IXLSparklineGroup sparklineGroup);
 
