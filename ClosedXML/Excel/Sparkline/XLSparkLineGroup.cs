@@ -125,8 +125,6 @@ namespace ClosedXML.Excel
 
             if (singleRow && singleColumn)
             {
-                if (sourceDataRange.RowCount() != 1 && sourceDataRange.ColumnCount() != 1)
-                    throw new ArgumentException("sourceDataRange must have either a single row or a single column");
                 newSparklines.Add(Add(locationRange.FirstCell(), sourceDataRange));
             }
             else if (singleRow)
@@ -246,7 +244,7 @@ namespace ClosedXML.Excel
 
         public IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase searchRange)
         {
-            foreach (var key in _sparklines.Keys.Where(cell => searchRange.Contains(cell)))
+            foreach (var key in _sparklines.Keys.Where(searchRange.Contains))
             {
                 yield return GetSparkline(key);
             }
@@ -279,7 +277,11 @@ namespace ClosedXML.Excel
             _sparklines.Clear();
         }
 
-        public IXLSparklineGroup SetAxisColor(XLColor value) { AxisColor = value; return this; }
+        public IXLSparklineGroup SetAxisColor(XLColor value)
+        {
+            AxisColor = value;
+            return this;
+        }
 
         public IXLSparklineGroup SetDateAxis(Boolean dateAxis)
         {
@@ -311,7 +313,11 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetFirstMarkerColor(XLColor value) { FirstMarkerColor = value; return this; }
+        public IXLSparklineGroup SetFirstMarkerColor(XLColor value)
+        {
+            FirstMarkerColor = value;
+            return this;
+        }
 
         public IXLSparklineGroup SetHigh(Boolean high)
         {
@@ -319,7 +325,11 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetHighMarkerColor(XLColor value) { HighMarkerColor = value; return this; }
+        public IXLSparklineGroup SetHighMarkerColor(XLColor value)
+        {
+            HighMarkerColor = value;
+            return this;
+        }
 
         public IXLSparklineGroup SetLast(Boolean last)
         {
@@ -327,7 +337,11 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetLastMarkerColor(XLColor value) { LastMarkerColor = value; return this; }
+        public IXLSparklineGroup SetLastMarkerColor(XLColor value)
+        {
+            LastMarkerColor = value;
+            return this;
+        }
 
         public IXLSparklineGroup SetLineWeight(Double lineWeight)
         {
@@ -341,7 +355,11 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetLowMarkerColor(XLColor value) { LowMarkerColor = value; return this; }
+        public IXLSparklineGroup SetLowMarkerColor(XLColor value)
+        {
+            LowMarkerColor = value;
+            return this;
+        }
 
         public IXLSparklineGroup SetManualMax(Double? manualMax)
         {
@@ -361,7 +379,11 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetMarkersColor(XLColor value) { MarkersColor = value; return this; }
+        public IXLSparklineGroup SetMarkersColor(XLColor value)
+        {
+            MarkersColor = value;
+            return this;
+        }
 
         public IXLSparklineGroup SetMaxAxisType(XLSparklineAxisMinMax maxAxisType)
         {
@@ -381,7 +403,11 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetNegativeColor(XLColor value) { NegativeColor = value; return this; }
+        public IXLSparklineGroup SetNegativeColor(XLColor value)
+        {
+            NegativeColor = value;
+            return this;
+        }
 
         public IXLSparklineGroup SetRightToLeft(Boolean rightToLeft)
         {
@@ -389,7 +415,11 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetSeriesColor(XLColor value) { SeriesColor = value; return this; }
+        public IXLSparklineGroup SetSeriesColor(XLColor value)
+        {
+            SeriesColor = value;
+            return this;
+        }
 
         public IXLSparklineGroup SetType(XLSparklineType type)
         {

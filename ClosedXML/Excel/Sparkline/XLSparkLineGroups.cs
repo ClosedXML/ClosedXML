@@ -132,8 +132,12 @@ namespace ClosedXML.Excel
 
         public void Remove(IXLRangeBase range)
         {
-            range.CellsUsed()
-                .ForEach(Remove);
+            var sparklinesToRemove = _sparklineGroups
+                .SelectMany(g => g)
+                .Where(sparkline => range.Contains(sparkline.Location))
+                .ToList();
+
+            sparklinesToRemove.ForEach(Remove);
         }
 
         /// <summary>
@@ -149,9 +153,9 @@ namespace ClosedXML.Excel
         /// Remove the sparkline from the worksheet
         /// </summary>
         /// <param name="sparkline">The sparkline to remove</param>
-        public void Remove(IXLSparkline sparkline)
+        private void Remove(IXLSparkline sparkline)
         {
-            _sparklineGroups.ForEach(slg => slg.Remove(sparkline));
+            sparkline.SparklineGroup.Remove(sparkline);
         }
 
         /// <summary>

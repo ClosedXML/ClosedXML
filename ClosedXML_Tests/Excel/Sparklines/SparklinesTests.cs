@@ -149,7 +149,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
             TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:A1"), ws.Range("B1:C4"));
 
             var message = Assert.Throws<ArgumentException>(action).Message;
-            Assert.AreEqual("sourceDataRange must have either a single row or a single column", message);
+            Assert.AreEqual("SourceData range must have either a single row or a single column", message);
         }
 
         [Test]
@@ -287,6 +287,151 @@ namespace ClosedXML_Tests.Excel.Sparklines
             Assert.AreEqual("B1", sparklines1.Last().Location.Address.ToString());
             Assert.AreEqual("B2:Z2", sparklines1.First().SourceData.RangeAddress.ToString());
             Assert.AreEqual("B2:B100", sparklines1.Last().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void CanRemoveSparklineFromCell()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A1:A3", "B1:Z3");
+            ws.SparklineGroups.Remove(ws.Cell("A2"));
+
+            Assert.AreEqual(1, ws.SparklineGroups.Count());
+            Assert.AreEqual(2, ws.SparklineGroups.Single().Count());
+            Assert.AreEqual("A1", ws.SparklineGroups.Single().First().Location.Address.ToString());
+            Assert.AreEqual("A3", ws.SparklineGroups.Single().Last().Location.Address.ToString());
+            Assert.AreEqual("B1:Z1", ws.SparklineGroups.Single().First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B3:Z3", ws.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void CanRemoveSparklineFromRange()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A1:A5", "B1:Z5");
+            ws.SparklineGroups.Remove(ws.Range("A2:D4"));
+
+            Assert.AreEqual(1, ws.SparklineGroups.Count());
+            Assert.AreEqual(2, ws.SparklineGroups.Single().Count());
+            Assert.AreEqual("A1", ws.SparklineGroups.Single().First().Location.Address.ToString());
+            Assert.AreEqual("A5", ws.SparklineGroups.Single().Last().Location.Address.ToString());
+            Assert.AreEqual("B1:Z1", ws.SparklineGroups.Single().First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B5:Z5", ws.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void RemoveSparklineFromEmptyCellDoesNothing()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+            ws.SparklineGroups.Remove(ws.Cell("F2"));
+
+            Assert.AreEqual(1, ws.SparklineGroups.Count());
+            Assert.AreEqual(2, ws.SparklineGroups.Single().Count());
+            Assert.AreEqual("A1", ws.SparklineGroups.Single().First().Location.Address.ToString());
+            Assert.AreEqual("A2", ws.SparklineGroups.Single().Last().Location.Address.ToString());
+            Assert.AreEqual("B1:Z1", ws.SparklineGroups.Single().First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B2:Z2", ws.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void CanChangeSparklineLocationInsideWorksheet()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+            ws.SparklineGroups.Single().Last().SetLocation(ws.Cell("F2"));
+
+            Assert.AreEqual(1, ws.SparklineGroups.Count());
+            Assert.AreEqual(2, ws.SparklineGroups.Single().Count());
+            Assert.AreEqual("A1", ws.SparklineGroups.Single().First().Location.Address.ToString());
+            Assert.AreEqual("F2", ws.SparklineGroups.Single().Last().Location.Address.ToString());
+            Assert.AreEqual("B1:Z1", ws.SparklineGroups.Single().First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B2:Z2", ws.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void ChangeSparklineLocationOverwritesExistingSparklineSameGroup()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+            ws.SparklineGroups.Single().Last().SetLocation(ws.Cell("A1"));
+
+            Assert.AreEqual(1, ws.SparklineGroups.Count());
+            Assert.AreEqual(1, ws.SparklineGroups.Single().Count());
+            Assert.AreEqual("A1", ws.SparklineGroups.Single().Single().Location.Address.ToString());
+            Assert.AreEqual("B2:Z2", ws.SparklineGroups.Single().Single().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void ChangeSparklineLocationOverwritesExistingSparklineDifferentGroups()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+            ws.SparklineGroups.Add("A3", "B3:Z3");
+            ws.SparklineGroups.Last().Single().SetLocation(ws.Cell("A2"));
+
+            Assert.AreEqual(2, ws.SparklineGroups.Count());
+            Assert.AreEqual(1, ws.SparklineGroups.First().Count());
+            Assert.AreEqual("A1", ws.SparklineGroups.First().Single().Location.Address.ToString());
+            Assert.AreEqual("B1:Z1", ws.SparklineGroups.First().Single().SourceData.RangeAddress.ToString());
+            Assert.AreEqual(1, ws.SparklineGroups.Last().Count());
+            Assert.AreEqual("A2", ws.SparklineGroups.Last().Single().Location.Address.ToString());
+            Assert.AreEqual("B3:Z3", ws.SparklineGroups.Last().Single().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void CannotChangeSparklineLocationToAnotherWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet("Sheet 1");
+            var ws2 = wb.AddWorksheet("Sheet 2");
+
+            var group = ws1.SparklineGroups.Add("A1:A2", "B1:Z2");
+
+            TestDelegate action = () => group.First().SetLocation(ws2.FirstCell());
+
+            var message = Assert.Throws<InvalidOperationException>(action).Message;
+            Assert.AreEqual("Cannot move the sparkline to a different worksheet", message);
+        }
+
+        [Test]
+        public void CanChangeSparklineSourceDataInsideWorksheet()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+            ws.SparklineGroups.Single().Last().SetSourceData(ws.Range("D4:D50"));
+
+            Assert.AreEqual(1, ws.SparklineGroups.Count());
+            Assert.AreEqual(2, ws.SparklineGroups.Single().Count());
+            Assert.AreEqual("A1", ws.SparklineGroups.Single().First().Location.Address.ToString());
+            Assert.AreEqual("A2", ws.SparklineGroups.Single().Last().Location.Address.ToString());
+            Assert.AreEqual("B1:Z1", ws.SparklineGroups.Single().First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("D4:D50", ws.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void CanChangeSparklineSourceDataDifferentWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet("Sheet 1");
+            var ws2 = wb.AddWorksheet("Sheet 2");
+
+            ws1.SparklineGroups.Add("A1:A2", "B1:Z2");
+            ws1.SparklineGroups.Single().Last().SetSourceData(ws2.Range("D4:D50"));
+
+            Assert.AreEqual(1, ws1.SparklineGroups.Count());
+            Assert.AreEqual(2, ws1.SparklineGroups.Single().Count());
+            Assert.AreEqual("A1", ws1.SparklineGroups.Single().First().Location.Address.ToString());
+            Assert.AreEqual("A2", ws1.SparklineGroups.Single().Last().Location.Address.ToString());
+            Assert.AreEqual("'Sheet 1'!B1:Z1", ws1.SparklineGroups.Single().First().SourceData.RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("'Sheet 2'!D4:D50", ws1.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString(XLReferenceStyle.A1, true));
         }
     }
 }
