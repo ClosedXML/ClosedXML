@@ -262,5 +262,31 @@ namespace ClosedXML_Tests.Excel.Sparklines
             var sp = ws.SparklineGroups.GetSparkline(ws.Cell(cellAddress));
             Assert.IsNull(sp);
         }
+
+        [Test]
+        public void CanGetSparklinesForRange()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A2:A100", "B2:Z100");
+            ws.SparklineGroups.Add("B1:Z1", "B2:Z100");
+
+            var sparklines1 = ws.SparklineGroups.GetSparklines(ws.Range("A1:B2"));
+            var sparklines2 = ws.SparklineGroups.GetSparklines(ws.Range("B2:E4"));
+            var sparklines3 = ws.SparklineGroups.GetSparklines(ws.Range("A1:Z100"));
+            var sparklines4 = ws.SparklineGroups.GetSparklines(ws.Range("A:A"));
+            var sparklines5 = ws.SparklineGroups.GetSparklines(ws.Range("1:1"));
+
+            Assert.AreEqual(2, sparklines1.Count());
+            Assert.AreEqual(0, sparklines2.Count());
+            Assert.AreEqual(99+25, sparklines3.Count());
+            Assert.AreEqual(99, sparklines4.Count());
+            Assert.AreEqual(25, sparklines5.Count());
+            
+            Assert.AreEqual("A2", sparklines1.First().Location.Address.ToString());
+            Assert.AreEqual("B1", sparklines1.Last().Location.Address.ToString());
+            Assert.AreEqual("B2:Z2", sparklines1.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B2:B100", sparklines1.Last().SourceData.RangeAddress.ToString());
+        }
     }
 }

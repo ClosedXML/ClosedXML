@@ -246,9 +246,9 @@ namespace ClosedXML.Excel
 
         public IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase searchRange)
         {
-            foreach (var cell in searchRange.CellsUsed())
+            foreach (var key in _sparklines.Keys.Where(cell => searchRange.Contains(cell)))
             {
-                yield return GetSparkline(cell);
+                yield return GetSparkline(key);
             }
         }
 
