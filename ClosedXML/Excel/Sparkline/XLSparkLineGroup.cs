@@ -156,6 +156,9 @@ namespace ClosedXML.Excel
         /// <returns>A newly created sparkline.</returns>
         public IXLSparkline Add(IXLCell location, IXLRange sourceData)
         {
+            if (location.Worksheet != Worksheet)
+                throw new ArgumentException("The specified sparkline belongs to the different worksheet");
+
             SparklineGroups.Remove(location);
 
             var sparkline = new XLSparkline(this, location, sourceData);

@@ -95,8 +95,57 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
             TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:A3"), ws.Range("B1:B4"));
 
-            var message = Assert.Throws<ArgumentException>(action = ).Message;
+            var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("locationRange and sourceDataRange must have the same height", message);
+        }
+
+        [Test]
+        public void CanAddSparklineToExistingGroup()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            var group = new XLSparklineGroup(ws);
+
+            group.Add("A2", "B2:E2");
+            group.Add(ws.Cell("A3"), ws.Range("B3:E3"));
+
+            Assert.AreEqual(0, ws.SparklineGroups.Count());
+
+            Assert.AreEqual("A2", group.ElementAt(0).Location.Address.ToString());
+            Assert.AreEqual("A3", group.ElementAt(1).Location.Address.ToString());
+
+            Assert.AreEqual("B2:E2", group.ElementAt(0).SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B3:E3", group.ElementAt(1).SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void CannotAddSparklineGroupFromDifferentWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet("Sheet 1");
+            var ws2 = wb.AddWorksheet("Sheet 2");
+
+            var group = new XLSparklineGroup(ws1);
+
+            TestDelegate action = () => ws2.SparklineGroups.Add(group);
+
+            var message = Assert.Throws<ArgumentException>(action).Message;
+            Assert.AreEqual("The specified sparkline group belongs to the different worksheet", message);
+        }
+
+        [Test]
+        public void CannotAddSparklineFromDifferentWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet("Sheet 1");
+            var ws2 = wb.AddWorksheet("Sheet 2");
+
+            var group = new XLSparklineGroup(ws1);
+
+            TestDelegate action = () => group.Add(ws2.Cell("A3"), ws1.Range("B3:E3"));
+
+            var message = Assert.Throws<ArgumentException>(action).Message;
+            Assert.AreEqual("The specified sparkline belongs to the different worksheet", message);
         }
     }
 }
