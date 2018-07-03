@@ -120,15 +120,15 @@ namespace ClosedXML.Excel
         public IEnumerable<IXLSparkline> Add(IXLRange locationRange, IXLRange sourceDataRange)
         {
             var singleRow = locationRange.RowCount() == 1;
-            var singleColumn = locationRange.RowCount() == 1;
-
+            var singleColumn = locationRange.ColumnCount() == 1;
+            var newSparklines = new List<IXLSparkline>();
             if (singleRow)
             {
                 if (locationRange.ColumnCount() != sourceDataRange.ColumnCount())
                     throw new ArgumentException("locationRange and sourceDataRange must have the same width");
                 for (int i = 1; i <= locationRange.ColumnCount(); i++)
                 {
-                    yield return Add(locationRange.Cell(1, i), locationRange.Column(i).AsRange());
+                    newSparklines.Add(Add(locationRange.Cell(1, i), sourceDataRange.Column(i).AsRange()));
                 }
             }
             else if (singleColumn)
@@ -138,11 +138,13 @@ namespace ClosedXML.Excel
 
                 for (int i = 1; i <= locationRange.RowCount(); i++)
                 {
-                    yield return Add(locationRange.Cell(i, 1), locationRange.Row(i).AsRange());
+                    newSparklines.Add(Add(locationRange.Cell(i, 1), sourceDataRange.Row(i).AsRange()));
                 }
             }
             else
                 throw new ArgumentException("locationRange must have either a single row or a single column");
+
+            return newSparklines;
         }
 
         /// <summary>
