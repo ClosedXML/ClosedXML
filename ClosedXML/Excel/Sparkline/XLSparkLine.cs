@@ -25,6 +25,13 @@ namespace ClosedXML.Excel
         /// <param name="sourceData">The range the sparkline gets data from</param>
         public XLSparkline(IXLSparklineGroup sparklineGroup, IXLCell cell, IXLRange sourceData)
         {
+            if (sparklineGroup == null)
+                throw new ArgumentNullException(nameof(sparklineGroup));
+            if (cell == null)
+                throw new ArgumentNullException(nameof(cell));
+            if (sourceData == null)
+                throw new ArgumentNullException(nameof(sourceData));
+
             if (sparklineGroup.Worksheet != cell.Worksheet)
                 throw new InvalidOperationException("Cell must belong to the same worksheet as the sparkline group");
 

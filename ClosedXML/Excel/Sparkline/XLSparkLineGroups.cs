@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
 
         public XLSparklineGroups(IXLWorksheet worksheet)
         {
-            Worksheet = worksheet;
+            Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
         }
 
         #endregion Public Constructors

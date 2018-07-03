@@ -11,6 +11,46 @@ namespace ClosedXML_Tests.Excel.Sparklines
     public class SparklinesTests
     {
         [Test]
+        public void CanotCreateSparklineGroupsWithoutWorksheet()
+        {
+            TestDelegate action = () => new XLSparklineGroups(null);
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
+        public void CanotCreateSparklineGroupWithoutWorksheet()
+        {
+            TestDelegate action = () => new XLSparklineGroup(null);
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
+        public void CannotCreateSparklineWithoutGroup()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            TestDelegate action = () => new XLSparkline(null, ws.Cell("A1"), ws.Range("A2:A5"));
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
+        public void CannotCreateSparklineWithoutLocation()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var group = new XLSparklineGroup(ws);
+            TestDelegate action = () => new XLSparkline(group, null, ws.Range("A2:A5"));
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
+        public void CannotCreateSparklineWithoutSourceData()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var group = new XLSparklineGroup(ws);
+            TestDelegate action = () => new XLSparkline(group, ws.FirstCell(), null);
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
         public void CanAddSparklineGroupForSingleCell()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
