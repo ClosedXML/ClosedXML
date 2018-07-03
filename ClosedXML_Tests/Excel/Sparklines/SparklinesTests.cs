@@ -28,6 +28,8 @@ namespace ClosedXML_Tests.Excel.Sparklines
             Assert.AreEqual("B1:E1", ws.SparklineGroups.ElementAt(0).Single().SourceData.RangeAddress.ToString());
             Assert.AreEqual("B2:E2", ws.SparklineGroups.ElementAt(1).Single().SourceData.RangeAddress.ToString());
             Assert.AreEqual("B3:E3", ws.SparklineGroups.ElementAt(2).Single().SourceData.RangeAddress.ToString());
+
+            Assert.IsTrue(ws.SparklineGroups.All(g => g.Worksheet == ws));
         }
 
         [Test]
@@ -146,6 +148,34 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("The specified sparkline belongs to the different worksheet", message);
+        }
+
+        [Test]
+        public void AddSparklineToSameCellOverwritesItWhenSameGroup()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            var group = ws.SparklineGroups.Add("A1", "B1:E1");
+            group.Add("A1", "B2:E2");
+            
+            Assert.AreEqual(1, group.Count());
+
+            Assert.AreEqual("A1", group.Single().Location.Address.ToString());
+            Assert.AreEqual("B2:E2", group.Single().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void AddSparklineToSameCellOverwritesItWhenDifferentGroup()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+
+            ws.SparklineGroups.Add("A1", "B1:E1");
+            ws.SparklineGroups.Add("A1", "B2:E2");
+
+            Assert.AreEqual(2, ws.SparklineGroups.Count());
+            Assert.IsFalse(ws.SparklineGroups.First().Any());
+            Assert.AreEqual("A1", ws.SparklineGroups.Last().Single().Location.Address.ToString());
+            Assert.AreEqual("B2:E2", ws.SparklineGroups.Last().Single().SourceData.RangeAddress.ToString());
         }
     }
 }
