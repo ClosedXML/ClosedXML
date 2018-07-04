@@ -557,5 +557,69 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
         #endregion Load and save sparkline groups
 
+        #region Change sparkline groups
+
+        [Test]
+        public void SetManualMinChangesAxisTypeToCustom()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
+                .SetMinAxisType(XLSparklineAxisMinMax.Group);
+
+            group.ManualMin = 100;
+
+            Assert.AreEqual(100, group.ManualMin, XLHelper.Epsilon);
+            Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.MinAxisType);
+        }
+
+        [Test]
+        public void SetManualMaxChangesAxisTypeToCustom()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
+                .SetMaxAxisType(XLSparklineAxisMinMax.Group);
+
+            group.ManualMax = 100;
+
+            Assert.AreEqual(100, group.ManualMax, XLHelper.Epsilon);
+            Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.MaxAxisType);
+        }
+
+        [TestCase(XLSparklineAxisMinMax.Custom, 100)]
+        [TestCase(XLSparklineAxisMinMax.Group, null)]
+        [TestCase(XLSparklineAxisMinMax.Individual, null)]
+        public void SetAxisTypeToNonCustomSetsManualMinToNull(XLSparklineAxisMinMax axisType, double? expectedManualMin)
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1", "B1:Z1")
+                .SetManualMin(100);
+
+            group.MinAxisType = axisType;
+
+            if (expectedManualMin.HasValue)
+                Assert.AreEqual(expectedManualMin.Value, group.ManualMin.Value, XLHelper.Epsilon);
+            else
+                Assert.IsNull(group.ManualMin);
+        }
+
+        [TestCase(XLSparklineAxisMinMax.Custom, 100)]
+        [TestCase(XLSparklineAxisMinMax.Group, null)]
+        [TestCase(XLSparklineAxisMinMax.Individual, null)]
+        public void SetAxisTypeToNonCustomSetsManualMaxToNull(XLSparklineAxisMinMax axisType, double? expectedManualMax)
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1", "B1:Z1")
+                .SetManualMax(100);
+
+            group.MaxAxisType = axisType;
+
+            if (expectedManualMax.HasValue)
+                Assert.AreEqual(expectedManualMax.Value, group.ManualMax.Value, XLHelper.Epsilon);
+            else
+                Assert.IsNull(group.ManualMax);
+        }
+
+
+        #endregion Change sparkline groups
     }
 }

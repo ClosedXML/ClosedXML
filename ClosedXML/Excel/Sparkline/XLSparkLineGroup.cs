@@ -38,17 +38,38 @@ namespace ClosedXML.Excel
 
         public XLColor LowMarkerColor { get; set; }
 
-        public Double? ManualMax { get; set; }
+        private Double? _manualMax;
 
-        public Double? ManualMin { get; set; }
+        public Double? ManualMax
+        {
+            get => _manualMax;
+            set => SetManualMax(value);
+        }
+
+        private Double? _manualMin;
+        public Double? ManualMin
+        {
+            get => _manualMin;
+            set => SetManualMin(value);
+        }
 
         public Boolean Markers { get; set; }
 
         public XLColor MarkersColor { get; set; }
 
-        public XLSparklineAxisMinMax MaxAxisType { get; set; }
+        private XLSparklineAxisMinMax _maxAxisType;
+        public XLSparklineAxisMinMax MaxAxisType
+        {
+            get => _maxAxisType;
+            set => SetMaxAxisType(value);
+        }
 
-        public XLSparklineAxisMinMax MinAxisType { get; set; }
+        private XLSparklineAxisMinMax _minAxisType;
+        public XLSparklineAxisMinMax MinAxisType
+        {
+            get => _minAxisType;
+            set => SetMinAxisType(value);
+        }
 
         public Boolean Negative { get; set; }
 
@@ -363,13 +384,19 @@ namespace ClosedXML.Excel
 
         public IXLSparklineGroup SetManualMax(Double? manualMax)
         {
-            ManualMax = manualMax;
+            if (manualMax != null)
+                MaxAxisType = XLSparklineAxisMinMax.Custom;
+
+            _manualMax = manualMax;
             return this;
         }
 
         public IXLSparklineGroup SetManualMin(Double? manualMin)
         {
-            ManualMin = manualMin;
+            if (manualMin != null)
+                MinAxisType = XLSparklineAxisMinMax.Custom;
+
+            _manualMin = manualMin;
             return this;
         }
 
@@ -387,13 +414,19 @@ namespace ClosedXML.Excel
 
         public IXLSparklineGroup SetMaxAxisType(XLSparklineAxisMinMax maxAxisType)
         {
-            MaxAxisType = maxAxisType;
+            if (maxAxisType != XLSparklineAxisMinMax.Custom)
+                _manualMax = null;
+
+            _maxAxisType = maxAxisType;
             return this;
         }
 
         public IXLSparklineGroup SetMinAxisType(XLSparklineAxisMinMax minAxisType)
         {
-            MinAxisType = minAxisType;
+            if (minAxisType != XLSparklineAxisMinMax.Custom)
+                _manualMin = null;
+
+            _minAxisType = minAxisType;
             return this;
         }
 
