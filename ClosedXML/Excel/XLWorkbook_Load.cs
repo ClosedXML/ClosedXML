@@ -2389,8 +2389,8 @@ namespace ClosedXML.Excel
                     if (slg.Markers != null) sparklineGroup.Markers = slg.Markers;
                     if (slg.High != null) sparklineGroup.High = slg.High;
                     if (slg.Low != null) sparklineGroup.Low = slg.Low;
-                    if (slg.First != null) sparklineGroup.Low = slg.First;
-                    if (slg.Last != null) sparklineGroup.Low = slg.Last;
+                    if (slg.First != null) sparklineGroup.First = slg.First;
+                    if (slg.Last != null) sparklineGroup.Last = slg.Last;
                     if (slg.Negative != null) sparklineGroup.Negative = slg.Negative;
 
                     if (slg.DateAxis != null) sparklineGroup.DateAxis = slg.DateAxis;
