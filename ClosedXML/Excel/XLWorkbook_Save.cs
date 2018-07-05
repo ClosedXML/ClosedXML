@@ -2336,6 +2336,16 @@ namespace ClosedXML.Excel
                     sharedItems.Count = Convert.ToUInt32(ptfi.DistinctValues.Count());
             }
 
+            foreach (var cf in pt.CalculatedFields)
+            {
+                cacheFields.AppendChild(new CacheField
+                {
+                    Name = cf.Name,
+                    Formula = cf.Formula,
+                    DatabaseField = false
+                });
+            }
+
             // End CacheFields
 
             var pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().Any() ?
@@ -2441,7 +2451,7 @@ namespace ClosedXML.Excel
             var rowItems = new RowItems();
             var columnItems = new ColumnItems();
             var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count() };
-            var pivotFields = new PivotFields { Count = Convert.ToUInt32(pt.SourceRange.ColumnCount()) };
+            var pivotFields = new PivotFields();
 
             var orderedPageFields = new SortedDictionary<int, PageField>();
             var orderedColumnLabels = new SortedDictionary<int, Field>();
@@ -2780,7 +2790,30 @@ namespace ClosedXML.Excel
                 pivotFields.AppendChild(pf);
             }
 
+            foreach (var cf in pt.CalculatedFields)
+            {
+                var pf = new PivotField
+                {
+                    IncludeNewItemsInFilter = true,
+                    Compact = BooleanValue.FromBoolean(false),
+                    Outline = BooleanValue.FromBoolean(false),
+                    DragToRow = BooleanValue.FromBoolean(false),
+                    DragToColumn = BooleanValue.FromBoolean(false),
+                    DragToPage = BooleanValue.FromBoolean(false),
+                    ShowAll = BooleanValue.FromBoolean(false),
+                    DefaultSubtotal = BooleanValue.FromBoolean(false)
+                };
+
+                if (pt.Values.ContainsSourceField(cf.Name))
+                    pf.DataField = true;
+
+                pivotFields.AppendChild(pf);
+            }
             pivotTableDefinition.AppendChild(location);
+
+            if (pivotFields.Any())
+                pivotFields.Count = Convert.ToUInt32(pivotFields.Count());
+
             pivotTableDefinition.AppendChild(pivotFields);
 
             if (pt.RowLabels.Any())
@@ -2834,9 +2867,29 @@ namespace ClosedXML.Excel
             var dataFields = new DataFields();
             foreach (var value in pt.Values)
             {
-                var sourceColumn =
-                    pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.SourceName);
-                if (sourceColumn == null) continue;
+                DataField df;
+                if (pt.CalculatedFields.TryGetCalculatedField(value.SourceName, out IXLPivotTableCalculatedField cf))
+                {
+                    df = new DataField
+                    {
+                        Name = value.CustomName,
+                        Field = Convert.ToUInt32(pt.Fields.Count() + pt.CalculatedFields.ToList().IndexOf(cf)),
+                    };
+                }
+                else if (pt.Fields.Contains(value.SourceName))
+                {
+                    var sourceColumn = pt.SourceRange.FirstRow().Cells(c => c.Value.ToInvariantString() == value.SourceName).FirstOrDefault()?.WorksheetColumn();
+
+                    df = new DataField
+                    {
+                        Name = value.CustomName,
+                        Field = (UInt32)(sourceColumn.ColumnNumber() - pt.SourceRange.RangeAddress.FirstAddress.ColumnNumber),
+                        Subtotal = value.SummaryFormula.ToOpenXml(),
+                        ShowDataAs = value.Calculation.ToOpenXml(),
+                    };
+                }
+                else
+                    continue;
 
                 UInt32 numberFormatId = 0;
                 if (value.NumberFormat.NumberFormatId != -1 || context.SharedNumberFormats.ContainsKey(value.NumberFormat.NumberFormatId))
@@ -2844,14 +2897,8 @@ namespace ClosedXML.Excel
                 else if (context.SharedNumberFormats.Any(snf => snf.Value.NumberFormat.Format == value.NumberFormat.Format))
                     numberFormatId = (UInt32)context.SharedNumberFormats.First(snf => snf.Value.NumberFormat.Format == value.NumberFormat.Format).Key;
 
-                var df = new DataField
-                {
-                    Name = value.CustomName,
-                    Field = (UInt32)(sourceColumn.ColumnNumber() - pt.SourceRange.RangeAddress.FirstAddress.ColumnNumber),
-                    Subtotal = value.SummaryFormula.ToOpenXml(),
-                    ShowDataAs = value.Calculation.ToOpenXml(),
-                    NumberFormatId = numberFormatId
-                };
+                if (numberFormatId > 0)
+                    df.NumberFormatId = numberFormatId;
 
                 if (!String.IsNullOrEmpty(value.BaseField))
                 {
