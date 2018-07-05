@@ -55,6 +55,16 @@ namespace ClosedXML.Excel
         public void Remove(String name)
         {
             _calculatedFields.Remove(name);
+
+            var valueFields = _pivotTable.Values
+                .Where(f => f.SourceName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            foreach (var v in valueFields)
+                _pivotTable.Values.Remove(v.CustomName);
+
+            if (_pivotTable.Fields.Contains(name))
+                _pivotTable.Fields.Remove(name);
         }
 
         public Boolean TryGetCalculatedField(String name, out IXLPivotTableCalculatedField calculatedField)
