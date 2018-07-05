@@ -223,21 +223,9 @@ namespace ClosedXML.Excel
 
             // For SetValue<T> we set the cell value directly to the parameter
             // as opposed to the other SetValue(object value) where we parse the string and try to decude the value
-            if (value is String || value is char || value is Guid)
-            {
-                parsedValue = value.ToInvariantString();
-                _dataType = XLDataType.Text;
-                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
-                    Style.Alignment.WrapText = true;
-
-                parsed = true;
-            }
-            else
-            {
-                var tuple = SetKnownTypedValue(value, style);
-                parsedValue = tuple.Item1;
-                parsed = tuple.Item2;
-            }
+            var tuple = SetKnownTypedValue(value, style, acceptString: true);
+            parsedValue = tuple.Item1;
+            parsed = tuple.Item2;
 
             // If parsing was unsuccessful, we throw an ArgumentException
             // because we are using SetValue<T> (typed).
@@ -253,11 +241,20 @@ namespace ClosedXML.Excel
         }
 
         // TODO: Replace with (string, bool) ValueTuple later
-        private Tuple<string, bool> SetKnownTypedValue<T>(T value, XLStyleValue style)
+        private Tuple<string, bool> SetKnownTypedValue<T>(T value, XLStyleValue style, Boolean acceptString)
         {
             string parsedValue;
             bool parsed;
-            if (value is DateTime d && d >= BaseDate)
+            if (value is String && acceptString || value is char || value is Guid)
+            {
+                parsedValue = value.ToInvariantString();
+                _dataType = XLDataType.Text;
+                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                    Style.Alignment.WrapText = true;
+
+                parsed = true;
+            }
+            else if (value is DateTime d && d >= BaseDate)
             {
                 parsedValue = d.ToOADate().ToInvariantString();
                 parsed = true;
@@ -1579,7 +1576,6 @@ namespace ClosedXML.Excel
                 value = default;
                 return false;
             }
-            
 
             if (currValue == null)
             {
@@ -2095,7 +2091,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var tuple = SetKnownTypedValue(value, style);
+                // Don't accept strings, because we're going to try to parse them later
+                var tuple = SetKnownTypedValue(value, style, acceptString: false);
                 parsedValue = tuple.Item1;
                 parsed = tuple.Item2;
             }
