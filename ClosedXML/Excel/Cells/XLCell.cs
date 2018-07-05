@@ -223,7 +223,7 @@ namespace ClosedXML.Excel
 
             // For SetValue<T> we set the cell value directly to the parameter
             // as opposed to the other SetValue(object value) where we parse the string and try to decude the value
-            if (value is String || value is char)
+            if (value is String || value is char || value is Guid)
             {
                 parsedValue = value.ToInvariantString();
                 _dataType = XLDataType.Text;
