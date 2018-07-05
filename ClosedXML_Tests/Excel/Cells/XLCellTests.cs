@@ -109,6 +109,16 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void InsertData_with_Guids()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.FirstCell().InsertData(Enumerable.Range(1, 20).Select(i => new { Guid = Guid.NewGuid() }));
+
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(Guid.NewGuid().ToString().Length, ws.FirstCell().GetString().Length);
+        }
+
+        [Test]
         public void IsEmpty1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -337,6 +347,23 @@ namespace ClosedXML_Tests
             bool success = cell.TryGetValue(out sbyte outValue);
             Assert.IsTrue(success);
             Assert.AreEqual(5, outValue);
+        }
+
+        [Test]
+        public void SetCellValueToGuid()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var guid = Guid.NewGuid();
+            ws.FirstCell().Value = guid;
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(guid.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(guid.ToString(), ws.FirstCell().GetString());
+
+            guid = Guid.NewGuid();
+            ws.FirstCell().SetValue(guid);
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(guid.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(guid.ToString(), ws.FirstCell().GetString());
         }
 
         [Test]
