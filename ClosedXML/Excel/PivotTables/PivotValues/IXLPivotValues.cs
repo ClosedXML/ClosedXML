@@ -16,6 +16,8 @@ namespace ClosedXML.Excel
 
         Boolean Contains(IXLPivotValue pivotValue);
 
+        Boolean ContainsSourceField(String sourceName);
+
         IXLPivotValue Get(String customName);
 
         IXLPivotValue Get(Int32 index);

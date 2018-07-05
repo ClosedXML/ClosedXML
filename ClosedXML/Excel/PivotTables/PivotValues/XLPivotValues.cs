@@ -50,6 +50,11 @@ namespace ClosedXML.Excel
             return _pivotValues.ContainsKey(pivotValue.SourceName);
         }
 
+        public Boolean ContainsSourceField(string sourceName)
+        {
+            return _pivotValues.Values.Select(v => v.SourceName).Contains(sourceName, StringComparer.OrdinalIgnoreCase);
+        }
+
         public IXLPivotValue Get(String customName)
         {
             return _pivotValues[customName];
