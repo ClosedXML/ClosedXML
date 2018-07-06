@@ -6,8 +6,8 @@ namespace ClosedXML.Excel
 {
     public enum XLDisplayBlanksAsValues
     {
-        Span = 0,
-        Gap = 1,
+        Interpolate = 0,
+        NotPlotted = 1,
         Zero = 2
     }
 
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
     {
         Line = 0,
         Column = 1,
-        Stacked = 2        
+        Stacked = 2
     }
     public interface IXLSparklineGroup : IEnumerable<IXLSparkline>
     {

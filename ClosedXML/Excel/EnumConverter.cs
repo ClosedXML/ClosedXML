@@ -811,8 +811,8 @@ namespace ClosedXML.Excel
         {
             switch (value)
             {
-                case XLDisplayBlanksAsValues.Span: return X14.DisplayBlanksAsValues.Span;
-                case XLDisplayBlanksAsValues.Gap: return X14.DisplayBlanksAsValues.Gap;
+                case XLDisplayBlanksAsValues.Interpolate: return X14.DisplayBlanksAsValues.Span;
+                case XLDisplayBlanksAsValues.NotPlotted: return X14.DisplayBlanksAsValues.Gap;
                 case XLDisplayBlanksAsValues.Zero: return X14.DisplayBlanksAsValues.Zero;
 
                 default:
@@ -1622,8 +1622,8 @@ namespace ClosedXML.Excel
         {
             switch (value)
             {
-                case X14.DisplayBlanksAsValues.Span: return XLDisplayBlanksAsValues.Span;
-                case X14.DisplayBlanksAsValues.Gap: return XLDisplayBlanksAsValues.Gap;
+                case X14.DisplayBlanksAsValues.Span: return XLDisplayBlanksAsValues.Interpolate;
+                case X14.DisplayBlanksAsValues.Gap: return XLDisplayBlanksAsValues.NotPlotted;
                 case X14.DisplayBlanksAsValues.Zero: return XLDisplayBlanksAsValues.Zero;
 
                 default:

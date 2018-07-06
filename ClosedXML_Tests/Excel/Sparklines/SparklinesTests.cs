@@ -619,7 +619,6 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 Assert.IsNull(group.ManualMax);
         }
 
-
         #endregion Change sparkline groups
     }
 }

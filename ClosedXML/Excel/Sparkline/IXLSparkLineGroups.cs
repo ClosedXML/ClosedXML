@@ -1,5 +1,4 @@
 ﻿// Keep this file CodeMaid organised and cleaned
-using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel
@@ -19,7 +18,6 @@ namespace ClosedXML.Excel
         IXLSparklineGroup Add(IXLCell location, IXLRange sourceData);
         IXLSparklineGroup Add(IXLRange locationRange, IXLRange sourceDataRange);
 
-
         void CopyTo(IXLWorksheet targetSheet);
 
         IXLSparkline GetSparkline(IXLCell cell);
@@ -31,7 +29,5 @@ namespace ClosedXML.Excel
         void RemoveAll();
 
         #endregion Public Methods
-
-        //IXLSparklineGroup AddCopy(IXLSparklineGroup sparklineGroupToCopy);
     }
 }
