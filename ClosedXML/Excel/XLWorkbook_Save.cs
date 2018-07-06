@@ -2012,14 +2012,19 @@ namespace ClosedXML.Excel
                 GeneratePivotTableCacheDefinitionPartContent(pivotTableCacheDefinitionPart, pt, context);
 
                 PivotTablePart pivotTablePart;
-                if (String.IsNullOrWhiteSpace(pt.RelId))
-                    pivotTablePart = worksheetPart.AddNewPart<PivotTablePart>(context.RelIdGenerator.GetNext(RelType.Workbook));
+                var createNewPivotTablePart = String.IsNullOrWhiteSpace(pt.RelId);
+                if (createNewPivotTablePart)
+                {
+                    var relId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    pt.RelId = relId;
+                    pivotTablePart = worksheetPart.AddNewPart<PivotTablePart>(relId);
+                }
                 else
                     pivotTablePart = worksheetPart.GetPartById(pt.RelId) as PivotTablePart;
 
                 GeneratePivotTablePartContent(pivotTablePart, pt, pivotCache.CacheId, context);
 
-                if (String.IsNullOrWhiteSpace(pt.RelId))
+                if (createNewPivotTablePart)
                     pivotTablePart.AddPart(pivotTableCacheDefinitionPart, context.RelIdGenerator.GetNext(RelType.Workbook));
             }
         }

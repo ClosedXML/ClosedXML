@@ -363,6 +363,61 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void MaintainPivotTableIntegrityOnMultipleSaves()
+        {
+            var pastries = new List<Pastry>
+            {
+                new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
+                new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
+                new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
+                new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
+                new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
+                new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
+                new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
+                new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
+                new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
+                new Pastry("Danish", 104, 394, -20.24, "", null),
+                new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
+                new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
+
+                // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
+                new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
+                new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
+                new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
+
+                // For ContainsBlank and integer rows/columns test
+                new Pastry("Scone", null, 255, 18.4, "", null),
+            };
+
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("PastrySalesData");
+                    var table = ws.FirstCell().InsertTable(pastries, "PastrySalesData", true);
+
+                    var pvtSheet = wb.Worksheets.Add("pvt");
+                    var pvt = table.CreatePivotTable(pvtSheet.FirstCell(), "PastryPvt");
+
+                    pvt.ColumnLabels.Add("Month");
+                    pvt.RowLabels.Add("Name");
+                    pvt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+                    //Deliberately try to save twice
+                    wb.SaveAs(ms);
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual(1, wb.Worksheets.SelectMany(ws => ws.PivotTables).Count());
+                }
+            }
+        }
+
+        [Test]
         public void ClearPivotTableTenderedTange()
         {
             // https://github.com/ClosedXML/ClosedXML/pull/856
