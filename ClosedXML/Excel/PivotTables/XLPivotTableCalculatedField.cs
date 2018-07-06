@@ -8,6 +8,11 @@ namespace ClosedXML.Excel
         public XLPivotTableCalculatedField(String name, String formula)
         {
             this.Name = name;
+
+            formula = formula.Trim();
+            if (formula[0] == '=')
+                formula = formula.Substring(1);
+
             this.Formula = formula;
         }
 
