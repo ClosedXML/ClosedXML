@@ -729,6 +729,68 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void TestCalculatedFields()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("PastrySalesData");
+                    var table = ws.FirstCell().InsertTable(PastryData, "PastrySalesData", true);
+
+                    var pvtSheet = wb.Worksheets.Add("pvt");
+                    var pvt = table.CreatePivotTable(pvtSheet.FirstCell(), "PastryPvt");
+
+                    pvt.RowLabels.Add("Name");
+
+                    pvt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+                    // Let's assume they have to sell 600
+                    pvt.CalculatedFields.Add("OverTarget", " = NumberOfOrders - 600");
+
+                    // Custom name required for calculated field in values
+                    Assert.Throws<ArgumentOutOfRangeException>(() => pvt.Values.Add("OverTarget"));
+                    Assert.Throws<ArgumentOutOfRangeException>(() => pvt.Values.Add("OverTarget", "OverTarget"));
+
+                    // Calculated fields may not be in columns, rows or filters
+                    Assert.Throws<ArgumentOutOfRangeException>(() => pvt.ColumnLabels.Add("OverTarget"));
+                    Assert.Throws<ArgumentOutOfRangeException>(() => pvt.RowLabels.Add("OverTarget"));
+                    Assert.Throws<ArgumentOutOfRangeException>(() => pvt.ReportFilters.Add("OverTarget"));
+
+                    // Add the calculated field correctly.
+                    pvt.Values.Add("OverTarget", "Sum of OverTarget").SetSummaryFormula(XLPivotSummary.Sum);
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var pvt = wb.Worksheets.SelectMany(ws => ws.PivotTables)
+                        .First();
+
+                    Assert.AreEqual(1, pvt.CalculatedFields.Count());
+                    var cf = pvt.CalculatedFields.First();
+                    Assert.AreEqual("OverTarget", cf.Name);
+
+                    // the = sign is stripped
+                    Assert.AreEqual("NumberOfOrders - 600", cf.Formula);
+
+                    Assert.IsTrue(pvt.Values.Contains("Sum of OverTarget"));
+                    Assert.IsTrue(pvt.Values.ContainsSourceField("OverTarget"));
+
+                    //Remove the field
+                    pvt.CalculatedFields.Remove("OverTarget");
+
+                    Assert.AreEqual(0, pvt.CalculatedFields.Count());
+                    Assert.IsFalse(pvt.Values.Contains("Sum of OverTarget"));
+                    Assert.IsFalse(pvt.Values.ContainsSourceField("OverTarget"));
+                }
+            }
+        }
+
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
         {
             field.SubtotalsAtTop = !withDefaults;
