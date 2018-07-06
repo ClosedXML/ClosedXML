@@ -10,6 +10,52 @@ namespace ClosedXML_Tests
     [TestFixture]
     public class XLPivotTableTests
     {
+        private class Pastry
+        {
+            public Pastry(string name, int? code, int numberOfOrders, double quality, string month, DateTime? bakeDate)
+            {
+                Name = name;
+                Code = code;
+                NumberOfOrders = numberOfOrders;
+                Quality = quality;
+                Month = month;
+                BakeDate = bakeDate;
+            }
+
+            public string Name { get; set; }
+            public int? Code { get; }
+            public int NumberOfOrders { get; set; }
+            public double Quality { get; set; }
+            public string Month { get; set; }
+            public DateTime? BakeDate { get; set; }
+        }
+
+        // Based on .\ClosedXML\ClosedXML_Examples\PivotTables\PivotTables.cs
+        private static IEnumerable<Pastry> PastryData { get; } =
+            new List<Pastry>
+            {
+                new Pastry("Croissant", 101, 150, 60.2, "Apr", new DateTime(2016, 04, 21)),
+                new Pastry("Croissant", 101, 250, 50.42, "May", new DateTime(2016, 05, 03)),
+                new Pastry("Croissant", 101, 134, 22.12, "Jun", new DateTime(2016, 06, 24)),
+                new Pastry("Doughnut", 102, 250, 89.99, "Apr", new DateTime(2017, 04, 23)),
+                new Pastry("Doughnut", 102, 225, 70, "May", new DateTime(2016, 05, 24)),
+                new Pastry("Doughnut", 102, 210, 75.33, "Jun", new DateTime(2016, 06, 02)),
+                new Pastry("Bearclaw", 103, 134, 10.24, "Apr", new DateTime(2016, 04, 27)),
+                new Pastry("Bearclaw", 103, 184, 33.33, "May", new DateTime(2016, 05, 20)),
+                new Pastry("Bearclaw", 103, 124, 25, "Jun", new DateTime(2017, 06, 05)),
+                new Pastry("Danish", 104, 394, -20.24, "Apr", new DateTime(2017, 04, 24)),
+                new Pastry("Danish", 104, 190, 60, "May", new DateTime(2017, 05, 08)),
+                new Pastry("Danish", 104, 221, 24.76, "Jun", new DateTime(2016, 06, 21)),
+
+                // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
+                new Pastry("Scone", 105, 135, 0, "Apr", new DateTime(2017, 04, 22)),
+                new Pastry("SconE", 105, 122, 5.19, "May", new DateTime(2017, 05, 03)),
+                new Pastry("SCONE", 105, 243, 44.2, "Jun", new DateTime(2017, 06, 14)),
+
+                // For ContainsBlank and integer rows/columns test
+                new Pastry("Scone", null, 255, 18.4, null, null),
+            };
+
         [Test]
         public void PivotTables()
         {
@@ -263,26 +309,6 @@ namespace ClosedXML_Tests
             }
         }
 
-        private class Pastry
-        {
-            public Pastry(string name, int? code, int numberOfOrders, double quality, string month, DateTime? bakeDate)
-            {
-                Name = name;
-                Code = code;
-                NumberOfOrders = numberOfOrders;
-                Quality = quality;
-                Month = month;
-                BakeDate = bakeDate;
-            }
-
-            public string Name { get; set; }
-            public int? Code { get; }
-            public int NumberOfOrders { get; set; }
-            public double Quality { get; set; }
-            public string Month { get; set; }
-            public DateTime? BakeDate { get; set; }
-        }
-
         [Test]
         public void BlankPivotTableField()
         {
@@ -290,31 +316,16 @@ namespace ClosedXML_Tests
             {
                 TestHelper.CreateAndCompare(() =>
                 {
-                    // Based on .\ClosedXML\ClosedXML_Examples\PivotTables\PivotTables.cs
                     // But with empty column for Month
-                    var pastries = new List<Pastry>
+                    // and a null value for one of the bake dates
+                    var pastries = PastryData.Select(p =>
                     {
-                        new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
-                        new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
-                        new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
-                        new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
-                        new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
-                        new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
-                        new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
-                        new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
-                        new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
-                        new Pastry("Danish", 104, 394, -20.24, "", null),
-                        new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
-                        new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
+                        var newItem = new Pastry(p.Name, p.Code, p.NumberOfOrders, p.Quality, "", p.BakeDate);
+                        if (newItem.Name == "Danish" && newItem.Quality == -20.24)
+                            newItem.BakeDate = null;
 
-                        // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
-                        new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
-                        new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
-                        new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
-
-                        // For ContainsBlank and integer rows/columns test
-                        new Pastry("Scone", null, 255, 18.4, "", null),
-                    };
+                        return newItem;
+                    });
 
                     var wb = new XLWorkbook();
 
@@ -368,37 +379,11 @@ namespace ClosedXML_Tests
             {
                 TestHelper.CreateAndCompare(() =>
                 {
-                    // Based on .\ClosedXML\ClosedXML_Examples\PivotTables\PivotTables.cs
-                    // But with empty column for Month
-                    var pastries = new List<Pastry>
-                    {
-                        new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
-                        new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
-                        new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
-                        new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
-                        new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
-                        new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
-                        new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
-                        new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
-                        new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
-                        new Pastry("Danish", 104, 394, -20.24, "", null),
-                        new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
-                        new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
-
-                        // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
-                        new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
-                        new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
-                        new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
-
-                        // For ContainsBlank and integer rows/columns test
-                        new Pastry("Scone", null, 255, 18.4, "", null),
-                    };
-
                     var wb = new XLWorkbook();
 
                     var sheet = wb.Worksheets.Add("Pastry Sales Data");
                     // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
-                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    var table = sheet.Cell(1, 1).InsertTable(PastryData, "PastrySalesData", true);
                     sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     sheet.Columns().AdjustToContents();
 
@@ -444,30 +429,6 @@ namespace ClosedXML_Tests
         [Test]
         public void MaintainPivotTableLabelsOrder()
         {
-            var pastries = new List<Pastry>
-            {
-                new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
-                new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
-                new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
-                new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
-                new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
-                new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
-                new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
-                new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
-                new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
-                new Pastry("Danish", 104, 394, -20.24, "", null),
-                new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
-                new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
-
-                // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
-                new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
-                new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
-                new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
-
-                // For ContainsBlank and integer rows/columns test
-                new Pastry("Scone", null, 255, 18.4, "", null),
-            };
-
             using (var ms = new MemoryStream())
             {
                 // Page fields
@@ -475,7 +436,7 @@ namespace ClosedXML_Tests
                 {
                     var sheet = wb.Worksheets.Add("PastrySalesData");
                     // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
-                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    var table = sheet.Cell(1, 1).InsertTable(PastryData, "PastrySalesData", true);
                     sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     sheet.Columns().AdjustToContents();
 
@@ -518,7 +479,7 @@ namespace ClosedXML_Tests
                 {
                     var sheet = wb.Worksheets.Add("PastrySalesData");
                     // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
-                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    var table = sheet.Cell(1, 1).InsertTable(PastryData, "PastrySalesData", true);
                     sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     sheet.Columns().AdjustToContents();
 
@@ -561,7 +522,7 @@ namespace ClosedXML_Tests
                 {
                     var sheet = wb.Worksheets.Add("PastrySalesData");
                     // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
-                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    var table = sheet.Cell(1, 1).InsertTable(PastryData, "PastrySalesData", true);
                     sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     sheet.Columns().AdjustToContents();
 
@@ -603,36 +564,12 @@ namespace ClosedXML_Tests
         [Test]
         public void MaintainPivotTableIntegrityOnMultipleSaves()
         {
-            var pastries = new List<Pastry>
-            {
-                new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
-                new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
-                new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
-                new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
-                new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
-                new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
-                new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
-                new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
-                new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
-                new Pastry("Danish", 104, 394, -20.24, "", null),
-                new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
-                new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
-
-                // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
-                new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
-                new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
-                new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
-
-                // For ContainsBlank and integer rows/columns test
-                new Pastry("Scone", null, 255, 18.4, "", null),
-            };
-
             using (var ms = new MemoryStream())
             {
                 using (var wb = new XLWorkbook())
                 {
                     var ws = wb.Worksheets.Add("PastrySalesData");
-                    var table = ws.FirstCell().InsertTable(pastries, "PastrySalesData", true);
+                    var table = ws.FirstCell().InsertTable(PastryData, "PastrySalesData", true);
 
                     var pvtSheet = wb.Worksheets.Add("pvt");
                     var pvt = table.CreatePivotTable(pvtSheet.FirstCell(), "PastryPvt");
@@ -685,7 +622,7 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void ClearPivotTableTenderedTange()
+        public void ClearPivotTableRenderedRange()
         {
             // https://github.com/ClosedXML/ClosedXML/pull/856
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\ClearPivotTableRenderedRangeWhenLoading\inputfile.xlsx")))
