@@ -29,6 +29,19 @@ namespace ClosedXML.Excel
 
         public void Clear()
         {
+            foreach (var cf in _calculatedFields.Values)
+            {
+                var valueFields = _pivotTable.Values
+                    .Where(f => f.SourceName.Equals(cf.Name, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                foreach (var v in valueFields)
+                    _pivotTable.Values.Remove(v.CustomName);
+
+                if (_pivotTable.Fields.Contains(cf.Name))
+                    _pivotTable.Fields.Remove(cf.Name);
+            }
+
             _calculatedFields.Clear();
         }
 
