@@ -308,11 +308,17 @@ namespace ClosedXML.Excel
         {
             if (value[0] == '\'')
             {
+                // If a user sets a cell value to a value starting with a single quote
+                // ensure the data type is text
+                // and that it will be prefixed with a quote in Excel too
+
                 value = value.Substring(1, value.Length - 1);
 
                 _dataType = XLDataType.Text;
                 if (value.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
+
+                this.Style.SetIncludeQuotePrefix();
             }
             else if (value.Trim() != "NaN" && Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double _))
                 _dataType = XLDataType.Number;

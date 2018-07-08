@@ -17,6 +17,7 @@ namespace ClosedXML.Excel
         /// <para>If the object is an IEnumerable, ClosedXML will copy the collection's data into a table starting from this cell.</para>
         /// <para>If the object is a range, ClosedXML will copy the range starting from this cell.</para>
         /// <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
+        /// <para>If the value starts with a single quote, ClosedXML will assume the value is a text variable and will prefix the value with a single quote in Excel too.</para>
         /// </summary>
         /// <value>
         /// The object containing the value(s) to set.
