@@ -30,15 +30,12 @@ namespace ClosedXML.Excel
 
         public XLColor LowMarkerColor { get; set; }
 
-        private Double? _manualMax;
-
         public Double? ManualMax
         {
             get => _manualMax;
             set => SetManualMax(value);
         }
 
-        private Double? _manualMin;
         public Double? ManualMin
         {
             get => _manualMin;
@@ -47,14 +44,12 @@ namespace ClosedXML.Excel
 
         public XLColor MarkersColor { get; set; }
 
-        private XLSparklineAxisMinMax _maxAxisType;
         public XLSparklineAxisMinMax MaxAxisType
         {
             get => _maxAxisType;
             set => SetMaxAxisType(value);
         }
 
-        private XLSparklineAxisMinMax _minAxisType;
         public XLSparklineAxisMinMax MinAxisType
         {
             get => _minAxisType;
@@ -78,6 +73,10 @@ namespace ClosedXML.Excel
         /// </summary>
         public IXLWorksheet Worksheet { get; }
 
+        private Double? _manualMax;
+        private Double? _manualMin;
+        private XLSparklineAxisMinMax _maxAxisType;
+        private XLSparklineAxisMinMax _minAxisType;
         #endregion Public Properties
 
         #region Public Constructors

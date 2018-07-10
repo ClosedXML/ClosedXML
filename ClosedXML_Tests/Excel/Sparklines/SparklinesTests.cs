@@ -489,6 +489,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
                         .SetDateAxis(true)
                         .SetDisplayHidden(true)
                         .SetDisplayXAxis(true)
+                        .SetRightToLeft(true)
                         .SetShowMarkers(XLSparklineMarkers.FirstPoint | XLSparklineMarkers.LastPoint |
                                         XLSparklineMarkers.HighPoint | XLSparklineMarkers.LowPoint |
                                         XLSparklineMarkers.NegativePoints | XLSparklineMarkers.Markers)
@@ -538,6 +539,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
                 Assert.IsTrue(group.DisplayHidden);
                 Assert.IsTrue(group.DisplayXAxis);
+                Assert.IsTrue(group.RightToLeft);
                 Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.FirstPoint));
                 Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.LastPoint));
                 Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.HighPoint));

@@ -136,6 +136,8 @@ namespace ClosedXML.Excel
 
         IXLSparklineGroup SetNegativeColor(XLColor value);
 
+        IXLSparklineGroup SetRightToLeft(Boolean value);
+
         IXLSparklineGroup SetSeriesColor(XLColor value);
 
         IXLSparklineGroup SetShowMarkers(XLSparklineMarkers value);
