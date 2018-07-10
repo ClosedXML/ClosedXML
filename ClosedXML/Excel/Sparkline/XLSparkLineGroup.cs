@@ -20,21 +20,13 @@ namespace ClosedXML.Excel
 
         public Boolean DisplayXAxis { get; set; }
 
-        public Boolean First { get; set; }
-
         public XLColor FirstMarkerColor { get; set; }
 
-        public Boolean High { get; set; }
-
         public XLColor HighMarkerColor { get; set; }
-
-        public Boolean Last { get; set; }
 
         public XLColor LastMarkerColor { get; set; }
 
         public Double LineWeight { get; set; }
-
-        public Boolean Low { get; set; }
 
         public XLColor LowMarkerColor { get; set; }
 
@@ -53,8 +45,6 @@ namespace ClosedXML.Excel
             set => SetManualMin(value);
         }
 
-        public Boolean Markers { get; set; }
-
         public XLColor MarkersColor { get; set; }
 
         private XLSparklineAxisMinMax _maxAxisType;
@@ -71,13 +61,13 @@ namespace ClosedXML.Excel
             set => SetMinAxisType(value);
         }
 
-        public Boolean Negative { get; set; }
-
         public XLColor NegativeColor { get; set; }
 
         public Boolean RightToLeft { get; set; }
 
         public XLColor SeriesColor { get; set; }
+
+        public XLSparklineMarkers ShowMarkers { get; set; }
 
         private IXLSparklineGroups SparklineGroups => Worksheet.SparklineGroups;
 
@@ -213,12 +203,7 @@ namespace ClosedXML.Excel
             NegativeColor = sparklineGroup.NegativeColor;
 
             DateAxis = sparklineGroup.DateAxis;
-            Markers = sparklineGroup.Markers;
-            High = sparklineGroup.High;
-            Low = sparklineGroup.Low;
-            First = sparklineGroup.First;
-            Last = sparklineGroup.Last;
-            Negative = sparklineGroup.Negative;
+            ShowMarkers = sparklineGroup.ShowMarkers;
             DisplayXAxis = sparklineGroup.DisplayXAxis;
             DisplayHidden = sparklineGroup.DisplayHidden;
 
@@ -328,33 +313,15 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetFirst(Boolean first)
-        {
-            First = first;
-            return this;
-        }
-
         public IXLSparklineGroup SetFirstMarkerColor(XLColor value)
         {
             FirstMarkerColor = value;
             return this;
         }
 
-        public IXLSparklineGroup SetHigh(Boolean high)
-        {
-            High = high;
-            return this;
-        }
-
         public IXLSparklineGroup SetHighMarkerColor(XLColor value)
         {
             HighMarkerColor = value;
-            return this;
-        }
-
-        public IXLSparklineGroup SetLast(Boolean last)
-        {
-            Last = last;
             return this;
         }
 
@@ -367,12 +334,6 @@ namespace ClosedXML.Excel
         public IXLSparklineGroup SetLineWeight(Double lineWeight)
         {
             LineWeight = lineWeight;
-            return this;
-        }
-
-        public IXLSparklineGroup SetLow(Boolean low)
-        {
-            Low = low;
             return this;
         }
 
@@ -400,12 +361,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetMarkers(Boolean markers)
-        {
-            Markers = markers;
-            return this;
-        }
-
         public IXLSparklineGroup SetMarkersColor(XLColor value)
         {
             MarkersColor = value;
@@ -430,12 +385,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetNegative(Boolean negative)
-        {
-            Negative = negative;
-            return this;
-        }
-
         public IXLSparklineGroup SetNegativeColor(XLColor value)
         {
             NegativeColor = value;
@@ -451,6 +400,12 @@ namespace ClosedXML.Excel
         public IXLSparklineGroup SetSeriesColor(XLColor value)
         {
             SeriesColor = value;
+            return this;
+        }
+
+        public IXLSparklineGroup SetShowMarkers(XLSparklineMarkers value)
+        {
+            ShowMarkers = value;
             return this;
         }
 

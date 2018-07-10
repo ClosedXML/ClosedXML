@@ -5266,12 +5266,12 @@ namespace ClosedXML.Excel
                     sparklineGroup.NegativeColor = new X14.NegativeColor() { Rgb = slg.NegativeColor.Color.ToHex() };
                     sparklineGroup.MarkersColor = new X14.MarkersColor() { Rgb = slg.MarkersColor.Color.ToHex() };
 
-                    sparklineGroup.High = slg.High;
-                    sparklineGroup.Low = slg.Low;
-                    sparklineGroup.First = slg.First;
-                    sparklineGroup.Last = slg.Last;
-                    sparklineGroup.Negative = slg.Negative;
-                    sparklineGroup.Markers = slg.Markers;
+                    sparklineGroup.High = slg.ShowMarkers.HasFlag(XLSparklineMarkers.HighPoint);
+                    sparklineGroup.Low = slg.ShowMarkers.HasFlag(XLSparklineMarkers.LowPoint);
+                    sparklineGroup.First = slg.ShowMarkers.HasFlag(XLSparklineMarkers.FirstPoint);
+                    sparklineGroup.Last = slg.ShowMarkers.HasFlag(XLSparklineMarkers.LastPoint);
+                    sparklineGroup.Negative = slg.ShowMarkers.HasFlag(XLSparklineMarkers.NegativePoints);
+                    sparklineGroup.Markers = slg.ShowMarkers.HasFlag(XLSparklineMarkers.Markers);
 
                     sparklineGroup.DisplayXAxis = slg.DisplayXAxis;
                     sparklineGroup.DisplayHidden = slg.DisplayHidden;

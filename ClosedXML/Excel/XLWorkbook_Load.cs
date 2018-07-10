@@ -2386,12 +2386,13 @@ namespace ClosedXML.Excel
                     if (slg.NegativeColor != null) sparklineGroup.NegativeColor = ExtractColor(slg.NegativeColor.Rgb.Value);
                     if (slg.MarkersColor != null) sparklineGroup.MarkersColor = ExtractColor(slg.MarkersColor.Rgb.Value);
 
-                    if (slg.Markers != null) sparklineGroup.Markers = slg.Markers;
-                    if (slg.High != null) sparklineGroup.High = slg.High;
-                    if (slg.Low != null) sparklineGroup.Low = slg.Low;
-                    if (slg.First != null) sparklineGroup.First = slg.First;
-                    if (slg.Last != null) sparklineGroup.Last = slg.Last;
-                    if (slg.Negative != null) sparklineGroup.Negative = slg.Negative;
+                    sparklineGroup.ShowMarkers = XLSparklineMarkers.None;
+                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.Markers, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.Markers;
+                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.High, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.HighPoint;
+                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.Low, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.LowPoint;
+                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.First, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.FirstPoint;
+                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.Last, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.LastPoint;
+                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.Negative, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.NegativePoints;
 
                     if (slg.DateAxis != null) sparklineGroup.DateAxis = slg.DateAxis;
                     if (slg.DisplayXAxis != null) sparklineGroup.DisplayXAxis = slg.DisplayXAxis;

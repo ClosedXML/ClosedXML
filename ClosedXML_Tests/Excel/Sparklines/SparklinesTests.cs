@@ -489,12 +489,9 @@ namespace ClosedXML_Tests.Excel.Sparklines
                         .SetDateAxis(true)
                         .SetDisplayHidden(true)
                         .SetDisplayXAxis(true)
-                        .SetFirst(true)
-                        .SetHigh(true)
-                        .SetLast(true)
-                        .SetLow(true)
-                        .SetMarkers(true)
-                        .SetNegative(true)
+                        .SetShowMarkers(XLSparklineMarkers.FirstPoint | XLSparklineMarkers.LastPoint |
+                                        XLSparklineMarkers.HighPoint | XLSparklineMarkers.LowPoint |
+                                        XLSparklineMarkers.NegativePoints | XLSparklineMarkers.Markers)
                         .SetDisplayEmptyCellsAs(XLDisplayBlanksAsValues.Zero)
                         .SetMaxAxisType(XLSparklineAxisMinMax.Custom)
                         .SetMinAxisType(XLSparklineAxisMinMax.Custom)
@@ -541,12 +538,12 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
                 Assert.IsTrue(group.DisplayHidden);
                 Assert.IsTrue(group.DisplayXAxis);
-                Assert.IsTrue(group.First);
-                Assert.IsTrue(group.High);
-                Assert.IsTrue(group.Last);
-                Assert.IsTrue(group.Low);
-                Assert.IsTrue(group.Markers);
-                Assert.IsTrue(group.Negative);
+                Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.FirstPoint));
+                Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.LastPoint));
+                Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.HighPoint));
+                Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.LowPoint));
+                Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.NegativePoints));
+                Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.Markers));
 
                 Assert.AreEqual(XLDisplayBlanksAsValues.Zero, group.DisplayEmptyCellsAs);
                 Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.MaxAxisType);
