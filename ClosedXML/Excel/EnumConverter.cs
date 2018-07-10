@@ -798,8 +798,8 @@ namespace ClosedXML.Excel
         {
             switch (value)
             {
-                case XLSparklineAxisMinMax.Individual: return X14.SparklineAxisMinMaxValues.Individual;
-                case XLSparklineAxisMinMax.Group: return X14.SparklineAxisMinMaxValues.Group;
+                case XLSparklineAxisMinMax.Automatic: return X14.SparklineAxisMinMaxValues.Individual;
+                case XLSparklineAxisMinMax.SameForAll: return X14.SparklineAxisMinMaxValues.Group;
                 case XLSparklineAxisMinMax.Custom: return X14.SparklineAxisMinMaxValues.Custom;
 
                 default:
@@ -1609,8 +1609,8 @@ namespace ClosedXML.Excel
         {
             switch (value)
             {
-                case X14.SparklineAxisMinMaxValues.Individual: return XLSparklineAxisMinMax.Individual;
-                case X14.SparklineAxisMinMaxValues.Group: return XLSparklineAxisMinMax.Group;
+                case X14.SparklineAxisMinMaxValues.Individual: return XLSparklineAxisMinMax.Automatic;
+                case X14.SparklineAxisMinMaxValues.Group: return XLSparklineAxisMinMax.SameForAll;
                 case X14.SparklineAxisMinMaxValues.Custom: return XLSparklineAxisMinMax.Custom;
 
                 default:

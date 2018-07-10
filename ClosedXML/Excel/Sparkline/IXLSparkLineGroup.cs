@@ -13,8 +13,8 @@ namespace ClosedXML.Excel
 
     public enum XLSparklineAxisMinMax
     {
-        Individual = 0,
-        Group = 1,
+        Automatic = 0,
+        SameForAll = 1,
         Custom = 2
     }
 

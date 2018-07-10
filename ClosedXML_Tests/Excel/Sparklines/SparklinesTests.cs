@@ -568,7 +568,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
             var axis = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
                 .VerticalAxis
-                .SetMinAxisType(XLSparklineAxisMinMax.Group);
+                .SetMinAxisType(XLSparklineAxisMinMax.SameForAll);
 
             axis.ManualMin = 100;
 
@@ -582,7 +582,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
             var axis = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
                 .VerticalAxis
-                .SetMaxAxisType(XLSparklineAxisMinMax.Group);
+                .SetMaxAxisType(XLSparklineAxisMinMax.SameForAll);
 
             axis.ManualMax = 100;
 
@@ -591,8 +591,8 @@ namespace ClosedXML_Tests.Excel.Sparklines
         }
 
         [TestCase(XLSparklineAxisMinMax.Custom, 100)]
-        [TestCase(XLSparklineAxisMinMax.Group, null)]
-        [TestCase(XLSparklineAxisMinMax.Individual, null)]
+        [TestCase(XLSparklineAxisMinMax.SameForAll, null)]
+        [TestCase(XLSparklineAxisMinMax.Automatic, null)]
         public void SetAxisTypeToNonCustomSetsManualMinToNull(XLSparklineAxisMinMax axisType, double? expectedManualMin)
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
@@ -609,8 +609,8 @@ namespace ClosedXML_Tests.Excel.Sparklines
         }
 
         [TestCase(XLSparklineAxisMinMax.Custom, 100)]
-        [TestCase(XLSparklineAxisMinMax.Group, null)]
-        [TestCase(XLSparklineAxisMinMax.Individual, null)]
+        [TestCase(XLSparklineAxisMinMax.SameForAll, null)]
+        [TestCase(XLSparklineAxisMinMax.Automatic, null)]
         public void SetAxisTypeToNonCustomSetsManualMaxToNull(XLSparklineAxisMinMax axisType, double? expectedManualMax)
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
