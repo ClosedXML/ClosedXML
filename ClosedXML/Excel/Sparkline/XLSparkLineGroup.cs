@@ -14,27 +14,21 @@ namespace ClosedXML.Excel
 
         public Boolean DisplayHidden { get; set; }
 
-        public XLColor FirstMarkerColor { get; set; }
-
-        public XLColor HighMarkerColor { get; set; }
-
         public IXLSparklineHorizontalAxis HorizontalAxis { get; }
 
-        public XLColor LastMarkerColor { get; set; }
-
         public Double LineWeight { get; set; }
-
-        public XLColor LowMarkerColor { get; set; }
-
-        public XLColor MarkersColor { get; set; }
-
-        public XLColor NegativeColor { get; set; }
-
-        public XLColor SeriesColor { get; set; }
 
         public XLSparklineMarkers ShowMarkers { get; set; }
 
         private IXLSparklineGroups SparklineGroups => Worksheet.SparklineGroups;
+
+        private IXLSparklineStyle _style;
+
+        public IXLSparklineStyle Style
+        {
+            get => _style;
+            set => SetStyle(value);
+        }
 
         public XLSparklineType Type { get; set; }
 
@@ -160,20 +154,13 @@ namespace ClosedXML.Excel
         /// <param name="sparklineGroup">The sparkline group to copy from</param>
         public void CopyFrom(IXLSparklineGroup sparklineGroup)
         {
-            SeriesColor = sparklineGroup.SeriesColor;
-            MarkersColor = sparklineGroup.MarkersColor;
-            HighMarkerColor = sparklineGroup.HighMarkerColor;
-            LowMarkerColor = sparklineGroup.LowMarkerColor;
-            FirstMarkerColor = sparklineGroup.FirstMarkerColor;
-            LastMarkerColor = sparklineGroup.LastMarkerColor;
-            NegativeColor = sparklineGroup.NegativeColor;
-
-            ShowMarkers = sparklineGroup.ShowMarkers;
+            DisplayEmptyCellsAs = sparklineGroup.DisplayEmptyCellsAs;
             DisplayHidden = sparklineGroup.DisplayHidden;
             LineWeight = sparklineGroup.LineWeight;
+            ShowMarkers = sparklineGroup.ShowMarkers;
             Type = sparklineGroup.Type;
-            DisplayEmptyCellsAs = sparklineGroup.DisplayEmptyCellsAs;
 
+            XLSparklineStyle.Copy(sparklineGroup.Style, Style);
             XLSparklineHorizontalAxis.Copy(sparklineGroup.HorizontalAxis, HorizontalAxis);
             XLSparklineVerticalAxis.Copy(sparklineGroup.VerticalAxis, VerticalAxis);
         }
@@ -255,57 +242,21 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetFirstMarkerColor(XLColor value)
-        {
-            FirstMarkerColor = value;
-            return this;
-        }
-
-        public IXLSparklineGroup SetHighMarkerColor(XLColor value)
-        {
-            HighMarkerColor = value;
-            return this;
-        }
-
-        public IXLSparklineGroup SetLastMarkerColor(XLColor value)
-        {
-            LastMarkerColor = value;
-            return this;
-        }
-
         public IXLSparklineGroup SetLineWeight(Double lineWeight)
         {
             LineWeight = lineWeight;
             return this;
         }
 
-        public IXLSparklineGroup SetLowMarkerColor(XLColor value)
-        {
-            LowMarkerColor = value;
-            return this;
-        }
-
-        public IXLSparklineGroup SetMarkersColor(XLColor value)
-        {
-            MarkersColor = value;
-            return this;
-        }
-
-        public IXLSparklineGroup SetNegativeColor(XLColor value)
-        {
-            NegativeColor = value;
-            return this;
-        }
-
-        public IXLSparklineGroup SetSeriesColor(XLColor value)
-        {
-            SeriesColor = value;
-            return this;
-        }
-
         public IXLSparklineGroup SetShowMarkers(XLSparklineMarkers value)
         {
             ShowMarkers = value;
+            return this;
+        }
+
+        public IXLSparklineGroup SetStyle(IXLSparklineStyle value)
+        {
+            _style = value ?? throw new ArgumentNullException(nameof(value));
             return this;
         }
 
@@ -335,16 +286,8 @@ namespace ClosedXML.Excel
             Worksheet = targetWorksheet ?? throw new ArgumentNullException(nameof(targetWorksheet));
             HorizontalAxis = new XLSparklineHorizontalAxis(this);
             VerticalAxis = new XLSparklineVerticalAxis(this);
-
             HorizontalAxis.Color = XLColor.Black;
-            SeriesColor = XLColor.FromHtml("FF376092");
-            MarkersColor = XLColor.FromHtml("FFD00000");
-            HighMarkerColor = XLColor.Black;
-            LowMarkerColor = XLColor.Black;
-            FirstMarkerColor = XLColor.Black;
-            LastMarkerColor = XLColor.Black;
-            NegativeColor = XLColor.Black;
-
+            Style = XLSparklineTheme.Default;
             LineWeight = 0.75d;
         }
 

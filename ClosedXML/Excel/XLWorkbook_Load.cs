@@ -2377,13 +2377,15 @@ namespace ClosedXML.Excel
                 {
                     var sparklineGroup = (ws.SparklineGroups as XLSparklineGroups).Add();
 
-                    if (slg.FirstMarkerColor != null) sparklineGroup.FirstMarkerColor = ExtractColor(slg.FirstMarkerColor.Rgb.Value);
-                    if (slg.LastMarkerColor != null) sparklineGroup.LastMarkerColor = ExtractColor(slg.LastMarkerColor.Rgb.Value);
-                    if (slg.HighMarkerColor != null) sparklineGroup.HighMarkerColor = ExtractColor(slg.HighMarkerColor.Rgb.Value);
-                    if (slg.LowMarkerColor != null) sparklineGroup.LowMarkerColor = ExtractColor(slg.LowMarkerColor.Rgb.Value);
-                    if (slg.SeriesColor != null) sparklineGroup.SeriesColor = ExtractColor(slg.SeriesColor.Rgb.Value);
-                    if (slg.NegativeColor != null) sparklineGroup.NegativeColor = ExtractColor(slg.NegativeColor.Rgb.Value);
-                    if (slg.MarkersColor != null) sparklineGroup.MarkersColor = ExtractColor(slg.MarkersColor.Rgb.Value);
+                    var style = sparklineGroup.Style;
+                    if (slg.FirstMarkerColor != null) style.FirstMarkerColor = ExtractColor(slg.FirstMarkerColor.Rgb.Value);
+                    if (slg.LastMarkerColor != null) style.LastMarkerColor = ExtractColor(slg.LastMarkerColor.Rgb.Value);
+                    if (slg.HighMarkerColor != null) style.HighMarkerColor = ExtractColor(slg.HighMarkerColor.Rgb.Value);
+                    if (slg.LowMarkerColor != null) style.LowMarkerColor = ExtractColor(slg.LowMarkerColor.Rgb.Value);
+                    if (slg.SeriesColor != null) style.SeriesColor = ExtractColor(slg.SeriesColor.Rgb.Value);
+                    if (slg.NegativeColor != null) style.NegativeColor = ExtractColor(slg.NegativeColor.Rgb.Value);
+                    if (slg.MarkersColor != null) style.MarkersColor = ExtractColor(slg.MarkersColor.Rgb.Value);
+                    sparklineGroup.Style = style;
 
                     if (slg.DisplayHidden != null) sparklineGroup.DisplayHidden = slg.DisplayHidden;
                     if (slg.LineWeight != null) sparklineGroup.LineWeight = slg.LineWeight;

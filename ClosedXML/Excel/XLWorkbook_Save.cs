@@ -5257,13 +5257,13 @@ namespace ClosedXML.Excel
                     X14.SparklineGroup sparklineGroup = new X14.SparklineGroup();
                     sparklineGroup.SetAttribute(new OpenXmlAttribute("xr2", "uid", "http://schemas.microsoft.com/office/spreadsheetml/2015/revision2", "{A98FF5F8-AE60-43B5-8001-AD89004F45D3}"));
 
-                    sparklineGroup.FirstMarkerColor = new X14.FirstMarkerColor() { Rgb = slg.FirstMarkerColor.Color.ToHex() };
-                    sparklineGroup.LastMarkerColor = new X14.LastMarkerColor() { Rgb = slg.LastMarkerColor.Color.ToHex() };
-                    sparklineGroup.HighMarkerColor = new X14.HighMarkerColor() { Rgb = slg.HighMarkerColor.Color.ToHex() };
-                    sparklineGroup.LowMarkerColor = new X14.LowMarkerColor() { Rgb = slg.LowMarkerColor.Color.ToHex() };
-                    sparklineGroup.SeriesColor = new X14.SeriesColor() { Rgb = slg.SeriesColor.Color.ToHex() };
-                    sparklineGroup.NegativeColor = new X14.NegativeColor() { Rgb = slg.NegativeColor.Color.ToHex() };
-                    sparklineGroup.MarkersColor = new X14.MarkersColor() { Rgb = slg.MarkersColor.Color.ToHex() };
+                    sparklineGroup.FirstMarkerColor = new X14.FirstMarkerColor() { Rgb = slg.Style.FirstMarkerColor.Color.ToHex() };
+                    sparklineGroup.LastMarkerColor = new X14.LastMarkerColor() { Rgb = slg.Style.LastMarkerColor.Color.ToHex() };
+                    sparklineGroup.HighMarkerColor = new X14.HighMarkerColor() { Rgb = slg.Style.HighMarkerColor.Color.ToHex() };
+                    sparklineGroup.LowMarkerColor = new X14.LowMarkerColor() { Rgb = slg.Style.LowMarkerColor.Color.ToHex() };
+                    sparklineGroup.SeriesColor = new X14.SeriesColor() { Rgb = slg.Style.SeriesColor.Color.ToHex() };
+                    sparklineGroup.NegativeColor = new X14.NegativeColor() { Rgb = slg.Style.NegativeColor.Color.ToHex() };
+                    sparklineGroup.MarkersColor = new X14.MarkersColor() { Rgb = slg.Style.MarkersColor.Color.ToHex() };
 
                     sparklineGroup.High = slg.ShowMarkers.HasFlag(XLSparklineMarkers.HighPoint);
                     sparklineGroup.Low = slg.ShowMarkers.HasFlag(XLSparklineMarkers.LowPoint);

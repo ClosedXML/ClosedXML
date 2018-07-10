@@ -47,6 +47,7 @@ namespace ClosedXML.Excel
             RightToLeft = value;
             return this;
         }
+
         public IXLSparklineHorizontalAxis SetVisible(bool value)
         {
             IsVisible = value;

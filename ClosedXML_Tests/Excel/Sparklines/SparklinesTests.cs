@@ -432,24 +432,6 @@ namespace ClosedXML_Tests.Excel.Sparklines
         }
 
         [Test]
-        public void CanChangeSparklineSourceDataDifferentWorksheet()
-        {
-            var wb = new XLWorkbook();
-            var ws1 = wb.AddWorksheet("Sheet 1");
-            var ws2 = wb.AddWorksheet("Sheet 2");
-
-            ws1.SparklineGroups.Add("A1:A2", "B1:Z2");
-            ws1.SparklineGroups.Single().Last().SetSourceData(ws2.Range("D4:D50"));
-
-            Assert.AreEqual(1, ws1.SparklineGroups.Count());
-            Assert.AreEqual(2, ws1.SparklineGroups.Single().Count());
-            Assert.AreEqual("A1", ws1.SparklineGroups.Single().First().Location.Address.ToString());
-            Assert.AreEqual("A2", ws1.SparklineGroups.Single().Last().Location.Address.ToString());
-            Assert.AreEqual("'Sheet 1'!B1:Z1", ws1.SparklineGroups.Single().First().SourceData.RangeAddress.ToString(XLReferenceStyle.A1, true));
-            Assert.AreEqual("'Sheet 2'!D4:D50", ws1.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString(XLReferenceStyle.A1, true));
-        }
-
-        [Test]
         public void CannotChangeSparklineSourceDataToNonLinearRange()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
@@ -460,6 +442,47 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("SourceData range must have either a single row or a single column", message);
+        }
+
+        [Test]
+        public void CanChangeSparklineStyle()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1", "B1:Z1");
+
+            group.Style = XLSparklineTheme.Colorful1;
+
+            Assert.AreEqual(XLColor.FromHtml("FF5F5F5F"), group.Style.SeriesColor);
+            Assert.AreEqual(XLColor.FromHtml("FFFFB620"), group.Style.NegativeColor);
+            Assert.AreEqual(XLColor.FromHtml("FFD70077"), group.Style.MarkersColor);
+            Assert.AreEqual(XLColor.FromHtml("FF5F5F5F"), group.Style.HighMarkerColor);
+            Assert.AreEqual(XLColor.FromHtml("FFFF5055"), group.Style.LowMarkerColor);
+            Assert.AreEqual(XLColor.FromHtml("FF5687C2"), group.Style.FirstMarkerColor);
+            Assert.AreEqual(XLColor.FromHtml("FF359CEB"), group.Style.LastMarkerColor);
+        }
+
+        [Test]
+        public void ChangeSparklineStyleDoesNotAffectOriginal()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1", "B1:Z1");
+            group.Style = XLSparklineTheme.Colorful1;
+
+            group.Style.NegativeColor = XLColor.Red;
+
+            Assert.AreEqual(XLColor.Red, group.Style.NegativeColor);
+            Assert.AreNotEqual(XLColor.Red, XLSparklineTheme.Colorful1.NegativeColor);
+        }
+
+        [Test]
+        public void CannotSetSparklineStyleToNull()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1", "B1:Z1");
+
+            TestDelegate action = () => group.Style = null;
+
+            Assert.Throws<ArgumentNullException>(action);
         }
 
         #endregion Change sparklines
@@ -475,13 +498,6 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 {
                     var ws = wb.AddWorksheet("Sheet 1");
                     var originalGroup = ws.SparklineGroups.Add("A1:A3", "B1:Z3")
-                        .SetFirstMarkerColor(XLColor.AliceBlue)
-                        .SetHighMarkerColor(XLColor.Alizarin)
-                        .SetLastMarkerColor(XLColor.Almond)
-                        .SetLowMarkerColor(XLColor.Amaranth)
-                        .SetMarkersColor(XLColor.Amber)
-                        .SetNegativeColor(XLColor.AmberSaeEce)
-                        .SetSeriesColor(XLColor.AmericanRose)
                         .SetLineWeight(5.5)
                         .SetDisplayHidden(true)
                         .SetShowMarkers(XLSparklineMarkers.FirstPoint | XLSparklineMarkers.LastPoint |
@@ -501,6 +517,15 @@ namespace ClosedXML_Tests.Excel.Sparklines
                         .SetManualMin(1.2)
                         .SetMaxAxisType(XLSparklineAxisMinMax.Custom)
                         .SetMinAxisType(XLSparklineAxisMinMax.Custom);
+
+                    originalGroup.Style
+                        .SetFirstMarkerColor(XLColor.AliceBlue)
+                        .SetHighMarkerColor(XLColor.Alizarin)
+                        .SetLastMarkerColor(XLColor.Almond)
+                        .SetLowMarkerColor(XLColor.Amaranth)
+                        .SetMarkersColor(XLColor.Amber)
+                        .SetNegativeColor(XLColor.AmberSaeEce)
+                        .SetSeriesColor(XLColor.AmericanRose);
 
                     AssertGroupIsValid(originalGroup);
                     wb.SaveAs(ms);
@@ -528,13 +553,13 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 Assert.AreEqual("B2:Z2", group.ElementAt(1).SourceData.RangeAddress.ToString());
                 Assert.AreEqual("B3:Z3", group.ElementAt(2).SourceData.RangeAddress.ToString());
 
-                Assert.AreEqual(XLColor.AliceBlue, group.FirstMarkerColor);
-                Assert.AreEqual(XLColor.Alizarin, group.HighMarkerColor);
-                Assert.AreEqual(XLColor.Almond, group.LastMarkerColor);
-                Assert.AreEqual(XLColor.Amaranth, group.LowMarkerColor);
-                Assert.AreEqual(XLColor.Amber, group.MarkersColor);
-                Assert.AreEqual(XLColor.AmberSaeEce, group.NegativeColor);
-                Assert.AreEqual(XLColor.AmericanRose, group.SeriesColor);
+                Assert.AreEqual(XLColor.AliceBlue, group.Style.FirstMarkerColor);
+                Assert.AreEqual(XLColor.Alizarin, group.Style.HighMarkerColor);
+                Assert.AreEqual(XLColor.Almond, group.Style.LastMarkerColor);
+                Assert.AreEqual(XLColor.Amaranth, group.Style.LowMarkerColor);
+                Assert.AreEqual(XLColor.Amber, group.Style.MarkersColor);
+                Assert.AreEqual(XLColor.AmberSaeEce, group.Style.NegativeColor);
+                Assert.AreEqual(XLColor.AmericanRose, group.Style.SeriesColor);
                 Assert.IsTrue(group.DisplayHidden);
                 Assert.AreEqual(5.5, group.LineWeight, XLHelper.Epsilon);
                 Assert.AreEqual(XLDisplayBlanksAsValues.Zero, group.DisplayEmptyCellsAs);

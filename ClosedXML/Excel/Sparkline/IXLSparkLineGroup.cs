@@ -45,29 +45,18 @@ namespace ClosedXML.Excel
 
         Boolean DisplayHidden { get; set; }
 
-        XLColor FirstMarkerColor { get; set; }
-
-        XLColor HighMarkerColor { get; set; }
-
         IXLSparklineHorizontalAxis HorizontalAxis { get; }
-
-        XLColor LastMarkerColor { get; set; }
 
         Double LineWeight { get; set; }
 
-        XLColor LowMarkerColor { get; set; }
-
-        XLColor MarkersColor { get; set; }
-
-        XLColor NegativeColor { get; set; }
-
-        XLColor SeriesColor { get; set; }
-
         XLSparklineMarkers ShowMarkers { get; set; }
+
+        IXLSparklineStyle Style { get; set; }
 
         XLSparklineType Type { get; set; }
 
         IXLSparklineVerticalAxis VerticalAxis { get; }
+
         IXLWorksheet Worksheet { get; }
 
         #endregion Public Properties
@@ -98,23 +87,11 @@ namespace ClosedXML.Excel
 
         IXLSparklineGroup SetDisplayHidden(Boolean value);
 
-        IXLSparklineGroup SetFirstMarkerColor(XLColor value);
-
-        IXLSparklineGroup SetHighMarkerColor(XLColor value);
-
-        IXLSparklineGroup SetLastMarkerColor(XLColor value);
-
         IXLSparklineGroup SetLineWeight(Double value);
 
-        IXLSparklineGroup SetLowMarkerColor(XLColor value);
-
-        IXLSparklineGroup SetMarkersColor(XLColor value);
-
-        IXLSparklineGroup SetNegativeColor(XLColor value);
-
-        IXLSparklineGroup SetSeriesColor(XLColor value);
-
         IXLSparklineGroup SetShowMarkers(XLSparklineMarkers value);
+
+        IXLSparklineGroup SetStyle(IXLSparklineStyle value);
 
         IXLSparklineGroup SetType(XLSparklineType value);
 
