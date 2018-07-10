@@ -475,7 +475,6 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 {
                     var ws = wb.AddWorksheet("Sheet 1");
                     var originalGroup = ws.SparklineGroups.Add("A1:A3", "B1:Z3")
-                        .SetAxisColor(XLColor.AirForceBlue)
                         .SetFirstMarkerColor(XLColor.AliceBlue)
                         .SetHighMarkerColor(XLColor.Alizarin)
                         .SetLastMarkerColor(XLColor.Almond)
@@ -484,19 +483,24 @@ namespace ClosedXML_Tests.Excel.Sparklines
                         .SetNegativeColor(XLColor.AmberSaeEce)
                         .SetSeriesColor(XLColor.AmericanRose)
                         .SetLineWeight(5.5)
-                        .SetManualMax(6.6)
-                        .SetManualMin(1.2)
-                        .SetDateAxis(true)
                         .SetDisplayHidden(true)
-                        .SetDisplayXAxis(true)
-                        .SetRightToLeft(true)
                         .SetShowMarkers(XLSparklineMarkers.FirstPoint | XLSparklineMarkers.LastPoint |
                                         XLSparklineMarkers.HighPoint | XLSparklineMarkers.LowPoint |
                                         XLSparklineMarkers.NegativePoints | XLSparklineMarkers.Markers)
                         .SetDisplayEmptyCellsAs(XLDisplayBlanksAsValues.Zero)
-                        .SetMaxAxisType(XLSparklineAxisMinMax.Custom)
-                        .SetMinAxisType(XLSparklineAxisMinMax.Custom)
                         .SetType(XLSparklineType.Stacked);
+
+                    originalGroup.HorizontalAxis
+                        .SetColor(XLColor.AirForceBlue)
+                        .SetDateAxis(true)
+                        .SetVisible(true)
+                        .SetRightToLeft(true);
+
+                    originalGroup.VerticalAxis
+                        .SetManualMax(6.6)
+                        .SetManualMin(1.2)
+                        .SetMaxAxisType(XLSparklineAxisMinMax.Custom)
+                        .SetMinAxisType(XLSparklineAxisMinMax.Custom);
 
                     AssertGroupIsValid(originalGroup);
                     wb.SaveAs(ms);
@@ -524,7 +528,6 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 Assert.AreEqual("B2:Z2", group.ElementAt(1).SourceData.RangeAddress.ToString());
                 Assert.AreEqual("B3:Z3", group.ElementAt(2).SourceData.RangeAddress.ToString());
 
-                Assert.AreEqual(XLColor.AirForceBlue, group.AxisColor);
                 Assert.AreEqual(XLColor.AliceBlue, group.FirstMarkerColor);
                 Assert.AreEqual(XLColor.Alizarin, group.HighMarkerColor);
                 Assert.AreEqual(XLColor.Almond, group.LastMarkerColor);
@@ -532,14 +535,11 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 Assert.AreEqual(XLColor.Amber, group.MarkersColor);
                 Assert.AreEqual(XLColor.AmberSaeEce, group.NegativeColor);
                 Assert.AreEqual(XLColor.AmericanRose, group.SeriesColor);
-
-                Assert.AreEqual(5.5, group.LineWeight, XLHelper.Epsilon);
-                Assert.AreEqual(6.6, group.ManualMax, XLHelper.Epsilon);
-                Assert.AreEqual(1.2, group.ManualMin, XLHelper.Epsilon);
-
                 Assert.IsTrue(group.DisplayHidden);
-                Assert.IsTrue(group.DisplayXAxis);
-                Assert.IsTrue(group.RightToLeft);
+                Assert.AreEqual(5.5, group.LineWeight, XLHelper.Epsilon);
+                Assert.AreEqual(XLDisplayBlanksAsValues.Zero, group.DisplayEmptyCellsAs);
+                Assert.AreEqual(XLSparklineType.Stacked, group.Type);
+
                 Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.FirstPoint));
                 Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.LastPoint));
                 Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.HighPoint));
@@ -547,10 +547,14 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.NegativePoints));
                 Assert.IsTrue(group.ShowMarkers.HasFlag(XLSparklineMarkers.Markers));
 
-                Assert.AreEqual(XLDisplayBlanksAsValues.Zero, group.DisplayEmptyCellsAs);
-                Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.MaxAxisType);
-                Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.MinAxisType);
-                Assert.AreEqual(XLSparklineType.Stacked, group.Type);
+                Assert.AreEqual(XLColor.AirForceBlue, group.HorizontalAxis.Color);
+                Assert.IsTrue(group.HorizontalAxis.IsVisible);
+                Assert.IsTrue(group.HorizontalAxis.RightToLeft);
+
+                Assert.AreEqual(6.6, group.VerticalAxis.ManualMax, XLHelper.Epsilon);
+                Assert.AreEqual(1.2, group.VerticalAxis.ManualMin, XLHelper.Epsilon);
+                Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.VerticalAxis.MaxAxisType);
+                Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.VerticalAxis.MinAxisType);
             }
         }
 
@@ -562,26 +566,28 @@ namespace ClosedXML_Tests.Excel.Sparklines
         public void SetManualMinChangesAxisTypeToCustom()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
-            var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
+            var axis = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
+                .VerticalAxis
                 .SetMinAxisType(XLSparklineAxisMinMax.Group);
 
-            group.ManualMin = 100;
+            axis.ManualMin = 100;
 
-            Assert.AreEqual(100, group.ManualMin, XLHelper.Epsilon);
-            Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.MinAxisType);
+            Assert.AreEqual(100, axis.ManualMin, XLHelper.Epsilon);
+            Assert.AreEqual(XLSparklineAxisMinMax.Custom, axis.MinAxisType);
         }
 
         [Test]
         public void SetManualMaxChangesAxisTypeToCustom()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
-            var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
+            var axis = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
+                .VerticalAxis
                 .SetMaxAxisType(XLSparklineAxisMinMax.Group);
 
-            group.ManualMax = 100;
+            axis.ManualMax = 100;
 
-            Assert.AreEqual(100, group.ManualMax, XLHelper.Epsilon);
-            Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.MaxAxisType);
+            Assert.AreEqual(100, axis.ManualMax, XLHelper.Epsilon);
+            Assert.AreEqual(XLSparklineAxisMinMax.Custom, axis.MaxAxisType);
         }
 
         [TestCase(XLSparklineAxisMinMax.Custom, 100)]
@@ -590,15 +596,16 @@ namespace ClosedXML_Tests.Excel.Sparklines
         public void SetAxisTypeToNonCustomSetsManualMinToNull(XLSparklineAxisMinMax axisType, double? expectedManualMin)
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
-            var group = ws.SparklineGroups.Add("A1", "B1:Z1")
+            var axis = ws.SparklineGroups.Add("A1", "B1:Z1")
+                .VerticalAxis
                 .SetManualMin(100);
 
-            group.MinAxisType = axisType;
+            axis.MinAxisType = axisType;
 
             if (expectedManualMin.HasValue)
-                Assert.AreEqual(expectedManualMin.Value, group.ManualMin.Value, XLHelper.Epsilon);
+                Assert.AreEqual(expectedManualMin.Value, axis.ManualMin.Value, XLHelper.Epsilon);
             else
-                Assert.IsNull(group.ManualMin);
+                Assert.IsNull(axis.ManualMin);
         }
 
         [TestCase(XLSparklineAxisMinMax.Custom, 100)]
@@ -607,15 +614,16 @@ namespace ClosedXML_Tests.Excel.Sparklines
         public void SetAxisTypeToNonCustomSetsManualMaxToNull(XLSparklineAxisMinMax axisType, double? expectedManualMax)
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
-            var group = ws.SparklineGroups.Add("A1", "B1:Z1")
+            var axis = ws.SparklineGroups.Add("A1", "B1:Z1")
+                .VerticalAxis
                 .SetManualMax(100);
 
-            group.MaxAxisType = axisType;
+            axis.MaxAxisType = axisType;
 
             if (expectedManualMax.HasValue)
-                Assert.AreEqual(expectedManualMax.Value, group.ManualMax.Value, XLHelper.Epsilon);
+                Assert.AreEqual(expectedManualMax.Value, axis.ManualMax.Value, XLHelper.Epsilon);
             else
-                Assert.IsNull(group.ManualMax);
+                Assert.IsNull(axis.ManualMax);
         }
 
         #endregion Change sparkline groups

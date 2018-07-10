@@ -5257,7 +5257,6 @@ namespace ClosedXML.Excel
                     X14.SparklineGroup sparklineGroup = new X14.SparklineGroup();
                     sparklineGroup.SetAttribute(new OpenXmlAttribute("xr2", "uid", "http://schemas.microsoft.com/office/spreadsheetml/2015/revision2", "{A98FF5F8-AE60-43B5-8001-AD89004F45D3}"));
 
-                    sparklineGroup.AxisColor = new X14.AxisColor() { Rgb = slg.AxisColor.Color.ToHex() };
                     sparklineGroup.FirstMarkerColor = new X14.FirstMarkerColor() { Rgb = slg.FirstMarkerColor.Color.ToHex() };
                     sparklineGroup.LastMarkerColor = new X14.LastMarkerColor() { Rgb = slg.LastMarkerColor.Color.ToHex() };
                     sparklineGroup.HighMarkerColor = new X14.HighMarkerColor() { Rgb = slg.HighMarkerColor.Color.ToHex() };
@@ -5273,24 +5272,22 @@ namespace ClosedXML.Excel
                     sparklineGroup.Negative = slg.ShowMarkers.HasFlag(XLSparklineMarkers.NegativePoints);
                     sparklineGroup.Markers = slg.ShowMarkers.HasFlag(XLSparklineMarkers.Markers);
 
-                    sparklineGroup.DisplayXAxis = slg.DisplayXAxis;
                     sparklineGroup.DisplayHidden = slg.DisplayHidden;
-                    sparklineGroup.RightToLeft = slg.RightToLeft;
-
                     sparklineGroup.LineWeight = slg.LineWeight;
-
                     sparklineGroup.Type = slg.Type.ToOpenXml();
                     sparklineGroup.DisplayEmptyCellsAs = slg.DisplayEmptyCellsAs.ToOpenXml();
 
-                    sparklineGroup.MinAxisType = slg.MinAxisType.ToOpenXml();
+                    sparklineGroup.AxisColor = new X14.AxisColor() { Rgb = slg.HorizontalAxis.Color.Color.ToHex() };
+                    sparklineGroup.DisplayXAxis = slg.HorizontalAxis.IsVisible;
+                    sparklineGroup.RightToLeft = slg.HorizontalAxis.RightToLeft;
 
-                    if (slg.MinAxisType == XLSparklineAxisMinMax.Custom)
-                        sparklineGroup.ManualMin = slg.ManualMin;
+                    sparklineGroup.MinAxisType = slg.VerticalAxis.MinAxisType.ToOpenXml();
+                    if (slg.VerticalAxis.MinAxisType == XLSparklineAxisMinMax.Custom)
+                        sparklineGroup.ManualMin = slg.VerticalAxis.ManualMin;
 
-                    sparklineGroup.MaxAxisType = slg.MaxAxisType.ToOpenXml();
-
-                    if (slg.MaxAxisType == XLSparklineAxisMinMax.Custom)
-                        sparklineGroup.ManualMax = slg.ManualMax;                    
+                    sparklineGroup.MaxAxisType = slg.VerticalAxis.MaxAxisType.ToOpenXml();
+                    if (slg.VerticalAxis.MaxAxisType == XLSparklineAxisMinMax.Custom)
+                        sparklineGroup.ManualMax = slg.VerticalAxis.ManualMax;
 
                     X14.Sparklines sparklines = new X14.Sparklines();
 

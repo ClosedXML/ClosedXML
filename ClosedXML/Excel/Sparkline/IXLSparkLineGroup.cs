@@ -36,22 +36,20 @@ namespace ClosedXML.Excel
         Column = 1,
         Stacked = 2
     }
+
     public interface IXLSparklineGroup : IEnumerable<IXLSparkline>
     {
         #region Public Properties
-
-        XLColor AxisColor { get; set; }
-        Boolean DateAxis { get; set; }
 
         XLDisplayBlanksAsValues DisplayEmptyCellsAs { get; set; }
 
         Boolean DisplayHidden { get; set; }
 
-        Boolean DisplayXAxis { get; set; }
-
         XLColor FirstMarkerColor { get; set; }
 
         XLColor HighMarkerColor { get; set; }
+
+        IXLSparklineHorizontalAxis HorizontalAxis { get; }
 
         XLColor LastMarkerColor { get; set; }
 
@@ -59,25 +57,17 @@ namespace ClosedXML.Excel
 
         XLColor LowMarkerColor { get; set; }
 
-        Double? ManualMax { get; set; }
-
-        Double? ManualMin { get; set; }
-
         XLColor MarkersColor { get; set; }
 
-        XLSparklineAxisMinMax MaxAxisType { get; set; }
-
-        XLSparklineAxisMinMax MinAxisType { get; set; }
-
         XLColor NegativeColor { get; set; }
-
-        Boolean RightToLeft { get; set; }
 
         XLColor SeriesColor { get; set; }
 
         XLSparklineMarkers ShowMarkers { get; set; }
+
         XLSparklineType Type { get; set; }
 
+        IXLSparklineVerticalAxis VerticalAxis { get; }
         IXLWorksheet Worksheet { get; }
 
         #endregion Public Properties
@@ -104,15 +94,9 @@ namespace ClosedXML.Excel
 
         void RemoveAll();
 
-        IXLSparklineGroup SetAxisColor(XLColor value);
-
-        IXLSparklineGroup SetDateAxis(Boolean value);
-
         IXLSparklineGroup SetDisplayEmptyCellsAs(XLDisplayBlanksAsValues value);
 
         IXLSparklineGroup SetDisplayHidden(Boolean value);
-
-        IXLSparklineGroup SetDisplayXAxis(Boolean value);
 
         IXLSparklineGroup SetFirstMarkerColor(XLColor value);
 
@@ -124,19 +108,9 @@ namespace ClosedXML.Excel
 
         IXLSparklineGroup SetLowMarkerColor(XLColor value);
 
-        IXLSparklineGroup SetManualMax(Double? value);
-
-        IXLSparklineGroup SetManualMin(Double? value);
-
         IXLSparklineGroup SetMarkersColor(XLColor value);
 
-        IXLSparklineGroup SetMaxAxisType(XLSparklineAxisMinMax value);
-
-        IXLSparklineGroup SetMinAxisType(XLSparklineAxisMinMax value);
-
         IXLSparklineGroup SetNegativeColor(XLColor value);
-
-        IXLSparklineGroup SetRightToLeft(Boolean value);
 
         IXLSparklineGroup SetSeriesColor(XLColor value);
 

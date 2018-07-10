@@ -10,19 +10,15 @@ namespace ClosedXML.Excel
     {
         #region Public Properties
 
-        public XLColor AxisColor { get; set; }
-
-        public Boolean DateAxis { get; set; }
-
         public XLDisplayBlanksAsValues DisplayEmptyCellsAs { get; set; }
 
         public Boolean DisplayHidden { get; set; }
 
-        public Boolean DisplayXAxis { get; set; }
-
         public XLColor FirstMarkerColor { get; set; }
 
         public XLColor HighMarkerColor { get; set; }
+
+        public IXLSparklineHorizontalAxis HorizontalAxis { get; }
 
         public XLColor LastMarkerColor { get; set; }
 
@@ -30,35 +26,9 @@ namespace ClosedXML.Excel
 
         public XLColor LowMarkerColor { get; set; }
 
-        public Double? ManualMax
-        {
-            get => _manualMax;
-            set => SetManualMax(value);
-        }
-
-        public Double? ManualMin
-        {
-            get => _manualMin;
-            set => SetManualMin(value);
-        }
-
         public XLColor MarkersColor { get; set; }
 
-        public XLSparklineAxisMinMax MaxAxisType
-        {
-            get => _maxAxisType;
-            set => SetMaxAxisType(value);
-        }
-
-        public XLSparklineAxisMinMax MinAxisType
-        {
-            get => _minAxisType;
-            set => SetMinAxisType(value);
-        }
-
         public XLColor NegativeColor { get; set; }
-
-        public Boolean RightToLeft { get; set; }
 
         public XLColor SeriesColor { get; set; }
 
@@ -68,15 +38,13 @@ namespace ClosedXML.Excel
 
         public XLSparklineType Type { get; set; }
 
+        public IXLSparklineVerticalAxis VerticalAxis { get; }
+
         /// <summary>
         /// The worksheet this sparkline group is associated with
         /// </summary>
         public IXLWorksheet Worksheet { get; }
 
-        private Double? _manualMax;
-        private Double? _manualMin;
-        private XLSparklineAxisMinMax _maxAxisType;
-        private XLSparklineAxisMinMax _minAxisType;
         #endregion Public Properties
 
         #region Public Constructors
@@ -192,7 +160,6 @@ namespace ClosedXML.Excel
         /// <param name="sparklineGroup">The sparkline group to copy from</param>
         public void CopyFrom(IXLSparklineGroup sparklineGroup)
         {
-            AxisColor = sparklineGroup.AxisColor;
             SeriesColor = sparklineGroup.SeriesColor;
             MarkersColor = sparklineGroup.MarkersColor;
             HighMarkerColor = sparklineGroup.HighMarkerColor;
@@ -201,20 +168,14 @@ namespace ClosedXML.Excel
             LastMarkerColor = sparklineGroup.LastMarkerColor;
             NegativeColor = sparklineGroup.NegativeColor;
 
-            DateAxis = sparklineGroup.DateAxis;
             ShowMarkers = sparklineGroup.ShowMarkers;
-            DisplayXAxis = sparklineGroup.DisplayXAxis;
             DisplayHidden = sparklineGroup.DisplayHidden;
-
-            ManualMax = sparklineGroup.ManualMax;
-            ManualMin = sparklineGroup.ManualMin;
             LineWeight = sparklineGroup.LineWeight;
-
-            MinAxisType = sparklineGroup.MinAxisType;
-            MaxAxisType = sparklineGroup.MaxAxisType;
-
             Type = sparklineGroup.Type;
             DisplayEmptyCellsAs = sparklineGroup.DisplayEmptyCellsAs;
+
+            XLSparklineHorizontalAxis.Copy(sparklineGroup.HorizontalAxis, HorizontalAxis);
+            XLSparklineVerticalAxis.Copy(sparklineGroup.VerticalAxis, VerticalAxis);
         }
 
         /// <summary>
@@ -282,18 +243,6 @@ namespace ClosedXML.Excel
             _sparklines.Clear();
         }
 
-        public IXLSparklineGroup SetAxisColor(XLColor value)
-        {
-            AxisColor = value;
-            return this;
-        }
-
-        public IXLSparklineGroup SetDateAxis(Boolean dateAxis)
-        {
-            DateAxis = dateAxis;
-            return this;
-        }
-
         public IXLSparklineGroup SetDisplayEmptyCellsAs(XLDisplayBlanksAsValues displayEmptyCellsAs)
         {
             DisplayEmptyCellsAs = displayEmptyCellsAs;
@@ -303,12 +252,6 @@ namespace ClosedXML.Excel
         public IXLSparklineGroup SetDisplayHidden(Boolean displayHidden)
         {
             DisplayHidden = displayHidden;
-            return this;
-        }
-
-        public IXLSparklineGroup SetDisplayXAxis(Boolean displayXAxis)
-        {
-            DisplayXAxis = displayXAxis;
             return this;
         }
 
@@ -342,57 +285,15 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetManualMax(Double? manualMax)
-        {
-            if (manualMax != null)
-                MaxAxisType = XLSparklineAxisMinMax.Custom;
-
-            _manualMax = manualMax;
-            return this;
-        }
-
-        public IXLSparklineGroup SetManualMin(Double? manualMin)
-        {
-            if (manualMin != null)
-                MinAxisType = XLSparklineAxisMinMax.Custom;
-
-            _manualMin = manualMin;
-            return this;
-        }
-
         public IXLSparklineGroup SetMarkersColor(XLColor value)
         {
             MarkersColor = value;
             return this;
         }
 
-        public IXLSparklineGroup SetMaxAxisType(XLSparklineAxisMinMax maxAxisType)
-        {
-            if (maxAxisType != XLSparklineAxisMinMax.Custom)
-                _manualMax = null;
-
-            _maxAxisType = maxAxisType;
-            return this;
-        }
-
-        public IXLSparklineGroup SetMinAxisType(XLSparklineAxisMinMax minAxisType)
-        {
-            if (minAxisType != XLSparklineAxisMinMax.Custom)
-                _manualMin = null;
-
-            _minAxisType = minAxisType;
-            return this;
-        }
-
         public IXLSparklineGroup SetNegativeColor(XLColor value)
         {
             NegativeColor = value;
-            return this;
-        }
-
-        public IXLSparklineGroup SetRightToLeft(Boolean rightToLeft)
-        {
-            RightToLeft = rightToLeft;
             return this;
         }
 
@@ -432,8 +333,10 @@ namespace ClosedXML.Excel
         internal XLSparklineGroup(IXLWorksheet targetWorksheet)
         {
             Worksheet = targetWorksheet ?? throw new ArgumentNullException(nameof(targetWorksheet));
+            HorizontalAxis = new XLSparklineHorizontalAxis(this);
+            VerticalAxis = new XLSparklineVerticalAxis(this);
 
-            AxisColor = XLColor.Black;
+            HorizontalAxis.Color = XLColor.Black;
             SeriesColor = XLColor.FromHtml("FF376092");
             MarkersColor = XLColor.FromHtml("FFD00000");
             HighMarkerColor = XLColor.Black;

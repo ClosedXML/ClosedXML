@@ -2377,7 +2377,6 @@ namespace ClosedXML.Excel
                 {
                     var sparklineGroup = (ws.SparklineGroups as XLSparklineGroups).Add();
 
-                    if (slg.AxisColor != null) sparklineGroup.AxisColor = ExtractColor(slg.AxisColor.Rgb.Value);
                     if (slg.FirstMarkerColor != null) sparklineGroup.FirstMarkerColor = ExtractColor(slg.FirstMarkerColor.Rgb.Value);
                     if (slg.LastMarkerColor != null) sparklineGroup.LastMarkerColor = ExtractColor(slg.LastMarkerColor.Rgb.Value);
                     if (slg.HighMarkerColor != null) sparklineGroup.HighMarkerColor = ExtractColor(slg.HighMarkerColor.Rgb.Value);
@@ -2385,6 +2384,11 @@ namespace ClosedXML.Excel
                     if (slg.SeriesColor != null) sparklineGroup.SeriesColor = ExtractColor(slg.SeriesColor.Rgb.Value);
                     if (slg.NegativeColor != null) sparklineGroup.NegativeColor = ExtractColor(slg.NegativeColor.Rgb.Value);
                     if (slg.MarkersColor != null) sparklineGroup.MarkersColor = ExtractColor(slg.MarkersColor.Rgb.Value);
+
+                    if (slg.DisplayHidden != null) sparklineGroup.DisplayHidden = slg.DisplayHidden;
+                    if (slg.LineWeight != null) sparklineGroup.LineWeight = slg.LineWeight;
+                    if (slg.Type != null) sparklineGroup.Type = slg.Type.Value.ToClosedXml();
+                    if (slg.DisplayEmptyCellsAs != null) sparklineGroup.DisplayEmptyCellsAs = slg.DisplayEmptyCellsAs.Value.ToClosedXml();
 
                     sparklineGroup.ShowMarkers = XLSparklineMarkers.None;
                     if (OpenXmlHelper.GetBooleanValueAsBool(slg.Markers, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.Markers;
@@ -2394,19 +2398,15 @@ namespace ClosedXML.Excel
                     if (OpenXmlHelper.GetBooleanValueAsBool(slg.Last, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.LastPoint;
                     if (OpenXmlHelper.GetBooleanValueAsBool(slg.Negative, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.NegativePoints;
 
-                    if (slg.DateAxis != null) sparklineGroup.DateAxis = slg.DateAxis;
-                    if (slg.DisplayXAxis != null) sparklineGroup.DisplayXAxis = slg.DisplayXAxis;
-                    if (slg.DisplayHidden != null) sparklineGroup.DisplayHidden = slg.DisplayHidden;
-                    if (slg.RightToLeft != null) sparklineGroup.RightToLeft = slg.RightToLeft;
+                    if (slg.AxisColor != null) sparklineGroup.HorizontalAxis.Color = ExtractColor(slg.AxisColor.Rgb.Value);
+                    if (slg.DateAxis != null) sparklineGroup.HorizontalAxis.DateAxis = slg.DateAxis;
+                    if (slg.DisplayXAxis != null) sparklineGroup.HorizontalAxis.IsVisible = slg.DisplayXAxis;
+                    if (slg.RightToLeft != null) sparklineGroup.HorizontalAxis.RightToLeft = slg.RightToLeft;
 
-                    if (slg.ManualMax != null) sparklineGroup.ManualMax = slg.ManualMax;
-                    if (slg.ManualMin != null) sparklineGroup.ManualMin = slg.ManualMin;
-                    if (slg.LineWeight != null) sparklineGroup.LineWeight = slg.LineWeight;
-
-                    if (slg.Type != null) sparklineGroup.Type = slg.Type.Value.ToClosedXml();
-                    if (slg.MinAxisType != null) sparklineGroup.MinAxisType = slg.MinAxisType.Value.ToClosedXml();
-                    if (slg.MaxAxisType != null) sparklineGroup.MaxAxisType = slg.MaxAxisType.Value.ToClosedXml();
-                    if (slg.DisplayEmptyCellsAs != null) sparklineGroup.DisplayEmptyCellsAs = slg.DisplayEmptyCellsAs.Value.ToClosedXml();
+                    if (slg.ManualMax != null) sparklineGroup.VerticalAxis.ManualMax = slg.ManualMax;
+                    if (slg.ManualMin != null) sparklineGroup.VerticalAxis.ManualMin = slg.ManualMin;
+                    if (slg.MinAxisType != null) sparklineGroup.VerticalAxis.MinAxisType = slg.MinAxisType.Value.ToClosedXml();
+                    if (slg.MaxAxisType != null) sparklineGroup.VerticalAxis.MaxAxisType = slg.MaxAxisType.Value.ToClosedXml();
 
                     foreach (var sls in slg.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Sparklines>())
                     {
