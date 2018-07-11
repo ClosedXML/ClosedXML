@@ -14,6 +14,7 @@ using System.Xml.Linq;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace ClosedXML.Excel
 {
@@ -2370,54 +2371,50 @@ namespace ClosedXML.Excel
                 }
             }
 
-            foreach (var sparklineGroups in extensions
-                .Descendants<DocumentFormat.OpenXml.Office2010.Excel.SparklineGroups>())
+            foreach (var slg in extensions
+                .Descendants<X14.SparklineGroups>()
+                .SelectMany(sparklineGroups => sparklineGroups.Descendants<X14.SparklineGroup>()))
             {
-                foreach (var slg in sparklineGroups.Descendants<DocumentFormat.OpenXml.Office2010.Excel.SparklineGroup>())
-                {
-                    var sparklineGroup = (ws.SparklineGroups as XLSparklineGroups).Add();
+                var xlSparklineGroup = (ws.SparklineGroups as XLSparklineGroups).Add();
 
-                    var style = sparklineGroup.Style;
-                    if (slg.FirstMarkerColor != null) style.FirstMarkerColor = ExtractColor(slg.FirstMarkerColor.Rgb.Value);
-                    if (slg.LastMarkerColor != null) style.LastMarkerColor = ExtractColor(slg.LastMarkerColor.Rgb.Value);
-                    if (slg.HighMarkerColor != null) style.HighMarkerColor = ExtractColor(slg.HighMarkerColor.Rgb.Value);
-                    if (slg.LowMarkerColor != null) style.LowMarkerColor = ExtractColor(slg.LowMarkerColor.Rgb.Value);
-                    if (slg.SeriesColor != null) style.SeriesColor = ExtractColor(slg.SeriesColor.Rgb.Value);
-                    if (slg.NegativeColor != null) style.NegativeColor = ExtractColor(slg.NegativeColor.Rgb.Value);
-                    if (slg.MarkersColor != null) style.MarkersColor = ExtractColor(slg.MarkersColor.Rgb.Value);
-                    sparklineGroup.Style = style;
+                if (slg.Formula != null)
+                    xlSparklineGroup.DateRange = Range(slg.Formula.Text);
 
-                    if (slg.DisplayHidden != null) sparklineGroup.DisplayHidden = slg.DisplayHidden;
-                    if (slg.LineWeight != null) sparklineGroup.LineWeight = slg.LineWeight;
-                    if (slg.Type != null) sparklineGroup.Type = slg.Type.Value.ToClosedXml();
-                    if (slg.DisplayEmptyCellsAs != null) sparklineGroup.DisplayEmptyCellsAs = slg.DisplayEmptyCellsAs.Value.ToClosedXml();
+                var xlSparklineStyle = xlSparklineGroup.Style;
+                if (slg.FirstMarkerColor != null) xlSparklineStyle.FirstMarkerColor = ExtractColor(slg.FirstMarkerColor.Rgb.Value);
+                if (slg.LastMarkerColor != null) xlSparklineStyle.LastMarkerColor = ExtractColor(slg.LastMarkerColor.Rgb.Value);
+                if (slg.HighMarkerColor != null) xlSparklineStyle.HighMarkerColor = ExtractColor(slg.HighMarkerColor.Rgb.Value);
+                if (slg.LowMarkerColor != null) xlSparklineStyle.LowMarkerColor = ExtractColor(slg.LowMarkerColor.Rgb.Value);
+                if (slg.SeriesColor != null) xlSparklineStyle.SeriesColor = ExtractColor(slg.SeriesColor.Rgb.Value);
+                if (slg.NegativeColor != null) xlSparklineStyle.NegativeColor = ExtractColor(slg.NegativeColor.Rgb.Value);
+                if (slg.MarkersColor != null) xlSparklineStyle.MarkersColor = ExtractColor(slg.MarkersColor.Rgb.Value);
+                xlSparklineGroup.Style = xlSparklineStyle;
 
-                    sparklineGroup.ShowMarkers = XLSparklineMarkers.None;
-                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.Markers, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.Markers;
-                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.High, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.HighPoint;
-                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.Low, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.LowPoint;
-                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.First, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.FirstPoint;
-                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.Last, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.LastPoint;
-                    if (OpenXmlHelper.GetBooleanValueAsBool(slg.Negative, false)) sparklineGroup.ShowMarkers |= XLSparklineMarkers.NegativePoints;
+                if (slg.DisplayHidden != null) xlSparklineGroup.DisplayHidden = slg.DisplayHidden;
+                if (slg.LineWeight != null) xlSparklineGroup.LineWeight = slg.LineWeight;
+                if (slg.Type != null) xlSparklineGroup.Type = slg.Type.Value.ToClosedXml();
+                if (slg.DisplayEmptyCellsAs != null) xlSparklineGroup.DisplayEmptyCellsAs = slg.DisplayEmptyCellsAs.Value.ToClosedXml();
 
-                    if (slg.AxisColor != null) sparklineGroup.HorizontalAxis.Color = ExtractColor(slg.AxisColor.Rgb.Value);
-                    if (slg.DateAxis != null) sparklineGroup.HorizontalAxis.DateAxis = slg.DateAxis;
-                    if (slg.DisplayXAxis != null) sparklineGroup.HorizontalAxis.IsVisible = slg.DisplayXAxis;
-                    if (slg.RightToLeft != null) sparklineGroup.HorizontalAxis.RightToLeft = slg.RightToLeft;
+                xlSparklineGroup.ShowMarkers = XLSparklineMarkers.None;
+                if (OpenXmlHelper.GetBooleanValueAsBool(slg.Markers, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.Markers;
+                if (OpenXmlHelper.GetBooleanValueAsBool(slg.High, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.HighPoint;
+                if (OpenXmlHelper.GetBooleanValueAsBool(slg.Low, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.LowPoint;
+                if (OpenXmlHelper.GetBooleanValueAsBool(slg.First, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.FirstPoint;
+                if (OpenXmlHelper.GetBooleanValueAsBool(slg.Last, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.LastPoint;
+                if (OpenXmlHelper.GetBooleanValueAsBool(slg.Negative, false)) xlSparklineGroup.ShowMarkers |= XLSparklineMarkers.NegativePoints;
 
-                    if (slg.ManualMax != null) sparklineGroup.VerticalAxis.ManualMax = slg.ManualMax;
-                    if (slg.ManualMin != null) sparklineGroup.VerticalAxis.ManualMin = slg.ManualMin;
-                    if (slg.MinAxisType != null) sparklineGroup.VerticalAxis.MinAxisType = slg.MinAxisType.Value.ToClosedXml();
-                    if (slg.MaxAxisType != null) sparklineGroup.VerticalAxis.MaxAxisType = slg.MaxAxisType.Value.ToClosedXml();
+                if (slg.AxisColor != null) xlSparklineGroup.HorizontalAxis.Color = ExtractColor(slg.AxisColor.Rgb.Value);
+                if (slg.DisplayXAxis != null) xlSparklineGroup.HorizontalAxis.IsVisible = slg.DisplayXAxis;
+                if (slg.RightToLeft != null) xlSparklineGroup.HorizontalAxis.RightToLeft = slg.RightToLeft;
 
-                    foreach (var sls in slg.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Sparklines>())
-                    {
-                        foreach (var sl in sls.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Sparkline>())
-                        {
-                            sparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text);
-                        }
-                    }
-                }
+                if (slg.ManualMax != null) xlSparklineGroup.VerticalAxis.ManualMax = slg.ManualMax;
+                if (slg.ManualMin != null) xlSparklineGroup.VerticalAxis.ManualMin = slg.ManualMin;
+                if (slg.MinAxisType != null) xlSparklineGroup.VerticalAxis.MinAxisType = slg.MinAxisType.Value.ToClosedXml();
+                if (slg.MaxAxisType != null) xlSparklineGroup.VerticalAxis.MaxAxisType = slg.MaxAxisType.Value.ToClosedXml();
+
+                slg.Descendants<X14.Sparklines>().SelectMany(sls => sls.Descendants<X14.Sparkline>())
+                    .ForEach(sl => xlSparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text));
+
             }
         }
 

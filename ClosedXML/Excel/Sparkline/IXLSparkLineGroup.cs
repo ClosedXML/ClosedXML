@@ -41,6 +41,8 @@ namespace ClosedXML.Excel
     {
         #region Public Properties
 
+        IXLRange DateRange { get; set; }
+
         XLDisplayBlanksAsValues DisplayEmptyCellsAs { get; set; }
 
         Boolean DisplayHidden { get; set; }
@@ -82,6 +84,8 @@ namespace ClosedXML.Excel
         void Remove(IXLSparkline sparkline);
 
         void RemoveAll();
+
+        IXLSparklineGroup SetDateRange(IXLRange value);
 
         IXLSparklineGroup SetDisplayEmptyCellsAs(XLDisplayBlanksAsValues value);
 

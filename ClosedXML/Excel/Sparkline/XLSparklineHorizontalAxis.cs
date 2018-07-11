@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
 
         public XLColor Color { get; set; }
 
-        public bool DateAxis { get; set; }
+        public bool DateAxis => SparklineGroup.DateRange != null;
 
         public bool IsVisible { get; set; }
 
@@ -36,12 +36,6 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineHorizontalAxis SetDateAxis(bool value)
-        {
-            DateAxis = value;
-            return this;
-        }
-
         public IXLSparklineHorizontalAxis SetRightToLeft(bool value)
         {
             RightToLeft = value;
@@ -59,7 +53,6 @@ namespace ClosedXML.Excel
         public static void Copy(IXLSparklineHorizontalAxis from, IXLSparklineHorizontalAxis to)
         {
             to.Color = from.Color;
-            to.DateAxis = from.DateAxis;
             to.IsVisible = from.IsVisible;
             to.RightToLeft = from.RightToLeft;
         }

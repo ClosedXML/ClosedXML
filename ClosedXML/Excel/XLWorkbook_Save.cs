@@ -5248,60 +5248,59 @@ namespace ClosedXML.Excel
                     sparklineGroups.RemoveAllChildren();
                 }
 
-                foreach (var slg in xlWorksheet.SparklineGroups)
+                foreach (var xlSparklineGroup in xlWorksheet.SparklineGroups)
                 {
                     // Do not create an empty Sparkline group
-                    if (!slg.Any())
+                    if (!xlSparklineGroup.Any())
                         continue;
 
-                    X14.SparklineGroup sparklineGroup = new X14.SparklineGroup();
+                    var sparklineGroup = new X14.SparklineGroup();
                     sparklineGroup.SetAttribute(new OpenXmlAttribute("xr2", "uid", "http://schemas.microsoft.com/office/spreadsheetml/2015/revision2", "{A98FF5F8-AE60-43B5-8001-AD89004F45D3}"));
 
-                    sparklineGroup.FirstMarkerColor = new X14.FirstMarkerColor() { Rgb = slg.Style.FirstMarkerColor.Color.ToHex() };
-                    sparklineGroup.LastMarkerColor = new X14.LastMarkerColor() { Rgb = slg.Style.LastMarkerColor.Color.ToHex() };
-                    sparklineGroup.HighMarkerColor = new X14.HighMarkerColor() { Rgb = slg.Style.HighMarkerColor.Color.ToHex() };
-                    sparklineGroup.LowMarkerColor = new X14.LowMarkerColor() { Rgb = slg.Style.LowMarkerColor.Color.ToHex() };
-                    sparklineGroup.SeriesColor = new X14.SeriesColor() { Rgb = slg.Style.SeriesColor.Color.ToHex() };
-                    sparklineGroup.NegativeColor = new X14.NegativeColor() { Rgb = slg.Style.NegativeColor.Color.ToHex() };
-                    sparklineGroup.MarkersColor = new X14.MarkersColor() { Rgb = slg.Style.MarkersColor.Color.ToHex() };
+                    sparklineGroup.FirstMarkerColor = new X14.FirstMarkerColor() { Rgb = xlSparklineGroup.Style.FirstMarkerColor.Color.ToHex() };
+                    sparklineGroup.LastMarkerColor = new X14.LastMarkerColor() { Rgb = xlSparklineGroup.Style.LastMarkerColor.Color.ToHex() };
+                    sparklineGroup.HighMarkerColor = new X14.HighMarkerColor() { Rgb = xlSparklineGroup.Style.HighMarkerColor.Color.ToHex() };
+                    sparklineGroup.LowMarkerColor = new X14.LowMarkerColor() { Rgb = xlSparklineGroup.Style.LowMarkerColor.Color.ToHex() };
+                    sparklineGroup.SeriesColor = new X14.SeriesColor() { Rgb = xlSparklineGroup.Style.SeriesColor.Color.ToHex() };
+                    sparklineGroup.NegativeColor = new X14.NegativeColor() { Rgb = xlSparklineGroup.Style.NegativeColor.Color.ToHex() };
+                    sparklineGroup.MarkersColor = new X14.MarkersColor() { Rgb = xlSparklineGroup.Style.MarkersColor.Color.ToHex() };
 
-                    sparklineGroup.High = slg.ShowMarkers.HasFlag(XLSparklineMarkers.HighPoint);
-                    sparklineGroup.Low = slg.ShowMarkers.HasFlag(XLSparklineMarkers.LowPoint);
-                    sparklineGroup.First = slg.ShowMarkers.HasFlag(XLSparklineMarkers.FirstPoint);
-                    sparklineGroup.Last = slg.ShowMarkers.HasFlag(XLSparklineMarkers.LastPoint);
-                    sparklineGroup.Negative = slg.ShowMarkers.HasFlag(XLSparklineMarkers.NegativePoints);
-                    sparklineGroup.Markers = slg.ShowMarkers.HasFlag(XLSparklineMarkers.Markers);
+                    sparklineGroup.High = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.HighPoint);
+                    sparklineGroup.Low = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.LowPoint);
+                    sparklineGroup.First = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.FirstPoint);
+                    sparklineGroup.Last = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.LastPoint);
+                    sparklineGroup.Negative = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.NegativePoints);
+                    sparklineGroup.Markers = xlSparklineGroup.ShowMarkers.HasFlag(XLSparklineMarkers.Markers);
 
-                    sparklineGroup.DisplayHidden = slg.DisplayHidden;
-                    sparklineGroup.LineWeight = slg.LineWeight;
-                    sparklineGroup.Type = slg.Type.ToOpenXml();
-                    sparklineGroup.DisplayEmptyCellsAs = slg.DisplayEmptyCellsAs.ToOpenXml();
+                    sparklineGroup.DisplayHidden = xlSparklineGroup.DisplayHidden;
+                    sparklineGroup.LineWeight = xlSparklineGroup.LineWeight;
+                    sparklineGroup.Type = xlSparklineGroup.Type.ToOpenXml();
+                    sparklineGroup.DisplayEmptyCellsAs = xlSparklineGroup.DisplayEmptyCellsAs.ToOpenXml();
 
-                    sparklineGroup.AxisColor = new X14.AxisColor() { Rgb = slg.HorizontalAxis.Color.Color.ToHex() };
-                    sparklineGroup.DisplayXAxis = slg.HorizontalAxis.IsVisible;
-                    sparklineGroup.RightToLeft = slg.HorizontalAxis.RightToLeft;
+                    sparklineGroup.AxisColor = new X14.AxisColor() { Rgb = xlSparklineGroup.HorizontalAxis.Color.Color.ToHex() };
+                    sparklineGroup.DisplayXAxis = xlSparklineGroup.HorizontalAxis.IsVisible;
+                    sparklineGroup.RightToLeft = xlSparklineGroup.HorizontalAxis.RightToLeft;
+                    sparklineGroup.DateAxis = xlSparklineGroup.HorizontalAxis.DateAxis;
+                    if (xlSparklineGroup.HorizontalAxis.DateAxis)
+                        sparklineGroup.Formula = new OfficeExcel.Formula(
+                            xlSparklineGroup.DateRange.RangeAddress.ToString(XLReferenceStyle.A1, true));
 
-                    sparklineGroup.MinAxisType = slg.VerticalAxis.MinAxisType.ToOpenXml();
-                    if (slg.VerticalAxis.MinAxisType == XLSparklineAxisMinMax.Custom)
-                        sparklineGroup.ManualMin = slg.VerticalAxis.ManualMin;
+                    sparklineGroup.MinAxisType = xlSparklineGroup.VerticalAxis.MinAxisType.ToOpenXml();
+                    if (xlSparklineGroup.VerticalAxis.MinAxisType == XLSparklineAxisMinMax.Custom)
+                        sparklineGroup.ManualMin = xlSparklineGroup.VerticalAxis.ManualMin;
 
-                    sparklineGroup.MaxAxisType = slg.VerticalAxis.MaxAxisType.ToOpenXml();
-                    if (slg.VerticalAxis.MaxAxisType == XLSparklineAxisMinMax.Custom)
-                        sparklineGroup.ManualMax = slg.VerticalAxis.ManualMax;
+                    sparklineGroup.MaxAxisType = xlSparklineGroup.VerticalAxis.MaxAxisType.ToOpenXml();
+                    if (xlSparklineGroup.VerticalAxis.MaxAxisType == XLSparklineAxisMinMax.Custom)
+                        sparklineGroup.ManualMax = xlSparklineGroup.VerticalAxis.ManualMax;
 
-                    X14.Sparklines sparklines = new X14.Sparklines();
-
-                    foreach (var sl in slg)
-                    {
-                        X14.Sparkline sparkline = new X14.Sparkline();
-                        OfficeExcel.Formula formula = new OfficeExcel.Formula();
-                        formula.Text = sl.SourceData.RangeAddress.ToString();
-                        OfficeExcel.ReferenceSequence referenceSequence = new OfficeExcel.ReferenceSequence();
-                        referenceSequence.Text = sl.Location.Address.ToString();
-                        sparkline.Append(formula);
-                        sparkline.Append(referenceSequence);
-                        sparklines.Append(sparkline);
-                    }
+                    var sparklines = new X14.Sparklines(xlSparklineGroup
+                        .Select(xlSparkline => new X14.Sparkline
+                            {
+                                Formula = new OfficeExcel.Formula(xlSparkline.SourceData.RangeAddress.ToString(XLReferenceStyle.A1, true)),
+                                ReferenceSequence =
+                                    new OfficeExcel.ReferenceSequence(xlSparkline.Location.Address.ToString())
+                            })
+                        );
 
                     sparklineGroup.Append(sparklines);
                     sparklineGroups.Append(sparklineGroup);

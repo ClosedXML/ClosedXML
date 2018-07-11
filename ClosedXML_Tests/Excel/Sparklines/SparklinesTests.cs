@@ -498,6 +498,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 {
                     var ws = wb.AddWorksheet("Sheet 1");
                     var originalGroup = ws.SparklineGroups.Add("A1:A3", "B1:Z3")
+                        .SetDateRange(ws.Range("B4:Z4"))
                         .SetLineWeight(5.5)
                         .SetDisplayHidden(true)
                         .SetShowMarkers(XLSparklineMarkers.FirstPoint | XLSparklineMarkers.LastPoint |
@@ -508,7 +509,6 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
                     originalGroup.HorizontalAxis
                         .SetColor(XLColor.AirForceBlue)
-                        .SetDateAxis(true)
                         .SetVisible(true)
                         .SetRightToLeft(true);
 
@@ -553,6 +553,8 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 Assert.AreEqual("B2:Z2", group.ElementAt(1).SourceData.RangeAddress.ToString());
                 Assert.AreEqual("B3:Z3", group.ElementAt(2).SourceData.RangeAddress.ToString());
 
+                Assert.AreEqual("B4:Z4", group.DateRange.RangeAddress.ToString());
+
                 Assert.AreEqual(XLColor.AliceBlue, group.Style.FirstMarkerColor);
                 Assert.AreEqual(XLColor.Alizarin, group.Style.HighMarkerColor);
                 Assert.AreEqual(XLColor.Almond, group.Style.LastMarkerColor);
@@ -575,6 +577,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 Assert.AreEqual(XLColor.AirForceBlue, group.HorizontalAxis.Color);
                 Assert.IsTrue(group.HorizontalAxis.IsVisible);
                 Assert.IsTrue(group.HorizontalAxis.RightToLeft);
+                Assert.IsTrue(group.HorizontalAxis.DateAxis);
 
                 Assert.AreEqual(6.6, group.VerticalAxis.ManualMax, XLHelper.Epsilon);
                 Assert.AreEqual(1.2, group.VerticalAxis.ManualMin, XLHelper.Epsilon);
@@ -651,6 +654,42 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 Assert.IsNull(axis.ManualMax);
         }
 
+        [Test]
+        public void SetDateRangeChangesAxisType()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+
+            group.DateRange = ws.Range("B3:Z3");
+
+            Assert.IsTrue(group.HorizontalAxis.DateAxis);
+        }
+
+        [Test]
+        public void SetDateRangeToNullChangesAxisType()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+            group.DateRange = ws.Range("B3:Z3");
+
+            group.DateRange = null;
+
+            Assert.IsFalse(group.HorizontalAxis.DateAxis);
+        }
+
+        [Test]
+        public void CannotSetNonLinearDateRange()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+
+            TestDelegate action = () => group.DateRange = ws.Range("B3:Z4");
+
+            Assert.Throws<ArgumentException>(action);
+        }
+
         #endregion Change sparkline groups
+
+        //TODO Add tests for cases when data sources and date ranges are on different worksheets from the location
     }
 }
