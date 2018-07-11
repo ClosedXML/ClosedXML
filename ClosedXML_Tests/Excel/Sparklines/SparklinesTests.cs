@@ -455,7 +455,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
             Assert.AreEqual(XLColor.FromHtml("FF5F5F5F"), group.Style.SeriesColor);
             Assert.AreEqual(XLColor.FromHtml("FFFFB620"), group.Style.NegativeColor);
             Assert.AreEqual(XLColor.FromHtml("FFD70077"), group.Style.MarkersColor);
-            Assert.AreEqual(XLColor.FromHtml("FF5F5F5F"), group.Style.HighMarkerColor);
+            Assert.AreEqual(XLColor.FromHtml("FF56BE79"), group.Style.HighMarkerColor);
             Assert.AreEqual(XLColor.FromHtml("FFFF5055"), group.Style.LowMarkerColor);
             Assert.AreEqual(XLColor.FromHtml("FF5687C2"), group.Style.FirstMarkerColor);
             Assert.AreEqual(XLColor.FromHtml("FF359CEB"), group.Style.LastMarkerColor);
