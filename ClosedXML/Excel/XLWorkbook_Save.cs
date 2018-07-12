@@ -1024,7 +1024,7 @@ namespace ClosedXML.Excel
             { Val = rt.VerticalAlignment.ToOpenXml() };
             var shadow = rt.Shadow ? new Shadow() : null;
             var fontSize = new FontSize { Val = rt.FontSize };
-            var color = GetNewColor(rt.FontColor);
+            var color = new Color().FromClosedXMLColor<Color>(rt.FontColor);
             var fontName = new RunFont { Val = rt.FontName };
             var fontFamilyNumbering = new FontFamily { Val = (Int32)rt.FontFamilyNumbering };
 
@@ -3837,7 +3837,7 @@ namespace ClosedXML.Excel
                 var leftBorder = new LeftBorder { Style = borderInfo.Border.LeftBorder.ToOpenXml() };
                 if (borderInfo.Border.LeftBorderColor != XLBorderValue.Default.LeftBorderColor || ignoreMod)
                 {
-                    var leftBorderColor = GetNewColor(borderInfo.Border.LeftBorderColor);
+                    var leftBorderColor = new Color().FromClosedXMLColor<Color>(borderInfo.Border.LeftBorderColor);
                     leftBorder.AppendChild(leftBorderColor);
                 }
                 border.AppendChild(leftBorder);
@@ -3848,7 +3848,7 @@ namespace ClosedXML.Excel
                 var rightBorder = new RightBorder { Style = borderInfo.Border.RightBorder.ToOpenXml() };
                 if (borderInfo.Border.RightBorderColor != XLBorderValue.Default.RightBorderColor || ignoreMod)
                 {
-                    var rightBorderColor = GetNewColor(borderInfo.Border.RightBorderColor);
+                    var rightBorderColor = new Color().FromClosedXMLColor<Color>(borderInfo.Border.RightBorderColor);
                     rightBorder.AppendChild(rightBorderColor);
                 }
                 border.AppendChild(rightBorder);
@@ -3859,7 +3859,7 @@ namespace ClosedXML.Excel
                 var topBorder = new TopBorder { Style = borderInfo.Border.TopBorder.ToOpenXml() };
                 if (borderInfo.Border.TopBorderColor != XLBorderValue.Default.TopBorderColor || ignoreMod)
                 {
-                    var topBorderColor = GetNewColor(borderInfo.Border.TopBorderColor);
+                    var topBorderColor = new Color().FromClosedXMLColor<Color>(borderInfo.Border.TopBorderColor);
                     topBorder.AppendChild(topBorderColor);
                 }
                 border.AppendChild(topBorder);
@@ -3870,7 +3870,7 @@ namespace ClosedXML.Excel
                 var bottomBorder = new BottomBorder { Style = borderInfo.Border.BottomBorder.ToOpenXml() };
                 if (borderInfo.Border.BottomBorderColor != XLBorderValue.Default.BottomBorderColor || ignoreMod)
                 {
-                    var bottomBorderColor = GetNewColor(borderInfo.Border.BottomBorderColor);
+                    var bottomBorderColor = new Color().FromClosedXMLColor<Color>(borderInfo.Border.BottomBorderColor);
                     bottomBorder.AppendChild(bottomBorderColor);
                 }
                 border.AppendChild(bottomBorder);
@@ -3882,7 +3882,7 @@ namespace ClosedXML.Excel
                 if (borderInfo.Border.DiagonalBorderColor != XLBorderValue.Default.DiagonalBorderColor || ignoreMod)
                     if (borderInfo.Border.DiagonalBorderColor != null)
                     {
-                        var DiagonalBorderColor = GetNewColor(borderInfo.Border.DiagonalBorderColor);
+                        var DiagonalBorderColor = new Color().FromClosedXMLColor<Color>(borderInfo.Border.DiagonalBorderColor);
                         DiagonalBorder.AppendChild(DiagonalBorderColor);
                     }
                 border.AppendChild(DiagonalBorder);
@@ -3904,45 +3904,40 @@ namespace ClosedXML.Excel
             {
                 if (b.DiagonalBorder.Style != null)
                     nb.DiagonalBorder = b.DiagonalBorder.Style.Value.ToClosedXml();
-                var bColor = GetColor(b.DiagonalBorder.Color);
-                if (bColor.HasValue)
-                    nb.DiagonalBorderColor = bColor.Key;
+                if (b.DiagonalBorder.Color != null)
+                    nb.DiagonalBorderColor = b.DiagonalBorder.Color.ToClosedXMLColor(_colorList).Key;
             }
 
             if (b.LeftBorder != null)
             {
                 if (b.LeftBorder.Style != null)
                     nb.LeftBorder = b.LeftBorder.Style.Value.ToClosedXml();
-                var bColor = GetColor(b.LeftBorder.Color);
-                if (bColor.HasValue)
-                    nb.LeftBorderColor = bColor.Key;
+                if (b.LeftBorder.Color != null)
+                    nb.LeftBorderColor = b.LeftBorder.Color.ToClosedXMLColor(_colorList).Key;
             }
 
             if (b.RightBorder != null)
             {
                 if (b.RightBorder.Style != null)
                     nb.RightBorder = b.RightBorder.Style.Value.ToClosedXml();
-                var bColor = GetColor(b.RightBorder.Color);
-                if (bColor.HasValue)
-                    nb.RightBorderColor = bColor.Key;
+                if (b.RightBorder.Color != null)
+                    nb.RightBorderColor = b.RightBorder.Color.ToClosedXMLColor(_colorList).Key;
             }
 
             if (b.TopBorder != null)
             {
                 if (b.TopBorder.Style != null)
                     nb.TopBorder = b.TopBorder.Style.Value.ToClosedXml();
-                var bColor = GetColor(b.TopBorder.Color);
-                if (bColor.HasValue)
-                    nb.TopBorderColor = bColor.Key;
+                if (b.TopBorder.Color != null)
+                    nb.TopBorderColor = b.TopBorder.Color.ToClosedXMLColor(_colorList).Key;
             }
 
             if (b.BottomBorder != null)
             {
                 if (b.BottomBorder.Style != null)
                     nb.BottomBorder = b.BottomBorder.Style.Value.ToClosedXml();
-                var bColor = GetColor(b.BottomBorder.Color);
-                if (bColor.HasValue)
-                    nb.BottomBorderColor = bColor.Key;
+                if (b.BottomBorder.Color != null)
+                    nb.BottomBorderColor = b.BottomBorder.Color.ToClosedXMLColor(_colorList).Key;
             }
 
             return nb.Equals(xlBorder.Key);
@@ -4014,61 +4009,18 @@ namespace ClosedXML.Excel
                     break;
 
                 case XLFillPatternValues.Solid:
+
                     if (differentialFillFormat)
                     {
                         patternFill.AppendChild(new ForegroundColor { Auto = true });
-                        backgroundColor = new BackgroundColor();
-                        switch (fillInfo.Fill.BackgroundColor.ColorType)
-                        {
-                            case XLColorType.Color:
-                                backgroundColor.Rgb = fillInfo.Fill.BackgroundColor.Color.ToHex();
-                                break;
-
-                            case XLColorType.Indexed:
-                                // 64 is 'transparent' and should be ignored for differential formats
-                                if (fillInfo.Fill.BackgroundColor.Indexed != 64)
-                                    backgroundColor.Indexed = (UInt32)fillInfo.Fill.BackgroundColor.Indexed;
-                                break;
-
-                            case XLColorType.Theme:
-                                backgroundColor.Theme = (UInt32)fillInfo.Fill.BackgroundColor.ThemeColor;
-
-                                if (fillInfo.Fill.BackgroundColor.ThemeTint != 0)
-                                    backgroundColor.Tint = fillInfo.Fill.BackgroundColor.ThemeTint;
-
-                                break;
-                        }
-
+                        backgroundColor = new BackgroundColor().FromClosedXMLColor<BackgroundColor>(fillInfo.Fill.BackgroundColor, true);
                         if (backgroundColor.HasAttributes)
                             patternFill.AppendChild(backgroundColor);
                     }
                     else
                     {
                         // ClosedXML Background color to be populated into OpenXML fgColor
-                        foregroundColor = new ForegroundColor();
-                        switch (fillInfo.Fill.BackgroundColor.ColorType)
-                        {
-                            case XLColorType.Color:
-                                foregroundColor.Rgb = fillInfo.Fill.BackgroundColor.Color.ToHex();
-                                break;
-
-                            case XLColorType.Indexed:
-                                // 64 is 'transparent' and should be ignored for differential formats
-                                if (fillInfo.Fill.BackgroundColor.Indexed != 64)
-                                    foregroundColor.Indexed = (UInt32)fillInfo.Fill.BackgroundColor.Indexed;
-
-                                //foregroundColor.Indexed = (UInt32)fillInfo.Fill.BackgroundColor.Indexed;
-                                break;
-
-                            case XLColorType.Theme:
-                                foregroundColor.Theme = (UInt32)fillInfo.Fill.BackgroundColor.ThemeColor;
-
-                                if (fillInfo.Fill.BackgroundColor.ThemeTint != 0)
-                                    foregroundColor.Tint = fillInfo.Fill.BackgroundColor.ThemeTint;
-
-                                break;
-                        }
-
+                        foregroundColor = new ForegroundColor().FromClosedXMLColor<ForegroundColor>(fillInfo.Fill.BackgroundColor);
                         if (foregroundColor.HasAttributes)
                             patternFill.AppendChild(foregroundColor);
                     }
@@ -4076,49 +4028,11 @@ namespace ClosedXML.Excel
 
                 default:
 
-                    foregroundColor = new ForegroundColor();
-                    switch (fillInfo.Fill.PatternColor.ColorType)
-                    {
-                        case XLColorType.Color:
-                            foregroundColor.Rgb = fillInfo.Fill.PatternColor.Color.ToHex();
-                            break;
-
-                        case XLColorType.Indexed:
-                            foregroundColor.Indexed = (UInt32)fillInfo.Fill.PatternColor.Indexed;
-                            break;
-
-                        case XLColorType.Theme:
-                            foregroundColor.Theme = (UInt32)fillInfo.Fill.PatternColor.ThemeColor;
-
-                            if (fillInfo.Fill.PatternColor.ThemeTint != 0)
-                                foregroundColor.Tint = fillInfo.Fill.PatternColor.ThemeTint;
-
-                            break;
-                    }
-
+                    foregroundColor = new ForegroundColor().FromClosedXMLColor<ForegroundColor>(fillInfo.Fill.PatternColor);
                     if (foregroundColor.HasAttributes)
                         patternFill.AppendChild(foregroundColor);
 
-                    backgroundColor = new BackgroundColor();
-                    switch (fillInfo.Fill.BackgroundColor.ColorType)
-                    {
-                        case XLColorType.Color:
-                            backgroundColor.Rgb = fillInfo.Fill.BackgroundColor.Color.ToHex();
-                            break;
-
-                        case XLColorType.Indexed:
-                            backgroundColor.Indexed = (UInt32)fillInfo.Fill.BackgroundColor.Indexed;
-                            break;
-
-                        case XLColorType.Theme:
-                            backgroundColor.Theme = (UInt32)fillInfo.Fill.BackgroundColor.ThemeColor;
-
-                            if (fillInfo.Fill.BackgroundColor.ThemeTint != 0)
-                                backgroundColor.Tint = fillInfo.Fill.BackgroundColor.ThemeTint;
-
-                            break;
-                    }
-
+                    backgroundColor = new BackgroundColor().FromClosedXMLColor<BackgroundColor>(fillInfo.Fill.BackgroundColor);
                     if (backgroundColor.HasAttributes)
                         patternFill.AppendChild(backgroundColor);
 
@@ -4193,7 +4107,7 @@ namespace ClosedXML.Excel
             var fontSize = fontInfo.Font.FontSize != XLFontValue.Default.FontSize || ignoreMod
                 ? new FontSize { Val = fontInfo.Font.FontSize }
                 : null;
-            var color = fontInfo.Font.FontColor != XLFontValue.Default.FontColor || ignoreMod ? GetNewColor(fontInfo.Font.FontColor) : null;
+            var color = fontInfo.Font.FontColor != XLFontValue.Default.FontColor || ignoreMod ? new Color().FromClosedXMLColor<Color>(fontInfo.Font.FontColor) : null;
 
             var fontName = fontInfo.Font.FontName != XLFontValue.Default.FontName || ignoreMod
                 ? new FontName { Val = fontInfo.Font.FontName }
@@ -4232,38 +4146,6 @@ namespace ClosedXML.Excel
             return font;
         }
 
-        private static Color GetNewColor(XLColor xlColor)
-        {
-            var color = new Color();
-            if (xlColor.ColorType == XLColorType.Color)
-                color.Rgb = xlColor.Color.ToHex();
-            else if (xlColor.ColorType == XLColorType.Indexed)
-                color.Indexed = (UInt32)xlColor.Indexed;
-            else
-            {
-                color.Theme = (UInt32)xlColor.ThemeColor;
-                if (xlColor.ThemeTint != 0)
-                    color.Tint = xlColor.ThemeTint;
-            }
-            return color;
-        }
-
-        private static TabColor GetTabColor(XLColor xlColor)
-        {
-            var color = new TabColor();
-            if (xlColor.ColorType == XLColorType.Color)
-                color.Rgb = xlColor.Color.ToHex();
-            else if (xlColor.ColorType == XLColorType.Indexed)
-                color.Indexed = (UInt32)xlColor.Indexed;
-            else
-            {
-                color.Theme = (UInt32)xlColor.ThemeColor;
-                if (xlColor.ThemeTint != 0)
-                    color.Tint = xlColor.ThemeTint;
-            }
-            return color;
-        }
-
         private bool FontsAreEqual(Font f, XLFontValue xlFont)
         {
             var nf = XLFontValue.Default.Key;
@@ -4286,9 +4168,8 @@ namespace ClosedXML.Excel
             nf.Shadow = f.Shadow != null;
             if (f.FontSize != null)
                 nf.FontSize = f.FontSize.Val;
-            var fColor = GetColor(f.Color);
-            if (fColor.HasValue)
-                nf.FontColor = fColor.Key;
+            if (f.Color != null)
+                nf.FontColor = f.Color.ToClosedXMLColor(_colorList).Key;
             if (f.FontName != null)
                 nf.FontName = f.FontName.Val;
             if (f.FontFamilyNumbering != null)
@@ -4389,7 +4270,7 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.SheetProperties = new SheetProperties();
 
             worksheetPart.Worksheet.SheetProperties.TabColor = xlWorksheet.TabColor.HasValue
-                ? GetTabColor(xlWorksheet.TabColor)
+                ? new TabColor().FromClosedXMLColor<TabColor>(xlWorksheet.TabColor)
                 : null;
 
             cm.SetElement(XLWorksheetContents.SheetProperties, worksheetPart.Worksheet.SheetProperties);
