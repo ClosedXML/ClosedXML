@@ -1506,21 +1506,10 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Boolean HasSparkline
-        {
-            get { return GetSparkline() != null; }
-        }
+        public Boolean HasSparkline => Sparkline != null;
 
-        /// <summary>
-        /// Get the sparkline assigned to the this cell
-        /// </summary>
-        /// <returns>The IXLSparkline applied to this cell or null if there is none.</returns>
-        private IXLSparkline GetSparkline()
-        {
-            return Worksheet
-                .SparklineGroups
-                .GetSparkline(this);
-        }
+        /// <summary> The sparkline assigned to the cell </summary>
+        public IXLSparkline Sparkline => Worksheet.SparklineGroups.GetSparkline(this);
 
         public Boolean HasDataValidation
         {

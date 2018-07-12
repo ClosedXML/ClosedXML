@@ -368,6 +368,9 @@ namespace ClosedXML.Excel
         IXLRow WorksheetRow();
 
         Boolean HasSparkline { get; }
+
+        IXLSparkline Sparkline { get; }
+
         Boolean HasDataValidation { get; }
 
         IXLConditionalFormat AddConditionalFormat();
