@@ -1475,7 +1475,7 @@ namespace ClosedXML.Excel
 
         public IXLCell CopyTo(IXLCell target)
         {
-            (target as XLCell).CopyFrom(this, true);
+            (target as XLCell).CopyFrom(this, XLCellCopyOptions.All);
             return target;
         }
 
@@ -1486,7 +1486,7 @@ namespace ClosedXML.Excel
 
         public IXLCell CopyFrom(IXLCell otherCell)
         {
-            return CopyFrom(otherCell as XLCell, true);
+            return CopyFrom(otherCell as XLCell, XLCellCopyOptions.All);
         }
 
         public IXLCell CopyFrom(String otherCell)
@@ -1970,7 +1970,7 @@ namespace ClosedXML.Excel
                     Worksheet.Cell(
                         _rowNumber + sourceCell.Address.RowNumber - minRow,
                         _columnNumber + sourceCell.Address.ColumnNumber - minColumn
-                        ).CopyFromInternal(sourceCell as XLCell, true);
+                        ).CopyFromInternal(sourceCell as XLCell, XLCellCopyOptions.All);
                 }
 
                 var rangesToMerge = (from mergedRange in (asRange.Worksheet).Internals.MergedRanges
@@ -1996,6 +1996,29 @@ namespace ClosedXML.Excel
             }
 
             return false;
+        }
+        private void CopyConditionalFormatsFrom(XLCell otherCell)
+        {
+            var conditionalFormats = otherCell
+                .Worksheet
+                .ConditionalFormats
+                .Where(c => c.Ranges.GetIntersectedRanges(otherCell).Any())
+                .ToList();
+
+            foreach (var cf in conditionalFormats)
+            {
+                if (otherCell.Worksheet == Worksheet)
+                {
+                    if (!cf.Ranges.GetIntersectedRanges(this).Any())
+                    {
+                        cf.Ranges.Add(this);
+                    }
+                }
+                else
+                {
+                    CopyConditionalFormatsFrom(otherCell.AsRange());
+                }
+            }
         }
 
         private void CopyConditionalFormatsFrom(XLRangeBase fromRange)
@@ -2393,25 +2416,22 @@ namespace ClosedXML.Excel
             return defaultWorksheet.Workbook.Worksheet(wsName).Cell(pair[1]);
         }
 
-        internal IXLCell CopyFromInternal(XLCell otherCell, Boolean copyDataValidations)
+        internal IXLCell CopyFromInternal(XLCell otherCell, XLCellCopyOptions options)
         {
-            CopyValuesFrom(otherCell);
-            CopySparklineFrom(otherCell);
+            if (options.HasFlag(XLCellCopyOptions.Values))
+                CopyValuesFrom(otherCell);
 
-            InnerStyle = otherCell.InnerStyle;
+            if (options.HasFlag(XLCellCopyOptions.Styles))
+                InnerStyle = otherCell.InnerStyle;
 
-            if (copyDataValidations)
-            {
-                var eventTracking = Worksheet.EventTrackingEnabled;
-                Worksheet.EventTrackingEnabled = false;
-                if (otherCell.HasDataValidation)
-                    CopyDataValidation(otherCell, otherCell.DataValidation);
-                else if (HasDataValidation)
-                {
-                    Worksheet.DataValidations.Delete(AsRange());
-                }
-                Worksheet.EventTrackingEnabled = eventTracking;
-            }
+            if (options.HasFlag(XLCellCopyOptions.Sparklines))
+                CopySparklineFrom(otherCell);
+
+            if (options.HasFlag(XLCellCopyOptions.ConditionalFormats))
+                CopyConditionalFormatsFrom(otherCell);
+
+            if (options.HasFlag(XLCellCopyOptions.DataValidations))
+                CopyDataValidationFrom(otherCell);
 
             return this;
         }
@@ -2450,42 +2470,25 @@ namespace ClosedXML.Excel
             group.Add(this, sourceData);
         }
 
-        public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)
-        {
-            return CopyFrom(otherCell, copyDataValidations, copyConditionalFormats: true);
-        }
-
-        public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations, bool copyConditionalFormats)
+        public IXLCell CopyFrom(IXLCell otherCell, XLCellCopyOptions options)
         {
             var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
 
-            CopyFromInternal(source, copyDataValidations);
-
-            if (copyConditionalFormats)
-            {
-                var conditionalFormats = source
-                    .Worksheet
-                    .ConditionalFormats
-                    .Where(c => c.Ranges.GetIntersectedRanges(source).Any())
-                    .ToList();
-
-                foreach (var cf in conditionalFormats)
-                {
-                    if (source.Worksheet == Worksheet)
-                    {
-                        if (!cf.Ranges.GetIntersectedRanges(this).Any())
-                        {
-                            cf.Ranges.Add(this);
-                        }
-                    }
-                    else
-                    {
-                        CopyConditionalFormatsFrom(source.AsRange());
-                    }
-                }
-            }
-
+            CopyFromInternal(source, options);
             return this;
+        }
+
+        private void CopyDataValidationFrom(XLCell otherCell)
+        {
+            var eventTracking = Worksheet.EventTrackingEnabled;
+            Worksheet.EventTrackingEnabled = false;
+            if (otherCell.HasDataValidation)
+                CopyDataValidation(otherCell, otherCell.DataValidation);
+            else if (HasDataValidation)
+            {
+                Worksheet.DataValidations.Delete(AsRange());
+            }
+            Worksheet.EventTrackingEnabled = eventTracking;
         }
 
         internal void CopyDataValidation(XLCell otherCell, IXLDataValidation otherDv)
