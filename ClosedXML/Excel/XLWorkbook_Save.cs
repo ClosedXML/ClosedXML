@@ -3405,7 +3405,7 @@ namespace ClosedXML.Excel
                 foreach (CellFormat f in workbookStylesPart.Stylesheet.CellFormats)
                 {
                     styleId++;
-                    if (CellFormatsAreEqual(f, ss.Value))
+                    if (CellFormatsAreEqual(f, ss.Value, compareAlignment: true))
                         break;
                 }
                 if (styleId == -1)
@@ -3572,7 +3572,7 @@ namespace ClosedXML.Excel
             {
                 var info = styleInfo;
                 var foundOne =
-                    workbookStylesPart.Stylesheet.CellFormats.Cast<CellFormat>().Any(f => CellFormatsAreEqual(f, info));
+                    workbookStylesPart.Stylesheet.CellFormats.Cast<CellFormat>().Any(f => CellFormatsAreEqual(f, info, compareAlignment: true));
 
                 if (foundOne) continue;
 
@@ -3611,7 +3611,7 @@ namespace ClosedXML.Excel
                 var info = styleInfo;
                 var foundOne =
                     workbookStylesPart.Stylesheet.CellStyleFormats.Cast<CellFormat>().Any(
-                        f => CellFormatsAreEqual(f, info));
+                        f => CellFormatsAreEqual(f, info, compareAlignment: false));
 
                 if (foundOne) continue;
 
@@ -3672,7 +3672,17 @@ namespace ClosedXML.Excel
             };
         }
 
-        private static bool CellFormatsAreEqual(CellFormat f, StyleInfo styleInfo)
+        /// <summary>
+        /// Check if two style are equivalent.
+        /// </summary>
+        /// <param name="f">Style in the OpenXML format.</param>
+        /// <param name="styleInfo">Style in the ClosedXML format.</param>
+        /// <param name="compareAlignment">Flag specifying whether or not compare the alignments of two styles.
+        /// Styles in x:cellStyleXfs section do not include alignment so we don't have to compare it in this case.
+        /// Styles in x:cellXfs section, on the opposite, do include alignments, and we must compare them.
+        /// </param>
+        /// <returns>True if two formats are equivalent, false otherwise.</returns>
+        private static bool CellFormatsAreEqual(CellFormat f, StyleInfo styleInfo, bool compareAlignment)
         {
             return
                 f.BorderId != null && styleInfo.BorderId == f.BorderId
@@ -3683,7 +3693,7 @@ namespace ClosedXML.Excel
                     f.ApplyFill != null && f.ApplyFill == ApplyFill(styleInfo))
                 && (f.ApplyBorder == null && styleInfo.Style.Border == XLBorderValue.Default ||
                     f.ApplyBorder != null && f.ApplyBorder == ApplyBorder(styleInfo))
-                && (f.Alignment == null || AlignmentsAreEqual(f.Alignment, styleInfo.Style.Alignment))
+                && (!compareAlignment || AlignmentsAreEqual(f.Alignment, styleInfo.Style.Alignment))
                 && ProtectionsAreEqual(f.Protection, styleInfo.Style.Protection)
                 ;
         }
