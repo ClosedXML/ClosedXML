@@ -490,5 +490,23 @@ namespace ClosedXML_Tests.Excel.Saving
                 }
             }
         }
+
+        [Test]
+        public void PreserveAlignmentOnSaving()
+        {
+            using (var input = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\HorizontalAlignment.xlsx")))
+            using (var output = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook(input))
+                {
+                    wb.SaveAs(output);
+                }
+
+                using (var wb = new XLWorkbook(output))
+                {
+                    Assert.AreEqual(XLAlignmentHorizontalValues.Center, wb.Worksheets.First().Cell("B1").Style.Alignment.Horizontal);
+                }
+            }
+        }
     }
 }
