@@ -545,9 +545,9 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
             Assert.AreEqual("B2", group1.First().Location.Address.ToString());
             Assert.AreEqual("G4:I4", group1.First().SourceData.RangeAddress.ToString());
-            Assert.AreEqual("E3", group2.First().Location.Address.ToString());
+            Assert.AreEqual("F3", group2.First().Location.Address.ToString());
             Assert.AreEqual("G4:G8", group2.First().SourceData.RangeAddress.ToString());
-            Assert.AreEqual("F4", group3.First().Location.Address.ToString());
+            Assert.AreEqual("G4", group3.First().Location.Address.ToString());
             Assert.AreEqual("A4:H4", group3.First().SourceData.RangeAddress.ToString());
         }
 
@@ -556,10 +556,10 @@ namespace ClosedXML_Tests.Excel.Sparklines
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
             var group1 = ws.SparklineGroups.Add("B2", "G4:I4");
-            var group2 = ws.SparklineGroups.Add("E3", "G4:G8");
-            var group3 = ws.SparklineGroups.Add("F4", "A4:H4");
+            var group2 = ws.SparklineGroups.Add("F3", "G4:G8");
+            var group3 = ws.SparklineGroups.Add("G4", "A4:H4");
 
-            ws.Columns(2, 4).Delete();
+            ws.Columns(3, 5).Delete();
 
             Assert.AreEqual("B2", group1.First().Location.Address.ToString());
             Assert.AreEqual("D4:F4", group1.First().SourceData.RangeAddress.ToString());

@@ -1117,6 +1117,7 @@ namespace ClosedXML.Excel
             MoveNamedRangesColumns(range, columnsShifted, Workbook.NamedRanges);
             ShiftConditionalFormattingColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
+            ShiftSparklineColumns(range, columnsShifted);
         }
 
         private void ShiftPageBreaksColumns(XLRange range, int columnsShifted)
@@ -1177,10 +1178,30 @@ namespace ClosedXML.Excel
             }
         }
 
-        // TODO: Sparklines
         private void ShiftSparklineColumns(XLRange range, int columnsShifted)
         {
-            throw new NotImplementedException();
+            var model = new XLRangeAddress(
+                range.RangeAddress.FirstAddress,
+                new XLAddress(range.RangeAddress.LastAddress.RowNumber, XLHelper.MaxColumnNumber, false, false));
+
+            var sparklines = SparklineGroups.SelectMany(g => g)
+                .Where(sl => model.Contains(sl.Location.Address))
+                .OrderByDescending(sl => sl.Location.Address.ColumnNumber * Math.Sign(columnsShifted))
+                .ToList();
+
+            foreach (var sparkline in sparklines)
+            {
+                var newAddress = new XLAddress(Worksheet,
+                    sparkline.Location.Address.RowNumber,
+                    sparkline.Location.Address.ColumnNumber + columnsShifted,
+                    sparkline.Location.Address.FixedRow,
+                    sparkline.Location.Address.FixedColumn);
+
+                if (newAddress.IsValid)
+                    sparkline.Location = Worksheet.Cell(newAddress);
+                else
+                    Worksheet.SparklineGroups.Remove(sparkline.Location);//TODO Add test for removing sparklines on shifting
+            }
         }
 
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
@@ -1204,6 +1225,7 @@ namespace ClosedXML.Excel
             Workbook.Worksheets.ForEach(ws => MoveNamedRangesRows(range, rowsShifted, ws.NamedRanges));
             MoveNamedRangesRows(range, rowsShifted, Workbook.NamedRanges);
             ShiftConditionalFormattingRows(range, rowsShifted);
+            ShiftSparklineRows(range, rowsShifted);
             ShiftPageBreaksRows(range, rowsShifted);
         }
 
@@ -1264,10 +1286,30 @@ namespace ClosedXML.Excel
             }
         }
 
-        // TODO: Sparklines
         private void ShiftSparklineRows(XLRange range, int rowsShifted)
         {
-            throw new NotImplementedException();
+            var model = new XLRangeAddress(
+                range.RangeAddress.FirstAddress,
+                new XLAddress(XLHelper.MaxRowNumber, range.RangeAddress.LastAddress.ColumnNumber, false, false));
+
+            var sparklines = SparklineGroups.SelectMany(g => g)
+                .Where(sl => model.Contains(sl.Location.Address))
+                .OrderByDescending(sl => sl.Location.Address.RowNumber * Math.Sign(rowsShifted))
+                .ToList();
+
+            foreach (var sparkline in sparklines)
+            {
+                var newAddress = new XLAddress(Worksheet,
+                    sparkline.Location.Address.RowNumber + rowsShifted,
+                    sparkline.Location.Address.ColumnNumber,
+                    sparkline.Location.Address.FixedRow,
+                    sparkline.Location.Address.FixedColumn);
+
+                if (newAddress.IsValid)
+                    sparkline.Location = Worksheet.Cell(newAddress);
+                else
+                    Worksheet.SparklineGroups.Remove(sparkline.Location);//TODO Add test for removing sparklines on shifting
+            }
         }
 
         private void MoveNamedRangesRows(XLRange range, int rowsShifted, IXLNamedRanges namedRanges)

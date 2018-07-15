@@ -1990,7 +1990,6 @@ namespace ClosedXML.Excel
                 rangesToMerge.ForEach(r => r.Merge(false));
 
                 CopyConditionalFormatsFrom(asRange);
-                CopySparklinesFrom(asRange);
 
                 return true;
             }
@@ -2054,20 +2053,6 @@ namespace ClosedXML.Excel
 
                 Worksheet.ConditionalFormats.Add(c);
             }
-        }
-
-        private void CopySparklinesFrom(XLRangeBase fromRange)
-        {
-            //TODO Implement
-            /*foreach (var sourceSparkline in fromRange.Worksheet.SparklineGroups.GetSparklines(fromRange))
-            {
-                var targetSparklineGroup = Worksheet.SparklineGroups.Find(sourceSparkline.SparklineGroup.Name);
-
-                if (targetSparklineGroup == null)
-                {
-                    targetSparklineGroup = sourceSparkline.SparklineGroup.CopyTo(Worksheet, sourceSparkline.SparklineGroup.Name);
-                }
-            }*/
         }
 
         private static IXLRangeBase Intersection(IXLRangeBase range, IXLRangeBase crop)

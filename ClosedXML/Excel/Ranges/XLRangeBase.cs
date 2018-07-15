@@ -1445,6 +1445,8 @@ namespace ClosedXML.Excel
 
             if (!RangeAddress.IsValid) return;
 
+            Worksheet.SparklineGroups.Remove(this);
+
             IXLRange shiftedRangeFormula = Worksheet.Range(
                 RangeAddress.FirstAddress.RowNumber,
                 RangeAddress.FirstAddress.ColumnNumber,
@@ -1500,7 +1502,6 @@ namespace ClosedXML.Excel
                     cellsToInsert.Add(newKey, newCell);
             }
 
-            cellsToDelete.ForEach(c => Worksheet.SparklineGroups.Remove(Worksheet.Cell(c)));
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(
                 c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
