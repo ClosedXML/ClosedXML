@@ -2381,13 +2381,13 @@ namespace ClosedXML.Excel
                     xlSparklineGroup.DateRange = Range(slg.Formula.Text);
 
                 var xlSparklineStyle = xlSparklineGroup.Style;
-                if (slg.FirstMarkerColor != null) xlSparklineStyle.FirstMarkerColor = ExtractColor(slg.FirstMarkerColor.Rgb.Value);
-                if (slg.LastMarkerColor != null) xlSparklineStyle.LastMarkerColor = ExtractColor(slg.LastMarkerColor.Rgb.Value);
-                if (slg.HighMarkerColor != null) xlSparklineStyle.HighMarkerColor = ExtractColor(slg.HighMarkerColor.Rgb.Value);
-                if (slg.LowMarkerColor != null) xlSparklineStyle.LowMarkerColor = ExtractColor(slg.LowMarkerColor.Rgb.Value);
-                if (slg.SeriesColor != null) xlSparklineStyle.SeriesColor = ExtractColor(slg.SeriesColor.Rgb.Value);
-                if (slg.NegativeColor != null) xlSparklineStyle.NegativeColor = ExtractColor(slg.NegativeColor.Rgb.Value);
-                if (slg.MarkersColor != null) xlSparklineStyle.MarkersColor = ExtractColor(slg.MarkersColor.Rgb.Value);
+                if (slg.FirstMarkerColor != null) xlSparklineStyle.FirstMarkerColor = GetColor(slg.FirstMarkerColor);
+                if (slg.LastMarkerColor != null) xlSparklineStyle.LastMarkerColor = GetColor(slg.LastMarkerColor);
+                if (slg.HighMarkerColor != null) xlSparklineStyle.HighMarkerColor = GetColor(slg.HighMarkerColor);
+                if (slg.LowMarkerColor != null) xlSparklineStyle.LowMarkerColor = GetColor(slg.LowMarkerColor);
+                if (slg.SeriesColor != null) xlSparklineStyle.SeriesColor = GetColor(slg.SeriesColor);
+                if (slg.NegativeColor != null) xlSparklineStyle.NegativeColor = GetColor(slg.NegativeColor);
+                if (slg.MarkersColor != null) xlSparklineStyle.MarkersColor = GetColor(slg.MarkersColor);
                 xlSparklineGroup.Style = xlSparklineStyle;
 
                 if (slg.DisplayHidden != null) xlSparklineGroup.DisplayHidden = slg.DisplayHidden;
@@ -2702,29 +2702,44 @@ namespace ClosedXML.Excel
 
         private XLColor GetColor(ColorType color)
         {
+            return color == null
+                ? XLColor.NoColor
+                : GetColor(color.Rgb, color.Indexed, color.Theme, color.Tint);
+        }
+
+        private XLColor GetColor(X14.ColorType color)
+        {
+            return color == null
+                ? XLColor.NoColor
+                : GetColor(color.Rgb, color.Indexed, color.Theme, color.Tint);
+
+        }
+
+        private XLColor GetColor(HexBinaryValue rgb, UInt32Value indexed, UInt32Value theme, DoubleValue tint)
+        {
             XLColor retVal = null;
-            if (color != null)
+            if (rgb != null)
             {
-                if (color.Rgb != null)
+                String htmlColor = "#" + rgb.Value;
+                Color thisColor;
+                if (!_colorList.ContainsKey(htmlColor))
                 {
-                    String htmlColor = "#" + color.Rgb.Value;
-                    Color thisColor;
-                    if (!_colorList.ContainsKey(htmlColor))
-                    {
-                        thisColor = ColorStringParser.ParseFromHtml(htmlColor);
-                        _colorList.Add(htmlColor, thisColor);
-                    }
-                    else
-                        thisColor = _colorList[htmlColor];
-                    retVal = XLColor.FromColor(thisColor);
+                    thisColor = ColorStringParser.ParseFromHtml(htmlColor);
+                    _colorList.Add(htmlColor, thisColor);
                 }
-                else if (color.Indexed != null && color.Indexed <= 64)
-                    retVal = XLColor.FromIndex((Int32)color.Indexed.Value);
-                else if (color.Theme != null)
-                {
-                    retVal = color.Tint != null ? XLColor.FromTheme((XLThemeColor)color.Theme.Value, color.Tint.Value) : XLColor.FromTheme((XLThemeColor)color.Theme.Value);
-                }
+                else
+                    thisColor = _colorList[htmlColor];
+                retVal = XLColor.FromColor(thisColor);
             }
+            else if (indexed != null && indexed <= 64)
+                retVal = XLColor.FromIndex((Int32)indexed.Value);
+            else if (theme != null)
+            {
+                retVal = tint != null
+                    ? XLColor.FromTheme((XLThemeColor)theme.Value, tint.Value)
+                    : XLColor.FromTheme((XLThemeColor)theme.Value);
+            }
+
             return retVal ?? XLColor.NoColor;
         }
 

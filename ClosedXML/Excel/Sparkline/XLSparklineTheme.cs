@@ -11,23 +11,23 @@ namespace ClosedXML.Excel
 
         public static IXLSparklineStyle Dark1 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Text1, 0.5),
-            NegativeColor = XLColor.FromTheme(XLThemeColor.Text1, 0.25),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Text1, 0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.25)
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Text1, 0.499984740745262),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893)
         };
         public static IXLSparklineStyle Dark2 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Text1, 0.4),
-            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.25),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Background1, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.25)
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Text1, 0.34998626667073579),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893)
         };
         public static IXLSparklineStyle Dark3 => new XLSparklineStyle
         {
@@ -143,61 +143,61 @@ namespace ClosedXML.Excel
         {
             SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent2),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent2 => new XLSparklineStyle
         {
             SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent3),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent3 => new XLSparklineStyle
         {
             SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent4),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent4 => new XLSparklineStyle
         {
             SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent5),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent5 => new XLSparklineStyle
         {
             SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent6),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent6 => new XLSparklineStyle
         {
             SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent1),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893)
         };
 
         #endregion Accent
@@ -206,63 +206,63 @@ namespace ClosedXML.Excel
 
         public static IXLSparklineStyle Accent1Darker25 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent2),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent2Darker25 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent3),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent3Darker25 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent4),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent4Darker25 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent5),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent5Darker25 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent6),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent6Darker25 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent1),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25)
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893)
         };
 
         #endregion Accent Darker 25%
@@ -271,63 +271,63 @@ namespace ClosedXML.Excel
 
         public static IXLSparklineStyle Accent1Darker50 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.5),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.499984740745262),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent2),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.5),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.499984740745262),
             HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1),
             LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.4),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.4)
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.39997558519241921)
         };
         public static IXLSparklineStyle Accent2Darker50 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.5),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.499984740745262),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent3),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.5),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.499984740745262),
             HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2),
             LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.4),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.4)
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.39997558519241921)
         };
         public static IXLSparklineStyle Accent3Darker50 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.5),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.499984740745262),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent4),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.5),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.499984740745262),
             HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3),
             LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.4),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.4)
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.39997558519241921)
         };
         public static IXLSparklineStyle Accent4Darker50 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.5),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.499984740745262),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent5),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.5),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.499984740745262),
             HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4),
             LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.4),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.4)
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.39997558519241921)
         };
         public static IXLSparklineStyle Accent5Darker50 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.5),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.499984740745262),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent6),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.5),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.499984740745262),
             HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5),
             LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.4),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.4)
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.39997558519241921)
         };
         public static IXLSparklineStyle Accent6Darker50 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.5),
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.499984740745262),
             NegativeColor = XLColor.FromTheme(XLThemeColor.Accent1),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.5),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.499984740745262),
             HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6),
             LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.4),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.4)
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.39997558519241921)
         };
 
         #endregion Accent Darker 50%
@@ -336,63 +336,63 @@ namespace ClosedXML.Excel
 
         public static IXLSparklineStyle Accent1Lighter40 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.4),
-            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.5),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.8),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.5),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.5),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.25)
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent2Lighter40 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.4),
-            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.5),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.8),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.5),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.5),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.25)
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent3Lighter40 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.4),
-            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.5),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.8),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.5),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.5),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.25)
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent4Lighter40 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.4),
-            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.5),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.8),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.5),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.5),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.25)
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent5Lighter40 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.4),
-            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.5),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.8),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.5),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.5),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.25)
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893)
         };
         public static IXLSparklineStyle Accent6Lighter40 => new XLSparklineStyle
         {
-            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.4),
-            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.5),
-            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.8),
-            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.5),
-            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.5),
-            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25),
-            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.25)
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893)
         };
 
         #endregion Accent Lighter 40%

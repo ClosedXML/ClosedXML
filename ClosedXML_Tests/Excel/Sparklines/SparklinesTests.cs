@@ -586,6 +586,71 @@ namespace ClosedXML_Tests.Excel.Sparklines
             }
         }
 
+        [Test]
+        public void CanLoadSparklines()
+        {
+            using (var ms = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx")))
+            using (var wb = new XLWorkbook(ms))
+            {
+                Assert.IsTrue(wb.Worksheets.All(ws => ws.SparklineGroups.Count() == 6));
+            }
+        }
+
+        [TestCase("Accent!B1", nameof(XLSparklineTheme.Accent1))]
+        [TestCase("Accent!B2", nameof(XLSparklineTheme.Accent2))]
+        [TestCase("Accent!B3", nameof(XLSparklineTheme.Accent3))]
+        [TestCase("Accent!B4", nameof(XLSparklineTheme.Accent4))]
+        [TestCase("Accent!B5", nameof(XLSparklineTheme.Accent5))]
+        [TestCase("Accent!B6", nameof(XLSparklineTheme.Accent6))]
+        [TestCase("'Accent Darker 25%'!B1", nameof(XLSparklineTheme.Accent1Darker25))]
+        [TestCase("'Accent Darker 25%'!B2", nameof(XLSparklineTheme.Accent2Darker25))]
+        [TestCase("'Accent Darker 25%'!B3", nameof(XLSparklineTheme.Accent3Darker25))]
+        [TestCase("'Accent Darker 25%'!B4", nameof(XLSparklineTheme.Accent4Darker25))]
+        [TestCase("'Accent Darker 25%'!B5", nameof(XLSparklineTheme.Accent5Darker25))]
+        [TestCase("'Accent Darker 25%'!B6", nameof(XLSparklineTheme.Accent6Darker25))]
+        [TestCase("'Accent Darker 50%'!B1", nameof(XLSparklineTheme.Accent1Darker50))]
+        [TestCase("'Accent Darker 50%'!B2", nameof(XLSparklineTheme.Accent2Darker50))]
+        [TestCase("'Accent Darker 50%'!B3", nameof(XLSparklineTheme.Accent3Darker50))]
+        [TestCase("'Accent Darker 50%'!B4", nameof(XLSparklineTheme.Accent4Darker50))]
+        [TestCase("'Accent Darker 50%'!B5", nameof(XLSparklineTheme.Accent5Darker50))]
+        [TestCase("'Accent Darker 50%'!B6", nameof(XLSparklineTheme.Accent6Darker50))]
+        [TestCase("'Accent Lighter 40%'!B1", nameof(XLSparklineTheme.Accent1Lighter40))]
+        [TestCase("'Accent Lighter 40%'!B2", nameof(XLSparklineTheme.Accent2Lighter40))]
+        [TestCase("'Accent Lighter 40%'!B3", nameof(XLSparklineTheme.Accent3Lighter40))]
+        [TestCase("'Accent Lighter 40%'!B4", nameof(XLSparklineTheme.Accent4Lighter40))]
+        [TestCase("'Accent Lighter 40%'!B5", nameof(XLSparklineTheme.Accent5Lighter40))]
+        [TestCase("'Accent Lighter 40%'!B6", nameof(XLSparklineTheme.Accent6Lighter40))]
+        [TestCase("Dark!B1", nameof(XLSparklineTheme.Dark1))]
+        [TestCase("Dark!B2", nameof(XLSparklineTheme.Dark2))]
+        [TestCase("Dark!B3", nameof(XLSparklineTheme.Dark3))]
+        [TestCase("Dark!B4", nameof(XLSparklineTheme.Dark4))]
+        [TestCase("Dark!B5", nameof(XLSparklineTheme.Dark5))]
+        [TestCase("Dark!B6", nameof(XLSparklineTheme.Dark6))]
+        [TestCase("Colorful!B1", nameof(XLSparklineTheme.Colorful1))]
+        [TestCase("Colorful!B2", nameof(XLSparklineTheme.Colorful2))]
+        [TestCase("Colorful!B3", nameof(XLSparklineTheme.Colorful3))]
+        [TestCase("Colorful!B4", nameof(XLSparklineTheme.Colorful4))]
+        [TestCase("Colorful!B5", nameof(XLSparklineTheme.Colorful5))]
+        [TestCase("Colorful!B6", nameof(XLSparklineTheme.Colorful6))]
+        public void SparklineThemesAreIdenticalToExcel(string cellAddress, string expectedThemeName)
+        {
+            using (var ms = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx")))
+            using (var wb = new XLWorkbook(ms))
+            {
+                var expectedStyle = GetThemeByName(expectedThemeName);
+                var actualStyle = wb.Cell(cellAddress).Sparkline.SparklineGroup.Style;
+
+                Assert.AreEqual(expectedStyle, actualStyle);
+            }
+
+            IXLSparklineStyle GetThemeByName(string themeName)
+            {
+                var themes = typeof(XLSparklineTheme);
+                var prop = themes.GetProperty(themeName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                return prop.GetValue(null, null) as IXLSparklineStyle;
+            }
+        }
+
         #endregion Load and save sparkline groups
 
         #region Change sparkline groups
