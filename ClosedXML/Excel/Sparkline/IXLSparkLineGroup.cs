@@ -27,7 +27,8 @@ namespace ClosedXML.Excel
         FirstPoint,
         LastPoint,
         NegativePoints,
-        Markers
+        Markers,
+        All = HighPoint | LowPoint | FirstPoint | LastPoint | NegativePoints | Markers
     }
 
     public enum XLSparklineType

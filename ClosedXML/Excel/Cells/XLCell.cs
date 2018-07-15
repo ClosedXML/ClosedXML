@@ -2379,14 +2379,6 @@ namespace ClosedXML.Excel
                 Hyperlink = new XLHyperlink(source.Hyperlink);
                 SettingHyperlink = false;
             }
-
-            var sparkline = Worksheet.SparklineGroups.GetSparkline(this);
-
-            //TODO Implement
-            //if (sparkline != null)
-            //{
-            //    Worksheet.SparklineGroups.AddCopy(sparkline.SparklineGroup, this.Worksheet);
-            //}
         }
 
         private IXLCell GetTargetCell(String target, XLWorksheet defaultWorksheet)
@@ -2404,6 +2396,7 @@ namespace ClosedXML.Excel
         internal IXLCell CopyFromInternal(XLCell otherCell, Boolean copyDataValidations)
         {
             CopyValuesFrom(otherCell);
+            CopySparklineFrom(otherCell);
 
             InnerStyle = otherCell.InnerStyle;
 
@@ -2421,6 +2414,40 @@ namespace ClosedXML.Excel
             }
 
             return this;
+        }
+
+        private void CopySparklineFrom(XLCell otherCell)
+        {
+            if (!otherCell.HasSparkline) return;
+
+            var sourceDataAddress = otherCell.Sparkline.SourceData.RangeAddress.ToString();
+            var shiftedRangeAddress = GetFormulaA1(otherCell.GetFormulaR1C1(sourceDataAddress));
+            var sourceDataWorksheet = otherCell.Worksheet == otherCell.Sparkline.SourceData.Worksheet
+                ? Worksheet
+                : otherCell.Sparkline.SourceData.Worksheet;
+            var sourceData = sourceDataWorksheet.Range(shiftedRangeAddress);
+
+            IXLSparklineGroup group;
+            if (otherCell.Worksheet == Worksheet)
+            {
+                group = otherCell.Sparkline.SparklineGroup;
+            }
+            else
+            {
+                group = Worksheet.SparklineGroups.Add(new XLSparklineGroup(Worksheet, otherCell.Sparkline.SparklineGroup));
+                if (otherCell.Sparkline.SparklineGroup.DateRange != null)
+                {
+                    var dateRangeWorksheet =
+                        otherCell.Worksheet == otherCell.Sparkline.SparklineGroup.DateRange.Worksheet
+                            ? Worksheet
+                            : otherCell.Sparkline.SparklineGroup.DateRange.Worksheet;
+                    var dateRangeAddress = otherCell.Sparkline.SparklineGroup.DateRange.RangeAddress.ToString();
+                    var shiftedDateRangeAddress = GetFormulaA1(otherCell.GetFormulaR1C1(dateRangeAddress));
+                    group.SetDateRange(dateRangeWorksheet.Range(shiftedDateRangeAddress));
+                }
+            }
+
+            group.Add(this, sourceData);
         }
 
         public IXLCell CopyFrom(IXLCell otherCell, Boolean copyDataValidations)

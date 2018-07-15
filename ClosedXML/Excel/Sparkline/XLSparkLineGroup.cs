@@ -153,7 +153,9 @@ namespace ClosedXML.Excel
 
         public IEnumerable<IXLSparkline> Add(string locationRangeAddress, string sourceDataAddress)
         {
-            return Add(Worksheet.Range(locationRangeAddress), Worksheet.Range(sourceDataAddress));
+            var sourceDataRange = Worksheet.Workbook.Range(sourceDataAddress) ??
+                                  Worksheet.Range(sourceDataAddress);
+            return Add(Worksheet.Range(locationRangeAddress), sourceDataRange);
         }
 
         /// <summary>
@@ -162,7 +164,13 @@ namespace ClosedXML.Excel
         /// <param name="sparklineGroup">The sparkline group to copy from</param>
         public void CopyFrom(IXLSparklineGroup sparklineGroup)
         {
-            DateRange = sparklineGroup.DateRange; //TODO Use relative reference!
+            if (sparklineGroup.DateRange != null)
+            {
+                DateRange = sparklineGroup.DateRange.Worksheet == sparklineGroup.Worksheet
+                    ? Worksheet.Range(sparklineGroup.DateRange.RangeAddress.ToString())
+                    : sparklineGroup.DateRange;
+            }
+
             DisplayEmptyCellsAs = sparklineGroup.DisplayEmptyCellsAs;
             DisplayHidden = sparklineGroup.DisplayHidden;
             LineWeight = sparklineGroup.LineWeight;
@@ -182,9 +190,19 @@ namespace ClosedXML.Excel
         {
             if (targetSheet == Worksheet)
                 throw new InvalidOperationException(
-                    "Cannot copy the sparkline group to the same worksheet it belong to");
+                    "Cannot copy the sparkline group to the same worksheet it belongs to");
 
-            return targetSheet.SparklineGroups.Add(new XLSparklineGroup(targetSheet, this));
+            var copy = targetSheet.SparklineGroups.Add(new XLSparklineGroup(targetSheet, this));
+            foreach (var sparkline in _sparklines.Values)
+            {
+                var location = targetSheet.Cell(((XLAddress)sparkline.Location.Address).WithoutWorksheet());
+                var sourceData = sparkline.SourceData.Worksheet == Worksheet
+                    ? targetSheet.Range(sparkline.SourceData.RangeAddress.ToString())
+                    : sparkline.SourceData;
+
+                copy.Add(location, sourceData);
+            }
+            return copy;
         }
 
         public IEnumerator<IXLSparkline> GetEnumerator()

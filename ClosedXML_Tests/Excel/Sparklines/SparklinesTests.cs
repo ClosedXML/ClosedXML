@@ -232,6 +232,18 @@ namespace ClosedXML_Tests.Excel.Sparklines
             Assert.AreEqual("B2:E2", ws.SparklineGroups.Last().Single().SourceData.RangeAddress.ToString());
         }
 
+        [Test]
+        public void CanAddSparklineReferringToDifferentWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet("Sheet 1");
+            var ws3 = wb.AddWorksheet("Sheet 3");
+
+            var group = ws1.SparklineGroups.Add("A1", "'Sheet 3'!B1:F1");
+
+            Assert.AreSame(ws3, group.Single().SourceData.Worksheet);
+        }
+
         #endregion Add sparklines
 
         #region Get sparklines
@@ -532,7 +544,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
             ws.Column(2).InsertColumnsAfter(3);
 
             Assert.AreEqual("B2", group1.First().Location.Address.ToString());
-            Assert.AreEqual("G4:I7", group1.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("G4:I4", group1.First().SourceData.RangeAddress.ToString());
             Assert.AreEqual("E3", group2.First().Location.Address.ToString());
             Assert.AreEqual("G4:G8", group2.First().SourceData.RangeAddress.ToString());
             Assert.AreEqual("F4", group3.First().Location.Address.ToString());
@@ -543,7 +555,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
         public void SparklinesShiftOnColumnDelete()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
-            var group1 = ws.SparklineGroups.Add("B2", "G4:I7");
+            var group1 = ws.SparklineGroups.Add("B2", "G4:I4");
             var group2 = ws.SparklineGroups.Add("E3", "G4:G8");
             var group3 = ws.SparklineGroups.Add("F4", "A4:H4");
 
@@ -905,7 +917,85 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
         #endregion Change sparkline groups
 
-        //TODO Add tests for cases when data sources and date ranges are on different worksheets from the location
+        #region Copy sparkline groups
+
+        [Test]
+        public void CopyCellToSameWorksheetCopiesSparkline()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            ws.SparklineGroups.Add("A1:A3", "B1:F3");
+            var target = ws.Cell("D4");
+
+            ws.Cell("A2").CopyTo(target);
+
+            Assert.AreEqual(1, ws.SparklineGroups.Count());
+            Assert.IsTrue(target.HasSparkline);
+            Assert.AreSame(ws.Cell("A2").Sparkline.SparklineGroup, target.Sparkline.SparklineGroup);
+            Assert.AreEqual("E4:I4", target.Sparkline.SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void CopyCellToDifferentWorksheetCopiesSparklineGroup()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet("Sheet 1");
+            var ws2 = wb.AddWorksheet("Sheet 2");
+            var ws3 = wb.AddWorksheet("Sheet 3");
+            ws1.SparklineGroups.Add("A1:A3", "B1:F3");
+            ws1.SparklineGroups.Add("A4:A6", "'Sheet 3'!B4:F6");
+            var target1 = ws2.Cell("D4");
+            var target2 = ws2.Cell("D5");
+
+            ws1.Cell("A2").CopyTo(target1);
+            ws1.Cell("A5").CopyTo(target2);
+
+            Assert.AreEqual(2, ws1.SparklineGroups.Count());
+            Assert.AreEqual(2, ws2.SparklineGroups.Count());
+            Assert.IsTrue(target1.HasSparkline);
+            Assert.IsTrue(target2.HasSparkline);
+            Assert.AreEqual("'Sheet 2'!E4:I4", target1.Sparkline.SourceData.RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("'Sheet 3'!E5:I5", target2.Sparkline.SourceData.RangeAddress.ToString(XLReferenceStyle.A1, true));
+        }
+
+        [Test]
+        public void CopySparklineIfDateRangeOnSameWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet("Sheet 1");
+            var ws2 = wb.AddWorksheet("Sheet 2");
+            var group = ws1.SparklineGroups.Add("A1:A3", "B1:F3");
+            group.SetDateRange(ws1.Range("A4:E4"));
+            var target = ws2.Cell("D4");
+
+            ws1.Cell("A2").CopyTo(target);
+
+            Assert.AreEqual(1, ws1.SparklineGroups.Count());
+            Assert.AreEqual(1, ws2.SparklineGroups.Count());
+            Assert.IsTrue(target.HasSparkline);
+            Assert.AreEqual("'Sheet 2'!D6:H6", target.Sparkline.SparklineGroup.DateRange.RangeAddress.ToString(XLReferenceStyle.A1, true));
+        }
+
+        [Test]
+        public void CopySparklineIfDateRangeSourceOnDifferentWorksheet()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet("Sheet 1");
+            var ws2 = wb.AddWorksheet("Sheet 2");
+            var ws3 = wb.AddWorksheet("Sheet 3");
+            var group = ws1.SparklineGroups.Add("A1:A3", "B1:F3");
+            group.SetDateRange(ws3.Range("A4:E4"));
+            var target = ws2.Cell("D4");
+
+            ws1.Cell("A2").CopyTo(target);
+
+            Assert.AreEqual(1, ws1.SparklineGroups.Count());
+            Assert.AreEqual(1, ws2.SparklineGroups.Count());
+            Assert.IsTrue(target.HasSparkline);
+            Assert.AreEqual("'Sheet 3'!D6:H6", target.Sparkline.SparklineGroup.DateRange.RangeAddress.ToString(XLReferenceStyle.A1, true));
+        }
+
+        #endregion Copy sparkline groups
+
         //TODO CanSaveAndLoadSparklineWithInvalidRange
     }
 }
