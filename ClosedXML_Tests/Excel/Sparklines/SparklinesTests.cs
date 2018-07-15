@@ -485,6 +485,106 @@ namespace ClosedXML_Tests.Excel.Sparklines
             Assert.Throws<ArgumentNullException>(action);
         }
 
+        [Test]
+        public void SparklinesShiftOnRowInsert()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group1 = ws.SparklineGroups.Add("B2", "D4:F4");
+            var group2 = ws.SparklineGroups.Add("B3", "D4:D8");
+            var group3 = ws.SparklineGroups.Add("B4", "E1:E8");
+
+            ws.Row(2).InsertRowsBelow(3);
+
+            Assert.AreEqual("B2", group1.First().Location.Address.ToString());
+            Assert.AreEqual("D7:F7", group1.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B6", group2.First().Location.Address.ToString());
+            Assert.AreEqual("D7:D11", group2.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B7", group3.First().Location.Address.ToString());
+            Assert.AreEqual("E1:E11", group3.First().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void SparklinesShiftOnRowDelete()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group1 = ws.SparklineGroups.Add("B2", "D7:F7");
+            var group2 = ws.SparklineGroups.Add("B6", "D7:D11");
+            var group3 = ws.SparklineGroups.Add("B7", "E1:E11");
+
+            ws.Rows(3, 5).Delete();
+
+            Assert.AreEqual("B2", group1.First().Location.Address.ToString());
+            Assert.AreEqual("D4:F4", group1.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B3", group2.First().Location.Address.ToString());
+            Assert.AreEqual("D4:D8", group2.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B4", group3.First().Location.Address.ToString());
+            Assert.AreEqual("E1:E8", group3.First().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void SparklinesShiftOnColumnInsert()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group1 = ws.SparklineGroups.Add("B2", "D4:F4");
+            var group2 = ws.SparklineGroups.Add("C3", "D4:D8");
+            var group3 = ws.SparklineGroups.Add("D4", "A4:E4");
+
+            ws.Column(2).InsertColumnsAfter(3);
+
+            Assert.AreEqual("B2", group1.First().Location.Address.ToString());
+            Assert.AreEqual("G4:I7", group1.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("E3", group2.First().Location.Address.ToString());
+            Assert.AreEqual("G4:G8", group2.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("F4", group3.First().Location.Address.ToString());
+            Assert.AreEqual("A4:H4", group3.First().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void SparklinesShiftOnColumnDelete()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group1 = ws.SparklineGroups.Add("B2", "G4:I7");
+            var group2 = ws.SparklineGroups.Add("E3", "G4:G8");
+            var group3 = ws.SparklineGroups.Add("F4", "A4:H4");
+
+            ws.Columns(2, 4).Delete();
+
+            Assert.AreEqual("B2", group1.First().Location.Address.ToString());
+            Assert.AreEqual("D4:F4", group1.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("C3", group2.First().Location.Address.ToString());
+            Assert.AreEqual("D4:D8", group2.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("D4", group3.First().Location.Address.ToString());
+            Assert.AreEqual("A4:E4", group3.First().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void SparklineRemovedOnCellRemoving()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1:B1", "C2:D6");
+
+            ws.Column(2).Delete();
+
+            Assert.AreEqual(1, group.Count());
+            Assert.AreEqual("A1", group.Single().Location.Address.ToString());
+            Assert.AreEqual("B2:B6", group.Single().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void SparklineRangeInvalidatedWhenDeleted()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1:B1", "C2:D6");
+
+            ws.Column(4).Delete();
+
+            Assert.AreEqual(2, group.Count());
+            Assert.AreEqual("A1", group.First().Location.Address.ToString());
+            Assert.AreEqual("C2:C6", group.First().SourceData.RangeAddress.ToString());
+            Assert.AreEqual("B1", group.Last().Location.Address.ToString());
+            Assert.IsFalse(group.Last().SourceData.RangeAddress.IsValid);
+        }
+
         #endregion Change sparklines
 
         #region Load and save sparkline groups
@@ -651,6 +751,56 @@ namespace ClosedXML_Tests.Excel.Sparklines
             }
         }
 
+        [Test]
+        public void DeletedSparklinesRemovedFromFile()
+        {
+            using (var input = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx")))
+            using (var output = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook(input))
+                {
+                    wb.Worksheet(1).SparklineGroups.RemoveAll();
+                    wb.Worksheet(2).SparklineGroups.Remove(wb.Worksheet(2).Cell("B1"));
+                    wb.Worksheet(3).SparklineGroups.Remove(wb.Worksheet(3).Range("B2:B6"));
+                    wb.Worksheet(4).SparklineGroups.Remove(wb.Worksheet(4).SparklineGroups.First());
+
+                    wb.SaveAs(output);
+                }
+
+                using (var wb = new XLWorkbook(output))
+                {
+                    Assert.AreEqual(0, wb.Worksheet(1).SparklineGroups.Count());
+                    Assert.AreEqual(5, wb.Worksheet(2).SparklineGroups.Count());
+                    Assert.AreEqual(1, wb.Worksheet(3).SparklineGroups.Count());
+                    Assert.AreEqual(5, wb.Worksheet(4).SparklineGroups.Count());
+                    Assert.AreEqual(6, wb.Worksheet(5).SparklineGroups.Count());
+                    Assert.AreEqual(6, wb.Worksheet(6).SparklineGroups.Count());
+                }
+            }
+        }
+
+        [Test]
+        public void EmptySparklineGroupsSkippedOnSaving()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet 1");
+                    var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+
+                    group.RemoveAll();
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual(0, wb.Worksheets.First().SparklineGroups.Count());
+                }
+            }
+        }
+
         #endregion Load and save sparkline groups
 
         #region Change sparkline groups
@@ -756,5 +906,6 @@ namespace ClosedXML_Tests.Excel.Sparklines
         #endregion Change sparkline groups
 
         //TODO Add tests for cases when data sources and date ranges are on different worksheets from the location
+        //TODO CanSaveAndLoadSparklineWithInvalidRange
     }
 }

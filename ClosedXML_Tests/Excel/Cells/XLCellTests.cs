@@ -53,6 +53,18 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CellUsedIncludesSparklines()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Range("C3:E4").Value = 1;
+            ws.SparklineGroups.Add("B2", "C3:E3");
+            ws.SparklineGroups.Add("F5", "C4:E4");
+
+            var range = ws.RangeUsed(true).RangeAddress.ToString();
+            Assert.AreEqual("B2:F5", range);
+        }
+
+        [Test]
         public void Double_Infinity_is_a_string()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -603,6 +615,21 @@ namespace ClosedXML_Tests
                     Assert.True(c.IsEmpty());
                 }
             }
+        }
+
+        [Test]
+        public void ClearCellRemovesSparkline()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.SparklineGroups.Add("B1:B3", "C1:E3");
+
+            ws.Cell("B1").Clear(XLClearOptions.All);
+            ws.Cell("B2").Clear(XLClearOptions.Sparklines);
+
+            Assert.AreEqual(1, ws.SparklineGroups.Single().Count());
+            Assert.IsFalse(ws.Cell("B1").HasSparkline);
+            Assert.IsFalse(ws.Cell("B2").HasSparkline);
+            Assert.IsTrue(ws.Cell("B3").HasSparkline);
         }
 
         [Test]
