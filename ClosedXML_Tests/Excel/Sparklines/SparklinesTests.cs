@@ -570,7 +570,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
         }
 
         [Test]
-        public void SparklineRemovedOnCellRemoving()
+        public void SparklineRemovedWhenColumnDeleted()
         {
             var ws = new XLWorkbook().AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1:B1", "C2:D6");
@@ -580,6 +580,41 @@ namespace ClosedXML_Tests.Excel.Sparklines
             Assert.AreEqual(1, group.Count());
             Assert.AreEqual("A1", group.Single().Location.Address.ToString());
             Assert.AreEqual("B2:B6", group.Single().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void SparklineRemovedWhenRowDeleted()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1:A2", "C3:F4");
+
+            ws.Row(2).Delete();
+
+            Assert.AreEqual(1, group.Count());
+            Assert.AreEqual("A1", group.Single().Location.Address.ToString());
+            Assert.AreEqual("C2:F2", group.Single().SourceData.RangeAddress.ToString());
+        }
+
+        [Test]
+        public void SparklineRemovedWhenShiftedTooFarRight()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("XFD1", "A1:Z1");
+
+            ws.Column(1).InsertColumnsBefore(1);
+
+            Assert.AreEqual(0, group.Count());
+        }
+
+        [Test]
+        public void SparklineRemovedWhenShiftedTooFarDown()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            var group = ws.SparklineGroups.Add("A1048576", "A1:Z1");
+
+            ws.Row(1).InsertRowsAbove(1);
+
+            Assert.AreEqual(0, group.Count());
         }
 
         [Test]

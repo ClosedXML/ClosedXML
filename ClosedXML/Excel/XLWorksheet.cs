@@ -1200,7 +1200,7 @@ namespace ClosedXML.Excel
                 if (newAddress.IsValid)
                     sparkline.Location = Worksheet.Cell(newAddress);
                 else
-                    Worksheet.SparklineGroups.Remove(sparkline.Location);//TODO Add test for removing sparklines on shifting
+                    Worksheet.SparklineGroups.Remove(sparkline.Location);
             }
         }
 
@@ -1308,7 +1308,7 @@ namespace ClosedXML.Excel
                 if (newAddress.IsValid)
                     sparkline.Location = Worksheet.Cell(newAddress);
                 else
-                    Worksheet.SparklineGroups.Remove(sparkline.Location);//TODO Add test for removing sparklines on shifting
+                    Worksheet.SparklineGroups.Remove(sparkline.Location);
             }
         }
 
