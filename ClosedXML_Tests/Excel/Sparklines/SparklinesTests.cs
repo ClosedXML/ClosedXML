@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ClosedXML.Excel;
+using ClosedXML_Examples.Sparklines;
+using NUnit.Framework;
+using System;
 using System.IO;
 using System.Linq;
-using System.Text;
-using ClosedXML.Excel;
-using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel.Sparklines
 {
@@ -298,7 +297,7 @@ namespace ClosedXML_Tests.Excel.Sparklines
 
             Assert.AreEqual(2, sparklines1.Count());
             Assert.AreEqual(0, sparklines2.Count());
-            Assert.AreEqual(99+25, sparklines3.Count());
+            Assert.AreEqual(99 + 25, sparklines3.Count());
             Assert.AreEqual(99, sparklines4.Count());
             Assert.AreEqual(25, sparklines5.Count());
 
@@ -687,7 +686,6 @@ namespace ClosedXML_Tests.Excel.Sparklines
                 }
             }
 
-
             void AssertGroupIsValid(IXLSparklineGroup group)
             {
                 Assert.AreEqual(3, group.Count());
@@ -1060,5 +1058,15 @@ namespace ClosedXML_Tests.Excel.Sparklines
         }
 
         #endregion Copy sparkline groups
+
+        #region Test Examples
+
+        [Test]
+        public void CreateSampleSparklines()
+        {
+            TestHelper.RunTestExample<SampleSparklines>(@"Sparklines\SampleSparklines.xlsx");
+        }
+
+        #endregion Test Examples
     }
 }

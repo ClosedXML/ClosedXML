@@ -1464,7 +1464,7 @@ namespace ClosedXML.Excel
                 else
                     cell.ShiftFormulaColumns((XLRange)shiftedRangeFormula, numberOfColumns * -1);
             }
-            
+
             // Range to shift...
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             //var cellsDataValidations = new Dictionary<XLAddress, DataValidationToCopy>();

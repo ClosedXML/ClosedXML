@@ -34,18 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Sparklines\AddingSparklines.cs" />
-    <Compile Remove="Sparklines\CopyingSparklines.cs" />
-    <Compile Remove="Sparklines\DeletingSparklines.cs" />
-    <Compile Remove="Sparklines\DeletingSparklinesHelp.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
-    <None Include="Sparklines\AddingSparklines.cs" />
-    <None Include="Sparklines\CopyingSparklines.cs" />
-    <None Include="Sparklines\DeletingSparklines.cs" />
-    <None Include="Sparklines\DeletingSparklinesHelp.cs" />
   </ItemGroup>
 
   <ItemGroup>

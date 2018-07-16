@@ -21,13 +21,13 @@ namespace ClosedXML.Excel
     [Flags]
     public enum XLSparklineMarkers
     {
-        None = 0,
-        HighPoint,
-        LowPoint,
-        FirstPoint,
-        LastPoint,
-        NegativePoints,
-        Markers,
+        None            = 0,
+        HighPoint       = 1 << 1,
+        LowPoint        = 1 << 2,
+        FirstPoint      = 1 << 3,
+        LastPoint       = 1 << 4,
+        NegativePoints  = 1 << 5,
+        Markers         = 1 << 6,
         All = HighPoint | LowPoint | FirstPoint | LastPoint | NegativePoints | Markers
     }
 
