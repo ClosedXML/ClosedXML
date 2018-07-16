@@ -144,11 +144,8 @@ namespace ClosedXML.Excel
             if (location.Worksheet != Worksheet)
                 throw new ArgumentException("The specified sparkline belongs to the different worksheet");
 
-            SparklineGroups.Remove(location);
-
             var sparkline = new XLSparkline(this, location, sourceData);
-            _sparklines.Add(location, sparkline);
-            return sparkline;
+            return Add(sparkline);
         }
 
         public IEnumerable<IXLSparkline> Add(string locationRangeAddress, string sourceDataAddress)
@@ -156,6 +153,21 @@ namespace ClosedXML.Excel
             var sourceDataRange = Worksheet.Workbook.Range(sourceDataAddress) ??
                                   Worksheet.Range(sourceDataAddress);
             return Add(Worksheet.Range(locationRangeAddress), sourceDataRange);
+        }
+
+        internal IXLSparkline Add(IXLSparkline sparkline)
+        {
+            if (sparkline.Location.Worksheet != Worksheet)
+                throw new ArgumentException("The specified sparkline belongs to the different worksheet");
+
+            SparklineGroups.Remove(sparkline.Location);
+
+            if (_sparklines.ContainsKey(sparkline.Location))
+                _sparklines.Remove(sparkline.Location);
+
+            _sparklines.Add(sparkline.Location, sparkline);
+
+            return sparkline;
         }
 
         /// <summary>

@@ -377,6 +377,9 @@ namespace ClosedXML_Tests.Excel.Sparklines
             Assert.AreEqual("F2", ws.SparklineGroups.Single().Last().Location.Address.ToString());
             Assert.AreEqual("B1:Z1", ws.SparklineGroups.Single().First().SourceData.RangeAddress.ToString());
             Assert.AreEqual("B2:Z2", ws.SparklineGroups.Single().Last().SourceData.RangeAddress.ToString());
+            Assert.IsTrue(ws.Cell("A1").HasSparkline);
+            Assert.IsFalse(ws.Cell("A2").HasSparkline);
+            Assert.IsTrue(ws.Cell("F2").HasSparkline);
         }
 
         [Test]

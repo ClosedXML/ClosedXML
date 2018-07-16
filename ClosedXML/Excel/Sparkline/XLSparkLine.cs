@@ -63,8 +63,11 @@ namespace ClosedXML.Excel
             if (cell.Worksheet != SparklineGroup.Worksheet)
                 throw new InvalidOperationException("Cannot move the sparkline to a different worksheet");
 
-            SparklineGroup.Worksheet.SparklineGroups.Remove(cell);
+            if (_location != null)
+                SparklineGroup.Remove(_location);
+
             _location = cell;
+            (SparklineGroup as XLSparklineGroup).Add(this);
             return this;
         }
 
