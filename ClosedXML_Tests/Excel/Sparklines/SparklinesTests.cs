@@ -848,6 +848,36 @@ namespace ClosedXML_Tests.Excel.Sparklines
             }
         }
 
+        [Test]
+        public void CanSaveAndLoadSparklineWithInvalidRange()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws1 = wb.AddWorksheet("Sheet 1");
+                    var ws2 = wb.AddWorksheet("Sheet 2");
+
+                    ws1.SparklineGroups.Add("A1:A3", "'Sheet 2'!B1:F3");
+                    ws1.SparklineGroups.Add("A4:A6", "B4:F6")
+                        .SetDateRange(ws2.Range("A1:E1"));
+
+                    ws2.Delete();
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.Single();
+
+                    Assert.AreEqual(2, ws.SparklineGroups.Count());
+                    Assert.IsFalse(ws.Cell("A2").Sparkline.SourceData.RangeAddress.IsValid);
+                    Assert.AreEqual("B5:F5", ws.Cell("A5").Sparkline.SourceData.RangeAddress.ToString());
+                    Assert.IsFalse(ws.Cell("A5").Sparkline.SparklineGroup.DateRange.RangeAddress.IsValid);
+                }
+            }
+        }
+
         #endregion Load and save sparkline groups
 
         #region Change sparkline groups
@@ -1030,7 +1060,5 @@ namespace ClosedXML_Tests.Excel.Sparklines
         }
 
         #endregion Copy sparkline groups
-
-        //TODO CanSaveAndLoadSparklineWithInvalidRange
     }
 }
