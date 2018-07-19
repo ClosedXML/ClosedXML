@@ -2068,7 +2068,9 @@ namespace ClosedXML.Excel
                 case XLPivotTableSourceType.Range:
                     worksheetSource.Name = null;
                     worksheetSource.Reference = source.RangeAddress.ToStringRelative(includeSheet: false);
-                    worksheetSource.Sheet = source.RangeAddress.Worksheet.Name.EscapeSheetName();
+
+                    // Do not quote worksheet name with whitespace here - issue #955
+                    worksheetSource.Sheet = source.RangeAddress.Worksheet.Name; 
                     break;
 
                 case XLPivotTableSourceType.Table:
