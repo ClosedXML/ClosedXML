@@ -367,6 +367,23 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void SetCellValueToEnum()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var dataType = XLDataType.Number;
+            ws.FirstCell().Value = dataType;
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
+
+            dataType = XLDataType.TimeSpan;
+            ws.FirstCell().SetValue(dataType);
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
+        }
+
+        [Test]
         public void ValueSetToEmptyString()
         {
             string expected = String.Empty;

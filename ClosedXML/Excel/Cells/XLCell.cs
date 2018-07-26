@@ -245,7 +245,7 @@ namespace ClosedXML.Excel
         {
             string parsedValue;
             bool parsed;
-            if (value is String && acceptString || value is char || value is Guid)
+            if (value is String && acceptString || value is char || value is Guid || value is Enum)
             {
                 parsedValue = value.ToInvariantString();
                 _dataType = XLDataType.Text;
@@ -281,7 +281,7 @@ namespace ClosedXML.Excel
                 {
                     parsedValue = value.ToString();
                     _dataType = XLDataType.Text;
-                    parsed = parsedValue.Length == 0;
+                    parsed = parsedValue.Length != 0;
                 }
                 else
                 {
@@ -292,10 +292,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                // Here we specifically don't use invariant string, as we want to use the current culture to convert to string
-                parsedValue = value.ToString();
-                _dataType = XLDataType.Text;
-                parsed = parsedValue.Length == 0;
+                parsed = false;
+                parsedValue = null;
             }
 
             return new Tuple<string, bool>(parsedValue, parsed);
@@ -303,7 +301,11 @@ namespace ClosedXML.Excel
 
         private string DeduceCellValueByParsing(string value, XLStyleValue style)
         {
-            if (value[0] == '\'')
+            if (String.IsNullOrEmpty(value))
+            {
+                _dataType = XLDataType.Text;
+            }
+            else if (value[0] == '\'')
             {
                 // If a user sets a cell value to a value starting with a single quote
                 // ensure the data type is text
@@ -2107,7 +2109,7 @@ namespace ClosedXML.Excel
             if (!parsed)
             {
                 // We'll have to parse it slowly :-(
-                parsedValue = DeduceCellValueByParsing(parsedValue.ToString(), style);
+                parsedValue = DeduceCellValueByParsing(value.ToString(), style);
             }
 
             if (SetTableHeaderValue(parsedValue)) return;
