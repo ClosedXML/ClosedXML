@@ -1,5 +1,6 @@
 using System;
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
@@ -47,7 +48,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void Degrees()
         {
             object actual1 = XLWorkbook.EvaluateExpr("Degrees(180)");
-            Assert.IsTrue(Math.PI - (double) actual1 < XLHelper.Epsilon);
+            Assert.IsTrue(Math.PI - (double)actual1 < XLHelper.Epsilon);
         }
 
         [Test]
@@ -185,17 +186,17 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             ws.Cell("A5").FormulaA1 = "MDeterm(A1:B2)";
             actual = ws.Cell("A5").Value;
 
-            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double)actual));
 
             ws.Cell("A6").FormulaA1 = "Sum(A5)";
             actual = ws.Cell("A6").Value;
 
-            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double)actual));
 
             ws.Cell("A7").FormulaA1 = "Sum(MDeterm(A1:B2))";
             actual = ws.Cell("A7").Value;
 
-            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(-2.0, (double)actual));
         }
 
         [Test]
@@ -212,17 +213,17 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             ws.Cell("A5").FormulaA1 = "MInverse(A1:C3)";
             actual = ws.Cell("A5").Value;
 
-            Assert.IsTrue(XLHelper.AreEqual(0.25, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
 
             ws.Cell("A6").FormulaA1 = "Sum(A5)";
             actual = ws.Cell("A6").Value;
 
-            Assert.IsTrue(XLHelper.AreEqual(0.25, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
 
             ws.Cell("A7").FormulaA1 = "Sum(MInverse(A1:C3))";
             actual = ws.Cell("A7").Value;
 
-            Assert.IsTrue(XLHelper.AreEqual(0.5, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.5, (double)actual));
         }
 
         [Test]
@@ -340,7 +341,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         public void Radians()
         {
             object actual = XLWorkbook.EvaluateExpr("Radians(270)");
-            Assert.IsTrue(Math.Abs(4.71238898038469 - (double) actual) < XLHelper.Epsilon);
+            Assert.IsTrue(Math.Abs(4.71238898038469 - (double)actual) < XLHelper.Epsilon);
         }
 
         [Test]
@@ -446,17 +447,17 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             ws.Cell("A6").FormulaA1 = "-1/FACT(6)";
 
             actual = ws.Evaluate("SERIESSUM(A2,0,2,A3:A6)");
-            Assert.IsTrue(Math.Abs(0.70710321482284566 - (double) actual) < XLHelper.Epsilon);
+            Assert.IsTrue(Math.Abs(0.70710321482284566 - (double)actual) < XLHelper.Epsilon);
         }
 
         [Test]
         public void SqrtPi()
         {
             object actual = XLWorkbook.EvaluateExpr("SqrtPi(1)");
-            Assert.IsTrue(Math.Abs(1.7724538509055159 - (double) actual) < XLHelper.Epsilon);
+            Assert.IsTrue(Math.Abs(1.7724538509055159 - (double)actual) < XLHelper.Epsilon);
 
             actual = XLWorkbook.EvaluateExpr("SqrtPi(2)");
-            Assert.IsTrue(Math.Abs(2.5066282746310002 - (double) actual) < XLHelper.Epsilon);
+            Assert.IsTrue(Math.Abs(2.5066282746310002 - (double)actual) < XLHelper.Epsilon);
         }
 
         [Test]
@@ -524,7 +525,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(7,2,3,""A"")");
-            Assert.IsTrue(Math.Abs(0.70710678118654757 - (double) actual) < XLHelper.Epsilon);
+            Assert.IsTrue(Math.Abs(0.70710678118654757 - (double)actual) < XLHelper.Epsilon);
         }
 
         [Test]
@@ -551,7 +552,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(10,2,3,""A"")");
-            Assert.IsTrue(Math.Abs(0.5 - (double) actual) < XLHelper.Epsilon);
+            Assert.IsTrue(Math.Abs(0.5 - (double)actual) < XLHelper.Epsilon);
         }
 
         [Test]
@@ -657,6 +658,132 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 value = wb.Evaluate("=IF(FALSE,,2)");
                 Assert.AreEqual(2, value);
             }
+        }
+
+        [Test]
+        public void NumberValue()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123.45\", \".\", \",\")");
+            Assert.AreEqual(123.45, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123,45\", \",\", \".\")");
+            Assert.AreEqual(123.45, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123.456.789,01\", \",\", \".\")");
+            Assert.AreEqual(123456789.01, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1,234.56\", \".\", \",\")");
+            Assert.AreEqual(1234.56, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1.234,56\", \",\", \".\")");
+            Assert.AreEqual(1234.56, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123.45\")");
+            Assert.AreEqual(123.45, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1,234.56\")");
+            Assert.AreEqual(1234.56, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"+1\")");
+            Assert.AreEqual(1, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"+1.23\")");
+            Assert.AreEqual(1.23, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"-1\")");
+            Assert.AreEqual(-1, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"-1.23\")");
+            Assert.AreEqual(-1.23, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\".1\")");
+            Assert.AreEqual(0.1, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1.234567890E+34\")");
+            Assert.AreEqual(1.234567890E+34, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\".99999999999999\")");
+            Assert.AreEqual(0.99999999999999, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"-.99999999999999\")");
+            Assert.AreEqual(-0.99999999999999, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1,23,4\")");
+            Assert.AreEqual(1234, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1,234,56\")");
+            Assert.AreEqual(123456, actual);
+        }
+
+        [Test]
+        public void NumberValueExceptions()
+        {
+            Object actual;
+
+            try
+            {
+                actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123.45\", \".\", \".\")");
+                Assert.Fail();
+            }
+            catch (CellValueException ex)
+            {
+                Assert.AreEqual("CurrencyDecimalSeparator and CurrencyGroupSeparator have to be different.", ex.Message);
+            }
+
+            try
+            {
+                XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1.234.56\")");
+                Assert.Fail();
+            }
+            catch (CellValueException ex)
+            {
+                Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            }
+
+            try
+            {
+                XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1.234,56\")");
+                Assert.Fail();
+            }
+            catch (CellValueException ex)
+            {
+                Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            }
+
+            try
+            {
+                XLWorkbook.EvaluateExpr("NUMBERVALUE(\"12;34\")");
+                Assert.Fail();
+            }
+            catch (CellValueException ex)
+            {
+                Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            }
+
+            //try
+            //{
+            //    XLWorkbook.EvaluateExpr("NUMBERVALUE(\"10/2\")"); //Excel returns 43141 - dont know why
+            //    Assert.Fail();
+            //}
+            //catch (CellValueException ex)
+            //{
+            //    Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            //}
+
+            //try
+            //{
+            //    XLWorkbook.EvaluateExpr("NUMBERVALUE(\"28.2.2011\")"); //Depends on local settings, only works with GroupSeparator
+            //    Assert.Fail();
+            //}
+            //catch (CellValueException ex)
+            //{
+            //    Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            //}
+
+            //try
+            //{
+            //    XLWorkbook.EvaluateExpr("NUMBERVALUE(\"10/2/2018\")"); //Excel returns 43141 - dont know why
+            //    Assert.Fail();
+            //}
+            //catch (CellValueException ex)
+            //{
+            //    Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            //}
+
         }
     }
 }
