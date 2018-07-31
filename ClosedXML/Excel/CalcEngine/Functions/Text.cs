@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using ExcelNumberFormat;
 using System;
 using System.Collections.Generic;
@@ -40,6 +40,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
             ce.RegisterFunction("VALUE", 1, Value); // Converts a text argument to a number
+            ce.RegisterFunction("NUMBERVALUE", 1, 3, NumberValue); // Converts a text argument to a number
         }
 
         private static object _Char(List<Expression> p)
@@ -291,6 +292,19 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Value(List<Expression> p)
         {
             return double.Parse((string)p[0], NumberStyles.Any, CultureInfo.InvariantCulture);
+        }
+
+        private static object NumberValue(List<Expression> p)
+        {
+            var numberFormatInfo = new NumberFormatInfo();
+
+            numberFormatInfo.NumberDecimalSeparator = p.Count > 1 ? p[1] : CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
+            numberFormatInfo.CurrencyDecimalSeparator = numberFormatInfo.NumberDecimalSeparator;
+
+            numberFormatInfo.NumberGroupSeparator = p.Count > 2 ? p[2] : CultureInfo.InvariantCulture.NumberFormat.NumberGroupSeparator;
+            numberFormatInfo.CurrencyGroupSeparator = numberFormatInfo.NumberGroupSeparator;
+
+            return double.Parse((string)p[0], NumberStyles.Any, numberFormatInfo);
         }
 
         private static object Asc(List<Expression> p)
