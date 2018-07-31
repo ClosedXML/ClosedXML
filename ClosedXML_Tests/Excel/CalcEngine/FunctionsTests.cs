@@ -658,5 +658,26 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(2, value);
             }
         }
+
+        [Test]
+        public void NumberValue()
+        {
+            Object actual;
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123.45\", \".\", \",\")");
+            Assert.AreEqual(123.45, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123,45\", \",\", \".\")");
+            Assert.AreEqual(123.45, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1,234.56\", \".\", \",\")");
+            Assert.AreEqual(1234.56, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1.234,56\", \",\", \".\")");
+            Assert.AreEqual(1234.56, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123.45\")");
+            Assert.AreEqual(123.45, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1,234.56\")");
+            Assert.AreEqual(1234.56, actual);
+        }
     }
 }
