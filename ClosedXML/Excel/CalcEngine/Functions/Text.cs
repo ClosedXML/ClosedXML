@@ -306,7 +306,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             if(numberFormatInfo.NumberDecimalSeparator == numberFormatInfo.NumberGroupSeparator)
             {
-                throw new ArgumentException("CurrencyDecimalSeparator and CurrencyGroupSeparator have to be different.");
+                throw new CellValueException("CurrencyDecimalSeparator and CurrencyGroupSeparator have to be different.");
             }
 
             try
@@ -315,7 +315,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
             catch (FormatException ex)
             {
-                throw new NumberFormatException(ex.Message, ex);
+                throw new CellValueException(ex.Message, ex);
             }
         }
 
