@@ -1,5 +1,6 @@
 using System;
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
@@ -668,6 +669,8 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(123.45, actual);
             actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123,45\", \",\", \".\")");
             Assert.AreEqual(123.45, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123.456.789,01\", \",\", \".\")");
+            Assert.AreEqual(123456789.01, actual);
 
             actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1,234.56\", \".\", \",\")");
             Assert.AreEqual(1234.56, actual);
@@ -678,6 +681,98 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(123.45, actual);
             actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1,234.56\")");
             Assert.AreEqual(1234.56, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"+1\")");
+            Assert.AreEqual(1, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"+1.23\")");
+            Assert.AreEqual(1.23, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"-1\")");
+            Assert.AreEqual(-1, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"-1.23\")");
+            Assert.AreEqual(-1.23, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\".1\")");
+            Assert.AreEqual(0.1, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1.234567890E+34\")");
+            Assert.AreEqual(1.234567890E+34, actual);
+
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\".99999999999999\")");
+            Assert.AreEqual(0.99999999999999, actual);
+            actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"-.99999999999999\")");
+            Assert.AreEqual(-0.99999999999999, actual);
+
+            try
+            {
+                actual = XLWorkbook.EvaluateExpr("NUMBERVALUE(\"123.45\", \".\", \".\")");
+                Assert.Fail();
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.AreEqual("CurrencyDecimalSeparator and CurrencyGroupSeparator have to be different.", ex.Message);
+            }
+
+            try
+            {
+                XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1.234.56\")");
+                Assert.Fail();
+            }
+            catch (NumberFormatException ex)
+            {
+                Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            }
+
+            try
+            {
+                XLWorkbook.EvaluateExpr("NUMBERVALUE(\"1.234,56\")");
+                Assert.Fail();
+            }
+            catch (CalcEngineException ex)
+            {
+                Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            }
+
+            try
+            {
+                XLWorkbook.EvaluateExpr("NUMBERVALUE(\"12;34\")");
+                Assert.Fail();
+            }
+            catch (NumberFormatException ex)
+            {
+                Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            }
+
+            try
+            {
+                XLWorkbook.EvaluateExpr("NUMBERVALUE(\"10/2\")");
+                Assert.Fail();
+            }
+            catch (NumberFormatException ex)
+            {
+                Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            }
+
+            try
+            {
+                XLWorkbook.EvaluateExpr("NUMBERVALUE(\"28.2.2011\")");
+                Assert.Fail();
+            }
+            catch (NumberFormatException ex)
+            {
+                Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            }
+
+            try
+            {
+                XLWorkbook.EvaluateExpr("NUMBERVALUE(\"10/2/2018\")");
+                Assert.Fail();
+            }
+            catch (NumberFormatException ex)
+            {
+                Assert.AreEqual("Input string was not in a correct format.", ex.Message);
+            }
+
         }
     }
 }

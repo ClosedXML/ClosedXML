@@ -28,6 +28,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("LEN", 1, Len); //, Returns the number of characters in a text string
             ce.RegisterFunction("LOWER", 1, Lower); //	Converts text to lowercase
             ce.RegisterFunction("MID", 3, Mid); // Returns a specific number of characters from a text string starting at the position you specify
+            ce.RegisterFunction("NUMBERVALUE", 1, 3, NumberValue); // Converts a text argument to a number
             //ce.RegisterFunction("PHONETIC	Extracts the phonetic (furigana) characters from a text string
             ce.RegisterFunction("PROPER", 1, Proper); // Capitalizes the first letter in each word of a text value
             ce.RegisterFunction("REPLACE", 4, Replace); // Replaces characters within text
@@ -40,7 +41,6 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
             ce.RegisterFunction("VALUE", 1, Value); // Converts a text argument to a number
-            ce.RegisterFunction("NUMBERVALUE", 1, 3, NumberValue); // Converts a text argument to a number
         }
 
         private static object _Char(List<Expression> p)
@@ -304,7 +304,19 @@ namespace ClosedXML.Excel.CalcEngine
             numberFormatInfo.NumberGroupSeparator = p.Count > 2 ? p[2] : CultureInfo.InvariantCulture.NumberFormat.NumberGroupSeparator;
             numberFormatInfo.CurrencyGroupSeparator = numberFormatInfo.NumberGroupSeparator;
 
-            return double.Parse((string)p[0], NumberStyles.Any, numberFormatInfo);
+            if(numberFormatInfo.NumberDecimalSeparator == numberFormatInfo.NumberGroupSeparator)
+            {
+                throw new ArgumentException("CurrencyDecimalSeparator and CurrencyGroupSeparator have to be different.");
+            }
+
+            try
+            {
+                return double.Parse((string)p[0], NumberStyles.Any, numberFormatInfo);
+            }
+            catch (FormatException ex)
+            {
+                throw new NumberFormatException(ex.Message, ex);
+            }
         }
 
         private static object Asc(List<Expression> p)
