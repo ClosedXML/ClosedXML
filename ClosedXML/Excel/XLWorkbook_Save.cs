@@ -2053,7 +2053,7 @@ namespace ClosedXML.Excel
                 case XLPivotTableSourceType.Range:
                     worksheetSource.Name = null;
                     worksheetSource.Reference = source.RangeAddress.ToStringRelative(includeSheet: false);
-                    worksheetSource.Sheet = source.RangeAddress.Worksheet.Name.EscapeSheetName();
+                    worksheetSource.Sheet = source.RangeAddress.Worksheet.Name;
                     break;
 
                 case XLPivotTableSourceType.Table:
