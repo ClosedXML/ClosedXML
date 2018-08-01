@@ -171,6 +171,8 @@ namespace ClosedXML.Excel
             get { return _name; }
             set
             {
+                if (_name == value) return;
+
                 if (String.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Worksheet names cannot be empty");
 

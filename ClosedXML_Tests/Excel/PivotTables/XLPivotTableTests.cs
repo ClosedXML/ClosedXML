@@ -276,6 +276,49 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void PivotTableWithNoneTheme()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\inputfile.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    wb.SaveAs(ms);
+                    return wb;
+                }, @"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\outputfile.xlsx");
+            }
+        }
+
+        [Test]
+        public void ClearPivotTableTenderedTange()
+        {
+            // https://github.com/ClosedXML/ClosedXML/pull/856
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\ClearPivotTableRenderedRangeWhenLoading\inputfile.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheet("Sheet1");
+                    Assert.IsTrue(ws.Cell("B1").IsEmpty());
+                    Assert.IsTrue(ws.Cell("C2").IsEmpty());
+                    Assert.IsTrue(ws.Cell("D5").IsEmpty());
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheet("Sheet1");
+                    Assert.IsTrue(ws.Cell("B1").IsEmpty());
+                    Assert.IsTrue(ws.Cell("C2").IsEmpty());
+                    Assert.IsTrue(ws.Cell("D5").IsEmpty());
+                }
+            }
+        }
+
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
         {
             field.SubtotalsAtTop = !withDefaults;

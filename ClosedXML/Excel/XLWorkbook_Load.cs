@@ -452,8 +452,9 @@ namespace ClosedXML.Excel
                         var pivotTableDefinition = pivotTablePart.PivotTableDefinition;
 
                         var target = ws.FirstCell();
-                        if (pivotTableDefinition.Location != null && pivotTableDefinition.Location.Reference != null && pivotTableDefinition.Location.Reference.HasValue)
+                        if (pivotTableDefinition?.Location?.Reference?.HasValue ?? false)
                         {
+                            ws.Range(pivotTableDefinition.Location.Reference.Value).Clear(XLClearOptions.All);
                             target = ws.Range(pivotTableDefinition.Location.Reference.Value).FirstCell();
                         }
 
@@ -584,11 +585,15 @@ namespace ClosedXML.Excel
                             var pivotTableStyle = pivotTableDefinition.GetFirstChild<PivotTableStyle>();
                             if (pivotTableStyle != null)
                             {
-                                pt.Theme = (XLPivotTableTheme)Enum.Parse(typeof(XLPivotTableTheme), pivotTableStyle.Name);
-                                pt.ShowRowHeaders = pivotTableStyle.ShowRowHeaders;
-                                pt.ShowColumnHeaders = pivotTableStyle.ShowColumnHeaders;
-                                pt.ShowRowStripes = pivotTableStyle.ShowRowStripes;
-                                pt.ShowColumnStripes = pivotTableStyle.ShowColumnStripes;
+                                if (pivotTableStyle.Name != null)
+                                    pt.Theme = (XLPivotTableTheme)Enum.Parse(typeof(XLPivotTableTheme), pivotTableStyle.Name);
+                                else
+                                    pt.Theme = XLPivotTableTheme.None;
+
+                                pt.ShowRowHeaders = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowRowHeaders, false);
+                                pt.ShowColumnHeaders = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowColumnHeaders, false);
+                                pt.ShowRowStripes = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowRowStripes, false);
+                                pt.ShowColumnStripes = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowColumnStripes, false);
                             }
 
                             // Subtotal configuration
@@ -701,12 +706,11 @@ namespace ClosedXML.Excel
                                         if (df.Subtotal != null) pivotValue = pivotValue.SetSummaryFormula(df.Subtotal.Value.ToClosedXml());
                                         if (df.ShowDataAs != null)
                                         {
-                                            var calculation = pivotValue.Calculation;
-                                            calculation = df.ShowDataAs.Value.ToClosedXml();
+                                            var calculation = df.ShowDataAs.Value.ToClosedXml();
                                             pivotValue = pivotValue.SetCalculation(calculation);
                                         }
 
-                                        if (df.BaseField != null)
+                                        if (df.BaseField?.Value != null)
                                         {
                                             var col = pt.SourceRange.Column(df.BaseField.Value + 1);
 
@@ -716,7 +720,13 @@ namespace ClosedXML.Excel
                                                         .Distinct().ToList();
 
                                             pivotValue.BaseField = col.FirstCell().GetValue<string>();
-                                            if (df.BaseItem != null) pivotValue.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                            
+                                            if (df.BaseItem?.Value != null)
+                                            {
+                                                var bi = (int)df.BaseItem.Value;
+                                                if (bi.Between(0, items.Count - 1))
+                                                    pivotValue.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                            }
                                         }
                                     }
                                 }

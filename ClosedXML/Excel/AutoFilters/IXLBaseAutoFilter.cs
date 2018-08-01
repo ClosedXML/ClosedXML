@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -26,5 +27,6 @@ namespace ClosedXML.Excel
         Boolean Sorted { get; set; }
         XLSortOrder SortOrder { get; set; }
         Int32 SortColumn { get; set; }
+        IEnumerable<IXLRangeRow> VisibleRows { get; }
     }
 }

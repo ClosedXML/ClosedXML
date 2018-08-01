@@ -53,6 +53,8 @@ namespace ClosedXML.Excel
             }
             set
             {
+                if (name == value) return;
+
                 if (table.ShowHeaderRow)
                     (table.HeadersRow(false).Cell(Index + 1) as XLCell).SetValue(value, false);
 
