@@ -1732,12 +1732,16 @@ namespace ClosedXML.Excel
                     {
                         if (openXMLFill.PatternFill.BackgroundColor != null)
                             closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor(_colorList);
+                        else
+                            closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
                     }
                     else
                     {
                         // yes, source is foreground!
                         if (openXMLFill.PatternFill.ForegroundColor != null)
                             closedXMLFill.BackgroundColor = openXMLFill.PatternFill.ForegroundColor.ToClosedXMLColor(_colorList);
+                        else
+                            closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
                     }
                     break;
 
@@ -1747,6 +1751,8 @@ namespace ClosedXML.Excel
 
                     if (openXMLFill.PatternFill.BackgroundColor != null)
                         closedXMLFill.BackgroundColor = openXMLFill.PatternFill.BackgroundColor.ToClosedXMLColor(_colorList);
+                    else
+                        closedXMLFill.BackgroundColor = XLColor.FromIndex(64);
                     break;
             }
         }
