@@ -188,6 +188,8 @@ namespace ClosedXML.Excel
                         _bitMatrix.Add(address.FirstAddress.RowNumber, null);
                     if (!_bitMatrix.ContainsKey(address.LastAddress.RowNumber))
                         _bitMatrix.Add(address.LastAddress.RowNumber, null);
+                    if (!_bitMatrix.ContainsKey(address.LastAddress.RowNumber + 1))
+                        _bitMatrix.Add(address.LastAddress.RowNumber + 1, null);
                 }
 
                 var keys = _bitMatrix.Keys.ToList();
