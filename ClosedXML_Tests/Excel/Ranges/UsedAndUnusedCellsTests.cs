@@ -211,5 +211,34 @@ namespace ClosedXML_Tests.Excel.Ranges
                 Assert.AreEqual("A2", actual.Address.ToString());
             }
         }
+
+        [Test]
+        public void ApplyingDataValidationMakesCellNotEmpty()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Range("B2:B12").SetDataValidation()
+                .Decimal.EqualOrGreaterThan(0);
+
+            var usedCells = ws.CellsUsed(includeFormats: true).ToList();
+
+            Assert.AreEqual(11, usedCells.Count);
+            Assert.AreEqual("B2", usedCells.First().Address.ToString());
+            Assert.AreEqual("B12", usedCells.Last().Address.ToString());
+        }
+
+        [Test]
+        public void MergeMakesCellNotEmpty()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            ws.Range("B2:B12").Merge();
+
+            var usedCells = ws.CellsUsed(includeFormats: true).ToList();
+
+            Assert.AreEqual(11, usedCells.Count);
+            Assert.AreEqual("B2", usedCells.First().Address.ToString());
+            Assert.AreEqual("B12", usedCells.Last().Address.ToString());
+        }
     }
 }
