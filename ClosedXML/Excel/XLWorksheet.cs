@@ -1537,7 +1537,8 @@ namespace ClosedXML.Excel
             if (usedCellsOnly)
                 return Cells(true, true);
             else
-                return Range(FirstCellUsed(), LastCellUsed()).Cells(false, true);
+                return Range(FirstCellUsed(includeFormats: true), LastCellUsed(includeFormats: true))
+                    .Cells(usedCellsOnly: false, includeFormats: true);
         }
 
         public new XLCell Cell(String cellAddressInRange)

@@ -24,15 +24,133 @@ namespace ClosedXML.Excel
         {
             _usedCellsOnly = usedCellsOnly;
             _includeFormats = includeFormats;
-            _predicate = predicate;
+
+            if (predicate == null)
+                _predicate = c => true;
+            else
+                _predicate = predicate;
         }
 
         #endregion Constructor
 
         #region IEnumerable<XLCell> Members
 
+        private IEnumerable<XLCell> GetAllCells()
+        {
+            var grouppedAddresses = _rangeAddresses.GroupBy(addr => addr.Worksheet);
+            foreach (var worksheetGroup in grouppedAddresses)
+            {
+                var ws = worksheetGroup.Key;
+                var sheetPoints = worksheetGroup.SelectMany(addr => GetAllCellsInRange(addr))
+                    .Distinct();
+                foreach (var sheetPoint in sheetPoints)
+                {
+                    var c = ws.Cell(sheetPoint.Row, sheetPoint.Column);
+                    if (_predicate(c))
+                        yield return c;
+                }
+            }
+        }
+
+        private IEnumerable<XLSheetPoint> GetAllCellsInRange(IXLRangeAddress rangeAddress)
+        {
+            if (!rangeAddress.IsValid)
+                yield break;
+
+            var normalizedAddress = ((XLRangeAddress)rangeAddress).Normalize();
+            var minRow = normalizedAddress.FirstAddress.RowNumber;
+            var maxRow = normalizedAddress.LastAddress.RowNumber;
+            var minColumn = normalizedAddress.FirstAddress.ColumnNumber;
+            var maxColumn = normalizedAddress.LastAddress.ColumnNumber;
+
+            for (var ro = minRow; ro <= maxRow; ro++)
+            {
+                for (var co = minColumn; co <= maxColumn; co++)
+                {
+                    yield return new XLSheetPoint(ro, co);
+                }
+            }
+        }
+
+        private IEnumerable<XLCell> GetUsedCells()
+        {
+            var grouppedAddresses = _rangeAddresses.GroupBy(addr => addr.Worksheet);
+            foreach (var worksheetGroup in grouppedAddresses)
+            {
+                var ws = worksheetGroup.Key;
+
+                var usedCellsCandidates = GetUsedCellsCandidates(ws).ToList();
+
+                var cells = worksheetGroup.SelectMany(addr => GetUsedCellsInRange(addr, ws, usedCellsCandidates))
+                    .OrderBy(cell => cell.Address.RowNumber)
+                    .ThenBy(cell => cell.Address.ColumnNumber);
+
+                var visitedCells = new HashSet<XLAddress>();
+                foreach (var cell in cells)
+                {
+                    if (visitedCells.Contains(cell.Address)) continue;
+
+                    visitedCells.Add(cell.Address);
+
+                    yield return cell;
+                }
+            }
+        }
+
+        private IEnumerable<XLCell> GetUsedCellsInRange(XLRangeAddress rangeAddress, XLWorksheet worksheet, List<XLSheetPoint> usedCellsCandidates)
+        {
+            if (!rangeAddress.IsValid)
+                yield break;
+
+            var normalizedAddress = ((XLRangeAddress)rangeAddress).Normalize();
+            var minRow = normalizedAddress.FirstAddress.RowNumber;
+            var maxRow = normalizedAddress.LastAddress.RowNumber;
+            var minColumn = normalizedAddress.FirstAddress.ColumnNumber;
+            var maxColumn = normalizedAddress.LastAddress.ColumnNumber;
+
+            var cellRange = worksheet.Internals.CellsCollection
+                .GetCells(minRow, minColumn, maxRow, maxColumn, _predicate)
+                .Where(c => !c.IsEmpty(_includeFormats));
+
+            foreach (var cell in cellRange)
+            {
+                if (_predicate(cell))
+                    yield return cell;
+            }
+
+            foreach (var sheetPoint in usedCellsCandidates)
+            {
+                if (sheetPoint.Row.Between(minRow, maxRow) &&
+                    sheetPoint.Column.Between(minColumn, maxColumn))
+                {
+                    var cell = worksheet.Cell(sheetPoint.Row, sheetPoint.Column);
+
+                    if (_predicate(cell))
+                        yield return cell;
+                }
+            }
+
+        }
+
+        private IEnumerable<XLSheetPoint> GetUsedCellsCandidates(XLWorksheet worksheet)
+        {
+            return
+                   worksheet.Internals.MergedRanges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))
+            .Union(worksheet.ConditionalFormats.SelectMany(cf => cf.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))))
+            .Union(worksheet.DataValidations.SelectMany(dv => dv.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))))
+            //TODO Do we need anything else?
+            .Distinct();
+        }
+
         public IEnumerator<XLCell> GetEnumerator()
         {
+            var cells = (_usedCellsOnly) ? GetUsedCells() : GetAllCells();
+            foreach (var cell in cells)
+            {
+                yield return cell;
+            }
+            yield break;
+            /*
             var cellsInRanges = new Dictionary<XLWorksheet, HashSet<XLSheetPoint>>();
             Boolean oneRange = _rangeAddresses.Count == 1;
             foreach (XLRangeAddress range in _rangeAddresses)
@@ -149,7 +267,7 @@ namespace ClosedXML.Excel
                         }
                     }
                 }
-            }
+            }*/
         }
 
         #endregion IEnumerable<XLCell> Members
@@ -249,18 +367,6 @@ namespace ClosedXML.Excel
         }
 
         //--
-
-        #region Nested type: MinMax
-
-        private struct MinMax
-        {
-            public Int32 MaxColumn;
-            public Int32 MaxRow;
-            public Int32 MinColumn;
-            public Int32 MinRow;
-        }
-
-        #endregion Nested type: MinMax
 
         public void Select()
         {
