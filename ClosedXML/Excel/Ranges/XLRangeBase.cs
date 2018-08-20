@@ -507,8 +507,8 @@ namespace ClosedXML.Excel
 
         public virtual Boolean IsEmpty(Boolean includeFormats)
         {
-            return !CellsUsed(includeFormats).Cast<XLCell>().Any() ||
-                   CellsUsed(includeFormats).Cast<XLCell>().Any(c => c.IsEmpty(includeFormats));
+            return //!CellsUsed(includeFormats).Cast<XLCell>().Any() ||
+                   CellsUsed(includeFormats).Cast<XLCell>().All(c => c.IsEmpty(includeFormats));
         }
 
         public virtual Boolean IsEntireRow()
@@ -583,6 +583,16 @@ namespace ClosedXML.Excel
 
         public XLCell FirstCellUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate)
         {
+            var cellsUsed = CellsUsed(includeFormats, predicate).ToList();
+
+            if (!cellsUsed.Any())
+                return null;
+
+            var firstRow = cellsUsed.Min(c => c.Address.RowNumber);
+            var firstColumn = cellsUsed.Min(c => c.Address.ColumnNumber);
+
+            return Worksheet.Cell(firstRow, firstColumn);
+            /*
             Int32 fRow = RangeAddress.FirstAddress.RowNumber;
             Int32 lRow = RangeAddress.LastAddress.RowNumber;
             Int32 fColumn = RangeAddress.FirstAddress.ColumnNumber;
@@ -653,7 +663,7 @@ namespace ClosedXML.Excel
             if (sp.Row > 0)
                 return Worksheet.Cell(sp.Row, sp.Column);
 
-            return null;
+            return null;*/
         }
 
         public XLCell LastCellUsed()
@@ -683,7 +693,17 @@ namespace ClosedXML.Excel
 
         public XLCell LastCellUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate)
         {
-            Int32 fRow = RangeAddress.FirstAddress.RowNumber;
+            var cellsUsed = CellsUsed(includeFormats, predicate).ToList();
+
+            if (!cellsUsed.Any())
+                return null;
+
+            var lastRow = cellsUsed.Max(c => c.Address.RowNumber);
+            var lastColumn = cellsUsed.Max(c => c.Address.ColumnNumber);
+
+            return Worksheet.Cell(lastRow, lastColumn);
+
+            /*Int32 fRow = RangeAddress.FirstAddress.RowNumber;
             Int32 lRow = RangeAddress.LastAddress.RowNumber;
             Int32 fColumn = RangeAddress.FirstAddress.ColumnNumber;
             Int32 lColumn = RangeAddress.LastAddress.ColumnNumber;
@@ -747,7 +767,7 @@ namespace ClosedXML.Excel
             if (sp.Row > 0)
                 return Worksheet.Cell(sp.Row, sp.Column);
 
-            return null;
+            return null;*/
         }
 
         public XLCell Cell(Int32 row, Int32 column)
