@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -140,11 +141,6 @@ namespace ClosedXML.Excel
 
         Object Evaluate(String expression);
 
-        /// <summary>
-        /// Force recalculation of all cell formulas.
-        /// </summary>
-        void RecalculateAllFormulas();
-
         IXLCells FindCells(Func<IXLCell, Boolean> predicate);
 
         IXLColumns FindColumns(Func<IXLColumn, Boolean> predicate);
@@ -168,6 +164,11 @@ namespace ClosedXML.Excel
         IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws);
 
         IXLRanges Ranges(String ranges);
+
+        /// <summary>
+        /// Force recalculation of all cell formulas.
+        /// </summary>
+        void RecalculateAllFormulas();
 
         /// <summary>
         ///   Saves the current workbook.
