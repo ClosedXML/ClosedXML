@@ -70,7 +70,21 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(String name)
         {
-            return _tables[name];
+            if (TryGetTable(name, out IXLTable table))
+                return table;
+
+            throw new ArgumentOutOfRangeException(nameof(name), $"Table {name} was not found.");
+        }
+
+        public bool TryGetTable(string tableName, out IXLTable table)
+        {
+            if (_tables.ContainsKey(tableName))
+            {
+                table = _tables[tableName];
+                return true;
+            }
+            table = null;
+            return false;
         }
 
         #endregion IXLTables Members

@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 
@@ -22,5 +23,7 @@ namespace ClosedXML.Excel
         IXLTable Table(Int32 index);
 
         IXLTable Table(String name);
+
+        Boolean TryGetTable(String tableName, out IXLTable table);
     }
 }

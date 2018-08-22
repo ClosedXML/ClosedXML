@@ -412,5 +412,16 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(25, picture.TopLeftCell.Address.RowNumber);
             }
         }
+
+        [Test]
+        public void PictureNotFound()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Picture("dummy"));
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Pictures.Delete("dummy"));
+            }
+        }
     }
 }

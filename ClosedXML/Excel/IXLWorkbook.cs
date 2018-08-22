@@ -223,6 +223,15 @@ namespace ClosedXML.Excel
 
         XLWorkbook SetUse1904DateSystem(Boolean value);
 
+        /// <summary>
+        /// Gets the Excel table of the given name
+        /// </summary>
+        /// <param name="tableName">Name of the table to return.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies how the strings will be compared.</param>
+        /// <returns>The table with given name</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If no tables with this name could be found in the workbook.</exception>
+        IXLTable Table(string tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase);
+
         Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet);
 
         void Unprotect();
