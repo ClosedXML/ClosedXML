@@ -1078,6 +1078,17 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void TableNotFound()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Table("dummy"));
+                Assert.Throws<ArgumentOutOfRangeException>(() => wb.Table("dummy"));
+            }
+        }
+
         private void AssertTablesAreEqual(IXLTable table1, IXLTable table2)
         {
             Assert.AreEqual(table1.RangeAddress.ToString(XLReferenceStyle.A1, false), table2.RangeAddress.ToString(XLReferenceStyle.A1, false));

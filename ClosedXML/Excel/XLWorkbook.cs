@@ -44,6 +44,7 @@ namespace ClosedXML.Excel
     public partial class XLWorkbook : IXLWorkbook
     {
         #region Static
+
         public static IXLStyle DefaultStyle
         {
             get
@@ -134,7 +135,7 @@ namespace ClosedXML.Excel
             RecalculationCounter++;
         }
 
-        #region  Nested Type : XLLoadSource
+        #region Nested Type : XLLoadSource
 
         private enum XLLoadSource
         {
@@ -143,7 +144,7 @@ namespace ClosedXML.Excel
             Stream
         };
 
-        #endregion Nested Type: XLLoadSource
+        #endregion Nested Type : XLLoadSource
 
         internal XLWorksheets WorksheetsInternal { get; private set; }
 
@@ -592,6 +593,18 @@ namespace ClosedXML.Excel
                 output.Write(buffer, 0, len);
             // dm 20130422, and flushing the output after write
             output.Flush();
+        }
+
+        public IXLTable Table(string tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+        {
+            var table = this.Worksheets
+                .SelectMany(ws => ws.Tables)
+                .FirstOrDefault(t => t.Name.Equals(tableName, comparisonType));
+
+            if (table == null)
+                throw new ArgumentOutOfRangeException($"Table {tableName} was not found.");
+
+            return table;
         }
 
         public IXLWorksheet Worksheet(String name)
