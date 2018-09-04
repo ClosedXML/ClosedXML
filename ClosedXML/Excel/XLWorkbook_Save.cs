@@ -2103,7 +2103,11 @@ namespace ClosedXML.Excel
                     .Union(pt.ReportFilters)
                     .FirstOrDefault(f => f.SourceName == columnName);
 
-                if (field != null)
+                if (field == null)
+                {
+                    xlpf.ShowBlankItems = true;
+                }
+                else
                 {
                     xlpf.CustomName = field.CustomName;
                     xlpf.SortType = field.SortType;
