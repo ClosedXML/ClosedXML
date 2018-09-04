@@ -358,7 +358,7 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        public void MaintainPivotTablePageFieldOrder()
+        public void MaintainPivotTableLabelsOrder()
         {
             var pastries = new List<Pastry>
             {
@@ -386,6 +386,7 @@ namespace ClosedXML_Tests
 
             using (var ms = new MemoryStream())
             {
+                // Page fields
                 using (var wb = new XLWorkbook())
                 {
                     var sheet = wb.Worksheets.Add("PastrySalesData");
@@ -423,6 +424,94 @@ namespace ClosedXML_Tests
 
                     Assert.AreEqual("Month", pageFields[0].SourceName);
                     Assert.AreEqual("Name", pageFields[1].SourceName);
+                }
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                // Column labels
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.Worksheets.Add("PastrySalesData");
+                    // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
+                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    sheet.Columns().AdjustToContents();
+
+                    IXLWorksheet ptSheet;
+                    IXLPivotTable pt;
+
+                    // Add a new sheet for our pivot table
+                    ptSheet = wb.Worksheets.Add("pvt");
+
+                    // Create the pivot table, using the data from the "PastrySalesData" table
+                    pt = ptSheet.PivotTables.Add("PastryPivot", ptSheet.Cell(1, 1), table);
+
+                    pt.ColumnLabels.Add("Month");
+                    pt.ColumnLabels.Add("Name");
+
+                    pt.RowLabels.Add("BakeDate");
+                    pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var columnLabels = wb.Worksheets.SelectMany(ws => ws.PivotTables)
+                        .First()
+                        .ColumnLabels
+                        .ToArray();
+
+                    Assert.AreEqual("Month", columnLabels[0].SourceName);
+                    Assert.AreEqual("Name", columnLabels[1].SourceName);
+                }
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                // Row labels
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.Worksheets.Add("PastrySalesData");
+                    // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
+                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    sheet.Columns().AdjustToContents();
+
+                    IXLWorksheet ptSheet;
+                    IXLPivotTable pt;
+
+                    // Add a new sheet for our pivot table
+                    ptSheet = wb.Worksheets.Add("pvt");
+
+                    // Create the pivot table, using the data from the "PastrySalesData" table
+                    pt = ptSheet.PivotTables.Add("PastryPivot", ptSheet.Cell(1, 1), table);
+
+                    pt.RowLabels.Add("Month");
+                    pt.RowLabels.Add("Name");
+                    pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                    pt.ColumnLabels.Add("BakeDate");
+                    pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var rowLabels = wb.Worksheets.SelectMany(ws => ws.PivotTables)
+                        .First()
+                        .RowLabels
+                        .ToArray();
+
+                    Assert.AreEqual("Month", rowLabels[0].SourceName);
+                    Assert.AreEqual("Name", rowLabels[1].SourceName);
+                    Assert.AreEqual("{{Values}}", rowLabels[2].SourceName);
                 }
             }
         }

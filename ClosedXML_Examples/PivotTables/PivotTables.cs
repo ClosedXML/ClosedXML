@@ -74,8 +74,8 @@ namespace ClosedXML_Examples
                     pt = ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table.AsRange());
 
                     // The rows in our pivot table will be the names of the pastries
-                    pt.RowLabels.Add("Name");
                     if (i == 2) pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                    pt.RowLabels.Add("Name");
 
                     // The columns will be the months
                     pt.ColumnLabels.Add("Month");

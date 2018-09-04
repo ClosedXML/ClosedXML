@@ -2070,7 +2070,7 @@ namespace ClosedXML.Excel
                     worksheetSource.Reference = source.RangeAddress.ToStringRelative(includeSheet: false);
 
                     // Do not quote worksheet name with whitespace here - issue #955
-                    worksheetSource.Sheet = source.RangeAddress.Worksheet.Name; 
+                    worksheetSource.Sheet = source.RangeAddress.Worksheet.Name;
                     break;
 
                 case XLPivotTableSourceType.Table:
@@ -2357,19 +2357,36 @@ namespace ClosedXML.Excel
             var pageFields = new PageFields { Count = (uint)pt.ReportFilters.Count() };
             var pivotFields = new PivotFields { Count = Convert.ToUInt32(pt.SourceRange.ColumnCount()) };
 
-            foreach (var xlpf in pt
-                .Fields
-                .Cast<XLPivotField>()
-                .OrderBy(f => pt.RowLabels.Any(p => p.SourceName == f.SourceName)
-                              ? pt.RowLabels.IndexOf(f)
-                              : Int32.MaxValue))
+            var orderedPageFields = new SortedDictionary<int, PageField>();
+            var orderedColumnLabels = new SortedDictionary<int, Field>();
+            var orderedRowLabels = new SortedDictionary<int, Field>();
+
+            // Add value fields first
+            if (pt.Values.Any())
+            {
+                if (pt.RowLabels.Contains(XLConstants.PivotTableValuesSentinalLabel))
+                {
+                    var f = pt.RowLabels.First(f1 => f1.SourceName == XLConstants.PivotTableValuesSentinalLabel);
+                    orderedRowLabels.Add(pt.RowLabels.IndexOf(f), new Field { Index = -2 });
+                    pivotTableDefinition.DataOnRows = true;
+                }
+                else if (pt.ColumnLabels.Contains(XLConstants.PivotTableValuesSentinalLabel))
+                {
+                    var f = pt.ColumnLabels.First(f1 => f1.SourceName == XLConstants.PivotTableValuesSentinalLabel);
+                    orderedColumnLabels.Add(pt.ColumnLabels.IndexOf(f), new Field { Index = -2 });
+                }
+            }
+
+            // TODO: improve performance as per https://github.com/ClosedXML/ClosedXML/pull/984#discussion_r217266491
+            foreach (var xlpf in pt.Fields)
             {
                 var ptfi = pti.Fields[xlpf.SourceName];
 
-                if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName))
+                if (pt.RowLabels.Contains(xlpf.SourceName))
                 {
+                    var rowLabelIndex = pt.RowLabels.IndexOf(xlpf);
                     var f = new Field { Index = pt.Fields.IndexOf(xlpf) };
-                    rowFields.AppendChild(f);
+                    orderedRowLabels.Add(rowLabelIndex, f);
 
                     if (ptfi.IsTotallyBlankField)
                         rowItems.AppendChild(new RowItem());
@@ -2387,10 +2404,11 @@ namespace ClosedXML.Excel
                     rowItemTotal.AppendChild(new MemberPropertyIndex());
                     rowItems.AppendChild(rowItemTotal);
                 }
-                else if (pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName))
+                else if (pt.ColumnLabels.Contains(xlpf.SourceName))
                 {
+                    var columnlabelIndex = pt.ColumnLabels.IndexOf(xlpf);
                     var f = new Field { Index = pt.Fields.IndexOf(xlpf) };
-                    columnFields.AppendChild(f);
+                    orderedColumnLabels.Add(columnlabelIndex, f);
 
                     if (ptfi.IsTotallyBlankField)
                         columnItems.AppendChild(new RowItem());
@@ -2410,21 +2428,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            if (pt.Values.Count() > 1)
-            {
-                // -2 is the sentinal value for "Values"
-                if (pt.ColumnLabels.Any(cl => cl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
-                    columnFields.AppendChild(new Field { Index = -2 });
-                else if (pt.RowLabels.Any(rl => rl.SourceName == XLConstants.PivotTableValuesSentinalLabel))
-                {
-                    pivotTableDefinition.DataOnRows = true;
-                    rowFields.AppendChild(new Field { Index = -2 });
-                }
-            }
-
-            var orderedPageFields = new SortedDictionary<int, PageField>();
-
-            foreach (var xlpf in pt.Fields.Cast<XLPivotField>())
+            foreach (var xlpf in pt.Fields)
             {
                 var ptfi = pti.Fields[xlpf.SourceName];
                 IXLPivotField labelOrFilterField = null;
@@ -2501,7 +2505,7 @@ namespace ClosedXML.Excel
                     var pageField = new PageField
                     {
                         Hierarchy = -1,
-                        Field = pt.Fields.IndexOf(xlpf),
+                        Field = pt.Fields.IndexOf(xlpf)
                     };
 
                     if (labelOrFilterField.SelectedValues.Count == 1)
@@ -2696,6 +2700,7 @@ namespace ClosedXML.Excel
 
             if (pt.RowLabels.Any())
             {
+                rowFields.Append(orderedRowLabels.Values);
                 rowFields.Count = Convert.ToUInt32(rowFields.Count());
                 pivotTableDefinition.AppendChild(rowFields);
             }
@@ -2721,8 +2726,9 @@ namespace ClosedXML.Excel
                 }
             }
 
-            if (columnFields.Any())
+            if (pt.ColumnLabels.Any())
             {
+                columnFields.Append(orderedColumnLabels.Values);
                 columnFields.Count = Convert.ToUInt32(columnFields.Count());
                 pivotTableDefinition.AppendChild(columnFields);
             }
