@@ -819,7 +819,7 @@ namespace ClosedXML.Excel
             if (pf.Outline != null) pivotField.Outline = pf.Outline.Value;
             if (pf.Compact != null) pivotField.Compact = pf.Compact.Value;
             if (pf.InsertBlankRow != null) pivotField.InsertBlankLines = pf.InsertBlankRow.Value;
-            if (pf.ShowAll != null) pivotField.ShowBlankItems = pf.ShowAll.Value;
+            pivotField.ShowBlankItems = OpenXmlHelper.GetBooleanValueAsBool(pf.ShowAll, true);
             if (pf.InsertPageBreak != null) pivotField.InsertPageBreaks = pf.InsertPageBreak.Value;
             if (pf.SubtotalTop != null) pivotField.SubtotalsAtTop = pf.SubtotalTop.Value;
             if (pf.AllDrilled != null) pivotField.Collapsed = !pf.AllDrilled.Value;
