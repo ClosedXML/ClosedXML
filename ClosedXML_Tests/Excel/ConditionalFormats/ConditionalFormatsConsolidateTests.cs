@@ -172,6 +172,27 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             Assert.AreEqual("A3=$D3", ws.ConditionalFormats.Single().Values.Single().Value.Value);
         }
 
+        [Test]
+        public void ColorScaleComparing()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet");
+
+                var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>();
+                var cf1 = new XLConditionalFormat(ranges);
+                cf1.ColorScale()
+                    .LowestValue(XLColor.Red)
+                    .HighestValue(XLColor.Green);
+
+                var cf2 = new XLConditionalFormat(ranges);
+                cf2.ColorScale()
+                    .LowestValue(XLColor.Red)
+                    .HighestValue(XLColor.Green);
+                Assert.True(XLConditionalFormat.NoRangeComparer.Equals(cf1, cf2));
+            }
+        }
+
         private static void SetFormat1(IXLConditionalFormat format)
         {
             format.WhenEquals("="+format.Range.FirstCell().CellRight(4).Address.ToStringRelative()).Fill.SetBackgroundColor(XLColor.Blue);
