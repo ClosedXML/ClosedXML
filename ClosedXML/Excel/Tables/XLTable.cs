@@ -848,7 +848,7 @@ namespace ClosedXML.Excel
             String tableName = Name;
             var newTable = (XLTable)targetSheet.Table(targetRange, tableName, true);
 
-            newTable.RelId = RelId;
+            newTable.RelId = null;
             newTable.EmphasizeFirstColumn = EmphasizeFirstColumn;
             newTable.EmphasizeLastColumn = EmphasizeLastColumn;
             newTable.ShowRowStripes = ShowRowStripes;

@@ -951,6 +951,53 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void NewTableHasNullRelId()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("Sheet1");
+                    ws.Cell("A1").Value = "Custom column 1";
+                    ws.Cell("B1").Value = "Custom column 2";
+                    ws.Cell("C1").Value = "Custom column 3";
+                    ws.Cell("A2").Value = "Value 1";
+                    ws.Cell("B2").Value = 123.45;
+                    ws.Cell("C2").Value = new DateTime(2018, 5, 10);
+                    var original = ws.Range("A1:C2").CreateTable("Attached table");
+
+                    Assert.AreEqual(1, ws.Tables.Count());
+                    Assert.IsNull((original as XLTable).RelId);
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.Add("Sheet2");
+                    var original = wb.Worksheets.First().Tables.First();
+
+                    Assert.IsNotNull((original as XLTable).RelId);
+
+                    var copy = original.CopyTo(ws);
+
+                    Assert.AreEqual(1, ws.Tables.Count());
+                    Assert.IsNull((copy as XLTable).RelId);
+
+                    AssertTablesAreEqual(original, copy);
+
+                    Assert.AreEqual("Sheet2!A1:C2", copy.RangeAddress.ToString(XLReferenceStyle.A1, true));
+                    Assert.AreEqual("Custom column 1", ws.Cell("A1").Value);
+                    Assert.AreEqual("Custom column 2", ws.Cell("B1").Value);
+                    Assert.AreEqual("Custom column 3", ws.Cell("C1").Value);
+                    Assert.AreEqual("Value 1", ws.Cell("A2").Value);
+                    Assert.AreEqual(123.45, (double)ws.Cell("B2").Value, XLHelper.Epsilon);
+                    Assert.AreEqual(new DateTime(2018, 5, 10), ws.Cell("C2").Value);
+                }
+            }
+        }
+
+        [Test]
         public void CopyTableWithoutData()
         {
             var wb = new XLWorkbook();
