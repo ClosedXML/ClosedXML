@@ -1056,6 +1056,28 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void CanCreateTableWithWhiteSpaceColumnHeaders()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                ws.Cell("A1").SetValue("Header");
+                ws.Cell("B1").SetValue(new string(' ', 1));
+                ws.Cell("C1").SetValue(new string(' ', 2));
+                ws.Cell("D1").SetValue(new string(' ', 3));
+
+                var table = ws.Range("A1:E3").CreateTable("Table1");
+
+                Assert.AreEqual("Header", table.Field(0).Name);
+                Assert.AreEqual(new string(' ', 1), table.Field(1).Name);
+                Assert.AreEqual(new string(' ', 2), table.Field(2).Name);
+                Assert.AreEqual(new string(' ', 3), table.Field(3).Name);
+                Assert.AreEqual("Column5", table.Field(4).Name);
+            }
+        }
+
         private void AssertTablesAreEqual(IXLTable table1, IXLTable table2)
         {
             Assert.AreEqual(table1.RangeAddress.ToString(XLReferenceStyle.A1, false), table2.RangeAddress.ToString(XLReferenceStyle.A1, false));
