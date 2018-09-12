@@ -85,7 +85,8 @@ namespace ClosedXML.Excel
                         continue;
                     }
 
-                    if (String.IsNullOrWhiteSpace(name))
+                    // Be careful here. Fields names may actually be whitespace, but not empty
+                    if (String.IsNullOrEmpty(name))
                     {
                         name = GetUniqueName("Column", cellPos + 1, true);
                         cell.SetValue(name);
@@ -564,7 +565,8 @@ namespace ClosedXML.Excel
             Int32 co = 1;
             foreach (IXLCell c in Row(1).Cells())
             {
-                if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                // Be careful here. Fields names may actually be whitespace, but not empty
+                if (String.IsNullOrEmpty(((XLCell)c).InnerText))
                     c.Value = GetUniqueName("Column", co, true);
                 _uniqueNames.Add(c.GetString());
                 co++;
