@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
 
                 if (_fieldNames == null)
                 {
-                    _fieldNames = new Dictionary<String, IXLTableField>();
+                    _fieldNames = new Dictionary<String, IXLTableField>(StringComparer.OrdinalIgnoreCase);
                     _lastRangeAddress = RangeAddress;
                     HeadersRow();
                 }
