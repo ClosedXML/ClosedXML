@@ -669,6 +669,12 @@ namespace ClosedXML_Tests.Excel
                 table1.Name = "table1";
                 Assert.AreEqual("table1", table1.Name);
 
+                table1.Name = "_table1";
+                Assert.AreEqual("_table1", table1.Name);
+
+                table1.Name = "\\table1";
+                Assert.AreEqual("\\table1", table1.Name);
+
                 Assert.Throws<ArgumentException>(() => table1.Name = "");
                 Assert.Throws<ArgumentException>(() => table1.Name = "R");
                 Assert.Throws<ArgumentException>(() => table1.Name = "C");

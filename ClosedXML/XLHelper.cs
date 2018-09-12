@@ -333,9 +333,10 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            if (newName[0] != '_' && !char.IsLetter(newName[0]))
+            var allowedFirstCharacters = new[] { '_', '\\' };
+            if (!allowedFirstCharacters.Contains(newName[0]) && !char.IsLetter(newName[0]))
             {
-                message = $"The {objectType} name '{newName}' does not begin with a letter or an underscore";
+                message = $"The {objectType} name '{newName}' does not begin with a letter, an underscore or a backslash.";
                 return false;
             }
 
