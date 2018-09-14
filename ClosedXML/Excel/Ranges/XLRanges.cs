@@ -168,7 +168,7 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells()
         {
-            var cells = new XLCells(false, false);
+            var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
             foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;
@@ -176,15 +176,24 @@ namespace ClosedXML.Excel
 
         public IXLCells CellsUsed()
         {
-            var cells = new XLCells(true, false);
+            var cells = new XLCells(true, XLCellsUsedOptions.AllContents);
             foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;
         }
 
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
+
         public IXLCells CellsUsed(Boolean includeFormats)
         {
-            var cells = new XLCells(true, includeFormats);
+            return CellsUsed(includeFormats
+                ? XLCellsUsedOptions.All
+                : XLCellsUsedOptions.AllContents);
+        }
+
+        public IXLCells CellsUsed(XLCellsUsedOptions options)
+        {
+            var cells = new XLCells(true, options);
             foreach (XLRange container in Ranges)
                 cells.Add(container.RangeAddress);
             return cells;

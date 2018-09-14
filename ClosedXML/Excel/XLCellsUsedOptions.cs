@@ -3,7 +3,7 @@
 namespace ClosedXML.Excel
 {
     [Flags]
-    public enum XLClearOptions
+    public enum XLCellsUsedOptions
     {
         Contents                = 1 << 0,
         DataType                = 1 << 1,
@@ -11,17 +11,18 @@ namespace ClosedXML.Excel
         ConditionalFormats      = 1 << 3,
         Comments                = 1 << 4,
         DataValidation          = 1 << 5,
+        MergedRanges            = 1 << 6,
 
         AllFormats = NormalFormats | ConditionalFormats,
         AllContents = Contents | DataType | Comments,
-        All = Contents | DataType | NormalFormats | ConditionalFormats | Comments | DataValidation
+        All = Contents | DataType | NormalFormats | ConditionalFormats | Comments | DataValidation | MergedRanges
     }
 
-    internal static class XLClearOptionsExtensions
+    internal static class XLCellsUsedOptionsExtensions
     {
-        public static XLCellsUsedOptions ToCellsUsedOptions(this XLClearOptions options)
+        public static XLClearOptions ToClearOptions(this XLCellsUsedOptions options)
         {
-            return (XLCellsUsedOptions)options;
+            return (XLClearOptions)options;
         }
     }
 }

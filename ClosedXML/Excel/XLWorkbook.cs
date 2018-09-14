@@ -624,10 +624,10 @@ namespace ClosedXML.Excel
 
         public IXLCells FindCells(Func<IXLCell, Boolean> predicate)
         {
-            var cells = new XLCells(false, false);
+            var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
             foreach (XLWorksheet ws in WorksheetsInternal)
             {
-                foreach (XLCell cell in ws.CellsUsed(true))
+                foreach (XLCell cell in ws.CellsUsed(XLCellsUsedOptions.All))
                 {
                     if (predicate(cell))
                         cells.Add(cell);

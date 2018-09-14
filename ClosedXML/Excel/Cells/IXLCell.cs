@@ -345,7 +345,10 @@ namespace ClosedXML.Excel
 
         Boolean IsEmpty();
 
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         Boolean IsEmpty(Boolean includeFormats);
+
+        Boolean IsEmpty(XLCellsUsedOptions options);
 
         IXLCell CellAbove();
 

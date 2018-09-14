@@ -133,59 +133,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal IEnumerable<XLCell> GetCellsUsed(Int32 rowStart, Int32 columnStart,
-                                    Int32 rowEnd, Int32 columnEnd,
-                                    Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
-        {
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-            for (int ro = rowStart; ro <= finalRow; ro++)
-            {
-                if (rowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
-                {
-                    for (int co = columnStart; co <= finalColumn; co++)
-                    {
-                        if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && !cell.IsEmpty(includeFormats)
-                            && (predicate == null || predicate(cell)))
-
-                            yield return cell;
-                    }
-                }
-            }
-        }
-
-        public XLSheetPoint FirstPointUsed(Int32 rowStart, Int32 columnStart,
-                                    Int32 rowEnd, Int32 columnEnd, Boolean includeFormats = false, Func<IXLCell, Boolean> predicate = null)
-        {
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-
-            var firstRow = FirstRowUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
-            if (firstRow == 0) return new XLSheetPoint(0, 0);
-
-            var firstColumn = FirstColumnUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
-            if (firstColumn == 0) return new XLSheetPoint(0, 0);
-
-            return new XLSheetPoint(firstRow, firstColumn);
-        }
-
-        public XLSheetPoint LastPointUsed(Int32 rowStart, Int32 columnStart,
-                            Int32 rowEnd, Int32 columnEnd, Boolean includeFormats = false, Func<IXLCell, Boolean> predicate = null)
-        {
-            int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
-            int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
-
-            var firstRow = LastRowUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
-            if (firstRow == 0) return new XLSheetPoint(0, 0);
-
-            var firstColumn = LastColumnUsed(rowStart, columnStart, finalRow, finalColumn, includeFormats, predicate);
-            if (firstColumn == 0) return new XLSheetPoint(0, 0);
-
-            return new XLSheetPoint(firstRow, firstColumn);
-        }
-
-        public int FirstRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats,
+        public int FirstRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
             Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
@@ -197,7 +145,7 @@ namespace ClosedXML.Excel
                     for (int co = columnStart; co <= finalColumn; co++)
                     {
                         if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && !cell.IsEmpty(includeFormats)
+                            && !cell.IsEmpty(options)
                             && (predicate == null || predicate(cell)))
 
                             return ro;
@@ -208,7 +156,8 @@ namespace ClosedXML.Excel
             return 0;
         }
 
-        public int FirstColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
+        public int FirstColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
+            Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -221,7 +170,7 @@ namespace ClosedXML.Excel
                     for (int co = columnStart; co <= firstColumnUsed; co++)
                     {
                         if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && !cell.IsEmpty(includeFormats)
+                            && !cell.IsEmpty(options)
                             && (predicate == null || predicate(cell))
                             && co <= firstColumnUsed)
                         {
@@ -236,7 +185,8 @@ namespace ClosedXML.Excel
             return found ? firstColumnUsed : 0;
         }
 
-        public int LastRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
+        public int LastRowUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
+            Func<IXLCell, Boolean> predicate = null)
         {
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
@@ -247,7 +197,7 @@ namespace ClosedXML.Excel
                     for (int co = finalColumn; co >= columnStart; co--)
                     {
                         if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && !cell.IsEmpty(includeFormats)
+                            && !cell.IsEmpty(options)
                             && (predicate == null || predicate(cell)))
 
                             return ro;
@@ -257,7 +207,8 @@ namespace ClosedXML.Excel
             return 0;
         }
 
-        public int LastColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, Boolean includeFormats, Func<IXLCell, Boolean> predicate = null)
+        public int LastColumnUsed(int rowStart, int columnStart, int rowEnd, int columnEnd, XLCellsUsedOptions options,
+            Func<IXLCell, Boolean> predicate = null)
         {
             int maxCo = 0;
             int finalRow = rowEnd > MaxRowUsed ? MaxRowUsed : rowEnd;
@@ -269,7 +220,7 @@ namespace ClosedXML.Excel
                     for (int co = finalColumn; co >= columnStart && co > maxCo; co--)
                     {
                         if (columnsCollection.TryGetValue(co, out XLCell cell)
-                            && !cell.IsEmpty(includeFormats)
+                            && !cell.IsEmpty(options)
                             && (predicate == null || predicate(cell)))
 
                             maxCo = co;

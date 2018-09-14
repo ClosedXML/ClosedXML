@@ -82,7 +82,7 @@ namespace ClosedXML.Excel
 
         public new IXLCells Cells(String cellsInColumn)
         {
-            var retVal = new XLCells(false, false);
+            var retVal = new XLCells(false, XLCellsUsedOptions.All);
             var rangePairs = cellsInColumn.Split(',');
             foreach (string pair in rangePairs)
                 retVal.Add(Range(pair.Trim()).RangeAddress);
@@ -91,13 +91,13 @@ namespace ClosedXML.Excel
 
         public new IXLCells Cells()
         {
-            return Cells(true, true);
+            return Cells(true, XLCellsUsedOptions.All);
         }
 
         public new IXLCells Cells(Boolean usedCellsOnly)
         {
             if (usedCellsOnly)
-                return Cells(true, true);
+                return Cells(true, XLCellsUsedOptions.All);
             else
                 return Cells(FirstCellUsed().Address.RowNumber, LastCellUsed().Address.RowNumber);
         }
@@ -510,9 +510,18 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         public IXLRangeColumn ColumnUsed(Boolean includeFormats = false)
         {
-            return Column(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
+            return ColumnUsed(includeFormats
+                ? XLCellsUsedOptions.All
+                : XLCellsUsedOptions.AllContents);
+        }
+
+        public IXLRangeColumn ColumnUsed(XLCellsUsedOptions options)
+        {
+            return Column((this as IXLRangeBase).FirstCellUsed(options),
+                          (this as IXLRangeBase).LastCellUsed(options));
         }
 
         #endregion IXLColumn Members
@@ -632,15 +641,16 @@ namespace ClosedXML.Excel
 
         public override Boolean IsEmpty()
         {
-            return IsEmpty(false);
+            return IsEmpty(XLCellsUsedOptions.AllContents);
         }
 
-        public override Boolean IsEmpty(Boolean includeFormats)
+        public override Boolean IsEmpty(XLCellsUsedOptions options)
         {
-            if (includeFormats && !StyleValue.Equals(Worksheet.StyleValue))
+            if (options.HasFlag(XLCellsUsedOptions.NormalFormats) &&
+                !StyleValue.Equals(Worksheet.StyleValue))
                 return false;
 
-            return base.IsEmpty(includeFormats);
+            return base.IsEmpty(options);
         }
 
         public override Boolean IsEntireRow()

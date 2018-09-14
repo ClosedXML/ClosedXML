@@ -175,6 +175,7 @@ namespace ClosedXML_Tests.Excel.Ranges
         }
 
         [Test]
+        [Ignore("Wait for proper merging (#1030)")]
         public void LastCellUsedPredicateConsidersMergedRanges()
         {
             using (XLWorkbook wb = new XLWorkbook())

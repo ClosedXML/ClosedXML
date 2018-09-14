@@ -2137,9 +2137,10 @@ namespace ClosedXML.Excel
                 var fieldValueCells = source.CellsUsed(cell => cell.Address.ColumnNumber == columnNumber
                                                            && cell.Address.RowNumber > source.FirstRow().RowNumber());
                 var types = fieldValueCells.Select(cell => cell.DataType).Distinct().ToArray();
-                var containsBlank = source.CellsUsed(true, cell => cell.Address.ColumnNumber == columnNumber
-                                                               && cell.Address.RowNumber > source.FirstRow().RowNumber()
-                                                               && cell.IsEmpty()).Any();
+                var containsBlank = source.CellsUsed(XLCellsUsedOptions.All,
+                    cell => cell.Address.ColumnNumber == columnNumber
+                            && cell.Address.RowNumber > source.FirstRow().RowNumber()
+                            && cell.IsEmpty()).Any();
 
                 // For a totally blank column, we need to check that all cells in column are unused
                 if (!fieldValueCells.Any())
@@ -4785,8 +4786,12 @@ namespace ClosedXML.Excel
                         var styleId = context.SharedStyles[xlCell.StyleValue.Key].StyleId;
                         var cellReference = (xlCell.Address).GetTrimmedAddress();
 
-                        // For saving cells to file, ignore conditional formatting. They just bloat the file
-                        var isEmpty = xlCell.IsEmpty(true, false);
+                        // For saving cells to file, ignore conditional formatting, data validation rules and merged
+                        // ranges. They just bloat the file
+                        var isEmpty = xlCell.IsEmpty(XLCellsUsedOptions.All
+                                                     & ~XLCellsUsedOptions.ConditionalFormats
+                                                     & ~XLCellsUsedOptions.DataValidation
+                                                     & ~XLCellsUsedOptions.MergedRanges);
 
                         Cell cell = null;
                         if (cellsByReference.ContainsKey(cellReference))
