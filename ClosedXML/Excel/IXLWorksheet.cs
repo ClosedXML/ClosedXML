@@ -60,8 +60,11 @@ namespace ClosedXML.Excel
         /// Gets the first row of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="includeFormats">If set to <c>true</c> formatted empty cells will count as used.</param>
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         IXLRow FirstRowUsed(Boolean includeFormats);
 
+        IXLRow FirstRowUsed(XLCellsUsedOptions options);
+        
         /// <summary>
         /// Gets the last row of the worksheet.
         /// </summary>
@@ -76,7 +79,10 @@ namespace ClosedXML.Excel
         /// Gets the last row of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="includeFormats">If set to <c>true</c> formatted empty cells will count as used.</param>
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         IXLRow LastRowUsed(Boolean includeFormats);
+
+        IXLRow LastRowUsed(XLCellsUsedOptions options);
 
         /// <summary>
         /// Gets the first column of the worksheet.
@@ -92,7 +98,10 @@ namespace ClosedXML.Excel
         /// Gets the first column of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="includeFormats">If set to <c>true</c> formatted empty cells will count as used.</param>
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         IXLColumn FirstColumnUsed(Boolean includeFormats);
+
+        IXLColumn FirstColumnUsed(XLCellsUsedOptions options);
 
         /// <summary>
         /// Gets the last column of the worksheet.
@@ -108,7 +117,10 @@ namespace ClosedXML.Excel
         /// Gets the last column of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="includeFormats">If set to <c>true</c> formatted empty cells will count as used.</param>
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         IXLColumn LastColumnUsed(Boolean includeFormats);
+
+        IXLColumn LastColumnUsed(XLCellsUsedOptions options);
 
         /// <summary>
         /// Gets a collection of all columns in this worksheet.
@@ -338,7 +350,10 @@ namespace ClosedXML.Excel
 
         IXLRange RangeUsed();
 
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         IXLRange RangeUsed(bool includeFormats);
+
+        IXLRange RangeUsed(XLCellsUsedOptions options);
 
         IXLDataValidations DataValidations { get; }
 
@@ -414,11 +429,17 @@ namespace ClosedXML.Excel
 
         IXLAutoFilter AutoFilter { get; }
 
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         IXLRows RowsUsed(Boolean includeFormats = false, Func<IXLRow, Boolean> predicate = null);
+
+        IXLRows RowsUsed(XLCellsUsedOptions options, Func<IXLRow, Boolean> predicate = null);
 
         IXLRows RowsUsed(Func<IXLRow, Boolean> predicate);
 
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         IXLColumns ColumnsUsed(Boolean includeFormats = false, Func<IXLColumn, Boolean> predicate = null);
+
+        IXLColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLColumn, Boolean> predicate = null);
 
         IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate);
 

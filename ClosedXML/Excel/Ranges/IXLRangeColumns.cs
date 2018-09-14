@@ -25,7 +25,10 @@ namespace ClosedXML.Excel
         /// Returns the collection of cells that have a value.
         /// </summary>
         /// <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         IXLCells CellsUsed(Boolean includeFormats);
+
+        IXLCells CellsUsed(XLCellsUsedOptions options);
 
         /// <summary>
         /// Deletes all columns and shifts the columns at the right of them accordingly.

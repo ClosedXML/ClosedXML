@@ -109,7 +109,7 @@ namespace ClosedXML_Tests
 
                 foreach (var c in ws.Range("A1:A3").Cells())
                 {
-                    Assert.IsTrue(c.IsEmpty());
+                    Assert.IsTrue(c.IsEmpty(XLCellsUsedOptions.Contents));
                     Assert.AreEqual(backgroundColor, c.Style.Fill.BackgroundColor);
                     Assert.AreEqual(foregroundColor, c.Style.Font.FontColor);
                     Assert.IsTrue(ws.ConditionalFormats.Any());

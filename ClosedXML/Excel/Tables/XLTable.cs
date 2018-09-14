@@ -641,7 +641,7 @@ namespace ClosedXML.Excel
                         RangeAddress.LastAddress.ColumnNumber);
                     var firstRow = asRange.FirstRow();
                     IXLRangeRow rangeRow;
-                    if (firstRow.IsEmpty(true))
+                    if (firstRow.IsEmpty(XLCellsUsedOptions.All))
                     {
                         rangeRow = firstRow;
                         RangeAddress = new XLRangeAddress(
@@ -745,14 +745,14 @@ namespace ClosedXML.Excel
             return columns;
         }
 
-        public override XLRangeColumns ColumnsUsed(bool includeFormats, Func<IXLRangeColumn, bool> predicate = null)
+        internal override XLRangeColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, bool> predicate = null)
         {
-            var columns = base.ColumnsUsed(includeFormats, predicate);
+            var columns = base.ColumnsUsed(options, predicate);
             columns.Cast<XLRangeColumn>().ForEach(column => column.Table = this);
             return columns;
         }
 
-        public override XLRangeColumns ColumnsUsed(Func<IXLRangeColumn, bool> predicate = null)
+        internal override XLRangeColumns ColumnsUsed(Func<IXLRangeColumn, bool> predicate = null)
         {
             var columns = base.ColumnsUsed(predicate);
             columns.Cast<XLRangeColumn>().ForEach(column => column.Table = this);

@@ -26,7 +26,7 @@ namespace ClosedXML.Excel
 
         public new IXLCells Cells(string cellsInColumn)
         {
-            var retVal = new XLCells(false, false);
+            var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInColumn.Split(',');
             foreach (string pair in rangePairs)
                 retVal.Add(Range(pair.Trim()).RangeAddress);
@@ -370,9 +370,18 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLRangeColumn ColumnUsed(Boolean includeFormats = false)
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
+        public IXLRangeColumn ColumnUsed(Boolean includeFormats)
         {
-            return Column(FirstCellUsed(includeFormats), LastCellUsed(includeFormats));
+            return ColumnUsed(includeFormats
+                ? XLCellsUsedOptions.All
+                : XLCellsUsedOptions.AllContents);
+        }
+
+        public IXLRangeColumn ColumnUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents)
+        {
+            return Column((this as IXLRangeBase).FirstCellUsed(options),
+                          (this as IXLRangeBase).LastCellUsed(options));
         }
 
         internal IXLTable Table { get; set; }

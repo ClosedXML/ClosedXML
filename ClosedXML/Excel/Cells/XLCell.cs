@@ -440,7 +440,7 @@ namespace ClosedXML.Excel
                 )
             {
                 var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                if (referenceCell.IsEmpty(false))
+                if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
                     return 0;
                 else
                     return referenceCell.Value;
@@ -458,7 +458,7 @@ namespace ClosedXML.Excel
                     && XLHelper.IsValidA1Address(cAddress))
                 {
                     var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                    if (referenceCell.IsEmpty(false))
+                    if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
                         return 0;
                     else
                         return referenceCell.Value;
@@ -1425,22 +1425,25 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty()
         {
-            return IsEmpty(false);
+            return IsEmpty(XLCellsUsedOptions.AllContents);
         }
 
+        [Obsolete("Use the overload with XLCellsUsedOptions")]
         public Boolean IsEmpty(Boolean includeFormats)
         {
-            return IsEmpty(includeFormats, includeFormats);
+            return IsEmpty(includeFormats
+                ? XLCellsUsedOptions.All
+                : XLCellsUsedOptions.AllContents);
         }
 
-        public Boolean IsEmpty(Boolean includeNormalFormats, Boolean includeConditionalFormats)
-        {
+        public Boolean IsEmpty(XLCellsUsedOptions options)
+        { 
             if (InnerText.Length > 0)
                 return false;
 
-            if (includeNormalFormats)
+            if (options.HasFlag(XLCellsUsedOptions.NormalFormats))
             {
-                if (!StyleValue.Equals(Worksheet.StyleValue) || IsMerged() || HasComment || HasDataValidation)
+                if (!StyleValue.Equals(Worksheet.StyleValue))
                     return false;
 
                 if (StyleValue.Equals(Worksheet.StyleValue))
@@ -1453,7 +1456,16 @@ namespace ClosedXML.Excel
                 }
             }
 
-            if (includeConditionalFormats
+            if (options.HasFlag(XLCellsUsedOptions.MergedRanges) && IsMerged())
+                return false;
+
+            if (options.HasFlag(XLCellsUsedOptions.Comments) && HasComment)
+                return false;
+
+            if (options.HasFlag(XLCellsUsedOptions.DataValidation) && HasDataValidation)
+                return false;
+
+            if (options.HasFlag(XLCellsUsedOptions.ConditionalFormats)
                 && Worksheet.ConditionalFormats.SelectMany(cf => cf.Ranges).Any(range => range.Contains(this)))
                 return false;
 
@@ -1997,7 +2009,7 @@ namespace ClosedXML.Excel
 
                 var minRow = asRange.RangeAddress.FirstAddress.RowNumber;
                 var minColumn = asRange.RangeAddress.FirstAddress.ColumnNumber;
-                foreach (var sourceCell in asRange.CellsUsed(true))
+                foreach (var sourceCell in asRange.CellsUsed(XLCellsUsedOptions.All))
                 {
                     Worksheet.Cell(
                         _rowNumber + sourceCell.Address.RowNumber - minRow,
@@ -2923,7 +2935,7 @@ namespace ClosedXML.Excel
             var rangeAddress = range.RangeAddress;
 
             var filledCells = range
-                .SurroundingCells(c => !(c as XLCell).IsEmpty(false, false))
+                .SurroundingCells(c => !(c as XLCell).IsEmpty(XLCellsUsedOptions.AllContents))
                 .Concat(this.Worksheet.Range(rangeAddress).Cells());
 
             var grownRangeAddress = new XLRangeAddress(
