@@ -650,6 +650,22 @@ namespace ClosedXML.Excel
             return cellValue;
         }
 
+        public override string ToString() => ToString("A");
+
+        public string ToString(string format)
+        {
+            return (format.ToUpper()) switch
+            {
+                "A" => this.Address.ToString(),
+                "F" => HasFormula ? this.FormulaA1 : string.Empty,
+                "NF" => Style.NumberFormat.Format,
+                "FG" => Style.Font.FontColor.ToString(),
+                "BG" => Style.Fill.BackgroundColor.ToString(),
+                "V" => GetFormattedString(),
+                _ => throw new FormatException($"Format {format} was not recognised."),
+            };
+        }
+
         public object Value
         {
             get
