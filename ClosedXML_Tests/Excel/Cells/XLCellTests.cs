@@ -1127,5 +1127,54 @@ namespace ClosedXML_Tests
             Assert.AreEqual("More text", ws.Cell("A5").GetString());
             Assert.IsTrue(ws.Cell("A6").IsEmpty());
         }
+
+        [Test]
+        public void ToStringNoFormatString()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var c = ws.FirstCell().CellBelow(2).CellRight(3);
+
+            Assert.AreEqual("D3", c.ToString());
+        }
+
+        [Test]
+        [TestCase("D3", "A")]
+        [TestCase("YEAR(DATE(2018, 1, 1))", "F")]
+        [TestCase("YEAR(DATE(2018, 1, 1))", "f")]
+        [TestCase("0000.00", "NF")]
+        [TestCase("0000.00", "nf")]
+        [TestCase("FFFF0000", "fg")]
+        [TestCase("Color Theme: Accent5, Tint: 0", "BG")]
+        [TestCase("2018.00", "v")]
+        public void ToStringFormatString(string expected, string format)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var c = ws.FirstCell().CellBelow(2).CellRight(3);
+
+            var formula = "YEAR(DATE(2018, 1, 1))";
+            c.FormulaA1 = formula;
+
+            var numberFormat = "0000.00";
+            c.Style.NumberFormat.Format = numberFormat;
+
+            c.Style.Font.FontColor = XLColor.Red;
+            c.Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent5);
+
+            Assert.AreEqual(expected, c.ToString(format));
+
+            Assert.Throws<FormatException>(() => c.ToString("dummy"));
+        }
+
+        [Test]
+        public void ToStringInvalidFormat()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var c = ws.FirstCell();
+
+            Assert.Throws<FormatException>(() => c.ToString("dummy"));
+        }
     }
 }

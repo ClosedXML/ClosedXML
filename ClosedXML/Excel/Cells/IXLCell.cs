@@ -384,6 +384,13 @@ namespace ClosedXML.Excel
 
         XLTableCellType TableCellType();
 
+        /// <summary>
+        /// Returns a string that represents the current state of the cell according to the format.
+        /// </summary>
+        /// <param name="format">A: address, F: formula, NF: number format, BG: background color, FG: foreground color, V: formatted value</param>
+        /// <returns></returns>
+        string ToString(string format);
+
         Boolean TryGetValue<T>(out T value);
 
         IXLColumn WorksheetColumn();
