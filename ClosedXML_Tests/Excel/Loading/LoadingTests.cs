@@ -37,7 +37,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\Date1904System.xlsx",
                 @"Misc\LoadImageWithoutTransform2D.xlsx",
                 @"Misc\PivotTableWithTableSource.xlsx",
-                @"Misc\TemplateWithTableSourcePivotTables.xlsx"
+                @"Misc\TemplateWithTableSourcePivotTables.xlsx",
+                @"Misc\PrintAreaRefersToExternalWorksheet.xlsx"
             };
 
             foreach (var file in files)
